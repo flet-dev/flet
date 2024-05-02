@@ -2,17 +2,18 @@ from typing import Any, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
     AnimationValue,
+    ClipBehavior,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ClipBehavior,
 )
 from flet_core.utils import deprecated
 
@@ -194,6 +195,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.clean()
 
     # horizontal
+
     @property
     def horizontal(self) -> Optional[bool]:
         return self._get_attr("horizontal")
@@ -203,6 +205,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("horizontal", value)
 
     # cache_extent
+
     @property
     def cache_extent(self) -> OptionalNumber:
         return self._get_attr("cacheExtent")
@@ -212,6 +215,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("cacheExtent", value)
 
     # runs_count
+
     @property
     def runs_count(self) -> Optional[int]:
         return self._get_attr("runsCount")
@@ -221,6 +225,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("runsCount", value)
 
     # max_extent
+
     @property
     def max_extent(self) -> OptionalNumber:
         return self._get_attr("maxExtent")
@@ -230,6 +235,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("maxExtent", value)
 
     # spacing
+
     @property
     def spacing(self) -> OptionalNumber:
         return self._get_attr("spacing")
@@ -239,6 +245,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("spacing", value)
 
     # run_spacing
+
     @property
     def run_spacing(self) -> OptionalNumber:
         return self._get_attr("runSpacing")
@@ -248,6 +255,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("runSpacing", value)
 
     # child_aspect_ratio
+
     @property
     def child_aspect_ratio(self) -> OptionalNumber:
         return self._get_attr("childAspectRatio")
@@ -257,6 +265,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("childAspectRatio", value)
 
     # padding
+
     @property
     def padding(self) -> PaddingValue:
         return self.__padding
@@ -266,6 +275,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.__padding = value
 
     # controls
+
     @property
     def controls(self):
         return self.__controls
@@ -275,6 +285,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.__controls = value if value is not None else []
 
     # clip_behavior
+
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
         return self._get_attr("clipBehavior")
@@ -286,6 +297,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         )
 
     # semantic_child_count
+
     @property
     def semantic_child_count(self) -> Optional[int]:
         return self._get_attr("semanticChildCount", data_type="int")

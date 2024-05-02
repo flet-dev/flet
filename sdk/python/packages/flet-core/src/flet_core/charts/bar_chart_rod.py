@@ -2,11 +2,11 @@ from typing import Any, List, Optional
 
 from flet_core.border import BorderSide
 from flet_core.charts.bar_chart_rod_stack_item import BarChartRodStackItem
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import BorderRadiusValue, TextAlign
+from flet_core.types import BorderRadiusValue, OptionalNumber, TextAlign
 
 
 class BarChartRod(Control):
@@ -78,6 +78,7 @@ class BarChartRod(Control):
         return self.__rod_stack_items
 
     # rod_stack_items
+
     @property
     def rod_stack_items(self):
         return self.__rod_stack_items
@@ -87,6 +88,7 @@ class BarChartRod(Control):
         self.__rod_stack_items = value if value is not None else []
 
     # from_y
+
     @property
     def from_y(self) -> OptionalNumber:
         return self._get_attr("fromY", data_type="float")
@@ -96,6 +98,7 @@ class BarChartRod(Control):
         self._set_attr("fromY", value)
 
     # to_y
+
     @property
     def to_y(self) -> OptionalNumber:
         return self._get_attr("toY", data_type="float")
@@ -105,6 +108,7 @@ class BarChartRod(Control):
         self._set_attr("toY", value)
 
     # width
+
     @property
     def width(self) -> OptionalNumber:
         return self._get_attr("width", data_type="float")
@@ -114,6 +118,7 @@ class BarChartRod(Control):
         self._set_attr("width", value)
 
     # color
+
     @property
     def color(self) -> Optional[str]:
         return self._get_attr("color")
@@ -123,6 +128,7 @@ class BarChartRod(Control):
         self._set_attr("color", value)
 
     # border_side
+
     @property
     def border_side(self) -> Optional[BorderSide]:
         return self.__border_side
@@ -132,6 +138,7 @@ class BarChartRod(Control):
         self.__border_side = value
 
     # border_radius
+
     @property
     def border_radius(self) -> Optional[BorderRadiusValue]:
         return self.__border_radius
@@ -141,6 +148,7 @@ class BarChartRod(Control):
         self.__border_radius = value
 
     # gradient
+
     @property
     def gradient(self) -> Optional[Gradient]:
         return self.__gradient
@@ -150,6 +158,7 @@ class BarChartRod(Control):
         self.__gradient = value
 
     # bg_from_y
+
     @property
     def bg_from_y(self) -> OptionalNumber:
         return self._get_attr("bgFromY", data_type="float")
@@ -159,6 +168,7 @@ class BarChartRod(Control):
         self._set_attr("bgFromY", value)
 
     # bg_to_y
+
     @property
     def bg_to_y(self) -> OptionalNumber:
         return self._get_attr("bgToY", data_type="float")
@@ -168,6 +178,7 @@ class BarChartRod(Control):
         self._set_attr("bgToY", value)
 
     # bg_color
+
     @property
     def bg_color(self) -> Optional[str]:
         return self._get_attr("bgColor")
@@ -177,6 +188,7 @@ class BarChartRod(Control):
         self._set_attr("bgColor", value)
 
     # bg_gradient
+
     @property
     def bg_gradient(self) -> Optional[Gradient]:
         return self.__bg_gradient
@@ -186,6 +198,7 @@ class BarChartRod(Control):
         self.__bg_gradient = value
 
     # selected
+
     @property
     def selected(self) -> Optional[bool]:
         return self._get_attr("selected", data_type="bool", def_value=False)
@@ -195,6 +208,7 @@ class BarChartRod(Control):
         self._set_attr("selected", value)
 
     # show_tooltip
+
     @property
     def show_tooltip(self) -> Optional[bool]:
         return self._get_attr("showTooltip", data_type="bool", def_value=True)
@@ -204,6 +218,7 @@ class BarChartRod(Control):
         self._set_attr("showTooltip", value)
 
     # tooltip
+
     @property
     def tooltip(self) -> Optional[str]:
         return self._get_attr("tooltip")
@@ -213,6 +228,7 @@ class BarChartRod(Control):
         self._set_attr("tooltip", value)
 
     # tooltip_align
+
     @property
     def tooltip_align(self) -> Optional[TextAlign]:
         return self.__tooltip_align
@@ -225,6 +241,7 @@ class BarChartRod(Control):
         )
 
     # tooltip_style
+
     @property
     def tooltip_style(self):
         return self.__tooltip_style

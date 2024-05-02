@@ -2,7 +2,6 @@ from typing import Any, Dict, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.types import (
@@ -11,6 +10,7 @@ from flet_core.types import (
     MaterialState,
     MouseCursor,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -175,6 +175,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
             self._set_attr_json("labelStyle", self.__label_style)
 
     # value
+
     @property
     def value(self) -> Optional[bool]:
         return self._get_attr("value", data_type="bool", def_value=False)
@@ -184,6 +185,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self._set_attr("value", value)
 
     # label
+
     @property
     def label(self) -> Optional[str]:
         return self._get_attr("label")
@@ -193,6 +195,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self._set_attr("label", value)
 
     # hover_color
+
     @property
     def hover_color(self) -> Optional[str]:
         return self._get_attr("hoverColor")
@@ -202,6 +205,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self._set_attr("hoverColor", value)
 
     # track_outline_color
+
     @property
     def track_outline_color(self) -> Union[None, str, Dict[MaterialState, str]]:
         return self.__track_outline_color
@@ -211,6 +215,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self.__track_outline_color = value
 
     # overlay_color
+
     @property
     def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
         return self.__overlay_color
@@ -220,6 +225,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self.__overlay_color = value
 
     # splash_radius
+
     @property
     def splash_radius(self) -> OptionalNumber:
         return self._get_attr("splashRadius", data_type="float")
@@ -229,6 +235,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self._set_attr("splashRadius", value)
 
     # label_style
+
     @property
     def label_style(self) -> Optional[TextStyle]:
         return self.__label_style
@@ -238,6 +245,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self.__label_style = value
 
     # label_position
+
     @property
     def label_position(self) -> Optional[LabelPosition]:
         return self.__label_position
@@ -250,6 +258,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         )
 
     # mouse_cursor
+
     @property
     def mouse_cursor(self) -> Optional[MouseCursor]:
         return self.__mouse_cursor
@@ -263,6 +272,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         )
 
     # autofocus
+
     @property
     def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
@@ -272,6 +282,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self._set_attr("autofocus", value)
 
     # active_color
+
     @property
     def active_color(self):
         return self._get_attr("activeColor")
@@ -281,6 +292,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self._set_attr("activeColor", value)
 
     # active_track_color
+
     @property
     def active_track_color(self):
         return self._get_attr("activeTrackColor")
@@ -290,6 +302,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self._set_attr("activeTrackColor", value)
 
     # focus_color
+
     @property
     def focus_color(self):
         return self._get_attr("focusColor")
@@ -299,6 +312,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self._set_attr("focusColor", value)
 
     # inactive_thumb_color
+
     @property
     def inactive_thumb_color(self):
         return self._get_attr("inactiveThumbColor")
@@ -308,6 +322,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self._set_attr("inactiveThumbColor", value)
 
     # inactive_track_color
+
     @property
     def inactive_track_color(self):
         return self._get_attr("inactiveTrackColor")
@@ -317,6 +332,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self._set_attr("inactiveTrackColor", value)
 
     # thumb_color
+
     @property
     def thumb_color(self) -> Union[None, str, Dict[MaterialState, str]]:
         return self.__thumb_color
@@ -326,6 +342,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self.__thumb_color = value
 
     # thumb_icon
+
     @property
     def thumb_icon(self) -> Union[None, str, Dict[MaterialState, str]]:
         return self.__thumb_icon
@@ -335,6 +352,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self.__thumb_icon = value
 
     # track_color
+
     @property
     def track_color(self) -> Union[None, str, Dict[MaterialState, str]]:
         return self.__track_color
@@ -344,6 +362,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self.__track_color = value
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")
@@ -353,6 +372,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self._add_event_handler("change", handler)
 
     # on_focus
+
     @property
     def on_focus(self):
         return self._get_event_handler("focus")
@@ -362,6 +382,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self._add_event_handler("focus", handler)
 
     # on_blur
+
     @property
     def on_blur(self):
         return self._get_event_handler("blur")

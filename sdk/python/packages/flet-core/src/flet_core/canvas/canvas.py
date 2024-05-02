@@ -3,13 +3,14 @@ from typing import Any, List, Optional, Union
 
 from flet_core.canvas.shape import Shape
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -116,6 +117,7 @@ class Canvas(ConstrainedControl):
         self.clean()
 
     # shapes
+
     @property
     def shapes(self) -> List[Shape]:
         return self.__shapes
@@ -125,6 +127,7 @@ class Canvas(ConstrainedControl):
         self.__shapes = value if value is not None else []
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -134,6 +137,7 @@ class Canvas(ConstrainedControl):
         self.__content = value
 
     # resize_interval
+
     @property
     def resize_interval(self) -> OptionalNumber:
         return self._get_attr("resizeInterval")
@@ -143,6 +147,7 @@ class Canvas(ConstrainedControl):
         self._set_attr("resizeInterval", value)
 
     # on_resize
+
     @property
     def on_resize(self):
         return self.__on_resize

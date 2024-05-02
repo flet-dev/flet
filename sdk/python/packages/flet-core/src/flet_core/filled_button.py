@@ -1,10 +1,10 @@
 from typing import Any, Optional, Union
 
 from flet_core.buttons import ButtonStyle
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.elevated_button import ElevatedButton
 from flet_core.ref import Ref
-from flet_core.types import ResponsiveNumber, UrlTarget
+from flet_core.types import OptionalNumber, ResponsiveNumber, UrlTarget
 
 
 class FilledButton(ElevatedButton):

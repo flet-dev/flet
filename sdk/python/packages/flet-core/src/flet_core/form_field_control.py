@@ -2,24 +2,20 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     VerticalAlignment,
 )
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
 
 
 class InputBorder(Enum):
@@ -194,6 +190,7 @@ class FormFieldControl(ConstrainedControl):
         return children
 
     # text_size
+
     @property
     def text_size(self) -> OptionalNumber:
         return self._get_attr("textSize")
@@ -203,6 +200,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("textSize", value)
 
     # text_style
+
     @property
     def text_style(self) -> Optional[TextStyle]:
         return self.__text_style
@@ -212,6 +210,7 @@ class FormFieldControl(ConstrainedControl):
         self.__text_style = value
 
     # label
+
     @property
     def label(self) -> Optional[str]:
         return self._get_attr("label")
@@ -221,6 +220,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("label", value)
 
     # label_style
+
     @property
     def label_style(self) -> Optional[TextStyle]:
         return self.__label_style
@@ -230,6 +230,7 @@ class FormFieldControl(ConstrainedControl):
         self.__label_style = value
 
     # icon
+
     @property
     def icon(self) -> Optional[str]:
         return self._get_attr("icon")
@@ -239,6 +240,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("icon", value)
 
     # border
+
     @property
     def border(self) -> Optional[InputBorder]:
         return self.__border
@@ -249,6 +251,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_enum_attr("border", value, InputBorder)
 
     # color
+
     @property
     def color(self) -> Optional[str]:
         return self._get_attr("color")
@@ -258,6 +261,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("color", value)
 
     # bgcolor
+
     @property
     def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
@@ -267,6 +271,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("bgcolor", value)
 
     # border_radius
+
     @property
     def border_radius(self) -> BorderRadiusValue:
         return self.__border_radius
@@ -276,6 +281,7 @@ class FormFieldControl(ConstrainedControl):
         self.__border_radius = value
 
     # border_width
+
     @property
     def border_width(self) -> OptionalNumber:
         return self._get_attr("borderWidth")
@@ -285,6 +291,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("borderWidth", value)
 
     # border_color
+
     @property
     def border_color(self) -> Optional[str]:
         return self._get_attr("borderColor")
@@ -294,6 +301,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("borderColor", value)
 
     # text_vertical_align
+
     @property
     def text_vertical_align(self) -> Union[VerticalAlignment, OptionalNumber]:
         return self._get_attr("textVerticalAlign")
@@ -306,6 +314,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("textVerticalAlign", v)
 
     # focused_color
+
     @property
     def focused_color(self) -> Optional[str]:
         return self._get_attr("focusedColor")
@@ -315,6 +324,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("focusedColor", value)
 
     # focused_bgcolor
+
     @property
     def focused_bgcolor(self) -> Optional[str]:
         return self._get_attr("focusedBgcolor")
@@ -324,6 +334,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("focusedBgcolor", value)
 
     # focused_border_width
+
     @property
     def focused_border_width(self) -> OptionalNumber:
         return self._get_attr("focusedBorderWidth")
@@ -333,6 +344,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("focusedBorderWidth", value)
 
     # focused_border_color
+
     @property
     def focused_border_color(self) -> Optional[str]:
         return self._get_attr("focusedBorderColor")
@@ -342,6 +354,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("focusedBorderColor", value)
 
     # content_padding
+
     @property
     def content_padding(self) -> PaddingValue:
         return self.__content_padding
@@ -351,6 +364,7 @@ class FormFieldControl(ConstrainedControl):
         self.__content_padding = value
 
     # dense
+
     @property
     def dense(self) -> Optional[bool]:
         return self._get_attr("dense")
@@ -360,6 +374,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("dense", value)
 
     # filled
+
     @property
     def filled(self) -> Optional[bool]:
         return self._get_attr("filled", data_type=bool)
@@ -369,6 +384,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("filled", value)
 
     # hint_text
+
     @property
     def hint_text(self) -> Optional[str]:
         return self._get_attr("hintText")
@@ -378,6 +394,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("hintText", value)
 
     # hint_style
+
     @property
     def hint_style(self) -> Optional[TextStyle]:
         return self.__hint_style
@@ -387,6 +404,7 @@ class FormFieldControl(ConstrainedControl):
         self.__hint_style = value
 
     # helper_text
+
     @property
     def helper_text(self) -> Optional[str]:
         return self._get_attr("helperText")
@@ -396,6 +414,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("helperText", value)
 
     # helper_style
+
     @property
     def helper_style(self) -> Optional[TextStyle]:
         return self.__helper_style
@@ -405,6 +424,7 @@ class FormFieldControl(ConstrainedControl):
         self.__helper_style = value
 
     # counter_text
+
     @property
     def counter_text(self) -> Optional[str]:
         return self._get_attr("counterText")
@@ -414,6 +434,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("counterText", value)
 
     # counter_style
+
     @property
     def counter_style(self) -> Optional[TextStyle]:
         return self.__counter_style
@@ -423,6 +444,7 @@ class FormFieldControl(ConstrainedControl):
         self.__counter_style = value
 
     # error_text
+
     @property
     def error_text(self) -> Optional[str]:
         return self._get_attr("errorText")
@@ -432,6 +454,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("errorText", value)
 
     # error_style
+
     @property
     def error_style(self) -> Optional[TextStyle]:
         return self.__error_style
@@ -441,6 +464,7 @@ class FormFieldControl(ConstrainedControl):
         self.__error_style = value
 
     # prefix
+
     @property
     def prefix(self) -> Optional[Control]:
         return self.__prefix
@@ -450,6 +474,7 @@ class FormFieldControl(ConstrainedControl):
         self.__prefix = value
 
     # prefix_icon
+
     @property
     def prefix_icon(self) -> Optional[str]:
         return self._get_attr("prefixIcon")
@@ -459,6 +484,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("prefixIcon", value)
 
     # prefix_text
+
     @property
     def prefix_text(self) -> Optional[str]:
         return self._get_attr("prefixText")
@@ -468,6 +494,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("prefixText", value)
 
     # prefix_style
+
     @property
     def prefix_style(self) -> Optional[TextStyle]:
         return self.__prefix_style
@@ -477,6 +504,7 @@ class FormFieldControl(ConstrainedControl):
         self.__prefix_style = value
 
     # suffix
+
     @property
     def suffix(self) -> Optional[Control]:
         return self.__suffix
@@ -486,6 +514,7 @@ class FormFieldControl(ConstrainedControl):
         self.__suffix = value
 
     # suffix_icon
+
     @property
     def suffix_icon(self) -> Optional[str]:
         return self._get_attr("suffixIcon")
@@ -495,6 +524,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("suffixIcon", value)
 
     # suffix_text
+
     @property
     def suffix_text(self) -> Optional[str]:
         return self._get_attr("suffixText")
@@ -504,6 +534,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("suffixText", value)
 
     # suffix_style
+
     @property
     def suffix_style(self) -> Optional[TextStyle]:
         return self.__suffix_style
@@ -513,6 +544,7 @@ class FormFieldControl(ConstrainedControl):
         self.__suffix_style = value
 
     # fill_color
+
     @property
     def fill_color(self) -> Optional[str]:
         return self._get_attr("fillColor")
@@ -522,6 +554,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr("fillColor", value)
 
     # hover_color
+
     @property
     def hover_color(self) -> Optional[str]:
         return self._get_attr("hoverColor")

@@ -2,11 +2,11 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -141,6 +141,7 @@ class ProgressRing(ConstrainedControl):
         return "progressring"
 
     # value
+
     @property
     def value(self) -> OptionalNumber:
         return self._get_attr("value")
@@ -150,6 +151,7 @@ class ProgressRing(ConstrainedControl):
         self._set_attr("value", value)
 
     # stroke_width
+
     @property
     def stroke_width(self) -> OptionalNumber:
         return self._get_attr("strokeWidth")
@@ -159,6 +161,7 @@ class ProgressRing(ConstrainedControl):
         self._set_attr("strokeWidth", value)
 
     # stroke_align
+
     @property
     def stroke_align(self) -> OptionalNumber:
         return self._get_attr("strokeAlign", data_type="float", def_value=0.0)
@@ -168,6 +171,7 @@ class ProgressRing(ConstrainedControl):
         self._set_attr("strokeAlign", value)
 
     # stroke_cap
+
     @property
     def stroke_cap(self) -> OptionalNumber:
         return self.__stroke_cap
@@ -180,6 +184,7 @@ class ProgressRing(ConstrainedControl):
         )
 
     # color
+
     @property
     def color(self):
         return self._get_attr("color")
@@ -189,6 +194,7 @@ class ProgressRing(ConstrainedControl):
         self._set_attr("color", value)
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self._get_attr("bgcolor")

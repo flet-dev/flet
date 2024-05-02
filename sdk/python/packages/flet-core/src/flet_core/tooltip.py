@@ -1,7 +1,7 @@
 from typing import Any, Optional
 
 from flet_core.border import Border
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
@@ -9,6 +9,7 @@ from flet_core.types import (
     BorderRadiusValue,
     BoxShape,
     MarginValue,
+    OptionalNumber,
     PaddingValue,
     TextAlign,
 )
@@ -139,6 +140,7 @@ class Tooltip(Control):
         return children
 
     # enable_feedback
+
     @property
     def enable_feedback(self) -> Optional[bool]:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
@@ -148,6 +150,7 @@ class Tooltip(Control):
         self._set_attr("enableFeedback", value)
 
     # enable_tap_to_dismiss
+
     @property
     def enable_tap_to_dismiss(self) -> Optional[bool]:
         return self._get_attr("enableTapToDismiss", data_type="bool", def_value=True)
@@ -157,6 +160,7 @@ class Tooltip(Control):
         self._set_attr("enableTapToDismiss", value)
 
     # exclude_from_semantics
+
     @property
     def exclude_from_semantics(self) -> Optional[bool]:
         return self._get_attr("excludeFromSemantics", data_type="bool", def_value=False)
@@ -166,6 +170,7 @@ class Tooltip(Control):
         self._set_attr("excludeFromSemantics", value)
 
     # margin
+
     @property
     def margin(self) -> MarginValue:
         return self.__margin
@@ -175,6 +180,7 @@ class Tooltip(Control):
         self.__margin = value
 
     # padding
+
     @property
     def padding(self) -> PaddingValue:
         return self.__padding
@@ -184,6 +190,7 @@ class Tooltip(Control):
         self.__padding = value
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self._get_attr("bgColor")
@@ -193,6 +200,7 @@ class Tooltip(Control):
         self._set_attr("bgColor", value)
 
     # gradient
+
     @property
     def gradient(self) -> Optional[Gradient]:
         return self.__gradient
@@ -202,6 +210,7 @@ class Tooltip(Control):
         self.__gradient = value
 
     # border
+
     @property
     def border(self) -> Optional[Border]:
         return self.__border
@@ -211,6 +220,7 @@ class Tooltip(Control):
         self.__border = value
 
     # border_radius
+
     @property
     def border_radius(self) -> BorderRadiusValue:
         return self.__border_radius
@@ -220,6 +230,7 @@ class Tooltip(Control):
         self.__border_radius = value
 
     # shape
+
     @property
     def shape(self) -> Optional[BoxShape]:
         return self.__shape
@@ -230,6 +241,7 @@ class Tooltip(Control):
         self._set_attr("shape", value.value if isinstance(value, BoxShape) else value)
 
     # message
+
     @property
     def message(self) -> Optional[str]:
         return self._get_attr("message")
@@ -239,6 +251,7 @@ class Tooltip(Control):
         self._set_attr("message", value)
 
     # text_align
+
     @property
     def text_align(self) -> Optional[TextAlign]:
         return self.__text_align
@@ -251,6 +264,7 @@ class Tooltip(Control):
         )
 
     # text_style
+
     @property
     def text_style(self) -> Optional[TextStyle]:
         return self.__text_style
@@ -260,6 +274,7 @@ class Tooltip(Control):
         self.__text_style = value
 
     # prefer_below
+
     @property
     def prefer_below(self) -> Optional[bool]:
         return self._get_attr("preferBelow", data_type="bool", def_value=False)
@@ -269,6 +284,7 @@ class Tooltip(Control):
         self._set_attr("preferBelow", value)
 
     # height
+
     @property
     def height(self) -> OptionalNumber:
         return self._get_attr("height")
@@ -278,6 +294,7 @@ class Tooltip(Control):
         self._set_attr("height", value)
 
     # vertical_offset
+
     @property
     def vertical_offset(self) -> OptionalNumber:
         return self._get_attr("verticalOffset")
@@ -287,6 +304,7 @@ class Tooltip(Control):
         self._set_attr("verticalOffset", value)
 
     # show_duration
+
     @property
     def show_duration(self) -> Optional[int]:
         return self._get_attr("showDuration")
@@ -296,6 +314,7 @@ class Tooltip(Control):
         self._set_attr("showDuration", value)
 
     # wait_duration
+
     @property
     def wait_duration(self) -> Optional[int]:
         return self._get_attr("waitDuration")
@@ -305,6 +324,7 @@ class Tooltip(Control):
         self._set_attr("waitDuration", value)
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content

@@ -1,15 +1,16 @@
-from typing import Any, Optional, Union, List
+from typing import Any, List, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber, Control
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
+    PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    PaddingValue,
 )
 
 
@@ -113,6 +114,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
         self._set_attr_json("padding", self.__padding)
 
     # controls
+
     @property
     def controls(self) -> List[Control]:
         return self.__controls
@@ -122,6 +124,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
         self.__controls = value if value is not None else []
 
     # border_color
+
     @property
     def border_color(self) -> Optional[str]:
         return self._get_attr("borderColor")
@@ -131,6 +134,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
         self._set_attr("borderColor", value)
 
     # selected_index
+
     @property
     def selected_index(self) -> Optional[int]:
         return self._get_attr("selectedIndex", data_type="int", def_value=0)
@@ -142,6 +146,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
         self._set_attr("selectedIndex", value)
 
     # selected_color
+
     @property
     def selected_color(self) -> Optional[str]:
         return self._get_attr("selectedColor")
@@ -151,6 +156,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
         self._set_attr("selectedColor", value)
 
     # unselected_color
+
     @property
     def unselected_color(self) -> Optional[str]:
         return self._get_attr("unselectedColor")
@@ -160,6 +166,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
         self._set_attr("unselectedColor", value)
 
     # click_color
+
     @property
     def click_color(self) -> Optional[str]:
         return self._get_attr("clickColor")
@@ -169,6 +176,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
         self._set_attr("clickColor", value)
 
     # padding
+
     @property
     def padding(self) -> PaddingValue:
         return self.__padding
@@ -178,6 +186,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
         self.__padding = value
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")

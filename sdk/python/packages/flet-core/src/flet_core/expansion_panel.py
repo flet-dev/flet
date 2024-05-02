@@ -2,11 +2,12 @@ from typing import Any, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
@@ -119,6 +120,7 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
         return children
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self._get_attr("bgColor")
@@ -128,6 +130,7 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
         self._set_attr("bgColor", value)
 
     # expanded
+
     @property
     def expanded(self) -> Optional[bool]:
         return self._get_attr("expanded", data_type="bool", def_value=False)
@@ -137,6 +140,7 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
         self._set_attr("expanded", value)
 
     # can_tap_header
+
     @property
     def can_tap_header(self) -> Optional[bool]:
         return self._get_attr("canTapHeader", data_type="bool", def_value=False)
@@ -146,6 +150,7 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
         self._set_attr("canTapHeader", value)
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -155,6 +160,7 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
         self.__content = value
 
     # header
+
     @property
     def header(self) -> Optional[Control]:
         return self.__header
@@ -265,6 +271,7 @@ class ExpansionPanelList(ConstrainedControl):
         return children
 
     # divider_color
+
     @property
     def divider_color(self):
         return self._get_attr("dividerColor")
@@ -274,6 +281,7 @@ class ExpansionPanelList(ConstrainedControl):
         self._set_attr("dividerColor", value)
 
     # expanded_icon_color
+
     @property
     def expanded_icon_color(self):
         return self._get_attr("expandedIconColor")
@@ -283,6 +291,7 @@ class ExpansionPanelList(ConstrainedControl):
         self._set_attr("expandedIconColor", value)
 
     # expanded_header_padding
+
     @property
     def expanded_header_padding(self) -> PaddingValue:
         return self.__expanded_header_padding
@@ -292,6 +301,7 @@ class ExpansionPanelList(ConstrainedControl):
         self.__expanded_header_padding = value
 
     # elevation
+
     @property
     def elevation(self) -> OptionalNumber:
         return self._get_attr("elevation")
@@ -301,6 +311,7 @@ class ExpansionPanelList(ConstrainedControl):
         self._set_attr("elevation", value)
 
     # spacing
+
     @property
     def spacing(self) -> OptionalNumber:
         return self._get_attr("spacing")
@@ -310,6 +321,7 @@ class ExpansionPanelList(ConstrainedControl):
         self._set_attr("spacing", value)
 
     # controls
+
     @property
     def controls(self):
         return self.__controls
@@ -319,6 +331,7 @@ class ExpansionPanelList(ConstrainedControl):
         self.__controls = value if value is not None else []
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")

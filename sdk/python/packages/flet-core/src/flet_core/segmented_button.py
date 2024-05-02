@@ -3,11 +3,12 @@ from typing import Any, List, Optional, Set, Union
 
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -67,6 +68,7 @@ class Segment(Control):
         return children
 
     # label
+
     @property
     def label(self) -> Optional[Control]:
         return self.__label
@@ -76,6 +78,7 @@ class Segment(Control):
         self.__label = value
 
     # icon
+
     @property
     def icon(self) -> Optional[Control]:
         return self.__icon
@@ -85,6 +88,7 @@ class Segment(Control):
         self.__icon = value
 
     # value
+
     @property
     def value(self) -> str:
         return self._get_attr("value")
@@ -207,6 +211,7 @@ class SegmentedButton(ConstrainedControl):
         return children
 
     # style
+
     @property
     def style(self) -> Optional[ButtonStyle]:
         return self.__style
@@ -216,6 +221,7 @@ class SegmentedButton(ConstrainedControl):
         self.__style = value
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")
@@ -225,6 +231,7 @@ class SegmentedButton(ConstrainedControl):
         self._add_event_handler("change", handler)
 
     # segments
+
     @property
     def segments(self):
         return self.__segments
@@ -234,6 +241,7 @@ class SegmentedButton(ConstrainedControl):
         self.__segments = value if value is not None else []
 
     # allow_empty_selection
+
     @property
     def allow_empty_selection(self) -> Optional[bool]:
         return self._get_attr("allowEmptySelection", data_type="bool", def_value=False)
@@ -243,6 +251,7 @@ class SegmentedButton(ConstrainedControl):
         self._set_attr("allowEmptySelection", value)
 
     # allow_multiple_selection
+
     @property
     def allow_multiple_selection(self) -> Optional[bool]:
         return self._get_attr(
@@ -254,6 +263,7 @@ class SegmentedButton(ConstrainedControl):
         self._set_attr("allowMultipleSelection", value)
 
     # selected
+
     @property
     def selected(self) -> Optional[Set]:
         s = self._get_attr("selected")
@@ -271,6 +281,7 @@ class SegmentedButton(ConstrainedControl):
         )
 
     # show_selected_icon
+
     @property
     def show_selected_icon(self) -> Optional[bool]:
         return self._get_attr("showSelectedIcon", data_type="bool", def_value=True)
@@ -280,6 +291,7 @@ class SegmentedButton(ConstrainedControl):
         self._set_attr("showSelectedIcon", value)
 
     # selected_icon
+
     @property
     def selected_icon(self) -> Optional[Control]:
         return self.__selected_icon

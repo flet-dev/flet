@@ -2,10 +2,10 @@ from typing import Any, Optional, Union
 
 from flet_core.charts.chart_point_line import ChartPointLine
 from flet_core.charts.chart_point_shape import ChartPointShape
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import TextAlign
+from flet_core.types import OptionalNumber, TextAlign
 
 
 class LineChartDataPoint(Control):
@@ -68,6 +68,7 @@ class LineChartDataPoint(Control):
         return children
 
     # x
+
     @property
     def x(self) -> OptionalNumber:
         return self._get_attr("x", data_type="float", def_value=0)
@@ -77,6 +78,7 @@ class LineChartDataPoint(Control):
         self._set_attr("x", value)
 
     # y
+
     @property
     def y(self) -> OptionalNumber:
         return self._get_attr("y", data_type="float", def_value=0)
@@ -86,6 +88,7 @@ class LineChartDataPoint(Control):
         self._set_attr("y", value)
 
     # selected
+
     @property
     def selected(self) -> Optional[bool]:
         return self._get_attr("selected", data_type="bool", def_value=False)
@@ -95,6 +98,7 @@ class LineChartDataPoint(Control):
         self._set_attr("selected", value)
 
     # show_tooltip
+
     @property
     def show_tooltip(self) -> Optional[bool]:
         return self._get_attr("showTooltip", data_type="bool", def_value=True)
@@ -104,6 +108,7 @@ class LineChartDataPoint(Control):
         self._set_attr("showTooltip", value)
 
     # tooltip
+
     @property
     def tooltip(self) -> Optional[str]:
         return self._get_attr("tooltip")
@@ -113,6 +118,7 @@ class LineChartDataPoint(Control):
         self._set_attr("tooltip", value)
 
     # tooltip_align
+
     @property
     def tooltip_align(self) -> Optional[TextAlign]:
         return self.__tooltip_align
@@ -125,6 +131,7 @@ class LineChartDataPoint(Control):
         )
 
     # tooltip_style
+
     @property
     def tooltip_style(self):
         return self.__tooltip_style
@@ -134,6 +141,7 @@ class LineChartDataPoint(Control):
         self.__tooltip_style = value
 
     # point
+
     @property
     def point(self):
         return self.__point
@@ -143,6 +151,7 @@ class LineChartDataPoint(Control):
         self.__point = value
 
     # selected_point
+
     @property
     def selected_point(self):
         return self.__selected_point
@@ -152,6 +161,7 @@ class LineChartDataPoint(Control):
         self.__selected_point = value
 
     # show_above_line
+
     @property
     def show_above_line(self) -> Optional[bool]:
         return self._get_attr("showAboveLine", data_type="bool", def_value=True)
@@ -161,6 +171,7 @@ class LineChartDataPoint(Control):
         self._set_attr("showAboveLine", value)
 
     # show_below_line
+
     @property
     def show_below_line(self) -> Optional[bool]:
         return self._get_attr("showBelowLine", data_type="bool", def_value=True)
@@ -170,6 +181,7 @@ class LineChartDataPoint(Control):
         self._set_attr("showBelowLine", value)
 
     # selected_below_line
+
     @property
     def selected_below_line(self) -> Union[None, bool, ChartPointLine]:
         return self.__selected_below_line

@@ -2,10 +2,9 @@ from typing import Any, List, Optional
 
 from flet_core.alignment import Alignment
 from flet_core.canvas.shape import Shape
-from flet_core.control import OptionalNumber
 from flet_core.inline_span import InlineSpan
 from flet_core.text_style import TextStyle
-from flet_core.types import TextAlign
+from flet_core.types import OptionalNumber, TextAlign
 
 
 class Text(Shape):
@@ -58,6 +57,7 @@ class Text(Shape):
         self._set_attr_json("alignment", self.__alignment)
 
     # x
+
     @property
     def x(self) -> OptionalNumber:
         return self._get_attr("x")
@@ -67,6 +67,7 @@ class Text(Shape):
         self._set_attr("x", value)
 
     # y
+
     @property
     def y(self) -> OptionalNumber:
         return self._get_attr("y")
@@ -76,6 +77,7 @@ class Text(Shape):
         self._set_attr("y", value)
 
     # text
+
     @property
     def text(self) -> Optional[str]:
         return self._get_attr("text")
@@ -85,6 +87,7 @@ class Text(Shape):
         self._set_attr("text", value)
 
     # style
+
     @property
     def style(self) -> Optional[TextStyle]:
         return self.__style
@@ -94,6 +97,7 @@ class Text(Shape):
         self.__style = value
 
     # spans
+
     @property
     def spans(self) -> Optional[List[InlineSpan]]:
         return self.__spans
@@ -103,6 +107,7 @@ class Text(Shape):
         self.__spans = value if value is not None else []
 
     # alignment
+
     @property
     def alignment(self) -> Optional[Alignment]:
         return self.__alignment
@@ -112,6 +117,7 @@ class Text(Shape):
         self.__alignment = value
 
     # text_align
+
     @property
     def text_align(self) -> Optional[TextAlign]:
         return self.__text_align
@@ -124,6 +130,7 @@ class Text(Shape):
         )
 
     # max_lines
+
     @property
     def max_lines(self) -> Optional[int]:
         return self._get_attr("maxLines")
@@ -133,6 +140,7 @@ class Text(Shape):
         self._set_attr("maxLines", value)
 
     # max_width
+
     @property
     def max_width(self) -> OptionalNumber:
         return self._get_attr("maxWidth")
@@ -142,6 +150,7 @@ class Text(Shape):
         self._set_attr("maxWidth", value)
 
     # ellipsis
+
     @property
     def ellipsis(self) -> Optional[str]:
         return self._get_attr("ellipsis")
@@ -151,6 +160,7 @@ class Text(Shape):
         self._set_attr("ellipsis", value)
 
     # rotate
+
     @property
     def rotate(self) -> OptionalNumber:
         return self._get_attr("rotate")

@@ -1,7 +1,8 @@
 from typing import Any, Optional
 
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
+from flet_core.types import OptionalNumber
 
 
 class Semantics(Control):
@@ -135,6 +136,7 @@ class Semantics(Control):
         return children
 
     # label
+
     @property
     def label(self):
         return self._get_attr("label")
@@ -144,6 +146,7 @@ class Semantics(Control):
         self._set_attr("label", value)
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -153,6 +156,7 @@ class Semantics(Control):
         self.__content = value
 
     # expanded
+
     @property
     def expanded(self):
         return self._get_attr("expanded")
@@ -162,6 +166,7 @@ class Semantics(Control):
         self._set_attr("expanded", value)
 
     # hidden
+
     @property
     def hidden(self):
         return self._get_attr("hidden")
@@ -171,6 +176,7 @@ class Semantics(Control):
         self._set_attr("hidden", value)
 
     # textfield
+
     @property
     def textfield(self):
         return self._get_attr("textfield")
@@ -180,6 +186,7 @@ class Semantics(Control):
         self._set_attr("textfield", value)
 
     # link
+
     @property
     def link(self):
         return self._get_attr("link")
@@ -189,6 +196,7 @@ class Semantics(Control):
         self._set_attr("link", value)
 
     # image
+
     @property
     def image(self):
         return self._get_attr("image")
@@ -198,6 +206,7 @@ class Semantics(Control):
         self._set_attr("image", value)
 
     # header
+
     @property
     def header(self):
         return self._get_attr("header")
@@ -207,6 +216,7 @@ class Semantics(Control):
         self._set_attr("header", value)
 
     # selected
+
     @property
     def selected(self):
         return self._get_attr("selected")
@@ -216,6 +226,7 @@ class Semantics(Control):
         self._set_attr("selected", value)
 
     # button
+
     @property
     def button(self):
         return self._get_attr("button")
@@ -225,6 +236,7 @@ class Semantics(Control):
         self._set_attr("button", value)
 
     # obscured
+
     @property
     def obscured(self):
         return self._get_attr("obscured")
@@ -234,6 +246,7 @@ class Semantics(Control):
         self._set_attr("obscured", value)
 
     # multiline
+
     @property
     def multiline(self):
         return self._get_attr("multiline")
@@ -243,6 +256,7 @@ class Semantics(Control):
         self._set_attr("multiline", value)
 
     # focusable
+
     @property
     def focusable(self):
         return self._get_attr("focusable")
@@ -252,6 +266,7 @@ class Semantics(Control):
         self._set_attr("focusable", value)
 
     # read_only
+
     @property
     def read_only(self):
         return self._get_attr("readOnly")
@@ -261,6 +276,7 @@ class Semantics(Control):
         self._set_attr("readOnly", value)
 
     # focused
+
     @property
     def focused(self):
         return self._get_attr("focus")
@@ -270,6 +286,7 @@ class Semantics(Control):
         self._set_attr("focused", value)
 
     # slider
+
     @property
     def slider(self):
         return self._get_attr("slider")
@@ -279,6 +296,7 @@ class Semantics(Control):
         self._set_attr("slider", value)
 
     # tooltip
+
     @property
     def tooltip(self):
         return self._get_attr("tooltip")
@@ -288,6 +306,7 @@ class Semantics(Control):
         self._set_attr("tooltip", value)
 
     # toggled
+
     @property
     def toggled(self):
         return self._get_attr("toggled")
@@ -297,6 +316,7 @@ class Semantics(Control):
         self._set_attr("toggled", value)
 
     # max_value_length
+
     @property
     def max_value_length(self):
         return self._get_attr("maxValueLength")
@@ -306,6 +326,7 @@ class Semantics(Control):
         self._set_attr("maxValueLength", value)
 
     # checked
+
     @property
     def checked(self):
         return self._get_attr("checked")
@@ -315,6 +336,7 @@ class Semantics(Control):
         self._set_attr("checked", value)
 
     # value
+
     @property
     def value(self):
         return self._get_attr("value")
@@ -324,6 +346,7 @@ class Semantics(Control):
         self._set_attr("value", value)
 
     # increased_value
+
     @property
     def increased_value(self):
         return self._get_attr("increasedValue")
@@ -333,6 +356,7 @@ class Semantics(Control):
         self._set_attr("increasedValue", value)
 
     # decreased_value
+
     @property
     def decreased_value(self):
         return self._get_attr("decreasedValue")
@@ -342,6 +366,7 @@ class Semantics(Control):
         self._set_attr("decreasedValue", value)
 
     # hint_text
+
     @property
     def hint_text(self):
         return self._get_attr("hintText")
@@ -351,6 +376,7 @@ class Semantics(Control):
         self._set_attr("hintText", value)
 
     # on_long_press_hint_text
+
     @property
     def on_long_press_hint_text(self):
         return self._get_attr("onLongPressHintText")
@@ -360,6 +386,7 @@ class Semantics(Control):
         self._set_attr("onLongPressHintText", value)
 
     # on_tap_hint_text
+
     @property
     def on_tap_hint_text(self):
         return self._get_attr("onTapHintText")
@@ -369,6 +396,7 @@ class Semantics(Control):
         self._set_attr("onTapHintText", value)
 
     # container
+
     @property
     def container(self):
         return self._get_attr("container")
@@ -378,6 +406,7 @@ class Semantics(Control):
         self._set_attr("container", value)
 
     # live_region
+
     @property
     def live_region(self):
         return self._get_attr("liveRegion")
@@ -387,6 +416,7 @@ class Semantics(Control):
         self._set_attr("liveRegion", value)
 
     # on_tap
+
     @property
     def on_tap(self):
         return self._get_event_handler("tap")
@@ -397,6 +427,7 @@ class Semantics(Control):
         self._set_attr("onTap", True if handler is not None else None)
 
     # on_double_tap
+
     @property
     def on_double_tap(self):
         return self._get_event_handler("double_tap")
@@ -407,6 +438,7 @@ class Semantics(Control):
         self._set_attr("onDoubleTap", True if handler is not None else None)
 
     # on_increase
+
     @property
     def on_increase(self):
         return self._get_event_handler("increase")
@@ -417,6 +449,7 @@ class Semantics(Control):
         self._set_attr("onIncrease", True if handler is not None else None)
 
     # on_decrease
+
     @property
     def on_decrease(self):
         return self._get_event_handler("decrease")
@@ -427,6 +460,7 @@ class Semantics(Control):
         self._set_attr("onDecrease", True if handler is not None else None)
 
     # on_dismiss
+
     @property
     def on_dismiss(self):
         return self._get_event_handler("dismiss")
@@ -437,6 +471,7 @@ class Semantics(Control):
         self._set_attr("onDismiss", True if handler is not None else None)
 
     # on_scroll_left
+
     @property
     def on_scroll_left(self):
         return self._get_event_handler("scroll_left")
@@ -447,6 +482,7 @@ class Semantics(Control):
         self._set_attr("onScrollLeft", True if handler is not None else None)
 
     # on_scroll_right
+
     @property
     def on_scroll_right(self):
         return self._get_event_handler("scroll_right")
@@ -457,6 +493,7 @@ class Semantics(Control):
         self._set_attr("onScrollRight", True if handler is not None else None)
 
     # on_scroll_up
+
     @property
     def on_scroll_up(self):
         return self._get_event_handler("scroll_up")
@@ -467,6 +504,7 @@ class Semantics(Control):
         self._set_attr("onScrollUp", True if handler is not None else None)
 
     # on_scroll_down
+
     @property
     def on_scroll_down(self):
         return self._get_event_handler("scroll_down")
@@ -477,6 +515,7 @@ class Semantics(Control):
         self._set_attr("onScrollDown", True if handler is not None else None)
 
     # on_copy
+
     @property
     def on_copy(self):
         return self._get_event_handler("copy")
@@ -487,6 +526,7 @@ class Semantics(Control):
         self._set_attr("onCopy", True if handler is not None else None)
 
     # on_cut
+
     @property
     def on_cut(self):
         return self._get_event_handler("cut")
@@ -497,6 +537,7 @@ class Semantics(Control):
         self._set_attr("onCut", True if handler is not None else None)
 
     # on_paste
+
     @property
     def on_paste(self):
         return self._get_event_handler("paste")
@@ -507,6 +548,7 @@ class Semantics(Control):
         self._set_attr("onPaste", True if handler is not None else None)
 
     # on_long_press
+
     @property
     def on_long_press(self):
         return self._get_event_handler("long_press")
@@ -517,6 +559,7 @@ class Semantics(Control):
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # on_move_cursor_forward_by_character
+
     @property
     def on_move_cursor_forward_by_character(self):
         return self._get_event_handler("move_cursor_forward_by_character")
@@ -529,6 +572,7 @@ class Semantics(Control):
         )
 
     # on_move_cursor_backward_by_character
+
     @property
     def on_move_cursor_backward_by_character(self):
         return self._get_event_handler("move_cursor_backward_by_character")
@@ -541,6 +585,7 @@ class Semantics(Control):
         )
 
     # on_did_gain_accessibility_focus
+
     @property
     def on_did_gain_accessibility_focus(self):
         return self._get_event_handler("did_gain_accessibility_focus")
@@ -553,6 +598,7 @@ class Semantics(Control):
         )
 
     # on_did_lose_accessibility_focus
+
     @property
     def on_did_lose_accessibility_focus(self):
         return self._get_event_handler("did_lose_accessibility_focus")

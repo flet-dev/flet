@@ -1,9 +1,14 @@
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
+from flet_core.types import (
+    AnimationValue,
+    OffsetValue,
+    OptionalNumber,
+    RotateValue,
+    ScaleValue,
+)
 
 
 class FletApp(ConstrainedControl):
@@ -80,6 +85,7 @@ class FletApp(ConstrainedControl):
         return "fletapp"
 
     # url
+
     @property
     def url(self):
         return self._get_attr("url")
@@ -89,6 +95,7 @@ class FletApp(ConstrainedControl):
         self._set_attr("url", value)
 
     # reconnect_interval_ms
+
     @property
     def reconnect_interval_ms(self) -> Optional[int]:
         return self._get_attr("reconnectIntervalMs")
@@ -98,6 +105,7 @@ class FletApp(ConstrainedControl):
         self._set_attr("reconnectIntervalMs", value)
 
     # reconnect_timeout_ms
+
     @property
     def reconnect_timeout_ms(self) -> Optional[int]:
         return self._get_attr("reconnectTimeoutMs")
@@ -107,6 +115,7 @@ class FletApp(ConstrainedControl):
         self._set_attr("reconnectTimeoutMs", value)
 
     # on_error
+
     @property
     def on_error(self):
         return self._get_event_handler("error")

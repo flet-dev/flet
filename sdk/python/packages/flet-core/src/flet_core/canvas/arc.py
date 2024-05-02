@@ -1,8 +1,8 @@
 from typing import Any, Optional
 
 from flet_core.canvas.shape import Shape
-from flet_core.control import OptionalNumber
 from flet_core.painting import Paint
+from flet_core.types import OptionalNumber
 
 
 class Arc(Shape):
@@ -43,6 +43,7 @@ class Arc(Shape):
         self._set_attr_json("paint", self.__paint)
 
     # x
+
     @property
     def x(self) -> OptionalNumber:
         return self._get_attr("x")
@@ -52,6 +53,7 @@ class Arc(Shape):
         self._set_attr("x", value)
 
     # y
+
     @property
     def y(self) -> OptionalNumber:
         return self._get_attr("y")
@@ -61,6 +63,7 @@ class Arc(Shape):
         self._set_attr("y", value)
 
     # width
+
     @property
     def width(self) -> OptionalNumber:
         return self._get_attr("width")
@@ -70,6 +73,7 @@ class Arc(Shape):
         self._set_attr("width", value)
 
     # height
+
     @property
     def height(self) -> OptionalNumber:
         return self._get_attr("height")
@@ -79,6 +83,7 @@ class Arc(Shape):
         self._set_attr("height", value)
 
     # start_angle
+
     @property
     def start_angle(self) -> OptionalNumber:
         return self._get_attr("startAngle")
@@ -88,6 +93,7 @@ class Arc(Shape):
         self._set_attr("startAngle", value)
 
     # sweep_angle
+
     @property
     def sweep_angle(self) -> OptionalNumber:
         return self._get_attr("sweepAngle")
@@ -97,6 +103,7 @@ class Arc(Shape):
         self._set_attr("sweepAngle", value)
 
     # use_center
+
     @property
     def use_center(self) -> Optional[bool]:
         return self._get_attr("useCenter", data_type="bool", def_value=False)
@@ -106,6 +113,7 @@ class Arc(Shape):
         self._set_attr("useCenter", value)
 
     # paint
+
     @property
     def paint(self) -> Optional[Paint]:
         return self.__paint

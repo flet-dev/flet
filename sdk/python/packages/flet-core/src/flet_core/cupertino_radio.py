@@ -1,12 +1,12 @@
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     LabelPosition,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -122,6 +122,7 @@ class CupertinoRadio(ConstrainedControl):
         super().before_update()
 
     # value
+
     @property
     def value(self) -> Optional[str]:
         return self._get_attr("value", def_value="")
@@ -131,6 +132,7 @@ class CupertinoRadio(ConstrainedControl):
         self._set_attr("value", value)
 
     # label
+
     @property
     def label(self) -> Optional[str]:
         return self._get_attr("label")
@@ -140,6 +142,7 @@ class CupertinoRadio(ConstrainedControl):
         self._set_attr("label", value)
 
     # label_position
+
     @property
     def label_position(self) -> Optional[LabelPosition]:
         return self.__label_position
@@ -152,6 +155,7 @@ class CupertinoRadio(ConstrainedControl):
         )
 
     # fill_color
+
     @property
     def fill_color(self) -> Optional[str]:
         return self._get_attr("fillColor")
@@ -161,6 +165,7 @@ class CupertinoRadio(ConstrainedControl):
         self._set_attr("fillColor", value)
 
     # focus_color
+
     @property
     def focus_color(self) -> Optional[str]:
         return self._get_attr("focusColor")
@@ -170,6 +175,7 @@ class CupertinoRadio(ConstrainedControl):
         self._set_attr("focusColor", value)
 
     # toggleable
+
     @property
     def toggleable(self) -> Optional[bool]:
         return self._get_attr("toggleable", data_type="bool", def_value=False)
@@ -179,6 +185,7 @@ class CupertinoRadio(ConstrainedControl):
         self._set_attr("toggleable", value)
 
     # on_focus
+
     @property
     def on_focus(self):
         return self._get_event_handler("focus")
@@ -188,6 +195,7 @@ class CupertinoRadio(ConstrainedControl):
         self._add_event_handler("focus", handler)
 
     # on_blur
+
     @property
     def on_blur(self):
         return self._get_event_handler("blur")
@@ -197,6 +205,7 @@ class CupertinoRadio(ConstrainedControl):
         self._add_event_handler("blur", handler)
 
     # autofocus
+
     @property
     def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
@@ -206,6 +215,7 @@ class CupertinoRadio(ConstrainedControl):
         self._set_attr("autofocus", value)
 
     # use_checkmark_style
+
     @property
     def use_checkmark_style(self) -> Optional[bool]:
         return self._get_attr("useCheckmarkStyle", data_type="bool", def_value=False)
@@ -215,6 +225,7 @@ class CupertinoRadio(ConstrainedControl):
         self._set_attr("useCheckmarkStyle", value)
 
     # active_color
+
     @property
     def active_color(self) -> Optional[str]:
         return self._get_attr("activeColor")
@@ -224,6 +235,7 @@ class CupertinoRadio(ConstrainedControl):
         self._set_attr("activeColor", value)
 
     # inactive_color
+
     @property
     def inactive_color(self) -> Optional[str]:
         return self._get_attr("inactiveColor")

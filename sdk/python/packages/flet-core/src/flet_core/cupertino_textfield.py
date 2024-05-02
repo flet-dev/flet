@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Any, List, Optional, Union
 
 from flet_core.border import Border
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
 from flet_core.shadow import BoxShadow
@@ -13,6 +13,7 @@ from flet_core.types import (
     BlendMode,
     BorderRadiusValue,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
@@ -221,6 +222,7 @@ class CupertinoTextField(TextField):
         self._set_attr_json("border", self.__border)
 
     # placeholder_text
+
     @property
     def placeholder_text(self):
         return self._get_attr("placeholderText")
@@ -230,6 +232,7 @@ class CupertinoTextField(TextField):
         self._set_attr("placeholderText", value)
 
     # placeholder_style
+
     @property
     def placeholder_style(self):
         return self.__placeholder_style
@@ -239,6 +242,7 @@ class CupertinoTextField(TextField):
         self.__placeholder_style = value
 
     # gradient
+
     @property
     def gradient(self) -> Optional[Gradient]:
         return self.__gradient
@@ -248,6 +252,7 @@ class CupertinoTextField(TextField):
         self.__gradient = value
 
     # blend_mode
+
     @property
     def blend_mode(self) -> Optional[BlendMode]:
         return self.__blend_mode
@@ -260,6 +265,7 @@ class CupertinoTextField(TextField):
         )
 
     # shadow
+
     @property
     def shadow(self):
         return self.__shadow
@@ -269,6 +275,7 @@ class CupertinoTextField(TextField):
         self.__shadow = value if value is not None else []
 
     # suffix_visibility_mode
+
     @property
     def suffix_visibility_mode(self) -> Optional[VisibilityMode]:
         return self.__suffix_visibility_mode
@@ -279,6 +286,7 @@ class CupertinoTextField(TextField):
         self._set_enum_attr("suffixVisibilityMode", value, VisibilityMode)
 
     # prefix_visibility_mode
+
     @property
     def prefix_visibility_mode(self) -> Optional[VisibilityMode]:
         return self.__prefix_visibility_mode
@@ -292,6 +300,7 @@ class CupertinoTextField(TextField):
         )
 
     # clear_button_semantics_label
+
     @property
     def clear_button_semantics_label(self):
         return self._get_attr("clearButtonSemanticsLabel")
@@ -301,6 +310,7 @@ class CupertinoTextField(TextField):
         self._set_attr("clearButtonSemanticsLabel", value)
 
     # border
+
     @property
     def border(self) -> Optional[Border]:
         return self.__border

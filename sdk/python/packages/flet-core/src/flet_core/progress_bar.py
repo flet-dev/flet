@@ -1,12 +1,12 @@
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -135,6 +135,7 @@ class ProgressBar(ConstrainedControl):
         self._set_attr_json("borderRadius", self.__border_radius)
 
     # value
+
     @property
     def value(self) -> OptionalNumber:
         return self._get_attr("value")
@@ -144,6 +145,7 @@ class ProgressBar(ConstrainedControl):
         self._set_attr("value", value)
 
     # bar_height
+
     @property
     def bar_height(self) -> OptionalNumber:
         return self._get_attr("barHeight")
@@ -153,6 +155,7 @@ class ProgressBar(ConstrainedControl):
         self._set_attr("barHeight", value)
 
     # semantics_value
+
     @property
     def semantics_value(self) -> OptionalNumber:
         return self._get_attr("semanticsValue")
@@ -162,6 +165,7 @@ class ProgressBar(ConstrainedControl):
         self._set_attr("semanticsValue", value)
 
     # color
+
     @property
     def color(self):
         return self._get_attr("color")
@@ -171,6 +175,7 @@ class ProgressBar(ConstrainedControl):
         self._set_attr("color", value)
 
     # semantics_label
+
     @property
     def semantics_label(self):
         return self._get_attr("semanticsLabel")
@@ -180,6 +185,7 @@ class ProgressBar(ConstrainedControl):
         self._set_attr("semanticsLabel", value)
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self._get_attr("bgcolor")
@@ -189,6 +195,7 @@ class ProgressBar(ConstrainedControl):
         self._set_attr("bgcolor", value)
 
     # border_radius
+
     @property
     def border_radius(self) -> BorderRadiusValue:
         return self.__border_radius

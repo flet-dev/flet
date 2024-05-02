@@ -2,7 +2,6 @@ from typing import Any, Dict, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.theme import ThemeVisualDensity
@@ -12,6 +11,7 @@ from flet_core.types import (
     MaterialState,
     MouseCursor,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -164,6 +164,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
             self._set_attr_json("labelStyle", self.__label_style)
 
     # value
+
     @property
     def value(self) -> Optional[str]:
         return self._get_attr("value", def_value="")
@@ -173,6 +174,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         self._set_attr("value", value)
 
     # active_color
+
     @property
     def active_color(self) -> Optional[str]:
         return self._get_attr("activeColor")
@@ -182,6 +184,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         self._set_attr("activeColor", value)
 
     # focus_color
+
     @property
     def focus_color(self) -> Optional[str]:
         return self._get_attr("focusColor")
@@ -191,6 +194,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         self._set_attr("focusColor", value)
 
     # splash_radius
+
     @property
     def splash_radius(self) -> OptionalNumber:
         return self._get_attr("splashRadius", data_type="float")
@@ -200,6 +204,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         self._set_attr("splashRadius", value)
 
     # toggleable
+
     @property
     def toggleable(self) -> Optional[bool]:
         return self._get_attr("toggleable", data_type="bool", def_value=False)
@@ -209,6 +214,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         self._set_attr("toggleable", value)
 
     # visual_density
+
     @property
     def visual_density(self) -> Optional[ThemeVisualDensity]:
         return self.__visual_density
@@ -222,6 +228,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         )
 
     # label
+
     @property
     def label(self):
         return self._get_attr("label")
@@ -231,6 +238,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         self._set_attr("label", value)
 
     # label_position
+
     @property
     def label_position(self) -> Optional[LabelPosition]:
         return self.__label_position
@@ -243,6 +251,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         )
 
     # mouse_cursor
+
     @property
     def mouse_cursor(self) -> Optional[MouseCursor]:
         return self.__mouse_cursor
@@ -255,6 +264,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         )
 
     # label_style
+
     @property
     def label_style(self) -> Optional[TextStyle]:
         return self.__label_style
@@ -264,6 +274,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         self.__label_style = value
 
     # fill_color
+
     @property
     def fill_color(self) -> Union[None, str, Dict[MaterialState, str]]:
         return self.__fill_color
@@ -273,6 +284,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         self.__fill_color = value
 
     # overlay_color
+
     @property
     def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
         return self.__overlay_color
@@ -282,6 +294,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         self.__overlay_color = value
 
     # on_focus
+
     @property
     def on_focus(self):
         return self._get_event_handler("focus")
@@ -291,6 +304,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         self._add_event_handler("focus", handler)
 
     # on_blur
+
     @property
     def on_blur(self):
         return self._get_event_handler("blur")
@@ -300,6 +314,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         self._add_event_handler("blur", handler)
 
     # autofocus
+
     @property
     def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)

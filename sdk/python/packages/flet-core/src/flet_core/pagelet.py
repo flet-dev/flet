@@ -4,7 +4,7 @@ from flet_core.adaptive_control import AdaptiveControl
 from flet_core.app_bar import AppBar
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.floating_action_button import FloatingActionButton
@@ -15,6 +15,7 @@ from flet_core.types import (
     AnimationValue,
     FloatingActionButtonLocation,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -178,6 +179,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
 
     # Drawer
     #
+
     def show_drawer(self, drawer: NavigationDrawer):
         self.drawer = drawer
         self.drawer.open = True
@@ -206,6 +208,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
 
     # End_drawer
     #
+
     def show_end_drawer(self, end_drawer: NavigationDrawer):
         self.end_drawer = end_drawer
         self.end_drawer.open = True
@@ -233,6 +236,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self.close_end_drawer()
 
     # appbar
+
     @property
     def appbar(self) -> Union[AppBar, CupertinoAppBar, None]:
         return self.__appbar
@@ -242,6 +246,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self.__appbar = value
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -251,6 +256,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self.__content = value
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self._get_attr("bgcolor")
@@ -260,6 +266,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self._set_attr("bgcolor", value)
 
     # bottom_appbar
+
     @property
     def bottom_appbar(self) -> Optional[BottomAppBar]:
         return self.__bottom_appbar
@@ -269,6 +276,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self.__bottom_appbar = value
 
     # navigation_bar
+
     @property
     def navigation_bar(self) -> Union[NavigationBar, CupertinoNavigationBar, None]:
         return self.__navigation_bar
@@ -281,6 +289,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self.__navigation_bar = value
 
     # bottom_sheet
+
     @property
     def bottom_sheet(self) -> Optional[Control]:
         return self.__bottom_sheet
@@ -293,6 +302,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self.__bottom_sheet = value
 
     # drawer
+
     @property
     def drawer(self) -> Optional[NavigationDrawer]:
         return self.__drawer
@@ -302,6 +312,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self.__drawer = value
 
     # end_drawer
+
     @property
     def end_drawer(self) -> Optional[NavigationDrawer]:
         return self.__end_drawer
@@ -311,6 +322,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self.__end_drawer = value
 
     # floating_action_button
+
     @property
     def floating_action_button(self) -> Optional[FloatingActionButton]:
         return self.__floating_action_button
@@ -320,6 +332,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self.__floating_action_button = value
 
     # floating_action_button_location
+
     @property
     def floating_action_button_location(
         self,

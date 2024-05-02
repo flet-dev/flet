@@ -2,11 +2,12 @@ from typing import Any, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
@@ -109,6 +110,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
         return children
 
     # left
+
     @property
     def left(self) -> Optional[bool]:
         return self._get_attr("left", data_type="bool", def_value=True)
@@ -118,6 +120,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
         self._set_attr("left", value)
 
     # top
+
     @property
     def top(self) -> Optional[bool]:
         return self._get_attr("top", data_type="bool", def_value=True)
@@ -127,6 +130,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
         self._set_attr("top", value)
 
     # right
+
     @property
     def right(self) -> Optional[bool]:
         return self._get_attr("right", data_type="bool", def_value=True)
@@ -136,6 +140,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
         self._set_attr("right", value)
 
     # bottom
+
     @property
     def bottom(self) -> Optional[bool]:
         return self._get_attr("bottom", data_type="bool", def_value=True)
@@ -145,6 +150,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
         self._set_attr("bottom", value)
 
     # maintain_bottom_view_padding
+
     @property
     def maintain_bottom_view_padding(self) -> Optional[bool]:
         return self._get_attr(
@@ -156,6 +162,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
         self._set_attr("maintainBottomViewPadding", value)
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -165,6 +172,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
         self.__content = value
 
     # minimum
+
     @property
     def minimum(self) -> PaddingValue:
         return self.__minimum

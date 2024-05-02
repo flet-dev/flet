@@ -4,11 +4,12 @@ from typing import Any, Optional, Union
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -163,6 +164,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         self.focus()
 
     # text
+
     @property
     def text(self):
         return self._get_attr("text")
@@ -172,6 +174,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("text", value)
 
     # icon
+
     @property
     def icon(self):
         return self._get_attr("icon")
@@ -181,6 +184,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("icon", value)
 
     # icon_color
+
     @property
     def icon_color(self):
         return self._get_attr("iconColor")
@@ -190,6 +194,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("iconColor", value)
 
     # style
+
     @property
     def style(self) -> Optional[ButtonStyle]:
         return self.__style
@@ -199,6 +204,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         self.__style = value
 
     # url
+
     @property
     def url(self):
         return self._get_attr("url")
@@ -208,6 +214,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("url", value)
 
     # url_target
+
     @property
     def url_target(self) -> Optional[UrlTarget]:
         return self.__url_target
@@ -220,6 +227,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         )
 
     # on_click
+
     @property
     def on_click(self):
         return self._get_event_handler("click")
@@ -229,6 +237,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         self._add_event_handler("click", handler)
 
     # on_long_press
+
     @property
     def on_long_press(self):
         return self._get_event_handler("long_press")
@@ -239,6 +248,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -248,6 +258,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         self.__content = value
 
     # autofocus
+
     @property
     def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
@@ -257,6 +268,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("autofocus", value)
 
     # on_hover
+
     @property
     def on_hover(self):
         return self._get_event_handler("hover")
@@ -270,6 +282,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
             self._set_attr("onHover", None)
 
     # on_focus
+
     @property
     def on_focus(self):
         return self._get_event_handler("focus")
@@ -279,6 +292,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         self._add_event_handler("focus", handler)
 
     # on_blur
+
     @property
     def on_blur(self):
         return self._get_event_handler("blur")

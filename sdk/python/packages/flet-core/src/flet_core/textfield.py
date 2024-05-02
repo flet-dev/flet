@@ -5,7 +5,7 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.form_field_control import FormFieldControl, InputBorder
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
@@ -13,6 +13,7 @@ from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
@@ -21,11 +22,6 @@ from flet_core.types import (
     VerticalAlignment,
 )
 from flet_core.utils import deprecated
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
 
 
 class KeyboardType(Enum):
@@ -323,6 +319,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self.focus()
 
     # value
+
     @property
     def value(self) -> Optional[str]:
         return self._get_attr("value", def_value="")
@@ -332,6 +329,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("value", value)
 
     # keyboard_type
+
     @property
     def keyboard_type(self) -> Optional[KeyboardType]:
         return self.__keyboard_type
@@ -342,6 +340,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_enum_attr("keyboardType", value, KeyboardType)
 
     # text_align
+
     @property
     def text_align(self) -> Optional[TextAlign]:
         return self.__text_align
@@ -354,6 +353,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         )
 
     # multiline
+
     @property
     def multiline(self) -> Optional[bool]:
         return self._get_attr("multiline", data_type="bool", def_value=False)
@@ -363,6 +363,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("multiline", value)
 
     # min_lines
+
     @property
     def min_lines(self) -> Optional[int]:
         return self._get_attr("minLines")
@@ -372,6 +373,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("minLines", value)
 
     # max_lines
+
     @property
     def max_lines(self) -> Optional[int]:
         return self._get_attr("maxLines")
@@ -381,6 +383,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("maxLines", value)
 
     # max_length
+
     @property
     def max_length(self) -> Optional[int]:
         return self._get_attr("maxLength")
@@ -390,6 +393,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("maxLength", value)
 
     # read_only
+
     @property
     def read_only(self) -> Optional[bool]:
         return self._get_attr("readOnly", data_type="bool", def_value=False)
@@ -399,6 +403,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("readOnly", value)
 
     # shift_enter
+
     @property
     def shift_enter(self) -> Optional[bool]:
         return self._get_attr("shiftEnter", data_type="bool", def_value=False)
@@ -408,6 +413,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("shiftEnter", value)
 
     # password
+
     @property
     def password(self) -> Optional[bool]:
         return self._get_attr("password", data_type="bool", def_value=False)
@@ -417,6 +423,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("password", value)
 
     # can_reveal_password
+
     @property
     def can_reveal_password(self) -> Optional[bool]:
         return self._get_attr("canRevealPassword", data_type="bool", def_value=False)
@@ -426,6 +433,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("canRevealPassword", value)
 
     # autofocus
+
     @property
     def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
@@ -435,6 +443,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("autofocus", value)
 
     # capitalization
+
     @property
     def capitalization(self) -> TextCapitalization:
         return self.__capitalization
@@ -445,6 +454,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_enum_attr("capitalization", value, TextCapitalization)
 
     # autocorrect
+
     @property
     def autocorrect(self) -> Optional[bool]:
         return self._get_attr("autocorrect", data_type="bool", def_value=True)
@@ -454,6 +464,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("autocorrect", value)
 
     # show_cursor
+
     @property
     def show_cursor(self) -> Optional[bool]:
         return self._get_attr("showCursor", data_type="bool", def_value=True)
@@ -463,6 +474,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("showCursor", value)
 
     # enable_suggestions
+
     @property
     def enable_suggestions(self) -> Optional[bool]:
         return self._get_attr("enableSuggestions", data_type="bool", def_value=True)
@@ -472,6 +484,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("enableSuggestions", value)
 
     # smart_dashes_type
+
     @property
     def smart_dashes_type(self) -> Optional[bool]:
         return self._get_attr("smartDashesType", data_type="bool", def_value=True)
@@ -481,6 +494,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("smartDashesType", value)
 
     # smart_quotes_type
+
     @property
     def smart_quotes_type(self) -> Optional[bool]:
         return self._get_attr("smartQuotesType", data_type="bool", def_value=True)
@@ -490,6 +504,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("smartQuotesType", value)
 
     # cursor_color
+
     @property
     def cursor_color(self):
         return self._get_attr("cursorColor")
@@ -499,6 +514,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("cursorColor", value)
 
     # cursor_height
+
     @property
     def cursor_height(self) -> OptionalNumber:
         return self._get_attr("cursorHeight")
@@ -508,6 +524,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("cursorHeight", value)
 
     # cursor_width
+
     @property
     def cursor_width(self) -> OptionalNumber:
         return self._get_attr("cursorWidth")
@@ -517,6 +534,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("cursorWidth", value)
 
     # cursor_radius
+
     @property
     def cursor_radius(self) -> OptionalNumber:
         return self._get_attr("cursorRadius")
@@ -526,6 +544,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("cursorRadius", value)
 
     # selection_color
+
     @property
     def selection_color(self):
         return self._get_attr("selectionColor")
@@ -535,6 +554,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._set_attr("selectionColor", value)
 
     # input_filter
+
     @property
     def input_filter(self) -> Optional[InputFilter]:
         return self.__input_filter
@@ -544,6 +564,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self.__input_filter = value
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")
@@ -557,6 +578,7 @@ class TextField(FormFieldControl, AdaptiveControl):
             self._set_attr("onchange", None)
 
     # on_submit
+
     @property
     def on_submit(self):
         return self._get_event_handler("submit")
@@ -566,6 +588,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._add_event_handler("submit", handler)
 
     # on_focus
+
     @property
     def on_focus(self):
         return self._get_event_handler("focus")
@@ -575,6 +598,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self._add_event_handler("focus", handler)
 
     # on_blur
+
     @property
     def on_blur(self):
         return self._get_event_handler("blur")

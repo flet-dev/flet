@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
@@ -11,6 +11,7 @@ from flet_core.snack_bar import DismissDirection
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -173,6 +174,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         self.confirm_dismiss(dismiss)
 
     # content
+
     @property
     def content(self) -> Control:
         return self.__content
@@ -182,6 +184,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         self.__content = value
 
     # background
+
     @property
     def background(self) -> Optional[Control]:
         return self.__background
@@ -191,6 +194,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         self.__background = value
 
     # secondary_background
+
     @property
     def secondary_background(self) -> Optional[Control]:
         return self.__secondary_background
@@ -200,6 +204,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         self.__secondary_background = value
 
     # movementDuration
+
     @property
     def movement_duration(self) -> Optional[int]:
         return self._get_attr("movementDuration")
@@ -209,6 +214,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         self._set_attr("movementDuration", value)
 
     # resizeDuration
+
     @property
     def resize_duration(self) -> Optional[int]:
         return self._get_attr("resizeDuration")
@@ -218,6 +224,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         self._set_attr("resizeDuration", value)
 
     # crossAxisEndOffset
+
     @property
     def cross_axis_end_offset(self) -> OptionalNumber:
         return self._get_attr("crossAxisEndOffset")
@@ -227,6 +234,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         self._set_attr("crossAxisEndOffset", value)
 
     # dismissDirection
+
     @property
     def dismiss_direction(self) -> Optional[DismissDirection]:
         return self.__dismiss_direction
@@ -240,6 +248,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         )
 
     # dismissThresholds
+
     @property
     def dismiss_thresholds(self) -> Optional[Dict[DismissDirection, OptionalNumber]]:
         return self.__dismiss_thresholds
@@ -251,6 +260,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         self.__dismiss_thresholds = value
 
     # on_dismiss
+
     @property
     def on_dismiss(self):
         return self._get_event_handler("dismiss")
@@ -261,6 +271,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         self._set_attr("onDismiss", True if handler is not None else None)
 
     # on_confirm_dismiss
+
     @property
     def on_confirm_dismiss(self):
         return self._get_event_handler("confirm_dismiss")
@@ -271,6 +282,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         self._set_attr("onConfirmDismiss", True if handler is not None else None)
 
     # on_update
+
     @property
     def on_update(self):
         return self._get_event_handler("update")
@@ -281,6 +293,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         self._set_attr("onUpdate", True if handler is not None else None)
 
     # on_resize
+
     @property
     def on_resize(self):
         return self._get_event_handler("resize")

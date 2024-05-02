@@ -3,13 +3,13 @@ from typing import Any, Dict, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     MaterialState,
     MouseCursor,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -164,10 +164,12 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("overlayColor", self.__overlay_color)
 
     # value
+
     @property
     def value(self) -> OptionalNumber:
         v = self._get_attr("value", data_type="float")
         # verify limits
+
         if self.min and v < self.min:
             v = self.min
         elif self.max and v > self.max:
@@ -179,6 +181,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self._set_attr("value", value)
 
     # label
+
     @property
     def label(self) -> Optional[str]:
         return self._get_attr("label")
@@ -188,6 +191,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self._set_attr("label", value)
 
     # interaction
+
     @property
     def interaction(self) -> Optional[SliderInteraction]:
         return self.__interaction
@@ -198,6 +202,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self._set_enum_attr("interaction", value, SliderInteraction)
 
     # min
+
     @property
     def min(self) -> OptionalNumber:
         return self._get_attr("min")
@@ -207,6 +212,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self._set_attr("min", value)
 
     # secondary_track_value
+
     @property
     def secondary_track_value(self) -> OptionalNumber:
         return self._get_attr("secondaryTrackValue", data_type="float")
@@ -216,6 +222,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self._set_attr("secondaryTrackValue", value)
 
     # secondary_active_color
+
     @property
     def secondary_active_color(self) -> Optional[str]:
         return self._get_attr("secondaryActiveColor")
@@ -225,6 +232,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self._set_attr("secondaryActiveColor", value)
 
     # mouse_cursor
+
     @property
     def mouse_cursor(self) -> Optional[MouseCursor]:
         return self._get_attr("mouseCursor")
@@ -236,6 +244,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         )
 
     # max
+
     @property
     def max(self) -> OptionalNumber:
         return self._get_attr("max")
@@ -245,6 +254,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self._set_attr("max", value)
 
     # divisions
+
     @property
     def divisions(self) -> Optional[int]:
         return self._get_attr("divisions")
@@ -254,6 +264,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self._set_attr("divisions", value)
 
     # round
+
     @property
     def round(self) -> Optional[int]:
         return self._get_attr("round")
@@ -263,6 +274,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self._set_attr("round", value)
 
     # overlay_color
+
     @property
     def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
         return self.__overlay_color
@@ -272,6 +284,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self.__overlay_color = value
 
     # autofocus
+
     @property
     def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
@@ -281,6 +294,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self._set_attr("autofocus", value)
 
     # active_color
+
     @property
     def active_color(self) -> Optional[str]:
         return self._get_attr("activeColor")
@@ -290,6 +304,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self._set_attr("activeColor", value)
 
     # inactive_color
+
     @property
     def inactive_color(self) -> Optional[str]:
         return self._get_attr("inactiveColor")
@@ -299,6 +314,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self._set_attr("inactiveColor", value)
 
     # thumb_color
+
     @property
     def thumb_color(self) -> Optional[str]:
         return self._get_attr("thumbColor")
@@ -308,6 +324,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self._set_attr("thumbColor", value)
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")
@@ -317,6 +334,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self._add_event_handler("change", handler)
 
     # on_change_start
+
     @property
     def on_change_start(self):
         return self._get_event_handler("change_start")
@@ -326,6 +344,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self._add_event_handler("change_start", handler)
 
     # on_change_end
+
     @property
     def on_change_end(self):
         return self._get_event_handler("change_end")
@@ -335,6 +354,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self._add_event_handler("change_end", handler)
 
     # on_focus
+
     @property
     def on_focus(self):
         return self._get_event_handler("focus")
@@ -344,6 +364,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self._add_event_handler("focus", handler)
 
     # on_blur
+
     @property
     def on_blur(self):
         return self._get_event_handler("blur")

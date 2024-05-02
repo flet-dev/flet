@@ -1,7 +1,8 @@
 from typing import Any, Optional
 
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
+from flet_core.types import OptionalNumber
 
 
 class Divider(Control):
@@ -79,6 +80,7 @@ class Divider(Control):
         return "divider"
 
     # height
+
     @property
     def height(self) -> OptionalNumber:
         return self._get_attr("height", data_type="float")
@@ -88,6 +90,7 @@ class Divider(Control):
         self._set_attr("height", value)
 
     # thickness
+
     @property
     def thickness(self) -> OptionalNumber:
         return self._get_attr("thickness", data_type="float")
@@ -97,6 +100,7 @@ class Divider(Control):
         self._set_attr("thickness", value)
 
     # color
+
     @property
     def color(self) -> Optional[str]:
         return self._get_attr("color")
@@ -106,6 +110,7 @@ class Divider(Control):
         self._set_attr("color", value)
 
     # leading_indent
+
     @property
     def leading_indent(self) -> OptionalNumber:
         return self._get_attr("leadingIndent", data_type="float")
@@ -115,6 +120,7 @@ class Divider(Control):
         self._set_attr("leadingIndent", value)
 
     # trailing_indent
+
     @property
     def trailing_indent(self) -> OptionalNumber:
         return self._get_attr("trailingIndent", data_type="float")

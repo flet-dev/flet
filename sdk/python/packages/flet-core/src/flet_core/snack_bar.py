@@ -2,9 +2,9 @@ from enum import Enum
 from typing import Any, Optional
 
 from flet_core.buttons import OutlinedBorder
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
-from flet_core.types import MarginValue, PaddingValue, ClipBehavior
+from flet_core.types import ClipBehavior, MarginValue, OptionalNumber, PaddingValue
 
 
 class SnackBarBehavior(Enum):
@@ -134,6 +134,7 @@ class SnackBar(Control):
         self._set_attr_json("padding", self.__padding)
 
     # open
+
     @property
     def open(self) -> Optional[bool]:
         return self._get_attr("open", data_type="bool", def_value=False)
@@ -143,6 +144,7 @@ class SnackBar(Control):
         self._set_attr("open", value)
 
     # show_close_icon
+
     @property
     def show_close_icon(self) -> Optional[bool]:
         return self._get_attr("showCloseIcon", data_type="bool", def_value=False)
@@ -152,6 +154,7 @@ class SnackBar(Control):
         self._set_attr("showCloseIcon", value)
 
     # content
+
     @property
     def content(self) -> Control:
         return self.__content
@@ -161,6 +164,7 @@ class SnackBar(Control):
         self.__content = value
 
     # action
+
     @property
     def action(self) -> Optional[str]:
         return self._get_attr("action")
@@ -170,6 +174,7 @@ class SnackBar(Control):
         self._set_attr("action", value)
 
     # action_color
+
     @property
     def action_color(self) -> Optional[str]:
         return self._get_attr("actionColor")
@@ -179,6 +184,7 @@ class SnackBar(Control):
         self._set_attr("actionColor", value)
 
     # bgcolor
+
     @property
     def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgColor")
@@ -188,6 +194,7 @@ class SnackBar(Control):
         self._set_attr("bgColor", value)
 
     # close_icon_color
+
     @property
     def close_icon_color(self) -> Optional[str]:
         return self._get_attr("closeIconColor")
@@ -197,6 +204,7 @@ class SnackBar(Control):
         self._set_attr("closeIconColor", value)
 
     # duration
+
     @property
     def duration(self) -> Optional[int]:
         return self._get_attr("duration", data_type="int")
@@ -206,6 +214,7 @@ class SnackBar(Control):
         self._set_attr("duration", value)
 
     # action_overflow_threshold
+
     @property
     def action_overflow_threshold(self) -> OptionalNumber:
         return self._get_attr("actionOverflowThreshold", data_type="float")
@@ -215,6 +224,7 @@ class SnackBar(Control):
         self._set_attr("actionOverflowThreshold", value)
 
     # behavior
+
     @property
     def behavior(self) -> Optional[SnackBarBehavior]:
         return self.__behavior
@@ -225,6 +235,7 @@ class SnackBar(Control):
         self._set_attr("behavior", value, SnackBarBehavior)
 
     # dismissDirection
+
     @property
     def dismiss_direction(self) -> Optional[DismissDirection]:
         return self.__dismiss_direction
@@ -235,6 +246,7 @@ class SnackBar(Control):
         self._set_enum_attr("dismissDirection", value, DismissDirection)
 
     # padding
+
     @property
     def padding(self) -> PaddingValue:
         return self.__padding
@@ -244,6 +256,7 @@ class SnackBar(Control):
         self.__padding = value
 
     # margin
+
     @property
     def margin(self) -> MarginValue:
         return self.__margin
@@ -253,6 +266,7 @@ class SnackBar(Control):
         self.__margin = value
 
     # width
+
     @property
     def width(self) -> OptionalNumber:
         return self._get_attr("width", data_type="float")
@@ -262,6 +276,7 @@ class SnackBar(Control):
         self._set_attr("width", value)
 
     # elevation
+
     @property
     def elevation(self) -> OptionalNumber:
         return self._get_attr("elevation", data_type="float")
@@ -271,6 +286,7 @@ class SnackBar(Control):
         self._set_attr("elevation", value)
 
     # clip_behavior
+
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
         return self.__clip_behavior
@@ -283,6 +299,7 @@ class SnackBar(Control):
         )
 
     # shape
+
     @property
     def shape(self) -> Optional[OutlinedBorder]:
         return self.__shape
@@ -292,6 +309,7 @@ class SnackBar(Control):
         self.__shape = value
 
     # on_action
+
     @property
     def on_action(self):
         return self._get_event_handler("action")
@@ -301,6 +319,7 @@ class SnackBar(Control):
         self._add_event_handler("action", handler)
 
     # on_visible
+
     @property
     def on_visible(self):
         return self._get_event_handler("visible")

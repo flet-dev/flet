@@ -1,11 +1,11 @@
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -149,6 +149,7 @@ class WebView(ConstrainedControl):
         self.bgcolor = bgcolor
 
         # events
+
         self.on_page_started = on_page_started
         self.on_page_ended = on_page_ended
         self.on_web_resource_error = on_web_resource_error
@@ -157,6 +158,7 @@ class WebView(ConstrainedControl):
         return "webview"
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self._get_attr("bgcolor")
@@ -166,6 +168,7 @@ class WebView(ConstrainedControl):
         self._set_attr("bgcolor", value)
 
     # url
+
     @property
     def url(self):
         return self._get_attr("url")
@@ -175,6 +178,7 @@ class WebView(ConstrainedControl):
         self._set_attr("url", value)
 
     # javascript_enabled
+
     @property
     def javascript_enabled(self):
         return self._get_attr("javascriptEnabled")
@@ -184,6 +188,7 @@ class WebView(ConstrainedControl):
         self._set_attr("javascriptEnabled", value)
 
     # prevent_link
+
     @property
     def prevent_link(self):
         return self._get_attr("prevent_link")
@@ -195,6 +200,7 @@ class WebView(ConstrainedControl):
     ## EVENTS
 
     # on_page_started
+
     @property
     def on_page_started(self):
         return self._get_event_handler("page_started")
@@ -204,6 +210,7 @@ class WebView(ConstrainedControl):
         self._add_event_handler("page_started", handler)
 
     # on_page_ended
+
     @property
     def on_page_ended(self):
         return self._get_event_handler("page_ended")
@@ -213,6 +220,7 @@ class WebView(ConstrainedControl):
         self._add_event_handler("page_ended", handler)
 
     # on_web_resource_error
+
     @property
     def on_web_resource_error(self):
         return self._get_event_handler("web_resource_error")

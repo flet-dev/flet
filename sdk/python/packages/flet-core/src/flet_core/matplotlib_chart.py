@@ -5,16 +5,16 @@ from typing import Any, Optional, Union
 
 from flet_core import alignment
 from flet_core.container import Container
-from flet_core.control import OptionalNumber
 from flet_core.image import Image
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
+    ImageFit,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ImageFit,
 )
 
 try:
@@ -150,6 +150,7 @@ class MatplotlibChart(Container):
             self.__img.src = svg
 
     # original_size
+
     @property
     def original_size(self):
         return self.__original_size
@@ -159,6 +160,7 @@ class MatplotlibChart(Container):
         self.__original_size = value
 
     # isolated
+
     @property
     def isolated(self):
         return self.__isolated
@@ -168,6 +170,7 @@ class MatplotlibChart(Container):
         self.__isolated = value
 
     # figure
+
     @property
     def figure(self):
         return self.__figure
@@ -177,6 +180,7 @@ class MatplotlibChart(Container):
         self.__figure = value
 
     # transparent
+
     @property
     def transparent(self) -> bool:
         return self.__transparent

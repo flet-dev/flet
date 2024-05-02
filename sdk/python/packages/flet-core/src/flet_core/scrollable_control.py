@@ -3,10 +3,10 @@ import time
 from typing import Any, Optional
 
 from flet_core.animation import AnimationCurve
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
-from flet_core.types import ScrollMode
+from flet_core.types import OptionalNumber, ScrollMode
 from flet_core.utils import deprecated
 
 
@@ -70,6 +70,7 @@ class ScrollableControl(Control):
         self.scroll_to(offset, delta, key, duration, curve)
 
     # scroll
+
     @property
     def scroll(self) -> Optional[ScrollMode]:
         return self.__scroll
@@ -79,14 +80,15 @@ class ScrollableControl(Control):
         self.__scroll = value
         self._set_attr(
             "scroll",
-            value.value
-            if isinstance(value, ScrollMode)
-            else "auto" if value is True
-            else None if value is False
-            else value,
+            (
+                value.value
+                if isinstance(value, ScrollMode)
+                else "auto" if value is True else None if value is False else value
+            ),
         )
 
     # auto_scroll
+
     @property
     def auto_scroll(self) -> Optional[str]:
         return self._get_attr("autoScroll", data_type="bool", def_value=False)
@@ -96,6 +98,7 @@ class ScrollableControl(Control):
         self._set_attr("autoScroll", value)
 
     # reverse
+
     @property
     def reverse(self) -> Optional[bool]:
         return self._get_attr("reverse", data_type="bool", def_value=False)
@@ -105,6 +108,7 @@ class ScrollableControl(Control):
         self._set_attr("reverse", value)
 
     # on_scroll_interval
+
     @property
     def on_scroll_interval(self) -> OptionalNumber:
         return self._get_attr("onScrollInterval")
@@ -114,6 +118,7 @@ class ScrollableControl(Control):
         self._set_attr("onScrollInterval", value)
 
     # on_scroll
+
     @property
     def on_scroll(self):
         return self.__on_scroll

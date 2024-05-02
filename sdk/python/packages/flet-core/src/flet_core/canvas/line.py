@@ -1,8 +1,8 @@
 from typing import Any, Optional
 
 from flet_core.canvas.shape import Shape
-from flet_core.control import OptionalNumber
 from flet_core.painting import Paint
+from flet_core.types import OptionalNumber
 
 
 class Line(Shape):
@@ -37,6 +37,7 @@ class Line(Shape):
         self._set_attr_json("paint", self.__paint)
 
     # x1
+
     @property
     def x1(self) -> OptionalNumber:
         return self._get_attr("x1")
@@ -46,6 +47,7 @@ class Line(Shape):
         self._set_attr("x1", value)
 
     # y1
+
     @property
     def y1(self) -> OptionalNumber:
         return self._get_attr("y1")
@@ -55,6 +57,7 @@ class Line(Shape):
         self._set_attr("y1", value)
 
     # x2
+
     @property
     def x2(self) -> OptionalNumber:
         return self._get_attr("x2")
@@ -64,6 +67,7 @@ class Line(Shape):
         self._set_attr("x2", value)
 
     # y2
+
     @property
     def y2(self) -> OptionalNumber:
         return self._get_attr("y2")
@@ -73,6 +77,7 @@ class Line(Shape):
         self._set_attr("y2", value)
 
     # paint
+
     @property
     def paint(self) -> Optional[Paint]:
         return self.__paint

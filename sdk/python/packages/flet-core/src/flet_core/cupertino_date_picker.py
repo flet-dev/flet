@@ -3,11 +3,11 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -129,6 +129,7 @@ class CupertinoDatePicker(ConstrainedControl):
         return "cupertinodatepicker"
 
     # value
+
     @property
     def value(self) -> Optional[datetime]:
         value_string = self._get_attr("value", def_value=None)
@@ -141,6 +142,7 @@ class CupertinoDatePicker(ConstrainedControl):
         self._set_attr("value", value)
 
     # first_date
+
     @property
     def first_date(self) -> Optional[datetime]:
         value_string = self._get_attr("firstDate", def_value=None)
@@ -155,6 +157,7 @@ class CupertinoDatePicker(ConstrainedControl):
         self._set_attr("firstDate", value)
 
     # last_date
+
     @property
     def last_date(self) -> Optional[datetime]:
         value_string = self._get_attr("lastDate", def_value=None)
@@ -169,6 +172,7 @@ class CupertinoDatePicker(ConstrainedControl):
         self._set_attr("lastDate", value)
 
     # bgcolor
+
     @property
     def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
@@ -178,6 +182,7 @@ class CupertinoDatePicker(ConstrainedControl):
         self._set_attr("bgcolor", value)
 
     # item_extent
+
     @property
     def item_extent(self) -> OptionalNumber:
         return self._get_attr("itemExtent", data_type="float", def_value=32.0)
@@ -189,6 +194,7 @@ class CupertinoDatePicker(ConstrainedControl):
         self._set_attr("itemExtent", value)
 
     # min_year
+
     @property
     def min_year(self) -> Optional[int]:
         return self._get_attr("minYear", data_type="int", def_value=1)
@@ -198,6 +204,7 @@ class CupertinoDatePicker(ConstrainedControl):
         self._set_attr("minYear", value)
 
     # max_year
+
     @property
     def max_year(self) -> Optional[int]:
         return self._get_attr("maxYear", data_type="int")
@@ -207,6 +214,7 @@ class CupertinoDatePicker(ConstrainedControl):
         self._set_attr("maxYear", value)
 
     # minute_interval
+
     @property
     def minute_interval(self) -> Optional[int]:
         return self._get_attr("minuteInterval", data_type="int", def_value=1)
@@ -218,6 +226,7 @@ class CupertinoDatePicker(ConstrainedControl):
         self._set_attr("minuteInterval", value)
 
     # use_24h_format
+
     @property
     def use_24h_format(self) -> Optional[int]:
         return self._get_attr("use24hFormat", data_type="bool", def_value=False)
@@ -227,6 +236,7 @@ class CupertinoDatePicker(ConstrainedControl):
         self._set_attr("use24hFormat", value)
 
     # date_picker_mode
+
     @property
     def date_picker_mode(self) -> Optional[CupertinoDatePickerMode]:
         return self.__date_picker_mode
@@ -237,6 +247,7 @@ class CupertinoDatePicker(ConstrainedControl):
         self._set_enum_attr("datePickerMode", value, CupertinoDatePickerMode)
 
     # date_order
+
     @property
     def date_order(self) -> Optional[CupertinoDatePickerDateOrder]:
         return self.__date_order
@@ -247,6 +258,7 @@ class CupertinoDatePicker(ConstrainedControl):
         self._set_enum_attr("dateOrder", value, CupertinoDatePickerDateOrder)
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")

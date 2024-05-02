@@ -1,10 +1,16 @@
 from typing import Any, Optional, Union
 
 from flet_core.alignment import Alignment
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.cupertino_button import CupertinoButton
 from flet_core.ref import Ref
-from flet_core.types import BorderRadiusValue, PaddingValue, ResponsiveNumber, UrlTarget
+from flet_core.types import (
+    BorderRadiusValue,
+    OptionalNumber,
+    PaddingValue,
+    ResponsiveNumber,
+    UrlTarget,
+)
 
 
 class CupertinoFilledButton(CupertinoButton):

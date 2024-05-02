@@ -1,14 +1,14 @@
 import asyncio
-from contextvars import ContextVar
 import json
 import logging
 import threading
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
+from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
-from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple, Union, cast
+from typing import Any, Awaitable, Callable, cast, Dict, List, Optional, Tuple, Union
 from urllib.parse import urlparse
 
 import flet_core
@@ -21,7 +21,7 @@ from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.bottom_sheet import BottomSheet
 from flet_core.client_storage import ClientStorage
 from flet_core.connection import Connection
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.control_event import ControlEvent
 from flet_core.cupertino_alert_dialog import CupertinoAlertDialog
 from flet_core.cupertino_app_bar import CupertinoAppBar
@@ -47,12 +47,13 @@ from flet_core.types import (
     FloatingActionButtonLocation,
     MainAxisAlignment,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     PagePlatform,
     ScrollMode,
     ThemeMode,
 )
-from flet_core.utils import deprecated, classproperty
+from flet_core.utils import classproperty, deprecated
 from flet_core.utils.concurrency_utils import is_pyodide
 from flet_core.view import View
 
@@ -191,11 +192,13 @@ class Page(AdaptiveControl):
         self.__last_route = None
 
         # authorize/login/logout
+
         self.__on_login = EventHandler()
         self._add_event_handler("authorize", self.__on_authorize_async)
         self.__on_logout = EventHandler()
 
         # route_change
+
         def convert_route_change_event(e):
             if self.__last_route == e.data:
                 return None  # avoid duplicate calls
@@ -261,6 +264,7 @@ class Page(AdaptiveControl):
         self._set_attr_json("darkTheme", self.__dark_theme)
 
         # keyboard event
+
         if self.__on_keyboard_event.count() > 0:
             self._set_attr("onKeyboardEvent", True)
 
@@ -435,14 +439,13 @@ class Page(AdaptiveControl):
         commands = []
 
         # build commands
+
         for control in controls:
             control.build_update_commands(
                 self._index, commands, added_controls, removed_controls
             )
-
         if len(commands) == 0:
             return commands, added_controls, removed_controls
-
         return commands, added_controls, removed_controls
 
     def __validate_controls_page(self, added_controls):
@@ -460,6 +463,7 @@ class Page(AdaptiveControl):
                     added_controls[n]._Control__uid = id
 
                     # add to index
+
                     self._index[id] = added_controls[n]
 
                     n += 1
@@ -488,7 +492,6 @@ class Page(AdaptiveControl):
         if e.target == "page" and e.name == "change":
             with self.__lock:
                 self.__on_page_change_event(e.data)
-
         elif e.target in self._index:
             ce = ControlEvent(e.target, e.name, e.data, self._index[e.target], self)
             handler = self._index[e.target].event_handlers.get(e.name)
@@ -509,7 +512,7 @@ class Page(AdaptiveControl):
     def run_task(self, handler: Callable[..., Awaitable[Any]], *args, **kwargs):
         _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
-        
+
         future = asyncio.run_coroutine_threadsafe(handler(*args, **kwargs), self.__loop)
 
         def _on_completion(f):
@@ -556,7 +559,6 @@ class Page(AdaptiveControl):
                     control=self,
                 ),
             )
-
         self.update()
         self.query()  # Update query url (required when using go)
 
@@ -700,11 +702,12 @@ class Page(AdaptiveControl):
         if not self.web:
             if self.platform in ["ios", "android"]:
                 # close web view on mobile
+
                 self.close_in_app_web_view()
             else:
                 # activate desktop window
-                self.window_to_front()
 
+                self.window_to_front()
         login_evt = LoginEvent(
             error=d["error"],
             error_description=d["error_description"],
@@ -716,13 +719,13 @@ class Page(AdaptiveControl):
         )
         if not login_evt.error:
             # perform token request
+
             code = d["code"]
             assert code not in [None, ""]
             try:
                 await self.__authorization.request_token_async(code)
             except Exception as ex:
                 login_evt.error = str(ex)
-
         self.run_task(
             self.__on_login.get_handler(),
             login_evt,
@@ -797,7 +800,6 @@ class Page(AdaptiveControl):
             args["window_width"] = str(window_width)
         if window_height is not None:
             args["window_height"] = str(window_height)
-
         self._invoke_method("launchUrl", args)
 
     @deprecated(
@@ -886,12 +888,13 @@ class Page(AdaptiveControl):
         method_id = uuid.uuid4().hex
 
         # register callback
+
         evt: Optional[threading.Event] = None
         if wait_for_result:
             evt = threading.Event()
             self.__method_calls[method_id] = evt
-
         # call method
+
         result = self._send_command(
             "invokeMethod", values=[method_id, method_name, control_id], attrs=arguments
         )
@@ -900,10 +903,8 @@ class Page(AdaptiveControl):
             if wait_for_result:
                 del self.__method_calls[method_id]
             raise Exception(result.error)
-
         if not wait_for_result:
             return
-
         assert evt is not None
 
         if not evt.wait(wait_timeout):
@@ -911,7 +912,6 @@ class Page(AdaptiveControl):
             raise TimeoutError(
                 f"Timeout waiting for invokeMethod {method_name}({arguments}) call"
             )
-
         result, err = self.__method_call_results.pop(evt)
         if err is not None:
             raise Exception(err)
@@ -930,12 +930,13 @@ class Page(AdaptiveControl):
         method_id = uuid.uuid4().hex
 
         # register callback
+
         evt: Optional[asyncio.Event] = None
         if wait_for_result:
             evt = asyncio.Event()
             self.__method_calls[method_id] = evt
-
         # call method
+
         result = self._send_command(
             "invokeMethod", values=[method_id, method_name, control_id], attrs=arguments
         )
@@ -944,10 +945,8 @@ class Page(AdaptiveControl):
             if wait_for_result:
                 del self.__method_calls[method_id]
             raise Exception(result.error)
-
         if not wait_for_result:
             return
-
         assert evt is not None
 
         try:
@@ -957,7 +956,6 @@ class Page(AdaptiveControl):
             raise Exception(
                 f"Timeout waiting for invokeMethod {method_name}({arguments}) call"
             )
-
         result, err = self.__method_call_results.pop(evt)
         if err is not None:
             raise Exception(err)
@@ -977,6 +975,7 @@ class Page(AdaptiveControl):
     #
     # SnackBar
     #
+
     def show_snack_bar(self, snack_bar: SnackBar):
         self.__offstage.snack_bar = snack_bar
         self.__offstage.snack_bar.open = True
@@ -993,6 +992,7 @@ class Page(AdaptiveControl):
     #
     # Dialogs
     #
+
     def show_dialog(self, dialog: Union[AlertDialog, CupertinoAlertDialog]):
         self.__offstage.dialog = dialog
         self.__offstage.dialog.open = True
@@ -1022,6 +1022,7 @@ class Page(AdaptiveControl):
     #
     # Banner
     #
+
     def show_banner(self, banner: Banner):
         self.__offstage.banner = banner
         self.__offstage.banner.open = True
@@ -1051,6 +1052,7 @@ class Page(AdaptiveControl):
     #
     # BottomSheet
     #
+
     def show_bottom_sheet(
         self,
         bottom_sheet: Union[BottomSheet, CupertinoBottomSheet],
@@ -1085,6 +1087,7 @@ class Page(AdaptiveControl):
 
     # Drawer
     #
+
     def show_drawer(self, drawer: NavigationDrawer):
         self.drawer = drawer
         self.drawer.open = True
@@ -1113,6 +1116,7 @@ class Page(AdaptiveControl):
 
     # End_drawer
     #
+
     def show_end_drawer(self, end_drawer: NavigationDrawer):
         self.end_drawer = end_drawer
         self.end_drawer.open = True
@@ -1176,26 +1180,31 @@ class Page(AdaptiveControl):
         self.window_close()
 
     # QueryString
+
     @property
     def query(self) -> QueryString:
         return self.__query
 
     # url
+
     @property
     def url(self):
         return self.__conn.page_url
 
     # name
+
     @property
     def name(self):
         return self.__conn.page_name
 
     # connection
+
     @property
     def connection(self):
         return self.__conn
 
     # snapshot
+
     @property
     def snapshot(self) -> Dict[str, Dict[str, Any]]:
         return self.__snapshot
@@ -1209,36 +1218,43 @@ class Page(AdaptiveControl):
         return self.__executor
 
     # expires_at
+
     @property
     def expires_at(self):
         return self.__expires_at
 
     # index
+
     @property
     def index(self):
         return self._index
 
     # session_id
+
     @property
     def session_id(self):
         return self._session_id
 
     # auth
+
     @property
     def auth(self):
         return self.__authorization
 
     # pubsub
+
     @property
     def pubsub(self) -> PubSubClient:
         return self.__pubsub
 
     # overlay
+
     @property
     def overlay(self):
         return self.__offstage.controls
 
     # title
+
     @property
     def title(self):
         return self._get_attr("title")
@@ -1248,6 +1264,7 @@ class Page(AdaptiveControl):
         self._set_attr("title", value)
 
     # route
+
     @property
     def route(self):
         return self._get_attr("route")
@@ -1257,21 +1274,25 @@ class Page(AdaptiveControl):
         self._set_attr("route", value)
 
     # pwa
+
     @property
     def pwa(self):
         return self._get_attr("pwa", data_type="bool", def_value=False)
 
     # web
+
     @property
     def web(self) -> bool:
         return cast(bool, self._get_attr("web", data_type="bool", def_value=False))
 
     # debug
+
     @property
     def debug(self) -> bool:
         return cast(bool, self._get_attr("debug", data_type="bool", def_value=False))
 
     # platform
+
     @property
     def platform(self):
         return PagePlatform(self._get_attr("platform"))
@@ -1283,6 +1304,7 @@ class Page(AdaptiveControl):
         )
 
     # platform_brightness
+
     @property
     def platform_brightness(self) -> Brightness:
         brightness = self._get_attr("platformBrightness")
@@ -1290,6 +1312,7 @@ class Page(AdaptiveControl):
         return Brightness(brightness)
 
     # media
+
     @property
     def media(self):
         m = self._get_attr("media")
@@ -1299,16 +1322,19 @@ class Page(AdaptiveControl):
         return PageMediaData(**d)
 
     # client_ip
+
     @property
     def client_ip(self):
         return self._get_attr("clientIP")
 
     # client_user_agent
+
     @property
     def client_user_agent(self):
         return self._get_attr("clientUserAgent")
 
     # fonts
+
     @property
     def fonts(self) -> Optional[Dict[str, str]]:
         return self.__fonts
@@ -1318,11 +1344,13 @@ class Page(AdaptiveControl):
         self.__fonts = value
 
     # views
+
     @property
     def views(self):
         return self.__views
 
     # controls
+
     @property
     def controls(self) -> Optional[List[Control]]:
         return self.__default_view.controls
@@ -1332,6 +1360,7 @@ class Page(AdaptiveControl):
         self.__default_view.controls = value if value is not None else []
 
     # appbar
+
     @property
     def appbar(self) -> Union[AppBar, CupertinoAppBar, None]:
         return self.__default_view.appbar
@@ -1341,6 +1370,7 @@ class Page(AdaptiveControl):
         self.__default_view.appbar = value
 
     # bottom_appbar
+
     @property
     def bottom_appbar(self) -> Optional[BottomAppBar]:
         return self.__default_view.bottom_appbar
@@ -1350,6 +1380,7 @@ class Page(AdaptiveControl):
         self.__default_view.bottom_appbar = value
 
     # navigation_bar
+
     @property
     def navigation_bar(self) -> Union[NavigationBar, CupertinoNavigationBar, None]:
         return self.__default_view.navigation_bar
@@ -1362,6 +1393,7 @@ class Page(AdaptiveControl):
         self.__default_view.navigation_bar = value
 
     # drawer
+
     @property
     def drawer(self) -> Optional[NavigationDrawer]:
         return self.__default_view.drawer
@@ -1371,6 +1403,7 @@ class Page(AdaptiveControl):
         self.__default_view.drawer = value
 
     # end_drawer
+
     @property
     def end_drawer(self) -> Optional[NavigationDrawer]:
         return self.__default_view.end_drawer
@@ -1380,6 +1413,7 @@ class Page(AdaptiveControl):
         self.__default_view.end_drawer = value
 
     # floating_action_button
+
     @property
     def floating_action_button(self) -> Optional[FloatingActionButton]:
         return self.__default_view.floating_action_button
@@ -1389,6 +1423,7 @@ class Page(AdaptiveControl):
         self.__default_view.floating_action_button = value
 
     # floating_action_button_location
+
     @property
     def floating_action_button_location(
         self,
@@ -1402,6 +1437,7 @@ class Page(AdaptiveControl):
         self.__default_view.floating_action_button_location = value
 
     # horizontal_alignment
+
     @property
     def horizontal_alignment(self) -> CrossAxisAlignment:
         return self.__default_view.horizontal_alignment
@@ -1411,6 +1447,7 @@ class Page(AdaptiveControl):
         self.__default_view.horizontal_alignment = value
 
     # vertical_alignment
+
     @property
     def vertical_alignment(self) -> MainAxisAlignment:
         return self.__default_view.vertical_alignment
@@ -1420,6 +1457,7 @@ class Page(AdaptiveControl):
         self.__default_view.vertical_alignment = value
 
     # spacing
+
     @property
     def spacing(self) -> OptionalNumber:
         return self.__default_view.spacing
@@ -1429,6 +1467,7 @@ class Page(AdaptiveControl):
         self.__default_view.spacing = value
 
     # padding
+
     @property
     def padding(self) -> PaddingValue:
         return self.__default_view.padding
@@ -1438,6 +1477,7 @@ class Page(AdaptiveControl):
         self.__default_view.padding = value
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self.__default_view.bgcolor
@@ -1447,6 +1487,7 @@ class Page(AdaptiveControl):
         self.__default_view.bgcolor = value
 
     # scroll
+
     @property
     def scroll(self) -> Optional[ScrollMode]:
         return self.__default_view.scroll
@@ -1456,6 +1497,7 @@ class Page(AdaptiveControl):
         self.__default_view.scroll = value
 
     # auto_scroll
+
     @property
     def auto_scroll(self) -> Optional[bool]:
         return self.__default_view.auto_scroll
@@ -1465,16 +1507,19 @@ class Page(AdaptiveControl):
         self.__default_view.auto_scroll = value
 
     # client_storage
+
     @property
     def client_storage(self):
         return self.__client_storage
 
     # session_storage
+
     @property
     def session(self):
         return self.__session_storage
 
     # splash
+
     @property
     def splash(self) -> Optional[Control]:
         return self.__offstage.splash
@@ -1484,6 +1529,7 @@ class Page(AdaptiveControl):
         self.__offstage.splash = value
 
     # banner
+
     @property
     def banner(self) -> Optional[Banner]:
         return self.__offstage.banner
@@ -1493,6 +1539,7 @@ class Page(AdaptiveControl):
         self.__offstage.banner = value
 
     # snack_bar
+
     @property
     def snack_bar(self) -> Optional[SnackBar]:
         return self.__offstage.snack_bar
@@ -1502,6 +1549,7 @@ class Page(AdaptiveControl):
         self.__offstage.snack_bar = value
 
     # dialog
+
     @property
     def dialog(self) -> Optional[Control]:
         return self.__offstage.dialog
@@ -1511,6 +1559,7 @@ class Page(AdaptiveControl):
         self.__offstage.dialog = value
 
     # bottom_sheet
+
     @property
     def bottom_sheet(self) -> Optional[BottomSheet]:
         return self.__offstage.bottom_sheet
@@ -1520,6 +1569,7 @@ class Page(AdaptiveControl):
         self.__offstage.bottom_sheet = value
 
     # theme_mode
+
     @property
     def theme_mode(self) -> Optional[ThemeMode]:
         return self.__theme_mode
@@ -1532,6 +1582,7 @@ class Page(AdaptiveControl):
         )
 
     # theme
+
     @property
     def theme(self) -> Optional[Theme]:
         return self.__theme
@@ -1541,6 +1592,7 @@ class Page(AdaptiveControl):
         self.__theme = value
 
     # dark_theme
+
     @property
     def dark_theme(self) -> Optional[Theme]:
         return self.__dark_theme
@@ -1550,6 +1602,7 @@ class Page(AdaptiveControl):
         self.__dark_theme = value
 
     # locale_configuration
+
     @property
     def locale_configuration(self) -> Optional[LocaleConfiguration]:
         return self.__locale_configuration
@@ -1559,6 +1612,7 @@ class Page(AdaptiveControl):
         self.__locale_configuration = value
 
     # rtl
+
     @property
     def rtl(self) -> Optional[bool]:
         return self._get_attr("rtl")
@@ -1568,6 +1622,7 @@ class Page(AdaptiveControl):
         self._set_attr("rtl", value)
 
     # show_semantics_debugger
+
     @property
     def show_semantics_debugger(self) -> Optional[bool]:
         return self._get_attr("showSemanticsDebugger")
@@ -1577,6 +1632,7 @@ class Page(AdaptiveControl):
         self._set_attr("showSemanticsDebugger", value)
 
     # width
+
     @property
     def width(self):
         w = self._get_attr("width")
@@ -1585,6 +1641,7 @@ class Page(AdaptiveControl):
         return 0
 
     # height
+
     @property
     def height(self):
         h = self._get_attr("height")
@@ -1593,6 +1650,7 @@ class Page(AdaptiveControl):
         return 0
 
     # window_bgcolor
+
     @property
     def window_bgcolor(self):
         return self._get_attr("windowBgcolor")
@@ -1602,6 +1660,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowBgcolor", value)
 
     # window_width
+
     @property
     def window_width(self) -> OptionalNumber:
         w = self._get_attr("windowWidth")
@@ -1614,6 +1673,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowWidth", value)
 
     # window_height
+
     @property
     def window_height(self) -> OptionalNumber:
         h = self._get_attr("windowHeight")
@@ -1626,6 +1686,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowHeight", value)
 
     # window_top
+
     @property
     def window_top(self) -> OptionalNumber:
         w = self._get_attr("windowTop")
@@ -1638,6 +1699,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowTop", value)
 
     # window_left
+
     @property
     def window_left(self) -> OptionalNumber:
         h = self._get_attr("windowLeft")
@@ -1650,6 +1712,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowLeft", value)
 
     # window_max_width
+
     @property
     def window_max_width(self) -> OptionalNumber:
         return self._get_attr("windowMaxWidth")
@@ -1659,6 +1722,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowMaxWidth", value)
 
     # window_max_height
+
     @property
     def window_max_height(self) -> OptionalNumber:
         return self._get_attr("windowMaxHeight")
@@ -1668,6 +1732,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowMaxHeight", value)
 
     # window_min_width
+
     @property
     def window_min_width(self) -> OptionalNumber:
         return self._get_attr("windowMinWidth")
@@ -1677,6 +1742,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowMinWidth", value)
 
     # window_min_height
+
     @property
     def window_min_height(self) -> OptionalNumber:
         return self._get_attr("windowMinHeight")
@@ -1686,6 +1752,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowMinHeight", value)
 
     # window_opacity
+
     @property
     def window_opacity(self) -> OptionalNumber:
         return self._get_attr("windowOpacity", data_type="float", def_value=1)
@@ -1695,6 +1762,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowOpacity", value)
 
     # window_maximized
+
     @property
     def window_maximized(self) -> Optional[bool]:
         return self._get_attr("windowMaximized", data_type="bool", def_value=False)
@@ -1704,6 +1772,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowMaximized", value)
 
     # window_minimized
+
     @property
     def window_minimized(self) -> Optional[bool]:
         return self._get_attr("windowMinimized", data_type="bool", def_value=False)
@@ -1713,6 +1782,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowMinimized", value)
 
     # window_minimizable
+
     @property
     def window_minimizable(self) -> Optional[bool]:
         return self._get_attr("windowMinimizable", data_type="bool", def_value=True)
@@ -1722,6 +1792,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowMinimizable", value)
 
     # window_maximizable
+
     @property
     def window_maximizable(self) -> Optional[bool]:
         return self._get_attr("windowMaximizable", data_type="bool", def_value=True)
@@ -1731,6 +1802,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowMaximizable", value)
 
     # window_resizable
+
     @property
     def window_resizable(self) -> Optional[bool]:
         return self._get_attr("windowResizable", data_type="bool", def_value=True)
@@ -1740,6 +1812,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowResizable", value)
 
     # window_movable
+
     @property
     def window_movable(self) -> Optional[bool]:
         return self._get_attr("windowMovable", data_type="bool", def_value=True)
@@ -1749,6 +1822,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowMovable", value)
 
     # window_full_screen
+
     @property
     def window_full_screen(self) -> Optional[bool]:
         return self._get_attr("windowFullScreen", data_type="bool", def_value=False)
@@ -1758,6 +1832,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowFullScreen", value)
 
     # window_always_on_top
+
     @property
     def window_always_on_top(self) -> Optional[bool]:
         return self._get_attr("windowAlwaysOnTop", data_type="bool", def_value=False)
@@ -1767,6 +1842,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowAlwaysOnTop", value)
 
     # window_prevent_close
+
     @property
     def window_prevent_close(self) -> Optional[bool]:
         return self._get_attr("windowPreventClose", data_type="bool", def_value=False)
@@ -1776,6 +1852,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowPreventClose", value)
 
     # window_title_bar_hidden
+
     @property
     def window_title_bar_hidden(self) -> Optional[bool]:
         return self._get_attr("windowTitleBarHidden", data_type="bool", def_value=False)
@@ -1785,6 +1862,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowTitleBarHidden", value)
 
     # window_title_bar_buttons_hidden
+
     @property
     def window_title_bar_buttons_hidden(self) -> Optional[bool]:
         return self._get_attr(
@@ -1796,6 +1874,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowTitleBarButtonsHidden", value)
 
     # window_skip_task_bar
+
     @property
     def window_skip_task_bar(self) -> Optional[bool]:
         return self._get_attr("windowSkipTaskBar", data_type="bool", def_value=False)
@@ -1805,6 +1884,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowSkipTaskBar", value)
 
     # window_frameless
+
     @property
     def window_frameless(self) -> Optional[bool]:
         return self._get_attr("windowFrameless", data_type="bool", def_value=False)
@@ -1814,6 +1894,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowFrameless", value)
 
     # window_progress_bar
+
     @property
     def window_progress_bar(self) -> OptionalNumber:
         return self._get_attr("windowProgressBar")
@@ -1823,6 +1904,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowProgressBar", value)
 
     # window_focused
+
     @property
     def window_focused(self) -> Optional[bool]:
         return self._get_attr("windowFocused", data_type="bool", def_value=True)
@@ -1832,6 +1914,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowFocused", value)
 
     # window_visible
+
     @property
     def window_visible(self) -> Optional[bool]:
         return self._get_attr("windowVisible", data_type="bool")
@@ -1841,6 +1924,7 @@ class Page(AdaptiveControl):
         self._set_attr("windowVisible", value)
 
     # on_scroll_interval
+
     @property
     def on_scroll_interval(self) -> OptionalNumber:
         return self.__default_view.on_scroll_interval
@@ -1850,6 +1934,7 @@ class Page(AdaptiveControl):
         self.__default_view.on_scroll_interval = value
 
     # on_close
+
     @property
     def on_close(self):
         return self.__on_close
@@ -1859,6 +1944,7 @@ class Page(AdaptiveControl):
         self.__on_close.subscribe(handler)
 
     # on_resize
+
     @property
     def on_resize(self):
         return self.__on_resize
@@ -1868,6 +1954,7 @@ class Page(AdaptiveControl):
         self.__on_resize.subscribe(handler)
 
     # on_platform_brightness_change
+
     @property
     def on_platform_brightness_change(self):
         return self.__on_platform_brightness_change
@@ -1877,6 +1964,7 @@ class Page(AdaptiveControl):
         self.__on_platform_brightness_change.subscribe(handler)
 
     # on_app_lifecycle_change
+
     @property
     def on_app_lifecycle_state_change(self):
         return self.__on_app_lifecycle_state_change
@@ -1886,6 +1974,7 @@ class Page(AdaptiveControl):
         self.__on_app_lifecycle_state_change.subscribe(handler)
 
     # on_route_change
+
     @property
     def on_route_change(self):
         return self.__on_route_change
@@ -1895,6 +1984,7 @@ class Page(AdaptiveControl):
         self.__on_route_change.subscribe(handler)
 
     # on_view_pop
+
     @property
     def on_view_pop(self):
         return self.__on_view_pop
@@ -1904,6 +1994,7 @@ class Page(AdaptiveControl):
         self.__on_view_pop.subscribe(handler)
 
     # on_keyboard_event
+
     @property
     def on_keyboard_event(self):
         return self.__on_keyboard_event
@@ -1913,6 +2004,7 @@ class Page(AdaptiveControl):
         self.__on_keyboard_event.subscribe(handler)
 
     # on_window_event
+
     @property
     def on_window_event(self):
         return self.__on_window_event
@@ -1922,6 +2014,7 @@ class Page(AdaptiveControl):
         self.__on_window_event.subscribe(handler)
 
     # on_media_change
+
     @property
     def on_media_change(self):
         return self.__on_page_media_change_event
@@ -1931,6 +2024,7 @@ class Page(AdaptiveControl):
         self.__on_page_media_change_event.subscribe(handler)
 
     # on_connect
+
     @property
     def on_connect(self):
         return self.__on_connect
@@ -1940,6 +2034,7 @@ class Page(AdaptiveControl):
         self.__on_connect.subscribe(handler)
 
     # on_disconnect
+
     @property
     def on_disconnect(self):
         return self.__on_disconnect
@@ -1949,6 +2044,7 @@ class Page(AdaptiveControl):
         self.__on_disconnect.subscribe(handler)
 
     # on_login
+
     @property
     def on_login(self):
         return self.__on_login
@@ -1958,6 +2054,7 @@ class Page(AdaptiveControl):
         self.__on_login.subscribe(handler)
 
     # on_logout
+
     @property
     def on_logout(self):
         return self.__on_logout
@@ -1967,6 +2064,7 @@ class Page(AdaptiveControl):
         self.__on_logout.subscribe(handler)
 
     # on_error
+
     @property
     def on_error(self):
         return self.__on_error
@@ -1976,6 +2074,7 @@ class Page(AdaptiveControl):
         self.__on_error.subscribe(handler)
 
     # on_scroll
+
     @property
     def on_scroll(self):
         return self.__default_view.on_scroll
@@ -2025,11 +2124,13 @@ class Offstage(Control):
         return children
 
     # controls
+
     @property
     def controls(self):
         return self.__controls
 
     # splash
+
     @property
     def splash(self) -> Optional[Control]:
         return self.__splash
@@ -2039,6 +2140,7 @@ class Offstage(Control):
         self.__splash = value
 
     # banner
+
     @property
     def banner(self) -> Optional[Banner]:
         return self.__banner
@@ -2048,6 +2150,7 @@ class Offstage(Control):
         self.__banner = value
 
     # snack_bar
+
     @property
     def snack_bar(self) -> Optional[SnackBar]:
         return self.__snack_bar
@@ -2057,6 +2160,7 @@ class Offstage(Control):
         self.__snack_bar = value
 
     # dialog
+
     @property
     def dialog(self) -> Union[AlertDialog, CupertinoAlertDialog, None]:
         return self.__dialog
@@ -2066,6 +2170,7 @@ class Offstage(Control):
         self.__dialog = value
 
     # bottom_sheet
+
     @property
     def bottom_sheet(
         self,

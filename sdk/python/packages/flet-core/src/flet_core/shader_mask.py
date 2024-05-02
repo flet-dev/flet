@@ -1,7 +1,7 @@
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
 from flet_core.types import (
@@ -9,6 +9,7 @@ from flet_core.types import (
     BlendMode,
     BorderRadiusValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -139,6 +140,7 @@ class ShaderMask(ConstrainedControl):
         return children
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -148,6 +150,7 @@ class ShaderMask(ConstrainedControl):
         self.__content = value
 
     # blend_mode
+
     @property
     def blend_mode(self) -> Optional[BlendMode]:
         return self.__blend_mode
@@ -160,6 +163,7 @@ class ShaderMask(ConstrainedControl):
         )
 
     # shader
+
     @property
     def shader(self) -> Optional[Gradient]:
         return self.__shader
@@ -169,6 +173,7 @@ class ShaderMask(ConstrainedControl):
         self.__shader = value
 
     # border_radius
+
     @property
     def border_radius(self) -> BorderRadiusValue:
         return self.__border_radius

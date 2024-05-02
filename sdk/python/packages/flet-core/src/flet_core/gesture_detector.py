@@ -4,7 +4,7 @@ from typing import Any, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
@@ -12,6 +12,7 @@ from flet_core.types import (
     AnimationValue,
     MouseCursor,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -312,6 +313,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._add_event_handler("exit", self.__on_exit.get_handler())
 
         # on_scroll
+
         self.__on_scroll = EventHandler(lambda e: ScrollEvent(**json.loads(e.data)))
         self._add_event_handler("scroll", self.__on_scroll.get_handler())
 
@@ -362,6 +364,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         return children
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -371,6 +374,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self.__content = value
 
     # mouse_cursor
+
     @property
     def mouse_cursor(self):
         return self.__mouse_cursor
@@ -381,6 +385,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # drag_interval
+
     @property
     def drag_interval(self) -> Optional[int]:
         return self._get_attr("dragInterval")
@@ -390,6 +395,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("dragInterval", value)
 
     # hover_interval
+
     @property
     def hover_interval(self) -> Optional[int]:
         return self._get_attr("hoverInterval")
@@ -399,6 +405,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("hoverInterval", value)
 
     # on_tap
+
     @property
     def on_tap(self):
         return self._get_event_handler("tap")
@@ -409,6 +416,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onTap", True if handler is not None else None)
 
     # on_tap_down
+
     @property
     def on_tap_down(self):
         return self.__on_tap_down
@@ -419,6 +427,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onTapDown", True if handler is not None else None)
 
     # on_tap_up
+
     @property
     def on_tap_up(self):
         return self.__on_tap_up
@@ -429,6 +438,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onTapUp", True if handler is not None else None)
 
     # on_multi_tap
+
     @property
     def on_multi_tap(self):
         return self.__on_multi_tap
@@ -439,6 +449,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onMultiTap", True if handler is not None else None)
 
     # multi_tap_touches
+
     @property
     def multi_tap_touches(self) -> Optional[int]:
         return self._get_attr("multiTapTouches")
@@ -448,6 +459,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("multiTapTouches", value)
 
     # on_multi_long_press
+
     @property
     def on_multi_long_press(self):
         return self._get_event_handler("multi_long_press")
@@ -458,6 +470,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onMultiLongPress", True if handler is not None else None)
 
     # on_secondary_tap
+
     @property
     def on_secondary_tap(self):
         return self._get_event_handler("secondary_tap")
@@ -468,6 +481,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onSecondaryTap", True if handler is not None else None)
 
     # on_tap_down
+
     @property
     def on_secondary_tap_down(self):
         return self.__on_secondary_tap_down
@@ -478,6 +492,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onSecondaryTapDown", True if handler is not None else None)
 
     # on_secondary_tap_up
+
     @property
     def on_secondary_tap_up(self):
         return self.__on_secondary_tap_up
@@ -488,6 +503,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onSecondaryTapUp", True if handler is not None else None)
 
     # on_long_press_start
+
     @property
     def on_long_press_start(self):
         return self.__on_long_press_start
@@ -498,6 +514,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onLongPressStart", True if handler is not None else None)
 
     # on_long_press_end
+
     @property
     def on_long_press_end(self):
         return self.__on_long_press_end
@@ -508,6 +525,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onLongPressEnd", True if handler is not None else None)
 
     # on_secondary_long_press_start
+
     @property
     def on_secondary_long_press_start(self):
         return self.__on_secondary_long_press_start
@@ -520,6 +538,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         )
 
     # on_secondary_long_press_end
+
     @property
     def on_secondary_long_press_end(self):
         return self.__on_secondary_long_press_end
@@ -530,6 +549,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onSecondaryLongPressEnd", True if handler is not None else None)
 
     # on_double_tap
+
     @property
     def on_double_tap(self):
         return self._get_event_handler("double_tap")
@@ -540,6 +560,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onDoubleTap", True if handler is not None else None)
 
     # on_double_tap_down
+
     @property
     def on_double_tap_down(self):
         return self.__on_double_tap_down
@@ -550,6 +571,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onDoubleTapDown", True if handler is not None else None)
 
     # on_horizontal_drag_start
+
     @property
     def on_horizontal_drag_start(self):
         return self.__on_horizontal_drag_start
@@ -560,6 +582,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onHorizontalDragStart", True if handler is not None else None)
 
     # on_horizontal_drag_update
+
     @property
     def on_horizontal_drag_update(self):
         return self.__on_horizontal_drag_update
@@ -570,6 +593,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onHorizontalDragUpdate", True if handler is not None else None)
 
     # on_horizontal_drag_end
+
     @property
     def on_horizontal_drag_end(self):
         return self.__on_horizontal_drag_end
@@ -580,6 +604,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onHorizontalDragEnd", True if handler is not None else None)
 
     # on_vertical_drag_start
+
     @property
     def on_vertical_drag_start(self):
         return self.__on_vertical_drag_start
@@ -590,6 +615,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onVerticalDragStart", True if handler is not None else None)
 
     # on_vertical_drag_update
+
     @property
     def on_vertical_drag_update(self):
         return self.__on_vertical_drag_update
@@ -600,6 +626,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onVerticalDragUpdate", True if handler is not None else None)
 
     # on_vertical_drag_end
+
     @property
     def on_vertical_drag_end(self):
         return self.__on_vertical_drag_end
@@ -610,6 +637,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onVerticalDragEnd", True if handler is not None else None)
 
     # on_pan_start
+
     @property
     def on_pan_start(self):
         return self.__on_pan_start
@@ -620,6 +648,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onPanStart", True if handler is not None else None)
 
     # on_pan_updatevertical_drag
+
     @property
     def on_pan_update(self):
         return self.__on_pan_update
@@ -630,6 +659,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onPanUpdate", True if handler is not None else None)
 
     # on_pan_end
+
     @property
     def on_pan_end(self):
         return self.__on_pan_end
@@ -640,6 +670,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onPanEnd", True if handler is not None else None)
 
     # on_scale_start
+
     @property
     def on_scale_start(self):
         return self.__on_scale_start
@@ -650,6 +681,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onScaleStart", True if handler is not None else None)
 
     # on_scale_update
+
     @property
     def on_scale_update(self):
         return self.__on_scale_update
@@ -660,6 +692,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onScaleUpdate", True if handler is not None else None)
 
     # on_scale_end
+
     @property
     def on_scale_end(self):
         return self.__on_scale_end
@@ -670,6 +703,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onScaleEnd", True if handler is not None else None)
 
     # on_hover
+
     @property
     def on_hover(self):
         return self.__on_hover
@@ -680,6 +714,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onHover", True if handler is not None else None)
 
     # on_enter
+
     @property
     def on_enter(self):
         return self.__on_enter
@@ -690,6 +725,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onEnter", True if handler is not None else None)
 
     # on_exit
+
     @property
     def on_exit(self):
         return self.__on_exit
@@ -700,6 +736,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self._set_attr("onExit", True if handler is not None else None)
 
     # on_scroll
+
     @property
     def on_scroll(self):
         return self.__on_scroll

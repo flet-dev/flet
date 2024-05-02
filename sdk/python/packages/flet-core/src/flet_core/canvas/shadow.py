@@ -2,7 +2,7 @@ from typing import Any, List, Optional
 
 from flet_core.canvas.path import Path
 from flet_core.canvas.shape import Shape
-from flet_core.control import OptionalNumber
+from flet_core.types import OptionalNumber
 
 
 class Shadow(Shape):
@@ -35,6 +35,7 @@ class Shadow(Shape):
         self._set_attr_json("path", self.__path)
 
     # path
+
     @property
     def path(self):
         return self.__path
@@ -44,6 +45,7 @@ class Shadow(Shape):
         self.__path = value if value is not None else []
 
     # color
+
     @property
     def color(self) -> Optional[str]:
         return self._get_attr("color")
@@ -53,6 +55,7 @@ class Shadow(Shape):
         self._set_attr("color", value)
 
     # elevation
+
     @property
     def elevation(self) -> OptionalNumber:
         return self._get_attr("elevation")
@@ -62,6 +65,7 @@ class Shadow(Shape):
         self._set_attr("elevation", value)
 
     # transparent_occluder
+
     @property
     def transparent_occluder(self) -> Optional[bool]:
         return self._get_attr("transparentOccluder", data_type="bool", def_value=False)

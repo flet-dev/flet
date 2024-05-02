@@ -3,13 +3,13 @@ from typing import Any, List, Optional, Union
 
 from flet_core.charts.pie_chart_section import PieChartSection
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -115,6 +115,7 @@ class PieChart(ConstrainedControl):
         return children
 
     # sections
+
     @property
     def sections(self):
         return self.__sections
@@ -124,6 +125,7 @@ class PieChart(ConstrainedControl):
         self.__sections = value if value is not None else []
 
     # center_space_color
+
     @property
     def center_space_color(self) -> Optional[str]:
         return self._get_attr("centerSpaceColor")
@@ -133,6 +135,7 @@ class PieChart(ConstrainedControl):
         self._set_attr("centerSpaceColor", value)
 
     # center_space_radius
+
     @property
     def center_space_radius(self) -> OptionalNumber:
         return self._get_attr("centerSpaceRadius", data_type="float")
@@ -142,6 +145,7 @@ class PieChart(ConstrainedControl):
         self._set_attr("centerSpaceRadius", value)
 
     # sections_space
+
     @property
     def sections_space(self) -> OptionalNumber:
         return self._get_attr("sectionsSpace", data_type="float")
@@ -151,6 +155,7 @@ class PieChart(ConstrainedControl):
         self._set_attr("sectionsSpace", value)
 
     # start_degree_offset
+
     @property
     def start_degree_offset(self) -> OptionalNumber:
         return self._get_attr("startDegreeOffset", data_type="float")
@@ -160,6 +165,7 @@ class PieChart(ConstrainedControl):
         self._set_attr("startDegreeOffset", value)
 
     # animate
+
     @property
     def animate(self) -> AnimationValue:
         return self.__animate
@@ -169,6 +175,7 @@ class PieChart(ConstrainedControl):
         self.__animate = value
 
     # on_chart_event
+
     @property
     def on_chart_event(self):
         return self.__on_chart_event

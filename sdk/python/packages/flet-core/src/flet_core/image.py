@@ -1,7 +1,7 @@
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
@@ -10,6 +10,7 @@ from flet_core.types import (
     ImageFit,
     ImageRepeat,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -154,6 +155,7 @@ class Image(ConstrainedControl):
         self._set_attr_json("borderRadius", self.__border_radius)
 
     # src
+
     @property
     def src(self):
         return self._get_attr("src")
@@ -163,6 +165,7 @@ class Image(ConstrainedControl):
         self._set_attr("src", value)
 
     # src_base64
+
     @property
     def src_base64(self):
         return self._get_attr("srcBase64")
@@ -172,6 +175,7 @@ class Image(ConstrainedControl):
         self._set_attr("srcBase64", value)
 
     # fit
+
     @property
     def fit(self) -> Optional[ImageFit]:
         return self.__fit
@@ -182,6 +186,7 @@ class Image(ConstrainedControl):
         self._set_attr("fit", value.value if isinstance(value, ImageFit) else value)
 
     # filter_quality
+
     @property
     def filter_quality(self) -> Optional[FilterQuality]:
         return self.__filter_quality
@@ -194,6 +199,7 @@ class Image(ConstrainedControl):
         )
 
     # repeat
+
     @property
     def repeat(self) -> Optional[ImageRepeat]:
         return self.__repeat
@@ -206,6 +212,7 @@ class Image(ConstrainedControl):
         )
 
     # border_radius
+
     @property
     def border_radius(self) -> BorderRadiusValue:
         return self.__border_radius
@@ -215,6 +222,7 @@ class Image(ConstrainedControl):
         self.__border_radius = value
 
     # color
+
     @property
     def color(self):
         return self._get_attr("color")
@@ -224,6 +232,7 @@ class Image(ConstrainedControl):
         self._set_attr("color", value)
 
     # color_blend_mode
+
     @property
     def color_blend_mode(self) -> Optional[BlendMode]:
         return self.__blend_mode
@@ -236,6 +245,7 @@ class Image(ConstrainedControl):
         )
 
     # gapless_playback
+
     @property
     def gapless_playback(self) -> Optional[bool]:
         return self._get_attr("gaplessPlayback", data_type="bool", def_value=False)
@@ -245,6 +255,7 @@ class Image(ConstrainedControl):
         self._set_attr("gaplessPlayback", value)
 
     # exclude_from_semantics
+
     @property
     def exclude_from_semantics(self) -> Optional[bool]:
         return self._get_attr("excludeFromSemantics", data_type="bool", def_value=False)
@@ -254,6 +265,7 @@ class Image(ConstrainedControl):
         self._set_attr("excludeFromSemantics", value)
 
     # semantics_label
+
     @property
     def semantics_label(self):
         return self._get_attr("semanticsLabel")
@@ -263,6 +275,7 @@ class Image(ConstrainedControl):
         self._set_attr("semanticsLabel", value)
 
     # error_content
+
     @property
     def error_content(self) -> Optional[Control]:
         return self.__error_content

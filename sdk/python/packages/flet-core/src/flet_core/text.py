@@ -3,7 +3,6 @@ from typing import Any, List, Optional, Union
 from warnings import warn
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_span import TextSpan
 from flet_core.text_style import TextStyle
@@ -11,16 +10,12 @@ from flet_core.types import (
     AnimationValue,
     FontWeight,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     TextAlign,
 )
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
 
 
 class TextOverflow(Enum):
@@ -191,6 +186,7 @@ class Text(ConstrainedControl):
             self._set_attr_json("style", self.__style)
 
     # value
+
     @property
     def value(self) -> Optional[str]:
         return self._get_attr("value")
@@ -200,6 +196,7 @@ class Text(ConstrainedControl):
         self._set_attr("value", value)
 
     # spans
+
     @property
     def spans(self) -> Optional[List[TextSpan]]:
         return self.__spans
@@ -209,6 +206,7 @@ class Text(ConstrainedControl):
         self.__spans = value if value is not None else []
 
     # text_align
+
     @property
     def text_align(self) -> Optional[TextAlign]:
         return self.__text_align
@@ -221,6 +219,7 @@ class Text(ConstrainedControl):
         )
 
     # font_family
+
     @property
     def font_family(self):
         return self._get_attr("fontFamily")
@@ -230,6 +229,7 @@ class Text(ConstrainedControl):
         self._set_attr("fontFamily", value)
 
     # size
+
     @property
     def size(self) -> OptionalNumber:
         return self._get_attr("size")
@@ -239,6 +239,7 @@ class Text(ConstrainedControl):
         self._set_attr("size", value)
 
     # weight
+
     @property
     def weight(self) -> Optional[FontWeight]:
         return self.__weight
@@ -251,6 +252,7 @@ class Text(ConstrainedControl):
         )
 
     # style
+
     @property
     def style(self) -> Union[TextThemeStyle, TextStyle, None]:
         return self.__style
@@ -271,6 +273,7 @@ class Text(ConstrainedControl):
                 )
 
     # theme_style
+
     @property
     def theme_style(self):
         return self._get_attr("theme_style")
@@ -282,6 +285,7 @@ class Text(ConstrainedControl):
         )
 
     # italic
+
     @property
     def italic(self) -> Optional[bool]:
         return self._get_attr("italic", data_type="bool", def_value=False)
@@ -291,6 +295,7 @@ class Text(ConstrainedControl):
         self._set_attr("italic", value)
 
     # no_wrap
+
     @property
     def no_wrap(self) -> Optional[bool]:
         return self._get_attr("italic", data_type="noWrap", def_value=False)
@@ -300,6 +305,7 @@ class Text(ConstrainedControl):
         self._set_attr("noWrap", value)
 
     # selectable
+
     @property
     def selectable(self) -> Optional[bool]:
         return self._get_attr("selectable", data_type="bool", def_value=False)
@@ -309,6 +315,7 @@ class Text(ConstrainedControl):
         self._set_attr("selectable", value)
 
     # max_lines
+
     @property
     def max_lines(self) -> Optional[int]:
         return self._get_attr("maxLines")
@@ -318,6 +325,7 @@ class Text(ConstrainedControl):
         self._set_attr("maxLines", value)
 
     # overflow
+
     @property
     def overflow(self) -> TextOverflow:
         return self.__overflow
@@ -330,6 +338,7 @@ class Text(ConstrainedControl):
         )
 
     # color
+
     @property
     def color(self):
         return self._get_attr("color")
@@ -339,6 +348,7 @@ class Text(ConstrainedControl):
         self._set_attr("color", value)
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self._get_attr("bgcolor")
@@ -348,6 +358,7 @@ class Text(ConstrainedControl):
         self._set_attr("bgcolor", value)
 
     # semantics_label
+
     @property
     def semantics_label(self) -> Optional[str]:
         return self._get_attr("semanticsLabel")

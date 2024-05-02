@@ -4,15 +4,16 @@ from typing import Any, Optional, Union
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
+    ClipBehavior,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ClipBehavior,
     UrlTarget,
 )
 from flet_core.utils import deprecated
@@ -161,6 +162,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
                 self.__style = ButtonStyle()
             if self.__style.color != self.__color or self.disabled:
                 # if the color is set through the style, use it
+
                 if not (
                     self.__class__.__name__ in ["FilledButton", "FilledTonalButton"]
                     and self.__style.color
@@ -169,6 +171,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
                     self.__style.color = self.__color if not self.disabled else None
             if self.__style.bgcolor != self.__bgcolor or self.disabled:
                 # if the bgcolor is set through the style, use it
+
                 if not (
                     self.__class__.__name__ in ["FilledButton", "FilledTonalButton"]
                     and self.__style.bgcolor
@@ -202,6 +205,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         self.focus()
 
     # text
+
     @property
     def text(self):
         return self._get_attr("text")
@@ -211,6 +215,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("text", value)
 
     # color
+
     @property
     def color(self):
         return self.__color
@@ -220,6 +225,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         self.__color = value
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self.__bgcolor
@@ -230,6 +236,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("bgColor", value)
 
     # elevation
+
     @property
     def elevation(self) -> OptionalNumber:
         return self.__elevation
@@ -239,6 +246,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         self.__elevation = value
 
     # style
+
     @property
     def style(self) -> Optional[ButtonStyle]:
         return self.__style
@@ -248,6 +256,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         self.__style = value
 
     # icon
+
     @property
     def icon(self):
         return self._get_attr("icon")
@@ -257,6 +266,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("icon", value)
 
     # icon_color
+
     @property
     def icon_color(self):
         return self._get_attr("iconColor")
@@ -266,6 +276,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("iconColor", value)
 
     # url
+
     @property
     def url(self):
         return self._get_attr("url")
@@ -275,6 +286,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("url", value)
 
     # url_target
+
     @property
     def url_target(self) -> Optional[UrlTarget]:
         return self.__url_target
@@ -287,6 +299,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         )
 
     # on_click
+
     @property
     def on_click(self):
         return self._get_event_handler("click")
@@ -296,6 +309,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         self._add_event_handler("click", handler)
 
     # on_long_press
+
     @property
     def on_long_press(self):
         return self._get_event_handler("long_press")
@@ -306,6 +320,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -315,6 +330,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         self.__content = value
 
     # autofocus
+
     @property
     def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
@@ -324,6 +340,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("autofocus", value)
 
     # clip_behavior
+
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
         return self._get_attr("clipBehavior")
@@ -335,6 +352,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         )
 
     # on_hover
+
     @property
     def on_hover(self):
         return self._get_event_handler("hover")
@@ -345,6 +363,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("onHover", True if handler is not None else None)
 
     # on_focus
+
     @property
     def on_focus(self):
         return self._get_event_handler("focus")
@@ -354,6 +373,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         self._add_event_handler("focus", handler)
 
     # on_blur
+
     @property
     def on_blur(self):
         return self._get_event_handler("blur")

@@ -1,15 +1,15 @@
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
+    ImageFit,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ImageFit,
 )
 from flet_core.video import FilterQuality
 
@@ -112,6 +112,7 @@ class Lottie(ConstrainedControl):
         return "lottie"
 
     # src
+
     @property
     def src(self):
         return self._get_attr("src")
@@ -121,6 +122,7 @@ class Lottie(ConstrainedControl):
         self._set_attr("src", value)
 
     # src_base64
+
     @property
     def src_base64(self):
         return self._get_attr("srcBase64")
@@ -130,6 +132,7 @@ class Lottie(ConstrainedControl):
         self._set_attr("srcBase64", value)
 
     # repeat
+
     @property
     def repeat(self):
         return self._get_attr("repeat", def_value=True, data_type="bool")
@@ -139,6 +142,7 @@ class Lottie(ConstrainedControl):
         self._set_attr("repeat", value)
 
     # animate
+
     @property
     def animate(self):
         return self._get_attr("animate", def_value=True, data_type="bool")
@@ -148,6 +152,7 @@ class Lottie(ConstrainedControl):
         self._set_attr("animate", value)
 
     # reverse
+
     @property
     def reverse(self):
         return self._get_attr("reverse", def_value=False, data_type="bool")
@@ -157,6 +162,7 @@ class Lottie(ConstrainedControl):
         self._set_attr("reverse", value)
 
     # filter_quality
+
     @property
     def filter_quality(self) -> Optional[FilterQuality]:
         return self.__filter_quality
@@ -169,6 +175,7 @@ class Lottie(ConstrainedControl):
         )
 
     # fit
+
     @property
     def fit(self) -> Optional[ImageFit]:
         return self.__fit
@@ -179,6 +186,7 @@ class Lottie(ConstrainedControl):
         self._set_attr("fit", value.value if isinstance(value, ImageFit) else value)
 
     # background_loading
+
     @property
     def background_loading(self):
         return self._get_attr("backgroundLoading", data_type="bool")
@@ -188,6 +196,7 @@ class Lottie(ConstrainedControl):
         self._set_attr("backgroundLoading", value)
 
     # on_error
+
     @property
     def on_error(self):
         return self._get_event_handler("error")

@@ -2,12 +2,12 @@ from typing import Any, List, Optional, Union
 
 from flet_core.border import Border
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.navigation_bar import NavigationBarDestination
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -143,6 +143,7 @@ class CupertinoNavigationBar(ConstrainedControl):
         return children
 
     # destinations
+
     @property
     def destinations(self) -> Optional[List[NavigationBarDestination]]:
         return self.__destinations
@@ -152,6 +153,7 @@ class CupertinoNavigationBar(ConstrainedControl):
         self.__destinations = value if value is not None else []
 
     # border
+
     @property
     def border(self) -> Optional[Border]:
         return self.__border
@@ -161,6 +163,7 @@ class CupertinoNavigationBar(ConstrainedControl):
         self.__border = value
 
     # selected_index
+
     @property
     def selected_index(self) -> Optional[int]:
         return self._get_attr("selectedIndex", data_type="int", def_value=0)
@@ -170,6 +173,7 @@ class CupertinoNavigationBar(ConstrainedControl):
         self._set_attr("selectedIndex", value)
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self._get_attr("bgcolor")
@@ -179,6 +183,7 @@ class CupertinoNavigationBar(ConstrainedControl):
         self._set_attr("bgcolor", value)
 
     # active_color
+
     @property
     def active_color(self):
         return self._get_attr("activeColor")
@@ -188,6 +193,7 @@ class CupertinoNavigationBar(ConstrainedControl):
         self._set_attr("activeColor", value)
 
     # inactive_color
+
     @property
     def inactive_color(self):
         return self._get_attr("inactiveColor")
@@ -197,6 +203,7 @@ class CupertinoNavigationBar(ConstrainedControl):
         self._set_attr("inactiveColor", value)
 
     # icon_size
+
     @property
     def icon_size(self) -> OptionalNumber:
         return self._get_attr("iconSize")
@@ -206,6 +213,7 @@ class CupertinoNavigationBar(ConstrainedControl):
         self._set_attr("iconSize", value)
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")

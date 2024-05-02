@@ -3,10 +3,10 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core import ControlEvent
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
-from flet_core.types import Orientation, ResponsiveNumber
+from flet_core.types import OptionalNumber, Orientation, ResponsiveNumber
 from flet_core.utils import deprecated
 
 
@@ -110,7 +110,9 @@ class TimePicker(Control):
             data=data,
         )
 
-        self.__on_entry_mode_change = EventHandler(lambda e: TimePickerEntryModeChangeEvent(e.data))
+        self.__on_entry_mode_change = EventHandler(
+            lambda e: TimePickerEntryModeChangeEvent(e.data)
+        )
         self._add_event_handler(
             "entryModeChange", self.__on_entry_mode_change.get_handler()
         )
@@ -145,6 +147,7 @@ class TimePicker(Control):
         self.pick_time()
 
     # open
+
     @property
     def open(self) -> Optional[bool]:
         return self._get_attr("open", data_type="bool", def_value=False)
@@ -154,6 +157,7 @@ class TimePicker(Control):
         self._set_attr("open", value)
 
     # value
+
     @property
     def value(self) -> Optional[time]:
         value_string = self._get_attr(
@@ -172,6 +176,7 @@ class TimePicker(Control):
         self._set_attr("value", value)
 
     # hour_label_text
+
     @property
     def hour_label_text(self) -> Optional[str]:
         return self._get_attr("hourLabelText", def_value=None)
@@ -181,6 +186,7 @@ class TimePicker(Control):
         self._set_attr("hourLabelText", value)
 
     # minute_label_text
+
     @property
     def minute_label_text(self) -> Optional[str]:
         return self._get_attr("minuteLabelText", def_value=None)
@@ -190,6 +196,7 @@ class TimePicker(Control):
         self._set_attr("minuteLabelText", value)
 
     # help_text
+
     @property
     def help_text(self) -> Optional[str]:
         return self._get_attr("helpText", def_value=None)
@@ -199,6 +206,7 @@ class TimePicker(Control):
         self._set_attr("helpText", value)
 
     # cancel_text
+
     @property
     def cancel_text(self) -> Optional[str]:
         return self._get_attr("cancelText", def_value=None)
@@ -208,6 +216,7 @@ class TimePicker(Control):
         self._set_attr("cancelText", value)
 
     # confirm_text
+
     @property
     def confirm_text(self) -> Optional[str]:
         return self._get_attr("confirmText", def_value=None)
@@ -217,6 +226,7 @@ class TimePicker(Control):
         self._set_attr("confirmText", value)
 
     # error_invalid_text
+
     @property
     def error_invalid_text(self) -> Optional[str]:
         return self._get_attr("errorInvalidText", def_value=None)
@@ -226,6 +236,7 @@ class TimePicker(Control):
         self._set_attr("errorInvalidText", value)
 
     # time_picker_entry_mode
+
     @property
     def time_picker_entry_mode(self) -> Optional[TimePickerEntryMode]:
         return self.__time_picker_entry_mode
@@ -236,6 +247,7 @@ class TimePicker(Control):
         self._set_enum_attr("timePickerEntryMode", value, TimePickerEntryMode)
 
     # orientation
+
     @property
     def orientation(self) -> Optional[Orientation]:
         return self.__orientation
@@ -246,6 +258,7 @@ class TimePicker(Control):
         self._set_enum_attr("orientation", value, Orientation)
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")
@@ -255,6 +268,7 @@ class TimePicker(Control):
         self._add_event_handler("change", handler)
 
     # on_dismiss
+
     @property
     def on_dismiss(self):
         return self._get_event_handler("dismiss")
@@ -264,6 +278,7 @@ class TimePicker(Control):
         self._add_event_handler("dismiss", handler)
 
     # on_entry_mode_change
+
     @property
     def on_entry_mode_change(self):
         return self.__on_entry_mode_change

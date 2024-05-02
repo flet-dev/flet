@@ -1,13 +1,13 @@
 from enum import Enum
-from typing import Any, Optional, Union, cast
+from typing import Any, cast, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -124,6 +124,7 @@ class Markdown(ConstrainedControl):
         self._set_attr_json("codeStyle", self.__code_style)
 
     # value
+
     @property
     def value(self) -> Optional[str]:
         return self._get_attr("value")
@@ -133,6 +134,7 @@ class Markdown(ConstrainedControl):
         self._set_attr("value", value)
 
     # selectable
+
     @property
     def selectable(self) -> Optional[bool]:
         return self._get_attr("selectable", data_type="bool", def_value=False)
@@ -142,6 +144,7 @@ class Markdown(ConstrainedControl):
         self._set_attr("selectable", value)
 
     # extension_set
+
     @property
     def extension_set(self) -> Optional[MarkdownExtensionSet]:
         return self.__extension_set
@@ -152,6 +155,7 @@ class Markdown(ConstrainedControl):
         self._set_enum_attr("extensionSet", value, MarkdownExtensionSet)
 
     # code_theme
+
     @property
     def code_theme(self):
         return self._get_attr("codeTheme")
@@ -161,6 +165,7 @@ class Markdown(ConstrainedControl):
         self._set_attr("codeTheme", value)
 
     # code_style
+
     @property
     def code_style(self):
         return self.__code_style
@@ -170,6 +175,7 @@ class Markdown(ConstrainedControl):
         self.__code_style = value
 
     # auto_follow_links
+
     @property
     def auto_follow_links(self) -> Optional[bool]:
         return cast(
@@ -182,6 +188,7 @@ class Markdown(ConstrainedControl):
         self._set_attr("autoFollowLinks", value)
 
     # auto_follow_links_target
+
     @property
     def auto_follow_links_target(self) -> Optional[str]:
         return self._get_attr("autoFollowLinksTarget")
@@ -191,6 +198,7 @@ class Markdown(ConstrainedControl):
         self._set_attr("autoFollowLinksTarget", value)
 
     # on_tap_link
+
     @property
     def on_tap_link(self):
         return self._get_event_handler("tap_link")

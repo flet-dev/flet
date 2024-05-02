@@ -1,8 +1,9 @@
 from typing import Any, Optional
 
 from flet_core.border import BorderSide
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
+from flet_core.types import OptionalNumber
 
 
 class BarChartRodStackItem(Control):
@@ -42,6 +43,7 @@ class BarChartRodStackItem(Control):
         self._set_attr_json("borderSide", self.__border_side)
 
     # from_y
+
     @property
     def from_y(self) -> OptionalNumber:
         return self._get_attr("fromY", data_type="float")
@@ -51,6 +53,7 @@ class BarChartRodStackItem(Control):
         self._set_attr("fromY", value)
 
     # to_y
+
     @property
     def to_y(self) -> OptionalNumber:
         return self._get_attr("toY", data_type="float")
@@ -60,6 +63,7 @@ class BarChartRodStackItem(Control):
         self._set_attr("toY", value)
 
     # color
+
     @property
     def color(self) -> Optional[str]:
         return self._get_attr("color")
@@ -69,6 +73,7 @@ class BarChartRodStackItem(Control):
         self._set_attr("color", value)
 
     # border_side
+
     @property
     def border_side(self) -> Optional[BorderSide]:
         return self.__border_side

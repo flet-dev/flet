@@ -1,11 +1,11 @@
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -108,6 +108,7 @@ class Icon(ConstrainedControl):
         return "icon"
 
     # name
+
     @property
     def name(self):
         return self._get_attr("name")
@@ -117,6 +118,7 @@ class Icon(ConstrainedControl):
         self._set_attr("name", value)
 
     # color
+
     @property
     def color(self):
         return self._get_attr("color")
@@ -126,6 +128,7 @@ class Icon(ConstrainedControl):
         self._set_attr("color", value)
 
     # size
+
     @property
     def size(self) -> OptionalNumber:
         return self._get_attr("size")
@@ -135,6 +138,7 @@ class Icon(ConstrainedControl):
         self._set_attr("size", value)
 
     # semantics_label
+
     @property
     def semantics_label(self):
         return self._get_attr("semanticsLabel")

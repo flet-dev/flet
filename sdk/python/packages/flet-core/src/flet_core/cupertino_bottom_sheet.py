@@ -1,8 +1,8 @@
 from typing import Any, Optional
 
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
-from flet_core.types import PaddingValue
+from flet_core.types import OptionalNumber, PaddingValue
 
 
 class CupertinoBottomSheet(Control):
@@ -64,6 +64,7 @@ class CupertinoBottomSheet(Control):
         return children
 
     # open
+
     @property
     def open(self) -> Optional[bool]:
         return self._get_attr("open", data_type="bool", def_value=False)
@@ -73,6 +74,7 @@ class CupertinoBottomSheet(Control):
         self._set_attr("open", value)
 
     # modal
+
     @property
     def modal(self) -> Optional[bool]:
         return self._get_attr("modal", data_type="bool", def_value=False)
@@ -82,6 +84,7 @@ class CupertinoBottomSheet(Control):
         self._set_attr("modal", value)
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self._get_attr("bgColor")
@@ -91,6 +94,7 @@ class CupertinoBottomSheet(Control):
         self._set_attr("bgColor", value)
 
     # height
+
     @property
     def height(self) -> OptionalNumber:
         return self._get_attr("height", data_type="float", def_value=220)
@@ -100,6 +104,7 @@ class CupertinoBottomSheet(Control):
         self._set_attr("height", value)
 
     # padding
+
     @property
     def padding(self) -> PaddingValue:
         return self.__padding
@@ -109,6 +114,7 @@ class CupertinoBottomSheet(Control):
         self.__padding = value
 
     # content
+
     @property
     def content(self):
         return self.__content
@@ -118,6 +124,7 @@ class CupertinoBottomSheet(Control):
         self.__content = value
 
     # on_dismiss
+
     @property
     def on_dismiss(self):
         return self._get_event_handler("dismiss")

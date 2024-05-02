@@ -5,12 +5,13 @@ from typing import Any, Dict, List, Optional, Union
 from flet_core.alignment import Alignment
 from flet_core.border import BorderSide
 from flet_core.buttons import OutlinedBorder
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     ClipBehavior,
     MaterialState,
     MouseCursor,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
 )
@@ -111,6 +112,7 @@ class MenuBar(Control):
         return self.__controls
 
     # controls
+
     @property
     def controls(self):
         return self.__controls
@@ -120,6 +122,7 @@ class MenuBar(Control):
         self.__controls = value if value is not None else []
 
     # clip_behavior
+
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
         return self.__clip_behavior
@@ -132,6 +135,7 @@ class MenuBar(Control):
         )
 
     # style
+
     @property
     def style(self) -> Optional[MenuStyle]:
         return self.__style

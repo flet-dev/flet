@@ -1,16 +1,16 @@
 import dataclasses
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union, cast
+from typing import Any, cast, Dict, List, Optional, Union
 
 from flet_core.alignment import Alignment
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
     ImageFit,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
@@ -360,11 +360,13 @@ class Video(ConstrainedControl):
         return int(sr) if sr else None
 
     # playlist
+
     @property
     def playlist(self) -> Optional[List[VideoMedia]]:
         return self.__playlist
 
     # fit
+
     @property
     def fit(self) -> Optional[ImageFit]:
         return self.__fit
@@ -375,6 +377,7 @@ class Video(ConstrainedControl):
         self._set_attr("fit", value.value if isinstance(value, ImageFit) else value)
 
     # subtitle_configuration
+
     @property
     def subtitle_configuration(self) -> Optional[VideoSubtitleConfiguration]:
         return self.__subtitle_configuration
@@ -384,6 +387,7 @@ class Video(ConstrainedControl):
         self.__subtitle_configuration = value
 
     # fill_color
+
     @property
     def fill_color(self) -> Optional[str]:
         return self._get_attr("fillColor")
@@ -393,6 +397,7 @@ class Video(ConstrainedControl):
         self._set_attr("fillColor", value)
 
     # wakelock
+
     @property
     def wakelock(self) -> Optional[bool]:
         return self._get_attr("wakelock", data_type="bool", def_value=True)
@@ -402,6 +407,7 @@ class Video(ConstrainedControl):
         self._set_attr("wakelock", value)
 
     # autoplay
+
     @property
     def autoplay(self) -> Optional[bool]:
         return self._get_attr("autoPlay", data_type="bool", def_value=False)
@@ -411,6 +417,7 @@ class Video(ConstrainedControl):
         self._set_attr("autoPlay", value)
 
     # muted
+
     @property
     def muted(self) -> Optional[bool]:
         return self._get_attr("muted", data_type="bool", def_value=False)
@@ -420,6 +427,7 @@ class Video(ConstrainedControl):
         self._set_attr("muted", value)
 
     # shuffle_playlist
+
     @property
     def shuffle_playlist(self) -> Optional[bool]:
         return self._get_attr("shufflePlaylist", data_type="bool", def_value=False)
@@ -429,6 +437,7 @@ class Video(ConstrainedControl):
         self._set_attr("shufflePlaylist", value)
 
     # show_controls
+
     @property
     def show_controls(self) -> Optional[bool]:
         return self._get_attr("showControls", data_type="bool", def_value=True)
@@ -438,6 +447,7 @@ class Video(ConstrainedControl):
         self._set_attr("showControls", value)
 
     # pitch
+
     @property
     def pitch(self) -> OptionalNumber:
         return self._get_attr("pitch")
@@ -447,6 +457,7 @@ class Video(ConstrainedControl):
         self._set_attr("pitch", value)
 
     # volume
+
     @property
     def volume(self) -> OptionalNumber:
         return self._get_attr("volume")
@@ -456,6 +467,7 @@ class Video(ConstrainedControl):
         self._set_attr("volume", value)
 
     # playback_rate
+
     @property
     def playback_rate(self) -> OptionalNumber:
         return self._get_attr("playbackRate")
@@ -465,6 +477,7 @@ class Video(ConstrainedControl):
         self._set_attr("playbackRate", value)
 
     # title
+
     @property
     def title(self) -> Optional[str]:
         return self._get_attr("title")
@@ -474,6 +487,7 @@ class Video(ConstrainedControl):
         self._set_attr("title", value)
 
     # pause_upon_entering_background_mode
+
     @property
     def pause_upon_entering_background_mode(self) -> Optional[bool]:
         return cast(
@@ -488,6 +502,7 @@ class Video(ConstrainedControl):
         self._set_attr("pauseUponEnteringBackgroundMode", value)
 
     # resume_upon_entering_foreground_mode
+
     @property
     def resume_upon_entering_foreground_mode(self) -> Optional[bool]:
         return cast(
@@ -502,6 +517,7 @@ class Video(ConstrainedControl):
         self._set_attr("resumeUponEnteringForegroundMode", value)
 
     # alignment
+
     @property
     def alignment(self) -> Optional[Alignment]:
         return self.__alignment
@@ -511,6 +527,7 @@ class Video(ConstrainedControl):
         self.__alignment = value
 
     # filter_quality
+
     @property
     def filter_quality(self) -> Optional[FilterQuality]:
         return self.__filter_quality
@@ -521,6 +538,7 @@ class Video(ConstrainedControl):
         self._set_enum_attr("filterQuality", value, FilterQuality)
 
     # playlist_mode
+
     @property
     def playlist_mode(self) -> Optional[PlaylistMode]:
         return self.__playlist_mode
@@ -531,6 +549,7 @@ class Video(ConstrainedControl):
         self._set_enum_attr("playlistMode", value, PlaylistMode)
 
     # on_enter_fullscreen
+
     @property
     def on_enter_fullscreen(self):
         return self._get_event_handler("enter_fullscreen")
@@ -541,6 +560,7 @@ class Video(ConstrainedControl):
         self._set_attr("onEnterFullscreen", True if handler is not None else None)
 
     # on_exit_fullscreen
+
     @property
     def on_exit_fullscreen(self):
         return self._get_event_handler("exit_fullscreen")
@@ -551,6 +571,7 @@ class Video(ConstrainedControl):
         self._set_attr("onExitFullscreen", True if handler is not None else None)
 
     # on_loaded
+
     @property
     def on_loaded(self):
         return self._get_event_handler("loaded")
@@ -561,6 +582,7 @@ class Video(ConstrainedControl):
         self._add_event_handler("loaded", handler)
 
     # on_error
+
     @property
     def on_error(self):
         return self._get_event_handler("error")

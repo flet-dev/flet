@@ -2,13 +2,14 @@ from typing import Any, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     CrossAxisAlignment,
     MainAxisAlignment,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -156,6 +157,7 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         self.clean()
 
     # horizontal_alignment
+
     @property
     def alignment(self) -> MainAxisAlignment:
         return self.__alignment
@@ -168,6 +170,7 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         )
 
     # vertical_alignment
+
     @property
     def vertical_alignment(self) -> CrossAxisAlignment:
         return self.__vertical_alignment
@@ -181,6 +184,7 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         )
 
     # columns
+
     @property
     def columns(self) -> Optional[ResponsiveNumber]:
         return self.__columns
@@ -190,6 +194,7 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         self.__columns = value
 
     # spacing
+
     @property
     def spacing(self) -> Optional[ResponsiveNumber]:
         return self.__spacing
@@ -199,6 +204,7 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         self.__spacing = value
 
     # run_spacing
+
     @property
     def run_spacing(self) -> Optional[ResponsiveNumber]:
         return self.__run_spacing
@@ -208,6 +214,7 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         self.__run_spacing = value
 
     # controls
+
     @property
     def controls(self):
         return self.__controls

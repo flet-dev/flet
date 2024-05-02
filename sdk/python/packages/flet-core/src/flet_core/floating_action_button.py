@@ -2,13 +2,14 @@ from typing import Any, Optional, Union
 
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
     MouseCursor,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -184,6 +185,7 @@ class FloatingActionButton(ConstrainedControl):
         return [self.__content]
 
     # text
+
     @property
     def text(self):
         return self._get_attr("text")
@@ -193,6 +195,7 @@ class FloatingActionButton(ConstrainedControl):
         self._set_attr("text", value)
 
     # icon
+
     @property
     def icon(self):
         return self._get_attr("icon")
@@ -202,6 +205,7 @@ class FloatingActionButton(ConstrainedControl):
         self._set_attr("icon", value)
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self._get_attr("bgcolor")
@@ -211,6 +215,7 @@ class FloatingActionButton(ConstrainedControl):
         self._set_attr("bgcolor", value)
 
     # url
+
     @property
     def url(self):
         return self._get_attr("url")
@@ -220,6 +225,7 @@ class FloatingActionButton(ConstrainedControl):
         self._set_attr("url", value)
 
     # url_target
+
     @property
     def url_target(self) -> Optional[UrlTarget]:
         return self.__url_target
@@ -232,6 +238,7 @@ class FloatingActionButton(ConstrainedControl):
         )
 
     # mouse_cursor
+
     @property
     def mouse_cursor(self) -> Optional[MouseCursor]:
         return self.__mouse_cursor
@@ -244,6 +251,7 @@ class FloatingActionButton(ConstrainedControl):
         )
 
     # on_click
+
     @property
     def on_click(self):
         return self._get_event_handler("click")
@@ -253,6 +261,7 @@ class FloatingActionButton(ConstrainedControl):
         self._add_event_handler("click", handler)
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -262,6 +271,7 @@ class FloatingActionButton(ConstrainedControl):
         self.__content = value
 
     # autofocus
+
     @property
     def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
@@ -271,6 +281,7 @@ class FloatingActionButton(ConstrainedControl):
         self._set_attr("autofocus", value)
 
     # shape
+
     @property
     def shape(self) -> Optional[OutlinedBorder]:
         return self.__shape
@@ -280,6 +291,7 @@ class FloatingActionButton(ConstrainedControl):
         self.__shape = value
 
     # mini
+
     @property
     def mini(self) -> Optional[bool]:
         return self._get_attr("mini", data_type="bool", def_value=False)
@@ -289,6 +301,7 @@ class FloatingActionButton(ConstrainedControl):
         self._set_attr("mini", value)
 
     # elevation
+
     @property
     def elevation(self):
         return self._get_attr("elevation", data_type="float")
@@ -298,6 +311,7 @@ class FloatingActionButton(ConstrainedControl):
         self._set_attr("elevation", value)
 
     # disabled_elevation
+
     @property
     def disabled_elevation(self):
         return self._get_attr("disabledElevation", data_type="float")
@@ -307,6 +321,7 @@ class FloatingActionButton(ConstrainedControl):
         self._set_attr("disabledElevation", value)
 
     # enable_feedback
+
     @property
     def enable_feedback(self):
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
@@ -316,6 +331,7 @@ class FloatingActionButton(ConstrainedControl):
         self._set_attr("enableFeedback", value)
 
     # focus_color
+
     @property
     def focus_color(self):
         return self._get_attr("focusColor")
@@ -325,6 +341,7 @@ class FloatingActionButton(ConstrainedControl):
         self._set_attr("focusColor", value)
 
     # focus_elevation
+
     @property
     def focus_elevation(self):
         return self._get_attr("focusElevation", data_type="float")
@@ -334,6 +351,7 @@ class FloatingActionButton(ConstrainedControl):
         self._set_attr("focusElevation", value)
 
     # foreground_color
+
     @property
     def foreground_color(self):
         return self._get_attr("foregroundColor")
@@ -343,6 +361,7 @@ class FloatingActionButton(ConstrainedControl):
         self._set_attr("foregroundColor", value)
 
     # highlight_elevation
+
     @property
     def highlight_elevation(self):
         return self._get_attr("highlightElevation", data_type="float")
@@ -352,6 +371,7 @@ class FloatingActionButton(ConstrainedControl):
         self._set_attr("highlightElevation", value)
 
     # hover_elevation
+
     @property
     def hover_elevation(self):
         return self._get_attr("hoverElevation", data_type="float")
@@ -361,6 +381,7 @@ class FloatingActionButton(ConstrainedControl):
         self._set_attr("hoverElevation", value)
 
     # clip_behavior
+
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
         return self.__clip_behavior

@@ -2,7 +2,7 @@ from typing import Any, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
@@ -10,6 +10,7 @@ from flet_core.types import (
     CrossAxisAlignment,
     MainAxisAlignment,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -176,6 +177,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.clean()
 
     # tight
+
     @property
     def tight(self) -> Optional[bool]:
         return self._get_attr("tight", data_type="bool", def_value=False)
@@ -185,6 +187,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("tight", value)
 
     # horizontal_alignment
+
     @property
     def alignment(self) -> MainAxisAlignment:
         return self.__alignment
@@ -197,6 +200,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         )
 
     # vertical_alignment
+
     @property
     def vertical_alignment(self) -> CrossAxisAlignment:
         return self.__vertical_alignment
@@ -210,6 +214,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         )
 
     # spacing
+
     @property
     def spacing(self) -> OptionalNumber:
         return self._get_attr("spacing")
@@ -219,6 +224,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("spacing", value)
 
     # wrap
+
     @property
     def wrap(self) -> Optional[bool]:
         return self._get_attr("wrap", data_type="bool", def_value=False)
@@ -228,6 +234,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("wrap", value)
 
     # run_spacing
+
     @property
     def run_spacing(self) -> OptionalNumber:
         return self._get_attr("runSpacing")
@@ -237,6 +244,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("runSpacing", value)
 
     # controls
+
     @property
     def controls(self):
         return self.__controls

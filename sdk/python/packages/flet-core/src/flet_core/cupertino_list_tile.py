@@ -1,11 +1,12 @@
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
@@ -172,6 +173,7 @@ class CupertinoListTile(ConstrainedControl):
         return children
 
     # leading
+
     @property
     def leading(self) -> Optional[Control]:
         return self.__leading
@@ -181,6 +183,7 @@ class CupertinoListTile(ConstrainedControl):
         self.__leading = value
 
     # leading_size
+
     @property
     def leading_size(self) -> OptionalNumber:
         return self._get_attr("leadingSize", data_type="float", def_value=30.0)
@@ -190,6 +193,7 @@ class CupertinoListTile(ConstrainedControl):
         self._set_attr("leadingSize", value)
 
     # leading_to_title
+
     @property
     def leading_to_title(self) -> OptionalNumber:
         return self._get_attr("leadingToTitle", data_type="float", def_value=12.0)
@@ -199,6 +203,7 @@ class CupertinoListTile(ConstrainedControl):
         self._set_attr("leadingToTitle", value)
 
     # title
+
     @property
     def title(self) -> Optional[Control]:
         return self.__title
@@ -208,6 +213,7 @@ class CupertinoListTile(ConstrainedControl):
         self.__title = value
 
     # subtitle
+
     @property
     def subtitle(self) -> Optional[Control]:
         return self.__subtitle
@@ -217,6 +223,7 @@ class CupertinoListTile(ConstrainedControl):
         self.__subtitle = value
 
     # trailing
+
     @property
     def trailing(self) -> Optional[Control]:
         return self.__trailing
@@ -226,6 +233,7 @@ class CupertinoListTile(ConstrainedControl):
         self.__trailing = value
 
     # additional_info
+
     @property
     def additional_info(self) -> Optional[Control]:
         return self.__additional_info
@@ -235,6 +243,7 @@ class CupertinoListTile(ConstrainedControl):
         self.__additional_info = value
 
     # padding
+
     @property
     def padding(self) -> PaddingValue:
         return self.__padding
@@ -244,6 +253,7 @@ class CupertinoListTile(ConstrainedControl):
         self.__padding = value
 
     # notched
+
     @property
     def notched(self) -> Optional[bool]:
         return self._get_attr("notched", data_type="bool", def_value=False)
@@ -253,6 +263,7 @@ class CupertinoListTile(ConstrainedControl):
         self._set_attr("notched", value)
 
     # bgcolor
+
     @property
     def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
@@ -262,6 +273,7 @@ class CupertinoListTile(ConstrainedControl):
         self._set_attr("bgcolor", value)
 
     # bgcolor_activated
+
     @property
     def bgcolor_activated(self) -> Optional[str]:
         return self._get_attr("bgcolorActivated")
@@ -271,6 +283,7 @@ class CupertinoListTile(ConstrainedControl):
         self._set_attr("bgcolorActivated", value)
 
     # url
+
     @property
     def url(self) -> Optional[str]:
         return self._get_attr("url")
@@ -280,6 +293,7 @@ class CupertinoListTile(ConstrainedControl):
         self._set_attr("url", value)
 
     # url_target
+
     @property
     def url_target(self) -> Optional[UrlTarget]:
         return self.__url_target
@@ -292,6 +306,7 @@ class CupertinoListTile(ConstrainedControl):
         )
 
     # toggle_inputs
+
     @property
     def toggle_inputs(self) -> Optional[bool]:
         return self._get_attr("toggleInputs", data_type="bool", def_value=False)
@@ -301,6 +316,7 @@ class CupertinoListTile(ConstrainedControl):
         self._set_attr("toggleInputs", value)
 
     # on_click
+
     @property
     def on_click(self):
         return self._get_event_handler("click")

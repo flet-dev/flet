@@ -3,17 +3,12 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core import ControlEvent
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.textfield import KeyboardType
-from flet_core.types import ResponsiveNumber
+from flet_core.types import OptionalNumber, ResponsiveNumber
 from flet_core.utils import deprecated
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
 
 
 class DatePickerMode(Enum):
@@ -127,7 +122,9 @@ class DatePicker(Control):
             data=data,
         )
 
-        self.__on_entry_mode_change = EventHandler(lambda e: DatePickerEntryModeChangeEvent(e.data))
+        self.__on_entry_mode_change = EventHandler(
+            lambda e: DatePickerEntryModeChangeEvent(e.data)
+        )
         self._add_event_handler(
             "entryModeChange", self.__on_entry_mode_change.get_handler()
         )
@@ -172,6 +169,7 @@ class DatePicker(Control):
         self.pick_date()
 
     # open
+
     @property
     def open(self) -> Optional[bool]:
         return self._get_attr("open", data_type="bool", def_value=False)
@@ -181,6 +179,7 @@ class DatePicker(Control):
         self._set_attr("open", value)
 
     # value
+
     @property
     def value(self) -> Optional[datetime]:
         value_string = self._get_attr("value", def_value=None)
@@ -193,6 +192,7 @@ class DatePicker(Control):
         self._set_attr("value", value)
 
     # first_date
+
     @property
     def first_date(self) -> Optional[datetime]:
         value_string = self._get_attr("firstDate", def_value=None)
@@ -207,6 +207,7 @@ class DatePicker(Control):
         self._set_attr("firstDate", value)
 
     # last_date
+
     @property
     def last_date(self) -> Optional[datetime]:
         value_string = self._get_attr("lastDate", def_value=None)
@@ -221,6 +222,7 @@ class DatePicker(Control):
         self._set_attr("lastDate", value)
 
     # current_date
+
     @property
     def current_date(self) -> Optional[datetime]:
         value_string = self._get_attr("currentDate", def_value=None)
@@ -235,6 +237,7 @@ class DatePicker(Control):
         self._set_attr("currentDate", value)
 
     # field_hint_text
+
     @property
     def field_hint_text(self) -> Optional[str]:
         return self._get_attr("fieldHintText", def_value=None)
@@ -244,6 +247,7 @@ class DatePicker(Control):
         self._set_attr("fieldHintText", value)
 
     # field_label_text
+
     @property
     def field_label_text(self) -> Optional[str]:
         return self._get_attr("fieldLabelText", def_value=None)
@@ -253,6 +257,7 @@ class DatePicker(Control):
         self._set_attr("fieldLabelText", value)
 
     # help_text
+
     @property
     def help_text(self) -> Optional[str]:
         return self._get_attr("helpText", def_value=None)
@@ -262,6 +267,7 @@ class DatePicker(Control):
         self._set_attr("helpText", value)
 
     # cancel_text
+
     @property
     def cancel_text(self) -> Optional[str]:
         return self._get_attr("cancelText", def_value=None)
@@ -271,6 +277,7 @@ class DatePicker(Control):
         self._set_attr("cancelText", value)
 
     # confirm_text
+
     @property
     def confirm_text(self) -> Optional[str]:
         return self._get_attr("confirmText", def_value=None)
@@ -280,6 +287,7 @@ class DatePicker(Control):
         self._set_attr("confirmText", value)
 
     # error_format_text
+
     @property
     def error_format_text(self) -> Optional[str]:
         return self._get_attr("errorFormatText", def_value=None)
@@ -289,6 +297,7 @@ class DatePicker(Control):
         self._set_attr("errorFormatText", value)
 
     # error_invalid_text
+
     @property
     def error_invalid_text(self) -> Optional[str]:
         return self._get_attr("errorInvalidText", def_value=None)
@@ -298,6 +307,7 @@ class DatePicker(Control):
         self._set_attr("errorInvalidText", value)
 
     # keyboard_type
+
     @property
     def keyboard_type(self) -> Optional[KeyboardType]:
         return self.__keyboard_type
@@ -310,6 +320,7 @@ class DatePicker(Control):
         )
 
     # date_picker_mode
+
     @property
     def date_picker_mode(self) -> Optional[DatePickerMode]:
         return self.__date_picker_mode
@@ -320,6 +331,7 @@ class DatePicker(Control):
         self._set_enum_attr("datePickerMode", value, DatePickerMode)
 
     # date_picker_entry_mode
+
     @property
     def date_picker_entry_mode(self) -> Optional[DatePickerEntryMode]:
         return self.__date_picker_entry_mode
@@ -333,6 +345,7 @@ class DatePicker(Control):
         )
 
     # switch_to_calendar_icon
+
     @property
     def switch_to_calendar_icon(self):
         return self._get_attr("switchToCalendarEntryModeIcon")
@@ -342,6 +355,7 @@ class DatePicker(Control):
         self._set_attr("switchToCalendarEntryModeIcon", value)
 
     # switch_to_input_icon
+
     @property
     def switch_to_input_icon(self):
         return self._get_attr("switchToInputEntryModeIcon")
@@ -351,6 +365,7 @@ class DatePicker(Control):
         self._set_attr("switchToInputEntryModeIcon", value)
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")
@@ -360,6 +375,7 @@ class DatePicker(Control):
         self._add_event_handler("change", handler)
 
     # on_dismiss
+
     @property
     def on_dismiss(self):
         return self._get_event_handler("dismiss")
@@ -369,6 +385,7 @@ class DatePicker(Control):
         self._add_event_handler("dismiss", handler)
 
     # on_entry_mode_change
+
     @property
     def on_entry_mode_change(self):
         return self.__on_entry_mode_change

@@ -1,11 +1,11 @@
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -84,6 +84,7 @@ class CupertinoActivityIndicator(ConstrainedControl):
         return "cupertinoactivityindicator"
 
     # color
+
     @property
     def color(self):
         return self._get_attr("color")
@@ -93,6 +94,7 @@ class CupertinoActivityIndicator(ConstrainedControl):
         self._set_attr("color", value)
 
     # animating
+
     @property
     def animating(self):
         return self._get_attr("animating")
@@ -102,6 +104,7 @@ class CupertinoActivityIndicator(ConstrainedControl):
         self._set_attr("animating", value)
 
     # radius
+
     @property
     def radius(self) -> OptionalNumber:
         return self._get_attr("radius")

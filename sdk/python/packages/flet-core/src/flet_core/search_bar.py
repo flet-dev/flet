@@ -4,14 +4,15 @@ from typing import Any, Dict, List, Optional, Union
 from flet_core.border import BorderSide
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.textfield import TextCapitalization, KeyboardType
+from flet_core.textfield import KeyboardType, TextCapitalization
 from flet_core.types import (
     AnimationValue,
     MaterialState,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -208,6 +209,7 @@ class SearchBar(ConstrainedControl):
         self.close_view(text=text)
 
     # bar_leading
+
     @property
     def bar_leading(self) -> Optional[Control]:
         return self.__bar_leading
@@ -217,6 +219,7 @@ class SearchBar(ConstrainedControl):
         self.__bar_leading = value
 
     # bar_trailing
+
     @property
     def bar_trailing(self) -> Optional[List[Control]]:
         return self.__bar_trailing
@@ -226,6 +229,7 @@ class SearchBar(ConstrainedControl):
         self.__bar_trailing = value
 
     # bar_bgcolor
+
     @property
     def bar_bgcolor(self) -> Union[None, str, Dict[MaterialState, str]]:
         return self.__bar_bgcolor
@@ -235,6 +239,7 @@ class SearchBar(ConstrainedControl):
         self.__bar_bgcolor = value
 
     # bar_overlay_color
+
     @property
     def bar_overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
         return self.__bar_overlay_color
@@ -244,6 +249,7 @@ class SearchBar(ConstrainedControl):
         self.__bar_overlay_color = value
 
     # view_leading
+
     @property
     def view_leading(self) -> Optional[Control]:
         return self.__view_leading
@@ -253,6 +259,7 @@ class SearchBar(ConstrainedControl):
         self.__view_leading = value
 
     # view_surface_tint_color
+
     @property
     def view_surface_tint_color(self) -> Optional[str]:
         return self._get_attr("viewSurfaceTintColor")
@@ -262,6 +269,7 @@ class SearchBar(ConstrainedControl):
         self._set_attr("viewSurfaceTintColor", value)
 
     # autofocus
+
     @property
     def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
@@ -271,6 +279,7 @@ class SearchBar(ConstrainedControl):
         self._set_attr("autofocus", value)
 
     # view_trailing
+
     @property
     def view_trailing(self) -> Optional[List[Control]]:
         return self.__view_trailing
@@ -280,6 +289,7 @@ class SearchBar(ConstrainedControl):
         self.__view_trailing = value
 
     # view_elevation
+
     @property
     def view_elevation(self) -> OptionalNumber:
         return self._get_attr("viewElevation")
@@ -289,6 +299,7 @@ class SearchBar(ConstrainedControl):
         self._set_attr("viewElevation", value)
 
     # view_bgcolor
+
     @property
     def view_bgcolor(self) -> Optional[str]:
         return self._get_attr("viewBgcolor")
@@ -298,6 +309,7 @@ class SearchBar(ConstrainedControl):
         self._set_attr("viewBgcolor", value)
 
     # divider_color
+
     @property
     def divider_color(self) -> Optional[str]:
         return self._get_attr("dividerColor")
@@ -307,6 +319,7 @@ class SearchBar(ConstrainedControl):
         self._set_attr("dividerColor", value)
 
     # bar_hint_text
+
     @property
     def bar_hint_text(self) -> Optional[str]:
         return self._get_attr("barHintText")
@@ -316,6 +329,7 @@ class SearchBar(ConstrainedControl):
         self._set_attr("barHintText", value)
 
     # view_hint_text
+
     @property
     def view_hint_text(self) -> Optional[str]:
         return self._get_attr("viewHintText")
@@ -325,6 +339,7 @@ class SearchBar(ConstrainedControl):
         self._set_attr("viewHintText", value)
 
     # view_shape
+
     @property
     def view_shape(self) -> Optional[OutlinedBorder]:
         return self.__view_shape
@@ -334,6 +349,7 @@ class SearchBar(ConstrainedControl):
         self.__view_shape = value
 
     # view_side
+
     @property
     def view_side(self) -> Optional[BorderSide]:
         return self.__view_side
@@ -343,6 +359,7 @@ class SearchBar(ConstrainedControl):
         self.__view_side = value
 
     # full_screen
+
     @property
     def full_screen(self) -> Optional[bool]:
         return self._get_attr("fullScreen", data_type="bool", def_value=False)
@@ -352,6 +369,7 @@ class SearchBar(ConstrainedControl):
         self._set_attr("fullScreen", value)
 
     # capitalization
+
     @property
     def capitalization(self) -> TextCapitalization:
         return self.__capitalization
@@ -365,6 +383,7 @@ class SearchBar(ConstrainedControl):
         )
 
     # keyboard_type
+
     @property
     def keyboard_type(self) -> KeyboardType:
         return self.__keyboard_type
@@ -378,6 +397,7 @@ class SearchBar(ConstrainedControl):
         )
 
     # view_header_text_style
+
     @property
     def view_header_text_style(self):
         return self.__view_header_text_style
@@ -387,6 +407,7 @@ class SearchBar(ConstrainedControl):
         self.__view_header_text_style = value
 
     # view_hint_text_style
+
     @property
     def view_hint_text_style(self):
         return self.__view_hint_text_style
@@ -396,6 +417,7 @@ class SearchBar(ConstrainedControl):
         self.__view_hint_text_style = value
 
     # controls
+
     @property
     def controls(self):
         return self.__controls
@@ -405,6 +427,7 @@ class SearchBar(ConstrainedControl):
         self.__controls = value if value is not None else []
 
     # value
+
     @property
     def value(self) -> Optional[str]:
         return self._get_attr("value", def_value="")
@@ -414,6 +437,7 @@ class SearchBar(ConstrainedControl):
         self._set_attr("value", value)
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")
@@ -424,6 +448,7 @@ class SearchBar(ConstrainedControl):
         self._set_attr("onchange", True if handler is not None else None)
 
     # on_tap
+
     @property
     def on_tap(self):
         return self._get_event_handler("tap")
@@ -434,6 +459,7 @@ class SearchBar(ConstrainedControl):
         self._set_attr("ontap", True if handler is not None else None)
 
     # on_submit
+
     @property
     def on_submit(self):
         return self._get_event_handler("submit")

@@ -3,13 +3,14 @@ from typing import Any, List, Optional, Union
 
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.menu_bar import MenuStyle
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -161,6 +162,7 @@ class SubmenuButton(ConstrainedControl):
         self.focus()
 
     # controls
+
     @property
     def controls(self):
         return self.__controls
@@ -170,6 +172,7 @@ class SubmenuButton(ConstrainedControl):
         self.__controls = value if value is not None else []
 
     # leading
+
     @property
     def leading(self) -> Optional[Control]:
         return self.__leading
@@ -179,6 +182,7 @@ class SubmenuButton(ConstrainedControl):
         self.__leading = value
 
     # trailing
+
     @property
     def trailing(self) -> Optional[Control]:
         return self.__trailing
@@ -188,6 +192,7 @@ class SubmenuButton(ConstrainedControl):
         self.__trailing = value
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -197,6 +202,7 @@ class SubmenuButton(ConstrainedControl):
         self.__content = value
 
     # style
+
     @property
     def style(self) -> Optional[ButtonStyle]:
         return self.__style
@@ -206,6 +212,7 @@ class SubmenuButton(ConstrainedControl):
         self.__style = value
 
     # menu_style
+
     @property
     def menu_style(self) -> Optional[MenuStyle]:
         return self.__menu_style
@@ -215,6 +222,7 @@ class SubmenuButton(ConstrainedControl):
         self.__menu_style = value
 
     # clip_behavior
+
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
         return self.__clip_behavior
@@ -227,6 +235,7 @@ class SubmenuButton(ConstrainedControl):
         )
 
     # alignment_offset
+
     @property
     def alignment_offset(self) -> OffsetValue:
         return self.__alignment_offset
@@ -236,6 +245,7 @@ class SubmenuButton(ConstrainedControl):
         self.__alignment_offset = value
 
     # on_open
+
     @property
     def on_open(self):
         return self._get_event_handler("open")
@@ -246,6 +256,7 @@ class SubmenuButton(ConstrainedControl):
         self._set_attr("onOpen", True if handler is not None else None)
 
     # on_close
+
     @property
     def on_close(self):
         return self._get_event_handler("close")
@@ -256,6 +267,7 @@ class SubmenuButton(ConstrainedControl):
         self._set_attr("onClose", True if handler is not None else None)
 
     # on_hover
+
     @property
     def on_hover(self):
         return self._get_event_handler("hover")
@@ -266,6 +278,7 @@ class SubmenuButton(ConstrainedControl):
         self._set_attr("onHover", True if handler is not None else None)
 
     # on_focus
+
     @property
     def on_focus(self):
         return self._get_event_handler("focus")
@@ -275,6 +288,7 @@ class SubmenuButton(ConstrainedControl):
         self._add_event_handler("focus", handler)
 
     # on_blur
+
     @property
     def on_blur(self):
         return self._get_event_handler("blur")

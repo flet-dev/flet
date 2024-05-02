@@ -1,8 +1,9 @@
 from typing import Any, Optional
 
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.types import OptionalNumber
 
 
 class CupertinoDialogAction(Control):
@@ -84,6 +85,7 @@ class CupertinoDialogAction(Control):
         return [self.__content]
 
     # text
+
     @property
     def text(self):
         return self._get_attr("text")
@@ -93,6 +95,7 @@ class CupertinoDialogAction(Control):
         self._set_attr("text", value)
 
     # is_default_action
+
     @property
     def is_default_action(self) -> Optional[bool]:
         return self._get_attr("isDefaultAction")
@@ -102,6 +105,7 @@ class CupertinoDialogAction(Control):
         self._set_attr("isDefaultAction", value)
 
     # is_destructive_action
+
     @property
     def is_destructive_action(self) -> Optional[bool]:
         return self._get_attr("isDestructiveAction")
@@ -111,6 +115,7 @@ class CupertinoDialogAction(Control):
         self._set_attr("isDestructiveAction", value)
 
     # on_click
+
     @property
     def on_click(self):
         return self._get_event_handler("click")
@@ -120,6 +125,7 @@ class CupertinoDialogAction(Control):
         self._add_event_handler("click", handler)
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -129,6 +135,7 @@ class CupertinoDialogAction(Control):
         self.__content = value
 
     # text_style
+
     @property
     def text_style(self):
         return self.__text_style

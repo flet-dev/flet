@@ -6,13 +6,13 @@ from flet_core.charts.bar_chart_group import BarChartGroup
 from flet_core.charts.chart_axis import ChartAxis
 from flet_core.charts.chart_grid_lines import ChartGridLines
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -153,6 +153,7 @@ class BarChart(ConstrainedControl):
         return children
 
     # bar_groups
+
     @property
     def bar_groups(self):
         return self.__bar_groups
@@ -162,6 +163,7 @@ class BarChart(ConstrainedControl):
         self.__bar_groups = value if value is not None else []
 
     # groups_space
+
     @property
     def groups_space(self) -> OptionalNumber:
         return self._get_attr("groupsSpace", data_type="float")
@@ -171,6 +173,7 @@ class BarChart(ConstrainedControl):
         self._set_attr("groupsSpace", value)
 
     # animate
+
     @property
     def animate(self) -> AnimationValue:
         return self.__animate
@@ -180,6 +183,7 @@ class BarChart(ConstrainedControl):
         self.__animate = value
 
     # bgcolor
+
     @property
     def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
@@ -189,6 +193,7 @@ class BarChart(ConstrainedControl):
         self._set_attr("bgcolor", value)
 
     # interactive
+
     @property
     def interactive(self) -> Optional[bool]:
         return self._get_attr("interactive", data_type="bool", def_value=True)
@@ -198,6 +203,7 @@ class BarChart(ConstrainedControl):
         self._set_attr("interactive", value)
 
     # tooltip_bgcolor
+
     @property
     def tooltip_bgcolor(self) -> Optional[str]:
         return self._get_attr("tooltipBgcolor")
@@ -207,6 +213,7 @@ class BarChart(ConstrainedControl):
         self._set_attr("tooltipBgcolor", value)
 
     # border
+
     @property
     def border(self) -> Optional[Border]:
         return self.__border
@@ -216,6 +223,7 @@ class BarChart(ConstrainedControl):
         self.__border = value
 
     # horizontal_grid_lines
+
     @property
     def horizontal_grid_lines(self) -> Optional[ChartGridLines]:
         return self.__horizontal_grid_lines
@@ -225,6 +233,7 @@ class BarChart(ConstrainedControl):
         self.__horizontal_grid_lines = value
 
     # vertical_grid_lines
+
     @property
     def vertical_grid_lines(self) -> Optional[ChartGridLines]:
         return self.__vertical_grid_lines
@@ -234,6 +243,7 @@ class BarChart(ConstrainedControl):
         self.__vertical_grid_lines = value
 
     # left_axis
+
     @property
     def left_axis(self) -> Optional[ChartAxis]:
         return self.__left_axis
@@ -243,6 +253,7 @@ class BarChart(ConstrainedControl):
         self.__left_axis = value
 
     # top_axis
+
     @property
     def top_axis(self) -> Optional[ChartAxis]:
         return self.__top_axis
@@ -252,6 +263,7 @@ class BarChart(ConstrainedControl):
         self.__top_axis = value
 
     # right_axis
+
     @property
     def right_axis(self) -> Optional[ChartAxis]:
         return self.__right_axis
@@ -261,6 +273,7 @@ class BarChart(ConstrainedControl):
         self.__right_axis = value
 
     # bottom_axis
+
     @property
     def bottom_axis(self) -> Optional[ChartAxis]:
         return self.__bottom_axis
@@ -270,6 +283,7 @@ class BarChart(ConstrainedControl):
         self.__bottom_axis = value
 
     # baseline_y
+
     @property
     def baseline_y(self) -> OptionalNumber:
         return self._get_attr("baseliney", data_type="float")
@@ -279,6 +293,7 @@ class BarChart(ConstrainedControl):
         self._set_attr("baseliney", value)
 
     # min_y
+
     @property
     def min_y(self) -> OptionalNumber:
         return self._get_attr("miny", data_type="float")
@@ -288,6 +303,7 @@ class BarChart(ConstrainedControl):
         self._set_attr("miny", value)
 
     # max_y
+
     @property
     def max_y(self) -> OptionalNumber:
         return self._get_attr("maxy", data_type="float")
@@ -297,6 +313,7 @@ class BarChart(ConstrainedControl):
         self._set_attr("maxy", value)
 
     # on_chart_event
+
     @property
     def on_chart_event(self):
         return self.__on_chart_event

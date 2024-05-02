@@ -1,12 +1,12 @@
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     LabelPosition,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -129,6 +129,7 @@ class CupertinoCheckbox(ConstrainedControl):
         return "cupertinocheckbox"
 
     # value
+
     @property
     def value(self) -> Optional[bool]:
         return self._get_attr(
@@ -140,6 +141,7 @@ class CupertinoCheckbox(ConstrainedControl):
         self._set_attr("value", value)
 
     # tristate
+
     @property
     def tristate(self) -> Optional[bool]:
         return self._get_attr("tristate", data_type="bool", def_value=False)
@@ -149,6 +151,7 @@ class CupertinoCheckbox(ConstrainedControl):
         self._set_attr("tristate", value)
 
     # label
+
     @property
     def label(self):
         return self._get_attr("label")
@@ -158,6 +161,7 @@ class CupertinoCheckbox(ConstrainedControl):
         self._set_attr("label", value)
 
     # label_position
+
     @property
     def label_position(self) -> Optional[LabelPosition]:
         return self.__label_position
@@ -170,6 +174,7 @@ class CupertinoCheckbox(ConstrainedControl):
         )
 
     # autofocus
+
     @property
     def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
@@ -179,6 +184,7 @@ class CupertinoCheckbox(ConstrainedControl):
         self._set_attr("autofocus", value)
 
     # check_color
+
     @property
     def check_color(self):
         return self._get_attr("checkColor")
@@ -188,6 +194,7 @@ class CupertinoCheckbox(ConstrainedControl):
         self._set_attr("checkColor", value)
 
     # active_color
+
     @property
     def active_color(self):
         return self._get_attr("activeColor")
@@ -197,6 +204,7 @@ class CupertinoCheckbox(ConstrainedControl):
         self._set_attr("activeColor", value)
 
     # inactive_color
+
     @property
     def inactive_color(self):
         return self._get_attr("inactiveColor")
@@ -206,6 +214,7 @@ class CupertinoCheckbox(ConstrainedControl):
         self._set_attr("inactiveColor", value)
 
     # focus_color
+
     @property
     def focus_color(self):
         return self._get_attr("focusColor")
@@ -215,6 +224,7 @@ class CupertinoCheckbox(ConstrainedControl):
         self._set_attr("focusColor", value)
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")
@@ -224,6 +234,7 @@ class CupertinoCheckbox(ConstrainedControl):
         self._add_event_handler("change", handler)
 
     # on_focus
+
     @property
     def on_focus(self):
         return self._get_event_handler("focus")
@@ -233,6 +244,7 @@ class CupertinoCheckbox(ConstrainedControl):
         self._add_event_handler("focus", handler)
 
     # on_blur
+
     @property
     def on_blur(self):
         return self._get_event_handler("blur")

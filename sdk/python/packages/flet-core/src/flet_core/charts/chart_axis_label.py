@@ -1,7 +1,8 @@
 from typing import Any, Optional
 
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
+from flet_core.types import OptionalNumber
 
 
 class ChartAxisLabel(Control):
@@ -39,6 +40,7 @@ class ChartAxisLabel(Control):
         return children
 
     # value
+
     @property
     def value(self) -> OptionalNumber:
         return self._get_attr("value", data_type="float", def_value=1.0)
@@ -48,6 +50,7 @@ class ChartAxisLabel(Control):
         self._set_attr("value", value)
 
     # label
+
     @property
     def label(self) -> Optional[Control]:
         return self.__label

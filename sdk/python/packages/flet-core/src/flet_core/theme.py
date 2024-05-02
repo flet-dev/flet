@@ -8,7 +8,6 @@ from flet_core.alignment import Alignment
 from flet_core.border import BorderSide
 from flet_core.border_radius import BorderRadius
 from flet_core.buttons import ButtonStyle, OutlinedBorder
-from flet_core.control import OptionalNumber
 from flet_core.navigation_bar import NavigationBarLabelBehavior
 from flet_core.navigation_rail import NavigationRailLabelType
 from flet_core.padding import Padding
@@ -24,6 +23,7 @@ from flet_core.types import (
     MaterialState,
     MouseCursor,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
 )
 
@@ -215,6 +215,7 @@ class CardTheme:
 @dataclasses.dataclass
 class ChipTheme:
     # color: Optional[str] = field(default=None)
+
     bgcolor: Optional[str] = field(default=None)
     shadow_color: Optional[str] = field(default=None)
     surface_tint_color: Optional[str] = field(default=None)
@@ -668,6 +669,7 @@ class NavigationBarTheme:
 @dataclasses.dataclass
 class SegmentedButtonTheme:
     # selected_icon: Optional[str] = field(default=None)
+
     style: Optional[ButtonStyle] = field(default=None)
 
 
@@ -706,6 +708,7 @@ class Theme:
     dialog_theme: Optional[DialogTheme] = field(default=None)
     divider_theme: Optional[DividerTheme] = field(default=None)
     # dropdown_menu_theme: Optional[DropdownMenuTheme] = field(default=None)
+
     expansion_tile_theme: Optional[ExpansionTileTheme] = field(default=None)
     list_tile_theme: Optional[ListTileTheme] = field(default=None)
     navigation_bar_theme: Optional[NavigationBarTheme] = field(default=None)
@@ -722,6 +725,7 @@ class Theme:
     scrollbar_theme: Optional[ScrollbarTheme] = field(default=None)
     search_bar_theme: Optional[SearchBarTheme] = field(default=None)
     # search_view_theme: Optional[SearchViewTheme] = field(default=None)
+
     segmented_button_theme: Optional[SegmentedButtonTheme] = field(default=None)
     slider_theme: Optional[SliderTheme] = field(default=None)
     snackbar_theme: Optional[SnackBarTheme] = field(default=None)

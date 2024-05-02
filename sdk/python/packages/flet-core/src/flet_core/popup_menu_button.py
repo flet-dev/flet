@@ -4,13 +4,14 @@ from typing import Any, List, Optional, Union
 
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
     MouseCursor,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
@@ -64,6 +65,7 @@ class PopupMenuItem(Control):
         return children
 
     # checked
+
     @property
     def checked(self) -> Optional[bool]:
         return self._get_attr("checked", data_type="bool")
@@ -73,6 +75,7 @@ class PopupMenuItem(Control):
         self._set_attr("checked", value)
 
     # mouse_cursor
+
     @property
     def mouse_cursor(self) -> Optional[MouseCursor]:
         return self._get_attr("mouseCursor")
@@ -84,6 +87,7 @@ class PopupMenuItem(Control):
         )
 
     # icon
+
     @property
     def icon(self) -> Optional[str]:
         return self._get_attr("icon")
@@ -93,6 +97,7 @@ class PopupMenuItem(Control):
         self._set_attr("icon", value)
 
     # text
+
     @property
     def text(self) -> Optional[str]:
         return self._get_attr("text")
@@ -102,6 +107,7 @@ class PopupMenuItem(Control):
         self._set_attr("text", value)
 
     # height
+
     @property
     def height(self) -> OptionalNumber:
         return self._get_attr("height", data_type="float", def_value=48)
@@ -111,6 +117,7 @@ class PopupMenuItem(Control):
         self._set_attr("height", value)
 
     # padding
+
     @property
     def padding(self) -> PaddingValue:
         return self.__padding
@@ -120,6 +127,7 @@ class PopupMenuItem(Control):
         self.__padding = value
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -129,6 +137,7 @@ class PopupMenuItem(Control):
         self.__content = value
 
     # on_click
+
     @property
     def on_click(self):
         return self._get_event_handler("click")
@@ -299,6 +308,7 @@ class PopupMenuButton(ConstrainedControl):
         self._set_attr_json("padding", self.__padding)
 
     # items
+
     @property
     def items(self) -> Optional[List[PopupMenuItem]]:
         return self.__items
@@ -308,6 +318,7 @@ class PopupMenuButton(ConstrainedControl):
         self.__items = value if value is not None else []
 
     # shape
+
     @property
     def shape(self) -> Optional[OutlinedBorder]:
         return self.__shape
@@ -317,6 +328,7 @@ class PopupMenuButton(ConstrainedControl):
         self.__shape = value
 
     # padding
+
     @property
     def padding(self) -> PaddingValue:
         return self.__padding
@@ -326,6 +338,7 @@ class PopupMenuButton(ConstrainedControl):
         self.__padding = value
 
     # icon
+
     @property
     def icon(self) -> Optional[str]:
         return self._get_attr("icon")
@@ -335,6 +348,7 @@ class PopupMenuButton(ConstrainedControl):
         self._set_attr("icon", value)
 
     # icon_color
+
     @property
     def icon_color(self) -> Optional[str]:
         return self._get_attr("iconColor")
@@ -344,6 +358,7 @@ class PopupMenuButton(ConstrainedControl):
         self._set_attr("iconColor", value)
 
     # bgcolor
+
     @property
     def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
@@ -353,6 +368,7 @@ class PopupMenuButton(ConstrainedControl):
         self._set_attr("bgcolor", value)
 
     # shadow_color
+
     @property
     def shadow_color(self) -> Optional[str]:
         return self._get_attr("shadowColor")
@@ -362,6 +378,7 @@ class PopupMenuButton(ConstrainedControl):
         self._set_attr("shadowColor", value)
 
     # surface_tint_color
+
     @property
     def surface_tint_color(self) -> Optional[str]:
         return self._get_attr("surfaceTintColor")
@@ -371,6 +388,7 @@ class PopupMenuButton(ConstrainedControl):
         self._set_attr("surfaceTintColor", value)
 
     # icon_size
+
     @property
     def icon_size(self) -> OptionalNumber:
         return self._get_attr("iconSize", data_type="float")
@@ -380,6 +398,7 @@ class PopupMenuButton(ConstrainedControl):
         self._set_attr("iconSize", value)
 
     # enable_feedback
+
     @property
     def enable_feedback(self) -> Optional[bool]:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
@@ -389,6 +408,7 @@ class PopupMenuButton(ConstrainedControl):
         self._set_attr("enableFeedback", value)
 
     # elevation
+
     @property
     def elevation(self) -> OptionalNumber:
         return self._get_attr("elevation", data_type="float", def_value=8)
@@ -398,6 +418,7 @@ class PopupMenuButton(ConstrainedControl):
         self._set_attr("elevation", value)
 
     # splash_radius
+
     @property
     def splash_radius(self) -> OptionalNumber:
         return self._get_attr("splashRadius", data_type="float")
@@ -407,6 +428,7 @@ class PopupMenuButton(ConstrainedControl):
         self._set_attr("splashRadius", value)
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -416,6 +438,7 @@ class PopupMenuButton(ConstrainedControl):
         self.__content = value
 
     # menu_position
+
     @property
     def menu_position(self) -> PopupMenuPosition:
         return self.__menu_position
@@ -429,6 +452,7 @@ class PopupMenuButton(ConstrainedControl):
         )
 
     # clip_behavior
+
     @property
     def clip_behavior(self) -> ClipBehavior:
         return self.__clip_behavior
@@ -442,6 +466,7 @@ class PopupMenuButton(ConstrainedControl):
         )
 
     # on_cancel
+
     @property
     def on_cancel(self):
         return self._get_event_handler("cancel")
@@ -451,6 +476,7 @@ class PopupMenuButton(ConstrainedControl):
         self._add_event_handler("cancel", handler)
 
     # on_cancelled
+
     @property
     def on_cancelled(self):
         warnings.warn(
@@ -473,6 +499,7 @@ class PopupMenuButton(ConstrainedControl):
             )
 
     # on_open
+
     @property
     def on_open(self):
         return self._get_event_handler("open")

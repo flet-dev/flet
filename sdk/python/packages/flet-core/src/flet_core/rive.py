@@ -2,15 +2,16 @@ from typing import Any, Optional, Union
 
 from flet_core.alignment import Alignment
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber, Control
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
+    ImageFit,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ImageFit,
 )
 
 
@@ -117,6 +118,7 @@ class Rive(ConstrainedControl):
         return []
 
     # src
+
     @property
     def src(self) -> Optional[str]:
         return self._get_attr("src")
@@ -128,6 +130,7 @@ class Rive(ConstrainedControl):
         self._set_attr("src", value)
 
     # alignment
+
     @property
     def alignment(self) -> Optional[Alignment]:
         return self.__alignment
@@ -137,6 +140,7 @@ class Rive(ConstrainedControl):
         self.__alignment = value
 
     # artboard
+
     @property
     def artboard(self):
         return self._get_attr("artBoard")
@@ -146,6 +150,7 @@ class Rive(ConstrainedControl):
         self._set_attr("artBoard", value)
 
     # enable_antialiasing
+
     @property
     def enable_antialiasing(self) -> Optional[bool]:
         return self._get_attr("enableAntiAliasing", def_value=True, data_type="bool")
@@ -155,6 +160,7 @@ class Rive(ConstrainedControl):
         self._set_attr("enableAntiAliasing", value)
 
     # placeholder
+
     @property
     def placeholder(self) -> Optional[Control]:
         return self.__placeholder
@@ -164,6 +170,7 @@ class Rive(ConstrainedControl):
         self.__placeholder = value
 
     # use_artboard_size
+
     @property
     def use_artboard_size(self) -> Optional[bool]:
         return self._get_attr("useArtBoardSize", def_value=False, data_type="bool")
@@ -173,6 +180,7 @@ class Rive(ConstrainedControl):
         self._set_attr("useArtBoardSize", value)
 
     # fit
+
     @property
     def fit(self) -> Optional[ImageFit]:
         return self.__fit

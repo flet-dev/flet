@@ -1,8 +1,8 @@
 import time
-from typing import Any, Optional, Union, List
+from typing import Any, List, Optional, Union
 
 from flet_core.alignment import Alignment
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.form_field_control import FormFieldControl, InputBorder
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
@@ -10,6 +10,7 @@ from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
@@ -48,6 +49,7 @@ class Option(Control):
         self._set_attr_json("alignment", self.__alignment)
 
     # key
+
     @property
     def key(self):
         return self._get_attr("key")
@@ -57,6 +59,7 @@ class Option(Control):
         self._set_attr("key", value)
 
     # text
+
     @property
     def text(self):
         return self._get_attr("text")
@@ -66,6 +69,7 @@ class Option(Control):
         self._set_attr("text", value)
 
     # alignment
+
     @property
     def alignment(self) -> Optional[Alignment]:
         return self.__alignment
@@ -75,6 +79,7 @@ class Option(Control):
         self.__alignment = value
 
     # on_click
+
     @property
     def on_click(self):
         return self._get_event_handler("click")
@@ -327,6 +332,7 @@ class Dropdown(FormFieldControl):
         self.focus()
 
     # options
+
     @property
     def options(self):
         return self.__options
@@ -336,6 +342,7 @@ class Dropdown(FormFieldControl):
         self.__options = value if value is not None else []
 
     # icon_content
+
     @property
     def icon_content(self) -> Optional[Control]:
         return self.__icon_content
@@ -345,6 +352,7 @@ class Dropdown(FormFieldControl):
         self.__icon_content = value
 
     # hint_content
+
     @property
     def hint_content(self) -> Optional[Control]:
         return self.__hint_content
@@ -354,6 +362,7 @@ class Dropdown(FormFieldControl):
         self.__hint_content = value
 
     # value
+
     @property
     def value(self) -> Optional[str]:
         return self._get_attr("value")
@@ -363,6 +372,7 @@ class Dropdown(FormFieldControl):
         self._set_attr("value", value)
 
     # icon_enabled_color
+
     @property
     def icon_enabled_color(self) -> Optional[str]:
         return self._get_attr("iconEnabledColor")
@@ -372,6 +382,7 @@ class Dropdown(FormFieldControl):
         self._set_attr("iconEnabledColor", value)
 
     # icon_disabled_color
+
     @property
     def icon_disabled_color(self) -> Optional[str]:
         return self._get_attr("iconDisabledColor")
@@ -381,6 +392,7 @@ class Dropdown(FormFieldControl):
         self._set_attr("iconDisabledColor", value)
 
     # item_height
+
     @property
     def item_height(self) -> OptionalNumber:
         return self._get_attr("itemHeight", data_type="float")
@@ -390,6 +402,7 @@ class Dropdown(FormFieldControl):
         self._set_attr("itemHeight", value)
 
     # menu_max_height
+
     @property
     def menu_max_height(self) -> OptionalNumber:
         return self._get_attr("menuMaxHeight", data_type="float")
@@ -399,6 +412,7 @@ class Dropdown(FormFieldControl):
         self._set_attr("menuMaxHeight", value)
 
     # icon_size
+
     @property
     def icon_size(self) -> OptionalNumber:
         return self._get_attr("iconSize", data_type="float", def_value=24.0)
@@ -408,6 +422,7 @@ class Dropdown(FormFieldControl):
         self._set_attr("iconSize", value)
 
     # padding
+
     @property
     def padding(self) -> PaddingValue:
         return self.__padding
@@ -417,6 +432,7 @@ class Dropdown(FormFieldControl):
         self.__padding = value
 
     # autofocus
+
     @property
     def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
@@ -426,6 +442,7 @@ class Dropdown(FormFieldControl):
         self._set_attr("autofocus", value)
 
     # enable_feedback
+
     @property
     def enable_feedback(self) -> Optional[bool]:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
@@ -435,6 +452,7 @@ class Dropdown(FormFieldControl):
         self._set_attr("enableFeedback", value)
 
     # elevation
+
     @property
     def elevation(self) -> OptionalNumber:
         return self._get_attr("elevation", data_type="float", def_value=8)
@@ -444,6 +462,7 @@ class Dropdown(FormFieldControl):
         self._set_attr("elevation", value)
 
     # alignment
+
     @property
     def alignment(self) -> Optional[Alignment]:
         return self.__alignment
@@ -453,6 +472,7 @@ class Dropdown(FormFieldControl):
         self.__alignment = value
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")
@@ -462,6 +482,7 @@ class Dropdown(FormFieldControl):
         self._add_event_handler("change", handler)
 
     # on_focus
+
     @property
     def on_focus(self):
         return self._get_event_handler("focus")
@@ -471,6 +492,7 @@ class Dropdown(FormFieldControl):
         self._add_event_handler("focus", handler)
 
     # on_blur
+
     @property
     def on_blur(self):
         return self._get_event_handler("blur")
@@ -480,6 +502,7 @@ class Dropdown(FormFieldControl):
         self._add_event_handler("blur", handler)
 
     # on_click
+
     @property
     def on_click(self):
         return self._get_event_handler("click")

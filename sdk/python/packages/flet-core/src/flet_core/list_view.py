@@ -2,17 +2,18 @@ from typing import Any, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
     AnimationValue,
+    ClipBehavior,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ClipBehavior,
 )
 from flet_core.utils import deprecated
 
@@ -184,6 +185,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.clean()
 
     # horizontal
+
     @property
     def horizontal(self) -> Optional[bool]:
         return self._get_attr("horizontal")
@@ -193,6 +195,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("horizontal", value)
 
     # spacing
+
     @property
     def spacing(self) -> OptionalNumber:
         return self._get_attr("spacing")
@@ -202,6 +205,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("spacing", value)
 
     # divider_thickness
+
     @property
     def divider_thickness(self) -> OptionalNumber:
         return self._get_attr("dividerThickness")
@@ -211,6 +215,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("dividerThickness", value)
 
     # item_extent
+
     @property
     def item_extent(self) -> OptionalNumber:
         return self._get_attr("itemExtent")
@@ -220,6 +225,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("itemExtent", value)
 
     # cache_extent
+
     @property
     def cache_extent(self) -> OptionalNumber:
         return self._get_attr("cacheExtent")
@@ -229,6 +235,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("cacheExtent", value)
 
     # first_item_prototype
+
     @property
     def first_item_prototype(self) -> Optional[bool]:
         return self._get_attr("firstItemPrototype")
@@ -238,6 +245,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self._set_attr("firstItemPrototype", value)
 
     # padding
+
     @property
     def padding(self) -> PaddingValue:
         return self.__padding
@@ -247,6 +255,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.__padding = value
 
     # controls
+
     @property
     def controls(self):
         return self.__controls
@@ -256,6 +265,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.__controls = value if value is not None else []
 
     # clip_behavior
+
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
         return self._get_attr("clipBehavior")
@@ -267,6 +277,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         )
 
     # semantic_child_count
+
     @property
     def semantic_child_count(self) -> Optional[int]:
         return self._get_attr("semanticChildCount", data_type="int")

@@ -1,15 +1,16 @@
-from typing import Any, Optional, Union, List
+from typing import Any, List, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber, Control
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
+    PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    PaddingValue,
 )
 
 
@@ -108,6 +109,7 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
         self._set_attr_json("padding", self.__padding)
 
     # controls
+
     @property
     def controls(self):
         return self.__controls
@@ -117,6 +119,7 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
         self.__controls = value if value is not None else []
 
     # selected_index
+
     @property
     def selected_index(self) -> Optional[int]:
         return self._get_attr("selectedIndex", data_type="int", def_value=0)
@@ -128,6 +131,7 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
         self._set_attr("selectedIndex", value)
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self._get_attr("bgcolor")
@@ -137,6 +141,7 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
         self._set_attr("bgcolor", value)
 
     # thumb_color
+
     @property
     def thumb_color(self):
         return self._get_attr("thumbColor")
@@ -146,6 +151,7 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
         self._set_attr("thumbColor", value)
 
     # padding
+
     @property
     def padding(self) -> PaddingValue:
         return self.__padding
@@ -155,6 +161,7 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
         self.__padding = value
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")

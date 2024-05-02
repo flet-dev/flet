@@ -1,9 +1,10 @@
 from typing import Any, Optional
 
 from flet_core.border import BorderSide
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.types import OptionalNumber
 
 
 class PieChartSection(Control):
@@ -61,6 +62,7 @@ class PieChartSection(Control):
         return children
 
     # value
+
     @property
     def value(self) -> OptionalNumber:
         return self._get_attr("value", data_type="float")
@@ -70,6 +72,7 @@ class PieChartSection(Control):
         self._set_attr("value", value)
 
     # radius
+
     @property
     def radius(self) -> OptionalNumber:
         return self._get_attr("radius", data_type="float")
@@ -79,6 +82,7 @@ class PieChartSection(Control):
         self._set_attr("radius", value)
 
     # border_side
+
     @property
     def border_side(self) -> Optional[BorderSide]:
         return self.__border_side
@@ -88,6 +92,7 @@ class PieChartSection(Control):
         self.__border_side = value
 
     # color
+
     @property
     def color(self) -> Optional[str]:
         return self._get_attr("color")
@@ -97,6 +102,7 @@ class PieChartSection(Control):
         self._set_attr("color", value)
 
     # badge
+
     @property
     def badge(self) -> Optional[Control]:
         return self.__badge
@@ -106,6 +112,7 @@ class PieChartSection(Control):
         self.__badge = value
 
     # badge_position
+
     @property
     def badge_position(self) -> OptionalNumber:
         return self._get_attr("badgePosition", data_type="float")
@@ -115,6 +122,7 @@ class PieChartSection(Control):
         self._set_attr("badgePosition", value)
 
     # title
+
     @property
     def title(self):
         return self._get_attr("title")
@@ -124,6 +132,7 @@ class PieChartSection(Control):
         self._set_attr("title", value)
 
     # title_style
+
     @property
     def title_style(self):
         return self.__title_style
@@ -133,6 +142,7 @@ class PieChartSection(Control):
         self.__title_style = value
 
     # title_position
+
     @property
     def title_position(self) -> OptionalNumber:
         return self._get_attr("titlePosition", data_type="float", def_value=1.0)

@@ -1,11 +1,11 @@
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -116,10 +116,12 @@ class CupertinoSlider(ConstrainedControl):
         return "cupertinoslider"
 
     # value
+
     @property
     def value(self) -> OptionalNumber:
         v = self._get_attr("value", data_type="float")
         # verify limits
+
         if self.min and v < self.min:
             v = self.min
         elif self.max and v > self.max:
@@ -131,6 +133,7 @@ class CupertinoSlider(ConstrainedControl):
         self._set_attr("value", value)
 
     # min
+
     @property
     def min(self) -> OptionalNumber:
         return self._get_attr("min")
@@ -140,6 +143,7 @@ class CupertinoSlider(ConstrainedControl):
         self._set_attr("min", value)
 
     # max
+
     @property
     def max(self) -> OptionalNumber:
         return self._get_attr("max")
@@ -149,6 +153,7 @@ class CupertinoSlider(ConstrainedControl):
         self._set_attr("max", value)
 
     # divisions
+
     @property
     def divisions(self) -> Optional[int]:
         return self._get_attr("divisions")
@@ -158,6 +163,7 @@ class CupertinoSlider(ConstrainedControl):
         self._set_attr("divisions", value)
 
     # round
+
     @property
     def round(self) -> Optional[int]:
         return self._get_attr("round")
@@ -167,6 +173,7 @@ class CupertinoSlider(ConstrainedControl):
         self._set_attr("round", value)
 
     # active_color
+
     @property
     def active_color(self):
         return self._get_attr("activeColor")
@@ -176,6 +183,7 @@ class CupertinoSlider(ConstrainedControl):
         self._set_attr("activeColor", value)
 
     # thumb_color
+
     @property
     def thumb_color(self):
         return self._get_attr("thumbColor")
@@ -185,6 +193,7 @@ class CupertinoSlider(ConstrainedControl):
         self._set_attr("thumbColor", value)
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")
@@ -194,6 +203,7 @@ class CupertinoSlider(ConstrainedControl):
         self._add_event_handler("change", handler)
 
     # on_change_start
+
     @property
     def on_change_start(self):
         return self._get_event_handler("change_start")
@@ -203,6 +213,7 @@ class CupertinoSlider(ConstrainedControl):
         self._add_event_handler("change_start", handler)
 
     # on_change_end
+
     @property
     def on_change_end(self):
         return self._get_event_handler("change_end")
@@ -212,6 +223,7 @@ class CupertinoSlider(ConstrainedControl):
         self._add_event_handler("change_end", handler)
 
     # on_focus
+
     @property
     def on_focus(self):
         return self._get_event_handler("focus")
@@ -221,6 +233,7 @@ class CupertinoSlider(ConstrainedControl):
         self._add_event_handler("focus", handler)
 
     # on_blur
+
     @property
     def on_blur(self):
         return self._get_event_handler("blur")

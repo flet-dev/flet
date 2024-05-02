@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Optional, Union
 
 from flet_core.border import Border, BorderSide
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.gesture_detector import TapEvent
@@ -13,12 +13,13 @@ from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
+    ClipBehavior,
     MaterialState,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ClipBehavior,
 )
 
 
@@ -66,6 +67,7 @@ class DataColumn(Control):
         return children
 
     # label
+
     @property
     def label(self):
         return self.__label
@@ -75,6 +77,7 @@ class DataColumn(Control):
         self.__label = value
 
     # numeric
+
     @property
     def numeric(self) -> Optional[bool]:
         return self._get_attr("numeric", data_type="bool", def_value=False)
@@ -84,6 +87,7 @@ class DataColumn(Control):
         self._set_attr("numeric", value)
 
     # tooltip
+
     @property
     def tooltip(self):
         return self._get_attr("tooltip")
@@ -93,6 +97,7 @@ class DataColumn(Control):
         self._set_attr("tooltip", value)
 
     # on_sort
+
     @property
     def on_sort(self):
         return self.__on_sort
@@ -143,6 +148,7 @@ class DataCell(Control):
         return [self.__content]
 
     # content
+
     @property
     def content(self):
         return self.__content
@@ -152,6 +158,7 @@ class DataCell(Control):
         self.__content = value
 
     # placeholder
+
     @property
     def placeholder(self) -> Optional[bool]:
         return self._get_attr("placeholder", data_type="bool", def_value=False)
@@ -161,6 +168,7 @@ class DataCell(Control):
         self._set_attr("placeholder", value)
 
     # show_edit_icon
+
     @property
     def show_edit_icon(self) -> Optional[bool]:
         return self._get_attr("showEditIcon", data_type="bool", def_value=False)
@@ -170,6 +178,7 @@ class DataCell(Control):
         self._set_attr("showEditIcon", value)
 
     # on_double_tap
+
     @property
     def on_double_tap(self):
         return self._get_event_handler("double_tap")
@@ -180,6 +189,7 @@ class DataCell(Control):
         self._set_attr("onDoubleTap", True if handler is not None else None)
 
     # on_long_press
+
     @property
     def on_long_press(self):
         return self._get_event_handler("long_press")
@@ -190,6 +200,7 @@ class DataCell(Control):
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # on_tap
+
     @property
     def on_tap(self):
         return self._get_event_handler("tap")
@@ -200,6 +211,7 @@ class DataCell(Control):
         self._set_attr("onTap", True if handler is not None else None)
 
     # on_tap_cancel
+
     @property
     def on_tap_cancel(self):
         return self._get_event_handler("tap_cancel")
@@ -210,6 +222,7 @@ class DataCell(Control):
         self._set_attr("onTapCancel", True if handler is not None else None)
 
     # on_tap_down
+
     @property
     def on_tap_down(self):
         return self.__on_tap_down
@@ -253,6 +266,7 @@ class DataRow(Control):
         return self.__cells
 
     # cells
+
     @property
     def cells(self):
         return self.__cells
@@ -262,6 +276,7 @@ class DataRow(Control):
         self.__cells = value if value is not None else []
 
     # color
+
     @property
     def color(self) -> Union[None, str, Dict[MaterialState, str]]:
         return self.__color
@@ -271,6 +286,7 @@ class DataRow(Control):
         self.__color = value
 
     # selected
+
     @property
     def selected(self) -> Optional[bool]:
         return self._get_attr("selected", data_type="bool", def_value=False)
@@ -280,6 +296,7 @@ class DataRow(Control):
         self._set_attr("selected", value)
 
     # on_long_press
+
     @property
     def on_long_press(self):
         return self._get_event_handler("long_press")
@@ -290,6 +307,7 @@ class DataRow(Control):
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # on_select_changed
+
     @property
     def on_select_changed(self):
         return self._get_event_handler("select_changed")
@@ -438,6 +456,7 @@ class DataTable(ConstrainedControl):
         return children
 
     # columns
+
     @property
     def columns(self):
         return self.__columns
@@ -447,6 +466,7 @@ class DataTable(ConstrainedControl):
         self.__columns = value if value is not None else []
 
     # rows
+
     @property
     def rows(self):
         return self.__rows
@@ -456,6 +476,7 @@ class DataTable(ConstrainedControl):
         self.__rows = value if value is not None else []
 
     # border
+
     @property
     def border(self) -> Optional[Border]:
         return self.__border
@@ -465,6 +486,7 @@ class DataTable(ConstrainedControl):
         self.__border = value
 
     # border_radius
+
     @property
     def border_radius(self) -> BorderRadiusValue:
         return self.__border_radius
@@ -474,6 +496,7 @@ class DataTable(ConstrainedControl):
         self.__border_radius = value
 
     # horizontal_lines
+
     @property
     def horizontal_lines(self) -> Optional[BorderSide]:
         return self.__horizontal_lines
@@ -483,6 +506,7 @@ class DataTable(ConstrainedControl):
         self.__horizontal_lines = value
 
     # vertical_lines
+
     @property
     def vertical_lines(self) -> Optional[BorderSide]:
         return self.__vertical_lines
@@ -492,6 +516,7 @@ class DataTable(ConstrainedControl):
         self.__vertical_lines = value
 
     # checkbox_horizontal_margin
+
     @property
     def checkbox_horizontal_margin(self) -> OptionalNumber:
         return self._get_attr("checkboxHorizontalMargin")
@@ -501,6 +526,7 @@ class DataTable(ConstrainedControl):
         self._set_attr("checkboxHorizontalMargin", value)
 
     # column_spacing
+
     @property
     def column_spacing(self) -> OptionalNumber:
         return self._get_attr("columnSpacing")
@@ -510,6 +536,7 @@ class DataTable(ConstrainedControl):
         self._set_attr("columnSpacing", value)
 
     # divider_thickness
+
     @property
     def divider_thickness(self) -> OptionalNumber:
         return self._get_attr("dividerThickness", data_type="float", def_value=1.0)
@@ -519,6 +546,7 @@ class DataTable(ConstrainedControl):
         self._set_attr("dividerThickness", value)
 
     # horizontal_margin
+
     @property
     def horizontal_margin(self) -> OptionalNumber:
         return self._get_attr("horizontalMargin")
@@ -528,6 +556,7 @@ class DataTable(ConstrainedControl):
         self._set_attr("horizontalMargin", value)
 
     # data_row_color
+
     @property
     def data_row_color(self) -> Union[None, str, Dict[MaterialState, str]]:
         return self.__data_row_color
@@ -537,6 +566,7 @@ class DataTable(ConstrainedControl):
         self.__data_row_color = value
 
     # data_row_min_height
+
     @property
     def data_row_min_height(self) -> OptionalNumber:
         return self._get_attr("dataRowMinHeight")
@@ -546,6 +576,7 @@ class DataTable(ConstrainedControl):
         self._set_attr("dataRowMinHeight", value)
 
     # data_row_max_height
+
     @property
     def data_row_max_height(self) -> OptionalNumber:
         return self._get_attr("dataRowMaxHeight")
@@ -555,6 +586,7 @@ class DataTable(ConstrainedControl):
         self._set_attr("dataRowMaxHeight", value)
 
     # data_text_style
+
     @property
     def data_text_style(self):
         return self.__data_text_style
@@ -564,6 +596,7 @@ class DataTable(ConstrainedControl):
         self.__data_text_style = value
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self._get_attr("bgColor")
@@ -573,6 +606,7 @@ class DataTable(ConstrainedControl):
         self._set_attr("bgColor", value)
 
     # gradient
+
     @property
     def gradient(self) -> Optional[Gradient]:
         return self.__gradient
@@ -582,6 +616,7 @@ class DataTable(ConstrainedControl):
         self.__gradient = value
 
     # heading_row_color
+
     @property
     def heading_row_color(self) -> Union[None, str, Dict[MaterialState, str]]:
         return self.__heading_row_color
@@ -591,6 +626,7 @@ class DataTable(ConstrainedControl):
         self.__heading_row_color = value
 
     # heading_row_height
+
     @property
     def heading_row_height(self) -> OptionalNumber:
         return self._get_attr("headingRowHeight")
@@ -600,6 +636,7 @@ class DataTable(ConstrainedControl):
         self._set_attr("headingRowHeight", value)
 
     # heading_text_style
+
     @property
     def heading_text_style(self):
         return self.__heading_text_style
@@ -609,6 +646,7 @@ class DataTable(ConstrainedControl):
         self.__heading_text_style = value
 
     # show_bottom_border
+
     @property
     def show_bottom_border(self) -> Optional[bool]:
         return self._get_attr("showBottomBorder", data_type="bool", def_value=False)
@@ -618,6 +656,7 @@ class DataTable(ConstrainedControl):
         self._set_attr("showBottomBorder", value)
 
     # show_checkbox_column
+
     @property
     def show_checkbox_column(self) -> Optional[bool]:
         return self._get_attr("showCheckboxColumn", data_type="bool", def_value=False)
@@ -627,6 +666,7 @@ class DataTable(ConstrainedControl):
         self._set_attr("showCheckboxColumn", value)
 
     # sort_ascending
+
     @property
     def sort_ascending(self) -> Optional[bool]:
         return self._get_attr("sortAscending", data_type="bool", def_value=False)
@@ -636,6 +676,7 @@ class DataTable(ConstrainedControl):
         self._set_attr("sortAscending", value)
 
     # sort_column_index
+
     @property
     def sort_column_index(self) -> Optional[int]:
         return self._get_attr("sortColumnIndex")
@@ -645,6 +686,7 @@ class DataTable(ConstrainedControl):
         self._set_attr("sortColumnIndex", value)
 
     # clip_behavior
+
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
         return self.__clip_behavior
@@ -657,6 +699,7 @@ class DataTable(ConstrainedControl):
         )
 
     # on_select_all
+
     @property
     def on_select_all(self):
         return self._get_event_handler("select_all")
@@ -676,14 +719,12 @@ class Item(Control):
     def _set_attr(self, name, value, dirty=True):
         if value is None:
             return
-
         orig_val = self._get_attr(name)
         if orig_val is not None:
             if isinstance(orig_val, bool):
                 value = str(value).lower() == "true"
             elif isinstance(orig_val, float):
                 value = float(str(value))
-
         self._set_attr_internal(name, value, dirty=False)
         if isinstance(self.obj, dict):
             self.obj[name] = value
@@ -692,6 +733,7 @@ class Item(Control):
 
     def _fetch_attrs(self):
         # reflection
+
         obj = self.obj if isinstance(self.obj, dict) else vars(self.obj)
 
         for name, val in obj.items():

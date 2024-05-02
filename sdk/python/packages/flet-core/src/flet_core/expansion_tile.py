@@ -5,7 +5,7 @@ from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.theme import ThemeVisualDensity
 from flet_core.types import (
@@ -13,6 +13,7 @@ from flet_core.types import (
     ClipBehavior,
     CrossAxisAlignment,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
@@ -188,6 +189,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         return children
 
     # controls
+
     @property
     def controls(self):
         return self.__controls
@@ -197,6 +199,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self.__controls = value if value is not None else []
 
     # controls_padding
+
     @property
     def controls_padding(self) -> PaddingValue:
         return self.__controls_padding
@@ -206,6 +209,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self.__controls_padding = value
 
     # tile_padding
+
     @property
     def tile_padding(self) -> PaddingValue:
         return self.__tile_padding
@@ -215,6 +219,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self.__tile_padding = value
 
     # expanded_alignment
+
     @property
     def expanded_alignment(self) -> Optional[Alignment]:
         return self.__expanded_alignment
@@ -224,6 +229,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self.__expanded_alignment = value
 
     # expanded_cross_axis_alignment
+
     @property
     def expanded_cross_axis_alignment(self) -> Optional[CrossAxisAlignment]:
         return self.__expanded_cross_axis_alignment
@@ -237,6 +243,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         )
 
     # affinity
+
     @property
     def affinity(self) -> Optional[TileAffinity]:
         return self.__affinity
@@ -247,6 +254,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self._set_enum_attr("affinity", value, TileAffinity)
 
     # leading
+
     @property
     def leading(self) -> Optional[Control]:
         return self.__leading
@@ -256,6 +264,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self.__leading = value
 
     # title
+
     @property
     def title(self) -> Optional[Control]:
         return self.__title
@@ -265,6 +274,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self.__title = value
 
     # subtitle
+
     @property
     def subtitle(self) -> Optional[Control]:
         return self.__subtitle
@@ -274,6 +284,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self.__subtitle = value
 
     # trailing
+
     @property
     def trailing(self) -> Optional[Control]:
         return self.__trailing
@@ -283,6 +294,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self.__trailing = value
 
     # dense
+
     @property
     def dense(self) -> Optional[bool]:
         return self._get_attr("dense", data_type="bool")
@@ -292,6 +304,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self._set_attr("dense", value)
 
     # enable_feedback
+
     @property
     def enable_feedback(self) -> Optional[bool]:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
@@ -301,6 +314,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self._set_attr("enableFeedback", value)
 
     # clip_behavior
+
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
         return self.__clip_behavior
@@ -313,6 +327,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         )
 
     # visual_density
+
     @property
     def visual_density(self) -> Optional[ThemeVisualDensity]:
         return self.__visual_density
@@ -326,6 +341,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         )
 
     # maintain_state
+
     @property
     def maintain_state(self) -> Optional[bool]:
         return self._get_attr("maintainState", data_type="bool", def_value=False)
@@ -335,6 +351,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self._set_attr("maintainState", value)
 
     # initially_expanded
+
     @property
     def initially_expanded(self) -> Optional[bool]:
         return self._get_attr("initiallyExpanded", data_type="bool", def_value=False)
@@ -344,6 +361,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self._set_attr("initiallyExpanded", value)
 
     # shape
+
     @property
     def shape(self) -> Optional[OutlinedBorder]:
         return self.__shape
@@ -353,6 +371,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self.__shape = value
 
     # text_color
+
     @property
     def text_color(self) -> Optional[str]:
         return self._get_attr("textColor")
@@ -362,6 +381,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self._set_attr("textColor", value)
 
     # icon_color
+
     @property
     def icon_color(self) -> Optional[str]:
         return self._get_attr("iconColor")
@@ -371,6 +391,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self._set_attr("iconColor", value)
 
     # bgcolor
+
     @property
     def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgColor")
@@ -380,6 +401,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self._set_attr("bgColor", value)
 
     # collapsed_bgcolor
+
     @property
     def collapsed_bgcolor(self) -> Optional[str]:
         return self._get_attr("collapsedBgColor")
@@ -389,6 +411,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self._set_attr("collapsedBgColor", value)
 
     # collapsed_icon_color
+
     @property
     def collapsed_icon_color(self) -> Optional[str]:
         return self._get_attr("collapsedIconColor")
@@ -398,6 +421,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self._set_attr("collapsedIconColor", value)
 
     # collapsed_text_color
+
     @property
     def collapsed_text_color(self) -> Optional[str]:
         return self._get_attr("collapsedTextColor")
@@ -407,6 +431,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self._set_attr("collapsedTextColor", value)
 
     # collapsed_shape
+
     @property
     def collapsed_shape(self) -> Optional[OutlinedBorder]:
         return self.__collapsed_shape
@@ -416,6 +441,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self.__collapsed_shape = value
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")

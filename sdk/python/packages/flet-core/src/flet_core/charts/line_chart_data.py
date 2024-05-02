@@ -3,10 +3,11 @@ from typing import Any, List, Optional, Union
 from flet_core.charts.chart_point_line import ChartPointLine
 from flet_core.charts.chart_point_shape import ChartPointShape
 from flet_core.charts.line_chart_data_point import LineChartDataPoint
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
 from flet_core.shadow import BoxShadow
+from flet_core.types import OptionalNumber
 
 
 class LineChartData(Control):
@@ -94,6 +95,7 @@ class LineChartData(Control):
         return self.__data_points
 
     # data_points
+
     @property
     def data_points(self):
         return self.__data_points
@@ -103,6 +105,7 @@ class LineChartData(Control):
         self.__data_points = value if value is not None else []
 
     # stroke_width
+
     @property
     def stroke_width(self) -> OptionalNumber:
         return self._get_attr("strokeWidth", data_type="float", def_value=1.0)
@@ -112,6 +115,7 @@ class LineChartData(Control):
         self._set_attr("strokeWidth", value)
 
     # curved
+
     @property
     def curved(self) -> Optional[bool]:
         return self._get_attr("curved", data_type="bool", def_value=False)
@@ -121,6 +125,7 @@ class LineChartData(Control):
         self._set_attr("curved", value)
 
     # color
+
     @property
     def color(self) -> Optional[str]:
         return self._get_attr("color")
@@ -130,6 +135,7 @@ class LineChartData(Control):
         self._set_attr("color", value)
 
     # gradient
+
     @property
     def gradient(self) -> Optional[Gradient]:
         return self.__gradient
@@ -139,6 +145,7 @@ class LineChartData(Control):
         self.__gradient = value
 
     # stroke_cap_round
+
     @property
     def stroke_cap_round(self) -> Optional[bool]:
         return self._get_attr("strokeCapRound", data_type="bool", def_value=False)
@@ -148,6 +155,7 @@ class LineChartData(Control):
         self._set_attr("strokeCapRound", value)
 
     # prevent_curve_over_shooting
+
     @property
     def prevent_curve_over_shooting(self) -> Optional[bool]:
         return self._get_attr(
@@ -159,6 +167,7 @@ class LineChartData(Control):
         self._set_attr("preventCurveOverShooting", value)
 
     # prevent_curve_over_shooting_threshold
+
     @property
     def prevent_curve_over_shooting_threshold(self) -> OptionalNumber:
         return self._get_attr("preventCurveOverShootingThreshold", data_type="float")
@@ -168,6 +177,7 @@ class LineChartData(Control):
         self._set_attr("preventCurveOverShootingThreshold", value)
 
     # dash_pattern
+
     @property
     def dash_pattern(self):
         return self.__dash_pattern
@@ -177,6 +187,7 @@ class LineChartData(Control):
         self.__dash_pattern = value
 
     # shadow
+
     @property
     def shadow(self):
         return self.__shadow
@@ -186,6 +197,7 @@ class LineChartData(Control):
         self.__shadow = value
 
     # point
+
     @property
     def point(self):
         return self.__point
@@ -195,6 +207,7 @@ class LineChartData(Control):
         self.__point = value
 
     # selected_point
+
     @property
     def selected_point(self):
         return self.__selected_point
@@ -204,6 +217,7 @@ class LineChartData(Control):
         self.__selected_point = value
 
     # above_line_bgcolor
+
     @property
     def above_line_bgcolor(self) -> Optional[str]:
         return self._get_attr("aboveLineBgcolor")
@@ -213,6 +227,7 @@ class LineChartData(Control):
         self._set_attr("aboveLineBgcolor", value)
 
     # above_line_gradient
+
     @property
     def above_line_gradient(self) -> Optional[Gradient]:
         return self.__above_line_gradient
@@ -222,6 +237,7 @@ class LineChartData(Control):
         self.__above_line_gradient = value
 
     # above_line_cutoff_y
+
     @property
     def above_line_cutoff_y(self) -> OptionalNumber:
         return self._get_attr("aboveLineCutoffY", data_type="float")
@@ -231,6 +247,7 @@ class LineChartData(Control):
         self._set_attr("aboveLineCutoffY", value)
 
     # above_line
+
     @property
     def above_line(self) -> Optional[ChartPointLine]:
         return self.__above_line
@@ -240,6 +257,7 @@ class LineChartData(Control):
         self.__above_line = value
 
     # below_line_bgcolor
+
     @property
     def below_line_bgcolor(self) -> Optional[str]:
         return self._get_attr("belowLineBgcolor")
@@ -249,6 +267,7 @@ class LineChartData(Control):
         self._set_attr("belowLineBgcolor", value)
 
     # below_line_gradient
+
     @property
     def below_line_gradient(self) -> Optional[Gradient]:
         return self.__below_line_gradient
@@ -258,6 +277,7 @@ class LineChartData(Control):
         self.__below_line_gradient = value
 
     # below_line_cutoff_y
+
     @property
     def below_line_cutoff_y(self) -> OptionalNumber:
         return self._get_attr("belowLineCutoffY", data_type="float")
@@ -267,6 +287,7 @@ class LineChartData(Control):
         self._set_attr("belowLineCutoffY", value)
 
     # below_line
+
     @property
     def below_line(self) -> Optional[ChartPointLine]:
         return self.__below_line
@@ -276,6 +297,7 @@ class LineChartData(Control):
         self.__below_line = value
 
     # selected_below_line
+
     @property
     def selected_below_line(self) -> Union[None, bool, ChartPointLine]:
         return self.__selected_below_line

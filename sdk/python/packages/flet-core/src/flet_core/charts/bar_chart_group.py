@@ -1,8 +1,9 @@
 from typing import Any, List, Optional
 
 from flet_core.charts.bar_chart_rod import BarChartRod
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
+from flet_core.types import OptionalNumber
 
 
 class BarChartGroup(Control):
@@ -44,6 +45,7 @@ class BarChartGroup(Control):
         return self.__bar_rods
 
     # bar_rods
+
     @property
     def bar_rods(self):
         return self.__bar_rods
@@ -53,6 +55,7 @@ class BarChartGroup(Control):
         self.__bar_rods = value if value is not None else []
 
     # x
+
     @property
     def x(self) -> Optional[int]:
         return self._get_attr("x", data_type="int")
@@ -62,6 +65,7 @@ class BarChartGroup(Control):
         self._set_attr("x", value)
 
     # group_vertically
+
     @property
     def group_vertically(self) -> Optional[bool]:
         return self._get_attr("groupVertically", data_type="bool", def_value=False)
@@ -71,6 +75,7 @@ class BarChartGroup(Control):
         self._set_attr("groupVertically", value)
 
     # bars_space
+
     @property
     def bars_space(self) -> OptionalNumber:
         return self._get_attr("barsSpace", data_type="float")

@@ -3,11 +3,11 @@ from typing import Any, Optional, Union
 
 from flet_core.alignment import Alignment
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -120,6 +120,7 @@ class CupertinoTimerPicker(ConstrainedControl):
         self._set_attr_json("alignment", self.__alignment)
 
     # value
+
     @property
     def value(self) -> Optional[int]:
         return self._get_attr("value", data_type="int", def_value=0)
@@ -129,6 +130,7 @@ class CupertinoTimerPicker(ConstrainedControl):
         self._set_attr("value", value)
 
     # alignment
+
     @property
     def alignment(self) -> Optional[Alignment]:
         return self.__alignment
@@ -138,6 +140,7 @@ class CupertinoTimerPicker(ConstrainedControl):
         self.__alignment = value
 
     # bgcolor
+
     @property
     def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
@@ -147,6 +150,7 @@ class CupertinoTimerPicker(ConstrainedControl):
         self._set_attr("bgcolor", value)
 
     # second_interval
+
     @property
     def second_interval(self) -> OptionalNumber:
         return self._get_attr("secondInterval", data_type="int", def_value=1)
@@ -156,6 +160,7 @@ class CupertinoTimerPicker(ConstrainedControl):
         self._set_attr("secondInterval", value)
 
     # item_extent
+
     @property
     def item_extent(self) -> OptionalNumber:
         return self._get_attr("itemExtent", data_type="float", def_value=32.0)
@@ -165,6 +170,7 @@ class CupertinoTimerPicker(ConstrainedControl):
         self._set_attr("itemExtent", value)
 
     # minute_interval
+
     @property
     def minute_interval(self) -> OptionalNumber:
         return self._get_attr("minuteInterval", data_type="int", def_value=1)
@@ -174,6 +180,7 @@ class CupertinoTimerPicker(ConstrainedControl):
         self._set_attr("minuteInterval", value)
 
     # mode
+
     @property
     def mode(self) -> Optional[CupertinoTimerPickerMode]:
         return self.__mode
@@ -184,6 +191,7 @@ class CupertinoTimerPicker(ConstrainedControl):
         self._set_enum_attr("mode", value, CupertinoTimerPickerMode)
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")

@@ -1,8 +1,9 @@
 from typing import Any, List, Optional
 
 from flet_core.charts.chart_axis_label import ChartAxisLabel
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
+from flet_core.types import OptionalNumber
 
 
 class ChartAxis(Control):
@@ -52,6 +53,7 @@ class ChartAxis(Control):
         return children
 
     # title
+
     @property
     def title(self) -> Optional[Control]:
         return self.__title
@@ -61,6 +63,7 @@ class ChartAxis(Control):
         self.__title = value
 
     # title_size
+
     @property
     def title_size(self) -> OptionalNumber:
         return self._get_attr("titleSize", data_type="float")
@@ -70,6 +73,7 @@ class ChartAxis(Control):
         self._set_attr("titleSize", value)
 
     # show_labels
+
     @property
     def show_labels(self) -> Optional[bool]:
         return self._get_attr("showLabels", data_type="bool", def_value=True)
@@ -79,6 +83,7 @@ class ChartAxis(Control):
         self._set_attr("showLabels", value)
 
     # labels
+
     @property
     def labels(self):
         return self.__labels
@@ -88,6 +93,7 @@ class ChartAxis(Control):
         self.__labels = value if value is not None else []
 
     # labels_interval
+
     @property
     def labels_interval(self) -> OptionalNumber:
         return self._get_attr("labelsInterval", data_type="float", def_value=1.0)
@@ -97,6 +103,7 @@ class ChartAxis(Control):
         self._set_attr("labelsInterval", value)
 
     # labels_size
+
     @property
     def labels_size(self) -> OptionalNumber:
         return self._get_attr("labelsSize", data_type="float")

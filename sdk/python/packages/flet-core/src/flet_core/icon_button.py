@@ -5,13 +5,14 @@ from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.theme import ThemeVisualDensity
 from flet_core.types import (
     AnimationValue,
     MouseCursor,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
@@ -211,6 +212,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self.focus()
 
     # icon
+
     @property
     def icon(self):
         return self._get_attr("icon")
@@ -220,6 +222,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("icon", value)
 
     # selected_icon
+
     @property
     def selected_icon(self):
         return self._get_attr("selectedIcon")
@@ -229,6 +232,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("selectedIcon", value)
 
     # icon_size
+
     @property
     def icon_size(self):
         return self._get_attr("iconSize")
@@ -238,6 +242,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("iconSize", value)
 
     # splash_radius
+
     @property
     def splash_radius(self):
         return self._get_attr("splashRadius")
@@ -247,6 +252,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("splashRadius", value)
 
     # splash_color
+
     @property
     def splash_color(self):
         return self._get_attr("splashColor")
@@ -256,6 +262,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("splashColor", value)
 
     # icon_color
+
     @property
     def icon_color(self):
         return self._get_attr("iconColor")
@@ -265,6 +272,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("iconColor", value)
 
     # highlight_color
+
     @property
     def highlight_color(self):
         return self._get_attr("highlightColor")
@@ -274,6 +282,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("highlightColor", value)
 
     # selected_icon_color
+
     @property
     def selected_icon_color(self):
         return self._get_attr("selectedIconColor")
@@ -283,6 +292,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("selectedIconColor", value)
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self._get_attr("bgcolor")
@@ -292,6 +302,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("bgcolor", value)
 
     # hover_color
+
     @property
     def hover_color(self):
         return self._get_attr("hoverColor")
@@ -301,6 +312,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("hoverColor", value)
 
     # focus_color
+
     @property
     def focus_color(self):
         return self._get_attr("focusColor")
@@ -310,6 +322,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("focusColor", value)
 
     # disabled_color
+
     @property
     def disabled_color(self):
         return self._get_attr("disabledColor")
@@ -319,6 +332,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("disabledColor", value)
 
     # padding
+
     @property
     def padding(self) -> PaddingValue:
         return self.__padding
@@ -328,6 +342,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self.__padding = value
 
     # selected
+
     @property
     def selected(self) -> Optional[bool]:
         return self._get_attr("selected", data_type="bool", def_value=False)
@@ -337,6 +352,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("selected", value)
 
     # enable_feedback
+
     @property
     def enable_feedback(self) -> Optional[bool]:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
@@ -346,6 +362,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("enableFeedback", value)
 
     # style
+
     @property
     def style(self) -> Optional[ButtonStyle]:
         return self.__style
@@ -355,6 +372,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self.__style = value
 
     # url
+
     @property
     def url(self):
         return self._get_attr("url")
@@ -364,6 +382,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("url", value)
 
     # url_target
+
     @property
     def url_target(self) -> Optional[UrlTarget]:
         return self.__url_target
@@ -376,6 +395,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         )
 
     # mouse_cursor
+
     @property
     def mouse_cursor(self) -> Optional[MouseCursor]:
         return self.__mouse_cursor
@@ -388,6 +408,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         )
 
     # visual_density
+
     @property
     def visual_density(self) -> Optional[ThemeVisualDensity]:
         return self.__visual_density
@@ -401,6 +422,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         )
 
     # on_click
+
     @property
     def on_click(self):
         return self._get_event_handler("click")
@@ -410,6 +432,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._add_event_handler("click", handler)
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -419,6 +442,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self.__content = value
 
     # autofocus
+
     @property
     def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
@@ -428,6 +452,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._set_attr("autofocus", value)
 
     # on_focus
+
     @property
     def on_focus(self):
         return self._get_event_handler("focus")
@@ -437,6 +462,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._add_event_handler("focus", handler)
 
     # on_blur
+
     @property
     def on_blur(self):
         return self._get_event_handler("blur")
@@ -446,6 +472,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._add_event_handler("blur", handler)
 
     # alignment
+
     @property
     def alignment(self) -> Optional[Alignment]:
         return self.__alignment

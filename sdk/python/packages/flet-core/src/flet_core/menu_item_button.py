@@ -3,12 +3,13 @@ from typing import Any, Optional, Union
 
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -149,6 +150,7 @@ class MenuItemButton(ConstrainedControl):
         self.focus()
 
     # focus_on_hover
+
     @property
     def focus_on_hover(self) -> Optional[bool]:
         return self._get_attr("focusOnHover", data_type="bool", def_value=True)
@@ -158,6 +160,7 @@ class MenuItemButton(ConstrainedControl):
         self._set_attr("focusOnHover", value)
 
     # close_on_click
+
     @property
     def close_on_click(self) -> Optional[bool]:
         return self._get_attr("closeOnClick", data_type="bool", def_value=True)
@@ -167,6 +170,7 @@ class MenuItemButton(ConstrainedControl):
         self._set_attr("closeOnClick", value)
 
     # leading
+
     @property
     def leading(self) -> Optional[Control]:
         return self.__leading
@@ -176,6 +180,7 @@ class MenuItemButton(ConstrainedControl):
         self.__leading = value
 
     # trailing
+
     @property
     def trailing(self) -> Optional[Control]:
         return self.__trailing
@@ -185,6 +190,7 @@ class MenuItemButton(ConstrainedControl):
         self.__trailing = value
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content
@@ -194,6 +200,7 @@ class MenuItemButton(ConstrainedControl):
         self.__content = value
 
     # style
+
     @property
     def style(self) -> Optional[ButtonStyle]:
         return self.__style
@@ -203,6 +210,7 @@ class MenuItemButton(ConstrainedControl):
         self.__style = value
 
     # clip_behavior
+
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
         return self.__clip_behavior
@@ -215,6 +223,7 @@ class MenuItemButton(ConstrainedControl):
         )
 
     # on_click
+
     @property
     def on_click(self):
         return self._get_event_handler("click")
@@ -225,6 +234,7 @@ class MenuItemButton(ConstrainedControl):
         self._set_attr("onClick", True if handler is not None else None)
 
     # on_hover
+
     @property
     def on_hover(self):
         return self._get_event_handler("hover")
@@ -235,6 +245,7 @@ class MenuItemButton(ConstrainedControl):
         self._set_attr("onHover", True if handler is not None else None)
 
     # on_focus
+
     @property
     def on_focus(self):
         return self._get_event_handler("focus")
@@ -244,6 +255,7 @@ class MenuItemButton(ConstrainedControl):
         self._add_event_handler("focus", handler)
 
     # on_blur
+
     @property
     def on_blur(self):
         return self._get_event_handler("blur")

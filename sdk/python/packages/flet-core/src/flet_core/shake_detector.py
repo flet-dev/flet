@@ -1,7 +1,8 @@
 from typing import Any, Optional
 
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
+from flet_core.types import OptionalNumber
 
 
 class ShakeDetector(Control):
@@ -63,6 +64,7 @@ class ShakeDetector(Control):
         return "shakedetector"
 
     # minimum_shake_count
+
     @property
     def minimum_shake_count(self) -> Optional[int]:
         return self._get_attr("minimumShakeCount")
@@ -72,6 +74,7 @@ class ShakeDetector(Control):
         self._set_attr("minimumShakeCount", value)
 
     # shake_slop_time_ms
+
     @property
     def shake_slop_time_ms(self) -> Optional[int]:
         return self._get_attr("shakeSlopTimeMS")
@@ -81,6 +84,7 @@ class ShakeDetector(Control):
         self._set_attr("shakeSlopTimeMS", value)
 
     # shake_count_reset_time_ms
+
     @property
     def shake_count_reset_time_ms(self) -> Optional[int]:
         return self._get_attr("shakeCountResetTimeMs")
@@ -90,6 +94,7 @@ class ShakeDetector(Control):
         self._set_attr("shakeCountResetTimeMs", value)
 
     # shake_threshold_gravity
+
     @property
     def shake_threshold_gravity(self) -> OptionalNumber:
         return self._get_attr("shakeThresholdGravity")
@@ -99,6 +104,7 @@ class ShakeDetector(Control):
         self._set_attr("shakeThresholdGravity", value)
 
     # on_shake
+
     @property
     def on_shake(self):
         return self._get_event_handler("shake")

@@ -1,11 +1,12 @@
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -123,6 +124,7 @@ class WindowDragArea(ConstrainedControl):
         return children
 
     # content
+
     @property
     def content(self):
         return self.__content
@@ -132,6 +134,7 @@ class WindowDragArea(ConstrainedControl):
         self.__content = value
 
     # maximizable
+
     @property
     def maximizable(self) -> Optional[bool]:
         return self._get_attr("maximizable", data_type="bool", def_value=True)

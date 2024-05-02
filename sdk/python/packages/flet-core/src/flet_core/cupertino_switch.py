@@ -1,12 +1,12 @@
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     LabelPosition,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -138,6 +138,7 @@ class CupertinoSwitch(ConstrainedControl):
         self._set_attr_json("trackColor", self.__track_color)
 
     # value
+
     @property
     def value(self) -> Optional[bool]:
         return self._get_attr("value", data_type="bool", def_value=False)
@@ -147,6 +148,7 @@ class CupertinoSwitch(ConstrainedControl):
         self._set_attr("value", value)
 
     # label
+
     @property
     def label(self) -> Optional[str]:
         return self._get_attr("label")
@@ -156,6 +158,7 @@ class CupertinoSwitch(ConstrainedControl):
         self._set_attr("label", value)
 
     # label_position
+
     @property
     def label_position(self) -> Optional[LabelPosition]:
         return self.__label_position
@@ -168,6 +171,7 @@ class CupertinoSwitch(ConstrainedControl):
         )
 
     # autofocus
+
     @property
     def autofocus(self) -> Optional[bool]:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
@@ -177,6 +181,7 @@ class CupertinoSwitch(ConstrainedControl):
         self._set_attr("autofocus", value)
 
     # active_color
+
     @property
     def active_color(self) -> Optional[str]:
         return self._get_attr("activeColor")
@@ -186,6 +191,7 @@ class CupertinoSwitch(ConstrainedControl):
         self._set_attr("activeColor", value)
 
     # focus_color
+
     @property
     def focus_color(self) -> Optional[str]:
         return self._get_attr("focusColor")
@@ -195,6 +201,7 @@ class CupertinoSwitch(ConstrainedControl):
         self._set_attr("focusColor", value)
 
     # thumb_color
+
     @property
     def thumb_color(self) -> Optional[str]:
         return self.__thumb_color
@@ -204,6 +211,7 @@ class CupertinoSwitch(ConstrainedControl):
         self.__thumb_color = value
 
     # track_color
+
     @property
     def track_color(self) -> Optional[str]:
         return self.__track_color
@@ -213,6 +221,7 @@ class CupertinoSwitch(ConstrainedControl):
         self.__track_color = value
 
     # on_label_color
+
     @property
     def on_label_color(self) -> Optional[str]:
         return self._get_attr("onLabelColor")
@@ -222,6 +231,7 @@ class CupertinoSwitch(ConstrainedControl):
         self._set_attr("onLabelColor", value)
 
     # off_label_color
+
     @property
     def off_label_color(self) -> Optional[str]:
         return self._get_attr("offLabelColor")
@@ -231,6 +241,7 @@ class CupertinoSwitch(ConstrainedControl):
         self._set_attr("offLabelColor", value)
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")
@@ -240,6 +251,7 @@ class CupertinoSwitch(ConstrainedControl):
         self._add_event_handler("change", handler)
 
     # on_focus
+
     @property
     def on_focus(self):
         return self._get_event_handler("focus")
@@ -249,6 +261,7 @@ class CupertinoSwitch(ConstrainedControl):
         self._add_event_handler("focus", handler)
 
     # on_blur
+
     @property
     def on_blur(self):
         return self._get_event_handler("blur")

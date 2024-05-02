@@ -1,12 +1,12 @@
 from typing import Any, Dict, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     MaterialState,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -172,6 +172,7 @@ class RangeSlider(ConstrainedControl):
         self._set_attr_json("overlayColor", self.__overlay_color)
 
     # start_value
+
     @property
     def start_value(self) -> float:
         return self._get_attr("startvalue")
@@ -181,6 +182,7 @@ class RangeSlider(ConstrainedControl):
         self._set_attr("startvalue", value)
 
     # end_value
+
     @property
     def end_value(self) -> float:
         return self._get_attr("endvalue")
@@ -190,6 +192,7 @@ class RangeSlider(ConstrainedControl):
         self._set_attr("endvalue", value)
 
     # label
+
     @property
     def label(self) -> str:
         return self._get_attr("label")
@@ -199,6 +202,7 @@ class RangeSlider(ConstrainedControl):
         self._set_attr("label", value)
 
     # min
+
     @property
     def min(self) -> OptionalNumber:
         return self._get_attr("min")
@@ -208,6 +212,7 @@ class RangeSlider(ConstrainedControl):
         self._set_attr("min", value)
 
     # max
+
     @property
     def max(self) -> OptionalNumber:
         return self._get_attr("max")
@@ -217,6 +222,7 @@ class RangeSlider(ConstrainedControl):
         self._set_attr("max", value)
 
     # divisions
+
     @property
     def divisions(self) -> Optional[int]:
         return self._get_attr("divisions")
@@ -226,6 +232,7 @@ class RangeSlider(ConstrainedControl):
         self._set_attr("divisions", value)
 
     # round
+
     @property
     def round(self) -> Optional[int]:
         return self._get_attr("round")
@@ -235,6 +242,7 @@ class RangeSlider(ConstrainedControl):
         self._set_attr("round", value)
 
     # active_color
+
     @property
     def active_color(self):
         return self._get_attr("activeColor")
@@ -244,6 +252,7 @@ class RangeSlider(ConstrainedControl):
         self._set_attr("activeColor", value)
 
     # inactive_color
+
     @property
     def inactive_color(self):
         return self._get_attr("inactiveColor")
@@ -253,6 +262,7 @@ class RangeSlider(ConstrainedControl):
         self._set_attr("inactiveColor", value)
 
     # overlay_color
+
     @property
     def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
         return self.__overlay_color
@@ -262,6 +272,7 @@ class RangeSlider(ConstrainedControl):
         self.__overlay_color = value
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")
@@ -271,6 +282,7 @@ class RangeSlider(ConstrainedControl):
         self._add_event_handler("change", handler)
 
     # on_change_start
+
     @property
     def on_change_start(self):
         return self._get_event_handler("change_start")
@@ -280,6 +292,7 @@ class RangeSlider(ConstrainedControl):
         self._add_event_handler("change_start", handler)
 
     # on_change_end
+
     @property
     def on_change_end(self):
         return self._get_event_handler("change_end")

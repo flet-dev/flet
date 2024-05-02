@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Optional, Union
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.border import BorderSide
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
@@ -12,6 +12,7 @@ from flet_core.types import (
     MaterialState,
     MouseCursor,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
@@ -58,6 +59,7 @@ class Tab(AdaptiveControl):
         return children
 
     # text
+
     @property
     def text(self):
         return self._get_attr("text")
@@ -67,6 +69,7 @@ class Tab(AdaptiveControl):
         self._set_attr("text", value)
 
     # icon
+
     @property
     def icon(self):
         return self._get_attr("icon")
@@ -76,6 +79,7 @@ class Tab(AdaptiveControl):
         self._set_attr("icon", value)
 
     # tab_content
+
     @property
     def tab_content(self):
         return self.__tab_content
@@ -85,6 +89,7 @@ class Tab(AdaptiveControl):
         self.__tab_content = value
 
     # content
+
     @property
     def content(self):
         return self.__content
@@ -262,6 +267,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         return self.__tabs
 
     # tabs
+
     @property
     def tabs(self) -> Optional[List[Tab]]:
         return self.__tabs
@@ -271,6 +277,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self.__tabs = value if value is not None else []
 
     # on_change
+
     @property
     def on_change(self):
         return self._get_event_handler("change")
@@ -280,6 +287,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self._add_event_handler("change", handler)
 
     # selected_index
+
     @property
     def selected_index(self) -> Optional[int]:
         return self._get_attr("selectedIndex", data_type="int", def_value=0)
@@ -289,6 +297,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self._set_attr("selectedIndex", value)
 
     # scrollable
+
     @property
     def scrollable(self) -> Optional[bool]:
         return self._get_attr("scrollable", data_type="bool", def_value=True)
@@ -298,6 +307,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self._set_attr("scrollable", value)
 
     # mouse_cursor
+
     @property
     def mouse_cursor(self) -> Optional[MouseCursor]:
         return self.__mouse_cursor
@@ -311,6 +321,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         )
 
     # clip_behavior
+
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
         return self.__clip_behavior
@@ -324,6 +335,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         )
 
     # is_secondary
+
     @property
     def is_secondary(self) -> Optional[bool]:
         return self._get_attr("isSecondary", data_type="bool", def_value=False)
@@ -333,6 +345,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self._set_attr("isSecondary", value)
 
     # tab_alignment
+
     @property
     def tab_alignment(self) -> Optional[TabAlignment]:
         return self.__tab_alignment
@@ -345,6 +358,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         )
 
     # animation_duration
+
     @property
     def animation_duration(self) -> Optional[int]:
         return self._get_attr("animationDuration", data_type="int")
@@ -354,6 +368,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self._set_attr("animationDuration", value)
 
     # divider_height
+
     @property
     def divider_height(self):
         return self._get_attr("dividerHeight", data_type="float", def_value=1.0)
@@ -363,6 +378,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self._set_attr("dividerHeight", value)
 
     # enable_feedback
+
     @property
     def enable_feedback(self):
         return self._get_attr("enableFeedback")
@@ -372,6 +388,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self._set_attr("enableFeedback", value)
 
     # indicator_thickness
+
     @property
     def indicator_thickness(self):
         return self._get_attr("indicatorThickness", data_type="float", def_value=3.0)
@@ -381,6 +398,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self._set_attr("indicatorThickness", value)
 
     # divider_color
+
     @property
     def divider_color(self) -> Optional[str]:
         return self._get_attr("dividerColor")
@@ -390,6 +408,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self._set_attr("dividerColor", value)
 
     # indicator_color
+
     @property
     def indicator_color(self) -> Optional[str]:
         return self._get_attr("indicatorColor")
@@ -399,6 +418,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self._set_attr("indicatorColor", value)
 
     # indicator_border_radius
+
     @property
     def indicator_border_radius(self) -> BorderRadiusValue:
         return self.__indicator_border_radius
@@ -408,6 +428,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self.__indicator_border_radius = value
 
     # indicator_border_side
+
     @property
     def indicator_border_side(self) -> Optional[BorderSide]:
         return self.__indicator_border_side
@@ -417,6 +438,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self.__indicator_border_side = value
 
     # indicator_padding
+
     @property
     def indicator_padding(self) -> PaddingValue:
         return self.__indicator_padding
@@ -426,6 +448,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self.__indicator_padding = value
 
     # indicator_tab_size
+
     @property
     def indicator_tab_size(self) -> Optional[bool]:
         return self._get_attr("indicatorTabSize", data_type="bool", def_value=False)
@@ -435,6 +458,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self._set_attr("indicatorTabSize", value)
 
     # label_color
+
     @property
     def label_color(self) -> Optional[str]:
         return self._get_attr("labelColor")
@@ -444,6 +468,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self._set_attr("labelColor", value)
 
     # unselected_label_color
+
     @property
     def unselected_label_color(self) -> Optional[str]:
         return self._get_attr("unselectedLabelColor")
@@ -453,6 +478,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self._set_attr("unselectedLabelColor", value)
 
     # overlay_color
+
     @property
     def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
         return self.__overlay_color

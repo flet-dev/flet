@@ -2,12 +2,13 @@ from typing import Any, Optional, Union
 
 from flet_core.alignment import Alignment
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
@@ -136,6 +137,7 @@ class CupertinoButton(ConstrainedControl):
         return [self.__content]
 
     # text
+
     @property
     def text(self):
         return self._get_attr("text")
@@ -145,6 +147,7 @@ class CupertinoButton(ConstrainedControl):
         self._set_attr("text", value)
 
     # icon
+
     @property
     def icon(self):
         return self._get_attr("icon")
@@ -154,6 +157,7 @@ class CupertinoButton(ConstrainedControl):
         self._set_attr("icon", value)
 
     # icon_color
+
     @property
     def icon_color(self):
         return self._get_attr("iconColor")
@@ -163,6 +167,7 @@ class CupertinoButton(ConstrainedControl):
         self._set_attr("iconColor", value)
 
     # alignment
+
     @property
     def alignment(self) -> Optional[Alignment]:
         return self.__alignment
@@ -172,6 +177,7 @@ class CupertinoButton(ConstrainedControl):
         self.__alignment = value
 
     # disabled_color
+
     @property
     def disabled_color(self) -> Optional[str]:
         return self._get_attr("disabledColor")
@@ -181,6 +187,7 @@ class CupertinoButton(ConstrainedControl):
         self._set_attr("disabledColor", value)
 
     # opacity_on_click
+
     @property
     def opacity_on_click(self) -> OptionalNumber:
         return self._get_attr("opacityOnClick", data_type="float", def_value=0.4)
@@ -192,6 +199,7 @@ class CupertinoButton(ConstrainedControl):
         self._set_attr("opacityOnClick", value)
 
     # border_radius
+
     @property
     def border_radius(self) -> BorderRadiusValue:
         return self.__border_radius
@@ -201,6 +209,7 @@ class CupertinoButton(ConstrainedControl):
         self.__border_radius = value
 
     # min_size
+
     @property
     def min_size(self) -> OptionalNumber:
         return self._get_attr("minSize", data_type="float", def_value=44.0)
@@ -210,6 +219,7 @@ class CupertinoButton(ConstrainedControl):
         self._set_attr("minSize", value)
 
     # padding
+
     @property
     def padding(self) -> PaddingValue:
         return self.__padding
@@ -219,6 +229,7 @@ class CupertinoButton(ConstrainedControl):
         self.__padding = value
 
     # bgcolor
+
     @property
     def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgColor")
@@ -228,6 +239,7 @@ class CupertinoButton(ConstrainedControl):
         self._set_attr("bgColor", value)
 
     # color
+
     @property
     def color(self) -> Optional[str]:
         return self._get_attr("color")
@@ -237,6 +249,7 @@ class CupertinoButton(ConstrainedControl):
         self._set_attr("color", value)
 
     # url
+
     @property
     def url(self):
         return self._get_attr("url")
@@ -246,6 +259,7 @@ class CupertinoButton(ConstrainedControl):
         self._set_attr("url", value)
 
     # url_target
+
     @property
     def url_target(self) -> Optional[UrlTarget]:
         return self.__url_target
@@ -258,6 +272,7 @@ class CupertinoButton(ConstrainedControl):
         )
 
     # on_click
+
     @property
     def on_click(self):
         return self._get_event_handler("click")
@@ -267,6 +282,7 @@ class CupertinoButton(ConstrainedControl):
         self._add_event_handler("click", handler)
 
     # content
+
     @property
     def content(self) -> Optional[Control]:
         return self.__content

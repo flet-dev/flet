@@ -4,7 +4,6 @@ from flet_core import Control
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.app_bar import AppBar
 from flet_core.bottom_app_bar import BottomAppBar
-from flet_core.control import OptionalNumber
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.floating_action_button import FloatingActionButton
@@ -16,6 +15,7 @@ from flet_core.types import (
     FloatingActionButtonLocation,
     MainAxisAlignment,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ScrollMode,
 )
@@ -126,6 +126,7 @@ class View(ScrollableControl, AdaptiveControl):
         return children
 
     # route
+
     @property
     def route(self):
         return self._get_attr("route")
@@ -135,6 +136,7 @@ class View(ScrollableControl, AdaptiveControl):
         self._set_attr("route", value)
 
     # controls
+
     @property
     def controls(self) -> List[Control]:
         return self.__controls
@@ -144,6 +146,7 @@ class View(ScrollableControl, AdaptiveControl):
         self.__controls = value
 
     # appbar
+
     @property
     def appbar(self) -> Union[AppBar, CupertinoAppBar, None]:
         return self.__appbar
@@ -153,6 +156,7 @@ class View(ScrollableControl, AdaptiveControl):
         self.__appbar = value
 
     # bottom_appbar
+
     @property
     def bottom_appbar(self) -> Optional[BottomAppBar]:
         return self.__bottom_appbar
@@ -162,6 +166,7 @@ class View(ScrollableControl, AdaptiveControl):
         self.__bottom_appbar = value
 
     # floating_action_button
+
     @property
     def floating_action_button(self) -> Optional[FloatingActionButton]:
         return self.__fab
@@ -171,6 +176,7 @@ class View(ScrollableControl, AdaptiveControl):
         self.__fab = value
 
     # floating_action_button_location
+
     @property
     def floating_action_button_location(
         self,
@@ -188,6 +194,7 @@ class View(ScrollableControl, AdaptiveControl):
         )
 
     # navigation_bar
+
     @property
     def navigation_bar(self) -> Union[NavigationBar, CupertinoNavigationBar, None]:
         return self.__navigation_bar
@@ -197,6 +204,7 @@ class View(ScrollableControl, AdaptiveControl):
         self.__navigation_bar = value
 
     # drawer
+
     @property
     def drawer(self) -> Optional[NavigationDrawer]:
         return self.__drawer
@@ -206,6 +214,7 @@ class View(ScrollableControl, AdaptiveControl):
         self.__drawer = value
 
     # end_drawer
+
     @property
     def end_drawer(self) -> Optional[NavigationDrawer]:
         return self.__end_drawer
@@ -215,6 +224,7 @@ class View(ScrollableControl, AdaptiveControl):
         self.__end_drawer = value
 
     # horizontal_alignment
+
     @property
     def horizontal_alignment(self) -> CrossAxisAlignment:
         return self.__horizontal_alignment
@@ -228,6 +238,7 @@ class View(ScrollableControl, AdaptiveControl):
         )
 
     # vertical_alignment
+
     @property
     def vertical_alignment(self) -> MainAxisAlignment:
         return self.__vertical_alignment
@@ -241,6 +252,7 @@ class View(ScrollableControl, AdaptiveControl):
         )
 
     # spacing
+
     @property
     def spacing(self) -> OptionalNumber:
         return self._get_attr("spacing")
@@ -250,6 +262,7 @@ class View(ScrollableControl, AdaptiveControl):
         self._set_attr("spacing", value)
 
     # padding
+
     @property
     def padding(self) -> PaddingValue:
         return self.__padding
@@ -259,6 +272,7 @@ class View(ScrollableControl, AdaptiveControl):
         self.__padding = value
 
     # bgcolor
+
     @property
     def bgcolor(self):
         return self._get_attr("bgcolor")
@@ -268,6 +282,7 @@ class View(ScrollableControl, AdaptiveControl):
         self._set_attr("bgcolor", value)
 
     # fullscreen_dialog
+
     @property
     def fullscreen_dialog(self) -> Optional[bool]:
         return self._get_attr("fullscreenDialog", data_type="bool", def_value=False)

@@ -4,12 +4,13 @@ from typing import Any, List, Optional, Union
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -153,6 +154,7 @@ class Stack(ConstrainedControl, AdaptiveControl):
         return self.__controls
 
     # controls
+
     @property
     def controls(self):
         return self.__controls
@@ -162,6 +164,7 @@ class Stack(ConstrainedControl, AdaptiveControl):
         self.__controls = value if value is not None else []
 
     # clip_behavior
+
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
         return self.__clip_behavior
@@ -174,6 +177,7 @@ class Stack(ConstrainedControl, AdaptiveControl):
         )
 
     # alignment
+
     @property
     def alignment(self) -> Optional[Alignment]:
         return self.__alignment
@@ -183,6 +187,7 @@ class Stack(ConstrainedControl, AdaptiveControl):
         self.__alignment = value
 
     # fit
+
     @property
     def fit(self) -> Optional[StackFit]:
         return self.__fit
