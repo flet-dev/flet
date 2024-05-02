@@ -1,3 +1,13 @@
+# 0.22.1
+
+* `AutoComplete` control ([#3003](https://github.com/flet-dev/flet/issues/3003))
+* Added `--exclude` option to `flet build` command ([#3125](https://github.com/flet-dev/flet/issues/3125))
+* `CupertinoTimePicker.alignment` property ([#3036](https://github.com/flet-dev/flet/issues/3036))
+* Bump `file_picker` dependency to 8.0.3.
+* Fix latest flet-build-template version in development mode ([#3021](https://github.com/flet-dev/flet/issues/3021))
+* Fix `flet --version` command for source checkout.
+* LineChart: fix regression ([#3033](https://github.com/flet-dev/flet/issues/3033))
+
 # 0.22.0
 
 * Controls enhancement (see [#2882](https://github.com/flet-dev/flet/issues/2882) for details).

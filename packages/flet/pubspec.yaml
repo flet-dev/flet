@@ -2,7 +2,7 @@ name: flet
 description: Write entire Flutter app in Python or add server-driven UI experience into existing Flutter app.
 homepage: https://flet.dev
 repository: https://github.com/flet-dev/flet/packages/flet
-version: 0.22.0
+version: 0.22.1
 
 # This package supports all platforms listed below.
 platforms:
