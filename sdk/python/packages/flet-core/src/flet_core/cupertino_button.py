@@ -130,6 +130,9 @@ class CupertinoButton(ConstrainedControl):
         self._set_attr_json("alignment", self.__alignment)
 
     def _get_children(self):
+        assert (
+            self.text or self.__content
+        ), "at minimum, text or content must be provided"
         if self.__content is None:
             return []
         self.__content._set_attr_internal("n", "content")

@@ -39,7 +39,8 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     debugPrint("CupertinoButton build: ${widget.control.id}");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    var contentCtrls = widget.children.where((c) => c.name == "content");
+    var contentCtrls =
+        widget.children.where((c) => c.name == "content" && c.isVisible);
 
     String? text = widget.control.attrString("text");
     IconData? icon = parseIcon(widget.control.attrString("icon", "")!);
@@ -66,7 +67,10 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       children.add(Text(text));
     }
 
-    if (children.isNotEmpty) {
+    if (contentCtrls.isNotEmpty) {
+      content = createControl(widget.control, contentCtrls.first.id, disabled,
+          parentAdaptive: widget.parentAdaptive);
+    } else if (children.isNotEmpty) {
       if (children.length == 2) {
         children.insert(1, const SizedBox(width: 8));
         content = Row(
@@ -76,14 +80,13 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       } else {
         content = children.first;
       }
-    } else if (contentCtrls.isNotEmpty) {
-      content = createControl(widget.control, contentCtrls.first.id, disabled,
-          parentAdaptive: widget.parentAdaptive);
     }
 
     if (content == null) {
       return const ErrorControl(
-          "CupertinoButton.content must be provided and visible");
+        "CupertinoButton has nothing to display",
+        description: "Provide at minimum text or (visible) content",
+      );
     }
 
     double pressedOpacity = widget.control.attrDouble("opacityOnClick", 0.4)!;
