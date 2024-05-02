@@ -121,11 +121,8 @@ class SnackBar(Control):
         return "snackbar"
 
     def _get_children(self):
-        children = []
-        if self.__content:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
+        self.__content._set_attr_internal("n", "content")
+        return [self.__content]
 
     def before_update(self):
         super().before_update()
@@ -268,6 +265,7 @@ class SnackBar(Control):
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
+        assert value is None or value >= 0, "elevation cannot be negative"
         self._set_attr("elevation", value)
 
     # clip_behavior

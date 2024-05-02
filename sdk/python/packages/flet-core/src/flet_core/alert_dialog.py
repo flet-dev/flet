@@ -162,6 +162,9 @@ class AlertDialog(AdaptiveControl):
             self._set_attr_json("titleTextStyle", self.__title_text_style)
 
     def _get_children(self):
+        assert (
+            self.__title or self.__content or self.__actions
+        ), "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions"
         children = []
         if self.__title:
             self.__title._set_attr_internal("n", "title")

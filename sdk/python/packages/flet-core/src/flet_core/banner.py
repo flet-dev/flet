@@ -50,12 +50,12 @@ class Banner(Control):
 
     def __init__(
         self,
+        content: Control,
+        actions: List[Control],
         open: bool = False,
         leading: Optional[Control] = None,
         leading_padding: Optional[PaddingValue] = None,
-        content: Optional[Control] = None,
         content_padding: Optional[PaddingValue] = None,
-        actions: Optional[List[Control]] = None,
         force_actions_below: Optional[bool] = None,
         bgcolor: Optional[str] = None,
         surface_tint_color: Optional[str] = None,
@@ -81,10 +81,6 @@ class Banner(Control):
             visible=visible,
             data=data,
         )
-
-        self.__leading: Optional[Control] = None
-        self.__content: Optional[Control] = None
-        self.__actions = []
 
         self.open = open
         self.leading = leading
@@ -114,16 +110,13 @@ class Banner(Control):
             self._set_attr_json("contentTextStyle", self.__content_text_style)
 
     def _get_children(self):
-        children = []
+        self.__content._set_attr_internal("n", "content")
+        for action in self.__actions:
+            action._set_attr_internal("n", "action")
+        children = [self.__content] + self.__actions
         if self.__leading:
             self.__leading._set_attr_internal("n", "leading")
             children.append(self.__leading)
-        if self.__content:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        for action in self.__actions:
-            action._set_attr_internal("n", "action")
-            children.append(action)
         return children
 
     # open
@@ -164,11 +157,11 @@ class Banner(Control):
 
     # content
     @property
-    def content(self) -> Optional[Control]:
+    def content(self) -> Control:
         return self.__content
 
     @content.setter
-    def content(self, value: Optional[Control]):
+    def content(self, value: Control):
         self.__content = value
 
     # content_padding
@@ -191,12 +184,13 @@ class Banner(Control):
 
     # actions
     @property
-    def actions(self):
+    def actions(self) -> List[Control]:
         return self.__actions
 
     @actions.setter
-    def actions(self, value):
-        self.__actions = value if value is not None else []
+    def actions(self, value: List[Control]):
+        assert len(value) > 0, "actions cannot be empty"
+        self.__actions = value
 
     # force_actions_below
     @property
@@ -259,6 +253,7 @@ class Banner(Control):
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
+        assert value is None or value >= 0, "elevation_on_scroll cannot be negative"
         self._set_attr("elevation", value)
 
     # on_visible

@@ -59,7 +59,7 @@ class MenuBar(Control):
 
     def __init__(
         self,
-        controls: Optional[List[Control]] = None,
+        controls: List[Control],
         clip_behavior: Optional[ClipBehavior] = None,
         style: Optional[MenuStyle] = None,
         #
@@ -86,7 +86,6 @@ class MenuBar(Control):
             data=data,
         )
 
-        self.__controls: List[Control] = []
         self.controls = controls
         self.clip_behavior = clip_behavior
         self.style = style

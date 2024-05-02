@@ -42,7 +42,8 @@ class SafeAreaControl extends StatelessWidget {
             child: contentCtrls.isNotEmpty
                 ? createControl(control, contentCtrls.first.id, disabled,
                     parentAdaptive: adaptive)
-                : const ErrorControl("SafeArea has no content.")),
+                : const ErrorControl(
+                    "SafeArea.content must be provided and visible")),
         parent,
         control);
   }

@@ -37,8 +37,8 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
+        title: Control,
         controls: Optional[List[Control]] = None,
-        title: Optional[Control] = None,
         subtitle: Optional[Control] = None,
         leading: Optional[Control] = None,
         trailing: Optional[Control] = None,
@@ -168,7 +168,8 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("collapsedShape", self.__collapsed_shape)
 
     def _get_children(self):
-        children = []
+        self.__title._set_attr_internal("n", "title")
+        children = [self.__title]
         if self.__controls:
             for c in self.__controls:
                 c._set_attr_internal("n", "controls")
@@ -176,9 +177,6 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         if self.__leading:
             self.__leading._set_attr_internal("n", "leading")
             children.append(self.__leading)
-        if self.__title:
-            self.__title._set_attr_internal("n", "title")
-            children.append(self.__title)
         if self.__subtitle:
             self.__subtitle._set_attr_internal("n", "subtitle")
             children.append(self.__subtitle)

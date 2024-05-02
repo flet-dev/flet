@@ -145,10 +145,8 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         return "dismissible"
 
     def _get_children(self):
-        children = []
-        if self.__content:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
+        self.__content._set_attr_internal("n", "content")
+        children = [self.__content]
         if self.__background:
             self.__background._set_attr_internal("n", "background")
             children.append(self.__background)

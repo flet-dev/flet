@@ -119,7 +119,10 @@ class CupertinoSegmentedButton(ConstrainedControl):
 
     @controls.setter
     def controls(self, value: List[Control]):
-        self.__controls = value if value is not None else []
+        assert (
+            len(value) >= 2
+        ), "CupertinoSegmentedButton must have at minimum two visible controls"
+        self.__controls = value
 
     # border_color
     @property

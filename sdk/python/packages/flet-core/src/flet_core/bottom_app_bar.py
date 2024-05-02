@@ -204,4 +204,5 @@ class BottomAppBar(ConstrainedControl):
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
+        assert value is None or value >= 0, "elevation cannot be negative"
         self._set_attr("elevation", value)

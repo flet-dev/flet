@@ -104,8 +104,8 @@ class DragTarget(Control):
 
     def __init__(
         self,
+        content: Control,
         group: Optional[str] = None,
-        content: Optional[Control] = None,
         on_will_accept=None,
         on_accept=None,
         on_leave=None,
@@ -136,8 +136,6 @@ class DragTarget(Control):
         self._add_event_handler("accept", self.__on_accept.get_handler())
         self._add_event_handler("move", self.__on_move.get_handler())
 
-        self.__content: Optional[Control] = None
-
         self.group = group
         self.content = content
         self.on_will_accept = on_will_accept
@@ -149,11 +147,8 @@ class DragTarget(Control):
         return "dragtarget"
 
     def _get_children(self):
-        children = []
-        if self.__content:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
+        self.__content._set_attr_internal("n", "content")
+        return [self.__content]
 
     # group
     @property
@@ -166,11 +161,11 @@ class DragTarget(Control):
 
     # content
     @property
-    def content(self) -> Optional[Control]:
+    def content(self) -> Control:
         return self.__content
 
     @content.setter
-    def content(self, value: Optional[Control]):
+    def content(self, value: Control):
         self.__content = value
 
     # on_will_accept

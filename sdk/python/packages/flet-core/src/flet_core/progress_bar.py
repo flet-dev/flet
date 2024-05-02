@@ -137,28 +137,31 @@ class ProgressBar(ConstrainedControl):
     # value
     @property
     def value(self) -> OptionalNumber:
-        return self._get_attr("value")
+        return self._get_attr("value", data_type="float")
 
     @value.setter
     def value(self, value: OptionalNumber):
+        assert value is None or value >= 0, "value cannot be negative"
         self._set_attr("value", value)
 
     # bar_height
     @property
     def bar_height(self) -> OptionalNumber:
-        return self._get_attr("barHeight")
+        return self._get_attr("barHeight", data_type="float")
 
     @bar_height.setter
     def bar_height(self, value: OptionalNumber):
+        assert value is None or value >= 0, "bar_height cannot be negative"
         self._set_attr("barHeight", value)
 
     # semantics_value
     @property
     def semantics_value(self) -> OptionalNumber:
-        return self._get_attr("semanticsValue")
+        return self._get_attr("semanticsValue", data_type="float")
 
     @semantics_value.setter
     def semantics_value(self, value: OptionalNumber):
+        assert value is None or value >= 0, "semantics_value cannot be negative"
         self._set_attr("semanticsValue", value)
 
     # color

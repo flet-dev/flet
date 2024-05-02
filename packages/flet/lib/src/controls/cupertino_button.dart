@@ -83,7 +83,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
 
     if (content == null) {
       return const ErrorControl(
-          "CupertinoButton has no content control. Please specify one.");
+          "CupertinoButton.content must be provided and visible");
     }
 
     double pressedOpacity = widget.control.attrDouble("opacityOnClick", 0.4)!;

@@ -54,9 +54,9 @@ class ShaderMask(ConstrainedControl):
 
     def __init__(
         self,
+        shader: Gradient,
         content: Optional[Control] = None,
         blend_mode: Optional[BlendMode] = None,
-        shader: Optional[Gradient] = None,
         border_radius: BorderRadiusValue = None,
         #
         # ConstrainedControl
@@ -132,11 +132,8 @@ class ShaderMask(ConstrainedControl):
         self._set_attr_json("borderRadius", self.__border_radius)
 
     def _get_children(self):
-        children = []
-        if self.__content is not None:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
+        self.__content._set_attr_internal("n", "content")
+        return [self.__content]
 
     # content
     @property

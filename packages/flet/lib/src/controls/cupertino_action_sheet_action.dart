@@ -32,7 +32,7 @@ class CupertinoActionSheetActionControl extends StatelessWidget {
         children.where((c) => c.name == "content" && c.isVisible);
     if (contentCtrls.isEmpty) {
       return const ErrorControl(
-          "CupertinoActionSheetAction must have a content control!");
+          "CupertinoActionSheetAction.content must be provided and visible");
     }
 
     return constrainedControl(

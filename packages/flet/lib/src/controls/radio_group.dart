@@ -29,7 +29,7 @@ class RadioGroupControl extends StatelessWidget {
 
     if (contentCtrls.isEmpty) {
       return const ErrorControl(
-          "RadioGroup control does not have any content.");
+          "RadioGroup.content must be provided and visible");
     }
 
     return createControl(control, contentCtrls.first.id, disabled,

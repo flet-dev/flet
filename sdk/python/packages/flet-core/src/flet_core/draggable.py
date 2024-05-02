@@ -113,8 +113,8 @@ class Draggable(Control):
 
     def __init__(
         self,
+        content: Control,
         group: Optional[str] = None,
-        content: Optional[Control] = None,
         content_when_dragging: Optional[Control] = None,
         content_feedback: Optional[Control] = None,
         on_drag_start=None,
@@ -136,10 +136,6 @@ class Draggable(Control):
             data=data,
         )
 
-        self.__content: Optional[Control] = None
-        self.__content_when_dragging: Optional[Control] = None
-        self.__content_feedback: Optional[Control] = None
-
         self.group = group
         self.content = content
         self.content_when_dragging = content_when_dragging
@@ -151,10 +147,8 @@ class Draggable(Control):
         return "draggable"
 
     def _get_children(self):
-        children = []
-        if self.__content:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
+        self.__content._set_attr_internal("n", "content")
+        children = [self.__content]
         if self.__content_when_dragging:
             self.__content_when_dragging._set_attr_internal(
                 "n", "content_when_dragging"
@@ -176,11 +170,11 @@ class Draggable(Control):
 
     # content
     @property
-    def content(self):
+    def content(self) -> Control:
         return self.__content
 
     @content.setter
-    def content(self, value):
+    def content(self, value: Control):
         self.__content = value
 
     # content_when_dragging

@@ -51,7 +51,7 @@ class BottomSheet(Control):
 
     def __init__(
         self,
-        content: Optional[Control] = None,
+        content: Control,
         open: bool = False,
         elevation: OptionalNumber = None,
         bgcolor: Optional[str] = None,
@@ -78,8 +78,6 @@ class BottomSheet(Control):
             data=data,
         )
 
-        self.__content: Optional[Control] = None
-
         self.open = open
         self.elevation = elevation
         self.bgcolor = bgcolor
@@ -96,11 +94,8 @@ class BottomSheet(Control):
         return "bottomsheet"
 
     def _get_children(self):
-        children = []
-        if self.__content:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
+        self.__content._set_attr_internal("n", "content")
+        return [self.__content]
 
     # open
     @property
@@ -118,6 +113,7 @@ class BottomSheet(Control):
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
+        assert value is None or value >= 0, "elevation cannot be negative"
         self._set_attr("elevation", value)
 
     # bgcolor

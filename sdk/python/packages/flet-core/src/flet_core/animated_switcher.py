@@ -79,7 +79,7 @@ class AnimatedSwitcher(ConstrainedControl):
 
     def __init__(
         self,
-        content: Optional[Control] = None,
+        content: Control,
         duration: Optional[int] = None,
         reverse_duration: Optional[int] = None,
         switch_in_curve: Optional[AnimationCurve] = None,
@@ -159,11 +159,8 @@ class AnimatedSwitcher(ConstrainedControl):
         super().before_update()
 
     def _get_children(self):
-        children = []
-        if self.__content is not None:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
+        self.__content._set_attr_internal("n", "content")
+        return [self.__content]
 
     # content
     @property

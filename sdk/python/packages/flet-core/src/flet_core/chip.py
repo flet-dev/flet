@@ -205,10 +205,8 @@ class Chip(ConstrainedControl):
         self._set_attr_json("color", self.__color)
 
     def _get_children(self):
-        children = []
-        if self.__label:
-            self.__label._set_attr_internal("n", "label")
-            children.append(self.__label)
+        self.__label._set_attr_internal("n", "label")
+        children = [self.__label]
         if self.__leading:
             self.__leading._set_attr_internal("n", "leading")
             children.append(self.__leading)
@@ -238,7 +236,7 @@ class Chip(ConstrainedControl):
     # show_checkmark
     @property
     def show_checkmark(self) -> Optional[bool]:
-        return self._get_attr("showCheckmark")
+        return self._get_attr("showCheckmark", data_type="bool", def_value=True)
 
     @show_checkmark.setter
     def show_checkmark(self, value: Optional[bool]):
@@ -246,12 +244,12 @@ class Chip(ConstrainedControl):
 
     # delete_icon_tooltip
     @property
-    def delete_icon_tooltip(self):
-        return self._get_attr("deleteButtonTooltipMessage")
+    def delete_icon_tooltip(self) -> Optional[str]:
+        return self._get_attr("deleteButtonTooltip")
 
     @delete_icon_tooltip.setter
-    def delete_icon_tooltip(self, value):
-        self._set_attr("deleteButtonTooltipMessage", value)
+    def delete_icon_tooltip(self, value: Optional[str]):
+        self._set_attr("deleteButtonTooltip", value)
 
     # label
     @property

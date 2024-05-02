@@ -101,8 +101,7 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
         debugPrint("Radio StoreConnector build: ${widget.control.id}");
 
         if (viewModel.ancestor == null) {
-          return const ErrorControl(
-              "Radio control must be enclosed with RadioGroup.");
+          return const ErrorControl("Radio must be enclosed within RadioGroup");
         }
 
         String groupValue = viewModel.ancestor!.attrString("value", "")!;

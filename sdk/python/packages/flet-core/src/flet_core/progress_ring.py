@@ -37,7 +37,7 @@ class ProgressRing(ConstrainedControl):
         page.add(
             ft.Text("Circular progress indicator", style="headlineSmall"),
             ft.Row([pr, ft.Text("Wait for the completion...")]),
-            ft.Text("Indeterminate cicrular progress", style="headlineSmall"),
+            ft.Text("Indeterminate circular progress", style="headlineSmall"),
             ft.Column(
                 [ft.ProgressRing(), ft.Text("I'm going to run for ages...")],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -156,6 +156,7 @@ class ProgressRing(ConstrainedControl):
 
     @stroke_width.setter
     def stroke_width(self, value: OptionalNumber):
+        assert value is None or value >= 0, "stroke_width cannot be negative"
         self._set_attr("strokeWidth", value)
 
     # stroke_align

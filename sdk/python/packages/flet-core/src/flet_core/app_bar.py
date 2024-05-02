@@ -177,6 +177,9 @@ class AppBar(AdaptiveControl):
 
     @toolbar_opacity.setter
     def toolbar_opacity(self, value: OptionalNumber):
+        assert value is None or (
+            0 >= value >= 1
+        ), "toolbar_opacity is out of range (0-1)"
         self._set_attr("toolbarOpacity", value)
 
     # shape
@@ -242,6 +245,7 @@ class AppBar(AdaptiveControl):
 
     @toolbar_height.setter
     def toolbar_height(self, value: OptionalNumber):
+        assert value is None or value >= 0, "toolbar_height cannot be negative"
         self._set_attr("toolbarHeight", value)
 
     # color
@@ -318,6 +322,7 @@ class AppBar(AdaptiveControl):
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
+        assert value is None or value >= 0, "elevation cannot be negative"
         self._set_attr("elevation", value)
 
     # elevation_on_scroll
@@ -327,6 +332,7 @@ class AppBar(AdaptiveControl):
 
     @elevation_on_scroll.setter
     def elevation_on_scroll(self, value: OptionalNumber):
+        assert value is None or value >= 0, "elevation_on_scroll cannot be negative"
         self._set_attr("elevationOnScroll", value)
 
     # clip_behavior

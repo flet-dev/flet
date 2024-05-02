@@ -23,8 +23,8 @@ class CupertinoActionSheetAction(ConstrainedControl):
 
     def __init__(
         self,
+        content: Control,
         text: Optional[str] = None,
-        content: Optional[Control] = None,
         is_default_action: Optional[bool] = None,
         is_destructive_action: Optional[bool] = None,
         on_click=None,
@@ -103,11 +103,8 @@ class CupertinoActionSheetAction(ConstrainedControl):
         super().before_update()
 
     def _get_children(self):
-        children = []
-        if self.__content:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
+        self.__content._set_attr_internal("n", "content")
+        return [self.__content]
 
     # text
     @property
@@ -121,7 +118,7 @@ class CupertinoActionSheetAction(ConstrainedControl):
     # is_default_action
     @property
     def is_default_action(self) -> Optional[bool]:
-        return self._get_attr("isDefaultAction")
+        return self._get_attr("isDefaultAction", data_type="bool", def_value=False)
 
     @is_default_action.setter
     def is_default_action(self, value: Optional[bool]):
@@ -130,7 +127,7 @@ class CupertinoActionSheetAction(ConstrainedControl):
     # is_destructive_action
     @property
     def is_destructive_action(self) -> Optional[bool]:
-        return self._get_attr("isDestructiveAction")
+        return self._get_attr("isDestructiveAction", data_type="bool", def_value=False)
 
     @is_destructive_action.setter
     def is_destructive_action(self, value: Optional[bool]):
