@@ -302,6 +302,8 @@ from flet_core.types import (
     BoxShape,
     Brightness,
     ClipBehavior,
+    ColorStr,
+    ControlEventFunction,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     FontWeight,

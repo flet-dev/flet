@@ -78,6 +78,7 @@ ResponsiveNumber = Union[Dict[str, Union[int, float]], int, float]
 OptionalNumber = Optional[Union[int, float]]
 
 # str type alias
+ColorStr = Optional[str]
 IconStr = Optional[str]
 
 
