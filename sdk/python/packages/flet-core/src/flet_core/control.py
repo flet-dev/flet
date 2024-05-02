@@ -67,11 +67,11 @@ class Control:
     def will_unmount(self):
         pass
 
-    def _get_children(self):
+    def _get_children(self) -> "List[Control]":
         return []
 
-    def _get_control_name(self):
-        raise Exception("_getControlName must be overridden in inherited class")
+    def _get_control_name(self) -> str:
+        raise Exception("_get_control_name must be overridden in inherited class")
 
     def _add_event_handler(self, event_name, handler):
         self.__event_handlers[event_name] = handler

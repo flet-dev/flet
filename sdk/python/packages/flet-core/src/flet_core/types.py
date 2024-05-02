@@ -35,19 +35,19 @@ class UrlTarget(Enum):
     # UNFENCED_TOP = "_unfencedTop"
 
 
-PaddingValue = Union[None, int, float, Padding]
+PaddingValue = Optional[Union[int, float, Padding]]
 
-MarginValue = Union[None, int, float, Margin]
+MarginValue = Optional[Union[int, float, Margin]]
 
-BorderRadiusValue = Union[None, int, float, BorderRadius]
+BorderRadiusValue = Optional[Union[int, float, BorderRadius]]
 
-RotateValue = Union[None, int, float, Rotate]
+RotateValue = Optional[Union[int, float, Rotate]]
 
-ScaleValue = Union[None, int, float, Scale]
+ScaleValue = Optional[Union[int, float, Scale]]
 
-OffsetValue = Union[None, Offset, Tuple[Union[float, int], Union[float, int]]]
+OffsetValue = Optional[Union[Offset, Tuple[Union[float, int], Union[float, int]]]]
 
-AnimationValue = Union[None, bool, int, Animation]
+AnimationValue = Optional[Union[bool, int, Animation]]
 
 
 class FontWeight(Enum):
@@ -76,6 +76,9 @@ class NotchShape(Enum):
 
 ResponsiveNumber = Union[Dict[str, Union[int, float]], int, float]
 OptionalNumber = Optional[Union[int, float]]
+
+# str type alias
+IconStr = Optional[str]
 
 
 class MaterialState(Enum):

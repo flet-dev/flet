@@ -305,6 +305,7 @@ from flet_core.types import (
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     FontWeight,
+    IconStr,
     ImageFit,
     ImageRepeat,
     LabelPosition,

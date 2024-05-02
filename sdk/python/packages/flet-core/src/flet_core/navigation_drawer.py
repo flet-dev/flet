@@ -20,7 +20,7 @@ class NavigationDrawerDestination(Control):
         #
         # Control
         #
-        ref: Optional[Ref] = None,
+        ref: Optional[Ref] = None
     ) -> None:
         Control.__init__(self, ref=ref)
         self.label = label
@@ -32,10 +32,10 @@ class NavigationDrawerDestination(Control):
         self.__selected_icon_content: Optional[Control] = None
         self.selected_icon_content = selected_icon_content
 
-    def _get_control_name(self) -> str:
+    def _get_control_name(self):
         return "navigationdrawerdestination"
 
-    def _get_children(self) -> Optional[List[Control]]:
+    def _get_children(self):
         children = []
         if self.__icon_content:
             self.__icon_content._set_attr_internal("n", "icon_content")
@@ -48,63 +48,57 @@ class NavigationDrawerDestination(Control):
         return children
 
     # bgcolor
-
     @property
     def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgColor")
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]) -> None:
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgColor", value)
 
     # icon
-
     @property
     def icon(self) -> Optional[str]:
         return self._get_attr("icon")
 
     @icon.setter
-    def icon(self, value: Optional[str]) -> None:
+    def icon(self, value: Optional[str]):
         self._set_attr("icon", value)
 
     # icon_content
-
     @property
     def icon_content(self) -> Optional[Control]:
         return self.__icon_content
 
     @icon_content.setter
-    def icon_content(self, value: Optional[Control]) -> None:
+    def icon_content(self, value: Optional[Control]):
         self.__icon_content = value
 
     # selected_icon
-
     @property
     def selected_icon(self) -> Optional[str]:
         return self._get_attr("selectedIcon")
 
     @selected_icon.setter
-    def selected_icon(self, value: Optional[str]) -> None:
+    def selected_icon(self, value: Optional[str]):
         self._set_attr("selectedIcon", value)
 
     # selected_icon_content
-
     @property
     def selected_icon_content(self) -> Optional[Control]:
         return self.__selected_icon_content
 
     @selected_icon_content.setter
-    def selected_icon_content(self, value: Optional[Control]) -> None:
+    def selected_icon_content(self, value: Optional[Control]):
         self.__selected_icon_content = value
 
     # label
-
     @property
     def label(self) -> Optional[str]:
         return self._get_attr("label")
 
     @label.setter
-    def label(self, value: Optional[str]) -> None:
+    def label(self, value: Optional[str]):
         self._set_attr("label", value)
 
 
@@ -202,7 +196,7 @@ class NavigationDrawer(Control):
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
-        data: Any = None,
+        data: Any = None
     ) -> None:
         Control.__init__(
             self,
@@ -226,7 +220,7 @@ class NavigationDrawer(Control):
         self.on_change = on_change
         self.on_dismiss = on_dismiss
 
-    def _get_control_name(self) -> str:
+    def _get_control_name(self):
         return "navigationdrawer"
 
     def before_update(self) -> None:
@@ -234,127 +228,115 @@ class NavigationDrawer(Control):
         self._set_attr_json("indicatorShape", self.__indicator_shape)
         self._set_attr_json("tilePadding", self.__tile_padding)
 
-    def _get_children(self) -> Optional[List[Control]]:
+    def _get_children(self):
         children = []
         children.extend(self.__controls)
         return children
 
     # open
-
     @property
     def open(self) -> Optional[bool]:
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
-    def open(self, value: Optional[bool]) -> None:
+    def open(self, value: Optional[bool]):
         self._set_attr("open", value)
 
     # controls
-
     @property
     def controls(self) -> Optional[List[Control]]:
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]) -> None:
+    def controls(self, value: Optional[List[Control]]):
         self.__controls = value if value else []
 
     # selected_index
-
     @property
     def selected_index(self) -> Optional[int]:
         return self._get_attr("selectedIndex", data_type="int", def_value=0)
 
     @selected_index.setter
-    def selected_index(self, value: Optional[int]) -> None:
+    def selected_index(self, value: Optional[int]):
         self._set_attr("selectedIndex", value)
 
     # bgcolor
-
     @property
     def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value) -> None:
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # elevation
-
     @property
     def elevation(self) -> OptionalNumber:
         return self._get_attr("elevation")
 
     @elevation.setter
-    def elevation(self, value: OptionalNumber) -> None:
+    def elevation(self, value: OptionalNumber):
         self._set_attr("elevation", value)
 
     # indicator_color
-
     @property
     def indicator_color(self) -> Optional[str]:
         return self._get_attr("indicatorColor")
 
     @indicator_color.setter
-    def indicator_color(self, value) -> None:
+    def indicator_color(self, value: Optional[str]):
         self._set_attr("indicatorColor", value)
 
     # indicator_shape
-
     @property
     def indicator_shape(self) -> Optional[OutlinedBorder]:
         return self.__indicator_shape
 
     @indicator_shape.setter
-    def indicator_shape(self, value: Optional[OutlinedBorder]) -> None:
+    def indicator_shape(self, value: Optional[OutlinedBorder]):
         self.__indicator_shape = value
 
     # shadow_color
-
     @property
     def shadow_color(self) -> Optional[str]:
         return self._get_attr("shadowColor")
 
     @shadow_color.setter
-    def shadow_color(self, value) -> None:
+    def shadow_color(self, value: Optional[str]):
         self._set_attr("shadowColor", value)
 
     # surface_tint_color
-
     @property
     def surface_tint_color(self) -> Optional[str]:
         return self._get_attr("surfaceTintColor")
 
     @surface_tint_color.setter
-    def surface_tint_color(self, value) -> None:
+    def surface_tint_color(self, value: Optional[str]):
         self._set_attr("surfaceTintColor", value)
 
     # tile_padding
-
     @property
     def tile_padding(self) -> PaddingValue:
         return self.__tile_padding
 
     @tile_padding.setter
-    def tile_padding(self, value: PaddingValue) -> None:
+    def tile_padding(self, value: PaddingValue):
         self.__tile_padding = value
 
     # on_change
-
     @property
     def on_change(self) -> Optional[ControlEventFunction]:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: ControlEventFunction) -> None:
+    def on_change(self, handler: Optional[ControlEventFunction]):
         self._add_event_handler("change", handler)
 
     # on_dismiss
-
     @property
     def on_dismiss(self) -> Optional[ControlEventFunction]:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler: ControlEventFunction) -> None:
+    def on_dismiss(self, handler: Optional[ControlEventFunction]):
         self._add_event_handler("dismiss", handler)
