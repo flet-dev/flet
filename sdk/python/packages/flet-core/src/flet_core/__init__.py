@@ -104,7 +104,12 @@ from flet_core.datatable import (
     DataRow,
     DataTable,
 )
-from flet_core.date_picker import DatePicker, DatePickerEntryMode, DatePickerMode, DatePickerEntryModeChangeEvent
+from flet_core.date_picker import (
+    DatePicker,
+    DatePickerEntryMode,
+    DatePickerEntryModeChangeEvent,
+    DatePickerMode,
+)
 from flet_core.dismissible import (
     Dismissible,
     DismissibleDismissEvent,
@@ -155,7 +160,7 @@ from flet_core.haptic_feedback import HapticFeedback
 from flet_core.icon import Icon
 from flet_core.icon_button import IconButton
 from flet_core.image import Image
-from flet_core.list_tile import ListTile, ListTileTitleAlignment, ListTileStyle
+from flet_core.list_tile import ListTile, ListTileStyle, ListTileTitleAlignment
 from flet_core.list_view import ListView
 from flet_core.lottie import Lottie
 from flet_core.margin import Margin
@@ -164,8 +169,8 @@ from flet_core.menu_bar import MenuBar, MenuStyle
 from flet_core.menu_item_button import MenuItemButton
 from flet_core.navigation_bar import (
     NavigationBar,
+    NavigationBarDestination,
     NavigationBarLabelBehavior,
-    NavigationDestination,
 )
 from flet_core.navigation_drawer import NavigationDrawer, NavigationDrawerDestination
 from flet_core.navigation_rail import (
@@ -177,6 +182,7 @@ from flet_core.outlined_button import OutlinedButton
 from flet_core.padding import Padding
 from flet_core.page import (
     AppLifecycleStateChangeEvent,
+    context,
     KeyboardEvent,
     Locale,
     LocaleConfiguration,
@@ -186,7 +192,6 @@ from flet_core.page import (
     PageMediaData,
     RouteChangeEvent,
     ViewPopEvent,
-    context,
 )
 from flet_core.pagelet import Pagelet
 from flet_core.painting import (
@@ -283,7 +288,11 @@ from flet_core.theme import (
     TimePickerTheme,
     TooltipTheme,
 )
-from flet_core.time_picker import TimePicker, TimePickerEntryMode, TimePickerEntryModeChangeEvent
+from flet_core.time_picker import (
+    TimePicker,
+    TimePickerEntryMode,
+    TimePickerEntryModeChangeEvent,
+)
 from flet_core.tooltip import Tooltip
 from flet_core.transform import Offset, Rotate, Scale
 from flet_core.transparent_pointer import TransparentPointer
@@ -293,9 +302,12 @@ from flet_core.types import (
     BoxShape,
     Brightness,
     ClipBehavior,
+    ColorStr,
+    ControlEventFunction,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     FontWeight,
+    IconStr,
     ImageFit,
     ImageRepeat,
     LabelPosition,

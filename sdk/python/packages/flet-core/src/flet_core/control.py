@@ -2,18 +2,16 @@ import datetime as dt
 import json
 from difflib import SequenceMatcher
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union, Type
+from typing import Any, Dict, List, Optional, Type, TYPE_CHECKING, Union
 
 from flet_core.embed_json_encoder import EmbedJsonEncoder
 from flet_core.protocol import Command
 from flet_core.ref import Ref
-from flet_core.types import ResponsiveNumber
+from flet_core.types import OptionalNumber, ResponsiveNumber
 from flet_core.utils import deprecated
 
 if TYPE_CHECKING:
     from .page import Page
-
-OptionalNumber = Union[None, int, float]
 
 
 class Control:
@@ -69,11 +67,11 @@ class Control:
     def will_unmount(self):
         pass
 
-    def _get_children(self):
+    def _get_children(self) -> "List[Control]":
         return []
 
-    def _get_control_name(self):
-        raise Exception("_getControlName must be overridden in inherited class")
+    def _get_control_name(self) -> str:
+        raise Exception("_get_control_name must be overridden in inherited class")
 
     def _add_event_handler(self, event_name, handler):
         self.__event_handlers[event_name] = handler
@@ -85,7 +83,6 @@ class Control:
         name = name.lower()
         if name not in self.__attrs:
             return def_value
-
         s_val = self.__attrs[name][0]
         if data_type == "bool" and s_val is not None and isinstance(s_val, str):
             return s_val.lower() == "true"
@@ -128,10 +125,8 @@ class Control:
 
         if orig_val is None and value is None:
             return
-
         if value is None:
             value = ""
-
         if orig_val is None or orig_val[0] != value:
             self.__attrs[name] = (value, dirty)
 
@@ -170,16 +165,19 @@ class Control:
         )
 
     # event_handlers
+
     @property
     def event_handlers(self):
         return self.__event_handlers
 
     # _previous_children
+
     @property
     def _previous_children(self):
         return self.__previous_children
 
     # _id
+
     @property
     def _id(self):
         return self._get_attr("id")
@@ -189,6 +187,7 @@ class Control:
         self._set_attr("id", value)
 
     # page
+
     @property
     def page(self):
         return self.__page
@@ -198,11 +197,13 @@ class Control:
         self.__page = page
 
     # uid
+
     @property
     def uid(self):
         return self.__uid
 
     # expand
+
     @property
     def expand(self) -> Union[None, bool, int]:
         return self.__expand
@@ -215,6 +216,7 @@ class Control:
         self._set_attr("expand", value if value else None)
 
     # expand_loose
+
     @property
     def expand_loose(self) -> Optional[bool]:
         return self._get_attr("expandLoose", data_type="bool", def_value=False)
@@ -224,6 +226,7 @@ class Control:
         self._set_attr("expandLoose", value)
 
     # rtl
+
     @property
     def rtl(self) -> Optional[bool]:
         return self._get_attr("rtl", data_type="bool", def_value=False)
@@ -233,6 +236,7 @@ class Control:
         self._set_attr("rtl", value)
 
     # col
+
     @property
     def col(self) -> Optional[ResponsiveNumber]:
         return self.__col
@@ -242,6 +246,7 @@ class Control:
         self.__col = value
 
     # opacity
+
     @property
     def opacity(self):
         return self._get_attr("opacity", data_type="float", def_value=1.0)
@@ -253,6 +258,7 @@ class Control:
         self._set_attr("opacity", value)
 
     # tooltip
+
     @property
     def tooltip(self):
         return self._get_attr("tooltip")
@@ -262,6 +268,7 @@ class Control:
         self._set_attr("tooltip", value)
 
     # visible
+
     @property
     def visible(self) -> Optional[bool]:
         return self._get_attr("visible", data_type="bool", def_value=True)
@@ -271,6 +278,7 @@ class Control:
         self._set_attr("visible", value)
 
     # disabled
+
     @property
     def disabled(self) -> Optional[bool]:
         return self._get_attr("disabled", data_type="bool", def_value=False)
@@ -280,6 +288,7 @@ class Control:
         self._set_attr("disabled", value)
 
     # data
+
     @property
     def data(self):
         return self.__data
@@ -289,6 +298,7 @@ class Control:
         self.__data = value
 
     # public methods
+
     def update(self):
         assert self.__page, "Control must be added to the page first."
         self.__page.update(self)
@@ -346,7 +356,6 @@ class Control:
 
             if dirty:
                 continue
-
             val = self.__attrs[attrName][0]
             sval = ""
             if val is None:
@@ -367,11 +376,10 @@ class Control:
         if len(update_cmd.attrs) > 0:
             update_cmd.name = "set"
             commands.append(update_cmd)
-
         if isolated:
             return
-
         # go through children
+
         previous_children = self.__previous_children
         current_children = self._get_children()
 
@@ -382,22 +390,22 @@ class Control:
         for ctrl in previous_children:
             hashes[hash(ctrl)] = ctrl
             previous_ints.append(hash(ctrl))
-
         for ctrl in current_children:
             hashes[hash(ctrl)] = ctrl
             current_ints.append(hash(ctrl))
-
         sm = SequenceMatcher(None, previous_ints, current_ints)
 
         n = 0
         for tag, a1, a2, b1, b2 in sm.get_opcodes():
             if tag == "delete" or tag == "replace":
                 # deleted controls
+
                 ids = []
                 for h in previous_ints[a1:a2]:
                     ctrl = hashes[h]
                     # check if re-added control is being deleted
                     # which means it's a replace
+
                     i = 0
                     replaced = False
                     while i < len(commands):
@@ -406,6 +414,7 @@ class Control:
                             c for c in cmd.commands if c.attrs.get("id") == ctrl.__uid
                         ):
                             # insert delete command before add
+
                             commands.insert(i, Command(0, "remove", [ctrl.__uid]))
                             replaced = True
                             break
@@ -419,6 +428,7 @@ class Control:
                     commands.append(Command(0, "remove", ids))
                 if tag == "replace":
                     # add
+
                     for h in current_ints[b1:b2]:
                         ctrl = hashes[h]
                         innerCmds = ctrl._build_add_commands(
@@ -437,6 +447,7 @@ class Control:
                         n += 1
             elif tag == "equal":
                 # unchanged control
+
                 for h in previous_ints[a1:a2]:
                     ctrl = hashes[h]
                     ctrl.build_update_commands(
@@ -449,6 +460,7 @@ class Control:
                     n += 1
             elif tag == "insert":
                 # add
+
                 for h in current_ints[b1:b2]:
                     ctrl = hashes[h]
                     innerCmds = ctrl._build_add_commands(
@@ -465,7 +477,6 @@ class Control:
                         )
                     )
                     n += 1
-
         self.__previous_children.clear()
         self.__previous_children.extend(current_children)
 
@@ -477,21 +488,20 @@ class Control:
 
             for child in control._get_children():
                 removed_controls.extend(self._remove_control_recursively(index, child))
-
             for child in control._previous_children:
                 removed_controls.extend(self._remove_control_recursively(index, child))
-
             removed_controls.append(control)
-
         return removed_controls
 
     # private methods
+
     def _build_add_commands(self, indent=0, index=None, added_controls=None):
         if index:
             self.page = index["page"]
         content = self.build()
 
         # fix for UserControl
+
         if content is not None:
             if isinstance(content, Control) and hasattr(self, "controls"):
                 self.controls = [content]
@@ -501,14 +511,14 @@ class Control:
                 and all(isinstance(control, Control) for control in content)
             ):
                 self.controls = content
-
         # remove control from index
+
         if self.__uid and index is not None and self.__uid in index:
             del index[self.__uid]
-
         commands = []
 
         # main command
+
         command = self._build_command(False)
         command.indent = indent
         command.values.append(self._get_control_name())
@@ -516,8 +526,8 @@ class Control:
 
         if added_controls is not None:
             added_controls.append(self)
-
         # controls
+
         children = self._get_children()
         for control in children:
             childCmd = control._build_add_commands(
@@ -525,7 +535,6 @@ class Control:
             )
             commands.extend(childCmd)
             control.parent = self  # set as parent
-
         self.__previous_children.clear()
         self.__previous_children.extend(children)
 
@@ -536,7 +545,6 @@ class Control:
 
         if update and not self.__uid:
             return command
-
         self._before_build_command()
         self.before_update()
 
@@ -546,7 +554,6 @@ class Control:
 
             if (update and not dirty) or attrName == "id":
                 continue
-
             val = self.__attrs[attrName][0]
             sval = ""
             if val is None:
@@ -559,7 +566,6 @@ class Control:
                 sval = str(val)
             command.attrs[attrName] = sval
             self.__attrs[attrName] = (val, False)
-
         id = self.__attrs.get("id")
         if not update and self.__uid is not None:
             command.attrs["id"] = self.__uid
@@ -568,7 +574,6 @@ class Control:
         elif update and len(command.attrs) > 0:
             assert self.__uid is not None
             command.values.append(self.__uid)
-
         return command
 
     def _dispose(self):

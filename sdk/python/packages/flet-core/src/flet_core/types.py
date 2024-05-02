@@ -1,8 +1,9 @@
 from enum import Enum
-from typing import Dict, Tuple, Union
+from typing import Callable, Dict, Tuple, Union, Optional
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
+from flet_core.control_event import ControlEvent
 from flet_core.margin import Margin
 from flet_core.padding import Padding
 from flet_core.transform import Offset, Rotate, Scale
@@ -34,19 +35,19 @@ class UrlTarget(Enum):
     # UNFENCED_TOP = "_unfencedTop"
 
 
-PaddingValue = Union[None, int, float, Padding]
+PaddingValue = Optional[Union[int, float, Padding]]
 
-MarginValue = Union[None, int, float, Margin]
+MarginValue = Optional[Union[int, float, Margin]]
 
-BorderRadiusValue = Union[None, int, float, BorderRadius]
+BorderRadiusValue = Optional[Union[int, float, BorderRadius]]
 
-RotateValue = Union[None, int, float, Rotate]
+RotateValue = Optional[Union[int, float, Rotate]]
 
-ScaleValue = Union[None, int, float, Scale]
+ScaleValue = Optional[Union[int, float, Scale]]
 
-OffsetValue = Union[None, Offset, Tuple[Union[float, int], Union[float, int]]]
+OffsetValue = Optional[Union[Offset, Tuple[Union[float, int], Union[float, int]]]]
 
-AnimationValue = Union[None, bool, int, Animation]
+AnimationValue = Optional[Union[bool, int, Animation]]
 
 
 class FontWeight(Enum):
@@ -74,6 +75,11 @@ class NotchShape(Enum):
 
 
 ResponsiveNumber = Union[Dict[str, Union[int, float]], int, float]
+OptionalNumber = Optional[Union[int, float]]
+
+# str type alias
+ColorStr = Optional[str]
+IconStr = Optional[str]
 
 
 class MaterialState(Enum):
@@ -290,3 +296,6 @@ class MouseCursor(Enum):
     WAIT = "wait"
     ZOOM_IN = "zoomIn"
     ZOOM_OUT = "zoomOut"
+
+# Events
+ControlEventFunction = Callable[[ControlEvent], None]
