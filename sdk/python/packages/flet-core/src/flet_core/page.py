@@ -4,11 +4,12 @@ import logging
 import threading
 import time
 import uuid
+from asyncio import Future
 from concurrent.futures import ThreadPoolExecutor
 from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
-from typing import Any, Awaitable, Callable, cast, Dict, List, Optional, Tuple, Union
+from typing import Any, Awaitable, Callable, Type, cast, Dict, List, Optional, Tuple, Union, Coroutine, TypeVar, overload
 from urllib.parse import urlparse
 
 import flet_core
@@ -42,9 +43,11 @@ from flet_core.snack_bar import SnackBar
 from flet_core.theme import Theme
 from flet_core.types import (
     AppLifecycleState,
+    Args,
     Brightness,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
+    Kwargs,
     MainAxisAlignment,
     OffsetValue,
     OptionalNumber,
@@ -52,8 +55,9 @@ from flet_core.types import (
     PagePlatform,
     ScrollMode,
     ThemeMode,
+    Wrapper,
 )
-from flet_core.utils import classproperty, deprecated
+from flet_core.utils import classproperty, deprecated, Inherited
 from flet_core.utils.concurrency_utils import is_pyodide
 from flet_core.view import View
 
@@ -72,6 +76,7 @@ try:
     from flet_runtime.auth.authorization import Authorization
     from flet_runtime.auth.oauth_provider import OAuthProvider
 except ImportError:
+
     class OAuthProvider: ...
 
     class Authorization:
@@ -82,6 +87,9 @@ except ImportError:
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
         ): ...
+        
+
+AT = TypeVar('AT', Authorization, Inherited[Authorization])
 
 
 @dataclass
@@ -430,12 +438,15 @@ class Page(AdaptiveControl):
         self.__update_control_ids(added_controls, results)
         return added_controls, removed_controls
 
-    def __prepare_update(self, *controls: List[Control]) -> Tuple[List[Any], List[Control], List[Control]]:
+    def __prepare_update(
+        self, *controls: List[Control]
+    ) -> Tuple[List[Any], List[Control], List[Control]]:
         added_controls = []
         removed_controls = []
         commands = []
 
         # build commands
+
         for control in controls:
             control.build_update_commands(
                 self._index, commands, added_controls, removed_controls
@@ -449,7 +460,9 @@ class Page(AdaptiveControl):
                     f"Control has already been added to another page: {ctrl}"
                 )
 
-    def __update_control_ids(self, added_controls: List[Control], results: List[Any]) -> None:
+    def __update_control_ids(
+        self, added_controls: List[Control], results: List[Any]
+    ) -> None:
         if len(results) > 0:
             n = 0
             for line in results:
@@ -462,7 +475,7 @@ class Page(AdaptiveControl):
 
                     n += 1
 
-    def __handle_mount_unmount(self, added_controls, removed_controls):
+    def __handle_mount_unmount(self, added_controls, removed_controls) -> None:
         for ctrl in removed_controls:
             ctrl.will_unmount()
             ctrl.parent = None  # remove parent reference
@@ -470,7 +483,7 @@ class Page(AdaptiveControl):
         for ctrl in added_controls:
             ctrl.did_mount()
 
-    def error(self, message=""):
+    def error(self, message: Optional[str] = "") -> None:
         with self.__lock:
             self._send_command("error", [message])
 
@@ -480,7 +493,7 @@ class Page(AdaptiveControl):
     async def error_async(self, message=""):
         self.error(message)
 
-    async def on_event_async(self, e: Event):
+    async def on_event_async(self, e: Event) -> None:
         logger.debug(f"page.on_event_async: {e.target} {e.name} {e.data}")
 
         if e.target == "page" and e.name == "change":
@@ -495,7 +508,7 @@ class Page(AdaptiveControl):
                 else:
                     self.run_thread(handler, ce)
 
-    def __on_page_change_event(self, data):
+    def __on_page_change_event(self, data: str) -> None:
         for props in json.loads(data):
             id = props["i"]
             if id in self._index:
@@ -503,7 +516,12 @@ class Page(AdaptiveControl):
                     if name != "i":
                         self._index[id]._set_attr(name, props[name], dirty=False)
 
-    def run_task(self, handler: Callable[..., Awaitable[Any]], *args, **kwargs):
+    def run_task(
+        self,
+        handler: Callable[..., Awaitable[Any]],
+        *args: Args,
+        **kwargs: Kwargs,
+    ) -> Future[Any]:
         _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
 
@@ -519,14 +537,14 @@ class Page(AdaptiveControl):
 
         return future
 
-    def __context_wrapper(self, handler):
+    def __context_wrapper(self, handler: Callable[..., Any]) -> Wrapper:
         def wrapper(*args):
             _session_page.set(self)
             handler(*args)
 
         return wrapper
 
-    def run_thread(self, handler, *args):
+    def run_thread(self, handler: Callable[..., Any], *args: Args) -> None:
         handler_with_context = self.__context_wrapper(handler)
         if is_pyodide():
             handler_with_context(*args)
@@ -539,7 +557,7 @@ class Page(AdaptiveControl):
                 *args,
             )
 
-    def go(self, route, skip_route_change_event=False, **kwargs):
+    def go(self, route: str, skip_route_change_event: bool = False, **kwargs: Kwargs) -> None:
         self.route = route if not kwargs else route + self.query.post(kwargs)
 
         if not skip_route_change_event:
@@ -562,7 +580,7 @@ class Page(AdaptiveControl):
     async def go_async(self, route, skip_route_change_event=False, **kwargs):
         self.go(route, skip_route_change_event, **kwargs)
 
-    def get_upload_url(self, file_name: str, expires: int):
+    def get_upload_url(self, file_name: str, expires: int) -> str:
         r = self._send_command(
             "getUploadUrl", attrs={"file": file_name, "expires": str(expires)}
         )
@@ -581,15 +599,15 @@ class Page(AdaptiveControl):
     def login(
         self,
         provider: OAuthProvider,
-        fetch_user=True,
-        fetch_groups=False,
+        fetch_user: Optional[bool] = True,
+        fetch_groups: Optional[bool] = False,
         scope: Optional[List[str]] = None,
         saved_token: Optional[str] = None,
-        on_open_authorization_url=None,
+        on_open_authorization_url: Optional[Callable[[str], None]] = None,
         complete_page_html: Optional[str] = None,
-        redirect_to_page=False,
-        authorization=Authorization,
-    ):
+        redirect_to_page: Optional[bool] = False,
+        authorization: Type[AT] = Authorization
+    ) -> AT:
         self.__authorization = authorization(
             provider,
             fetch_user=fetch_user,
@@ -634,15 +652,15 @@ class Page(AdaptiveControl):
     async def login_async(
         self,
         provider: OAuthProvider,
-        fetch_user=True,
-        fetch_groups=False,
+        fetch_user: Optional[bool] = True,
+        fetch_groups: Optional[bool] = False,
         scope: Optional[List[str]] = None,
         saved_token: Optional[str] = None,
-        on_open_authorization_url=None,
+        on_open_authorization_url: Optional[Callable[[str], Coroutine[Any, Any, None]]] = None,
         complete_page_html: Optional[str] = None,
-        redirect_to_page=False,
-        authorization=Authorization,
-    ):
+        redirect_to_page: Optional[bool] = False,
+        authorization: Type[AT] = Authorization,
+    ) -> AT:
         self.__authorization = authorization(
             provider,
             fetch_user=fetch_user,
@@ -684,11 +702,11 @@ class Page(AdaptiveControl):
             )
         return self.__authorization
 
-    async def _authorize_callback_async(self, data):
+    async def _authorize_callback_async(self, data: str) -> None:
         await self.on_event_async(Event("page", "authorize", json.dumps(data)))
 
-    async def __on_authorize_async(self, e):
-        assert self.__authorization is not None
+    async def __on_authorize_async(self, e) -> None:
+        assert self.__authorization
         d = json.loads(e.data)
         state = d["state"]
         assert state == self.__authorization.state
@@ -725,7 +743,7 @@ class Page(AdaptiveControl):
             login_evt,
         )
 
-    def logout(self):
+    def logout(self) -> None:
         self.__authorization = None
         self.run_task(
             self.__on_logout.get_handler(),
@@ -756,7 +774,7 @@ class Page(AdaptiveControl):
             ),
         )
 
-    def set_clipboard(self, value: str, wait_timeout: Optional[float] = 10):
+    def set_clipboard(self, value: str, wait_timeout: Optional[float] = 10) -> None:
         self._invoke_method("setClipboard", {"data": value}, wait_timeout=wait_timeout)
 
     @deprecated(
@@ -767,12 +785,12 @@ class Page(AdaptiveControl):
     async def set_clipboard_async(self, value: str, wait_timeout: Optional[float] = 10):
         self.set_clipboard(value, wait_timeout=wait_timeout)
 
-    def get_clipboard(self, wait_timeout: Optional[float] = 10):
+    def get_clipboard(self, wait_timeout: Optional[float] = 10) -> Optional[str]:
         return self._invoke_method(
             "getClipboard", wait_for_result=True, wait_timeout=wait_timeout
         )
 
-    def get_clipboard_async(self, wait_timeout: Optional[float] = 10):
+    def get_clipboard_async(self, wait_timeout: Optional[float] = 10) -> Optional[str]:
         return self._invoke_method_async(
             "getClipboard", wait_for_result=True, wait_timeout=wait_timeout
         )
@@ -781,18 +799,18 @@ class Page(AdaptiveControl):
         self,
         url: str,
         web_window_name: Optional[str] = None,
-        web_popup_window: bool = False,
+        web_popup_window: Optional[bool] = False,
         window_width: Optional[int] = None,
         window_height: Optional[int] = None,
-    ):
+    ) -> None:
         args = {"url": url}
-        if web_window_name is not None:
+        if web_window_name:
             args["web_window_name"] = web_window_name
-        if web_popup_window is not None:
+        if web_popup_window:
             args["web_popup_window"] = str(web_popup_window)
-        if window_width is not None:
+        if window_width:
             args["window_width"] = str(window_width)
-        if window_height is not None:
+        if window_height:
             args["window_height"] = str(window_height)
         self._invoke_method("launchUrl", args)
 
@@ -813,18 +831,18 @@ class Page(AdaptiveControl):
             url, web_window_name, web_popup_window, window_width, window_height
         )
 
-    def can_launch_url(self, url: str):
+    def can_launch_url(self, url: str) -> bool:
         args = {"url": url}
         return self._invoke_method("canLaunchUrl", args, wait_for_result=True) == "true"
 
-    async def can_launch_url_async(self, url: str):
+    async def can_launch_url_async(self, url: str) -> bool:
         args = {"url": url}
         return (
             await self._invoke_method_async("canLaunchUrl", args, wait_for_result=True)
             == "true"
         )
 
-    def close_in_app_web_view(self):
+    def close_in_app_web_view(self) -> None:
         self._invoke_method("closeInAppWebView")
 
     @deprecated(
@@ -835,7 +853,7 @@ class Page(AdaptiveControl):
     async def close_in_app_web_view_async(self):
         self.close_in_app_web_view()
 
-    def window_to_front(self):
+    def window_to_front(self) -> None:
         self._invoke_method("windowToFront")
 
     @deprecated(
@@ -853,7 +871,7 @@ class Page(AdaptiveControl):
         key: Optional[str] = None,
         duration: Optional[int] = None,
         curve: Optional[AnimationCurve] = None,
-    ):
+    ) -> None:
         self.__default_view.scroll_to(
             offset=offset, delta=delta, key=key, duration=duration, curve=curve
         )
@@ -876,19 +894,18 @@ class Page(AdaptiveControl):
         method_name: str,
         arguments: Optional[Dict[str, str]] = None,
         control_id: Optional[str] = "",
-        wait_for_result: bool = False,
+        wait_for_result: Optional[bool] = False,
         wait_timeout: Optional[float] = 5,
     ) -> Optional[str]:
         method_id = uuid.uuid4().hex
 
         # register callback
-
         evt: Optional[threading.Event] = None
         if wait_for_result:
             evt = threading.Event()
             self.__method_calls[method_id] = evt
-        # call method
 
+        # call method
         result = self._send_command(
             "invokeMethod", values=[method_id, method_name, control_id], attrs=arguments
         )
@@ -906,11 +923,10 @@ class Page(AdaptiveControl):
             raise TimeoutError(
                 f"Timeout waiting for invokeMethod {method_name}({arguments}) call"
             )
+
         result, err = self.__method_call_results.pop(evt)
-        if err is not None:
+        if err:
             raise Exception(err)
-        if result is None:
-            return None
         return result
 
     async def _invoke_method_async(
@@ -918,19 +934,18 @@ class Page(AdaptiveControl):
         method_name: str,
         arguments: Optional[Dict[str, str]] = None,
         control_id: Optional[str] = "",
-        wait_for_result: bool = False,
+        wait_for_result: Optional[bool] = False,
         wait_timeout: Optional[float] = 5,
     ) -> Optional[str]:
         method_id = uuid.uuid4().hex
 
         # register callback
-
         evt: Optional[asyncio.Event] = None
         if wait_for_result:
             evt = asyncio.Event()
             self.__method_calls[method_id] = evt
-        # call method
 
+        # call method
         result = self._send_command(
             "invokeMethod", values=[method_id, method_name, control_id], attrs=arguments
         )
@@ -950,14 +965,13 @@ class Page(AdaptiveControl):
             raise Exception(
                 f"Timeout waiting for invokeMethod {method_name}({arguments}) call"
             )
+
         result, err = self.__method_call_results.pop(evt)
-        if err is not None:
+        if err:
             raise Exception(err)
-        if result is None:
-            return None
         return result
 
-    def __on_invoke_method_result(self, e):
+    def __on_invoke_method_result(self, e) -> None:
         d = json.loads(e.data)
         result = InvokeMethodResults(**d)
         evt = self.__method_calls.pop(result.method_id, None)
@@ -965,45 +979,97 @@ class Page(AdaptiveControl):
             return
         self.__method_call_results[evt] = (result.result, result.error)
         evt.set()
+    
+    # Open / Close
+    def __open_control(self, control_name: str, control: Control, base: 'Union[Page, Offstage]' = None) -> None:
+        if not base:
+            base = self
+
+        if control:
+            control.open = True
+            base.update()
+        else:
+            raise Exception(
+                f"Please define {control_name} before show_{control_name}() method"
+            )
+    
+    def __close_control(self, control_name: str, control: Control, base: 'Union[Page, Offstage]' = None) -> None:
+        if not base:
+            base = self
+        
+        if control:
+            control.open = False
+            base.update()
+        else:
+            raise Exception(
+                f"Please define {control_name} before close_{control_name}() method"
+            )
 
     #
     # SnackBar
     #
-
-    def show_snack_bar(self, snack_bar: SnackBar):
-        self.__offstage.snack_bar = snack_bar
-        self.__offstage.snack_bar.open = True
-        self.__offstage.update()
+    @overload
+    def open_snack_bar(self) -> None: ...
+    @overload
+    def open_snack_bar(self, snack_bar: SnackBar) -> None: ...
+    def open_snack_bar(self, snack_bar = None) -> None:
+        if snack_bar:
+            self.__offstage.snack_bar = snack_bar
+        self.__open_control('snack_bar', self.__offstage.snack_bar, self.__offstage)
+    
+    # Deprecated
+    @deprecated(
+        reason="Use open_snack_bar() method instead.",
+        version="0.22.0",
+        delete_version="1.0",
+    )
+    def show_snack_bar(self, snack_bar: SnackBar = None):
+        self.open_snack_bar(snack_bar)
 
     @deprecated(
-        reason="Use show_snack_bar() method instead.",
+        reason="Use open_snack_bar() method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
-    async def show_snack_bar_async(self, snack_bar: SnackBar):
-        self.show_snack_bar(snack_bar)
+    async def show_snack_bar_async(self, snack_bar: SnackBar = None):
+        self.open_snack_bar(snack_bar)
+    # End deprecated
+    
+    def close_snack_bar(self) -> None:
+        self.__close_control('snack_bar', self.__offstage.snack_bar, self.__offstage)
 
     #
     # Dialogs
     #
-
-    def show_dialog(self, dialog: Union[AlertDialog, CupertinoAlertDialog]):
-        self.__offstage.dialog = dialog
-        self.__offstage.dialog.open = True
-        self.__offstage.update()
+    @overload
+    def open_dialog(self) -> None: ...
+    @overload
+    def open_dialog(self, dialog: Union[AlertDialog, CupertinoAlertDialog]) -> None: ...
+    def open_dialog(self, dialog = None) -> None:
+        if dialog:
+            self.__offstage.dialog = dialog
+        self.__open_control('dialog', self.__offstage.dialog, self.__offstage)
+    
+    # Deprecated
+    @deprecated(
+        reason="Use open_dialog() method instead.",
+        version="0.22.0",
+        delete_version="1.0",
+    )
+    def show_dialog(self, dialog: Union[AlertDialog, CupertinoAlertDialog] = None):
+        self.open_dialog(dialog)
 
     @deprecated(
-        reason="Use show_dialog() method instead.",
+        reason="Use open_dialog() method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
-    async def show_dialog_async(self, dialog: Union[AlertDialog, CupertinoAlertDialog]):
-        self.show_dialog(dialog)
+    async def show_dialog_async(self, dialog: Union[AlertDialog, CupertinoAlertDialog] = None):
+        self.open_dialog(dialog)
+    # End deprecated
 
-    def close_dialog(self):
-        if self.__offstage.dialog is not None:
-            self.__offstage.dialog.open = False
-            self.__offstage.update()
+    def close_dialog(self) -> None:
+        self.__close_control('dialog', self.__offstage.dialog, self.__offstage)
 
     @deprecated(
         reason="Use close_dialog() method instead.",

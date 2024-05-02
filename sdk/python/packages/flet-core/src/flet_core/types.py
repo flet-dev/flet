@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Callable, Dict, Tuple, Union, Optional
+from typing import Callable, Dict, Tuple, Union, Optional, Any, List
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
@@ -299,3 +299,10 @@ class MouseCursor(Enum):
 
 # Events
 ControlEventFunction = Callable[[ControlEvent], None]
+
+# Wrapper
+Wrapper = Callable[..., Any]
+
+# Args / Kwargs
+Args = List[Any]
+Kwargs = Dict[str, Any]
