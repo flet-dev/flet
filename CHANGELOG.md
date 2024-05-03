@@ -9,6 +9,7 @@
 * Fix latest flet-build-template version in development mode ([#3021](https://github.com/flet-dev/flet/issues/3021))
 * Fix `flet --version` command for source checkout.
 * LineChart: fix regression ([#3033](https://github.com/flet-dev/flet/issues/3033))
+* Fixed: OAuth expiry of token will hang fastapi server ([#3150](https://github.com/flet-dev/flet/issues/3150))
 
 # 0.22.0
 
