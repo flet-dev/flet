@@ -129,8 +129,9 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
 
     @selected_index.setter
     def selected_index(self, value: Optional[int]):
-        if value is not None:
-            assert 0 <= value <= len(self.controls) - 1, "selected_index out of range"
+        assert (
+            value is None or 0 <= value <= len(self.controls) - 1
+        ), "selected_index out of range"
         self._set_attr("selectedIndex", value)
 
     # bgcolor

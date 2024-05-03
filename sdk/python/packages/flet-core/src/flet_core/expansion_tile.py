@@ -170,10 +170,9 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     def _get_children(self):
         self.__title._set_attr_internal("n", "title")
         children = [self.__title]
-        if self.__controls:
-            for c in self.__controls:
-                c._set_attr_internal("n", "controls")
-                children.append(c)
+        for c in self.__controls:
+            c._set_attr_internal("n", "controls")
+            children.append(c)
         if self.__leading:
             self.__leading._set_attr_internal("n", "leading")
             children.append(self.__leading)

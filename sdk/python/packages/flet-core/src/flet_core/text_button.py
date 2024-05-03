@@ -262,10 +262,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     @on_hover.setter
     def on_hover(self, handler):
         self._add_event_handler("hover", handler)
-        if handler is not None:
-            self._set_attr("onHover", True)
-        else:
-            self._set_attr("onHover", None)
+        self._set_attr("onHover", True if handler is not None else None)
 
     # on_focus
     @property

@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Any
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import OutlinedBorder
@@ -80,15 +80,14 @@ class AppBar(AdaptiveControl):
         # AdaptiveControl
         #
         ref: Optional[Ref] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         adaptive: Optional[bool] = None,
     ):
-        Control.__init__(self, ref=ref)
+        Control.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
-
-        self.__leading: Optional[Control] = None
-        self.__title: Optional[Control] = None
-        self.__actions: List[Control] = []
 
         self.leading = leading
         self.leading_width = leading_width

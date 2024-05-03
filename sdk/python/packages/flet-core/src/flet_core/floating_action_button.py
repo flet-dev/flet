@@ -329,6 +329,7 @@ class FloatingActionButton(ConstrainedControl):
 
     @focus_elevation.setter
     def focus_elevation(self, value: OptionalNumber):
+        assert value is None or value >= 0, "focus_elevation cannot be negative"
         self._set_attr("focusElevation", value)
 
     # foreground_color
@@ -347,6 +348,7 @@ class FloatingActionButton(ConstrainedControl):
 
     @highlight_elevation.setter
     def highlight_elevation(self, value: OptionalNumber):
+        assert value is None or value >= 0, "highlight_elevation cannot be negative"
         self._set_attr("highlightElevation", value)
 
     # hover_elevation
@@ -356,6 +358,7 @@ class FloatingActionButton(ConstrainedControl):
 
     @hover_elevation.setter
     def hover_elevation(self, value: OptionalNumber):
+        assert value is None or value >= 0, "hover_elevation cannot be negative"
         self._set_attr("hoverElevation", value)
 
     # clip_behavior

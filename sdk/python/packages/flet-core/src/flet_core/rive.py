@@ -25,7 +25,7 @@ class Rive(ConstrainedControl):
 
     def __init__(
         self,
-        src: str = None,
+        src: str,
         placeholder: Optional[Control] = None,
         artboard: Optional[str] = None,
         alignment: Optional[Alignment] = None,
@@ -116,6 +116,10 @@ class Rive(ConstrainedControl):
             return [self.__placeholder]
         return []
 
+    def did_mount(self):
+        super().did_mount()
+        assert self.src, "src must be provided"
+
     # src
     @property
     def src(self) -> Optional[str]:
@@ -123,8 +127,6 @@ class Rive(ConstrainedControl):
 
     @src.setter
     def src(self, value: Optional[str]):
-        if not value:
-            raise ValueError("Rive.src must be specified")
         self._set_attr("src", value)
 
     # alignment

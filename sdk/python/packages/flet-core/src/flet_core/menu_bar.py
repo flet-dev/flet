@@ -107,10 +107,13 @@ class MenuBar(Control):
         self._set_attr_json("style", self.__style)
 
     def _get_children(self):
+        return self.__controls
+
+    def did_mount(self):
+        super().did_mount()
         assert (
             len(self.__controls) > 0
         ), "MenuBar must have at minimum one visible control"
-        return self.__controls
 
     # controls
     @property

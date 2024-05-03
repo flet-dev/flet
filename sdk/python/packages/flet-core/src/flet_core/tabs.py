@@ -263,7 +263,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # tabs
     @property
-    def tabs(self) -> Optional[List[Tab]]:
+    def tabs(self) -> List[Tab]:
         return self.__tabs
 
     @tabs.setter

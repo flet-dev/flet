@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -93,10 +93,6 @@ class BottomAppBar(ConstrainedControl):
             data=data,
         )
 
-        self.__leading: Optional[Control] = None
-        self.__title: Optional[Control] = None
-        self.__actions: List[Control] = []
-
         self.content = content
         self.surface_tint_color = surface_tint_color
         self.bgcolor = bgcolor
@@ -115,11 +111,10 @@ class BottomAppBar(ConstrainedControl):
         self._set_attr_json("padding", self.__padding)
 
     def _get_children(self):
-        children = []
         if self.__content is not None:
             self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
+            return [self.__content]
+        return []
 
     # content
     @property

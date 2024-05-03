@@ -41,9 +41,7 @@ class TextSpan(InlineSpan):
         return "textspan"
 
     def _get_children(self):
-        children = []
-        children.extend(self.__spans)
-        return children
+        return self.__spans
 
     def before_update(self):
         super().before_update()
@@ -69,7 +67,7 @@ class TextSpan(InlineSpan):
 
     # spans
     @property
-    def spans(self) -> Optional[List[InlineSpan]]:
+    def spans(self) -> List[InlineSpan]:
         return self.__spans
 
     @spans.setter
