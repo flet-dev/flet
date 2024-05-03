@@ -521,7 +521,7 @@ class Page(AdaptiveControl):
         handler: Callable[..., Awaitable[Any]],
         *args: Args,
         **kwargs: Kwargs,
-    ) -> Future[Any]:
+    ) -> Future:
         _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
 
