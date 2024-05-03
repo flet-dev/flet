@@ -8,6 +8,7 @@
 * Fix `flet --version` command for source checkout.
 * LineChart: fix regression ([#3033](https://github.com/flet-dev/flet/issues/3033))
 * Fixed: OAuth expiry of token will hang fastapi server ([#3150](https://github.com/flet-dev/flet/issues/3150))
+* Fixed: Disabled the dropwown, but the color isnot gray ([#2989](https://github.com/flet-dev/flet/issues/2989))
 
 # 0.22.0
 
