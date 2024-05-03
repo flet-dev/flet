@@ -2,7 +2,7 @@ import datetime as dt
 import json
 from difflib import SequenceMatcher
 from enum import Enum
-from typing import Any, Dict, List, Optional, Type, TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type, Union
 
 from flet_core.embed_json_encoder import EmbedJsonEncoder
 from flet_core.protocol import Command
@@ -27,27 +27,30 @@ class Control:
         disabled: Optional[bool] = None,
         data: Any = None,
         rtl: Optional[bool] = None,
-    ):
+    ) -> None:
         super().__init__()
+
         self.__page: Optional[Page] = None
         self.__attrs: Dict[str, Any] = {}
         self.__previous_children = []
         self._id = None
         self.__uid: Optional[str] = None
+
+        if ref:
+            ref.current = self
         self.expand = expand
         self.expand_loose = expand_loose
         self.col = col
         self.opacity = opacity
         self.tooltip = tooltip
         self.visible = visible
-        self.rtl = rtl
         self.disabled = disabled
         self.__data: Any = None
         self.data = data
+        self.rtl = rtl
+
         self.__event_handlers = {}
         self.parent: Optional[Control] = None
-        if ref:
-            ref.current = self
 
     def is_isolated(self):
         return False
@@ -129,6 +132,8 @@ class Control:
             value = ""
         if orig_val is None or orig_val[0] != value:
             self.__attrs[name] = (value, dirty)
+            if self.__page and self.__page.auto_update:
+                self.update()
 
     def _set_attr_json(self, name, value):
         ov = self._get_attr(name)
@@ -296,6 +301,15 @@ class Control:
     @data.setter
     def data(self, value):
         self.__data = value
+
+    # auto_update
+    @property
+    def auto_update(self) -> Optional[bool]:
+        return self.__auto_update
+
+    @auto_update.setter
+    def auto_update(self, value: Optional[bool]):
+        self.__auto_update = value
 
     # public methods
 
