@@ -57,7 +57,7 @@ from flet_core.types import (
     ThemeMode,
     Wrapper,
 )
-from flet_core.utils import classproperty, deprecated, Inherited
+from flet_core.utils import classproperty, deprecated
 from flet_core.utils.concurrency_utils import is_pyodide
 from flet_core.view import View
 
@@ -89,7 +89,7 @@ except ImportError:
         ): ...
         
 
-AT = TypeVar('AT', Authorization, Inherited[Authorization])
+AT = TypeVar('AT', bound=Authorization)
 
 
 @dataclass
