@@ -49,22 +49,6 @@ class Geolocator(Control):
     def _get_control_name(self):
         return "geolocator"
 
-    def test(self, wait_timeout: Optional[float] = 5) -> str:
-        output = self.invoke_method(
-            "test",
-            wait_for_result=True,
-            wait_timeout=wait_timeout,
-        )
-        return output
-
-    async def test_async(self, wait_timeout: Optional[float] = 5) -> str:
-        output = await self.invoke_method_async(
-            "test",
-            wait_for_result=True,
-            wait_timeout=wait_timeout,
-        )
-        return output
-
     def get_location(
         self,
         location_accuracy: Optional[LocationAccuracy] = LocationAccuracy.BEST,
