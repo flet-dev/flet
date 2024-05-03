@@ -153,22 +153,6 @@ class Control:
             return value
         return {"": value}
 
-    def __str__(self):
-        attrs = {}
-        for k, v in self.__attrs.items():
-            attrs[k] = v[0]
-        return f"{self._get_control_name()} {attrs}"
-
-    def __repr__(self):
-        return (
-            f"{self.__class__.__name__}("
-            + ", ".join(
-                f"{k}={v[0]}" if not isinstance(v[0], str) else f"{k}='{v[0]}'"
-                for k, v in self.__attrs.items()
-            )
-            + ")"
-        )
-
     # event_handlers
 
     @property
@@ -593,3 +577,82 @@ class Control:
     def _dispose(self):
         self.page = None
         self.__event_handlers.clear()
+
+    # Add/Insert/Remove helper methods
+    def __add(self, var: "List[Control]", *controls: "List[Control]") -> None:
+        var.extend(controls)
+        self.update()
+
+    def __insert(
+        self, var: "List[Control]", at: int, *controls: "List[Control]"
+    ) -> None:
+        for i, control in enumerate(controls, start=at):
+            var.insert(i, control)
+        self.update()
+
+    def __remove(self, var: "List[Control]", *controls: "List[Control]") -> None:
+        for control in controls:
+            var.remove(control)
+        self.update()
+
+    # Magic methods
+    def __str__(self) -> str:
+        attrs = {}
+        for k, v in self.__attrs.items():
+            attrs[k] = v[0]
+        return f"{self._get_control_name()} {attrs}"
+
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}("
+            + ", ".join(
+                f"{k}={v[0]}" if not isinstance(v[0], str) else f"{k}='{v[0]}'"
+                for k, v in self.__attrs.items()
+            )
+            + ")"
+        )
+
+    # +=
+    def __iadd__(self, other: "Control | List[Control]") -> "Control":
+        try:
+            if not isinstance(other, list):
+                other = [other]
+            self.add(*other)
+            return self
+        except AttributeError:
+            raise Exception("The add() method is not implemented for this class")
+
+    # +
+    def __add__(self, other: "Control | List[Control]") -> "Control":
+        r = self
+        return r.__iadd__(other)
+
+    def __radd__(self, other: "Control | List[Control]") -> "Control":
+        return self.__add__(other)
+
+    # -=
+    def __isub__(self, other: "Control | List[Control]") -> "Control":
+        try:
+            if not isinstance(other, list):
+                other = [other]
+            self.remove(*other)
+            return self
+        except AttributeError:
+            raise Exception("The remove() method is not implemented for this class")
+
+    # -
+    def __sub__(self, other: "Control | List[Control]") -> "Control":
+        r = self
+        return r.__isub__(other)
+
+    def __rsub__(self, other: "Control | List[Control]") -> "Control":
+        return self.__sub__(other)
+
+    # control[key]
+    def __setitem__(self, key: int, value: "Control | List[Control]") -> None:
+        try:
+            if not isinstance(value, list):
+                value = [value]
+            self.insert(key, *value)
+        except AttributeError:
+            raise Exception("The insert() method is not implemented for this class")

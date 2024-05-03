@@ -19,6 +19,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet_core.utils import deprecated
 
 
 class NavigationBarLabelBehavior(Enum):
@@ -130,7 +131,41 @@ class NavigationBarDestination(Control):
         self._set_attr("bgcolor", value)
 
 
-NavigationDestination = NavigationBarDestination
+@deprecated(
+    reason="Use NavigationBarDestination class instead.",
+    version="0.22.0",
+    delete_version="1.0",
+)
+class NavigationDestination(NavigationBarDestination):
+    def __init__(
+        self,
+        label: Optional[str] = None,
+        icon: IconStr = None,
+        icon_content: Optional[Control] = None,
+        selected_icon: IconStr = None,
+        selected_icon_content: Optional[Control] = None,
+        bgcolor: ColorStr = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        tooltip: Optional[str] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+    ) -> None:
+        NavigationBarDestination.__init__(
+            self,
+            label,
+            icon,
+            icon_content,
+            selected_icon,
+            selected_icon_content,
+            bgcolor,
+            ref,
+            tooltip,
+            disabled,
+            data,
+        )
 
 
 class NavigationBar(ConstrainedControl, AdaptiveControl):
@@ -271,6 +306,16 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         children.extend(self.__destinations)
         return children
 
+    # Public methods
+    def add(self, *destinations: List[NavigationBarDestination]) -> None:
+        self.__add(self.__destinations, *destinations)
+
+    def insert(self, at: int, *destinations: List[NavigationBarDestination]) -> None:
+        self.__insert(self.__destinations, at, *destinations)
+
+    def remove(self, *destinations: List[NavigationBarDestination]) -> None:
+        self.__remove(self.__destinations, *destinations)
+
     # destinations
     @property
     def destinations(self) -> Optional[List[NavigationBarDestination]]:
@@ -305,7 +350,9 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Optional[Union[ColorStr, Dict[MaterialState, ColorStr]]]):
+    def overlay_color(
+        self, value: Optional[Union[ColorStr, Dict[MaterialState, ColorStr]]]
+    ):
         self.__overlay_color = value
 
     # bgcolor
