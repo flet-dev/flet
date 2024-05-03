@@ -31,7 +31,6 @@ class UrlTarget(Enum):
     SELF = "_self"
     PARENT = "_parent"
     TOP = "_top"
-    # UNFENCED_TOP = "_unfencedTop"
 
 
 PaddingValue = Union[None, int, float, Padding]

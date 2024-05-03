@@ -78,11 +78,11 @@ class TextSpan(InlineSpan):
 
     # url
     @property
-    def url(self):
+    def url(self) -> Optional[str]:
         return self._get_attr("url")
 
     @url.setter
-    def url(self, value):
+    def url(self, value: Optional[str]):
         self._set_attr("url", value)
 
     # url_target

@@ -171,29 +171,29 @@ class CupertinoNavigationBar(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # active_color
     @property
-    def active_color(self):
+    def active_color(self) -> Optional[str]:
         return self._get_attr("activeColor")
 
     @active_color.setter
-    def active_color(self, value):
+    def active_color(self, value: Optional[str]):
         self._set_attr("activeColor", value)
 
     # inactive_color
     @property
-    def inactive_color(self):
+    def inactive_color(self) -> Optional[str]:
         return self._get_attr("inactiveColor")
 
     @inactive_color.setter
-    def inactive_color(self, value):
+    def inactive_color(self, value: Optional[str]):
         self._set_attr("inactiveColor", value)
 
     # icon_size

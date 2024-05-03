@@ -222,10 +222,7 @@ class View(ScrollableControl, AdaptiveControl):
     @horizontal_alignment.setter
     def horizontal_alignment(self, value: CrossAxisAlignment):
         self.__horizontal_alignment = value
-        self._set_attr(
-            "horizontalAlignment",
-            value.value if isinstance(value, CrossAxisAlignment) else value,
-        )
+        self._set_enum_attr("horizontalAlignment", value, CrossAxisAlignment)
 
     # vertical_alignment
     @property
@@ -235,15 +232,12 @@ class View(ScrollableControl, AdaptiveControl):
     @vertical_alignment.setter
     def vertical_alignment(self, value: MainAxisAlignment):
         self.__vertical_alignment = value
-        self._set_attr(
-            "verticalAlignment",
-            value.value if isinstance(value, MainAxisAlignment) else value,
-        )
+        self._set_enum_attr("verticalAlignment", value, MainAxisAlignment)
 
     # spacing
     @property
     def spacing(self) -> OptionalNumber:
-        return self._get_attr("spacing")
+        return self._get_attr("spacing", data_type="float")
 
     @spacing.setter
     def spacing(self, value: OptionalNumber):
@@ -260,11 +254,11 @@ class View(ScrollableControl, AdaptiveControl):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # fullscreen_dialog

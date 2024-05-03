@@ -129,20 +129,20 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # thumb_color
     @property
-    def thumb_color(self):
+    def thumb_color(self) -> Optional[str]:
         return self._get_attr("thumbColor")
 
     @thumb_color.setter
-    def thumb_color(self, value):
+    def thumb_color(self, value: Optional[str]):
         self._set_attr("thumbColor", value)
 
     # padding

@@ -985,7 +985,10 @@ Widget createWidget(
 Widget baseControl(
     BuildContext context, Widget widget, Control? parent, Control control) {
   return _expandable(
-      _tooltip(_opacity(context, widget, parent, control), parent, control),
+      _directionality(
+          _tooltip(_opacity(context, widget, parent, control), parent, control),
+          parent,
+          control),
       parent,
       control);
 }

@@ -16,11 +16,11 @@ from flet_core.types import (
 
 class CupertinoListTile(ConstrainedControl):
     """
-        An iOS-style list tile. The CupertinoListTile is a Cupertino equivalent of Material ListTile.
+    An iOS-style list tile. The CupertinoListTile is a Cupertino equivalent of Material ListTile.
 
-        Example:
+    Example:
 
-        ```
+    ```
     import flet as ft
 
 
@@ -43,11 +43,11 @@ class CupertinoListTile(ConstrainedControl):
         )
 
     ft.app(target=main)
-        ```
+    ```
 
-        -----
+    -----
 
-        Online docs: https://flet.dev/docs/controls/cupertinolisttile
+    Online docs: https://flet.dev/docs/controls/cupertinolisttile
     """
 
     def __init__(

@@ -384,9 +384,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @style.setter
     def style(self, value: Optional[ListTileStyle]):
         self.__style = value
-        self._set_attr(
-            "style", value.value if isinstance(value, ListTileStyle) else value
-        )
+        self._set_enum_attr("style", value, ListTileStyle)
 
     # title_alignment
     @property
@@ -481,9 +479,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_attr(
-            "mouseCursor", value.value if isinstance(value, MouseCursor) else value
-        )
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # visual_density
     @property
@@ -493,10 +489,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @visual_density.setter
     def visual_density(self, value: Optional[ThemeVisualDensity]):
         self.__visual_density = value
-        self._set_attr(
-            "visualDensity",
-            value.value if isinstance(value, ThemeVisualDensity) else value,
-        )
+        self._set_enum_attr("visualDensity", value, ThemeVisualDensity)
 
     # shape
     @property

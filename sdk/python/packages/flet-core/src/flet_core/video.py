@@ -389,7 +389,7 @@ class Video(ConstrainedControl):
         return self._get_attr("fillColor")
 
     @fill_color.setter
-    def fill_color(self, value):
+    def fill_color(self, value: Optional[str]):
         self._set_attr("fillColor", value)
 
     # wakelock
@@ -440,7 +440,7 @@ class Video(ConstrainedControl):
     # pitch
     @property
     def pitch(self) -> OptionalNumber:
-        return self._get_attr("pitch")
+        return self._get_attr("pitch", data_type="float")
 
     @pitch.setter
     def pitch(self, value: OptionalNumber):
@@ -449,7 +449,7 @@ class Video(ConstrainedControl):
     # volume
     @property
     def volume(self) -> OptionalNumber:
-        return self._get_attr("volume")
+        return self._get_attr("volume", data_type="float")
 
     @volume.setter
     def volume(self, value: OptionalNumber):
@@ -458,7 +458,7 @@ class Video(ConstrainedControl):
     # playback_rate
     @property
     def playback_rate(self) -> OptionalNumber:
-        return self._get_attr("playbackRate")
+        return self._get_attr("playbackRate", data_type="float")
 
     @playback_rate.setter
     def playback_rate(self, value: OptionalNumber):

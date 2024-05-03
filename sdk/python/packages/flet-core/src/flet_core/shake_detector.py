@@ -65,7 +65,7 @@ class ShakeDetector(Control):
     # minimum_shake_count
     @property
     def minimum_shake_count(self) -> Optional[int]:
-        return self._get_attr("minimumShakeCount")
+        return self._get_attr("minimumShakeCount", data_type="int")
 
     @minimum_shake_count.setter
     def minimum_shake_count(self, value: Optional[int]):
@@ -74,7 +74,7 @@ class ShakeDetector(Control):
     # shake_slop_time_ms
     @property
     def shake_slop_time_ms(self) -> Optional[int]:
-        return self._get_attr("shakeSlopTimeMS")
+        return self._get_attr("shakeSlopTimeMS", data_type="int")
 
     @shake_slop_time_ms.setter
     def shake_slop_time_ms(self, value: Optional[int]):
@@ -83,7 +83,7 @@ class ShakeDetector(Control):
     # shake_count_reset_time_ms
     @property
     def shake_count_reset_time_ms(self) -> Optional[int]:
-        return self._get_attr("shakeCountResetTimeMs")
+        return self._get_attr("shakeCountResetTimeMs", data_type="int")
 
     @shake_count_reset_time_ms.setter
     def shake_count_reset_time_ms(self, value: Optional[int]):
@@ -92,7 +92,7 @@ class ShakeDetector(Control):
     # shake_threshold_gravity
     @property
     def shake_threshold_gravity(self) -> OptionalNumber:
-        return self._get_attr("shakeThresholdGravity")
+        return self._get_attr("shakeThresholdGravity", data_type="float")
 
     @shake_threshold_gravity.setter
     def shake_threshold_gravity(self, value: OptionalNumber):

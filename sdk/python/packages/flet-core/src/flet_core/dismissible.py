@@ -202,7 +202,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     # movementDuration
     @property
     def movement_duration(self) -> Optional[int]:
-        return self._get_attr("movementDuration")
+        return self._get_attr("movementDuration", data_type="int")
 
     @movement_duration.setter
     def movement_duration(self, value: Optional[int]):
@@ -211,7 +211,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     # resizeDuration
     @property
     def resize_duration(self) -> Optional[int]:
-        return self._get_attr("resizeDuration")
+        return self._get_attr("resizeDuration", data_type="int")
 
     @resize_duration.setter
     def resize_duration(self, value: Optional[int]):
@@ -220,7 +220,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     # crossAxisEndOffset
     @property
     def cross_axis_end_offset(self) -> OptionalNumber:
-        return self._get_attr("crossAxisEndOffset")
+        return self._get_attr("crossAxisEndOffset", data_type="float")
 
     @cross_axis_end_offset.setter
     def cross_axis_end_offset(self, value: OptionalNumber):
@@ -234,10 +234,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     @dismiss_direction.setter
     def dismiss_direction(self, value: Optional[DismissDirection]):
         self.__dismiss_direction = value
-        self._set_attr(
-            "dismissDirection",
-            value.value if isinstance(value, DismissDirection) else value,
-        )
+        self._set_enum_attr("dismissDirection", value, DismissDirection)
 
     # dismissThresholds
     @property

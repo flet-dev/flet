@@ -24,7 +24,6 @@ except ImportError:
 
 
 class TextOverflow(Enum):
-    NONE = None
     CLIP = "clip"
     ELLIPSIS = "ellipsis"
     FADE = "fade"
@@ -90,7 +89,7 @@ class Text(ConstrainedControl):
         style: Union[TextThemeStyle, TextStyle, None] = None,
         theme_style: Optional[TextThemeStyle] = None,
         max_lines: Optional[int] = None,
-        overflow: TextOverflow = TextOverflow.NONE,
+        overflow: Optional[TextOverflow] = None,
         selectable: Optional[bool] = None,
         no_wrap: Optional[bool] = None,
         color: Optional[str] = None,
@@ -216,23 +215,21 @@ class Text(ConstrainedControl):
     @text_align.setter
     def text_align(self, value: Optional[TextAlign]):
         self.__text_align = value
-        self._set_attr(
-            "textAlign", value.value if isinstance(value, TextAlign) else value
-        )
+        self._set_enum_attr("textAlign", value, TextAlign)
 
     # font_family
     @property
-    def font_family(self):
+    def font_family(self) -> Optional[str]:
         return self._get_attr("fontFamily")
 
     @font_family.setter
-    def font_family(self, value):
+    def font_family(self, value: Optional[str]):
         self._set_attr("fontFamily", value)
 
     # size
     @property
     def size(self) -> OptionalNumber:
-        return self._get_attr("size")
+        return self._get_attr("size", data_type="float")
 
     @size.setter
     def size(self, value: OptionalNumber):
@@ -246,9 +243,7 @@ class Text(ConstrainedControl):
     @weight.setter
     def weight(self, value: Optional[FontWeight]):
         self.__weight = value
-        self._set_attr(
-            "weight", value.value if isinstance(value, FontWeight) else value
-        )
+        self._set_enum_attr("weight", value, FontWeight)
 
     # style
     @property
@@ -272,14 +267,13 @@ class Text(ConstrainedControl):
 
     # theme_style
     @property
-    def theme_style(self):
-        return self._get_attr("theme_style")
+    def theme_style(self) -> Optional[TextThemeStyle]:
+        return self.__theme_style
 
     @theme_style.setter
     def theme_style(self, value: Optional[TextThemeStyle]):
-        self._set_attr(
-            "theme_style", value.value if isinstance(value, TextThemeStyle) else value
-        )
+        self.__theme_style = value
+        self._set_enum_attr("theme_style", value, TextThemeStyle)
 
     # italic
     @property
@@ -319,32 +313,30 @@ class Text(ConstrainedControl):
 
     # overflow
     @property
-    def overflow(self) -> TextOverflow:
+    def overflow(self) -> Optional[TextOverflow]:
         return self.__overflow
 
     @overflow.setter
-    def overflow(self, value: TextOverflow):
+    def overflow(self, value: Optional[TextOverflow]):
         self.__overflow = value
-        self._set_attr(
-            "overflow", value.value if isinstance(value, TextOverflow) else value
-        )
+        self._set_enum_attr("overflow", value, TextOverflow)
 
     # color
     @property
-    def color(self):
+    def color(self) -> Optional[str]:
         return self._get_attr("color")
 
     @color.setter
-    def color(self, value):
+    def color(self, value: Optional[str]):
         self._set_attr("color", value)
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # semantics_label
