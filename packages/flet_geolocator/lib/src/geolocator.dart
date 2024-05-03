@@ -1,9 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flet/flet.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flet_geolocator/flet_geolocator.dart';
+// import 'package:flet_geolocator/flet_geolocator.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 // import 'utils/geolocator.dart';
 
@@ -69,28 +70,32 @@ class _GeolocatorControlState extends State<GeolocatorControl>
   Widget build(BuildContext context) {
     debugPrint(
         "Geolocator build: ${widget.control.id} (${widget.control.hashCode})");
-
+    LocationAccuracy locationAccuracy = LocationAccuracy.best;
+    // Geolocator geoLocator = Geolocator();
     // int bitRate = widget.control.attrInt("bitRate", 128000)!;
     // int sampleRate = widget.control.attrInt("sampleRate", 44100)!;
     // int numChannels = widget.control.attrInt("channels", 2)!;
     // bool autoGain = widget.control.attrBool("autoGain", false)!;
     // bool cancelEcho = widget.control.attrBool("cancelEcho", false)!;
     // bool suppressNoise = widget.control.attrBool("suppressNoise", false)!;
-    // AudioEncoder audioEncoder =
-    //     parseAudioEncoder(widget.control.attrString("audioEncoder", "wav"))!;
-    //
-    // _onStateChanged = (state) {
-    //   debugPrint("Geolocator($hashCode) - state_changed: ${state.name}");
-    //   var s = state.name.toString();
-    //   if (s == "record") {
-    //     s = "recording";
-    //   } else if (s == "pause") {
-    //     s = "paused";
-    //   } else if (s == "stop") {
-    //     s = "stopped";
-    //   }
-    //   widget.backend.triggerControlEvent(widget.control.id, "state_changed", s);
-    // };
+    String locationAccuracyString =
+        widget.control.attrString("locationAccuracy", 'best')!;
+    switch (locationAccuracyString) {
+      case "best":
+        locationAccuracy = LocationAccuracy.best;
+      case "bestForNavigation":
+        locationAccuracy = LocationAccuracy.bestForNavigation;
+      case "high":
+        locationAccuracy = LocationAccuracy.high;
+      case "medium":
+        locationAccuracy = LocationAccuracy.medium;
+      case "low":
+        locationAccuracy = LocationAccuracy.low;
+      case "lowest":
+        locationAccuracy = LocationAccuracy.lowest;
+      case "reduced":
+        locationAccuracy = LocationAccuracy.reduced;
+    }
 
     () async {
       widget.backend.subscribeMethods(widget.control.id,
@@ -99,61 +104,23 @@ class _GeolocatorControlState extends State<GeolocatorControl>
           case "test":
             debugPrint('Print from Test Case');
             return 'GEOLOCATOR TEST';
-        //   case "start_recording":
-        //     if (await recorder!.hasPermission()) {
-        //       await recorder!.start(
-        //           RecordConfig(
-        //             encoder: audioEncoder,
-        //             bitRate: bitRate,
-        //             sampleRate: sampleRate,
-        //             numChannels: numChannels,
-        //             autoGain: autoGain,
-        //             echoCancel: cancelEcho,
-        //             noiseSuppress: suppressNoise,
-        //           ),
-        //           path: args["outputPath"] ??
-        //               ""); // FIX: a better default value just in case
-        //     }
-        //     return null;
-        //   case "stop_recording":
-        //     debugPrint("Geolocator.stopRecording($hashCode)");
-        //     String? out = await recorder!.stop();
-        //     return out;
-        //   case "resume_recording":
-        //     debugPrint("Geolocator.resumeRecording($hashCode)");
-        //     await recorder!.resume();
-        //   case "pause_recording":
-        //     debugPrint("Geolocator.pauseRecording($hashCode)");
-        //     await recorder!.pause();
-        //   case "is_supported_encoder":
-        //     debugPrint("Geolocator.isEncoderSupported($hashCode)");
-        //     if (parseAudioEncoder(args["encoder"]) != null) {
-        //       bool isSupported = await recorder!.isEncoderSupported(
-        //           parseAudioEncoder(args["encoder"]) ?? AudioEncoder.wav);
-        //       return isSupported.toString();
-        //     }
-        //     return null;
-        //   case "is_paused":
-        //     debugPrint("Geolocator.isPaused($hashCode)");
-        //     bool isPaused = await recorder!.isPaused();
-        //     return isPaused.toString();
-        //   case "is_recording":
-        //     debugPrint("Geolocator.isRecording($hashCode)");
-        //     bool isRecording = await recorder!.isRecording();
-        //     return isRecording.toString();
-        //   case "has_permission":
-        //     debugPrint("Geolocator.hasPermission($hashCode)");
-        //     bool hasPermission = await recorder!.hasPermission();
-        //     return hasPermission.toString();
-        //   case "get_input_devices":
-        //     debugPrint("Geolocator.getInputDevices($hashCode)");
-        //     List<InputDevice> devices = await recorder!.listInputDevices();
-        //     String devicesJson = json.encode(devices.asMap().map((key, value) {
-        //       return MapEntry(key, (value.id, value.label));
-        //     }).toString());
-        //     return devicesJson;
+          case "getLocation":
+            Future<bool> locationHandler =
+                Permission.location.request().isGranted;
+            return locationHandler.then((value) async {
+              debugPrint('HERE');
+              if (value == true) {
+                Position location = await Geolocator.getCurrentPosition(
+                    desiredAccuracy: locationAccuracy);
+                debugPrint('TRUE');
+                return 'latitude.${location.latitude},longitude.${location.longitude},altitude.${location.altitude},speed.${location.speed},timestamp.${location.timestamp}';
+              } else {
+                debugPrint('FALSE');
+                return 'latitude null,longitude null,altitude null,speed null,timestamp null';
+              }
+            });
         }
-        // return null;
+        return null;
       });
     }();
 
