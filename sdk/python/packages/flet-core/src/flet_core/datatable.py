@@ -254,6 +254,10 @@ class DataRow(Control):
     def _get_children(self):
         return self.__cells
 
+    def did_mount(self):
+        super().did_mount()
+        assert len(self.__cells) > 0, "cells cannot be empty"
+
     # cells
     @property
     def cells(self) -> List[Control]:
@@ -436,6 +440,10 @@ class DataTable(ConstrainedControl):
     def _get_children(self):
         return self.__columns + self.__rows
 
+    def did_mount(self):
+        super().did_mount()
+        assert len(self.__columns) > 0, "columns cannot be empty"
+
     # columns
     @property
     def columns(self) -> List[DataColumn]:
@@ -443,7 +451,6 @@ class DataTable(ConstrainedControl):
 
     @columns.setter
     def columns(self, value: List[DataColumn]):
-        assert len(value) > 0, "columns cannot be empty"
         self.__columns = value
 
     # rows

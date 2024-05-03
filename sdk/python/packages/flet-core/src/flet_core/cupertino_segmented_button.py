@@ -108,6 +108,12 @@ class CupertinoSegmentedButton(ConstrainedControl):
     def _get_children(self):
         return self.__controls
 
+    def did_mount(self):
+        super().did_mount()
+        assert (
+            len(self.__controls) >= 2
+        ), "CupertinoSegmentedButton must have at minimum two visible controls"
+
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("padding", self.__padding)
@@ -119,9 +125,6 @@ class CupertinoSegmentedButton(ConstrainedControl):
 
     @controls.setter
     def controls(self, value: List[Control]):
-        assert (
-            len(value) >= 2
-        ), "CupertinoSegmentedButton must have at minimum two visible controls"
         self.__controls = value
 
     # border_color

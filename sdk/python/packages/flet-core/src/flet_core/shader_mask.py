@@ -132,8 +132,10 @@ class ShaderMask(ConstrainedControl):
         self._set_attr_json("borderRadius", self.__border_radius)
 
     def _get_children(self):
-        self.__content._set_attr_internal("n", "content")
-        return [self.__content]
+        if self.__content:
+            self.__content._set_attr_internal("n", "content")
+            return [self.__content]
+        return []
 
     # content
     @property

@@ -119,6 +119,10 @@ class Banner(Control):
             children.append(self.__leading)
         return children
 
+    def did_mount(self):
+        super().did_mount()
+        assert len(self.__actions) > 0, "actions cannot be empty"
+
     # open
     @property
     def open(self) -> Optional[bool]:
@@ -189,7 +193,6 @@ class Banner(Control):
 
     @actions.setter
     def actions(self, value: List[Control]):
-        assert len(value) > 0, "actions cannot be empty"
         self.__actions = value
 
     # force_actions_below

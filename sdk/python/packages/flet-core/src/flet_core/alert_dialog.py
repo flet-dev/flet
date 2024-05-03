@@ -110,11 +110,6 @@ class AlertDialog(AdaptiveControl):
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
-        self.__title: Optional[Control] = None
-        self.__icon: Optional[Control] = None
-        self.__content: Optional[Control] = None
-        self.__actions: List[Control] = []
-
         self.open = open
         self.bgcolor = bgcolor
         self.elevation = elevation
@@ -162,9 +157,6 @@ class AlertDialog(AdaptiveControl):
             self._set_attr_json("titleTextStyle", self.__title_text_style)
 
     def _get_children(self):
-        assert (
-            self.__title or self.__content or self.__actions
-        ), "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions"
         children = []
         if self.__title:
             self.__title._set_attr_internal("n", "title")
@@ -179,6 +171,12 @@ class AlertDialog(AdaptiveControl):
             action._set_attr_internal("n", "action")
             children.append(action)
         return children
+
+    def did_mount(self):
+        super().did_mount()
+        assert (
+            self.__title or self.__content or self.__actions
+        ), "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions"
 
     # open
     @property
@@ -335,7 +333,7 @@ class AlertDialog(AdaptiveControl):
 
     # actions
     @property
-    def actions(self) -> Optional[List[Control]]:
+    def actions(self) -> List[Control]:
         return self.__actions
 
     @actions.setter

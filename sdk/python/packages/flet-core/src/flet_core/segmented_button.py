@@ -205,6 +205,10 @@ class SegmentedButton(ConstrainedControl):
             children.append(self.__selected_icon)
         return children
 
+    def did_mount(self):
+        super().did_mount()
+        assert len(self.__segments) > 0, "segments must have at minimum one Segment"
+
     # style
     @property
     def style(self) -> Optional[ButtonStyle]:
@@ -230,7 +234,6 @@ class SegmentedButton(ConstrainedControl):
 
     @segments.setter
     def segments(self, value: List[Segment]):
-        assert len(value) > 0, "segments must have at minimum one Segment"
         self.__segments = value
 
     # allow_empty_selection

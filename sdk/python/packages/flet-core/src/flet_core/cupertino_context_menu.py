@@ -54,6 +54,12 @@ class CupertinoContextMenu(AdaptiveControl):
             action._set_attr_internal("n", "action")
         return [self.__content] + self.__actions
 
+    def did_mount(self):
+        super().did_mount()
+        assert (
+            len(self.__actions) > 0
+        ), "actions must be provided and at least one must be visible"
+
     # enable_haptic_feedback
     @property
     def enable_haptic_feedback(self) -> Optional[bool]:
@@ -79,7 +85,4 @@ class CupertinoContextMenu(AdaptiveControl):
 
     @actions.setter
     def actions(self, value: List[Control]):
-        assert (
-            len(value) > 0
-        ), "actions must be provided and at least one must be visible"
         self.__actions = value
