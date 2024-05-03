@@ -70,21 +70,18 @@ class _GeolocatorControlState extends State<GeolocatorControl>
       widget.backend.subscribeMethods(widget.control.id,
           (methodName, args) async {
         switch (methodName) {
-          case "test":
-            debugPrint('Print from Test Case');
-            return 'GEOLOCATOR TEST';
           case "getLocation":
             Future<bool> locationHandler =
                 Permission.location.request().isGranted;
             return locationHandler.then((value) async {
-              debugPrint('HERE');
+
               if (value == true) {
                 Position location = await Geolocator.getCurrentPosition(
                     desiredAccuracy: locationAccuracy);
-                debugPrint('TRUE');
+
                 return 'latitude.${location.latitude},longitude.${location.longitude},altitude.${location.altitude},speed.${location.speed},timestamp.${location.timestamp}';
               } else {
-                debugPrint('FALSE');
+
                 return 'latitude null,longitude null,altitude null,speed null,timestamp null';
               }
             });

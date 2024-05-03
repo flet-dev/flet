@@ -26,7 +26,9 @@ class Position:
 
 class Geolocator(Control):
     """
-    A control that allows you to record audio from your device.
+    A control that allows you to fetch GPS data from your device.
+    This control is non-visual and should be added to `page.overlay` list
+
 
     -----
 

@@ -1,3 +1,3 @@
-# Flet `AudioRecorder` control
+# Flet `Geolocator` control
 
-`AudioRecorder` control to use in Flet apps.
+`Geolocator` control to use in Flet apps.
