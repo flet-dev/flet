@@ -9,6 +9,7 @@
 * LineChart: fix regression ([#3033](https://github.com/flet-dev/flet/issues/3033))
 * Fixed: OAuth expiry of token will hang fastapi server ([#3150](https://github.com/flet-dev/flet/issues/3150))
 * Fixed: Disabled the dropwown, but the color isnot gray ([#2989](https://github.com/flet-dev/flet/issues/2989))
+* Fixed: `pubspec.yaml` for adding custom Flutter packages requires `dependency_overrides` ([#3187](https://github.com/flet-dev/flet/issues/3187))
 
 # 0.22.0
 

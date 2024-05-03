@@ -429,7 +429,7 @@ class Command(BaseCommand):
         for k, v in flutter_dependencies.items():
             pubspec["dependencies"][k] = v
 
-        if src_pubspec and src_pubspec["dependency_overrides"]:
+        if src_pubspec and "dependency_overrides" in src_pubspec:
             pubspec["dependency_overrides"] = {}
             for k, v in src_pubspec["dependency_overrides"].items():
                 pubspec["dependency_overrides"][k] = v
