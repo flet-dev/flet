@@ -205,11 +205,11 @@ class Control:
 
     # page
     @property
-    def page(self) -> Optional[Page]:
+    def page(self) -> "Optional[Page]":
         return self.__page
 
     @page.setter
-    def page(self, page: Optional[Page]):
+    def page(self, page: "Optional[Page]"):
         self.__page = page
 
     # uid
