@@ -2,16 +2,34 @@ import datetime as dt
 import json
 from difflib import SequenceMatcher
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    AnyStr,
+    Dict,
+    List,
+    Optional,
+    Type,
+    TypeVar,
+    Union,
+)
 
 from flet_core.embed_json_encoder import EmbedJsonEncoder
 from flet_core.protocol import Command
 from flet_core.ref import Ref
-from flet_core.types import OptionalNumber, ResponsiveNumber
+from flet_core.types import OptionalNumber, ResponsiveNumber, SupportsStr
 from flet_core.utils import deprecated
 
 if TYPE_CHECKING:
     from .page import Page
+
+try:
+    from typing import Literal
+except:
+    from typing_extensions import Literal
+
+V = TypeVar("V", str, int, float, bool, Any)
+DV = TypeVar("DV", bound=Optional[Any])
 
 
 class Control:
@@ -52,7 +70,7 @@ class Control:
         self.__event_handlers = {}
         self.parent: Optional[Control] = None
 
-    def is_isolated(self):
+    def is_isolated(self) -> bool:
         return False
 
     def build(self):
@@ -61,7 +79,7 @@ class Control:
     def before_update(self):
         pass
 
-    def _before_build_command(self):
+    def _before_build_command(self) -> None:
         self._set_attr_json("col", self.__col)
 
     def did_mount(self):
@@ -74,15 +92,24 @@ class Control:
         return []
 
     def _get_control_name(self) -> str:
-        raise Exception("_get_control_name must be overridden in inherited class")
+        raise NotImplementedError(
+            "_get_control_name must be overridden in inherited class"
+        )
 
-    def _add_event_handler(self, event_name, handler):
+    def _add_event_handler(self, event_name: str, handler) -> None:
         self.__event_handlers[event_name] = handler
 
-    def _get_event_handler(self, event_name):
+    def _get_event_handler(self, event_name: str):
         return self.__event_handlers.get(event_name)
 
-    def _get_attr(self, name, def_value=None, data_type="string"):
+    def _get_attr(
+        self,
+        name: str,
+        def_value: DV = None,
+        data_type: Union[
+            Literal["string", "int", "float", "bool", "bool?"], AnyStr
+        ] = "string",
+    ) -> Union[V, DV]:
         name = name.lower()
         if name not in self.__attrs:
             return def_value
@@ -103,26 +130,30 @@ class Control:
         else:
             return s_val
 
-    def _set_attr(self, name, value, dirty=True):
+    def _set_attr(self, name: str, value: V, dirty: bool = True) -> None:
         self._set_attr_internal(name, value, dirty)
 
-    def _set_enum_attr(self, name, value, enum_type: Type[Enum], dirty=True):
+    def _set_enum_attr(
+        self, name: str, value: V, enum_type: Type[Enum], dirty: bool = True
+    ) -> None:
         self._set_attr_internal(
             name, value.value if isinstance(value, enum_type) else value, dirty
         )
 
-    def _get_value_or_list_attr(self, name, delimiter):
+    def _get_value_or_list_attr(self, name: str, delimiter: str) -> Union[List[str], V]:
         v = self._get_attr(name)
         if v and delimiter in v:
             return [x.strip() for x in v.split(delimiter)]
         return v
 
-    def _set_value_or_list_attr(self, name, value, delimiter):
+    def _set_value_or_list_attr(
+        self, name: str, value: Union[List[SupportsStr], V], delimiter: str
+    ) -> None:
         if isinstance(value, List):
             value = delimiter.join([str(x) for x in value])
         self._set_attr(name, value)
 
-    def _set_attr_internal(self, name, value, dirty=True):
+    def _set_attr_internal(self, name: str, value: V, dirty: bool = True) -> None:
         name = name.lower()
         orig_val = self.__attrs.get(name)
 
@@ -135,77 +166,70 @@ class Control:
             if self.__page and self.__page.auto_update:
                 self.update()
 
-    def _set_attr_json(self, name, value):
+    def _set_attr_json(self, name: str, value: V) -> None:
         ov = self._get_attr(name)
         nv = self._convert_attr_json(value)
         if ov != nv:
             self._set_attr(name, nv)
 
-    def _convert_attr_json(self, value):
+    def _convert_attr_json(self, value: V) -> str:
         return (
             json.dumps(value, cls=EmbedJsonEncoder, separators=(",", ":"))
             if value is not None
             else None
         )
 
-    def _wrap_attr_dict(self, value):
+    def _wrap_attr_dict(self, value: Optional[Union[Dict, Any]]) -> Optional[Dict]:
         if value is None or isinstance(value, Dict):
             return value
         return {"": value}
 
     # event_handlers
-
     @property
-    def event_handlers(self):
+    def event_handlers(self) -> Dict[str, Any]:
         return self.__event_handlers
 
     # _previous_children
-
     @property
     def _previous_children(self):
         return self.__previous_children
 
     # _id
-
     @property
-    def _id(self):
+    def _id(self) -> str:
         return self._get_attr("id")
 
     @_id.setter
-    def _id(self, value):
+    def _id(self, value: str):
         self._set_attr("id", value)
 
     # page
-
     @property
-    def page(self):
+    def page(self) -> Optional[Page]:
         return self.__page
 
     @page.setter
-    def page(self, page):
+    def page(self, page: Optional[Page]):
         self.__page = page
 
     # uid
-
     @property
-    def uid(self):
+    def uid(self) -> Optional[str]:
         return self.__uid
 
     # expand
-
     @property
-    def expand(self) -> Union[None, bool, int]:
+    def expand(self) -> Optional[Union[bool, int]]:
         return self.__expand
 
     @expand.setter
-    def expand(self, value: Union[None, bool, int]):
+    def expand(self, value: Optional[Union[bool, int]]):
         self.__expand = value
         if value and isinstance(value, bool):
             value = 1
         self._set_attr("expand", value if value else None)
 
     # expand_loose
-
     @property
     def expand_loose(self) -> Optional[bool]:
         return self._get_attr("expandLoose", data_type="bool", def_value=False)
@@ -215,7 +239,6 @@ class Control:
         self._set_attr("expandLoose", value)
 
     # rtl
-
     @property
     def rtl(self) -> Optional[bool]:
         return self._get_attr("rtl", data_type="bool", def_value=False)
@@ -225,7 +248,6 @@ class Control:
         self._set_attr("rtl", value)
 
     # col
-
     @property
     def col(self) -> Optional[ResponsiveNumber]:
         return self.__col
@@ -235,19 +257,17 @@ class Control:
         self.__col = value
 
     # opacity
-
     @property
-    def opacity(self):
+    def opacity(self) -> Optional[float]:
         return self._get_attr("opacity", data_type="float", def_value=1.0)
 
     @opacity.setter
-    def opacity(self, value):
-        if value is not None:
+    def opacity(self, value: Optional[float]):
+        if value:
             value = max(0.0, min(value, 1.0))  # make sure 0.0 <= value <= 1.0
         self._set_attr("opacity", value)
 
     # tooltip
-
     @property
     def tooltip(self):
         return self._get_attr("tooltip")
@@ -257,7 +277,6 @@ class Control:
         self._set_attr("tooltip", value)
 
     # visible
-
     @property
     def visible(self) -> Optional[bool]:
         return self._get_attr("visible", data_type="bool", def_value=True)
@@ -267,7 +286,6 @@ class Control:
         self._set_attr("visible", value)
 
     # disabled
-
     @property
     def disabled(self) -> Optional[bool]:
         return self._get_attr("disabled", data_type="bool", def_value=False)
@@ -277,35 +295,24 @@ class Control:
         self._set_attr("disabled", value)
 
     # data
-
     @property
-    def data(self):
+    def data(self) -> Optional[Any]:
         return self.__data
 
     @data.setter
-    def data(self, value):
+    def data(self, value: Optional[Any]):
         self.__data = value
 
-    # auto_update
-    @property
-    def auto_update(self) -> Optional[bool]:
-        return self.__auto_update
-
-    @auto_update.setter
-    def auto_update(self, value: Optional[bool]):
-        self.__auto_update = value
-
     # public methods
-
-    def update(self):
+    def update(self) -> None:
         assert self.__page, "Control must be added to the page first."
         self.__page.update(self)
 
-    async def update_async(self):
+    async def update_async(self) -> None:
         assert self.__page, "Control must be added to the page first."
         await self.__page.update_async(self)
 
-    def clean(self):
+    def clean(self) -> None:
         assert self.__page, "Control must be added to the page first."
         self.__page._clean(self)
 
@@ -347,7 +354,7 @@ class Control:
             wait_timeout=wait_timeout,
         )
 
-    def copy_attrs(self, dest: Dict[str, Any]):
+    def copy_attrs(self, dest: Dict[str, Any]) -> None:
         for attrName in sorted(self.__attrs):
             attrName = attrName.lower()
             dirty = self.__attrs[attrName][1]
@@ -367,8 +374,8 @@ class Control:
             dest[attrName] = sval
 
     def build_update_commands(
-        self, index, commands, added_controls, removed_controls, isolated=False
-    ):
+        self, index, commands, added_controls, removed_controls, isolated: bool = False
+    ) -> None:
         update_cmd = self._build_command(update=True)
 
         if len(update_cmd.attrs) > 0:
@@ -478,7 +485,7 @@ class Control:
         self.__previous_children.clear()
         self.__previous_children.extend(current_children)
 
-    def _remove_control_recursively(self, index, control):
+    def _remove_control_recursively(self, index, control: "Control") -> "List[Control]":
         removed_controls = []
 
         if control.__uid in index:
@@ -492,8 +499,9 @@ class Control:
         return removed_controls
 
     # private methods
-
-    def _build_add_commands(self, indent=0, index=None, added_controls=None):
+    def _build_add_commands(
+        self, indent: int = 0, index=None, added_controls=None
+    ) -> List[Command]:
         if index:
             self.page = index["page"]
         content = self.build()
@@ -538,7 +546,7 @@ class Control:
 
         return commands
 
-    def _build_command(self, update=False):
+    def _build_command(self, update: bool = False) -> Command:
         command = Command(0, None, [], {}, [])
 
         if update and not self.__uid:
@@ -574,7 +582,7 @@ class Control:
             command.values.append(self.__uid)
         return command
 
-    def _dispose(self):
+    def _dispose(self) -> None:
         self.page = None
         self.__event_handlers.clear()
 

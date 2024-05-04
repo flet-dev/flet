@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Callable, Dict, Tuple, Union, Optional, Any, List
+from typing import Any, Callable, Dict, List, Optional, Protocol, Tuple, Union
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
@@ -74,8 +74,9 @@ class NotchShape(Enum):
     CIRCULAR = "circular"
 
 
-ResponsiveNumber = Union[Dict[str, Union[int, float]], int, float]
-OptionalNumber = Optional[Union[int, float]]
+Number = Union[int, float]
+ResponsiveNumber = Union[Dict[str, Number], Number]
+OptionalNumber = Optional[Number]
 
 # str type alias
 ColorStr = Optional[str]
@@ -297,6 +298,7 @@ class MouseCursor(Enum):
     ZOOM_IN = "zoomIn"
     ZOOM_OUT = "zoomOut"
 
+
 # Events
 ControlEventFunction = Callable[[ControlEvent], None]
 
@@ -306,3 +308,8 @@ Wrapper = Callable[..., Any]
 # Args / Kwargs
 Args = List[Any]
 Kwargs = Dict[str, Any]
+
+# Protocols
+class SupportsStr(Protocol):
+    def __str__(self) -> str:
+        ...

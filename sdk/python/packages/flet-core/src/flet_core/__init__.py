@@ -65,7 +65,7 @@ from flet_core.chip import Chip
 from flet_core.circle_avatar import CircleAvatar
 from flet_core.column import Column
 from flet_core.container import Container, ContainerTapEvent
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.control_event import ControlEvent
 from flet_core.cupertino_action_sheet import CupertinoActionSheet
 from flet_core.cupertino_action_sheet_action import CupertinoActionSheetAction
@@ -182,7 +182,6 @@ from flet_core.outlined_button import OutlinedButton
 from flet_core.padding import Padding
 from flet_core.page import (
     AppLifecycleStateChangeEvent,
-    context,
     KeyboardEvent,
     Locale,
     LocaleConfiguration,
@@ -192,6 +191,7 @@ from flet_core.page import (
     PageMediaData,
     RouteChangeEvent,
     ViewPopEvent,
+    context,
 )
 from flet_core.pagelet import Pagelet
 from flet_core.painting import (
@@ -315,10 +315,13 @@ from flet_core.types import (
     MaterialState,
     MouseCursor,
     NotchShape,
+    Number,
+    OptionalNumber,
     Orientation,
     PaddingValue,
     PagePlatform,
     ScrollMode,
+    SupportsStr,
     TabAlignment,
     TextAlign,
     ThemeMode,
