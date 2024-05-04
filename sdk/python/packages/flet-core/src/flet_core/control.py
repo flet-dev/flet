@@ -579,18 +579,16 @@ class Control:
         self.__event_handlers.clear()
 
     # Add/Insert/Remove helper methods
-    def __add(self, var: "List[Control]", *controls: "List[Control]") -> None:
+    def __add(self, var: "List[Control]", *controls: "Control") -> None:
         var.extend(controls)
         self.update()
 
-    def __insert(
-        self, var: "List[Control]", at: int, *controls: "List[Control]"
-    ) -> None:
+    def __insert(self, var: "List[Control]", at: int, *controls: "Control") -> None:
         for i, control in enumerate(controls, start=at):
             var.insert(i, control)
         self.update()
 
-    def __remove(self, var: "List[Control]", *controls: "List[Control]") -> None:
+    def __remove(self, var: "List[Control]", *controls: "Control") -> None:
         for control in controls:
             var.remove(control)
         self.update()

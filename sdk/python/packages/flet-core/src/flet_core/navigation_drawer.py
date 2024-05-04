@@ -239,6 +239,16 @@ class NavigationDrawer(Control):
         children.extend(self.__controls)
         return children
 
+    # Public methods
+    def add(self, *controls: Control) -> None:
+        self.__add(self.__controls, *controls)
+
+    def insert(self, at: int, *controls: Control) -> None:
+        self.__insert(self.__controls, at, *controls)
+
+    def remove(self, *controls: Control) -> None:
+        self.__remove(self.__controls, *controls)
+
     # open
     @property
     def open(self) -> Optional[bool]:

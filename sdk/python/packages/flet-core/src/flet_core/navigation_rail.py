@@ -91,7 +91,7 @@ class NavigationRailDestination(Control):
     @icon.setter
     def icon(self, value: IconStr):
         self._set_attr("icon", value)
-    
+
     # icon_content
     @property
     def icon_content(self) -> Optional[Control]:
@@ -342,6 +342,16 @@ class NavigationRail(ConstrainedControl):
             children.append(self.__trailing)
         children.extend(self.__destinations)
         return children
+
+    # Public methods
+    def add(self, *destinations: NavigationRailDestination) -> None:
+        self.__add(self.__destinations, *destinations)
+
+    def insert(self, at: int, *destinations: NavigationRailDestination) -> None:
+        self.__insert(self.__destinations, at, *destinations)
+
+    def remove(self, *destinations: NavigationRailDestination) -> None:
+        self.__remove(self.__destinations, *destinations)
 
     # destinations
     @property

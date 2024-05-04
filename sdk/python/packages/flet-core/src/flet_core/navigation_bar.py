@@ -307,13 +307,13 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         return children
 
     # Public methods
-    def add(self, *destinations: List[NavigationBarDestination]) -> None:
+    def add(self, *destinations: NavigationBarDestination) -> None:
         self.__add(self.__destinations, *destinations)
 
-    def insert(self, at: int, *destinations: List[NavigationBarDestination]) -> None:
+    def insert(self, at: int, *destinations: NavigationBarDestination) -> None:
         self.__insert(self.__destinations, at, *destinations)
 
-    def remove(self, *destinations: List[NavigationBarDestination]) -> None:
+    def remove(self, *destinations: NavigationBarDestination) -> None:
         self.__remove(self.__destinations, *destinations)
 
     # destinations
