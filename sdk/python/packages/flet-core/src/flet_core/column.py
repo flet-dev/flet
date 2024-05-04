@@ -2,7 +2,7 @@ from typing import Any, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
@@ -10,6 +10,7 @@ from flet_core.types import (
     CrossAxisAlignment,
     MainAxisAlignment,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,

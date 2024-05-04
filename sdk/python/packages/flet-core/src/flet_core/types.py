@@ -309,6 +309,7 @@ Wrapper = Callable[..., Any]
 Args = List[Any]
 Kwargs = Dict[str, Any]
 
+
 # Protocols
 class SupportsStr(Protocol):
     def __str__(self) -> str:
