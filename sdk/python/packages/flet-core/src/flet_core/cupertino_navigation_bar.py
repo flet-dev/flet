@@ -2,12 +2,14 @@ from typing import Any, List, Optional, Union
 
 from flet_core.border import Border
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
 from flet_core.navigation_bar import NavigationBarDestination
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
+    ColorStr,
+    ControlEventFunction,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -91,7 +93,7 @@ class CupertinoNavigationBar(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-    ):
+    ) -> None:
         ConstrainedControl.__init__(
             self,
             ref=ref,
@@ -133,7 +135,7 @@ class CupertinoNavigationBar(ConstrainedControl):
     def _get_control_name(self):
         return "cupertinonavigationbar"
 
-    def before_update(self):
+    def before_update(self) -> None:
         super().before_update()
         self._set_attr_json("border", self.__border)
 
@@ -159,7 +161,7 @@ class CupertinoNavigationBar(ConstrainedControl):
 
     @destinations.setter
     def destinations(self, value: Optional[List[NavigationBarDestination]]):
-        self.__destinations = value if value is not None else []
+        self.__destinations = value if value else []
 
     # border
     @property
@@ -181,29 +183,29 @@ class CupertinoNavigationBar(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> ColorStr:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: ColorStr):
         self._set_attr("bgcolor", value)
 
     # active_color
     @property
-    def active_color(self):
+    def active_color(self) -> ColorStr:
         return self._get_attr("activeColor")
 
     @active_color.setter
-    def active_color(self, value):
+    def active_color(self, value: ColorStr):
         self._set_attr("activeColor", value)
 
     # inactive_color
     @property
-    def inactive_color(self):
+    def inactive_color(self) -> ColorStr:
         return self._get_attr("inactiveColor")
 
     @inactive_color.setter
-    def inactive_color(self, value):
+    def inactive_color(self, value: ColorStr):
         self._set_attr("inactiveColor", value)
 
     # icon_size
@@ -217,9 +219,9 @@ class CupertinoNavigationBar(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> Optional[ControlEventFunction]:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: Optional[ControlEventFunction]):
         self._add_event_handler("change", handler)
