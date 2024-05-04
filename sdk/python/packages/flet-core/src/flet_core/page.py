@@ -358,7 +358,7 @@ class Page(AdaptiveControl):
     async def update_async(self, *controls):
         self.update(*controls)
 
-    def add(self, *controls) -> None:
+    def add(self, *controls: Control) -> None:
         with self.__lock:
             self._controls.extend(controls)
             r = self.__update(self)
@@ -370,7 +370,7 @@ class Page(AdaptiveControl):
     async def add_async(self, *controls):
         self.add(*controls)
 
-    def insert(self, at, *controls) -> None:
+    def insert(self, at: int, *controls: Control) -> None:
         with self.__lock:
             n = at
             for control in controls:
@@ -385,7 +385,7 @@ class Page(AdaptiveControl):
     async def insert_async(self, at, *controls):
         self.insert(at, *controls)
 
-    def remove(self, *controls) -> None:
+    def remove(self, *controls: Control) -> None:
         with self.__lock:
             for control in controls:
                 self._controls.remove(control)
@@ -398,7 +398,7 @@ class Page(AdaptiveControl):
     async def remove_async(self, *controls):
         self.remove(*controls)
 
-    def remove_at(self, index) -> None:
+    def remove_at(self, index: int) -> None:
         with self.__lock:
             self._controls.pop(index)
             r = self.__update(self)
@@ -2020,7 +2020,6 @@ class Page(AdaptiveControl):
         self.__default_view.on_scroll_interval = value
 
     # on_close
-
     @property
     def on_close(self) -> Optional[Callable[..., None]]:
         return self.__on_close

@@ -3,7 +3,7 @@ from typing import Any, List, Optional, Union
 from flet_core.border import Border
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
-from flet_core.navigation_bar import NavigationDestination
+from flet_core.navigation_bar import NavigationBarDestination
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
@@ -55,7 +55,7 @@ class CupertinoNavigationBar(ConstrainedControl):
 
     def __init__(
         self,
-        destinations: Optional[List[NavigationDestination]] = None,
+        destinations: Optional[List[NavigationBarDestination]] = None,
         selected_index: Optional[int] = None,
         bgcolor: Optional[str] = None,
         active_color: Optional[str] = None,
@@ -142,13 +142,23 @@ class CupertinoNavigationBar(ConstrainedControl):
         children.extend(self.__destinations)
         return children
 
+    # Public methods
+    def add(self, *destinations: NavigationBarDestination) -> None:
+        self.__add(self.__destinations, *destinations)
+
+    def insert(self, at: int, *destinations: NavigationBarDestination) -> None:
+        self.__insert(self.__destinations, at, *destinations)
+
+    def remove(self, *destinations: NavigationBarDestination) -> None:
+        self.__remove(self.__destinations, *destinations)
+
     # destinations
     @property
-    def destinations(self) -> Optional[List[NavigationDestination]]:
+    def destinations(self) -> Optional[List[NavigationBarDestination]]:
         return self.__destinations
 
     @destinations.setter
-    def destinations(self, value: Optional[List[NavigationDestination]]):
+    def destinations(self, value: Optional[List[NavigationBarDestination]]):
         self.__destinations = value if value is not None else []
 
     # border
