@@ -7,7 +7,7 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.textfield import TextCapitalization, KeyboardType
+from flet_core.textfield import KeyboardType, TextCapitalization
 from flet_core.types import (
     AnimationValue,
     MaterialState,
@@ -172,6 +172,7 @@ class SearchBar(ConstrainedControl):
                 children.append(i)
         return children
 
+    # Public methods
     def open_view(self):
         m = {
             "n": "openView",
@@ -206,6 +207,15 @@ class SearchBar(ConstrainedControl):
     )
     async def close_view_async(self, text: str = ""):
         self.close_view(text=text)
+
+    def add(self, *controls: Control) -> None:
+        self.__add(self.__controls, *controls)
+
+    def insert(self, at: int, *controls: Control) -> None:
+        self.__insert(self.__controls, at, *controls)
+
+    def remove(self, *controls: Control) -> None:
+        self.__remove(self.__controls, *controls)
 
     # bar_leading
     @property
