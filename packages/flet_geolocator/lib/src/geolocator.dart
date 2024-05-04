@@ -4,6 +4,7 @@ import 'package:flet/flet.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'utils/geolocator.dart';
 
 class GeolocatorControl extends StatefulWidget {
   final Control? parent;
@@ -49,22 +50,7 @@ class _GeolocatorControlState extends State<GeolocatorControl>
 
     String locationAccuracyString =
         widget.control.attrString("locationAccuracy", 'best')!;
-    switch (locationAccuracyString) {
-      case "best":
-        locationAccuracy = LocationAccuracy.best;
-      case "bestForNavigation":
-        locationAccuracy = LocationAccuracy.bestForNavigation;
-      case "high":
-        locationAccuracy = LocationAccuracy.high;
-      case "medium":
-        locationAccuracy = LocationAccuracy.medium;
-      case "low":
-        locationAccuracy = LocationAccuracy.low;
-      case "lowest":
-        locationAccuracy = LocationAccuracy.lowest;
-      case "reduced":
-        locationAccuracy = LocationAccuracy.reduced;
-    }
+    locationAccuracy = parseLocationAccuracy(locationAccuracyString);
 
     () async {
       widget.backend.subscribeMethods(widget.control.id,
@@ -74,14 +60,11 @@ class _GeolocatorControlState extends State<GeolocatorControl>
             Future<bool> locationHandler =
                 Permission.location.request().isGranted;
             return locationHandler.then((value) async {
-
               if (value == true) {
                 Position location = await Geolocator.getCurrentPosition(
                     desiredAccuracy: locationAccuracy);
-
                 return 'latitude.${location.latitude},longitude.${location.longitude},altitude.${location.altitude},speed.${location.speed},timestamp.${location.timestamp}';
               } else {
-
                 return 'latitude null,longitude null,altitude null,speed null,timestamp null';
               }
             });

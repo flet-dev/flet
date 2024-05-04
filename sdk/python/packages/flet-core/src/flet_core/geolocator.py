@@ -11,7 +11,7 @@ class LocationAccuracy(Enum):
     MEDIUM = "medium"
     HIGH = "high"
     BEST = "best"
-    BESTFORNAVIGATION = "bestForNavigation"
+    BEST_FOR_NAVIGATION = "bestForNavigation"
     REDUCED = "reduced"
 
 
@@ -56,19 +56,25 @@ class Geolocator(Control):
         location_accuracy: Optional[LocationAccuracy] = LocationAccuracy.BEST,
         wait_timeout: Optional[float] = 25,
     ) -> Position:
-        output = self.invoke_method(
-            "getLocation",
-            {
-                "locationAccuracy": (
-                    location_accuracy.value
-                    if isinstance(location_accuracy, LocationAccuracy)
-                    else location_accuracy
-                )
-            },
-            wait_for_result=True,
-            wait_timeout=wait_timeout,
-        )
-        return self.__string2dict(string=output)
+        try:
+            output = self.invoke_method(
+                "getLocation",
+                {
+                    "locationAccuracy": (
+                        location_accuracy.value
+                        if isinstance(location_accuracy, LocationAccuracy)
+                        else location_accuracy
+                    )
+                },
+                wait_for_result=True,
+                wait_timeout=wait_timeout,
+            )
+            return self.__string2dict(string=output)
+        except Exception as e:
+            if "Unsupported operation: Platform._operatingSystem" in e.args:
+                raise Exception("Location is Unsupported on this platform")
+            else:
+                return self.__string2dict(string="null")
 
     async def get_location_async(
         self,
