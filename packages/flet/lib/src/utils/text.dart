@@ -149,6 +149,16 @@ TextAlign? parseTextAlign(String? textAlign, [TextAlign? defaultTextAlign]) {
       defaultTextAlign;
 }
 
+TextOverflow? parseTextOverflow(String? textOverflow,
+    [TextOverflow? defaultTextOverflow]) {
+  if (textOverflow == null) {
+    return defaultTextOverflow;
+  }
+  return TextOverflow.values.firstWhereOrNull(
+          (a) => a.name.toLowerCase() == textOverflow.toLowerCase()) ??
+      defaultTextOverflow;
+}
+
 TextStyle? parseTextStyle(ThemeData theme, Control control, String propName) {
   dynamic j;
   var v = control.attrString(propName, null);

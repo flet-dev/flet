@@ -95,11 +95,8 @@ class TextControl extends StatelessWidget with FletStoreMixin {
       TextAlign textAlign =
           parseTextAlign(control.attrString("textAlign"), TextAlign.start)!;
 
-      TextOverflow overflow = TextOverflow.values.firstWhere(
-          (v) =>
-              v.name.toLowerCase() ==
-              control.attrString("overflow", "")!.toLowerCase(),
-          orElse: () => TextOverflow.clip);
+      TextOverflow overflow =
+          parseTextOverflow(control.attrString("overflow"), TextOverflow.clip)!;
 
       return control.attrBool("selectable", false)!
           ? (spans.isNotEmpty)
