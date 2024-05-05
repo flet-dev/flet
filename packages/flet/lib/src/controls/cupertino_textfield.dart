@@ -266,9 +266,9 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
                 parseBoxShadow(Theme.of(context), widget.control, "shadow")),
         cursorHeight: widget.control.attrDouble("cursorHeight"),
         showCursor: widget.control.attrBool("showCursor"),
-        cursorWidth: widget.control.attrDouble("cursorWidth") ?? 2.0,
-        cursorRadius: parseRadius(widget.control, "cursorRadius") ??
-            const Radius.circular(2.0),
+        cursorWidth: widget.control.attrDouble("cursorWidth", 2.0)!,
+        cursorRadius: parseRadius(
+            widget.control, "cursorRadius", const Radius.circular(2.0))!,
         keyboardType: keyboardType,
         clearButtonSemanticLabel:
             widget.control.attrString("clearButtonSemanticsLabel"),

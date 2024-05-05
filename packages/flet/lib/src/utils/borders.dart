@@ -17,10 +17,10 @@ BorderRadius? parseBorderRadius(Control control, String propName,
   return borderRadiusFromJSON(j1);
 }
 
-Radius? parseRadius(Control control, String propName) {
+Radius? parseRadius(Control control, String propName, [Radius? defaultValue]) {
   var r = control.attrDouble(propName, null);
   if (r == null) {
-    return null;
+    return defaultValue;
   }
 
   return Radius.circular(r);

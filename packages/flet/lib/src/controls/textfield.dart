@@ -234,7 +234,7 @@ class _TextFieldControlState extends State<TextFieldControl>
               ? TextAlignVertical(y: textVerticalAlign)
               : null,
           cursorHeight: widget.control.attrDouble("cursorHeight"),
-          cursorWidth: widget.control.attrDouble("cursorWidth") ?? 2.0,
+          cursorWidth: widget.control.attrDouble("cursorWidth", 2.0)!,
           cursorRadius: parseRadius(widget.control, "cursorRadius"),
           keyboardType: keyboardType,
           autocorrect: autocorrect,
