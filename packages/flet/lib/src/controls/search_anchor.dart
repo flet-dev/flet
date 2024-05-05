@@ -99,8 +99,8 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
 
     var textCapitalization = parseTextCapitalization(
         widget.control.attrString("textCapitalization"));
-    TextInputType keyboardType =
-        parseTextInputType(widget.control.attrString("keyboardType", "")!);
+    TextInputType keyboardType = parseTextInputType(
+        widget.control.attrString("keyboardType"), TextInputType.text)!;
 
     var method = widget.control.attrString("method");
 

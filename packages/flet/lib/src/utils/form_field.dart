@@ -10,8 +10,8 @@ import 'text.dart';
 
 enum FormFieldInputBorder { outline, underline, none }
 
-TextInputType parseTextInputType(String type) {
-  switch (type.toLowerCase()) {
+TextInputType? parseTextInputType(String? type, [TextInputType? defaultValue]) {
+  switch (type?.toLowerCase()) {
     case "datetime":
       return TextInputType.datetime;
     case "email":
@@ -35,7 +35,7 @@ TextInputType parseTextInputType(String type) {
     case "visiblepassword":
       return TextInputType.visiblePassword;
   }
-  return TextInputType.text;
+  return defaultValue;
 }
 
 InputDecoration buildInputDecoration(

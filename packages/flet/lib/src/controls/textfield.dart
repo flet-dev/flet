@@ -184,12 +184,10 @@ class _TextFieldControlState extends State<TextFieldControl>
             });
       }
 
-      TextInputType keyboardType =
-          parseTextInputType(widget.control.attrString("keyboardType", "")!);
-
-      if (multiline) {
-        keyboardType = TextInputType.multiline;
-      }
+      TextInputType keyboardType = multiline
+          ? TextInputType.multiline
+          : parseTextInputType(
+              widget.control.attrString("keyboardType"), TextInputType.text)!;
 
       TextAlign textAlign = parseTextAlign(
           widget.control.attrString("textAlign"), TextAlign.start)!;

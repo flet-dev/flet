@@ -39,8 +39,8 @@ class _DatePickerControlState extends State<DatePickerControl> {
     String? confirmText = widget.control.attrString("confirmText");
     String? errorFormatText = widget.control.attrString("errorFormatText");
     String? errorInvalidText = widget.control.attrString("errorInvalidText");
-    TextInputType keyboardType =
-        parseTextInputType(widget.control.attrString("keyboardType", "")!);
+    TextInputType keyboardType = parseTextInputType(
+        widget.control.attrString("keyboardType"), TextInputType.text)!;
     DatePickerMode datePickerMode = DatePickerMode.values.firstWhere(
         (a) =>
             a.name.toLowerCase() ==
