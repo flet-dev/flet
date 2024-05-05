@@ -790,7 +790,8 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
 
           final spacing = control.attrDouble("spacing", 10)!;
           final mainAlignment = parseMainAxisAlignment(
-              control, "verticalAlignment", MainAxisAlignment.start);
+              control.attrString("verticalAlignment"),
+              MainAxisAlignment.start)!;
           final crossAlignment = parseCrossAxisAlignment(
               control.attrString("horizontalAlignment"),
               CrossAxisAlignment.start)!;

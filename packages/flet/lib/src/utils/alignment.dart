@@ -6,13 +6,14 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import 'numbers.dart';
 
-MainAxisAlignment parseMainAxisAlignment(
-    Control control, String propName, MainAxisAlignment defValue) {
-  return MainAxisAlignment.values.firstWhere(
-      (e) =>
-          e.name.toLowerCase() ==
-          control.attrString(propName, "")!.toLowerCase(),
-      orElse: () => defValue);
+MainAxisAlignment? parseMainAxisAlignment(String? alignment,
+    [MainAxisAlignment? defValue]) {
+  if (alignment == null) {
+    return defValue;
+  }
+  return MainAxisAlignment.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == alignment.toLowerCase()) ??
+      defValue;
 }
 
 CrossAxisAlignment? parseCrossAxisAlignment(String? alignment,
