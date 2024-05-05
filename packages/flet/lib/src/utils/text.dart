@@ -140,10 +140,13 @@ InlineSpan? parseInlineSpan(
   return null;
 }
 
-TextAlign? parseTextAlign(String align, [TextAlign? defaultAlign]) {
+TextAlign? parseTextAlign(String? textAlign, [TextAlign? defaultTextAlign]) {
+  if (textAlign == null) {
+    return defaultTextAlign;
+  }
   return TextAlign.values.firstWhereOrNull(
-          (a) => a.name.toLowerCase() == align.toLowerCase()) ??
-      defaultAlign;
+          (a) => a.name.toLowerCase() == textAlign.toLowerCase()) ??
+      defaultTextAlign;
 }
 
 TextStyle? parseTextStyle(ThemeData theme, Control control, String propName) {

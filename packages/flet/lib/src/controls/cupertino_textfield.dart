@@ -165,11 +165,8 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
       keyboardType = TextInputType.multiline;
     }
 
-    TextAlign textAlign = TextAlign.values.firstWhere(
-      ((b) =>
-          b.name == widget.control.attrString("textAlign", "")!.toLowerCase()),
-      orElse: () => TextAlign.start,
-    );
+    TextAlign textAlign = parseTextAlign(
+        widget.control.attrString("textAlign"), TextAlign.start)!;
 
     double? textVerticalAlign = widget.control.attrDouble("textVerticalAlign");
 
