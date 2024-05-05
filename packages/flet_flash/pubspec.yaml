@@ -1,8 +1,8 @@
 name: flet_flash
 description: Flet Flash control
 homepage: https://flet.dev
-repository: https://github.com/flet-dev/flet/packages/flet_audio
-version: 0.22.0
+repository: https://github.com/flet-dev/flet/packages/flet_flash
+version: 0.23.0
 
 
 environment:

@@ -25,7 +25,6 @@ if (flutterVersionName == null) {
 android {
     namespace "com.appveyor.flet"
     compileSdkVersion flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
     ndkVersion "25.1.8937393"
 
     compileOptions {

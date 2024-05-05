@@ -8,7 +8,7 @@ import 'package:flet_lottie/flet_lottie.dart' as flet_lottie;
 import 'package:flet_rive/flet_rive.dart' as flet_rive;
 import 'package:flet_video/flet_video.dart' as flet_video;
 import 'package:flet_webview/flet_webview.dart' as flet_webview;
-import 'package:flet_flash/flet_flash.dart' as flet_flash;
+import "package:flet_flash/flet_flash.dart" as flet_flash;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_strategy/url_strategy.dart';

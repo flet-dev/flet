@@ -35,14 +35,18 @@ class _FlashControlState extends State<FlashControl> {
             case "on":
               try {
                 await TorchLight.enableTorch();
+                return "1";
               } on Exception catch (_) {
                 debugPrint("Couldn't enable Flash: $_");
+                return "0";
               }
             case "off":
               try {
                 await TorchLight.disableTorch();
+                return "1";
               } on Exception catch (_) {
                 debugPrint("Couldn't disable Flash");
+                return "0";
               }
           }
           return null;

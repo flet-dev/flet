@@ -252,7 +252,7 @@ packages:
       path: "../packages/flet_flash"
       relative: true
     source: path
-    version: "0.22.0"
+    version: "0.23.0"
   flet_lottie:
     dependency: "direct main"
     description:
