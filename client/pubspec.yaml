@@ -45,6 +45,8 @@ dependencies:
     path: ../packages/flet_video
   flet_webview:
     path: ../packages/flet_webview
+  flet_flash:
+    path: ../packages/flet_flash
 
   url_strategy: ^0.2.0
   cupertino_icons: ^1.0.6
