@@ -54,11 +54,8 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
     String? semanticsLabel = control.attrString("semanticsLabel");
     var gaplessPlayback = control.attrBool("gaplessPlayback");
     var excludeFromSemantics = control.attrBool("excludeFromSemantics", false)!;
-    FilterQuality filterQuality = FilterQuality.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            control.attrString("filterQuality", "")!.toLowerCase(),
-        orElse: () => FilterQuality.low);
+    FilterQuality filterQuality = parseFilterQuality(
+        control.attrString("filterQuality"), FilterQuality.low)!;
     bool disabled = control.isDisabled || parentDisabled;
     var errorContentCtrls =
         children.where((c) => c.name == "error_content" && c.isVisible);

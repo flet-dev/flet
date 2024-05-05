@@ -56,3 +56,12 @@ ImageFilter blurImageFilterFromJSON(dynamic json) {
 
   return ImageFilter.blur(sigmaX: sigmaX, sigmaY: sigmaY, tileMode: tileMode);
 }
+
+FilterQuality? parseFilterQuality(String? quality, [FilterQuality? defValue]) {
+  if (quality == null) {
+    return defValue;
+  }
+  return FilterQuality.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == quality.toLowerCase()) ??
+      defValue;
+}
