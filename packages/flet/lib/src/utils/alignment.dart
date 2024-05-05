@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -32,13 +33,14 @@ TabAlignment parseTabAlignment(
       orElse: () => defValue);
 }
 
-WrapAlignment parseWrapAlignment(
-    Control control, String propName, WrapAlignment defValue) {
-  return WrapAlignment.values.firstWhere(
-      (e) =>
-          e.name.toLowerCase() ==
-          control.attrString(propName, "")!.toLowerCase(),
-      orElse: () => defValue);
+WrapAlignment? parseWrapAlignment(String? alignment,
+    [WrapAlignment? defValue]) {
+  if (alignment == null) {
+    return defValue;
+  }
+  return WrapAlignment.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == alignment.toLowerCase()) ??
+      defValue;
 }
 
 WrapCrossAlignment parseWrapCrossAlignment(

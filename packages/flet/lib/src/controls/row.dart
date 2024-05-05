@@ -61,8 +61,8 @@ class RowControl extends StatelessWidget {
             direction: Axis.horizontal,
             spacing: spacing,
             runSpacing: control.attrDouble("runSpacing", 10)!,
-            alignment:
-                parseWrapAlignment(control, "alignment", WrapAlignment.start),
+            alignment: parseWrapAlignment(
+                control.attrString("alignment"), WrapAlignment.start)!,
             crossAxisAlignment: parseWrapCrossAlignment(
                 control, "verticalAlignment", WrapCrossAlignment.center),
             children: controls,

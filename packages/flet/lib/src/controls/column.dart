@@ -61,8 +61,8 @@ class ColumnControl extends StatelessWidget {
             direction: Axis.vertical,
             spacing: spacing,
             runSpacing: control.attrDouble("runSpacing", 10)!,
-            alignment:
-                parseWrapAlignment(control, "alignment", WrapAlignment.start),
+            alignment: parseWrapAlignment(
+                control.attrString("alignment"), WrapAlignment.start)!,
             crossAxisAlignment: parseWrapCrossAlignment(
                 control, "horizontalAlignment", WrapCrossAlignment.start),
             children: controls,
