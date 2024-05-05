@@ -1,0 +1,58 @@
+import 'dart:io' show Platform;
+import 'dart:io';
+
+import 'package:flet/flet.dart';
+import 'package:flutter/widgets.dart';
+import 'package:torch_light/torch_light.dart';
+
+class FlashControl extends StatefulWidget {
+  final Control? parent;
+  final Control control;
+  final Widget? nextChild;
+  final FletControlBackend backend;
+
+  const FlashControl(
+      {super.key,
+      required this.parent,
+      required this.control,
+      required this.nextChild,
+      required this.backend});
+
+  @override
+  State<FlashControl> createState() => _FlashControlState();
+}
+
+class _FlashControlState extends State<FlashControl> {
+  @override
+  Widget build(BuildContext context) {
+    debugPrint("FlashControl build: ${widget.control.id}");
+
+    if (Platform.isIOS || Platform.isAndroid) {
+      () async {
+        widget.backend.subscribeMethods(widget.control.id,
+            (meathodName, args) async {
+          switch (meathodName) {
+            case "on":
+              try {
+                await TorchLight.enableTorch();
+              } on Exception catch (_) {
+                debugPrint("Couldn't enable Flash: $_");
+              }
+            case "off":
+              try {
+                await TorchLight.disableTorch();
+              } on Exception catch (_) {
+                debugPrint("Couldn't disable Flash");
+              }
+          }
+          return null;
+        });
+      }();
+
+      return const SizedBox.shrink();
+    } else {
+      return const ErrorControl(
+          "Flash control is not supported on this platform yet.");
+    }
+  }
+}
