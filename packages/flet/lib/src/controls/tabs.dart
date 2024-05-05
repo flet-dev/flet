@@ -153,8 +153,9 @@ class _TabsControlState extends State<TabsControl>
           var enableFeedback = widget.control.attrBool("enableFeedback");
           var indicatorWeight =
               widget.control.attrDouble("indicatorThickness", 2.0)!;
-          var tabAlignment = parseTabAlignment(widget.control, "tabAlignment",
-              isScrollable ? TabAlignment.start : TabAlignment.fill);
+          var tabAlignment = parseTabAlignment(
+              widget.control.attrString("tabAlignment"),
+              isScrollable ? TabAlignment.start : TabAlignment.fill)!;
           var mouseCursor =
               parseMouseCursor(widget.control.attrString("mouseCursor"));
           var clipBehavior = parseClip(

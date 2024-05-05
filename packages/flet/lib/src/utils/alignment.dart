@@ -24,13 +24,13 @@ CrossAxisAlignment parseCrossAxisAlignment(
       orElse: () => defValue);
 }
 
-TabAlignment parseTabAlignment(
-    Control control, String propName, TabAlignment defValue) {
-  return TabAlignment.values.firstWhere(
-      (e) =>
-          e.name.toLowerCase() ==
-          control.attrString(propName, "")!.toLowerCase(),
-      orElse: () => defValue);
+TabAlignment? parseTabAlignment(String? alignment, [TabAlignment? defValue]) {
+  if (alignment == null) {
+    return defValue;
+  }
+  return TabAlignment.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == alignment.toLowerCase()) ??
+      defValue;
 }
 
 WrapAlignment? parseWrapAlignment(String? alignment,
