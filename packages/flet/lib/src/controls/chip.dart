@@ -117,8 +117,8 @@ class _ChipControlState extends State<ChipControl> {
       _selected = selected;
     }
     bool showCheckmark = widget.control.attrBool("showCheckmark", true)!;
-    String deleteButtonTooltipMessage =
-        widget.control.attrString("deleteButtonTooltipMessage", "")!;
+    String? deleteButtonTooltipMessage =
+        widget.control.attrString("deleteButtonTooltipMessage");
 
     var elevation = widget.control.attrDouble("elevation");
 

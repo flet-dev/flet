@@ -139,12 +139,9 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
           fontSize: textSize, color: _focused ? focusedColor ?? color : color);
     }
 
-    TextCapitalization? textCapitalization = TextCapitalization.values
-        .firstWhere(
-            (a) =>
-                a.name.toLowerCase() ==
-                widget.control.attrString("capitalization", "")!.toLowerCase(),
-            orElse: () => TextCapitalization.none);
+    TextCapitalization textCapitalization = parseTextCapitalization(
+        widget.control.attrString("textCapitalization"),
+        TextCapitalization.none)!;
 
     FilteringTextInputFormatter? inputFilter =
         parseInputFilter(widget.control, "inputFilter");

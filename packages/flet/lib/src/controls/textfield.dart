@@ -155,14 +155,9 @@ class _TextFieldControlState extends State<TextFieldControl>
             color: _focused ? focusedColor ?? color : color);
       }
 
-      TextCapitalization? textCapitalization = TextCapitalization.values
-          .firstWhere(
-              (a) =>
-                  a.name.toLowerCase() ==
-                  widget.control
-                      .attrString("capitalization", "")!
-                      .toLowerCase(),
-              orElse: () => TextCapitalization.none);
+      TextCapitalization textCapitalization = parseTextCapitalization(
+          widget.control.attrString("textCapitalization"),
+          TextCapitalization.none)!;
 
       FilteringTextInputFormatter? inputFilter =
           parseInputFilter(widget.control, "inputFilter");
@@ -221,9 +216,9 @@ class _TextFieldControlState extends State<TextFieldControl>
           autofocus: autofocus,
           enabled: !disabled,
           onFieldSubmitted: !multiline
-              ? (_) {
+              ? (value) {
                   widget.backend
-                      .triggerControlEvent(widget.control.id, "submit", "");
+                      .triggerControlEvent(widget.control.id, "submit", value);
                 }
               : null,
           decoration: buildInputDecoration(

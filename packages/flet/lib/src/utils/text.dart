@@ -159,6 +159,16 @@ TextOverflow? parseTextOverflow(String? textOverflow,
       defaultTextOverflow;
 }
 
+TextCapitalization? parseTextCapitalization(String? textCapitalization,
+    [TextCapitalization? defaultTextCapitalization]) {
+  if (textCapitalization == null) {
+    return defaultTextCapitalization;
+  }
+  return TextCapitalization.values.firstWhereOrNull(
+          (a) => a.name.toLowerCase() == textCapitalization.toLowerCase()) ??
+      defaultTextCapitalization;
+}
+
 TextStyle? parseTextStyle(ThemeData theme, Control control, String propName) {
   dynamic j;
   var v = control.attrString(propName, null);
