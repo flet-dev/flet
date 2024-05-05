@@ -38,7 +38,7 @@ class SafeAreaControl extends StatelessWidget {
             bottom: control.attrBool("bottom", true)!,
             maintainBottomViewPadding:
                 control.attrBool("maintainBottomViewPadding", false)!,
-            minimum: parseEdgeInsets(control, "minimum") ?? EdgeInsets.zero,
+            minimum: parseEdgeInsets(control, "minimum", EdgeInsets.zero)!,
             child: contentCtrls.isNotEmpty
                 ? createControl(control, contentCtrls.first.id, disabled,
                     parentAdaptive: adaptive)

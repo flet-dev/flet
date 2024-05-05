@@ -96,8 +96,8 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
         selectedIndex: _selectedIndex,
         shadowColor: widget.control.attrColor("shadowColor", context),
         surfaceTintColor: widget.control.attrColor("surfaceTintColor", context),
-        tilePadding: parseEdgeInsets(widget.control, "tilePadding") ??
-            const EdgeInsets.symmetric(horizontal: 12.0),
+        tilePadding: parseEdgeInsets(widget.control, "tilePadding",
+            const EdgeInsets.symmetric(horizontal: 12.0))!,
         onDestinationSelected: _destinationChanged,
         children: children,
       );

@@ -5,10 +5,11 @@ import 'package:flutter/widgets.dart';
 import '../models/control.dart';
 import 'numbers.dart';
 
-EdgeInsets? parseEdgeInsets(Control control, String propName) {
+EdgeInsets? parseEdgeInsets(Control control, String propName,
+    [EdgeInsets? defaultValue]) {
   var v = control.attrString(propName, null);
   if (v == null) {
-    return null;
+    return defaultValue;
   }
 
   final j1 = json.decode(v);
@@ -23,11 +24,11 @@ EdgeInsets edgeInsetsFromJson(dynamic json) {
       parseDouble(json['r']), parseDouble(json['b']));
 }
 
-EdgeInsetsDirectional? parseEdgeInsetsDirectional(
-    Control control, String propName) {
+EdgeInsetsDirectional? parseEdgeInsetsDirectional(Control control,
+    String propName, [EdgeInsetsDirectional? defaultValue]) {
   var v = control.attrString(propName, null);
   if (v == null) {
-    return null;
+    return defaultValue;
   }
 
   final j1 = json.decode(v);

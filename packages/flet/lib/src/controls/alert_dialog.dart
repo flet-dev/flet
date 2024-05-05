@@ -68,8 +68,8 @@ class _AlertDialogControlState extends State<AlertDialogControl>
           ? createControl(widget.control, contentCtrls.first.id, disabled,
               parentAdaptive: adaptive)
           : null,
-      contentPadding: parseEdgeInsets(widget.control, "contentPadding") ??
-          const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
+      contentPadding: parseEdgeInsets(widget.control, "contentPadding",
+          const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0))!,
       actions: actionCtrls
           .map((c) => createControl(widget.control, c.id, disabled,
               parentAdaptive: adaptive))
@@ -78,8 +78,8 @@ class _AlertDialogControlState extends State<AlertDialogControl>
       actionsAlignment: actionsAlignment,
       shape: parseOutlinedBorder(widget.control, "shape"),
       semanticLabel: widget.control.attrString("semanticsLabel"),
-      insetPadding: parseEdgeInsets(widget.control, "insetPadding") ??
-          const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0),
+      insetPadding: parseEdgeInsets(widget.control, "insetPadding",
+          const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0))!,
       iconPadding: parseEdgeInsets(widget.control, "iconPadding"),
       backgroundColor: widget.control.attrColor("bgcolor", context),
       buttonPadding: parseEdgeInsets(widget.control, "actionButtonPadding"),

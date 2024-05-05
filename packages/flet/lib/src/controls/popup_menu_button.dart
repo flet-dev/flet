@@ -75,7 +75,7 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
           elevation: elevation,
           enableFeedback: enableFeedback,
           padding:
-              parseEdgeInsets(control, "padding") ?? const EdgeInsets.all(8),
+              parseEdgeInsets(control, "padding", const EdgeInsets.all(8))!,
           color: bgcolor,
           clipBehavior: clipBehavior,
           shape: shape,

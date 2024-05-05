@@ -974,8 +974,8 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
             Widget body = Stack(children: [
               SizedBox.expand(
                   child: Container(
-                      padding: parseEdgeInsets(control, "padding") ??
-                          const EdgeInsets.all(10),
+                      padding: parseEdgeInsets(
+                          control, "padding", const EdgeInsets.all(10))!,
                       child: child)),
               ...widget.overlayWidgets
             ]);
