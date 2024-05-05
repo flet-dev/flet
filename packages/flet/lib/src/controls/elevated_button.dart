@@ -89,7 +89,8 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
       String url = widget.control.attrString("url", "")!;
       IconData? icon = parseIcon(widget.control.attrString("icon", "")!);
       Color? iconColor = widget.control.attrColor("iconColor", context);
-      var contentCtrls = widget.children.where((c) => c.name == "content");
+      var contentCtrls =
+          widget.children.where((c) => c.name == "content" && c.isVisible);
       var clipBehavior =
           parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
       bool onHover = widget.control.attrBool("onHover", false)!;

@@ -37,7 +37,8 @@ class _SnackBarControlState extends State<SnackBarControl> {
 
   Widget _createSnackBar() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    var contentCtrls = widget.children.where((c) => c.name == "content");
+    var contentCtrls =
+        widget.children.where((c) => c.name == "content" && c.isVisible);
 
     if (contentCtrls.isEmpty) {
       return const ErrorControl("SnackBar does not have a content.");

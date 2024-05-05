@@ -117,12 +117,12 @@ class _NavigationRailControlState extends State<NavigationRailControl>
               onDestinationSelected: _destinationChanged,
               destinations: viewModel.controlViews.map((destView) {
                 var label = destView.control.attrString("label", "")!;
-                var labelContentCtrls =
-                    destView.children.where((c) => c.name == "label_content");
+                var labelContentCtrls = destView.children
+                    .where((c) => c.name == "label_content" && c.isVisible);
 
                 var icon = parseIcon(destView.control.attrString("icon", "")!);
-                var iconContentCtrls =
-                    destView.children.where((c) => c.name == "icon_content");
+                var iconContentCtrls = destView.children
+                    .where((c) => c.name == "icon_content" && c.isVisible);
 
                 var selectedIcon =
                     parseIcon(destView.control.attrString("selectedIcon", "")!);

@@ -65,8 +65,9 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
             .map((e) => e.toString())
             .toSet();
 
-    List<Control> segments =
-        widget.children.where((c) => c.name == "segment").toList();
+    List<Control> segments = widget.children
+        .where((c) => c.name == "segment" && c.isVisible)
+        .toList();
 
     if (selected.isEmpty && !allowEmptySelection) {
       return const ErrorControl("When allow_empty_selection is False, "
@@ -85,7 +86,8 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
           "be less than or equal to the number of segments.");
     }
 
-    var selectedIcon = widget.children.where((c) => c.name == "selectedIcon");
+    var selectedIcon =
+        widget.children.where((c) => c.name == "selectedIcon" && c.isVisible);
 
     bool showSelectedIcon = widget.control.attrBool("showSelectedIcon", true)!;
 

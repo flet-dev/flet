@@ -85,7 +85,8 @@ class _TextButtonControlState extends State<TextButtonControl>
       String text = widget.control.attrString("text", "")!;
       IconData? icon = parseIcon(widget.control.attrString("icon", "")!);
       Color? iconColor = widget.control.attrColor("iconColor", context);
-      var contentCtrls = widget.children.where((c) => c.name == "content");
+      var contentCtrls =
+          widget.children.where((c) => c.name == "content" && c.isVisible);
       bool onHover = widget.control.attrBool("onHover", false)!;
       bool onLongPress = widget.control.attrBool("onLongPress", false)!;
       String url = widget.control.attrString("url", "")!;

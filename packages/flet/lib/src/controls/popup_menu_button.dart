@@ -60,8 +60,9 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
         : null;
 
     var popupButton = withControls(
-        children.where((c) => c.name != "content").map((c) => c.id),
-        (content, viewModel) {
+        children
+            .where((c) => c.name != "content" && c.isVisible)
+            .map((c) => c.id), (content, viewModel) {
       return PopupMenuButton<String>(
           enabled: !disabled,
           icon: icon != null ? Icon(icon) : null,
@@ -94,8 +95,8 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
                 var height = cv.control.attrDouble("height", 48.0)!;
                 var padding = parseEdgeInsets(cv.control, "padding");
                 var disabled = cv.control.isDisabled || parentDisabled;
-                var contentCtrls =
-                    cv.children.where((c) => c.name == "content");
+                var contentCtrls = cv.children
+                    .where((c) => c.name == "content" && c.isVisible);
 
                 Widget? child;
                 if (contentCtrls.isNotEmpty) {

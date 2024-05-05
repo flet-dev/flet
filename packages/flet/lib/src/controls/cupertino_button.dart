@@ -39,7 +39,8 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     debugPrint("CupertinoButton build: ${widget.control.id}");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    var contentCtrls = widget.children.where((c) => c.name == "content");
+    var contentCtrls =
+        widget.children.where((c) => c.name == "content" && c.isVisible);
 
     String? text = widget.control.attrString("text");
     IconData? icon = parseIcon(widget.control.attrString("icon", "")!);

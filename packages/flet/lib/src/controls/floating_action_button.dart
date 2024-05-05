@@ -48,7 +48,8 @@ class FloatingActionButtonControl extends StatelessWidget {
     OutlinedBorder? shape = parseOutlinedBorder(control, "shape");
     var clipBehavior =
         parseClip(control.attrString("clipBehavior"), Clip.none)!;
-    var contentCtrls = children.where((c) => c.name == "content");
+    var contentCtrls =
+        children.where((c) => c.name == "content" && c.isVisible);
     var tooltip = control.attrString("tooltip");
     bool autofocus = control.attrBool("autofocus", false)!;
     bool mini = control.attrBool("mini", false)!;

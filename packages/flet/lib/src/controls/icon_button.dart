@@ -95,7 +95,8 @@ class _IconButtonControlState extends State<IconButtonControl>
       var padding = parseEdgeInsets(widget.control, "padding");
       var alignment = parseAlignment(widget.control, "alignment");
       var tooltip = widget.control.attrString("tooltip");
-      var contentCtrls = widget.children.where((c) => c.name == "content");
+      var contentCtrls =
+          widget.children.where((c) => c.name == "content" && c.isVisible);
       bool autofocus = widget.control.attrBool("autofocus", false)!;
       bool enableFeedback = widget.control.attrBool("enableFeedback", true)!;
       bool selected = widget.control.attrBool("selected", false)!;
