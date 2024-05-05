@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
+import '../utils/others.dart';
 import '../utils/text.dart';
 import '../utils/theme.dart';
 import 'create_control.dart';
@@ -98,9 +99,8 @@ class _ChipControlState extends State<ChipControl> {
         parseBorderSide(Theme.of(context), widget.control, "borderSide");
     VisualDensity? visualDensity =
         parseVisualDensity(widget.control.attrString("visualDensity"), null);
-    Clip clipBehavior = Clip.values.firstWhere(
-        (c) => c.toString() == widget.control.attrString("clipBehavior", "")!,
-        orElse: () => Clip.none);
+    Clip clipBehavior =
+        parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
 
     bool onClick = widget.control.attrBool("onclick", false)!;
     bool onDelete = widget.control.attrBool("onDelete", false)!;

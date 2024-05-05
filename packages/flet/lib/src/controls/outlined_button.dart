@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'cupertino_button.dart';
 import 'cupertino_dialog_action.dart';
@@ -69,11 +70,8 @@ class _OutlinedButtonControlState extends State<OutlinedButtonControl>
     bool onHover = widget.control.attrBool("onHover", false)!;
     bool onLongPress = widget.control.attrBool("onLongPress", false)!;
     bool autofocus = widget.control.attrBool("autofocus", false)!;
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            widget.control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.none);
+    var clipBehavior =
+        parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
     Function()? onPressed = !disabled
         ? () {
             debugPrint("Button ${widget.control.id} clicked!");

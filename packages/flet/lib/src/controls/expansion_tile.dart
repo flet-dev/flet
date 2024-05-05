@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
+import '../utils/others.dart';
 import '../utils/theme.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -61,11 +62,8 @@ class ExpansionTileControl extends StatelessWidget {
             e.name.toLowerCase() ==
             control.attrString("affinity", "")!.toLowerCase(),
         orElse: () => ListTileControlAffinity.platform);
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.none);
+    var clipBehavior =
+        parseClip(control.attrString("clipBehavior"), Clip.none)!;
 
     var expandedCrossAxisAlignment = parseCrossAxisAlignment(
         control, "crossAxisAlignment", CrossAxisAlignment.center);

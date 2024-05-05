@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/menu.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -37,11 +38,8 @@ class _MenuBarControlState extends State<MenuBarControl> {
     }
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            widget.control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.none);
+    var clipBehavior =
+        parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
 
     // var theme = Theme.of(context);
 

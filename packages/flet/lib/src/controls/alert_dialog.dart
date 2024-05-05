@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
+import '../utils/others.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 import 'cupertino_alert_dialog.dart';
@@ -53,11 +54,9 @@ class _AlertDialogControlState extends State<AlertDialogControl>
     if (titleCtrls.isEmpty && contentCtrls.isEmpty && actionCtrls.isEmpty) {
       return const ErrorControl("AlertDialog does not have any content.");
     }
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            widget.control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.none);
+
+    var clipBehavior =
+        parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
 
     return AlertDialog(
       title: titleCtrls.isNotEmpty

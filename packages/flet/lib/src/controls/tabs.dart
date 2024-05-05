@@ -14,6 +14,7 @@ import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/material_state.dart';
 import '../utils/mouse.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 
 class TabsControl extends StatefulWidget {
@@ -156,11 +157,8 @@ class _TabsControlState extends State<TabsControl>
               isScrollable ? TabAlignment.start : TabAlignment.fill);
           var mouseCursor =
               parseMouseCursor(widget.control.attrString("mouseCursor"));
-          var clipBehavior = Clip.values.firstWhere(
-              (e) =>
-                  e.name.toLowerCase() ==
-                  widget.control.attrString("clipBehavior", "")!.toLowerCase(),
-              orElse: () => Clip.hardEdge);
+          var clipBehavior = parseClip(
+              widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
 
           var indicator = indicatorBorderRadius != null ||
                   indicatorBorderSide != null ||

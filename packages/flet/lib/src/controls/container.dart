@@ -13,6 +13,7 @@ import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
 import '../utils/launch_url.dart';
+import '../utils/others.dart';
 import '../utils/shadows.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -125,11 +126,8 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
 
       var borderRadius = parseBorderRadius(control, "borderRadius");
 
-      var clipBehavior = Clip.values.firstWhere(
-          (e) =>
-              e.name.toLowerCase() ==
-              control.attrString("clipBehavior", "")!.toLowerCase(),
-          orElse: () => borderRadius != null ? Clip.antiAlias : Clip.none);
+      var clipBehavior = parseClip(control.attrString("clipBehavior"),
+          borderRadius != null ? Clip.antiAlias : Clip.none)!;
 
       var boxDecor = BoxDecoration(
           color: bgColor,

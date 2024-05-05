@@ -7,6 +7,7 @@ import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/mouse.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'flet_store_mixin.dart';
 
@@ -39,11 +40,8 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
         (Theme.of(context).useMaterial3
             ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
             : null);
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.none);
+    var clipBehavior =
+        parseClip(control.attrString("clipBehavior"), Clip.none)!;
     var bgcolor = control.attrColor("bgcolor", context);
     var iconColor = control.attrColor("iconColor", context);
     var shadowColor = control.attrColor("shadowColor", context);

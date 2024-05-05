@@ -5,6 +5,7 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -52,11 +53,8 @@ class _SnackBarControlState extends State<SnackBarControl> {
               widget.backend.triggerControlEvent(widget.control.id, "action");
             })
         : null;
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            widget.control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.hardEdge);
+    var clipBehavior =
+        parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
 
     SnackBarBehavior? behavior = SnackBarBehavior.values.firstWhereOrNull((a) =>
         a.name.toLowerCase() ==

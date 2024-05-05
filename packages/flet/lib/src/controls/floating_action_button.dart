@@ -6,6 +6,7 @@ import '../utils/borders.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import '../utils/mouse.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -45,11 +46,8 @@ class FloatingActionButtonControl extends StatelessWidget {
     Color? hoverColor = control.attrColor("hoverColor", context);
     Color? focusColor = control.attrColor("focusColor", context);
     OutlinedBorder? shape = parseOutlinedBorder(control, "shape");
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.none);
+    var clipBehavior =
+        parseClip(control.attrString("clipBehavior"), Clip.none)!;
     var contentCtrls = children.where((c) => c.name == "content");
     var tooltip = control.attrString("tooltip");
     bool autofocus = control.attrBool("autofocus", false)!;

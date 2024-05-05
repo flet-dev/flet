@@ -1,8 +1,8 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/others.dart';
 import '../utils/text.dart';
 import '../utils/theme.dart';
 import 'create_control.dart';
@@ -68,11 +68,7 @@ class AppBarControl extends StatelessWidget
           control.attrBool("excludeHeaderSemantics", false)!;
       var titleSpacing = control.attrDouble("titleSpacing");
 
-      var clipBehavior = Clip.values.firstWhereOrNull(
-        (e) =>
-            e.name.toLowerCase() ==
-            control.attrString("clipBehavior", "")!.toLowerCase(),
-      );
+      var clipBehavior = parseClip(control.attrString("clipBehavior"));
 
       return AppBar(
         leading: leadingCtrls.isNotEmpty
