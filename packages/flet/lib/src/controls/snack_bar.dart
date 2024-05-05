@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/dismissible.dart';
 import '../utils/edge_insets.dart';
 import '../utils/others.dart';
 import 'create_control.dart';
@@ -61,11 +62,8 @@ class _SnackBarControlState extends State<SnackBarControl> {
         a.name.toLowerCase() ==
         widget.control.attrString("behavior", "")!.toLowerCase());
 
-    DismissDirection? dismissDirection = DismissDirection.values.firstWhere(
-        (a) =>
-            a.name.toLowerCase() ==
-            widget.control.attrString("dismissDirection", "")!.toLowerCase(),
-        orElse: () => DismissDirection.down);
+    DismissDirection? dismissDirection =
+        parseDismissDirection(widget.control.attrString("dismissDirection"));
 
     return SnackBar(
         behavior: behavior,
