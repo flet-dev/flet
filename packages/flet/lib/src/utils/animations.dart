@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import 'numbers.dart';
 
-ImplicitAnimationDetails? parseAnimation(Control control, String propName) {
+ImplicitAnimationDetails? parseAnimation(Control control, String propName,
+    [ImplicitAnimationDetails? defaultValue]) {
   var v = control.attrString(propName, null);
   if (v == null) {
-    return null;
+    return defaultValue;
   }
 
   final j1 = json.decode(v);
