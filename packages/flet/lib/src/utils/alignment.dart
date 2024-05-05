@@ -15,13 +15,14 @@ MainAxisAlignment parseMainAxisAlignment(
       orElse: () => defValue);
 }
 
-CrossAxisAlignment parseCrossAxisAlignment(
-    Control control, String propName, CrossAxisAlignment defValue) {
-  return CrossAxisAlignment.values.firstWhere(
-      (e) =>
-          e.name.toLowerCase() ==
-          control.attrString(propName, "")!.toLowerCase(),
-      orElse: () => defValue);
+CrossAxisAlignment? parseCrossAxisAlignment(String? alignment,
+    [CrossAxisAlignment? defValue]) {
+  if (alignment == null) {
+    return defValue;
+  }
+  return CrossAxisAlignment.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == alignment.toLowerCase()) ??
+      defValue;
 }
 
 TabAlignment? parseTabAlignment(String? alignment, [TabAlignment? defValue]) {

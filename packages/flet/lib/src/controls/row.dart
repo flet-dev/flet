@@ -72,7 +72,8 @@ class RowControl extends StatelessWidget {
             mainAxisAlignment: mainAlignment,
             mainAxisSize: tight ? MainAxisSize.min : MainAxisSize.max,
             crossAxisAlignment: parseCrossAxisAlignment(
-                control, "verticalAlignment", CrossAxisAlignment.center),
+                control.attrString("verticalAlignment"),
+                CrossAxisAlignment.center)!,
             children: controls,
           );
 

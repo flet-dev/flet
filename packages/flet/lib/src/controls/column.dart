@@ -72,7 +72,8 @@ class ColumnControl extends StatelessWidget {
             mainAxisAlignment: mainAlignment,
             mainAxisSize: tight ? MainAxisSize.min : MainAxisSize.max,
             crossAxisAlignment: parseCrossAxisAlignment(
-                control, "horizontalAlignment", CrossAxisAlignment.start),
+                control.attrString("horizontalAlignment"),
+                CrossAxisAlignment.start)!,
             children: controls,
           );
 

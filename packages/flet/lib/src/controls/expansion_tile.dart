@@ -66,7 +66,7 @@ class ExpansionTileControl extends StatelessWidget {
         parseClip(control.attrString("clipBehavior"), Clip.none)!;
 
     var expandedCrossAxisAlignment = parseCrossAxisAlignment(
-        control, "crossAxisAlignment", CrossAxisAlignment.center);
+        control.attrString("crossAxisAlignment"), CrossAxisAlignment.center)!;
 
     if (expandedCrossAxisAlignment == CrossAxisAlignment.baseline) {
       return const ErrorControl(
@@ -88,8 +88,8 @@ class ExpansionTileControl extends StatelessWidget {
       childrenPadding: parseEdgeInsets(control, "controlsPadding"),
       tilePadding: parseEdgeInsets(control, "tilePadding"),
       expandedAlignment: parseAlignment(control, "expandedAlignment"),
-      expandedCrossAxisAlignment: parseCrossAxisAlignment(
-          control, "crossAxisAlignment", CrossAxisAlignment.center),
+      expandedCrossAxisAlignment:
+          parseCrossAxisAlignment(control.attrString("crossAxisAlignment")),
       backgroundColor: bgColor,
       iconColor: iconColor,
       textColor: textColor,

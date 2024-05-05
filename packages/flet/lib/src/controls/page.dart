@@ -792,7 +792,8 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
           final mainAlignment = parseMainAxisAlignment(
               control, "verticalAlignment", MainAxisAlignment.start);
           final crossAlignment = parseCrossAxisAlignment(
-              control, "horizontalAlignment", CrossAxisAlignment.start);
+              control.attrString("horizontalAlignment"),
+              CrossAxisAlignment.start)!;
           final fabLocation = parseFloatingActionButtonLocation(
               control,
               "floatingActionButtonLocation",
