@@ -6,10 +6,11 @@ import '../models/control.dart';
 import 'colors.dart';
 import 'numbers.dart';
 
-BorderRadius? parseBorderRadius(Control control, String propName) {
+BorderRadius? parseBorderRadius(Control control, String propName,
+    [BorderRadius? defaultValue]) {
   var v = control.attrString(propName, null);
   if (v == null) {
-    return null;
+    return defaultValue;
   }
 
   final j1 = json.decode(v);

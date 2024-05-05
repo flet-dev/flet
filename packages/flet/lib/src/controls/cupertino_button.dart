@@ -96,9 +96,8 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     Color? color = widget.control.attrColor("color", context);
     AlignmentGeometry alignment =
         parseAlignment(widget.control, "alignment") ?? Alignment.center;
-    BorderRadius borderRadius =
-        parseBorderRadius(widget.control, "borderRadius") ??
-            const BorderRadius.all(Radius.circular(8.0));
+    BorderRadius borderRadius = parseBorderRadius(widget.control,
+        "borderRadius", const BorderRadius.all(Radius.circular(8.0)))!;
 
     EdgeInsets? padding = parseEdgeInsets(widget.control, "padding");
 
