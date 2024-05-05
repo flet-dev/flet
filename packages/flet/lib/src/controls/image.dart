@@ -44,7 +44,8 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
     }
     double? width = control.attrDouble("width", null);
     double? height = control.attrDouble("height", null);
-    var repeat = parseImageRepeat(control, "repeat");
+    var repeat =
+        parseImageRepeat(control.attrString("repeat"), ImageRepeat.noRepeat)!;
     var fit = parseBoxFit(control, "fit");
     var colorBlendMode = BlendMode.values.firstWhereOrNull((e) =>
         e.name.toLowerCase() ==

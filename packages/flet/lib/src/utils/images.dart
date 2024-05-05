@@ -10,12 +10,13 @@ import 'numbers.dart';
 
 export 'images_io.dart' if (dart.library.js) "images_web.dart";
 
-ImageRepeat parseImageRepeat(Control control, String propName) {
-  return ImageRepeat.values.firstWhere(
-      (e) =>
-          e.name.toLowerCase() ==
-          control.attrString(propName, "")!.toLowerCase(),
-      orElse: () => ImageRepeat.noRepeat);
+ImageRepeat? parseImageRepeat(String? repeat, [ImageRepeat? defValue]) {
+  if (repeat == null) {
+    return defValue;
+  }
+  return ImageRepeat.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == repeat.toLowerCase()) ??
+      defValue;
 }
 
 BoxFit? parseBoxFit(Control control, String propName) {
