@@ -120,7 +120,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
             widget.control.attrBool("resumeUponEnteringForegroundMode", false)!,
         alignment:
             parseAlignment(widget.control, "alignment") ?? Alignment.center,
-        fit: parseBoxFit(widget.control, "fit") ?? BoxFit.contain,
+        fit: parseBoxFit(widget.control.attrString("fit"), BoxFit.contain)!,
         filterQuality: filterQuality,
         subtitleViewConfiguration:
             subtitleViewConfiguration ?? const SubtitleViewConfiguration(),

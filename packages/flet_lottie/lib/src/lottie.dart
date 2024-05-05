@@ -40,7 +40,7 @@ class _LottieControlState extends State<LottieControl> with FletStoreMixin {
     var backgroundLoading = widget.control.attrBool("backgroundLoading");
     var reverse = widget.control.attrBool("reverse");
     var animate = widget.control.attrBool("animate");
-    var fit = parseBoxFit(widget.control, "fit");
+    var fit = parseBoxFit(widget.control.attrString("fit"));
     FilterQuality filterQuality = FilterQuality.values.firstWhere((e) =>
         e.name.toLowerCase() ==
         widget.control.attrString("filterQuality", "low")!.toLowerCase());

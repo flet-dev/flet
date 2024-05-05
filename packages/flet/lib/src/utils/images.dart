@@ -19,9 +19,13 @@ ImageRepeat? parseImageRepeat(String? repeat, [ImageRepeat? defValue]) {
       defValue;
 }
 
-BoxFit? parseBoxFit(Control control, String propName) {
-  return BoxFit.values.firstWhereOrNull((e) =>
-      e.name.toLowerCase() == control.attrString(propName, "")!.toLowerCase());
+BoxFit? parseBoxFit(String? fit, [BoxFit? defValue]) {
+  if (fit == null) {
+    return defValue;
+  }
+  return BoxFit.values
+          .firstWhereOrNull((e) => e.name.toLowerCase() == fit.toLowerCase()) ??
+      defValue;
 }
 
 ImageFilter? parseBlur(Control control, String propName,

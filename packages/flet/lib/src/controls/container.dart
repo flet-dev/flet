@@ -77,7 +77,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     var imageSrcBase64 = control.attrString("imageSrcBase64", "")!;
     var imageRepeat = parseImageRepeat(
         control.attrString("imageRepeat"), ImageRepeat.noRepeat)!;
-    var imageFit = parseBoxFit(control, "imageFit");
+    var imageFit = parseBoxFit(control.attrString("imageFit"));
     var imageOpacity = control.attrDouble("imageOpacity", 1)!;
 
     Widget? child = contentCtrls.isNotEmpty
