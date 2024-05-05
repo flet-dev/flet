@@ -91,7 +91,8 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
                   alignment: parseWrapAlignment(
                       control.attrString("alignment"), WrapAlignment.start)!,
                   crossAxisAlignment: parseWrapCrossAlignment(
-                      control, "verticalAlignment", WrapCrossAlignment.start),
+                      control.attrString("verticalAlignment"),
+                      WrapCrossAlignment.start)!,
                   children: controls,
                 )
               : Row(

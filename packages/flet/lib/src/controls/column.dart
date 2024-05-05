@@ -64,7 +64,8 @@ class ColumnControl extends StatelessWidget {
             alignment: parseWrapAlignment(
                 control.attrString("alignment"), WrapAlignment.start)!,
             crossAxisAlignment: parseWrapCrossAlignment(
-                control, "horizontalAlignment", WrapCrossAlignment.start),
+                control.attrString("horizontalAlignment"),
+                WrapCrossAlignment.start)!,
             children: controls,
           )
         : Column(

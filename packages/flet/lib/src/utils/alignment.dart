@@ -43,13 +43,14 @@ WrapAlignment? parseWrapAlignment(String? alignment,
       defValue;
 }
 
-WrapCrossAlignment parseWrapCrossAlignment(
-    Control control, String propName, WrapCrossAlignment defValue) {
-  return WrapCrossAlignment.values.firstWhere(
-      (e) =>
-          e.name.toLowerCase() ==
-          control.attrString(propName, "")!.toLowerCase(),
-      orElse: () => defValue);
+WrapCrossAlignment? parseWrapCrossAlignment(String? alignment,
+    [WrapCrossAlignment? defValue]) {
+  if (alignment == null) {
+    return defValue;
+  }
+  return WrapCrossAlignment.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == alignment.toLowerCase()) ??
+      defValue;
 }
 
 Alignment? parseAlignment(Control control, String propName) {
