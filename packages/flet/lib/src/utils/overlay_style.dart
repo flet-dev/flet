@@ -42,7 +42,11 @@ SystemUiOverlayStyle overlayStyleFromJson(
           json["status_bar_icon_brightness"], invertedBrightness));
 }
 
-Brightness? parseBrightness(dynamic value, [Brightness? defValue]) {
-  return Brightness.values.firstWhereOrNull((e) => e.toString() == value) ??
+Brightness? parseBrightness(String? value, [Brightness? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return Brightness.values
+          .firstWhereOrNull((e) => e.toString() == value.toLowerCase()) ??
       defValue;
 }
