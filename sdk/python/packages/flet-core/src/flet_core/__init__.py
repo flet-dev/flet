@@ -103,7 +103,12 @@ from flet_core.datatable import (
     DataRow,
     DataTable,
 )
-from flet_core.date_picker import DatePicker, DatePickerEntryMode, DatePickerMode, DatePickerEntryModeChangeEvent
+from flet_core.date_picker import (
+    DatePicker,
+    DatePickerEntryMode,
+    DatePickerMode,
+    DatePickerEntryModeChangeEvent,
+)
 from flet_core.dismissible import (
     Dismissible,
     DismissibleDismissEvent,
@@ -197,6 +202,7 @@ from flet_core.painting import (
     StrokeCap,
     StrokeJoin,
 )
+from flet_core.permission_handler import PermissionHandler
 from flet_core.popup_menu_button import (
     PopupMenuButton,
     PopupMenuItem,
@@ -282,7 +288,11 @@ from flet_core.theme import (
     TimePickerTheme,
     TooltipTheme,
 )
-from flet_core.time_picker import TimePicker, TimePickerEntryMode, TimePickerEntryModeChangeEvent
+from flet_core.time_picker import (
+    TimePicker,
+    TimePickerEntryMode,
+    TimePickerEntryModeChangeEvent,
+)
 from flet_core.tooltip import Tooltip
 from flet_core.transform import Offset, Rotate, Scale
 from flet_core.transparent_pointer import TransparentPointer
