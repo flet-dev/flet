@@ -8,6 +8,7 @@ import 'package:flet_lottie/flet_lottie.dart' as flet_lottie;
 import 'package:flet_rive/flet_rive.dart' as flet_rive;
 import 'package:flet_video/flet_video.dart' as flet_video;
 import 'package:flet_webview/flet_webview.dart' as flet_webview;
+import 'package:flet_flash/flet_flash.dart' as flet_flash;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -29,13 +30,14 @@ void main([List<String>? args]) async {
   flet_rive.ensureInitialized();
   flet_video.ensureInitialized();
   flet_webview.ensureInitialized();
+  flet_flash.ensureInitialized();
 
   var pageUrl = Uri.base.toString();
   var assetsDir = "";
   //debugPrint("Uri.base: ${Uri.base}");
 
   if (kDebugMode) {
-    pageUrl = "http://localhost:8550";
+    pageUrl = "http://192.168.29.120:8550";
   }
 
   if (kIsWeb) {
@@ -91,7 +93,8 @@ void main([List<String>? args]) async {
       flet_lottie.createControl,
       flet_rive.createControl,
       flet_video.createControl,
-      flet_webview.createControl
+      flet_webview.createControl,
+      flet_flash.createControl,
     ],
   ));
 }
