@@ -34,7 +34,7 @@ dependencies:
   flutter_highlight: ^0.7.0
   highlight: ^0.7.0
   markdown: ^7.1.1
-  file_picker: ^6.1.1
+  file_picker: ^8.0.0+1
   shared_preferences: ^2.0.15
   flutter_svg: ^2.0.9
   window_to_front: ^0.0.3

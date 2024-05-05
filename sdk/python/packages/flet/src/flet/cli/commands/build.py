@@ -12,13 +12,15 @@ import urllib.request
 from pathlib import Path
 from typing import Optional
 
-import flet.version
 import yaml
-from flet.cli.commands.base import BaseCommand
 from flet_core.utils import random_string, slugify
 from flet_runtime.utils import calculate_file_hash, copy_tree, is_windows
 from packaging import version
 from rich import print
+
+import flet.version
+from flet.cli.commands.base import BaseCommand
+from flet.version import update_version
 
 if is_windows():
     from ctypes import windll
@@ -387,11 +389,17 @@ class Command(BaseCommand):
         template_ref = options.template_ref
         if not template_url:
             template_url = DEFAULT_TEMPLATE_URL
-            if flet.version.version and not template_ref:
-                template_ref = version.Version(flet.version.version).base_version
+            if not template_ref:
+                if flet.version.version:
+                    template_ref = version.Version(flet.version.version).base_version
+                else:
+                    template_ref = update_version()
 
         # create Flutter project from a template
-        print("Creating Flutter bootstrap project...", end="")
+        print(
+            f"Creating Flutter bootstrap project from {template_url} with ref {template_ref} ... ",
+            end="",
+        )
         try:
             cookiecutter(
                 template=template_url,
