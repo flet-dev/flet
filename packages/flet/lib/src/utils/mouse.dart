@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 MouseCursor? parseMouseCursor(String? cursor,
-    [MouseCursor? defaultMouseCursor = MouseCursor.defer]) {
+    [MouseCursor? defaultMouseCursor]) {
   switch (cursor) {
     case "alias":
       return SystemMouseCursors.alias;

@@ -141,7 +141,7 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
           visualDensity: parseVisualDensity(
               widget.control.attrString("visualDensity"), null),
           mouseCursor:
-              parseMouseCursor(widget.control.attrString("mouseCursor"), null),
+              parseMouseCursor(widget.control.attrString("mouseCursor")),
           onChanged: !disabled
               ? (bool? value) {
                   _onChange(value);

@@ -104,7 +104,7 @@ class _IconButtonControlState extends State<IconButtonControl>
       String? urlTarget = widget.control.attrString("urlTarget");
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
       var mouseCursor =
-          parseMouseCursor(widget.control.attrString("mouseCursor"), null);
+          parseMouseCursor(widget.control.attrString("mouseCursor"));
       var visualDensity =
           parseVisualDensity(widget.control.attrString("visualDensity"), null);
 

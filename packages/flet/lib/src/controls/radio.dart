@@ -112,8 +112,7 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
             autofocus: autofocus,
             focusNode: _focusNode,
             groupValue: groupValue,
-            mouseCursor: parseMouseCursor(
-                widget.control.attrString("mouseCursor"), null),
+            mouseCursor: parseMouseCursor(widget.control.attrString("mouseCursor")),
             value: value,
             activeColor: widget.control.attrColor("activeColor", context),
             focusColor: widget.control.attrColor("focusColor", context),
