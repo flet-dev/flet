@@ -23,10 +23,11 @@ BoxFit? parseBoxFit(Control control, String propName) {
       e.name.toLowerCase() == control.attrString(propName, "")!.toLowerCase());
 }
 
-ImageFilter? parseBlur(Control control, String propName) {
+ImageFilter? parseBlur(Control control, String propName,
+    [ImageFilter? defValue]) {
   var v = control.attrString(propName, null);
   if (v == null) {
-    return null;
+    return defValue;
   }
 
   final j1 = json.decode(v);
