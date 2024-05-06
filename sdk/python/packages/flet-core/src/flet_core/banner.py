@@ -121,7 +121,10 @@ class Banner(Control):
 
     def did_mount(self):
         super().did_mount()
-        assert len(self.__actions) > 0, "actions cannot be empty"
+        assert self.__content.visible, "content must be visible"
+        assert (
+            len(list(filter(lambda a: a.visible, self.__actions))) > 0
+        ), "actions must contain at minimum one visible action Control"
 
     # open
     @property

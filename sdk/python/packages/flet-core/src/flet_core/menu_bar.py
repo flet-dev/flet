@@ -112,7 +112,7 @@ class MenuBar(Control):
     def did_mount(self):
         super().did_mount()
         assert (
-            len(self.__controls) > 0
+            len(list(filter(lambda c: c.visible, self.__controls))) > 0
         ), "MenuBar must have at minimum one visible control"
 
     # controls

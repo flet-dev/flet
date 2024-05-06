@@ -97,6 +97,10 @@ class BottomSheet(Control):
         self.__content._set_attr_internal("n", "content")
         return [self.__content]
 
+    def did_mount(self):
+        super().did_mount()
+        assert self.__content.visible, "content must be visible"
+
     # open
     @property
     def open(self) -> Optional[bool]:

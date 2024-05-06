@@ -184,6 +184,10 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
             children.append(self.__trailing)
         return children
 
+    def did_mount(self):
+        super().did_mount()
+        assert self.__title.visible, "title must be visible"
+
     # controls
     @property
     def controls(self):

@@ -159,6 +159,10 @@ class Draggable(Control):
             children.append(self.__content_feedback)
         return children
 
+    def did_mount(self):
+        super().did_mount()
+        assert self.__content.visible, "content must be visible"
+
     # group
     @property
     def group(self) -> Optional[str]:

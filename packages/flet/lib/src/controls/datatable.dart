@@ -110,9 +110,11 @@ class _DataTableControlState extends State<DataTableControl>
                 }
               : null,
           columns: viewModel.controlViews
-              .where((c) => c.control.type == "c")
+              .where(
+                  (c) => c.control.type == "datacolumn" && c.control.isVisible)
               .map((column) {
-            var labelCtrls = column.children.where((c) => c.name == "l");
+            var labelCtrls =
+                column.children.where((c) => c.name == "label" && c.isVisible);
             return DataColumn(
                 numeric: column.control.attrBool("numeric", false)!,
                 tooltip: column.control.attrString("tooltip"),
@@ -128,7 +130,7 @@ class _DataTableControlState extends State<DataTableControl>
                     column.control.isDisabled || tableDisabled));
           }).toList(),
           rows: viewModel.controlViews
-              .where((c) => c.control.type == "r")
+              .where((c) => c.control.type == "datarow" && c.control.isVisible)
               .map((row) {
             return DataRow(
                 key: ValueKey(row.control.id),
@@ -149,6 +151,7 @@ class _DataTableControlState extends State<DataTableControl>
                       }
                     : null,
                 cells: row.children
+                    .where((c) => c.type == "datacell" && c.isVisible)
                     .map((cell) => DataCell(
                           createControl(row.control, cell.childIds.first,
                               row.control.isDisabled || tableDisabled),

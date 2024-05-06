@@ -23,8 +23,8 @@ class CupertinoActionSheetAction(ConstrainedControl):
 
     def __init__(
         self,
-        content: Control,
         text: Optional[str] = None,
+        content: Optional[Control] = None,
         is_default_action: Optional[bool] = None,
         is_destructive_action: Optional[bool] = None,
         on_click=None,
@@ -99,10 +99,17 @@ class CupertinoActionSheetAction(ConstrainedControl):
     def _get_control_name(self):
         return "cupertinoactionsheetaction"
 
-
     def _get_children(self):
-        self.__content._set_attr_internal("n", "content")
-        return [self.__content]
+        if self.__content is not None:
+            self.__content._set_attr_internal("n", "content")
+            return [self.__content]
+        return []
+
+    def did_mount(self):
+        super().did_mount()
+        assert self.text is not None or (
+            (self.__content is not None and self.__content.visible)
+        ), "either text or (visible) content must be provided visible"
 
     # text
     @property

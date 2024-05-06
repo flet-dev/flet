@@ -56,14 +56,15 @@ class DataColumn(Control):
         self.on_sort = on_sort
 
     def _get_control_name(self):
-        return "c"
+        return "datacolumn"
 
     def _get_children(self):
-        children = []
-        if self.__label:
-            self.__label._set_attr_internal("n", "l")
-            children.append(self.__label)
-        return children
+        self.__label._set_attr_internal("n", "label")
+        return [self.__label]
+
+    def did_mount(self):
+        super().did_mount()
+        assert self.__label.visible, "label must be visible"
 
     # label
     @property
@@ -107,13 +108,13 @@ class DataCell(Control):
     def __init__(
         self,
         content: Control,
-        on_double_tap=None,
-        on_long_press=None,
-        on_tap=None,
-        on_tap_cancel=None,
-        on_tap_down=None,
         placeholder: Optional[bool] = None,
         show_edit_icon: Optional[bool] = None,
+        on_tap=None,
+        on_double_tap=None,
+        on_long_press=None,
+        on_tap_cancel=None,
+        on_tap_down=None,
         #
         # Control
         #
@@ -137,18 +138,22 @@ class DataCell(Control):
         self.show_edit_icon = show_edit_icon
 
     def _get_control_name(self):
-        return "c"
+        return "datacell"
 
     def _get_children(self):
         return [self.__content]
 
+    def did_mount(self):
+        super().did_mount()
+        assert self.__content.visible, "content must be visible"
+
     # content
     @property
-    def content(self):
+    def content(self) -> Control:
         return self.__content
 
     @content.setter
-    def content(self, value):
+    def content(self, value: Control):
         self.__content = value
 
     # placeholder
@@ -223,7 +228,7 @@ class DataCell(Control):
 class DataRow(Control):
     def __init__(
         self,
-        cells: List[Control],
+        cells: List[DataCell],
         color: Union[None, str, Dict[MaterialState, str]] = None,
         selected: Optional[bool] = None,
         on_long_press=None,
@@ -245,7 +250,7 @@ class DataRow(Control):
         self.on_select_changed = on_select_changed
 
     def _get_control_name(self):
-        return "r"
+        return "datarow"
 
     def before_update(self):
         super().before_update()
@@ -256,15 +261,20 @@ class DataRow(Control):
 
     def did_mount(self):
         super().did_mount()
-        assert len(self.__cells) > 0, "cells cannot be empty"
+        assert (
+            len(list(filter(lambda cell: cell.visible, self.__cells))) > 0
+        ), "cells must contain at minimum one visible DataCell"
 
     # cells
     @property
-    def cells(self) -> List[Control]:
+    def cells(self) -> List[DataCell]:
         return self.__cells
 
     @cells.setter
-    def cells(self, value: List[Control]):
+    def cells(self, value: List[DataCell]):
+        assert all(
+            isinstance(cell, DataCell) for cell in value
+        ), "cells must contain only DataCell instances"
         self.__cells = value
 
     # color
@@ -442,7 +452,15 @@ class DataTable(ConstrainedControl):
 
     def did_mount(self):
         super().did_mount()
-        assert len(self.__columns) > 0, "columns cannot be empty"
+        visible_columns = list(filter(lambda column: column.visible, self.__columns))
+        visible_rows = list(filter(lambda row: row.visible, self.__rows))
+        assert (
+            len(visible_columns) > 0
+        ), "columns must contain at minimum one visible DataColumn"
+        assert all(
+            len(list(filter(lambda c: c.visible, row.cells))) == len(visible_columns)
+            for row in visible_rows
+        ), "each visible DataRow must contain exactly as many visible DataCells as there are visible DataColumns"
 
     # columns
     @property
@@ -451,6 +469,9 @@ class DataTable(ConstrainedControl):
 
     @columns.setter
     def columns(self, value: List[DataColumn]):
+        assert all(
+            isinstance(column, DataColumn) for column in value
+        ), "columns must contain only DataColumn instances"
         self.__columns = value
 
     # rows
@@ -461,6 +482,9 @@ class DataTable(ConstrainedControl):
     @rows.setter
     def rows(self, value: Optional[List[DataRow]]):
         self.__rows = value if value is not None else []
+        assert all(
+            isinstance(row, DataRow) for row in self.__rows
+        ), "rows must contain only DataRow instances"
 
     # border
     @property

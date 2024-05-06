@@ -27,12 +27,12 @@ class CupertinoActionSheetActionControl extends StatelessWidget {
     debugPrint("CupertinoActionSheetActionControl build: ${control.id}");
     bool disabled = control.isDisabled || parentDisabled;
 
-    String text = control.attrString("text", "")!;
+    var text = control.attrString("text");
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
-    if (contentCtrls.isEmpty) {
+    if (contentCtrls.isEmpty && text == null) {
       return const ErrorControl(
-          "CupertinoActionSheetAction.content must be provided and visible");
+          "CupertinoActionSheetAction must have at minimum text or (visible) content provided");
     }
 
     return constrainedControl(
@@ -48,7 +48,7 @@ class CupertinoActionSheetActionControl extends StatelessWidget {
           child: contentCtrls.isNotEmpty
               ? createControl(control, contentCtrls.first.id, disabled,
                   parentAdaptive: parentAdaptive)
-              : Text(text),
+              : Text(text!),
         ),
         parent,
         control);
