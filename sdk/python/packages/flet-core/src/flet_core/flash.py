@@ -45,6 +45,6 @@ class Flash(Control):
         sr = self.invoke_method("on", wait_for_result=True, wait_timeout=wait_timeout)
         return int(sr)
 
-    def off(self, wait_timeout: Optional[int] = 3):
+    def off(self, wait_timeout: Optional[int] = 3) -> int:
         sr = self.invoke_method("off", wait_for_result=True, wait_timeout=wait_timeout)
         return int(sr)
