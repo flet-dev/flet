@@ -1,3 +1,20 @@
+# 0.22.1
+
+* `AutoComplete` control ([#3003](https://github.com/flet-dev/flet/issues/3003))
+* Added `--exclude` option to `flet build` command ([#3125](https://github.com/flet-dev/flet/issues/3125))
+* `CupertinoTimePicker.alignment` property ([#3036](https://github.com/flet-dev/flet/issues/3036))
+* Bump `file_picker` dependency to 8.0.3.
+* Fix latest flet-build-template version in development mode ([#3021](https://github.com/flet-dev/flet/issues/3021))
+* Fix `flet --version` command for source checkout.
+* LineChart: fix regression ([#3033](https://github.com/flet-dev/flet/issues/3033))
+* Fixed: OAuth expiry of token will hang fastapi server ([#3150](https://github.com/flet-dev/flet/issues/3150))
+* Fixed: Disabled the dropwown, but the color isnot gray ([#2989](https://github.com/flet-dev/flet/issues/2989))
+* Fixed: `pubspec.yaml` for adding custom Flutter packages requires `dependency_overrides` ([#3187](https://github.com/flet-dev/flet/issues/3187))
+* Fixed `disabled` dropdown ([#3183](https://github.com/flet-dev/flet/issues/3183))
+* Fixed default value for scrollbar thickness ([#3147](https://github.com/flet-dev/flet/issues/3147))
+* Fixed: autoreload, restrict eventhandler from restart on open ([#3098](https://github.com/flet-dev/flet/issues/3098))
+* Fixed ([#3035](https://github.com/flet-dev/flet/issues/3035)) switch Flutter RichText to Text.rich ([#3066](https://github.com/flet-dev/flet/issues/3066))
+
 # 0.22.0
 
 * Controls enhancement (see [#2882](https://github.com/flet-dev/flet/issues/2882) for details).
