@@ -259,7 +259,7 @@ packages:
       path: "../packages/flet_lottie"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.22.0"
   flet_rive:
     dependency: "direct main"
     description:
