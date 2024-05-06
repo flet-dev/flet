@@ -12,6 +12,10 @@
 * Fixed: OAuth expiry of token will hang fastapi server ([#3150](https://github.com/flet-dev/flet/issues/3150))
 * Fixed: Disabled the dropwown, but the color isnot gray ([#2989](https://github.com/flet-dev/flet/issues/2989))
 * Fixed: `pubspec.yaml` for adding custom Flutter packages requires `dependency_overrides` ([#3187](https://github.com/flet-dev/flet/issues/3187))
+* Fixed `disabled` dropdown ([#3183](https://github.com/flet-dev/flet/issues/3183))
+* Fixed default value for scrollbar thickness ([#3147](https://github.com/flet-dev/flet/issues/3147))
+* Fixed: autoreload, restrict eventhandler from restart on open ([#3098](https://github.com/flet-dev/flet/issues/3098))
+* Fixed ([#3035](https://github.com/flet-dev/flet/issues/3035)) switch Flutter RichText to Text.rich ([#3066](https://github.com/flet-dev/flet/issues/3066))
 
 # 0.22.0
 
