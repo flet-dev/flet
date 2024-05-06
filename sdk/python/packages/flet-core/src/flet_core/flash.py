@@ -41,7 +41,7 @@ class Flash(Control):
     def _get_control_name(self):
         return "flash"
 
-    def on(self, wait_timeout: Optional[int] = 3):
+    def on(self, wait_timeout: Optional[int] = 3) -> int:
         sr = self.invoke_method("on", wait_for_result=True, wait_timeout=wait_timeout)
         return int(sr)
 
