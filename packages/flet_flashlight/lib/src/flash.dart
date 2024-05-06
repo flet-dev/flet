@@ -25,7 +25,7 @@ class FlashControl extends StatefulWidget {
 class _FlashControlState extends State<FlashControl> {
   @override
   Widget build(BuildContext context) {
-    debugPrint("FlashControl build: ${widget.control.id}");
+    debugPrint("FlashLightControl build: ${widget.control.id}");
 
     if (Platform.isIOS || Platform.isAndroid) {
       () async {
@@ -56,7 +56,7 @@ class _FlashControlState extends State<FlashControl> {
       return const SizedBox.shrink();
     } else {
       return const ErrorControl(
-          "Flash control is not supported on this platform yet.");
+          "FlashLight control is not supported on this platform yet.");
     }
   }
 }

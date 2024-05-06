@@ -246,10 +246,10 @@ packages:
       relative: true
     source: path
     version: "0.22.1"
-  flet_flash:
+  flet_flashlight:
     dependency: "direct main"
     description:
-      path: "../packages/flet_flash"
+      path: "../packages/flet_flashlight"
       relative: true
     source: path
     version: "0.23.0"
@@ -259,7 +259,7 @@ packages:
       path: "../packages/flet_lottie"
       relative: true
     source: path
-    version: "0.22.0"
+    version: "0.22.1"
   flet_rive:
     dependency: "direct main"
     description:

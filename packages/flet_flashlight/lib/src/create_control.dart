@@ -4,7 +4,7 @@ import 'flash.dart';
 
 CreateControlFactory createControl = (CreateControlArgs args) {
   switch (args.control.type) {
-    case "flash":
+    case "flashlight":
       return FlashControl(
           parent: args.parent,
           control: args.control,
