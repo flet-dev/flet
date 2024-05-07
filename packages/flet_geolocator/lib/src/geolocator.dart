@@ -1,9 +1,8 @@
-import 'dart:async';
-
 import 'package:flet/flet.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:permission_handler/permission_handler.dart';
+
 import 'utils/geolocator.dart';
 
 class GeolocatorControl extends StatefulWidget {
@@ -25,10 +24,10 @@ class _GeolocatorControlState extends State<GeolocatorControl>
     with FletStoreMixin {
   @override
   void initState() {
+    super.initState();
     debugPrint("Geolocator.initState($hashCode)");
     widget.control.onRemove.clear();
     widget.control.onRemove.add(_onRemove);
-    super.initState();
   }
 
   void _onRemove() {
@@ -46,28 +45,47 @@ class _GeolocatorControlState extends State<GeolocatorControl>
   Widget build(BuildContext context) {
     debugPrint(
         "Geolocator build: ${widget.control.id} (${widget.control.hashCode})");
-    LocationAccuracy locationAccuracy = LocationAccuracy.best;
-
-    String locationAccuracyString =
-        widget.control.attrString("locationAccuracy", 'best')!;
-    locationAccuracy = parseLocationAccuracy(locationAccuracyString);
 
     () async {
       widget.backend.subscribeMethods(widget.control.id,
           (methodName, args) async {
         switch (methodName) {
-          case "getLocation":
-            Future<bool> locationHandler =
-                Permission.location.request().isGranted;
-            return locationHandler.then((value) async {
-              if (value == true) {
-                Position location = await Geolocator.getCurrentPosition(
-                    desiredAccuracy: locationAccuracy);
-                return 'latitude.${location.latitude},longitude.${location.longitude},altitude.${location.altitude},speed.${location.speed},timestamp.${location.timestamp}';
-              } else {
-                return 'latitude null,longitude null,altitude null,speed null,timestamp null';
-              }
-            });
+          case "request_permission":
+            var permission = await Geolocator.requestPermission();
+            return permission.name;
+          case "has_permission":
+            var permission = await Geolocator.checkPermission();
+            return permission.name;
+          case "is_location_service_enabled":
+            var serviceEnabled = await Geolocator.isLocationServiceEnabled();
+            return serviceEnabled.toString();
+          case "open_app_settings":
+            if (!kIsWeb) {
+              var opened = await Geolocator.openAppSettings();
+              return opened.toString();
+            }
+            return "false";
+          case "open_location_settings":
+            if (!kIsWeb) {
+              var opened = await Geolocator.openLocationSettings();
+              return opened.toString();
+            }
+            return "false";
+          case "get_last_known_position":
+            if (!kIsWeb) {
+              Position? position = await Geolocator.getLastKnownPosition();
+              return positionToJson(position);
+            }
+            return null;
+          case "get_current_position":
+            Position currentPosition = await Geolocator.getCurrentPosition(
+              desiredAccuracy: parseLocationAccuracy(
+                  args["accuracy"], LocationAccuracy.best)!,
+              // timeLimit: args["timeLimit"] != null
+              //     ? Duration(seconds: parseInt(args["timeLimit"]))
+              //     : null
+            );
+            return positionToJson(currentPosition)!;
         }
         return null;
       });

@@ -1,6 +1,8 @@
+import json
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Optional
-from dataclasses import dataclass
+
 from flet_core.control import Control
 from flet_core.ref import Ref
 
@@ -15,13 +17,28 @@ class LocationAccuracy(Enum):
     REDUCED = "reduced"
 
 
+class LocationPermission(Enum):
+    DENIED = "denied"
+    DENIED_FOREVER = "deniedForever"
+    WHILE_IN_USE = "whileInUse"
+    ALWAYS = "always"
+    UNABLE_TO_DETERMINE = "unableToDetermine"
+
+
 @dataclass
-class Position:
-    latitude: float
-    longitude: float
-    speed: float
-    altitude: float
-    timestamp: str
+class GeolocatorPosition:
+    latitude: Optional[float] = field(default=None)
+    longitude: Optional[float] = field(default=None)
+    speed: Optional[float] = field(default=None)
+    altitude: Optional[float] = field(default=None)
+    timestamp: Optional[float] = field(default=None)
+    accuracy: Optional[float] = field(default=None)
+    altitude_accuracy: Optional[float] = field(default=None)
+    heading: Optional[float] = field(default=None)
+    heading_accuracy: Optional[float] = field(default=None)
+    speed_accuracy: Optional[float] = field(default=None)
+    floor: Optional[int] = field(default=None)
+    is_mocked: Optional[bool] = field(default=None)
 
 
 class Geolocator(Control):
@@ -51,73 +68,182 @@ class Geolocator(Control):
     def _get_control_name(self):
         return "geolocator"
 
-    def get_location(
+    def get_current_position(
         self,
-        location_accuracy: Optional[LocationAccuracy] = LocationAccuracy.BEST,
+        accuracy: Optional[LocationAccuracy] = LocationAccuracy.BEST,
         wait_timeout: Optional[float] = 25,
-    ) -> Position:
-        try:
-            output = self.invoke_method(
-                "getLocation",
-                {
-                    "locationAccuracy": (
-                        location_accuracy.value
-                        if isinstance(location_accuracy, LocationAccuracy)
-                        else location_accuracy
-                    )
-                },
-                wait_for_result=True,
-                wait_timeout=wait_timeout,
-            )
-            return self.__string2dict(string=output)
-        except Exception as e:
-            if "Unsupported operation: Platform._operatingSystem" in e.args:
-                raise Exception("Location is Unsupported on this platform")
-            else:
-                return self.__string2dict(string="null")
-
-    async def get_location_async(
-        self,
-        location_accuracy: Optional[LocationAccuracy] = LocationAccuracy.BEST,
-        wait_timeout: Optional[float] = 25,
-    ) -> Position:
-        output = await self.invoke_method_async(
-            "getLocation",
+    ) -> GeolocatorPosition:
+        output = self.invoke_method(
+            "get_current_position",
             {
-                "locationAccuracy": (
-                    location_accuracy.value
-                    if isinstance(location_accuracy, LocationAccuracy)
-                    else location_accuracy
+                "accuracy": (
+                    accuracy.value
+                    if isinstance(accuracy, LocationAccuracy)
+                    else accuracy
                 )
             },
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        return self.__string2dict(string=output)
+        if output == "null":
+            return GeolocatorPosition()
+        return GeolocatorPosition(**json.loads(output))
+        # try:
+        # except Exception as e:
+        #     if "Unsupported operation: Platform._operatingSystem" in e.args:
+        #         raise Exception("Location is Unsupported on this platform")
+        #     else:
+        #         raise e
+        #         #return self.__string2dict(string="null")
 
-    def __string2dict(self, string: str) -> Position:
-        if string != "null":
-            try:
-                for each in string.split(","):
-                    temp = each.split(".")
-                    if temp[1] != "null":
-                        # out[temp[0]] = float(temp[1])
-                        if temp[0] == "timestamp":
-                            Position.timestamp = temp[1]
-                        elif temp[0] == "latitude":
-                            Position.latitude = temp[1]
-                        elif temp[0] == "longitude":
-                            Position.longitude = temp[1]
-                        elif temp[0] == "altitude":
-                            Position.altitude = temp[1]
-                        elif temp[0] == "speed":
-                            Position.speed = temp[1]
-            except Exception as e:
-                print(e, "in __string2dict")
-        else:
-            Position.timestamp = None
-            Position.latitude = None
-            Position.longitude = None
-            Position.altitude = None
-            Position.speed = None
-        return Position
+    async def get_current_position_async(
+        self,
+        accuracy: Optional[LocationAccuracy] = LocationAccuracy.BEST,
+        wait_timeout: Optional[float] = 25,
+    ) -> GeolocatorPosition:
+        output = await self.invoke_method_async(
+            "get_current_position",
+            {
+                "accuracy": (
+                    accuracy.value
+                    if isinstance(accuracy, LocationAccuracy)
+                    else accuracy
+                )
+            },
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        if output == "null":
+            return GeolocatorPosition()
+        return GeolocatorPosition(**json.loads(output))
+
+    def get_last_known_position(
+        self,
+        wait_timeout: Optional[float] = 25,
+    ) -> GeolocatorPosition:
+        output = self.invoke_method(
+            "get_last_known_position",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        if output == "null":
+            return GeolocatorPosition()
+        return GeolocatorPosition(**json.loads(output))
+        # try:
+        # except Exception as e:
+        #     if "Unsupported operation: Platform._operatingSystem" in e.args:
+        #         raise Exception("Location is Unsupported on this platform")
+        #     else:
+        #         raise e
+        #         #return self.__string2dict(string="null")
+
+    async def get_last_known_position_async(
+        self,
+        wait_timeout: Optional[float] = 25,
+    ) -> GeolocatorPosition:
+        output = await self.invoke_method_async(
+            "get_last_known_position",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        if output == "null":
+            return GeolocatorPosition()
+        return GeolocatorPosition(**json.loads(output))
+
+    def has_permission(self, wait_timeout: Optional[float] = 25) -> LocationPermission:
+        p = self.invoke_method(
+            "has_permission",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return LocationPermission(p)
+
+    async def has_permission_async(
+        self, wait_timeout: Optional[float] = 25
+    ) -> LocationPermission:
+        p = await self.invoke_method_async(
+            "has_permission",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return LocationPermission(p)
+
+    def request_permission(
+        self, wait_timeout: Optional[float] = 25
+    ) -> LocationPermission:
+        p = self.invoke_method(
+            "request_permission",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return LocationPermission(p)
+
+    async def request_permission_async(
+        self, wait_timeout: Optional[float] = 25
+    ) -> LocationPermission:
+        p = await self.invoke_method_async(
+            "request_permission",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return LocationPermission(p)
+
+    def is_location_service_enabled(
+        self, wait_timeout: Optional[float] = 10
+    ) -> bool:
+        enabled = self.invoke_method(
+            "request_permission",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return enabled == "true"
+
+    async def is_location_service_enabled_async(
+        self, wait_timeout: Optional[float] = 10
+    ) -> bool:
+        enabled = await self.invoke_method_async(
+            "is_location_service_enabled",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return enabled == "true"
+
+    def open_app_settings(
+        self, wait_timeout: Optional[float] = 10
+    ) -> bool:
+        opened = self.invoke_method(
+            "open_app_settings",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return opened == "true"
+
+    async def open_app_settings_async(
+        self, wait_timeout: Optional[float] = 10
+    ) -> bool:
+        opened = await self.invoke_method_async(
+            "open_app_settings",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return opened == "true"
+
+    def open_location_settings(
+        self, wait_timeout: Optional[float] = 10
+    ) -> bool:
+        opened = self.invoke_method(
+            "open_location_settings",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return opened == "true"
+
+    async def open_location_settings_async(
+        self, wait_timeout: Optional[float] = 10
+    ) -> bool:
+        opened = await self.invoke_method_async(
+            "open_location_settings",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return opened == "true"
