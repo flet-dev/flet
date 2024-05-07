@@ -1,24 +1,23 @@
 import 'package:geolocator/geolocator.dart';
 
-LocationAccuracy parseLocationAccuracy(String accuracy) {
-  LocationAccuracy locationAccuracy;
-  switch (accuracy) {
+LocationAccuracy? parseLocationAccuracy(String? accuracy,
+    [LocationAccuracy? defaultValue]) {
+  switch (accuracy?.toLowerCase()) {
     case "best":
-      locationAccuracy = LocationAccuracy.best;
-    case "bestForNavigation":
-      locationAccuracy = LocationAccuracy.bestForNavigation;
+      return LocationAccuracy.best;
+    case "bestfornavigation":
+      return LocationAccuracy.bestForNavigation;
     case "high":
-      locationAccuracy = LocationAccuracy.high;
+      return LocationAccuracy.high;
     case "medium":
-      locationAccuracy = LocationAccuracy.medium;
+      return LocationAccuracy.medium;
     case "low":
-      locationAccuracy = LocationAccuracy.low;
+      return LocationAccuracy.low;
     case "lowest":
-      locationAccuracy = LocationAccuracy.lowest;
+      return LocationAccuracy.lowest;
     case "reduced":
-      locationAccuracy = LocationAccuracy.reduced;
+      return LocationAccuracy.reduced;
     default:
-      locationAccuracy = LocationAccuracy.best;
+      return defaultValue;
   }
-  return locationAccuracy;
 }
