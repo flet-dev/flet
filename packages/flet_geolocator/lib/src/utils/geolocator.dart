@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:geolocator/geolocator.dart';
 
 LocationAccuracy? parseLocationAccuracy(String? accuracy,
@@ -20,4 +22,24 @@ LocationAccuracy? parseLocationAccuracy(String? accuracy,
     default:
       return defaultValue;
   }
+}
+
+String? positionToJson(Position? position) {
+  if (position == null) {
+    return null;
+  }
+  String positionAsJson = json.encode({
+    "latitude": position.latitude,
+    "longitude": position.longitude,
+    "accuracy": position.accuracy,
+    "altitude": position.altitude,
+    "speed": position.speed,
+    "speed_accuracy": position.speedAccuracy,
+    "heading": position.heading,
+    "heading_accuracy": position.headingAccuracy,
+    "timestamp": position.timestamp.toIso8601String(),
+    "floor": position.floor,
+    "is_mocked": position.isMocked,
+  });
+  return positionAsJson;
 }
