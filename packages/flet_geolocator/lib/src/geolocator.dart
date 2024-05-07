@@ -81,9 +81,6 @@ class _GeolocatorControlState extends State<GeolocatorControl>
             Position currentPosition = await Geolocator.getCurrentPosition(
               desiredAccuracy: parseLocationAccuracy(
                   args["accuracy"], LocationAccuracy.best)!,
-              // timeLimit: args["timeLimit"] != null
-              //     ? Duration(seconds: parseInt(args["timeLimit"]))
-              //     : null
             );
             return positionToJson(currentPosition)!;
         }

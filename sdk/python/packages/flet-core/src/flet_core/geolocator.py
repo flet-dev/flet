@@ -88,13 +88,6 @@ class Geolocator(Control):
         if output == "null":
             return GeolocatorPosition()
         return GeolocatorPosition(**json.loads(output))
-        # try:
-        # except Exception as e:
-        #     if "Unsupported operation: Platform._operatingSystem" in e.args:
-        #         raise Exception("Location is Unsupported on this platform")
-        #     else:
-        #         raise e
-        #         #return self.__string2dict(string="null")
 
     async def get_current_position_async(
         self,
@@ -129,13 +122,6 @@ class Geolocator(Control):
         if output == "null":
             return GeolocatorPosition()
         return GeolocatorPosition(**json.loads(output))
-        # try:
-        # except Exception as e:
-        #     if "Unsupported operation: Platform._operatingSystem" in e.args:
-        #         raise Exception("Location is Unsupported on this platform")
-        #     else:
-        #         raise e
-        #         #return self.__string2dict(string="null")
 
     async def get_last_known_position_async(
         self,
