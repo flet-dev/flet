@@ -23,7 +23,7 @@ def test_datarow_instance_no_attrs_set():
         Command(
             indent=0,
             name=None,
-            values=["r"],
+            values=["datarow"],
             attrs={},
             commands=[],
         )
@@ -37,7 +37,7 @@ def test_datarow_color_literal_material_state_as_string():
         Command(
             indent=0,
             name=None,
-            values=["r"],
+            values=["datarow"],
             attrs={"color": '"yellow"'},
             commands=[],
         )
@@ -51,7 +51,7 @@ def test_datarow_color_multiple_material_states_as_strings():
         Command(
             indent=0,
             name=None,
-            values=["r"],
+            values=["datarow"],
             attrs={"color": '{"selected":"red","hovered":"blue","":"yellow"}'},
             commands=[],
         )
@@ -72,7 +72,7 @@ def test_datarow_color_multiple_material_states():
         Command(
             indent=0,
             name=None,
-            values=["r"],
+            values=["datarow"],
             attrs={"color": '{"selected":"red","hovered":"blue","":"yellow"}'},
             commands=[],
         )
