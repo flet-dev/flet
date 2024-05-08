@@ -8,9 +8,6 @@ double parseDouble(dynamic v, [double defValue = 0]) {
   }
 }
 
-double? parseDoubleFromJson(dynamic v, [double? defValue]) =>
-    v != null ? parseDouble(v, defValue ?? 0) : defValue;
-
 int parseInt(dynamic v, [int defValue = 0]) {
   if (v is int) {
     return v;
@@ -21,9 +18,6 @@ int parseInt(dynamic v, [int defValue = 0]) {
   }
 }
 
-int? parseIntFromJson(dynamic v, [int? defValue]) =>
-    v != null ? parseInt(v, defValue ?? 0) : defValue;
-
 bool parseBool(dynamic v, [bool defValue = false]) {
   if (v is bool) {
     return v;
@@ -33,6 +27,3 @@ bool parseBool(dynamic v, [bool defValue = false]) {
     return "true" == v.toString().toLowerCase();
   }
 }
-
-bool? parseBoolFromJson(dynamic v, [bool? defValue]) =>
-    v != null ? parseBool(v, defValue ?? false) : defValue;

@@ -26,8 +26,6 @@ class TileLayer(Control):
         keep_buffer: Optional[int] = None,
         pan_buffer: Optional[int] = None,
         tms: Optional[bool] = None,
-        initial_rotation: OptionalNumber = None,
-        initial_zoom: OptionalNumber = None,
         keep_alive: Optional[bool] = None,
         max_zoom: OptionalNumber = None,
         min_zoom: OptionalNumber = None,
@@ -44,7 +42,6 @@ class TileLayer(Control):
         Control.__init__(
             self,
             ref=ref,
-            opacity=opacity,
             visible=visible,
             data=data,
         )
@@ -59,8 +56,6 @@ class TileLayer(Control):
         self.keep_buffer = keep_buffer
         self.pan_buffer = pan_buffer
         self.tms = tms
-        self.initial_rotation = initial_rotation
-        self.initial_zoom = initial_zoom
         self.keep_alive = keep_alive
         self.max_zoom = max_zoom
         self.min_zoom = min_zoom
@@ -160,32 +155,7 @@ class TileLayer(Control):
     def tms(self, value: Optional[bool]):
         self._set_attr("tms", value)
 
-    # initial_rotation
-    @property
-    def initial_rotation(self) -> OptionalNumber:
-        return self._get_attr("initialRotation", data_type="float")
 
-    @initial_rotation.setter
-    def initial_rotation(self, value: OptionalNumber):
-        self._set_attr("initialRotation", value)
-
-    # initial_zoom
-    @property
-    def initial_zoom(self) -> OptionalNumber:
-        return self._get_attr("initialZoom", data_type="float")
-
-    @initial_zoom.setter
-    def initial_zoom(self, value: OptionalNumber):
-        self._set_attr("initialZoom", value)
-
-    # keep_alive
-    @property
-    def keep_alive(self) -> Optional[bool]:
-        return self._get_attr("keepAlive", data_type="bool")
-
-    @keep_alive.setter
-    def keep_alive(self, value: Optional[bool]):
-        self._set_attr("keepAlive", value)
 
     # max_zoom
     @property
