@@ -1,4 +1,5 @@
 import "dart:async";
+import "dart:convert";
 
 import "package:permission_handler/permission_handler.dart";
 
@@ -87,25 +88,30 @@ Permission? parsePermissionInstance(String permissionOf) {
   }
 }
 
-Future<String>? checkPermission(String permissionOf) {
-  return parsePermissionInstance(permissionOf)!.isGranted.then((value) {
-    if (value) {
-      return 'true';
-    } else {
-      return 'false';
-    }
+Future<String?> checkPermission(String permissionOf) async {
+  bool isGranted = await parsePermissionInstance(permissionOf)!.isGranted;
+  bool isDenied = await parsePermissionInstance(permissionOf)!.isDenied;
+  bool isPermanentlyDenied =
+      await parsePermissionInstance(permissionOf)!.isPermanentlyDenied;
+  bool isLimited = await parsePermissionInstance(permissionOf)!.isLimited;
+  bool isProvisional =
+      await parsePermissionInstance(permissionOf)!.isProvisional;
+  bool isRestricted = await parsePermissionInstance(permissionOf)!.isRestricted;
+
+  return json.encode({
+    "is_granted": isGranted,
+    "is_denied": isDenied,
+    "is_permanently_denied": isPermanentlyDenied,
+    "is_limited": isLimited,
+    "is_provisional": isProvisional,
+    "is_restricted": isRestricted
   });
 }
 
-Future<String>? requestPermission(String permissionOf) {
-  return parsePermissionInstance(permissionOf)!
-      .request()
-      .isGranted
-      .then((value) {
-    if (value) {
-      return 'true';
-    } else {
-      return 'false';
-    }
+Future<String?> requestPermission(String permissionOf) async {
+  Future<PermissionStatus> permissionStatus =
+      parsePermissionInstance(permissionOf)!.request();
+  return permissionStatus.then((value) async {
+    return await checkPermission(permissionOf);
   });
 }

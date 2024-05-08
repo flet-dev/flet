@@ -49,9 +49,9 @@ class _PermissionHandlerControlState extends State<PermissionHandlerControl>
           (methodName, args) async {
         switch (methodName) {
           case "checkPermission":
-            return checkPermission(args['permissionOf']!);
+            return await checkPermission(args['permissionOf']!);
           case "requestPermission":
-            return requestPermission(args['permissionOf']!);
+            return await requestPermission(args['permissionOf']!);
         }
         return null;
       });

@@ -1,8 +1,19 @@
 from enum import Enum
+import json
 from typing import Any, Optional
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from flet_core.control import Control
 from flet_core.ref import Ref
+
+
+@dataclass
+class PermissionStatus:
+    is_granted: Optional[bool] = field(default=None)
+    is_denied: Optional[bool] = field(default=None)
+    is_permanently_denied: Optional[bool] = field(default=None)
+    is_limited: Optional[bool] = field(default=None)
+    is_provisional: Optional[bool] = field(default=None)
+    is_restricted: Optional[bool] = field(default=None)
 
 
 class PermissionTemplate(Control):
@@ -12,49 +23,55 @@ class PermissionTemplate(Control):
         self.invoke_method = invoke_method
         self.invoke_method_async = invoke_method_async
 
-    def check_permission(self, wait_timeout: Optional[float] = 5) -> bool:
-        output = self.invoke_method(
+    def check_permission(self, wait_timeout: Optional[float] = 5) -> PermissionStatus:
+        permission = self.invoke_method(
             "checkPermission",
             {"permissionOf": self.__permission_of},
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        return self.__convert_to_bool(output)
+        if permission != "null":
+            return PermissionStatus(**json.loads(permission))
+        else:
+            return PermissionStatus()
 
-    async def check_permission_async(self, wait_timeout: Optional[float] = 5) -> bool:
-        output = await self.invoke_method_async(
+    async def check_permission_async(self, wait_timeout: Optional[float] = 5) -> PermissionStatus:
+        permission = await self.invoke_method_async(
             "checkPermission",
             {"permissionOf": self.__permission_of},
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        return self.__convert_to_bool(output)
+        if permission != "null":
+            return PermissionStatus(**json.loads(permission))
+        else:
+            return PermissionStatus()
 
-    def request_permission(self, wait_timeout: Optional[float] = 25) -> bool:
-        output = self.invoke_method(
+    def request_permission(self, wait_timeout: Optional[float] = 25) -> PermissionStatus:
+        permission = self.invoke_method(
             "requestPermission",
             {"permissionOf": self.__permission_of},
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        return self.__convert_to_bool(output)
+        if permission != "null":
+            return PermissionStatus(**json.loads(permission))
+        else:
+            return PermissionStatus()
 
     async def request_permission_async(
         self, wait_timeout: Optional[float] = 25
-    ) -> bool:
-        output = await self.invoke_method_async(
+    ) -> PermissionStatus:
+        permission = await self.invoke_method_async(
             "requestPermission",
             {"permissionOf": self.__permission_of},
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        return self.__convert_to_bool(output)
-
-    def __convert_to_bool(self, output):
-        if output == "true":
-            return True
+        if permission != "null":
+            return PermissionStatus(**json.loads(permission))
         else:
-            return False
+            return PermissionStatus()
 
 
 class PermissionHandler(Control):
