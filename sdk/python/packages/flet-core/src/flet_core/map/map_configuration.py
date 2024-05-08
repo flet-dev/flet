@@ -85,7 +85,9 @@ class MapConfiguration(Control):
     # apply_pointer_translucency_to_layers
     @property
     def apply_pointer_translucency_to_layers(self) -> Optional[bool]:
-        return self._get_attr("applyPointerTranslucencyToLayers", data_type="bool")
+        return self._get_attr(
+            "applyPointerTranslucencyToLayers", data_type="bool", def_value=True
+        )
 
     @apply_pointer_translucency_to_layers.setter
     def apply_pointer_translucency_to_layers(self, value: Optional[bool]):
@@ -121,7 +123,7 @@ class MapConfiguration(Control):
     # initial_rotation
     @property
     def initial_rotation(self) -> OptionalNumber:
-        return self._get_attr("initialRotation", data_type="float")
+        return self._get_attr("initialRotation", data_type="float", def_value=0.0)
 
     @initial_rotation.setter
     def initial_rotation(self, value: OptionalNumber):
@@ -130,7 +132,7 @@ class MapConfiguration(Control):
     # initial_zoom
     @property
     def initial_zoom(self) -> OptionalNumber:
-        return self._get_attr("initialZoom", data_type="float")
+        return self._get_attr("initialZoom", data_type="float", def_value=13.0)
 
     @initial_zoom.setter
     def initial_zoom(self, value: OptionalNumber):
@@ -139,7 +141,7 @@ class MapConfiguration(Control):
     # keep_alive
     @property
     def keep_alive(self) -> Optional[bool]:
-        return self._get_attr("keepAlive", data_type="bool")
+        return self._get_attr("keepAlive", data_type="bool", def_value=False)
 
     @keep_alive.setter
     def keep_alive(self, value: Optional[bool]):

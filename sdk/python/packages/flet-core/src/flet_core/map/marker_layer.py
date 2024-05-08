@@ -77,7 +77,7 @@ class Marker(Control):
     # height
     @property
     def height(self) -> OptionalNumber:
-        return self._get_attr("height", data_type="float")
+        return self._get_attr("height", data_type="float", def_value=30.0)
 
     @height.setter
     def height(self, value: OptionalNumber):
@@ -86,7 +86,7 @@ class Marker(Control):
     # width
     @property
     def width(self) -> OptionalNumber:
-        return self._get_attr("width", data_type="float")
+        return self._get_attr("width", data_type="float", def_value=30.0)
 
     @width.setter
     def width(self, value: OptionalNumber):

@@ -47,7 +47,7 @@ class TileLayerControl extends StatelessWidget with FletStoreMixin {
           // subdomains: ,
           keepBuffer: control.attrInt("keepBuffer", 2)!,
           panBuffer: control.attrInt("panBuffer", 1)!,
-          tms: control.attrBool("tms", false)!,
+          tms: control.attrBool("enableTms", false)!,
           maxZoom: control.attrDouble("maxZoom", double.infinity)!,
           minZoom: control.attrDouble("minZoom", 0)!,
           errorImage: errorImage,

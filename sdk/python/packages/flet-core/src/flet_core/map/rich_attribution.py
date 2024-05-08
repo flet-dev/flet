@@ -58,7 +58,7 @@ class RichAttribution(Control):
     # permanent_height
     @property
     def permanent_height(self) -> OptionalNumber:
-        return self._get_attr("permanentHeight", data_type="float")
+        return self._get_attr("permanentHeight", data_type="float", def_value=24.0)
 
     @permanent_height.setter
     def permanent_height(self, value: OptionalNumber):
