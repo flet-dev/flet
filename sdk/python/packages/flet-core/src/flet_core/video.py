@@ -41,6 +41,13 @@ class VideoMedia:
 
 
 @dataclasses.dataclass
+class VideoConfiguration:
+    output_driver: Optional[str] = dataclasses.field(default=None)
+    hardware_decoding_api: Optional[str] = dataclasses.field(default=None)
+    enable_hardware_acceleration: Optional[bool] = dataclasses.field(default=None)
+
+
+@dataclasses.dataclass
 class VideoSubtitleConfiguration:
     src: Optional[str] = dataclasses.field(default=None)
     title: Optional[str] = dataclasses.field(default=None)
@@ -81,6 +88,7 @@ class Video(ConstrainedControl):
         resume_upon_entering_foreground_mode: Optional[bool] = None,
         aspect_ratio: OptionalNumber = None,
         pitch: OptionalNumber = None,
+        configuration: Optional[VideoConfiguration] = None,
         subtitle_configuration: Optional[VideoSubtitleConfiguration] = None,
         on_loaded=None,
         on_enter_fullscreen=None,
@@ -147,6 +155,7 @@ class Video(ConstrainedControl):
 
         self.__playlist = playlist or []
         self.subtitle_configuration = subtitle_configuration
+        self.configuration = configuration
         self.fit = fit
         self.pitch = pitch
         self.fill_color = fill_color
@@ -177,6 +186,9 @@ class Video(ConstrainedControl):
         self._set_attr_json("playlist", self.__playlist if self.__playlist else None)
         if isinstance(self.__subtitle_configuration, VideoSubtitleConfiguration):
             self._set_attr_json("subtitleConfiguration", self.__subtitle_configuration)
+
+        if isinstance(self.configuration, VideoConfiguration):
+            self._set_attr_json("configuration", self.configuration)
 
     def play(self):
         self.invoke_method("play")
@@ -382,6 +394,15 @@ class Video(ConstrainedControl):
     @subtitle_configuration.setter
     def subtitle_configuration(self, value: Optional[VideoSubtitleConfiguration]):
         self.__subtitle_configuration = value
+
+    # configuration
+    @property
+    def configuration(self) -> Optional[VideoConfiguration]:
+        return self.__configuration
+
+    @configuration.setter
+    def configuration(self, value: Optional[VideoConfiguration]):
+        self.__configuration = value
 
     # fill_color
     @property
