@@ -3,6 +3,7 @@ from flet_core.map.map import Map
 from flet_core.map.map_configuration import (
     MapConfiguration,
     MapLatitudeLongitude,
+    MapInteractionConfiguration,
     TapEvent,
     MapEvent,
     MapEventSource,

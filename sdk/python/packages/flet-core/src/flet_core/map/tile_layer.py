@@ -148,14 +148,12 @@ class TileLayer(Control):
 
     # tms
     @property
-    def tms(self) -> Optional[bool]:
-        return self._get_attr("tms", data_type="bool")
+    def enable_tms(self) -> Optional[bool]:
+        return self._get_attr("enableTms", data_type="bool", def_value=False)
 
-    @tms.setter
-    def tms(self, value: Optional[bool]):
-        self._set_attr("tms", value)
-
-
+    @enable_tms.setter
+    def enable_tms(self, value: Optional[bool]):
+        self._set_attr("enableTms", value)
 
     # max_zoom
     @property

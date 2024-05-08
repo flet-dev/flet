@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -52,4 +51,30 @@ LatLng? parseLatLng(Control control, String propName, [LatLng? defValue]) {
 
 LatLng latLngFromJson(Map<String, dynamic> json) {
   return LatLng(parseDouble(json['latitude']), parseDouble(json['longitude']));
+}
+
+InteractionOptions? parseInteractionOptions(Control control, String propName) {
+  var v = control.attrString(propName);
+  if (v == null) {
+    return null;
+  }
+
+  final j1 = json.decode(v);
+  return interactionOptionsFromJSON(j1);
+}
+
+InteractionOptions interactionOptionsFromJSON(dynamic json) {
+  return InteractionOptions(
+      enableMultiFingerGestureRace:
+          parseBool(json["enable_multi_finger_gesture_race"], false),
+      enableScrollWheel: parseBool(json["enable_scroll_wheel"], false),
+      pinchMoveThreshold: parseDouble(json["pinch_move_threshold"], 40.0),
+      scrollWheelVelocity: parseDouble(json["scroll_wheel_velocity"], 0.005),
+      pinchZoomThreshold: parseDouble(json["pinch_zoom_threshold"], 0.5),
+      rotationThreshold: parseDouble(json["rotation_threshold"], 20.0)
+      // flags: json["flags"] ? parseInt(json["flags"]) : InteractiveFlag.all,
+      // rotationWinGestures: ,
+      // pinchMoveWinGestures: ,
+      // pinchZoomWinGestures: ,
+      );
 }

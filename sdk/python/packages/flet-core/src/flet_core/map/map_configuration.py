@@ -14,10 +14,24 @@ class MapLatitudeLongitude:
     longitude: Union[float, int]
 
 
+@dataclasses.dataclass
+class MapInteractionConfiguration:
+    enable_multi_finger_gesture_race: Optional[bool] = dataclasses.field(default=None)
+    enable_scroll_wheel: Optional[bool] = dataclasses.field(default=None)
+    pinch_move_threshold: OptionalNumber = dataclasses.field(default=None)
+    scroll_wheel_velocity: OptionalNumber = dataclasses.field(default=None)
+    pinch_zoom_threshold: OptionalNumber = dataclasses.field(default=None)
+    rotation_threshold: OptionalNumber = dataclasses.field(default=None)
+
+
 class MapConfiguration(Control):
     def __init__(
         self,
         apply_pointer_translucency_to_layers: Optional[bool] = None,
+        initial_center: Optional[MapLatitudeLongitude] = None,
+        initial_rotation: OptionalNumber = None,
+        initial_zoom: OptionalNumber = None,
+        interaction_configuration: Optional[MapInteractionConfiguration] = None,
         bgcolor: Optional[str] = None,
         keep_alive: Optional[bool] = None,
         max_zoom: OptionalNumber = None,
@@ -46,6 +60,7 @@ class MapConfiguration(Control):
         self.initial_center = initial_center
         self.initial_rotation = initial_rotation
         self.initial_zoom = initial_zoom
+        self.interaction_configuration = interaction_configuration
         self.keep_alive = keep_alive
         self.max_zoom = max_zoom
         self.min_zoom = min_zoom
@@ -62,6 +77,10 @@ class MapConfiguration(Control):
         super().before_update()
         if isinstance(self.__initial_center, MapLatitudeLongitude):
             self._set_attr_json("initialCenter", self.__initial_center)
+        if isinstance(self.__interaction_configuration, MapInteractionConfiguration):
+            self._set_attr_json(
+                "interactionConfiguration", self.__interaction_configuration
+            )
 
     # apply_pointer_translucency_to_layers
     @property
@@ -89,6 +108,15 @@ class MapConfiguration(Control):
     @initial_center.setter
     def initial_center(self, value: Optional[MapLatitudeLongitude]):
         self.__initial_center = value
+
+    # interaction_configuration
+    @property
+    def interaction_configuration(self) -> Optional[MapInteractionConfiguration]:
+        return self.__interaction_configuration
+
+    @interaction_configuration.setter
+    def interaction_configuration(self, value: Optional[MapInteractionConfiguration]):
+        self.__interaction_configuration = value
 
     # initial_rotation
     @property
