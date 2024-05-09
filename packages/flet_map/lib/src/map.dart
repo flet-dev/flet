@@ -35,6 +35,8 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
     List<String> acceptedChildrenTypes = [
       "mapcirclelayer",
       "maptilelayer",
+      "mappolygonlayer",
+      "mappolylinelayer",
       "mapmarkerlayer",
       "maprichattribution",
       "mapsimpleattribution"
