@@ -56,15 +56,17 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
     var autoFollowLinksTarget = control.attrString("autoFollowLinksTarget");
 
     return withPageArgs((context, pageArgs) {
+      bool selectable = control.attrBool("selectable", false)!;
       Widget markdown = MarkdownBody(
           data: value,
-          selectable: control.attrBool("selectable", false)!,
+          selectable: selectable,
           imageDirectory: pageArgs.assetsDir != ""
               ? pageArgs.assetsDir
               : getBaseUri(pageArgs.pageUri!).toString(),
           extensionSet: extensionSet,
           builders: {
-            'code': CodeElementBuilder(codeTheme.toLowerCase(), mdStyleSheet),
+            'code': CodeElementBuilder(
+                codeTheme.toLowerCase(), mdStyleSheet, selectable),
           },
           styleSheet: mdStyleSheet,
           onTapLink: (String text, String? href, String title) {
@@ -84,8 +86,9 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
 class CodeElementBuilder extends MarkdownElementBuilder {
   final String codeTheme;
   final MarkdownStyleSheet mdStyleSheet;
+  final bool selectable;
 
-  CodeElementBuilder(this.codeTheme, this.mdStyleSheet);
+  CodeElementBuilder(this.codeTheme, this.mdStyleSheet, this.selectable);
 
   @override
   Widget? visitElementAfter(md.Element element, TextStyle? preferredStyle) {
@@ -123,6 +126,8 @@ class CodeElementBuilder extends MarkdownElementBuilder {
 
           // Specify text style
           textStyle: mdStyleSheet.code,
+
+          selectable: selectable,
         ),
       );
     });

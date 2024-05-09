@@ -169,6 +169,7 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
             suffixControls.isNotEmpty ? suffixControls.first.control : null,
             null,
             _focused,
+            disabled,
             widget.parentAdaptive),
         onTap: !disabled
             ? () {

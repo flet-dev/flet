@@ -7,6 +7,7 @@ import flet.cli.commands.pack
 import flet.cli.commands.publish
 import flet.cli.commands.run
 import flet.version
+from flet.version import update_version
 
 
 # Source https://stackoverflow.com/a/26379693
@@ -60,7 +61,11 @@ argparse.ArgumentParser.set_default_subparser = set_default_subparser
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--version", action="version", version=flet.version.version)
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=flet.version.version if flet.version.version else update_version(),
+    )
     sp = parser.add_subparsers(dest="command")
     # sp.default = "run"
 
