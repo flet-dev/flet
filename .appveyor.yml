@@ -119,36 +119,36 @@ for:
             python3 ci/patch_pubspec.py packages/flet_video/pubspec.yaml $PKG_VER
             python3 ci/patch_pubspec.py packages/flet_webview/pubspec.yaml $PKG_VER
 
-            # cd packages/flet
-            # flutter test
-            # dart pub publish --force || exit 1
-            # cd $APPVEYOR_BUILD_FOLDER
+            cd packages/flet
+            flutter test
+            dart pub publish --force || exit 1
+            cd $APPVEYOR_BUILD_FOLDER
 
-            # sleep 10
+            sleep 10
 
-            # cd packages/flet_audio
-            # dart pub publish --force || exit 1
-            # cd $APPVEYOR_BUILD_FOLDER
+            cd packages/flet_audio
+            dart pub publish --force || exit 1
+            cd $APPVEYOR_BUILD_FOLDER
 
-            # cd packages/flet_audio_recorder
-            # dart pub publish --force || exit 1
-            # cd $APPVEYOR_BUILD_FOLDER
+            cd packages/flet_audio_recorder
+            dart pub publish --force || exit 1
+            cd $APPVEYOR_BUILD_FOLDER
 
-            # cd packages/flet_lottie
-            # dart pub publish --force || exit 1
-            # cd $APPVEYOR_BUILD_FOLDER
+            cd packages/flet_lottie
+            dart pub publish --force || exit 1
+            cd $APPVEYOR_BUILD_FOLDER
 
-            # cd packages/flet_rive
-            # dart pub publish --force || exit 1
-            # cd $APPVEYOR_BUILD_FOLDER
+            cd packages/flet_rive
+            dart pub publish --force || exit 1
+            cd $APPVEYOR_BUILD_FOLDER
 
-            # cd packages/flet_video
-            # dart pub publish --force || exit 1
-            # cd $APPVEYOR_BUILD_FOLDER
+            cd packages/flet_video
+            dart pub publish --force || exit 1
+            cd $APPVEYOR_BUILD_FOLDER
 
-            # cd packages/flet_webview
-            # dart pub publish --force || exit 1
-            # cd $APPVEYOR_BUILD_FOLDER
+            cd packages/flet_webview
+            dart pub publish --force || exit 1
+            cd $APPVEYOR_BUILD_FOLDER
 
           else
 
