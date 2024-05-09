@@ -53,6 +53,25 @@ LatLng latLngFromJson(Map<String, dynamic> json) {
   return LatLng(parseDouble(json['latitude']), parseDouble(json['longitude']));
 }
 
+LatLngBounds? parseLatLngBounds(Control control, String propName,
+    [LatLngBounds? defValue]) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return defValue;
+  }
+
+  final j1 = json.decode(v);
+  return latLngBoundsFromJson(j1);
+}
+
+LatLngBounds? latLngBoundsFromJson(Map<String, dynamic> json) {
+  if (json['corner_1'] == null || json['corner_2'] == null) {
+    return null;
+  }
+  return LatLngBounds(
+      latLngFromJson(json['corner_1']), latLngFromJson(json['corner_2']));
+}
+
 InteractionOptions? parseInteractionOptions(Control control, String propName) {
   var v = control.attrString(propName);
   if (v == null) {
@@ -65,16 +84,32 @@ InteractionOptions? parseInteractionOptions(Control control, String propName) {
 
 InteractionOptions interactionOptionsFromJSON(dynamic json) {
   return InteractionOptions(
-      enableMultiFingerGestureRace:
-          parseBool(json["enable_multi_finger_gesture_race"], false),
-      enableScrollWheel: parseBool(json["enable_scroll_wheel"], false),
-      pinchMoveThreshold: parseDouble(json["pinch_move_threshold"], 40.0),
-      scrollWheelVelocity: parseDouble(json["scroll_wheel_velocity"], 0.005),
-      pinchZoomThreshold: parseDouble(json["pinch_zoom_threshold"], 0.5),
-      rotationThreshold: parseDouble(json["rotation_threshold"], 20.0)
-      // flags: json["flags"] ? parseInt(json["flags"]) : InteractiveFlag.all,
-      // rotationWinGestures: ,
-      // pinchMoveWinGestures: ,
-      // pinchZoomWinGestures: ,
-      );
+    enableMultiFingerGestureRace:
+        parseBool(json["enable_multi_finger_gesture_race"], false),
+    enableScrollWheel: parseBool(json["enable_scroll_wheel"], false),
+    pinchMoveThreshold: parseDouble(json["pinch_move_threshold"], 40.0),
+    scrollWheelVelocity: parseDouble(json["scroll_wheel_velocity"], 0.005),
+    pinchZoomThreshold: parseDouble(json["pinch_zoom_threshold"], 0.5),
+    rotationThreshold: parseDouble(json["rotation_threshold"], 20.0),
+    // flags: json["flags"] ? parseInt(json["flags"]) : InteractiveFlag.all,
+    // rotationWinGestures: ,
+    // pinchMoveWinGestures: ,
+    // pinchZoomWinGestures: ,
+  );
+}
+
+EvictErrorTileStrategy? parseEvictErrorTileStrategy(String? strategy,
+    [EvictErrorTileStrategy? defValue]) {
+  switch (strategy?.toLowerCase()) {
+    case "dispose":
+      return EvictErrorTileStrategy.dispose;
+    case "notvisible":
+      return EvictErrorTileStrategy.notVisible;
+    case "notvisiblerespectmargin":
+      return EvictErrorTileStrategy.notVisibleRespectMargin;
+    case "none":
+      return EvictErrorTileStrategy.none;
+    default:
+      return defValue;
+  }
 }

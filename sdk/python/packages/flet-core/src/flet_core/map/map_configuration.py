@@ -15,6 +15,12 @@ class MapLatitudeLongitude:
 
 
 @dataclasses.dataclass
+class MapLatitudeLongitudeBounds:
+    corner_1: MapLatitudeLongitude
+    corner_2: MapLatitudeLongitude
+
+
+@dataclasses.dataclass
 class MapInteractionConfiguration:
     enable_multi_finger_gesture_race: Optional[bool] = dataclasses.field(default=None)
     enable_scroll_wheel: Optional[bool] = dataclasses.field(default=None)
