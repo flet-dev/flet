@@ -50,7 +50,7 @@ class _AlertDialogControlState extends State<AlertDialogControl>
     var actionCtrls =
         widget.children.where((c) => c.name == "action" && c.isVisible);
     final actionsAlignment =
-        parseMainAxisAlignment(widget.control.attrString("actionsAlignment")!);
+        parseMainAxisAlignment(widget.control.attrString("actionsAlignment"));
     if (titleCtrls.isEmpty && contentCtrls.isEmpty && actionCtrls.isEmpty) {
       return const ErrorControl("AlertDialog does not have any content.");
     }
