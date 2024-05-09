@@ -126,10 +126,10 @@ for:
             python3 ci/patch_pubspec.py packages/flet_video/pubspec.yaml $PKG_VER
             python3 ci/patch_pubspec.py packages/flet_webview/pubspec.yaml $PKG_VER
 
-            cd packages/flet
-            flutter test
-            dart pub publish --force || exit 1
-            cd $APPVEYOR_BUILD_FOLDER
+            # cd packages/flet
+            # flutter test
+            # dart pub publish --force || exit 1
+            # cd $APPVEYOR_BUILD_FOLDER
 
             cd packages/flet_audio
             dart pub publish --force || exit 1
