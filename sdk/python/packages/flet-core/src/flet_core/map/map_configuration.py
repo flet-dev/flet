@@ -1,6 +1,6 @@
 import dataclasses
 import json
-from enum import Enum
+from enum import Enum, IntFlag
 from typing import Optional, Union
 
 from flet_core import ControlEvent
@@ -20,6 +20,26 @@ class MapLatitudeLongitudeBounds:
     corner_2: MapLatitudeLongitude
 
 
+class MapInteractiveFlags(IntFlag):
+    NONE = 0
+    DRAG = 1 << 0
+    FLING_ANIMATION =1 << 1
+    PINCH_MOVE =  1 << 2
+    PINCH_ZOOM = 1 << 3
+    SCROLL_WHEEL_ZOOM = 1 << 6
+    DOUBLE_TAP_ZOOM = 1 << 4
+    DOUBLE_TAP_DRAG_ZOOM = 1 << 5
+    ROTATE = 1 << 7
+    ALL = (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4) | (1 << 5) | (1 << 6) | (1 << 7)
+
+class MapMultiFingerGesture(IntFlag):
+    NONE = 0
+    PINCH_MOVE =  1 << 0
+    PINCH_ZOOM = 1 << 1
+    ROTATE = 1 << 2
+    ALL = (1 << 0) | (1 << 1) | (1 << 2)
+
+
 @dataclasses.dataclass
 class MapInteractionConfiguration:
     enable_multi_finger_gesture_race: Optional[bool] = dataclasses.field(default=None)
@@ -28,6 +48,10 @@ class MapInteractionConfiguration:
     scroll_wheel_velocity: OptionalNumber = dataclasses.field(default=None)
     pinch_zoom_threshold: OptionalNumber = dataclasses.field(default=None)
     rotation_threshold: OptionalNumber = dataclasses.field(default=None)
+    flags: Optional[MapInteractiveFlags] = dataclasses.field(default=None)
+    rotation_win_gestures: Optional[MapMultiFingerGesture] = dataclasses.field(default=None)
+    pinch_move_win_gestures: Optional[MapMultiFingerGesture] = dataclasses.field(default=None)
+    pinch_zoom_win_gestures: Optional[MapMultiFingerGesture] = dataclasses.field(default=None)
 
 
 class MapConfiguration(Control):

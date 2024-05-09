@@ -69,7 +69,7 @@ class TileLayerControl extends StatelessWidget with FletStoreMixin {
           additionalOptions: additionalOptions != null
               ? (jsonDecode(additionalOptions) as Map)
                   .map((k, v) => MapEntry(k.toString(), v.toString()))
-              : {});
+              : const {});
 
       return constrainedControl(context, tile, parent, control);
     });
