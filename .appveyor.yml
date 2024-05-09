@@ -14,9 +14,9 @@ environment:
     secure: 9SKIwc3VSfYJ5IChvNR74hQprJ0DRmcV9pPX+8KyE6IXIdfMsX6ikeUmMhJGRu3ztkZaF45jmU7Xn/6tauXQXhDBxK1N8kFHFSAnq6LjUXyhS0TZKX/H+jDozBeVbCXp
 
   matrix:
-    # - job_name: Build Flet package for Flutter
-    #   job_group: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    - job_name: Build Flet package for Flutter
+      job_group: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
     - job_name: Build Flet for Windows
       job_group: build_flet
