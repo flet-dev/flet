@@ -124,6 +124,8 @@ for:
             dart pub publish --force || exit 1
             cd $APPVEYOR_BUILD_FOLDER
 
+            sleep 10
+
             cd packages/flet_audio
             dart pub publish --force || exit 1
             cd $APPVEYOR_BUILD_FOLDER
