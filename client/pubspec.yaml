@@ -33,6 +33,7 @@ dependencies:
 
   flet:
     path: ../packages/flet
+# --FAT_CLIENT_START--
   flet_audio:
     path: ../packages/flet_audio
   flet_lottie:
@@ -45,6 +46,7 @@ dependencies:
     path: ../packages/flet_video
   flet_webview:
     path: ../packages/flet_webview
+# --FAT_CLIENT_END--
 
   url_strategy: ^0.2.0
   cupertino_icons: ^1.0.6
