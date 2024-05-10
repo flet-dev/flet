@@ -161,7 +161,9 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
 
   List<FontVariation>? variations;
   if (fontWeight != null && fontWeight.startsWith("w")) {
-    variations = [FontVariation('wght', parseDouble(fontWeight.substring(1)))];
+    variations = [
+      FontVariation('wght', parseDouble(fontWeight.substring(1), 0)!)
+    ];
   }
 
   List<TextDecoration> decorations = [];

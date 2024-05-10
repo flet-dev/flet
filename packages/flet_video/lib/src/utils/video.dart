@@ -76,9 +76,7 @@ Map<String, dynamic> subtitleConfigurationFromJSON(
             fontWeight: FontWeight.normal,
             backgroundColor: Color(0xaa000000)),
     visible: json["visible"] != null ? parseBool(json["visible"]) : true,
-    textScaleFactor: json["text_scale_factor"] != null
-        ? parseDouble(json["text_scale_factor"])
-        : null,
+    textScaleFactor: parseDouble(json["text_scale_factor"]),
     textAlign: json["text_align"] != null
         ? parseTextAlign(json["text_align"], TextAlign.center)!
         : TextAlign.center,

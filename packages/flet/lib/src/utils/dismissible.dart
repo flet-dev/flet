@@ -13,7 +13,7 @@ Map<DismissDirection, double>? parseDismissThresholds(
   }
 
   final j1 = json.decode(v);
-  return getDismissThresholds(j1, (jv) => parseDouble(jv));
+  return getDismissThresholds(j1, (jv) => parseDouble(jv, 0)!);
 }
 
 Map<DismissDirection, double>? getDismissThresholds<T>(

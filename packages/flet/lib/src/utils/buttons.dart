@@ -70,7 +70,7 @@ ButtonStyle? buttonStyleFromJSON(ThemeData theme, Map<String, dynamic> json,
           (jv) => HexColor.fromString(theme, jv as String),
           defaultSurfaceTintColor),
       elevation: getMaterialStateProperty(
-          json["elevation"], (jv) => parseDouble(jv), defaultElevation),
+          json["elevation"], (jv) => parseDouble(jv, 0)!, defaultElevation),
       animationDuration: json["animation_duration"] != null
           ? Duration(milliseconds: parseInt(json["animation_duration"], 0)!)
           : null,

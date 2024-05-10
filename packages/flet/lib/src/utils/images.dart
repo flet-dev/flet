@@ -38,13 +38,13 @@ ImageFilter blurImageFilterFromJSON(dynamic json) {
   double sigmaY = 0.0;
   TileMode tileMode = TileMode.clamp;
   if (json is int || json is double) {
-    sigmaX = sigmaY = parseDouble(json);
+    sigmaX = sigmaY = parseDouble(json, 0)!;
   } else if (json is List && json.length > 1) {
-    sigmaX = parseDouble(json[0]);
-    sigmaY = parseDouble(json[1]);
+    sigmaX = parseDouble(json[0], 0)!;
+    sigmaY = parseDouble(json[1], 0)!;
   } else {
-    sigmaX = parseDouble(json["sigma_x"]);
-    sigmaY = parseDouble(json["sigma_y"]);
+    sigmaX = parseDouble(json["sigma_x"], 0)!;
+    sigmaY = parseDouble(json["sigma_y"], 0)!;
     tileMode = parseTileMode(json["tile_mode"]);
   }
 

@@ -59,13 +59,13 @@ OutlinedBorder? parseOutlinedBorder(Control control, String propName) {
 
 BorderRadius borderRadiusFromJSON(dynamic json) {
   if (json is int || json is double) {
-    return BorderRadius.all(Radius.circular(parseDouble(json)));
+    return BorderRadius.all(Radius.circular(parseDouble(json, 0)!));
   }
   return BorderRadius.only(
-    topLeft: Radius.circular(parseDouble(json['tl'])),
-    topRight: Radius.circular(parseDouble(json['tr'])),
-    bottomLeft: Radius.circular(parseDouble(json['bl'])),
-    bottomRight: Radius.circular(parseDouble(json['br'])),
+    topLeft: Radius.circular(parseDouble(json['tl'], 0)!),
+    topRight: Radius.circular(parseDouble(json['tr'], 0)!),
+    bottomLeft: Radius.circular(parseDouble(json['bl'], 0)!),
+    bottomRight: Radius.circular(parseDouble(json['br'], 0)!),
   );
 }
 
@@ -91,7 +91,7 @@ BorderSide? borderSideFromJSON(ThemeData? theme, dynamic json,
                   defaultSideColor ??
                   Colors.black
               : Colors.black,
-          width: parseDouble(json['w'], 1),
+          width: parseDouble(json['w'], 1)!,
           style: BorderStyle.solid)
       : null;
 }

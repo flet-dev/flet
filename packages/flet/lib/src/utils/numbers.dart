@@ -1,4 +1,4 @@
-double parseDouble(dynamic v, [double defValue = 0]) {
+double? parseDouble(dynamic v, [double? defValue]) {
   if (v is double) {
     return v;
   } else if (v == null) {

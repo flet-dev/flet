@@ -33,8 +33,8 @@ Gradient? gradientFromJSON(ThemeData? theme, Map<String, dynamic> json) {
         colors: parseColors(theme, json["colors"]),
         stops: parseStops(json["stops"]),
         center: alignmentFromJson(json["center"]),
-        radius: parseDouble(json["radius"]),
-        focalRadius: parseDouble(json["focal_radius"]),
+        radius: parseDouble(json["radius"], 0.5)!,
+        focalRadius: parseDouble(json["focal_radius"], 0)!,
         focal: json["focal"] != null ? alignmentFromJson(json["focal"]) : null,
         tileMode: parseTileMode(json["tile_mode"]),
         transform: parseRotation(json["rotation"]));
@@ -42,8 +42,8 @@ Gradient? gradientFromJSON(ThemeData? theme, Map<String, dynamic> json) {
     return SweepGradient(
         colors: parseColors(theme, json["colors"]),
         center: alignmentFromJson(json["center"]),
-        startAngle: parseDouble(json["start_angle"]),
-        endAngle: parseDouble(json["end_angle"]),
+        startAngle: parseDouble(json["start_angle"], 0)!,
+        endAngle: parseDouble(json["end_angle"], 0)!,
         stops: parseStops(json["stops"]),
         tileMode: parseTileMode(json["tile_mode"]),
         transform: parseRotation(json["rotation"]));
@@ -65,7 +65,7 @@ List<double>? parseStops(dynamic jv) {
   if (list.isEmpty) {
     return null;
   }
-  return list.map((v) => parseDouble(v)).toList();
+  return list.map((v) => parseDouble(v, 0)!).toList();
 }
 
 TileMode parseTileMode(dynamic jv) {
@@ -80,14 +80,14 @@ GradientRotation? parseRotation(dynamic jv) {
   if (jv == null) {
     return null;
   }
-  return GradientRotation(parseDouble(jv));
+  return GradientRotation(parseDouble(jv, 0)!);
 }
 
 Float64List? parseRotationToMatrix4(dynamic jv, Rect bounds) {
   if (jv == null) {
     return null;
   }
-  return GradientRotation(parseDouble(jv)).transform(bounds).storage;
+  return GradientRotation(parseDouble(jv, 0)!).transform(bounds).storage;
 }
 
 extension GradientExtension on Gradient {

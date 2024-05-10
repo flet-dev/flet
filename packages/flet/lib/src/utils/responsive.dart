@@ -21,7 +21,7 @@ Map<String, double> parseResponsiveNumber(
 }
 
 Map<String, double> responsiveNumberFromJson(Map<String, dynamic> json) {
-  return json.map((key, value) => MapEntry(key, parseDouble(value)));
+  return json.map((key, value) => MapEntry(key, parseDouble(value, 0)!));
 }
 
 double getBreakpointNumber(Map<String, double> responsiveNumber, double width,

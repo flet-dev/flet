@@ -19,7 +19,7 @@ RotationDetails? parseRotate(Control control, String propName) {
 RotationDetails rotateFromJSON(dynamic json) {
   if (json is int || json is double) {
     return RotationDetails(
-        angle: parseDouble(json), alignment: Alignment.center);
+        angle: parseDouble(json, 0)!, alignment: Alignment.center);
   }
 
   return RotationDetails.fromJson(json);
@@ -82,7 +82,7 @@ class RotationDetails {
 
   factory RotationDetails.fromJson(Map<String, dynamic> json) {
     return RotationDetails(
-        angle: parseDouble(json["angle"]),
+        angle: parseDouble(json["angle"], 0)!,
         alignment: json["alignment"] != null
             ? alignmentFromJson(json["alignment"])
             : Alignment.center);
@@ -103,9 +103,9 @@ class ScaleDetails {
 
   factory ScaleDetails.fromJson(Map<String, dynamic> json) {
     return ScaleDetails(
-        scale: json["scale"] != null ? parseDouble(json["scale"]) : null,
-        scaleX: json["scale_x"] != null ? parseDouble(json["scale_x"]) : null,
-        scaleY: json["scale_y"] != null ? parseDouble(json["scale_y"]) : null,
+        scale: parseDouble(json["scale"]),
+        scaleX: parseDouble(json["scale_x"]),
+        scaleY: parseDouble(json["scale_y"]),
         alignment: json["alignment"] != null
             ? alignmentFromJson(json["alignment"])
             : Alignment.center);
@@ -120,10 +120,11 @@ class OffsetDetails {
 
   factory OffsetDetails.fromJson(dynamic json) {
     if (json is List && json.length > 1) {
-      return OffsetDetails(x: parseDouble(json[0]), y: parseDouble(json[1]));
+      return OffsetDetails(
+          x: parseDouble(json[0], 0)!, y: parseDouble(json[1], 0)!);
     } else {
       return OffsetDetails(
-          x: parseDouble(json["x"]), y: parseDouble(json["y"]));
+          x: parseDouble(json["x"], 0)!, y: parseDouble(json["y"], 0)!);
     }
   }
 }

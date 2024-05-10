@@ -156,7 +156,7 @@ extension HexColor on Color {
     }
 
     if (color != null && colorOpacity != null) {
-      color = color.withOpacity(parseDouble(colorOpacity));
+      color = color.withOpacity(parseDouble(colorOpacity, 1.0)!);
     }
 
     return color;
