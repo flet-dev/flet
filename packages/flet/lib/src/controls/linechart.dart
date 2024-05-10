@@ -450,6 +450,7 @@ class _LineChartControlState extends State<LineChartControl> {
         dashArray: dashPattern != null
             ? (json.decode(dashPattern) as List)
                 .map((e) => parseInt(e))
+                .whereNotNull()
                 .toList()
             : null,
         shadow: shadow.isNotEmpty

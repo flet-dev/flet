@@ -72,7 +72,7 @@ ButtonStyle? buttonStyleFromJSON(ThemeData theme, Map<String, dynamic> json,
       elevation: getMaterialStateProperty(
           json["elevation"], (jv) => parseDouble(jv), defaultElevation),
       animationDuration: json["animation_duration"] != null
-          ? Duration(milliseconds: parseInt(json["animation_duration"]))
+          ? Duration(milliseconds: parseInt(json["animation_duration"], 0)!)
           : null,
       padding: getMaterialStateProperty(
           json["padding"], (jv) => edgeInsetsFromJson(jv), defaultPadding),

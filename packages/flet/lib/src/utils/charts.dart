@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -67,7 +68,10 @@ FlLine? parseSelectedFlLine(ThemeData theme, Control control, String propName,
           : defaultGetPointColor(color, gradient, 0),
       strokeWidth: j['width'] != null ? parseDouble(j['width'], 3) : 3,
       dashArray: j['dash_pattern'] != null
-          ? (j['dash_pattern'] as List).map((e) => parseInt(e)).toList()
+          ? (j['dash_pattern'] as List)
+              .map((e) => parseInt(e))
+              .whereNotNull()
+              .toList()
           : null);
 }
 
@@ -82,7 +86,10 @@ FlLine? flineFromJSON(theme, j) {
           : Colors.black,
       strokeWidth: j['width'] != null ? parseDouble(j['width'], 1) : 2,
       dashArray: j['dash_pattern'] != null
-          ? (j['dash_pattern'] as List).map((e) => parseInt(e)).toList()
+          ? (j['dash_pattern'] as List)
+              .map((e) => parseInt(e))
+              .whereNotNull()
+              .toList()
           : null);
 }
 

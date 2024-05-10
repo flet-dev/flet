@@ -18,7 +18,8 @@ ImplicitAnimationDetails? parseAnimation(Control control, String propName) {
 ImplicitAnimationDetails animationFromJSON(dynamic json) {
   if (json is int) {
     return ImplicitAnimationDetails(
-        duration: Duration(milliseconds: parseInt(json)), curve: Curves.linear);
+        duration: Duration(milliseconds: parseInt(json, 0)!),
+        curve: Curves.linear);
   } else if (json is bool && json == true) {
     return ImplicitAnimationDetails(
         duration: const Duration(milliseconds: 1000), curve: Curves.linear);

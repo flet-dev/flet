@@ -91,7 +91,7 @@ class _ScrollableControlState extends State<ScrollableControl>
         var params = Map<String, dynamic>.from(mj["p"] as Map);
 
         if (name == "scroll_to") {
-          var duration = parseInt(params["duration"]);
+          var duration = parseInt(params["duration"], 0)!;
           var curve = params["curve"] != null
               ? parseCurve(params["curve"] as String)
               : Curves.ease;

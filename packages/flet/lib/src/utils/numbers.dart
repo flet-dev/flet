@@ -8,7 +8,7 @@ double parseDouble(dynamic v, [double defValue = 0]) {
   }
 }
 
-int parseInt(dynamic v, [int defValue = 0]) {
+int? parseInt(dynamic v, [int? defValue]) {
   if (v is int) {
     return v;
   } else if (v == null) {

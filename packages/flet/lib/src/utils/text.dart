@@ -165,7 +165,7 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
   }
 
   List<TextDecoration> decorations = [];
-  var decor = parseInt(json["decoration"]);
+  var decor = parseInt(json["decoration"], 0)!;
   if (decor & 0x1 > 0) {
     decorations.add(TextDecoration.underline);
   }

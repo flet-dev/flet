@@ -217,7 +217,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
               break;
             case "jump_to":
               debugPrint("Video.jump($hashCode)");
-              await player.jump(parseInt(args["media_index"], 0));
+              await player.jump(parseInt(args["media_index"], 0)!);
               break;
             case "playlist_add":
               debugPrint("Video.add($hashCode)");
@@ -234,7 +234,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
               break;
             case "playlist_remove":
               debugPrint("Video.remove($hashCode)");
-              await player.remove(parseInt(args["media_index"], 0));
+              await player.remove(parseInt(args["media_index"], 0)!);
               break;
             case "is_playing":
               debugPrint("Video.isPlaying($hashCode)");
