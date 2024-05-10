@@ -274,9 +274,10 @@ for:
       - tar -czvf flet-linux-amd64.tar.gz -C build/linux/x64/release flet
 
       # THIN client
+      - flutter clean
       - sed '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' pubspec.yaml > pubspec.yaml
       - sed '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' lib/main.dart > lib/main.dart
-      - flutter clean
+      - flutter build linux --build-name=$APPVEYOR_BUILD_VERSION
       - mv build/linux/x64/release/bundle build/linux/x64/release/flet
       - tar -czvf flet-linux-thin-amd64.tar.gz -C build/linux/x64/release flet
 
@@ -327,9 +328,10 @@ for:
       - tar -czvf flet-linux-arm64.tar.gz -C build/linux/arm64/release flet
 
       # THIN client
+      - flutter clean
       - sed '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' pubspec.yaml > pubspec.yaml
       - sed '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' lib/main.dart > lib/main.dart
-      - flutter clean
+      - flutter build linux --build-name=$APPVEYOR_BUILD_VERSION
       - mv build/linux/arm64/release/bundle build/linux/arm64/release/flet
       - tar -czvf flet-linux-thin-arm64.tar.gz -C build/linux/arm64/release flet
 
