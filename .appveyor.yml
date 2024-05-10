@@ -33,11 +33,11 @@ environment:
       job_depends_on: build_flet_package
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    - job_name: Build Flet for Linux ARM64
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
-      python_stack: ""
+    # - job_name: Build Flet for Linux ARM64
+    #   job_group: build_flet
+    #   job_depends_on: build_flet_package
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
+    #   python_stack: ""
 
     # - job_name: Build Flet for web
     #   job_group: build_flet
@@ -267,6 +267,8 @@ for:
 
     build_script:
       - cd client
+      - sed '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' pubspec.yaml
+      - exit 1
 
       # FAT client
       - flutter build linux --build-name=$APPVEYOR_BUILD_VERSION
