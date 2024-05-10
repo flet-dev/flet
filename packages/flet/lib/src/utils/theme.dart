@@ -273,7 +273,7 @@ ScrollbarThemeData? parseScrollBarTheme(
     crossAxisMargin: parseDouble(j["cross_axis_margin"]),
     mainAxisMargin: parseDouble(j["main_axis_margin"]),
     minThumbLength: parseDouble(j["min_thumb_length"]),
-    interactive: j["interactive"] != null ? parseBool(j["interactive"]) : null,
+    interactive: parseBool(j["interactive"]),
   );
 }
 
@@ -292,7 +292,7 @@ TabBarTheme? parseTabBarTheme(ThemeData theme, Map<String, dynamic>? j) {
     labelColor: HexColor.fromString(theme, j["label_color"]),
     unselectedLabelColor:
         HexColor.fromString(theme, j["unselected_label_color"]),
-    indicatorSize: parseBool(j["indicator_tab_size"], false)
+    indicatorSize: parseBool(j["indicator_tab_size"], false)!
         ? TabBarIndicatorSize.tab
         : TabBarIndicatorSize.label,
     indicator: j["indicator_border_radius"] != null ||
@@ -394,8 +394,7 @@ BottomSheetThemeData? parseBottomSheetTheme(
     dragHandleColor: HexColor.fromString(theme, j["drag_handle_color"]),
     elevation: parseDouble(j["elevation"]),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    showDragHandle:
-        j["show_drag_handle"] != null ? parseBool(j["show_drag_handle"]) : null,
+    showDragHandle: parseBool(j["show_drag_handle"]),
     modalBackgroundColor: HexColor.fromString(theme, j["modal_bgcolor"]),
     modalElevation: parseDouble(j["modal_elevation"]),
     clipBehavior: j["clip_behavior"] != null
@@ -459,8 +458,7 @@ ChipThemeData? parseChipTheme(ThemeData theme, Map<String, dynamic>? j) {
             (b) => b.name.toLowerCase() == j["brightness"].toLowerCase())
         : null,
     selectedShadowColor: HexColor.fromString(theme, j["selected_shadow_color"]),
-    showCheckmark:
-        j["show_checkmark"] != null ? parseBool(j["show_checkmark"]) : null,
+    showCheckmark: parseBool(j["show_checkmark"]),
     pressElevation: parseDouble(j["click_elevation"]),
   );
 }
@@ -486,8 +484,7 @@ FloatingActionButtonThemeData? parseFloatingActionButtonTheme(
     highlightElevation: parseDouble(j["highlight_elevation"]),
     disabledElevation: parseDouble(j["disabled_elevation"]),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    enableFeedback:
-        j["enable_feedback"] != null ? parseBool(j["enable_feedback"]) : null,
+    enableFeedback: parseBool(j["enable_feedback"]),
     extendedPadding: j["extended_padding"] != null
         ? edgeInsetsFromJson(j["extended_padding"])
         : null,
@@ -524,8 +521,7 @@ NavigationRailThemeData? parseNavigationRailTheme(
         ? outlinedBorderFromJSON(j["indicator_shape"])
         : null,
     minExtendedWidth: parseDouble(j["min_extended_width"]),
-    useIndicator:
-        j["use_indicator"] != null ? parseBool(j["use_indicator"]) : null,
+    useIndicator: parseBool(j["use_indicator"]),
   );
 }
 
@@ -547,8 +543,7 @@ AppBarTheme? parseAppBarTheme(ThemeData theme, Map<String, dynamic>? j) {
     toolbarTextStyle: parseTextStyle("toolbar_text_style"),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
     elevation: parseDouble(j["elevation"]),
-    centerTitle:
-        j["center_title"] != null ? parseBool(j["center_title"]) : null,
+    centerTitle: parseBool(j["center_title"]),
     titleSpacing: parseDouble(j["title_spacing"]),
     scrolledUnderElevation: parseDouble(j["scroll_elevation"]),
     toolbarHeight: parseDouble(j["toolbar_height"]),
@@ -713,8 +708,7 @@ SnackBarThemeData? parseSnackBarTheme(
         ? DismissDirection.values.firstWhereOrNull(
             (c) => c.name.toLowerCase() == j["dismiss_direction"].toLowerCase())
         : null,
-    showCloseIcon:
-        j["show_close_icon"] != null ? parseBool(j["show_close_icon"]) : null,
+    showCloseIcon: parseBool(j["show_close_icon"]),
     actionOverflowThreshold: parseDouble(j["action_overflow_threshold"]),
   );
 }
@@ -900,17 +894,15 @@ ListTileThemeData? parseListTileTheme(
         : null,
     selectedColor: HexColor.fromString(theme, j["selected_color"]),
     selectedTileColor: HexColor.fromString(theme, j["selected_tile_color"]),
-    isThreeLine:
-        j["is_three_line"] != null ? parseBool(j["is_three_line"]) : null,
+    isThreeLine: parseBool(j["is_three_line"]),
     visualDensity: j["visual_density"] != null
         ? parseVisualDensity(j["visual_density"])
         : null,
     titleTextStyle: parseTextStyle("title_text_style"),
     subtitleTextStyle: parseTextStyle("subtitle_text_style"),
     minVerticalPadding: parseDouble(j["min_vertical_padding"]),
-    enableFeedback:
-        j["enable_feedback"] != null ? parseBool(j["enable_feedback"]) : null,
-    dense: j["dense"] != null ? parseBool(j["dense"]) : null,
+    enableFeedback: parseBool(j["enable_feedback"]),
+    dense: parseBool(j["dense"]),
     // style:
     horizontalTitleGap: parseDouble(j["horizontal_spacing"]),
     // titleAlignment: j["title_alignment"] != null ? alignmentFromJson(j["title_alignment"]) : null,
@@ -930,11 +922,9 @@ TooltipThemeData? parseTooltipTheme(ThemeData theme, Map<String, dynamic>? j) {
   }
 
   return theme.tooltipTheme.copyWith(
-    enableFeedback: j["enable_feedback"] != null,
+    enableFeedback: parseBool(j["enable_feedback"]),
     height: parseDouble(j["height"]),
-    excludeFromSemantics: j["exclude_from_semantics"] != null
-        ? parseBool(j["exclude_from_semantics"])
-        : null,
+    excludeFromSemantics: parseBool(j["exclude_from_semantics"]),
     textStyle: parseTextStyle("text_style"),
   );
 }
@@ -1008,7 +998,7 @@ PopupMenuThemeData? parsePopupMenuTheme(
     textStyle: parseTextStyle("text_style"),
     labelTextStyle: getMaterialStateProperty<TextStyle?>(
         j["label_text_style"], (jv) => parseTextStyle(jv)),
-    enableFeedback: parseBool(j["enable_feedback"], true),
+    enableFeedback: parseBool(j["enable_feedback"]),
     elevation: parseDouble(j["elevation"]),
     iconSize: parseDouble(j["icon_size"]),
     position: j["menu_position"] != null
@@ -1096,13 +1086,9 @@ BottomNavigationBarThemeData? parseBottomNavigationBarTheme(
     selectedItemColor: HexColor.fromString(theme, j["selected_item_color"]),
     unselectedItemColor: HexColor.fromString(theme, j["unselected_item_color"]),
     elevation: parseDouble(j["elevation"]),
-    enableFeedback: parseBool(j["enable_feedback"], true),
-    showSelectedLabels: j["show_selected_labels"] != null
-        ? parseBool(j["show_selected_labels"])
-        : null,
-    showUnselectedLabels: j["show_unselected_labels"] != null
-        ? parseBool(j["show_unselected_labels"])
-        : null,
+    enableFeedback: parseBool(j["enable_feedback"]),
+    showSelectedLabels: parseBool(j["show_selected_labels"]),
+    showUnselectedLabels: parseBool(j["show_unselected_labels"]),
     selectedLabelStyle: parseTextStyle("selected_label_text_style"),
     unselectedLabelStyle: parseTextStyle("unselected_label_text_style"),
   );

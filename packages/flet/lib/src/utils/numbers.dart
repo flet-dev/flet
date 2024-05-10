@@ -18,7 +18,7 @@ int? parseInt(dynamic v, [int? defValue]) {
   }
 }
 
-bool parseBool(dynamic v, [bool defValue = false]) {
+bool? parseBool(dynamic v, [bool? defValue]) {
   if (v is bool) {
     return v;
   } else if (v == null) {

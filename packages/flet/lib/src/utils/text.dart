@@ -181,9 +181,7 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
   return TextStyle(
       fontSize: json["size"] != null ? parseDouble(json["size"]) : null,
       fontWeight: fontWeight != null ? getFontWeight(fontWeight) : null,
-      fontStyle: (json["italic"] != null)
-          ? (parseBool(json["italic"]) ? FontStyle.italic : null)
-          : null,
+      fontStyle: parseBool(json["italic"], false)! ? FontStyle.italic : null,
       fontFamily: json["font_family"],
       fontVariations: variations,
       height: json["height"] != null ? parseDouble(json["height"]) : null,

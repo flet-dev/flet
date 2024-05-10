@@ -362,8 +362,8 @@ class FletCustomPainter extends CustomPainter {
             Offset(parseDouble(elem["x"], 0)!, parseDouble(elem["y"], 0)!),
             radius: Radius.circular(parseDouble(elem["radius"], 0)!),
             rotation: parseDouble(elem["rotation"], 0)!,
-            largeArc: parseBool(elem["large_arc"]),
-            clockwise: parseBool(elem["clockwise"]));
+            largeArc: parseBool(elem["large_arc"], false)!,
+            clockwise: parseBool(elem["clockwise"], true)!);
       } else if (type == "oval") {
         path.addOval(Rect.fromLTWH(
             parseDouble(elem["x"], 0)!,

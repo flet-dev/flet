@@ -23,7 +23,7 @@ FilteringTextInputFormatter inputFilterFromJSON(dynamic json) {
   String? replacementString = "";
 
   if (json != null) {
-    allow = parseBool(json["allow"], true);
+    allow = parseBool(json["allow"], true)!;
     regexString = json["regex_string"]?.toString();
     replacementString = json["replacement_string"]?.toString();
   }
