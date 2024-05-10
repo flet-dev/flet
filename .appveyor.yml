@@ -262,8 +262,8 @@ for:
 
     install:
       - cd client
-      - sed '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' pubspec.yaml > pubspec1.yaml
-      - cat pubspec1.yaml
+      - sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' pubspec.yaml
+      - cat pubspec.yaml
       - exit 1
 
       - sudo apt update --allow-releaseinfo-change
