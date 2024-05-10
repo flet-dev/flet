@@ -137,9 +137,9 @@ class FletAppManager:
                         and datetime.now(timezone.utc) > state.expires_at
                     ):
                         ids.append(id)
-                for id in ids:
-                    logger.info(f"Delete expired oauth state: {id}")
-                    self.retrieve_state(id)
+            for id in ids:
+                logger.info(f"Delete expired oauth state: {id}")
+                self.retrieve_state(id)
 
     def delete_temp_dirs(self):
         for temp_dir in self.__temp_dirs.keys():

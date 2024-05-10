@@ -12,15 +12,14 @@ import urllib.request
 from pathlib import Path
 from typing import Optional
 
+import flet.version
 import yaml
+from flet.cli.commands.base import BaseCommand
+from flet.version import update_version
 from flet_core.utils import random_string, slugify
 from flet_runtime.utils import calculate_file_hash, copy_tree, is_windows
 from packaging import version
 from rich import print
-
-import flet.version
-from flet.cli.commands.base import BaseCommand
-from flet.version import update_version
 
 if is_windows():
     from ctypes import windll
@@ -103,6 +102,13 @@ class Command(BaseCommand):
             nargs="?",
             default=".",
             help="path to a directory with a Python program",
+        )
+        parser.add_argument(
+            "--exclude",
+            dest="exclude",
+            nargs="+",
+            default=[],
+            help="exclude files and directories from a Python app package",
         )
         parser.add_argument(
             "-o",
@@ -397,7 +403,7 @@ class Command(BaseCommand):
 
         # create Flutter project from a template
         print(
-            f"Creating Flutter bootstrap project from {template_url} with ref {template_ref} ... ",
+            f"Creating Flutter bootstrap project from {template_url} with ref {template_ref}...",
             end="",
         )
         try:
@@ -423,7 +429,7 @@ class Command(BaseCommand):
         for k, v in flutter_dependencies.items():
             pubspec["dependencies"][k] = v
 
-        if src_pubspec and src_pubspec["dependency_overrides"]:
+        if src_pubspec and "dependency_overrides" in src_pubspec:
             pubspec["dependency_overrides"] = {}
             for k, v in src_pubspec["dependency_overrides"].items():
                 pubspec["dependency_overrides"][k] = v
@@ -635,6 +641,11 @@ class Command(BaseCommand):
 
             print("[spring_green3]OK[/spring_green3]")
 
+        exclude_list = ["build"]
+
+        if options.exclude:
+            exclude_list.extend(options.exclude)
+
         # package Python app
         print(f"Packaging Python app...", end="")
         package_args = [
@@ -646,6 +657,7 @@ class Command(BaseCommand):
         ]
         if target_platform == "web":
             pip_platform, find_links_path = self.create_pyodide_find_links()
+            exclude_list.append("assets")
             package_args.extend(
                 [
                     "--web",
@@ -658,7 +670,7 @@ class Command(BaseCommand):
                     "--find-links",
                     find_links_path,
                     "--exclude",
-                    "assets,build",
+                    ",".join(exclude_list),
                 ]
             )
         else:
@@ -677,7 +689,7 @@ class Command(BaseCommand):
                     "--req-deps",
                     "flet-embed",
                     "--exclude",
-                    "build",
+                    ",".join(exclude_list),
                 ]
             )
 
