@@ -56,21 +56,18 @@ ButtonStyle? buttonStyleFromJSON(ThemeData theme, Map<String, dynamic>? json,
   return ButtonStyle(
       foregroundColor: getMaterialStateProperty<Color?>(
           json["color"],
-          (jv) => HexColor.fromString(theme, jv as String),
-          defaultForegroundColor),
+          (jv) => parseColor(theme, jv as String), defaultForegroundColor),
       backgroundColor: getMaterialStateProperty<Color?>(
           json["bgcolor"],
-          (jv) => HexColor.fromString(theme, jv as String),
-          defaultBackgroundColor),
+          (jv) => parseColor(theme, jv as String), defaultBackgroundColor),
       overlayColor: getMaterialStateProperty<Color?>(
           json["overlay_color"],
-          (jv) => HexColor.fromString(theme, jv as String),
-          defaultOverlayColor),
+          (jv) => parseColor(theme, jv as String), defaultOverlayColor),
       shadowColor: getMaterialStateProperty<Color?>(json["shadow_color"],
-          (jv) => HexColor.fromString(theme, jv as String), defaultShadowColor),
+          (jv) => parseColor(theme, jv as String), defaultShadowColor),
       surfaceTintColor: getMaterialStateProperty<Color?>(
           json["surface_tint_color"],
-          (jv) => HexColor.fromString(theme, jv as String),
+          (jv) => parseColor(theme, jv as String),
           defaultSurfaceTintColor),
       elevation: getMaterialStateProperty(
           json["elevation"], (jv) => parseDouble(jv), defaultElevation),

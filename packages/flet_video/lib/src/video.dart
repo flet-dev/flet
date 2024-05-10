@@ -121,7 +121,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
         filterQuality: filterQuality,
         subtitleViewConfiguration:
             subtitleViewConfiguration ?? const SubtitleViewConfiguration(),
-        fill: HexColor.fromString(Theme.of(context),
+        fill: parseColor(Theme.of(context),
                 widget.control.attrString("fillColor", "")!) ??
             const Color(0xFF000000),
         onEnterFullscreen: widget.control.attrBool("onEnterFullscreen", false)!

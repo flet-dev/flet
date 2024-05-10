@@ -37,8 +37,7 @@ Paint paintFromJSON(ThemeData? theme, Map<String, dynamic> json) {
   //debugPrint("paintFromJSON: $json");
   var paint = Paint();
   if (json["color"] != null) {
-    paint.color =
-        HexColor.fromString(theme, json["color"] as String) ?? Colors.black;
+    paint.color = parseColor(theme, json["color"] as String, Colors.black)!;
   }
   if (json["blend_mode"] != null) {
     paint.blendMode = BlendMode.values.firstWhere(

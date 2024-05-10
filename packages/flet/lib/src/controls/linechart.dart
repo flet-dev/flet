@@ -224,8 +224,8 @@ class _LineChartControlState extends State<LineChartControl> {
 
           var chart = LineChart(
             LineChartData(
-                backgroundColor: HexColor.fromString(Theme.of(context),
-                    widget.control.attrString("bgcolor", "")!),
+                backgroundColor: parseColor(
+                    Theme.of(context), widget.control.attrString("bgcolor")),
                 minX: widget.control.attrDouble("minx"),
                 maxX: widget.control.attrDouble("maxx"),
                 minY: widget.control.attrDouble("miny"),

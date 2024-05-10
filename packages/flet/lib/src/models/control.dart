@@ -112,9 +112,8 @@ class Control extends Equatable {
   }
 
   Color? attrColor(String name, BuildContext? context, [Color? defValue]) {
-    return HexColor.fromString(context != null ? Theme.of(context) : null,
-            attrString(name, "")!) ??
-        defValue;
+    return parseColor(
+        context != null ? Theme.of(context) : null, attrString(name), defValue);
   }
 
   List? attrList(String name, [List? defValue = const []]) {

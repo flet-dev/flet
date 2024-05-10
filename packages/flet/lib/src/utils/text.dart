@@ -214,18 +214,12 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
           ? TextDecorationStyle.values.firstWhereOrNull((v) =>
               v.name.toLowerCase() == json["decoration_style"].toLowerCase())
           : null,
-      decorationColor: json["decoration_color"] != null
-          ? HexColor.fromString(theme, json["decoration_color"] ?? "")
-          : null,
+      decorationColor: parseColor(theme, json["decoration_color"]),
       decorationThickness: json["decoration_thickness"] != null
           ? parseDouble(json["decoration_thickness"])
           : null,
-      color: json["color"] != null
-          ? HexColor.fromString(theme, json["color"] ?? "")
-          : null,
-      backgroundColor: json["bgcolor"] != null
-          ? HexColor.fromString(theme, json["bgcolor"] ?? "")
-          : null,
+      color: parseColor(theme, json["color"]),
+      backgroundColor: parseColor(theme, json["bgcolor"]),
       shadows: json["shadow"] != null
           ? boxShadowsFromJSON(theme, json["shadow"])
           : null,

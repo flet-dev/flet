@@ -52,9 +52,7 @@ Gradient? gradientFromJSON(ThemeData? theme, Map<String, dynamic> json) {
 }
 
 List<Color> parseColors(ThemeData? theme, dynamic jv) {
-  return (jv as List)
-      .map((c) => HexColor.fromString(theme, c as String)!)
-      .toList();
+  return (jv as List).map((c) => parseColor(theme, c as String)!).toList();
 }
 
 List<double>? parseStops(dynamic jv) {

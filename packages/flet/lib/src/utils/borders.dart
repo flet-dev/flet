@@ -87,11 +87,8 @@ BorderSide? borderSideFromJSON(ThemeData? theme, dynamic json,
     [Color? defaultSideColor]) {
   return json != null
       ? BorderSide(
-          color: json['c'] != null
-              ? HexColor.fromString(theme, json['c'] as String) ??
-                  defaultSideColor ??
-                  Colors.black
-              : Colors.black,
+          color:
+              parseColor(theme, json['c'], defaultSideColor ?? Colors.black)!,
           width: parseDouble(json['w'], 1),
           style: BorderStyle.solid)
       : null;

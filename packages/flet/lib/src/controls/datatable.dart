@@ -60,7 +60,7 @@ class _DataTableControlState extends State<DataTableControl>
           borderRadius != null ||
           gradient != null) {
         decoration = (defaultDecoration as BoxDecoration).copyWith(
-            color: HexColor.fromString(Theme.of(context), bgColor ?? ""),
+            color: parseColor(Theme.of(context), bgColor),
             border: border,
             borderRadius: borderRadius,
             gradient: gradient);

@@ -14,18 +14,11 @@ SystemUiOverlayStyle overlayStyleFromJson(
       : null;
 
   return SystemUiOverlayStyle(
-      statusBarColor: json["status_bar_color"] != null
-          ? HexColor.fromString(theme, json["status_bar_color"] ?? "")
-          : null,
-      systemNavigationBarColor: json["system_navigation_bar_color"] != null
-          ? HexColor.fromString(
-              theme, json["system_navigation_bar_color"] ?? "")
-          : null,
+      statusBarColor: parseColor(theme, json["status_bar_color"]),
+      systemNavigationBarColor:
+          parseColor(theme, json["system_navigation_bar_color"]),
       systemNavigationBarDividerColor:
-          json["system_navigation_bar_divider_color"] != null
-              ? HexColor.fromString(
-                  theme, json["system_navigation_bar_divider_color"] ?? "")
-              : null,
+          parseColor(theme, json["system_navigation_bar_divider_color"]),
       systemStatusBarContrastEnforced:
           json["enforce_system_status_bar_contrast"] != null
               ? parseBool(json["enforce_system_status_bar_contrast"])
