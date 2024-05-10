@@ -33,11 +33,11 @@ environment:
       job_depends_on: build_flet_package
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Build Flet for Linux ARM64
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
-    #   python_stack: ""
+    - job_name: Build Flet for Linux ARM64
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
+      python_stack: ""
 
     # - job_name: Build Flet for web
     #   job_group: build_flet
@@ -261,11 +261,6 @@ for:
         - job_name: Build Flet for Linux
 
     install:
-      - cd client
-      - sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' pubspec.yaml
-      - cat pubspec.yaml
-      - exit 1
-
       - sudo apt update --allow-releaseinfo-change
       - sudo apt install -y libmpv-dev mpv libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
       - flutter upgrade --force
@@ -280,9 +275,8 @@ for:
 
       # THIN client
       - flutter clean
-      - sed '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' pubspec.yaml | tee pubspec.yaml
-      - sed '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' lib/main.dart | tee lib/main.dart
-      - cat pubspec.yaml
+      - sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' pubspec.yaml
+      - sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' lib/main.dart
       - flutter build linux --build-name=$APPVEYOR_BUILD_VERSION
       - mv build/linux/x64/release/bundle build/linux/x64/release/flet
       - tar -czvf flet-linux-thin-amd64.tar.gz -C build/linux/x64/release flet
@@ -335,8 +329,8 @@ for:
 
       # THIN client
       - flutter clean
-      - sed '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' pubspec.yaml | tee pubspec.yaml
-      - sed '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' lib/main.dart | tee lib/main.dart
+      - sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' pubspec.yaml
+      - sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' lib/main.dart
       - flutter build linux --build-name=$APPVEYOR_BUILD_VERSION
       - mv build/linux/arm64/release/bundle build/linux/arm64/release/flet
       - tar -czvf flet-linux-thin-arm64.tar.gz -C build/linux/arm64/release flet
