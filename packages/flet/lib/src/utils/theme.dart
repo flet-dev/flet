@@ -92,9 +92,8 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
       useMaterial3: json?["use_material3"] ?? primarySwatch == null);
 
   theme = theme.copyWith(
-    visualDensity: json?["visual_density"] != null
-        ? parseVisualDensity(json?["visual_density"])
-        : theme.visualDensity,
+    visualDensity:
+        parseVisualDensity(json?["visual_density"], theme.visualDensity)!,
     pageTransitionsTheme: json?["page_transitions"] != null
         ? parsePageTransitions(json?["page_transitions"])
         : theme.pageTransitionsTheme,
@@ -255,7 +254,8 @@ ScrollbarThemeData? parseScrollBarTheme(
         j["track_visibility"], (jv) => parseBool(jv)),
     trackColor: getMaterialStateProperty<Color?>(
         j["track_color"], (jv) => parseColor(theme, jv as String)),
-    trackBorderColor: getMaterialStateProperty<Color?>(j["track_border_color"], (jv) => parseColor(theme, jv as String)),
+    trackBorderColor: getMaterialStateProperty<Color?>(
+        j["track_border_color"], (jv) => parseColor(theme, jv as String)),
     thumbVisibility: getMaterialStateProperty<bool?>(
         j["thumb_visibility"], (jv) => parseBool(jv)),
     thumbColor: getMaterialStateProperty<Color?>(
@@ -327,8 +327,7 @@ TabBarTheme? parseTabBarTheme(ThemeData theme, Map<String, dynamic>? j) {
   );
 }
 
-VisualDensity? parseVisualDensity(String? density,
-    [VisualDensity? defValue = VisualDensity.standard]) {
+VisualDensity? parseVisualDensity(String? density, [VisualDensity? defValue]) {
   switch (density?.toLowerCase()) {
     case "adaptiveplatformdensity":
       return VisualDensity.adaptivePlatformDensity;
@@ -336,6 +335,8 @@ VisualDensity? parseVisualDensity(String? density,
       return VisualDensity.comfortable;
     case "compact":
       return VisualDensity.compact;
+    case "standard":
+      return VisualDensity.standard;
     default:
       return defValue;
   }
@@ -600,9 +601,7 @@ RadioThemeData? parseRadioTheme(ThemeData theme, Map<String, dynamic>? j) {
         j["splash_radius"] != null ? parseDouble(j["splash_radius"]) : null,
     overlayColor: getMaterialStateProperty<Color?>(
         j["overlay_color"], (jv) => parseColor(theme, jv as String)),
-    visualDensity: j["visual_density"] != null
-        ? parseVisualDensity(j["visual_density"])
-        : null,
+    visualDensity: parseVisualDensity(j["visual_density"]),
     mouseCursor: getMaterialStateProperty<MouseCursor?>(
         j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
   );
@@ -621,9 +620,7 @@ CheckboxThemeData? parseCheckboxTheme(
         j["splash_radius"] != null ? parseDouble(j["splash_radius"]) : null,
     overlayColor: getMaterialStateProperty<Color?>(
         j["overlay_color"], (jv) => parseColor(theme, jv as String)),
-    visualDensity: j["visual_density"] != null
-        ? parseVisualDensity(j["visual_density"])
-        : null,
+    visualDensity: parseVisualDensity(j["visual_density"]),
     checkColor: getMaterialStateProperty<Color?>(
         j["check_color"], (jv) => parseColor(theme, jv as String)),
     side: j["border_side"] != null
@@ -787,7 +784,8 @@ DatePickerThemeData? parseDatePickerTheme(
     yearStyle: parseTextStyle("year_text_style"),
     dayStyle: parseTextStyle("day_text_style"),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    dayOverlayColor: getMaterialStateProperty<Color?>(j["day_overlay_color"], (jv) => parseColor(theme, jv as String)),
+    dayOverlayColor: getMaterialStateProperty<Color?>(
+        j["day_overlay_color"], (jv) => parseColor(theme, jv as String)),
     headerBackgroundColor: parseColor(theme, j["header_bgcolor"]),
     dayForegroundColor: getMaterialStateProperty<Color?>(
         j["day_foreground_color"], (jv) => parseColor(theme, jv as String)),
@@ -828,7 +826,8 @@ DatePickerThemeData? parseDatePickerTheme(
         j["year_bgcolor"], (jv) => parseColor(theme, jv as String)),
     yearForegroundColor: getMaterialStateProperty<Color?>(
         j["year_foreground_color"], (jv) => parseColor(theme, jv as String)),
-    yearOverlayColor: getMaterialStateProperty<Color?>(j["year_overlay_color"], (jv) => parseColor(theme, jv as String)),
+    yearOverlayColor: getMaterialStateProperty<Color?>(
+        j["year_overlay_color"], (jv) => parseColor(theme, jv as String)),
     weekdayStyle: parseTextStyle("weekday_text_style"),
   );
 }
@@ -916,9 +915,7 @@ ListTileThemeData? parseListTileTheme(
     selectedTileColor: parseColor(theme, j["selected_tile_color"]),
     isThreeLine:
         j["is_three_line"] != null ? parseBool(j["is_three_line"]) : null,
-    visualDensity: j["visual_density"] != null
-        ? parseVisualDensity(j["visual_density"])
-        : null,
+    visualDensity: parseVisualDensity(j["visual_density"]),
     titleTextStyle: parseTextStyle("title_text_style"),
     subtitleTextStyle: parseTextStyle("subtitle_text_style"),
     minVerticalPadding: j["min_vertical_padding"] != null
@@ -1053,7 +1050,8 @@ SearchBarThemeData? parseSearchBarTheme(
   }
 
   return theme.searchBarTheme.copyWith(
-    surfaceTintColor: getMaterialStateProperty<Color?>(j["surface_tint_color"], (jv) => parseColor(theme, jv as String)),
+    surfaceTintColor: getMaterialStateProperty<Color?>(
+        j["surface_tint_color"], (jv) => parseColor(theme, jv as String)),
     shadowColor: getMaterialStateProperty<Color?>(
         j["shadow_color"], (jv) => parseColor(theme, jv as String)),
     elevation: getMaterialStateProperty<double?>(

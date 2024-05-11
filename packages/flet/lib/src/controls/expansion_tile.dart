@@ -102,8 +102,7 @@ class ExpansionTileControl extends StatelessWidget {
       shape: parseOutlinedBorder(control, "shape"),
       collapsedShape: parseOutlinedBorder(control, "collapsedShape"),
       onExpansionChanged: onChange,
-      visualDensity:
-          parseVisualDensity(control.attrString("visualDensity"), null),
+      visualDensity: parseVisualDensity(control.attrString("visualDensity")),
       enableFeedback: control.attrBool("enableFeedback"),
       dense: control.attrBool("dense"),
       leading: leadingCtrls.isNotEmpty

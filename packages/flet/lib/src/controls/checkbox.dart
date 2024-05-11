@@ -138,8 +138,8 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
           fillColor: parseMaterialStateColor(
               Theme.of(context), widget.control, "fillColor"),
           tristate: _tristate,
-          visualDensity: parseVisualDensity(
-              widget.control.attrString("visualDensity"), null),
+          visualDensity:
+              parseVisualDensity(widget.control.attrString("visualDensity")),
           mouseCursor:
               parseMouseCursor(widget.control.attrString("mouseCursor")),
           onChanged: !disabled

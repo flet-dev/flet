@@ -86,7 +86,7 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
               widget.control.attrString("labelPosition", "")!.toLowerCase(),
           orElse: () => LabelPosition.right);
       VisualDensity? visualDensity =
-          parseVisualDensity(widget.control.attrString("visualDensity"), null);
+          parseVisualDensity(widget.control.attrString("visualDensity"));
       bool autofocus = widget.control.attrBool("autofocus", false)!;
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
 

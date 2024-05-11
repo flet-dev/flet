@@ -98,7 +98,7 @@ class _ChipControlState extends State<ChipControl> {
     BorderSide? borderSide =
         parseBorderSide(Theme.of(context), widget.control, "borderSide");
     VisualDensity? visualDensity =
-        parseVisualDensity(widget.control.attrString("visualDensity"), null);
+        parseVisualDensity(widget.control.attrString("visualDensity"));
     Clip clipBehavior =
         parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
 

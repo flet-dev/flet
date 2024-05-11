@@ -106,7 +106,7 @@ class _IconButtonControlState extends State<IconButtonControl>
       var mouseCursor =
           parseMouseCursor(widget.control.attrString("mouseCursor"));
       var visualDensity =
-          parseVisualDensity(widget.control.attrString("visualDensity"), null);
+          parseVisualDensity(widget.control.attrString("visualDensity"));
 
       Function()? onPressed = disabled
           ? null
