@@ -158,7 +158,7 @@ class _ScrollableControlState extends State<ScrollableControl>
                   : platform == TargetPlatform.iOS ||
                           platform == TargetPlatform.android
                       ? 4.0
-                      : 8.0,
+                      : null,
               //interactive: true,
               controller: _controller,
               child: SingleChildScrollView(
