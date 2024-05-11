@@ -187,7 +187,7 @@ class Video(ConstrainedControl):
         if isinstance(self.__subtitle_configuration, VideoSubtitleConfiguration):
             self._set_attr_json("subtitleConfiguration", self.__subtitle_configuration)
 
-        if isinstance(self.configuration, VideoConfiguration):
+        if isinstance(self.__configuration, VideoConfiguration):
             self._set_attr_json("configuration", self.configuration)
 
     def play(self):
