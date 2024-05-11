@@ -30,7 +30,7 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
   Widget build(BuildContext context) {
     debugPrint("PopupMenuButton build: ${control.id}");
 
-    var icon = parseIcon(control.attrString("icon", "")!);
+    var icon = parseIcon(control.attrString("icon"));
     var tooltip = control.attrString("tooltip", "")!;
     var iconSize = control.attrDouble("iconSize");
     var splashRadius = control.attrDouble("splashRadius");
@@ -89,7 +89,7 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
           position: menuPosition,
           itemBuilder: (BuildContext context) =>
               viewModel.controlViews.map((cv) {
-                var itemIcon = parseIcon(cv.control.attrString("icon", "")!);
+                var itemIcon = parseIcon(cv.control.attrString("icon"));
                 var text = cv.control.attrString("text", "")!;
                 var checked = cv.control.attrBool("checked");
                 var height = cv.control.attrDouble("height", 48.0)!;

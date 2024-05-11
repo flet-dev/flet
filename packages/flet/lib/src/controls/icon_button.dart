@@ -77,9 +77,9 @@ class _IconButtonControlState extends State<IconButtonControl>
             backend: widget.backend);
       }
 
-      IconData? icon = parseIcon(widget.control.attrString("icon", "")!);
+      IconData? icon = parseIcon(widget.control.attrString("icon"));
       IconData? selectedIcon =
-          parseIcon(widget.control.attrString("selectedIcon", "")!);
+          parseIcon(widget.control.attrString("selectedIcon"));
       Color? iconColor = widget.control.attrColor("iconColor", context);
       Color? highlightColor =
           widget.control.attrColor("highlightColor", context);

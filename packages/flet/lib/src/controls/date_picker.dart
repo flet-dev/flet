@@ -59,7 +59,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
     IconData? switchToCalendarEntryModeIcon = parseIcon(
         widget.control.attrString("switchToCalendarEntryModeIcon", "")!);
     IconData? switchToInputEntryModeIcon =
-        parseIcon(widget.control.attrString("switchToInputEntryModeIcon", "")!);
+        parseIcon(widget.control.attrString("switchToInputEntryModeIcon"));
 
     void onClosed(DateTime? dateValue) {
       String stringValue;

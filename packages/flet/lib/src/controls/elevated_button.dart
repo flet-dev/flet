@@ -87,7 +87,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
 
       String text = widget.control.attrString("text", "")!;
       String url = widget.control.attrString("url", "")!;
-      IconData? icon = parseIcon(widget.control.attrString("icon", "")!);
+      IconData? icon = parseIcon(widget.control.attrString("icon"));
       Color? iconColor = widget.control.attrColor("iconColor", context);
       var contentCtrls =
           widget.children.where((c) => c.name == "content" && c.isVisible);

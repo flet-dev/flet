@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui' as ui;
 
+import 'package:flet/src/utils/others.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -60,14 +61,10 @@ Paint paintFromJSON(ThemeData? theme, Map<String, dynamic> json) {
     paint.strokeWidth = parseDouble(json["stroke_width"]);
   }
   if (json["stroke_cap"] != null) {
-    paint.strokeCap = StrokeCap.values.firstWhere(
-        (e) => e.name.toLowerCase() == json["stroke_cap"].toLowerCase(),
-        orElse: () => StrokeCap.butt);
+    paint.strokeCap = parseStrokeCap(json["stroke_cap"], StrokeCap.butt)!;
   }
   if (json["stroke_join"] != null) {
-    paint.strokeJoin = StrokeJoin.values.firstWhere(
-        (e) => e.name.toLowerCase() == json["stroke_join"].toLowerCase(),
-        orElse: () => StrokeJoin.miter);
+    paint.strokeJoin = parseStrokeJoin(json["stroke_join"], StrokeJoin.miter)!;
   }
   if (json["style"] != null) {
     paint.style = PaintingStyle.values.firstWhere(

@@ -146,5 +146,5 @@ class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
   int get hashCode => dx.hashCode + dy.hashCode;
 
   @override
-  String toString() => 'CustomFloatingActionButtonLocation';
+  String toString() => 'CustomFloatingActionButtonLocation(dx: $dx, dy: $dy)';
 }

@@ -62,7 +62,7 @@ class _OutlinedButtonControlState extends State<OutlinedButtonControl>
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     String text = widget.control.attrString("text", "")!;
-    IconData? icon = parseIcon(widget.control.attrString("icon", "")!);
+    IconData? icon = parseIcon(widget.control.attrString("icon"));
     Color? iconColor = widget.control.attrColor("iconColor", context);
     var contentCtrls =
         widget.children.where((c) => c.name == "content" && c.isVisible);

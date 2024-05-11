@@ -60,11 +60,11 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
             .map((c) => c.id), (content, viewModel) {
       List<Widget> children = viewModel.controlViews.map((destView) {
         if (destView.control.type == "navigationdrawerdestination") {
-          var icon = parseIcon(destView.control.attrString("icon", "")!);
+          var icon = parseIcon(destView.control.attrString("icon"));
           var iconContentCtrls = destView.children
               .where((c) => c.name == "icon_content" && c.isVisible);
           var selectedIcon =
-              parseIcon(destView.control.attrString("selectedIcon", "")!);
+              parseIcon(destView.control.attrString("selectedIcon"));
           var selectedIconContentCtrls = destView.children
               .where((c) => c.name == "selected_icon_content" && c.isVisible);
           return NavigationDrawerDestination(
