@@ -74,7 +74,7 @@ ButtonStyle? buttonStyleFromJSON(ThemeData theme, Map<String, dynamic>? json,
       animationDuration: json["animation_duration"] != null
           ? Duration(milliseconds: parseInt(json["animation_duration"]))
           : null,
-      padding: getMaterialStateProperty(
+      padding: getMaterialStateProperty<EdgeInsetsGeometry?>(
           json["padding"], (jv) => edgeInsetsFromJson(jv), defaultPadding),
       side: getMaterialStateProperty<BorderSide?>(
           json["side"],

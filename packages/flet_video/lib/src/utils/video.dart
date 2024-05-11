@@ -80,9 +80,8 @@ Map<String, dynamic> subtitleConfigurationFromJSON(
         ? parseDouble(json["text_scale_factor"])
         : null,
     textAlign: parseTextAlign(json["text_align"], TextAlign.center)!,
-    padding: json["padding"] != null
-        ? edgeInsetsFromJson(json["padding"])
-        : const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 24.0),
+    padding: edgeInsetsFromJson(json["padding"]) ??
+        const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 24.0),
   );
 
   return <String, dynamic>{

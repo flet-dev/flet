@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/utils/others.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -307,15 +308,12 @@ TabBarTheme? parseTabBarTheme(ThemeData theme, Map<String, dynamic>? j) {
                 BorderSide(
                     width: 2.0,
                     color: indicatorColor ?? theme.colorScheme.primary),
-            insets: j["indicator_padding"] != null
-                ? edgeInsetsFromJson(j["indicator_padding"])
-                : EdgeInsets.zero)
+            insets:
+                edgeInsetsFromJson(j["indicator_padding"]) ?? EdgeInsets.zero)
         : null,
     mouseCursor: getMaterialStateProperty<MouseCursor?>(
         j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
-    labelPadding: j["label_padding"] != null
-        ? edgeInsetsFromJson(j["label_padding"])
-        : null,
+    labelPadding: edgeInsetsFromJson(j["label_padding"]),
     dividerHeight:
         j["divider_height"] != null ? parseDouble(j["divider_height"]) : null,
     labelStyle: j["label_text_style"] != null
@@ -376,9 +374,7 @@ DialogTheme? parseDialogTheme(ThemeData theme, Map<String, dynamic>? j) {
     contentTextStyle: parseTextStyle("content_text_style"),
     alignment:
         j["alignment"] != null ? alignmentFromJson(j["alignment"]) : null,
-    actionsPadding: j["actions_padding"] != null
-        ? edgeInsetsFromJson(j["actions_padding"])
-        : null,
+    actionsPadding: edgeInsetsFromJson(j["actions_padding"]),
   );
 }
 
@@ -400,10 +396,7 @@ BottomSheetThemeData? parseBottomSheetTheme(
     modalBackgroundColor: parseColor(theme, j["modal_bgcolor"]),
     modalElevation:
         j["modal_elevation"] != null ? parseDouble(j["modal_elevation"]) : null,
-    clipBehavior: j["clip_behavior"] != null
-        ? Clip.values.firstWhereOrNull(
-            (c) => c.name.toLowerCase() == j["clip_behavior"].toLowerCase())
-        : null,
+    clipBehavior: parseClip(j["clip_behavior"]),
   );
 }
 
@@ -418,11 +411,8 @@ CardTheme? parseCardTheme(ThemeData theme, Map<String, dynamic>? j) {
       surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
       elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
       shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-      clipBehavior: j["clip_behavior"] != null
-          ? Clip.values.firstWhereOrNull(
-              (c) => c.name.toLowerCase() == j["clip_behavior"].toLowerCase())
-          : null,
-      margin: j["margin"] != null ? edgeInsetsFromJson(j["margin"]) : null);
+      clipBehavior: parseClip(j["clip_behavior"]),
+      margin: edgeInsetsFromJson(j["margin"]));
 }
 
 ChipThemeData? parseChipTheme(ThemeData theme, Map<String, dynamic>? j) {
@@ -441,10 +431,8 @@ ChipThemeData? parseChipTheme(ThemeData theme, Map<String, dynamic>? j) {
     surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
     elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    padding: j["padding"] != null ? edgeInsetsFromJson(j["padding"]) : null,
-    labelPadding: j["label_padding"] != null
-        ? edgeInsetsFromJson(j["label_padding"])
-        : null,
+    padding: edgeInsetsFromJson(j["padding"]),
+    labelPadding: edgeInsetsFromJson(j["label_padding"]),
     labelStyle: parseTextStyle("label_text_style"),
     secondaryLabelStyle: parseTextStyle("secondary_label_text_style"),
     disabledColor: parseColor(theme, j["disabled_color"]),
@@ -496,9 +484,7 @@ FloatingActionButtonThemeData? parseFloatingActionButtonTheme(
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
     enableFeedback:
         j["enable_feedback"] != null ? parseBool(j["enable_feedback"]) : null,
-    extendedPadding: j["extended_padding"] != null
-        ? edgeInsetsFromJson(j["extended_padding"])
-        : null,
+    extendedPadding: edgeInsetsFromJson(j["extended_padding"]),
     extendedTextStyle: parseTextStyle("extended_text_style"),
     extendedIconLabelSpacing: j["extended_icon_label_spacing"] != null
         ? parseDouble(j["extended_icon_label_spacing"])
@@ -584,7 +570,7 @@ BottomAppBarTheme? parseBottomAppBarTheme(
     surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
     elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
     height: j["height"] != null ? parseDouble(j["height"]) : null,
-    padding: j["padding"] != null ? edgeInsetsFromJson(j["padding"]) : null,
+    padding: edgeInsetsFromJson(j["padding"]),
     //shape:
   );
 }
@@ -643,7 +629,7 @@ BadgeThemeData? parseBadgeTheme(ThemeData theme, Map<String, dynamic>? j) {
   return theme.badgeTheme.copyWith(
     backgroundColor: parseColor(theme, j["bgcolor"]),
     textStyle: parseTextStyle("text_style"),
-    padding: j["padding"] != null ? edgeInsetsFromJson(j["padding"]) : null,
+    padding: edgeInsetsFromJson(j["padding"]),
     alignment:
         j["alignment"] != null ? alignmentFromJson(j["alignment"]) : null,
     textColor: parseColor(theme, j["text_color"]),
@@ -722,9 +708,7 @@ SnackBarThemeData? parseSnackBarTheme(
         : null,
     contentTextStyle: parseTextStyle("content_text_style"),
     width: j["width"] != null ? parseDouble(j["width"]) : null,
-    insetPadding: j["inset_padding"] != null
-        ? edgeInsetsFromJson(j["inset_padding"])
-        : null,
+    insetPadding: edgeInsetsFromJson(j["inset_padding"]),
     dismissDirection: j["dismiss_direction"] != null
         ? DismissDirection.values.firstWhereOrNull(
             (c) => c.name.toLowerCase() == j["dismiss_direction"].toLowerCase())
@@ -751,10 +735,8 @@ MaterialBannerThemeData? parseBannerTheme(
     backgroundColor: parseColor(theme, j["bgcolor"]),
     elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
     dividerColor: parseColor(theme, j["divider_color"]),
-    padding: j["padding"] != null ? edgeInsetsFromJson(j["padding"]) : null,
-    leadingPadding: j["leading_padding"] != null
-        ? edgeInsetsFromJson(j["leading_padding"])
-        : null,
+    padding: edgeInsetsFromJson(j["padding"]),
+    leadingPadding: edgeInsetsFromJson(j["leading_padding"]),
     surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
     shadowColor: parseColor(theme, j["shadow_color"]),
     contentTextStyle: parseTextStyle("content_text_style"),
@@ -845,7 +827,7 @@ TimePickerThemeData? parseTimePickerTheme(
   return theme.timePickerTheme.copyWith(
     backgroundColor: parseColor(theme, j["bgcolor"]),
     elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
-    padding: j["padding"] != null ? edgeInsetsFromJson(j["padding"]) : null,
+    padding: edgeInsetsFromJson(j["padding"]),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
     dayPeriodBorderSide: j["day_period_border_side"] != null
         ? borderSideFromJSON(theme, j["day_period_border_side"])
@@ -908,9 +890,7 @@ ListTileThemeData? parseListTileTheme(
     textColor: parseColor(theme, j["text_color"]),
     tileColor: parseColor(theme, j["bgcolor"]),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    contentPadding: j["content_padding"] != null
-        ? edgeInsetsFromJson(j["content_padding"])
-        : null,
+    contentPadding: edgeInsetsFromJson(j["content_padding"]),
     selectedColor: parseColor(theme, j["selected_color"]),
     selectedTileColor: parseColor(theme, j["selected_tile_color"]),
     isThreeLine:
