@@ -213,7 +213,7 @@ Widget createWidget(
     bool? parentAdaptive,
     Widget? nextChild,
     FletControlBackend backend) {
-  switch (controlView.control.type) {
+  switch (controlView.control.type.toLowerCase()) {
     case "page":
       return PageControl(
           control: controlView.control,

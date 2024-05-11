@@ -83,14 +83,14 @@ ui.Gradient? paintGradientFromJSON(
         offsetFromJson(json["end"])!,
         parseColors(theme, json["colors"]),
         parseStops(json["color_stops"]),
-        parseTileMode(json["tile_mode"]));
+        parseTileMode(json["tile_mode"], TileMode.clamp)!);
   } else if (type == "radial") {
     return ui.Gradient.radial(
       offsetFromJson(json["center"])!,
       parseDouble(json["radius"]),
       parseColors(theme, json["colors"]),
       parseStops(json["color_stops"]),
-      parseTileMode(json["tile_mode"]),
+      parseTileMode(json["tile_mode"], TileMode.clamp)!,
       null,
       offsetFromJson(json["focal"]),
       parseDouble(json["focal_radius"]),
@@ -101,7 +101,7 @@ ui.Gradient? paintGradientFromJSON(
         center,
         parseColors(theme, json["colors"]),
         parseStops(json["color_stops"]),
-        parseTileMode(json["tile_mode"]),
+        parseTileMode(json["tile_mode"], TileMode.clamp)!,
         parseDouble(json["start_angle"]),
         parseDouble(json["end_angle"]),
         parseRotationToMatrix4(

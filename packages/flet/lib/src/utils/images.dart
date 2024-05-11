@@ -51,7 +51,7 @@ ImageFilter blurImageFilterFromJSON(dynamic json) {
   } else {
     sigmaX = parseDouble(json["sigma_x"]);
     sigmaY = parseDouble(json["sigma_y"]);
-    tileMode = parseTileMode(json["tile_mode"]);
+    tileMode = parseTileMode(json["tile_mode"], TileMode.clamp)!;
   }
 
   return ImageFilter.blur(sigmaX: sigmaX, sigmaY: sigmaY, tileMode: tileMode);

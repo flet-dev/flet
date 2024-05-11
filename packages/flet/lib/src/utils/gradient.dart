@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -26,7 +27,7 @@ Gradient? gradientFromJSON(ThemeData? theme, Map<String, dynamic> json) {
         stops: parseStops(json["stops"]),
         begin: alignmentFromJson(json["begin"], Alignment.centerLeft)!,
         end: alignmentFromJson(json["end"], Alignment.centerRight)!,
-        tileMode: parseTileMode(json["tile_mode"]),
+        tileMode: parseTileMode(json["tile_mode"], TileMode.clamp)!,
         transform: parseRotation(json["rotation"]));
   } else if (type == "radial") {
     return RadialGradient(
@@ -36,7 +37,7 @@ Gradient? gradientFromJSON(ThemeData? theme, Map<String, dynamic> json) {
         radius: parseDouble(json["radius"]),
         focalRadius: parseDouble(json["focal_radius"]),
         focal: alignmentFromJson(json["focal"]),
-        tileMode: parseTileMode(json["tile_mode"]),
+        tileMode: parseTileMode(json["tile_mode"], TileMode.clamp)!,
         transform: parseRotation(json["rotation"]));
   } else if (type == "sweep") {
     return SweepGradient(
@@ -45,7 +46,7 @@ Gradient? gradientFromJSON(ThemeData? theme, Map<String, dynamic> json) {
         startAngle: parseDouble(json["start_angle"]),
         endAngle: parseDouble(json["end_angle"]),
         stops: parseStops(json["stops"]),
-        tileMode: parseTileMode(json["tile_mode"]),
+        tileMode: parseTileMode(json["tile_mode"], TileMode.clamp)!,
         transform: parseRotation(json["rotation"]));
   }
   return null;
@@ -66,17 +67,15 @@ List<double>? parseStops(dynamic jv) {
   return list.map((v) => parseDouble(v)).toList();
 }
 
-TileMode parseTileMode(dynamic jv) {
-  return jv != null
-      ? TileMode.values.firstWhere(
-          (e) => e.name.toLowerCase() == jv.toLowerCase(),
-          orElse: () => TileMode.clamp)
-      : TileMode.clamp;
+TileMode? parseTileMode(dynamic jv, [TileMode? defValue]) {
+  return TileMode.values
+          .firstWhereOrNull((e) => e.name.toLowerCase() == jv.toLowerCase()) ??
+      defValue;
 }
 
-GradientRotation? parseRotation(dynamic jv) {
+GradientRotation? parseRotation(dynamic jv, [GradientRotation? defValue]) {
   if (jv == null) {
-    return null;
+    return defValue;
   }
   return GradientRotation(parseDouble(jv));
 }
