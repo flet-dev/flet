@@ -23,7 +23,11 @@ from flet_core.animation import Animation, AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.audio import Audio
 from flet_core.audio_recorder import AudioEncoder, AudioRecorder
-from flet_core.auto_complete import AutoComplete, AutoCompleteSuggestion
+from flet_core.autofill_group import (
+    AutofillGroup,
+    AutofillGroupDisposeAction,
+    AutofillHint,
+)
 from flet_core.badge import Badge
 from flet_core.banner import Banner
 from flet_core.blur import Blur, BlurTileMode
@@ -107,8 +111,8 @@ from flet_core.datatable import (
 from flet_core.date_picker import (
     DatePicker,
     DatePickerEntryMode,
-    DatePickerEntryModeChangeEvent,
     DatePickerMode,
+    DatePickerEntryModeChangeEvent,
 )
 from flet_core.dismissible import (
     Dismissible,

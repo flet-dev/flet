@@ -14,6 +14,7 @@
 * Fixed default value for scrollbar thickness ([#3147](https://github.com/flet-dev/flet/issues/3147))
 * Fixed: autoreload, restrict eventhandler from restart on open ([#3098](https://github.com/flet-dev/flet/issues/3098))
 * Fixed ([#3035](https://github.com/flet-dev/flet/issues/3035)) switch Flutter RichText to Text.rich ([#3066](https://github.com/flet-dev/flet/issues/3066))
+* Fixed: Markdown code block is not selectable ([#1753](https://github.com/flet-dev/flet/issues/1753))
 
 # 0.22.0
 
