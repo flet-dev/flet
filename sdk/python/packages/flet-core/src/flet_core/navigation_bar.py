@@ -133,7 +133,7 @@ class NavigationBarDestination(Control):
 
 @deprecated(
     reason="Use NavigationBarDestination class instead.",
-    version="0.22.0",
+    version="0.22.1",
     delete_version="1.0",
 )
 class NavigationDestination(NavigationBarDestination):

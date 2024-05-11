@@ -1049,7 +1049,7 @@ class Page(AdaptiveControl):
     # Deprecated
     @deprecated(
         reason="Use open_snack_bar() method instead.",
-        version="0.22.0",
+        version="0.22.1",
         delete_version="1.0",
     )
     def show_snack_bar(self, snack_bar: SnackBar = None):
@@ -1087,7 +1087,7 @@ class Page(AdaptiveControl):
     # Deprecated
     @deprecated(
         reason="Use open_dialog() method instead.",
-        version="0.22.0",
+        version="0.22.1",
         delete_version="1.0",
     )
     def show_dialog(self, dialog: Union[AlertDialog, CupertinoAlertDialog] = None):
@@ -1135,7 +1135,7 @@ class Page(AdaptiveControl):
     # Deprecated
     @deprecated(
         reason="Use open_banner() method instead.",
-        version="0.22.0",
+        version="0.22.1",
         delete_version="1.0",
     )
     def show_banner(self, banner: Banner = None):
@@ -1185,7 +1185,7 @@ class Page(AdaptiveControl):
     # Deprecated
     @deprecated(
         reason="Use open_bottom_sheet() method instead.",
-        version="0.22.0",
+        version="0.22.1",
         delete_version="1.0",
     )
     def show_bottom_sheet(
@@ -1237,7 +1237,7 @@ class Page(AdaptiveControl):
     # Deprecated
     @deprecated(
         reason="Use open_drawer() method instead.",
-        version="0.22.0",
+        version="0.22.1",
         delete_version="1.0",
     )
     def show_drawer(self, drawer: NavigationDrawer = None):
@@ -1283,7 +1283,7 @@ class Page(AdaptiveControl):
     # Deprecated
     @deprecated(
         reason="Use open_end_drawer() method instead.",
-        version="0.22.0",
+        version="0.22.1",
         delete_version="1.0",
     )
     def show_end_drawer(self, end_drawer: NavigationDrawer = None):
