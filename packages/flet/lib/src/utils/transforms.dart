@@ -86,9 +86,7 @@ class RotationDetails {
   factory RotationDetails.fromJson(Map<String, dynamic> json) {
     return RotationDetails(
         angle: parseDouble(json["angle"]),
-        alignment: json["alignment"] != null
-            ? alignmentFromJson(json["alignment"])
-            : Alignment.center);
+        alignment: alignmentFromJson(json["alignment"], Alignment.center)!);
   }
 }
 
@@ -109,9 +107,7 @@ class ScaleDetails {
         scale: json["scale"] != null ? parseDouble(json["scale"]) : null,
         scaleX: json["scale_x"] != null ? parseDouble(json["scale_x"]) : null,
         scaleY: json["scale_y"] != null ? parseDouble(json["scale_y"]) : null,
-        alignment: json["alignment"] != null
-            ? alignmentFromJson(json["alignment"])
-            : Alignment.center);
+        alignment: alignmentFromJson(json["alignment"], Alignment.center)!);
   }
 }
 

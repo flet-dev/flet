@@ -372,8 +372,7 @@ DialogTheme? parseDialogTheme(ThemeData theme, Map<String, dynamic>? j) {
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
     titleTextStyle: parseTextStyle("title_text_style"),
     contentTextStyle: parseTextStyle("content_text_style"),
-    alignment:
-        j["alignment"] != null ? alignmentFromJson(j["alignment"]) : null,
+    alignment: alignmentFromJson(j["alignment"]),
     actionsPadding: edgeInsetsFromJson(j["actions_padding"]),
   );
 }
@@ -630,8 +629,7 @@ BadgeThemeData? parseBadgeTheme(ThemeData theme, Map<String, dynamic>? j) {
     backgroundColor: parseColor(theme, j["bgcolor"]),
     textStyle: parseTextStyle("text_style"),
     padding: edgeInsetsFromJson(j["padding"]),
-    alignment:
-        j["alignment"] != null ? alignmentFromJson(j["alignment"]) : null,
+    alignment: alignmentFromJson(j["alignment"]),
     textColor: parseColor(theme, j["text_color"]),
     offset: j["offset"] != null ? offsetFromJson(j["offset"]) : null,
     smallSize: j["small_size"] != null ? parseDouble(j["small_size"]) : null,

@@ -52,9 +52,7 @@ MenuStyle? menuStyleFromJSON(ThemeData theme, Map<String, dynamic> json,
     BorderSide? defaultBorderSide,
     OutlinedBorder? defaultShape]) {
   return MenuStyle(
-    alignment: json["alignment"] != null
-        ? alignmentFromJson(json["alignment"])
-        : defaultAlignment,
+    alignment: alignmentFromJson(json["alignment"], defaultAlignment)!,
     backgroundColor: getMaterialStateProperty<Color?>(
         json["bgcolor"],
         (jv) => parseColor(theme, jv as String), defaultBackgroundColor),

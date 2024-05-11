@@ -272,7 +272,7 @@ class FletCustomPainter extends CustomPainter {
     var offset =
         Offset(shape.control.attrDouble("x")!, shape.control.attrDouble("y")!);
     var alignment =
-        parseAlignment(shape.control, "alignment") ?? Alignment.topLeft;
+        parseAlignment(shape.control, "alignment", Alignment.topLeft)!;
     var text = shape.control.attrString("text", "")!;
     TextStyle style = parseTextStyle(theme, shape.control, "style") ??
         theme.textTheme.bodyMedium!;

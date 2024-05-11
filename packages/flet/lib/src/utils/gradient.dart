@@ -24,24 +24,24 @@ Gradient? gradientFromJSON(ThemeData? theme, Map<String, dynamic> json) {
     return LinearGradient(
         colors: parseColors(theme, json["colors"]),
         stops: parseStops(json["stops"]),
-        begin: alignmentFromJson(json["begin"]),
-        end: alignmentFromJson(json["end"]),
+        begin: alignmentFromJson(json["begin"], Alignment.centerLeft)!,
+        end: alignmentFromJson(json["end"], Alignment.centerRight)!,
         tileMode: parseTileMode(json["tile_mode"]),
         transform: parseRotation(json["rotation"]));
   } else if (type == "radial") {
     return RadialGradient(
         colors: parseColors(theme, json["colors"]),
         stops: parseStops(json["stops"]),
-        center: alignmentFromJson(json["center"]),
+        center: alignmentFromJson(json["center"], Alignment.center)!,
         radius: parseDouble(json["radius"]),
         focalRadius: parseDouble(json["focal_radius"]),
-        focal: json["focal"] != null ? alignmentFromJson(json["focal"]) : null,
+        focal: alignmentFromJson(json["focal"]),
         tileMode: parseTileMode(json["tile_mode"]),
         transform: parseRotation(json["rotation"]));
   } else if (type == "sweep") {
     return SweepGradient(
         colors: parseColors(theme, json["colors"]),
-        center: alignmentFromJson(json["center"]),
+        center: alignmentFromJson(json["center"], Alignment.center)!,
         startAngle: parseDouble(json["start_angle"]),
         endAngle: parseDouble(json["end_angle"]),
         stops: parseStops(json["stops"]),
