@@ -15,11 +15,12 @@ class Flashlight(Control):
     import flet as ft
 
     def main(page: ft.Page):
-        flashLight = ft.Flash()
+        flashLight = ft.Flashlight()
         page.overlay.append(flashLight)
         page.add(
             ft.TextButton("On", on_click:lambda _: flashLight.on()),
-            ft.ElevatedButton("Off", on_click:lambda _: flashLight.off()),
+            ft.TextButton("Off", on_click:lambda _: flashLight.off()),
+            ft.TextButton("toggle", on_click: lambda _: flashlight.toggle())
         )
 
     ft.app(target=main)
@@ -43,14 +44,14 @@ class Flashlight(Control):
     def _get_control_name(self):
         return "flashlight"
 
-    def on(self, wait_timeout: Optional[int] = 3) -> int:
+    def turn_on(self, wait_timeout: Optional[int] = 3) -> int:
         sr = self.invoke_method("on", wait_for_result=True, wait_timeout=wait_timeout)
 
         if int(sr) == 1:
             self.turned_on = True
         return self.turned_on
 
-    def off(self, wait_timeout: Optional[int] = 3) -> int:
+    def turn_off(self, wait_timeout: Optional[int] = 3) -> int:
         sr = self.invoke_method("off", wait_for_result=True, wait_timeout=wait_timeout)
 
         if int(sr) == 1:
