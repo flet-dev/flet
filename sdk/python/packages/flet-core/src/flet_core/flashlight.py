@@ -8,7 +8,7 @@ class Flashlight(Control):
     """
     A control to use Flash Light. Works on iOS and Android. Based on torch_light Flutter widget (https://pub.dev/packages/torch_light).
 
-    Flash control is non-visual and should be added to `page.overlay` list.
+    Flashlight control is non-visual and should be added to `page.overlay` list.
 
     Example:
     ```
@@ -18,7 +18,8 @@ class Flashlight(Control):
         flashLight = ft.Flashlight()
         page.overlay.append(flashLight)
         page.add(
-            ft.TextButton("On", on_click:lambda _: flashLight.on()),
+            ft.TextButton("On", on_click:lambda _: flashLight.turn_on()),
+            ft.TextButton("Off", on_click:lambda _: flashLight.turn_off()),
             ft.TextButton("Off", on_click:lambda _: flashLight.off()),
             ft.TextButton("toggle", on_click: lambda _: flashlight.toggle())
         )

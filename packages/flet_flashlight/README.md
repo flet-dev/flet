@@ -1,3 +1,3 @@
-# Flet `Flash` control
+# Flet `Flashlight` control
 
-`Flash` control to use in Flet apps.
+`Flashlight` control to use in Flet apps.
