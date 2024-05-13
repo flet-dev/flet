@@ -29,10 +29,10 @@ pytest = "^7.2.0"
 cryptography = "^39.0.0"
 
 [tool.poetry.scripts]
-flet = "flet.cli.cli:main"
+flet = "flet_cli.cli:main"
 
 [tool.poetry.plugins."pyinstaller40"]
-hook-dirs = "flet.__pyinstaller:get_hook_dirs"
+hook-dirs = "flet_cli.__pyinstaller:get_hook_dirs"
 
 [build-system]
 requires = ["poetry-core"]

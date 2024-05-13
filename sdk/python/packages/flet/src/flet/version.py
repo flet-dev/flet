@@ -1,13 +1,12 @@
 """Provide the current Flet version."""
 
-
 import os
 import subprocess as sp
 from pathlib import Path
 
 import flet
 import flet_core.version
-from flet_runtime.utils import is_mobile, is_windows, which
+from flet_core.utils import is_mobile, is_windows, which
 
 version = flet_core.version.version
 

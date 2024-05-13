@@ -6,7 +6,7 @@ from typing import Any, Awaitable, Callable, Dict, Iterable, Optional, Union
 
 import flet_core
 from flet_core.locks import NopeLock
-from flet_core.utils.concurrency_utils import is_pyodide
+from flet_core.utils import is_pyodide
 
 logger = logging.getLogger(flet_core.__name__)
 

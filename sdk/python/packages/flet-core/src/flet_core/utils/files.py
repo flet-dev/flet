@@ -22,3 +22,21 @@ def safe_tar_extractall(tar, path=".", members=None, *, numeric_owner=False):
 
 def copy_tree(src, dst, ignore=None):
     return shutil.copytree(src, dst, ignore=ignore, symlinks=True, dirs_exist_ok=True)
+
+
+# https://stackoverflow.com/questions/377017/test-if-executable-exists-in-python
+def which(program, exclude_exe=None):
+    import os
+
+    def is_exe(fpath):
+        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+    for path in os.environ["PATH"].split(os.pathsep):
+        exe_file = os.path.join(path, program)
+        if is_exe(exe_file) and (
+            exclude_exe is None
+            or (exclude_exe is not None and exclude_exe.lower() != exe_file.lower())
+        ):
+            return exe_file
+
+    return None

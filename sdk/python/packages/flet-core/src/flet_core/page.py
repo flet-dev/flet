@@ -1,11 +1,11 @@
 import asyncio
-from contextvars import ContextVar
 import json
 import logging
 import threading
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
+from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple, Union, cast
@@ -52,8 +52,7 @@ from flet_core.types import (
     ScrollMode,
     ThemeMode,
 )
-from flet_core.utils import deprecated, classproperty
-from flet_core.utils.concurrency_utils import is_pyodide
+from flet_core.utils import classproperty, deprecated, is_pyodide
 from flet_core.view import View
 
 logger = logging.getLogger(flet_core.__name__)
@@ -68,8 +67,8 @@ class context:
 
 
 try:
-    from flet_runtime.auth.authorization import Authorization
-    from flet_runtime.auth.oauth_provider import OAuthProvider
+    from flet.auth.authorization import Authorization
+    from flet.auth.oauth_provider import OAuthProvider
 except ImportError as e:
 
     class OAuthProvider:

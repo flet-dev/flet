@@ -3,7 +3,8 @@ import tempfile
 import uuid
 from pathlib import Path
 
-from flet_runtime.utils import copy_tree, get_package_bin_dir
+from flet_core.utils import copy_tree
+from flet_desktop import get_package_bin_dir
 
 
 def get_flet_bin_path():
