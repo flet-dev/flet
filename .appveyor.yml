@@ -28,16 +28,16 @@ environment:
     #   job_depends_on: build_flet_package
     #   APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
-    - job_name: Build Flet for Linux
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    # - job_name: Build Flet for Linux
+    #   job_group: build_flet
+    #   job_depends_on: build_flet_package
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    - job_name: Build Flet for Linux ARM64
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
-      python_stack: ""
+    # - job_name: Build Flet for Linux ARM64
+    #   job_group: build_flet
+    #   job_depends_on: build_flet_package
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
+    #   python_stack: ""
 
     # - job_name: Build Flet for web
     #   job_group: build_flet
@@ -69,14 +69,14 @@ environment:
     #   python_stack: python 3.11
     #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    # - job_name: Build Python wheels
-    #   job_group: python_build
-    #   job_depends_on: python_tests, build_flet
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
-    #   TWINE_USERNAME: __token__
-    #   TWINE_PASSWORD:
-    #     secure: 174ncAbF5IjSIkmioPt62jeSnzmTlRNchUkE4QdjDWH8xK1olYtySXLJpo2q95HcP7lWJky1hv4APESiRRHnBWoY0XRFafzM/mbCDMzG1tZXiXZmpP1qzHAtRP2QSCIg18xh1TMktraUdTi7sbJnjjRhqzgbW1k0kLBxKw79MPFBhYQ/TiGcmaYWZbWVZNY3HCUCb6Dt7bG1OE2Ul9rD1gvs55xwO9Oq9FOVA1VnMYw=
-    #   TWINE_NON_INTERACTIVE: true
+    - job_name: Build Python wheels
+      job_group: python_build
+      job_depends_on: python_tests, build_flet
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      TWINE_USERNAME: __token__
+      TWINE_PASSWORD:
+        secure: 174ncAbF5IjSIkmioPt62jeSnzmTlRNchUkE4QdjDWH8xK1olYtySXLJpo2q95HcP7lWJky1hv4APESiRRHnBWoY0XRFafzM/mbCDMzG1tZXiXZmpP1qzHAtRP2QSCIg18xh1TMktraUdTi7sbJnjjRhqzgbW1k0kLBxKw79MPFBhYQ/TiGcmaYWZbWVZNY3HCUCb6Dt7bG1OE2Ul9rD1gvs55xwO9Oq9FOVA1VnMYw=
+      TWINE_NON_INTERACTIVE: true
 
 matrix:
   fast_finish: true
@@ -441,11 +441,12 @@ for:
       only:
         - job_group: python_build
 
+    environment:
+      flet_sdk_root: sdk/python
+
     install:
       - python --version
-      - cd sdk/python
       - pip install --upgrade setuptools wheel twine poetry tomlkit virtualenv
-      - poetry install
 
     test: off
 
@@ -454,49 +455,39 @@ for:
       - ps: |
           $ErrorActionPreference = "Stop"
           $env:PYPI_VER = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
-          $vp = "packages/flet-core/src/flet_core/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
-      - python3 patch_toml.py packages/flet/pyproject.toml $PYPI_VER
-      - python3 patch_toml.py packages/flet-embed/pyproject.toml $PYPI_VER
-      - python3 patch_toml.py packages/flet-runtime/pyproject.toml $PYPI_VER
-      - python3 patch_toml.py packages/flet-core/pyproject.toml $PYPI_VER
-      - python3 patch_toml.py packages/flet-pyodide/pyproject.toml $PYPI_VER
+          $vp = "$env:flet_sdk_root/packages/flet-core/src/flet_core/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
+      - python3 ci/patch_toml_versions.py $flet_sdk_root/packages/flet/pyproject.toml $PYPI_VER
+      - python3 ci/patch_toml_versions.py $flet_sdk_root/packages/flet-cli/pyproject.toml $PYPI_VER
+      - python3 ci/patch_toml_versions.py $flet_sdk_root/packages/flet-core/pyproject.toml $PYPI_VER
+
+      # install poetry env
+      - cd $flet_sdk_root
+      - poetry install
 
       # build "flet-core" package
       - pushd packages/flet-core
       - poetry build
       - popd
 
-      # build "flet-runtime" package
-      - pushd packages/flet-runtime
-      - poetry build
-      - popd
-
-      # build "flet-embed" package
-      - pushd packages/flet-embed
+      # build "flet-cli" package
+      - pushd packages/flet-cli
       - poetry build
       - popd
 
       # build "flet" package
       - pushd packages/flet
-      - python3 download-web.py
       - poetry build
-      - python3 build-wheels.py
       - popd
 
-      # build "flet-pyodide" package
-      - pushd packages/flet-pyodide
-      - poetry build
-      - popd
+      #- find dist -type f -iname *.tar.gz -exec appveyor PushArtifact -DeploymentName python-dist-macos {} \;
 
       # publish package
       - sh: |
           if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
-              twine upload packages/flet-core/dist/* packages/flet-runtime/dist/* packages/flet-embed/dist/* packages/flet/dist/* packages/flet-pyodide/dist/*
+              twine upload packages/flet-core/dist/* packages/flet-cli/dist/* packages/flet/dist/*
           fi
 
     artifacts:
       - path: sdk/python/packages/flet-core/dist/*
-      - path: sdk/python/packages/flet-runtime/dist/*
+      - path: sdk/python/packages/flet-cli/dist/*
       - path: sdk/python/packages/flet/dist/*
-      - path: sdk/python/packages/flet-embed/dist/*
-      - path: sdk/python/packages/flet-pyodide/dist/*
