@@ -18,10 +18,10 @@ environment:
     #   job_group: build_flet_package
     #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Build Flet for Windows
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+    - job_name: Build Flet for Windows
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
 
     # - job_name: Build Flet for macOS
     #   job_group: build_flet
@@ -39,10 +39,10 @@ environment:
     #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
     #   python_stack: ""
 
-    - job_name: Build Flet for web
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    # - job_name: Build Flet for web
+    #   job_group: build_flet
+    #   job_depends_on: build_flet_package
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     # - job_name: Test Python 3.8
     #   job_group: python_tests
@@ -186,6 +186,8 @@ for:
         - job_name: Build Flet for Windows
 
     install:
+      - python --version
+      - pip install --upgrade setuptools wheel twine poetry tomlkit virtualenv
       - flutter upgrade --force
 
     build_script:
