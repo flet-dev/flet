@@ -197,8 +197,8 @@ for:
           $ErrorActionPreference = "Stop"
           $env:PYPI_VER = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
           $vp = "$env:flet_sdk_root/packages/flet-core/src/flet_core/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
-      - python3 ci/patch_toml_versions.py %flet_sdk_root%/packages/flet-desktop/pyproject.toml %PYPI_VER%
-      - python3 ci/patch_toml_versions.py %flet_sdk_root%/packages/flet-core/pyproject.toml %PYPI_VER%
+      - python ci/patch_toml_versions.py %flet_sdk_root%/packages/flet-desktop/pyproject.toml %PYPI_VER%
+      - python ci/patch_toml_versions.py %flet_sdk_root%/packages/flet-core/pyproject.toml %PYPI_VER%
 
       - cd client
       - flutter build windows --build-name=%APPVEYOR_BUILD_VERSION%
