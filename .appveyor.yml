@@ -234,17 +234,19 @@ for:
 
     build_script:
       # Flutter macOS client
-      - cd client
+      - pushd client
       - flutter build macos --build-name=$APPVEYOR_BUILD_VERSION
       - tar -czvf flet-macos.tar.gz -C build/macos/Build/Products/Release Flet.app
       - mkdir -p $flet_sdk_root/packages/flet-desktop/src/flet_desktop/app
       - cp flet-macos.tar.gz $flet_sdk_root/packages/flet-desktop/src/flet_desktop/app
+      - popd
 
       # Python package
       - ps: |
           $ErrorActionPreference = "Stop"
           $env:PYPI_VER = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
           $vp = "$env:flet_sdk_root/packages/flet-core/src/flet_core/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
+      - python3 ci/patch_toml_versions.py $flet_sdk_root/packages/flet-core/pyproject.toml $PYPI_VER
       - python3 ci/patch_toml_versions.py $flet_sdk_root/packages/flet-desktop/pyproject.toml $PYPI_VER
 
       # install poetry env
