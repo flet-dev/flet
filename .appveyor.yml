@@ -191,6 +191,15 @@ for:
       - flutter upgrade --force
 
     build_script:
+      - ps: $env:flet_sdk_root=$env:APPVEYOR_BUILD_FOLDER/sdk/python
+      # patch version
+      - ps: |
+          $ErrorActionPreference = "Stop"
+          $env:PYPI_VER = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
+          $vp = "$env:flet_sdk_root/packages/flet-core/src/flet_core/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
+      - python3 ci/patch_toml_versions.py %flet_sdk_root%/packages/flet-desktop/pyproject.toml %PYPI_VER%
+      - python3 ci/patch_toml_versions.py %flet_sdk_root%/packages/flet-core/pyproject.toml %PYPI_VER%
+
       - cd client
       - flutter build windows --build-name=%APPVEYOR_BUILD_VERSION%
       - set RELEASE_DIR=build\windows\x64\runner\Release
