@@ -37,6 +37,8 @@ dependencies:
     path: ../packages/flet_audio
   flet_lottie:
     path: ../packages/flet_lottie
+  flet_mobile_ads:
+    path: ../packages/flet_mobile_ads
   flet_rive:
     path: ../packages/flet_rive
   flet_audio_recorder:

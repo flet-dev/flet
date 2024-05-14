@@ -5,6 +5,7 @@ import 'package:flet_audio/flet_audio.dart' as flet_audio;
 import 'package:flet_audio_recorder/flet_audio_recorder.dart'
     as flet_audio_recorder;
 import 'package:flet_lottie/flet_lottie.dart' as flet_lottie;
+import 'package:flet_mobile_ads/flet_mobile_ads.dart' as flet_mobile_ads;
 import 'package:flet_rive/flet_rive.dart' as flet_rive;
 import 'package:flet_video/flet_video.dart' as flet_video;
 import 'package:flet_webview/flet_webview.dart' as flet_webview;
@@ -26,6 +27,7 @@ void main([List<String>? args]) async {
   flet_audio.ensureInitialized();
   flet_audio_recorder.ensureInitialized();
   flet_lottie.ensureInitialized();
+  flet_mobile_ads.ensureInitialized();
   flet_rive.ensureInitialized();
   flet_video.ensureInitialized();
   flet_webview.ensureInitialized();
@@ -35,7 +37,7 @@ void main([List<String>? args]) async {
   //debugPrint("Uri.base: ${Uri.base}");
 
   if (kDebugMode) {
-    pageUrl = "http://localhost:8550";
+    pageUrl = "http://10.11.121.181:8550";
   }
 
   if (kIsWeb) {
@@ -89,6 +91,7 @@ void main([List<String>? args]) async {
       flet_audio.createControl,
       flet_audio_recorder.createControl,
       flet_lottie.createControl,
+      flet_mobile_ads.createControl,
       flet_rive.createControl,
       flet_video.createControl,
       flet_webview.createControl

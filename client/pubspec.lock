@@ -253,6 +253,13 @@ packages:
       relative: true
     source: path
     version: "0.22.1"
+  flet_mobile_ads:
+    dependency: "direct main"
+    description:
+      path: "../packages/flet_mobile_ads"
+      relative: true
+    source: path
+    version: "0.22.1"
   flet_rive:
     dependency: "direct main"
     description:
@@ -360,6 +367,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  google_mobile_ads:
+    dependency: transitive
+    description:
+      name: google_mobile_ads
+      sha256: e2d18992d30b2be77cb6976b931112fc3c4612feffb5eb7a8b036bd7a64934da
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.0"
   graphs:
     dependency: transitive
     description:
