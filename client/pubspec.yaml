@@ -36,17 +36,17 @@ dependencies:
 # --FAT_CLIENT_START--
   flet_audio:
     path: ../packages/flet_audio
+  flet_video:
+    path: ../packages/flet_video
+# --FAT_CLIENT_END--
   flet_lottie:
     path: ../packages/flet_lottie
   flet_rive:
     path: ../packages/flet_rive
   flet_audio_recorder:
     path: ../packages/flet_audio_recorder
-  flet_video:
-    path: ../packages/flet_video
   flet_webview:
     path: ../packages/flet_webview
-# --FAT_CLIENT_END--
 
   url_strategy: ^0.2.0
   cupertino_icons: ^1.0.6

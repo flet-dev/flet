@@ -3,13 +3,15 @@ import 'dart:io';
 import 'package:flet/flet.dart';
 // --FAT_CLIENT_START--
 import 'package:flet_audio/flet_audio.dart' as flet_audio;
+// --FAT_CLIENT_END--
 import 'package:flet_audio_recorder/flet_audio_recorder.dart'
     as flet_audio_recorder;
 import 'package:flet_lottie/flet_lottie.dart' as flet_lottie;
 import 'package:flet_rive/flet_rive.dart' as flet_rive;
+// --FAT_CLIENT_START--
 import 'package:flet_video/flet_video.dart' as flet_video;
-import 'package:flet_webview/flet_webview.dart' as flet_webview;
 // --FAT_CLIENT_END--
+import 'package:flet_webview/flet_webview.dart' as flet_webview;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -28,12 +30,12 @@ void main([List<String>? args]) async {
 
   // --FAT_CLIENT_START--
   flet_audio.ensureInitialized();
+  flet_video.ensureInitialized();
+  // --FAT_CLIENT_END--
   flet_audio_recorder.ensureInitialized();
   flet_lottie.ensureInitialized();
   flet_rive.ensureInitialized();
-  flet_video.ensureInitialized();
   flet_webview.ensureInitialized();
-  // --FAT_CLIENT_END--
 
   var pageUrl = Uri.base.toString();
   var assetsDir = "";
@@ -93,12 +95,12 @@ void main([List<String>? args]) async {
     createControlFactories: [
 // --FAT_CLIENT_START--
       flet_audio.createControl,
+      flet_video.createControl,
+// --FAT_CLIENT_END--
       flet_audio_recorder.createControl,
       flet_lottie.createControl,
       flet_rive.createControl,
-      flet_video.createControl,
       flet_webview.createControl
-// --FAT_CLIENT_END--
     ],
   ));
 }
