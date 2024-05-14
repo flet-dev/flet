@@ -257,7 +257,7 @@ for:
       - pushd packages/flet-desktop
       - poetry build
       - sh: |
-          for file in "dist/*-py3-none-any.whl*; do
+          for file in dist/*-py3-none-any.whl; do
               arm64_wheel=$(echo "$file" | sed 's/-py3-none-any/-py3-none-macosx_12_0_arm64/')
               x86_64_wheel=$(echo "$file" | sed 's/-py3-none-any/-py3-none-macosx_10_14_x86_64/')
               cp "$file" "$arm64_wheel"
