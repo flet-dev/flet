@@ -73,9 +73,6 @@ environment:
     #     secure: 174ncAbF5IjSIkmioPt62jeSnzmTlRNchUkE4QdjDWH8xK1olYtySXLJpo2q95HcP7lWJky1hv4APESiRRHnBWoY0XRFafzM/mbCDMzG1tZXiXZmpP1qzHAtRP2QSCIg18xh1TMktraUdTi7sbJnjjRhqzgbW1k0kLBxKw79MPFBhYQ/TiGcmaYWZbWVZNY3HCUCb6Dt7bG1OE2Ul9rD1gvs55xwO9Oq9FOVA1VnMYw=
     #   TWINE_NON_INTERACTIVE: true
 
-install:
-- . ci/common.sh
-
 matrix:
   fast_finish: true
 
@@ -227,6 +224,7 @@ for:
         - job_name: Build Flet for macOS
 
     install:
+      - . ci/common.sh
       - python --version
       - pip install --upgrade setuptools wheel twine poetry tomlkit virtualenv
       - HOMEBREW_NO_AUTO_UPDATE=1 brew install cocoapods
@@ -382,6 +380,7 @@ for:
         - job_name: Build Flet for web
 
     install:
+      - . ci/common.sh
       - flutter upgrade --force
 
     build_script:
@@ -447,6 +446,7 @@ for:
         - job_group: python_build
 
     install:
+      - . ci/common.sh
       - python --version
       - pip install --upgrade setuptools wheel twine poetry tomlkit virtualenv
 
