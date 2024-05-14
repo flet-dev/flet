@@ -10,7 +10,6 @@ skip_commits:
 
 environment:
   python_stack: python 3.10
-  flet_sdk_root: $APPVEYOR_BUILD_FOLDER/sdk/python
   GITHUB_TOKEN:
     secure: 9SKIwc3VSfYJ5IChvNR74hQprJ0DRmcV9pPX+8KyE6IXIdfMsX6ikeUmMhJGRu3ztkZaF45jmU7Xn/6tauXQXhDBxK1N8kFHFSAnq6LjUXyhS0TZKX/H+jDozBeVbCXp
 
@@ -73,6 +72,10 @@ environment:
       TWINE_PASSWORD:
         secure: 174ncAbF5IjSIkmioPt62jeSnzmTlRNchUkE4QdjDWH8xK1olYtySXLJpo2q95HcP7lWJky1hv4APESiRRHnBWoY0XRFafzM/mbCDMzG1tZXiXZmpP1qzHAtRP2QSCIg18xh1TMktraUdTi7sbJnjjRhqzgbW1k0kLBxKw79MPFBhYQ/TiGcmaYWZbWVZNY3HCUCb6Dt7bG1OE2Ul9rD1gvs55xwO9Oq9FOVA1VnMYw=
       TWINE_NON_INTERACTIVE: true
+
+init:
+- export flet_sdk_root=$APPVEYOR_BUILD_FOLDER/sdk/python
+- echo $flet_sdk_root
 
 matrix:
   fast_finish: true
