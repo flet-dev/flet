@@ -106,7 +106,7 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
             # check if flet_view.app exists in a temp directory
             if not temp_flet_dir.exists():
                 # check if flet.tar.gz exists
-                gz_filename = "flet-macos-amd64.tar.gz"
+                gz_filename = "flet-macos.tar.gz"
                 tar_file = os.path.join(get_package_bin_dir(), gz_filename)
                 if not os.path.exists(tar_file):
                     tar_file = __download_flet_client(gz_filename)
