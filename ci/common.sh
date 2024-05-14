@@ -2,6 +2,9 @@ export root=$APPVEYOR_BUILD_FOLDER
 export flet_sdk_root=$root/sdk/python
 echo "flet_sdk_root: $flet_sdk_root"
 
+python --version
+pip install --upgrade setuptools wheel twine poetry tomlkit virtualenv
+
 function patch_python_package_versions() {
     PYPI_VER="${APPVEYOR_BUILD_VERSION/+/.dev}"
     sed -i -e "s/version = \"\"/version = \"$PYPI_VER\"/g" $flet_sdk_root/packages/flet-core/src/flet_core/version.py

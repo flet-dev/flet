@@ -225,8 +225,6 @@ for:
 
     install:
       - . ci/common.sh
-      - python --version
-      - pip install --upgrade setuptools wheel twine poetry tomlkit virtualenv
       - HOMEBREW_NO_AUTO_UPDATE=1 brew install cocoapods
       - flutter upgrade
       - flutter config --enable-macos-desktop
@@ -388,7 +386,6 @@ for:
       - pushd client
       - flutter build web --release
       - rm -rf build/web/canvaskit
-      - ls -alR build/web
       - cp -R build/web $flet_sdk_root/packages/flet-web/src/flet_web
       - popd
       - tar -czvf client/build/flet-web.tar.gz -C client/build/web .
@@ -447,8 +444,6 @@ for:
 
     install:
       - . ci/common.sh
-      - python --version
-      - pip install --upgrade setuptools wheel twine poetry tomlkit virtualenv
 
     test: off
 
