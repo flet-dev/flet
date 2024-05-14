@@ -10,7 +10,7 @@ skip_commits:
 
 environment:
   python_stack: python 3.10
-  flet_sdk_root: sdk/python
+  flet_sdk_root: $APPVEYOR_BUILD_FOLDER/sdk/python
   GITHUB_TOKEN:
     secure: 9SKIwc3VSfYJ5IChvNR74hQprJ0DRmcV9pPX+8KyE6IXIdfMsX6ikeUmMhJGRu3ztkZaF45jmU7Xn/6tauXQXhDBxK1N8kFHFSAnq6LjUXyhS0TZKX/H+jDozBeVbCXp
 
