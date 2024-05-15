@@ -46,7 +46,6 @@ class AutoComplete(Control):
         )
 
         def convert_event_data(e):
-            print(e.data)
             d = json.loads(e.data)
             return AutoCompleteSelectEvent(**d)
 

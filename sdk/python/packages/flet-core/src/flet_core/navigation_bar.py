@@ -6,6 +6,7 @@ from flet_core.border import Border
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
+from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
@@ -43,6 +44,7 @@ class NavigationDestination(Control):
         selected_icon: Optional[str] = None,
         selected_icon_content: Optional[Control] = None,
         bgcolor: Optional[str] = None,
+        page_controls: Optional[List[Control]] = None,
         #
         # Control
         #
@@ -60,6 +62,7 @@ class NavigationDestination(Control):
         self.__selected_icon_content: Optional[Control] = None
         self.selected_icon_content = selected_icon_content
         self.bgcolor = bgcolor
+        self.page_controls = page_controls
 
     def _get_control_name(self):
         return "navigationdestination"
@@ -111,6 +114,15 @@ class NavigationDestination(Control):
     @selected_icon_content.setter
     def selected_icon_content(self, value: Optional[Control]):
         self.__selected_icon_content = value
+
+    # page_controls
+    @property
+    def page_controls(self) -> Optional[List[Control]]:
+        return self.__page_controls
+
+    @page_controls.setter
+    def page_controls(self, value: Optional[List[Control]]):
+        self.__page_controls = value
 
     # label
     @property
@@ -241,6 +253,19 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         )
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
+
+        def convert_event_data(e):
+            if self.page and isinstance(
+                self.destinations[self.selected_index].page_controls, list
+            ):
+                self.page.controls = self.destinations[
+                    self.selected_index
+                ].page_controls
+                self.page.update()
+            return e
+
+        self.__on_change = EventHandler(convert_event_data)
+        self._add_event_handler("change", self.__on_change.get_handler())
 
         self.destinations = destinations
         self.selected_index = selected_index
@@ -386,4 +411,4 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     @on_change.setter
     def on_change(self, handler):
-        self._add_event_handler("change", handler)
+        self.__on_change.subscribe(handler)
