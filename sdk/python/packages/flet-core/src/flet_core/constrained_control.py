@@ -24,7 +24,6 @@ class ConstrainedControl(Control):
         disabled: Optional[bool] = None,
         data: Any = None,
         rtl: Optional[bool] = None,
-        auto_update: Optional[bool] = None,
         #
         # ConstrainedControl specific
         #
@@ -59,7 +58,6 @@ class ConstrainedControl(Control):
             disabled=disabled,
             data=data,
             rtl=rtl,
-            auto_update=auto_update,
         )
 
         self.key = key
