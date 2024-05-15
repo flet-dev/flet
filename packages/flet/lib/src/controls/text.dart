@@ -116,8 +116,9 @@ class TextControl extends StatelessWidget with FletStoreMixin {
                   textAlign: textAlign,
                 )
           : (spans.isNotEmpty)
-              ? RichText(
-                  text: TextSpan(text: text, style: style, children: spans),
+              ? Text.rich(
+                  TextSpan(text: text, style: style, children: spans),
+                  semanticsLabel: semanticsLabel,
                   maxLines: maxLines,
                   softWrap: !noWrap,
                   textAlign: textAlign,
