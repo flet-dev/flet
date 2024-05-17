@@ -374,10 +374,11 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     # indicator_thickness
     @property
     def indicator_thickness(self):
-        return self._get_attr("indicatorThickness", data_type="float", def_value=3.0)
+        return self._get_attr("indicatorThickness", data_type="float", def_value=2.0)
 
     @indicator_thickness.setter
     def indicator_thickness(self, value: OptionalNumber):
+        assert value is None or value > 0, "indicator_thickness must be greater than 0"
         self._set_attr("indicatorThickness", value)
 
     # divider_color
