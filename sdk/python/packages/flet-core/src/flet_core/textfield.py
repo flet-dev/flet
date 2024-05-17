@@ -314,6 +314,14 @@ class TextField(FormFieldControl, AdaptiveControl):
         ) and self.filled is None:
             self.filled = True  # required to display any of the above colors
 
+    def did_mount(self):
+        super().did_mount()
+        assert (
+            self.max_lines is None
+            or self.min_lines is None
+            or self.min_lines <= self.max_lines
+        ), "min_lines can't be greater than max_lines"
+
     def focus(self):
         self._set_attr_json("focus", str(time.time()))
         self.update()
@@ -371,6 +379,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     @min_lines.setter
     def min_lines(self, value: Optional[int]):
+        assert value is None or value > 0, "min_lines must be greater than 0"
         self._set_attr("minLines", value)
 
     # max_lines
@@ -380,6 +389,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     @max_lines.setter
     def max_lines(self, value: Optional[int]):
+        assert value is None or value > 0, "max_lines must be greater than 0"
         self._set_attr("maxLines", value)
 
     # max_length
@@ -389,6 +399,9 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     @max_length.setter
     def max_length(self, value: Optional[int]):
+        assert (
+            value is None or value == -1 or value > 0
+        ), "max_length must be either equal to -1 or greater than 0"
         self._set_attr("maxLength", value)
 
     # read_only
