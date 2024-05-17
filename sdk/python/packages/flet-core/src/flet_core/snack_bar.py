@@ -222,7 +222,7 @@ class SnackBar(Control):
     @behavior.setter
     def behavior(self, value: Optional[SnackBarBehavior]):
         self.__behavior = value
-        self._set_attr("behavior", value, SnackBarBehavior)
+        self._set_enum_attr("behavior", value, SnackBarBehavior)
 
     # dismissDirection
     @property

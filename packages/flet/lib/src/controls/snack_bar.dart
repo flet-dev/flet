@@ -67,6 +67,14 @@ class _SnackBarControlState extends State<SnackBarControl> {
             a.name.toLowerCase() ==
             widget.control.attrString("dismissDirection", "")!.toLowerCase(),
         orElse: () => DismissDirection.down);
+    var width = widget.control.attrDouble("width");
+    var margin = parseEdgeInsets(widget.control, "margin");
+
+    // required to avoid assertion errors
+    if (behavior != SnackBarBehavior.floating) {
+      margin = null;
+      width = null;
+    }
 
     return SnackBar(
         behavior: behavior,
@@ -85,9 +93,9 @@ class _SnackBarControlState extends State<SnackBarControl> {
             parentAdaptive: widget.parentAdaptive),
         backgroundColor: widget.control.attrColor("bgColor", context),
         action: action,
-        margin: parseEdgeInsets(widget.control, "margin"),
+        margin: margin,
         padding: parseEdgeInsets(widget.control, "padding"),
-        width: widget.control.attrDouble("width"),
+        width: width,
         elevation: widget.control.attrDouble("elevation"),
         duration:
             Duration(milliseconds: widget.control.attrInt("duration", 4000)!));
