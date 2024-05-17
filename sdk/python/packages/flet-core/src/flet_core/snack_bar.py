@@ -208,11 +208,15 @@ class SnackBar(Control):
     # action_overflow_threshold
     @property
     def action_overflow_threshold(self) -> OptionalNumber:
-        return self._get_attr("actionOverflowThreshold", data_type="float", def_value=0.25)
+        return self._get_attr(
+            "actionOverflowThreshold", data_type="float", def_value=0.25
+        )
 
     @action_overflow_threshold.setter
-    def action_overflow_threshold(self, value: OptionalNumber ):
-        assert value is None or 0 <= value <= 1, "action_overflow_threshold must be between 0 and 1 inclusive"
+    def action_overflow_threshold(self, value: OptionalNumber):
+        assert (
+            value is None or 0 <= value <= 1
+        ), "action_overflow_threshold must be between 0 and 1 inclusive"
         self._set_attr("actionOverflowThreshold", value)
 
     # behavior
