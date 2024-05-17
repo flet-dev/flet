@@ -207,7 +207,15 @@ class SegmentedButton(ConstrainedControl):
 
     def did_mount(self):
         super().did_mount()
-        assert len(self.__segments) > 0, "segments must have at minimum one Segment"
+        assert (
+            len(filter(lambda segment: segment.visible, self.__segments)) > 0
+        ), "segments must have at minimum one visible Segment"
+        assert (
+            len(self.selected) > 0 or self.allow_empty_selection
+        ), "allow_empty_selection must be True for selected to be empty"
+        assert (
+            len(self.selected) < 2 or self.allow_multiple_selection
+        ), "allow_multiple_selection must be True for selected to have more than one item"
 
     # style
     @property
