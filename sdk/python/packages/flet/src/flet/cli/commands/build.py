@@ -12,14 +12,15 @@ import urllib.request
 from pathlib import Path
 from typing import Optional
 
-import flet.version
 import yaml
+from packaging import version
+from rich import print
+
+import flet.version
 from flet.cli.commands.base import BaseCommand
 from flet.version import update_version
 from flet_core.utils import random_string, slugify
 from flet_runtime.utils import calculate_file_hash, copy_tree, is_windows
-from packaging import version
-from rich import print
 
 if is_windows():
     from ctypes import windll
@@ -335,8 +336,7 @@ class Command(BaseCommand):
             else python_app_path.joinpath(rel_out_dir)
         )
 
-        template_data = {}
-        template_data["out_dir"] = self.flutter_dir.name
+        template_data = {"out_dir": self.flutter_dir.name}
 
         project_name = slugify(
             options.project_name if options.project_name else python_app_path.name
