@@ -1,8 +1,9 @@
 from enum import Enum
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control, OptionalNumber
+from flet_core.padding import Padding
 from flet_core.ref import Ref
 from flet_core.types import MarginValue, PaddingValue, ClipBehavior
 
@@ -127,8 +128,10 @@ class SnackBar(Control):
     def before_update(self):
         super().before_update()
         self._set_attr_json("shape", self.__shape)
-        self._set_attr_json("margin", self.__margin)
         self._set_attr_json("padding", self.__padding)
+        if isinstance(self.__margin, Union[int, float, Padding]) and not self.width:
+            # margin and width cannot be set together - if width is set, margin is ignored
+            self._set_attr_json("margin", self.__margin)
 
     # open
     @property
@@ -205,10 +208,11 @@ class SnackBar(Control):
     # action_overflow_threshold
     @property
     def action_overflow_threshold(self) -> OptionalNumber:
-        return self._get_attr("actionOverflowThreshold", data_type="float")
+        return self._get_attr("actionOverflowThreshold", data_type="float", def_value=0.25)
 
     @action_overflow_threshold.setter
-    def action_overflow_threshold(self, value: OptionalNumber):
+    def action_overflow_threshold(self, value: OptionalNumber ):
+        assert value is None or 0 <= value <= 1, "action_overflow_threshold must be between 0 and 1 inclusive"
         self._set_attr("actionOverflowThreshold", value)
 
     # behavior
