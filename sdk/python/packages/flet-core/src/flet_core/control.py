@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 
 try:
     from typing import Literal
-except:
+except ImportError:
     from typing_extensions import Literal
 
 V = TypeVar("V", str, int, float, bool, Any)
