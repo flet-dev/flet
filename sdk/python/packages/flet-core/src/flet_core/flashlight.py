@@ -6,7 +6,7 @@ from flet_core.ref import Ref
 
 class Flashlight(Control):
     """
-    A control to use Flash Light. Works on iOS and Android. Based on torch_light Flutter widget (https://pub.dev/packages/torch_light).
+    A control to use FlashLight. Works on iOS and Android. Based on torch_light Flutter widget (https://pub.dev/packages/torch_light).
 
     Flashlight control is non-visual and should be added to `page.overlay` list.
 
@@ -18,9 +18,6 @@ class Flashlight(Control):
         flashLight = ft.Flashlight()
         page.overlay.append(flashLight)
         page.add(
-            ft.TextButton("On", on_click:lambda _: flashLight.turn_on()),
-            ft.TextButton("Off", on_click:lambda _: flashLight.turn_off()),
-            ft.TextButton("Off", on_click:lambda _: flashLight.off()),
             ft.TextButton("toggle", on_click: lambda _: flashlight.toggle())
         )
 
@@ -61,5 +58,5 @@ class Flashlight(Control):
 
     def toggle(self, wait_timeout: Optional[int] = 3) -> int:
         if self.turned_on:
-            return self.off(wait_timeout)
-        return self.on(wait_timeout)
+            return self.turn_off(wait_timeout)
+        return self.turn_on(wait_timeout)

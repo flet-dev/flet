@@ -5,13 +5,13 @@ import 'package:flet/flet.dart';
 import 'package:flutter/widgets.dart';
 import 'package:torch_light/torch_light.dart';
 
-class FlashControl extends StatefulWidget {
+class FlashlightControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final Widget? nextChild;
   final FletControlBackend backend;
 
-  const FlashControl(
+  const FlashlightControl(
       {super.key,
       required this.parent,
       required this.control,
@@ -19,10 +19,10 @@ class FlashControl extends StatefulWidget {
       required this.backend});
 
   @override
-  State<FlashControl> createState() => _FlashControlState();
+  State<FlashlightControl> createState() => _FlashlightControlState();
 }
 
-class _FlashControlState extends State<FlashControl> {
+class _FlashlightControlState extends State<FlashlightControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("FlashLightControl build: ${widget.control.id}");

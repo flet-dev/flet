@@ -1,11 +1,11 @@
 import "package:flet/flet.dart";
 
-import 'flash.dart';
+import 'flashlight.dart';
 
 CreateControlFactory createControl = (CreateControlArgs args) {
   switch (args.control.type) {
     case "flashlight":
-      return FlashControl(
+      return FlashlightControl(
           parent: args.parent,
           control: args.control,
           nextChild: args.nextChild,
