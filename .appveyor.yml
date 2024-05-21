@@ -231,9 +231,9 @@ for:
 
       # publish
       - ps: |
-        if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
-            twine upload packages\flet-desktop\dist\*
-        fi
+          if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
+              twine upload packages\flet-desktop\dist\*
+          fi
 
     test: off
 
