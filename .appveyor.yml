@@ -216,7 +216,7 @@ for:
       - cd build\windows\x64\runner
       - 7z a flet-windows.zip flet
       - mkdir %flet_sdk_root%\packages\flet-desktop\src\flet_desktop\app
-      - xcopy flet %flet_sdk_root%\packages\flet-desktop\src\flet_desktop\app\flet /s /e
+      - xcopy flet %flet_sdk_root%\packages\flet-desktop\src\flet_desktop\app\flet\ /s /e
 
       # install poetry env
       - cd %flet_sdk_root%
