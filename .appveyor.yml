@@ -191,7 +191,7 @@ for:
       - flutter upgrade --force
 
     build_script:
-      - ps: $env:flet_sdk_root="$env:APPVEYOR_BUILD_FOLDER/sdk/python"
+      - ps: $env:flet_sdk_root="$env:APPVEYOR_BUILD_FOLDER\sdk\python"
       # patch version
       - ps: |
           $ErrorActionPreference = "Stop"
