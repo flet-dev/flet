@@ -210,13 +210,36 @@ for:
       - ren build\windows\x64\runner\Release flet
       - cd build\windows\x64\runner
       - 7z a flet-windows.zip flet
+      - mkdir %flet_sdk_root%\packages\flet-desktop\src\flet_desktop\app
+      - robocopy flet %flet_sdk_root%\packages\flet-desktop\src\flet_desktop\app\flet
+
+      # install poetry env
+      - cd %flet_sdk_root%
+      - poetry install
+
+      # build "flet-desktop" package
+      - cd packages\flet-desktop
+      - poetry build
+      - ps: |
+          Get-ChildItem -Path dist/*-py3-none-any.whl | ForEach-Object {
+              $win64_wheel = $_.Name -replace "-py3-none-any", "-py3-none-win_amd64"
+              $win32_wheel = $_.Name -replace "-py3-none-any", "-py3-none-win32"
+              Copy-Item $_.FullName $win64_wheel
+              Move-Item $_.FullName $win32_wheel
+          }
       - cd %APPVEYOR_BUILD_FOLDER%
+
+      # publish
+      - ps: |
+        if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
+            twine upload packages\flet-desktop\dist\*
+        fi
 
     test: off
 
     artifacts:
       - path: client\build\windows\x64\runner\flet-windows.zip
-        name: flet_windows
+      - path: sdk\python\packages\flet-desktop\dist\*.whl
 
     deploy:
       provider: GitHub
