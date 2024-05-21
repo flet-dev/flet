@@ -15,6 +15,10 @@ function patch_python_package_versions() {
     python3 ci/patch_toml_versions.py $flet_sdk_root/packages/flet-web/pyproject.toml $PYPI_VER
 }
 
+function patch_flet_desktop_package_name() {
+    python3 ci/patch_toml_package_name.py $flet_sdk_root/packages/flet-desktop/pyproject.toml $1
+}
+
 function publish_to_pypi() {
     if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
         twine upload "$@"

@@ -18,29 +18,38 @@ environment:
     #   job_group: build_flet_package
     #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    - job_name: Build Flet for Windows
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+    # - job_name: Build Flet for Windows
+    #   job_group: build_flet
+    #   job_depends_on: build_flet_package
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
 
     # - job_name: Build Flet for macOS
     #   job_group: build_flet
     #   job_depends_on: build_flet_package
     #   APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
-    # - job_name: Build Flet for Linux
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    - job_name: Build Flet for Linux
+      job_group: build_flet_linux
+      job_depends_on: build_flet_package
+      ARCH: amd64
+      PACKAGE_NAME: flet-desktop
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+
+    - job_name: Build Flet Light for Linux
+      job_group: build_flet_linux
+      job_depends_on: build_flet_package
+      ARCH: amd64
+      PACKAGE_NAME: flet-desktop-light
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
     # - job_name: Build Flet for Linux ARM64
-    #   job_group: build_flet
+    #   job_group: build_flet_linux
     #   job_depends_on: build_flet_package
     #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
     #   python_stack: ""
 
     # - job_name: Build Flet for web
-    #   job_group: build_flet
+    #   job_group: build_flet_linux
     #   job_depends_on: build_flet_package
     #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
@@ -318,34 +327,79 @@ for:
 
   - matrix:
       only:
-        - job_name: Build Flet for Linux
+        - job_group: build_flet_linux
 
     install:
       - sudo apt update --allow-releaseinfo-change
       - sudo apt install -y libmpv-dev mpv libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
+      - sh: |
+          if [[ ("$ARCH" == "arm64" ]]; then
+            git clone https://github.com/flutter/flutter.git -b stable "$HOME/flutter"
+            export PATH="$PATH:$HOME/flutter/bin"
+          fi
       - flutter upgrade --force
 
     build_script:
       - cd client
 
-      # FAT client
-      - flutter build linux --build-name=$APPVEYOR_BUILD_VERSION
-      - mv build/linux/x64/release/bundle build/linux/x64/release/flet
-      - tar -czvf flet-linux-amd64.tar.gz -C build/linux/x64/release flet
+      # build client
+      - sh: |
+          if [[ "$ARCH" == "amd64" ]]; then
+              build_arch="x64"
+              platform_arch="x86_64"
+              wheel_tags=(
+                "py3-none-manylinux_2_17_x86_64"
+                "py3-none-manylinux2014_x86_64"
+                "py3-none-musllinux_1_2_x86_64"
+              )
+          else
+              build_arch="arm64"
+              platform_arch="aarch64"
+              wheel_tags=(
+                "py3-none-manylinux_2_17_aarch64"
+                "py3-none-manylinux2014_aarch64"
+              )
+          fi
 
-      # THIN client
-      - flutter clean
-      - sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' pubspec.yaml
-      - sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' lib/main.dart
+      - sh: |
+          if [[ "$PACKAGE_NAME" == "flet-desktop-light" ]]; then
+            sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' pubspec.yaml
+            sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' lib/main.dart
+            patch_flet_desktop_package_name "flet-desktop-light"
+            artifact_suffix="-light"
+          fi
       - flutter build linux --build-name=$APPVEYOR_BUILD_VERSION
-      - mv build/linux/x64/release/bundle build/linux/x64/release/flet
-      - tar -czvf flet-linux-thin-amd64.tar.gz -C build/linux/x64/release flet
+      - mv build/linux/$build_arch/release/bundle build/linux/$build_arch/release/flet
+      - tar -czvf flet-linux$artifact_suffix-$ARCH.tar.gz -C build/linux/$build_arch/release flet
+      - mkdir -p $flet_sdk_root/packages/flet-desktop/src/flet_desktop/app
+      - cp flet-linux$artifact_suffix-$ARCH.tar.gz $flet_sdk_root/packages/flet-desktop/src/flet_desktop/app/flet-linux-$ARCH.tar.gz
+
+      # Python package
+      - patch_python_package_versions
+
+      # install poetry env
+      - cd $flet_sdk_root
+      - poetry install
+
+      # build "flet-desktop" package
+      - pushd packages/flet-desktop
+      - poetry build
+      - sh: |
+          for file in dist/*-py3-none-any.whl; do
+            for tag in "${wheel_tags[@]}"; do
+              wheel=$(echo "$file" | sed "s/-py3-none-any/-$tag/")
+              cp "$file" "$wheel"
+            done
+            rm "$file"
+          done
+      - popd
+
+      # publish
+      - publish_to_pypi packages/flet-desktop/dist/*
 
     artifacts:
-      - path: client/flet-linux-amd64.tar.gz
-        name: flet_linux_amd64
-      - path: client/flet-linux-thin-amd64.tar.gz
-        name: flet_linux_thin_amd64
+      - path: client/flet-linux$artifact_suffix-$ARCH.tar.gz
+      - path: sdk/python/packages/flet-desktop/dist/*.whl
 
     deploy:
       provider: GitHub
@@ -370,7 +424,6 @@ for:
       - git clone https://github.com/flutter/flutter.git -b stable "$HOME/flutter"
       - export PATH="$PATH:$HOME/flutter/bin"
       - flutter upgrade
-      - flutter doctor
 
       # Fix Flutter on ARM
       - pushd /tmp
