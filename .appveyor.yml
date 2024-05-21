@@ -233,11 +233,12 @@ for:
               Move-Item $_.FullName $win32_wheel
           }
       - cd %APPVEYOR_BUILD_FOLDER%
+      - dir %flet_sdk_root%\packages\flet-desktop\dist
 
       # publish
       - ps: |
           if (($env:APPVEYOR_REPO_BRANCH -eq "main" -or $env:APPVEYOR_REPO_TAG_NAME) -and (-not $env:APPVEYOR_PULL_REQUEST_NUMBER)) {
-              twine upload packages\flet-desktop\dist\*
+              twine upload %flet_sdk_root%\packages\flet-desktop\dist\*
           }
 
     test: off
