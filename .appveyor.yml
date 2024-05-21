@@ -229,8 +229,8 @@ for:
           Get-ChildItem -Path dist/*-py3-none-any.whl | ForEach-Object {
               $win64_wheel = $_.Name -replace "-py3-none-any", "-py3-none-win_amd64"
               $win32_wheel = $_.Name -replace "-py3-none-any", "-py3-none-win32"
-              Copy-Item $_.FullName $win64_wheel
-              Move-Item $_.FullName $win32_wheel
+              Copy-Item $_.FullName dist/$win64_wheel
+              Move-Item $_.FullName dist/$win32_wheel
           }
       - cd %APPVEYOR_BUILD_FOLDER%
       - dir %flet_sdk_root%\packages\flet-desktop\dist
