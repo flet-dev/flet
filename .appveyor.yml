@@ -201,8 +201,13 @@ for:
       - python ci/patch_toml_versions.py %flet_sdk_root%/packages/flet-core/pyproject.toml %PYPI_VER%
 
       - cd client
-      - flutter build windows --build-name=%APPVEYOR_BUILD_VERSION%
       - set RELEASE_DIR=build\windows\x64\runner\Release
+      #- flutter build windows --build-name=%APPVEYOR_BUILD_VERSION%
+      - mkdir %RELEASE_DIR%
+      - mkdir %RELEASE_DIR%\data
+      - echo "Test!" > %RELEASE_DIR%\flet.bat
+      - echo "Another thest!" > %RELEASE_DIR%\data\something.txt
+
       - copy "%WINDIR%\system32\msvcp140.dll" %RELEASE_DIR%
       - copy "%WINDIR%\system32\vcruntime140.dll" %RELEASE_DIR%
       - copy "%WINDIR%\system32\vcruntime140_1.dll" %RELEASE_DIR%
@@ -211,7 +216,7 @@ for:
       - cd build\windows\x64\runner
       - 7z a flet-windows.zip flet
       - mkdir %flet_sdk_root%\packages\flet-desktop\src\flet_desktop\app
-      - robocopy flet %flet_sdk_root%\packages\flet-desktop\src\flet_desktop\app\flet /s /e
+      - xcopy flet %flet_sdk_root%\packages\flet-desktop\src\flet_desktop\app\flet /s /e
 
       # install poetry env
       - cd %flet_sdk_root%
