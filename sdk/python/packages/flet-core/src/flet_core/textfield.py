@@ -2,9 +2,10 @@ import dataclasses
 import time
 from dataclasses import field
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, List
 
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.autofill_group import AutofillHint
 from flet_core.control import Control, OptionalNumber
 from flet_core.form_field_control import FormFieldControl, InputBorder
 from flet_core.ref import Ref
@@ -27,21 +28,6 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-KeyboardTypeString = Literal[
-    None,
-    "text",
-    "multiline",
-    "number",
-    "phone",
-    "datetime",
-    "email",
-    "url",
-    "visiblePassword",
-    "name",
-    "streetAddress",
-    "none",
-]
-
 
 class KeyboardType(Enum):
     NONE = "none"
@@ -57,11 +43,7 @@ class KeyboardType(Enum):
     STREET_ADDRESS = "streetAddress"
 
 
-TextCapitalizationString = Literal[None, "none", "characters", "words", "sentences"]
-
-
 class TextCapitalization(Enum):
-    NONE = None
     CHARACTERS = "characters"
     WORDS = "words"
     SENTENCES = "sentences"
@@ -76,12 +58,12 @@ class InputFilter:
 
 class NumbersOnlyInputFilter(InputFilter):
     def __init__(self):
-        super().__init__(r"[0-9]")
+        super().__init__(regex_string=r"[0-9]")
 
 
 class TextOnlyInputFilter(InputFilter):
     def __init__(self):
-        super().__init__(r"[a-zA-Z]")
+        super().__init__(regex_string=r"[a-zA-Z]")
 
 
 class TextField(FormFieldControl, AdaptiveControl):
@@ -126,9 +108,9 @@ class TextField(FormFieldControl, AdaptiveControl):
         can_reveal_password: Optional[bool] = None,
         read_only: Optional[bool] = None,
         shift_enter: Optional[bool] = None,
-        text_align: TextAlign = TextAlign.NONE,
+        text_align: Optional[TextAlign] = None,
         autofocus: Optional[bool] = None,
-        capitalization: TextCapitalization = TextCapitalization.NONE,
+        capitalization: Optional[TextCapitalization] = None,
         autocorrect: Optional[bool] = None,
         enable_suggestions: Optional[bool] = None,
         smart_dashes_type: Optional[bool] = None,
@@ -140,6 +122,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         cursor_radius: OptionalNumber = None,
         selection_color: Optional[str] = None,
         input_filter: Optional[InputFilter] = None,
+        autofill_hints: Union[None, AutofillHint, List[AutofillHint]] = None,
         on_change=None,
         on_submit=None,
         on_focus=None,
@@ -166,6 +149,8 @@ class TextField(FormFieldControl, AdaptiveControl):
         content_padding: PaddingValue = None,
         dense: Optional[bool] = None,
         filled: Optional[bool] = None,
+        fill_color: Optional[str] = None,
+        hover_color: Optional[str] = None,
         hint_text: Optional[str] = None,
         hint_style: Optional[TextStyle] = None,
         helper_text: Optional[str] = None,
@@ -259,6 +244,8 @@ class TextField(FormFieldControl, AdaptiveControl):
             content_padding=content_padding,
             dense=dense,
             filled=filled,
+            fill_color=fill_color,
+            hover_color=hover_color,
             hint_text=hint_text,
             hint_style=hint_style,
             helper_text=helper_text,
@@ -304,6 +291,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self.cursor_radius = cursor_radius
         self.selection_color = selection_color
         self.input_filter = input_filter
+        self.autofill_hints = autofill_hints
         self.on_change = on_change
         self.on_submit = on_submit
         self.on_focus = on_focus
@@ -315,8 +303,16 @@ class TextField(FormFieldControl, AdaptiveControl):
     def before_update(self):
         super().before_update()
         self._set_attr_json("inputFilter", self.__input_filter)
-        if self.bgcolor is not None and self.filled is None:
-            self.filled = True  # Flutter requires filled = True to display a bgcolor
+        self._set_attr_json("autofillHints", self.__autofill_hints)
+        if (
+            (
+                self.bgcolor is not None
+                or self.fill_color is not None
+                or self.hover_color is not None
+                or self.focused_color is not None
+            )
+        ) and self.filled is None:
+            self.filled = True  # required to display any of the above colors
 
     def focus(self):
         self._set_attr_json("focus", str(time.time()))
@@ -347,21 +343,17 @@ class TextField(FormFieldControl, AdaptiveControl):
     @keyboard_type.setter
     def keyboard_type(self, value: Optional[KeyboardType]):
         self.__keyboard_type = value
-        self._set_attr(
-            "keyboardType", value.value if isinstance(value, KeyboardType) else value
-        )
+        self._set_enum_attr("keyboardType", value, KeyboardType)
 
     # text_align
     @property
-    def text_align(self) -> TextAlign:
+    def text_align(self) -> Optional[TextAlign]:
         return self.__text_align
 
     @text_align.setter
-    def text_align(self, value: TextAlign):
+    def text_align(self, value: Optional[TextAlign]):
         self.__text_align = value
-        self._set_attr(
-            "textAlign", value.value if isinstance(value, TextAlign) else value
-        )
+        self._set_enum_attr("textAlign", value, TextAlign)
 
     # multiline
     @property
@@ -452,10 +444,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     @capitalization.setter
     def capitalization(self, value: TextCapitalization):
         self.__capitalization = value
-        self._set_attr(
-            "capitalization",
-            value.value if isinstance(value, TextCapitalization) else value,
-        )
+        self._set_enum_attr("capitalization", value, TextCapitalization)
 
     # autocorrect
     @property
@@ -555,6 +544,25 @@ class TextField(FormFieldControl, AdaptiveControl):
     @input_filter.setter
     def input_filter(self, value: Optional[InputFilter]):
         self.__input_filter = value
+
+    # autofill_hints
+    @property
+    def autofill_hints(self) -> Union[None, AutofillHint, List[AutofillHint]]:
+        return self.__autofill_hints
+
+    @autofill_hints.setter
+    def autofill_hints(self, value: Union[None, AutofillHint, List[AutofillHint]]):
+        if value is not None:
+            if isinstance(value, List):
+                value = list(
+                    map(
+                        lambda x: x.value if isinstance(x, AutofillHint) else str(x),
+                        value,
+                    )
+                )
+            elif isinstance(value, AutofillHint):
+                value = value.value
+        self.__autofill_hints = value
 
     # on_change
     @property

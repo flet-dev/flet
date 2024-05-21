@@ -1,3 +1,4 @@
+import warnings
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
@@ -16,7 +17,8 @@ class CircleAvatar(ConstrainedControl):
     """
     A circle that represents a user.
 
-    If `foreground_image_url` fails then `background_image_url` is used. If `background_image_url` fails too, `bgcolor` is used.
+    If `foreground_image_src` fails then `background_image_src` is used. If `background_image_src` fails too,
+    then `bgcolor` is used.
 
     Example:
     ```
@@ -25,12 +27,12 @@ class CircleAvatar(ConstrainedControl):
     def main(page):
         # a "normal" avatar with background image
         a1 = ft.CircleAvatar(
-            foreground_image_url="https://avatars.githubusercontent.com/u/5041459?s=88&v=4",
+            foreground_image_src="https://avatars.githubusercontent.com/u/5041459?s=88&v=4",
             content=ft.Text("FF"),
         )
         # avatar with failing foreground image and fallback text
         a2 = ft.CircleAvatar(
-            foreground_image_url="https://avatars.githubusercontent.com/u/_5041459?s=88&v=4",
+            foreground_image_src="https://avatars.githubusercontent.com/u/_5041459?s=88&v=4",
             content=ft.Text("FF"),
         )
         # avatar with icon, aka icon with inverse background
@@ -47,7 +49,7 @@ class CircleAvatar(ConstrainedControl):
         a5 = ft.Stack(
             [
                 ft.CircleAvatar(
-                    foreground_image_url="https://avatars.githubusercontent.com/u/5041459?s=88&v=4"
+                    foreground_image_src="https://avatars.githubusercontent.com/u/5041459?s=88&v=4"
                 ),
                 ft.Container(
                     content=ft.CircleAvatar(bgcolor=ft.colors.GREEN, radius=5),
@@ -73,11 +75,14 @@ class CircleAvatar(ConstrainedControl):
         content: Optional[Control] = None,
         foreground_image_url: Optional[str] = None,
         background_image_url: Optional[str] = None,
+        foreground_image_src: Optional[str] = None,
+        background_image_src: Optional[str] = None,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
         radius: OptionalNumber = None,
         min_radius: OptionalNumber = None,
         max_radius: OptionalNumber = None,
+        on_image_error=None,
         #
         # ConstrainedControl
         #
@@ -142,83 +147,130 @@ class CircleAvatar(ConstrainedControl):
 
         self.foreground_image_url = foreground_image_url
         self.background_image_url = background_image_url
+        self.foreground_image_src = foreground_image_src
+        self.background_image_src = background_image_src
         self.radius = radius
         self.min_radius = min_radius
         self.max_radius = max_radius
         self.color = color
         self.bgcolor = bgcolor
         self.content = content
+        self.on_image_error = on_image_error
 
     def _get_control_name(self):
         return "circleavatar"
 
     def _get_children(self):
-        if self.__content is None:
-            return []
-        self.__content._set_attr_internal("n", "content")
-        return [self.__content]
+        if self.__content is not None:
+            self.__content._set_attr_internal("n", "content")
+            return [self.__content]
+        return []
 
     # foreground_image_url
     @property
-    def foreground_image_url(self):
+    def foreground_image_url(self) -> Optional[str]:
+        warnings.warn(
+            f"foreground_image_url is deprecated since version 0.22.0 "
+            f"and will be removed in version 1.0. Use foreground_image_src instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
         return self._get_attr("foregroundImageUrl")
 
     @foreground_image_url.setter
-    def foreground_image_url(self, value):
+    def foreground_image_url(self, value: Optional[str]):
         self._set_attr("foregroundImageUrl", value)
+        if value is not None:
+            warnings.warn(
+                f"foreground_image_url is deprecated since version 0.22.0 "
+                f"and will be removed in version 1.0. Use foreground_image_src instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
 
     # background_image_url
     @property
-    def background_image_url(self):
+    def background_image_url(self) -> Optional[str]:
+        warnings.warn(
+            f"background_image_url is deprecated since version 0.22.0 "
+            f"and will be removed in version 1.0. Use background_image_src instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
         return self._get_attr("backgroundImageUrl")
 
     @background_image_url.setter
-    def background_image_url(self, value):
+    def background_image_url(self, value: Optional[str]):
         self._set_attr("backgroundImageUrl", value)
+        if value is not None:
+            warnings.warn(
+                f"background_image_url is deprecated since version 0.22.0 "
+                f"and will be removed in version 1.0. Use background_image_src instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
+
+    # foreground_image_src
+    @property
+    def foreground_image_src(self) -> Optional[str]:
+        return self._get_attr("foregroundImageSrc")
+
+    @foreground_image_src.setter
+    def foreground_image_src(self, value: Optional[str]):
+        self._set_attr("foregroundImageSrc", value)
+
+    # background_image_src
+    @property
+    def background_image_src(self) -> Optional[str]:
+        return self._get_attr("backgroundImageSrc")
+
+    @background_image_src.setter
+    def background_image_src(self, value: Optional[str]):
+        self._set_attr("backgroundImageSrc", value)
 
     # radius
     @property
-    def radius(self):
-        return self._get_attr("radius")
+    def radius(self) -> OptionalNumber:
+        return self._get_attr("radius", data_type="float")
 
     @radius.setter
-    def radius(self, value):
+    def radius(self, value: OptionalNumber):
         self._set_attr("radius", value)
 
     # min_radius
     @property
-    def min_radius(self):
-        return self._get_attr("minRadius")
+    def min_radius(self) -> OptionalNumber:
+        return self._get_attr("minRadius", data_type="float")
 
     @min_radius.setter
-    def min_radius(self, value):
+    def min_radius(self, value: OptionalNumber):
         self._set_attr("minRadius", value)
 
     # max_radius
     @property
-    def max_radius(self):
-        return self._get_attr("maxRadius")
+    def max_radius(self) -> OptionalNumber:
+        return self._get_attr("maxRadius", data_type="float")
 
     @max_radius.setter
-    def max_radius(self, value):
+    def max_radius(self, value: OptionalNumber):
         self._set_attr("maxRadius", value)
 
     # color
     @property
-    def color(self):
+    def color(self) -> Optional[str]:
         return self._get_attr("color")
 
     @color.setter
-    def color(self, value):
+    def color(self, value: Optional[str]):
         self._set_attr("color", value)
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # content
@@ -229,3 +281,12 @@ class CircleAvatar(ConstrainedControl):
     @content.setter
     def content(self, value: Optional[Control]):
         self.__content = value
+
+    # on_image_error
+    @property
+    def on_image_error(self):
+        return self._get_event_handler("imageError")
+
+    @on_image_error.setter
+    def on_image_error(self, handler):
+        self._add_event_handler("imageError", handler)

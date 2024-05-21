@@ -86,13 +86,13 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
     var swtch = CupertinoSwitch(
         autofocus: autofocus,
         focusNode: _focusNode,
-        activeColor: HexColor.fromString(
-            Theme.of(context), widget.control.attrString("activeColor", "")!),
+        activeColor: widget.control.attrColor("activeColor", context),
         thumbColor: materialThumbColor?.resolve({}),
         trackColor: materialTrackColor?.resolve({}),
-        focusColor: HexColor.fromString(
-            Theme.of(context), widget.control.attrString("focusColor", "")!),
+        focusColor: widget.control.attrColor("focusColor", context),
         value: _value,
+        offLabelColor: widget.control.attrColor("offLabelColor", context),
+        onLabelColor: widget.control.attrColor("onLabelColor", context),
         onChanged: !disabled
             ? (bool value) {
                 _onChange(value);

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../utils/colors.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
@@ -86,13 +85,11 @@ class TextControl extends StatelessWidget with FletStoreMixin {
             : null,
         fontFamily: control.attrString("fontFamily"),
         fontVariations: variations,
-        color: HexColor.fromString(
-                Theme.of(context), control.attrString("color", "")!) ??
+        color: control.attrColor("color", context) ??
             (spans.isNotEmpty
                 ? DefaultTextStyle.of(context).style.color
                 : null),
-        backgroundColor: HexColor.fromString(
-            Theme.of(context), control.attrString("bgcolor", "")!),
+        backgroundColor: control.attrColor("bgcolor", context),
       );
 
       TextAlign textAlign = parseTextAlign(
@@ -119,8 +116,9 @@ class TextControl extends StatelessWidget with FletStoreMixin {
                   textAlign: textAlign,
                 )
           : (spans.isNotEmpty)
-              ? RichText(
-                  text: TextSpan(text: text, style: style, children: spans),
+              ? Text.rich(
+                  TextSpan(text: text, style: style, children: spans),
+                  semanticsLabel: semanticsLabel,
                   maxLines: maxLines,
                   softWrap: !noWrap,
                   textAlign: textAlign,

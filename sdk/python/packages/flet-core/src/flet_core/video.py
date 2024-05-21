@@ -63,7 +63,7 @@ class Video(ConstrainedControl):
 
     def __init__(
         self,
-        playlist: Union[List[VideoMedia], None] = None,
+        playlist: Optional[List[VideoMedia]] = None,
         title: Optional[str] = None,
         fit: Optional[ImageFit] = None,
         fill_color: Optional[str] = None,
@@ -175,7 +175,7 @@ class Video(ConstrainedControl):
         super().before_update()
         self._set_attr_json("alignment", self.__alignment)
         self._set_attr_json("playlist", self.__playlist if self.__playlist else None)
-        if dataclasses.is_dataclass(self.__subtitle_configuration):
+        if isinstance(self.__subtitle_configuration, VideoSubtitleConfiguration):
             self._set_attr_json("subtitleConfiguration", self.__subtitle_configuration)
 
     def play(self):
@@ -518,9 +518,7 @@ class Video(ConstrainedControl):
     @filter_quality.setter
     def filter_quality(self, value: Optional[FilterQuality]):
         self.__filter_quality = value
-        self._set_attr(
-            "filterQuality", value.value if isinstance(value, FilterQuality) else value
-        )
+        self._set_enum_attr("filterQuality", value, FilterQuality)
 
     # playlist_mode
     @property
@@ -530,10 +528,7 @@ class Video(ConstrainedControl):
     @playlist_mode.setter
     def playlist_mode(self, value: Optional[PlaylistMode]):
         self.__playlist_mode = value
-        self._set_attr(
-            "playlistMode",
-            value.value if isinstance(value, PlaylistMode) else value,
-        )
+        self._set_enum_attr("playlistMode", value, PlaylistMode)
 
     # on_enter_fullscreen
     @property

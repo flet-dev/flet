@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -41,14 +39,12 @@ class _CupertinoSlidingSegmentedButtonControlState
     bool? adaptive =
         widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
 
-    var thumbColor = HexColor.fromString(
-            Theme.of(context), widget.control.attrString("thumbColor", "")!) ??
+    var thumbColor = widget.control.attrColor("thumbColor", context) ??
         const CupertinoDynamicColor.withBrightness(
           color: Color(0xFFFFFFFF),
           darkColor: Color(0xFF636366),
         );
-    var bgColor = HexColor.fromString(
-            Theme.of(context), widget.control.attrString("bgColor", "")!) ??
+    var bgColor = widget.control.attrColor("bgColor", context) ??
         CupertinoColors.tertiarySystemFill;
     List<Control> ctrls = widget.children.where((c) => c.isVisible).toList();
     int? selectedIndex = widget.control.attrInt("selectedIndex");
@@ -57,8 +53,8 @@ class _CupertinoSlidingSegmentedButtonControlState
             const EdgeInsets.symmetric(vertical: 2, horizontal: 3);
 
     if (ctrls.length < 2) {
-      return const ErrorControl("When allow_empty_selection is False, "
-          "the selected property must contain at least one value.");
+      return const ErrorControl(
+          "CupertinoSlidingSegmentedButton must have at least two controls.");
     }
     Map<int, Widget> children = ctrls.asMap().map((i, c) => MapEntry(
         i,

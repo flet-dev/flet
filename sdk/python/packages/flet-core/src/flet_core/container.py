@@ -28,6 +28,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     ThemeMode,
+    UrlTarget,
 )
 
 
@@ -61,6 +62,39 @@ class Container(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         content: Optional[Control] = None,
+        padding: PaddingValue = None,
+        margin: MarginValue = None,
+        alignment: Optional[Alignment] = None,
+        bgcolor: Optional[str] = None,
+        gradient: Optional[Gradient] = None,
+        blend_mode: Optional[BlendMode] = None,
+        border: Optional[Border] = None,
+        border_radius: BorderRadiusValue = None,
+        image_src: Optional[str] = None,
+        image_src_base64: Optional[str] = None,
+        image_repeat: Optional[ImageRepeat] = None,
+        image_fit: Optional[ImageFit] = None,
+        image_opacity: OptionalNumber = None,
+        shape: Optional[BoxShape] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        ink: Optional[bool] = None,
+        ink_color: Optional[str] = None,
+        animate: AnimationValue = None,
+        blur: Union[
+            None, float, int, Tuple[Union[float, int], Union[float, int]], Blur
+        ] = None,
+        shadow: Union[None, BoxShadow, List[BoxShadow]] = None,
+        url: Optional[str] = None,
+        url_target: Optional[UrlTarget] = None,
+        theme: Optional[Theme] = None,
+        theme_mode: Optional[ThemeMode] = None,
+        on_click=None,
+        on_tap_down=None,
+        on_long_press=None,
+        on_hover=None,
+        #
+        # ConstrainedControl and AdaptiveControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -89,41 +123,6 @@ class Container(ConstrainedControl, AdaptiveControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         rtl: Optional[bool] = None,
-        #
-        # Specific
-        #
-        padding: PaddingValue = None,
-        margin: MarginValue = None,
-        alignment: Optional[Alignment] = None,
-        bgcolor: Optional[str] = None,
-        gradient: Optional[Gradient] = None,
-        blend_mode: BlendMode = BlendMode.NONE,
-        border: Optional[Border] = None,
-        border_radius: BorderRadiusValue = None,
-        image_src: Optional[str] = None,
-        image_src_base64: Optional[str] = None,
-        image_repeat: Optional[ImageRepeat] = None,
-        image_fit: Optional[ImageFit] = None,
-        image_opacity: OptionalNumber = None,
-        shape: Optional[BoxShape] = None,
-        clip_behavior: Optional[ClipBehavior] = None,
-        ink: Optional[bool] = None,
-        ink_color: Optional[str] = None,
-        animate: AnimationValue = None,
-        blur: Union[
-            None, float, int, Tuple[Union[float, int], Union[float, int]], Blur
-        ] = None,
-        shadow: Union[None, BoxShadow, List[BoxShadow]] = None,
-        url: Optional[str] = None,
-        url_target: Optional[str] = None,
-        theme: Optional[Theme] = None,
-        theme_mode: Optional[ThemeMode] = None,
-        on_click=None,
-        on_long_press=None,
-        on_hover=None,
-        #
-        # Adaptive
-        #
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -164,8 +163,8 @@ class Container(ConstrainedControl, AdaptiveControl):
             d = json.loads(e.data)
             return ContainerTapEvent(**d)
 
-        self.__on_click = EventHandler(convert_container_tap_event_data)
-        self._add_event_handler("click", self.__on_click.get_handler())
+        self.__on_tap_down = EventHandler(convert_container_tap_event_data)
+        self._add_event_handler("tap_down", self.__on_tap_down.get_handler())
 
         self.content = content
         self.padding = padding
@@ -193,6 +192,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.theme = theme
         self.theme_mode = theme_mode
         self.on_click = on_click
+        self.on_tap_down = on_tap_down
         self.on_long_press = on_long_press
         self.on_hover = on_hover
 
@@ -271,11 +271,11 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # blend_mode
     @property
-    def blend_mode(self) -> BlendMode:
+    def blend_mode(self) -> Optional[BlendMode]:
         return self.__blend_mode
 
     @blend_mode.setter
-    def blend_mode(self, value: BlendMode):
+    def blend_mode(self, value: Optional[BlendMode]):
         self.__blend_mode = value
         self._set_attr(
             "blendMode", value.value if isinstance(value, BlendMode) else value
@@ -390,7 +390,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @shape.setter
     def shape(self, value: Optional[BoxShape]):
         self.__shape = value
-        self._set_attr("shape", value.value if value is not None else None)
+        self._set_attr("shape", value.value if isinstance(value, BoxShape) else value)
 
     # clip_behavior
     @property
@@ -442,12 +442,15 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # url_target
     @property
-    def url_target(self):
-        return self._get_attr("urlTarget")
+    def url_target(self) -> Optional[UrlTarget]:
+        return self.__url_target
 
     @url_target.setter
-    def url_target(self, value):
-        self._set_attr("urlTarget", value)
+    def url_target(self, value: Optional[UrlTarget]):
+        self.__url_target = value
+        self._set_attr(
+            "urlTarget", value.value if isinstance(value, UrlTarget) else value
+        )
 
     # theme
     @property
@@ -466,18 +469,29 @@ class Container(ConstrainedControl, AdaptiveControl):
     @theme_mode.setter
     def theme_mode(self, value: Optional[ThemeMode]):
         self.__theme_mode = value
-        self._set_attr("themeMode", value.value if value is not None else None)
+        self._set_attr(
+            "themeMode", value.value if isinstance(value, ThemeMode) else value
+        )
 
     # on_click
     @property
     def on_click(self):
-        return self.__on_click
+        return self._get_event_handler("click")
 
     @on_click.setter
     def on_click(self, handler):
-        self.__on_click.subscribe(handler)
+        self._add_event_handler("click", handler)
         self._set_attr("onClick", True if handler is not None else None)
 
+    # on_tap_down
+    @property
+    def on_tap_down(self):
+        return self.__on_tap_down
+
+    @on_tap_down.setter
+    def on_tap_down(self, handler):
+        self.__on_tap_down.subscribe(handler)
+        self._set_attr("onTapDown", True if handler is not None else None)
 
     # on_long_press
     @property

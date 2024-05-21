@@ -27,6 +27,7 @@ def app(
     use_color_emoji: bool = False,
     route_url_strategy: str = "path",
     upload_dir: Optional[str] = None,
+    upload_endpoint_path: Optional[str] = None,
     max_upload_size: Optional[int] = None,
     secret_key: Optional[str] = None,
     session_timeout_seconds: int = DEFAULT_FLET_SESSION_TIMEOUT,
@@ -36,8 +37,7 @@ def app(
     Mount all Flet FastAPI handlers in one call.
 
     Parameters:
-    * `fastapi_app` (FastAPI) - FastAPI application instance.
-    * `session_handler` (Coroutine) - application entry point - an async method called for newly connected user. Handler coroutine must have 1 parameter: `page` - `Page` instance.
+    * `session_handler` (function or coroutine) - application entry point - a method called for newly connected user. Handler must have 1 parameter: `page` - `Page` instance.
     * `assets_dir` (str, optional) - an absolute path to app's assets directory.
     * `app_name` (str, optional) - PWA application name.
     * `app_short_name` (str, optional) - PWA application short name.
@@ -46,6 +46,7 @@ def app(
     * `use_color_emoji` (bool) - whether to load a font with color emoji. Default is `False`.
     * `route_url_strategy` (str) - routing URL strategy: `path` (default) or `hash`.
     * `upload_dir` (str) - an absolute path to a directory with uploaded files.
+    * `upload_endpoint_path` (str, optional) - absolute URL of upload endpoint, e.g. `/upload`.
     * `max_upload_size` (str, int) - maximum size of a single upload, bytes. Unlimited if `None`.
     * `secret_key` (str, optional) - secret key to sign and verify upload requests.
     * `session_timeout_seconds` (int, optional)- session lifetime, in seconds, after user disconnected.
@@ -82,15 +83,16 @@ def app(
             session_handler,
             session_timeout_seconds=session_timeout_seconds,
             oauth_state_timeout_seconds=oauth_state_timeout_seconds,
+            upload_endpoint_path=upload_endpoint_path,
             secret_key=secret_key,
         ).handle(websocket)
 
     if upload_dir:
 
-        @fastapi_app.put(f"/{upload_endpoint}")
+        @fastapi_app.put(
+            f"/{upload_endpoint_path if upload_endpoint_path else upload_endpoint}"
+        )
         async def upload_handler(request: Request):
-            if not upload_dir:
-                return
             await FletUpload(
                 upload_dir=upload_dir,
                 max_upload_size=max_upload_size,

@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Any, Optional, Union
 
+from flet_core.alignment import Alignment
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -33,10 +34,12 @@ class CupertinoTimerPicker(ConstrainedControl):
     def __init__(
         self,
         value: Optional[int] = None,
+        alignment: Optional[Alignment] = None,
         second_interval: OptionalNumber = None,
         minute_interval: OptionalNumber = None,
         mode: Optional[CupertinoTimerPickerMode] = None,
         bgcolor: Optional[str] = None,
+        item_extent: OptionalNumber = None,
         on_change=None,
         #
         # ConstrainedControl
@@ -101,14 +104,20 @@ class CupertinoTimerPicker(ConstrainedControl):
         )
 
         self.value = value
+        self.alignment = alignment
         self.mode = mode
         self.bgcolor = bgcolor
         self.on_change = on_change
         self.second_interval = second_interval
         self.minute_interval = minute_interval
+        self.item_extent = item_extent
 
     def _get_control_name(self):
         return "cupertinotimerpicker"
+
+    def before_update(self):
+        super().before_update()
+        self._set_attr_json("alignment", self.__alignment)
 
     # value
     @property
@@ -118,6 +127,15 @@ class CupertinoTimerPicker(ConstrainedControl):
     @value.setter
     def value(self, value: Optional[int]):
         self._set_attr("value", value)
+
+    # alignment
+    @property
+    def alignment(self) -> Optional[Alignment]:
+        return self.__alignment
+
+    @alignment.setter
+    def alignment(self, value: Optional[Alignment]):
+        self.__alignment = value
 
     # bgcolor
     @property
@@ -137,6 +155,15 @@ class CupertinoTimerPicker(ConstrainedControl):
     def second_interval(self, value: OptionalNumber):
         self._set_attr("secondInterval", value)
 
+    # item_extent
+    @property
+    def item_extent(self) -> OptionalNumber:
+        return self._get_attr("itemExtent", data_type="float", def_value=32.0)
+
+    @item_extent.setter
+    def item_extent(self, value: OptionalNumber):
+        self._set_attr("itemExtent", value)
+
     # minute_interval
     @property
     def minute_interval(self) -> OptionalNumber:
@@ -154,7 +181,7 @@ class CupertinoTimerPicker(ConstrainedControl):
     @mode.setter
     def mode(self, value: Optional[CupertinoTimerPickerMode]):
         self.__mode = value
-        self._set_attr("mode", value.value if value is not None else None)
+        self._set_enum_attr("mode", value, CupertinoTimerPickerMode)
 
     # on_change
     @property

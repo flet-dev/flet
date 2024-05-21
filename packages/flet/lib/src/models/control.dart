@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/colors.dart';
 
 class Control extends Equatable {
   static const reservedProps = ['i', 'p', 't', 'c', 'n'];
@@ -105,6 +109,26 @@ class Control extends Equatable {
     List<String> splitted = value.split(':');
     return TimeOfDay(
         hour: int.parse(splitted[0]), minute: int.parse(splitted[1]));
+  }
+
+  Color? attrColor(String name, BuildContext? context, [Color? defValue]) {
+    return HexColor.fromString(context != null ? Theme.of(context) : null,
+            attrString(name, "")!) ??
+        defValue;
+  }
+
+  List? attrList(String name, [List? defValue = const []]) {
+    var l = attrString(name);
+    if (l == null) {
+      return defValue;
+    } else {
+      try {
+        return jsonDecode(l) as List;
+      } catch (e) {
+        debugPrint("attrList error while parsing $name: $e");
+        return defValue;
+      }
+    }
   }
 
   Control copyWith(

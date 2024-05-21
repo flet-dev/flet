@@ -34,6 +34,7 @@ foreach($line in $lines) {
     }
 }
 """
+import random
 
 
 def with_opacity(opacity: float, color: str):
@@ -377,3 +378,10 @@ GREY_600 = "grey600"
 GREY_700 = "grey700"
 GREY_800 = "grey800"
 GREY_900 = "grey900"
+
+colors_list = [v for k, v in vars().items() if k.isupper()]
+
+
+def random_color() -> str:
+    """Return a random color from the colors defined in this module."""
+    return random.choice(colors_list)

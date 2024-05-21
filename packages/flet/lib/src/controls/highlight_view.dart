@@ -28,16 +28,18 @@ class HighlightView extends StatelessWidget {
   /// Specify text styles such as font family and font size
   final TextStyle? textStyle;
 
-  HighlightView(
-    String input, {
-    super.key,
-    this.language,
-    this.theme = const {},
-    this.padding,
-    this.decoration,
-    this.textStyle,
-    int tabSize = 8, // TODO: https://github.com/flutter/flutter/issues/50087
-  }) : source = input.replaceAll('\t', ' ' * tabSize);
+  final bool selectable;
+
+  HighlightView(String input,
+      {super.key,
+      this.language,
+      this.theme = const {},
+      this.padding,
+      this.decoration,
+      this.textStyle,
+      int tabSize = 8, // TODO: https://github.com/flutter/flutter/issues/50087
+      this.selectable = false})
+      : source = input.replaceAll('\t', ' ' * tabSize);
 
   List<TextSpan> _convert(List<Node> nodes) {
     List<TextSpan> spans = [];
@@ -101,13 +103,19 @@ class HighlightView extends StatelessWidget {
     return Container(
       padding: padding,
       decoration: d,
-      child: RichText(
-        text: TextSpan(
-          style: style,
-          children:
-              _convert(highlight.parse(source, language: language).nodes!),
-        ),
-      ),
+      child: selectable
+          ? SelectableText.rich(TextSpan(
+              style: style,
+              children:
+                  _convert(highlight.parse(source, language: language).nodes!),
+            ))
+          : Text.rich(
+              TextSpan(
+                style: style,
+                children: _convert(
+                    highlight.parse(source, language: language).nodes!),
+              ),
+            ),
     );
   }
 }

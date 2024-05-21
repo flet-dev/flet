@@ -1,7 +1,8 @@
 import datetime as dt
 import json
 from difflib import SequenceMatcher
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from enum import Enum
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union, Type
 
 from flet_core.embed_json_encoder import EmbedJsonEncoder
 from flet_core.protocol import Command
@@ -46,6 +47,7 @@ class Control:
         self.__data: Any = None
         self.data = data
         self.__event_handlers = {}
+        self.parent: Optional[Control] = None
         if ref:
             ref.current = self
 
@@ -103,6 +105,11 @@ class Control:
 
     def _set_attr(self, name, value, dirty=True):
         self._set_attr_internal(name, value, dirty)
+
+    def _set_enum_attr(self, name, value, enum_type: Type[Enum], dirty=True):
+        self._set_attr_internal(
+            name, value.value if isinstance(value, enum_type) else value, dirty
+        )
 
     def _get_value_or_list_attr(self, name, delimiter):
         v = self._get_attr(name)
@@ -418,6 +425,7 @@ class Control:
                             index=index, added_controls=added_controls
                         )
                         assert self.__uid is not None
+                        ctrl.parent = self  # set as parent
                         commands.append(
                             Command(
                                 indent=0,
@@ -447,6 +455,7 @@ class Control:
                         index=index, added_controls=added_controls
                     )
                     assert self.__uid is not None
+                    ctrl.parent = self  # set as parent
                     commands.append(
                         Command(
                             indent=0,
@@ -515,6 +524,7 @@ class Control:
                 indent=indent + 2, index=index, added_controls=added_controls
             )
             commands.extend(childCmd)
+            control.parent = self  # set as parent
 
         self.__previous_children.clear()
         self.__previous_children.extend(children)

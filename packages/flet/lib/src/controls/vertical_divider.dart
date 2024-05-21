@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import '../utils/colors.dart';
 import 'create_control.dart';
 
 class VerticalDividerControl extends StatelessWidget {
@@ -17,8 +16,9 @@ class VerticalDividerControl extends StatelessWidget {
 
     var width = control.attrDouble("width");
     var thickness = control.attrDouble("thickness");
-    var color = HexColor.fromString(
-        Theme.of(context), control.attrString("color", "")!);
+    var leadingIndent = control.attrDouble("leadingIndent");
+    var trailingIndent = control.attrDouble("trailingIndent");
+    var color = control.attrColor("color", context);
 
     return baseControl(
         context,
@@ -26,6 +26,8 @@ class VerticalDividerControl extends StatelessWidget {
           width: width,
           thickness: thickness,
           color: color,
+          indent: leadingIndent,
+          endIndent: trailingIndent,
         ),
         parent,
         control);

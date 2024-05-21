@@ -11,11 +11,7 @@ skip_commits:
 environment:
   python_stack: python 3.10
   GITHUB_TOKEN:
-    secure: doX0dwjWhBmT56aJqR9NCbtMFJpDpdYxPCIB4vQoHfSR+nTa+pLCo6Yv5qWpD/90
-  DOCKER_REGISTRY_USER:
-    secure: NJVK0u9M6ZhmQKUeR6Gnxg==
-  DOCKER_REGISTRY_PASS:
-    secure: V9nRzVDlIGS0a+dhkC2/vw==
+    secure: 9SKIwc3VSfYJ5IChvNR74hQprJ0DRmcV9pPX+8KyE6IXIdfMsX6ikeUmMhJGRu3ztkZaF45jmU7Xn/6tauXQXhDBxK1N8kFHFSAnq6LjUXyhS0TZKX/H+jDozBeVbCXp
 
   matrix:
     - job_name: Build Flet package for Flutter
@@ -84,9 +80,6 @@ environment:
 
 matrix:
   fast_finish: true
-  allow_failures:
-    - job_name: Build Flet for iOS
-    - job_name: Build Flet Studio for iOS
 
 stack: $python_stack
 
@@ -122,6 +115,7 @@ for:
             python3 ci/patch_pubspec.py packages/flet_audio/pubspec.yaml $PKG_VER
             python3 ci/patch_pubspec.py packages/flet_audio_recorder/pubspec.yaml $PKG_VER
             python3 ci/patch_pubspec.py packages/flet_lottie/pubspec.yaml $PKG_VER
+            python3 ci/patch_pubspec.py packages/flet_rive/pubspec.yaml $PKG_VER
             python3 ci/patch_pubspec.py packages/flet_video/pubspec.yaml $PKG_VER
             python3 ci/patch_pubspec.py packages/flet_webview/pubspec.yaml $PKG_VER
 
@@ -129,6 +123,8 @@ for:
             flutter test
             dart pub publish --force || exit 1
             cd $APPVEYOR_BUILD_FOLDER
+
+            sleep 10
 
             cd packages/flet_audio
             dart pub publish --force || exit 1
@@ -139,6 +135,10 @@ for:
             cd $APPVEYOR_BUILD_FOLDER
 
             cd packages/flet_lottie
+            dart pub publish --force || exit 1
+            cd $APPVEYOR_BUILD_FOLDER
+
+            cd packages/flet_rive
             dart pub publish --force || exit 1
             cd $APPVEYOR_BUILD_FOLDER
 
@@ -166,6 +166,10 @@ for:
             cd $APPVEYOR_BUILD_FOLDER
 
             cd packages/flet_lottie
+            dart pub publish --dry-run
+            cd $APPVEYOR_BUILD_FOLDER
+
+            cd packages/flet_rive
             dart pub publish --dry-run
             cd $APPVEYOR_BUILD_FOLDER
 

@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -40,18 +38,16 @@ class _CupertinoSegmentedButtonControlState
     bool? adaptive =
         widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
 
-    var borderColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("borderColor", "")!);
-    var selectedColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("selectedColor", "")!);
-    var unselectedColor = HexColor.fromString(
-        Theme.of(context), widget.control.attrString("unselectedColor", "")!);
+    var borderColor = widget.control.attrColor("borderColor", context);
+    var selectedColor = widget.control.attrColor("selectedColor", context);
+    var unselectedColor = widget.control.attrColor("unselectedColor", context);
+    var clickColor = widget.control.attrColor("clickColor", context);
     List<Control> ctrls = widget.children.where((c) => c.isVisible).toList();
     int? selectedIndex = widget.control.attrInt("selectedIndex");
 
     if (ctrls.length < 2) {
-      return const ErrorControl("When allow_empty_selection is False, "
-          "the selected property must contain at least one value.");
+      return const ErrorControl(
+          "CupertinoSegmentedButton must have at least two controls.");
     }
     var children = ctrls.asMap().map((i, c) => MapEntry(
         i,
@@ -77,6 +73,7 @@ class _CupertinoSegmentedButtonControlState
           borderColor: borderColor,
           selectedColor: selectedColor,
           unselectedColor: unselectedColor,
+          pressedColor: clickColor,
           padding: parseEdgeInsets(widget.control, "padding"),
         ),
         widget.parent,

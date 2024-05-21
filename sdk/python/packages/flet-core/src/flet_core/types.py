@@ -7,11 +7,6 @@ from flet_core.margin import Margin
 from flet_core.padding import Padding
 from flet_core.transform import Offset, Rotate, Scale
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
 WEB_BROWSER = "web_browser"
 FLET_APP = "flet_app"
 FLET_APP_WEB = "flet_app_web"
@@ -29,6 +24,14 @@ class WebRenderer(Enum):
     AUTO = "auto"
     HTML = "html"
     CANVAS_KIT = "canvaskit"
+
+
+class UrlTarget(Enum):
+    BLANK = "blank"
+    SELF = "_self"
+    PARENT = "_parent"
+    TOP = "_top"
+    # UNFENCED_TOP = "_unfencedTop"
 
 
 PaddingValue = Union[None, int, float, Padding]
@@ -86,7 +89,6 @@ class MaterialState(Enum):
 
 
 class MainAxisAlignment(Enum):
-    NONE = None
     START = "start"
     END = "end"
     CENTER = "center"
@@ -96,7 +98,6 @@ class MainAxisAlignment(Enum):
 
 
 class CrossAxisAlignment(Enum):
-    NONE = None
     START = "start"
     END = "end"
     CENTER = "center"
@@ -112,7 +113,6 @@ class VerticalAlignment(Enum):
 
 
 class TabAlignment(Enum):
-    NONE = None
     START = "start"
     START_OFFSET = "startOffset"
     FILL = "fill"
@@ -120,13 +120,11 @@ class TabAlignment(Enum):
 
 
 class LabelPosition(Enum):
-    NONE = None
     RIGHT = "right"
     LEFT = "left"
 
 
 class BlendMode(Enum):
-    NONE = None
     CLEAR = "clear"
     COLOR = "color"
     COLOR_BURN = "colorBurn"
@@ -160,7 +158,6 @@ class BlendMode(Enum):
 
 
 class TextAlign(Enum):
-    NONE = None
     LEFT = "left"
     RIGHT = "right"
     CENTER = "center"
@@ -219,6 +216,11 @@ class Brightness(Enum):
     DARK = "dark"
 
 
+class Orientation(Enum):
+    PORTRAIT = "portrait"
+    LANDSCAPE = "landscape"
+
+
 class FloatingActionButtonLocation(Enum):
     CENTER_DOCKED = "centerDocked"
     CENTER_FLOAT = "centerFloat"
@@ -249,3 +251,42 @@ class AppLifecycleState(Enum):
     PAUSE = "pause"
     DETACH = "detach"
     RESTART = "restart"
+
+
+class MouseCursor(Enum):
+    ALIAS = "alias"
+    ALL_SCROLL = "allScroll"
+    BASIC = "basic"
+    CELL = "cell"
+    CLICK = "click"
+    CONTEXT_MENU = "contextMenu"
+    COPY = "copy"
+    DISAPPEARING = "disappearing"
+    FORBIDDEN = "forbidden"
+    GRAB = "grab"
+    GRABBING = "grabbing"
+    HELP = "help"
+    MOVE = "move"
+    NO_DROP = "noDrop"
+    NONE = "none"
+    PRECISE = "precise"
+    PROGRESS = "progress"
+    RESIZE_COLUMN = "resizeColumn"
+    RESIZE_DOWN = "resizeDown"
+    RESIZE_DOWN_LEFT = "resizeDownLeft"
+    RESIZE_DOWN_RIGHT = "resizeDownRight"
+    RESIZE_LEFT = "resizeLeft"
+    RESIZE_LEFT_RIGHT = "resizeLeftRight"
+    RESIZE_RIGHT = "resizeRight"
+    RESIZE_ROW = "resizeRow"
+    RESIZE_UP = "resizeUp"
+    RESIZE_UP_DOWN = "resizeUpDown"
+    RESIZE_UP_LEFT = "resizeUpLeft"
+    RESIZE_UP_LEFT_DOWN_RIGHT = "resizeUpLeftDownRight"
+    RESIZE_UP_RIGHT = "resizeUpRight"
+    RESIZE_UP_RIGHT_DOWN_LEFT = "resizeUpRightDownLeft"
+    TEXT = "text"
+    VERTICAL_TEXT = "verticalText"
+    WAIT = "wait"
+    ZOOM_IN = "zoomIn"
+    ZOOM_OUT = "zoomOut"

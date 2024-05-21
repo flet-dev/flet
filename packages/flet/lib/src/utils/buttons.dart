@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flet/src/utils/transforms.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -39,18 +40,19 @@ ButtonStyle? parseButtonStyle(ThemeData theme, Control control, String propName,
       defaultShape);
 }
 
-ButtonStyle? buttonStyleFromJSON(
-    ThemeData theme,
-    Map<String, dynamic> json,
-    Color defaultForegroundColor,
-    Color defaultBackgroundColor,
-    Color defaultOverlayColor,
-    Color defaultShadowColor,
-    Color defaultSurfaceTintColor,
-    double defaultElevation,
-    EdgeInsets defaultPadding,
-    BorderSide defaultBorderSide,
-    OutlinedBorder defaultShape) {
+ButtonStyle? buttonStyleFromJSON(ThemeData theme, Map<String, dynamic>? json,
+    [Color? defaultForegroundColor,
+    Color? defaultBackgroundColor,
+    Color? defaultOverlayColor,
+    Color? defaultShadowColor,
+    Color? defaultSurfaceTintColor,
+    double? defaultElevation,
+    EdgeInsets? defaultPadding,
+    BorderSide? defaultBorderSide,
+    OutlinedBorder? defaultShape]) {
+  if (json == null) {
+    return null;
+  }
   return ButtonStyle(
       foregroundColor: getMaterialStateProperty<Color?>(
           json["color"],
@@ -83,4 +85,69 @@ ButtonStyle? buttonStyleFromJSON(
           defaultBorderSide),
       shape: getMaterialStateProperty<OutlinedBorder?>(
           json["shape"], (jv) => outlinedBorderFromJSON(jv), defaultShape));
+}
+
+FloatingActionButtonLocation parseFloatingActionButtonLocation(
+    Control control, String propName, FloatingActionButtonLocation defValue) {
+  List<FloatingActionButtonLocation> fabLocations = [
+    FloatingActionButtonLocation.centerDocked,
+    FloatingActionButtonLocation.centerFloat,
+    FloatingActionButtonLocation.centerTop,
+    FloatingActionButtonLocation.endContained,
+    FloatingActionButtonLocation.endDocked,
+    FloatingActionButtonLocation.endFloat,
+    FloatingActionButtonLocation.endTop,
+    FloatingActionButtonLocation.miniCenterDocked,
+    FloatingActionButtonLocation.miniCenterFloat,
+    FloatingActionButtonLocation.miniCenterTop,
+    FloatingActionButtonLocation.miniEndFloat,
+    FloatingActionButtonLocation.miniEndTop,
+    FloatingActionButtonLocation.miniStartDocked,
+    FloatingActionButtonLocation.miniStartFloat,
+    FloatingActionButtonLocation.miniStartTop,
+    FloatingActionButtonLocation.startDocked,
+    FloatingActionButtonLocation.startFloat,
+    FloatingActionButtonLocation.startTop
+  ];
+
+  try {
+    OffsetDetails? fabLocationOffsetDetails = parseOffset(control, propName);
+    if (fabLocationOffsetDetails != null) {
+      return CustomFloatingActionButtonLocation(
+          dx: fabLocationOffsetDetails.x, dy: fabLocationOffsetDetails.y);
+    } else {
+      return defValue;
+    }
+  } catch (e) {
+    return fabLocations.firstWhere(
+        (l) =>
+            l.toString().split('.').last.toLowerCase() ==
+            control.attrString(propName, "")!.toLowerCase(),
+        orElse: () => defValue);
+  }
+}
+
+class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
+  final double dx;
+  final double dy;
+
+  CustomFloatingActionButtonLocation({required this.dx, required this.dy});
+
+  @override
+  Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
+    return Offset(scaffoldGeometry.scaffoldSize.width - dx,
+        scaffoldGeometry.scaffoldSize.height - dy);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is CustomFloatingActionButtonLocation &&
+      other.dx == dx &&
+      other.dy == dy;
+
+  @override
+  int get hashCode => dx.hashCode + dy.hashCode;
+
+  @override
+  String toString() => 'CustomFloatingActionButtonLocation';
 }

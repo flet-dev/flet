@@ -237,9 +237,7 @@ class Audio(Control):
 
     @release_mode.setter
     def release_mode(self, value: Optional[ReleaseMode]):
-        self._set_attr(
-            "releaseMode", value.value if isinstance(value, ReleaseMode) else value
-        )
+        self._set_enum_attr("releaseMode", value, ReleaseMode)
 
     # on_loaded
     @property

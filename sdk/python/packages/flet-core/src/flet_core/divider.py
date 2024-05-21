@@ -50,6 +50,8 @@ class Divider(Control):
         height: OptionalNumber = None,
         thickness: OptionalNumber = None,
         color: Optional[str] = None,
+        leading_indent: OptionalNumber = None,
+        trailing_indent: OptionalNumber = None,
         #
         # Control
         #
@@ -70,6 +72,8 @@ class Divider(Control):
         self.height = height
         self.thickness = thickness
         self.color = color
+        self.leading_indent = leading_indent
+        self.trailing_indent = trailing_indent
 
     def _get_control_name(self):
         return "divider"
@@ -77,7 +81,7 @@ class Divider(Control):
     # height
     @property
     def height(self) -> OptionalNumber:
-        return self._get_attr("height")
+        return self._get_attr("height", data_type="float")
 
     @height.setter
     def height(self, value: OptionalNumber):
@@ -86,7 +90,7 @@ class Divider(Control):
     # thickness
     @property
     def thickness(self) -> OptionalNumber:
-        return self._get_attr("thickness")
+        return self._get_attr("thickness", data_type="float")
 
     @thickness.setter
     def thickness(self, value: OptionalNumber):
@@ -94,9 +98,27 @@ class Divider(Control):
 
     # color
     @property
-    def color(self):
+    def color(self) -> Optional[str]:
         return self._get_attr("color")
 
     @color.setter
-    def color(self, value):
+    def color(self, value: Optional[str]):
         self._set_attr("color", value)
+
+    # leading_indent
+    @property
+    def leading_indent(self) -> OptionalNumber:
+        return self._get_attr("leadingIndent", data_type="float")
+
+    @leading_indent.setter
+    def leading_indent(self, value: OptionalNumber):
+        self._set_attr("leadingIndent", value)
+
+    # trailing_indent
+    @property
+    def trailing_indent(self) -> OptionalNumber:
+        return self._get_attr("trailingIndent", data_type="float")
+
+    @trailing_indent.setter
+    def trailing_indent(self, value: OptionalNumber):
+        self._set_attr("trailingIndent", value)

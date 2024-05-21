@@ -4,15 +4,16 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
-import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
+import '../utils/form_field.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 import 'flet_store_mixin.dart';
-import 'form_field.dart';
 
 class DropdownControl extends StatefulWidget {
   final Control? parent;
   final Control control;
+  final List<Control> children;
   final bool parentDisabled;
   final bool? parentAdaptive;
   final FletControlBackend backend;
@@ -21,6 +22,7 @@ class DropdownControl extends StatefulWidget {
       {super.key,
       this.parent,
       required this.control,
+      required this.children,
       required this.parentDisabled,
       required this.parentAdaptive,
       required this.backend});
@@ -68,11 +70,19 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
       var textSize = widget.control.attrDouble("textSize");
+      var alignment = parseAlignment(widget.control, "alignment");
+      var iconCtrl =
+          widget.children.where((c) => c.name == "icon" && c.isVisible);
+      var hintCtrl =
+          widget.children.where((c) => c.name == "hint" && c.isVisible);
 
-      var color = HexColor.fromString(
-          Theme.of(context), widget.control.attrString("color", "")!);
-      var focusedColor = HexColor.fromString(
-          Theme.of(context), widget.control.attrString("focusedColor", "")!);
+      var color = widget.control.attrColor("color", context);
+      var focusedColor = widget.control.attrColor("focusedColor", context);
+      var bgcolor = widget.control.attrColor("bgcolor", context);
+      var iconEnabledColor =
+          widget.control.attrColor("iconEnabledColor", context);
+      var iconDisabledColor =
+          widget.control.attrColor("iconDisabledColor", context);
 
       TextStyle? textStyle =
           parseTextStyle(Theme.of(context), widget.control, "textStyle");
@@ -83,8 +93,6 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
                 Theme.of(context).colorScheme.onSurface);
       }
 
-      var alignment = parseAlignment(widget.control, "alignment");
-
       var items = itemsView.controlViews
           .map((v) => v.control)
           .where((c) => c.name == null && c.isVisible)
@@ -92,13 +100,19 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         Widget itemChild = Text(
           itemCtrl.attrs["text"] ?? itemCtrl.attrs["key"] ?? itemCtrl.id,
         );
-
-        if (alignment != null) {
-          itemChild = Container(alignment: alignment, child: itemChild);
+        var align = parseAlignment(itemCtrl, "alignment");
+        if (align != null) {
+          itemChild = Container(alignment: align, child: itemChild);
         }
         return DropdownMenuItem<String>(
           enabled: !(disabled || itemCtrl.isDisabled),
           value: itemCtrl.attrs["key"] ?? itemCtrl.attrs["text"] ?? itemCtrl.id,
+          alignment: align ?? AlignmentDirectional.centerStart,
+          onTap: !(disabled || itemCtrl.isDisabled)
+              ? () {
+                  widget.backend.triggerControlEvent(itemCtrl.id, "click");
+                }
+              : null,
           child: itemChild,
         );
       }).toList();
@@ -130,9 +144,24 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         autofocus: autofocus,
         focusNode: _focusNode,
         value: _value,
+        dropdownColor: bgcolor,
+        enableFeedback: widget.control.attrBool("enableFeedback"),
+        elevation: widget.control.attrInt("elevation", 8)!,
+        padding: parseEdgeInsets(widget.control, "padding"),
+        itemHeight: widget.control.attrDouble("itemHeight"),
+        menuMaxHeight: widget.control.attrDouble("maxMenuHeight"),
+        iconEnabledColor: iconEnabledColor,
+        iconDisabledColor: iconDisabledColor,
+        iconSize: widget.control.attrDouble("iconSize", 24.0)!,
         borderRadius: borderRadius,
         alignment: alignment ?? AlignmentDirectional.centerStart,
         isExpanded: alignment != null,
+        icon: iconCtrl.isNotEmpty
+            ? createControl(widget.control, iconCtrl.first.id, disabled)
+            : null,
+        hint: iconCtrl.isNotEmpty
+            ? createControl(widget.control, hintCtrl.first.id, disabled)
+            : null,
         decoration: buildInputDecoration(
             context,
             widget.control,
@@ -140,7 +169,13 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
             suffixControls.isNotEmpty ? suffixControls.first.control : null,
             null,
             _focused,
+            disabled,
             widget.parentAdaptive),
+        onTap: !disabled
+            ? () {
+                widget.backend.triggerControlEvent(widget.control.id, "click");
+              }
+            : null,
         onChanged: disabled
             ? null
             : (String? value) {

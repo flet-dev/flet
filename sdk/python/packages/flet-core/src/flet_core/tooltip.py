@@ -77,10 +77,12 @@ class Tooltip(Control):
         shape: Optional[BoxShape] = None,
         message: Optional[str] = None,
         text_style: Optional[TextStyle] = None,
-        text_align: TextAlign = TextAlign.NONE,
+        text_align: Optional[TextAlign] = None,
         prefer_below: Optional[bool] = None,
         show_duration: Optional[int] = None,
         wait_duration: Optional[int] = None,
+        enable_tap_to_dismiss: Optional[bool] = None,
+        exclude_from_semantics: Optional[bool] = None,
         #
         # Control
         #
@@ -114,6 +116,8 @@ class Tooltip(Control):
         self.prefer_below = prefer_below
         self.show_duration = show_duration
         self.wait_duration = wait_duration
+        self.enable_tap_to_dismiss = enable_tap_to_dismiss
+        self.exclude_from_semantics = exclude_from_semantics
 
     def _get_control_name(self):
         return "tooltip"
@@ -137,11 +141,29 @@ class Tooltip(Control):
     # enable_feedback
     @property
     def enable_feedback(self) -> Optional[bool]:
-        return self._get_attr("enableFeedback", data_type="bool", def_value=False)
+        return self._get_attr("enableFeedback", data_type="bool", def_value=True)
 
     @enable_feedback.setter
     def enable_feedback(self, value: Optional[bool]):
         self._set_attr("enableFeedback", value)
+
+    # enable_tap_to_dismiss
+    @property
+    def enable_tap_to_dismiss(self) -> Optional[bool]:
+        return self._get_attr("enableTapToDismiss", data_type="bool", def_value=True)
+
+    @enable_tap_to_dismiss.setter
+    def enable_tap_to_dismiss(self, value: Optional[bool]):
+        self._set_attr("enableTapToDismiss", value)
+
+    # exclude_from_semantics
+    @property
+    def exclude_from_semantics(self) -> Optional[bool]:
+        return self._get_attr("excludeFromSemantics", data_type="bool", def_value=False)
+
+    @exclude_from_semantics.setter
+    def exclude_from_semantics(self, value: Optional[bool]):
+        self._set_attr("excludeFromSemantics", value)
 
     # margin
     @property
@@ -199,13 +221,13 @@ class Tooltip(Control):
 
     # shape
     @property
-    def shape(self):
+    def shape(self) -> Optional[BoxShape]:
         return self.__shape
 
     @shape.setter
     def shape(self, value: Optional[BoxShape]):
         self.__shape = value
-        self._set_attr("shape", value.value if value is not None else None)
+        self._set_attr("shape", value.value if isinstance(value, BoxShape) else value)
 
     # message
     @property
@@ -218,11 +240,11 @@ class Tooltip(Control):
 
     # text_align
     @property
-    def text_align(self) -> TextAlign:
+    def text_align(self) -> Optional[TextAlign]:
         return self.__text_align
 
     @text_align.setter
-    def text_align(self, value: TextAlign):
+    def text_align(self, value: Optional[TextAlign]):
         self.__text_align = value
         self._set_attr(
             "textAlign", value.value if isinstance(value, TextAlign) else value
@@ -230,7 +252,7 @@ class Tooltip(Control):
 
     # text_style
     @property
-    def text_style(self):
+    def text_style(self) -> Optional[TextStyle]:
         return self.__text_style
 
     @text_style.setter

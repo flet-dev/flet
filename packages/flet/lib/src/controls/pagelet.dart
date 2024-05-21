@@ -7,13 +7,12 @@ import '../flet_control_backend.dart';
 import '../models/app_state.dart';
 import '../models/control.dart';
 import '../models/controls_view_model.dart';
-import '../utils/colors.dart';
+import '../utils/buttons.dart';
 import 'app_bar.dart';
 import 'create_control.dart';
 import 'cupertino_app_bar.dart';
 import 'error.dart';
 import 'flet_store_mixin.dart';
-import 'floating_action_button.dart';
 import 'navigation_drawer.dart';
 import 'page.dart';
 
@@ -205,8 +204,7 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
 
             Widget scaffold = Scaffold(
                 key: bar == null || bar is AppBarControl ? scaffoldKey : null,
-                backgroundColor: HexColor.fromString(Theme.of(context),
-                        widget.control.attrString("bgcolor", "")!) ??
+                backgroundColor: widget.control.attrColor("bgcolor", context) ??
                     CupertinoTheme.of(context).scaffoldBackgroundColor,
                 appBar: bar is AppBarControl ? bar : null,
                 drawer: drawerView != null
@@ -257,8 +255,7 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
             if (bar is CupertinoAppBarControl) {
               scaffold = CupertinoPageScaffold(
                   key: scaffoldKey,
-                  backgroundColor: HexColor.fromString(Theme.of(context),
-                      widget.control.attrString("bgcolor", "")!),
+                  backgroundColor: widget.control.attrColor("bgcolor", context),
                   navigationBar: bar as ObstructingPreferredSizeWidget,
                   child: scaffold);
             }

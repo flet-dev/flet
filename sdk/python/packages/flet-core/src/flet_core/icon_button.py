@@ -2,16 +2,21 @@ import time
 from typing import Any, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.alignment import Alignment
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.theme import ThemeVisualDensity
 from flet_core.types import (
     AnimationValue,
+    MouseCursor,
     OffsetValue,
+    PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    UrlTarget,
 )
 from flet_core.utils import deprecated
 
@@ -68,8 +73,18 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         style: Optional[ButtonStyle] = None,
         content: Optional[Control] = None,
         autofocus: Optional[bool] = None,
+        disabled_color: Optional[str] = None,
+        hover_color: Optional[str] = None,
+        focus_color: Optional[str] = None,
+        splash_color: Optional[str] = None,
+        splash_radius: OptionalNumber = None,
+        alignment: Optional[Alignment] = None,
+        padding: PaddingValue = None,
+        enable_feedback: Optional[bool] = None,
         url: Optional[str] = None,
-        url_target: Optional[str] = None,
+        url_target: Optional[UrlTarget] = None,
+        mouse_cursor: Optional[MouseCursor] = None,
+        visual_density: Optional[ThemeVisualDensity] = None,
         on_click=None,
         on_focus=None,
         on_blur=None,
@@ -148,11 +163,21 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self.style = style
         self.content = content
         self.autofocus = autofocus
+        self.disabled_color = disabled_color
+        self.hover_color = hover_color
+        self.alignment = alignment
+        self.padding = padding
+        self.enable_feedback = enable_feedback
+        self.splash_color = splash_color
+        self.splash_radius = splash_radius
+        self.focus_color = focus_color
         self.url = url
         self.url_target = url_target
         self.on_click = on_click
         self.on_focus = on_focus
         self.on_blur = on_blur
+        self.mouse_cursor = mouse_cursor
+        self.visual_density = visual_density
 
     def _get_control_name(self):
         return "iconbutton"
@@ -164,6 +189,8 @@ class IconButton(ConstrainedControl, AdaptiveControl):
             self.__style.shape = self._wrap_attr_dict(self.__style.shape)
             self.__style.padding = self._wrap_attr_dict(self.__style.padding)
         self._set_attr_json("style", self.__style)
+        self._set_attr_json("alignment", self.__alignment)
+        self._set_attr_json("padding", self.__padding)
 
     def _get_children(self):
         if self.__content is None:
@@ -207,8 +234,26 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         return self._get_attr("iconSize")
 
     @icon_size.setter
-    def icon_size(self, value):
+    def icon_size(self, value: OptionalNumber):
         self._set_attr("iconSize", value)
+
+    # splash_radius
+    @property
+    def splash_radius(self):
+        return self._get_attr("splashRadius")
+
+    @splash_radius.setter
+    def splash_radius(self, value: OptionalNumber):
+        self._set_attr("splashRadius", value)
+
+    # splash_color
+    @property
+    def splash_color(self):
+        return self._get_attr("splashColor")
+
+    @splash_color.setter
+    def splash_color(self, value: Optional[str]):
+        self._set_attr("splashColor", value)
 
     # icon_color
     @property
@@ -216,7 +261,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         return self._get_attr("iconColor")
 
     @icon_color.setter
-    def icon_color(self, value):
+    def icon_color(self, value: Optional[str]):
         self._set_attr("iconColor", value)
 
     # highlight_color
@@ -246,6 +291,42 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     def bgcolor(self, value):
         self._set_attr("bgcolor", value)
 
+    # hover_color
+    @property
+    def hover_color(self):
+        return self._get_attr("hoverColor")
+
+    @hover_color.setter
+    def hover_color(self, value: Optional[str]):
+        self._set_attr("hoverColor", value)
+
+    # focus_color
+    @property
+    def focus_color(self):
+        return self._get_attr("focusColor")
+
+    @focus_color.setter
+    def focus_color(self, value: Optional[str]):
+        self._set_attr("focusColor", value)
+
+    # disabled_color
+    @property
+    def disabled_color(self):
+        return self._get_attr("disabledColor")
+
+    @disabled_color.setter
+    def disabled_color(self, value: Optional[str]):
+        self._set_attr("disabledColor", value)
+
+    # padding
+    @property
+    def padding(self) -> PaddingValue:
+        return self.__padding
+
+    @padding.setter
+    def padding(self, value: PaddingValue):
+        self.__padding = value
+
     # selected
     @property
     def selected(self) -> Optional[bool]:
@@ -254,6 +335,15 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @selected.setter
     def selected(self, value: Optional[bool]):
         self._set_attr("selected", value)
+
+    # enable_feedback
+    @property
+    def enable_feedback(self) -> Optional[bool]:
+        return self._get_attr("enableFeedback", data_type="bool", def_value=True)
+
+    @enable_feedback.setter
+    def enable_feedback(self, value: Optional[bool]):
+        self._set_attr("enableFeedback", value)
 
     # style
     @property
@@ -275,12 +365,40 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     # url_target
     @property
-    def url_target(self):
-        return self._get_attr("urlTarget")
+    def url_target(self) -> Optional[UrlTarget]:
+        return self.__url_target
 
     @url_target.setter
-    def url_target(self, value):
-        self._set_attr("urlTarget", value)
+    def url_target(self, value: Optional[UrlTarget]):
+        self.__url_target = value
+        self._set_attr(
+            "urlTarget", value.value if isinstance(value, UrlTarget) else value
+        )
+
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self.__mouse_cursor
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
+        self._set_attr(
+            "mouseCursor", value.value if isinstance(value, MouseCursor) else value
+        )
+
+    # visual_density
+    @property
+    def visual_density(self) -> Optional[ThemeVisualDensity]:
+        return self.__visual_density
+
+    @visual_density.setter
+    def visual_density(self, value: Optional[ThemeVisualDensity]):
+        self.__visual_density = value
+        self._set_attr(
+            "visualDensity",
+            value.value if isinstance(value, ThemeVisualDensity) else value,
+        )
 
     # on_click
     @property
@@ -326,3 +444,12 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @on_blur.setter
     def on_blur(self, handler):
         self._add_event_handler("blur", handler)
+
+    # alignment
+    @property
+    def alignment(self) -> Optional[Alignment]:
+        return self.__alignment
+
+    @alignment.setter
+    def alignment(self, value: Optional[Alignment]):
+        self.__alignment = value
