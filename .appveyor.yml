@@ -353,21 +353,18 @@ for:
     build_script:
       - pushd client
       - sh: |
+          wheel_tags=(
+            "py3-none-manylinux_2_17_"
+            "py3-none-manylinux2014_"
+            "py3-none-musllinux_1_2_"
+          )
           if [[ "$ARCH" == "amd64" ]]; then
               build_arch="x64"
               platform_arch="x86_64"
-              wheel_tags=(
-                "py3-none-manylinux_2_17_x86_64"
-                "py3-none-manylinux2014_x86_64"
-                "py3-none-musllinux_1_2_x86_64"
-              )
+
           else
               build_arch="arm64"
               platform_arch="aarch64"
-              wheel_tags=(
-                "py3-none-manylinux_2_17_aarch64"
-                "py3-none-manylinux2014_aarch64"
-              )
           fi
 
       - sh: |
@@ -397,7 +394,7 @@ for:
       - sh: |
           for file in dist/*-py3-none-any.whl; do
             for tag in "${wheel_tags[@]}"; do
-              wheel=$(echo "$file" | sed "s/-py3-none-any/-$tag/")
+              wheel=$(echo "$file" | sed "s/-py3-none-any/-$tag$platform_arch/")
               cp "$file" "$wheel"
             done
             rm "$file"
