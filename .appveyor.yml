@@ -341,9 +341,7 @@ for:
       - flutter upgrade --force
 
     build_script:
-      - cd client
-
-      # build client
+      - pushd client
       - sh: |
           if [[ "$ARCH" == "amd64" ]]; then
               build_arch="x64"
@@ -374,7 +372,7 @@ for:
       - tar -czvf flet-linux$artifact_suffix-$ARCH.tar.gz -C build/linux/$build_arch/release flet
       - mkdir -p $flet_sdk_root/packages/flet-desktop/src/flet_desktop/app
       - cp flet-linux$artifact_suffix-$ARCH.tar.gz $flet_sdk_root/packages/flet-desktop/src/flet_desktop/app/flet-linux-$ARCH.tar.gz
-      - cd -
+      - popd
 
       # Python package
       - patch_python_package_versions
