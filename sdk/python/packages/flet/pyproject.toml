@@ -18,7 +18,7 @@ documentation = "https://flet.dev/docs"
 [tool.poetry.dependencies]
 python = "^3.8"
 flet-cli = { version = "0.1.0", markers = "platform_system != 'embedded'" }
-flet-desktop = { version = "0.1.0", markers = "platform_system != 'embedded'" }
+flet-desktop = { version = "0.1.0", markers = "platform_system != 'desktop-light'" }
 flet-web = { version = "0.1.0", markers = "platform_system != 'embedded'" }
 oauthlib = { version = "^3.2.2", markers = "platform_system != 'Emscripten'" }
 httpx = { version = "^0", markers = "platform_system != 'Emscripten'" }
