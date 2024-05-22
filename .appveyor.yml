@@ -12,21 +12,25 @@ environment:
   python_stack: python 3.12
   GITHUB_TOKEN:
     secure: 9SKIwc3VSfYJ5IChvNR74hQprJ0DRmcV9pPX+8KyE6IXIdfMsX6ikeUmMhJGRu3ztkZaF45jmU7Xn/6tauXQXhDBxK1N8kFHFSAnq6LjUXyhS0TZKX/H+jDozBeVbCXp
+  TWINE_USERNAME: __token__
+  TWINE_PASSWORD:
+    secure: 174ncAbF5IjSIkmioPt62jeSnzmTlRNchUkE4QdjDWH8xK1olYtySXLJpo2q95HcP7lWJky1hv4APESiRRHnBWoY0XRFafzM/mbCDMzG1tZXiXZmpP1qzHAtRP2QSCIg18xh1TMktraUdTi7sbJnjjRhqzgbW1k0kLBxKw79MPFBhYQ/TiGcmaYWZbWVZNY3HCUCb6Dt7bG1OE2Ul9rD1gvs55xwO9Oq9FOVA1VnMYw=
+  TWINE_NON_INTERACTIVE: true
 
   matrix:
-    # - job_name: Build Flet package for Flutter
-    #   job_group: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    - job_name: Build Flet package for Flutter
+      job_group: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Build Flet for Windows
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+    - job_name: Build Flet for Windows
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
 
-    # - job_name: Build Flet for macOS
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
+    - job_name: Build Flet for macOS
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
     - job_name: Build Flet for Linux
       job_group: build_flet_linux
@@ -58,39 +62,40 @@ environment:
       python_stack: python 3.10
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
 
-    # - job_name: Build Flet for web
-    #   job_group: build_flet_linux
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    - job_name: Build Flet for web
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Test Python 3.8
-    #   job_group: python_tests
-    #   python_stack: python 3.8
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    - job_name: Test Python 3.8
+      job_group: python_tests
+      python_stack: python 3.8
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Test Python 3.9
-    #   job_group: python_tests
-    #   python_stack: python 3.9
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    - job_name: Test Python 3.9
+      job_group: python_tests
+      python_stack: python 3.9
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Test Python 3.10
-    #   job_group: python_tests
-    #   python_stack: python 3.10
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    - job_name: Test Python 3.10
+      job_group: python_tests
+      python_stack: python 3.10
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Test Python 3.11
-    #   job_group: python_tests
-    #   python_stack: python 3.11
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    - job_name: Test Python 3.11
+      job_group: python_tests
+      python_stack: python 3.11
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    # - job_name: Build Python wheels
-    #   job_group: python_build
-    #   job_depends_on: python_tests
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
-    #   TWINE_USERNAME: __token__
-    #   TWINE_PASSWORD:
-    #     secure: 174ncAbF5IjSIkmioPt62jeSnzmTlRNchUkE4QdjDWH8xK1olYtySXLJpo2q95HcP7lWJky1hv4APESiRRHnBWoY0XRFafzM/mbCDMzG1tZXiXZmpP1qzHAtRP2QSCIg18xh1TMktraUdTi7sbJnjjRhqzgbW1k0kLBxKw79MPFBhYQ/TiGcmaYWZbWVZNY3HCUCb6Dt7bG1OE2Ul9rD1gvs55xwO9Oq9FOVA1VnMYw=
-    #   TWINE_NON_INTERACTIVE: true
+    - job_name: Test Python 3.12
+      job_group: python_tests
+      python_stack: python 3.12
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+
+    - job_name: Build Python wheels
+      job_group: python_build
+      job_depends_on: python_tests, build_flet, build_flet_linux
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
 matrix:
   fast_finish: true
@@ -412,59 +417,6 @@ for:
       provider: GitHub
       auth_token: $(GITHUB_TOKEN)
       release: $(APPVEYOR_REPO_TAG_NAME)
-      on:
-        APPVEYOR_REPO_TAG: true
-
-  # ======================================
-  #    Build Flet Client for Linux ARM64
-  # ======================================
-
-  - matrix:
-      only:
-        - job_name: Build Flet for Linux ARM64
-
-    install:
-      # Flutter SDK
-      - sudo apt update --allow-releaseinfo-change
-      - sudo apt install -y clang libmpv-dev mpv libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
-      - git clone https://github.com/flutter/flutter.git -b stable "$HOME/flutter"
-      - export PATH="$PATH:$HOME/flutter/bin"
-      - flutter upgrade
-
-      # Fix Flutter on ARM
-      - pushd /tmp
-      - curl -O https://appveyordownloads.blob.core.windows.net/misc/shader_lib.tar.gz
-      - tar -zxf shader_lib.tar.gz
-      - cp -R shader_lib $HOME/flutter/bin/cache/artifacts/engine/linux-arm64
-      - popd
-
-    build_script:
-      - cd client
-
-      # FAT client
-      - flutter build linux --build-name=$APPVEYOR_BUILD_VERSION
-      - mv build/linux/arm64/release/bundle build/linux/arm64/release/flet
-      - tar -czvf flet-linux-arm64.tar.gz -C build/linux/arm64/release flet
-
-      # THIN client
-      - flutter clean
-      - sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' pubspec.yaml
-      - sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' lib/main.dart
-      - flutter build linux --build-name=$APPVEYOR_BUILD_VERSION
-      - mv build/linux/arm64/release/bundle build/linux/arm64/release/flet
-      - tar -czvf flet-linux-thin-arm64.tar.gz -C build/linux/arm64/release flet
-
-    artifacts:
-      - path: client/flet-linux-arm64.tar.gz
-        name: flet_linux_arm64
-      - path: client/flet-linux-thin-arm64.tar.gz
-        name: flet_linux_thin_arm64
-
-    deploy:
-      provider: GitHub
-      auth_token: $(GITHUB_TOKEN)
-      release: $(APPVEYOR_REPO_TAG_NAME)
-      artifact: flet_linux_arm64
       on:
         APPVEYOR_REPO_TAG: true
 
