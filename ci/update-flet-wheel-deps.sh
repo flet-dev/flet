@@ -25,7 +25,7 @@ pushd $wheel_dir
 # process metadata
 for metadata_file in *.dist-info/METADATA; do
     # Replace the condition in METADATA
-    sed -i "s/platform_system != \"embedded\"/(platform_system == 'Darwin' || platform_system == 'Linux' || platform_system == 'Windows') && 'embedded' not in platform_version/g" "$metadata_file"
+    sed -i "s/platform_system != \"embedded\"/(platform_system == 'Darwin' or platform_system == 'Linux' or platform_system == 'Windows') and 'embedded' not in platform_version/g" "$metadata_file"
     cat $metadata_file
 done
 
