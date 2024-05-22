@@ -47,6 +47,7 @@ environment:
       job_depends_on: build_flet_package
       ARCH: arm64
       PACKAGE_NAME: flet-desktop
+      python_stack: python 3.10
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
 
     - job_name: Build Flet Light for Linux ARM64
@@ -54,6 +55,7 @@ environment:
       job_depends_on: build_flet_package
       ARCH: arm64
       PACKAGE_NAME: flet-desktop-light
+      python_stack: python 3.10
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
 
     # - job_name: Build Flet for web
