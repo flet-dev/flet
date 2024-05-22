@@ -398,7 +398,7 @@ for:
       - publish_to_pypi packages/flet-desktop/dist/*
 
     artifacts:
-      - path: client/flet-linux$artifact_suffix-$ARCH.tar.gz
+      - path: client/flet-linux-*.tar.gz
       - path: sdk/python/packages/flet-desktop/dist/*.whl
 
     deploy:
