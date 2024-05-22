@@ -22,12 +22,21 @@ t["tool"]["poetry"]["version"] = ver
 
 # patch dependencies
 deps = t["tool"]["poetry"]["dependencies"]
-if deps.get("flet-core"):
-    deps["flet-core"] = ver
-if deps.get("flet-runtime"):
-    deps["flet-runtime"] = ver
-if deps.get("flet"):
-    deps["flet"] = ver
+
+
+def patch_dep(dep_name):
+    if deps.get(dep_name):
+        if isinstance(deps[dep_name], dict):
+            deps[dep_name]["version"] = ver
+        else:
+            deps[dep_name] = ver
+
+
+patch_dep("flet-core")
+patch_dep("flet-cli")
+patch_dep("flet-desktop")
+patch_dep("flet-web")
+patch_dep("flet")
 
 # save
 with open(toml_path, "w") as f:
