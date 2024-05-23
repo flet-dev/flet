@@ -38,7 +38,10 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   late final Player player = Player(
     configuration: playerConfig,
   );
-  late final controller = VideoController(player);
+  late final videoControllerConfiguration = parseControllerConfiguration(
+      widget.control, "configuration", const VideoControllerConfiguration())!;
+  late final controller =
+      VideoController(player, configuration: videoControllerConfiguration);
 
   @override
   void initState() {

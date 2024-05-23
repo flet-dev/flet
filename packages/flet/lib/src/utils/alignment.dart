@@ -50,10 +50,11 @@ WrapCrossAlignment parseWrapCrossAlignment(
       orElse: () => defValue);
 }
 
-Alignment? parseAlignment(Control control, String propName) {
+Alignment? parseAlignment(Control control, String propName,
+    [Alignment? defValue]) {
   var v = control.attrString(propName, null);
   if (v == null) {
-    return null;
+    return defValue;
   }
 
   final j1 = json.decode(v);
