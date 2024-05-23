@@ -143,6 +143,9 @@ class AlertDialog(AdaptiveControl):
 
     def before_update(self):
         super().before_update()
+        assert (
+            self.__title or self.__content or self.__actions
+        ), "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions"
         self._set_attr_json("actionsPadding", self.__actions_padding)
         self._set_attr_json("contentPadding", self.__content_padding)
         self._set_attr_json("titlePadding", self.__title_padding)
@@ -171,12 +174,6 @@ class AlertDialog(AdaptiveControl):
             action._set_attr_internal("n", "action")
             children.append(action)
         return children
-
-    def did_mount(self):
-        super().did_mount()
-        assert (
-            self.__title or self.__content or self.__actions
-        ), "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions"
 
     # open
     @property

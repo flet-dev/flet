@@ -109,16 +109,13 @@ class Rive(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
+        assert self.src, "src must be provided"
         self._set_attr_json("alignment", self.__alignment)
 
     def _get_children(self):
         if self.__placeholder:
             return [self.__placeholder]
         return []
-
-    def did_mount(self):
-        super().did_mount()
-        assert self.src, "src must be provided"
 
     # src
     @property

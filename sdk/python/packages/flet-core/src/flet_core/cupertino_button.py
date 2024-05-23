@@ -125,6 +125,9 @@ class CupertinoButton(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
+        assert (
+            self.text or self.__content
+        ), "at minimum, text or content must be provided"
         self._set_attr_json("padding", self.__padding)
         self._set_attr_json("borderRadius", self.__border_radius)
         self._set_attr_json("alignment", self.__alignment)
@@ -134,12 +137,6 @@ class CupertinoButton(ConstrainedControl):
             return []
         self.__content._set_attr_internal("n", "content")
         return [self.__content]
-
-    def did_mount(self):
-        super().did_mount()
-        assert (
-            self.text or self.__content
-        ), "at minimum, text or content must be provided"
 
     # text
     @property

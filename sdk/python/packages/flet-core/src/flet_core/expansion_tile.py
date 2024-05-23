@@ -161,6 +161,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
+        assert self.__title.visible, "title must be visible"
         self._set_attr_json("expandedAlignment", self.__expanded_alignment)
         self._set_attr_json("controlsPadding", self.__controls_padding)
         self._set_attr_json("tilePadding", self.__tile_padding)
@@ -183,10 +184,6 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
             self.__trailing._set_attr_internal("n", "trailing")
             children.append(self.__trailing)
         return children
-
-    def did_mount(self):
-        super().did_mount()
-        assert self.__title.visible, "title must be visible"
 
     # controls
     @property

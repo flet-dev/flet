@@ -150,8 +150,8 @@ class DragTarget(Control):
         self.__content._set_attr_internal("n", "content")
         return [self.__content]
 
-    def did_mount(self):
-        super().did_mount()
+    def before_update(self):
+        super().before_update()
         assert self.__content.visible, "content must be visible"
 
     # group

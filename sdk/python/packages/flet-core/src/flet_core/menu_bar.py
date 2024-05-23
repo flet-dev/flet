@@ -95,6 +95,9 @@ class MenuBar(Control):
 
     def before_update(self):
         super().before_update()
+        assert (
+            len(list(filter(lambda c: c.visible, self.__controls))) > 0
+        ), "MenuBar must have at minimum one visible control"
         if self.__style is not None:
             self.__style.side = self._wrap_attr_dict(self.__style.side)
             self.__style.shape = self._wrap_attr_dict(self.__style.shape)
@@ -108,12 +111,6 @@ class MenuBar(Control):
 
     def _get_children(self):
         return self.__controls
-
-    def did_mount(self):
-        super().did_mount()
-        assert (
-            len(list(filter(lambda c: c.visible, self.__controls))) > 0
-        ), "MenuBar must have at minimum one visible control"
 
     # controls
     @property

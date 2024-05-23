@@ -59,7 +59,7 @@ class PolylineLayerControl extends StatelessWidget with FletStoreMixin {
                 : null,
             gradientColors: gradientColors != null
                 ? (jsonDecode(gradientColors) as List)
-                    .map((e) => parseColorFromJson(Theme.of(context), e))
+                    .map((e) => parseColor(Theme.of(context), e))
                     .whereNotNull()
                     .toList()
                 : null,

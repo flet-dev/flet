@@ -174,8 +174,8 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
             children.append(self.__floating_action_button)
         return children
 
-    def did_mount(self):
-        super().did_mount()
+    def before_update(self):
+        super().before_update()
         assert self.__content.visible, "content must be visible"
 
     # Drawer

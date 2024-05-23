@@ -105,8 +105,8 @@ class CupertinoActionSheetAction(ConstrainedControl):
             return [self.__content]
         return []
 
-    def did_mount(self):
-        super().did_mount()
+    def before_update(self):
+        super().before_update()
         assert self.text is not None or (
             (self.__content is not None and self.__content.visible)
         ), "either text or (visible) content must be provided visible"

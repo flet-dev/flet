@@ -102,16 +102,13 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
+        assert self.__content.visible, "content must be visible"
         self._set_attr_json("minimum", self.__minimum)
         self._set_attr_json("minimumPadding", self.__minimum_padding)
 
     def _get_children(self):
         self.__content._set_attr_internal("n", "content")
         return [self.__content]
-
-    def did_mount(self):
-        super().did_mount()
-        assert self.__content.visible, "content must be visible"
 
     # left
     @property

@@ -62,17 +62,17 @@ class DataColumn(Control):
         self.__label._set_attr_internal("n", "label")
         return [self.__label]
 
-    def did_mount(self):
-        super().did_mount()
+    def before_update(self):
+        super().before_update()
         assert self.__label.visible, "label must be visible"
 
     # label
     @property
-    def label(self):
+    def label(self) -> Control:
         return self.__label
 
     @label.setter
-    def label(self, value):
+    def label(self, value: Control):
         self.__label = value
 
     # numeric
@@ -86,11 +86,11 @@ class DataColumn(Control):
 
     # tooltip
     @property
-    def tooltip(self):
+    def tooltip(self) -> Optional[str]:
         return self._get_attr("tooltip")
 
     @tooltip.setter
-    def tooltip(self, value):
+    def tooltip(self, value: Optional[str]):
         self._set_attr("tooltip", value)
 
     # on_sort
@@ -143,8 +143,8 @@ class DataCell(Control):
     def _get_children(self):
         return [self.__content]
 
-    def did_mount(self):
-        super().did_mount()
+    def before_update(self):
+        super().before_update()
         assert self.__content.visible, "content must be visible"
 
     # content
@@ -254,16 +254,13 @@ class DataRow(Control):
 
     def before_update(self):
         super().before_update()
+        assert (
+                len(list(filter(lambda cell: cell.visible, self.__cells))) > 0
+        ), "cells must contain at minimum one visible DataCell"
         self._set_attr_json("color", self.__color)
 
     def _get_children(self):
         return self.__cells
-
-    def did_mount(self):
-        super().did_mount()
-        assert (
-            len(list(filter(lambda cell: cell.visible, self.__cells))) > 0
-        ), "cells must contain at minimum one visible DataCell"
 
     # cells
     @property
@@ -437,6 +434,15 @@ class DataTable(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
+        visible_columns = list(filter(lambda column: column.visible, self.__columns))
+        visible_rows = list(filter(lambda row: row.visible, self.__rows))
+        assert (
+                len(visible_columns) > 0
+        ), "columns must contain at minimum one visible DataColumn"
+        assert all(
+            len(list(filter(lambda c: c.visible, row.cells))) == len(visible_columns)
+            for row in visible_rows
+        ), "each visible DataRow must contain exactly as many visible DataCells as there are visible DataColumns"
         self._set_attr_json("border", self.__border)
         self._set_attr_json("gradient", self.__gradient)
         self._set_attr_json("borderRadius", self.__border_radius)
@@ -449,18 +455,6 @@ class DataTable(ConstrainedControl):
 
     def _get_children(self):
         return self.__columns + self.__rows
-
-    def did_mount(self):
-        super().did_mount()
-        visible_columns = list(filter(lambda column: column.visible, self.__columns))
-        visible_rows = list(filter(lambda row: row.visible, self.__rows))
-        assert (
-            len(visible_columns) > 0
-        ), "columns must contain at minimum one visible DataColumn"
-        assert all(
-            len(list(filter(lambda c: c.visible, row.cells))) == len(visible_columns)
-            for row in visible_rows
-        ), "each visible DataRow must contain exactly as many visible DataCells as there are visible DataColumns"
 
     # columns
     @property

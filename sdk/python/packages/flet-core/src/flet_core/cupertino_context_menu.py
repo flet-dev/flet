@@ -45,17 +45,14 @@ class CupertinoContextMenu(AdaptiveControl):
     def _get_control_name(self):
         return "cupertinocontextmenu"
 
-    def _before_build_command(self):
-        super()._before_build_command()
-
     def _get_children(self):
         self.__content._set_attr_internal("n", "content")
         for action in self.__actions:
             action._set_attr_internal("n", "action")
         return [self.__content] + self.__actions
 
-    def did_mount(self):
-        super().did_mount()
+    def before_update(self):
+        super().before_update()
         assert (
             len(self.__actions) > 0
         ), "actions must be provided and at least one must be visible"

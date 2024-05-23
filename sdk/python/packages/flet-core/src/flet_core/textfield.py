@@ -302,6 +302,11 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
+        assert (
+            self.max_lines is None
+            or self.min_lines is None
+            or self.min_lines <= self.max_lines
+        ), "min_lines can't be greater than max_lines"
         self._set_attr_json("inputFilter", self.__input_filter)
         self._set_attr_json("autofillHints", self.__autofill_hints)
         if (
@@ -313,14 +318,6 @@ class TextField(FormFieldControl, AdaptiveControl):
             )
         ) and self.filled is None:
             self.filled = True  # required to display any of the above colors
-
-    def did_mount(self):
-        super().did_mount()
-        assert (
-            self.max_lines is None
-            or self.min_lines is None
-            or self.min_lines <= self.max_lines
-        ), "min_lines can't be greater than max_lines"
 
     def focus(self):
         self._set_attr_json("focus", str(time.time()))

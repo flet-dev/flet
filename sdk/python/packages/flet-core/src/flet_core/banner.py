@@ -103,6 +103,11 @@ class Banner(Control):
 
     def before_update(self):
         super().before_update()
+        assert self.__content.visible, "content must be visible"
+        assert (
+            len(list(filter(lambda a: a.visible, self.__actions))) > 0
+        ), "actions must contain at minimum one visible action Control"
+
         self._set_attr_json("contentPadding", self.__content_padding)
         self._set_attr_json("leadingPadding", self.__leading_padding)
         self._set_attr_json("margin", self.__margin)
@@ -118,13 +123,6 @@ class Banner(Control):
             self.__leading._set_attr_internal("n", "leading")
             children.append(self.__leading)
         return children
-
-    def did_mount(self):
-        super().did_mount()
-        assert self.__content.visible, "content must be visible"
-        assert (
-            len(list(filter(lambda a: a.visible, self.__actions))) > 0
-        ), "actions must contain at minimum one visible action Control"
 
     # open
     @property

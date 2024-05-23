@@ -108,8 +108,8 @@ class CupertinoSegmentedButton(ConstrainedControl):
     def _get_children(self):
         return self.__controls
 
-    def did_mount(self):
-        super().did_mount()
+    def before_update(self):
+        super().before_update()
         assert (
             len(self.__controls) >= 2
         ), "CupertinoSegmentedButton must have at minimum two visible controls"

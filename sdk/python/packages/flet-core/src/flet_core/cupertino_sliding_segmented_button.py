@@ -103,15 +103,12 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
     def _get_children(self):
         return self.__controls
 
-    def _before_build_command(self):
-        super()._before_build_command()
-        self._set_attr_json("padding", self.__padding)
-
-    def did_mount(self):
-        super().did_mount()
+    def before_update(self):
+        super().before_update()
         assert (
             len(self.__controls) >= 2
         ), "CupertinoSlidingSegmentedButton must have at minimum two visible controls"
+        self._set_attr_json("padding", self.__padding)
 
     # controls
     @property
