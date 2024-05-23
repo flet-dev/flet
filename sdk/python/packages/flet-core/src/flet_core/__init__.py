@@ -332,6 +332,7 @@ from flet_core.video import (
     FilterQuality,
     PlaylistMode,
     Video,
+    VideoConfiguration,
     VideoMedia,
     VideoSubtitleConfiguration,
 )
