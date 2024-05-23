@@ -10,7 +10,7 @@ else
   echo "Found file: $wheel"
 fi
 
-version=$(echo "$wheel" | sed -E 's/.*-([0-9.]+).*/\1/')
+version=$(echo "$wheel" | sed -E 's/.*-([0-9]+[^-]+)-.*/\1/')
 echo "$version"
 
 # Define temporary directory and file
