@@ -43,6 +43,8 @@ dependencies:
     path: ../packages/flet_rive
   flet_audio_recorder:
     path: ../packages/flet_audio_recorder
+  flet_permission_handler:
+    path: ../packages/flet_permission_handler 
   flet_video:
     path: ../packages/flet_video
   flet_webview:

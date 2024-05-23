@@ -206,6 +206,7 @@ from flet_core.painting import (
     PaintSweepGradient,
     StrokeJoin,
 )
+from flet_core.permission_handler import PermissionHandler
 from flet_core.popup_menu_button import (
     PopupMenuButton,
     PopupMenuItem,
