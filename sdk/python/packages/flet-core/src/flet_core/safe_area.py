@@ -1,3 +1,4 @@
+import warnings
 from typing import Any, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
@@ -18,17 +19,18 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         content: Control,
-        key: Optional[str] = None,
         left: Optional[bool] = None,
         top: Optional[bool] = None,
         right: Optional[bool] = None,
         bottom: Optional[bool] = None,
         maintain_bottom_view_padding: Optional[bool] = None,
         minimum: PaddingValue = None,
+        minimum_padding: PaddingValue = None,
         #
         # ConstrainedControl
         #
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
@@ -93,6 +95,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
         self.bottom = bottom
         self.maintain_bottom_view_padding = maintain_bottom_view_padding
         self.minimum = minimum
+        self.minimum_padding = minimum_padding
 
     def _get_control_name(self):
         return "safearea"
@@ -100,6 +103,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
     def before_update(self):
         super().before_update()
         self._set_attr_json("minimum", self.__minimum)
+        self._set_attr_json("minimumPadding", self.__minimum_padding)
 
     def _get_children(self):
         self.__content._set_attr_internal("n", "content")
@@ -168,8 +172,30 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
     # minimum
     @property
     def minimum(self) -> PaddingValue:
+        warnings.warn(
+            f"minimum is deprecated since version 0.23.0 "
+            f"and will be removed in version 1.0. Use minimum_padding instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
         return self.__minimum
 
     @minimum.setter
     def minimum(self, value: PaddingValue):
         self.__minimum = value
+        if value is not None:
+            warnings.warn(
+                f"minimum is deprecated since version 0.23.0 "
+                f"and will be removed in version 1.0. Use minimum_padding instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
+
+    # minimum_padding
+    @property
+    def minimum_padding(self) -> PaddingValue:
+        return self.__minimum_padding
+
+    @minimum_padding.setter
+    def minimum_padding(self, value: PaddingValue):
+        self.__minimum_padding = value
