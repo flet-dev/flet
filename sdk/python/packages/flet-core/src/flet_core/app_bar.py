@@ -138,16 +138,6 @@ class AppBar(AdaptiveControl):
             children.append(action)
         return children
 
-    # Public methods
-    def add(self, *actions: Control) -> None:
-        self.__add(self.__actions, *actions)
-
-    def insert(self, at: int, *actions: Control) -> None:
-        self.__insert(self.__actions, at, *actions)
-
-    def remove(self, *actions: Control) -> None:
-        self.__remove(self.__actions, *actions)
-
     # leading
     @property
     def leading(self) -> Optional[Control]:

@@ -209,15 +209,6 @@ class SearchBar(ConstrainedControl):
     async def close_view_async(self, text: str = ""):
         self.close_view(text=text)
 
-    def add(self, *controls: Control) -> None:
-        self.__add(self.__controls, *controls)
-
-    def insert(self, at: int, *controls: Control) -> None:
-        self.__insert(self.__controls, at, *controls)
-
-    def remove(self, *controls: Control) -> None:
-        self.__remove(self.__controls, *controls)
-
     # bar_leading
     @property
     def bar_leading(self) -> Optional[Control]:

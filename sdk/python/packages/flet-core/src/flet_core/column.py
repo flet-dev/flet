@@ -171,15 +171,6 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     async def clean_async(self):
         self.clean()
 
-    def add(self, *controls: Control) -> None:
-        self.__add(self.__controls, *controls)
-
-    def insert(self, at: int, *controls: Control) -> None:
-        self.__insert(self.__controls, at, *controls)
-
-    def remove(self, *controls: Control) -> None:
-        self.__remove(self.__controls, *controls)
-
     # tight
     @property
     def tight(self) -> Optional[bool]:

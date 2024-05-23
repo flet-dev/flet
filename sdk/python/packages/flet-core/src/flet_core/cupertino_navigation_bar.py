@@ -35,9 +35,9 @@ class CupertinoNavigationBar(ConstrainedControl):
             active_color=ft.colors.BLACK,
             on_change=lambda e: print("Selected tab:", e.control.selected_index),
             destinations=[
-                ft.NavigationDestination(icon=ft.icons.EXPLORE, label="Explore"),
-                ft.NavigationDestination(icon=ft.icons.COMMUTE, label="Commute"),
-                ft.NavigationDestination(
+                ft.NavigationBarDestination(icon=ft.icons.EXPLORE, label="Explore"),
+                ft.NavigationBarDestination(icon=ft.icons.COMMUTE, label="Commute"),
+                ft.NavigationBarDestination(
                     icon=ft.icons.BOOKMARK_BORDER,
                     selected_icon=ft.icons.BOOKMARK,
                     label="Explore",
@@ -143,16 +143,6 @@ class CupertinoNavigationBar(ConstrainedControl):
         children = []
         children.extend(self.__destinations)
         return children
-
-    # Public methods
-    def add(self, *destinations: NavigationBarDestination) -> None:
-        self.__add(self.__destinations, *destinations)
-
-    def insert(self, at: int, *destinations: NavigationBarDestination) -> None:
-        self.__insert(self.__destinations, at, *destinations)
-
-    def remove(self, *destinations: NavigationBarDestination) -> None:
-        self.__remove(self.__destinations, *destinations)
 
     # destinations
     @property

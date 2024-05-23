@@ -111,16 +111,6 @@ class MenuBar(Control):
     def _get_children(self):
         return self.__controls
 
-    # Public methods
-    def add(self, *controls: Control) -> None:
-        self.__add(self.__controls, *controls)
-
-    def insert(self, at: int, *controls: Control) -> None:
-        self.__insert(self.__controls, at, *controls)
-
-    def remove(self, *controls: Control) -> None:
-        self.__remove(self.__controls, *controls)
-
     # controls
     @property
     def controls(self):
