@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
@@ -10,13 +9,8 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    StrokeCap,
 )
-
-
-class StrokeCap(Enum):
-    ROUND = "round"
-    SQUARE = "square"
-    BUTT = "butt"
 
 
 class ProgressRing(ConstrainedControl):
