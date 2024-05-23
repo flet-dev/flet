@@ -289,3 +289,15 @@ class MouseCursor(Enum):
     WAIT = "wait"
     ZOOM_IN = "zoomIn"
     ZOOM_OUT = "zoomOut"
+
+
+class StrokeCap(Enum):
+    ROUND = "round"
+    SQUARE = "square"
+    BUTT = "butt"
+
+
+class StrokeJoin(Enum):
+    MITER = "mitter"
+    ROUND = "round"
+    BEVEL = "bevel"
