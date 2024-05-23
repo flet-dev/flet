@@ -533,7 +533,8 @@ develop = true
 
 [package.dependencies]
 flet-cli = {version = "0.1.0", markers = "platform_system != \"embedded\""}
-flet-desktop = {version = "0.1.0", markers = "platform_system != \"embedded\""}
+flet-core = "0.1.0"
+flet-desktop = {version = "0.1.0", markers = "platform_system != \"desktop-light\""}
 flet-web = {version = "0.1.0", markers = "platform_system != \"embedded\""}
 httpx = {version = "^0", markers = "platform_system != \"Emscripten\""}
 oauthlib = {version = "^3.2.2", markers = "platform_system != \"Emscripten\""}
@@ -553,10 +554,6 @@ develop = true
 
 [package.dependencies]
 cookiecutter = "^2.6.0"
-flet = "0.1.0"
-flet-core = "0.1.0"
-flet-desktop = "0.1.0"
-flet-web = "0.1.0"
 packaging = "^23.1"
 qrcode = "^7.4.2"
 watchdog = "^4.0.0"
@@ -590,9 +587,6 @@ python-versions = "^3.8"
 files = []
 develop = true
 
-[package.dependencies]
-flet-core = "0.1.0"
-
 [package.source]
 type = "directory"
 url = "packages/flet-desktop"
@@ -608,7 +602,6 @@ develop = true
 
 [package.dependencies]
 fastapi = "^0"
-flet-core = "0.1.0"
 uvicorn = {version = "^0", extras = ["standard"]}
 
 [package.source]

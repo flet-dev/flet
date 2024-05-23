@@ -17,10 +17,6 @@ documentation = "https://flet.dev/docs"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-flet = "0.1.0"
-flet-core = "0.1.0"
-flet-web = "0.1.0"
-flet-desktop = "0.1.0"
 watchdog = "^4.0.0"
 packaging = "^23.1"
 qrcode = "^7.4.2"
