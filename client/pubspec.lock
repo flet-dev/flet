@@ -250,6 +250,9 @@ packages:
     dependency: "direct main"
     description:
       path: "../packages/flet_flashlight"
+      relative: true
+    source: path
+    version: "0.23.0"
   flet_geolocator:
     dependency: "direct main"
     description:
