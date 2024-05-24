@@ -45,7 +45,7 @@ class WindowDragArea(ConstrainedControl):
 
     def __init__(
         self,
-        content: Optional[Control] = None,
+        content: Control,
         maximizable: Optional[bool] = None,
         #
         # ConstrainedControl
@@ -107,8 +107,6 @@ class WindowDragArea(ConstrainedControl):
             data=data,
         )
 
-        self.__content: Optional[Control] = None
-
         self.content = content
         self.maximizable = maximizable
 
@@ -116,19 +114,20 @@ class WindowDragArea(ConstrainedControl):
         return "windowDragArea"
 
     def _get_children(self):
-        children = []
-        if self.__content:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
+        self.__content._set_attr_internal("n", "content")
+        return [self.__content]
+
+    def before_update(self):
+        super().before_update()
+        assert self.__content.visible, "content must be visible"
 
     # content
     @property
-    def content(self):
+    def content(self) -> Control:
         return self.__content
 
     @content.setter
-    def content(self, value):
+    def content(self, value: Control):
         self.__content = value
 
     # maximizable

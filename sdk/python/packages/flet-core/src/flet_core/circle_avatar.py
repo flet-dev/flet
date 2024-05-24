@@ -235,6 +235,7 @@ class CircleAvatar(ConstrainedControl):
 
     @radius.setter
     def radius(self, value: OptionalNumber):
+        assert value is None or value >= 0, "radius cannot be negative"
         self._set_attr("radius", value)
 
     # min_radius
@@ -244,6 +245,7 @@ class CircleAvatar(ConstrainedControl):
 
     @min_radius.setter
     def min_radius(self, value: OptionalNumber):
+        assert value is None or value >= 0, "min_radius cannot be negative"
         self._set_attr("minRadius", value)
 
     # max_radius
@@ -253,6 +255,7 @@ class CircleAvatar(ConstrainedControl):
 
     @max_radius.setter
     def max_radius(self, value: OptionalNumber):
+        assert value is None or value >= 0, "max_radius cannot be negative"
         self._set_attr("maxRadius", value)
 
     # color

@@ -47,7 +47,7 @@ class _CupertinoSegmentedButtonControlState
 
     if (ctrls.length < 2) {
       return const ErrorControl(
-          "CupertinoSegmentedButton must have at least two controls.");
+          "CupertinoSegmentedButton must have at minimum two visible controls");
     }
     var children = ctrls.asMap().map((i, c) => MapEntry(
         i,

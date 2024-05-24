@@ -72,6 +72,7 @@ class AutoComplete(Control):
 
     @suggestions_max_height.setter
     def suggestions_max_height(self, value: OptionalNumber):
+        assert value is None or value >= 0, "suggestions_max_height cannot be negative"
         self._set_attr("suggestionsMaxHeight", value)
 
     # suggestions

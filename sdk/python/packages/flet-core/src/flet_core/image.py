@@ -143,11 +143,10 @@ class Image(ConstrainedControl):
         return "image"
 
     def _get_children(self):
-        children = []
         if self.__error_content is not None:
             self.__error_content._set_attr_internal("n", "error_content")
-            children.append(self.__error_content)
-        return children
+            return [self.__error_content]
+        return []
 
     def before_update(self):
         super().before_update()

@@ -85,6 +85,7 @@ class VerticalDivider(Control):
 
     @width.setter
     def width(self, value: OptionalNumber):
+        assert value is None or value >= 0, "width cannot be negative"
         self._set_attr("width", value)
 
     # thickness
@@ -94,6 +95,7 @@ class VerticalDivider(Control):
 
     @thickness.setter
     def thickness(self, value: OptionalNumber):
+        assert value is None or value >= 0, "thickness cannot be negative"
         self._set_attr("thickness", value)
 
     # color
@@ -112,6 +114,7 @@ class VerticalDivider(Control):
 
     @leading_indent.setter
     def leading_indent(self, value: OptionalNumber):
+        assert value is None or value >= 0, "leading_indent cannot be negative"
         self._set_attr("leadingIndent", value)
 
     # trailing_indent
@@ -121,4 +124,5 @@ class VerticalDivider(Control):
 
     @trailing_indent.setter
     def trailing_indent(self, value: OptionalNumber):
+        assert value is None or value >= 0, "trailing_indent cannot be negative"
         self._set_attr("trailingIndent", value)

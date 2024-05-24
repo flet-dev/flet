@@ -31,7 +31,7 @@ class ProgressRing(ConstrainedControl):
         page.add(
             ft.Text("Circular progress indicator", style="headlineSmall"),
             ft.Row([pr, ft.Text("Wait for the completion...")]),
-            ft.Text("Indeterminate cicrular progress", style="headlineSmall"),
+            ft.Text("Indeterminate circular progress", style="headlineSmall"),
             ft.Column(
                 [ft.ProgressRing(), ft.Text("I'm going to run for ages...")],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -137,7 +137,7 @@ class ProgressRing(ConstrainedControl):
     # value
     @property
     def value(self) -> OptionalNumber:
-        return self._get_attr("value")
+        return self._get_attr("value", data_type="float")
 
     @value.setter
     def value(self, value: OptionalNumber):
@@ -146,10 +146,11 @@ class ProgressRing(ConstrainedControl):
     # stroke_width
     @property
     def stroke_width(self) -> OptionalNumber:
-        return self._get_attr("strokeWidth")
+        return self._get_attr("strokeWidth", data_type="float", def_value=4.0)
 
     @stroke_width.setter
     def stroke_width(self, value: OptionalNumber):
+        assert value is None or value >= 0, "stroke_width cannot be negative"
         self._set_attr("strokeWidth", value)
 
     # stroke_align
@@ -163,30 +164,28 @@ class ProgressRing(ConstrainedControl):
 
     # stroke_cap
     @property
-    def stroke_cap(self) -> OptionalNumber:
+    def stroke_cap(self) -> Optional[StrokeCap]:
         return self.__stroke_cap
 
     @stroke_cap.setter
-    def stroke_cap(self, value: OptionalNumber):
+    def stroke_cap(self, value: Optional[StrokeCap]):
         self.__stroke_cap = value
-        self._set_attr(
-            "strokeCap", value.value if isinstance(value, StrokeCap) else value
-        )
+        self._set_enum_attr("strokeCap", value, StrokeCap)
 
     # color
     @property
-    def color(self):
+    def color(self) -> Optional[str]:
         return self._get_attr("color")
 
     @color.setter
-    def color(self, value):
+    def color(self, value: Optional[str]):
         self._set_attr("color", value)
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)

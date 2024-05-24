@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Any, List, Optional, Union
 
+from flet_core.autofill_group import AutofillHint
 from flet_core.border import Border
 from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient
@@ -75,6 +76,7 @@ class CupertinoTextField(TextField):
         show_cursor: Optional[bool] = None,
         selection_color: Optional[str] = None,
         input_filter: Optional[InputFilter] = None,
+        autofill_hints: Union[None, AutofillHint, List[AutofillHint]] = None,
         on_change=None,
         on_submit=None,
         on_focus=None,
@@ -194,6 +196,7 @@ class CupertinoTextField(TextField):
             show_cursor=show_cursor,
             selection_color=selection_color,
             input_filter=input_filter,
+            autofill_hints=autofill_hints,
             on_change=on_change,
             on_submit=on_submit,
             on_focus=on_focus,
