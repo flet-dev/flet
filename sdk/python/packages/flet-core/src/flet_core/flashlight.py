@@ -42,21 +42,21 @@ class Flashlight(Control):
     def _get_control_name(self):
         return "flashlight"
 
-    def turn_on(self, wait_timeout: Optional[int] = 3) -> int:
+    def turn_on(self, wait_timeout: Optional[int] = 3) -> bool:
         sr = self.invoke_method("on", wait_for_result=True, wait_timeout=wait_timeout)
 
         if int(sr) == 1:
             self.turned_on = True
         return self.turned_on
 
-    def turn_off(self, wait_timeout: Optional[int] = 3) -> int:
+    def turn_off(self, wait_timeout: Optional[int] = 3) -> bool:
         sr = self.invoke_method("off", wait_for_result=True, wait_timeout=wait_timeout)
 
         if int(sr) == 1:
             self.turned_on = False
         return self.turned_on
 
-    def toggle(self, wait_timeout: Optional[int] = 3) -> int:
+    def toggle(self, wait_timeout: Optional[int] = 3) -> bool:
         if self.turned_on:
             return self.turn_off(wait_timeout)
         return self.turn_on(wait_timeout)
