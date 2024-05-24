@@ -204,16 +204,16 @@ from flet_core.painting import (
     PaintLinearGradient,
     PaintRadialGradient,
     PaintSweepGradient,
-    StrokeCap,
     StrokeJoin,
 )
+from flet_core.permission_handler import PermissionHandler
 from flet_core.popup_menu_button import (
     PopupMenuButton,
     PopupMenuItem,
     PopupMenuPosition,
 )
 from flet_core.progress_bar import ProgressBar
-from flet_core.progress_ring import ProgressRing, StrokeCap
+from flet_core.progress_ring import ProgressRing
 from flet_core.pubsub import PubSubClient, PubSubHub
 from flet_core.querystring import QueryString
 from flet_core.radio import Radio
@@ -331,6 +331,8 @@ from flet_core.types import (
     ThemeMode,
     UrlTarget,
     VerticalAlignment,
+    StrokeCap,
+    StrokeJoin,
 )
 from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider
@@ -338,6 +340,7 @@ from flet_core.video import (
     FilterQuality,
     PlaylistMode,
     Video,
+    VideoConfiguration,
     VideoMedia,
     VideoSubtitleConfiguration,
 )

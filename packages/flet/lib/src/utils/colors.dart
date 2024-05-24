@@ -250,3 +250,6 @@ MaterialStateProperty<Color?>? parseMaterialStateColor(
   return getMaterialStateProperty<Color?>(
       j1, (jv) => HexColor.fromString(theme, jv as String), null);
 }
+
+Color? parseColorFromJson(ThemeData? theme, [String? colorString = ""]) =>
+    colorString != null ? HexColor.fromString(theme, colorString ?? "") : null;

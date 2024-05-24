@@ -299,6 +299,17 @@ class MouseCursor(Enum):
     ZOOM_OUT = "zoomOut"
 
 
+class StrokeCap(Enum):
+    ROUND = "round"
+    SQUARE = "square"
+    BUTT = "butt"
+
+
+class StrokeJoin(Enum):
+    MITER = "mitter"
+    ROUND = "round"
+    BEVEL = "bevel
+
 # Events
 ControlEventFunction = Callable[[ControlEvent], None]
 
@@ -312,5 +323,4 @@ Kwargs = Dict[str, Any]
 
 # Protocols
 class SupportsStr(Protocol):
-    def __str__(self) -> str:
-        ...
+    def __str__(self) -> str: ...
