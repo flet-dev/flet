@@ -107,7 +107,7 @@ class ScaleDetails {
         scale: parseDouble(json["scale"]),
         scaleX: parseDouble(json["scale_x"]),
         scaleY: parseDouble(json["scale_y"]),
-        alignment: alignment: alignmentFromJson(json["alignment"], Alignment.center)!);
+        alignment: alignmentFromJson(json["alignment"], Alignment.center)!);
   }
 }
 
