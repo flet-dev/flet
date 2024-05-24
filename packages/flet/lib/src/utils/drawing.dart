@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui' as ui;
 
+import 'package:flet/src/utils/others.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
@@ -38,11 +39,9 @@ List<double>? parsePaintStrokeDashPattern(Control control, String propName) {
 }
 
 Paint paintFromJSON(ThemeData? theme, Map<String, dynamic> json) {
-  //debugPrint("paintFromJSON: $json");
   var paint = Paint();
   if (json["color"] != null) {
-    paint.color =
-        HexColor.fromString(theme, json["color"] as String) ?? Colors.black;
+    paint.color = parseColor(theme, json["color"] as String, Colors.black)!;
   }
   if (json["blend_mode"] != null) {
     paint.blendMode = BlendMode.values.firstWhere(
@@ -62,14 +61,10 @@ Paint paintFromJSON(ThemeData? theme, Map<String, dynamic> json) {
   paint.strokeWidth = parseDouble(json["stroke_width"], 0)!;
 
   if (json["stroke_cap"] != null) {
-    paint.strokeCap = StrokeCap.values.firstWhere(
-        (e) => e.name.toLowerCase() == json["stroke_cap"].toLowerCase(),
-        orElse: () => StrokeCap.butt);
+    paint.strokeCap = parseStrokeCap(json["stroke_cap"], StrokeCap.butt)!;
   }
   if (json["stroke_join"] != null) {
-    paint.strokeJoin = StrokeJoin.values.firstWhere(
-        (e) => e.name.toLowerCase() == json["stroke_join"].toLowerCase(),
-        orElse: () => StrokeJoin.miter);
+    paint.strokeJoin = parseStrokeJoin(json["stroke_join"], StrokeJoin.miter)!;
   }
   if (json["style"] != null) {
     paint.style = PaintingStyle.values.firstWhere(
@@ -88,14 +83,14 @@ ui.Gradient? paintGradientFromJSON(
         offsetFromJson(json["end"])!,
         parseColors(theme, json["colors"]),
         parseStops(json["color_stops"]),
-        parseTileMode(json["tile_mode"]));
+        parseTileMode(json["tile_mode"], TileMode.clamp)!);
   } else if (type == "radial") {
     return ui.Gradient.radial(
       offsetFromJson(json["center"])!,
       parseDouble(json["radius"], 0)!,
       parseColors(theme, json["colors"]),
       parseStops(json["color_stops"]),
-      parseTileMode(json["tile_mode"]),
+      parseTileMode(json["tile_mode"], TileMode.clamp)!,
       null,
       offsetFromJson(json["focal"]),
       parseDouble(json["focal_radius"], 0)!,
@@ -106,7 +101,7 @@ ui.Gradient? paintGradientFromJSON(
         center,
         parseColors(theme, json["colors"]),
         parseStops(json["color_stops"]),
-        parseTileMode(json["tile_mode"]),
+        parseTileMode(json["tile_mode"], TileMode.clamp)!,
         parseDouble(json["start_angle"], 0)!,
         parseDouble(json["end_angle"], 0)!,
         parseRotationToMatrix4(

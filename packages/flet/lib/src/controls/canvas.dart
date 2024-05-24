@@ -272,7 +272,7 @@ class FletCustomPainter extends CustomPainter {
     var offset =
         Offset(shape.control.attrDouble("x")!, shape.control.attrDouble("y")!);
     var alignment =
-        parseAlignment(shape.control, "alignment") ?? Alignment.topLeft;
+        parseAlignment(shape.control, "alignment", Alignment.topLeft)!;
     var text = shape.control.attrString("text", "")!;
     TextStyle style = parseTextStyle(theme, shape.control, "style") ??
         theme.textTheme.bodyMedium!;
@@ -281,9 +281,8 @@ class FletCustomPainter extends CustomPainter {
       style = style.copyWith(color: theme.textTheme.bodyMedium!.color);
     }
 
-    TextAlign? textAlign = TextAlign.values.firstWhereOrNull((a) =>
-        a.name.toLowerCase() ==
-        shape.control.attrString("textAlign", "")!.toLowerCase());
+    TextAlign? textAlign =
+        parseTextAlign(shape.control.attrString("textAlign"), TextAlign.start)!;
     TextSpan span = TextSpan(
         text: text,
         style: style,
@@ -296,7 +295,7 @@ class FletCustomPainter extends CustomPainter {
     // paint
     TextPainter textPainter = TextPainter(
         text: span,
-        textAlign: textAlign ?? TextAlign.start,
+        textAlign: textAlign,
         maxLines: maxLines,
         ellipsis: ellipsis,
         textDirection: Directionality.of(context));

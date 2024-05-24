@@ -100,14 +100,14 @@ class _NavigationBarControlState extends State<NavigationBarControl>
             destinations: viewModel.controlViews.map((destView) {
               var label = destView.control.attrString("label", "")!;
 
-              var icon = parseIcon(destView.control.attrString("icon", "")!);
-              var iconContentCtrls =
-                  destView.children.where((c) => c.name == "icon_content");
+              var icon = parseIcon(destView.control.attrString("icon"));
+              var iconContentCtrls = destView.children
+                  .where((c) => c.name == "icon_content" && c.isVisible);
 
               var selectedIcon =
-                  parseIcon(destView.control.attrString("selectedIcon", "")!);
-              var selectedIconContentCtrls = destView.children
-                  .where((c) => c.name == "selected_icon_content");
+                  parseIcon(destView.control.attrString("selectedIcon"));
+              var selectedIconContentCtrls = destView.children.where(
+                  (c) => c.name == "selected_icon_content" && c.isVisible);
 
               return NavigationDestination(
                   enabled: !disabled || !destView.control.isDisabled,

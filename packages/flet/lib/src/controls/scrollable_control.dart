@@ -92,9 +92,7 @@ class _ScrollableControlState extends State<ScrollableControl>
 
         if (name == "scroll_to") {
           var duration = parseInt(params["duration"], 0)!;
-          var curve = params["curve"] != null
-              ? parseCurve(params["curve"] as String)
-              : Curves.ease;
+          var curve = parseCurve(params["curve"], Curves.ease)!;
           if (params["key"] != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               var key = FletAppServices.of(context).globalKeys[params["key"]];

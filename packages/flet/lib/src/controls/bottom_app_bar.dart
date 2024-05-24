@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/edge_insets.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'flet_store_mixin.dart';
 
@@ -44,11 +45,8 @@ class _BottomAppBarControlState extends State<BottomAppBarControl>
 
     var elevation = widget.control.attrDouble("elevation", 0)!;
 
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            widget.control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.none);
+    var clipBehavior =
+        parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
     var bottomAppBar = withControls(
         widget.children
             .where((c) => c.isVisible && c.name == null)

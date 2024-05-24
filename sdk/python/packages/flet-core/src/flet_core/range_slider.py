@@ -201,7 +201,7 @@ class RangeSlider(ConstrainedControl):
     # min
     @property
     def min(self) -> OptionalNumber:
-        return self._get_attr("min")
+        return self._get_attr("min", data_type="float")
 
     @min.setter
     def min(self, value: OptionalNumber):
@@ -213,7 +213,7 @@ class RangeSlider(ConstrainedControl):
     # max
     @property
     def max(self) -> OptionalNumber:
-        return self._get_attr("max")
+        return self._get_attr("max", data_type="float")
 
     @max.setter
     def max(self, value: OptionalNumber):
@@ -242,20 +242,20 @@ class RangeSlider(ConstrainedControl):
 
     # active_color
     @property
-    def active_color(self):
+    def active_color(self) -> Optional[str]:
         return self._get_attr("activeColor")
 
     @active_color.setter
-    def active_color(self, value):
+    def active_color(self, value: Optional[str]):
         self._set_attr("activeColor", value)
 
     # inactive_color
     @property
-    def inactive_color(self):
+    def inactive_color(self) -> Optional[str]:
         return self._get_attr("inactiveColor")
 
     @inactive_color.setter
-    def inactive_color(self, value):
+    def inactive_color(self, value: Optional[str]):
         self._set_attr("inactiveColor", value)
 
     # overlay_color

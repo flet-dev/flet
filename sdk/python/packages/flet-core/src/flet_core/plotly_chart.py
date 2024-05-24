@@ -129,27 +129,27 @@ class PlotlyChart(Container):
 
     # original_size
     @property
-    def original_size(self):
+    def original_size(self) -> bool:
         return self.__original_size
 
     @original_size.setter
-    def original_size(self, value):
+    def original_size(self, value: bool):
         self.__original_size = value
 
     # isolated
     @property
-    def isolated(self):
+    def isolated(self) -> bool:
         return self.__isolated
 
     @isolated.setter
-    def isolated(self, value):
+    def isolated(self, value: bool):
         self.__isolated = value
 
     # figure
     @property
-    def figure(self):
+    def figure(self) -> Optional[Figure]:
         return self.__figure
 
     @figure.setter
-    def figure(self, value):
+    def figure(self, value: Optional[Figure]):
         self.__figure = value

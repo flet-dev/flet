@@ -48,7 +48,7 @@ def test_text_style_enum():
 
 def test_text_overflow_enum():
     r = ft.Text()
-    assert r.overflow == ft.TextOverflow.NONE
+    assert r.overflow is None
     assert r._get_attr("overflow") is None
 
     r = ft.Text(overflow=ft.TextOverflow.ELLIPSIS)

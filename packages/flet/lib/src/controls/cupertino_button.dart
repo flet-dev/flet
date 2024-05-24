@@ -43,14 +43,14 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
         widget.children.where((c) => c.name == "content" && c.isVisible);
 
     String? text = widget.control.attrString("text");
-    IconData? icon = parseIcon(widget.control.attrString("icon", "")!);
+    IconData? icon = parseIcon(widget.control.attrString("icon"));
     Color? iconColor = widget.control.attrColor("iconColor", context);
 
     // IconButton props below
     double? iconSize = widget.control.attrDouble("iconSize");
     bool selected = widget.control.attrBool("selected", false)!;
     IconData? selectedIcon =
-        parseIcon(widget.control.attrString("selectedIcon", "")!);
+        parseIcon(widget.control.attrString("selectedIcon"));
     Color? selectedIconColor =
         widget.control.attrColor("selectedIconColor", context);
 
@@ -97,10 +97,9 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     Color? bgColor = widget.control.attrColor("bgColor", context);
     Color? color = widget.control.attrColor("color", context);
     AlignmentGeometry alignment =
-        parseAlignment(widget.control, "alignment") ?? Alignment.center;
-    BorderRadius borderRadius =
-        parseBorderRadius(widget.control, "borderRadius") ??
-            const BorderRadius.all(Radius.circular(8.0));
+        parseAlignment(widget.control, "alignment", Alignment.center)!;
+    BorderRadius borderRadius = parseBorderRadius(widget.control,
+        "borderRadius", const BorderRadius.all(Radius.circular(8.0)))!;
 
     EdgeInsets? padding = parseEdgeInsets(widget.control, "padding");
 

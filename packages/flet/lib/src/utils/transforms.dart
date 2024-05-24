@@ -6,10 +6,11 @@ import '../models/control.dart';
 import 'alignment.dart';
 import 'numbers.dart';
 
-RotationDetails? parseRotate(Control control, String propName) {
-  var v = control.attrString(propName, null);
+RotationDetails? parseRotate(Control control, String propName,
+    [RotationDetails? defaultValue]) {
+  var v = control.attrString(propName);
   if (v == null) {
-    return null;
+    return defaultValue;
   }
 
   final j1 = json.decode(v);
@@ -25,10 +26,11 @@ RotationDetails rotateFromJSON(dynamic json) {
   return RotationDetails.fromJson(json);
 }
 
-ScaleDetails? parseScale(Control control, String propName) {
-  var v = control.attrString(propName, null);
+ScaleDetails? parseScale(Control control, String propName,
+    [ScaleDetails? defaultValue]) {
+  var v = control.attrString(propName);
   if (v == null) {
-    return null;
+    return defaultValue;
   }
 
   final j1 = json.decode(v);
@@ -47,10 +49,11 @@ ScaleDetails scaleFromJSON(dynamic json) {
   return ScaleDetails.fromJson(json);
 }
 
-OffsetDetails? parseOffset(Control control, String propName) {
+OffsetDetails? parseOffset(Control control, String propName,
+    [OffsetDetails? defaultValue]) {
   var v = control.attrString(propName, null);
   if (v == null) {
-    return null;
+    return defaultValue;
   }
 
   final j1 = json.decode(v);
@@ -83,9 +86,7 @@ class RotationDetails {
   factory RotationDetails.fromJson(Map<String, dynamic> json) {
     return RotationDetails(
         angle: parseDouble(json["angle"], 0)!,
-        alignment: json["alignment"] != null
-            ? alignmentFromJson(json["alignment"])
-            : Alignment.center);
+        alignment: alignmentFromJson(json["alignment"], Alignment.center)!);
   }
 }
 
@@ -106,9 +107,7 @@ class ScaleDetails {
         scale: parseDouble(json["scale"]),
         scaleX: parseDouble(json["scale_x"]),
         scaleY: parseDouble(json["scale_y"]),
-        alignment: json["alignment"] != null
-            ? alignmentFromJson(json["alignment"])
-            : Alignment.center);
+        alignment: alignment: alignmentFromJson(json["alignment"], Alignment.center)!);
   }
 }
 

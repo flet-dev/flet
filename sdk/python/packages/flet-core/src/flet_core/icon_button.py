@@ -231,7 +231,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     # icon_size
     @property
     def icon_size(self) -> OptionalNumber:
-        return self._get_attr("iconSize")
+        return self._get_attr("iconSize", data_type="float")
 
     @icon_size.setter
     def icon_size(self, value: OptionalNumber):
@@ -240,7 +240,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     # splash_radius
     @property
     def splash_radius(self) -> OptionalNumber:
-        return self._get_attr("splashRadius")
+        return self._get_attr("splashRadius", data_type="float")
 
     @splash_radius.setter
     def splash_radius(self, value: OptionalNumber):
@@ -381,7 +381,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_attr("mouseCursor", value, MouseCursor)
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # visual_density
     @property
@@ -391,7 +391,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @visual_density.setter
     def visual_density(self, value: Optional[ThemeVisualDensity]):
         self.__visual_density = value
-        self._set_attr("visualDensity", value, ThemeVisualDensity)
+        self._set_enum_attr("visualDensity", value, ThemeVisualDensity)
 
     # on_click
     @property

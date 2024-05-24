@@ -1,7 +1,7 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 
 class ProgressRingControl extends StatelessWidget {
@@ -19,9 +19,7 @@ class ProgressRingControl extends StatelessWidget {
     var semanticsValue = control.attrDouble("semanticsValue");
     var strokeAlign = control.attrDouble("strokeAlign", 0)!;
     var semanticsLabel = control.attrString("semanticsLabel");
-    var strokeCap = StrokeCap.values.firstWhereOrNull((e) =>
-        e.name.toLowerCase() ==
-        control.attrString("strokeCap", "")!.toLowerCase());
+    var strokeCap = parseStrokeCap(control.attrString("strokeCap"));
     var strokeWidth = control.attrDouble("strokeWidth", 4)!;
     var color = control.attrColor("color", context);
     var bgColor = control.attrColor("bgColor", context);

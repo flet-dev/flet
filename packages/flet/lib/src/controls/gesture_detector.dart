@@ -557,7 +557,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
     var mouseCursor = widget.control.attrString("mouseCursor");
     result = ((mouseCursor != null) || onHover || onEnter || onExit)
         ? MouseRegion(
-            cursor: parseMouseCursor(mouseCursor)!,
+            cursor: parseMouseCursor(mouseCursor, MouseCursor.defer)!,
             onHover: onHover
                 ? (details) {
                     handleHover(details);

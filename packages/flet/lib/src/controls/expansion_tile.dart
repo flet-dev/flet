@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
+import '../utils/others.dart';
 import '../utils/theme.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -62,14 +63,11 @@ class ExpansionTileControl extends StatelessWidget {
             e.name.toLowerCase() ==
             control.attrString("affinity", "")!.toLowerCase(),
         orElse: () => ListTileControlAffinity.platform);
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.none);
+    var clipBehavior =
+        parseClip(control.attrString("clipBehavior"), Clip.none)!;
 
     var expandedCrossAxisAlignment = parseCrossAxisAlignment(
-        control, "crossAxisAlignment", CrossAxisAlignment.center);
+        control.attrString("crossAxisAlignment"), CrossAxisAlignment.center)!;
 
     if (expandedCrossAxisAlignment == CrossAxisAlignment.baseline) {
       return const ErrorControl(
@@ -91,8 +89,8 @@ class ExpansionTileControl extends StatelessWidget {
       childrenPadding: parseEdgeInsets(control, "controlsPadding"),
       tilePadding: parseEdgeInsets(control, "tilePadding"),
       expandedAlignment: parseAlignment(control, "expandedAlignment"),
-      expandedCrossAxisAlignment: parseCrossAxisAlignment(
-          control, "crossAxisAlignment", CrossAxisAlignment.center),
+      expandedCrossAxisAlignment:
+          parseCrossAxisAlignment(control.attrString("crossAxisAlignment")),
       backgroundColor: bgColor,
       iconColor: iconColor,
       textColor: textColor,
@@ -105,8 +103,7 @@ class ExpansionTileControl extends StatelessWidget {
       shape: parseOutlinedBorder(control, "shape"),
       collapsedShape: parseOutlinedBorder(control, "collapsedShape"),
       onExpansionChanged: onChange,
-      visualDensity:
-          parseVisualDensity(control.attrString("visualDensity"), null),
+      visualDensity: parseVisualDensity(control.attrString("visualDensity")),
       enableFeedback: control.attrBool("enableFeedback"),
       dense: control.attrBool("dense"),
       leading: leadingCtrls.isNotEmpty

@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import 'numbers.dart';
 
-ImplicitAnimationDetails? parseAnimation(Control control, String propName) {
+ImplicitAnimationDetails? parseAnimation(Control control, String propName,
+    [ImplicitAnimationDetails? defaultValue]) {
   var v = control.attrString(propName, null);
   if (v == null) {
-    return null;
+    return defaultValue;
   }
 
   final j1 = json.decode(v);
@@ -37,11 +38,11 @@ class ImplicitAnimationDetails {
   factory ImplicitAnimationDetails.fromJson(Map<String, dynamic> json) {
     return ImplicitAnimationDetails(
         duration: Duration(milliseconds: json["duration"] as int),
-        curve: parseCurve(json["curve"]));
+        curve: parseCurve(json["curve"], Curves.linear)!);
   }
 }
 
-Curve parseCurve(String? s) {
+Curve? parseCurve(String? s, [Curve? defaultValue]) {
   switch (s?.toLowerCase()) {
     case "bouncein":
       return Curves.bounceIn;
@@ -126,6 +127,6 @@ Curve parseCurve(String? s) {
     case "slowmiddle":
       return Curves.slowMiddle;
     default:
-      return Curves.linear;
+      return defaultValue;
   }
 }

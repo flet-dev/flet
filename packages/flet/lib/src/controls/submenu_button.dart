@@ -4,6 +4,7 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/menu.dart';
+import '../utils/others.dart';
 import '../utils/transforms.dart';
 import 'create_control.dart';
 
@@ -63,11 +64,8 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
     var trailing =
         widget.children.where((c) => c.name == "trailing" && c.isVisible);
 
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            widget.control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.hardEdge);
+    var clipBehavior =
+        parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
 
     var offsetDetails = parseOffset(widget.control, "alignmentOffset");
 
