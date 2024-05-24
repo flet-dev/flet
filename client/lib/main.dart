@@ -4,6 +4,7 @@ import 'package:flet/flet.dart';
 import 'package:flet_audio/flet_audio.dart' as flet_audio;
 import 'package:flet_audio_recorder/flet_audio_recorder.dart'
     as flet_audio_recorder;
+import 'package:flet_geolocator/flet_geolocator.dart' as flet_geolocator;
 import 'package:flet_permission_handler/flet_permission_handler.dart' as flet_permission_handler;
 import 'package:flet_lottie/flet_lottie.dart' as flet_lottie;
 import 'package:flet_map/flet_map.dart' as flet_map;
@@ -27,6 +28,7 @@ void main([List<String>? args]) async {
   WidgetsFlutterBinding.ensureInitialized();
   flet_audio.ensureInitialized();
   flet_audio_recorder.ensureInitialized();
+  flet_geolocator.ensureInitialized();
   flet_permission_handler.ensureInitialized();
   flet_lottie.ensureInitialized();
   flet_map.ensureInitialized();
@@ -92,6 +94,7 @@ void main([List<String>? args]) async {
     createControlFactories: [
       flet_audio.createControl,
       flet_audio_recorder.createControl,
+      flet_geolocator.createControl,
       flet_permission_handler.createControl,
       flet_lottie.createControl,
       flet_map.createControl,
