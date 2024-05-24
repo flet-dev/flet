@@ -4,7 +4,6 @@ import '../models/control.dart';
 import '../utils/edge_insets.dart';
 import '../utils/others.dart';
 import 'create_control.dart';
-import 'error.dart';
 import 'flet_store_mixin.dart';
 
 class BottomAppBarControl extends StatefulWidget {
@@ -44,11 +43,7 @@ class _BottomAppBarControlState extends State<BottomAppBarControl>
       shape = const AutomaticNotchedShape(ContinuousRectangleBorder());
     }
 
-    var elevation = widget.control.attrDouble("elevation", 0);
-    if (elevation! < 0) {
-      return const ErrorControl(
-          "The Elevation of the BottomAppBar must be greater than or equal to 0 !");
-    }
+    var elevation = widget.control.attrDouble("elevation", 0)!;
 
     var clipBehavior =
         parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;

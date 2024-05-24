@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -93,10 +93,6 @@ class BottomAppBar(ConstrainedControl):
             data=data,
         )
 
-        self.__leading: Optional[Control] = None
-        self.__title: Optional[Control] = None
-        self.__actions: List[Control] = []
-
         self.content = content
         self.surface_tint_color = surface_tint_color
         self.bgcolor = bgcolor
@@ -115,11 +111,10 @@ class BottomAppBar(ConstrainedControl):
         self._set_attr_json("padding", self.__padding)
 
     def _get_children(self):
-        children = []
         if self.__content is not None:
             self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
+            return [self.__content]
+        return []
 
     # content
     @property
@@ -132,29 +127,29 @@ class BottomAppBar(ConstrainedControl):
 
     # surface_tint_color
     @property
-    def surface_tint_color(self):
+    def surface_tint_color(self) -> Optional[str]:
         return self._get_attr("surfaceTintColor")
 
     @surface_tint_color.setter
-    def surface_tint_color(self, value):
+    def surface_tint_color(self, value: Optional[str]):
         self._set_attr("surfaceTintColor", value)
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # shadow_color
     @property
-    def shadow_color(self):
+    def shadow_color(self) -> Optional[str]:
         return self._get_attr("shadowColor")
 
     @shadow_color.setter
-    def shadow_color(self, value):
+    def shadow_color(self, value: Optional[str]):
         self._set_attr("shadowColor", value)
 
     # padding
@@ -168,13 +163,13 @@ class BottomAppBar(ConstrainedControl):
 
     # shape
     @property
-    def shape(self):
+    def shape(self) -> Optional[NotchShape]:
         return self.__shape
 
     @shape.setter
     def shape(self, value: Optional[NotchShape]):
         self.__shape = value
-        self._set_attr("shape", value.value if isinstance(value, NotchShape) else value)
+        self._set_enum_attr("shape", value, NotchShape)
 
     # clip_behavior
     @property
@@ -184,9 +179,7 @@ class BottomAppBar(ConstrainedControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_attr(
-            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
-        )
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
 
     # notch_margin
     @property
@@ -204,4 +197,5 @@ class BottomAppBar(ConstrainedControl):
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
+        assert value is None or value >= 0, "elevation cannot be negative"
         self._set_attr("elevation", value)

@@ -63,10 +63,6 @@ class CupertinoAlertDialog(Control):
             data=data,
         )
 
-        self.__title: Optional[Control] = None
-        self.__content: Optional[Control] = None
-        self.__actions: List[Control] = []
-
         self.open = open
         self.modal = modal
         self.title = title
@@ -128,11 +124,11 @@ class CupertinoAlertDialog(Control):
 
     # actions
     @property
-    def actions(self):
+    def actions(self) -> List[Control]:
         return self.__actions
 
     @actions.setter
-    def actions(self, value):
+    def actions(self, value: Optional[List[Control]]):
         self.__actions = value if value is not None else []
 
     # on_dismiss

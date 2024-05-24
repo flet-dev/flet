@@ -63,7 +63,7 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
 
                   if (contentCtrls.isEmpty) {
                     return const ErrorControl(
-                        "BottomSheet does not have a content.");
+                        "BottomSheet.content must be provided and visible");
                   }
 
                   var content = createControl(

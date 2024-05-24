@@ -30,7 +30,7 @@ class SelectionAreaControl extends StatelessWidget {
         children.where((c) => c.name == "content" && c.isVisible);
     if (contentCtrls.isEmpty) {
       return const ErrorControl(
-          "Content control must be specified and be visible.");
+          "SelectionArea.content must be provided and visible");
     }
     bool disabled = control.isDisabled || parentDisabled;
 

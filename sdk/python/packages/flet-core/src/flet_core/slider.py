@@ -166,16 +166,15 @@ class Slider(ConstrainedControl, AdaptiveControl):
     # value
     @property
     def value(self) -> OptionalNumber:
-        v = self._get_attr("value", data_type="float")
-        # verify limits
-        if self.min and v < self.min:
-            v = self.min
-        elif self.max and v > self.max:
-            v = self.max
-        return v
+        return self._get_attr("value", data_type="float", def_value=0)
 
     @value.setter
     def value(self, value: OptionalNumber):
+        if value is not None:
+            if self.min is not None:
+                assert value >= self.min, "value must be greater than or equal to min"
+            if self.max is not None:
+                assert value <= self.max, "value must be less than or equal to max"
         self._set_attr("value", value)
 
     # label
@@ -200,10 +199,13 @@ class Slider(ConstrainedControl, AdaptiveControl):
     # min
     @property
     def min(self) -> OptionalNumber:
-        return self._get_attr("min")
+        return self._get_attr("min", data_type="float", def_value=0)
 
     @min.setter
     def min(self, value: OptionalNumber):
+        if value is not None:
+            if self.max is not None:
+                assert value <= self.max, "min must be less than or equal to max"
         self._set_attr("min", value)
 
     # secondary_track_value
@@ -236,10 +238,13 @@ class Slider(ConstrainedControl, AdaptiveControl):
     # max
     @property
     def max(self) -> OptionalNumber:
-        return self._get_attr("max")
+        return self._get_attr("max", data_type="float", def_value=1)
 
     @max.setter
     def max(self, value: OptionalNumber):
+        if value is not None:
+            if self.min is not None:
+                assert value >= self.min, "max must be greater than or equal to min"
         self._set_attr("max", value)
 
     # divisions
@@ -254,7 +259,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     # round
     @property
     def round(self) -> Optional[int]:
-        return self._get_attr("round")
+        return self._get_attr("round", data_type="int", def_value=0)
 
     @round.setter
     def round(self, value: Optional[int]):

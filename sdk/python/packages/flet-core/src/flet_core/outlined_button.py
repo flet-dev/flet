@@ -218,9 +218,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     @url_target.setter
     def url_target(self, value: Optional[UrlTarget]):
         self.__url_target = value
-        self._set_attr(
-            "urlTarget", value.value if isinstance(value, UrlTarget) else value
-        )
+        self._set_enum_attr("urlTarget", value, UrlTarget)
 
     # on_click
     @property
@@ -262,13 +260,12 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     # clip_behavior
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
-        return self._get_attr("clipBehavior")
+        return self.__clip_behavior
 
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
-        self._set_attr(
-            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
-        )
+        self.__clip_behavior = value
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
 
     # on_hover
     @property

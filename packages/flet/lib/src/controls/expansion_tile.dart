@@ -41,7 +41,8 @@ class ExpansionTileControl extends StatelessWidget {
         children.where((c) => c.name == "trailing" && c.isVisible);
 
     if (titleCtrls.isEmpty) {
-      return const ErrorControl("ExpansionTile requires a title!");
+      return const ErrorControl(
+          "ExpansionTile.title must be provided and visible");
     }
 
     bool disabled = control.isDisabled || parentDisabled;
@@ -119,12 +120,10 @@ class ExpansionTileControl extends StatelessWidget {
           ? createControl(control, trailingCtrls.first.id, disabled,
               parentAdaptive: adaptive)
           : null,
-      children: ctrls.isNotEmpty
-          ? ctrls
-              .map((c) => createControl(control, c.id, disabled,
-                  parentAdaptive: adaptive))
-              .toList()
-          : [],
+      children: ctrls
+          .map((c) =>
+              createControl(control, c.id, disabled, parentAdaptive: adaptive))
+          .toList(),
     );
 
     return constrainedControl(context, tile, parent, control);

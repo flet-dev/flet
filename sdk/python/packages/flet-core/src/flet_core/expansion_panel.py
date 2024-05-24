@@ -176,6 +176,15 @@ class ExpansionPanelList(ConstrainedControl):
     def __init__(
         self,
         controls: Optional[List[ExpansionPanel]] = None,
+        divider_color: Optional[str] = None,
+        elevation: OptionalNumber = None,
+        expanded_header_padding: PaddingValue = None,
+        expand_icon_color: Optional[str] = None,
+        spacing: OptionalNumber = None,
+        on_change=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -202,15 +211,6 @@ class ExpansionPanelList(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        divider_color: Optional[str] = None,
-        elevation: OptionalNumber = None,
-        expanded_header_padding: PaddingValue = None,
-        expand_icon_color: Optional[str] = None,
-        spacing: OptionalNumber = None,
-        on_change=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -298,6 +298,7 @@ class ExpansionPanelList(ConstrainedControl):
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
+        assert value is None or value >= 0, "elevation cannot be negative"
         self._set_attr("elevation", value)
 
     # spacing

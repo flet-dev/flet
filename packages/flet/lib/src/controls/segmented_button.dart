@@ -69,21 +69,26 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
         .where((c) => c.name == "segment" && c.isVisible)
         .toList();
 
+    if (segments.isEmpty) {
+      return const ErrorControl(
+          "SegmentedButton.segments must be provided and contain at minimum one visible segment");
+    }
+
     if (selected.isEmpty && !allowEmptySelection) {
-      return const ErrorControl("When allow_empty_selection is False, "
-          "the selected property must contain at least one value.");
+      return const ErrorControl(
+          "SegmentedButton.selected must be provided and contain at minimum one value because allow_empty_selection=False");
     }
 
     if (!allowMultipleSelection &&
         selected.length != 1 &&
         !allowEmptySelection) {
-      return const ErrorControl("When allow_multiple_selection is False, "
-          "the selected property must contain exactly one value.");
+      return const ErrorControl(
+          "SegmentedButton.selected must be provided and contain exactly one value because allow_multiple_selection=False");
     }
 
     if (allowMultipleSelection && selected.length > segments.length) {
-      return const ErrorControl("The length of the selected property must "
-          "be less than or equal to the number of segments.");
+      return const ErrorControl(
+          "The length of SegmentedButton.selected must be less than or equal to the number of visible segments");
     }
 
     var selectedIcon =

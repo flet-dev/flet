@@ -54,6 +54,7 @@ class FloatingActionButtonControl extends StatelessWidget {
     bool autofocus = control.attrBool("autofocus", false)!;
     bool mini = control.attrBool("mini", false)!;
     bool? enableFeedback = control.attrBool("enableFeedback");
+    var mouseCursor = parseMouseCursor(control.attrString("mouseCursor"));
     bool disabled = control.isDisabled || parentDisabled;
 
     Function()? onPressed = disabled
@@ -68,7 +69,7 @@ class FloatingActionButtonControl extends StatelessWidget {
 
     if (text == null && icon == null && contentCtrls.isEmpty) {
       return const ErrorControl(
-          "FAB doesn't have a text, nor icon, nor content.");
+          "FloatingActionButton has nothing to display. Provide at minimum one of these: text, icon, content");
     }
 
     Widget button;
@@ -77,7 +78,7 @@ class FloatingActionButtonControl extends StatelessWidget {
           heroTag: control.id,
           autofocus: autofocus,
           onPressed: onPressed,
-          mouseCursor: parseMouseCursor(control.attrString("mouseCursor")),
+          mouseCursor: mouseCursor,
           backgroundColor: bgColor,
           foregroundColor: foregroundColor,
           hoverColor: hoverColor,
@@ -100,7 +101,7 @@ class FloatingActionButtonControl extends StatelessWidget {
           heroTag: control.id,
           autofocus: autofocus,
           onPressed: onPressed,
-          mouseCursor: parseMouseCursor(control.attrString("mouseCursor")),
+          mouseCursor: mouseCursor,
           backgroundColor: bgColor,
           foregroundColor: foregroundColor,
           hoverColor: hoverColor,
@@ -122,7 +123,7 @@ class FloatingActionButtonControl extends StatelessWidget {
         heroTag: control.id,
         autofocus: autofocus,
         onPressed: onPressed,
-        mouseCursor: parseMouseCursor(control.attrString("mouseCursor")),
+        mouseCursor: mouseCursor,
         backgroundColor: bgColor,
         foregroundColor: foregroundColor,
         hoverColor: hoverColor,
@@ -145,7 +146,7 @@ class FloatingActionButtonControl extends StatelessWidget {
         heroTag: control.id,
         autofocus: autofocus,
         onPressed: onPressed,
-        mouseCursor: parseMouseCursor(control.attrString("mouseCursor")),
+        mouseCursor: mouseCursor,
         label: Text(text),
         icon: Icon(icon),
         backgroundColor: bgColor,
@@ -164,7 +165,8 @@ class FloatingActionButtonControl extends StatelessWidget {
         shape: shape,
       );
     } else {
-      return const ErrorControl("FAB doesn't have a text, nor icon.");
+      return const ErrorControl(
+          "FloatingActionButton has nothing to display. Provide at minimum one of these: text, icon, content");
     }
 
     return constrainedControl(context, button, parent, control);

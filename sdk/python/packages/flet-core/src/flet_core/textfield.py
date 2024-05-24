@@ -302,6 +302,11 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
+        assert (
+            self.max_lines is None
+            or self.min_lines is None
+            or self.min_lines <= self.max_lines
+        ), "min_lines can't be greater than max_lines"
         self._set_attr_json("inputFilter", self.__input_filter)
         self._set_attr_json("autofillHints", self.__autofill_hints)
         if (
@@ -371,6 +376,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     @min_lines.setter
     def min_lines(self, value: Optional[int]):
+        assert value is None or value > 0, "min_lines must be greater than 0"
         self._set_attr("minLines", value)
 
     # max_lines
@@ -380,6 +386,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     @max_lines.setter
     def max_lines(self, value: Optional[int]):
+        assert value is None or value > 0, "max_lines must be greater than 0"
         self._set_attr("maxLines", value)
 
     # max_length
@@ -389,6 +396,9 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     @max_length.setter
     def max_length(self, value: Optional[int]):
+        assert (
+            value is None or value == -1 or value > 0
+        ), "max_length must be either equal to -1 or greater than 0"
         self._set_attr("maxLength", value)
 
     # read_only

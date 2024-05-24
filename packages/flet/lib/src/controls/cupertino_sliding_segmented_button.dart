@@ -55,7 +55,7 @@ class _CupertinoSlidingSegmentedButtonControlState
 
     if (ctrls.length < 2) {
       return const ErrorControl(
-          "CupertinoSlidingSegmentedButton must have at least two controls.");
+          "CupertinoSlidingSegmentedButton must have at minimum two visible controls");
     }
     Map<int, Widget> children = ctrls.asMap().map((i, c) => MapEntry(
         i,

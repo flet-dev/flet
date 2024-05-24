@@ -42,7 +42,7 @@ class _CupertinoAlertDialogControlState
         widget.children.where((c) => c.name == "action" && c.isVisible);
     if (titleCtrls.isEmpty && contentCtrls.isEmpty && actionCtrls.isEmpty) {
       return const ErrorControl(
-          "CupertinoAlertDialog does not have any content.");
+          "CupertinoAlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions");
     }
 
     return CupertinoAlertDialog(

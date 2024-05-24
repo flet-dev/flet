@@ -67,7 +67,10 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       children.add(Text(text));
     }
 
-    if (children.isNotEmpty) {
+    if (contentCtrls.isNotEmpty) {
+      content = createControl(widget.control, contentCtrls.first.id, disabled,
+          parentAdaptive: widget.parentAdaptive);
+    } else if (children.isNotEmpty) {
       if (children.length == 2) {
         children.insert(1, const SizedBox(width: 8));
         content = Row(
@@ -77,14 +80,13 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       } else {
         content = children.first;
       }
-    } else if (contentCtrls.isNotEmpty) {
-      content = createControl(widget.control, contentCtrls.first.id, disabled,
-          parentAdaptive: widget.parentAdaptive);
     }
 
     if (content == null) {
       return const ErrorControl(
-          "CupertinoButton has no content control. Please specify one.");
+        "CupertinoButton has nothing to display",
+        description: "Provide at minimum text or (visible) content",
+      );
     }
 
     double pressedOpacity = widget.control.attrDouble("opacityOnClick", 0.4)!;

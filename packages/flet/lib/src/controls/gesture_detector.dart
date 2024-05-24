@@ -582,7 +582,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
 
     if (result == null || result == content) {
       return const ErrorControl(
-          "GestureDetector should have at least one event handler defined.");
+          "GestureDetector should have at least one event handler defined");
     }
 
     return constrainedControl(context, result, widget.parent, widget.control);

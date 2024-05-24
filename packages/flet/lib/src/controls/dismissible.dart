@@ -42,7 +42,8 @@ class _DismissibleControlState extends State<DismissibleControl> {
         widget.children.where((c) => c.name == "content" && c.isVisible);
 
     if (contentCtrls.isEmpty) {
-      return const ErrorControl("Dismissible does not have a content.");
+      return const ErrorControl(
+          "Dismissible.content must be provided and visible");
     }
 
     var backgroundCtrls =

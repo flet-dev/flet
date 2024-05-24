@@ -189,7 +189,7 @@ class _IconButtonControlState extends State<IconButtonControl>
                 parentAdaptive: widget.parentAdaptive));
       } else {
         return const ErrorControl(
-            "Icon button does not have an icon neither content specified.");
+            "IconButton must have either icon or a visible content specified.");
       }
 
       if (bgColor != null) {

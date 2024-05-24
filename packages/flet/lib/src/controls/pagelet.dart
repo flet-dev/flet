@@ -62,7 +62,7 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
         .where((c) => c.name == "floatingactionbutton" && c.isVisible);
 
     if (contentCtrls.isEmpty) {
-      return const ErrorControl("Pagelet must have content specified.");
+      return const ErrorControl("Pagelet.content must be provided and visible");
     }
 
     return withPagePlatform((context, platform) {

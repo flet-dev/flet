@@ -122,8 +122,7 @@ class View(ScrollableControl, AdaptiveControl):
         if self.__end_drawer:
             self.__end_drawer._set_attr_internal("n", "end")
             children.append(self.__end_drawer)
-        children.extend(self.__controls)
-        return children
+        return children + self.__controls
 
     # route
     @property

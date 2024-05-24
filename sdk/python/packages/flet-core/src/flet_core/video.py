@@ -474,6 +474,7 @@ class Video(ConstrainedControl):
 
     @volume.setter
     def volume(self, value: OptionalNumber):
+        assert value is None or 0 <= value <= 100, "volume must be between 0 and 100"
         self._set_attr("volume", value)
 
     # playback_rate

@@ -33,15 +33,12 @@ class _MenuBarControlState extends State<MenuBarControl> {
     var ctrls = widget.children.where((c) => c.isVisible).toList();
     if (ctrls.isEmpty) {
       return const ErrorControl(
-        "MenuBar must have at least one child control",
-      );
+          "MenuBar must have at minimum one visible control");
     }
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     var clipBehavior =
         parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
-
-    // var theme = Theme.of(context);
 
     var style = parseMenuStyle(Theme.of(context), widget.control, "style");
 

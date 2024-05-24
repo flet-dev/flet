@@ -52,7 +52,8 @@ class _AlertDialogControlState extends State<AlertDialogControl>
     final actionsAlignment =
         parseMainAxisAlignment(widget.control.attrString("actionsAlignment"));
     if (titleCtrls.isEmpty && contentCtrls.isEmpty && actionCtrls.isEmpty) {
-      return const ErrorControl("AlertDialog does not have any content.");
+      return const ErrorControl(
+          "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions");
     }
 
     var clipBehavior =

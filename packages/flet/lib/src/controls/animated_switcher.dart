@@ -36,7 +36,8 @@ class AnimatedSwitcherControl extends StatelessWidget {
     bool disabled = control.isDisabled || parentDisabled;
 
     if (contentCtrls.isEmpty) {
-      return const ErrorControl("Content is not set.");
+      return const ErrorControl(
+          "AnimatedSwitcher.content must be provided and visible");
     }
 
     var child = createControl(control, contentCtrls.first.id, disabled,
