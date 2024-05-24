@@ -58,7 +58,7 @@ class AutofillHint(Enum):
     STREET_ADDRESS_LINE1 = "streetAddressLine1"
     STREET_ADDRESS_LINE2 = "streetAddressLine2"
     STREET_ADDRESS_LINE3 = "streetAddressLine3"
-    SUB_LOCALITY = "sublocality"
+    SUB_LOCALITY = "subLocality"
     TELEPHONE_NUMBER = "telephoneNumber"
     TELEPHONE_NUMBER_AREA_CODE = "telephoneNumberAreaCode"
     TELEPHONE_NUMBER_COUNTRY_CODE = "telephoneNumberCountryCode"
@@ -112,10 +112,12 @@ class AutofillGroup(Control):
         return "autofillgroup"
 
     def _get_children(self):
-        if isinstance(self.__content, Control):
-            self.__content._set_attr_internal("n", "content")
-            return [self.__content]
-        return []
+        self.__content._set_attr_internal("n", "content")
+        return [self.__content]
+
+    def before_update(self):
+        super().before_update()
+        assert self.__content.visible, "content must be visible"
 
     # content
     @property

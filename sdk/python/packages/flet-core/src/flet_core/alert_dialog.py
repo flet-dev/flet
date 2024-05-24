@@ -110,11 +110,6 @@ class AlertDialog(AdaptiveControl):
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
-        self.__title: Optional[Control] = None
-        self.__icon: Optional[Control] = None
-        self.__content: Optional[Control] = None
-        self.__actions: List[Control] = []
-
         self.open = open
         self.bgcolor = bgcolor
         self.elevation = elevation
@@ -148,6 +143,9 @@ class AlertDialog(AdaptiveControl):
 
     def before_update(self):
         super().before_update()
+        assert (
+            self.__title or self.__content or self.__actions
+        ), "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions"
         self._set_attr_json("actionsPadding", self.__actions_padding)
         self._set_attr_json("contentPadding", self.__content_padding)
         self._set_attr_json("titlePadding", self.__title_padding)
@@ -332,7 +330,7 @@ class AlertDialog(AdaptiveControl):
 
     # actions
     @property
-    def actions(self) -> Optional[List[Control]]:
+    def actions(self) -> List[Control]:
         return self.__actions
 
     @actions.setter
@@ -409,13 +407,12 @@ class AlertDialog(AdaptiveControl):
     # clip_behavior
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
-        return self._get_attr("clipBehavior")
+        return self.__clip_behavior
 
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
-        self._set_attr(
-            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
-        )
+        self.__clip_behavior = value
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
 
     # on_dismiss
     @property

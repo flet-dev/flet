@@ -215,9 +215,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     @url_target.setter
     def url_target(self, value: Optional[UrlTarget]):
         self.__url_target = value
-        self._set_attr(
-            "urlTarget", value.value if isinstance(value, UrlTarget) else value
-        )
+        self._set_enum_attr("urlTarget", value, UrlTarget)
 
     # on_click
     @property
@@ -264,10 +262,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     @on_hover.setter
     def on_hover(self, handler):
         self._add_event_handler("hover", handler)
-        if handler is not None:
-            self._set_attr("onHover", True)
-        else:
-            self._set_attr("onHover", None)
+        self._set_attr("onHover", True if handler is not None else None)
 
     # on_focus
     @property

@@ -226,6 +226,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     @splash_radius.setter
     def splash_radius(self, value: OptionalNumber):
+        assert value is None or value >= 0, "splash_radius cannot be negative"
         self._set_attr("splashRadius", value)
 
     # label_style

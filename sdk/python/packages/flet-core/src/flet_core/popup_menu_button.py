@@ -79,9 +79,7 @@ class PopupMenuItem(Control):
 
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
-        self._set_attr(
-            "mouseCursor", value.value if isinstance(value, MouseCursor) else value
-        )
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # icon
     @property
@@ -290,8 +288,7 @@ class PopupMenuButton(ConstrainedControl):
         if self.__content:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
-        children.extend(self.__items)
-        return children
+        return children + self.__items
 
     def before_update(self):
         super().before_update()
@@ -423,10 +420,7 @@ class PopupMenuButton(ConstrainedControl):
     @menu_position.setter
     def menu_position(self, value: PopupMenuPosition):
         self.__menu_position = value
-        self._set_attr(
-            "menuPosition",
-            value.value if isinstance(value, PopupMenuPosition) else value,
-        )
+        self._set_enum_attr("menuPosition", value, PopupMenuPosition)
 
     # clip_behavior
     @property
@@ -436,10 +430,7 @@ class PopupMenuButton(ConstrainedControl):
     @clip_behavior.setter
     def clip_behavior(self, value: ClipBehavior):
         self.__clip_behavior = value
-        self._set_attr(
-            "clipBehavior",
-            value.value if isinstance(value, ClipBehavior) else value,
-        )
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
 
     # on_cancel
     @property

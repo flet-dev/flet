@@ -38,16 +38,19 @@ class _DismissibleControlState extends State<DismissibleControl> {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     bool? adaptive =
         widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
-    var contentCtrls = widget.children.where((c) => c.name == "content");
+    var contentCtrls =
+        widget.children.where((c) => c.name == "content" && c.isVisible);
 
     if (contentCtrls.isEmpty) {
-      return const ErrorControl("Dismissible does not have a content.");
+      return const ErrorControl(
+          "Dismissible.content must be provided and visible");
     }
 
-    var backgroundCtrls = widget.children.where((c) => c.name == "background");
+    var backgroundCtrls =
+        widget.children.where((c) => c.name == "background" && c.isVisible);
 
-    var secondaryBackgroundCtrls =
-        widget.children.where((c) => c.name == "secondaryBackground");
+    var secondaryBackgroundCtrls = widget.children
+        .where((c) => c.name == "secondaryBackground" && c.isVisible);
 
     var dismissThresholds =
         parseDismissThresholds(widget.control, "dismissThresholds");

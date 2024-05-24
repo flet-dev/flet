@@ -128,11 +128,9 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
               .toList()
               .first
           : null,
-      menuChildren: ctrls.isNotEmpty
-          ? ctrls.map((c) {
-              return createControl(widget.control, c.id, disabled);
-            }).toList()
-          : [],
+      menuChildren: ctrls.map((c) {
+        return createControl(widget.control, c.id, disabled);
+      }).toList(),
       child: content.isNotEmpty
           ? content
               .map((c) => createControl(widget.control, c.id, disabled))

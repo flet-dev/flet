@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Any
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import OutlinedBorder
@@ -80,15 +80,14 @@ class AppBar(AdaptiveControl):
         # AdaptiveControl
         #
         ref: Optional[Ref] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
         adaptive: Optional[bool] = None,
     ):
-        Control.__init__(self, ref=ref)
+        Control.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
-
-        self.__leading: Optional[Control] = None
-        self.__title: Optional[Control] = None
-        self.__actions: List[Control] = []
 
         self.leading = leading
         self.leading_width = leading_width
@@ -177,6 +176,9 @@ class AppBar(AdaptiveControl):
 
     @toolbar_opacity.setter
     def toolbar_opacity(self, value: OptionalNumber):
+        assert value is None or (
+            0 >= value >= 1
+        ), "toolbar_opacity is out of range (0-1)"
         self._set_attr("toolbarOpacity", value)
 
     # shape
@@ -242,6 +244,7 @@ class AppBar(AdaptiveControl):
 
     @toolbar_height.setter
     def toolbar_height(self, value: OptionalNumber):
+        assert value is None or value >= 0, "toolbar_height cannot be negative"
         self._set_attr("toolbarHeight", value)
 
     # color
@@ -318,6 +321,7 @@ class AppBar(AdaptiveControl):
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
+        assert value is None or value >= 0, "elevation cannot be negative"
         self._set_attr("elevation", value)
 
     # elevation_on_scroll
@@ -327,6 +331,7 @@ class AppBar(AdaptiveControl):
 
     @elevation_on_scroll.setter
     def elevation_on_scroll(self, value: OptionalNumber):
+        assert value is None or value >= 0, "elevation_on_scroll cannot be negative"
         self._set_attr("elevationOnScroll", value)
 
     # clip_behavior
@@ -336,10 +341,7 @@ class AppBar(AdaptiveControl):
 
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
-        self._set_attr(
-            "clipBehavior",
-            value.value if isinstance(value, ClipBehavior) else value,
-        )
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
 
     # actions
     @property
