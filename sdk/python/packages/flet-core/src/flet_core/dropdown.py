@@ -24,6 +24,7 @@ class Option(Control):
         key: Optional[str] = None,
         text: Optional[str] = None,
         alignment: Optional[Alignment] = None,
+        text_style: Optional[TextStyle] = None,
         on_click=None,
         #
         # Control
@@ -39,6 +40,7 @@ class Option(Control):
         self.text = text
         self.on_click = on_click
         self.alignment = alignment
+        self.text_style = text_style
 
     def _get_control_name(self):
         return "dropdownoption"
@@ -46,6 +48,8 @@ class Option(Control):
     def before_update(self):
         super().before_update()
         self._set_attr_json("alignment", self.__alignment)
+        if isinstance(self.__text_style, TextStyle):
+            self._set_attr_json("textStyle", self.__text_style)
 
     # key
     @property
@@ -73,6 +77,15 @@ class Option(Control):
     @alignment.setter
     def alignment(self, value: Optional[Alignment]):
         self.__alignment = value
+
+    # text_style
+    @property
+    def text_style(self) -> Optional[TextStyle]:
+        return self.__text_style
+
+    @text_style.setter
+    def text_style(self, value: Optional[TextStyle]):
+        self.__text_style = value
 
     # on_click
     @property
