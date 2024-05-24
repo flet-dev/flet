@@ -181,9 +181,7 @@ class Text(ConstrainedControl):
         return "text"
 
     def _get_children(self):
-        children = []
-        children.extend(self.__spans)
-        return children
+        return self.__spans
 
     def before_update(self):
         super().before_update()
@@ -201,7 +199,7 @@ class Text(ConstrainedControl):
 
     # spans
     @property
-    def spans(self) -> Optional[List[TextSpan]]:
+    def spans(self) -> List[TextSpan]:
         return self.__spans
 
     @spans.setter

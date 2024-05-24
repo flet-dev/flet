@@ -25,7 +25,7 @@ class Rive(ConstrainedControl):
 
     def __init__(
         self,
-        src: str = None,
+        src: str,
         placeholder: Optional[Control] = None,
         artboard: Optional[str] = None,
         alignment: Optional[Alignment] = None,
@@ -109,6 +109,7 @@ class Rive(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
+        assert self.src, "src must be provided"
         self._set_attr_json("alignment", self.__alignment)
 
     def _get_children(self):
@@ -123,8 +124,6 @@ class Rive(ConstrainedControl):
 
     @src.setter
     def src(self, value: Optional[str]):
-        if not value:
-            raise ValueError("Rive.src must be specified")
         self._set_attr("src", value)
 
     # alignment

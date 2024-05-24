@@ -18,7 +18,7 @@ from flet_core.types import (
 class SafeArea(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
-        content: Optional[Control] = None,
+        content: Control,
         left: Optional[bool] = None,
         top: Optional[bool] = None,
         right: Optional[bool] = None,
@@ -102,15 +102,13 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
+        assert self.__content.visible, "content must be visible"
         self._set_attr_json("minimum", self.__minimum)
         self._set_attr_json("minimumPadding", self.__minimum_padding)
 
     def _get_children(self):
-        children = []
-        if self.__content is not None:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
+        self.__content._set_attr_internal("n", "content")
+        return [self.__content]
 
     # left
     @property
@@ -161,11 +159,11 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
 
     # content
     @property
-    def content(self) -> Optional[Control]:
+    def content(self) -> Control:
         return self.__content
 
     @content.setter
-    def content(self, value: Optional[Control]):
+    def content(self, value: Control):
         self.__content = value
 
     # minimum

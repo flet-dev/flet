@@ -36,7 +36,7 @@ class ShaderMaskControl extends StatelessWidget {
 
     var gradient = parseGradient(Theme.of(context), control, "shader");
     if (gradient == null) {
-      return const ErrorControl("Shader property is not set.");
+      return const ErrorControl("ShaderMask.shader must be provided");
     }
 
     return constrainedControl(

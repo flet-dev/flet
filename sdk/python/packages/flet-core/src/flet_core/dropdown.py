@@ -24,6 +24,7 @@ class Option(Control):
         key: Optional[str] = None,
         text: Optional[str] = None,
         alignment: Optional[Alignment] = None,
+        text_style: Optional[TextStyle] = None,
         on_click=None,
         #
         # Control
@@ -39,6 +40,7 @@ class Option(Control):
         self.text = text
         self.on_click = on_click
         self.alignment = alignment
+        self.text_style = text_style
 
     def _get_control_name(self):
         return "dropdownoption"
@@ -46,6 +48,8 @@ class Option(Control):
     def before_update(self):
         super().before_update()
         self._set_attr_json("alignment", self.__alignment)
+        if isinstance(self.__text_style, TextStyle):
+            self._set_attr_json("textStyle", self.__text_style)
 
     # key
     @property
@@ -73,6 +77,15 @@ class Option(Control):
     @alignment.setter
     def alignment(self, value: Optional[Alignment]):
         self.__alignment = value
+
+    # text_style
+    @property
+    def text_style(self) -> Optional[TextStyle]:
+        return self.__text_style
+
+    @text_style.setter
+    def text_style(self, value: Optional[TextStyle]):
+        self.__text_style = value
 
     # on_click
     @property
@@ -304,8 +317,7 @@ class Dropdown(FormFieldControl):
             self.filled = True  # required to display any of the above colors
 
     def _get_children(self):
-        children = FormFieldControl._get_children(self)
-        children.extend(self.__options)
+        children = FormFieldControl._get_children(self) + self.__options
         if isinstance(self.__hint_content, Control):
             self.__hint_content._set_attr_internal("n", "hint")
             children.extend(self.__hint_content)
@@ -387,6 +399,9 @@ class Dropdown(FormFieldControl):
 
     @item_height.setter
     def item_height(self, value: OptionalNumber):
+        assert (
+            value is None or value >= 48.0
+        ), "item_height must be greater than or equal to 48.0"
         self._set_attr("itemHeight", value)
 
     # menu_max_height

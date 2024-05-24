@@ -29,10 +29,8 @@ class NavigationDrawerDestination(Control):
         self.label = label
         self.bgcolor = bgcolor
         self.icon = icon
-        self.__icon_content: Optional[Control] = None
         self.icon_content = icon_content
         self.selected_icon = selected_icon
-        self.__selected_icon_content: Optional[Control] = None
         self.selected_icon_content = selected_icon_content
 
     def _get_control_name(self):
@@ -226,7 +224,6 @@ class NavigationDrawer(Control):
         self.shadow_color = shadow_color
         self.surface_tint_color = surface_tint_color
         self.tile_padding = tile_padding
-
         self.on_change = on_change
         self.on_dismiss = on_dismiss
 
@@ -239,9 +236,7 @@ class NavigationDrawer(Control):
         self._set_attr_json("tilePadding", self.__tile_padding)
 
     def _get_children(self):
-        children = []
-        children.extend(self.__controls)
-        return children
+        return self.__controls
 
     # open
     @property

@@ -53,7 +53,8 @@ class DraggableControl extends StatelessWidget {
         : null;
 
     if (child == null) {
-      return const ErrorControl("Draggable should have content.");
+      return const ErrorControl(
+          "Draggable.content must be provided and visible");
     }
 
     var data = json.encode({"id": control.id, "group": group});

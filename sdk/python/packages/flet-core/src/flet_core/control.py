@@ -51,7 +51,7 @@ class Control:
         if ref:
             ref.current = self
 
-    def is_isolated(self):
+    def is_isolated(self) -> bool:
         return False
 
     def build(self):

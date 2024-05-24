@@ -101,7 +101,7 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
 
       debugPrint("SliderControl build: ${widget.control.id}");
 
-      double value = widget.control.attrDouble("value", 0)!;
+      double value = widget.control.attrDouble("value", min)!;
       if (_value != value) {
         // verify limits
         if (value < min) {
