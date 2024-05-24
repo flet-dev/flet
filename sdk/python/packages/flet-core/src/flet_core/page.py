@@ -57,12 +57,10 @@ from flet_core.snack_bar import SnackBar
 from flet_core.theme import Theme
 from flet_core.types import (
     AppLifecycleState,
-    Args,
     Brightness,
     ColorStr,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
-    Kwargs,
     MainAxisAlignment,
     OffsetValue,
     OptionalNumber,
@@ -536,8 +534,8 @@ class Page(AdaptiveControl):
     def run_task(
         self,
         handler: Callable[..., Awaitable[Any]],
-        *args: Args,
-        **kwargs: Kwargs,
+        *args: Any,
+        **kwargs: Any,
     ) -> Future:
         _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
@@ -561,7 +559,7 @@ class Page(AdaptiveControl):
 
         return wrapper
 
-    def run_thread(self, handler: Callable[..., Any], *args: Args) -> None:
+    def run_thread(self, handler: Callable[..., Any], *args: Any) -> None:
         handler_with_context = self.__context_wrapper(handler)
         if is_pyodide():
             handler_with_context(*args)
@@ -575,7 +573,7 @@ class Page(AdaptiveControl):
             )
 
     def go(
-        self, route: str, skip_route_change_event: bool = False, **kwargs: Kwargs
+        self, route: str, skip_route_change_event: bool = False, **kwargs: Any
     ) -> None:
         self.route = route if not kwargs else route + self.query.post(kwargs)
 

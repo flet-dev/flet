@@ -317,10 +317,6 @@ ControlEventFunction = Optional[Callable[[ControlEvent], None]]
 # Wrapper
 Wrapper = Callable[..., Any]
 
-# Args / Kwargs
-Args = List[Any]
-Kwargs = Dict[str, Any]
-
 
 # Protocols
 class SupportsStr(Protocol):
