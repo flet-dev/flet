@@ -164,29 +164,29 @@ class TextButton(ConstrainedControl, AdaptiveControl):
 
     # text
     @property
-    def text(self):
+    def text(self) -> Optional[str]:
         return self._get_attr("text")
 
     @text.setter
-    def text(self, value):
+    def text(self, value: Optional[str]):
         self._set_attr("text", value)
 
     # icon
     @property
-    def icon(self):
+    def icon(self) -> Optional[str]:
         return self._get_attr("icon")
 
     @icon.setter
-    def icon(self, value):
+    def icon(self, value: Optional[str]):
         self._set_attr("icon", value)
 
     # icon_color
     @property
-    def icon_color(self):
+    def icon_color(self) -> Optional[str]:
         return self._get_attr("iconColor")
 
     @icon_color.setter
-    def icon_color(self, value):
+    def icon_color(self, value: Optional[str]):
         self._set_attr("iconColor", value)
 
     # style
@@ -200,11 +200,11 @@ class TextButton(ConstrainedControl, AdaptiveControl):
 
     # url
     @property
-    def url(self):
+    def url(self) -> Optional[str]:
         return self._get_attr("url")
 
     @url.setter
-    def url(self, value):
+    def url(self, value: Optional[str]):
         self._set_attr("url", value)
 
     # url_target

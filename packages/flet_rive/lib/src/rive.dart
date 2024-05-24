@@ -38,7 +38,7 @@ class _RiveControlState extends State<RiveControl> with FletStoreMixin {
     var artBoard = widget.control.attrString("artBoard");
     var antiAliasing = widget.control.attrBool("enableAntiAliasing", true)!;
     var useArtBoardSize = widget.control.attrBool("useArtBoardSize", false)!;
-    var fit = parseBoxFit(widget.control, "fit");
+    var fit = parseBoxFit(widget.control.attrString("fit"));
     var alignment = parseAlignment(widget.control, "alignment");
     var ctrls = widget.children.where((c) => c.isVisible);
     if (ctrls.isNotEmpty) {

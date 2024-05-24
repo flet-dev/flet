@@ -448,11 +448,11 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     # capitalization
     @property
-    def capitalization(self) -> TextCapitalization:
+    def capitalization(self) -> Optional[TextCapitalization]:
         return self.__capitalization
 
     @capitalization.setter
-    def capitalization(self, value: TextCapitalization):
+    def capitalization(self, value: Optional[TextCapitalization]):
         self.__capitalization = value
         self._set_enum_attr("capitalization", value, TextCapitalization)
 
@@ -539,11 +539,11 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     # selection_color
     @property
-    def selection_color(self):
+    def selection_color(self) -> Optional[str]:
         return self._get_attr("selectionColor")
 
     @selection_color.setter
-    def selection_color(self, value):
+    def selection_color(self, value: Optional[str]):
         self._set_attr("selectionColor", value)
 
     # input_filter
@@ -582,10 +582,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     @on_change.setter
     def on_change(self, handler):
         self._add_event_handler("change", handler)
-        if handler is not None:
-            self._set_attr("onchange", True)
-        else:
-            self._set_attr("onchange", None)
+        self._set_attr("onChange", True if handler is not None else None)
 
     # on_submit
     @property

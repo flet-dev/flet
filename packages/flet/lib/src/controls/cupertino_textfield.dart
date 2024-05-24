@@ -139,12 +139,9 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
           fontSize: textSize, color: _focused ? focusedColor ?? color : color);
     }
 
-    TextCapitalization? textCapitalization = TextCapitalization.values
-        .firstWhere(
-            (a) =>
-                a.name.toLowerCase() ==
-                widget.control.attrString("capitalization", "")!.toLowerCase(),
-            orElse: () => TextCapitalization.none);
+    TextCapitalization textCapitalization = parseTextCapitalization(
+        widget.control.attrString("textCapitalization"),
+        TextCapitalization.none)!;
 
     FilteringTextInputFormatter? inputFilter =
         parseInputFilter(widget.control, "inputFilter");
@@ -158,18 +155,13 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
       inputFormatters.add(TextCapitalizationFormatter(textCapitalization));
     }
 
-    TextInputType keyboardType =
-        parseTextInputType(widget.control.attrString("keyboardType", "")!);
+    TextInputType keyboardType = multiline
+        ? TextInputType.multiline
+        : parseTextInputType(
+            widget.control.attrString("keyboardType"), TextInputType.text)!;
 
-    if (multiline) {
-      keyboardType = TextInputType.multiline;
-    }
-
-    TextAlign textAlign = TextAlign.values.firstWhere(
-      ((b) =>
-          b.name == widget.control.attrString("textAlign", "")!.toLowerCase()),
-      orElse: () => TextAlign.start,
-    );
+    TextAlign textAlign = parseTextAlign(
+        widget.control.attrString("textAlign"), TextAlign.start)!;
 
     double? textVerticalAlign = widget.control.attrDouble("textVerticalAlign");
 
@@ -272,9 +264,9 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
                 parseBoxShadow(Theme.of(context), widget.control, "shadow")),
         cursorHeight: widget.control.attrDouble("cursorHeight"),
         showCursor: widget.control.attrBool("showCursor"),
-        cursorWidth: widget.control.attrDouble("cursorWidth") ?? 2.0,
-        cursorRadius: parseRadius(widget.control, "cursorRadius") ??
-            const Radius.circular(2.0),
+        cursorWidth: widget.control.attrDouble("cursorWidth", 2.0)!,
+        cursorRadius: parseRadius(
+            widget.control, "cursorRadius", const Radius.circular(2.0))!,
         keyboardType: keyboardType,
         clearButtonSemanticLabel:
             widget.control.attrString("clearButtonSemanticsLabel"),

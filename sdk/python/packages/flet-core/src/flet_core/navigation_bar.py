@@ -305,11 +305,11 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # elevation
@@ -323,20 +323,20 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     # shadow_color
     @property
-    def shadow_color(self):
+    def shadow_color(self) -> Optional[str]:
         return self._get_attr("shadowColor")
 
     @shadow_color.setter
-    def shadow_color(self, value):
+    def shadow_color(self, value: Optional[str]):
         self._set_attr("shadowColor", value)
 
     # indicator_color
     @property
-    def indicator_color(self):
+    def indicator_color(self) -> Optional[str]:
         return self._get_attr("indicatorColor")
 
     @indicator_color.setter
-    def indicator_color(self, value):
+    def indicator_color(self, value: Optional[str]):
         self._set_attr("indicatorColor", value)
 
     # indicator_shape
@@ -350,11 +350,11 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     # surface_tint_color
     @property
-    def surface_tint_color(self):
+    def surface_tint_color(self) -> Optional[str]:
         return self._get_attr("surfaceTintColor")
 
     @surface_tint_color.setter
-    def surface_tint_color(self, value):
+    def surface_tint_color(self, value: Optional[str]):
         self._set_attr("surfaceTintColor", value)
 
     # border
@@ -368,11 +368,11 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     # animation_duration
     @property
-    def animation_duration(self):
+    def animation_duration(self) -> Optional[int]:
         return self._get_attr("animationDuration", data_type="int")
 
     @animation_duration.setter
-    def animation_duration(self, value: OptionalNumber):
+    def animation_duration(self, value: Optional[int]):
         self._set_attr("animationDuration", value)
 
     # on_change

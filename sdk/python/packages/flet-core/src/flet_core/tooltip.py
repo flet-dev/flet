@@ -184,11 +184,11 @@ class Tooltip(Control):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgColor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgColor", value)
 
     # gradient
@@ -226,7 +226,7 @@ class Tooltip(Control):
     @shape.setter
     def shape(self, value: Optional[BoxShape]):
         self.__shape = value
-        self._set_attr("shape", value.value if isinstance(value, BoxShape) else value)
+        self._set_enum_attr("shape", value, BoxShape)
 
     # message
     @property
@@ -245,9 +245,7 @@ class Tooltip(Control):
     @text_align.setter
     def text_align(self, value: Optional[TextAlign]):
         self.__text_align = value
-        self._set_attr(
-            "textAlign", value.value if isinstance(value, TextAlign) else value
-        )
+        self._set_enum_attr("textAlign", value, TextAlign)
 
     # text_style
     @property
@@ -288,7 +286,7 @@ class Tooltip(Control):
     # show_duration
     @property
     def show_duration(self) -> Optional[int]:
-        return self._get_attr("showDuration")
+        return self._get_attr("showDuration", data_type="int")
 
     @show_duration.setter
     def show_duration(self, value: Optional[int]):
@@ -297,7 +295,7 @@ class Tooltip(Control):
     # wait_duration
     @property
     def wait_duration(self) -> Optional[int]:
-        return self._get_attr("waitDuration")
+        return self._get_attr("waitDuration", data_type="int")
 
     @wait_duration.setter
     def wait_duration(self, value: Optional[int]):

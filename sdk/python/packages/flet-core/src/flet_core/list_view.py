@@ -195,7 +195,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     # spacing
     @property
     def spacing(self) -> OptionalNumber:
-        return self._get_attr("spacing")
+        return self._get_attr("spacing", data_type="float")
 
     @spacing.setter
     def spacing(self, value: OptionalNumber):
@@ -222,7 +222,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     # cache_extent
     @property
     def cache_extent(self) -> OptionalNumber:
-        return self._get_attr("cacheExtent")
+        return self._get_attr("cacheExtent", data_type="float")
 
     @cache_extent.setter
     def cache_extent(self, value: OptionalNumber):
@@ -231,7 +231,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     # first_item_prototype
     @property
     def first_item_prototype(self) -> Optional[bool]:
-        return self._get_attr("firstItemPrototype")
+        return self._get_attr("firstItemPrototype", data_type="bool")
 
     @first_item_prototype.setter
     def first_item_prototype(self, value: Optional[bool]):

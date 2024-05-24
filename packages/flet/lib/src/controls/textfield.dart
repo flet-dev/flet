@@ -156,14 +156,9 @@ class _TextFieldControlState extends State<TextFieldControl>
             color: _focused ? focusedColor ?? color : color);
       }
 
-      TextCapitalization? textCapitalization = TextCapitalization.values
-          .firstWhere(
-              (a) =>
-                  a.name.toLowerCase() ==
-                  widget.control
-                      .attrString("capitalization", "")!
-                      .toLowerCase(),
-              orElse: () => TextCapitalization.none);
+      TextCapitalization textCapitalization = parseTextCapitalization(
+          widget.control.attrString("textCapitalization"),
+          TextCapitalization.none)!;
 
       FilteringTextInputFormatter? inputFilter =
           parseInputFilter(widget.control, "inputFilter");
@@ -190,19 +185,13 @@ class _TextFieldControlState extends State<TextFieldControl>
             });
       }
 
-      TextInputType keyboardType =
-          parseTextInputType(widget.control.attrString("keyboardType", "")!);
+      TextInputType keyboardType = multiline
+          ? TextInputType.multiline
+          : parseTextInputType(
+              widget.control.attrString("keyboardType"), TextInputType.text)!;
 
-      if (multiline) {
-        keyboardType = TextInputType.multiline;
-      }
-
-      TextAlign textAlign = TextAlign.values.firstWhere(
-        ((b) =>
-            b.name ==
-            widget.control.attrString("textAlign", "")!.toLowerCase()),
-        orElse: () => TextAlign.start,
-      );
+      TextAlign textAlign = parseTextAlign(
+          widget.control.attrString("textAlign"), TextAlign.start)!;
 
       double? textVerticalAlign =
           widget.control.attrDouble("textVerticalAlign");
@@ -226,9 +215,9 @@ class _TextFieldControlState extends State<TextFieldControl>
           autofocus: autofocus,
           enabled: !disabled,
           onFieldSubmitted: !multiline
-              ? (_) {
+              ? (value) {
                   widget.backend
-                      .triggerControlEvent(widget.control.id, "submit", "");
+                      .triggerControlEvent(widget.control.id, "submit", value);
                 }
               : null,
           decoration: buildInputDecoration(
@@ -245,7 +234,7 @@ class _TextFieldControlState extends State<TextFieldControl>
               ? TextAlignVertical(y: textVerticalAlign)
               : null,
           cursorHeight: widget.control.attrDouble("cursorHeight"),
-          cursorWidth: widget.control.attrDouble("cursorWidth") ?? 2.0,
+          cursorWidth: widget.control.attrDouble("cursorWidth", 2.0)!,
           cursorRadius: parseRadius(widget.control, "cursorRadius"),
           keyboardType: keyboardType,
           autocorrect: autocorrect,

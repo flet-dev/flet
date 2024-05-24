@@ -7,7 +7,10 @@ import 'cupertino_icons.dart';
 import 'material_icons.dart';
 import 'material_state.dart';
 
-IconData? parseIcon(String iconName) {
+IconData? parseIcon(String? iconName, [IconData? defaultIcon]) {
+  if (iconName == null) {
+    return defaultIcon;
+  }
   return materialIcons[iconName.toLowerCase()] ?? cupertinoIcons[iconName.toLowerCase()];
 }
 

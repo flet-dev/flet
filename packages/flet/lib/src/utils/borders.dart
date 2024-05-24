@@ -6,20 +6,21 @@ import '../models/control.dart';
 import 'colors.dart';
 import 'numbers.dart';
 
-BorderRadius? parseBorderRadius(Control control, String propName) {
+BorderRadius? parseBorderRadius(Control control, String propName,
+    [BorderRadius? defaultValue]) {
   var v = control.attrString(propName, null);
   if (v == null) {
-    return null;
+    return defaultValue;
   }
 
   final j1 = json.decode(v);
   return borderRadiusFromJSON(j1);
 }
 
-Radius? parseRadius(Control control, String propName) {
+Radius? parseRadius(Control control, String propName, [Radius? defaultValue]) {
   var r = control.attrDouble(propName, null);
   if (r == null) {
-    return null;
+    return defaultValue;
   }
 
   return Radius.circular(r);
@@ -86,11 +87,8 @@ BorderSide? borderSideFromJSON(ThemeData? theme, dynamic json,
     [Color? defaultSideColor]) {
   return json != null
       ? BorderSide(
-          color: json['c'] != null
-              ? HexColor.fromString(theme, json['c'] as String) ??
-                  defaultSideColor ??
-                  Colors.black
-              : Colors.black,
+          color:
+              parseColor(theme, json['c'], defaultSideColor ?? Colors.black)!,
           width: parseDouble(json['w'], 1),
           style: BorderStyle.solid)
       : null;

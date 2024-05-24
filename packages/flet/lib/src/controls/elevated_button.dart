@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'cupertino_button.dart';
 import 'cupertino_dialog_action.dart';
@@ -86,14 +87,12 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
 
       String text = widget.control.attrString("text", "")!;
       String url = widget.control.attrString("url", "")!;
-      IconData? icon = parseIcon(widget.control.attrString("icon", "")!);
+      IconData? icon = parseIcon(widget.control.attrString("icon"));
       Color? iconColor = widget.control.attrColor("iconColor", context);
-      var contentCtrls = widget.children.where((c) => c.name == "content");
-      var clipBehavior = Clip.values.firstWhere(
-          (e) =>
-              e.name.toLowerCase() ==
-              widget.control.attrString("clipBehavior", "")!.toLowerCase(),
-          orElse: () => Clip.none);
+      var contentCtrls =
+          widget.children.where((c) => c.name == "content" && c.isVisible);
+      var clipBehavior =
+          parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
       bool onHover = widget.control.attrBool("onHover", false)!;
       bool onLongPress = widget.control.attrBool("onLongPress", false)!;
       bool autofocus = widget.control.attrBool("autofocus", false)!;
