@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -98,13 +97,10 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
     TextStyle? viewHintTextStyle =
         parseTextStyle(Theme.of(context), widget.control, "viewHintTextStyle");
 
-    var textCapitalization = TextCapitalization.values.firstWhereOrNull(
-      (c) =>
-          c.name.toLowerCase() ==
-          widget.control.attrString("capitalization", "")!,
-    );
-    TextInputType keyboardType =
-        parseTextInputType(widget.control.attrString("keyboardType", "")!);
+    var textCapitalization = parseTextCapitalization(
+        widget.control.attrString("textCapitalization"));
+    TextInputType keyboardType = parseTextInputType(
+        widget.control.attrString("keyboardType"), TextInputType.text)!;
 
     var method = widget.control.attrString("method");
 

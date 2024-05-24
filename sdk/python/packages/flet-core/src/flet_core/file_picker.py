@@ -271,16 +271,16 @@ class FilePicker(Control):
 
     # dialog_title
     @property
-    def dialog_title(self):
+    def dialog_title(self) -> Optional[str]:
         return self._get_attr("dialogTitle")
 
     @dialog_title.setter
-    def dialog_title(self, value):
+    def dialog_title(self, value: Optional[str]):
         self._set_attr("dialogTitle", value)
 
     # file_name
     @property
-    def file_name(self):
+    def file_name(self) -> Optional[str]:
         return self._get_attr("fileName")
 
     @file_name.setter

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 
 class MenuItemButtonControl extends StatefulWidget {
@@ -61,11 +62,8 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
     var trailing =
         widget.children.where((c) => c.name == "trailing" && c.isVisible);
 
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            widget.control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.none);
+    var clipBehavior =
+        parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
 
     var theme = Theme.of(context);
     var style = parseButtonStyle(Theme.of(context), widget.control, "style",

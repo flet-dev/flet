@@ -53,20 +53,20 @@ class Option(Control):
 
     # key
     @property
-    def key(self):
+    def key(self) -> Optional[str]:
         return self._get_attr("key")
 
     @key.setter
-    def key(self, value):
+    def key(self, value: Optional[str]):
         self._set_attr("key", value)
 
     # text
     @property
-    def text(self):
+    def text(self) -> Optional[str]:
         return self._get_attr("text")
 
     @text.setter
-    def text(self, value):
+    def text(self, value: Optional[str]):
         self._set_attr("text", value)
 
     # alignment
@@ -317,8 +317,7 @@ class Dropdown(FormFieldControl):
             self.filled = True  # required to display any of the above colors
 
     def _get_children(self):
-        children = FormFieldControl._get_children(self)
-        children.extend(self.__options)
+        children = FormFieldControl._get_children(self) + self.__options
         if isinstance(self.__hint_content, Control):
             self.__hint_content._set_attr_internal("n", "hint")
             children.extend(self.__hint_content)
@@ -400,6 +399,9 @@ class Dropdown(FormFieldControl):
 
     @item_height.setter
     def item_height(self, value: OptionalNumber):
+        assert (
+            value is None or value >= 48.0
+        ), "item_height must be greater than or equal to 48.0"
         self._set_attr("itemHeight", value)
 
     # menu_max_height

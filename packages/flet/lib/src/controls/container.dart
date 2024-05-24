@@ -13,6 +13,7 @@ import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
 import '../utils/launch_url.dart';
+import '../utils/others.dart';
 import '../utils/shadows.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -74,8 +75,9 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
 
     var imageSrc = control.attrString("imageSrc", "")!;
     var imageSrcBase64 = control.attrString("imageSrcBase64", "")!;
-    var imageRepeat = parseImageRepeat(control, "imageRepeat");
-    var imageFit = parseBoxFit(control, "imageFit");
+    var imageRepeat = parseImageRepeat(
+        control.attrString("imageRepeat"), ImageRepeat.noRepeat)!;
+    var imageFit = parseBoxFit(control.attrString("imageFit"));
     var imageOpacity = control.attrDouble("imageOpacity", 1)!;
 
     Widget? child = contentCtrls.isNotEmpty
@@ -125,11 +127,8 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
 
       var borderRadius = parseBorderRadius(control, "borderRadius");
 
-      var clipBehavior = Clip.values.firstWhere(
-          (e) =>
-              e.name.toLowerCase() ==
-              control.attrString("clipBehavior", "")!.toLowerCase(),
-          orElse: () => borderRadius != null ? Clip.antiAlias : Clip.none);
+      var clipBehavior = parseClip(control.attrString("clipBehavior"),
+          borderRadius != null ? Clip.antiAlias : Clip.none)!;
 
       var boxDecor = BoxDecoration(
           color: bgColor,

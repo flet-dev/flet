@@ -103,8 +103,11 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
     def _get_children(self):
         return self.__controls
 
-    def _before_build_command(self):
-        super()._before_build_command()
+    def before_update(self):
+        super().before_update()
+        assert (
+            len(self.__controls) >= 2
+        ), "CupertinoSlidingSegmentedButton must have at minimum two visible controls"
         self._set_attr_json("padding", self.__padding)
 
     # controls
@@ -114,7 +117,7 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
 
     @controls.setter
     def controls(self, value: List[Control]):
-        self.__controls = value if value is not None else []
+        self.__controls = value
 
     # selected_index
     @property
@@ -123,26 +126,27 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
 
     @selected_index.setter
     def selected_index(self, value: Optional[int]):
-        if value is not None:
-            assert 0 <= value <= len(self.controls) - 1, "selected_index out of range"
+        assert (
+            value is None or 0 <= value <= len(self.controls) - 1
+        ), "selected_index out of range"
         self._set_attr("selectedIndex", value)
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # thumb_color
     @property
-    def thumb_color(self):
+    def thumb_color(self) -> Optional[str]:
         return self._get_attr("thumbColor")
 
     @thumb_color.setter
-    def thumb_color(self, value):
+    def thumb_color(self, value: Optional[str]):
         self._set_attr("thumbColor", value)
 
     # padding

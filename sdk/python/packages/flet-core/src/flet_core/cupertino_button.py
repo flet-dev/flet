@@ -125,6 +125,9 @@ class CupertinoButton(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
+        assert (
+            self.text or self.__content
+        ), "at minimum, text or content must be provided"
         self._set_attr_json("padding", self.__padding)
         self._set_attr_json("borderRadius", self.__border_radius)
         self._set_attr_json("alignment", self.__alignment)
@@ -253,9 +256,7 @@ class CupertinoButton(ConstrainedControl):
     @url_target.setter
     def url_target(self, value: Optional[UrlTarget]):
         self.__url_target = value
-        self._set_attr(
-            "urlTarget", value.value if isinstance(value, UrlTarget) else value
-        )
+        self._set_enum_attr("urlTarget", value, UrlTarget)
 
     # on_click
     @property

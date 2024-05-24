@@ -112,7 +112,7 @@ class CupertinoPicker(ConstrainedControl):
         return "cupertinopicker"
 
     def _get_children(self):
-        return self.controls
+        return self.__controls
 
     # squeeze
     @property
@@ -161,8 +161,9 @@ class CupertinoPicker(ConstrainedControl):
 
     @item_extent.setter
     def item_extent(self, value: OptionalNumber):
-        if value is not None and value <= 0:
-            raise ValueError("CupertinoPicker.item_extent must be greater than 0")
+        assert (
+            value is None or value > 0
+        ), "item_extent cannot be negative or equal to 0"
         self._set_attr("itemExtent", value)
 
     # looping
@@ -203,7 +204,7 @@ class CupertinoPicker(ConstrainedControl):
 
     # controls
     @property
-    def controls(self):
+    def controls(self) -> List[Control]:
         return self.__controls
 
     @controls.setter

@@ -30,7 +30,8 @@ class WindowDragAreaControl extends StatelessWidget {
     bool disabled = control.isDisabled || parentDisabled;
 
     if (contentCtrls.isEmpty) {
-      return const ErrorControl("WindowDragArea should have content.");
+      return const ErrorControl(
+          "WindowDragArea.content must be provided and visible");
     }
 
     return constrainedControl(

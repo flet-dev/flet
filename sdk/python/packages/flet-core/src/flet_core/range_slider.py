@@ -75,8 +75,8 @@ class RangeSlider(ConstrainedControl):
 
     def __init__(
         self,
-        start_value: [float],
-        end_value: [float],
+        start_value: float,
+        end_value: float,
         label: Optional[str] = None,
         min: OptionalNumber = None,
         max: OptionalNumber = None,
@@ -174,46 +174,52 @@ class RangeSlider(ConstrainedControl):
     # start_value
     @property
     def start_value(self) -> float:
-        return self._get_attr("startvalue")
+        return self._get_attr("startValue", data_type="float")
 
     @start_value.setter
     def start_value(self, value: float):
-        self._set_attr("startvalue", value)
+        self._set_attr("startValue", value)
 
     # end_value
     @property
     def end_value(self) -> float:
-        return self._get_attr("endvalue")
+        return self._get_attr("endValue", data_type="float")
 
     @end_value.setter
     def end_value(self, value: float):
-        self._set_attr("endvalue", value)
+        self._set_attr("endValue", value)
 
     # label
     @property
-    def label(self) -> str:
+    def label(self) -> Optional[str]:
         return self._get_attr("label")
 
     @label.setter
-    def label(self, value: str):
+    def label(self, value: Optional[str]):
         self._set_attr("label", value)
 
     # min
     @property
     def min(self) -> OptionalNumber:
-        return self._get_attr("min")
+        return self._get_attr("min", data_type="float")
 
     @min.setter
     def min(self, value: OptionalNumber):
+        if value is not None:
+            if self.max is not None:
+                assert value <= self.max, "min must be less than or equal to max"
         self._set_attr("min", value)
 
     # max
     @property
     def max(self) -> OptionalNumber:
-        return self._get_attr("max")
+        return self._get_attr("max", data_type="float")
 
     @max.setter
     def max(self, value: OptionalNumber):
+        if value is not None:
+            if self.min is not None:
+                assert value >= self.min, "max must be greater than or equal to min"
         self._set_attr("max", value)
 
     # divisions
@@ -236,20 +242,20 @@ class RangeSlider(ConstrainedControl):
 
     # active_color
     @property
-    def active_color(self):
+    def active_color(self) -> Optional[str]:
         return self._get_attr("activeColor")
 
     @active_color.setter
-    def active_color(self, value):
+    def active_color(self, value: Optional[str]):
         self._set_attr("activeColor", value)
 
     # inactive_color
     @property
-    def inactive_color(self):
+    def inactive_color(self) -> Optional[str]:
         return self._get_attr("inactiveColor")
 
     @inactive_color.setter
-    def inactive_color(self, value):
+    def inactive_color(self, value: Optional[str]):
         self._set_attr("inactiveColor", value)
 
     # overlay_color

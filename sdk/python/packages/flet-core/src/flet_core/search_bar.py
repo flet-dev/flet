@@ -159,18 +159,15 @@ class SearchBar(ConstrainedControl):
         if self.__view_leading:
             self.__view_leading._set_attr_internal("n", "viewLeading")
             children.append(self.__view_leading)
-        if self.__bar_trailing:
-            for i in self.__bar_trailing:
-                i._set_attr_internal("n", "barTrailing")
-                children.append(i)
-        if self.__view_trailing:
-            for i in self.__view_trailing:
-                i._set_attr_internal("n", "viewTrailing")
-                children.append(i)
-        if self.__controls:
-            for i in self.__controls:
-                i._set_attr_internal("n", "controls")
-                children.append(i)
+        for i in self.__bar_trailing:
+            i._set_attr_internal("n", "barTrailing")
+            children.append(i)
+        for i in self.__view_trailing:
+            i._set_attr_internal("n", "viewTrailing")
+            children.append(i)
+        for i in self.__controls:
+            i._set_attr_internal("n", "controls")
+            children.append(i)
         return children
 
     # Public methods
@@ -225,7 +222,7 @@ class SearchBar(ConstrainedControl):
 
     @bar_trailing.setter
     def bar_trailing(self, value: Optional[List[Control]]):
-        self.__bar_trailing = value
+        self.__bar_trailing = value if value is not None else []
 
     # bar_bgcolor
     @property
@@ -279,7 +276,7 @@ class SearchBar(ConstrainedControl):
 
     @view_trailing.setter
     def view_trailing(self, value: Optional[List[Control]]):
-        self.__view_trailing = value
+        self.__view_trailing = value if value is not None else []
 
     # view_elevation
     @property
@@ -361,10 +358,7 @@ class SearchBar(ConstrainedControl):
     @capitalization.setter
     def capitalization(self, value: TextCapitalization):
         self.__capitalization = value
-        self._set_attr(
-            "capitalization",
-            value.value if isinstance(value, TextCapitalization) else value,
-        )
+        self._set_enum_attr("capitalization", value, TextCapitalization)
 
     # keyboard_type
     @property
@@ -374,10 +368,7 @@ class SearchBar(ConstrainedControl):
     @keyboard_type.setter
     def keyboard_type(self, value: KeyboardType):
         self.__keyboard_type = value
-        self._set_attr(
-            "keyboardType",
-            value.value if isinstance(value, KeyboardType) else value,
-        )
+        self._set_enum_attr("keyboardType", value, KeyboardType)
 
     # view_header_text_style
     @property

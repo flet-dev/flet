@@ -140,9 +140,7 @@ class CupertinoNavigationBar(ConstrainedControl):
         self._set_attr_json("border", self.__border)
 
     def _get_children(self):
-        children = []
-        children.extend(self.__destinations)
-        return children
+        return self.__destinations
 
     # destinations
     @property

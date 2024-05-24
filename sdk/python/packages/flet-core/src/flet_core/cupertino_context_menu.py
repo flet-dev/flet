@@ -45,18 +45,17 @@ class CupertinoContextMenu(AdaptiveControl):
     def _get_control_name(self):
         return "cupertinocontextmenu"
 
-    def _before_build_command(self):
-        super()._before_build_command()
-
     def _get_children(self):
-        children = []
-        if self.__content:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
+        self.__content._set_attr_internal("n", "content")
         for action in self.__actions:
             action._set_attr_internal("n", "action")
-            children.append(action)
-        return children
+        return [self.__content] + self.__actions
+
+    def before_update(self):
+        super().before_update()
+        assert (
+            len(self.__actions) > 0
+        ), "actions must be provided and at least one must be visible"
 
     # enable_haptic_feedback
     @property
@@ -83,7 +82,4 @@ class CupertinoContextMenu(AdaptiveControl):
 
     @actions.setter
     def actions(self, value: List[Control]):
-        assert (
-            isinstance(value, list) and len(value) > 0
-        ), "CupertinoContextMenu.actions list must have at least one action control"
         self.__actions = value

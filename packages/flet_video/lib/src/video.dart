@@ -66,11 +66,8 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   Widget build(BuildContext context) {
     debugPrint("Video build: ${widget.control.id}");
 
-    FilterQuality filterQuality = FilterQuality.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            widget.control.attrString("filterQuality", "")!.toLowerCase(),
-        orElse: () => FilterQuality.low);
+    FilterQuality filterQuality = parseFilterQuality(
+        widget.control.attrString("filterQuality"), FilterQuality.low)!;
 
     return withPageArgs((context, pageArgs) {
       SubtitleTrack? subtitleTrack;
@@ -122,12 +119,12 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
         resumeUponEnteringForegroundMode:
             widget.control.attrBool("resumeUponEnteringForegroundMode", false)!,
         alignment:
-            parseAlignment(widget.control, "alignment") ?? Alignment.center,
-        fit: parseBoxFit(widget.control, "fit") ?? BoxFit.contain,
+            parseAlignment(widget.control, "alignment", Alignment.center)!,
+        fit: parseBoxFit(widget.control.attrString("fit"), BoxFit.contain)!,
         filterQuality: filterQuality,
         subtitleViewConfiguration:
             subtitleViewConfiguration ?? const SubtitleViewConfiguration(),
-        fill: HexColor.fromString(Theme.of(context),
+        fill: parseColor(Theme.of(context),
                 widget.control.attrString("fillColor", "")!) ??
             const Color(0xFF000000),
         onEnterFullscreen: widget.control.attrBool("onEnterFullscreen", false)!

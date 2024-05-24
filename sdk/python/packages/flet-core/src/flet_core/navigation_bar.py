@@ -54,10 +54,8 @@ class NavigationBarDestination(Control):
         Control.__init__(self, ref=ref, tooltip=tooltip, disabled=disabled, data=data)
         self.label = label
         self.icon = icon
-        self.__icon_content: Optional[Control] = None
         self.icon_content = icon_content
         self.selected_icon = selected_icon
-        self.__selected_icon_content: Optional[Control] = None
         self.selected_icon_content = selected_icon_content
         self.bgcolor = bgcolor
 
@@ -302,9 +300,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("overlayColor", self.__overlay_color)
 
     def _get_children(self):
-        children = []
-        children.extend(self.__destinations)
-        return children
+        return self.__destinations
 
     # destinations
     @property
@@ -414,7 +410,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         return self._get_attr("animationDuration", data_type="int")
 
     @animation_duration.setter
-    def animation_duration(self, value: OptionalNumber):
+    def animation_duration(self, value: Optional[int]):
         self._set_attr("animationDuration", value)
 
     # on_change

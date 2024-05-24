@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/menu.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -32,18 +33,12 @@ class _MenuBarControlState extends State<MenuBarControl> {
     var ctrls = widget.children.where((c) => c.isVisible).toList();
     if (ctrls.isEmpty) {
       return const ErrorControl(
-        "MenuBar must have at least one child control",
-      );
+          "MenuBar must have at minimum one visible control");
     }
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            widget.control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.none);
-
-    // var theme = Theme.of(context);
+    var clipBehavior =
+        parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
 
     var style = parseMenuStyle(Theme.of(context), widget.control, "style");
 

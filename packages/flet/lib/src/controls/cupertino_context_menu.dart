@@ -44,11 +44,11 @@ class _CupertinoContextMenuControlState
 
     if (actionCtrls.isEmpty) {
       return const ErrorControl(
-          "CupertinoContextMenu.actions list must have at least one action control");
+          "CupertinoContextMenu.actions must be provided and at least action must be visible");
     }
     if (contentCtrls.isEmpty) {
       return const ErrorControl(
-          "CupertinoContextMenu.content must be provided");
+          "CupertinoContextMenu.content must be provided and visible");
     }
 
     return CupertinoContextMenu(
