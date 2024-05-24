@@ -49,9 +49,25 @@ class Flashlight(Control):
             self.turned_on = True
         return self.turned_on
 
+    async def turn_on_async(self, wait_timeout: Optional[int] = 3) -> bool:
+        sr = await self.invoke_method_async(
+            "on", wait_for_result=True, wait_timeout=wait_timeout
+        )
+        if int(sr) == 1:
+            self.turned_on = True
+        return self.turned_on
+
     def turn_off(self, wait_timeout: Optional[int] = 3) -> bool:
         sr = self.invoke_method("off", wait_for_result=True, wait_timeout=wait_timeout)
 
+        if int(sr) == 1:
+            self.turned_on = False
+        return self.turned_on
+
+    async def turn_off_async(self, wait_timeout: Optional[int] = 3) -> bool:
+        sr = await self.invoke_method_async(
+            "off", wait_for_result=True, wait_timeout=wait_timeout
+        )
         if int(sr) == 1:
             self.turned_on = False
         return self.turned_on
@@ -60,3 +76,8 @@ class Flashlight(Control):
         if self.turned_on:
             return self.turn_off(wait_timeout)
         return self.turn_on(wait_timeout)
+
+    async def toggle_async(self, wait_timeout: Optional[int] = 3) -> bool:
+        if self.turned_on:
+            return self.turn_off_async(wait_timeout)
+        return self.turn_on_async(wait_timeout)
