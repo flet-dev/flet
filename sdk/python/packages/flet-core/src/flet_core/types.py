@@ -308,10 +308,11 @@ class StrokeCap(Enum):
 class StrokeJoin(Enum):
     MITER = "mitter"
     ROUND = "round"
-    BEVEL = "bevel
+    BEVEL = "bevel"
+
 
 # Events
-ControlEventFunction = Callable[[ControlEvent], None]
+ControlEventFunction = Optional[Callable[[ControlEvent]]]
 
 # Wrapper
 Wrapper = Callable[..., Any]
@@ -323,4 +324,5 @@ Kwargs = Dict[str, Any]
 
 # Protocols
 class SupportsStr(Protocol):
-    def __str__(self) -> str: ...
+    def __str__(self) -> str:
+        ...
