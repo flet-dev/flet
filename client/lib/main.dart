@@ -12,6 +12,7 @@ import 'package:flet_permission_handler/flet_permission_handler.dart' as flet_pe
 import 'package:flet_rive/flet_rive.dart' as flet_rive;
 import 'package:flet_video/flet_video.dart' as flet_video;
 import 'package:flet_webview/flet_webview.dart' as flet_webview;
+import "package:flet_flashlight/flet_flashlight.dart" as flet_flashlight;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -37,6 +38,7 @@ void main([List<String>? args]) async {
   flet_rive.ensureInitialized();
   flet_video.ensureInitialized();
   flet_webview.ensureInitialized();
+  flet_flashlight.ensureInitialized();
 
   var pageUrl = Uri.base.toString();
   var assetsDir = "";
@@ -103,7 +105,8 @@ void main([List<String>? args]) async {
       flet_mobile_ads.createControl,
       flet_rive.createControl,
       flet_video.createControl,
-      flet_webview.createControl
+      flet_webview.createControl,
+      flet_flashlight.createControl,
     ],
   ));
 }

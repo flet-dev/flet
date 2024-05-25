@@ -246,6 +246,13 @@ packages:
       relative: true
     source: path
     version: "0.22.1"
+  flet_flashlight:
+    dependency: "direct main"
+    description:
+      path: "../packages/flet_flashlight"
+      relative: true
+    source: path
+    version: "0.23.0"
   flet_geolocator:
     dependency: "direct main"
     description:
@@ -1182,6 +1189,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.1"
+  torch_light:
+    dependency: transitive
+    description:
+      name: torch_light
+      sha256: "4be36446b3b1a49c6a99836706d96da0bd30ce6c5d12d03ac60ccd3968af8f40"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   typed_data:
     dependency: transitive
     description:
