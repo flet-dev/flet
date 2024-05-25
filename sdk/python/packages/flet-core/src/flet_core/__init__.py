@@ -44,6 +44,7 @@ from flet_core.buttons import (
     RoundedRectangleBorder,
     StadiumBorder,
 )
+from flet_core.camera import Camera, ExposureMode, ImageFormatGroup, ResolutionPreset
 from flet_core.card import Card, CardVariant
 from flet_core.charts.bar_chart import BarChart, BarChartEvent
 from flet_core.charts.bar_chart_group import BarChartGroup

@@ -1,0 +1,24 @@
+name: flet_camera
+description: Flet Camera control
+homepage: https://flet.dev
+repository: https://github.com/flet-dev/flet/packages/flet_camera
+version: 0.22.1
+
+environment:
+  sdk: '>=3.2.3 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  collection: ^1.16.0
+  camera: ^0.11.0
+
+  flet:
+    path: ../flet/
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
