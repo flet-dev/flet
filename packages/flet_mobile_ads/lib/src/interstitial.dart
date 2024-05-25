@@ -34,19 +34,15 @@ class _InterstitialAdControlState extends State<InterstitialAdControl>
           adUnitId: widget.control.attrString("unitId", testAdUnitId)!,
           request: const AdRequest(),
           adLoadCallback: InterstitialAdLoadCallback(
-            // Called when an ad is successfully received.
             onAdLoaded: (ad) {
               ad.fullScreenContentCallback = FullScreenContentCallback(
-                  // Called when the ad showed the full screen content.
                   onAdShowedFullScreenContent: (ad) {
                 widget.backend.triggerControlEvent(widget.control.id, "open");
               },
-                  // Called when an impression occurs on the ad.
                   onAdImpression: (ad) {
                 widget.backend
                     .triggerControlEvent(widget.control.id, "impression");
               },
-                  // Called when the ad failed to show full screen content.
                   onAdFailedToShowFullScreenContent: (ad, err) {
                 widget.backend.triggerControlEvent(widget.control.id, "error");
                 // Dispose the ad here to free resources.
@@ -57,17 +53,14 @@ class _InterstitialAdControlState extends State<InterstitialAdControl>
                 widget.backend.triggerControlEvent(widget.control.id, "close");
                 // Dispose the ad here to free resources.
                 ad.dispose();
-              },
-                  // Called when a click is recorded for an ad.
-                  onAdClicked: (ad) {
+              }, onAdClicked: (ad) {
                 widget.backend.triggerControlEvent(widget.control.id, "click");
               });
 
-              // Keep a reference to the ad so you can show it later.
+              // Keep a reference to show it later.
               _interstitialAd = ad;
               widget.backend.triggerControlEvent(widget.control.id, "load");
             },
-            // Called when an ad request failed.
             onAdFailedToLoad: (LoadAdError error) {
               debugPrint('InterstitialAd failed to load: $error');
               setState(() {

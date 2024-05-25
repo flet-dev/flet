@@ -6,10 +6,10 @@ import 'interstitial.dart';
 
 CreateControlFactory createControl = (CreateControlArgs args) {
   switch (args.control.type) {
-    case "bannerad":
+    case "banner_ad":
       return BannerAdControl(
           parent: args.parent, control: args.control, backend: args.backend);
-    case "interstitialad":
+    case "interstitial_ad":
       return InterstitialAdControl(
           parent: args.parent, control: args.control, backend: args.backend);
     default:

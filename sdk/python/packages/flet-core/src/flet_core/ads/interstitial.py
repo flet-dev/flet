@@ -101,10 +101,7 @@ class InterstitialAd(ConstrainedControl):
         self.unit_id = unit_id
 
     def _get_control_name(self):
-        return "interstitialad"
-
-    def did_mount(self):
-        super().did_mount()
+        return "interstitial_ad"
 
     def show(self):
         self.invoke_method("show")

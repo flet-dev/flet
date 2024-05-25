@@ -1,6 +1,6 @@
 from typing import Any, Optional, Union
 
-from flet_core.ads.base_ad import BaseAd
+from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
@@ -12,18 +12,10 @@ from flet_core.types import (
 )
 
 
-class BannerAd(BaseAd):
-    """
-    TBA
-
-    -----
-
-    Online docs: https://flet.dev/docs/controls/bannerad
-    """
-
+class BaseAd(ConstrainedControl):
     def __init__(
         self,
-        unit_id: Optional[str] = None,
+        unit_id: str,
         on_load=None,
         on_error=None,
         on_open=None,
@@ -62,16 +54,8 @@ class BannerAd(BaseAd):
         disabled: Optional[bool] = None,
         data: Any = None,
     ):
-        BaseAd.__init__(
+        ConstrainedControl.__init__(
             self,
-            unit_id=unit_id,
-            on_load=on_load,
-            on_error=on_error,
-            on_open=on_open,
-            on_close=on_close,
-            on_impression=on_impression,
-            on_click=on_click,
-            on_will_dismiss=on_will_dismiss,
             ref=ref,
             key=key,
             width=width,
@@ -101,5 +85,82 @@ class BannerAd(BaseAd):
             data=data,
         )
 
-    def _get_control_name(self):
-        return "banner_ad"
+        self.on_load = on_load
+        self.on_error = on_error
+        self.on_open = on_open
+        self.on_close = on_close
+        self.on_impression = on_impression
+        self.on_click = on_click
+        self.on_will_dismiss = on_will_dismiss
+        self.unit_id = unit_id
+
+    @property
+    def unit_id(self) -> str:
+        return self._get_attr("unitId")
+
+    @unit_id.setter
+    def unit_id(self, value: str):
+        self._set_attr("unitId", value)
+
+    # on_load
+    @property
+    def on_load(self):
+        return self._get_event_handler("load")
+
+    @on_load.setter
+    def on_load(self, handler):
+        self._add_event_handler("load", handler)
+
+    # on_error
+    @property
+    def on_error(self):
+        return self._get_event_handler("error")
+
+    @on_error.setter
+    def on_error(self, handler):
+        self._add_event_handler("error", handler)
+
+    # on_open
+    @property
+    def on_open(self):
+        return self._get_event_handler("open")
+
+    @on_open.setter
+    def on_open(self, handler):
+        self._add_event_handler("open", handler)
+
+    # on_close
+    @property
+    def on_close(self):
+        return self._get_event_handler("close")
+
+    @on_close.setter
+    def on_close(self, handler):
+        self._add_event_handler("close", handler)
+
+    # on_click
+    @property
+    def on_click(self):
+        return self._get_event_handler("click")
+
+    @on_click.setter
+    def on_click(self, handler):
+        self._add_event_handler("click", handler)
+
+    # on_impression
+    @property
+    def on_impression(self):
+        return self._get_event_handler("impression")
+
+    @on_impression.setter
+    def on_impression(self, handler):
+        self._add_event_handler("impression", handler)
+
+    # on_will_dismiss
+    @property
+    def on_will_dismiss(self):
+        return self._get_event_handler("willDismiss")
+
+    @on_will_dismiss.setter
+    def on_will_dismiss(self, handler):
+        self._add_event_handler("willDismiss", handler)

@@ -43,10 +43,10 @@ class _BannerAdControlState extends State<BannerAdControl> with FletStoreMixin {
             });
           },
           // Called when an ad request failed.
-          onAdFailedToLoad: (ad, err) {
+          onAdFailedToLoad: (ad, error) {
             widget.backend.triggerControlEvent(
-                widget.control.id, "error", err.toString());
-            debugPrint("BANNER AD failed to load: $err");
+                widget.control.id, "error", error.toString());
+            debugPrint("BANNER AD failed to load: $error");
             // Dispose the ad to free resources.
             ad.dispose();
             setState(() {
