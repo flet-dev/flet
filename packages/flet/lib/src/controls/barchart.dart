@@ -245,15 +245,12 @@ class _BarChartControlState extends State<BarChartControl> {
                               rod.color ??
                               Colors.blueGrey);
                     }
-                    TextAlign? tooltipAlign = TextAlign.values.firstWhereOrNull(
-                        (a) =>
-                            a.name.toLowerCase() ==
-                            dp.control
-                                .attrString("tooltipAlign", "")!
-                                .toLowerCase());
+                    TextAlign? tooltipAlign = parseTextAlign(
+                        dp.control.attrString("tooltipAlign", ""),
+                        TextAlign.center)!;
                     return dp.control.attrBool("showTooltip", true)!
                         ? BarTooltipItem(tooltip, tooltipStyle,
-                            textAlign: tooltipAlign ?? TextAlign.center)
+                            textAlign: tooltipAlign)
                         : null;
                   },
                 ),

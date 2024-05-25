@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
 import '../utils/alignment.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 
 class StackControl extends StatelessWidget {
@@ -25,11 +26,8 @@ class StackControl extends StatelessWidget {
     bool disabled = control.isDisabled || parentDisabled;
     bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
 
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.hardEdge);
+    var clipBehavior =
+        parseClip(control.attrString("clipBehavior"), Clip.hardEdge)!;
 
     StackFit fit = StackFit.values.firstWhere(
         (e) =>

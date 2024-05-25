@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
@@ -19,11 +20,7 @@ List<Media> parseVideoMedia(Control control, String propName) {
 List<Media> videoMediasFromJSON(dynamic json) {
   List<Media> m = [];
   if (json is List) {
-    json.map((e) => videoMediaFromJSON(e)).toList().forEach((e) {
-      if (e != null) {
-        m.add(e);
-      }
-    });
+    m = json.map((e) => videoMediaFromJSON(e)).whereNotNull().toList();
   } else {
     if (videoMediaFromJSON(json) != null) {
       m.add(videoMediaFromJSON(json)!);
@@ -79,12 +76,9 @@ Map<String, dynamic> subtitleConfigurationFromJSON(
     textScaleFactor: json["text_scale_factor"] != null
         ? parseDouble(json["text_scale_factor"])
         : null,
-    textAlign: json["text_align"] != null
-        ? parseTextAlign(json["text_align"], TextAlign.center)!
-        : TextAlign.center,
-    padding: json["padding"] != null
-        ? edgeInsetsFromJson(json["padding"])
-        : const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 24.0),
+    textAlign: parseTextAlign(json["text_align"], TextAlign.center)!,
+    padding: edgeInsetsFromJson(json["padding"]) ??
+        const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 24.0),
   );
 
   return <String, dynamic>{
@@ -105,4 +99,25 @@ SubtitleTrack parseSubtitleTrack(
   } else {
     return SubtitleTrack.uri(assetSrc.path, title: title, language: language);
   }
+}
+
+VideoControllerConfiguration? parseControllerConfiguration(
+    Control control, String propName,
+    [VideoControllerConfiguration? defValue]) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return defValue;
+  }
+
+  final j1 = json.decode(v);
+  return controllerConfigurationFromJSON(j1);
+}
+
+VideoControllerConfiguration? controllerConfigurationFromJSON(dynamic json) {
+  return VideoControllerConfiguration(
+    vo: json["output_driver"],
+    hwdec: json["hardware_decoding_api"],
+    enableHardwareAcceleration:
+        parseBool(json["enable_hardware_acceleration"], true),
+  );
 }

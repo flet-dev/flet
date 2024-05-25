@@ -97,15 +97,22 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
           .map((v) => v.control)
           .where((c) => c.name == null && c.isVisible)
           .map<DropdownMenuItem<String>>((Control itemCtrl) {
+        bool itemDisabled = disabled || itemCtrl.isDisabled;
+        TextStyle? textStyle =
+            parseTextStyle(Theme.of(context), itemCtrl, "textStyle");
+        if (itemDisabled && textStyle != null) {
+          textStyle = textStyle.apply(color: Theme.of(context).disabledColor);
+        }
         Widget itemChild = Text(
           itemCtrl.attrs["text"] ?? itemCtrl.attrs["key"] ?? itemCtrl.id,
+          style: textStyle,
         );
         var align = parseAlignment(itemCtrl, "alignment");
         if (align != null) {
           itemChild = Container(alignment: align, child: itemChild);
         }
         return DropdownMenuItem<String>(
-          enabled: !(disabled || itemCtrl.isDisabled),
+          enabled: !itemDisabled,
           value: itemCtrl.attrs["key"] ?? itemCtrl.attrs["text"] ?? itemCtrl.id,
           alignment: align ?? AlignmentDirectional.centerStart,
           onTap: !(disabled || itemCtrl.isDisabled)

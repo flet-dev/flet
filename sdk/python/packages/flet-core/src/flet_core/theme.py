@@ -46,7 +46,6 @@ class ThemeVisualDensityDeprecated(EnumMeta):
 
 
 class ThemeVisualDensity(Enum, metaclass=ThemeVisualDensityDeprecated):
-    NONE = None
     STANDARD = "standard"
     COMPACT = "compact"
     COMFORTABLE = "comfortable"

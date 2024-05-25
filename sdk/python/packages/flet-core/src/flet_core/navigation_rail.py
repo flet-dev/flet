@@ -49,12 +49,9 @@ class NavigationRailDestination(Control):
         Control.__init__(self, ref=ref, disabled=disabled, data=data)
         self.label = label
         self.icon = icon
-        self.__icon_content: Optional[Control] = None
         self.icon_content = icon_content
         self.selected_icon = selected_icon
-        self.__selected_icon_content: Optional[Control] = None
         self.selected_icon_content = selected_icon_content
-        self.__label_content: Optional[Control] = None
         self.label_content = label_content
         self.padding = padding
         self.indicator_color = indicator_color
@@ -122,11 +119,11 @@ class NavigationRailDestination(Control):
 
     # selected_icon
     @property
-    def selected_icon(self):
+    def selected_icon(self) -> Optional[str]:
         return self._get_attr("selectedIcon")
 
     @selected_icon.setter
-    def selected_icon(self, value):
+    def selected_icon(self, value: Optional[str]):
         self._set_attr("selectedIcon", value)
 
     # selected_icon_content
@@ -140,11 +137,11 @@ class NavigationRailDestination(Control):
 
     # label
     @property
-    def label(self):
+    def label(self) -> Optional[str]:
         return self._get_attr("label")
 
     @label.setter
-    def label(self, value):
+    def label(self, value: Optional[str]):
         self._set_attr("label", value)
 
     # label_content
@@ -341,8 +338,7 @@ class NavigationRail(ConstrainedControl):
         if self.__trailing:
             self.__trailing._set_attr_internal("n", "trailing")
             children.append(self.__trailing)
-        children.extend(self.__destinations)
-        return children
+        return children + self.__destinations
 
     # destinations
     @property
@@ -415,6 +411,7 @@ class NavigationRail(ConstrainedControl):
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
+        assert value is None or value >= 0, "elevation cannot be negative"
         self._set_attr("elevation", value)
 
     # extended
@@ -465,7 +462,7 @@ class NavigationRail(ConstrainedControl):
     # min_width
     @property
     def min_width(self) -> OptionalNumber:
-        return self._get_attr("minWidth")
+        return self._get_attr("minWidth", data_type="float")
 
     @min_width.setter
     def min_width(self, value: OptionalNumber):
@@ -474,7 +471,7 @@ class NavigationRail(ConstrainedControl):
     # min_extended_width
     @property
     def min_extended_width(self) -> OptionalNumber:
-        return self._get_attr("minExtendedWidth")
+        return self._get_attr("minExtendedWidth", data_type="float")
 
     @min_extended_width.setter
     def min_extended_width(self, value: OptionalNumber):
@@ -483,7 +480,7 @@ class NavigationRail(ConstrainedControl):
     # group_alignment
     @property
     def group_alignment(self) -> OptionalNumber:
-        return self._get_attr("groupAlignment")
+        return self._get_attr("groupAlignment", data_type="float")
 
     @group_alignment.setter
     def group_alignment(self, value: OptionalNumber):

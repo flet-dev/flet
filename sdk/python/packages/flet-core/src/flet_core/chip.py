@@ -205,10 +205,8 @@ class Chip(ConstrainedControl):
         self._set_attr_json("color", self.__color)
 
     def _get_children(self):
-        children = []
-        if self.__label:
-            self.__label._set_attr_internal("n", "label")
-            children.append(self.__label)
+        self.__label._set_attr_internal("n", "label")
+        children = [self.__label]
         if self.__leading:
             self.__leading._set_attr_internal("n", "leading")
             children.append(self.__leading)
@@ -238,7 +236,7 @@ class Chip(ConstrainedControl):
     # show_checkmark
     @property
     def show_checkmark(self) -> Optional[bool]:
-        return self._get_attr("showCheckmark")
+        return self._get_attr("showCheckmark", data_type="bool", def_value=True)
 
     @show_checkmark.setter
     def show_checkmark(self, value: Optional[bool]):
@@ -246,12 +244,12 @@ class Chip(ConstrainedControl):
 
     # delete_icon_tooltip
     @property
-    def delete_icon_tooltip(self):
-        return self._get_attr("deleteButtonTooltipMessage")
+    def delete_icon_tooltip(self) -> Optional[str]:
+        return self._get_attr("deleteButtonTooltip")
 
     @delete_icon_tooltip.setter
-    def delete_icon_tooltip(self, value):
-        self._set_attr("deleteButtonTooltipMessage", value)
+    def delete_icon_tooltip(self, value: Optional[str]):
+        self._set_attr("deleteButtonTooltip", value)
 
     # label
     @property
@@ -273,7 +271,7 @@ class Chip(ConstrainedControl):
 
     # label_style
     @property
-    def label_style(self):
+    def label_style(self) -> Optional[TextStyle]:
         return self.__label_style
 
     @label_style.setter
@@ -300,20 +298,20 @@ class Chip(ConstrainedControl):
 
     # delete_icon_color
     @property
-    def delete_icon_color(self):
+    def delete_icon_color(self) -> Optional[str]:
         return self._get_attr("deleteIconColor")
 
     @delete_icon_color.setter
-    def delete_icon_color(self, value):
+    def delete_icon_color(self, value: Optional[str]):
         self._set_attr("deleteIconColor", value)
 
     # disabled_color
     @property
-    def disabled_color(self):
+    def disabled_color(self) -> Optional[str]:
         return self._get_attr("disabledColor")
 
     @disabled_color.setter
-    def disabled_color(self, value):
+    def disabled_color(self, value: Optional[str]):
         self._set_attr("disabledColor", value)
 
     # color
@@ -423,10 +421,7 @@ class Chip(ConstrainedControl):
     @visual_density.setter
     def visual_density(self, value: Optional[ThemeVisualDensity]):
         self.__visual_density = value
-        self._set_attr(
-            "visualDensity",
-            value.value if isinstance(value, ThemeVisualDensity) else value,
-        )
+        self._set_enum_attr("visualDensity", value, ThemeVisualDensity)
 
     # clip_behavior
     @property
@@ -436,9 +431,7 @@ class Chip(ConstrainedControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_attr(
-            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
-        )
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
 
     # border_side
     @property

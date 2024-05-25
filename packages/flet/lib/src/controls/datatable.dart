@@ -7,6 +7,7 @@ import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/gradient.dart';
+import '../utils/others.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 import 'flet_store_mixin.dart';
@@ -59,7 +60,7 @@ class _DataTableControlState extends State<DataTableControl>
           borderRadius != null ||
           gradient != null) {
         decoration = (defaultDecoration as BoxDecoration).copyWith(
-            color: HexColor.fromString(Theme.of(context), bgColor ?? ""),
+            color: parseColor(Theme.of(context), bgColor),
             border: border,
             borderRadius: borderRadius,
             gradient: gradient);
@@ -72,9 +73,8 @@ class _DataTableControlState extends State<DataTableControl>
             verticalInside: verticalLines ?? BorderSide.none);
       }
 
-      Clip clipBehavior = Clip.values.firstWhere(
-          (c) => c.toString() == widget.control.attrString("clipBehavior", "")!,
-          orElse: () => Clip.none);
+      Clip clipBehavior =
+          parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
 
       return DataTable(
           decoration: decoration,
@@ -110,9 +110,11 @@ class _DataTableControlState extends State<DataTableControl>
                 }
               : null,
           columns: viewModel.controlViews
-              .where((c) => c.control.type == "c")
+              .where(
+                  (c) => c.control.type == "datacolumn" && c.control.isVisible)
               .map((column) {
-            var labelCtrls = column.children.where((c) => c.name == "l");
+            var labelCtrls =
+                column.children.where((c) => c.name == "label" && c.isVisible);
             return DataColumn(
                 numeric: column.control.attrBool("numeric", false)!,
                 tooltip: column.control.attrString("tooltip"),
@@ -128,7 +130,7 @@ class _DataTableControlState extends State<DataTableControl>
                     column.control.isDisabled || tableDisabled));
           }).toList(),
           rows: viewModel.controlViews
-              .where((c) => c.control.type == "r")
+              .where((c) => c.control.type == "datarow" && c.control.isVisible)
               .map((row) {
             return DataRow(
                 key: ValueKey(row.control.id),
@@ -149,6 +151,7 @@ class _DataTableControlState extends State<DataTableControl>
                       }
                     : null,
                 cells: row.children
+                    .where((c) => c.type == "datacell" && c.isVisible)
                     .map((cell) => DataCell(
                           createControl(row.control, cell.childIds.first,
                               row.control.isDisabled || tableDisabled),
