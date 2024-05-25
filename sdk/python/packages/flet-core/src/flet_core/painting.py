@@ -5,13 +5,7 @@ from typing import List, Optional, Tuple, Union
 
 from flet_core.blur import Blur
 from flet_core.gradients import GradientTileMode
-from flet_core.types import BlendMode, OffsetValue
-
-
-class StrokeCap(Enum):
-    BUTT = "butt"
-    ROUND = "round"
-    SQUARE = "square"
+from flet_core.types import BlendMode, OffsetValue, StrokeCap
 
 
 class StrokeJoin(Enum):

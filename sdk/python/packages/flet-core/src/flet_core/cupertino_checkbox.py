@@ -150,11 +150,11 @@ class CupertinoCheckbox(ConstrainedControl):
 
     # label
     @property
-    def label(self):
+    def label(self) -> Optional[str]:
         return self._get_attr("label")
 
     @label.setter
-    def label(self, value):
+    def label(self, value: Optional[str]):
         self._set_attr("label", value)
 
     # label_position
@@ -165,9 +165,7 @@ class CupertinoCheckbox(ConstrainedControl):
     @label_position.setter
     def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
-        self._set_attr(
-            "labelPosition", value.value if isinstance(value, LabelPosition) else value
-        )
+        self._set_enum_attr("labelPosition", value, LabelPosition)
 
     # autofocus
     @property
@@ -180,38 +178,38 @@ class CupertinoCheckbox(ConstrainedControl):
 
     # check_color
     @property
-    def check_color(self):
+    def check_color(self) -> Optional[str]:
         return self._get_attr("checkColor")
 
     @check_color.setter
-    def check_color(self, value):
+    def check_color(self, value: Optional[str]):
         self._set_attr("checkColor", value)
 
     # active_color
     @property
-    def active_color(self):
+    def active_color(self) -> Optional[str]:
         return self._get_attr("activeColor")
 
     @active_color.setter
-    def active_color(self, value):
+    def active_color(self, value: Optional[str]):
         self._set_attr("activeColor", value)
 
     # inactive_color
     @property
-    def inactive_color(self):
+    def inactive_color(self) -> Optional[str]:
         return self._get_attr("inactiveColor")
 
     @inactive_color.setter
-    def inactive_color(self, value):
+    def inactive_color(self, value: Optional[str]):
         self._set_attr("inactiveColor", value)
 
     # focus_color
     @property
-    def focus_color(self):
+    def focus_color(self) -> Optional[str]:
         return self._get_attr("focusColor")
 
     @focus_color.setter
-    def focus_color(self, value):
+    def focus_color(self, value: Optional[str]):
         self._set_attr("focusColor", value)
 
     # on_change

@@ -283,7 +283,9 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # blur
     @property
-    def blur(self):
+    def blur(
+        self,
+    ) -> Union[None, float, int, Tuple[Union[float, int], Union[float, int]], Blur]:
         return self.__blur
 
     @blur.setter
@@ -297,7 +299,7 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # shadow
     @property
-    def shadow(self):
+    def shadow(self) -> Union[None, BoxShadow, List[BoxShadow]]:
         return self.__shadow
 
     @shadow.setter
@@ -324,20 +326,20 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # image_src
     @property
-    def image_src(self):
+    def image_src(self) -> Optional[str]:
         return self._get_attr("imageSrc")
 
     @image_src.setter
-    def image_src(self, value):
+    def image_src(self, value: Optional[str]):
         self._set_attr("imageSrc", value)
 
     # image_src_base64
     @property
-    def image_src_base64(self):
+    def image_src_base64(self) -> Optional[str]:
         return self._get_attr("imageSrcBase64")
 
     @image_src_base64.setter
-    def image_src_base64(self, value):
+    def image_src_base64(self, value: Optional[str]):
         self._set_attr("imageSrcBase64", value)
 
     # image_fit
@@ -348,9 +350,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @image_fit.setter
     def image_fit(self, value: Optional[ImageFit]):
         self.__image_fit = value
-        self._set_attr(
-            "imageFit", value.value if isinstance(value, ImageFit) else value
-        )
+        self._set_enum_attr("imageFit", value, ImageFit)
 
     # image_repeat
     @property
@@ -360,9 +360,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @image_repeat.setter
     def image_repeat(self, value: Optional[ImageRepeat]):
         self.__image_repeat = value
-        self._set_attr(
-            "imageRepeat", value.value if isinstance(value, ImageRepeat) else value
-        )
+        self._set_enum_attr("imageRepeat", value, ImageRepeat)
 
     # image_opacity
     @property
@@ -384,13 +382,13 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # shape
     @property
-    def shape(self):
+    def shape(self) -> Optional[BoxShape]:
         return self.__shape
 
     @shape.setter
     def shape(self, value: Optional[BoxShape]):
         self.__shape = value
-        self._set_attr("shape", value.value if isinstance(value, BoxShape) else value)
+        self._set_enum_attr("shape", value, BoxShape)
 
     # clip_behavior
     @property
@@ -400,9 +398,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_attr(
-            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
-        )
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
 
     # ink
     @property
@@ -415,11 +411,11 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # ink color
     @property
-    def ink_color(self):
+    def ink_color(self) -> Optional[str]:
         return self._get_attr("inkColor")
 
     @ink_color.setter
-    def ink_color(self, value):
+    def ink_color(self, value: Optional[str]):
         self._set_attr("inkColor", value)
 
     # animate
@@ -433,11 +429,11 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # url
     @property
-    def url(self):
+    def url(self) -> Optional[str]:
         return self._get_attr("url")
 
     @url.setter
-    def url(self, value):
+    def url(self, value: Optional[str]):
         self._set_attr("url", value)
 
     # url_target
@@ -448,9 +444,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @url_target.setter
     def url_target(self, value: Optional[UrlTarget]):
         self.__url_target = value
-        self._set_attr(
-            "urlTarget", value.value if isinstance(value, UrlTarget) else value
-        )
+        self._set_enum_attr("urlTarget", value, UrlTarget)
 
     # theme
     @property
@@ -469,9 +463,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @theme_mode.setter
     def theme_mode(self, value: Optional[ThemeMode]):
         self.__theme_mode = value
-        self._set_attr(
-            "themeMode", value.value if isinstance(value, ThemeMode) else value
-        )
+        self._set_enum_attr("themeMode", value, ThemeMode)
 
     # on_click
     @property
@@ -511,10 +503,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @on_hover.setter
     def on_hover(self, handler):
         self._add_event_handler("hover", handler)
-        if handler is not None:
-            self._set_attr("onHover", True)
-        else:
-            self._set_attr("onHover", None)
+        self._set_attr("onHover", True if handler is not None else None)
 
 
 class ContainerTapEvent(ControlEvent):

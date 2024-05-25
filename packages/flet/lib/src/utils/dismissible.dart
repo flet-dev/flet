@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -59,4 +60,14 @@ Map<DismissDirection, double> getDismissThresholdsFromJSON(
   }
 
   return dismissDirectionMap;
+}
+
+DismissDirection? parseDismissDirection(String? direction,
+    [DismissDirection? defaultDirection]) {
+  if (direction == null) {
+    return defaultDirection;
+  }
+  return DismissDirection.values.firstWhereOrNull(
+          (a) => a.name.toLowerCase() == direction.toLowerCase()) ??
+      defaultDirection;
 }

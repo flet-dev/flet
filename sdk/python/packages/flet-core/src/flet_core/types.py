@@ -31,7 +31,6 @@ class UrlTarget(Enum):
     SELF = "_self"
     PARENT = "_parent"
     TOP = "_top"
-    # UNFENCED_TOP = "_unfencedTop"
 
 
 PaddingValue = Union[None, int, float, Padding]
@@ -290,3 +289,15 @@ class MouseCursor(Enum):
     WAIT = "wait"
     ZOOM_IN = "zoomIn"
     ZOOM_OUT = "zoomOut"
+
+
+class StrokeCap(Enum):
+    ROUND = "round"
+    SQUARE = "square"
+    BUTT = "butt"
+
+
+class StrokeJoin(Enum):
+    MITER = "mitter"
+    ROUND = "round"
+    BEVEL = "bevel"

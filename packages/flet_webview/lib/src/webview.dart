@@ -30,8 +30,7 @@ class WebViewControl extends StatelessWidget {
     }
 
     bool javascriptEnabled = control.attrBool("javascriptEnabled", false)!;
-    var bgcolor = HexColor.fromString(
-        Theme.of(context), control.attrString("bgcolor", "")!);
+    var bgcolor = parseColor(Theme.of(context), control.attrString("bgcolor"));
     String preventLink = control.attrString("preventLink", "")!;
 
     if (Platform.isIOS || Platform.isAndroid) {

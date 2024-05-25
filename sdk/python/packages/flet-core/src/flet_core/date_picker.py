@@ -127,7 +127,9 @@ class DatePicker(Control):
             data=data,
         )
 
-        self.__on_entry_mode_change = EventHandler(lambda e: DatePickerEntryModeChangeEvent(e.data))
+        self.__on_entry_mode_change = EventHandler(
+            lambda e: DatePickerEntryModeChangeEvent(e.data)
+        )
         self._add_event_handler(
             "entryModeChange", self.__on_entry_mode_change.get_handler()
         )
@@ -305,9 +307,7 @@ class DatePicker(Control):
     @keyboard_type.setter
     def keyboard_type(self, value: Optional[KeyboardType]):
         self.__keyboard_type = value
-        self._set_attr(
-            "keyboardType", value.value if isinstance(value, KeyboardType) else value
-        )
+        self._set_enum_attr("keyboardType", value, KeyboardType)
 
     # date_picker_mode
     @property
@@ -327,27 +327,24 @@ class DatePicker(Control):
     @date_picker_entry_mode.setter
     def date_picker_entry_mode(self, value: Optional[DatePickerEntryMode]):
         self.__date_picker_entry_mode = value
-        self._set_attr(
-            "datePickerEntryMode",
-            value.value if isinstance(value, DatePickerEntryMode) else value,
-        )
+        self._set_enum_attr("datePickerEntryMode", value, DatePickerEntryMode)
 
     # switch_to_calendar_icon
     @property
-    def switch_to_calendar_icon(self):
+    def switch_to_calendar_icon(self) -> Optional[str]:
         return self._get_attr("switchToCalendarEntryModeIcon")
 
     @switch_to_calendar_icon.setter
-    def switch_to_calendar_icon(self, value):
+    def switch_to_calendar_icon(self, value: Optional[str]):
         self._set_attr("switchToCalendarEntryModeIcon", value)
 
     # switch_to_input_icon
     @property
-    def switch_to_input_icon(self):
+    def switch_to_input_icon(self) -> Optional[str]:
         return self._get_attr("switchToInputEntryModeIcon")
 
     @switch_to_input_icon.setter
-    def switch_to_input_icon(self, value):
+    def switch_to_input_icon(self, value: Optional[str]):
         self._set_attr("switchToInputEntryModeIcon", value)
 
     # on_change

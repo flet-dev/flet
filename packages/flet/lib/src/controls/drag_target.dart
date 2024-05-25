@@ -57,7 +57,8 @@ class DragTargetControl extends StatelessWidget {
         : null;
 
     if (child == null) {
-      return const ErrorControl("DragTarget should have content.");
+      return const ErrorControl(
+          "DragTarget.content must be provided and visible");
     }
 
     return DragTarget<String>(

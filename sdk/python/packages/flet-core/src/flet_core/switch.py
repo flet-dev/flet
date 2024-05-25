@@ -226,6 +226,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     @splash_radius.setter
     def splash_radius(self, value: OptionalNumber):
+        assert value is None or value >= 0, "splash_radius cannot be negative"
         self._set_attr("splashRadius", value)
 
     # label_style
@@ -245,9 +246,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     @label_position.setter
     def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
-        self._set_attr(
-            "labelPosition", value.value if isinstance(value, LabelPosition) else value
-        )
+        self._set_enum_attr("labelPosition", value, LabelPosition)
 
     # mouse_cursor
     @property
@@ -257,10 +256,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_attr(
-            "mouseCursor",
-            value.value if isinstance(value, MouseCursor) else value,
-        )
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # autofocus
     @property
@@ -273,47 +269,47 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     # active_color
     @property
-    def active_color(self):
+    def active_color(self) -> Optional[str]:
         return self._get_attr("activeColor")
 
     @active_color.setter
-    def active_color(self, value):
+    def active_color(self, value: Optional[str]):
         self._set_attr("activeColor", value)
 
     # active_track_color
     @property
-    def active_track_color(self):
+    def active_track_color(self) -> Optional[str]:
         return self._get_attr("activeTrackColor")
 
     @active_track_color.setter
-    def active_track_color(self, value):
+    def active_track_color(self, value: Optional[str]):
         self._set_attr("activeTrackColor", value)
 
     # focus_color
     @property
-    def focus_color(self):
+    def focus_color(self) -> Optional[str]:
         return self._get_attr("focusColor")
 
     @focus_color.setter
-    def focus_color(self, value):
+    def focus_color(self, value: Optional[str]):
         self._set_attr("focusColor", value)
 
     # inactive_thumb_color
     @property
-    def inactive_thumb_color(self):
+    def inactive_thumb_color(self) -> Optional[str]:
         return self._get_attr("inactiveThumbColor")
 
     @inactive_thumb_color.setter
-    def inactive_thumb_color(self, value):
+    def inactive_thumb_color(self, value: Optional[str]):
         self._set_attr("inactiveThumbColor", value)
 
     # inactive_track_color
     @property
-    def inactive_track_color(self):
+    def inactive_track_color(self) -> Optional[str]:
         return self._get_attr("inactiveTrackColor")
 
     @inactive_track_color.setter
-    def inactive_track_color(self, value):
+    def inactive_track_color(self, value: Optional[str]):
         self._set_attr("inactiveTrackColor", value)
 
     # thumb_color

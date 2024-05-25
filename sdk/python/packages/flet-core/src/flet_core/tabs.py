@@ -263,7 +263,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # tabs
     @property
-    def tabs(self) -> Optional[List[Tab]]:
+    def tabs(self) -> List[Tab]:
         return self.__tabs
 
     @tabs.setter
@@ -305,10 +305,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_attr(
-            "mouseCursor",
-            value.value if isinstance(value, MouseCursor) else value,
-        )
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # clip_behavior
     @property
@@ -318,10 +315,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_attr(
-            "clipBehavior",
-            value.value if isinstance(value, ClipBehavior) else value,
-        )
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
 
     # is_secondary
     @property
@@ -340,9 +334,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     @tab_alignment.setter
     def tab_alignment(self, value: Optional[TabAlignment]):
         self.__tab_alignment = value
-        self._set_attr(
-            "tabAlignment", value.value if isinstance(value, TabAlignment) else value
-        )
+        self._set_enum_attr("tabAlignment", value, TabAlignment)
 
     # animation_duration
     @property
@@ -374,10 +366,11 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     # indicator_thickness
     @property
     def indicator_thickness(self):
-        return self._get_attr("indicatorThickness", data_type="float", def_value=3.0)
+        return self._get_attr("indicatorThickness", data_type="float", def_value=2.0)
 
     @indicator_thickness.setter
     def indicator_thickness(self, value: OptionalNumber):
+        assert value is None or value > 0, "indicator_thickness must be greater than 0"
         self._set_attr("indicatorThickness", value)
 
     # divider_color

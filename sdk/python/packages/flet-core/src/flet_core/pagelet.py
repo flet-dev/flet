@@ -52,7 +52,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
-        content: Optional[Control] = None,
+        content: Control,
         appbar: Union[AppBar, CupertinoAppBar, None] = None,
         navigation_bar: Union[NavigationBar, CupertinoNavigationBar, None] = None,
         bottom_app_bar: Optional[BottomAppBar] = None,
@@ -147,13 +147,11 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         return "pagelet"
 
     def _get_children(self):
-        children = []
+        self.__content._set_attr_internal("n", "content")
+        children = [self.__content]
         if self.__appbar:
             self.__appbar._set_attr_internal("n", "appbar")
             children.append(self.__appbar)
-        if self.__content:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
         if self.__navigation_bar:
             self.__navigation_bar._set_attr_internal("n", "navigationbar")
             children.append(self.__navigation_bar)
@@ -175,6 +173,10 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
             )
             children.append(self.__floating_action_button)
         return children
+
+    def before_update(self):
+        super().before_update()
+        assert self.__content.visible, "content must be visible"
 
     # Drawer
     #
@@ -243,20 +245,20 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
 
     # content
     @property
-    def content(self) -> Optional[Control]:
+    def content(self) -> Control:
         return self.__content
 
     @content.setter
-    def content(self, value: Optional[Control]):
+    def content(self, value: Control):
         self.__content = value
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # bottom_appbar

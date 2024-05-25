@@ -9,13 +9,13 @@ from flet_core.types import OffsetValue, PaddingValue
 
 class Badge(Control):
     """
-        A Material Design "badge".
+    A Material Design "badge".
 
-        Badges are used to show notifications, counts, or status information on navigation items such as NavigationBar or NavigationRail destinations
-        or a button's icon.
+    Badges are used to show notifications, counts, or status information on navigation items such as NavigationBar or NavigationRail destinations
+    or a button's icon.
 
-        Example:
-            ```
+    Example:
+    ```
     import flet as ft
 
     def main(page: ft.Page):
@@ -42,11 +42,11 @@ class Badge(Control):
 
 
 
-            ```
+    ```
 
-            -----
+    -----
 
-            Online docs: https://flet.dev/docs/controls/badge
+    Online docs: https://flet.dev/docs/controls/badge
     """
 
     def __init__(
@@ -101,11 +101,10 @@ class Badge(Control):
         self._set_attr_json("textStyle", self.__text_style)
 
     def _get_children(self):
-        children = []
         if self.__content is not None:
             self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
+            return [self.__content]
+        return []
 
     # alignment
     @property
@@ -150,11 +149,11 @@ class Badge(Control):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgColor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgColor", value)
 
     # label_visible
@@ -195,16 +194,16 @@ class Badge(Control):
 
     # text_color
     @property
-    def text_color(self):
+    def text_color(self) -> Optional[str]:
         return self._get_attr("textColor")
 
     @text_color.setter
-    def text_color(self, value):
+    def text_color(self, value: Optional[str]):
         self._set_attr("textColor", value)
 
     # text_style
     @property
-    def text_style(self):
+    def text_style(self) -> Optional[TextStyle]:
         return self.__text_style
 
     @text_style.setter

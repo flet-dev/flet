@@ -94,7 +94,7 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
           fillColor: widget.control.attrColor("fillColor", context),
           focusColor: widget.control.attrColor("focusColor", context),
           toggleable: widget.control.attrBool("toggleable", false)!,
-          activeColor: HexColor.fromString(Theme.of(context),
+          activeColor: parseColor(Theme.of(context),
               widget.control.attrString("activeColor", "primary")!),
           inactiveColor: widget.control.attrColor("inactiveColor", context),
           onChanged: !disabled

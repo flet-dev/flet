@@ -43,9 +43,10 @@ class _BannerControlState extends State<BannerControl> {
         widget.children.where((c) => c.name == "action" && c.isVisible);
 
     if (contentCtrls.isEmpty) {
-      return const ErrorControl("Banner does not have any content.");
+      return const ErrorControl("Banner.content must be provided and visible");
     } else if (actionCtrls.isEmpty) {
-      return const ErrorControl("Banner should have at least one action.");
+      return const ErrorControl(
+          "Banner.actions must be provided and at least one action should be visible");
     }
 
     return MaterialBanner(

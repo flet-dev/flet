@@ -118,9 +118,6 @@ class CupertinoRadio(ConstrainedControl):
     def _get_control_name(self):
         return "cupertinoradio"
 
-    def before_update(self):
-        super().before_update()
-
     # value
     @property
     def value(self) -> Optional[str]:
@@ -147,9 +144,7 @@ class CupertinoRadio(ConstrainedControl):
     @label_position.setter
     def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
-        self._set_attr(
-            "labelPosition", value.value if isinstance(value, LabelPosition) else value
-        )
+        self._set_enum_attr("labelPosition", value, LabelPosition)
 
     # fill_color
     @property

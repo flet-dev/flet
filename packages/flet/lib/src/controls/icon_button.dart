@@ -77,9 +77,9 @@ class _IconButtonControlState extends State<IconButtonControl>
             backend: widget.backend);
       }
 
-      IconData? icon = parseIcon(widget.control.attrString("icon", "")!);
+      IconData? icon = parseIcon(widget.control.attrString("icon"));
       IconData? selectedIcon =
-          parseIcon(widget.control.attrString("selectedIcon", "")!);
+          parseIcon(widget.control.attrString("selectedIcon"));
       Color? iconColor = widget.control.attrColor("iconColor", context);
       Color? highlightColor =
           widget.control.attrColor("highlightColor", context);
@@ -95,7 +95,8 @@ class _IconButtonControlState extends State<IconButtonControl>
       var padding = parseEdgeInsets(widget.control, "padding");
       var alignment = parseAlignment(widget.control, "alignment");
       var tooltip = widget.control.attrString("tooltip");
-      var contentCtrls = widget.children.where((c) => c.name == "content");
+      var contentCtrls =
+          widget.children.where((c) => c.name == "content" && c.isVisible);
       bool autofocus = widget.control.attrBool("autofocus", false)!;
       bool enableFeedback = widget.control.attrBool("enableFeedback", true)!;
       bool selected = widget.control.attrBool("selected", false)!;
@@ -103,9 +104,9 @@ class _IconButtonControlState extends State<IconButtonControl>
       String? urlTarget = widget.control.attrString("urlTarget");
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
       var mouseCursor =
-          parseMouseCursor(widget.control.attrString("mouseCursor"), null);
+          parseMouseCursor(widget.control.attrString("mouseCursor"));
       var visualDensity =
-          parseVisualDensity(widget.control.attrString("visualDensity"), null);
+          parseVisualDensity(widget.control.attrString("visualDensity"));
 
       Function()? onPressed = disabled
           ? null
@@ -188,7 +189,7 @@ class _IconButtonControlState extends State<IconButtonControl>
                 parentAdaptive: widget.parentAdaptive));
       } else {
         return const ErrorControl(
-            "Icon button does not have an icon neither content specified.");
+            "IconButton must have either icon or a visible content specified.");
       }
 
       if (bgColor != null) {

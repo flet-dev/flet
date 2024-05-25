@@ -58,8 +58,9 @@
 		</dict>
 		<key>NSMicrophoneUsageDescription</key>
 		<string>Audio Recording</string>
-
 		<key>NSCameraUsageDescription</key>
         <string>App requires access to camera</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+        <string>App requires access to Location</string>
 	</dict>
 </plist>
