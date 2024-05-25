@@ -81,7 +81,7 @@ class TooltipControl extends StatelessWidget {
                 : null,
             verticalOffset: control.attrDouble("verticalOffset"),
             textStyle: parseTextStyle(Theme.of(context), control, "textStyle"),
-            textAlign: parseTextAlign(control.attrString("textAlign", "")!),
+            textAlign: parseTextAlign(control.attrString("textAlign")),
             child: contentCtrls.isNotEmpty
                 ? createControl(control, contentCtrls.first.id, disabled,
                     parentAdaptive: parentAdaptive)

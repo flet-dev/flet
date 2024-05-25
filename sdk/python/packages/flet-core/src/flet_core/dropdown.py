@@ -53,20 +53,20 @@ class Option(Control):
 
     # key
     @property
-    def key(self):
+    def key(self) -> Optional[str]:
         return self._get_attr("key")
 
     @key.setter
-    def key(self, value):
+    def key(self, value: Optional[str]):
         self._set_attr("key", value)
 
     # text
     @property
-    def text(self):
+    def text(self) -> Optional[str]:
         return self._get_attr("text")
 
     @text.setter
-    def text(self, value):
+    def text(self, value: Optional[str]):
         self._set_attr("text", value)
 
     # alignment

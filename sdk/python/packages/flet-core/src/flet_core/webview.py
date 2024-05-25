@@ -147,8 +147,6 @@ class WebView(ConstrainedControl):
         self.javascript_enabled = javascript_enabled
         self.prevent_link = prevent_link
         self.bgcolor = bgcolor
-
-        # events
         self.on_page_started = on_page_started
         self.on_page_ended = on_page_ended
         self.on_web_resource_error = on_web_resource_error
@@ -158,41 +156,39 @@ class WebView(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # url
     @property
-    def url(self):
+    def url(self) -> str:
         return self._get_attr("url")
 
     @url.setter
-    def url(self, value):
+    def url(self, value: str):
         self._set_attr("url", value)
 
     # javascript_enabled
     @property
-    def javascript_enabled(self):
+    def javascript_enabled(self) -> bool:
         return self._get_attr("javascriptEnabled")
 
     @javascript_enabled.setter
-    def javascript_enabled(self, value):
+    def javascript_enabled(self, value: bool):
         self._set_attr("javascriptEnabled", value)
 
     # prevent_link
     @property
-    def prevent_link(self):
+    def prevent_link(self) -> str:
         return self._get_attr("prevent_link")
 
     @prevent_link.setter
-    def prevent_link(self, value):
+    def prevent_link(self, value: str):
         self._set_attr("prevent_link", value)
-
-    ## EVENTS
 
     # on_page_started
     @property

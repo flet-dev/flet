@@ -140,10 +140,33 @@ InlineSpan? parseInlineSpan(
   return null;
 }
 
-TextAlign? parseTextAlign(String align, [TextAlign? defaultAlign]) {
+TextAlign? parseTextAlign(String? textAlign, [TextAlign? defaultTextAlign]) {
+  if (textAlign == null) {
+    return defaultTextAlign;
+  }
   return TextAlign.values.firstWhereOrNull(
-          (a) => a.name.toLowerCase() == align.toLowerCase()) ??
-      defaultAlign;
+          (a) => a.name.toLowerCase() == textAlign.toLowerCase()) ??
+      defaultTextAlign;
+}
+
+TextOverflow? parseTextOverflow(String? textOverflow,
+    [TextOverflow? defaultTextOverflow]) {
+  if (textOverflow == null) {
+    return defaultTextOverflow;
+  }
+  return TextOverflow.values.firstWhereOrNull(
+          (a) => a.name.toLowerCase() == textOverflow.toLowerCase()) ??
+      defaultTextOverflow;
+}
+
+TextCapitalization? parseTextCapitalization(String? textCapitalization,
+    [TextCapitalization? defaultTextCapitalization]) {
+  if (textCapitalization == null) {
+    return defaultTextCapitalization;
+  }
+  return TextCapitalization.values.firstWhereOrNull(
+          (a) => a.name.toLowerCase() == textCapitalization.toLowerCase()) ??
+      defaultTextCapitalization;
 }
 
 TextStyle? parseTextStyle(ThemeData theme, Control control, String propName) {
@@ -177,34 +200,33 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
   }
 
   return TextStyle(
-    fontSize: json["size"] != null ? parseDouble(json["size"]) : null,
-    fontWeight: fontWeight != null ? getFontWeight(fontWeight) : null,
-    fontStyle: (json["italic"] != null)
-        ? (parseBool(json["italic"]) ? FontStyle.italic : null)
-        : null,
-    fontFamily: json["font_family"],
-    fontVariations: variations,
-    height: json["height"] != null ? parseDouble(json["height"]) : null,
-    decoration:
-        decorations.isNotEmpty ? TextDecoration.combine(decorations) : null,
-    decorationStyle: json["decoration_style"] != null
-        ? TextDecorationStyle.values.firstWhereOrNull((v) =>
-            v.name.toLowerCase() == json["decoration_style"].toLowerCase())
-        : null,
-    decorationColor: parseColorFromJson(theme, json["decoration_color"] ?? ""),
-    decorationThickness: json["decoration_thickness"] != null
-        ? parseDouble(json["decoration_thickness"])
-        : null,
-    color: parseColorFromJson(theme, json["color"]),
-    backgroundColor: parseColorFromJson(theme, json["bgcolor"] ?? ""),
-    shadows: json["shadow"] != null
-        ? boxShadowsFromJSON(theme, json["shadow"])
-        : null,
-    foreground: json["foreground"] != null
-        ? paintFromJSON(theme, json["foreground"])
-        : null,
-    letterSpacing: json['letter_spacing'] != null
-        ? parseDouble(json['letter_spacing'])
-        : null,
-  );
+      fontSize: json["size"] != null ? parseDouble(json["size"]) : null,
+      fontWeight: fontWeight != null ? getFontWeight(fontWeight) : null,
+      fontStyle: (json["italic"] != null)
+          ? (parseBool(json["italic"]) ? FontStyle.italic : null)
+          : null,
+      fontFamily: json["font_family"],
+      fontVariations: variations,
+      height: json["height"] != null ? parseDouble(json["height"]) : null,
+      decoration:
+          decorations.isNotEmpty ? TextDecoration.combine(decorations) : null,
+      decorationStyle: json["decoration_style"] != null
+          ? TextDecorationStyle.values.firstWhereOrNull((v) =>
+              v.name.toLowerCase() == json["decoration_style"].toLowerCase())
+          : null,
+      decorationColor: parseColor(theme, json["decoration_color"]),
+      decorationThickness: json["decoration_thickness"] != null
+          ? parseDouble(json["decoration_thickness"])
+          : null,
+      color: parseColor(theme, json["color"]),
+      backgroundColor: parseColor(theme, json["bgcolor"]),
+      shadows: json["shadow"] != null
+          ? boxShadowsFromJSON(theme, json["shadow"])
+          : null,
+      foreground: json["foreground"] != null
+          ? paintFromJSON(theme, json["foreground"])
+          : null,
+      letterSpacing: json['letter_spacing'] != null
+          ? parseDouble(json['letter_spacing'])
+          : null);
 }

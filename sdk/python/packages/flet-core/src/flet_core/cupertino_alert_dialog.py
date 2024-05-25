@@ -106,20 +106,20 @@ class CupertinoAlertDialog(Control):
 
     # title
     @property
-    def title(self):
+    def title(self) -> Optional[Control]:
         return self.__title
 
     @title.setter
-    def title(self, value):
+    def title(self, value: Optional[Control]):
         self.__title = value
 
     # content
     @property
-    def content(self):
+    def content(self) -> Optional[Control]:
         return self.__content
 
     @content.setter
-    def content(self, value):
+    def content(self, value: Optional[Control]):
         self.__content = value
 
     # actions

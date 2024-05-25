@@ -215,9 +215,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     @label_position.setter
     def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
-        self._set_attr(
-            "labelPosition", value.value if isinstance(value, LabelPosition) else value
-        )
+        self._set_enum_attr("labelPosition", value, LabelPosition)
 
     # mouse_cursor
     @property
@@ -227,10 +225,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_attr(
-            "mouseCursor",
-            value.value if isinstance(value, MouseCursor) else value,
-        )
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # visual_density
     @property
@@ -240,10 +235,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     @visual_density.setter
     def visual_density(self, value: Optional[ThemeVisualDensity]):
         self.__visual_density = value
-        self._set_attr(
-            "visualDensity",
-            value.value if isinstance(value, ThemeVisualDensity) else value,
-        )
+        self._set_enum_attr("visualDensity", value, ThemeVisualDensity)
 
     # autofocus
     @property

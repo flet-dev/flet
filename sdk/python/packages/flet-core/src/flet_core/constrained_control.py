@@ -255,7 +255,4 @@ class ConstrainedControl(Control):
     @on_animation_end.setter
     def on_animation_end(self, handler):
         self._add_event_handler("animation_end", handler)
-        if handler is not None:
-            self._set_attr("onAnimationEnd", True)
-        else:
-            self._set_attr("onAnimationEnd", None)
+        self._set_attr("onAnimationEnd", True if handler is not None else None)

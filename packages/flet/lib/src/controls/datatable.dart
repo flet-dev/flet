@@ -7,6 +7,7 @@ import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/gradient.dart';
+import '../utils/others.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 import 'flet_store_mixin.dart';
@@ -59,7 +60,7 @@ class _DataTableControlState extends State<DataTableControl>
           borderRadius != null ||
           gradient != null) {
         decoration = (defaultDecoration as BoxDecoration).copyWith(
-            color: HexColor.fromString(Theme.of(context), bgColor ?? ""),
+            color: parseColor(Theme.of(context), bgColor),
             border: border,
             borderRadius: borderRadius,
             gradient: gradient);
@@ -72,9 +73,8 @@ class _DataTableControlState extends State<DataTableControl>
             verticalInside: verticalLines ?? BorderSide.none);
       }
 
-      Clip clipBehavior = Clip.values.firstWhere(
-          (c) => c.toString() == widget.control.attrString("clipBehavior", "")!,
-          orElse: () => Clip.none);
+      Clip clipBehavior =
+          parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
 
       return DataTable(
           decoration: decoration,

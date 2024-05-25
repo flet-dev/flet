@@ -29,8 +29,8 @@ class RowControl extends StatelessWidget {
     debugPrint("Row build: ${control.id}");
 
     final spacing = control.attrDouble("spacing", 10)!;
-    final mainAlignment =
-        parseMainAxisAlignment(control, "alignment", MainAxisAlignment.start);
+    final mainAlignment = parseMainAxisAlignment(
+        control.attrString("alignment"), MainAxisAlignment.start)!;
     bool tight = control.attrBool("tight", false)!;
     bool wrap = control.attrBool("wrap", false)!;
     bool disabled = control.isDisabled || parentDisabled;
@@ -61,17 +61,19 @@ class RowControl extends StatelessWidget {
             direction: Axis.horizontal,
             spacing: spacing,
             runSpacing: control.attrDouble("runSpacing", 10)!,
-            alignment:
-                parseWrapAlignment(control, "alignment", WrapAlignment.start),
+            alignment: parseWrapAlignment(
+                control.attrString("alignment"), WrapAlignment.start)!,
             crossAxisAlignment: parseWrapCrossAlignment(
-                control, "verticalAlignment", WrapCrossAlignment.center),
+                control.attrString("verticalAlignment"),
+                WrapCrossAlignment.center)!,
             children: controls,
           )
         : Row(
             mainAxisAlignment: mainAlignment,
             mainAxisSize: tight ? MainAxisSize.min : MainAxisSize.max,
             crossAxisAlignment: parseCrossAxisAlignment(
-                control, "verticalAlignment", CrossAxisAlignment.center),
+                control.attrString("verticalAlignment"),
+                CrossAxisAlignment.center)!,
             children: controls,
           );
 

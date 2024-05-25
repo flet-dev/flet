@@ -258,13 +258,11 @@ class CupertinoTextField(TextField):
     @blend_mode.setter
     def blend_mode(self, value: Optional[BlendMode]):
         self.__blend_mode = value
-        self._set_attr(
-            "blendMode", value.value if isinstance(value, BlendMode) else value
-        )
+        self._set_enum_attr("blendMode", value, BlendMode)
 
     # shadow
     @property
-    def shadow(self):
+    def shadow(self) -> Union[None, BoxShadow, List[BoxShadow]]:
         return self.__shadow
 
     @shadow.setter
@@ -289,18 +287,15 @@ class CupertinoTextField(TextField):
     @prefix_visibility_mode.setter
     def prefix_visibility_mode(self, value: Optional[VisibilityMode]):
         self.__prefix_visibility_mode = value
-        self._set_attr(
-            "prefixVisibilityMode",
-            value.value if isinstance(value, VisibilityMode) else value,
-        )
+        self._set_enum_attr("prefixVisibilityMode", value, VisibilityMode)
 
     # clear_button_semantics_label
     @property
-    def clear_button_semantics_label(self):
+    def clear_button_semantics_label(self) -> Optional[str]:
         return self._get_attr("clearButtonSemanticsLabel")
 
     @clear_button_semantics_label.setter
-    def clear_button_semantics_label(self, value):
+    def clear_button_semantics_label(self, value: Optional[str]):
         self._set_attr("clearButtonSemanticsLabel", value)
 
     # border

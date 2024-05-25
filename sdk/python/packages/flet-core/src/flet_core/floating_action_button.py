@@ -286,7 +286,7 @@ class FloatingActionButton(ConstrainedControl):
 
     # elevation
     @property
-    def elevation(self):
+    def elevation(self) -> OptionalNumber:
         return self._get_attr("elevation", data_type="float")
 
     @elevation.setter

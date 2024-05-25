@@ -60,13 +60,13 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
             .map((c) => c.id), (content, viewModel) {
       List<Widget> children = viewModel.controlViews.map((destView) {
         if (destView.control.type == "navigationdrawerdestination") {
-          var icon = parseIcon(destView.control.attrString("icon", "")!);
-          var iconContentCtrls =
-              destView.children.where((c) => c.name == "icon_content");
+          var icon = parseIcon(destView.control.attrString("icon"));
+          var iconContentCtrls = destView.children
+              .where((c) => c.name == "icon_content" && c.isVisible);
           var selectedIcon =
-              parseIcon(destView.control.attrString("selectedIcon", "")!);
-          var selectedIconContentCtrls =
-              destView.children.where((c) => c.name == "selected_icon_content");
+              parseIcon(destView.control.attrString("selectedIcon"));
+          var selectedIconContentCtrls = destView.children
+              .where((c) => c.name == "selected_icon_content" && c.isVisible);
           return NavigationDrawerDestination(
             backgroundColor: destView.control.attrColor("bgColor", context),
             icon: iconContentCtrls.isNotEmpty
@@ -96,8 +96,8 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
         selectedIndex: _selectedIndex,
         shadowColor: widget.control.attrColor("shadowColor", context),
         surfaceTintColor: widget.control.attrColor("surfaceTintColor", context),
-        tilePadding: parseEdgeInsets(widget.control, "tilePadding") ??
-            const EdgeInsets.symmetric(horizontal: 12.0),
+        tilePadding: parseEdgeInsets(widget.control, "tilePadding",
+            const EdgeInsets.symmetric(horizontal: 12.0))!,
         onDestinationSelected: _destinationChanged,
         children: children,
       );

@@ -213,7 +213,7 @@ Widget createWidget(
     bool? parentAdaptive,
     Widget? nextChild,
     FletControlBackend backend) {
-  switch (controlView.control.type) {
+  switch (controlView.control.type.toLowerCase()) {
     case "page":
       return PageControl(
           control: controlView.control,
@@ -994,7 +994,10 @@ Widget createWidget(
 Widget baseControl(
     BuildContext context, Widget widget, Control? parent, Control control) {
   return _expandable(
-      _tooltip(_opacity(context, widget, parent, control), parent, control),
+      _directionality(
+          _tooltip(_opacity(context, widget, parent, control), parent, control),
+          parent,
+          control),
       parent,
       control);
 }

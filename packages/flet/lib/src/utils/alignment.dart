@@ -1,53 +1,58 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import 'numbers.dart';
 
-MainAxisAlignment parseMainAxisAlignment(
-    Control control, String propName, MainAxisAlignment defValue) {
-  return MainAxisAlignment.values.firstWhere(
-      (e) =>
-          e.name.toLowerCase() ==
-          control.attrString(propName, "")!.toLowerCase(),
-      orElse: () => defValue);
+MainAxisAlignment? parseMainAxisAlignment(String? alignment,
+    [MainAxisAlignment? defValue]) {
+  if (alignment == null) {
+    return defValue;
+  }
+  return MainAxisAlignment.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == alignment.toLowerCase()) ??
+      defValue;
 }
 
-CrossAxisAlignment parseCrossAxisAlignment(
-    Control control, String propName, CrossAxisAlignment defValue) {
-  return CrossAxisAlignment.values.firstWhere(
-      (e) =>
-          e.name.toLowerCase() ==
-          control.attrString(propName, "")!.toLowerCase(),
-      orElse: () => defValue);
+CrossAxisAlignment? parseCrossAxisAlignment(String? alignment,
+    [CrossAxisAlignment? defValue]) {
+  if (alignment == null) {
+    return defValue;
+  }
+  return CrossAxisAlignment.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == alignment.toLowerCase()) ??
+      defValue;
 }
 
-TabAlignment parseTabAlignment(
-    Control control, String propName, TabAlignment defValue) {
-  return TabAlignment.values.firstWhere(
-      (e) =>
-          e.name.toLowerCase() ==
-          control.attrString(propName, "")!.toLowerCase(),
-      orElse: () => defValue);
+TabAlignment? parseTabAlignment(String? alignment, [TabAlignment? defValue]) {
+  if (alignment == null) {
+    return defValue;
+  }
+  return TabAlignment.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == alignment.toLowerCase()) ??
+      defValue;
 }
 
-WrapAlignment parseWrapAlignment(
-    Control control, String propName, WrapAlignment defValue) {
-  return WrapAlignment.values.firstWhere(
-      (e) =>
-          e.name.toLowerCase() ==
-          control.attrString(propName, "")!.toLowerCase(),
-      orElse: () => defValue);
+WrapAlignment? parseWrapAlignment(String? alignment,
+    [WrapAlignment? defValue]) {
+  if (alignment == null) {
+    return defValue;
+  }
+  return WrapAlignment.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == alignment.toLowerCase()) ??
+      defValue;
 }
 
-WrapCrossAlignment parseWrapCrossAlignment(
-    Control control, String propName, WrapCrossAlignment defValue) {
-  return WrapCrossAlignment.values.firstWhere(
-      (e) =>
-          e.name.toLowerCase() ==
-          control.attrString(propName, "")!.toLowerCase(),
-      orElse: () => defValue);
+WrapCrossAlignment? parseWrapCrossAlignment(String? alignment,
+    [WrapCrossAlignment? defValue]) {
+  if (alignment == null) {
+    return defValue;
+  }
+  return WrapCrossAlignment.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == alignment.toLowerCase()) ??
+      defValue;
 }
 
 Alignment? parseAlignment(Control control, String propName,
@@ -58,9 +63,13 @@ Alignment? parseAlignment(Control control, String propName,
   }
 
   final j1 = json.decode(v);
-  return alignmentFromJson(j1);
+  return alignmentFromJson(j1, defValue);
 }
 
-Alignment alignmentFromJson(Map<String, dynamic> json) {
+Alignment? alignmentFromJson(Map<String, dynamic>? json,
+    [Alignment? defValue]) {
+  if (json == null) {
+    return defValue;
+  }
   return Alignment(parseDouble(json['x']), parseDouble(json['y']));
 }

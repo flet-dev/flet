@@ -1,8 +1,8 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/others.dart';
 
 class TimePickerControl extends StatefulWidget {
   final Control? parent;
@@ -46,9 +46,8 @@ class _TimePickerControlState extends State<TimePickerControl> {
                     .attrString("timePickerEntryMode", "")!
                     .toLowerCase(),
             orElse: () => TimePickerEntryMode.dial);
-    Orientation? orientation = Orientation.values.firstWhereOrNull((a) =>
-        a.name.toLowerCase() ==
-        widget.control.attrString("orientation", "")!.toLowerCase());
+    Orientation? orientation =
+        parseOrientation(widget.control.attrString("orientation"));
 
     void onClosed(TimeOfDay? timeValue) {
       String stringValue;

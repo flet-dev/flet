@@ -229,10 +229,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     @expanded_cross_axis_alignment.setter
     def expanded_cross_axis_alignment(self, value: Optional[CrossAxisAlignment]):
         self.__expanded_cross_axis_alignment = value
-        self._set_attr(
-            "crossAxisAlignment",
-            value.value if isinstance(value, CrossAxisAlignment) else value,
-        )
+        self._set_enum_attr("crossAxisAlignment", value, CrossAxisAlignment)
 
     # affinity
     @property
@@ -316,10 +313,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     @visual_density.setter
     def visual_density(self, value: Optional[ThemeVisualDensity]):
         self.__visual_density = value
-        self._set_attr(
-            "visualDensity",
-            value.value if isinstance(value, ThemeVisualDensity) else value,
-        )
+        self._set_enum_attr("visualDensity", value, ThemeVisualDensity)
 
     # maintain_state
     @property

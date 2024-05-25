@@ -32,7 +32,7 @@ class ProgressBarControl extends StatelessWidget {
           semanticsLabel: semanticsLabel,
           semanticsValue: semanticsValue.toString(),
           borderRadius:
-              parseBorderRadius(control, "borderRadius") ?? BorderRadius.zero,
+              parseBorderRadius(control, "borderRadius", BorderRadius.zero)!,
         ),
         parent,
         control);
