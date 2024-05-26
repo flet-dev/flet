@@ -51,8 +51,6 @@ dependencies:
     path: ../packages/flet_permission_handler 
   flet_geolocator:
     path: ../packages/flet_geolocator
-  flet_video:
-    path: ../packages/flet_video
   flet_webview:
     path: ../packages/flet_webview
   flet_flashlight:
