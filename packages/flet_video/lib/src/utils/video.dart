@@ -72,10 +72,8 @@ Map<String, dynamic> subtitleConfigurationFromJSON(
             color: Color(0xffffffff),
             fontWeight: FontWeight.normal,
             backgroundColor: Color(0xaa000000)),
-    visible: json["visible"] != null ? parseBool(json["visible"]) : true,
-    textScaleFactor: json["text_scale_factor"] != null
-        ? parseDouble(json["text_scale_factor"])
-        : null,
+    visible: parseBool(json["visible"], true)!,
+    textScaleFactor: parseDouble(json["text_scale_factor"]),
     textAlign: parseTextAlign(json["text_align"], TextAlign.center)!,
     padding: edgeInsetsFromJson(json["padding"]) ??
         const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 24.0),
@@ -118,6 +116,6 @@ VideoControllerConfiguration? controllerConfigurationFromJSON(dynamic json) {
     vo: json["output_driver"],
     hwdec: json["hardware_decoding_api"],
     enableHardwareAcceleration:
-        parseBool(json["enable_hardware_acceleration"], true),
+        parseBool(json["enable_hardware_acceleration"], true)!,
   );
 }

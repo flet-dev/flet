@@ -20,10 +20,13 @@ EdgeInsets? edgeInsetsFromJson(dynamic json, [EdgeInsets? defaultValue]) {
   if (json == null) {
     return defaultValue;
   } else if (json is int || json is double) {
-    return EdgeInsets.all(parseDouble(json));
+    return EdgeInsets.all(parseDouble(json, 0)!);
   }
-  return EdgeInsets.fromLTRB(parseDouble(json['l']), parseDouble(json['t']),
-      parseDouble(json['r']), parseDouble(json['b']));
+  return EdgeInsets.fromLTRB(
+      parseDouble(json['l'], 0)!,
+      parseDouble(json['t'], 0)!,
+      parseDouble(json['r'], 0)!,
+      parseDouble(json['b'], 0)!);
 }
 
 EdgeInsetsDirectional? parseEdgeInsetsDirectional(
@@ -43,8 +46,11 @@ EdgeInsetsDirectional? edgeInsetsDirectionalFromJson(dynamic json,
   if (json == null) {
     return defaultValue;
   } else if (json is int || json is double) {
-    return EdgeInsetsDirectional.all(parseDouble(json));
+    return EdgeInsetsDirectional.all(parseDouble(json, 0)!);
   }
-  return EdgeInsetsDirectional.fromSTEB(parseDouble(json['l']),
-      parseDouble(json['t']), parseDouble(json['r']), parseDouble(json['b']));
+  return EdgeInsetsDirectional.fromSTEB(
+      parseDouble(json['l'], 0)!,
+      parseDouble(json['t'], 0)!,
+      parseDouble(json['r'], 0)!,
+      parseDouble(json['b'], 0)!);
 }

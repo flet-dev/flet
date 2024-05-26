@@ -35,9 +35,6 @@ BoxShadow boxShadowFromJSON(ThemeData theme, dynamic json) {
           ? BlurStyle.values
               .firstWhere((e) => e.name.toLowerCase() == json["blur_style"])
           : BlurStyle.normal,
-      blurRadius:
-          json["blur_radius"] != null ? parseDouble(json["blur_radius"]) : 0.0,
-      spreadRadius: json["spread_radius"] != null
-          ? parseDouble(json["spread_radius"])
-          : 0.0);
+      blurRadius: parseDouble(json["blur_radius"], 0)!,
+      spreadRadius: parseDouble(json["spread_radius"], 0)!);
 }

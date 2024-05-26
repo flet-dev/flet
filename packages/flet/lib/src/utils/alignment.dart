@@ -71,5 +71,5 @@ Alignment? alignmentFromJson(Map<String, dynamic>? json,
   if (json == null) {
     return defValue;
   }
-  return Alignment(parseDouble(json['x']), parseDouble(json['y']));
+  return Alignment(parseDouble(json['x'], 0)!, parseDouble(json['y'],0)!);
 }

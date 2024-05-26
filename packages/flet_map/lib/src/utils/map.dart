@@ -15,7 +15,8 @@ LatLng? parseLatLng(Control control, String propName, [LatLng? defValue]) {
 }
 
 LatLng latLngFromJson(Map<String, dynamic> json) {
-  return LatLng(parseDouble(json['latitude']), parseDouble(json['longitude']));
+  return LatLng(
+      parseDouble(json['latitude'], 0)!, parseDouble(json['longitude'], 0)!);
 }
 
 LatLngBounds? parseLatLngBounds(Control control, String propName,
@@ -50,19 +51,19 @@ InteractionOptions? parseInteractionOptions(Control control, String propName) {
 InteractionOptions interactionOptionsFromJSON(dynamic json) {
   return InteractionOptions(
       enableMultiFingerGestureRace:
-          parseBool(json["enable_multi_finger_gesture_race"], false),
-      enableScrollWheel: parseBool(json["enable_scroll_wheel"], false),
-      pinchMoveThreshold: parseDouble(json["pinch_move_threshold"], 40.0),
-      scrollWheelVelocity: parseDouble(json["scroll_wheel_velocity"], 0.005),
-      pinchZoomThreshold: parseDouble(json["pinch_zoom_threshold"], 0.5),
-      rotationThreshold: parseDouble(json["rotation_threshold"], 20.0),
-      flags: parseInt(json["flags"], InteractiveFlag.all),
+          parseBool(json["enable_multi_finger_gesture_race"], false)!,
+      enableScrollWheel: parseBool(json["enable_scroll_wheel"], false)!,
+      pinchMoveThreshold: parseDouble(json["pinch_move_threshold"], 40.0)!,
+      scrollWheelVelocity: parseDouble(json["scroll_wheel_velocity"], 0.005)!,
+      pinchZoomThreshold: parseDouble(json["pinch_zoom_threshold"], 0.5)!,
+      rotationThreshold: parseDouble(json["rotation_threshold"], 20.0)!,
+      flags: parseInt(json["flags"], InteractiveFlag.all)!,
       rotationWinGestures:
-          parseInt(json["rotation_win_gestures"], MultiFingerGesture.rotate),
+          parseInt(json["rotation_win_gestures"], MultiFingerGesture.rotate)!,
       pinchMoveWinGestures: parseInt(json["pinch_move_win_gestures"],
-          MultiFingerGesture.pinchZoom | MultiFingerGesture.pinchMove),
+          MultiFingerGesture.pinchZoom | MultiFingerGesture.pinchMove)!,
       pinchZoomWinGestures: parseInt(json["pinch_zoom_win_gestures"],
-          MultiFingerGesture.pinchZoom | MultiFingerGesture.pinchMove));
+          MultiFingerGesture.pinchZoom | MultiFingerGesture.pinchMove)!);
 }
 
 EvictErrorTileStrategy? parseEvictErrorTileStrategy(String? strategy,

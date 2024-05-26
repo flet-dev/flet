@@ -1,4 +1,4 @@
-double parseDouble(dynamic v, [double defValue = 0]) {
+double? parseDouble(dynamic v, [double? defValue]) {
   if (v is double) {
     return v;
   } else if (v == null) {
@@ -8,7 +8,7 @@ double parseDouble(dynamic v, [double defValue = 0]) {
   }
 }
 
-int parseInt(dynamic v, [int defValue = 0]) {
+int? parseInt(dynamic v, [int? defValue]) {
   if (v is int) {
     return v;
   } else if (v == null) {
@@ -18,7 +18,7 @@ int parseInt(dynamic v, [int defValue = 0]) {
   }
 }
 
-bool parseBool(dynamic v, [bool defValue = false]) {
+bool? parseBool(dynamic v, [bool? defValue]) {
   if (v is bool) {
     return v;
   } else if (v == null) {

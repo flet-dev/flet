@@ -70,8 +70,8 @@ class TextControl extends StatelessWidget with FletStoreMixin {
 
       List<FontVariation> variations = [];
       if (fontWeight.startsWith("w")) {
-        variations
-            .add(FontVariation('wght', parseDouble(fontWeight.substring(1))));
+        variations.add(
+            FontVariation('wght', parseDouble(fontWeight.substring(1), 0)!));
       }
 
       style = (style ?? const TextStyle()).copyWith(

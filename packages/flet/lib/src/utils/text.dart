@@ -184,11 +184,13 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
 
   List<FontVariation>? variations;
   if (fontWeight != null && fontWeight.startsWith("w")) {
-    variations = [FontVariation('wght', parseDouble(fontWeight.substring(1)))];
+    variations = [
+      FontVariation('wght', parseDouble(fontWeight.substring(1), 0)!)
+    ];
   }
 
   List<TextDecoration> decorations = [];
-  var decor = parseInt(json["decoration"]);
+  var decor = parseInt(json["decoration"], 0)!;
   if (decor & 0x1 > 0) {
     decorations.add(TextDecoration.underline);
   }
@@ -202,9 +204,7 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
   return TextStyle(
       fontSize: json["size"] != null ? parseDouble(json["size"]) : null,
       fontWeight: fontWeight != null ? getFontWeight(fontWeight) : null,
-      fontStyle: (json["italic"] != null)
-          ? (parseBool(json["italic"]) ? FontStyle.italic : null)
-          : null,
+      fontStyle: parseBool(json["italic"], false)! ? FontStyle.italic : null,
       fontFamily: json["font_family"],
       fontVariations: variations,
       height: json["height"] != null ? parseDouble(json["height"]) : null,
