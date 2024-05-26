@@ -112,7 +112,6 @@ void main([List<String>? args]) async {
       flet_lottie.createControl,
       flet_map.createControl,
       flet_rive.createControl,
-      flet_video.createControl,
       flet_webview.createControl,
       flet_flashlight.createControl,
     ],
