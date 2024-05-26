@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
+import '../utils/others.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 import 'cupertino_alert_dialog.dart';
@@ -48,16 +49,15 @@ class _AlertDialogControlState extends State<AlertDialogControl>
         widget.children.where((c) => c.name == "content" && c.isVisible);
     var actionCtrls =
         widget.children.where((c) => c.name == "action" && c.isVisible);
-    final actionsAlignment = parseMainAxisAlignment(
-        widget.control, "actionsAlignment", MainAxisAlignment.end);
+    final actionsAlignment =
+        parseMainAxisAlignment(widget.control.attrString("actionsAlignment"));
     if (titleCtrls.isEmpty && contentCtrls.isEmpty && actionCtrls.isEmpty) {
-      return const ErrorControl("AlertDialog does not have any content.");
+      return const ErrorControl(
+          "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions");
     }
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            widget.control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.none);
+
+    var clipBehavior =
+        parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
 
     return AlertDialog(
       title: titleCtrls.isNotEmpty
@@ -69,8 +69,8 @@ class _AlertDialogControlState extends State<AlertDialogControl>
           ? createControl(widget.control, contentCtrls.first.id, disabled,
               parentAdaptive: adaptive)
           : null,
-      contentPadding: parseEdgeInsets(widget.control, "contentPadding") ??
-          const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
+      contentPadding: parseEdgeInsets(widget.control, "contentPadding",
+          const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0))!,
       actions: actionCtrls
           .map((c) => createControl(widget.control, c.id, disabled,
               parentAdaptive: adaptive))
@@ -79,8 +79,8 @@ class _AlertDialogControlState extends State<AlertDialogControl>
       actionsAlignment: actionsAlignment,
       shape: parseOutlinedBorder(widget.control, "shape"),
       semanticLabel: widget.control.attrString("semanticsLabel"),
-      insetPadding: parseEdgeInsets(widget.control, "insetPadding") ??
-          const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0),
+      insetPadding: parseEdgeInsets(widget.control, "insetPadding",
+          const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0))!,
       iconPadding: parseEdgeInsets(widget.control, "iconPadding"),
       backgroundColor: widget.control.attrColor("bgcolor", context),
       buttonPadding: parseEdgeInsets(widget.control, "actionButtonPadding"),

@@ -10,8 +10,8 @@ import 'text.dart';
 
 enum FormFieldInputBorder { outline, underline, none }
 
-TextInputType parseTextInputType(String type) {
-  switch (type.toLowerCase()) {
+TextInputType? parseTextInputType(String? type, [TextInputType? defaultValue]) {
+  switch (type?.toLowerCase()) {
     case "datetime":
       return TextInputType.datetime;
     case "email":
@@ -35,7 +35,7 @@ TextInputType parseTextInputType(String type) {
     case "visiblepassword":
       return TextInputType.visiblePassword;
   }
-  return TextInputType.text;
+  return defaultValue;
 }
 
 InputDecoration buildInputDecoration(
@@ -52,11 +52,11 @@ InputDecoration buildInputDecoration(
     ((b) => b.name == control.attrString("border", "")!.toLowerCase()),
     orElse: () => FormFieldInputBorder.outline,
   );
-  var icon = parseIcon(control.attrString("icon", "")!);
+  var icon = parseIcon(control.attrString("icon"));
 
-  var prefixIcon = parseIcon(control.attrString("prefixIcon", "")!);
+  var prefixIcon = parseIcon(control.attrString("prefixIcon"));
   var prefixText = control.attrString("prefixText");
-  var suffixIcon = parseIcon(control.attrString("suffixIcon", "")!);
+  var suffixIcon = parseIcon(control.attrString("suffixIcon"));
   var suffixText = control.attrString("suffixText");
 
   var bgcolor = control.attrColor("bgcolor", context);

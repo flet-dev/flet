@@ -6,10 +6,11 @@ import '../models/control.dart';
 import 'alignment.dart';
 import 'numbers.dart';
 
-RotationDetails? parseRotate(Control control, String propName) {
-  var v = control.attrString(propName, null);
+RotationDetails? parseRotate(Control control, String propName,
+    [RotationDetails? defaultValue]) {
+  var v = control.attrString(propName);
   if (v == null) {
-    return null;
+    return defaultValue;
   }
 
   final j1 = json.decode(v);
@@ -19,16 +20,17 @@ RotationDetails? parseRotate(Control control, String propName) {
 RotationDetails rotateFromJSON(dynamic json) {
   if (json is int || json is double) {
     return RotationDetails(
-        angle: parseDouble(json), alignment: Alignment.center);
+        angle: parseDouble(json, 0)!, alignment: Alignment.center);
   }
 
   return RotationDetails.fromJson(json);
 }
 
-ScaleDetails? parseScale(Control control, String propName) {
-  var v = control.attrString(propName, null);
+ScaleDetails? parseScale(Control control, String propName,
+    [ScaleDetails? defaultValue]) {
+  var v = control.attrString(propName);
   if (v == null) {
-    return null;
+    return defaultValue;
   }
 
   final j1 = json.decode(v);
@@ -47,10 +49,11 @@ ScaleDetails scaleFromJSON(dynamic json) {
   return ScaleDetails.fromJson(json);
 }
 
-OffsetDetails? parseOffset(Control control, String propName) {
+OffsetDetails? parseOffset(Control control, String propName,
+    [OffsetDetails? defaultValue]) {
   var v = control.attrString(propName, null);
   if (v == null) {
-    return null;
+    return defaultValue;
   }
 
   final j1 = json.decode(v);
@@ -82,10 +85,8 @@ class RotationDetails {
 
   factory RotationDetails.fromJson(Map<String, dynamic> json) {
     return RotationDetails(
-        angle: parseDouble(json["angle"]),
-        alignment: json["alignment"] != null
-            ? alignmentFromJson(json["alignment"])
-            : Alignment.center);
+        angle: parseDouble(json["angle"], 0)!,
+        alignment: alignmentFromJson(json["alignment"], Alignment.center)!);
   }
 }
 
@@ -103,12 +104,10 @@ class ScaleDetails {
 
   factory ScaleDetails.fromJson(Map<String, dynamic> json) {
     return ScaleDetails(
-        scale: json["scale"] != null ? parseDouble(json["scale"]) : null,
-        scaleX: json["scale_x"] != null ? parseDouble(json["scale_x"]) : null,
-        scaleY: json["scale_y"] != null ? parseDouble(json["scale_y"]) : null,
-        alignment: json["alignment"] != null
-            ? alignmentFromJson(json["alignment"])
-            : Alignment.center);
+        scale: parseDouble(json["scale"]),
+        scaleX: parseDouble(json["scale_x"]),
+        scaleY: parseDouble(json["scale_y"]),
+        alignment: alignmentFromJson(json["alignment"], Alignment.center)!);
   }
 }
 
@@ -120,10 +119,11 @@ class OffsetDetails {
 
   factory OffsetDetails.fromJson(dynamic json) {
     if (json is List && json.length > 1) {
-      return OffsetDetails(x: parseDouble(json[0]), y: parseDouble(json[1]));
+      return OffsetDetails(
+          x: parseDouble(json[0], 0)!, y: parseDouble(json[1], 0)!);
     } else {
       return OffsetDetails(
-          x: parseDouble(json["x"]), y: parseDouble(json["y"]));
+          x: parseDouble(json["x"], 0)!, y: parseDouble(json["y"], 0)!);
     }
   }
 }

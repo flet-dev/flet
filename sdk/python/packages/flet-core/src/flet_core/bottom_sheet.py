@@ -51,7 +51,7 @@ class BottomSheet(Control):
 
     def __init__(
         self,
-        content: Optional[Control] = None,
+        content: Control,
         open: bool = False,
         elevation: OptionalNumber = None,
         bgcolor: Optional[str] = None,
@@ -78,8 +78,6 @@ class BottomSheet(Control):
             data=data,
         )
 
-        self.__content: Optional[Control] = None
-
         self.open = open
         self.elevation = elevation
         self.bgcolor = bgcolor
@@ -96,11 +94,12 @@ class BottomSheet(Control):
         return "bottomsheet"
 
     def _get_children(self):
-        children = []
-        if self.__content:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
+        self.__content._set_attr_internal("n", "content")
+        return [self.__content]
+
+    def before_update(self):
+        super().before_update()
+        assert self.__content.visible, "content must be visible"
 
     # open
     @property
@@ -118,15 +117,16 @@ class BottomSheet(Control):
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
+        assert value is None or value >= 0, "elevation cannot be negative"
         self._set_attr("elevation", value)
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgColor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgColor", value)
 
     # dismissible
@@ -187,11 +187,11 @@ class BottomSheet(Control):
 
     # content
     @property
-    def content(self):
+    def content(self) -> Control:
         return self.__content
 
     @content.setter
-    def content(self, value):
+    def content(self, value: Control):
         self.__content = value
 
     # on_dismiss

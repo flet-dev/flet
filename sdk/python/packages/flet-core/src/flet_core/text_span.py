@@ -41,9 +41,7 @@ class TextSpan(InlineSpan):
         return "textspan"
 
     def _get_children(self):
-        children = []
-        children.extend(self.__spans)
-        return children
+        return self.__spans
 
     def before_update(self):
         super().before_update()
@@ -69,7 +67,7 @@ class TextSpan(InlineSpan):
 
     # spans
     @property
-    def spans(self) -> Optional[List[InlineSpan]]:
+    def spans(self) -> List[InlineSpan]:
         return self.__spans
 
     @spans.setter
@@ -78,11 +76,11 @@ class TextSpan(InlineSpan):
 
     # url
     @property
-    def url(self):
+    def url(self) -> Optional[str]:
         return self._get_attr("url")
 
     @url.setter
-    def url(self, value):
+    def url(self, value: Optional[str]):
         self._set_attr("url", value)
 
     # url_target
@@ -93,9 +91,7 @@ class TextSpan(InlineSpan):
     @url_target.setter
     def url_target(self, value: Optional[UrlTarget]):
         self.__url_target = value
-        self._set_attr(
-            "urlTarget", value.value if isinstance(value, UrlTarget) else value
-        )
+        self._set_enum_attr("urlTarget", value, UrlTarget)
 
     # on_click
     @property

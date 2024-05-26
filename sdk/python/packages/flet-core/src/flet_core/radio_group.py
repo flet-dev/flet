@@ -36,7 +36,7 @@ class RadioGroup(Control):
 
     def __init__(
         self,
-        content: Optional[Control] = None,
+        content: Control,
         value: Optional[str] = None,
         on_change=None,
         #
@@ -66,10 +66,12 @@ class RadioGroup(Control):
         return "radiogroup"
 
     def _get_children(self):
-        if isinstance(self.__content, Control):
-            self.__content._set_attr_internal("n", "content")
-            return [self.__content]
-        return []
+        self.__content._set_attr_internal("n", "content")
+        return [self.__content]
+
+    def before_update(self):
+        super().before_update()
+        assert self.__content.visible, "content must be visible"
 
     # value
     @property
@@ -82,11 +84,11 @@ class RadioGroup(Control):
 
     # content
     @property
-    def content(self) -> Optional[Control]:
+    def content(self) -> Control:
         return self.__content
 
     @content.setter
-    def content(self, value: Optional[Control]):
+    def content(self, value: Control):
         self.__content = value
 
     # on_change

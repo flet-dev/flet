@@ -163,9 +163,7 @@ class CupertinoSwitch(ConstrainedControl):
     @label_position.setter
     def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
-        self._set_attr(
-            "labelPosition", value.value if isinstance(value, LabelPosition) else value
-        )
+        self._set_enum_attr("labelPosition", value, LabelPosition)
 
     # autofocus
     @property

@@ -42,10 +42,10 @@ class ChartAxisViewModel extends Equatable {
 
     return ChartAxisViewModel(
         control: control,
-        title: children.where((c) => c.name == "t").firstOrNull,
+        title: children.where((c) => c.name == "t" && c.isVisible).firstOrNull,
         labels: {
           for (var e in children
-              .where((c) => c.name == "l")
+              .where((c) => c.name == "l" && c.isVisible)
               .map((c) => ChartAxisLabelViewModel.fromStore(store, c))
               .where((c) => c.control != null))
             e.value: e.control!

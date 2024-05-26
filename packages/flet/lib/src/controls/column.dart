@@ -29,8 +29,8 @@ class ColumnControl extends StatelessWidget {
     debugPrint("Column build: ${control.id}");
 
     final spacing = control.attrDouble("spacing", 10)!;
-    final mainAlignment =
-        parseMainAxisAlignment(control, "alignment", MainAxisAlignment.start);
+    final mainAlignment = parseMainAxisAlignment(
+        control.attrString("alignment"), MainAxisAlignment.start)!;
     bool tight = control.attrBool("tight", false)!;
     bool wrap = control.attrBool("wrap", false)!;
     bool disabled = control.isDisabled || parentDisabled;
@@ -61,17 +61,19 @@ class ColumnControl extends StatelessWidget {
             direction: Axis.vertical,
             spacing: spacing,
             runSpacing: control.attrDouble("runSpacing", 10)!,
-            alignment:
-                parseWrapAlignment(control, "alignment", WrapAlignment.start),
+            alignment: parseWrapAlignment(
+                control.attrString("alignment"), WrapAlignment.start)!,
             crossAxisAlignment: parseWrapCrossAlignment(
-                control, "horizontalAlignment", WrapCrossAlignment.start),
+                control.attrString("horizontalAlignment"),
+                WrapCrossAlignment.start)!,
             children: controls,
           )
         : Column(
             mainAxisAlignment: mainAlignment,
             mainAxisSize: tight ? MainAxisSize.min : MainAxisSize.max,
             crossAxisAlignment: parseCrossAxisAlignment(
-                control, "horizontalAlignment", CrossAxisAlignment.start),
+                control.attrString("horizontalAlignment"),
+                CrossAxisAlignment.start)!,
             children: controls,
           );
 

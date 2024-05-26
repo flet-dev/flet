@@ -10,23 +10,29 @@ import 'numbers.dart';
 
 export 'images_io.dart' if (dart.library.js) "images_web.dart";
 
-ImageRepeat parseImageRepeat(Control control, String propName) {
-  return ImageRepeat.values.firstWhere(
-      (e) =>
-          e.name.toLowerCase() ==
-          control.attrString(propName, "")!.toLowerCase(),
-      orElse: () => ImageRepeat.noRepeat);
+ImageRepeat? parseImageRepeat(String? repeat, [ImageRepeat? defValue]) {
+  if (repeat == null) {
+    return defValue;
+  }
+  return ImageRepeat.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == repeat.toLowerCase()) ??
+      defValue;
 }
 
-BoxFit? parseBoxFit(Control control, String propName) {
-  return BoxFit.values.firstWhereOrNull((e) =>
-      e.name.toLowerCase() == control.attrString(propName, "")!.toLowerCase());
+BoxFit? parseBoxFit(String? fit, [BoxFit? defValue]) {
+  if (fit == null) {
+    return defValue;
+  }
+  return BoxFit.values
+          .firstWhereOrNull((e) => e.name.toLowerCase() == fit.toLowerCase()) ??
+      defValue;
 }
 
-ImageFilter? parseBlur(Control control, String propName) {
+ImageFilter? parseBlur(Control control, String propName,
+    [ImageFilter? defValue]) {
   var v = control.attrString(propName, null);
   if (v == null) {
-    return null;
+    return defValue;
   }
 
   final j1 = json.decode(v);
@@ -38,15 +44,24 @@ ImageFilter blurImageFilterFromJSON(dynamic json) {
   double sigmaY = 0.0;
   TileMode tileMode = TileMode.clamp;
   if (json is int || json is double) {
-    sigmaX = sigmaY = parseDouble(json);
+    sigmaX = sigmaY = parseDouble(json, 0)!;
   } else if (json is List && json.length > 1) {
-    sigmaX = parseDouble(json[0]);
-    sigmaY = parseDouble(json[1]);
+    sigmaX = parseDouble(json[0], 0)!;
+    sigmaY = parseDouble(json[1], 0)!;
   } else {
-    sigmaX = parseDouble(json["sigma_x"]);
-    sigmaY = parseDouble(json["sigma_y"]);
-    tileMode = parseTileMode(json["tile_mode"]);
+    sigmaX = parseDouble(json["sigma_x"], 0)!;
+    sigmaY = parseDouble(json["sigma_y"], 0)!;
+    tileMode = parseTileMode(json["tile_mode"], TileMode.clamp)!;
   }
 
   return ImageFilter.blur(sigmaX: sigmaX, sigmaY: sigmaY, tileMode: tileMode);
+}
+
+FilterQuality? parseFilterQuality(String? quality, [FilterQuality? defValue]) {
+  if (quality == null) {
+    return defValue;
+  }
+  return FilterQuality.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == quality.toLowerCase()) ??
+      defValue;
 }

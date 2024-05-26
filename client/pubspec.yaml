@@ -41,12 +41,22 @@ dependencies:
 # --FAT_CLIENT_END--
   flet_lottie:
     path: ../packages/flet_lottie
+  flet_map:
+    path: ../packages/flet_map
   flet_rive:
     path: ../packages/flet_rive
   flet_audio_recorder:
     path: ../packages/flet_audio_recorder
+  flet_permission_handler:
+    path: ../packages/flet_permission_handler 
+  flet_geolocator:
+    path: ../packages/flet_geolocator
+  flet_video:
+    path: ../packages/flet_video
   flet_webview:
     path: ../packages/flet_webview
+  flet_flashlight:
+    path: ../packages/flet_flashlight
 
   url_strategy: ^0.2.0
   cupertino_icons: ^1.0.6

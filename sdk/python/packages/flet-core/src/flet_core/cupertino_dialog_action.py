@@ -85,11 +85,11 @@ class CupertinoDialogAction(Control):
 
     # text
     @property
-    def text(self):
+    def text(self) -> Optional[str]:
         return self._get_attr("text")
 
     @text.setter
-    def text(self, value):
+    def text(self, value: Optional[str]):
         self._set_attr("text", value)
 
     # is_default_action
@@ -130,7 +130,7 @@ class CupertinoDialogAction(Control):
 
     # text_style
     @property
-    def text_style(self):
+    def text_style(self) -> Optional[TextStyle]:
         return self.__text_style
 
     @text_style.setter

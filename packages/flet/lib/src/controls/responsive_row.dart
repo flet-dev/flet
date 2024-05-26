@@ -89,17 +89,20 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
                   runSpacing: getBreakpointNumber(
                       runSpacing, view.size.width, view.breakpoints),
                   alignment: parseWrapAlignment(
-                      control, "alignment", WrapAlignment.start),
+                      control.attrString("alignment"), WrapAlignment.start)!,
                   crossAxisAlignment: parseWrapCrossAlignment(
-                      control, "verticalAlignment", WrapCrossAlignment.start),
+                      control.attrString("verticalAlignment"),
+                      WrapCrossAlignment.start)!,
                   children: controls,
                 )
               : Row(
                   mainAxisAlignment: parseMainAxisAlignment(
-                      control, "alignment", MainAxisAlignment.start),
+                      control.attrString("alignment"),
+                      MainAxisAlignment.start)!,
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: parseCrossAxisAlignment(
-                      control, "verticalAlignment", CrossAxisAlignment.start),
+                      control.attrString("verticalAlignment"),
+                      CrossAxisAlignment.start)!,
                   children: controls,
                 );
         } catch (e) {

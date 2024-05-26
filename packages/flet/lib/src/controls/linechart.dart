@@ -224,8 +224,8 @@ class _LineChartControlState extends State<LineChartControl> {
 
           var chart = LineChart(
             LineChartData(
-                backgroundColor: HexColor.fromString(Theme.of(context),
-                    widget.control.attrString("bgcolor", "")!),
+                backgroundColor: parseColor(
+                    Theme.of(context), widget.control.attrString("bgcolor")),
                 minX: widget.control.attrDouble("minx"),
                 maxX: widget.control.attrDouble("maxx"),
                 minY: widget.control.attrDouble("miny"),
@@ -341,15 +341,12 @@ class _LineChartControlState extends State<LineChartControl> {
                                   spot.bar.color ??
                                   Colors.blueGrey);
                         }
-                        TextAlign? tooltipAlign = TextAlign.values
-                            .firstWhereOrNull((a) =>
-                                a.name.toLowerCase() ==
-                                dp.control
-                                    .attrString("tooltipAlign", "")!
-                                    .toLowerCase());
+                        TextAlign? tooltipAlign = parseTextAlign(
+                            dp.control.attrString("tooltipAlign"),
+                            TextAlign.center)!;
                         return dp.control.attrBool("showTooltip", true)!
                             ? LineTooltipItem(tooltip, tooltipStyle,
-                                textAlign: tooltipAlign ?? TextAlign.center)
+                                textAlign: tooltipAlign)
                             : null;
                       }).toList();
                     },
@@ -450,6 +447,7 @@ class _LineChartControlState extends State<LineChartControl> {
         dashArray: dashPattern != null
             ? (json.decode(dashPattern) as List)
                 .map((e) => parseInt(e))
+                .whereNotNull()
                 .toList()
             : null,
         shadow: shadow.isNotEmpty

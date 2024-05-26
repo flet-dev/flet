@@ -46,7 +46,6 @@ class AutoComplete(Control):
         )
 
         def convert_event_data(e):
-            print(e.data)
             d = json.loads(e.data)
             return AutoCompleteSelectEvent(**d)
 
@@ -63,6 +62,11 @@ class AutoComplete(Control):
     def before_update(self):
         self._set_attr_json("suggestions", self.__suggestions)
 
+    # selected_index
+    @property
+    def selected_index(self) -> Optional[int]:
+        return self._get_attr("selectedIndex", data_type="int")
+
     # suggestions_max_height
     @property
     def suggestions_max_height(self) -> OptionalNumber:
@@ -72,6 +76,7 @@ class AutoComplete(Control):
 
     @suggestions_max_height.setter
     def suggestions_max_height(self, value: OptionalNumber):
+        assert value is None or value >= 0, "suggestions_max_height cannot be negative"
         self._set_attr("suggestionsMaxHeight", value)
 
     # suggestions

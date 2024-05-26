@@ -32,7 +32,8 @@ class CircleAvatarControl extends StatelessWidget with FletStoreMixin {
           control.attrString("foregroundImageUrl");
       var backgroundImageSrc = control.attrString("backgroundImageSrc") ??
           control.attrString("backgroundImageUrl");
-      var contentCtrls = children.where((c) => c.name == "content");
+      var contentCtrls =
+          children.where((c) => c.name == "content" && c.isVisible);
 
       ImageProvider<Object>? backgroundImage;
       ImageProvider<Object>? foregroundImage;

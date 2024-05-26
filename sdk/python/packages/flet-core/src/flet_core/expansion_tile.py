@@ -37,8 +37,8 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
+        title: Control,
         controls: Optional[List[Control]] = None,
-        title: Optional[Control] = None,
         subtitle: Optional[Control] = None,
         leading: Optional[Control] = None,
         trailing: Optional[Control] = None,
@@ -161,6 +161,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
+        assert self.__title.visible, "title must be visible"
         self._set_attr_json("expandedAlignment", self.__expanded_alignment)
         self._set_attr_json("controlsPadding", self.__controls_padding)
         self._set_attr_json("tilePadding", self.__tile_padding)
@@ -168,17 +169,14 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("collapsedShape", self.__collapsed_shape)
 
     def _get_children(self):
-        children = []
-        if self.__controls:
-            for c in self.__controls:
-                c._set_attr_internal("n", "controls")
-                children.append(c)
+        self.__title._set_attr_internal("n", "title")
+        children = [self.__title]
+        for c in self.__controls:
+            c._set_attr_internal("n", "controls")
+            children.append(c)
         if self.__leading:
             self.__leading._set_attr_internal("n", "leading")
             children.append(self.__leading)
-        if self.__title:
-            self.__title._set_attr_internal("n", "title")
-            children.append(self.__title)
         if self.__subtitle:
             self.__subtitle._set_attr_internal("n", "subtitle")
             children.append(self.__subtitle)
@@ -231,10 +229,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     @expanded_cross_axis_alignment.setter
     def expanded_cross_axis_alignment(self, value: Optional[CrossAxisAlignment]):
         self.__expanded_cross_axis_alignment = value
-        self._set_attr(
-            "crossAxisAlignment",
-            value.value if isinstance(value, CrossAxisAlignment) else value,
-        )
+        self._set_enum_attr("crossAxisAlignment", value, CrossAxisAlignment)
 
     # affinity
     @property
@@ -308,9 +303,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_attr(
-            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
-        )
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
 
     # visual_density
     @property
@@ -320,10 +313,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     @visual_density.setter
     def visual_density(self, value: Optional[ThemeVisualDensity]):
         self.__visual_density = value
-        self._set_attr(
-            "visualDensity",
-            value.value if isinstance(value, ThemeVisualDensity) else value,
-        )
+        self._set_enum_attr("visualDensity", value, ThemeVisualDensity)
 
     # maintain_state
     @property

@@ -29,17 +29,12 @@ List<BoxShadow> boxShadowsFromJSON(ThemeData theme, dynamic json) {
 BoxShadow boxShadowFromJSON(ThemeData theme, dynamic json) {
   var offset = json["offset"] != null ? offsetFromJSON(json["offset"]) : null;
   return BoxShadow(
-      color: json["color"] != null
-          ? HexColor.fromString(theme, json["color"]) ?? const Color(0xFF000000)
-          : const Color(0xFF000000),
+      color: parseColor(theme, json["color"], const Color(0xFF000000))!,
       offset: offset != null ? Offset(offset.x, offset.y) : Offset.zero,
       blurStyle: json["blur_style"] != null
           ? BlurStyle.values
               .firstWhere((e) => e.name.toLowerCase() == json["blur_style"])
           : BlurStyle.normal,
-      blurRadius:
-          json["blur_radius"] != null ? parseDouble(json["blur_radius"]) : 0.0,
-      spreadRadius: json["spread_radius"] != null
-          ? parseDouble(json["spread_radius"])
-          : 0.0);
+      blurRadius: parseDouble(json["blur_radius"], 0)!,
+      spreadRadius: parseDouble(json["spread_radius"], 0)!);
 }

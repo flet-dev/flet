@@ -44,8 +44,9 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
     }
     double? width = control.attrDouble("width", null);
     double? height = control.attrDouble("height", null);
-    var repeat = parseImageRepeat(control, "repeat");
-    var fit = parseBoxFit(control, "fit");
+    var repeat =
+        parseImageRepeat(control.attrString("repeat"), ImageRepeat.noRepeat)!;
+    var fit = parseBoxFit(control.attrString("fit"));
     var colorBlendMode = BlendMode.values.firstWhereOrNull((e) =>
         e.name.toLowerCase() ==
         control.attrString("colorBlendMode", "")!.toLowerCase());
@@ -53,11 +54,8 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
     String? semanticsLabel = control.attrString("semanticsLabel");
     var gaplessPlayback = control.attrBool("gaplessPlayback");
     var excludeFromSemantics = control.attrBool("excludeFromSemantics", false)!;
-    FilterQuality filterQuality = FilterQuality.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            control.attrString("filterQuality", "")!.toLowerCase(),
-        orElse: () => FilterQuality.low);
+    FilterQuality filterQuality = parseFilterQuality(
+        control.attrString("filterQuality"), FilterQuality.low)!;
     bool disabled = control.isDisabled || parentDisabled;
     var errorContentCtrls =
         children.where((c) => c.name == "error_content" && c.isVisible);

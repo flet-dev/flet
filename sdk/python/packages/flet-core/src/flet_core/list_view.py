@@ -195,7 +195,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     # spacing
     @property
     def spacing(self) -> OptionalNumber:
-        return self._get_attr("spacing")
+        return self._get_attr("spacing", data_type="float")
 
     @spacing.setter
     def spacing(self, value: OptionalNumber):
@@ -222,7 +222,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     # cache_extent
     @property
     def cache_extent(self) -> OptionalNumber:
-        return self._get_attr("cacheExtent")
+        return self._get_attr("cacheExtent", data_type="float")
 
     @cache_extent.setter
     def cache_extent(self, value: OptionalNumber):
@@ -231,7 +231,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     # first_item_prototype
     @property
     def first_item_prototype(self) -> Optional[bool]:
-        return self._get_attr("firstItemPrototype")
+        return self._get_attr("firstItemPrototype", data_type="bool")
 
     @first_item_prototype.setter
     def first_item_prototype(self, value: Optional[bool]):
@@ -258,13 +258,12 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     # clip_behavior
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
-        return self._get_attr("clipBehavior")
+        return self.__clip_behavior
 
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
-        self._set_attr(
-            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
-        )
+        self.__clip_behavior = value
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
 
     # semantic_child_count
     @property

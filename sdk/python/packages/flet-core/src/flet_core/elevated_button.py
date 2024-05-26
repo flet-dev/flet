@@ -203,29 +203,29 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     # text
     @property
-    def text(self):
+    def text(self) -> Optional[str]:
         return self._get_attr("text")
 
     @text.setter
-    def text(self, value):
+    def text(self, value: Optional[str]):
         self._set_attr("text", value)
 
     # color
     @property
-    def color(self):
+    def color(self) -> Optional[str]:
         return self.__color
 
     @color.setter
-    def color(self, value):
+    def color(self, value: Optional[str]):
         self.__color = value
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self.__bgcolor = value
         self._set_attr("bgColor", value)
 
@@ -249,29 +249,29 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     # icon
     @property
-    def icon(self):
+    def icon(self) -> Optional[str]:
         return self._get_attr("icon")
 
     @icon.setter
-    def icon(self, value):
+    def icon(self, value: Optional[str]):
         self._set_attr("icon", value)
 
     # icon_color
     @property
-    def icon_color(self):
+    def icon_color(self) -> Optional[str]:
         return self._get_attr("iconColor")
 
     @icon_color.setter
-    def icon_color(self, value):
+    def icon_color(self, value: Optional[str]):
         self._set_attr("iconColor", value)
 
     # url
     @property
-    def url(self):
+    def url(self) -> Optional[str]:
         return self._get_attr("url")
 
     @url.setter
-    def url(self, value):
+    def url(self, value: Optional[str]):
         self._set_attr("url", value)
 
     # url_target
@@ -282,9 +282,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     @url_target.setter
     def url_target(self, value: Optional[UrlTarget]):
         self.__url_target = value
-        self._set_attr(
-            "urlTarget", value.value if isinstance(value, UrlTarget) else value
-        )
+        self._set_enum_attr("urlTarget", value, UrlTarget)
 
     # on_click
     @property
@@ -326,13 +324,12 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     # clip_behavior
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
-        return self._get_attr("clipBehavior")
+        return self.__clip_behavior
 
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
-        self._set_attr(
-            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
-        )
+        self.__clip_behavior = value
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
 
     # on_hover
     @property

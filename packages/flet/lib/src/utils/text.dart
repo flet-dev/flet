@@ -140,10 +140,33 @@ InlineSpan? parseInlineSpan(
   return null;
 }
 
-TextAlign? parseTextAlign(String align, [TextAlign? defaultAlign]) {
+TextAlign? parseTextAlign(String? textAlign, [TextAlign? defaultTextAlign]) {
+  if (textAlign == null) {
+    return defaultTextAlign;
+  }
   return TextAlign.values.firstWhereOrNull(
-          (a) => a.name.toLowerCase() == align.toLowerCase()) ??
-      defaultAlign;
+          (a) => a.name.toLowerCase() == textAlign.toLowerCase()) ??
+      defaultTextAlign;
+}
+
+TextOverflow? parseTextOverflow(String? textOverflow,
+    [TextOverflow? defaultTextOverflow]) {
+  if (textOverflow == null) {
+    return defaultTextOverflow;
+  }
+  return TextOverflow.values.firstWhereOrNull(
+          (a) => a.name.toLowerCase() == textOverflow.toLowerCase()) ??
+      defaultTextOverflow;
+}
+
+TextCapitalization? parseTextCapitalization(String? textCapitalization,
+    [TextCapitalization? defaultTextCapitalization]) {
+  if (textCapitalization == null) {
+    return defaultTextCapitalization;
+  }
+  return TextCapitalization.values.firstWhereOrNull(
+          (a) => a.name.toLowerCase() == textCapitalization.toLowerCase()) ??
+      defaultTextCapitalization;
 }
 
 TextStyle? parseTextStyle(ThemeData theme, Control control, String propName) {
@@ -161,11 +184,13 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
 
   List<FontVariation>? variations;
   if (fontWeight != null && fontWeight.startsWith("w")) {
-    variations = [FontVariation('wght', parseDouble(fontWeight.substring(1)))];
+    variations = [
+      FontVariation('wght', parseDouble(fontWeight.substring(1), 0)!)
+    ];
   }
 
   List<TextDecoration> decorations = [];
-  var decor = parseInt(json["decoration"]);
+  var decor = parseInt(json["decoration"], 0)!;
   if (decor & 0x1 > 0) {
     decorations.add(TextDecoration.underline);
   }
@@ -179,9 +204,7 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
   return TextStyle(
       fontSize: json["size"] != null ? parseDouble(json["size"]) : null,
       fontWeight: fontWeight != null ? getFontWeight(fontWeight) : null,
-      fontStyle: (json["italic"] != null)
-          ? (parseBool(json["italic"]) ? FontStyle.italic : null)
-          : null,
+      fontStyle: parseBool(json["italic"], false)! ? FontStyle.italic : null,
       fontFamily: json["font_family"],
       fontVariations: variations,
       height: json["height"] != null ? parseDouble(json["height"]) : null,
@@ -191,18 +214,12 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
           ? TextDecorationStyle.values.firstWhereOrNull((v) =>
               v.name.toLowerCase() == json["decoration_style"].toLowerCase())
           : null,
-      decorationColor: json["decoration_color"] != null
-          ? HexColor.fromString(theme, json["decoration_color"] ?? "")
-          : null,
+      decorationColor: parseColor(theme, json["decoration_color"]),
       decorationThickness: json["decoration_thickness"] != null
           ? parseDouble(json["decoration_thickness"])
           : null,
-      color: json["color"] != null
-          ? HexColor.fromString(theme, json["color"] ?? "")
-          : null,
-      backgroundColor: json["bgcolor"] != null
-          ? HexColor.fromString(theme, json["bgcolor"] ?? "")
-          : null,
+      color: parseColor(theme, json["color"]),
+      backgroundColor: parseColor(theme, json["bgcolor"]),
       shadows: json["shadow"] != null
           ? boxShadowsFromJSON(theme, json["shadow"])
           : null,

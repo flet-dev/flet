@@ -38,7 +38,10 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   late final Player player = Player(
     configuration: playerConfig,
   );
-  late final controller = VideoController(player);
+  late final videoControllerConfiguration = parseControllerConfiguration(
+      widget.control, "configuration", const VideoControllerConfiguration())!;
+  late final controller =
+      VideoController(player, configuration: videoControllerConfiguration);
 
   @override
   void initState() {
@@ -63,11 +66,8 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   Widget build(BuildContext context) {
     debugPrint("Video build: ${widget.control.id}");
 
-    FilterQuality filterQuality = FilterQuality.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            widget.control.attrString("filterQuality", "")!.toLowerCase(),
-        orElse: () => FilterQuality.low);
+    FilterQuality filterQuality = parseFilterQuality(
+        widget.control.attrString("filterQuality"), FilterQuality.low)!;
 
     return withPageArgs((context, pageArgs) {
       SubtitleTrack? subtitleTrack;
@@ -119,12 +119,12 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
         resumeUponEnteringForegroundMode:
             widget.control.attrBool("resumeUponEnteringForegroundMode", false)!,
         alignment:
-            parseAlignment(widget.control, "alignment") ?? Alignment.center,
-        fit: parseBoxFit(widget.control, "fit") ?? BoxFit.contain,
+            parseAlignment(widget.control, "alignment", Alignment.center)!,
+        fit: parseBoxFit(widget.control.attrString("fit"), BoxFit.contain)!,
         filterQuality: filterQuality,
         subtitleViewConfiguration:
             subtitleViewConfiguration ?? const SubtitleViewConfiguration(),
-        fill: HexColor.fromString(Theme.of(context),
+        fill: parseColor(Theme.of(context),
                 widget.control.attrString("fillColor", "")!) ??
             const Color(0xFF000000),
         onEnterFullscreen: widget.control.attrBool("onEnterFullscreen", false)!
@@ -217,7 +217,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
               break;
             case "jump_to":
               debugPrint("Video.jump($hashCode)");
-              await player.jump(parseInt(args["media_index"], 0));
+              await player.jump(parseInt(args["media_index"], 0)!);
               break;
             case "playlist_add":
               debugPrint("Video.add($hashCode)");
@@ -234,7 +234,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
               break;
             case "playlist_remove":
               debugPrint("Video.remove($hashCode)");
-              await player.remove(parseInt(args["media_index"], 0));
+              await player.remove(parseInt(args["media_index"], 0)!);
               break;
             case "is_playing":
               debugPrint("Video.isPlaying($hashCode)");
