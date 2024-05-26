@@ -23,6 +23,11 @@ from flet_core.animation import Animation, AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.audio import Audio
 from flet_core.audio_recorder import AudioEncoder, AudioRecorder
+from flet_core.auto_complete import (
+    AutoComplete,
+    AutoCompleteSuggestion,
+    AutoCompleteSelectEvent,
+)
 from flet_core.autofill_group import (
     AutofillGroup,
     AutofillGroupDisposeAction,

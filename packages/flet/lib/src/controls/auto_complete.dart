@@ -28,6 +28,8 @@ class AutoCompleteControl extends StatelessWidget {
     var auto = Autocomplete(
       optionsMaxHeight: suggestionsMaxHeight,
       onSelected: (AutoCompleteSuggestion selection) {
+        backend.updateControlState(control.id,
+            {"selectedIndex": suggestions.indexOf(selection).toString()});
         backend.triggerControlEvent(
             control.id,
             "select",
