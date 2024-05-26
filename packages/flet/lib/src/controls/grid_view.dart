@@ -4,6 +4,7 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
+import '../utils/others.dart';
 import '../widgets/adjustable_scroll_controller.dart';
 import 'create_control.dart';
 import 'scroll_notification_control.dart';
@@ -65,11 +66,8 @@ class _GridViewControlState extends State<GridViewControl> {
     final reverse = widget.control.attrBool("reverse", false)!;
     final cacheExtent = widget.control.attrDouble("cacheExtent");
 
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            widget.control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.hardEdge);
+    var clipBehavior =
+        parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
 
     List<Control> visibleControls =
         widget.children.where((c) => c.isVisible).toList();

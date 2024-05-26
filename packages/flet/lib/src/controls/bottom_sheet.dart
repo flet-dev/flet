@@ -58,12 +58,12 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
         showModalBottomSheet<void>(
                 context: context,
                 builder: (context) {
-                  var contentCtrls =
-                      widget.children.where((c) => c.name == "content");
+                  var contentCtrls = widget.children
+                      .where((c) => c.name == "content" && c.isVisible);
 
                   if (contentCtrls.isEmpty) {
                     return const ErrorControl(
-                        "BottomSheet does not have a content.");
+                        "BottomSheet.content must be provided and visible");
                   }
 
                   var content = createControl(

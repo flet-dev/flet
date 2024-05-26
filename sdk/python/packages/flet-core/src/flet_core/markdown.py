@@ -153,16 +153,16 @@ class Markdown(ConstrainedControl):
 
     # code_theme
     @property
-    def code_theme(self):
+    def code_theme(self) -> Optional[str]:
         return self._get_attr("codeTheme")
 
     @code_theme.setter
-    def code_theme(self, value):
+    def code_theme(self, value: Optional[str]):
         self._set_attr("codeTheme", value)
 
     # code_style
     @property
-    def code_style(self):
+    def code_style(self) -> Optional[TextStyle]:
         return self.__code_style
 
     @code_style.setter

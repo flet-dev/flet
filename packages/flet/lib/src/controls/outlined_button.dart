@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'cupertino_button.dart';
 import 'cupertino_dialog_action.dart';
@@ -61,19 +62,17 @@ class _OutlinedButtonControlState extends State<OutlinedButtonControl>
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     String text = widget.control.attrString("text", "")!;
-    IconData? icon = parseIcon(widget.control.attrString("icon", "")!);
+    IconData? icon = parseIcon(widget.control.attrString("icon"));
     Color? iconColor = widget.control.attrColor("iconColor", context);
-    var contentCtrls = widget.children.where((c) => c.name == "content");
+    var contentCtrls =
+        widget.children.where((c) => c.name == "content" && c.isVisible);
     String url = widget.control.attrString("url", "")!;
     String? urlTarget = widget.control.attrString("urlTarget");
     bool onHover = widget.control.attrBool("onHover", false)!;
     bool onLongPress = widget.control.attrBool("onLongPress", false)!;
     bool autofocus = widget.control.attrBool("autofocus", false)!;
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            widget.control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.none);
+    var clipBehavior =
+        parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
     Function()? onPressed = !disabled
         ? () {
             debugPrint("Button ${widget.control.id} clicked!");

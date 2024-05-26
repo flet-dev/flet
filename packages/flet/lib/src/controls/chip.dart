@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
+import '../utils/others.dart';
 import '../utils/text.dart';
 import '../utils/theme.dart';
 import 'create_control.dart';
@@ -78,7 +79,7 @@ class _ChipControlState extends State<ChipControl> {
         widget.children.where((c) => c.name == "deleteIcon" && c.isVisible);
 
     if (labelCtrls.isEmpty) {
-      return const ErrorControl("Chip must have label specified.");
+      return const ErrorControl("Chip.label must be provided and visible");
     }
 
     double? clickElevation = widget.control.attrDouble("clickElevation");
@@ -97,10 +98,9 @@ class _ChipControlState extends State<ChipControl> {
     BorderSide? borderSide =
         parseBorderSide(Theme.of(context), widget.control, "borderSide");
     VisualDensity? visualDensity =
-        parseVisualDensity(widget.control.attrString("visualDensity"), null);
-    Clip clipBehavior = Clip.values.firstWhere(
-        (c) => c.toString() == widget.control.attrString("clipBehavior", "")!,
-        orElse: () => Clip.none);
+        parseVisualDensity(widget.control.attrString("visualDensity"));
+    Clip clipBehavior =
+        parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
 
     bool onClick = widget.control.attrBool("onclick", false)!;
     bool onDelete = widget.control.attrBool("onDelete", false)!;
@@ -108,7 +108,7 @@ class _ChipControlState extends State<ChipControl> {
 
     if (onSelect && onClick) {
       return const ErrorControl(
-          "Chip cannot have both on_select and on_click events specified.");
+          "Chip cannot have both on_select and on_click events specified");
     }
 
     bool autofocus = widget.control.attrBool("autofocus", false)!;
@@ -117,8 +117,8 @@ class _ChipControlState extends State<ChipControl> {
       _selected = selected;
     }
     bool showCheckmark = widget.control.attrBool("showCheckmark", true)!;
-    String deleteButtonTooltipMessage =
-        widget.control.attrString("deleteButtonTooltipMessage", "")!;
+    String? deleteButtonTooltip =
+        widget.control.attrString("deleteButtonTooltip");
 
     var elevation = widget.control.attrDouble("elevation");
 
@@ -151,7 +151,7 @@ class _ChipControlState extends State<ChipControl> {
           checkmarkColor: widget.control.attrColor("checkColor", context),
           selected: _selected,
           showCheckmark: showCheckmark,
-          deleteButtonTooltipMessage: deleteButtonTooltipMessage,
+          deleteButtonTooltipMessage: deleteButtonTooltip,
           onPressed: onClickHandler,
           onDeleted: onDeleteHandler,
           onSelected: onSelect && !disabled

@@ -30,5 +30,7 @@
 	<string>NSApplication</string>
 	<key>NSMicrophoneUsageDescription</key>
     <string>Audio Recording</string>
+    <key>NSLocationUsageDescription</key>
+    <string>This app needs access to location.</string>
 </dict>
 </plist>

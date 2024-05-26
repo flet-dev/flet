@@ -85,26 +85,26 @@ class CupertinoActivityIndicator(ConstrainedControl):
 
     # color
     @property
-    def color(self):
+    def color(self) -> Optional[str]:
         return self._get_attr("color")
 
     @color.setter
-    def color(self, value):
+    def color(self, value: Optional[str]):
         self._set_attr("color", value)
 
     # animating
     @property
-    def animating(self):
+    def animating(self) -> Optional[bool]:
         return self._get_attr("animating")
 
     @animating.setter
-    def animating(self, value):
+    def animating(self, value: Optional[bool]):
         self._set_attr("animating", value)
 
     # radius
     @property
     def radius(self) -> OptionalNumber:
-        return self._get_attr("radius")
+        return self._get_attr("radius", data_type="float")
 
     @radius.setter
     def radius(self, value: OptionalNumber):

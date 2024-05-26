@@ -790,9 +790,11 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
 
           final spacing = control.attrDouble("spacing", 10)!;
           final mainAlignment = parseMainAxisAlignment(
-              control, "verticalAlignment", MainAxisAlignment.start);
+              control.attrString("verticalAlignment"),
+              MainAxisAlignment.start)!;
           final crossAlignment = parseCrossAxisAlignment(
-              control, "horizontalAlignment", CrossAxisAlignment.start);
+              control.attrString("horizontalAlignment"),
+              CrossAxisAlignment.start)!;
           final fabLocation = parseFloatingActionButtonLocation(
               control,
               "floatingActionButtonLocation",
@@ -974,8 +976,8 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
             Widget body = Stack(children: [
               SizedBox.expand(
                   child: Container(
-                      padding: parseEdgeInsets(control, "padding") ??
-                          const EdgeInsets.all(10),
+                      padding: parseEdgeInsets(
+                          control, "padding", const EdgeInsets.all(10))!,
                       child: child)),
               ...widget.overlayWidgets
             ]);

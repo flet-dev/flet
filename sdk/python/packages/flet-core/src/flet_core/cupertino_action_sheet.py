@@ -97,9 +97,6 @@ class CupertinoActionSheet(ConstrainedControl):
     def _get_control_name(self):
         return "cupertinoactionsheet"
 
-    def before_update(self):
-        super().before_update()
-
     def _get_children(self):
         children = []
         if self.__cancel:
@@ -145,9 +142,9 @@ class CupertinoActionSheet(ConstrainedControl):
 
     # actions
     @property
-    def actions(self):
+    def actions(self) -> List[Control]:
         return self.__actions
 
     @actions.setter
-    def actions(self, value):
+    def actions(self, value: Optional[List[Control]]):
         self.__actions = value if value is not None else []

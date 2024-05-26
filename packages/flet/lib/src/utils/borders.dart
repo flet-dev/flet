@@ -6,20 +6,21 @@ import '../models/control.dart';
 import 'colors.dart';
 import 'numbers.dart';
 
-BorderRadius? parseBorderRadius(Control control, String propName) {
+BorderRadius? parseBorderRadius(Control control, String propName,
+    [BorderRadius? defaultValue]) {
   var v = control.attrString(propName, null);
   if (v == null) {
-    return null;
+    return defaultValue;
   }
 
   final j1 = json.decode(v);
   return borderRadiusFromJSON(j1);
 }
 
-Radius? parseRadius(Control control, String propName) {
+Radius? parseRadius(Control control, String propName, [Radius? defaultValue]) {
   var r = control.attrDouble(propName, null);
   if (r == null) {
-    return null;
+    return defaultValue;
   }
 
   return Radius.circular(r);
@@ -59,13 +60,13 @@ OutlinedBorder? parseOutlinedBorder(Control control, String propName) {
 
 BorderRadius borderRadiusFromJSON(dynamic json) {
   if (json is int || json is double) {
-    return BorderRadius.all(Radius.circular(parseDouble(json)));
+    return BorderRadius.all(Radius.circular(parseDouble(json, 0)!));
   }
   return BorderRadius.only(
-    topLeft: Radius.circular(parseDouble(json['tl'])),
-    topRight: Radius.circular(parseDouble(json['tr'])),
-    bottomLeft: Radius.circular(parseDouble(json['bl'])),
-    bottomRight: Radius.circular(parseDouble(json['br'])),
+    topLeft: Radius.circular(parseDouble(json['tl'], 0)!),
+    topRight: Radius.circular(parseDouble(json['tr'], 0)!),
+    bottomLeft: Radius.circular(parseDouble(json['bl'], 0)!),
+    bottomRight: Radius.circular(parseDouble(json['br'], 0)!),
   );
 }
 
@@ -86,12 +87,9 @@ BorderSide? borderSideFromJSON(ThemeData? theme, dynamic json,
     [Color? defaultSideColor]) {
   return json != null
       ? BorderSide(
-          color: json['c'] != null
-              ? HexColor.fromString(theme, json['c'] as String) ??
-                  defaultSideColor ??
-                  Colors.black
-              : Colors.black,
-          width: parseDouble(json['w'], 1),
+          color:
+              parseColor(theme, json['c'], defaultSideColor ?? Colors.black)!,
+          width: parseDouble(json['w'], 1)!,
           style: BorderStyle.solid)
       : null;
 }

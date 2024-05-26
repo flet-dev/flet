@@ -42,7 +42,7 @@ class _CupertinoContextMenuActionControlState
     var contentCtrls =
         widget.children.where((c) => c.name == "content" && c.isVisible);
     IconData? trailingIcon =
-        parseIcon(widget.control.attrString("trailingIcon", "")!);
+        parseIcon(widget.control.attrString("trailingIcon"));
 
     Widget child = DefaultTextStyle(
         style: CupertinoTheme.of(context).textTheme.textStyle.copyWith(

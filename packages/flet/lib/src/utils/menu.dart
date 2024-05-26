@@ -52,21 +52,18 @@ MenuStyle? menuStyleFromJSON(ThemeData theme, Map<String, dynamic> json,
     BorderSide? defaultBorderSide,
     OutlinedBorder? defaultShape]) {
   return MenuStyle(
-    alignment: json["alignment"] != null
-        ? alignmentFromJson(json["alignment"])
-        : defaultAlignment,
+    alignment: alignmentFromJson(json["alignment"], defaultAlignment)!,
     backgroundColor: getMaterialStateProperty<Color?>(
         json["bgcolor"],
-        (jv) => HexColor.fromString(theme, jv as String),
-        defaultBackgroundColor),
+        (jv) => parseColor(theme, jv as String), defaultBackgroundColor),
     shadowColor: getMaterialStateProperty<Color?>(json["shadow_color"],
-        (jv) => HexColor.fromString(theme, jv as String), defaultShadowColor),
+        (jv) => parseColor(theme, jv as String), defaultShadowColor),
     surfaceTintColor: getMaterialStateProperty<Color?>(
         json["surface_tint_color"],
-        (jv) => HexColor.fromString(theme, jv as String),
+        (jv) => parseColor(theme, jv as String),
         defaultSurfaceTintColor),
     elevation: getMaterialStateProperty<double?>(
-        json["elevation"], (jv) => parseDouble(jv), defaultElevation),
+        json["elevation"], (jv) => parseDouble(jv, 0)!, defaultElevation),
     padding: getMaterialStateProperty<EdgeInsetsGeometry?>(
         json["padding"], (jv) => edgeInsetsFromJson(jv), defaultPadding),
     side: getMaterialStateProperty<BorderSide?>(

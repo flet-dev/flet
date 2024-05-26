@@ -86,7 +86,7 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
               widget.control.attrString("labelPosition", "")!.toLowerCase(),
           orElse: () => LabelPosition.right);
       VisualDensity? visualDensity =
-          parseVisualDensity(widget.control.attrString("visualDensity"), null);
+          parseVisualDensity(widget.control.attrString("visualDensity"));
       bool autofocus = widget.control.attrBool("autofocus", false)!;
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
@@ -101,8 +101,7 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
         debugPrint("Radio StoreConnector build: ${widget.control.id}");
 
         if (viewModel.ancestor == null) {
-          return const ErrorControl(
-              "Radio control must be enclosed with RadioGroup.");
+          return const ErrorControl("Radio must be enclosed within RadioGroup");
         }
 
         String groupValue = viewModel.ancestor!.attrString("value", "")!;
@@ -112,8 +111,7 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
             autofocus: autofocus,
             focusNode: _focusNode,
             groupValue: groupValue,
-            mouseCursor: parseMouseCursor(
-                widget.control.attrString("mouseCursor"), null),
+            mouseCursor: parseMouseCursor(widget.control.attrString("mouseCursor")),
             value: value,
             activeColor: widget.control.attrColor("activeColor", context),
             focusColor: widget.control.attrColor("focusColor", context),

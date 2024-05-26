@@ -99,29 +99,31 @@ class CupertinoActionSheetAction(ConstrainedControl):
     def _get_control_name(self):
         return "cupertinoactionsheetaction"
 
+    def _get_children(self):
+        if self.__content is not None:
+            self.__content._set_attr_internal("n", "content")
+            return [self.__content]
+        return []
+
     def before_update(self):
         super().before_update()
-
-    def _get_children(self):
-        children = []
-        if self.__content:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
+        assert self.text is not None or (
+            (self.__content is not None and self.__content.visible)
+        ), "either text or (visible) content must be provided visible"
 
     # text
     @property
-    def text(self):
+    def text(self) -> Optional[str]:
         return self._get_attr("text")
 
     @text.setter
-    def text(self, value):
+    def text(self, value: Optional[str]):
         self._set_attr("text", value)
 
     # is_default_action
     @property
     def is_default_action(self) -> Optional[bool]:
-        return self._get_attr("isDefaultAction")
+        return self._get_attr("isDefaultAction", data_type="bool", def_value=False)
 
     @is_default_action.setter
     def is_default_action(self, value: Optional[bool]):
@@ -130,7 +132,7 @@ class CupertinoActionSheetAction(ConstrainedControl):
     # is_destructive_action
     @property
     def is_destructive_action(self) -> Optional[bool]:
-        return self._get_attr("isDestructiveAction")
+        return self._get_attr("isDestructiveAction", data_type="bool", def_value=False)
 
     @is_destructive_action.setter
     def is_destructive_action(self, value: Optional[bool]):

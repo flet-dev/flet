@@ -28,7 +28,8 @@ class CupertinoDialogActionControl extends StatelessWidget {
     debugPrint("CupertinoDialogAction build: ${control.id}");
 
     String text = control.attrString("text", "")!;
-    var contentCtrls = children.where((c) => c.name == "content");
+    var contentCtrls =
+        children.where((c) => c.name == "content" && c.isVisible);
     bool isDefaultAction = control.attrBool("isDefaultAction", false)!;
     bool isDestructiveAction = control.attrBool("isDestructiveAction", false)!;
     bool disabled = control.isDisabled || parentDisabled;
