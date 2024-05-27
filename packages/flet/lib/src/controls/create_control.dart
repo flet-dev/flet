@@ -171,15 +171,16 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
           parentAdaptive, nextChild, FletAppServices.of(context).server);
 
       // no theme defined? return widget!
-      if (id == "page" || controlView.control.attrString("theme") == null) {
+      var themeMode = ThemeMode.values.firstWhereOrNull((t) =>
+          t.name.toLowerCase() ==
+          controlView.control.attrString("themeMode", "")!.toLowerCase());
+      if (id == "page" ||
+          (controlView.control.attrString("theme") == null &&
+              themeMode == null)) {
         return widget;
       }
 
       // wrap into theme widget
-      var themeMode = ThemeMode.values.firstWhereOrNull((t) =>
-          t.name.toLowerCase() ==
-          controlView.control.attrString("themeMode", "")!.toLowerCase());
-
       ThemeData? parentTheme = (themeMode == null) ? Theme.of(context) : null;
 
       buildTheme(Brightness? brightness) {
