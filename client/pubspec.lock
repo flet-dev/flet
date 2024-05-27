@@ -274,6 +274,13 @@ packages:
       relative: true
     source: path
     version: "0.23.0"
+  flet_permission_handler:
+    dependency: "direct main"
+    description:
+      path: "../packages/flet_permission_handler"
+      relative: true
+    source: path
+    version: "0.23.0"
   flet_rive:
     dependency: "direct main"
     description:
