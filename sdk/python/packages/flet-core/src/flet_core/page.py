@@ -1,11 +1,11 @@
 import asyncio
-from contextvars import ContextVar
 import json
 import logging
 import threading
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
+from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple, Union, cast
@@ -509,7 +509,7 @@ class Page(AdaptiveControl):
     def run_task(self, handler: Callable[..., Awaitable[Any]], *args, **kwargs):
         _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
-        
+
         future = asyncio.run_coroutine_threadsafe(handler(*args, **kwargs), self.__loop)
 
         def _on_completion(f):
@@ -775,9 +775,25 @@ class Page(AdaptiveControl):
             "getClipboard", wait_for_result=True, wait_timeout=wait_timeout
         )
 
-    def get_clipboard_async(self, wait_timeout: Optional[float] = 10):
-        return self._invoke_method_async(
+    async def get_clipboard_async(self, wait_timeout: Optional[float] = 10):
+        return await self._invoke_method_async(
             "getClipboard", wait_for_result=True, wait_timeout=wait_timeout
+        )
+
+    def take_screenshot(self, of: str, wait_timeout: Optional[float] = 10):
+        return self._invoke_method(
+            "takeScreenshot",
+            {"data": of},
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+
+    async def take_screenshot_async(self, of: str, wait_timeout: Optional[float] = 10):
+        return await self._invoke_method_async(
+            "takeScreenshot",
+            {"data": of},
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
         )
 
     def launch_url(

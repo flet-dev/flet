@@ -20,6 +20,7 @@ import 'utils/desktop.dart';
 import 'utils/launch_url.dart';
 import 'utils/platform_utils_non_web.dart'
     if (dart.library.js) "utils/platform_utils_web.dart";
+import 'utils/screenshot.dart';
 import 'utils/session_store_non_web.dart'
     if (dart.library.js) "utils/session_store_web.dart";
 import 'utils/uri.dart';
@@ -292,6 +293,20 @@ AppState appReducer(AppState state, dynamic action) {
               .onError((error, stackTrace) =>
                   sendMethodResult(error: error?.toString()));
           break;
+        case "takeScreenshot":
+          String? controlId = action.payload.args["data"];
+          debugPrint("Controls: ${state.controls.keys.toList()}");
+          if (controlId != null) {
+            try {
+              takeScreenshot(controlId, state.controls[controlId])
+                  .then((value) => sendMethodResult(result: value))
+                  .onError((error, stackTrace) =>
+                      sendMethodResult(error: error?.toString()));
+            } catch (e) {
+              sendMethodResult(error: e.toString());
+            }
+          }
+          break;
         case "windowToFront":
           windowToFront();
           break;
@@ -381,18 +396,14 @@ AppState appReducer(AppState state, dynamic action) {
 }
 
 addWindowMediaEventProps(WindowMediaData wmd, Map<String, String> props) {
-  props["windowwidth"] = wmd.width != null ? wmd.width.toString() : "";
-  props["windowheight"] = wmd.height != null ? wmd.height.toString() : "";
-  props["windowtop"] = wmd.top != null ? wmd.top.toString() : "";
-  props["windowleft"] = wmd.left != null ? wmd.left.toString() : "";
-  props["windowminimized"] =
-      wmd.isMinimized != null ? wmd.isMinimized.toString() : "";
-  props["windowmaximized"] =
-      wmd.isMaximized != null ? wmd.isMaximized.toString() : "";
-  props["windowfocused"] =
-      wmd.isFocused != null ? wmd.isFocused.toString() : "";
-  props["windowfullscreen"] =
-      wmd.isFullScreen != null ? wmd.isFullScreen.toString() : "";
+  props["windowwidth"] = wmd.width?.toString() ?? '';
+  props["windowheight"] = wmd.height?.toString() ?? "";
+  props["windowtop"] = wmd.top?.toString() ?? "";
+  props["windowleft"] = wmd.left?.toString() ?? "";
+  props["windowminimized"] = wmd.isMinimized?.toString() ?? "";
+  props["windowmaximized"] = wmd.isMaximized?.toString() ?? "";
+  props["windowfocused"] = wmd.isFocused?.toString() ?? "";
+  props["windowfullscreen"] = wmd.isFullScreen?.toString() ?? "";
 }
 
 addControls(Map<String, Control> controls, List<Control> newControls) {
