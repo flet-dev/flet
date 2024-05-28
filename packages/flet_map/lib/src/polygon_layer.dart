@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -20,22 +19,19 @@ class PolygonLayerControl extends StatelessWidget with FletStoreMixin {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-        "PolygonLayerControl build: ${control.id} (${control.hashCode})");
+    debugPrint("PolygonLayerControl build: ${control.id}");
 
     return withControls(control.childIds, (context, polygonsView) {
       debugPrint("PolygonLayerControlState build: ${control.id}");
 
       var polygons = polygonsView.controlViews
           .where((c) =>
-              c.control.type == "mappolygonmarker" && c.control.isVisible)
+              c.control.type == "map_polygon_marker" && c.control.isVisible)
           .map((polygon) {
-        var strokeCap = StrokeCap.values.firstWhereOrNull((e) =>
-            e.name.toLowerCase() ==
-            control.attrString("strokeCap", "")!.toLowerCase());
-        var strokeJoin = StrokeJoin.values.firstWhereOrNull((e) =>
-            e.name.toLowerCase() ==
-            control.attrString("strokeJoin", "")!.toLowerCase());
+        var strokeCap = parseStrokeCap(
+            polygon.control.attrString("strokeCap"), StrokeCap.round)!;
+        var strokeJoin = parseStrokeJoin(
+            polygon.control.attrString("strokeJoin"), StrokeJoin.round)!;
         var points = polygon.control.attrString("points");
         return Polygon(
             borderStrokeWidth:
@@ -53,8 +49,8 @@ class PolygonLayerControl extends StatelessWidget with FletStoreMixin {
             labelStyle: parseTextStyle(
                     Theme.of(context), polygon.control, "labelStyle") ??
                 const TextStyle(),
-            strokeCap: strokeCap ?? StrokeCap.round,
-            strokeJoin: strokeJoin ?? StrokeJoin.round,
+            strokeCap: strokeCap,
+            strokeJoin: strokeJoin,
             points: points != null
                 ? (jsonDecode(points) as List)
                     .map((e) => latLngFromJson(e))

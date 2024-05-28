@@ -33,13 +33,13 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     List<String> acceptedChildrenTypes = [
-      "mapcirclelayer",
-      "maptilelayer",
-      "mappolygonlayer",
-      "mappolylinelayer",
-      "mapmarkerlayer",
-      "maprichattribution",
-      "mapsimpleattribution"
+      "map_circle_layer",
+      "map_tile_layer",
+      "map_polygon_layer",
+      "map_polyline_layer",
+      "map_marker_layer",
+      "map_rich_attribution",
+      "map_simple_attribution"
     ];
     var ctrls = widget.children
         .where((c) => c.isVisible && (acceptedChildrenTypes.contains(c.type)))
@@ -58,7 +58,7 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
 
     return withControls(widget.control.childIds, (context, configurationsView) {
       var configuration = configurationsView.controlViews
-          .where((c) => c.control.type == "mapconfiguration")
+          .where((c) => c.control.type == "map_configuration")
           .map((config) {
         var onTap = config.control.attrBool("onTap", false)!;
         var onLongPress = config.control.attrBool("onLongPress", false)!;

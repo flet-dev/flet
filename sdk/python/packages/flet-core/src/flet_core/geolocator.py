@@ -118,6 +118,7 @@ class Geolocator(Control):
         self,
         wait_timeout: Optional[float] = 25,
     ) -> GeolocatorPosition:
+        assert not self.page.web, "get_last_known_position is not supported on web"
         output = self.invoke_method(
             "get_last_known_position",
             wait_for_result=True,
@@ -133,6 +134,7 @@ class Geolocator(Control):
         self,
         wait_timeout: Optional[float] = 25,
     ) -> GeolocatorPosition:
+        assert not self.page.web, "get_last_known_position is not supported on web"
         output = await self.invoke_method_async(
             "get_last_known_position",
             wait_for_result=True,
@@ -201,6 +203,7 @@ class Geolocator(Control):
         return enabled == "true"
 
     def open_app_settings(self, wait_timeout: Optional[float] = 10) -> bool:
+        assert not self.page.web, "open_app_settings is not supported on web"
         opened = self.invoke_method(
             "open_app_settings",
             wait_for_result=True,
@@ -209,6 +212,7 @@ class Geolocator(Control):
         return opened == "true"
 
     async def open_app_settings_async(self, wait_timeout: Optional[float] = 10) -> bool:
+        assert not self.page.web, "open_app_settings is not supported on web"
         opened = await self.invoke_method_async(
             "open_app_settings",
             wait_for_result=True,
@@ -217,6 +221,7 @@ class Geolocator(Control):
         return opened == "true"
 
     def open_location_settings(self, wait_timeout: Optional[float] = 10) -> bool:
+        assert not self.page.web, "open_location_settings is not supported on web"
         opened = self.invoke_method(
             "open_location_settings",
             wait_for_result=True,
@@ -227,6 +232,7 @@ class Geolocator(Control):
     async def open_location_settings_async(
         self, wait_timeout: Optional[float] = 10
     ) -> bool:
+        assert not self.page.web, "open_location_settings is not supported on web"
         opened = await self.invoke_method_async(
             "open_location_settings",
             wait_for_result=True,

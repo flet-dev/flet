@@ -117,7 +117,7 @@ class MapConfiguration(Control):
         self.on_event = on_event
 
     def _get_control_name(self):
-        return "mapconfiguration"
+        return "map_configuration"
 
     def before_update(self):
         super().before_update()

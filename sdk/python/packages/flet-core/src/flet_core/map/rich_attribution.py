@@ -23,7 +23,7 @@ class RichAttribution(Control):
 
     def __init__(
         self,
-        attributions: List[TextSourceAttribution] = None,
+        attributions: List[TextSourceAttribution],
         alignment: Optional[AttributionAlignment] = None,
         popup_bgcolor: Optional[str] = None,
         permanent_height: OptionalNumber = None,
@@ -50,7 +50,7 @@ class RichAttribution(Control):
         self.show_flutter_map_attribution = show_flutter_map_attribution
 
     def _get_control_name(self):
-        return "maprichattribution"
+        return "map_rich_attribution"
 
     def _get_children(self):
         return self.attributions

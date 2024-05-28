@@ -20,13 +20,13 @@ class MarkerLayerControl extends StatelessWidget with FletStoreMixin {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("MarkerLayerControl build: ${control.id} (${control.hashCode})");
+    debugPrint("MarkerLayerControl build: ${control.id}");
 
     return withControls(control.childIds, (context, markersView) {
       debugPrint("MarkerLayerControlState build: ${control.id}");
 
       var markers = markersView.controlViews
-          .where((c) => c.control.type == "mapmarker" && c.control.isVisible)
+          .where((c) => c.control.type == "map_marker" && c.control.isVisible)
           .map((marker) {
         return Marker(
             point: parseLatLng(marker.control, "location")!,

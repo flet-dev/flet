@@ -46,7 +46,7 @@ class Marker(Control):
         self.alignment = alignment
 
     def _get_control_name(self):
-        return "mapmarker"
+        return "map_marker"
 
     def _get_children(self):
         return [self.__content]
@@ -123,7 +123,7 @@ class MarkerLayer(Control):
 
     def __init__(
         self,
-        markers: List[Marker] = None,
+        markers: List[Marker],
         alignment: Optional[Alignment] = None,
         rotate: Optional[bool] = None,
         #
@@ -146,7 +146,7 @@ class MarkerLayer(Control):
         self.rotate = rotate
 
     def _get_control_name(self):
-        return "mapmarkerlayer"
+        return "map_marker_layer"
 
     def _get_children(self):
         return self.__markers

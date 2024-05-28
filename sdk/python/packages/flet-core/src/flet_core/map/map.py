@@ -24,7 +24,7 @@ class Map(ConstrainedControl):
 
     def __init__(
         self,
-        layers: List[Control] = None,
+        layers: List[Control],
         configuration: Optional[MapConfiguration] = None,
         #
         # ConstrainedControl

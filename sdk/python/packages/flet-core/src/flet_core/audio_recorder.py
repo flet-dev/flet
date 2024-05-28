@@ -61,18 +61,27 @@ class AudioRecorder(Control):
     def _get_control_name(self):
         return "audiorecorder"
 
-    def start_recording(self, output_path: str = None):
-        if not self.page.web and not output_path:
-            raise ValueError("output_path must be provided when not on web!")
-        self.invoke_method("start_recording", {"outputPath": output_path})
+    def start_recording(
+        self, output_path: str = None, wait_timeout: Optional[float] = 10
+    ) -> bool:
+        assert (
+            self.page.web or output_path
+        ), "output_path must be provided when not on web"
+        started = self.invoke_method(
+            "start_recording",
+            {"outputPath": output_path},
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return started == "true"
 
     @deprecated(
         reason="Use start_recording() method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
-    async def start_recording_async(self, output_path: str):
-        self.start_recording(output_path)
+    async def start_recording_async(self, output_path: str) -> bool:
+        return self.start_recording(output_path)
 
     def is_recording(self, wait_timeout: Optional[float] = 5) -> bool:
         recording = self.invoke_method(

@@ -25,15 +25,14 @@ class _RichAttributionControlState extends State<RichAttributionControl>
     with FletStoreMixin {
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-        "RichAttributionControl build: ${widget.control.id} (${widget.control.hashCode})");
+    debugPrint("RichAttributionControl build: ${widget.control.id}");
 
     return withControls(widget.control.childIds, (context, attributionsView) {
       debugPrint("RichAttributionControlState build: ${widget.control.id}");
 
       var attributions = attributionsView.controlViews
           .map((v) => v.control)
-          .where((c) => c.type == "maptextsourceattribution" && c.isVisible)
+          .where((c) => c.type == "map_text_source_attribution" && c.isVisible)
           .map((Control itemCtrl) {
         return TextSourceAttribution(
           itemCtrl.attrs["text"] ?? "Placeholder Text",

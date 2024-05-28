@@ -45,7 +45,7 @@ class CircleMarker(Control):
         self.radius = radius
 
     def _get_control_name(self):
-        return "mapcirclemarker"
+        return "map_circle_marker"
 
     def before_update(self):
         super().before_update()
@@ -117,7 +117,7 @@ class CircleLayer(Control):
 
     def __init__(
         self,
-        circles: List[CircleMarker] = None,
+        circles: List[CircleMarker],
         #
         # Control
         #
@@ -138,7 +138,7 @@ class CircleLayer(Control):
         self.circles = circles
 
     def _get_control_name(self):
-        return "mapcirclelayer"
+        return "map_circle_layer"
 
     def _get_children(self):
         return self.__circles

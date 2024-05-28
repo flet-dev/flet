@@ -56,7 +56,7 @@ class PolylineMarker(Control):
         self.use_stroke_width_in_meter = use_stroke_width_in_meter
 
     def _get_control_name(self):
-        return "mappolylinemarker"
+        return "map_polyline_marker"
 
     def before_update(self):
         super().before_update()
@@ -204,7 +204,7 @@ class PolylineLayer(Control):
         self.polyline_culling = polyline_culling
 
     def _get_control_name(self):
-        return "mappolylinelayer"
+        return "map_polyline_layer"
 
     def _get_children(self):
         return self.__polylines

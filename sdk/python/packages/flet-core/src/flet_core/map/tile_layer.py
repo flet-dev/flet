@@ -24,7 +24,7 @@ class TileLayer(Control):
 
     def __init__(
         self,
-        url_template: str = None,
+        url_template: str,
         fallback_url: Optional[str] = None,
         subdomains: Optional[List[str]] = None,
         tile_bounds: Optional[MapLatitudeLongitudeBounds] = None,
@@ -81,10 +81,11 @@ class TileLayer(Control):
         self.additional_options = additional_options
 
     def _get_control_name(self):
-        return "maptilelayer"
+        return "map_tile_layer"
 
     def before_update(self):
         super().before_update()
+        assert self.url_template, "url_template is required"
         if isinstance(self.__tile_bounds, MapLatitudeLongitudeBounds):
             self._set_attr_json("tileBounds", self.__tile_bounds)
         if isinstance(self.__subdomains, list):

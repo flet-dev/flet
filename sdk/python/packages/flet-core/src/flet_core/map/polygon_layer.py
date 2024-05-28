@@ -59,7 +59,7 @@ class PolygonMarker(Control):
         self.stroke_join = stroke_join
 
     def _get_control_name(self):
-        return "mappolygonmarker"
+        return "map_polygon_marker"
 
     def before_update(self):
         super().before_update()
@@ -216,7 +216,7 @@ class PolygonLayer(Control):
         self.draw_labels_last = draw_labels_last
 
     def _get_control_name(self):
-        return "mappolygonlayer"
+        return "map_polygon_layer"
 
     def _get_children(self):
         return self.__polygons

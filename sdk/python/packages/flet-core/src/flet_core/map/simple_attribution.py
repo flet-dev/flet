@@ -41,7 +41,7 @@ class SimpleAttribution(Control):
         self.on_click = on_click
 
     def _get_control_name(self):
-        return "mapsimpleattribution"
+        return "map_simple_attribution"
 
     def before_update(self):
         super().before_update()
