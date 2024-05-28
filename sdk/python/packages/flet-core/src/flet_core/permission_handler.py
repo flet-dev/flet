@@ -91,9 +91,7 @@ class PermissionHandler(Control):
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        if out == "null":
-            return None
-        return PermissionStatus(out)
+        return PermissionStatus(out) if out is not None else None
 
     async def check_permission_async(
         self, of: PermissionType, wait_timeout: Optional[float] = 25
@@ -104,9 +102,7 @@ class PermissionHandler(Control):
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        if out == "null":
-            return None
-        return PermissionStatus(out)
+        return PermissionStatus(out) if out is not None else None
 
     def request_permission(
         self, of: PermissionType, wait_timeout: Optional[float] = 25
@@ -117,9 +113,7 @@ class PermissionHandler(Control):
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        if out == "null":
-            return None
-        return PermissionStatus(out)
+        return PermissionStatus(out) if out is not None else None
 
     async def request_permission_async(
         self, of: PermissionType, wait_timeout: Optional[float] = 25

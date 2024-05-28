@@ -1,11 +1,11 @@
 import asyncio
-from contextvars import ContextVar
 import json
 import logging
 import threading
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
+from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple, Union, cast
@@ -509,7 +509,7 @@ class Page(AdaptiveControl):
     def run_task(self, handler: Callable[..., Awaitable[Any]], *args, **kwargs):
         _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
-        
+
         future = asyncio.run_coroutine_threadsafe(handler(*args, **kwargs), self.__loop)
 
         def _on_completion(f):
@@ -915,7 +915,7 @@ class Page(AdaptiveControl):
         result, err = self.__method_call_results.pop(evt)
         if err is not None:
             raise Exception(err)
-        if result is None:
+        if result is None or result == "null":
             return None
         return result
 

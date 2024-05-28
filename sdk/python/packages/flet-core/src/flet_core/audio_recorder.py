@@ -96,7 +96,7 @@ class AudioRecorder(Control):
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        return out if out != "null" else None
+        return out if out is not None else None
 
     async def stop_recording_async(
         self, wait_timeout: Optional[float] = 10
@@ -106,7 +106,7 @@ class AudioRecorder(Control):
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        return out if out != "null" else None
+        return out if out is not None else None
 
     def resume_recording(self):
         self.invoke_method("resume_recording")
