@@ -3,6 +3,7 @@ from typing import Any, Optional, List
 from flet_core.alignment import Alignment
 from flet_core.control import Control, OptionalNumber
 from flet_core.map import MapLatitudeLongitude
+from flet_core.map.map_layer import MapLayer
 from flet_core.ref import Ref
 
 
@@ -81,6 +82,7 @@ class Marker(Control):
 
     @height.setter
     def height(self, value: OptionalNumber):
+        assert value is None or value >= 0, "height cannot be negative"
         self._set_attr("height", value)
 
     # width
@@ -90,6 +92,7 @@ class Marker(Control):
 
     @width.setter
     def width(self, value: OptionalNumber):
+        assert value is None or value >= 0, "width cannot be negative"
         self._set_attr("width", value)
 
     # alignment
@@ -111,10 +114,9 @@ class Marker(Control):
         self.__location = value
 
 
-class MarkerLayer(Control):
+class MarkerLayer(MapLayer):
     """
     A layer to display Markers.
-
 
     -----
 
@@ -127,14 +129,14 @@ class MarkerLayer(Control):
         alignment: Optional[Alignment] = None,
         rotate: Optional[bool] = None,
         #
-        # Control
+        # MapLayer
         #
         ref: Optional[Ref] = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):
 
-        Control.__init__(
+        MapLayer.__init__(
             self,
             ref=ref,
             visible=visible,
@@ -154,20 +156,6 @@ class MarkerLayer(Control):
     def before_update(self):
         super().before_update()
         self._set_attr_json("alignment", self.__alignment)
-
-    def add(self, *marker: Marker):
-        self.__markers.extend(marker)
-        self.update()
-
-    def insert(self, at: int, *markers: Marker) -> None:
-        for i, marker in enumerate(markers, start=at):
-            self.__markers.insert(i, marker)
-        self.update()
-
-    def remove(self, *markers: Marker) -> None:
-        for marker in markers:
-            self.__markers.remove(marker)
-        self.update()
 
     # alignment
     @property

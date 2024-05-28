@@ -2,6 +2,7 @@ from typing import Any, Optional, List, Union
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.map import MapLatitudeLongitude
+from flet_core.map.map_layer import MapLayer
 from flet_core.ref import Ref
 from flet_core.types import StrokeCap, StrokeJoin
 
@@ -150,16 +151,18 @@ class PolylineMarker(Control):
 
     @border_stroke_width.setter
     def border_stroke_width(self, value: OptionalNumber):
+        assert value is None or value >= 0, "border_stroke_width cannot be negative"
         self._set_attr("borderStrokeWidth", value)
 
     # stroke_width
     @property
     def stroke_width(self) -> OptionalNumber:
-        return self._get_attr("StrokeWidth", data_type="float", def_value=1.0)
+        return self._get_attr("strokeWidth", data_type="float", def_value=1.0)
 
     @stroke_width.setter
     def stroke_width(self, value: OptionalNumber):
-        self._set_attr("StrokeWidth", value)
+        assert value is None or value >= 0, "stroke_width cannot be negative"
+        self._set_attr("strokeWidth", value)
 
     # points
     @property
@@ -171,10 +174,9 @@ class PolylineMarker(Control):
         self.__points = value
 
 
-class PolylineLayer(Control):
+class PolylineLayer(MapLayer):
     """
     A layer to display PolylineMarkers.
-
 
     -----
 
@@ -186,14 +188,14 @@ class PolylineLayer(Control):
         polylines: List[PolylineMarker],
         polyline_culling: Optional[bool] = None,
         #
-        # Control
+        # MapLayer
         #
         ref: Optional[Ref] = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):
 
-        Control.__init__(
+        MapLayer.__init__(
             self,
             ref=ref,
             visible=visible,
@@ -208,20 +210,6 @@ class PolylineLayer(Control):
 
     def _get_children(self):
         return self.__polylines
-
-    def add(self, *marker: PolylineMarker):
-        self.__polylines.extend(marker)
-        self.update()
-
-    def insert(self, at: int, *polylines: PolylineMarker) -> None:
-        for i, line in enumerate(polylines, start=at):
-            self.__polylines.insert(i, line)
-        self.update()
-
-    def remove(self, *polylines: PolylineMarker) -> None:
-        for line in polylines:
-            self.__polylines.remove(line)
-        self.update()
 
     # polylines
     @property

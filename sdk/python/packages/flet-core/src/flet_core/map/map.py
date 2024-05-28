@@ -1,8 +1,9 @@
 from typing import Any, Optional, Union, List
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber, Control
+from flet_core.control import OptionalNumber
 from flet_core.map.map_configuration import MapConfiguration
+from flet_core.map.map_layer import MapLayer
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
@@ -24,7 +25,7 @@ class Map(ConstrainedControl):
 
     def __init__(
         self,
-        layers: List[Control],
+        layers: List[MapLayer],
         configuration: Optional[MapConfiguration] = None,
         #
         # ConstrainedControl
@@ -108,9 +109,9 @@ class Map(ConstrainedControl):
 
     # layers
     @property
-    def layers(self) -> List[Control]:
+    def layers(self) -> List[MapLayer]:
         return self.__layers
 
     @layers.setter
-    def layers(self, value: List[Control]):
+    def layers(self, value: List[MapLayer]):
         self.__layers = value

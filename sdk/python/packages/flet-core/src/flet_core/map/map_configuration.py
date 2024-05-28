@@ -20,7 +20,7 @@ class MapLatitudeLongitudeBounds:
     corner_2: MapLatitudeLongitude
 
 
-class MapInteractiveFlags(IntFlag):
+class MapInteractiveFlag(IntFlag):
     NONE = 0
     DRAG = 1 << 0
     FLING_ANIMATION = 1 << 1
@@ -58,7 +58,7 @@ class MapInteractionConfiguration:
     scroll_wheel_velocity: OptionalNumber = dataclasses.field(default=None)
     pinch_zoom_threshold: OptionalNumber = dataclasses.field(default=None)
     rotation_threshold: OptionalNumber = dataclasses.field(default=None)
-    flags: Optional[MapInteractiveFlags] = dataclasses.field(default=None)
+    flags: Optional[MapInteractiveFlag] = dataclasses.field(default=None)
     rotation_win_gestures: Optional[MapMultiFingerGesture] = dataclasses.field(
         default=None
     )

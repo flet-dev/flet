@@ -2,6 +2,7 @@ from typing import Any, Optional, List
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.map import MapLatitudeLongitude
+from flet_core.map.map_layer import MapLayer
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.types import StrokeCap, StrokeJoin
@@ -167,6 +168,7 @@ class PolygonMarker(Control):
 
     @border_stroke_width.setter
     def border_stroke_width(self, value: OptionalNumber):
+        assert value is None or value >= 0, "border_stroke_width cannot be negative"
         self._set_attr("borderStrokeWidth", value)
 
     # points
@@ -179,10 +181,9 @@ class PolygonMarker(Control):
         self.__points = value
 
 
-class PolygonLayer(Control):
+class PolygonLayer(MapLayer):
     """
     A layer to display PolygonMarkers.
-
 
     -----
 
@@ -196,14 +197,14 @@ class PolygonLayer(Control):
         polygon_labels: Optional[bool] = None,
         draw_labels_last: Optional[bool] = None,
         #
-        # Control
+        # MapLayer
         #
         ref: Optional[Ref] = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):
 
-        Control.__init__(
+        MapLayer.__init__(
             self,
             ref=ref,
             visible=visible,
@@ -220,20 +221,6 @@ class PolygonLayer(Control):
 
     def _get_children(self):
         return self.__polygons
-
-    def add(self, *marker: PolygonMarker):
-        self.__polygons.extend(marker)
-        self.update()
-
-    def insert(self, at: int, *polygons: PolygonMarker) -> None:
-        for i, marker in enumerate(polygons, start=at):
-            self.__polygons.insert(i, marker)
-        self.update()
-
-    def remove(self, *polygons: PolygonMarker) -> None:
-        for marker in polygons:
-            self.__polygons.remove(marker)
-        self.update()
 
     # polygons
     @property

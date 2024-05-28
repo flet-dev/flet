@@ -1,7 +1,8 @@
 from enum import Enum
 from typing import Any, Optional, List
 
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import OptionalNumber
+from flet_core.map.map_layer import MapLayer
 from flet_core.map.text_source_attribution import TextSourceAttribution
 from flet_core.ref import Ref
 
@@ -11,7 +12,7 @@ class AttributionAlignment(Enum):
     BOTTOM_RIGHT = "bottomRight"
 
 
-class RichAttribution(Control):
+class RichAttribution(MapLayer):
     """
     An animated and interactive attribution layer that supports both logos/images and text
     (displayed in a popup controlled by an icon button adjacent to the logos).
@@ -29,14 +30,14 @@ class RichAttribution(Control):
         permanent_height: OptionalNumber = None,
         show_flutter_map_attribution: Optional[bool] = None,
         #
-        # Control
+        # MapLayer
         #
         ref: Optional[Ref] = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):
 
-        Control.__init__(
+        MapLayer.__init__(
             self,
             ref=ref,
             visible=visible,
@@ -62,6 +63,7 @@ class RichAttribution(Control):
 
     @permanent_height.setter
     def permanent_height(self, value: OptionalNumber):
+        assert value is None or value >= 0, "permanent_height cannot be negative"
         self._set_attr("permanentHeight", value)
 
     # alignment

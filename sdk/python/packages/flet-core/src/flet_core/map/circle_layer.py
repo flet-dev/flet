@@ -2,6 +2,7 @@ from typing import Any, Optional, List, Union
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.map.map_configuration import MapLatitudeLongitude
+from flet_core.map.map_layer import MapLayer
 from flet_core.ref import Ref
 
 
@@ -106,7 +107,7 @@ class CircleMarker(Control):
         self.__location = value
 
 
-class CircleLayer(Control):
+class CircleLayer(MapLayer):
     """
     A layer to display CircleMarkers.
 
@@ -119,18 +120,16 @@ class CircleLayer(Control):
         self,
         circles: List[CircleMarker],
         #
-        # Control
+        # MapLayer
         #
         ref: Optional[Ref] = None,
-        opacity: OptionalNumber = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):
 
-        Control.__init__(
+        MapLayer.__init__(
             self,
             ref=ref,
-            opacity=opacity,
             visible=visible,
             data=data,
         )
@@ -142,20 +141,6 @@ class CircleLayer(Control):
 
     def _get_children(self):
         return self.__circles
-
-    def add(self, *circle: CircleMarker):
-        self.__circles.extend(circle)
-        self.update()
-
-    def insert(self, at: int, *circles: CircleMarker) -> None:
-        for i, circle in enumerate(circles, start=at):
-            self.__circles.insert(i, circle)
-        self.update()
-
-    def remove(self, *circles: CircleMarker) -> None:
-        for circle in circles:
-            self.__circles.remove(circle)
-        self.update()
 
     # circles
     @property
