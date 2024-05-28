@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flet/flet.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -68,16 +69,10 @@ InteractionOptions interactionOptionsFromJSON(dynamic json) {
 
 EvictErrorTileStrategy? parseEvictErrorTileStrategy(String? strategy,
     [EvictErrorTileStrategy? defValue]) {
-  switch (strategy?.toLowerCase()) {
-    case "dispose":
-      return EvictErrorTileStrategy.dispose;
-    case "notvisible":
-      return EvictErrorTileStrategy.notVisible;
-    case "notvisiblerespectmargin":
-      return EvictErrorTileStrategy.notVisibleRespectMargin;
-    case "none":
-      return EvictErrorTileStrategy.none;
-    default:
-      return defValue;
+  if (strategy == null) {
+    return defValue;
   }
+  return EvictErrorTileStrategy.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == strategy.toLowerCase()) ??
+      defValue;
 }

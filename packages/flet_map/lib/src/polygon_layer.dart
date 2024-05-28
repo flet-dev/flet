@@ -32,7 +32,7 @@ class PolygonLayerControl extends StatelessWidget with FletStoreMixin {
             polygon.control.attrString("strokeCap"), StrokeCap.round)!;
         var strokeJoin = parseStrokeJoin(
             polygon.control.attrString("strokeJoin"), StrokeJoin.round)!;
-        var points = polygon.control.attrString("points");
+        var coordinates = polygon.control.attrString("coordinates");
         return Polygon(
             borderStrokeWidth:
                 polygon.control.attrDouble("borderStrokeWidth", 0)!,
@@ -41,7 +41,6 @@ class PolygonLayerControl extends StatelessWidget with FletStoreMixin {
             color: polygon.control.attrColor("color", context) ??
                 const Color(0xFF00FF00),
             isDotted: polygon.control.attrBool("dotted", false)!,
-            isFilled: polygon.control.attrBool("filled", false)!,
             disableHolesBorder:
                 polygon.control.attrBool("disableHolesBorder", false)!,
             rotateLabel: polygon.control.attrBool("rotateLabel", false)!,
@@ -51,8 +50,8 @@ class PolygonLayerControl extends StatelessWidget with FletStoreMixin {
                 const TextStyle(),
             strokeCap: strokeCap,
             strokeJoin: strokeJoin,
-            points: points != null
-                ? (jsonDecode(points) as List)
+            points: coordinates != null
+                ? (jsonDecode(coordinates) as List)
                     .map((e) => latLngFromJson(e))
                     .toList()
                 : []);

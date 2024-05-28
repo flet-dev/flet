@@ -18,7 +18,7 @@ class PolylineMarker(Control):
 
     def __init__(
         self,
-        points: List[MapLatitudeLongitude],
+        coordinates: List[MapLatitudeLongitude],
         colors_stop: Optional[List[Union[float, int]]] = None,
         gradient_colors: Optional[List[str]] = None,
         border_color: Optional[str] = None,
@@ -44,7 +44,7 @@ class PolylineMarker(Control):
             data=data,
         )
 
-        self.points = points
+        self.coordinates = coordinates
         self.border_color = border_color
         self.color = color
         self.border_stroke_width = border_stroke_width
@@ -61,8 +61,8 @@ class PolylineMarker(Control):
 
     def before_update(self):
         super().before_update()
-        if isinstance(self.__points, list):
-            self._set_attr_json("points", self.__points)
+        if isinstance(self.__coordinates, list):
+            self._set_attr_json("coordinates", self.__coordinates)
         if isinstance(self.__colors_stop, list):
             self._set_attr_json("colorsStop", self.__colors_stop)
         if isinstance(self.__gradient_colors, list):
@@ -164,14 +164,14 @@ class PolylineMarker(Control):
         assert value is None or value >= 0, "stroke_width cannot be negative"
         self._set_attr("strokeWidth", value)
 
-    # points
+    # coordinates
     @property
-    def points(self) -> Optional[List[MapLatitudeLongitude]]:
-        return self.__points
+    def coordinates(self) -> Optional[List[MapLatitudeLongitude]]:
+        return self.__coordinates
 
-    @points.setter
-    def points(self, value: Optional[List[MapLatitudeLongitude]]):
-        self.__points = value
+    @coordinates.setter
+    def coordinates(self, value: Optional[List[MapLatitudeLongitude]]):
+        self.__coordinates = value
 
 
 class PolylineLayer(MapLayer):
@@ -186,7 +186,6 @@ class PolylineLayer(MapLayer):
     def __init__(
         self,
         polylines: List[PolylineMarker],
-        polyline_culling: Optional[bool] = None,
         #
         # MapLayer
         #
@@ -203,7 +202,6 @@ class PolylineLayer(MapLayer):
         )
 
         self.polylines = polylines
-        self.polyline_culling = polyline_culling
 
     def _get_control_name(self):
         return "map_polyline_layer"
@@ -219,12 +217,3 @@ class PolylineLayer(MapLayer):
     @polylines.setter
     def polylines(self, value: List[PolylineMarker]):
         self.__polylines = value
-
-    # polyline_culling
-    @property
-    def polyline_culling(self) -> Optional[bool]:
-        return self._get_attr("polylineCulling", data_type="bool", def_value=False)
-
-    @polyline_culling.setter
-    def polyline_culling(self, value: Optional[bool]):
-        self._set_attr("polylineCulling", value)

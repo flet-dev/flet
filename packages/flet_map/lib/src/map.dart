@@ -69,8 +69,6 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
         return MapOptions(
           initialCenter: parseLatLng(
               config.control, "initialCenter", const LatLng(50.5, 30.51))!,
-          applyPointerTranslucencyToLayers: config.control
-              .attrBool("applyPointerTranslucencyToLayers", true)!,
           backgroundColor: config.control
               .attrColor("backgroundColor", context, const Color(0x00000000))!,
           initialRotation: config.control.attrDouble("initialRotation", 0.0)!,

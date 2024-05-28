@@ -19,7 +19,7 @@ class Marker(Control):
     def __init__(
         self,
         content: Control,
-        location: MapLatitudeLongitude,
+        coordinates: MapLatitudeLongitude,
         rotate: Optional[bool] = None,
         height: OptionalNumber = None,
         width: OptionalNumber = None,
@@ -40,7 +40,7 @@ class Marker(Control):
         )
 
         self.content = content
-        self.location = location
+        self.coordinates = coordinates
         self.rotate = rotate
         self.height = height
         self.width = width
@@ -55,7 +55,7 @@ class Marker(Control):
     def before_update(self):
         super().before_update()
         self._set_attr_json("alignment", self.__alignment)
-        self._set_attr_json("location", self.__location)
+        self._set_attr_json("coordinates", self.__coordinates)
 
     # content
     @property
@@ -104,14 +104,14 @@ class Marker(Control):
     def alignment(self, value: Optional[Alignment]):
         self.__alignment = value
 
-    # location
+    # coordinates
     @property
-    def location(self) -> MapLatitudeLongitude:
-        return self.__location
+    def coordinates(self) -> MapLatitudeLongitude:
+        return self.__coordinates
 
-    @location.setter
-    def location(self, value: MapLatitudeLongitude):
-        self.__location = value
+    @coordinates.setter
+    def coordinates(self, value: MapLatitudeLongitude):
+        self.__coordinates = value
 
 
 class MarkerLayer(MapLayer):

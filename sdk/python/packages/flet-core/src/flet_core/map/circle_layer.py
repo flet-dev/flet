@@ -8,7 +8,7 @@ from flet_core.ref import Ref
 
 class CircleMarker(Control):
     """
-    A circular marker displayed on the Map at the specified location  through the CircleLayer.
+    A circular marker displayed on the Map at the specified location through the CircleLayer.
 
     -----
 
@@ -18,7 +18,7 @@ class CircleMarker(Control):
     def __init__(
         self,
         radius: Union[int, float],
-        location: MapLatitudeLongitude,
+        coordinates: MapLatitudeLongitude,
         color: Optional[str] = None,
         border_color: Optional[str] = None,
         border_stroke_width: OptionalNumber = None,
@@ -38,7 +38,7 @@ class CircleMarker(Control):
             data=data,
         )
 
-        self.location = location
+        self.coordinates = coordinates
         self.color = color
         self.border_color = border_color
         self.border_stroke_width = border_stroke_width
@@ -50,7 +50,7 @@ class CircleMarker(Control):
 
     def before_update(self):
         super().before_update()
-        self._set_attr_json("location", self.__location)
+        self._set_attr_json("coordinates", self.__coordinates)
 
     # use_radius_in_meter
     @property
@@ -95,16 +95,17 @@ class CircleMarker(Control):
 
     @border_stroke_width.setter
     def border_stroke_width(self, value: OptionalNumber):
+        assert value is None or value >= 0, "border_stroke_width cannot be negative"
         self._set_attr("borderStrokeWidth", value)
 
-    # location
+    # coordinates
     @property
-    def location(self) -> MapLatitudeLongitude:
-        return self.__location
+    def coordinates(self) -> MapLatitudeLongitude:
+        return self.__coordinates
 
-    @location.setter
-    def location(self, value: MapLatitudeLongitude):
-        self.__location = value
+    @coordinates.setter
+    def coordinates(self, value: MapLatitudeLongitude):
+        self.__coordinates = value
 
 
 class CircleLayer(MapLayer):

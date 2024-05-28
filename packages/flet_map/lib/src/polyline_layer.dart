@@ -29,7 +29,7 @@ class PolylineLayerControl extends StatelessWidget with FletStoreMixin {
           .where((c) =>
               c.control.type == "map_polyline_marker" && c.control.isVisible)
           .map((polyline) {
-        var points = polyline.control.attrString("points");
+        var coordinates = polyline.control.attrString("coordinates");
         var colorsStop = polyline.control.attrString("colorsStop");
         var gradientColors = polyline.control.attrString("gradientColors");
         return Polyline(
@@ -59,8 +59,8 @@ class PolylineLayerControl extends StatelessWidget with FletStoreMixin {
                     .whereNotNull()
                     .toList()
                 : null,
-            points: points != null
-                ? (jsonDecode(points) as List)
+            points: coordinates != null
+                ? (jsonDecode(coordinates) as List)
                     .map((e) => latLngFromJson(e))
                     .toList()
                 : []);
@@ -68,7 +68,6 @@ class PolylineLayerControl extends StatelessWidget with FletStoreMixin {
 
       return PolylineLayer(
         polylines: polylines,
-        polylineCulling: control.attrBool("polylineCulling", false)!,
       );
     });
   }
