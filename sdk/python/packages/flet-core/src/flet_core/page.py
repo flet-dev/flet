@@ -169,7 +169,6 @@ class Page(AdaptiveControl):
         self.__loop = loop
         self.__executor = executor
         self._index = {self._Control__uid: self}  # index with all page controls
-        self.__auto_update = False
 
         self.__lock = threading.Lock() if not is_pyodide() else NopeLock()
 
@@ -1343,15 +1342,6 @@ class Page(AdaptiveControl):
     )
     async def window_close_async(self):
         self.window_close()
-
-    # auto_update
-    @property
-    def auto_update(self) -> bool:
-        return self.__auto_update
-
-    @auto_update.setter
-    def auto_update(self, value: bool):
-        self.__auto_update = value
 
     # query
     @property

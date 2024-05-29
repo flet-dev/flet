@@ -163,8 +163,6 @@ class Control:
             value = ""
         if orig_val is None or orig_val[0] != value:
             self.__attrs[name] = (value, dirty)
-            if self.__page and self.__page.auto_update:
-                self.update()
 
     def _set_attr_json(self, name: str, value: V) -> None:
         ov = self._get_attr(name)
