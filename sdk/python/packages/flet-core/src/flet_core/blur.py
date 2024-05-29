@@ -1,5 +1,4 @@
-import dataclasses
-from dataclasses import field
+from dataclasses import dataclass, field
 from enum import Enum
 
 
@@ -10,7 +9,7 @@ class BlurTileMode(Enum):
     REPEATED = "repeated"
 
 
-@dataclasses.dataclass
+@dataclass
 class Blur:
     sigma_x: float
     sigma_y: float
