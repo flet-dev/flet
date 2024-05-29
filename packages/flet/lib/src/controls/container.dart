@@ -87,6 +87,8 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
 
     var animation = parseAnimation(control, "animate");
     var blur = parseBlur(control, "blur");
+    var colorFilter =
+        parseColorFilter(control, "colorFilter", Theme.of(context));
 
     return withPageArgs((context, pageArgs) {
       DecorationImage? image;
@@ -314,6 +316,9 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 borderRadius: borderRadius,
                 child: BackdropFilter(filter: blur, child: result))
             : ClipRect(child: BackdropFilter(filter: blur, child: result));
+      }
+      if (colorFilter != null) {
+        result = ColorFiltered(colorFilter: colorFilter, child: result);
       }
 
       return constrainedControl(context, result, parent, control);

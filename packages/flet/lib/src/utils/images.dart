@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import 'colors.dart';
 import 'gradient.dart';
 import 'numbers.dart';
 
@@ -55,6 +56,27 @@ ImageFilter blurImageFilterFromJSON(dynamic json) {
   }
 
   return ImageFilter.blur(sigmaX: sigmaX, sigmaY: sigmaY, tileMode: tileMode);
+}
+
+ColorFilter? parseColorFilter(Control control, String propName, ThemeData theme,
+    [ColorFilter? defValue]) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return defValue;
+  }
+
+  final j1 = json.decode(v);
+  return colorFilterFromJSON(j1, theme);
+}
+
+ColorFilter? colorFilterFromJSON(dynamic json, ThemeData theme,
+    [ColorFilter? defValue]) {
+  Color? color = parseColor(theme, json["color"]);
+  BlendMode? blendMode = parseBlendMode(json["blend_mode"]);
+  if (color == null || blendMode == null) {
+    return defValue;
+  }
+  return ColorFilter.mode(color, blendMode);
 }
 
 FilterQuality? parseFilterQuality(String? quality, [FilterQuality? defValue]) {
