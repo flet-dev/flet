@@ -42,7 +42,7 @@ class TextSourceAttribution(Control):
         self.on_click = on_click
 
     def _get_control_name(self):
-        return "maptextsourceattribution"
+        return "map_text_source_attribution"
 
     def before_update(self):
         super().before_update()
