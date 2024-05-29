@@ -58,11 +58,8 @@ class ExpansionTileControl extends StatelessWidget {
     var collapsedIconColor = control.attrColor("collapsedIconColor", context);
     var collapsedTextColor = control.attrColor("collapsedTextColor", context);
 
-    var affinity = ListTileControlAffinity.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            control.attrString("affinity", "")!.toLowerCase(),
-        orElse: () => ListTileControlAffinity.platform);
+    var affinity = parseListTileControlAffinity(
+        control.attrString("affinity"), ListTileControlAffinity.platform)!;
     var clipBehavior =
         parseClip(control.attrString("clipBehavior"), Clip.none)!;
 

@@ -20,6 +20,15 @@ ImageRepeat? parseImageRepeat(String? repeat, [ImageRepeat? defValue]) {
       defValue;
 }
 
+BlendMode? parseBlendMode(String? mode, [BlendMode? defValue]) {
+  if (mode == null) {
+    return defValue;
+  }
+  return BlendMode.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == mode.toLowerCase()) ??
+      defValue;
+}
+
 BoxFit? parseBoxFit(String? fit, [BoxFit? defValue]) {
   if (fit == null) {
     return defValue;

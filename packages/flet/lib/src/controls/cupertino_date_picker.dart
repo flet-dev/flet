@@ -1,8 +1,8 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -43,16 +43,11 @@ class _CupertinoDatePickerControlState
     int minuteInterval = widget.control.attrInt("minuteInterval", 1)!;
     bool use24hFormat = widget.control.attrBool("use24hFormat", false)!;
 
-    DatePickerDateOrder? dateOrder = DatePickerDateOrder.values
-        .firstWhereOrNull((a) =>
-            a.name.toLowerCase() ==
-            widget.control.attrString("dateOrder", "")!.toLowerCase());
-    CupertinoDatePickerMode datePickerMode = CupertinoDatePickerMode.values
-        .firstWhere(
-            (a) =>
-                a.name.toLowerCase() ==
-                widget.control.attrString("datePickerMode", "")!.toLowerCase(),
-            orElse: () => CupertinoDatePickerMode.dateAndTime);
+    DatePickerDateOrder? dateOrder =
+        parseDatePickerDateOrder(widget.control.attrString("dateOrder"));
+    CupertinoDatePickerMode datePickerMode = parseCupertinoDatePickerMode(
+        widget.control.attrString("datePickerMode"),
+        CupertinoDatePickerMode.dateAndTime)!;
 
     Widget dialog;
     try {

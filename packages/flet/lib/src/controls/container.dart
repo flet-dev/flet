@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -118,14 +117,9 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
       }
 
       var gradient = parseGradient(Theme.of(context), control, "gradient");
-      var blendMode = BlendMode.values.firstWhereOrNull((e) =>
-          e.name.toLowerCase() ==
-          control.attrString("blendMode", "")!.toLowerCase());
-      var shape = BoxShape.values.firstWhere(
-          (e) =>
-              e.name.toLowerCase() ==
-              control.attrString("shape", "")!.toLowerCase(),
-          orElse: () => BoxShape.rectangle);
+      var blendMode = parseBlendMode(control.attrString("blendMode"));
+      var shape =
+          parseBoxShape(control.attrString("shape"), BoxShape.rectangle)!;
 
       var borderRadius = parseBorderRadius(control, "borderRadius");
 
