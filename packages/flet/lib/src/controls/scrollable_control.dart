@@ -91,7 +91,7 @@ class _ScrollableControlState extends State<ScrollableControl>
         var params = Map<String, dynamic>.from(mj["p"] as Map);
 
         if (name == "scroll_to") {
-          var duration = parseInt(params["duration"]);
+          var duration = parseInt(params["duration"], 0)!;
           var curve = parseCurve(params["curve"], Curves.ease)!;
           if (params["key"] != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -109,7 +109,7 @@ class _ScrollableControlState extends State<ScrollableControl>
             });
           } else if (params["offset"] != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              var offset = parseDouble(params["offset"]);
+              var offset = parseDouble(params["offset"], 0)!;
               if (offset < 0) {
                 offset = _controller.position.maxScrollExtent + offset + 1;
               }
@@ -125,7 +125,7 @@ class _ScrollableControlState extends State<ScrollableControl>
             });
           } else if (params["delta"] != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              var delta = parseDouble(params["delta"]);
+              var delta = parseDouble(params["delta"], 0)!;
               var offset = _controller.position.pixels + delta;
               if (duration < 1) {
                 _controller.jumpTo(offset);

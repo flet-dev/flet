@@ -23,6 +23,11 @@ from flet_core.animation import Animation, AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.audio import Audio
 from flet_core.audio_recorder import AudioEncoder, AudioRecorder
+from flet_core.auto_complete import (
+    AutoComplete,
+    AutoCompleteSuggestion,
+    AutoCompleteSelectEvent,
+)
 from flet_core.autofill_group import (
     AutofillGroup,
     AutofillGroupDisposeAction,
@@ -136,6 +141,7 @@ from flet_core.file_picker import (
 from flet_core.filled_button import FilledButton
 from flet_core.filled_tonal_button import FilledTonalButton
 from flet_core.flet_app import FletApp
+from flet_core.flashlight import Flashlight
 from flet_core.floating_action_button import FloatingActionButton
 from flet_core.form_field_control import InputBorder
 from flet_core.geolocator import Geolocator, LocationAccuracy
@@ -207,7 +213,11 @@ from flet_core.painting import (
     PaintSweepGradient,
     StrokeJoin,
 )
-from flet_core.permission_handler import PermissionHandler
+from flet_core.permission_handler import (
+    PermissionHandler,
+    PermissionType,
+    PermissionStatus,
+)
 from flet_core.popup_menu_button import (
     PopupMenuButton,
     PopupMenuItem,

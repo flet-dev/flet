@@ -1,6 +1,5 @@
 """Provide the current Flet version."""
 
-
 import os
 import subprocess as sp
 from pathlib import Path
