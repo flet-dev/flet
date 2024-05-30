@@ -19,46 +19,46 @@ CreateControlFactory createControl = (CreateControlArgs args) {
         parentDisabled: args.parentDisabled,
         backend: args.backend,
       );
-    case "maprichattribution":
+    case "map_rich_attribution":
       return RichAttributionControl(
         parent: args.parent,
         control: args.control,
         children: args.children,
         backend: args.backend,
       );
-    case "mapsimpleattribution":
+    case "map_simple_attribution":
       return SimpleAttributionControl(
         parent: args.parent,
         control: args.control,
         children: args.children,
         backend: args.backend,
       );
-    case "maptilelayer":
+    case "map_tile_layer":
       return TileLayerControl(
         parent: args.parent,
         control: args.control,
         backend: args.backend,
       );
-    case "mapmarkerlayer":
+    case "map_marker_layer":
       return MarkerLayerControl(
         parent: args.parent,
         control: args.control,
         children: args.children,
         parentDisabled: args.parentDisabled,
       );
-    case "mapcirclelayer":
+    case "map_circle_layer":
       return CircleLayerControl(
         parent: args.parent,
         control: args.control,
         children: args.children,
       );
-    case "mappolygonlayer":
+    case "map_polygon_layer":
       return PolygonLayerControl(
         parent: args.parent,
         control: args.control,
         children: args.children,
       );
-    case "mappolylinelayer":
+    case "map_polyline_layer":
       return PolylineLayerControl(
         parent: args.parent,
         control: args.control,

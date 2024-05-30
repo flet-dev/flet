@@ -24,8 +24,7 @@ class SimpleAttributionControl extends StatefulWidget {
 class _SimpleAttributionControlState extends State<SimpleAttributionControl> {
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-        "SimpleAttributionControl build: ${widget.control.id} (${widget.control.hashCode})");
+    debugPrint("SimpleAttributionControl build: ${widget.control.id}");
 
     return SimpleAttributionWidget(
       source: Text(widget.control.attrString("text", "Placeholder Text")!),

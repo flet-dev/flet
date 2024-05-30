@@ -18,17 +18,17 @@ class CircleLayerControl extends StatelessWidget with FletStoreMixin {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("CircleLayerControl build: ${control.id} (${control.hashCode})");
+    debugPrint("CircleLayerControl build: ${control.id}");
 
     return withControls(control.childIds, (context, circlesView) {
       debugPrint("CircleLayerControlState build: ${control.id}");
 
       var circles = circlesView.controlViews
-          .where(
-              (c) => c.control.type == "mapcirclemarker" && c.control.isVisible)
+          .where((c) =>
+              c.control.type == "map_circle_marker" && c.control.isVisible)
           .map((circle) {
         return CircleMarker(
-            point: parseLatLng(circle.control, "location")!,
+            point: parseLatLng(circle.control, "coordinates")!,
             color: circle.control
                 .attrColor("color", context, const Color(0xFF00FF00))!,
             borderColor: circle.control

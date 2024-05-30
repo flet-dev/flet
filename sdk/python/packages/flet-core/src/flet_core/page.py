@@ -945,6 +945,8 @@ class Page(AdaptiveControl):
         result, err = self.__method_call_results.pop(evt)
         if err:
             raise Exception(err)
+        if result is None or result == "null":
+            return None
         return result
 
     async def _invoke_method_async(

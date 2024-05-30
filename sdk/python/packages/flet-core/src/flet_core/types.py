@@ -305,7 +305,7 @@ class StrokeCap(Enum):
 
 
 class StrokeJoin(Enum):
-    MITER = "mitter"
+    MITER = "miter"
     ROUND = "round"
     BEVEL = "bevel"
 

@@ -43,44 +43,28 @@ class _PermissionHandlerControlState extends State<PermissionHandlerControl>
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-        "PermissionHandler build: ${widget.control.id} (${widget.control.hashCode})");
+    debugPrint("PermissionHandler build: ${widget.control.id}");
 
     () async {
       widget.backend.subscribeMethods(widget.control.id,
           (methodName, args) async {
         switch (methodName) {
           case "check_permission":
-            bool? isGranted = await parsePermission(args['of'])?.isGranted;
-            bool? isDenied = await parsePermission(args['of'])?.isDenied;
-            bool? isPermanentlyDenied =
-                await parsePermission(args['of'])?.isPermanentlyDenied;
-            bool? isLimited = await parsePermission(args['of'])?.isLimited;
-            bool? isProvisional =
-                await parsePermission(args['of'])?.isProvisional;
-            bool? isRestricted =
-                await parsePermission(args['of'])?.isRestricted;
-
-            if (isGranted == true) {
-              return "granted";
-            } else if (isDenied == true) {
-              return "denied";
-            } else if (isPermanentlyDenied == true) {
-              return "permanentlyDenied";
-            } else if (isLimited == true) {
-              return "limited";
-            } else if (isProvisional == true) {
-              return "provisional";
-            } else if (isRestricted == true) {
-              return "restricted";
-            }
-            return null;
-          case "request_permission":
-            Future<PermissionStatus> permissionStatus =
-                parsePermission(args['of'])!.request();
-            return permissionStatus.then((value) async {
+            return await parsePermission(args['of'])?.status.then((value) {
+              debugPrint("PermissionHandler.check_permission: $value");
               return value.name;
             });
+          case "request_permission":
+            var p = parsePermission(args['of']);
+            if (p != null) {
+              Future<PermissionStatus> permissionStatus = p.request();
+              return await permissionStatus.then((value) async {
+                return value.name;
+              });
+            }
+            break;
+          case "open_app_settings":
+            return await openAppSettings().then((value) => value.toString());
         }
         return null;
       });
