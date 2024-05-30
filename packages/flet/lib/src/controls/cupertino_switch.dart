@@ -77,11 +77,11 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
       _value = value;
     }
 
-    var materialThumbColor = parseMaterialStateColor(
-        Theme.of(context), widget.control, "thumbColor");
+    var materialThumbColor =
+        parseWidgetStateColor(Theme.of(context), widget.control, "thumbColor");
 
-    var materialTrackColor = parseMaterialStateColor(
-        Theme.of(context), widget.control, "trackColor");
+    var materialTrackColor =
+        parseWidgetStateColor(Theme.of(context), widget.control, "trackColor");
 
     var swtch = CupertinoSwitch(
         autofocus: autofocus,

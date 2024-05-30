@@ -183,9 +183,9 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
             textCapitalization: textCapitalization,
             autoFocus: widget.control.attrBool("autoFocus", false)!,
             hintText: widget.control.attrString("barHintText"),
-            backgroundColor: parseMaterialStateColor(
+            backgroundColor: parseWidgetStateColor(
                 Theme.of(context), widget.control, "barBgcolor"),
-            overlayColor: parseMaterialStateColor(
+            overlayColor: parseWidgetStateColor(
                 Theme.of(context), widget.control, "barOverlayColor"),
             leading: barLeadingCtrls.isNotEmpty
                 ? createControl(

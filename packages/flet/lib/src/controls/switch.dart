@@ -111,11 +111,11 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
               widget.control.attrColor("inactiveThumbColor", context),
           inactiveTrackColor:
               widget.control.attrColor("inactiveTrackColor", context),
-          thumbColor: parseMaterialStateColor(
+          thumbColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "thumbColor"),
-          thumbIcon: parseMaterialStateIcon(
+          thumbIcon: parseWidgetStateIcon(
               Theme.of(context), widget.control, "thumbIcon"),
-          trackColor: parseMaterialStateColor(
+          trackColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "trackColor"),
           focusColor: widget.control.attrColor("focusColor", context),
           value: _value,
@@ -123,9 +123,9 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
               parseMouseCursor(widget.control.attrString("mouseCursor")),
           splashRadius: widget.control.attrDouble("splashRadius"),
           hoverColor: widget.control.attrColor("hoverColor", context),
-          overlayColor: parseMaterialStateColor(
+          overlayColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "overlayColor"),
-          trackOutlineColor: parseMaterialStateColor(
+          trackOutlineColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "trackOutlineColor"),
           onChanged: !disabled
               ? (bool value) {

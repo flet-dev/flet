@@ -240,7 +240,7 @@ extension ColorExtension on Color {
   }
 }
 
-MaterialStateProperty<Color?>? parseMaterialStateColor(
+WidgetStateProperty<Color?>? parseWidgetStateColor(
     ThemeData theme, Control control, String propName) {
   var v = control.attrString(propName, null);
   if (v == null) {
@@ -248,7 +248,7 @@ MaterialStateProperty<Color?>? parseMaterialStateColor(
   }
 
   final j1 = json.decode(v);
-  return getMaterialStateProperty<Color?>(
+  return getWidgetStateProperty<Color?>(
       j1, (jv) => HexColor.fromString(theme, jv as String), null);
 }
 

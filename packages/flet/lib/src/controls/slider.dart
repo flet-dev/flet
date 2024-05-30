@@ -96,7 +96,7 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
           e.name.toLowerCase() ==
           widget.control.attrString("interaction", "")!.toLowerCase());
 
-      var overlayColor = parseMaterialStateColor(
+      var overlayColor = parseWidgetStateColor(
           Theme.of(context), widget.control, "overlayColor");
 
       debugPrint("SliderControl build: ${widget.control.id}");
