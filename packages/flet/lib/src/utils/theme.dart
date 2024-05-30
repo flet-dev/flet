@@ -51,10 +51,10 @@ CupertinoThemeData fixCupertinoTheme(
     CupertinoThemeData cupertinoTheme, ThemeData theme) {
   return cupertinoTheme.copyWith(
       applyThemeToAll: true,
-      barBackgroundColor: theme.colorScheme.background,
+      barBackgroundColor: theme.colorScheme.surface,
       textTheme: cupertinoTheme.textTheme.copyWith(
           navTitleTextStyle: cupertinoTheme.textTheme.navTitleTextStyle
-              .copyWith(color: theme.colorScheme.onBackground)));
+              .copyWith(color: theme.colorScheme.onSurface)));
 }
 
 ThemeData parseTheme(Control control, String propName, Brightness? brightness,
@@ -95,9 +95,8 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
   theme = theme.copyWith(
     visualDensity:
         parseVisualDensity(json?["visual_density"], theme.visualDensity)!,
-    pageTransitionsTheme: json?["page_transitions"] != null
-        ? parsePageTransitions(json?["page_transitions"])
-        : theme.pageTransitionsTheme,
+    pageTransitionsTheme: parsePageTransitions(
+        json?["page_transitions"], theme.pageTransitionsTheme)!,
     colorScheme: parseColorScheme(theme, json?["color_scheme"]),
     textTheme: parseTextTheme(theme, theme.textTheme, json?["text_theme"]),
     primaryTextTheme: parseTextTheme(
@@ -200,11 +199,9 @@ ColorScheme? parseColorScheme(ThemeData theme, Map<String, dynamic>? j) {
     onError: parseColor(null, j["on_error"]),
     errorContainer: parseColor(null, j["error_container"]),
     onErrorContainer: parseColor(null, j["on_error_container"]),
-    background: parseColor(null, j["background"]),
-    onBackground: parseColor(null, j["on_background"]),
     surface: parseColor(null, j["surface"]),
     onSurface: parseColor(null, j["on_surface"]),
-    surfaceVariant: parseColor(null, j["surface_variant"]),
+    surfaceContainerHighest: parseColor(null, j["surface_variant"]),
     onSurfaceVariant: parseColor(null, j["on_surface_variant"]),
     outline: parseColor(null, j["outline"]),
     outlineVariant: parseColor(null, j["outline_variant"]),
@@ -334,18 +331,22 @@ VisualDensity? parseVisualDensity(String? density, [VisualDensity? defValue]) {
   }
 }
 
-PageTransitionsTheme parsePageTransitions(Map<String, dynamic>? json) {
+PageTransitionsTheme? parsePageTransitions(Map<String, dynamic>? json,
+    [PageTransitionsTheme? defValue]) {
+  if (json == null) {
+    return defValue;
+  }
   return PageTransitionsTheme(builders: {
     TargetPlatform.android: parseTransitionsBuilder(
-        json?["android"], const FadeUpwardsPageTransitionsBuilder()),
+        json["android"], const FadeUpwardsPageTransitionsBuilder()),
     TargetPlatform.iOS: parseTransitionsBuilder(
-        json?["ios"], const CupertinoPageTransitionsBuilder()),
+        json["ios"], const CupertinoPageTransitionsBuilder()),
     TargetPlatform.linux: parseTransitionsBuilder(
-        json?["linux"], const ZoomPageTransitionsBuilder()),
+        json["linux"], const ZoomPageTransitionsBuilder()),
     TargetPlatform.macOS: parseTransitionsBuilder(
-        json?["macos"], const ZoomPageTransitionsBuilder()),
+        json["macos"], const ZoomPageTransitionsBuilder()),
     TargetPlatform.windows: parseTransitionsBuilder(
-        json?["windows"], const ZoomPageTransitionsBuilder()),
+        json["windows"], const ZoomPageTransitionsBuilder()),
   });
 }
 
@@ -624,8 +625,7 @@ SwitchThemeData? parseSwitchTheme(ThemeData theme, Map<String, dynamic>? j) {
     thumbIcon: getWidgetStateProperty<Icon?>(
         j["thumb_icon"], (jv) => Icon(parseIcon(jv as String))),
     trackOutlineColor: getWidgetStateProperty<Color?>(j["track_outline_color"],
-        (jv) => parseColor(theme, jv as String),
-        null),
+        (jv) => parseColor(theme, jv as String), null),
     trackOutlineWidth: getWidgetStateProperty<double?>(
         j["track_outline_width"], (jv) => parseDouble(jv)),
     mouseCursor: getWidgetStateProperty<MouseCursor?>(

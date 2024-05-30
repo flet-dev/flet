@@ -47,15 +47,14 @@ Color? _getThemeColor(ThemeData theme, String colorName) {
     case "outlinevariant":
       return scheme.outlineVariant;
     case "background":
-      return scheme.background;
-    case "onbackground":
-      return scheme.onBackground;
     case "surface":
       return scheme.surface;
+    case "onbackground":
     case "onsurface":
       return scheme.onSurface;
     case "surfacevariant":
-      return scheme.surfaceVariant;
+    case "surfacecontainerhighest":
+      return scheme.surfaceContainerHighest;
     case "onsurfacevariant":
       return scheme.onSurfaceVariant;
     case "surfacetint":
