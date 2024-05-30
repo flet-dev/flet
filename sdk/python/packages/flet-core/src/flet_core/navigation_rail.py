@@ -1,24 +1,23 @@
 from enum import Enum
-from typing import Any, List, Optional, Union
+from typing import Any, Callable, List, Optional, Union
 
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
+    ColorStr,
+    ControlEventFunction,
+    IconStr,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
 )
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
 
 
 class NavigationRailLabelType(Enum):
@@ -30,14 +29,14 @@ class NavigationRailLabelType(Enum):
 class NavigationRailDestination(Control):
     def __init__(
         self,
-        icon: Optional[str] = None,
+        icon: IconStr = None,
         icon_content: Optional[Control] = None,
-        selected_icon: Optional[str] = None,
+        selected_icon: IconStr = None,
         selected_icon_content: Optional[Control] = None,
         label: Optional[str] = None,
         label_content: Optional[Control] = None,
         padding: PaddingValue = None,
-        indicator_color: Optional[str] = None,
+        indicator_color: ColorStr = None,
         indicator_shape: Optional[OutlinedBorder] = None,
         #
         # Control
@@ -45,7 +44,7 @@ class NavigationRailDestination(Control):
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-    ):
+    ) -> None:
         Control.__init__(self, ref=ref, disabled=disabled, data=data)
         self.label = label
         self.icon = icon
@@ -60,7 +59,7 @@ class NavigationRailDestination(Control):
     def _get_control_name(self):
         return "navigationraildestination"
 
-    def before_update(self):
+    def before_update(self) -> None:
         super().before_update()
         self._set_attr_json("padding", self.__padding)
         if isinstance(self.__indicator_shape, OutlinedBorder):
@@ -83,30 +82,12 @@ class NavigationRailDestination(Control):
 
     # icon
     @property
-    def icon(self) -> Optional[str]:
+    def icon(self) -> IconStr:
         return self._get_attr("icon")
 
     @icon.setter
-    def icon(self, value: Optional[str]):
+    def icon(self, value: IconStr):
         self._set_attr("icon", value)
-
-    # indicator_color
-    @property
-    def indicator_color(self) -> Optional[str]:
-        return self._get_attr("indicatorColor")
-
-    @indicator_color.setter
-    def indicator_color(self, value: Optional[str]):
-        self._set_attr("indicatorColor", value)
-
-    # indicator_shape
-    @property
-    def indicator_shape(self) -> Optional[OutlinedBorder]:
-        return self.__indicator_shape
-
-    @indicator_shape.setter
-    def indicator_shape(self, value: Optional[OutlinedBorder]):
-        self.__indicator_shape = value
 
     # icon_content
     @property
@@ -119,11 +100,11 @@ class NavigationRailDestination(Control):
 
     # selected_icon
     @property
-    def selected_icon(self) -> Optional[str]:
+    def selected_icon(self) -> IconStr:
         return self._get_attr("selectedIcon")
 
     @selected_icon.setter
-    def selected_icon(self, value: Optional[str]):
+    def selected_icon(self, value: IconStr):
         self._set_attr("selectedIcon", value)
 
     # selected_icon_content
@@ -152,6 +133,24 @@ class NavigationRailDestination(Control):
     @label_content.setter
     def label_content(self, value: Optional[Control]):
         self.__label_content = value
+
+    # indicator_color
+    @property
+    def indicator_color(self) -> ColorStr:
+        return self._get_attr("indicatorColor")
+
+    @indicator_color.setter
+    def indicator_color(self, value: ColorStr):
+        self._set_attr("indicatorColor", value)
+
+    # indicator_shape
+    @property
+    def indicator_shape(self) -> Optional[OutlinedBorder]:
+        return self.__indicator_shape
+
+    @indicator_shape.setter
+    def indicator_shape(self, value: Optional[OutlinedBorder]):
+        self.__indicator_shape = value
 
     # padding
     @property
@@ -226,8 +225,8 @@ class NavigationRail(ConstrainedControl):
         selected_index: Optional[int] = None,
         extended: Optional[bool] = None,
         label_type: Optional[NavigationRailLabelType] = None,
-        bgcolor: Optional[str] = None,
-        indicator_color: Optional[str] = None,
+        bgcolor: ColorStr = None,
+        indicator_color: ColorStr = None,
         indicator_shape: Optional[OutlinedBorder] = None,
         leading: Optional[Control] = None,
         trailing: Optional[Control] = None,
@@ -236,7 +235,7 @@ class NavigationRail(ConstrainedControl):
         group_alignment: OptionalNumber = None,
         selected_label_text_style: Optional[TextStyle] = None,
         unselected_label_text_style: Optional[TextStyle] = None,
-        on_change=None,
+        on_change: ControlEventFunction = None,
         #
         # ConstrainedControl
         #
@@ -261,7 +260,7 @@ class NavigationRail(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: Callable[..., None] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -347,7 +346,7 @@ class NavigationRail(ConstrainedControl):
 
     @destinations.setter
     def destinations(self, value: Optional[List[NavigationRailDestination]]):
-        self.__destinations = value if value is not None else []
+        self.__destinations = value if value else []
 
     # on_change
     @property
@@ -388,20 +387,20 @@ class NavigationRail(ConstrainedControl):
 
     # indicator_color
     @property
-    def indicator_color(self) -> Optional[str]:
+    def indicator_color(self) -> ColorStr:
         return self._get_attr("indicatorColor")
 
     @indicator_color.setter
-    def indicator_color(self, value: Optional[str]):
+    def indicator_color(self, value: ColorStr):
         self._set_attr("indicatorColor", value)
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
+    def bgcolor(self) -> ColorStr:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
+    def bgcolor(self, value: ColorStr):
         self._set_attr("bgcolor", value)
 
     # elevation

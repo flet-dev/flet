@@ -5,12 +5,13 @@ from typing import Any, Dict, List, Optional, Union
 from flet_core.alignment import Alignment
 from flet_core.border import BorderSide
 from flet_core.buttons import OutlinedBorder
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     ClipBehavior,
     MaterialState,
     MouseCursor,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
 )
