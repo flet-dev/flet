@@ -13,13 +13,16 @@ class OutlinedBorder:
 
 @dataclasses.dataclass
 class StadiumBorder(OutlinedBorder):
-    type: str = field(default="stadium")
+    def __post_init__(self):
+        self.type = "stadium"
 
 
 @dataclasses.dataclass
 class RoundedRectangleBorder(OutlinedBorder):
-    type: str = field(default="roundedRectangle")
     radius: BorderRadiusValue = field(default=None)
+
+    def __post_init__(self):
+        self.type = "roundedRectangle"
 
 
 @dataclasses.dataclass
@@ -29,14 +32,18 @@ class CircleBorder(OutlinedBorder):
 
 @dataclasses.dataclass
 class BeveledRectangleBorder(OutlinedBorder):
-    type: str = field(default="beveledRectangle")
     radius: BorderRadiusValue = field(default=None)
+
+    def __post_init__(self):
+        self.type = "beveledRectangle"
 
 
 @dataclasses.dataclass
 class ContinuousRectangleBorder(OutlinedBorder):
-    type: str = field(default="continuousRectangle")
     radius: BorderRadiusValue = field(default=None)
+
+    def __post_init__(self):
+        self.type = "continuousRectangle"
 
 
 @dataclasses.dataclass
