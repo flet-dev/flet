@@ -1,5 +1,5 @@
-import dataclasses
 import json
+from dataclasses import dataclass, field
 from enum import Enum, IntFlag
 from typing import Optional, Union
 
@@ -8,13 +8,13 @@ from flet_core.control import OptionalNumber, Control
 from flet_core.event_handler import EventHandler
 
 
-@dataclasses.dataclass
+@dataclass
 class MapLatitudeLongitude:
     latitude: Union[float, int]
     longitude: Union[float, int]
 
 
-@dataclasses.dataclass
+@dataclass
 class MapLatitudeLongitudeBounds:
     corner_1: MapLatitudeLongitude
     corner_2: MapLatitudeLongitude
@@ -50,24 +50,17 @@ class MapMultiFingerGesture(IntFlag):
     ALL = (1 << 0) | (1 << 1) | (1 << 2)
 
 
-@dataclasses.dataclass
+@dataclass
 class MapInteractionConfiguration:
-    enable_multi_finger_gesture_race: Optional[bool] = dataclasses.field(default=None)
-    enable_scroll_wheel: Optional[bool] = dataclasses.field(default=None)
-    pinch_move_threshold: OptionalNumber = dataclasses.field(default=None)
-    scroll_wheel_velocity: OptionalNumber = dataclasses.field(default=None)
-    pinch_zoom_threshold: OptionalNumber = dataclasses.field(default=None)
-    rotation_threshold: OptionalNumber = dataclasses.field(default=None)
-    flags: Optional[MapInteractiveFlag] = dataclasses.field(default=None)
-    rotation_win_gestures: Optional[MapMultiFingerGesture] = dataclasses.field(
-        default=None
-    )
-    pinch_move_win_gestures: Optional[MapMultiFingerGesture] = dataclasses.field(
-        default=None
-    )
-    pinch_zoom_win_gestures: Optional[MapMultiFingerGesture] = dataclasses.field(
-        default=None
-    )
+    enable_multi_finger_gesture_race: Optional[bool] = field(default=None)
+    pinch_move_threshold: OptionalNumber = field(default=None)
+    scroll_wheel_velocity: OptionalNumber = field(default=None)
+    pinch_zoom_threshold: OptionalNumber = field(default=None)
+    rotation_threshold: OptionalNumber = field(default=None)
+    flags: Optional[MapInteractiveFlag] = field(default=None)
+    rotation_win_gestures: Optional[MapMultiFingerGesture] = field(default=None)
+    pinch_move_win_gestures: Optional[MapMultiFingerGesture] = field(default=None)
+    pinch_zoom_win_gestures: Optional[MapMultiFingerGesture] = field(default=None)
 
 
 class MapConfiguration(Control):
@@ -282,8 +275,10 @@ class MapEventSource(Enum):
 
 
 class MapEvent(ControlEvent):
-    def __init__(self, src, c_lat, c_long, zoom, rot) -> None:
+    def __init__(self, src, c_lat, c_long, zoom, min_zoom, max_zoom, rot) -> None:
         self.source: MapEventSource = MapEventSource(src)
         self.center: MapLatitudeLongitude = MapLatitudeLongitude(c_lat, c_long)
         self.zoom: float = zoom
+        self.min_zoom: float = min_zoom
+        self.max_zoom: float = max_zoom
         self.rotation: float = rot

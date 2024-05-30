@@ -1,5 +1,4 @@
 import "package:collection/collection.dart";
-import "package:flet/flet.dart";
 import "package:permission_handler/permission_handler.dart";
 
 Permission? parsePermission(String? permission,
@@ -9,7 +8,7 @@ Permission? parsePermission(String? permission,
   }
   return Permission.values.firstWhereOrNull(
         (Permission p) =>
-            trimStart(p.toString().toLowerCase(), "permission.") ==
+            p.toString().split('.').last.toLowerCase() ==
             permission.toLowerCase(),
       ) ??
       defaultPermission;

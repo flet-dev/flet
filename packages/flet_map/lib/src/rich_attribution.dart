@@ -51,7 +51,12 @@ class _RichAttributionControlState extends State<RichAttributionControl>
         showFlutterMapAttribution:
             widget.control.attrBool("showFlutterMapAttribution", true)!,
         alignment: parseAttributionAlignment(
-            "alignment", widget.control, AttributionAlignment.bottomRight)!,
+            widget.control.attrString("alignment"),
+            AttributionAlignment.bottomRight)!,
+        popupBorderRadius:
+            parseBorderRadius(widget.control, "popupBorderRadius"),
+        popupInitialDisplayDuration: Duration(
+            seconds: widget.control.attrInt("popupInitialDisplayDuration", 0)!),
       );
     });
   }

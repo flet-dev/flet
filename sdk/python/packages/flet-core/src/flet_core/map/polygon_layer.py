@@ -25,7 +25,6 @@ class PolygonMarker(Control):
         border_color: Optional[str] = None,
         color: Optional[str] = None,
         border_stroke_width: OptionalNumber = None,
-        dotted: Optional[bool] = None,
         disable_holes_border: Optional[bool] = None,
         rotate_label: Optional[bool] = None,
         stroke_cap: Optional[StrokeCap] = None,
@@ -51,7 +50,6 @@ class PolygonMarker(Control):
         self.border_color = border_color
         self.color = color
         self.border_stroke_width = border_stroke_width
-        self.dotted = dotted
         self.disable_holes_border = disable_holes_border
         self.rotate_label = rotate_label
         self.stroke_cap = stroke_cap
@@ -123,15 +121,6 @@ class PolygonMarker(Control):
     def disable_holes_border(self, value: Optional[bool]):
         self._set_attr("disableHolesBorder", value)
 
-    # dotted
-    @property
-    def dotted(self) -> Optional[bool]:
-        return self._get_attr("dotted", data_type="bool", def_value=False)
-
-    @dotted.setter
-    def dotted(self, value: Optional[bool]):
-        self._set_attr("dotted", value)
-
     # color
     @property
     def color(self) -> Optional[str]:
@@ -185,6 +174,8 @@ class PolygonLayer(MapLayer):
         polygon_culling: Optional[bool] = None,
         polygon_labels: Optional[bool] = None,
         draw_labels_last: Optional[bool] = None,
+        simplification_tolerance: OptionalNumber = None,
+        use_alternative_rendering: Optional[bool] = None,
         #
         # MapLayer
         #
@@ -204,6 +195,8 @@ class PolygonLayer(MapLayer):
         self.polygon_culling = polygon_culling
         self.polygon_labels = polygon_labels
         self.draw_labels_last = draw_labels_last
+        self.simplification_tolerance = simplification_tolerance
+        self.use_alternative_rendering = use_alternative_rendering
 
     def _get_control_name(self):
         return "map_polygon_layer"
@@ -229,6 +222,17 @@ class PolygonLayer(MapLayer):
     def polygon_culling(self, value: Optional[bool]):
         self._set_attr("polygonCulling", value)
 
+    # use_alternative_rendering
+    @property
+    def use_alternative_rendering(self) -> Optional[bool]:
+        return self._get_attr(
+            "useAlternativeRendering", data_type="bool", def_value=False
+        )
+
+    @use_alternative_rendering.setter
+    def use_alternative_rendering(self, value: Optional[bool]):
+        self._set_attr("useAlternativeRendering", value)
+
     # polygon_labels
     @property
     def polygon_labels(self) -> Optional[bool]:
@@ -237,6 +241,17 @@ class PolygonLayer(MapLayer):
     @polygon_labels.setter
     def polygon_labels(self, value: Optional[bool]):
         self._set_attr("polygonLabels", value)
+
+    # simplification_tolerance
+    @property
+    def simplification_tolerance(self) -> OptionalNumber:
+        return self._get_attr(
+            "simplificationTolerance", data_type="float", def_value=0.5
+        )
+
+    @simplification_tolerance.setter
+    def simplification_tolerance(self, value: OptionalNumber):
+        self._set_attr("simplificationTolerance", value)
 
     # draw_labels_last
     @property

@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Any, Optional, List
 
+from flet_core.border_radius import BorderRadius
 from flet_core.control import OptionalNumber
 from flet_core.map.map_layer import MapLayer
 from flet_core.map.text_source_attribution import TextSourceAttribution
@@ -27,6 +28,8 @@ class RichAttribution(MapLayer):
         attributions: List[TextSourceAttribution],
         alignment: Optional[AttributionAlignment] = None,
         popup_bgcolor: Optional[str] = None,
+        popup_border_radius: Optional[BorderRadius] = None,
+        popup_initial_display_duration: Optional[int] = None,
         permanent_height: OptionalNumber = None,
         show_flutter_map_attribution: Optional[bool] = None,
         #
@@ -49,12 +52,18 @@ class RichAttribution(MapLayer):
         self.popup_bgcolor = popup_bgcolor
         self.permanent_height = permanent_height
         self.show_flutter_map_attribution = show_flutter_map_attribution
+        self.popup_border_radius = popup_border_radius
+        self.popup_initial_display_duration = popup_initial_display_duration
 
     def _get_control_name(self):
         return "map_rich_attribution"
 
     def _get_children(self):
         return self.attributions
+
+    def before_update(self):
+        super().before_update()
+        self._set_attr_json("popupBorderRadius", self.__popup_border_radius)
 
     # permanent_height
     @property
@@ -65,6 +74,29 @@ class RichAttribution(MapLayer):
     def permanent_height(self, value: OptionalNumber):
         assert value is None or value >= 0, "permanent_height cannot be negative"
         self._set_attr("permanentHeight", value)
+
+    # popup_initial_display_duration
+    @property
+    def popup_initial_display_duration(self) -> Optional[int]:
+        return self._get_attr(
+            "popupInitialDisplayDuration", data_type="int", def_value=0
+        )
+
+    @popup_initial_display_duration.setter
+    def popup_initial_display_duration(self, value: Optional[int]):
+        assert (
+            value is None or value >= 0
+        ), "popup_initial_display_duration cannot be negative"
+        self._set_attr("popupInitialDisplayDuration", value)
+
+    # popup_border_radius
+    @property
+    def popup_border_radius(self) -> Optional[BorderRadius]:
+        return self.__popup_border_radius
+
+    @popup_border_radius.setter
+    def popup_border_radius(self, value: Optional[BorderRadius]):
+        self.__popup_border_radius = value
 
     # alignment
     @property
