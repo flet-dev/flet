@@ -1,5 +1,6 @@
-from enum import Enum
+from enum import Enum, EnumMeta
 from typing import Dict, Tuple, Union
+from warnings import warn
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
@@ -75,7 +76,30 @@ class NotchShape(Enum):
 ResponsiveNumber = Union[Dict[str, Union[int, float]], int, float]
 
 
-class MaterialState(Enum):
+class MaterialStateDeprecated(EnumMeta):
+    def __getattribute__(self, item):
+        warn(
+            "MaterialState enum is deprecated and will be removed in v1.0. "
+            "Use ControlState enum instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return EnumMeta.__getattribute__(self, item)
+
+
+class MaterialState(Enum, metaclass=MaterialStateDeprecated):
+    HOVERED = "hovered"
+    FOCUSED = "focused"
+    PRESSED = "pressed"
+    DRAGGED = "dragged"
+    SELECTED = "selected"
+    SCROLLED_UNDER = "scrolledUnder"
+    DISABLED = "disabled"
+    ERROR = "error"
+    DEFAULT = ""
+
+
+class ControlState(Enum):
     HOVERED = "hovered"
     FOCUSED = "focused"
     PRESSED = "pressed"
