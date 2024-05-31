@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional, Protocol, Tuple, Union
+from typing import Any, Callable, Dict, Optional, Protocol, Tuple, Union
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
@@ -318,6 +318,13 @@ Wrapper = Callable[..., Any]
 
 
 # Protocols
+class Openable(Protocol):
+    @property
+    def open(self) -> Optional[bool]: ...
+
+    @open.setter
+    def open(self, value: Optional[bool]): ...
+
 class SupportsStr(Protocol):
     def __str__(self) -> str:
         ...

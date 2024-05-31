@@ -22,7 +22,7 @@ from typing import (
     TypeVar,
     Union,
     cast,
-    overload,
+    overload, Literal,
 )
 from urllib.parse import urlparse
 
@@ -64,6 +64,7 @@ from flet_core.types import (
     MainAxisAlignment,
     OffsetValue,
     OptionalNumber,
+    Openable,
     PaddingValue,
     PagePlatform,
     ScrollMode,
@@ -1029,8 +1030,36 @@ class Page(AdaptiveControl):
                 f"Please define {control_name} before close_{control_name}() method"
             )
 
-    # TODO: signature overloads with all supported types
-    def open(self, control_name: str, control: Optional[SnackBar, AlertDialog, CupertinoAlertDialog, Banner, BottomSheet, NavigationDrawer] = None):
+    @overload
+    def open(self, control_name: Literal['snack_bar', 'dialog', 'banner', 'bottom_sheet', 'drawer', 'end_drawer']):
+        ...
+
+    @overload
+    def open(self, control_name: Literal['snack_bar'], control: SnackBar):
+        ...
+
+    @overload
+    def open(self, control_name: Literal['dialog'], control: Union[AlertDialog, CupertinoAlertDialog]):
+        ...
+
+    @overload
+    def open(self, control_name: Literal['banner'], control: Banner):
+        ...
+
+    @overload
+    def open(self, control_name: Literal['bottom_sheet'], control: BottomSheet):
+        ...
+
+    @overload
+    def open(self, control_name: Literal['drawer'], control: NavigationDrawer):
+        ...
+
+    @overload
+    def open(self, control_name: Literal['end_drawer'], control: NavigationDrawer):
+        ...
+
+    def open(self, control_name: Literal['snack_bar', 'dialog', 'banner', 'bottom_sheet', 'drawer', 'end_drawer'],
+             control: Optional[Openable] = None):
         # TODO: Realisation of open()
         ...
 
