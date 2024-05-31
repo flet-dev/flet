@@ -1029,6 +1029,11 @@ class Page(AdaptiveControl):
                 f"Please define {control_name} before close_{control_name}() method"
             )
 
+    # TODO: signature overloads with all supported types
+    def open(self, control_name: str, control: Optional[SnackBar, AlertDialog, CupertinoAlertDialog, Banner, BottomSheet, NavigationDrawer] = None):
+        # TODO: Realisation of open()
+        ...
+
     #
     # SnackBar
     #
