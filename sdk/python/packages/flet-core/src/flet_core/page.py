@@ -442,7 +442,7 @@ class Page(AdaptiveControl):
         self.__session_storage = None
         self.__conn = None
 
-    def __update(self, *controls) -> Tuple[List[Control], List[Control]]:
+    def __update(self, *controls: Control) -> Tuple[List[Control], List[Control]]:
         if not self.__conn:
             raise PageDisconnectedException("Page has been disconnected")
         commands, added_controls, removed_controls = self.__prepare_update(*controls)
