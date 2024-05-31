@@ -37,7 +37,7 @@ class DatePicker(Control):
     """
     A Material-style date picker dialog.
 
-    It is added to [`page.overlay`](page#overlay) and called using its `pick_date()` method.
+    It is added to [`page.overlay`](page#overlay) and can be opened by setting `open=True` or by calling `Page.open()` method.
 
     Depending on the `date_picker_entry_mode`, it will show either a Calendar or an Input (TextField) for picking a date.
 
@@ -65,7 +65,7 @@ class DatePicker(Control):
         date_button = ft.ElevatedButton(
             "Pick date",
             icon=ft.icons.CALENDAR_MONTH,
-            on_click=lambda _: date_picker.pick_date(),
+            on_click=lambda _: page.open(date_picker),
         )
 
         page.add(date_button)
@@ -161,12 +161,17 @@ class DatePicker(Control):
     def before_update(self):
         super().before_update()
 
+    @deprecated(
+        reason="Use Page.open() method instead.",
+        version="0.23.0",
+        delete_version="1.0",
+    )
     def pick_date(self):
         self.open = True
         self.update()
 
     @deprecated(
-        reason="Use pick_date() method instead.",
+        reason="Use Page.open() method instead.",
         version="0.21.0",
         delete_version="1.0",
     )

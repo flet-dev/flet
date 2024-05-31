@@ -26,7 +26,7 @@ class TimePicker(Control):
     """
     A Material-style time picker dialog.
 
-    It is added to [`page.overlay`](page#overlay) and called using its `pick_time()` method.
+    It is added to [`page.overlay`](page#overlay) and can be opened by setting `open=True` or by calling `Page.open()` method.
 
     Depending on the `time_picker_entry_mode`, it will show either a Dial or an Input (hour and minute text fields) for picking a time.
 
@@ -55,7 +55,7 @@ class TimePicker(Control):
         date_button = ft.ElevatedButton(
             "Pick time",
             icon=ft.icons.TIME_TO_LEAVE,
-            on_click=lambda _: time_picker.pick_time(),
+            on_click=lambda _: page.open(time_picker),
         )
 
         page.add(date_button)
@@ -132,12 +132,17 @@ class TimePicker(Control):
     def _get_control_name(self):
         return "timepicker"
 
+    @deprecated(
+        reason="Use Page.open() method instead.",
+        version="0.23.0",
+        delete_version="1.0",
+    )
     def pick_time(self):
         self.open = True
         self.update()
 
     @deprecated(
-        reason="Use pick_time() method instead.",
+        reason="Use Page.open() method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
