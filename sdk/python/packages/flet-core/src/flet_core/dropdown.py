@@ -320,10 +320,10 @@ class Dropdown(FormFieldControl):
         children = FormFieldControl._get_children(self) + self.__options
         if isinstance(self.__hint_content, Control):
             self.__hint_content._set_attr_internal("n", "hint")
-            children.extend(self.__hint_content)
+            children.append(self.__hint_content)
         if isinstance(self.__icon_content, Control):
             self.__icon_content._set_attr_internal("n", "icon")
-            children.extend(self.__icon_content)
+            children.append(self.__icon_content)
         return children
 
     def focus(self):
