@@ -260,9 +260,8 @@ class Control:
         return self._get_attr("opacity", data_type="float", def_value=1.0)
 
     @opacity.setter
-    def opacity(self, value: Optional[float]):
-        if value:
-            value = max(0.0, min(value, 1.0))  # make sure 0.0 <= value <= 1.0
+    def opacity(self, value: OptionalNumber):
+        assert value is None or 0.0 <= value <= 1.0, "Opacity must be between 0.0 and 1.0"
         self._set_attr("opacity", value)
 
     # tooltip

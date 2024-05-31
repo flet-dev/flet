@@ -4,8 +4,8 @@ import logging
 import threading
 import time
 import uuid
-from asyncio import AbstractEventLoop, Future
-from concurrent.futures import ThreadPoolExecutor
+from asyncio import AbstractEventLoop
+from concurrent.futures import ThreadPoolExecutor, Future
 from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -22,11 +22,11 @@ from typing import (
     TypeVar,
     Union,
     cast,
-    overload,
 )
 from urllib.parse import urlparse
 
 import flet_core
+from flet_core import OnScrollEvent
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alert_dialog import AlertDialog
 from flet_core.animation import AnimationCurve
@@ -58,7 +58,6 @@ from flet_core.theme import Theme
 from flet_core.types import (
     AppLifecycleState,
     Brightness,
-    ColorStr,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     MainAxisAlignment,
@@ -68,7 +67,7 @@ from flet_core.types import (
     PagePlatform,
     ScrollMode,
     ThemeMode,
-    Wrapper,
+    Wrapper, OptionalEventCallback,
 )
 from flet_core.utils import classproperty, deprecated
 from flet_core.utils.concurrency_utils import is_pyodide
@@ -443,7 +442,7 @@ class Page(AdaptiveControl):
         self.__session_storage = None
         self.__conn = None
 
-    def __update(self, *controls: List[Control]) -> Tuple[List[Control], List[Control]]:
+    def __update(self, *controls) -> Tuple[List[Control], List[Control]]:
         if not self.__conn:
             raise PageDisconnectedException("Page has been disconnected")
         commands, added_controls, removed_controls = self.__prepare_update(*controls)
@@ -453,7 +452,7 @@ class Page(AdaptiveControl):
         return added_controls, removed_controls
 
     def __prepare_update(
-        self, *controls: List[Control]
+            self, *controls: Control
     ) -> Tuple[List[Any], List[Control], List[Control]]:
         added_controls = []
         removed_controls = []
@@ -481,10 +480,10 @@ class Page(AdaptiveControl):
             n = 0
             for line in results:
                 for id in line.split(" "):
+
                     added_controls[n]._Control__uid = id
 
                     # add to index
-
                     self._index[id] = added_controls[n]
 
                     n += 1
@@ -497,7 +496,7 @@ class Page(AdaptiveControl):
         for ctrl in added_controls:
             ctrl.did_mount()
 
-    def error(self, message: Optional[str] = "") -> None:
+    def error(self, message: str = "") -> None:
         with self.__lock:
             self._send_command("error", [message])
 
@@ -808,8 +807,10 @@ class Page(AdaptiveControl):
             "getClipboard", wait_for_result=True, wait_timeout=wait_timeout
         )
 
-    def get_clipboard_async(self, wait_timeout: Optional[float] = 10) -> Optional[str]:
-        return self._invoke_method_async(
+    async def get_clipboard_async(
+            self, wait_timeout: Optional[float] = 10
+    ) -> Optional[str]:
+        return await self._invoke_method_async(
             "getClipboard", wait_for_result=True, wait_timeout=wait_timeout
         )
 
@@ -982,13 +983,15 @@ class Page(AdaptiveControl):
             await asyncio.wait_for(evt.wait(), timeout=wait_timeout)
         except TimeoutError:
             del self.__method_calls[method_id]
-            raise Exception(
+            raise TimeoutError(
                 f"Timeout waiting for invokeMethod {method_name}({arguments}) call"
             )
 
         result, err = self.__method_call_results.pop(evt)
         if err:
             raise Exception(err)
+        if result == "null":
+            return None
         return result
 
     def __on_invoke_method_result(self, e) -> None:
@@ -1000,115 +1003,72 @@ class Page(AdaptiveControl):
         self.__method_call_results[evt] = (result.result, result.error)
         evt.set()
 
-    # Open / Close
-    def __open_control(
-        self, control_name: str, control: Control, base: "Union[Page, Offstage]" = None
-    ) -> None:
-        if not base:
-            base = self
-
-        if control:
+    @staticmethod
+    def open(control: Control) -> None:
+        if hasattr(control, "open"):
             control.open = True
-            base.update()
-        else:
-            raise Exception(
-                f"Please define {control_name} before show_{control_name}() method"
-            )
+            control.update()
 
-    def __close_control(
-        self, control_name: str, control: Control, base: "Union[Page, Offstage]" = None
-    ) -> None:
-        if not base:
-            base = self
-
-        if control:
+    @staticmethod
+    def close(control: Control) -> None:
+        if hasattr(control, "open"):
             control.open = False
-            base.update()
-        else:
-            raise Exception(
-                f"Please define {control_name} before close_{control_name}() method"
-            )
+            control.update()
 
     #
     # SnackBar
     #
-    @overload
-    def open_snack_bar(self) -> None:
-        ...
-
-    @overload
-    def open_snack_bar(self, snack_bar: SnackBar) -> None:
-        ...
-
-    def open_snack_bar(self, snack_bar=None) -> None:
-        if snack_bar:
-            self.__offstage.snack_bar = snack_bar
-        self.__open_control("snack_bar", self.__offstage.snack_bar, self.__offstage)
-
-    # Deprecated
     @deprecated(
-        reason="Use open_snack_bar() method instead.",
-        version="0.22.1",
+        reason="Use open() method instead.",
+        version="0.23.0",
         delete_version="1.0",
     )
-    def show_snack_bar(self, snack_bar: SnackBar = None):
-        self.open_snack_bar(snack_bar)
+    def show_snack_bar(self, snack_bar: SnackBar):
+        self.__offstage.snack_bar = snack_bar
+        self.__offstage.snack_bar.open = True
+        self.__offstage.update()
 
     @deprecated(
-        reason="Use open_snack_bar() method instead.",
+        reason="Use open() method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
-    async def show_snack_bar_async(self, snack_bar: SnackBar = None):
-        self.open_snack_bar(snack_bar)
-
-    # End deprecated
-
-    def close_snack_bar(self) -> None:
-        self.__close_control("snack_bar", self.__offstage.snack_bar, self.__offstage)
+    async def show_snack_bar_async(self, snack_bar: SnackBar):
+        self.show_snack_bar(snack_bar)
 
     #
     # Dialogs
     #
-    @overload
-    def open_dialog(self) -> None:
-        ...
-
-    @overload
-    def open_dialog(self, dialog: Union[AlertDialog, CupertinoAlertDialog]) -> None:
-        ...
-
-    def open_dialog(self, dialog=None) -> None:
-        if dialog:
-            self.__offstage.dialog = dialog
-        self.__open_control("dialog", self.__offstage.dialog, self.__offstage)
-
-    # Deprecated
     @deprecated(
-        reason="Use open_dialog() method instead.",
-        version="0.22.1",
+        reason="Use open() method instead.",
+        version="0.23.0",
         delete_version="1.0",
     )
-    def show_dialog(self, dialog: Union[AlertDialog, CupertinoAlertDialog] = None):
-        self.open_dialog(dialog)
+    def show_dialog(self, dialog: Union[AlertDialog, CupertinoAlertDialog]):
+        self.__offstage.dialog = dialog
+        self.__offstage.dialog.open = True
+        self.__offstage.update()
 
     @deprecated(
-        reason="Use open_dialog() method instead.",
+        reason="Use open() method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
-    async def show_dialog_async(
-        self, dialog: Union[AlertDialog, CupertinoAlertDialog] = None
-    ):
-        self.open_dialog(dialog)
-
-    # End deprecated
-
-    def close_dialog(self) -> None:
-        self.__close_control("dialog", self.__offstage.dialog, self.__offstage)
+    async def show_dialog_async(self, dialog: Union[AlertDialog, CupertinoAlertDialog]):
+        self.show_dialog(dialog)
 
     @deprecated(
-        reason="Use close_dialog() method instead.",
+        reason="Use close() method instead.",
+        version="0.23.0",
+        delete_version="1.0",
+    )
+    def close_dialog(self):
+        if self.__offstage.dialog is not None:
+            self.__offstage.dialog.open = False
+            self.__offstage.update()
+
+    @deprecated(
+        reason="Use close() method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
@@ -1118,43 +1078,36 @@ class Page(AdaptiveControl):
     #
     # Banner
     #
-    @overload
-    def open_banner(self) -> None:
-        ...
-
-    @overload
-    def open_banner(self, banner: Banner) -> None:
-        ...
-
-    def open_banner(self, banner=None) -> None:
-        if banner:
-            self.__offstage.banner = banner
-        self.__open_control("banner", self.__offstage.banner, self.__offstage)
-
-    # Deprecated
     @deprecated(
-        reason="Use open_banner() method instead.",
-        version="0.22.1",
+        reason="Use open() method instead.",
+        version="0.23.0",
         delete_version="1.0",
     )
-    def show_banner(self, banner: Banner = None):
-        self.open_banner(banner)
+    def show_banner(self, banner: Banner):
+        self.__offstage.banner = banner
+        self.__offstage.banner.open = True
+        self.__offstage.update()
 
     @deprecated(
-        reason="Use open_banner() method instead.",
+        reason="Use open() method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
-    async def show_banner_async(self, banner: Banner = None):
-        self.open_banner(banner)
-
-    # End deprecated
-
-    def close_banner(self) -> None:
-        self.__close_control("banner", self.__offstage.banner, self.__offstage)
+    async def show_banner_async(self, banner: Banner):
+        self.show_banner(banner)
 
     @deprecated(
-        reason="Use close_banner() method instead.",
+        reason="Use close() method instead.",
+        version="0.23.0",
+        delete_version="1.0",
+    )
+    def close_banner(self):
+        if self.__offstage.banner is not None:
+            self.__offstage.banner.open = False
+            self.__offstage.update()
+
+    @deprecated(
+        reason="Use close() method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
@@ -1164,53 +1117,42 @@ class Page(AdaptiveControl):
     #
     # BottomSheet
     #
-    @overload
-    def open_bottom_sheet(self) -> None:
-        ...
-
-    @overload
-    def open_bottom_sheet(
-        self, bottom_sheet: Union[BottomSheet, CupertinoBottomSheet]
-    ) -> None:
-        ...
-
-    def open_bottom_sheet(self, bottom_sheet=None) -> None:
-        if bottom_sheet:
-            self.__offstage.bottom_sheet = bottom_sheet
-        self.__open_control(
-            "bottom_sheet", self.__offstage.bottom_sheet, self.__offstage
-        )
-
-    # Deprecated
     @deprecated(
-        reason="Use open_bottom_sheet() method instead.",
-        version="0.22.1",
+        reason="Use open() method instead.",
+        version="0.23.0",
         delete_version="1.0",
     )
     def show_bottom_sheet(
-        self, bottom_sheet: Union[BottomSheet, CupertinoBottomSheet] = None
+            self,
+            bottom_sheet: Union[BottomSheet, CupertinoBottomSheet],
     ):
-        self.open_bottom_sheet(bottom_sheet)
+        self.__offstage.bottom_sheet = bottom_sheet
+        self.__offstage.bottom_sheet.open = True
+        self.__offstage.update()
 
     @deprecated(
-        reason="Use open_bottom_sheet() method instead.",
+        reason="Use open() method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
     async def show_bottom_sheet_async(
-        self, bottom_sheet: Union[BottomSheet, CupertinoBottomSheet] = None
+            self,
+            bottom_sheet: Union[BottomSheet, CupertinoBottomSheet],
     ):
-        self.open_bottom_sheet(bottom_sheet)
-
-    # End deprecated
-
-    def close_bottom_sheet(self) -> None:
-        self.__close_control(
-            "bottom_sheet", self.__offstage.bottom_sheet, self.__offstage
-        )
+        self.show_bottom_sheet(bottom_sheet)
 
     @deprecated(
-        reason="Use close_bottom_sheet() method instead.",
+        reason="Use close() method instead.",
+        version="0.23.0",
+        delete_version="1.0",
+    )
+    def close_bottom_sheet(self):
+        if self.__offstage.bottom_sheet is not None:
+            self.__offstage.bottom_sheet.open = False
+            self.__offstage.update()
+
+    @deprecated(
+        reason="Use close() method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
@@ -1220,43 +1162,36 @@ class Page(AdaptiveControl):
     #
     # Drawer
     #
-    @overload
-    def open_drawer(self) -> None:
-        ...
-
-    @overload
-    def open_drawer(self, drawer: NavigationDrawer) -> None:
-        ...
-
-    def open_drawer(self, drawer=None) -> None:
-        if drawer:
-            self.drawer = drawer
-        self.__open_control("drawer", self.drawer)
-
-    # Deprecated
     @deprecated(
-        reason="Use open_drawer() method instead.",
-        version="0.22.1",
+        reason="Use close() method instead.",
+        version="0.23.0",
         delete_version="1.0",
     )
-    def show_drawer(self, drawer: NavigationDrawer = None):
-        self.open_drawer(drawer)
+    def show_drawer(self, drawer: NavigationDrawer):
+        self.drawer = drawer
+        self.drawer.open = True
+        self.update()
 
     @deprecated(
-        reason="Use open_drawer() method instead.",
+        reason="Use open() method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
-    async def show_drawer_async(self, drawer: NavigationDrawer = None):
-        self.open_drawer(drawer)
-
-    # End deprecated
-
-    def close_drawer(self):
-        self.__close_control("drawer", self.drawer)
+    async def show_drawer_async(self, drawer: NavigationDrawer):
+        self.show_drawer(drawer)
 
     @deprecated(
-        reason="Use close_drawer() method instead.",
+        reason="Use close() method instead.",
+        version="0.23.0",
+        delete_version="1.0",
+    )
+    def close_drawer(self):
+        if self.drawer is not None:
+            self.drawer.open = False
+            self.update()
+
+    @deprecated(
+        reason="Use close() method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
@@ -1266,43 +1201,31 @@ class Page(AdaptiveControl):
     #
     # End_drawer
     #
-    @overload
-    def open_end_drawer(self) -> None:
-        ...
-
-    @overload
-    def open_end_drawer(self, end_drawer: NavigationDrawer) -> None:
-        ...
-
-    def open_end_drawer(self, end_drawer=None) -> None:
-        if end_drawer:
-            self.end_drawer = end_drawer
-        self.__open_control("end_drawer", self.end_drawer)
-
-    # Deprecated
     @deprecated(
-        reason="Use open_end_drawer() method instead.",
-        version="0.22.1",
+        reason="Use close() method instead.",
+        version="0.23.0",
         delete_version="1.0",
     )
-    def show_end_drawer(self, end_drawer: NavigationDrawer = None):
-        self.open_end_drawer(end_drawer)
+    def show_end_drawer(self, end_drawer: NavigationDrawer):
+        self.end_drawer = end_drawer
+        self.end_drawer.open = True
+        self.update()
 
     @deprecated(
-        reason="Use open_end_drawer() method instead.",
+        reason="Use open() method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
-    async def show_end_drawer_async(self, end_drawer: NavigationDrawer = None):
-        self.open_end_drawer(end_drawer)
+    async def show_end_drawer_async(self, end_drawer: NavigationDrawer):
+        self.show_end_drawer(end_drawer)
 
-    # End deprecated
-
-    def close_end_drawer(self) -> None:
-        self.__close_control("end_drawer", self.end_drawer)
+    def close_end_drawer(self):
+        if self.end_drawer is not None:
+            self.end_drawer.open = False
+            self.update()
 
     @deprecated(
-        reason="Use close_end_drawer() method instead.",
+        reason="Use close() method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
@@ -1463,7 +1386,7 @@ class Page(AdaptiveControl):
 
     # media
     @property
-    def media(self) -> "PageMediaData":
+    def media(self) -> Optional["PageMediaData"]:
         m = self._get_attr("media")
         if not isinstance(m, str):
             return None
@@ -1611,11 +1534,11 @@ class Page(AdaptiveControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> ColorStr:
+    def bgcolor(self) -> Optional[str]:
         return self.__default_view.bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: ColorStr):
+    def bgcolor(self, value: Optional[str]):
         self.__default_view.bgcolor = value
 
     # scroll
@@ -1762,11 +1685,11 @@ class Page(AdaptiveControl):
 
     # window_bgcolor
     @property
-    def window_bgcolor(self) -> ColorStr:
+    def window_bgcolor(self) -> Optional[str]:
         return self._get_attr("windowBgcolor")
 
     @window_bgcolor.setter
-    def window_bgcolor(self, value: ColorStr):
+    def window_bgcolor(self, value: Optional[str]):
         self._set_attr("windowBgcolor", value)
 
     # window_width
@@ -2011,61 +1934,61 @@ class Page(AdaptiveControl):
 
     # on_close
     @property
-    def on_close(self) -> Optional[Callable[..., None]]:
+    def on_close(self):
         return self.__on_close
 
     @on_close.setter
-    def on_close(self, handler: Optional[Callable[..., None]]):
+    def on_close(self, handler: OptionalEventCallback):
         self.__on_close.subscribe(handler)
 
     # on_resize
     @property
-    def on_resize(self) -> Optional[Callable[..., None]]:
+    def on_resize(self):
         return self.__on_resize
 
     @on_resize.setter
-    def on_resize(self, handler: Optional[Callable[..., None]]):
+    def on_resize(self, handler: OptionalEventCallback):
         self.__on_resize.subscribe(handler)
 
     # on_platform_brightness_change
     @property
-    def on_platform_brightness_change(self) -> Optional[Callable[..., None]]:
+    def on_platform_brightness_change(self):
         return self.__on_platform_brightness_change
 
     @on_platform_brightness_change.setter
-    def on_platform_brightness_change(self, handler: Optional[Callable[..., None]]):
+    def on_platform_brightness_change(self, handler: OptionalEventCallback):
         self.__on_platform_brightness_change.subscribe(handler)
 
     # on_app_lifecycle_change
     @property
-    def on_app_lifecycle_state_change(self) -> Optional[Callable[..., None]]:
+    def on_app_lifecycle_state_change(self):
         return self.__on_app_lifecycle_state_change
 
     @on_app_lifecycle_state_change.setter
-    def on_app_lifecycle_state_change(self, handler: Optional[Callable[..., None]]):
+    def on_app_lifecycle_state_change(self, handler: "Optional[Callable[[AppLifecycleStateChangeEvent], None]]"):
         self.__on_app_lifecycle_state_change.subscribe(handler)
 
     # on_route_change
     @property
-    def on_route_change(self) -> Optional[Callable[..., None]]:
+    def on_route_change(self):
         return self.__on_route_change
 
     @on_route_change.setter
-    def on_route_change(self, handler: Optional[Callable[..., None]]):
+    def on_route_change(self, handler: "Optional[Callable[[RouteChangeEvent], None]]"):
         self.__on_route_change.subscribe(handler)
 
     # on_view_pop
     @property
-    def on_view_pop(self) -> Optional[Callable[..., None]]:
+    def on_view_pop(self):
         return self.__on_view_pop
 
     @on_view_pop.setter
-    def on_view_pop(self, handler: Optional[Callable[..., None]]):
+    def on_view_pop(self, handler: "Optional[Callable[[ViewPopEvent], None]]"):
         self.__on_view_pop.subscribe(handler)
 
     # on_keyboard_event
     @property
-    def on_keyboard_event(self) -> "Optional[Callable[[KeyboardEvent], None]]":
+    def on_keyboard_event(self):
         return self.__on_keyboard_event
 
     @on_keyboard_event.setter
@@ -2074,79 +1997,79 @@ class Page(AdaptiveControl):
 
     # on_window_event
     @property
-    def on_window_event(self) -> Optional[Callable[..., None]]:
+    def on_window_event(self):
         return self.__on_window_event
 
     @on_window_event.setter
-    def on_window_event(self, handler: Optional[Callable[..., None]]):
+    def on_window_event(self, handler: OptionalEventCallback):
         self.__on_window_event.subscribe(handler)
 
     # on_media_change
     @property
-    def on_media_change(self) -> Optional[Callable[..., None]]:
+    def on_media_change(self):
         return self.__on_page_media_change_event
 
     @on_media_change.setter
-    def on_media_change(self, handler: Optional[Callable[..., None]]):
+    def on_media_change(self, handler: "Optional[Callable[[PageMediaData], None]]"):
         self.__on_page_media_change_event.subscribe(handler)
 
     # on_connect
     @property
-    def on_connect(self) -> Optional[Callable[..., None]]:
+    def on_connect(self):
         return self.__on_connect
 
     @on_connect.setter
-    def on_connect(self, handler: Optional[Callable[..., None]]):
+    def on_connect(self, handler: OptionalEventCallback):
         self.__on_connect.subscribe(handler)
 
     # on_disconnect
     @property
-    def on_disconnect(self) -> Optional[Callable[..., None]]:
+    def on_disconnect(self):
         return self.__on_disconnect
 
     @on_disconnect.setter
-    def on_disconnect(self, handler: Optional[Callable[..., None]]):
+    def on_disconnect(self, handler: OptionalEventCallback):
         self.__on_disconnect.subscribe(handler)
 
     # on_login
     @property
-    def on_login(self) -> Optional[Callable[..., None]]:
+    def on_login(self):
         return self.__on_login
 
     @on_login.setter
-    def on_login(self, handler: Optional[Callable[..., None]]):
+    def on_login(self, handler: "Optional[Callable[[LoginEvent], None]]"):
         self.__on_login.subscribe(handler)
 
     # on_logout
     @property
-    def on_logout(self) -> Optional[Callable[..., None]]:
+    def on_logout(self):
         return self.__on_logout
 
     @on_logout.setter
-    def on_logout(self, handler: Optional[Callable[..., None]]):
+    def on_logout(self, handler: OptionalEventCallback):
         self.__on_logout.subscribe(handler)
 
     # on_error
     @property
-    def on_error(self) -> Optional[Callable[..., None]]:
+    def on_error(self):
         return self.__on_error
 
     @on_error.setter
-    def on_error(self, handler: Optional[Callable[..., None]]):
+    def on_error(self, handler: OptionalEventCallback):
         self.__on_error.subscribe(handler)
 
     # on_scroll
     @property
-    def on_scroll(self) -> Optional[Callable[..., None]]:
+    def on_scroll(self):
         return self.__default_view.on_scroll
 
     @on_scroll.setter
-    def on_scroll(self, handler: Optional[Callable[..., None]]):
+    def on_scroll(self, handler: Optional[Callable[[OnScrollEvent], None]]):
         self.__default_view.on_scroll = handler
 
     # Magic methods
     def __contains__(self, item: Control) -> bool:
-        return item.__page == self
+        return item in self._controls
 
 
 class Offstage(Control):

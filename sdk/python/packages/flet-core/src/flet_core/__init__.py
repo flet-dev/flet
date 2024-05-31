@@ -140,8 +140,8 @@ from flet_core.file_picker import (
 )
 from flet_core.filled_button import FilledButton
 from flet_core.filled_tonal_button import FilledTonalButton
-from flet_core.flet_app import FletApp
 from flet_core.flashlight import Flashlight
+from flet_core.flet_app import FletApp
 from flet_core.floating_action_button import FloatingActionButton
 from flet_core.form_field_control import InputBorder
 from flet_core.geolocator import Geolocator, LocationAccuracy
@@ -181,6 +181,7 @@ from flet_core.menu_item_button import MenuItemButton
 from flet_core.navigation_bar import (
     NavigationBar,
     NavigationBarDestination,
+    NavigationDestination,
     NavigationBarLabelBehavior,
 )
 from flet_core.navigation_drawer import NavigationDrawer, NavigationDrawerDestination
@@ -317,12 +318,10 @@ from flet_core.types import (
     BoxShape,
     Brightness,
     ClipBehavior,
-    ColorStr,
-    ControlEventFunction,
+    OptionalEventCallback,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     FontWeight,
-    IconStr,
     ImageFit,
     ImageRepeat,
     LabelPosition,

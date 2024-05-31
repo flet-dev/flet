@@ -8,9 +8,7 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
-    ColorStr,
-    ControlEventFunction,
-    IconStr,
+    OptionalEventCallback,
     OffsetValue,
     OptionalNumber,
     PaddingValue,
@@ -29,14 +27,14 @@ class NavigationRailLabelType(Enum):
 class NavigationRailDestination(Control):
     def __init__(
         self,
-        icon: IconStr = None,
+            icon: Optional[str] = None,
         icon_content: Optional[Control] = None,
-        selected_icon: IconStr = None,
+            selected_icon: Optional[str] = None,
         selected_icon_content: Optional[Control] = None,
         label: Optional[str] = None,
         label_content: Optional[Control] = None,
         padding: PaddingValue = None,
-        indicator_color: ColorStr = None,
+            indicator_color: Optional[str] = None,
         indicator_shape: Optional[OutlinedBorder] = None,
         #
         # Control
@@ -82,11 +80,11 @@ class NavigationRailDestination(Control):
 
     # icon
     @property
-    def icon(self) -> IconStr:
+    def icon(self) -> Optional[str]:
         return self._get_attr("icon")
 
     @icon.setter
-    def icon(self, value: IconStr):
+    def icon(self, value: Optional[str]):
         self._set_attr("icon", value)
 
     # icon_content
@@ -100,11 +98,11 @@ class NavigationRailDestination(Control):
 
     # selected_icon
     @property
-    def selected_icon(self) -> IconStr:
+    def selected_icon(self) -> Optional[str]:
         return self._get_attr("selectedIcon")
 
     @selected_icon.setter
-    def selected_icon(self, value: IconStr):
+    def selected_icon(self, value: Optional[str]):
         self._set_attr("selectedIcon", value)
 
     # selected_icon_content
@@ -136,11 +134,11 @@ class NavigationRailDestination(Control):
 
     # indicator_color
     @property
-    def indicator_color(self) -> ColorStr:
+    def indicator_color(self) -> Optional[str]:
         return self._get_attr("indicatorColor")
 
     @indicator_color.setter
-    def indicator_color(self, value: ColorStr):
+    def indicator_color(self, value: Optional[str]):
         self._set_attr("indicatorColor", value)
 
     # indicator_shape
@@ -225,8 +223,8 @@ class NavigationRail(ConstrainedControl):
         selected_index: Optional[int] = None,
         extended: Optional[bool] = None,
         label_type: Optional[NavigationRailLabelType] = None,
-        bgcolor: ColorStr = None,
-        indicator_color: ColorStr = None,
+            bgcolor: Optional[str] = None,
+            indicator_color: Optional[str] = None,
         indicator_shape: Optional[OutlinedBorder] = None,
         leading: Optional[Control] = None,
         trailing: Optional[Control] = None,
@@ -235,7 +233,7 @@ class NavigationRail(ConstrainedControl):
         group_alignment: OptionalNumber = None,
         selected_label_text_style: Optional[TextStyle] = None,
         unselected_label_text_style: Optional[TextStyle] = None,
-        on_change: ControlEventFunction = None,
+            on_change: OptionalEventCallback = None,
         #
         # ConstrainedControl
         #
@@ -350,11 +348,11 @@ class NavigationRail(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallback:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallback):
         self._add_event_handler("change", handler)
 
     # selected_index
@@ -387,20 +385,20 @@ class NavigationRail(ConstrainedControl):
 
     # indicator_color
     @property
-    def indicator_color(self) -> ColorStr:
+    def indicator_color(self) -> Optional[str]:
         return self._get_attr("indicatorColor")
 
     @indicator_color.setter
-    def indicator_color(self, value: ColorStr):
+    def indicator_color(self, value: Optional[str]):
         self._set_attr("indicatorColor", value)
 
     # bgcolor
     @property
-    def bgcolor(self) -> ColorStr:
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value: ColorStr):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # elevation
