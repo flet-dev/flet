@@ -180,6 +180,7 @@ from flet_core.menu_bar import MenuBar, MenuStyle
 from flet_core.menu_item_button import MenuItemButton
 from flet_core.navigation_bar import (
     NavigationBar,
+    NavigationDestination,
     NavigationBarDestination,
     NavigationBarLabelBehavior,
 )
