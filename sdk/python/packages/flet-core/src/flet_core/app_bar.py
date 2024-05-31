@@ -2,10 +2,10 @@ from typing import List, Optional, Any
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import OutlinedBorder
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import ClipBehavior
+from flet_core.types import ClipBehavior, OptionalNumber
 
 
 class AppBar(AdaptiveControl):

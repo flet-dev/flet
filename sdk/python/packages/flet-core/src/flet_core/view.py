@@ -268,3 +268,7 @@ class View(ScrollableControl, AdaptiveControl):
     @fullscreen_dialog.setter
     def fullscreen_dialog(self, value: Optional[bool]):
         self._set_attr("fullscreenDialog", value)
+
+    # Magic methods
+    def __contains__(self, item: Control) -> bool:
+        return item in self.__controls

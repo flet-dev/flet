@@ -20,7 +20,7 @@ class MapLatitudeLongitudeBounds:
     corner_2: MapLatitudeLongitude
 
 
-class MapInteractiveFlags(IntFlag):
+class MapInteractiveFlag(IntFlag):
     NONE = 0
     DRAG = 1 << 0
     FLING_ANIMATION = 1 << 1
@@ -58,7 +58,7 @@ class MapInteractionConfiguration:
     scroll_wheel_velocity: OptionalNumber = dataclasses.field(default=None)
     pinch_zoom_threshold: OptionalNumber = dataclasses.field(default=None)
     rotation_threshold: OptionalNumber = dataclasses.field(default=None)
-    flags: Optional[MapInteractiveFlags] = dataclasses.field(default=None)
+    flags: Optional[MapInteractiveFlag] = dataclasses.field(default=None)
     rotation_win_gestures: Optional[MapMultiFingerGesture] = dataclasses.field(
         default=None
     )
@@ -73,7 +73,6 @@ class MapInteractionConfiguration:
 class MapConfiguration(Control):
     def __init__(
         self,
-        apply_pointer_translucency_to_layers: Optional[bool] = None,
         initial_center: Optional[MapLatitudeLongitude] = None,
         initial_rotation: OptionalNumber = None,
         initial_zoom: OptionalNumber = None,
@@ -101,7 +100,6 @@ class MapConfiguration(Control):
         self.__on_event = EventHandler(lambda e: MapEvent(**json.loads(e.data)))
         self._add_event_handler("event", self.__on_event.get_handler())
 
-        self.apply_pointer_translucency_to_layers = apply_pointer_translucency_to_layers
         self.bgcolor = bgcolor
         self.initial_center = initial_center
         self.initial_rotation = initial_rotation
@@ -117,7 +115,7 @@ class MapConfiguration(Control):
         self.on_event = on_event
 
     def _get_control_name(self):
-        return "mapconfiguration"
+        return "map_configuration"
 
     def before_update(self):
         super().before_update()
@@ -127,17 +125,6 @@ class MapConfiguration(Control):
             self._set_attr_json(
                 "interactionConfiguration", self.__interaction_configuration
             )
-
-    # apply_pointer_translucency_to_layers
-    @property
-    def apply_pointer_translucency_to_layers(self) -> Optional[bool]:
-        return self._get_attr(
-            "applyPointerTranslucencyToLayers", data_type="bool", def_value=True
-        )
-
-    @apply_pointer_translucency_to_layers.setter
-    def apply_pointer_translucency_to_layers(self, value: Optional[bool]):
-        self._set_attr("applyPointerTranslucencyToLayers", value)
 
     # bgcolor
     @property
@@ -268,7 +255,7 @@ class TapEvent(ControlEvent):
         self.local_y: Optional[float] = ly
         self.global_x: float = gx
         self.global_y: float = gy
-        self.location: MapLatitudeLongitude = MapLatitudeLongitude(lat, long)
+        self.coordinates: MapLatitudeLongitude = MapLatitudeLongitude(lat, long)
 
 
 class MapEventSource(Enum):

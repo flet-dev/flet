@@ -2,12 +2,13 @@ from typing import Any, Optional, List, Union
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.map.map_configuration import MapLatitudeLongitude
+from flet_core.map.map_layer import MapLayer
 from flet_core.ref import Ref
 
 
 class CircleMarker(Control):
     """
-    A circular marker displayed on the Map at the specified location  through the CircleLayer.
+    A circular marker displayed on the Map at the specified location through the CircleLayer.
 
     -----
 
@@ -17,7 +18,7 @@ class CircleMarker(Control):
     def __init__(
         self,
         radius: Union[int, float],
-        location: MapLatitudeLongitude,
+        coordinates: MapLatitudeLongitude,
         color: Optional[str] = None,
         border_color: Optional[str] = None,
         border_stroke_width: OptionalNumber = None,
@@ -37,7 +38,7 @@ class CircleMarker(Control):
             data=data,
         )
 
-        self.location = location
+        self.coordinates = coordinates
         self.color = color
         self.border_color = border_color
         self.border_stroke_width = border_stroke_width
@@ -45,11 +46,11 @@ class CircleMarker(Control):
         self.radius = radius
 
     def _get_control_name(self):
-        return "mapcirclemarker"
+        return "map_circle_marker"
 
     def before_update(self):
         super().before_update()
-        self._set_attr_json("location", self.__location)
+        self._set_attr_json("coordinates", self.__coordinates)
 
     # use_radius_in_meter
     @property
@@ -94,19 +95,20 @@ class CircleMarker(Control):
 
     @border_stroke_width.setter
     def border_stroke_width(self, value: OptionalNumber):
+        assert value is None or value >= 0, "border_stroke_width cannot be negative"
         self._set_attr("borderStrokeWidth", value)
 
-    # location
+    # coordinates
     @property
-    def location(self) -> MapLatitudeLongitude:
-        return self.__location
+    def coordinates(self) -> MapLatitudeLongitude:
+        return self.__coordinates
 
-    @location.setter
-    def location(self, value: MapLatitudeLongitude):
-        self.__location = value
+    @coordinates.setter
+    def coordinates(self, value: MapLatitudeLongitude):
+        self.__coordinates = value
 
 
-class CircleLayer(Control):
+class CircleLayer(MapLayer):
     """
     A layer to display CircleMarkers.
 
@@ -117,20 +119,18 @@ class CircleLayer(Control):
 
     def __init__(
         self,
-        circles: List[CircleMarker] = None,
+        circles: List[CircleMarker],
         #
-        # Control
+        # MapLayer
         #
         ref: Optional[Ref] = None,
-        opacity: OptionalNumber = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):
 
-        Control.__init__(
+        MapLayer.__init__(
             self,
             ref=ref,
-            opacity=opacity,
             visible=visible,
             data=data,
         )
@@ -138,24 +138,10 @@ class CircleLayer(Control):
         self.circles = circles
 
     def _get_control_name(self):
-        return "mapcirclelayer"
+        return "map_circle_layer"
 
     def _get_children(self):
         return self.__circles
-
-    def add(self, *circle: CircleMarker):
-        self.__circles.extend(circle)
-        self.update()
-
-    def insert(self, at: int, *circles: CircleMarker) -> None:
-        for i, circle in enumerate(circles, start=at):
-            self.__circles.insert(i, circle)
-        self.update()
-
-    def remove(self, *circles: CircleMarker) -> None:
-        for circle in circles:
-            self.__circles.remove(circle)
-        self.update()
 
     # circles
     @property

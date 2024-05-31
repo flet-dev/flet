@@ -64,19 +64,19 @@ class _GeolocatorControlState extends State<GeolocatorControl>
               var opened = await Geolocator.openAppSettings();
               return opened.toString();
             }
-            return "false";
+            break;
           case "open_location_settings":
             if (!kIsWeb) {
               var opened = await Geolocator.openLocationSettings();
               return opened.toString();
             }
-            return "false";
+            break;
           case "get_last_known_position":
             if (!kIsWeb) {
               Position? position = await Geolocator.getLastKnownPosition();
               return positionToJson(position);
             }
-            return null;
+            break;
           case "get_current_position":
             Position currentPosition = await Geolocator.getCurrentPosition(
               desiredAccuracy: parseLocationAccuracy(

@@ -3,6 +3,7 @@ from typing import Any, Optional, List
 from flet_core.alignment import Alignment
 from flet_core.control import Control, OptionalNumber
 from flet_core.map import MapLatitudeLongitude
+from flet_core.map.map_layer import MapLayer
 from flet_core.ref import Ref
 
 
@@ -18,7 +19,7 @@ class Marker(Control):
     def __init__(
         self,
         content: Control,
-        location: MapLatitudeLongitude,
+        coordinates: MapLatitudeLongitude,
         rotate: Optional[bool] = None,
         height: OptionalNumber = None,
         width: OptionalNumber = None,
@@ -39,14 +40,14 @@ class Marker(Control):
         )
 
         self.content = content
-        self.location = location
+        self.coordinates = coordinates
         self.rotate = rotate
         self.height = height
         self.width = width
         self.alignment = alignment
 
     def _get_control_name(self):
-        return "mapmarker"
+        return "map_marker"
 
     def _get_children(self):
         return [self.__content]
@@ -54,7 +55,7 @@ class Marker(Control):
     def before_update(self):
         super().before_update()
         self._set_attr_json("alignment", self.__alignment)
-        self._set_attr_json("location", self.__location)
+        self._set_attr_json("coordinates", self.__coordinates)
 
     # content
     @property
@@ -81,6 +82,7 @@ class Marker(Control):
 
     @height.setter
     def height(self, value: OptionalNumber):
+        assert value is None or value >= 0, "height cannot be negative"
         self._set_attr("height", value)
 
     # width
@@ -90,6 +92,7 @@ class Marker(Control):
 
     @width.setter
     def width(self, value: OptionalNumber):
+        assert value is None or value >= 0, "width cannot be negative"
         self._set_attr("width", value)
 
     # alignment
@@ -101,20 +104,19 @@ class Marker(Control):
     def alignment(self, value: Optional[Alignment]):
         self.__alignment = value
 
-    # location
+    # coordinates
     @property
-    def location(self) -> MapLatitudeLongitude:
-        return self.__location
+    def coordinates(self) -> MapLatitudeLongitude:
+        return self.__coordinates
 
-    @location.setter
-    def location(self, value: MapLatitudeLongitude):
-        self.__location = value
+    @coordinates.setter
+    def coordinates(self, value: MapLatitudeLongitude):
+        self.__coordinates = value
 
 
-class MarkerLayer(Control):
+class MarkerLayer(MapLayer):
     """
     A layer to display Markers.
-
 
     -----
 
@@ -123,18 +125,18 @@ class MarkerLayer(Control):
 
     def __init__(
         self,
-        markers: List[Marker] = None,
+        markers: List[Marker],
         alignment: Optional[Alignment] = None,
         rotate: Optional[bool] = None,
         #
-        # Control
+        # MapLayer
         #
         ref: Optional[Ref] = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):
 
-        Control.__init__(
+        MapLayer.__init__(
             self,
             ref=ref,
             visible=visible,
@@ -146,7 +148,7 @@ class MarkerLayer(Control):
         self.rotate = rotate
 
     def _get_control_name(self):
-        return "mapmarkerlayer"
+        return "map_marker_layer"
 
     def _get_children(self):
         return self.__markers
@@ -154,20 +156,6 @@ class MarkerLayer(Control):
     def before_update(self):
         super().before_update()
         self._set_attr_json("alignment", self.__alignment)
-
-    def add(self, *marker: Marker):
-        self.__markers.extend(marker)
-        self.update()
-
-    def insert(self, at: int, *markers: Marker) -> None:
-        for i, marker in enumerate(markers, start=at):
-            self.__markers.insert(i, marker)
-        self.update()
-
-    def remove(self, *markers: Marker) -> None:
-        for marker in markers:
-            self.__markers.remove(marker)
-        self.update()
 
     # alignment
     @property
