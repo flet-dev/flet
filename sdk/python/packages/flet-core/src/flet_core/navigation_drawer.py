@@ -16,16 +16,16 @@ class NavigationDrawerDestination(Control):
     def __init__(
         self,
         label: Optional[str] = None,
-            icon: Optional[str] = None,
+        icon: Optional[str] = None,
         icon_content: Optional[Control] = None,
-            selected_icon: Optional[str] = None,
+        selected_icon: Optional[str] = None,
         selected_icon_content: Optional[Control] = None,
-            bgcolor: Optional[str] = None,
+        bgcolor: Optional[str] = None,
         #
         # Control
         #
         ref: Optional[Ref] = None,
-    ) -> None:
+    ):
         Control.__init__(self, ref=ref)
         self.label = label
         self.bgcolor = bgcolor
@@ -183,15 +183,15 @@ class NavigationDrawer(Control):
         controls: Optional[List[Control]] = None,
         open: bool = False,
         selected_index: Optional[int] = None,
-            bgcolor: Optional[str] = None,
+        bgcolor: Optional[str] = None,
         elevation: OptionalNumber = None,
-            indicator_color: Optional[str] = None,
+        indicator_color: Optional[str] = None,
         indicator_shape: Optional[OutlinedBorder] = None,
-            shadow_color: Optional[str] = None,
-            surface_tint_color: Optional[str] = None,
+        shadow_color: Optional[str] = None,
+        surface_tint_color: Optional[str] = None,
         tile_padding: PaddingValue = None,
-            on_change: OptionalEventCallback = None,
-            on_dismiss: OptionalEventCallback = None,
+        on_change: OptionalEventCallback = None,
+        on_dismiss: OptionalEventCallback = None,
         #
         # Control
         #
@@ -199,7 +199,7 @@ class NavigationDrawer(Control):
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
         data: Any = None,
-    ) -> None:
+    ):
         Control.__init__(
             self,
             ref=ref,

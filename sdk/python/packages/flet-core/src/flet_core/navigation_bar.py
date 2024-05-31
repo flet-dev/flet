@@ -34,20 +34,20 @@ class NavigationBarDestination(Control):
     The value must be a list of two or more NavigationBarDestination instances."""
 
     def __init__(
-        self,
-        label: Optional[str] = None,
+            self,
+            label: Optional[str] = None,
             icon: Optional[str] = None,
-        icon_content: Optional[Control] = None,
+            icon_content: Optional[Control] = None,
             selected_icon: Optional[str] = None,
-        selected_icon_content: Optional[Control] = None,
+            selected_icon_content: Optional[Control] = None,
             bgcolor: Optional[str] = None,
-        #
-        # Control
-        #
-        ref: Optional[Ref] = None,
-        tooltip: Optional[str] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
+            #
+            # Control
+            #
+            ref: Optional[Ref] = None,
+            tooltip: Optional[str] = None,
+            disabled: Optional[bool] = None,
+            data: Any = None,
     ) -> None:
         Control.__init__(self, ref=ref, tooltip=tooltip, disabled=disabled, data=data)
         self.label = label
@@ -134,20 +134,20 @@ class NavigationBarDestination(Control):
 )
 class NavigationDestination(NavigationBarDestination):
     def __init__(
-        self,
-        label: Optional[str] = None,
+            self,
+            label: Optional[str] = None,
             icon: Optional[str] = None,
-        icon_content: Optional[Control] = None,
+            icon_content: Optional[Control] = None,
             selected_icon: Optional[str] = None,
-        selected_icon_content: Optional[Control] = None,
+            selected_icon_content: Optional[Control] = None,
             bgcolor: Optional[str] = None,
-        #
-        # Control
-        #
-        ref: Optional[Ref] = None,
-        tooltip: Optional[str] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
+            #
+            # Control
+            #
+            ref: Optional[Ref] = None,
+            tooltip: Optional[str] = None,
+            disabled: Optional[bool] = None,
+            data: Any = None,
     ) -> None:
         NavigationBarDestination.__init__(
             self,
@@ -202,17 +202,17 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         self,
         destinations: Optional[List[NavigationBarDestination]] = None,
         selected_index: Optional[int] = None,
-            bgcolor: Optional[str] = None,
+        bgcolor: Optional[str] = None,
         label_behavior: Optional[NavigationBarLabelBehavior] = None,
         elevation: OptionalNumber = None,
-            shadow_color: Optional[str] = None,
-            indicator_color: Optional[str] = None,
+        shadow_color: Optional[str] = None,
+        indicator_color: Optional[str] = None,
         indicator_shape: Optional[OutlinedBorder] = None,
-            surface_tint_color: Optional[str] = None,
+        surface_tint_color: Optional[str] = None,
         border: Optional[Border] = None,
         animation_duration: Optional[int] = None,
-            overlay_color: Optional[Union[Optional[str], Dict[MaterialState, Optional[str]]]] = None,
-            on_change: OptionalEventCallback = None,
+        overlay_color: Optional[Union[Optional[str], Dict[MaterialState, Optional[str]]]] = None,
+        on_change: OptionalEventCallback = None,
         #
         # ConstrainedControl and AdaptiveControl
         #

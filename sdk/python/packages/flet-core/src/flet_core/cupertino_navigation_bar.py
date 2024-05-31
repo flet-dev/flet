@@ -63,7 +63,7 @@ class CupertinoNavigationBar(ConstrainedControl):
         inactive_color: Optional[str] = None,
         border: Optional[Border] = None,
         icon_size: OptionalNumber = None,
-            on_change: OptionalEventCallback = None,
+        on_change: OptionalEventCallback = None,
         #
         # ConstrainedControl
         #
@@ -92,7 +92,7 @@ class CupertinoNavigationBar(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-    ) -> None:
+    ):
         ConstrainedControl.__init__(
             self,
             ref=ref,

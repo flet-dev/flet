@@ -26,22 +26,22 @@ class NavigationRailLabelType(Enum):
 
 class NavigationRailDestination(Control):
     def __init__(
-        self,
+            self,
             icon: Optional[str] = None,
-        icon_content: Optional[Control] = None,
+            icon_content: Optional[Control] = None,
             selected_icon: Optional[str] = None,
-        selected_icon_content: Optional[Control] = None,
-        label: Optional[str] = None,
-        label_content: Optional[Control] = None,
-        padding: PaddingValue = None,
+            selected_icon_content: Optional[Control] = None,
+            label: Optional[str] = None,
+            label_content: Optional[Control] = None,
+            padding: PaddingValue = None,
             indicator_color: Optional[str] = None,
-        indicator_shape: Optional[OutlinedBorder] = None,
-        #
-        # Control
-        #
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
+            indicator_shape: Optional[OutlinedBorder] = None,
+            #
+            # Control
+            #
+            ref: Optional[Ref] = None,
+            disabled: Optional[bool] = None,
+            data: Any = None,
     ) -> None:
         Control.__init__(self, ref=ref, disabled=disabled, data=data)
         self.label = label
@@ -223,8 +223,8 @@ class NavigationRail(ConstrainedControl):
         selected_index: Optional[int] = None,
         extended: Optional[bool] = None,
         label_type: Optional[NavigationRailLabelType] = None,
-            bgcolor: Optional[str] = None,
-            indicator_color: Optional[str] = None,
+        bgcolor: Optional[str] = None,
+        indicator_color: Optional[str] = None,
         indicator_shape: Optional[OutlinedBorder] = None,
         leading: Optional[Control] = None,
         trailing: Optional[Control] = None,
@@ -233,7 +233,7 @@ class NavigationRail(ConstrainedControl):
         group_alignment: OptionalNumber = None,
         selected_label_text_style: Optional[TextStyle] = None,
         unselected_label_text_style: Optional[TextStyle] = None,
-            on_change: OptionalEventCallback = None,
+        on_change: OptionalEventCallback = None,
         #
         # ConstrainedControl
         #

@@ -26,7 +26,6 @@ from typing import (
 from urllib.parse import urlparse
 
 import flet_core
-from flet_core import OnScrollEvent
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alert_dialog import AlertDialog
 from flet_core.animation import AnimationCurve
@@ -52,6 +51,7 @@ from flet_core.padding import Padding
 from flet_core.protocol import Command
 from flet_core.pubsub import PubSubClient
 from flet_core.querystring import QueryString
+from flet_core.scrollable_control import OnScrollEvent
 from flet_core.session_storage import SessionStorage
 from flet_core.snack_bar import SnackBar
 from flet_core.theme import Theme
