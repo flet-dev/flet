@@ -1012,7 +1012,7 @@ class Page(AdaptiveControl):
             base.update()
         else:
             raise Exception(
-                f"Please define {control_name} before show_{control_name}() method"
+                f"Please define {control_name} before open_{control_name}() method"
             )
 
     def __close_control(
