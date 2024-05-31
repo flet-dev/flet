@@ -1026,7 +1026,7 @@ class Page(AdaptiveControl):
             base.update()
         else:
             raise Exception(
-                f"Please define {control_name} before close_{control_name}() method"
+                f"The control {control_name} must be defined before calling close_{control_name}() method"
             )
 
     #
