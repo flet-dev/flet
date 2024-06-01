@@ -1019,7 +1019,7 @@ class Page(AdaptiveControl):
             base.update()
         else:
             raise Exception(
-                f"Please define {control_name} before show_{control_name}() method"
+                f"Please define {control_name} before open('{control_name}') method"
             )
 
     def __close_control(
@@ -1033,8 +1033,18 @@ class Page(AdaptiveControl):
             base.update()
         else:
             raise Exception(
-                f"Please define {control_name} before close_{control_name}() method"
+                f"Please define {control_name} before close('{control_name}') method"
             )
+
+    def __get_supported_types(self) -> Dict[str, Union[type, tuple[type, ...]]]:
+        return {
+            'snack_bar': SnackBar,
+            'dialog': (AlertDialog, CupertinoAlertDialog),
+            'banner': Banner,
+            'bottom_sheet': BottomSheet,
+            'drawer': NavigationDrawer,
+            'end_drawer': NavigationDrawer,
+        }
 
     @overload
     def open(self, control_name: Literal['snack_bar', 'dialog', 'banner', 'bottom_sheet', 'drawer', 'end_drawer']):
@@ -1065,15 +1075,8 @@ class Page(AdaptiveControl):
         ...
 
     def open(self, control_name: Literal['snack_bar', 'dialog', 'banner', 'bottom_sheet', 'drawer', 'end_drawer'],
-             control: Optional[Openable] = None):
-        supported_types = {
-            'snack_bar': SnackBar,
-            'dialog': (AlertDialog, CupertinoAlertDialog),
-            'banner': Banner,
-            'bottom_sheet': BottomSheet,
-            'drawer': NavigationDrawer,
-            'end_drawer': NavigationDrawer,
-        }
+             control: Optional[Openable] = None) -> None:
+        supported_types = self.__get_supported_types()
 
         if control_name not in list(supported_types.keys()):
             raise Exception(
@@ -1092,6 +1095,24 @@ class Page(AdaptiveControl):
             self.__setattr__(self, control_name, control)
 
         self.__open_control(control_name, self.__getattribute__(self, control_name))
+
+    def close(
+            self, control_name: Literal['snack_bar', 'dialog', 'banner', 'bottom_sheet', 'drawer', 'end_drawer']
+    ) -> None:
+        supported_types = self.__get_supported_types()
+
+        if control_name not in list(supported_types.keys()):
+            raise Exception(
+                f"control_name argument must be in list of supported controls. Supported controls: " +
+                ",".join(list(supported_types.keys()))
+            )
+
+        if not self.__getattribute__(self, control_name).open:
+            raise Exception(
+                f"{control_name} must be opened before closing."
+            )
+
+        self.__close_control(control_name, self.__getattribute__(self, control_name))
 
     #
     # SnackBar
