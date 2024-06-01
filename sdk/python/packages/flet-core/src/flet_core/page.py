@@ -1066,9 +1066,29 @@ class Page(AdaptiveControl):
 
     def open(self, control_name: Literal['snack_bar', 'dialog', 'banner', 'bottom_sheet', 'drawer', 'end_drawer'],
              control: Optional[Openable] = None):
-        # TODO: Type check `control` variable
+        supported_types = {
+            'snack_bar': SnackBar,
+            'dialog': (AlertDialog, CupertinoAlertDialog),
+            'banner': Banner,
+            'bottom_sheet': BottomSheet,
+            'drawer': NavigationDrawer,
+            'end_drawer': NavigationDrawer,
+        }
+
+        if control_name not in list(supported_types.keys()):
+            raise Exception(
+                f"control_name argument must be in list of supported controls. Supported controls: " +
+                ",".join(list(supported_types.keys()))
+            )
 
         if control:
+            t = supported_types[control_name]
+            if not isinstance(control, t):
+                raise Exception(
+                    f"The {control_name} property can have only the following types: " +
+                    ",".join([str(t)] if not isinstance(t, tuple) else [str(i) for i in t])
+                )
+
             self.__setattr__(self, control_name, control)
 
         self.__open_control(control_name, self.__getattribute__(self, control_name))
