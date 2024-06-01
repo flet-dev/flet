@@ -343,11 +343,8 @@ class Command(BaseCommand):
                 console.log("Flutter bootstrap directory:", self.flutter_dir)
             self.flutter_dir.mkdir(exist_ok=True)
 
-            rel_out_dir = (
-                options.output_dir
-                if options.output_dir
-                else os.path.join("build", self.platforms[target_platform]["dist"])
-            )
+            rel_out_dir = options.output_dir or os.path.join("build", self.platforms[target_platform]["dist"])
+
             out_dir = (
                 Path(options.output_dir).resolve()
                 if options.output_dir
@@ -358,10 +355,10 @@ class Command(BaseCommand):
             template_data["out_dir"] = self.flutter_dir.name
 
             project_name = slugify(
-                options.project_name if options.project_name else python_app_path.name
+                options.project_name or python_app_path.name
             ).replace("-", "_")
 
-            product_name = options.product_name if options.product_name else project_name
+            product_name = options.product_name or project_name
 
             template_data["project_name"] = project_name
 
@@ -896,14 +893,10 @@ class Command(BaseCommand):
                 console.log(f"Deleting Flutter bootstrap directory {self.flutter_dir}")
             shutil.rmtree(str(self.flutter_dir), ignore_errors=True, onerror=None)
         if exit_code == 0:
-            msg = message if message else "Success! 🥳"
+            msg = message or "Success! 🥳"
             console.log(msg)
         else:
-            msg = (
-                message
-                if message
-                else "Error building Flet app - see the log of failed command above."
-            )
+            msg = message or "Error building Flet app - see the log of failed command above."
             if check_flutter_version:
                 version_results = self.run(
                     [self.flutter_exe, "--version"],
