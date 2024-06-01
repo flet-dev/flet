@@ -22,8 +22,14 @@ from typing import (
     TypeVar,
     Union,
     cast,
-    overload, Literal,
+    overload,
 )
+
+try:
+    from typing import Literal
+except ImportError:
+    from typing_extensions import Literal
+
 from urllib.parse import urlparse
 
 import flet_core
