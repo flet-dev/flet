@@ -1096,35 +1096,31 @@ class Page(AdaptiveControl):
     #
     # SnackBar
     #
-    @overload
-    def open_snack_bar(self) -> None:
-        ...
-
-    @overload
-    def open_snack_bar(self, snack_bar: SnackBar) -> None:
-        ...
-
-    def open_snack_bar(self, snack_bar=None) -> None:
-        if snack_bar:
-            self.__offstage.snack_bar = snack_bar
-        self.__open_control("snack_bar", self.__offstage.snack_bar, self.__offstage)
 
     # Deprecated
     @deprecated(
-        reason="Use open_snack_bar() method instead.",
+        reason="Use open('snack_bar') method instead.",
+        version="0.22.1",
+        delete_version="1.0",
+    )
+    def open_snack_bar(self, snack_bar=None) -> None:
+        self.open('snack_bar', snack_bar)
+
+    @deprecated(
+        reason="Use open('snack_bar') method instead.",
         version="0.22.1",
         delete_version="1.0",
     )
     def show_snack_bar(self, snack_bar: SnackBar = None):
-        self.open_snack_bar(snack_bar)
+        self.open('snack_bar', snack_bar)
 
     @deprecated(
-        reason="Use open_snack_bar() method instead.",
+        reason="Use open('snack_bar') method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
     async def show_snack_bar_async(self, snack_bar: SnackBar = None):
-        self.open_snack_bar(snack_bar)
+        self.open('snack_bar', snack_bar)
 
     # End deprecated
 
@@ -1134,37 +1130,33 @@ class Page(AdaptiveControl):
     #
     # Dialogs
     #
-    @overload
-    def open_dialog(self) -> None:
-        ...
-
-    @overload
-    def open_dialog(self, dialog: Union[AlertDialog, CupertinoAlertDialog]) -> None:
-        ...
-
-    def open_dialog(self, dialog=None) -> None:
-        if dialog:
-            self.__offstage.dialog = dialog
-        self.__open_control("dialog", self.__offstage.dialog, self.__offstage)
 
     # Deprecated
     @deprecated(
-        reason="Use open_dialog() method instead.",
+        reason="Use open('dialog') method instead.",
+        version="0.22.1",
+        delete_version="1.0",
+    )
+    def open_dialog(self, dialog=None) -> None:
+        self.open('dialog', dialog)
+
+    @deprecated(
+        reason="Use open('dialog') method instead.",
         version="0.22.1",
         delete_version="1.0",
     )
     def show_dialog(self, dialog: Union[AlertDialog, CupertinoAlertDialog] = None):
-        self.open_dialog(dialog)
+        self.open('dialog', dialog)
 
     @deprecated(
-        reason="Use open_dialog() method instead.",
+        reason="Use open('dialog') method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
     async def show_dialog_async(
         self, dialog: Union[AlertDialog, CupertinoAlertDialog] = None
     ):
-        self.open_dialog(dialog)
+        self.open('dialog', dialog)
 
     # End deprecated
 
@@ -1182,35 +1174,31 @@ class Page(AdaptiveControl):
     #
     # Banner
     #
-    @overload
-    def open_banner(self) -> None:
-        ...
-
-    @overload
-    def open_banner(self, banner: Banner) -> None:
-        ...
-
-    def open_banner(self, banner=None) -> None:
-        if banner:
-            self.__offstage.banner = banner
-        self.__open_control("banner", self.__offstage.banner, self.__offstage)
 
     # Deprecated
     @deprecated(
-        reason="Use open_banner() method instead.",
+        reason="Use open('banner') method instead.",
+        version="0.22.1",
+        delete_version="1.0",
+    )
+    def open_banner(self, banner=None) -> None:
+        self.open('banner', banner)
+
+    @deprecated(
+        reason="Use open('banner') method instead.",
         version="0.22.1",
         delete_version="1.0",
     )
     def show_banner(self, banner: Banner = None):
-        self.open_banner(banner)
+        self.open('banner', banner)
 
     @deprecated(
-        reason="Use open_banner() method instead.",
+        reason="Use open('banner') method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
     async def show_banner_async(self, banner: Banner = None):
-        self.open_banner(banner)
+        self.open('banner', banner)
 
     # End deprecated
 
@@ -1228,43 +1216,35 @@ class Page(AdaptiveControl):
     #
     # BottomSheet
     #
-    @overload
-    def open_bottom_sheet(self) -> None:
-        ...
-
-    @overload
-    def open_bottom_sheet(
-        self, bottom_sheet: Union[BottomSheet, CupertinoBottomSheet]
-    ) -> None:
-        ...
-
-    def open_bottom_sheet(self, bottom_sheet=None) -> None:
-        if bottom_sheet:
-            self.__offstage.bottom_sheet = bottom_sheet
-        self.__open_control(
-            "bottom_sheet", self.__offstage.bottom_sheet, self.__offstage
-        )
 
     # Deprecated
     @deprecated(
-        reason="Use open_bottom_sheet() method instead.",
+        reason="Use open('bottom_sheet') method instead.",
+        version="0.22.1",
+        delete_version="1.0",
+    )
+    def open_bottom_sheet(self, bottom_sheet=None) -> None:
+        self.open('bottom_sheet', bottom_sheet)
+
+    @deprecated(
+        reason="Use open('bottom_sheet') method instead.",
         version="0.22.1",
         delete_version="1.0",
     )
     def show_bottom_sheet(
         self, bottom_sheet: Union[BottomSheet, CupertinoBottomSheet] = None
     ):
-        self.open_bottom_sheet(bottom_sheet)
+        self.open('bottom_sheet', bottom_sheet)
 
     @deprecated(
-        reason="Use open_bottom_sheet() method instead.",
+        reason="Use open('bottom_sheet') method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
     async def show_bottom_sheet_async(
         self, bottom_sheet: Union[BottomSheet, CupertinoBottomSheet] = None
     ):
-        self.open_bottom_sheet(bottom_sheet)
+        self.open('bottom_sheet', bottom_sheet)
 
     # End deprecated
 
@@ -1284,35 +1264,31 @@ class Page(AdaptiveControl):
     #
     # Drawer
     #
-    @overload
-    def open_drawer(self) -> None:
-        ...
-
-    @overload
-    def open_drawer(self, drawer: NavigationDrawer) -> None:
-        ...
-
-    def open_drawer(self, drawer=None) -> None:
-        if drawer:
-            self.drawer = drawer
-        self.__open_control("drawer", self.drawer)
 
     # Deprecated
     @deprecated(
-        reason="Use open_drawer() method instead.",
+        reason="Use open('drawer') method instead.",
+        version="0.22.1",
+        delete_version="1.0",
+    )
+    def open_drawer(self, drawer=None) -> None:
+        self.open('drawer', drawer)
+
+    @deprecated(
+        reason="Use open('drawer') method instead.",
         version="0.22.1",
         delete_version="1.0",
     )
     def show_drawer(self, drawer: NavigationDrawer = None):
-        self.open_drawer(drawer)
+        self.open('drawer', drawer)
 
     @deprecated(
-        reason="Use open_drawer() method instead.",
+        reason="Use open('drawer') method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
     async def show_drawer_async(self, drawer: NavigationDrawer = None):
-        self.open_drawer(drawer)
+        self.open('drawer', drawer)
 
     # End deprecated
 
@@ -1330,35 +1306,31 @@ class Page(AdaptiveControl):
     #
     # End_drawer
     #
-    @overload
-    def open_end_drawer(self) -> None:
-        ...
-
-    @overload
-    def open_end_drawer(self, end_drawer: NavigationDrawer) -> None:
-        ...
-
-    def open_end_drawer(self, end_drawer=None) -> None:
-        if end_drawer:
-            self.end_drawer = end_drawer
-        self.__open_control("end_drawer", self.end_drawer)
 
     # Deprecated
     @deprecated(
-        reason="Use open_end_drawer() method instead.",
+        reason="Use open('end_drawer') method instead.",
+        version="0.22.1",
+        delete_version="1.0",
+    )
+    def open_end_drawer(self, end_drawer=None) -> None:
+        self.open('end_drawer', end_drawer)
+
+    @deprecated(
+        reason="Use open('end_drawer') method instead.",
         version="0.22.1",
         delete_version="1.0",
     )
     def show_end_drawer(self, end_drawer: NavigationDrawer = None):
-        self.open_end_drawer(end_drawer)
+        self.open('end_drawer', end_drawer)
 
     @deprecated(
-        reason="Use open_end_drawer() method instead.",
+        reason="Use open('end_drawer') method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
     async def show_end_drawer_async(self, end_drawer: NavigationDrawer = None):
-        self.open_end_drawer(end_drawer)
+        self.open('end_drawer', end_drawer)
 
     # End deprecated
 
