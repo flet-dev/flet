@@ -42,6 +42,7 @@ class Command(BaseCommand):
     def __init__(self, parser: argparse.ArgumentParser) -> None:
         super().__init__(parser)
 
+        self.verbose = 0
         self.platforms = {
             "windows": {
                 "build_command": "windows",
@@ -93,6 +94,21 @@ class Command(BaseCommand):
                 "can_be_run_on": ["Darwin"],
             },
         }
+
+        # create and display build-platform-matrix table
+        self.platform_matrix_table = Table(
+            Column("Command", style="cyan", justify="left"),
+            Column("Platform", style="magenta", justify="center"),
+            title="Build Platform Matrix",
+            header_style="bold",
+            show_lines=True,
+        )
+        for p, info in self.platforms.items():
+            self.platform_matrix_table.add_row(
+                "flet build " + p,
+                ", ".join(info["can_be_run_on"]).replace("Darwin", "macOS"),
+                # style="bold red1" if p == target_platform else None,
+            )
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
         parser.add_argument(
@@ -281,6 +297,12 @@ class Command(BaseCommand):
             type=str,
             help="the branch, tag or commit ID to checkout after cloning the repository with Flutter bootstrap template",
         )
+        parser.add_argument(
+            "--show-platform-matrix",
+            action="store_true",
+            default=True,
+            help="displays the build platform matrix in a table, then exits",
+        )
 
     def handle(self, options: argparse.Namespace) -> None:
         self.verbose = options.verbose
@@ -288,28 +310,33 @@ class Command(BaseCommand):
         target_platform = options.target_platform.lower()
         # platform check
         current_platform = platform.system()
-        if current_platform not in self.platforms[target_platform]["can_be_run_on"]:
-            # make the platform name more user friendly
-            if current_platform == "Darwin":
-                current_platform = "macOS"
-            # create and display build-platform-matrix table
-            matrix_table = Table(
-                Column("Command", style="cyan", justify="left"),
-                Column("Platform", style="magenta", justify="center"),
-                title="Build Platform Matrix",
-                header_style="bold",
-                show_lines=True,
+        if (
+            current_platform not in self.platforms[target_platform]["can_be_run_on"]
+            or options.show_platform_matrix
+        ):
+            can_build_message = (
+                "can't"
+                if current_platform
+                not in self.platforms[target_platform]["can_be_run_on"]
+                else "can"
             )
-            for p, info in self.platforms.items():
-                matrix_table.add_row(
-                    "flet build " + p,
-                    ", ".join(info["can_be_run_on"]).replace("Darwin", "macOS"),
-                    style="bold red1" if p == target_platform else None,
-                )
-            console.log(matrix_table)
-            self.cleanup(1, f"Can't build {target_platform} on {current_platform}.")
+            # replace "Darwin" with "macOS" for user-friendliness
+            current_platform = (
+                "macOS" if current_platform == "Darwin" else current_platform
+            )
+            # highlight the current platform in the build matrix table
+            self.platform_matrix_table.rows[
+                list(self.platforms.keys()).index(target_platform)
+            ].style = "bold red1"
+            console.log(self.platform_matrix_table)
 
-        with console.status(f"[bold blue]Initializing {target_platform} build... ", spinner="bouncingBall") as status:
+            message = f"You {can_build_message} build [cyan]{target_platform}[/] on [magenta]{current_platform}[/]."
+            self.cleanup(1, message)
+
+        with console.status(
+            f"[bold blue]Initializing {target_platform} build... ",
+            spinner="bouncingBall",
+        ) as status:
             from cookiecutter.main import cookiecutter
 
             # get `flutter` and `dart` executables from PATH
@@ -321,7 +348,9 @@ class Command(BaseCommand):
                 console.log("Dart executable:", self.dart_exe)
 
             python_app_path = Path(options.python_app_path).resolve()
-            if not os.path.exists(python_app_path) or not os.path.isdir(python_app_path):
+            if not os.path.exists(python_app_path) or not os.path.isdir(
+                python_app_path
+            ):
                 self.cleanup(
                     1,
                     f"Path to Flet app does not exist or is not a directory: {python_app_path}",
@@ -329,10 +358,13 @@ class Command(BaseCommand):
 
             python_module_name = Path(options.module_name).stem
             python_module_filename = f"{python_module_name}.py"
-            if not os.path.exists(os.path.join(python_app_path, python_module_filename)):
+            if not os.path.exists(
+                os.path.join(python_app_path, python_module_filename)
+            ):
                 self.cleanup(
                     1,
-                    f"{python_module_filename} not found in the root of Flet app directory. Use --module-name option to specify an entry point for your Flet app.",
+                    f"{python_module_filename} not found in the root of Flet app directory. "
+                    f"Use --module-name option to specify an entry point for your Flet app.",
                 )
 
             self.flutter_dir = Path(tempfile.gettempdir()).joinpath(
@@ -343,7 +375,9 @@ class Command(BaseCommand):
                 console.log("Flutter bootstrap directory:", self.flutter_dir)
             self.flutter_dir.mkdir(exist_ok=True)
 
-            rel_out_dir = options.output_dir or os.path.join("build", self.platforms[target_platform]["dist"])
+            rel_out_dir = options.output_dir or os.path.join(
+                "build", self.platforms[target_platform]["dist"]
+            )
 
             out_dir = (
                 Path(options.output_dir).resolve()
@@ -351,8 +385,7 @@ class Command(BaseCommand):
                 else python_app_path.joinpath(rel_out_dir)
             )
 
-            template_data = {}
-            template_data["out_dir"] = self.flutter_dir.name
+            template_data = {"out_dir": self.flutter_dir.name}
 
             project_name = slugify(
                 options.project_name or python_app_path.name
@@ -400,22 +433,27 @@ class Command(BaseCommand):
             if options.flutter_packages:
                 for package in options.flutter_packages:
                     pspec = package.split(":")
-                    flutter_dependencies[pspec[0]] = pspec[1] if len(pspec) > 1 else "any"
+                    flutter_dependencies[pspec[0]] = (
+                        pspec[1] if len(pspec) > 1 else "any"
+                    )
 
             if self.verbose > 0:
                 console.log("Additional Flutter dependencies:", flutter_dependencies)
 
-            template_data["flutter"] = {"dependencies": list(flutter_dependencies.keys())}
+            template_data["flutter"] = {
+                "dependencies": list(flutter_dependencies.keys())
+            }
 
             template_url = options.template
             template_ref = options.template_ref
             if not template_url:
                 template_url = DEFAULT_TEMPLATE_URL
                 if not template_ref:
-                    if flet.version.version:
-                        template_ref = version.Version(flet.version.version).base_version
-                    else:
-                        template_ref = update_version()
+                    template_ref = (
+                        version.Version(flet.version.version).base_version
+                        if flet.version.version
+                        else update_version()
+                    )
 
             # create Flutter project from a template
             status.update(
@@ -456,12 +494,13 @@ class Command(BaseCommand):
                 if dep == project_name:
                     self.cleanup(
                         1,
-                        f"Project name cannot have the same name as one of its dependencies: {dep}. Use --project option to specify a different project name.",
+                        f"Project name cannot have the same name as one of its dependencies: {dep}. "
+                        f"Use --project option to specify a different project name.",
                     )
 
             # copy icons to `flutter_dir`
             status.update(
-                "[bold blue]Customizing app icons and splash images ⏳...",
+                "[bold blue]Customizing app icons and splash images ⏳... ",
             )
             assets_path = python_app_path.joinpath("assets")
             if assets_path.exists():
@@ -489,7 +528,9 @@ class Command(BaseCommand):
                 windows_icon = self.copy_icon_image(
                     assets_path, images_path, "icon_windows"
                 )
-                macos_icon = self.copy_icon_image(assets_path, images_path, "icon_macos")
+                macos_icon = self.copy_icon_image(
+                    assets_path, images_path, "icon_macos"
+                )
 
                 fallback_image("flutter_launcher_icons/image_path", [default_icon])
                 fallback_image(
@@ -515,15 +556,20 @@ class Command(BaseCommand):
                     [windows_icon, default_icon],
                 )
                 fallback_image(
-                    "flutter_launcher_icons/macos/image_path", [macos_icon, default_icon]
+                    "flutter_launcher_icons/macos/image_path",
+                    [macos_icon, default_icon],
                 )
 
                 # copy splash images
-                default_splash = self.copy_icon_image(assets_path, images_path, "splash")
+                default_splash = self.copy_icon_image(
+                    assets_path, images_path, "splash"
+                )
                 default_dark_splash = self.copy_icon_image(
                     assets_path, images_path, "splash_dark"
                 )
-                ios_splash = self.copy_icon_image(assets_path, images_path, "splash_ios")
+                ios_splash = self.copy_icon_image(
+                    assets_path, images_path, "splash_ios"
+                )
                 ios_dark_splash = self.copy_icon_image(
                     assets_path, images_path, "splash_dark_ios"
                 )
@@ -533,7 +579,9 @@ class Command(BaseCommand):
                 android_dark_splash = self.copy_icon_image(
                     assets_path, images_path, "splash_dark_android"
                 )
-                web_splash = self.copy_icon_image(assets_path, images_path, "splash_web")
+                web_splash = self.copy_icon_image(
+                    assets_path, images_path, "splash_web"
+                )
                 web_dark_splash = self.copy_icon_image(
                     assets_path, images_path, "splash_dark_web"
                 )
@@ -827,7 +875,7 @@ class Command(BaseCommand):
             self.cleanup(
                 0,
                 message=f"Successfully built your [cyan]{self.platforms[target_platform]['status_text']}[/cyan]! 🥳 "
-                        f"Find it in [cyan]{rel_out_dir}[/cyan] directory. 📂",
+                f"Find it in [cyan]{rel_out_dir}[/cyan] directory. 📂",
             )
 
     def create_pyodide_find_links(self):
@@ -886,7 +934,7 @@ class Command(BaseCommand):
         return r
 
     def cleanup(
-            self, exit_code: int, message: Optional[str] = None, check_flutter_version=False
+        self, exit_code: int, message: Optional[str] = None, check_flutter_version=False
     ):
         if self.flutter_dir and os.path.exists(self.flutter_dir):
             if self.verbose > 0:
@@ -896,7 +944,11 @@ class Command(BaseCommand):
             msg = message or "Success! 🥳"
             console.log(msg)
         else:
-            msg = message or "Error building Flet app - see the log of failed command above."
+            msg = (
+                message
+                if message is not None
+                else "Error building Flet app - see the log of failed command above."
+            )
             if check_flutter_version:
                 version_results = self.run(
                     [self.flutter_exe, "--version"],
@@ -911,9 +963,9 @@ class Command(BaseCommand):
                         flutter_version = version.parse(match.group(1))
                         if flutter_version < version.parse(MINIMAL_FLUTTER_VERSION):
                             flutter_msg = (
-                                    "Incorrect version of Flutter SDK installed. "
-                                    + f"Flet build requires Flutter {MINIMAL_FLUTTER_VERSION} or above. "
-                                    + f"You have {flutter_version}."
+                                "Incorrect version of Flutter SDK installed. "
+                                + f"Flet build requires Flutter {MINIMAL_FLUTTER_VERSION} or above. "
+                                + f"You have {flutter_version}."
                             )
                             msg = f"{msg}\n{flutter_msg}"
             console.log(msg, style=error_style)
