@@ -15,6 +15,7 @@ from typing import Optional
 import yaml
 from packaging import version
 from rich.console import Console, Style
+from rich.table import Table, Column
 
 import flet.version
 from flet.cli.commands.base import BaseCommand
@@ -29,7 +30,8 @@ PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.25.0/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 MINIMAL_FLUTTER_VERSION = "3.19.0"
 
-console = Console(log_path=False, style=Style(bold=True, color="green"))
+error_style = Style(color="red1")
+console = Console(log_path=False, style=Style(color="green", bold=True))
 
 
 class Command(BaseCommand):
@@ -281,6 +283,8 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
+        self.verbose = options.verbose
+        self.flutter_dir = None
         target_platform = options.target_platform.lower()
         # platform check
         current_platform = platform.system()
@@ -288,22 +292,33 @@ class Command(BaseCommand):
             # make the platform name more user friendly
             if current_platform == "Darwin":
                 current_platform = "macOS"
-
-            self.cleanup(1, f"Can't build {target_platform} on {current_platform}")
+            # create and display build-platform-matrix table
+            matrix_table = Table(
+                Column("Command", style="cyan", justify="left"),
+                Column("Platform", style="magenta", justify="center"),
+                title="Build Platform Matrix",
+                header_style="bold",
+                show_lines=True,
+            )
+            for p, info in self.platforms.items():
+                matrix_table.add_row(
+                    "flet build " + p,
+                    ", ".join(info["can_be_run_on"]).replace("Darwin", "macOS"),
+                    style="bold red1" if p == target_platform else None,
+                )
+            console.log(matrix_table)
+            self.cleanup(1, f"Can't build {target_platform} on {current_platform}.")
 
         with console.status(f"[bold blue]Initializing {target_platform} build... ", spinner="bouncingBall") as status:
             from cookiecutter.main import cookiecutter
-
-            self.verbose = options.verbose
-            self.flutter_dir = None
 
             # get `flutter` and `dart` executables from PATH
             self.flutter_exe = self.find_flutter_batch("flutter")
             self.dart_exe = self.find_flutter_batch("dart")
 
             if self.verbose > 1:
-                console.print("Flutter executable:", self.flutter_exe)
-                console.print("Dart executable:", self.dart_exe)
+                console.log("Flutter executable:", self.flutter_exe)
+                console.log("Dart executable:", self.dart_exe)
 
             python_app_path = Path(options.python_app_path).resolve()
             if not os.path.exists(python_app_path) or not os.path.isdir(python_app_path):
@@ -325,7 +340,7 @@ class Command(BaseCommand):
             )
 
             if self.verbose > 0:
-                console.print("Flutter bootstrap directory:", self.flutter_dir)
+                console.log("Flutter bootstrap directory:", self.flutter_dir)
             self.flutter_dir.mkdir(exist_ok=True)
 
             rel_out_dir = (
@@ -391,7 +406,7 @@ class Command(BaseCommand):
                     flutter_dependencies[pspec[0]] = pspec[1] if len(pspec) > 1 else "any"
 
             if self.verbose > 0:
-                console.print("Additional Flutter dependencies:", flutter_dependencies)
+                console.log("Additional Flutter dependencies:", flutter_dependencies)
 
             template_data["flutter"] = {"dependencies": list(flutter_dependencies.keys())}
 
@@ -407,7 +422,7 @@ class Command(BaseCommand):
 
             # create Flutter project from a template
             status.update(
-                f"[bold blue]Creating Flutter bootstrap project from {template_url} with ref {template_ref}...",
+                f"[bold blue]Creating Flutter bootstrap project from {template_url} with ref {template_ref} ⏳... ",
             )
             try:
                 cookiecutter(
@@ -449,7 +464,7 @@ class Command(BaseCommand):
 
             # copy icons to `flutter_dir`
             status.update(
-                "[bold blue]Customizing app icons and splash images...",
+                "[bold blue]Customizing app icons and splash images ⏳...",
             )
             assets_path = python_app_path.joinpath("assets")
             if assets_path.exists():
@@ -616,7 +631,7 @@ class Command(BaseCommand):
                 yaml.dump(pubspec, f)
 
             # generate icons
-            status.update("[bold blue]Generating app icons...")
+            status.update("[bold blue]Generating app icons ⏳... ")
             icons_result = self.run(
                 [self.dart_exe, "run", "flutter_launcher_icons"],
                 cwd=str(self.flutter_dir),
@@ -624,16 +639,16 @@ class Command(BaseCommand):
             )
             if icons_result.returncode != 0:
                 if icons_result.stdout:
-                    console.print(icons_result.stdout)
+                    console.log(icons_result.stdout)
                 if icons_result.stderr:
-                    console.print(icons_result.stderr, style="red")
+                    console.log(icons_result.stderr, style=error_style)
                 self.cleanup(icons_result.returncode, check_flutter_version=True)
 
             console.log("Generated app icons ✅")
             # generate splash
             if target_platform in ["web", "ipa", "apk", "aab"]:
                 status.update(
-                    "[bold blue]Generating splash screens...",
+                    "[bold blue]Generating splash screens ⏳... ",
                 )
                 splash_result = self.run(
                     [self.dart_exe, "run", "flutter_native_splash:create"],
@@ -642,9 +657,9 @@ class Command(BaseCommand):
                 )
                 if splash_result.returncode != 0:
                     if splash_result.stdout:
-                        console.print(splash_result.stdout)
+                        console.log(splash_result.stdout)
                     if splash_result.stderr:
-                        console.print(splash_result.stderr, style="red")
+                        console.log(splash_result.stderr, style=error_style)
                     self.cleanup(splash_result.returncode, check_flutter_version=True)
 
                 console.log("Generated splash screens ✅")
@@ -656,7 +671,7 @@ class Command(BaseCommand):
 
             # package Python app
             status.update(
-                f"[bold blue]Packaging Python app...",
+                f"[bold blue]Packaging Python app ⏳... ",
             )
             package_args = [
                 self.dart_exe,
@@ -712,9 +727,9 @@ class Command(BaseCommand):
 
             if package_result.returncode != 0:
                 if package_result.stdout:
-                    console.print(package_result.stdout)
+                    console.log(package_result.stdout)
                 if package_result.stderr:
-                    console.print(package_result.stderr, style="red")
+                    console.log(package_result.stderr, style=error_style)
                 self.cleanup(package_result.returncode)
 
             # make sure app/app.zip exists
@@ -730,7 +745,7 @@ class Command(BaseCommand):
 
             # run `flutter build`
             status.update(
-                f"[bold blue]Building [cyan]{self.platforms[target_platform]['status_text']}[/cyan]...",
+                f"[bold blue]Building [cyan]{self.platforms[target_platform]['status_text']}[/cyan] ⏳... ",
             )
             build_args = [
                 self.flutter_exe,
@@ -761,9 +776,9 @@ class Command(BaseCommand):
 
             if build_result.returncode != 0:
                 if build_result.stdout:
-                    console.print(build_result.stdout)
+                    console.log(build_result.stdout)
                 if build_result.stderr:
-                    console.print(build_result.stderr, style="red")
+                    console.log(build_result.stderr, style=error_style)
                 self.cleanup(build_result.returncode, check_flutter_version=True)
             console.log(
                 f"Built [cyan]{self.platforms[target_platform]['status_text']}[/cyan] ✅",
@@ -771,7 +786,7 @@ class Command(BaseCommand):
 
             # copy build results to `out_dir`
             status.update(
-                f"[bold blue]Copying build to [cyan]{rel_out_dir}[/cyan] directory...",
+                f"[bold blue]Copying build to [cyan]{rel_out_dir}[/cyan] directory ⏳... ",
             )
             arch = platform.machine().lower()
             if arch == "x86_64" or arch == "amd64":
@@ -832,7 +847,7 @@ class Command(BaseCommand):
         images = glob.glob(str(src_path.joinpath(f"{image_name}.*")))
         if len(images) > 0:
             if self.verbose > 0:
-                console.print(f"Copying {images[0]} to {dest_path}")
+                console.log(f"Copying {images[0]} to {dest_path}")
             shutil.copy(images[0], dest_path)
             return Path(images[0]).name
         return None
@@ -857,7 +872,7 @@ class Command(BaseCommand):
             windll.kernel32.SetConsoleOutputCP(65001)
 
         if self.verbose > 0:
-            console.print(f"\nRun subprocess: {args}")
+            console.log(f"Run subprocess: {args}")
 
         r = subprocess.run(
             args,
@@ -878,7 +893,7 @@ class Command(BaseCommand):
     ):
         if self.flutter_dir and os.path.exists(self.flutter_dir):
             if self.verbose > 0:
-                console.print(f"Deleting Flutter bootstrap directory {self.flutter_dir}")
+                console.log(f"Deleting Flutter bootstrap directory {self.flutter_dir}")
             shutil.rmtree(str(self.flutter_dir), ignore_errors=True, onerror=None)
         if exit_code == 0:
             msg = message if message else "Success! 🥳"
@@ -908,5 +923,5 @@ class Command(BaseCommand):
                                     + f"You have {flutter_version}."
                             )
                             msg = f"{msg}\n{flutter_msg}"
-            console.print(msg, style="red")
+            console.log(msg, style=error_style)
         sys.exit(exit_code)
