@@ -1036,7 +1036,7 @@ class Page(AdaptiveControl):
                 f"Please define {control_name} before close('{control_name}') method"
             )
 
-    def __get_supported_types(self) -> Dict[str, Union[type, tuple[type, ...]]]:
+    def __get_supported_types(self) -> Dict[str, Union[type, Tuple[type, ...]]]:
         return {
             'snack_bar': SnackBar,
             'dialog': (AlertDialog, CupertinoAlertDialog),
