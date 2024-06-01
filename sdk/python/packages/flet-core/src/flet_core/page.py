@@ -1066,8 +1066,12 @@ class Page(AdaptiveControl):
 
     def open(self, control_name: Literal['snack_bar', 'dialog', 'banner', 'bottom_sheet', 'drawer', 'end_drawer'],
              control: Optional[Openable] = None):
-        # TODO: Realisation of open()
-        ...
+        # TODO: Type check `control` variable
+
+        if control:
+            self.__setattr__(self, control_name, control)
+
+        self.__open_control(control_name, self.__getattribute__(self, control_name))
 
     #
     # SnackBar
