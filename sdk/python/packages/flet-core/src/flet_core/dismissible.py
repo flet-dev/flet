@@ -165,7 +165,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use confirm_dismiss() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def confirm_dismiss_async(self, dismiss: bool):
         self.confirm_dismiss(dismiss)

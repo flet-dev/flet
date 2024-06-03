@@ -196,7 +196,7 @@ class Video(ConstrainedControl):
     @deprecated(
         reason="Use play() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def play_async(self):
         self.play()
@@ -207,7 +207,7 @@ class Video(ConstrainedControl):
     @deprecated(
         reason="Use pause() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def pause_async(self):
         self.pause()
@@ -218,7 +218,7 @@ class Video(ConstrainedControl):
     @deprecated(
         reason="Use play_or_pause() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def play_or_pause_async(self):
         self.play_or_pause()
@@ -229,7 +229,7 @@ class Video(ConstrainedControl):
     @deprecated(
         reason="Use stop() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def stop_async(self):
         self.stop()
@@ -240,7 +240,7 @@ class Video(ConstrainedControl):
     @deprecated(
         reason="Use next() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def next_async(self):
         self.next()
@@ -251,7 +251,7 @@ class Video(ConstrainedControl):
     @deprecated(
         reason="Use previous() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def previous_async(self):
         self.previous()
@@ -285,7 +285,7 @@ class Video(ConstrainedControl):
     @deprecated(
         reason="Use playlist_add() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def playlist_add_async(self, media: VideoMedia):
         self.playlist_add(media)
@@ -298,7 +298,7 @@ class Video(ConstrainedControl):
     @deprecated(
         reason="Use playlist_remove() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def playlist_remove_async(self, media_index: int):
         self.playlist_remove(media_index)
