@@ -4,6 +4,7 @@ import logging
 import threading
 import time
 import uuid
+import warnings
 from asyncio import AbstractEventLoop
 from concurrent.futures import ThreadPoolExecutor, Future
 from contextvars import ContextVar
@@ -46,7 +47,7 @@ from flet_core.event_handler import EventHandler
 from flet_core.floating_action_button import FloatingActionButton
 from flet_core.locks import NopeLock
 from flet_core.navigation_bar import NavigationBar
-from flet_core.navigation_drawer import NavigationDrawer
+from flet_core.navigation_drawer import NavigationDrawer, NavigationDrawerPosition
 from flet_core.padding import Padding
 from flet_core.protocol import Command
 from flet_core.pubsub import PubSubClient
@@ -67,7 +68,8 @@ from flet_core.types import (
     PagePlatform,
     ScrollMode,
     ThemeMode,
-    Wrapper, OptionalEventCallback,
+    Wrapper,
+    OptionalEventCallback,
 )
 from flet_core.utils import classproperty, deprecated
 from flet_core.utils.concurrency_utils import is_pyodide
@@ -452,7 +454,7 @@ class Page(AdaptiveControl):
         return added_controls, removed_controls
 
     def __prepare_update(
-            self, *controls: Control
+        self, *controls: Control
     ) -> Tuple[List[Any], List[Control], List[Control]]:
         added_controls = []
         removed_controls = []
@@ -808,7 +810,7 @@ class Page(AdaptiveControl):
         )
 
     async def get_clipboard_async(
-            self, wait_timeout: Optional[float] = 10
+        self, wait_timeout: Optional[float] = 10
     ) -> Optional[str]:
         return await self._invoke_method_async(
             "getClipboard", wait_for_result=True, wait_timeout=wait_timeout
@@ -1003,17 +1005,37 @@ class Page(AdaptiveControl):
         self.__method_call_results[evt] = (result.result, result.error)
         evt.set()
 
-    @staticmethod
-    def open(control: Control) -> None:
-        if hasattr(control, "open"):
+    def open(self, control: Control) -> None:
+        if not hasattr(control, "open"):
+            raise ValueError("control has no open attribute")
+        else:
             control.open = True
-            control.update()
+            if isinstance(control, NavigationDrawer):
+                if control.position == NavigationDrawerPosition.END:
+                    if self.end_drawer == control:
+                        control.update()
+                        return
+                    else:
+                        self.end_drawer = control
+                else:
+                    if self.drawer == control:
+                        control.update()
+                        return
+                    else:
+                        self.drawer = control
+                self.update()  # called only if the new drawer is different from the current one
+            elif control not in self.overlay:
+                self.__offstage.controls.append(control)
+                self.__offstage.update()
+            return
 
     @staticmethod
     def close(control: Control) -> None:
         if hasattr(control, "open"):
             control.open = False
             control.update()
+        else:
+            raise ValueError("control has no open attribute")
 
     #
     # SnackBar
@@ -1123,8 +1145,8 @@ class Page(AdaptiveControl):
         delete_version="1.0",
     )
     def show_bottom_sheet(
-            self,
-            bottom_sheet: Union[BottomSheet, CupertinoBottomSheet],
+        self,
+        bottom_sheet: Union[BottomSheet, CupertinoBottomSheet],
     ):
         self.__offstage.bottom_sheet = bottom_sheet
         self.__offstage.bottom_sheet.open = True
@@ -1136,8 +1158,8 @@ class Page(AdaptiveControl):
         delete_version="1.0",
     )
     async def show_bottom_sheet_async(
-            self,
-            bottom_sheet: Union[BottomSheet, CupertinoBottomSheet],
+        self,
+        bottom_sheet: Union[BottomSheet, CupertinoBottomSheet],
     ):
         self.show_bottom_sheet(bottom_sheet)
 
@@ -1586,6 +1608,11 @@ class Page(AdaptiveControl):
     @banner.setter
     def banner(self, value: Optional[Banner]):
         self.__offstage.banner = value
+        warnings.warn(
+            "banner is deprecated in version 0.23.0 and will be removed in version 0.26.0. ",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
     # snack_bar
     @property
@@ -1595,6 +1622,11 @@ class Page(AdaptiveControl):
     @snack_bar.setter
     def snack_bar(self, value: Optional[SnackBar]):
         self.__offstage.snack_bar = value
+        warnings.warn(
+            "snack_bar is deprecated in version 0.23.0 and will be removed in version 0.26.0. ",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
     # dialog
     @property
@@ -1604,6 +1636,11 @@ class Page(AdaptiveControl):
     @dialog.setter
     def dialog(self, value: Optional[Control]):
         self.__offstage.dialog = value
+        warnings.warn(
+            "dialog is deprecated in version 0.23.0 and will be removed in version 0.26.0. ",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
     # bottom_sheet
     @property
@@ -1613,6 +1650,11 @@ class Page(AdaptiveControl):
     @bottom_sheet.setter
     def bottom_sheet(self, value: Optional[BottomSheet]):
         self.__offstage.bottom_sheet = value
+        warnings.warn(
+            "bottom_sheet is deprecated in version 0.23.0 and will be removed in version 0.26.0. ",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
     # theme_mode
     @property
@@ -1965,7 +2007,9 @@ class Page(AdaptiveControl):
         return self.__on_app_lifecycle_state_change
 
     @on_app_lifecycle_state_change.setter
-    def on_app_lifecycle_state_change(self, handler: "Optional[Callable[[AppLifecycleStateChangeEvent], None]]"):
+    def on_app_lifecycle_state_change(
+        self, handler: "Optional[Callable[[AppLifecycleStateChangeEvent], None]]"
+    ):
         self.__on_app_lifecycle_state_change.subscribe(handler)
 
     # on_route_change
@@ -2097,19 +2141,7 @@ class Offstage(Control):
         return "offstage"
 
     def _get_children(self):
-        children = []
-        children.extend(self.__controls)
-        if self.__banner:
-            children.append(self.__banner)
-        if self.__snack_bar:
-            children.append(self.__snack_bar)
-        if self.__dialog:
-            children.append(self.__dialog)
-        if self.__bottom_sheet:
-            children.append(self.__bottom_sheet)
-        if self.__splash:
-            children.append(self.__splash)
-        return children
+        return self.__controls
 
     # controls
     @property
@@ -2124,6 +2156,8 @@ class Offstage(Control):
     @splash.setter
     def splash(self, value: Optional[Control]):
         self.__splash = value
+        if value is not None:
+            self.__controls.append(value)
 
     # banner
     @property
@@ -2133,6 +2167,8 @@ class Offstage(Control):
     @banner.setter
     def banner(self, value: Optional[Banner]):
         self.__banner = value
+        if value is not None:
+            self.__controls.append(value)
 
     # snack_bar
     @property
@@ -2142,6 +2178,8 @@ class Offstage(Control):
     @snack_bar.setter
     def snack_bar(self, value: Optional[SnackBar]):
         self.__snack_bar = value
+        if value is not None:
+            self.__controls.append(value)
 
     # dialog
     @property
@@ -2151,6 +2189,8 @@ class Offstage(Control):
     @dialog.setter
     def dialog(self, value: Optional[Union[AlertDialog, CupertinoAlertDialog]]):
         self.__dialog = value
+        if value is not None:
+            self.__controls.append(value)
 
     # bottom_sheet
     @property
@@ -2160,6 +2200,8 @@ class Offstage(Control):
     @bottom_sheet.setter
     def bottom_sheet(self, value: Optional[Union[BottomSheet, CupertinoBottomSheet]]):
         self.__bottom_sheet = value
+        if value is not None:
+            self.__controls.append(value)
 
 
 @dataclass

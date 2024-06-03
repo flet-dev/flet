@@ -1,12 +1,12 @@
 from datetime import time
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, Callable
 
 from flet_core import ControlEvent
 from flet_core.control import Control, OptionalNumber
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
-from flet_core.types import Orientation, ResponsiveNumber
+from flet_core.types import Orientation, ResponsiveNumber, OptionalEventCallback
 from flet_core.utils import deprecated
 
 
@@ -32,36 +32,40 @@ class TimePicker(Control):
 
     Example:
     ```
-    import datetime
     import flet as ft
 
-    def main(page: ft.Page):
-        def change_time(e):
-            print(f"Time picker changed, value (minute) is {time_picker.value.minute}")
 
-        def dismissed(e):
-            print(f"Time picker dismissed, value is {time_picker.value}")
+    def main(page: ft.Page):
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+
+        def handle_change(e):
+            page.add(ft.Text(f"TimePicker change: {time_picker.value}"))
+
+        def handle_dismissal(e):
+            page.add(ft.Text(f"TimePicker dismissed: {time_picker.value}"))
+
+        def handle_entry_mode_change(e):
+            page.add(ft.Text(f"TimePicker Entry mode changed to {e.entry_mode}"))
 
         time_picker = ft.TimePicker(
             confirm_text="Confirm",
             error_invalid_text="Time out of range",
             help_text="Pick your time slot",
-            on_change=change_time,
-            on_dismiss=dismissed,
+            on_change=handle_change,
+            on_dismiss=handle_dismissal,
+            on_entry_mode_change=handle_entry_mode_change,
         )
 
-        page.overlay.append(time_picker)
-
-        date_button = ft.ElevatedButton(
-            "Pick time",
-            icon=ft.icons.TIME_TO_LEAVE,
-            on_click=lambda _: page.open(time_picker),
+        page.add(
+            ft.ElevatedButton(
+                "Pick time",
+                icon=ft.icons.TIME_TO_LEAVE,
+                on_click=lambda _: page.open(time_picker),
+            )
         )
 
-        page.add(date_button)
 
-
-    ft.app(target=main)
+    ft.app(main)
     ```
 
     -----
@@ -81,9 +85,11 @@ class TimePicker(Control):
         confirm_text: Optional[str] = None,
         error_invalid_text: Optional[str] = None,
         orientation: Optional[Orientation] = None,
-        on_change=None,
-        on_dismiss=None,
-        on_entry_mode_change=None,
+        on_change: OptionalEventCallback = None,
+        on_dismiss: OptionalEventCallback = None,
+        on_entry_mode_change: Optional[
+            Callable[[TimePickerEntryModeChangeEvent], None]
+        ] = None,
         #
         # Control
         #
@@ -110,7 +116,9 @@ class TimePicker(Control):
             data=data,
         )
 
-        self.__on_entry_mode_change = EventHandler(lambda e: TimePickerEntryModeChangeEvent(e.data))
+        self.__on_entry_mode_change = EventHandler(
+            lambda e: TimePickerEntryModeChangeEvent(e.data)
+        )
         self._add_event_handler(
             "entryModeChange", self.__on_entry_mode_change.get_handler()
         )
@@ -256,7 +264,7 @@ class TimePicker(Control):
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallback):
         self._add_event_handler("change", handler)
 
     # on_dismiss
@@ -265,7 +273,7 @@ class TimePicker(Control):
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler):
+    def on_dismiss(self, handler: OptionalEventCallback):
         self._add_event_handler("dismiss", handler)
 
     # on_entry_mode_change
@@ -274,5 +282,7 @@ class TimePicker(Control):
         return self.__on_entry_mode_change
 
     @on_entry_mode_change.setter
-    def on_entry_mode_change(self, handler):
+    def on_entry_mode_change(
+        self, handler: Optional[Callable[[TimePickerEntryModeChangeEvent], None]]
+    ):
         self.__on_entry_mode_change.subscribe(handler)

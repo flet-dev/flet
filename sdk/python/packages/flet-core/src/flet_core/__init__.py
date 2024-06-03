@@ -184,7 +184,11 @@ from flet_core.navigation_bar import (
     NavigationDestination,
     NavigationBarLabelBehavior,
 )
-from flet_core.navigation_drawer import NavigationDrawer, NavigationDrawerDestination
+from flet_core.navigation_drawer import (
+    NavigationDrawer,
+    NavigationDrawerDestination,
+    NavigationDrawerPosition,
+)
 from flet_core.navigation_rail import (
     NavigationRail,
     NavigationRailDestination,
