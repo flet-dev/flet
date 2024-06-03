@@ -17,7 +17,12 @@ from typing import (
 from flet_core.embed_json_encoder import EmbedJsonEncoder
 from flet_core.protocol import Command
 from flet_core.ref import Ref
-from flet_core.types import OptionalNumber, ResponsiveNumber, SupportsStr
+from flet_core.types import (
+    OptionalNumber,
+    ResponsiveNumber,
+    SupportsStr,
+    OptionalEventCallback,
+)
 from flet_core.utils import deprecated
 
 if TYPE_CHECKING:
@@ -67,7 +72,7 @@ class Control:
         self.data = data
         self.rtl = rtl
 
-        self.__event_handlers = {}
+        self.__event_handlers: Dict[str, OptionalEventCallback] = {}
         self.parent: Optional[Control] = None
 
     def is_isolated(self) -> bool:
@@ -96,10 +101,12 @@ class Control:
             "_get_control_name must be overridden in inherited class"
         )
 
-    def _add_event_handler(self, event_name: str, handler) -> None:
+    def _add_event_handler(
+        self, event_name: str, handler: OptionalEventCallback
+    ) -> None:
         self.__event_handlers[event_name] = handler
 
-    def _get_event_handler(self, event_name: str):
+    def _get_event_handler(self, event_name: str) -> OptionalEventCallback:
         return self.__event_handlers.get(event_name)
 
     def _get_attr(
@@ -261,7 +268,9 @@ class Control:
 
     @opacity.setter
     def opacity(self, value: OptionalNumber):
-        assert value is None or 0.0 <= value <= 1.0, "Opacity must be between 0.0 and 1.0"
+        assert (
+            value is None or 0.0 <= value <= 1.0
+        ), "opacity must be between 0.0 and 1.0"
         self._set_attr("opacity", value)
 
     # tooltip
