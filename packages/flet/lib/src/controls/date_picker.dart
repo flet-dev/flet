@@ -4,6 +4,7 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/form_field.dart';
 import '../utils/icons.dart';
+import '../utils/others.dart';
 
 class DatePickerControl extends StatefulWidget {
   final Control? parent;
@@ -41,19 +42,11 @@ class _DatePickerControlState extends State<DatePickerControl> {
     String? errorInvalidText = widget.control.attrString("errorInvalidText");
     TextInputType keyboardType = parseTextInputType(
         widget.control.attrString("keyboardType"), TextInputType.text)!;
-    DatePickerMode datePickerMode = DatePickerMode.values.firstWhere(
-        (a) =>
-            a.name.toLowerCase() ==
-            widget.control.attrString("datePickerMode", "")!.toLowerCase(),
-        orElse: () => DatePickerMode.day);
-    DatePickerEntryMode datePickerEntryMode = DatePickerEntryMode.values
-        .firstWhere(
-            (a) =>
-                a.name.toLowerCase() ==
-                widget.control
-                    .attrString("datePickerEntryMode", "")!
-                    .toLowerCase(),
-            orElse: () => DatePickerEntryMode.calendar);
+    DatePickerMode datePickerMode = parseDatePickerMode(
+        widget.control.attrString("datePickerMode"), DatePickerMode.day)!;
+    DatePickerEntryMode datePickerEntryMode = parseDatePickerEntryMode(
+        widget.control.attrString("datePickerEntryMode"),
+        DatePickerEntryMode.calendar)!;
     String? fieldHintText = widget.control.attrString("fieldHintText");
     String? fieldLabelText = widget.control.attrString("fieldLabelText");
     IconData? switchToCalendarEntryModeIcon = parseIcon(

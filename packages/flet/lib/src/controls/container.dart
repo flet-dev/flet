@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -87,6 +86,8 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
 
     var animation = parseAnimation(control, "animate");
     var blur = parseBlur(control, "blur");
+    var colorFilter =
+        parseColorFilter(control, "colorFilter", Theme.of(context));
 
     return withPageArgs((context, pageArgs) {
       DecorationImage? image;
@@ -116,14 +117,9 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
       }
 
       var gradient = parseGradient(Theme.of(context), control, "gradient");
-      var blendMode = BlendMode.values.firstWhereOrNull((e) =>
-          e.name.toLowerCase() ==
-          control.attrString("blendMode", "")!.toLowerCase());
-      var shape = BoxShape.values.firstWhere(
-          (e) =>
-              e.name.toLowerCase() ==
-              control.attrString("shape", "")!.toLowerCase(),
-          orElse: () => BoxShape.rectangle);
+      var blendMode = parseBlendMode(control.attrString("blendMode"));
+      var shape =
+          parseBoxShape(control.attrString("shape"), BoxShape.rectangle)!;
 
       var borderRadius = parseBorderRadius(control, "borderRadius");
 
@@ -314,6 +310,9 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 borderRadius: borderRadius,
                 child: BackdropFilter(filter: blur, child: result))
             : ClipRect(child: BackdropFilter(filter: blur, child: result));
+      }
+      if (colorFilter != null) {
+        result = ColorFiltered(colorFilter: colorFilter, child: result);
       }
 
       return constrainedControl(context, result, parent, control);

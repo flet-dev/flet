@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -50,10 +49,8 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
         children.where((c) => c.name == "content" && c.isVisible);
     bool disabled = control.isDisabled || parentDisabled;
 
-    PopupMenuPosition? menuPosition = PopupMenuPosition.values.firstWhereOrNull(
-        (p) =>
-            p.name.toLowerCase() ==
-            control.attrString("menuPosition", "")!.toLowerCase());
+    PopupMenuPosition? menuPosition =
+        parsePopupMenuPosition(control.attrString("menuPosition"));
 
     Widget? child = contentCtrls.isNotEmpty
         ? createControl(control, contentCtrls.first.id, disabled)

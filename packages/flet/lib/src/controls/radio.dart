@@ -5,6 +5,7 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/mouse.dart';
+import '../utils/others.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 import 'cupertino_radio.dart';
@@ -12,7 +13,6 @@ import 'error.dart';
 import 'flet_store_mixin.dart';
 import 'list_tile.dart';
 
-enum LabelPosition { right, left }
 
 class RadioControl extends StatefulWidget {
   final Control? parent;
@@ -80,11 +80,8 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
 
       String label = widget.control.attrString("label", "")!;
       String value = widget.control.attrString("value", "")!;
-      LabelPosition labelPosition = LabelPosition.values.firstWhere(
-          (p) =>
-              p.name.toLowerCase() ==
-              widget.control.attrString("labelPosition", "")!.toLowerCase(),
-          orElse: () => LabelPosition.right);
+      LabelPosition labelPosition = parseLabelPosition(
+          widget.control.attrString("labelPosition"), LabelPosition.right)!;
       VisualDensity? visualDensity =
           parseVisualDensity(widget.control.attrString("visualDensity"));
       bool autofocus = widget.control.attrBool("autofocus", false)!;

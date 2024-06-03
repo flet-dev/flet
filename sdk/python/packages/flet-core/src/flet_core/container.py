@@ -1,4 +1,5 @@
 import json
+from dataclasses import dataclass, field
 from typing import Any, List, Optional, Tuple, Union
 
 from flet_core.adaptive_control import AdaptiveControl
@@ -30,6 +31,12 @@ from flet_core.types import (
     ThemeMode,
     UrlTarget,
 )
+
+
+@dataclass
+class ColorFilter:
+    color: Optional[str] = field(default=None)
+    blend_mode: Optional[BlendMode] = field(default=None)
 
 
 class Container(ConstrainedControl, AdaptiveControl):
@@ -88,6 +95,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         url_target: Optional[UrlTarget] = None,
         theme: Optional[Theme] = None,
         theme_mode: Optional[ThemeMode] = None,
+        color_filter: Optional[ColorFilter] = None,
         on_click=None,
         on_tap_down=None,
         on_long_press=None,
@@ -191,6 +199,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.url_target = url_target
         self.theme = theme
         self.theme_mode = theme_mode
+        self.color_filter = color_filter
         self.on_click = on_click
         self.on_tap_down = on_tap_down
         self.on_long_press = on_long_press
@@ -211,6 +220,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("blur", self.__blur)
         self._set_attr_json("shadow", self.__shadow if self.__shadow else None)
         self._set_attr_json("theme", self.__theme)
+        self._set_attr_json("colorFilter", self.__color_filter)
 
     def _get_children(self):
         children = []
@@ -305,6 +315,15 @@ class Container(ConstrainedControl, AdaptiveControl):
     @shadow.setter
     def shadow(self, value: Union[None, BoxShadow, List[BoxShadow]]):
         self.__shadow = value if value is not None else []
+
+    # color_filter
+    @property
+    def color_filter(self) -> Optional[ColorFilter]:
+        return self.__color_filter
+
+    @color_filter.setter
+    def color_filter(self, value: Optional[ColorFilter]):
+        self.__color_filter = value
 
     # border
     @property

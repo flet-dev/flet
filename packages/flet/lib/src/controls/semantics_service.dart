@@ -3,6 +3,7 @@ import 'package:flutter/semantics.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/others.dart';
 
 class SemanticsServiceControl extends StatelessWidget {
   final Control? parent;
@@ -22,9 +23,8 @@ class SemanticsServiceControl extends StatelessWidget {
         case "announce_message":
           debugPrint("SemanticsService.announceMessage($message)");
           var rtl = args["rtl"] == "true";
-          var assertiveness = Assertiveness.values.firstWhere(
-              (e) => e.name == args["assertiveness"].toString().toLowerCase(),
-              orElse: () => Assertiveness.polite);
+          var assertiveness = parseAssertiveness(
+              args["assertiveness"].toString(), Assertiveness.polite)!;
           SemanticsService.announce(
               message, rtl ? TextDirection.rtl : TextDirection.ltr,
               assertiveness: assertiveness);

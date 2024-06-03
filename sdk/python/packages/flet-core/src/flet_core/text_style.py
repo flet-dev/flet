@@ -1,5 +1,4 @@
-import dataclasses
-from dataclasses import field
+from dataclasses import dataclass, field
 from enum import Enum, IntFlag
 from typing import List, Optional, Union
 
@@ -24,7 +23,7 @@ class TextDecorationStyle(Enum):
     WAVY = "wavy"
 
 
-@dataclasses.dataclass
+@dataclass
 class TextStyle:
     size: OptionalNumber = field(default=None)
     height: OptionalNumber = field(default=None)
