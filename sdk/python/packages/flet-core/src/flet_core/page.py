@@ -1028,7 +1028,7 @@ class Page(AdaptiveControl):
                     else:
                         self.drawer = control
                 self.update()  # called only if the new drawer is different from the current one
-            elif control not in self.overlay:
+            elif control not in self.__offstage.controls:
                 self.__offstage.controls.append(control)
                 self.__offstage.update()
             return
