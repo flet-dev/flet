@@ -6,8 +6,6 @@ import '../utils/edge_insets.dart';
 import '../utils/others.dart';
 import 'create_control.dart';
 
-enum CardVariant { elevated, filled, outlined }
-
 class CardControl extends StatelessWidget {
   final Control? parent;
   final Control control;
@@ -35,11 +33,8 @@ class CardControl extends StatelessWidget {
 
     Widget? card;
 
-    CardVariant variant = CardVariant.values.firstWhere(
-        (v) =>
-            v.name.toLowerCase() ==
-            control.attrString("variant", "")!.toLowerCase(),
-        orElse: () => CardVariant.elevated);
+    CardVariant variant =
+        parseCardVariant(control.attrString("variant"), CardVariant.elevated)!;
 
     if (variant == CardVariant.outlined) {
       card = Card.outlined(

@@ -1,45 +1,44 @@
-import dataclasses
-from dataclasses import field
+from dataclasses import dataclass, field
 from typing import Dict, Optional, Union
 
 from flet_core.border import BorderSide
 from flet_core.types import BorderRadiusValue, MaterialState, PaddingValue
 
 
-@dataclasses.dataclass
+@dataclass
 class OutlinedBorder:
     pass
 
 
-@dataclasses.dataclass
+@dataclass
 class StadiumBorder(OutlinedBorder):
     type: str = field(default="stadium")
 
 
-@dataclasses.dataclass
+@dataclass
 class RoundedRectangleBorder(OutlinedBorder):
     type: str = field(default="roundedRectangle")
     radius: BorderRadiusValue = field(default=None)
 
 
-@dataclasses.dataclass
+@dataclass
 class CircleBorder(OutlinedBorder):
     type: str = field(default="circle")
 
 
-@dataclasses.dataclass
+@dataclass
 class BeveledRectangleBorder(OutlinedBorder):
     type: str = field(default="beveledRectangle")
     radius: BorderRadiusValue = field(default=None)
 
 
-@dataclasses.dataclass
+@dataclass
 class ContinuousRectangleBorder(OutlinedBorder):
     type: str = field(default="continuousRectangle")
     radius: BorderRadiusValue = field(default=None)
 
 
-@dataclasses.dataclass
+@dataclass
 class ButtonStyle:
     color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(default=None)
     bgcolor: Union[None, str, Dict[Union[str, MaterialState], str]] = field(

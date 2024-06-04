@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -6,6 +5,7 @@ import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'cupertino_navigation_bar.dart';
 import 'flet_store_mixin.dart';
@@ -71,9 +71,8 @@ class _NavigationBarControlState extends State<NavigationBarControl>
       var animationDuration = widget.control.attrInt("animationDuration");
 
       NavigationDestinationLabelBehavior? labelBehavior =
-          NavigationDestinationLabelBehavior.values.firstWhereOrNull((a) =>
-              a.name.toLowerCase() ==
-              widget.control.attrString("labelBehavior", "")!.toLowerCase());
+          parseNavigationDestinationLabelBehavior(
+              widget.control.attrString("labelBehavior"));
 
       var navBar = withControls(
           widget.children

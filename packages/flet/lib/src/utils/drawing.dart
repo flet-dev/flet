@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:ui' as ui;
 
-import 'package:flet/src/utils/others.dart';
 import 'package:collection/collection.dart';
+import 'package:flet/src/utils/others.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -20,6 +20,15 @@ Paint parsePaint(ThemeData theme, Control control, String propName) {
   final j1 = json.decode(v);
 
   return paintFromJSON(theme, j1);
+}
+
+PaintingStyle? parsePaintingStyle(String? value, [PaintingStyle? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return PaintingStyle.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
 }
 
 List<double>? parsePaintStrokeDashPattern(Control control, String propName) {
@@ -44,9 +53,7 @@ Paint paintFromJSON(ThemeData? theme, Map<String, dynamic> json) {
     paint.color = parseColor(theme, json["color"] as String, Colors.black)!;
   }
   if (json["blend_mode"] != null) {
-    paint.blendMode = BlendMode.values.firstWhere(
-        (e) => e.name.toLowerCase() == json["blend_mode"].toLowerCase(),
-        orElse: () => BlendMode.srcOver);
+    paint.blendMode = parseBlendMode(json["blend_mode"], BlendMode.srcOver)!;
   }
   if (json["anti_alias"] != null) {
     paint.isAntiAlias = json["anti_alias"];
@@ -67,9 +74,7 @@ Paint paintFromJSON(ThemeData? theme, Map<String, dynamic> json) {
     paint.strokeJoin = parseStrokeJoin(json["stroke_join"], StrokeJoin.miter)!;
   }
   if (json["style"] != null) {
-    paint.style = PaintingStyle.values.firstWhere(
-        (e) => e.name.toLowerCase() == json["style"].toLowerCase(),
-        orElse: () => PaintingStyle.fill);
+    paint.style = parsePaintingStyle(json["style"], PaintingStyle.fill)!;
   }
   return paint;
 }

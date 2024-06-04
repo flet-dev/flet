@@ -73,7 +73,7 @@ from flet_core.checkbox import Checkbox
 from flet_core.chip import Chip
 from flet_core.circle_avatar import CircleAvatar
 from flet_core.column import Column
-from flet_core.container import Container, ContainerTapEvent
+from flet_core.container import Container, ContainerTapEvent, ColorFilter
 from flet_core.control import Control
 from flet_core.control_event import ControlEvent
 from flet_core.cupertino_action_sheet import CupertinoActionSheet

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../models/control.dart';
@@ -27,9 +26,6 @@ FilteringTextInputFormatter inputFilterFromJSON(dynamic json) {
     regexString = json["regex_string"]?.toString();
     replacementString = json["replacement_string"]?.toString();
   }
-
-  debugPrint(
-      "Textfield inputFilter - allow: $allow | regexString: $regexString | replacementString: $replacementString");
 
   return FilteringTextInputFormatter(RegExp(regexString ?? ""),
       allow: allow, replacementString: replacementString ?? "");
