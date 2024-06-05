@@ -385,38 +385,11 @@ class Command(BaseCommand):
                 else python_app_path.joinpath(rel_out_dir)
             )
 
-            template_data = {"out_dir": self.flutter_dir.name}
-
-            project_name = slugify(
+            base_url = options.base_url.strip("/").strip()
+            project_name = options.product_name or slugify(
                 options.project_name or python_app_path.name
             ).replace("-", "_")
-
             product_name = options.product_name or project_name
-
-            template_data["project_name"] = project_name
-
-            if options.description is not None:
-                template_data["description"] = options.description
-
-            template_data["sep"] = os.sep
-            template_data["python_module_name"] = python_module_name
-            template_data["product_name"] = product_name
-            if options.org_name:
-                template_data["org_name"] = options.org_name
-            if options.company_name:
-                template_data["company_name"] = options.company_name
-            if options.copyright:
-                template_data["copyright"] = options.copyright
-            if options.team_id:
-                template_data["team_id"] = options.team_id
-
-            base_url = options.base_url.strip("/").strip()
-            template_data["base_url"] = "/" if base_url == "" else f"/{base_url}/"
-            template_data["route_url_strategy"] = options.route_url_strategy
-            template_data["web_renderer"] = options.web_renderer
-            template_data["use_color_emoji"] = (
-                "true" if options.use_color_emoji else "false"
-            )
 
             src_pubspec = None
             src_pubspec_path = python_app_path.joinpath("pubspec.yaml")
@@ -440,9 +413,25 @@ class Command(BaseCommand):
             if self.verbose > 0:
                 console.log("Additional Flutter dependencies:", flutter_dependencies)
 
-            template_data["flutter"] = {
-                "dependencies": list(flutter_dependencies.keys())
+            template_data = {
+                "out_dir": self.flutter_dir.name,
+                "sep": os.sep,
+                "python_module_name": python_module_name,
+                "route_url_strategy": options.route_url_strategy,
+                "web_renderer": options.web_renderer,
+                "use_color_emoji": "true" if options.use_color_emoji else "false",
+                "base_url": f"/{base_url}/" if base_url else "/",
+                "project_name": project_name,
+                "product_name": product_name,
+                "description": options.description,
+                "org_name": options.org_name,
+                "company_name": options.company_name,
+                "copyright": options.copyright,
+                "team_id": options.team_id,
+                "flutter": {"dependencies": list(flutter_dependencies.keys())},
             }
+            # Remove None values from the dictionary
+            template_data = {k: v for k, v in template_data.items() if v is not None}
 
             template_url = options.template
             template_ref = options.template_ref
