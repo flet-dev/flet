@@ -300,7 +300,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--show-platform-matrix",
             action="store_true",
-            default=True,
+            default=False,
             help="displays the build platform matrix in a table, then exits",
         )
 
