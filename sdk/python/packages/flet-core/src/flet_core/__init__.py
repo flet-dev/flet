@@ -245,6 +245,7 @@ from flet_core.shader_mask import ShaderMask
 from flet_core.shadow import BoxShadow, ShadowBlurStyle
 from flet_core.shake_detector import ShakeDetector
 from flet_core.slider import Slider, SliderInteraction
+from flet_core.sliver_grid_view import SliverGridView
 from flet_core.sliver_list_view import SliverListView
 from flet_core.snack_bar import DismissDirection, SnackBar, SnackBarBehavior
 from flet_core.stack import Stack, StackFit

@@ -9,7 +9,7 @@ import 'create_control.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
 
-class SliverListViewControl extends StatefulWidget {
+class SliverGridViewControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final bool parentDisabled;
@@ -17,7 +17,7 @@ class SliverListViewControl extends StatefulWidget {
   final bool? parentAdaptive;
   final FletControlBackend backend;
 
-  const SliverListViewControl(
+  const SliverGridViewControl(
       {super.key,
       this.parent,
       required this.control,
@@ -27,10 +27,10 @@ class SliverListViewControl extends StatefulWidget {
       required this.backend});
 
   @override
-  State<SliverListViewControl> createState() => _SliverListViewControlState();
+  State<SliverGridViewControl> createState() => _SliverGridViewControlState();
 }
 
-class _SliverListViewControlState extends State<SliverListViewControl> {
+class _SliverGridViewControlState extends State<SliverGridViewControl> {
   late final ScrollController _controller;
 
   @override
@@ -48,7 +48,7 @@ class _SliverListViewControlState extends State<SliverListViewControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("SliverListViewControl build: ${widget.control.id}");
+    debugPrint("SliverGridViewControl build: ${widget.control.id}");
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     bool? adaptive =
@@ -56,36 +56,45 @@ class _SliverListViewControlState extends State<SliverListViewControl> {
 
     final horizontal = widget.control.attrBool("horizontal", false)!;
     final spacing = widget.control.attrDouble("spacing", 0)!;
-    final dividerThickness = widget.control.attrDouble("dividerThickness", 0)!;
+    final maxExtent = widget.control.attrDouble("maxExtent");
+    final maxCrossAxisExtent =
+        widget.control.attrDouble("maxCrossAxisExtent", 200)!;
     final cacheExtent = widget.control.attrDouble("cacheExtent");
+    final runSpacing = widget.control.attrDouble("runSpacing", 10)!;
+    final runsCount = widget.control.attrInt("runsCount", 1)!;
+    final childAspectRatio = widget.control.attrDouble("childAspectRatio", 1)!;
     var clipBehavior =
         parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
 
     List<Control> visibleControls =
         widget.children.where((c) => c.isVisible).toList();
     var scrollDirection = horizontal ? Axis.horizontal : Axis.vertical;
+    var gridDelegate = maxExtent == null
+        ? SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: runsCount,
+            mainAxisSpacing: spacing,
+            crossAxisSpacing: runSpacing,
+            childAspectRatio: childAspectRatio)
+        : SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: maxExtent,
+            mainAxisSpacing: spacing,
+            crossAxisSpacing: runSpacing,
+            childAspectRatio: childAspectRatio);
 
     Widget child = spacing > 0
-        ? SliverList.separated(
-            itemCount: widget.children.length,
-            itemBuilder: (context, index) {
-              return createControl(
-                  widget.control, visibleControls[index].id, disabled,
-                  parentAdaptive: adaptive);
-            },
-            separatorBuilder: (context, index) {
-              return horizontal
-                  ? dividerThickness == 0
-                      ? SizedBox(width: spacing)
-                      : VerticalDivider(
-                          width: spacing, thickness: dividerThickness)
-                  : dividerThickness == 0
-                      ? SizedBox(height: spacing)
-                      : Divider(height: spacing, thickness: dividerThickness);
-            },
+        ? SliverGrid.extent(
+            maxCrossAxisExtent: maxCrossAxisExtent,
+            childAspectRatio: childAspectRatio,
+            crossAxisSpacing: runSpacing,
+            mainAxisSpacing: spacing,
+            children: visibleControls
+                .map((e) => createControl(widget.control, e.id, disabled,
+                    parentAdaptive: adaptive))
+                .toList(),
           )
-        : SliverList.builder(
+        : SliverGrid.builder(
             itemCount: widget.children.length,
+            gridDelegate: gridDelegate,
             itemBuilder: (context, index) {
               return createControl(
                   widget.control, visibleControls[index].id, disabled,
@@ -97,9 +106,6 @@ class _SliverListViewControlState extends State<SliverListViewControl> {
       cacheExtent: cacheExtent,
       clipBehavior: clipBehavior,
       scrollDirection: scrollDirection,
-      reverse: widget.control.attrBool("reverse", false)!,
-      shrinkWrap: widget.control.attrBool("shrinkWrap", false)!,
-      semanticChildCount: widget.control.attrInt("semanticChildCount"),
     );
     child = ScrollableControl(
         control: widget.control,

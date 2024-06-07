@@ -16,30 +16,28 @@ from flet_core.types import (
 )
 
 
-class SliverListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
+class SliverGridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     """
-    A scrollable list of controls arranged linearly.
+    A scrollable, 2D array of controls.
 
     -----
 
-    Online docs: https://flet.dev/docs/controls/sliverlistview
+    Online docs: https://flet.dev/docs/controls/slivergridview
     """
 
     def __init__(
         self,
         controls: Optional[List[Control]] = None,
         horizontal: Optional[bool] = None,
+        runs_count: Optional[int] = None,
+        max_extent: Optional[int] = None,
         spacing: OptionalNumber = None,
-        divider_thickness: OptionalNumber = None,
+        run_spacing: OptionalNumber = None,
+        child_aspect_ratio: OptionalNumber = None,
         padding: PaddingValue = None,
         clip_behavior: Optional[ClipBehavior] = None,
+        semantic_child_count: Optional[int] = None,
         cache_extent: OptionalNumber = None,
-        #
-        # ScrollableControl
-        #
-        on_scroll_interval: OptionalNumber = None,
-        on_scroll: Any = None,
-        reverse: Optional[bool] = None,
         #
         # ConstrainedControl
         #
@@ -69,6 +67,13 @@ class SliverListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        #
+        # ScrollableControl
+        #
+        auto_scroll: Optional[bool] = None,
+        reverse: Optional[bool] = None,
+        on_scroll_interval: OptionalNumber = None,
+        on_scroll: Any = None,
         #
         # AdaptiveControl
         #
@@ -106,23 +111,29 @@ class SliverListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
         ScrollableControl.__init__(
             self,
+            auto_scroll=auto_scroll,
+            reverse=reverse,
             on_scroll_interval=on_scroll_interval,
             on_scroll=on_scroll,
-            reverse=reverse,
         )
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
+        self.__controls: List[Control] = []
         self.controls = controls
         self.horizontal = horizontal
+        self.runs_count = runs_count
+        self.max_extent = max_extent
         self.spacing = spacing
-        self.divider_thickness = divider_thickness
+        self.run_spacing = run_spacing
+        self.child_aspect_ratio = child_aspect_ratio
         self.padding = padding
         self.clip_behavior = clip_behavior
+        self.semantic_child_count = semantic_child_count
         self.cache_extent = cache_extent
 
     def _get_control_name(self):
-        return "sliver_list_view"
+        return "gridview"
 
     def before_update(self):
         super().before_update()
@@ -144,32 +155,59 @@ class SliverListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     def horizontal(self, value: Optional[bool]):
         self._set_attr("horizontal", value)
 
+    # cache_extent
+    @property
+    def cache_extent(self) -> OptionalNumber:
+        return self._get_attr("cacheExtent")
+
+    @cache_extent.setter
+    def cache_extent(self, value: OptionalNumber):
+        self._set_attr("cacheExtent", value)
+
+    # runs_count
+    @property
+    def runs_count(self) -> Optional[int]:
+        return self._get_attr("runsCount")
+
+    @runs_count.setter
+    def runs_count(self, value: Optional[int]):
+        self._set_attr("runsCount", value)
+
+    # max_extent
+    @property
+    def max_extent(self) -> OptionalNumber:
+        return self._get_attr("maxExtent")
+
+    @max_extent.setter
+    def max_extent(self, value: OptionalNumber):
+        self._set_attr("maxExtent", value)
+
     # spacing
     @property
     def spacing(self) -> OptionalNumber:
-        return self._get_attr("spacing", data_type="float")
+        return self._get_attr("spacing")
 
     @spacing.setter
     def spacing(self, value: OptionalNumber):
         self._set_attr("spacing", value)
 
-    # divider_thickness
+    # run_spacing
     @property
-    def divider_thickness(self) -> OptionalNumber:
-        return self._get_attr("dividerThickness")
+    def run_spacing(self) -> OptionalNumber:
+        return self._get_attr("runSpacing")
 
-    @divider_thickness.setter
-    def divider_thickness(self, value: OptionalNumber):
-        self._set_attr("dividerThickness", value)
+    @run_spacing.setter
+    def run_spacing(self, value: OptionalNumber):
+        self._set_attr("runSpacing", value)
 
-    # cache_extent
+    # child_aspect_ratio
     @property
-    def cache_extent(self) -> OptionalNumber:
-        return self._get_attr("cacheExtent", data_type="float")
+    def child_aspect_ratio(self) -> OptionalNumber:
+        return self._get_attr("childAspectRatio")
 
-    @cache_extent.setter
-    def cache_extent(self, value: OptionalNumber):
-        self._set_attr("cacheExtent", value)
+    @child_aspect_ratio.setter
+    def child_aspect_ratio(self, value: OptionalNumber):
+        self._set_attr("childAspectRatio", value)
 
     # padding
     @property
@@ -182,11 +220,11 @@ class SliverListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     # controls
     @property
-    def controls(self) -> List[Control]:
+    def controls(self):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: List[Control]):
+    def controls(self, value):
         self.__controls = value if value is not None else []
 
     # clip_behavior
@@ -198,3 +236,12 @@ class SliverListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
         self._set_enum_attr("clipBehavior", value, ClipBehavior)
+
+    # semantic_child_count
+    @property
+    def semantic_child_count(self) -> Optional[int]:
+        return self._get_attr("semanticChildCount", data_type="int")
+
+    @semantic_child_count.setter
+    def semantic_child_count(self, value: Optional[int]):
+        self._set_attr("semanticChildCount", value)
