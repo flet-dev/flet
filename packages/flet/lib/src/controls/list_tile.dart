@@ -131,6 +131,7 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
         enableFeedback: enableFeedback,
         minLeadingWidth: minLeadingWidth,
         minVerticalPadding: minVerticalPadding,
+        minTileHeight: control.attrDouble("minHeight"),
         selectedTileColor: control.attrColor("selectedTileColor", context),
         selectedColor: control.attrColor("selectedColor", context),
         focusColor: control.attrColor("focusColor", context),
