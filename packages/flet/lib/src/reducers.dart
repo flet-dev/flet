@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flet/src/utils/browser_context_menu.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -291,6 +292,14 @@ AppState appReducer(AppState state, dynamic action) {
               .then((value) => sendMethodResult(result: value))
               .onError((error, stackTrace) =>
                   sendMethodResult(error: error?.toString()));
+          break;
+        case "enableBrowserContextMenu":
+          enableBrowserContextMenu().onError((error, stackTrace) =>
+              sendMethodResult(error: error?.toString()));
+          break;
+        case "disableBrowserContextMenu":
+          disableBrowserContextMenu().onError((error, stackTrace) =>
+              sendMethodResult(error: error?.toString()));
           break;
         case "windowToFront":
           windowToFront();
