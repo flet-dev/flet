@@ -1,9 +1,10 @@
 from enum import Enum, EnumMeta
-from typing import Dict, Tuple, Union
+from typing import Any, Callable, Dict, Optional, Protocol, Tuple, Union
 from warnings import warn
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
+from flet_core.control_event import ControlEvent
 from flet_core.margin import Margin
 from flet_core.padding import Padding
 from flet_core.transform import Offset, Rotate, Scale
@@ -34,19 +35,19 @@ class UrlTarget(Enum):
     TOP = "_top"
 
 
-PaddingValue = Union[None, int, float, Padding]
+PaddingValue = Optional[Union[int, float, Padding]]
 
-MarginValue = Union[None, int, float, Margin]
+MarginValue = Optional[Union[int, float, Margin]]
 
-BorderRadiusValue = Union[None, int, float, BorderRadius]
+BorderRadiusValue = Optional[Union[int, float, BorderRadius]]
 
-RotateValue = Union[None, int, float, Rotate]
+RotateValue = Optional[Union[int, float, Rotate]]
 
-ScaleValue = Union[None, int, float, Scale]
+ScaleValue = Optional[Union[int, float, Scale]]
 
-OffsetValue = Union[None, Offset, Tuple[Union[float, int], Union[float, int]]]
+OffsetValue = Optional[Union[Offset, Tuple[Union[float, int], Union[float, int]]]]
 
-AnimationValue = Union[None, bool, int, Animation]
+AnimationValue = Optional[Union[bool, int, Animation]]
 
 
 class FontWeight(Enum):
@@ -73,7 +74,12 @@ class NotchShape(Enum):
     CIRCULAR = "circular"
 
 
-ResponsiveNumber = Union[Dict[str, Union[int, float]], int, float]
+Number = Union[int, float]
+ResponsiveNumber = Union[Dict[str, Number], Number]
+OptionalNumber = Optional[Number]
+
+# str type alias
+OptionalString = Optional[str]
 
 
 class MaterialStateDeprecated(EnumMeta):
@@ -325,3 +331,16 @@ class StrokeJoin(Enum):
     MITER = "miter"
     ROUND = "round"
     BEVEL = "bevel"
+
+
+# Events
+OptionalEventCallback = Optional[Callable[[ControlEvent], None]]
+
+# Wrapper
+Wrapper = Callable[..., Any]
+
+
+# Protocols
+class SupportsStr(Protocol):
+    def __str__(self) -> str:
+        ...

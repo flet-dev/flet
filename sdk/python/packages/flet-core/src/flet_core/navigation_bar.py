@@ -1,25 +1,24 @@
 from enum import Enum
-from typing import Any, List, Optional, Union, Dict
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.border import Border
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
+    OptionalEventCallback,
+    MaterialState,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     ControlState,
 )
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
+from flet_core.utils import deprecated
 
 
 class NavigationBarLabelBehavior(Enum):
@@ -30,10 +29,10 @@ class NavigationBarLabelBehavior(Enum):
     ONLY_SHOW_SELECTED = "onlyShowSelected"
 
 
-class NavigationDestination(Control):
+class NavigationBarDestination(Control):
     """Defines the appearance of the button items that are arrayed within the navigation bar.
 
-    The value must be a list of two or more NavigationDestination instances."""
+    The value must be a list of two or more NavigationBarDestination instances."""
 
     def __init__(
         self,
@@ -60,7 +59,7 @@ class NavigationDestination(Control):
         self.bgcolor = bgcolor
 
     def _get_control_name(self):
-        return "navigationdestination"
+        return "navigationbardestination"
 
     def _get_children(self):
         children = []
@@ -129,6 +128,43 @@ class NavigationDestination(Control):
         self._set_attr("bgcolor", value)
 
 
+@deprecated(
+    reason="Use NavigationBarDestination class instead.",
+    version="0.23.0",
+    delete_version="0.26.0",
+)
+class NavigationDestination(NavigationBarDestination):
+    def __init__(
+        self,
+        label: Optional[str] = None,
+        icon: Optional[str] = None,
+        icon_content: Optional[Control] = None,
+        selected_icon: Optional[str] = None,
+        selected_icon_content: Optional[Control] = None,
+        bgcolor: Optional[str] = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        tooltip: Optional[str] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+    ) -> None:
+        NavigationBarDestination.__init__(
+            self,
+            label,
+            icon,
+            icon_content,
+            selected_icon,
+            selected_icon_content,
+            bgcolor,
+            ref,
+            tooltip,
+            disabled,
+            data,
+        )
+
+
 class NavigationBar(ConstrainedControl, AdaptiveControl):
     """
     Material 3 Navigation Bar component.
@@ -141,16 +177,15 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     import flet as ft
 
     def main(page: ft.Page):
-
         page.title = "NavigationBar Example"
         page.navigation_bar = ft.NavigationBar(
             destinations=[
-                ft.NavigationDestination(icon=ft.icons.EXPLORE, label="Explore"),
-                ft.NavigationDestination(icon=ft.icons.COMMUTE, label="Commute"),
-                ft.NavigationDestination(
+                ft.NavigationBarDestination(icon=ft.icons.EXPLORE, label="Explore"),
+                ft.NavigationBarDestination(icon=ft.icons.COMMUTE, label="Commute"),
+                ft.NavigationBarDestination(
                     icon=ft.icons.BOOKMARK_BORDER,
                     selected_icon=ft.icons.BOOKMARK,
-                    label="Explore",
+                    label="Explore"
                 ),
             ]
         )
@@ -166,7 +201,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
-        destinations: Optional[List[NavigationDestination]] = None,
+        destinations: Optional[List[NavigationBarDestination]] = None,
         selected_index: Optional[int] = None,
         bgcolor: Optional[str] = None,
         label_behavior: Optional[NavigationBarLabelBehavior] = None,
@@ -178,7 +213,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         border: Optional[Border] = None,
         animation_duration: Optional[int] = None,
         overlay_color: Union[None, str, Dict[ControlState, str]] = None,
-        on_change=None,
+        on_change: OptionalEventCallback = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -203,7 +238,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: Callable[..., None] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -268,12 +303,12 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     # destinations
     @property
-    def destinations(self) -> Optional[List[NavigationDestination]]:
+    def destinations(self) -> Optional[List[NavigationBarDestination]]:
         return self.__destinations
 
     @destinations.setter
-    def destinations(self, value: Optional[List[NavigationDestination]]):
-        self.__destinations = value if value is not None else []
+    def destinations(self, value: Optional[List[NavigationBarDestination]]):
+        self.__destinations = value if value else []
 
     # selected_index
     @property
@@ -377,9 +412,9 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallback:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallback):
         self._add_event_handler("change", handler)

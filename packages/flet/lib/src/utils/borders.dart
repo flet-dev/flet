@@ -27,7 +27,7 @@ Radius? parseRadius(Control control, String propName, [Radius? defaultValue]) {
 }
 
 Border? parseBorder(ThemeData theme, Control control, String propName,
-    {Color? defaultSideColor}) {
+    [Color? defaultSideColor]) {
   var v = control.attrString(propName, null);
   if (v == null) {
     return null;

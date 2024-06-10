@@ -38,14 +38,9 @@ class _TimePickerControlState extends State<TimePickerControl> {
     String? hourLabelText = widget.control.attrString("hourLabelText");
     String? minuteLabelText = widget.control.attrString("minuteLabelText");
     String? errorInvalidText = widget.control.attrString("errorInvalidText");
-    TimePickerEntryMode timePickerEntryMode = TimePickerEntryMode.values
-        .firstWhere(
-            (a) =>
-                a.name.toLowerCase() ==
-                widget.control
-                    .attrString("timePickerEntryMode", "")!
-                    .toLowerCase(),
-            orElse: () => TimePickerEntryMode.dial);
+    TimePickerEntryMode timePickerEntryMode = parseTimePickerEntryMode(
+        widget.control.attrString("timePickerEntryMode"),
+        TimePickerEntryMode.dial)!;
     Orientation? orientation =
         parseOrientation(widget.control.attrString("orientation"));
 

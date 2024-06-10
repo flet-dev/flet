@@ -15,6 +15,7 @@ import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/dash_path.dart';
 import '../utils/drawing.dart';
+import '../utils/images.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
 import '../utils/transforms.dart';
@@ -232,11 +233,8 @@ class FletCustomPainter extends CustomPainter {
 
   void drawColor(Canvas canvas, ControlTreeViewModel shape) {
     var color = shape.control.attrColor("color", context) ?? Colors.black;
-    var blendMode = BlendMode.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            shape.control.attrString("blendMode", "")!.toLowerCase(),
-        orElse: () => BlendMode.srcOver);
+    var blendMode = parseBlendMode(
+        shape.control.attrString("blendMode"), BlendMode.srcOver)!;
     canvas.drawColor(color, blendMode);
   }
 

@@ -11,6 +11,7 @@ import 'alignment.dart';
 import 'borders.dart';
 import 'buttons.dart';
 import 'colors.dart';
+import 'dismissible.dart';
 import 'drawing.dart';
 import 'edge_insets.dart';
 import 'icons.dart';
@@ -667,17 +668,11 @@ SnackBarThemeData? parseSnackBarTheme(
         parseColor(theme, j["disabled_action_bgcolor"]),
     elevation: parseDouble(j["elevation"]),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    behavior: j["behavior"] != null
-        ? SnackBarBehavior.values.firstWhereOrNull(
-            (c) => c.name.toLowerCase() == j["behavior"].toLowerCase())
-        : null,
+    behavior: parseSnackBarBehavior(j["behavior"]),
     contentTextStyle: parseTextStyle("content_text_style"),
     width: parseDouble(j["width"]),
     insetPadding: edgeInsetsFromJson(j["inset_padding"]),
-    dismissDirection: j["dismiss_direction"] != null
-        ? DismissDirection.values.firstWhereOrNull(
-            (c) => c.name.toLowerCase() == j["dismiss_direction"].toLowerCase())
-        : null,
+    dismissDirection: parseDismissDirection(j["dismiss_direction"]),
     showCloseIcon: parseBool(j["show_close_icon"]),
     actionOverflowThreshold: parseDouble(j["action_overflow_threshold"]),
   );

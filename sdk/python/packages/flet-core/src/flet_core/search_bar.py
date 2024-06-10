@@ -4,14 +4,15 @@ from typing import Any, Dict, List, Optional, Union
 from flet_core.border import BorderSide
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.textfield import TextCapitalization, KeyboardType
+from flet_core.textfield import KeyboardType, TextCapitalization
 from flet_core.types import (
     AnimationValue,
     ControlState,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -169,6 +170,7 @@ class SearchBar(ConstrainedControl):
             children.append(i)
         return children
 
+    # Public methods
     def open_view(self):
         m = {
             "n": "openView",
@@ -181,7 +183,7 @@ class SearchBar(ConstrainedControl):
     @deprecated(
         reason="Use open_view() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def open_view_async(self):
         self.open_view()
@@ -199,7 +201,7 @@ class SearchBar(ConstrainedControl):
     @deprecated(
         reason="Use close_view() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def close_view_async(self, text: str = ""):
         self.close_view(text=text)

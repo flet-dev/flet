@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io' as io;
 
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -47,9 +46,7 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
     var repeat =
         parseImageRepeat(control.attrString("repeat"), ImageRepeat.noRepeat)!;
     var fit = parseBoxFit(control.attrString("fit"));
-    var colorBlendMode = BlendMode.values.firstWhereOrNull((e) =>
-        e.name.toLowerCase() ==
-        control.attrString("colorBlendMode", "")!.toLowerCase());
+    var colorBlendMode = parseBlendMode(control.attrString("colorBlendMode"));
     var color = control.attrColor("color", context);
     String? semanticsLabel = control.attrString("semanticsLabel");
     var gaplessPlayback = control.attrBool("gaplessPlayback");

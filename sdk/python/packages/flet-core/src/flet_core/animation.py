@@ -1,5 +1,4 @@
-import dataclasses
-from dataclasses import field
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
 
@@ -54,7 +53,7 @@ class AnimationCurve(Enum):
     SLOW_MIDDLE = "slowMiddle"
 
 
-@dataclasses.dataclass
+@dataclass
 class Animation:
     duration: int = field(default=1)
     curve: Optional[AnimationCurve] = field(default=None)

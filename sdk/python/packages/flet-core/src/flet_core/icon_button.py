@@ -205,7 +205,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use focus() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def focus_async(self):
         self.focus()

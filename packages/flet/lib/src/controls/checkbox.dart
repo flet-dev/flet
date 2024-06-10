@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/mouse.dart';
+import '../utils/others.dart';
 import '../utils/text.dart';
 import '../utils/theme.dart';
 import 'create_control.dart';
@@ -12,7 +13,6 @@ import 'cupertino_checkbox.dart';
 import 'flet_store_mixin.dart';
 import 'list_tile.dart';
 
-enum LabelPosition { right, left }
 
 class CheckboxControl extends StatefulWidget {
   final Control? parent;
@@ -94,11 +94,8 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
       }
 
       String label = widget.control.attrString("label", "")!;
-      LabelPosition labelPosition = LabelPosition.values.firstWhere(
-          (p) =>
-              p.name.toLowerCase() ==
-              widget.control.attrString("labelPosition", "")!.toLowerCase(),
-          orElse: () => LabelPosition.right);
+      LabelPosition labelPosition = parseLabelPosition(
+          widget.control.attrString("labelPosition"), LabelPosition.right)!;
       _tristate = widget.control.attrBool("tristate", false)!;
       bool autofocus = widget.control.attrBool("autofocus", false)!;
 

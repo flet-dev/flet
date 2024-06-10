@@ -2,7 +2,7 @@ from typing import Any, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.scrollable_control import ScrollableControl
 from flet_core.types import (
@@ -10,6 +10,7 @@ from flet_core.types import (
     CrossAxisAlignment,
     MainAxisAlignment,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -163,6 +164,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     def _get_children(self):
         return self.__controls
 
+    # Public methods
     def clean(self):
         super().clean()
         self.__controls.clear()
@@ -170,7 +172,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @deprecated(
         reason="Use clean() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def clean_async(self):
         self.clean()
@@ -238,4 +240,4 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     @controls.setter
     def controls(self, value: Optional[List[Control]]):
-        self.__controls = value if value is not None else []
+        self.__controls = value if value else []

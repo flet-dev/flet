@@ -1,22 +1,22 @@
-import dataclasses
-from dataclasses import field
+from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Union
 
 from flet_core.alignment import Alignment
 from flet_core.border import BorderSide
 from flet_core.buttons import OutlinedBorder
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     ClipBehavior,
     ControlState,
     MouseCursor,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
 )
 
 
-@dataclasses.dataclass
+@dataclass
 class MenuStyle:
     alignment: Optional[Alignment] = field(default=None)
     bgcolor: Union[None, str, Dict[Union[str, ControlState], str]] = field(
