@@ -132,7 +132,8 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
           image: image,
           backgroundBlendMode:
               bgColor != null || gradient != null ? blendMode : null,
-          border: parseBorder(Theme.of(context), control, "border"),
+          border: parseBorder(Theme.of(context), control, "border",
+              Theme.of(context).colorScheme.primary),
           borderRadius: borderRadius,
           shape: shape,
           boxShadow: parseBoxShadow(Theme.of(context), control, "shadow"));
