@@ -46,7 +46,7 @@ class FletAppManager:
             psh = self.__pubsubhubs.get(session_handler, None)
             if psh is None:
                 psh = PubSubHub(
-                    loop=loop if loop else asyncio.get_running_loop(),
+                    loop=loop or asyncio.get_running_loop(),
                     executor=self.__executor,
                 )
                 self.__pubsubhubs[session_handler] = psh
