@@ -1,0 +1,539 @@
+{
+  "configVersion": 2,
+  "packages": [
+    {
+      "name": "args",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/args-2.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "async",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/async-2.11.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "boolean_selector",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/boolean_selector-2.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "characters",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/characters-1.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "clock",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/clock-1.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "collection",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/collection-1.18.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "cross_file",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/cross_file-0.3.4+1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "crypto",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/crypto-3.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "equatable",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/equatable-2.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "fake_async",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/fake_async-1.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "ffi",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/ffi-2.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "file",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/file-7.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "file_picker",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/file_picker-8.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "fl_chart",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/fl_chart-0.65.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "flet",
+      "rootUri": "../../flet",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "flutter",
+      "rootUri": "file:///Users/feodor/flutter/packages/flutter",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "flutter_highlight",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/flutter_highlight-0.7.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_lints",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/flutter_lints-2.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "flutter_localizations",
+      "rootUri": "file:///Users/feodor/flutter/packages/flutter_localizations",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "flutter_markdown",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/flutter_markdown-0.6.23",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "flutter_plugin_android_lifecycle",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.20",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "flutter_redux",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/flutter_redux-0.10.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "flutter_svg",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/flutter_svg-2.0.10+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "flutter_test",
+      "rootUri": "file:///Users/feodor/flutter/packages/flutter_test",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "flutter_web_plugins",
+      "rootUri": "file:///Users/feodor/flutter/packages/flutter_web_plugins",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "highlight",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/highlight-0.7.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "http",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/http-1.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "http_parser",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/http_parser-4.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "intl",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/intl-0.19.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "js",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/js-0.6.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "leak_tracker",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/leak_tracker-10.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "leak_tracker_flutter_testing",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/leak_tracker_flutter_testing-3.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "leak_tracker_testing",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/leak_tracker_testing-3.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "lints",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/lints-2.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "logging",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/logging-1.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "markdown",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/markdown-7.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "matcher",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/matcher-0.12.16+1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "material_color_utilities",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/material_color_utilities-0.8.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "meta",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/meta-1.12.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "path",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/path-1.9.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "path_parsing",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/path_parsing-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "path_provider_linux",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/path_provider_linux-2.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "path_provider_platform_interface",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/path_provider_platform_interface-2.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "path_provider_windows",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/path_provider_windows-2.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "petitparser",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/petitparser-6.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "platform",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/platform-3.1.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "plugin_platform_interface",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/plugin_platform_interface-2.1.8",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "redux",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/redux-5.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "screen_retriever",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/screen_retriever-0.1.9",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "sensors_plus",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/sensors_plus-4.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "sensors_plus_platform_interface",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/sensors_plus_platform_interface-1.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "shared_preferences",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/shared_preferences-2.2.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "shared_preferences_android",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/shared_preferences_android-2.2.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "shared_preferences_foundation",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/shared_preferences_foundation-2.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "shared_preferences_linux",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/shared_preferences_linux-2.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "shared_preferences_platform_interface",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/shared_preferences_platform_interface-2.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "shared_preferences_web",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/shared_preferences_web-2.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "shared_preferences_windows",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/shared_preferences_windows-2.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "sky_engine",
+      "rootUri": "file:///Users/feodor/flutter/bin/cache/pkg/sky_engine",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "source_span",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/source_span-1.10.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "stack_trace",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/stack_trace-1.11.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "stream_channel",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/stream_channel-2.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "string_scanner",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/string_scanner-1.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "term_glyph",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/term_glyph-1.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "test_api",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/test_api-0.7.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "torch_light",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/torch_light-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "typed_data",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/typed_data-1.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "url_launcher",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/url_launcher-6.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "url_launcher_android",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/url_launcher_android-6.3.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "url_launcher_ios",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/url_launcher_ios-6.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "url_launcher_linux",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/url_launcher_linux-3.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "url_launcher_macos",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/url_launcher_macos-3.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "url_launcher_platform_interface",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/url_launcher_platform_interface-2.3.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "url_launcher_web",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/url_launcher_web-2.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "url_launcher_windows",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/url_launcher_windows-3.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "vector_graphics",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/vector_graphics-1.1.11+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "vector_graphics_codec",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/vector_graphics_codec-1.1.11+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "vector_graphics_compiler",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/vector_graphics_compiler-1.1.11+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "vector_math",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/vector_math-2.1.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "vm_service",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/vm_service-14.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "web",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/web-0.5.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "web_socket_channel",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/web_socket_channel-2.4.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "win32",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/win32-5.5.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "window_manager",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/window_manager-0.3.9",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "window_to_front",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/window_to_front-0.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "xdg_directories",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/xdg_directories-1.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "xml",
+      "rootUri": "file:///Users/feodor/.pub-cache/hosted/pub.dev/xml-6.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "flet_flashlight",
+      "rootUri": "../",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    }
+  ],
+  "generated": "2024-06-10T18:09:32.328691Z",
+  "generator": "pub",
+  "generatorVersion": "3.4.0",
+  "flutterRoot": "file:///Users/feodor/flutter",
+  "flutterVersion": "3.22.0",
+  "pubCache": "file:///Users/feodor/.pub-cache"
+}
