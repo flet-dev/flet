@@ -32,7 +32,7 @@ class FletAppManager:
         self.__evict_oauth_states_task = None
         self.__temp_dirs = {}
         self.__executor = ThreadPoolExecutor(thread_name_prefix="flet_fastapi")
-        self.__pubsubhubs_lock = threading.Lock()
+        self.__pubsubhubs_lock = threading.Lock() if not is_pyodide() else NopeLock()
         self.__pubsubhubs = {}
 
     @property
