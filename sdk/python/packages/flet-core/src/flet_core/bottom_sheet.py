@@ -12,34 +12,27 @@ class BottomSheet(Control):
     ```
     import flet as ft
 
+
     def main(page: ft.Page):
-        def bs_dismissed(e):
-            print("Dismissed!")
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-        def show_bs(e):
-            bs.open = True
-            bs.update()
-
-        def close_bs(e):
-            bs.open = False
-            bs.update()
-
+        def handle_dismissal(e):
+            page.add(ft.Text("Bottom sheet dismissed"))
         bs = ft.BottomSheet(
-            ft.Container(
-                ft.Column(
-                    [
-                        ft.Text("This is sheet's content!"),
-                        ft.ElevatedButton("Close bottom sheet", on_click=close_bs),
-                    ],
+            on_dismiss=handle_dismissal,
+            content=ft.Container(
+                padding=50,
+                content=ft.Column(
                     tight=True,
+                    controls=[
+                        ft.Text("This is bottom sheet's content!"),
+                        ft.ElevatedButton("Close bottom sheet", on_click=lambda _: page.close(bs)),
+                    ],
                 ),
-                padding=10,
             ),
-            open=True,
-            on_dismiss=bs_dismissed,
         )
-        page.overlay.append(bs)
-        page.add(ft.ElevatedButton("Display bottom sheet", on_click=show_bs))
+        page.add(ft.ElevatedButton("Display bottom sheet", on_click=lambda _: page.open(bs)))
+
 
     ft.app(target=main)
     ```

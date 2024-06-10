@@ -57,7 +57,7 @@ class ScrollableControl(Control):
     @deprecated(
         reason="Use scroll_to() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def scroll_to_async(
         self,
@@ -81,8 +81,10 @@ class ScrollableControl(Control):
             "scroll",
             value.value
             if isinstance(value, ScrollMode)
-            else "auto" if value is True
-            else None if value is False
+            else "auto"
+            if value is True
+            else None
+            if value is False
             else value,
         )
 

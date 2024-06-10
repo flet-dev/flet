@@ -40,7 +40,6 @@ class PolygonLayerControl extends StatelessWidget with FletStoreMixin {
                 const Color(0xFFFFFF00),
             color: polygon.control.attrColor("color", context) ??
                 const Color(0xFF00FF00),
-            isDotted: polygon.control.attrBool("dotted", false)!,
             disableHolesBorder:
                 polygon.control.attrBool("disableHolesBorder", false)!,
             rotateLabel: polygon.control.attrBool("rotateLabel", false)!,

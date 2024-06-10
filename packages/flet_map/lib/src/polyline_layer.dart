@@ -39,7 +39,6 @@ class PolylineLayerControl extends StatelessWidget with FletStoreMixin {
                 .attrColor("borderColor", context, const Color(0xFFFFFF00))!,
             color: polyline.control
                 .attrColor("color", context, const Color(0xFF00FF00))!,
-            isDotted: polyline.control.attrBool("dotted", false)!,
             strokeCap: parseStrokeCap(
                 polyline.control.attrString("strokeCap"), StrokeCap.round)!,
             strokeJoin: parseStrokeJoin(

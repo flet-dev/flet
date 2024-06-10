@@ -42,7 +42,6 @@ class Command(BaseCommand):
     def __init__(self, parser: argparse.ArgumentParser) -> None:
         super().__init__(parser)
 
-        self.verbose = 0
         self.platforms = {
             "windows": {
                 "build_command": "windows",

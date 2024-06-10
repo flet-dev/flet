@@ -88,7 +88,7 @@ class Audio(Control):
     @deprecated(
         reason="Use play() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def play_async(self):
         self.play()
@@ -99,7 +99,7 @@ class Audio(Control):
     @deprecated(
         reason="Use pause() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def pause_async(self):
         self.pause()
@@ -110,7 +110,7 @@ class Audio(Control):
     @deprecated(
         reason="Use resume() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def resume_async(self):
         self.resume()
@@ -121,7 +121,7 @@ class Audio(Control):
     @deprecated(
         reason="Use release() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def release_async(self):
         self.release()
@@ -132,7 +132,7 @@ class Audio(Control):
     @deprecated(
         reason="Use seek() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def seek_async(self, position_milliseconds: int):
         self.seek(position_milliseconds)

@@ -19,7 +19,7 @@ class PubSubClient:
     @deprecated(
         reason="Use send_all() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def send_all_async(self, message: Any):
         self.send_all(message)
@@ -30,7 +30,7 @@ class PubSubClient:
     @deprecated(
         reason="Use send_all_on_topic() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def send_all_on_topic_async(self, topic: str, message: Any):
         self.send_all_on_topic(topic, message)
@@ -41,7 +41,7 @@ class PubSubClient:
     @deprecated(
         reason="Use send_others() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def send_others_async(self, message: Any):
         self.send_others(message)
@@ -52,7 +52,7 @@ class PubSubClient:
     @deprecated(
         reason="Use send_others_on_topic() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def send_others_on_topic_async(self, topic: str, message: Any):
         self.send_others_on_topic(topic, message)
@@ -63,7 +63,7 @@ class PubSubClient:
     @deprecated(
         reason="Use subscribe() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def subscribe_async(self, handler: Callable):
         self.subscribe(handler)
@@ -74,7 +74,7 @@ class PubSubClient:
     @deprecated(
         reason="Use subscribe_topic() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def subscribe_topic_async(self, topic: str, handler: Callable):
         self.subscribe_topic(topic, handler)
@@ -85,7 +85,7 @@ class PubSubClient:
     @deprecated(
         reason="Use unsubscribe() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def unsubscribe_async(self):
         self.unsubscribe()
@@ -96,7 +96,7 @@ class PubSubClient:
     @deprecated(
         reason="Use unsubscribe_topic() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def unsubscribe_topic_async(self, topic: str):
         self.unsubscribe_topic(topic)
@@ -107,7 +107,7 @@ class PubSubClient:
     @deprecated(
         reason="Use unsubscribe_all() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def unsubscribe_all_async(self):
         self.unsubscribe_all()

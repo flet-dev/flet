@@ -9,10 +9,9 @@ import '../models/control.dart';
 import '../utils/animations.dart';
 import '../utils/desktop.dart';
 import '../utils/numbers.dart';
+import '../utils/others.dart';
 import '../widgets/adjustable_scroll_controller.dart';
 import 'flet_store_mixin.dart';
-
-enum ScrollMode { none, auto, adaptive, always, hidden }
 
 class ScrollableControl extends StatefulWidget {
   final Control control;
@@ -65,11 +64,8 @@ class _ScrollableControlState extends State<ScrollableControl>
   @override
   Widget build(BuildContext context) {
     return withPagePlatform((context, platform) {
-      ScrollMode scrollMode = ScrollMode.values.firstWhere(
-          (m) =>
-              m.name.toLowerCase() ==
-              widget.control.attrString("scroll", "")!.toLowerCase(),
-          orElse: () => ScrollMode.none);
+      ScrollMode scrollMode = parseScrollMode(
+          widget.control.attrString("scroll"), ScrollMode.none)!;
 
       var method = widget.control.attrString("method");
 

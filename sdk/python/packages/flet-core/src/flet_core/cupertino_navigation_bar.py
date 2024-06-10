@@ -6,8 +6,7 @@ from flet_core.navigation_bar import NavigationBarDestination
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
-    ColorStr,
-    ControlEventFunction,
+    OptionalEventCallback,
     OffsetValue,
     OptionalNumber,
     ResponsiveNumber,
@@ -64,7 +63,7 @@ class CupertinoNavigationBar(ConstrainedControl):
         inactive_color: Optional[str] = None,
         border: Optional[Border] = None,
         icon_size: OptionalNumber = None,
-        on_change=None,
+        on_change: OptionalEventCallback = None,
         #
         # ConstrainedControl
         #
@@ -93,7 +92,7 @@ class CupertinoNavigationBar(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-    ) -> None:
+    ):
         ConstrainedControl.__init__(
             self,
             ref=ref,
@@ -171,29 +170,29 @@ class CupertinoNavigationBar(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> ColorStr:
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value: ColorStr):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # active_color
     @property
-    def active_color(self) -> ColorStr:
+    def active_color(self) -> Optional[str]:
         return self._get_attr("activeColor")
 
     @active_color.setter
-    def active_color(self, value: ColorStr):
+    def active_color(self, value: Optional[str]):
         self._set_attr("activeColor", value)
 
     # inactive_color
     @property
-    def inactive_color(self) -> ColorStr:
+    def inactive_color(self) -> Optional[str]:
         return self._get_attr("inactiveColor")
 
     @inactive_color.setter
-    def inactive_color(self, value: ColorStr):
+    def inactive_color(self, value: Optional[str]):
         self._set_attr("inactiveColor", value)
 
     # icon_size
@@ -207,9 +206,9 @@ class CupertinoNavigationBar(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self) -> Optional[ControlEventFunction]:
+    def on_change(self) -> OptionalEventCallback:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: Optional[ControlEventFunction]):
+    def on_change(self, handler: OptionalEventCallback):
         self._add_event_handler("change", handler)

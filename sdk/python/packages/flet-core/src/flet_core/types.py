@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional, Protocol, Tuple, Union
+from typing import Any, Callable, Dict, Optional, Protocol, Tuple, Union
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
@@ -78,8 +78,7 @@ ResponsiveNumber = Union[Dict[str, Number], Number]
 OptionalNumber = Optional[Number]
 
 # str type alias
-ColorStr = Optional[str]
-IconStr = Optional[str]
+OptionalString = Optional[str]
 
 
 class MaterialState(Enum):
@@ -311,7 +310,7 @@ class StrokeJoin(Enum):
 
 
 # Events
-ControlEventFunction = Optional[Callable[[ControlEvent], None]]
+OptionalEventCallback = Optional[Callable[[ControlEvent], None]]
 
 # Wrapper
 Wrapper = Callable[..., Any]

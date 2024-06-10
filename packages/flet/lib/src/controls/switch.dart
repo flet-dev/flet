@@ -5,13 +5,12 @@ import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/mouse.dart';
+import '../utils/others.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 import 'cupertino_switch.dart';
 import 'flet_store_mixin.dart';
 import 'list_tile.dart';
-
-enum LabelPosition { right, left }
 
 class SwitchControl extends StatefulWidget {
   final Control? parent;
@@ -80,11 +79,8 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
       }
 
       String label = widget.control.attrString("label", "")!;
-      LabelPosition labelPosition = LabelPosition.values.firstWhere(
-          (p) =>
-              p.name.toLowerCase() ==
-              widget.control.attrString("labelPosition", "")!.toLowerCase(),
-          orElse: () => LabelPosition.right);
+      LabelPosition labelPosition = parseLabelPosition(
+          widget.control.attrString("labelPosition"), LabelPosition.right)!;
       bool autofocus = widget.control.attrBool("autofocus", false)!;
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
 

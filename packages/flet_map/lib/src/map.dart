@@ -76,8 +76,6 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
           keepAlive: config.control.attrBool("keepAlive", false)!,
           maxZoom: config.control.attrDouble("maxZoom"),
           minZoom: config.control.attrDouble("minZoom"),
-          interactionOptions: parseInteractionOptions(
-              config.control, "interactionConfiguration"),
           onTap: onTap
               ? (TapPosition pos, LatLng latlng) {
                   triggerEvent(config.control, "tap", {

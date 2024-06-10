@@ -78,7 +78,7 @@ class AudioRecorder(Control):
     @deprecated(
         reason="Use start_recording() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def start_recording_async(self, output_path: str) -> bool:
         return self.start_recording(output_path)
@@ -123,7 +123,7 @@ class AudioRecorder(Control):
     @deprecated(
         reason="Use resume_recording() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def resume_recording_async(self):
         self.resume_recording()
@@ -134,7 +134,7 @@ class AudioRecorder(Control):
     @deprecated(
         reason="Use pause_recording() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def pause_recording_async(self):
         self.pause_recording()

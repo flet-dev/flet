@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -59,9 +58,8 @@ class _SnackBarControlState extends State<SnackBarControl> {
     var clipBehavior =
         parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
 
-    SnackBarBehavior? behavior = SnackBarBehavior.values.firstWhereOrNull((a) =>
-        a.name.toLowerCase() ==
-        widget.control.attrString("behavior", "")!.toLowerCase());
+    SnackBarBehavior? behavior =
+        parseSnackBarBehavior(widget.control.attrString("behavior"));
 
     DismissDirection? dismissDirection =
         parseDismissDirection(widget.control.attrString("dismissDirection"));

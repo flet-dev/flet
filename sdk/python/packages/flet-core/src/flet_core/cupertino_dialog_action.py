@@ -13,23 +13,42 @@ class CupertinoDialogAction(Control):
     ```
     import flet as ft
 
+
     def main(page: ft.Page):
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+
+        def dialog_dismissed(e):
+            page.add(ft.Text("Dialog dismissed"))
+
+        def handle_action_click(e):
+            page.add(ft.Text(f"Action clicked: {e.control.text}"))
+            page.close(cupertino_alert_dialog)
+
         cupertino_alert_dialog = ft.CupertinoAlertDialog(
             title=ft.Text("Cupertino Alert Dialog"),
-            content=ft.Text("body"),
-            on_dismiss=lambda e: print("Dismissed!"),
+            content=ft.Text("Do you want to delete this file?"),
+            on_dismiss=dialog_dismissed,
             actions=[
                 ft.CupertinoDialogAction(
-                    "OK",
+                    text="Yes",
                     is_destructive_action=True,
+                    on_click=handle_action_click,
                 ),
-                ft.CupertinoDialogAction(text="Cancel", is_default_action=False),
+                ft.CupertinoDialogAction(
+                    text="No",
+                    is_default_action=True,
+                    on_click=handle_action_click
+                ),
             ],
         )
 
         page.add(
-            ft.OutlinedButton("Open Cupertino Dialog", on_click=lambda e: page.show_dialog(cupertino_alert_dialog)),
+            ft.CupertinoFilledButton(
+                text="Open CupertinoAlertDialog",
+                on_click=lambda e: page.open(cupertino_alert_dialog),
+            )
         )
+
 
     ft.app(target=main)
     ```
