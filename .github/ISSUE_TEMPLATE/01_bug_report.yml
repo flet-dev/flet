@@ -45,7 +45,7 @@ body:
     attributes:
       label: "Screenshots"
       description: "One image is worth a thousand words. If you can, please add screenshots to help explain the issue."
-      placeholder: DO NOT PASTE SCREENSHOTS OF LOGS OR ERRORS! (share them as text instead)
+      placeholder: "Please do not paste screenshots of logs or errors. Share them as text instead."
     validations:
       required: false
   - type: dropdown
