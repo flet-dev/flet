@@ -188,7 +188,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use show_drawer() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def show_drawer_async(self, drawer: NavigationDrawer):
         self.show_drawer(drawer)
@@ -201,7 +201,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use close_end_drawer() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def close_drawer_async(self):
         self.close_end_drawer()
@@ -216,7 +216,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use show_end_drawer() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def show_end_drawer_async(self, end_drawer: NavigationDrawer):
         self.show_end_drawer(end_drawer)
@@ -229,7 +229,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use close_end_drawer() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def close_end_drawer_async(self):
         self.close_end_drawer()

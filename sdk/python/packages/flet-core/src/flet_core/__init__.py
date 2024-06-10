@@ -181,9 +181,14 @@ from flet_core.menu_item_button import MenuItemButton
 from flet_core.navigation_bar import (
     NavigationBar,
     NavigationBarDestination,
+    NavigationDestination,
     NavigationBarLabelBehavior,
 )
-from flet_core.navigation_drawer import NavigationDrawer, NavigationDrawerDestination
+from flet_core.navigation_drawer import (
+    NavigationDrawer,
+    NavigationDrawerDestination,
+    NavigationDrawerPosition,
+)
 from flet_core.navigation_rail import (
     NavigationRail,
     NavigationRailDestination,
@@ -317,12 +322,10 @@ from flet_core.types import (
     BoxShape,
     Brightness,
     ClipBehavior,
-    ColorStr,
-    ControlEventFunction,
+    OptionalEventCallback,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     FontWeight,
-    IconStr,
     ImageFit,
     ImageRepeat,
     LabelPosition,

@@ -37,41 +37,40 @@ class DatePicker(Control):
     """
     A Material-style date picker dialog.
 
-    It is added to [`page.overlay`](page#overlay) and called using its `pick_date()` method.
+    It is added to [`page.overlay`](page#overlay) and can be opened by setting `open=True` or by calling `Page.open()` method.
 
     Depending on the `date_picker_entry_mode`, it will show either a Calendar or an Input (TextField) for picking a date.
 
     Example:
     ```
-    import datetime
     import flet as ft
 
-    def main(page: ft.Page):
-        def change_date(e):
-            print(f"Date picker changed, value is {date_picker.value}")
 
-        def date_picker_dismissed(e):
-            print(f"Date picker dismissed, value is {date_picker.value}")
+    def main(page):
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-        date_picker = ft.DatePicker(
-            on_change=change_date,
-            on_dismiss=date_picker_dismissed,
-            first_date=datetime.datetime(2023, 10, 1),
-            last_date=datetime.datetime(2024, 10, 1),
+        def handle_date_change(e: ft.ControlEvent):
+            page.add(ft.Text(f"Date changed: {e.control.value.strftime('%Y-%m-%d %H:%M %p')}"))
+
+        cupertino_date_picker = ft.CupertinoDatePicker(
+            date_picker_mode=ft.CupertinoDatePickerMode.DATE_AND_TIME,
+            on_change=handle_date_change,
+        )
+        page.add(
+            ft.CupertinoFilledButton(
+                "Open CupertinoDatePicker",
+                on_click=lambda e: page.open(
+                    ft.CupertinoBottomSheet(
+                        cupertino_date_picker,
+                        height=216,
+                        padding=ft.padding.only(top=6),
+                    )
+                ),
+            )
         )
 
-        page.overlay.append(date_picker)
 
-        date_button = ft.ElevatedButton(
-            "Pick date",
-            icon=ft.icons.CALENDAR_MONTH,
-            on_click=lambda _: date_picker.pick_date(),
-        )
-
-        page.add(date_button)
-
-
-    ft.app(target=main)
+    ft.app(main)
     ```
 
     -----
@@ -161,14 +160,19 @@ class DatePicker(Control):
     def before_update(self):
         super().before_update()
 
+    @deprecated(
+        reason="Use Page.open() method instead.",
+        version="0.23.0",
+        delete_version="0.26.0",
+    )
     def pick_date(self):
         self.open = True
         self.update()
 
     @deprecated(
-        reason="Use pick_date() method instead.",
+        reason="Use Page.open() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def pick_date_async(self):
         self.pick_date()
