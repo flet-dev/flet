@@ -52,10 +52,10 @@ CupertinoThemeData fixCupertinoTheme(
     CupertinoThemeData cupertinoTheme, ThemeData theme) {
   return cupertinoTheme.copyWith(
       applyThemeToAll: true,
-      barBackgroundColor: theme.colorScheme.background,
+      barBackgroundColor: theme.colorScheme.surface,
       textTheme: cupertinoTheme.textTheme.copyWith(
           navTitleTextStyle: cupertinoTheme.textTheme.navTitleTextStyle
-              .copyWith(color: theme.colorScheme.onBackground)));
+              .copyWith(color: theme.colorScheme.onSurface)));
 }
 
 ThemeData parseTheme(Control control, String propName, Brightness? brightness,
@@ -201,11 +201,9 @@ ColorScheme? parseColorScheme(ThemeData theme, Map<String, dynamic>? j) {
     onError: parseColor(null, j["on_error"]),
     errorContainer: parseColor(null, j["error_container"]),
     onErrorContainer: parseColor(null, j["on_error_container"]),
-    background: parseColor(null, j["background"]),
-    onBackground: parseColor(null, j["on_background"]),
     surface: parseColor(null, j["surface"]),
     onSurface: parseColor(null, j["on_surface"]),
-    surfaceVariant: parseColor(null, j["surface_variant"]),
+    surfaceContainerHighest: parseColor(null, j["surface_variant"]),
     onSurfaceVariant: parseColor(null, j["on_surface_variant"]),
     outline: parseColor(null, j["outline"]),
     outlineVariant: parseColor(null, j["outline_variant"]),
