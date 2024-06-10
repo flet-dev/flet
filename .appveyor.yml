@@ -112,11 +112,13 @@ for:
 
             # patch pubspecs
             for dir in packages/flet*; do
+              echo "Patching $dir/pubspec.yaml"
               python3 ci/patch_pubspec.py $dir/pubspec.yaml $PKG_VER
             done
 
             cd packages/flet
-            flutter test
+            echo "Running flet tests"
+            flutter test || exit 1
             dart pub publish --force || exit 1
             cd $APPVEYOR_BUILD_FOLDER
 
@@ -124,6 +126,7 @@ for:
 
             for dir in packages/flet_*; do
               cd "$dir"
+              echo "Publishing $dir package"
               dart pub publish --force || exit 1
               cd "$APPVEYOR_BUILD_FOLDER"
             done
@@ -131,12 +134,14 @@ for:
           else
 
             cd packages/flet
-            flutter test
+            echo "Running flet tests"
+            flutter test || exit 1
             dart pub publish --dry-run
             cd $APPVEYOR_BUILD_FOLDER
 
             for dir in packages/flet_*; do
               cd "$dir"
+              echo "Dry-run publishing $dir package"
               dart pub publish --dry-run
               cd "$APPVEYOR_BUILD_FOLDER"
             done

@@ -9,7 +9,7 @@ void main() {
   test("Light theme is parsed correctly from JSON", () {
     const t1 = '''{
         "color_scheme_seed": "red",
-        "brightness": "light1",
+        "brightness": "light",
         "use_material3": false
       }''';
 
