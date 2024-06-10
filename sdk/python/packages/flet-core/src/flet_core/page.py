@@ -818,6 +818,12 @@ class Page(AdaptiveControl):
             "getClipboard", wait_for_result=True, wait_timeout=wait_timeout
         )
 
+    def enable_browser_context_menu(self, wait_timeout: Optional[float] = 10):
+        self._invoke_method("enableBrowserContextMenu", wait_timeout=wait_timeout)
+
+    def disable_browser_context_menu(self, wait_timeout: Optional[float] = 10):
+        self._invoke_method("disableBrowserContextMenu", wait_timeout=wait_timeout)
+
     def launch_url(
         self,
         url: str,
