@@ -140,7 +140,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
 
       Widget? result;
 
-      if ((onClick || url != "" || onLongPress || onHover) &&
+      if ((onClick || url != "" || onLongPress || onHover || onTapDown) &&
           ink &&
           !disabled) {
         var ink = Material(
@@ -150,7 +150,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
               // Dummy callback to enable widget
               // see https://github.com/flutter/flutter/issues/50116#issuecomment-582047374
               // and https://github.com/flutter/flutter/blob/eed80afe2c641fb14b82a22279d2d78c19661787/packages/flutter/lib/src/material/ink_well.dart#L1125-L1129
-              onTap: onClick || url != ""
+              onTap: onClick || url != "" || onTapDown
                   ? () {
                       debugPrint("Container ${control.id} clicked!");
                       if (url != "") {
