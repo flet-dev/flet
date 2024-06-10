@@ -13,7 +13,14 @@ from flet_core.map.map_configuration import (
 )
 from flet_core.map.marker_layer import Marker, MarkerLayer
 from flet_core.map.polygon_layer import PolygonMarker, PolygonLayer
-from flet_core.map.polyline_layer import PolylineMarker, PolylineLayer
+from flet_core.map.polyline_layer import (
+    PolylineMarker,
+    PolylineLayer,
+    PatternFit,
+    DashedStrokePattern,
+    DottedStrokePattern,
+    SolidStrokePattern,
+)
 from flet_core.map.rich_attribution import RichAttribution
 from flet_core.map.simple_attribution import SimpleAttribution
 from flet_core.map.text_source_attribution import TextSourceAttribution

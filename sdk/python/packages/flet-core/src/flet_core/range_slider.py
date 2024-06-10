@@ -5,7 +5,7 @@ from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
-    MaterialState,
+    ControlState,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
@@ -84,7 +84,7 @@ class RangeSlider(ConstrainedControl):
         round: Optional[int] = None,
         active_color: Optional[str] = None,
         inactive_color: Optional[str] = None,
-        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
+        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         on_change=None,
         on_change_start=None,
         on_change_end=None,
@@ -260,11 +260,11 @@ class RangeSlider(ConstrainedControl):
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__overlay_color = value
 
     # on_change

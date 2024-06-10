@@ -9,7 +9,7 @@ from flet_core.theme import ThemeVisualDensity
 from flet_core.types import (
     AnimationValue,
     LabelPosition,
-    MaterialState,
+    ControlState,
     MouseCursor,
     OffsetValue,
     ResponsiveNumber,
@@ -60,9 +60,9 @@ class Radio(ConstrainedControl, AdaptiveControl):
         label_style: Optional[TextStyle] = None,
         value: Optional[str] = None,
         autofocus: Optional[bool] = None,
-        fill_color: Union[None, str, Dict[MaterialState, str]] = None,
+        fill_color: Union[None, str, Dict[ControlState, str]] = None,
         active_color: Optional[str] = None,
-        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
+        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         hover_color: Optional[str] = None,
         focus_color: Optional[str] = None,
         splash_radius: OptionalNumber = None,
@@ -258,20 +258,20 @@ class Radio(ConstrainedControl, AdaptiveControl):
 
     # fill_color
     @property
-    def fill_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def fill_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__fill_color
 
     @fill_color.setter
-    def fill_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def fill_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__fill_color = value
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__overlay_color = value
 
     # on_focus

@@ -123,12 +123,12 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
 
     if (bgColor == null && style != null) {
       bgColor = style.backgroundColor
-          ?.resolve(selected ? {MaterialState.selected} : {});
+          ?.resolve(selected ? {WidgetState.selected} : {});
     }
 
     if (color == null && style != null) {
       color = style.foregroundColor
-          ?.resolve(selected ? {MaterialState.selected} : {});
+          ?.resolve(selected ? {WidgetState.selected} : {});
     }
 
     if (color != null) {

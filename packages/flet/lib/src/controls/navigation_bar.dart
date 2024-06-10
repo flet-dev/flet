@@ -88,7 +88,7 @@ class _NavigationBarControlState extends State<NavigationBarControl>
             shadowColor: widget.control.attrColor("shadowColor", context),
             surfaceTintColor:
                 widget.control.attrColor("surfaceTintColor", context),
-            overlayColor: parseMaterialStateColor(
+            overlayColor: parseWidgetStateColor(
                 Theme.of(context), widget.control, "overlayColor"),
             indicatorColor: widget.control.attrColor("indicatorColor", context),
             indicatorShape:

@@ -337,6 +337,7 @@ from flet_core.types import (
     ImageRepeat,
     LabelPosition,
     MainAxisAlignment,
+    ControlState,
     MaterialState,
     MouseCursor,
     NotchShape,

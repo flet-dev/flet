@@ -115,9 +115,9 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
             hoverColor: widget.control.attrColor("hoverColor", context),
             splashRadius: widget.control.attrDouble("splashRadius"),
             toggleable: widget.control.attrBool("toggleable", false)!,
-            fillColor: parseMaterialStateColor(
+            fillColor: parseWidgetStateColor(
                 Theme.of(context), widget.control, "fillColor"),
-            overlayColor: parseMaterialStateColor(
+            overlayColor: parseWidgetStateColor(
                 Theme.of(context), widget.control, "overlayColor"),
             visualDensity: visualDensity,
             onChanged: !disabled

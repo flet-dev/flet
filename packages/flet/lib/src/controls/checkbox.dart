@@ -114,7 +114,7 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
         labelStyle = labelStyle.apply(color: Theme.of(context).disabledColor);
       }
 
-      MaterialStateBorderSide? side = parseMaterialStateBorderSide(
+      WidgetStateBorderSide? side = parseWidgetStateBorderSide(
           Theme.of(context), widget.control, "borderSide");
 
       var checkbox = Checkbox(
@@ -129,10 +129,10 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
           activeColor: widget.control.attrColor("activeColor", context),
           focusColor: widget.control.attrColor("focusColor", context),
           hoverColor: widget.control.attrColor("hoverColor", context),
-          overlayColor: parseMaterialStateColor(
+          overlayColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "overlayColor"),
           checkColor: widget.control.attrColor("checkColor", context),
-          fillColor: parseMaterialStateColor(
+          fillColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "fillColor"),
           tristate: _tristate,
           visualDensity:

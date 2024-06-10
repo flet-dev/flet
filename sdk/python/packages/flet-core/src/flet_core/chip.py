@@ -15,7 +15,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     ClipBehavior,
-    MaterialState,
+    ControlState,
 )
 
 
@@ -87,7 +87,7 @@ class Chip(ConstrainedControl):
         selected_shadow_color: Optional[str] = None,
         autofocus: Optional[bool] = None,
         surface_tint_color: Optional[str] = None,
-        color: Union[None, str, Dict[Union[MaterialState, str], str]] = None,
+        color: Union[None, str, Dict[Union[ControlState, str], str]] = None,
         click_elevation: OptionalNumber = None,
         clip_behavior: Optional[ClipBehavior] = None,
         visual_density: Optional[ThemeVisualDensity] = None,
@@ -316,11 +316,11 @@ class Chip(ConstrainedControl):
 
     # color
     @property
-    def color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__color
 
     @color.setter
-    def color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__color = value
 
     # autofocus

@@ -65,6 +65,12 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
         var onSecondaryTap = config.control.attrBool("onSecondaryTap", false)!;
         var onMapEvent = config.control.attrBool("onEvent", false)!;
         var onInit = config.control.attrBool("onInit", false)!;
+        var onPointerDown = config.control.attrBool("onPointerDown", false)!;
+        var onPointerCancel =
+            config.control.attrBool("onPointerCancel", false)!;
+        var onPointerUp = config.control.attrBool("onPointerUp", false)!;
+        var onPositionChange =
+            config.control.attrBool("onPositionChange", false)!;
 
         return MapOptions(
           initialCenter: parseLatLng(
@@ -100,6 +106,41 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
                   });
                 }
               : null,
+          onPositionChanged: onPositionChange
+              ? (MapCamera camera, bool hasGesture) {
+                  triggerEvent(config.control, "position_change", {
+                    "lat": camera.center.latitude,
+                    "long": camera.center.longitude,
+                    "min_zoom": camera.minZoom,
+                    "max_zoom": camera.maxZoom,
+                    "rot": camera.rotation,
+                  });
+                }
+              : null,
+          onPointerDown: onPointerDown
+              ? (PointerDownEvent e, LatLng latlng) {
+                  triggerEvent(config.control, "pointer_down", {
+                    "lat": latlng.latitude,
+                    "long": latlng.longitude,
+                  });
+                }
+              : null,
+          onPointerCancel: onPointerCancel
+              ? (PointerCancelEvent e, LatLng latlng) {
+                  triggerEvent(config.control, "pointer_cancel", {
+                    "lat": latlng.latitude,
+                    "long": latlng.longitude,
+                  });
+                }
+              : null,
+          onPointerUp: onPointerUp
+              ? (PointerUpEvent e, LatLng latlng) {
+                  triggerEvent(config.control, "pointer_up", {
+                    "lat": latlng.latitude,
+                    "long": latlng.longitude,
+                  });
+                }
+              : null,
           onSecondaryTap: onSecondaryTap
               ? (TapPosition pos, LatLng latlng) {
                   triggerEvent(config.control, "secondary_tap", {
@@ -119,6 +160,8 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
                     "c_lat": e.camera.center.latitude,
                     "c_long": e.camera.center.longitude,
                     "zoom": e.camera.zoom,
+                    "min_zoom": e.camera.minZoom,
+                    "max_zoom": e.camera.maxZoom,
                     "rot": e.camera.rotation,
                   });
                 }

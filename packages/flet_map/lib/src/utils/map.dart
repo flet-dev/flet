@@ -39,10 +39,55 @@ LatLngBounds? latLngBoundsFromJson(Map<String, dynamic> json) {
       latLngFromJson(json['corner_1']), latLngFromJson(json['corner_2']));
 }
 
-InteractionOptions? parseInteractionOptions(Control control, String propName) {
+PatternFit? parsePatternFit(String? value,
+    [PatternFit? defValue = PatternFit.none]) {
+  if (value == null) {
+    return defValue;
+  }
+  return PatternFit.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+StrokePattern? parseStrokePattern(Control control, String propName,
+    [StrokePattern? defValue]) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return defValue;
+  }
+
+  final j1 = json.decode(v);
+  return strokePatternFromJson(j1);
+}
+
+StrokePattern? strokePatternFromJson(Map<String, dynamic> json) {
+  if (json['type'] == 'dotted') {
+    return StrokePattern.dotted(
+      spacingFactor: parseDouble(json['spacing_factor'], 1)!,
+      patternFit: parsePatternFit(json['pattern_fit'], PatternFit.none)!,
+    );
+  } else if (json['type'] == 'solid') {
+    return const StrokePattern.solid();
+  } else if (json['type'] == 'dash') {
+    var segments = json['segments'];
+    return StrokePattern.dashed(
+      patternFit: parsePatternFit(json['pattern_fit'], PatternFit.none)!,
+      segments: segments != null
+          ? (jsonDecode(segments) as List)
+              .map((e) => parseDouble(e))
+              .whereNotNull()
+              .toList()
+          : [],
+    );
+  }
+  return null;
+}
+
+InteractionOptions parseInteractionOptions(Control control, String propName,
+    [InteractionOptions defValue = const InteractionOptions()]) {
   var v = control.attrString(propName);
   if (v == null) {
-    return null;
+    return defValue;
   }
 
   final j1 = json.decode(v);

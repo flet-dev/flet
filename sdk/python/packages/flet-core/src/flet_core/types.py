@@ -1,5 +1,6 @@
-from enum import Enum
+from enum import Enum, EnumMeta
 from typing import Any, Callable, Dict, Optional, Protocol, Tuple, Union
+from warnings import warn
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
@@ -81,7 +82,30 @@ OptionalNumber = Optional[Number]
 OptionalString = Optional[str]
 
 
-class MaterialState(Enum):
+class MaterialStateDeprecated(EnumMeta):
+    def __getattribute__(self, item):
+        warn(
+            "MaterialState enum is deprecated and will be removed in v1.0. "
+            "Use ControlState enum instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return EnumMeta.__getattribute__(self, item)
+
+
+class MaterialState(Enum, metaclass=MaterialStateDeprecated):
+    HOVERED = "hovered"
+    FOCUSED = "focused"
+    PRESSED = "pressed"
+    DRAGGED = "dragged"
+    SELECTED = "selected"
+    SCROLLED_UNDER = "scrolledUnder"
+    DISABLED = "disabled"
+    ERROR = "error"
+    DEFAULT = ""
+
+
+class ControlState(Enum):
     HOVERED = "hovered"
     FOCUSED = "focused"
     PRESSED = "pressed"

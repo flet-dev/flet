@@ -54,33 +54,30 @@ ButtonStyle? buttonStyleFromJSON(ThemeData theme, Map<String, dynamic>? json,
     return null;
   }
   return ButtonStyle(
-      foregroundColor: getMaterialStateProperty<Color?>(
-          json["color"],
+      foregroundColor: getWidgetStateProperty<Color?>(json["color"],
           (jv) => parseColor(theme, jv as String), defaultForegroundColor),
-      backgroundColor: getMaterialStateProperty<Color?>(
-          json["bgcolor"],
+      backgroundColor: getWidgetStateProperty<Color?>(json["bgcolor"],
           (jv) => parseColor(theme, jv as String), defaultBackgroundColor),
-      overlayColor: getMaterialStateProperty<Color?>(
-          json["overlay_color"],
+      overlayColor: getWidgetStateProperty<Color?>(json["overlay_color"],
           (jv) => parseColor(theme, jv as String), defaultOverlayColor),
-      shadowColor: getMaterialStateProperty<Color?>(json["shadow_color"],
+      shadowColor: getWidgetStateProperty<Color?>(json["shadow_color"],
           (jv) => parseColor(theme, jv as String), defaultShadowColor),
-      surfaceTintColor: getMaterialStateProperty<Color?>(
+      surfaceTintColor: getWidgetStateProperty<Color?>(
           json["surface_tint_color"],
           (jv) => parseColor(theme, jv as String),
           defaultSurfaceTintColor),
-      elevation: getMaterialStateProperty(
+      elevation: getWidgetStateProperty(
           json["elevation"], (jv) => parseDouble(jv, 0)!, defaultElevation),
       animationDuration: json["animation_duration"] != null
           ? Duration(milliseconds: parseInt(json["animation_duration"], 0)!)
           : null,
-      padding: getMaterialStateProperty<EdgeInsetsGeometry?>(
+      padding: getWidgetStateProperty<EdgeInsetsGeometry?>(
           json["padding"], (jv) => edgeInsetsFromJson(jv), defaultPadding),
-      side: getMaterialStateProperty<BorderSide?>(
+      side: getWidgetStateProperty<BorderSide?>(
           json["side"],
           (jv) => borderSideFromJSON(theme, jv, theme.colorScheme.outline),
           defaultBorderSide),
-      shape: getMaterialStateProperty<OutlinedBorder?>(
+      shape: getWidgetStateProperty<OutlinedBorder?>(
           json["shape"], (jv) => outlinedBorderFromJSON(jv), defaultShape));
 }
 

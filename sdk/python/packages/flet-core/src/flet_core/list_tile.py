@@ -107,6 +107,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         title_text_style: Optional[TextStyle] = None,
         subtitle_text_style: Optional[TextStyle] = None,
         leading_and_trailing_text_style: Optional[TextStyle] = None,
+            min_height: OptionalNumber = None,
         on_click=None,
         on_long_press=None,
         #
@@ -207,6 +208,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         self.title_text_style = title_text_style
         self.subtitle_text_style = subtitle_text_style
         self.leading_and_trailing_text_style = leading_and_trailing_text_style
+        self.min_height = min_height
 
     def _get_control_name(self):
         return "listtile"
@@ -303,6 +305,15 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @horizontal_spacing.setter
     def horizontal_spacing(self, value: OptionalNumber):
         self._set_attr("horizontalSpacing", value)
+
+    # min_height
+    @property
+    def min_height(self) -> OptionalNumber:
+        return self._get_attr("minHeight", data_type="float")
+
+    @min_height.setter
+    def min_height(self, value: OptionalNumber):
+        self._set_attr("minHeight", value)
 
     # hover_color
     @property
