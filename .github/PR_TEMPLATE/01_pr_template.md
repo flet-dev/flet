@@ -2,6 +2,8 @@
 
 <!-- Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. -->
 
+
+<!-- If it fixes an open issue, please link to the issue here. -->
 Fixes #(issue)
 
 ## Test Code
