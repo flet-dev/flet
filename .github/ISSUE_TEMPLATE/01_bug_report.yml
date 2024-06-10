@@ -1,0 +1,104 @@
+name: Bug Report
+description: "You are about to report a bug with Flet. We'd appreciate if you'd first search through our open issues and docs, to make sure the issue isn't already known."
+
+body:
+  - type: checkboxes
+    attributes:
+      label: "Duplicate Check"
+      options:
+        - label: "I have searched the [opened issues](https://github.com/flet-dev/flet/issues) and there are no duplicates"
+          required: true
+  - type: textarea
+    id: "describe-the-bug"
+    attributes:
+      label: "Describe the bug"
+      description: "A clear and concise description of the bug."
+      placeholder: Tell us what you see.
+    validations:
+      required: true
+  - type: textarea
+    id: "code"
+    attributes:
+      label: "Code"
+      description: "If you want your issue to be quickly addressed provide some runnable code which reproduces the issue."
+      placeholder: ```py ```
+    validations:
+      required: false
+  - type: textarea
+    id: "to-reproduce"
+    attributes:
+      label: "To reproduce"
+      description: "Bug reports with clear reproduction will get prioritized higher and addressed more quickly."
+      placeholder: "Steps to reproduce: 1. Run the repro code 2. Click on '...' 3. Scroll down to '...' 4. See error '...'"
+    validations:
+      required: true
+  - type: textarea
+    id: "expected-behavior"
+    attributes:
+      label: "Expected behavior"
+      description: "A clear and concise description of what you expected to happen."
+      placeholder: Tell us what you expected to see.
+    validations:
+      required: false
+  - type: textarea
+    id: "screenshots"
+    attributes:
+      label: "Screenshots"
+      description: "One image is worth a thousand words. If you can, please add screenshots to help explain the issue."
+      placeholder: "Please do not paste screenshots of logs or errors. Share them as text instead."
+    validations:
+      required: false
+  - type: dropdown
+    id: "os"
+    attributes:
+      label: "Operating System"
+      multiple: false
+      options:
+        - macOS
+        - Linux
+        - Windows
+    validations:
+      required: true
+  - type: input
+    id: "os-version"
+    attributes:
+      label: "Operating system details"
+      description: "For example: Debian 11.2"
+    validations:
+      required: true
+  - type: input
+    id: "flet-version"
+    attributes:
+      label: "Flet version"
+      description: "run `pip show flet` in your terminal to view your Flet version"
+    validations:
+      required: true
+  - type: dropdown
+    id: "regression"
+    attributes:
+      label: "Regression"
+      description: "Is the reported bug a regression (used to work in a previous Flet version)?"
+      multiple: false
+      options:
+        - "No, it isn't"
+        - "Yes, it used to work in a previous Flet version (please specify the version in additional details)"
+        - "I'm not sure / I don't know"
+    validations:
+      required: true
+  - type: textarea
+    id: "suggestion"
+    attributes:
+      label: "Suggestions"
+      description: "Any suggestions on how to fix your issue?"
+      placeholder: I suggest...
+    validations:
+      required: false
+  - type: textarea
+    id: "additional-details"
+    attributes:
+      label: "Additional details"
+      description: "Add any other detail about the issue here. Ex: happens only on specific conditions, etc."
+    validations:
+      required: false
+
+
