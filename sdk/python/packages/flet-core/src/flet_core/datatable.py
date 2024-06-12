@@ -255,7 +255,7 @@ class DataRow(Control):
     def before_update(self):
         super().before_update()
         assert (
-                len(list(filter(lambda cell: cell.visible, self.__cells))) > 0
+            len(list(filter(lambda cell: cell.visible, self.__cells))) > 0
         ), "cells must contain at minimum one visible DataCell"
         self._set_attr_json("color", self.__color)
 
@@ -437,12 +437,23 @@ class DataTable(ConstrainedControl):
         visible_columns = list(filter(lambda column: column.visible, self.__columns))
         visible_rows = list(filter(lambda row: row.visible, self.__rows))
         assert (
-                len(visible_columns) > 0
+            len(visible_columns) > 0
         ), "columns must contain at minimum one visible DataColumn"
         assert all(
             len(list(filter(lambda c: c.visible, row.cells))) == len(visible_columns)
             for row in visible_rows
-        ), "each visible DataRow must contain exactly as many visible DataCells as there are visible DataColumns"
+        ), f"each visible DataRow must contain exactly as many visible DataCells as there are visible DataColumns ({len(visible_columns)})"
+        assert (
+            self.data_row_min_height is None
+            or self.data_row_max_height is None
+            or (self.data_row_min_height <= self.data_row_max_height)
+        ), "data_row_min_height must be less than or equal to data_row_max_height"
+        assert (
+            self.divider_thickness is None or self.divider_thickness >= 0
+        ), "divider_thickness must be greater than or equal to 0"
+        assert self.sort_column_index is None or (
+            0 <= self.sort_column_index < len(visible_columns)
+        ), f"sort_column_index must be greater than or equal to 0 and less than the number of columns ({len(visible_columns)})"
         self._set_attr_json("border", self.__border)
         self._set_attr_json("gradient", self.__gradient)
         self._set_attr_json("borderRadius", self.__border_radius)
