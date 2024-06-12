@@ -12,6 +12,7 @@
 * NEW: Enable/disable browser context menu ([#3434](https://github.com/flet-dev/flet/issues/3434))
 * NEW: `Container.color_filter` property ([#3392](https://github.com/flet-dev/flet/issues/3392))
 * NEW: `dropdown.Option.text_style` property ([#3293](https://github.com/flet-dev/flet/issues/3293))
+* NEW: `dropdown.Option.content` property ([#3456](https://github.com/flet-dev/flet/issues/3456))
 * NEW: `Video.configuration` property ([#3074](https://github.com/flet-dev/flet/issues/3074))
 * NEW: AutoComplete: add selected_index read-only property ([#3298](https://github.com/flet-dev/flet/issues/3298))
 * NEW: Renamed `NavigationDestination` to `NavigationBarDestination` ([#3172](https://github.com/flet-dev/flet/issues/3172))
