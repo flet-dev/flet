@@ -29,6 +29,7 @@ from urllib.parse import urlparse
 import flet_core
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alert_dialog import AlertDialog
+from flet_core.alignment import Alignment
 from flet_core.animation import AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.banner import Banner
@@ -126,6 +127,322 @@ class PageDisconnectedException(Exception):
         super().__init__(message)
 
 
+class Window:
+    def __init__(self, page: "Page"):
+        self.page = page
+        self.__alignment = None
+
+    # bgcolor
+    @property
+    def bgcolor(self) -> Optional[str]:
+        return self.page._get_attr("windowBgcolor")
+
+    @bgcolor.setter
+    def bgcolor(self, value: Optional[str]):
+        self.page._set_attr("windowBgcolor", value)
+
+    # width
+    @property
+    def width(self) -> OptionalNumber:
+        w = self.page._get_attr("windowWidth")
+        return float(w) if w else 0
+
+    @width.setter
+    def width(self, value: OptionalNumber):
+        self.page._set_attr("windowWidth", value)
+
+    # height
+    @property
+    def height(self) -> OptionalNumber:
+        h = self.page._get_attr("windowHeight")
+        return float(h) if h else 0
+
+    @height.setter
+    def height(self, value: OptionalNumber):
+        self.page._set_attr("windowHeight", value)
+
+    # aspect_ratio
+    @property
+    def aspect_ratio(self) -> OptionalNumber:
+        h = self.page._get_attr("windowAspectRatio")
+        return float(h) if h else 0
+
+    @aspect_ratio.setter
+    def aspect_ratio(self, value: OptionalNumber):
+        self.page._set_attr("windowAspectRatio", value)
+
+    # top
+    @property
+    def top(self) -> OptionalNumber:
+        w = self.page._get_attr("windowTop")
+        return float(w) if w else 0
+
+    @top.setter
+    def top(self, value: OptionalNumber):
+        self.page._set_attr("windowTop", value)
+
+    # left
+    @property
+    def left(self) -> OptionalNumber:
+        h = self.page._get_attr("windowLeft")
+        return float(h) if h else 0
+
+    @left.setter
+    def left(self, value: OptionalNumber):
+        self.page._set_attr("windowLeft", value)
+
+    # max_width
+    @property
+    def max_width(self) -> OptionalNumber:
+        return self.page._get_attr("windowMaxWidth")
+
+    @max_width.setter
+    def max_width(self, value: OptionalNumber):
+        self.page._set_attr("windowMaxWidth", value)
+
+    # max_height
+    @property
+    def max_height(self) -> OptionalNumber:
+        return self.page._get_attr("windowMaxHeight")
+
+    @max_height.setter
+    def max_height(self, value: OptionalNumber):
+        self.page._set_attr("windowMaxHeight", value)
+
+    # min_width
+    @property
+    def min_width(self) -> OptionalNumber:
+        return self.page._get_attr("windowMinWidth")
+
+    @min_width.setter
+    def min_width(self, value: OptionalNumber):
+        self.page._set_attr("windowMinWidth", value)
+
+    # min_height
+    @property
+    def min_height(self) -> OptionalNumber:
+        return self.page._get_attr("windowMinHeight")
+
+    @min_height.setter
+    def min_height(self, value: OptionalNumber):
+        self.page._set_attr("windowMinHeight", value)
+
+    # opacity
+    @property
+    def opacity(self) -> OptionalNumber:
+        return self.page._get_attr("windowOpacity", data_type="float", def_value=1)
+
+    @opacity.setter
+    def opacity(self, value: OptionalNumber):
+        self.page._set_attr("windowOpacity", value)
+
+    # maximized
+    @property
+    def maximized(self) -> Optional[bool]:
+        return self.page._get_attr("windowMaximized", data_type="bool", def_value=False)
+
+    @maximized.setter
+    def maximized(self, value: Optional[bool]):
+        self.page._set_attr("windowMaximized", value)
+
+    # minimized
+    @property
+    def minimized(self) -> Optional[bool]:
+        return self.page._get_attr("windowMinimized", data_type="bool", def_value=False)
+
+    @minimized.setter
+    def minimized(self, value: Optional[bool]):
+        self.page._set_attr("windowMinimized", value)
+
+    # minimizable
+    @property
+    def minimizable(self) -> Optional[bool]:
+        return self.page._get_attr(
+            "windowMinimizable", data_type="bool", def_value=True
+        )
+
+    @minimizable.setter
+    def minimizable(self, value: Optional[bool]):
+        self.page._set_attr("windowMinimizable", value)
+
+    # maximizable
+    @property
+    def maximizable(self) -> Optional[bool]:
+        return self.page._get_attr(
+            "windowMaximizable", data_type="bool", def_value=True
+        )
+
+    @maximizable.setter
+    def maximizable(self, value: Optional[bool]):
+        self.page._set_attr("windowMaximizable", value)
+
+    # resizable
+    @property
+    def resizable(self) -> Optional[bool]:
+        return self.page._get_attr("windowResizable", data_type="bool", def_value=True)
+
+    @resizable.setter
+    def resizable(self, value: Optional[bool]):
+        self.page._set_attr("windowResizable", value)
+
+    # movable
+    @property
+    def movable(self) -> Optional[bool]:
+        return self.page._get_attr("windowMovable", data_type="bool", def_value=True)
+
+    @movable.setter
+    def movable(self, value: Optional[bool]):
+        self.page._set_attr("windowMovable", value)
+
+    # full_screen
+    @property
+    def full_screen(self) -> Optional[bool]:
+        return self.page._get_attr(
+            "windowFullScreen", data_type="bool", def_value=False
+        )
+
+    @full_screen.setter
+    def full_screen(self, value: Optional[bool]):
+        self.page._set_attr("windowFullScreen", value)
+
+    # always_on_top
+    @property
+    def always_on_top(self) -> Optional[bool]:
+        return self.page._get_attr(
+            "windowAlwaysOnTop", data_type="bool", def_value=False
+        )
+
+    @always_on_top.setter
+    def always_on_top(self, value: Optional[bool]):
+        self.page._set_attr("windowAlwaysOnTop", value)
+
+    # prevent_close
+    @property
+    def prevent_close(self) -> Optional[bool]:
+        return self.page._get_attr(
+            "windowPreventClose", data_type="bool", def_value=False
+        )
+
+    @prevent_close.setter
+    def prevent_close(self, value: Optional[bool]):
+        self.page._set_attr("windowPreventClose", value)
+
+    # title_bar_hidden
+    @property
+    def title_bar_hidden(self) -> Optional[bool]:
+        return self.page._get_attr(
+            "windowTitleBarHidden", data_type="bool", def_value=False
+        )
+
+    @title_bar_hidden.setter
+    def title_bar_hidden(self, value: Optional[bool]):
+        self.page._set_attr("windowTitleBarHidden", value)
+
+    # title_bar_buttons_hidden
+    @property
+    def title_bar_buttons_hidden(self) -> Optional[bool]:
+        return self.page._get_attr(
+            "windowTitleBarButtonsHidden", data_type="bool", def_value=False
+        )
+
+    @title_bar_buttons_hidden.setter
+    def title_bar_buttons_hidden(self, value: Optional[bool]):
+        self.page._set_attr("windowTitleBarButtonsHidden", value)
+
+    # skip_task_bar
+    @property
+    def skip_task_bar(self) -> Optional[bool]:
+        return self.page._get_attr(
+            "windowSkipTaskBar", data_type="bool", def_value=False
+        )
+
+    @skip_task_bar.setter
+    def skip_task_bar(self, value: Optional[bool]):
+        self.page._set_attr("windowSkipTaskBar", value)
+
+    # frameless
+    @property
+    def frameless(self) -> Optional[bool]:
+        return self.page._get_attr("windowFrameless", data_type="bool", def_value=False)
+
+    @frameless.setter
+    def frameless(self, value: Optional[bool]):
+        self.page._set_attr("windowFrameless", value)
+
+    # progress_bar
+    @property
+    def progress_bar(self) -> OptionalNumber:
+        return self.page._get_attr("windowProgressBar")
+
+    @progress_bar.setter
+    def progress_bar(self, value: OptionalNumber):
+        self.page._set_attr("windowProgressBar", value)
+
+    # focused
+    @property
+    def focused(self) -> Optional[bool]:
+        return self.page._get_attr("windowFocused", data_type="bool", def_value=True)
+
+    @focused.setter
+    def focused(self, value: Optional[bool]):
+        self.page._set_attr("windowFocused", value)
+
+    # visible
+    @property
+    def visible(self) -> Optional[bool]:
+        return self.page._get_attr("windowVisible", data_type="bool")
+
+    @visible.setter
+    def visible(self, value: Optional[bool]):
+        self.page._set_attr("windowVisible", value)
+
+    # always_on_bottom
+    @property
+    def always_on_bottom(self) -> Optional[bool]:
+        return self.page._get_attr(
+            "windowAlwaysOnBottom", data_type="bool", def_value=False
+        )
+
+    @always_on_bottom.setter
+    def always_on_bottom(self, value: Optional[bool]):
+        self.page._set_attr("windowAlwaysOnBottom", value)
+
+    # alignment
+    @property
+    def alignment(self) -> Optional[Alignment]:
+        return self.__alignment
+
+    @alignment.setter
+    def alignment(self, value: Optional[Alignment]):
+        self.__alignment = value
+
+    # badge_label
+    @property
+    def badge_label(self) -> Optional[str]:
+        return self.page._get_attr("windowBadgeLabel")
+
+    @badge_label.setter
+    def badge_label(self, value: Optional[str]):
+        self.page._set_attr("windowBadgeLabel", value)
+
+    # Methods
+    def destroy(self):
+        self.page._set_attr("windowDestroy", True)
+        self.page.update()
+
+    def wait_until_ready_to_show(self):
+        self.page._set_attr("windowWaitUntilReadyToShow", True)
+        self.page.update()
+
+    def center(self) -> None:
+        self.page._set_attr("windowCenter", str(time.time()))
+        self.page.update()
+
+    def close(self) -> None:
+        self.page._set_attr("windowClose", str(time.time()))
+        self.page.update()
+
+
 class Page(AdaptiveControl):
     """
     Page is a container for `View` (https://flet.dev/docs/controls/view) controls.
@@ -161,6 +478,7 @@ class Page(AdaptiveControl):
         Control.__init__(self)
         self._id = "page"
         self._Control__uid = "page"
+        self.window = Window(self)
         self.__conn = conn
         self.__next_control_id = 1
         self.__snapshot: Dict[str, Dict[str, Any]] = {}
@@ -282,9 +600,9 @@ class Page(AdaptiveControl):
         self._set_attr_json("theme", self.__theme)
         self._set_attr_json("localeConfiguration", self.__locale_configuration)
         self._set_attr_json("darkTheme", self.__dark_theme)
+        self._set_attr_json("windowAlignment", self.window.alignment)
 
         # keyboard event
-
         if self.__on_keyboard_event.count() > 0:
             self._set_attr("onKeyboardEvent", True)
 
@@ -484,7 +802,6 @@ class Page(AdaptiveControl):
             n = 0
             for line in results:
                 for id in line.split(" "):
-
                     added_controls[n]._Control__uid = id
 
                     # add to index
@@ -1265,40 +1582,41 @@ class Page(AdaptiveControl):
         self.close_end_drawer()
 
     def window_destroy(self) -> None:
-        self._set_attr("windowDestroy", "true")
-        self.update()
+        self.window.destroy()
 
     @deprecated(
-        reason="Use window_destroy() method instead.",
+        reason="Use page.window.destroy() method instead.",
         version="0.21.0",
         delete_version="0.26.0",
     )
     async def window_destroy_async(self):
-        self.window_destroy()
+        self.window.destroy()
 
-    def window_center(self) -> None:
-        self._set_attr("windowCenter", str(time.time()))
+    def window_wait_until_ready_to_show(self) -> None:
+        self._set_attr("windowWaitUntilReadyToShow", "true")
         self.update()
 
+    def window_center(self) -> None:
+        self.window.center()
+
     @deprecated(
-        reason="Use window_center() method instead.",
+        reason="Use page.window.center() method instead.",
         version="0.21.0",
         delete_version="0.26.0",
     )
     async def window_center_async(self):
-        self.window_center()
+        self.window.center()
 
     def window_close(self) -> None:
-        self._set_attr("windowClose", str(time.time()))
-        self.update()
+        self.window.close()
 
     @deprecated(
-        reason="Use window_close() method instead.",
+        reason="Use page.window.close() method instead.",
         version="0.21.0",
         delete_version="1.0",
     )
     async def window_close_async(self):
-        self.window_close()
+        self.window.close()
 
     # query
     @property
@@ -1748,251 +2066,245 @@ class Page(AdaptiveControl):
     # window_bgcolor
     @property
     def window_bgcolor(self) -> Optional[str]:
-        return self._get_attr("windowBgcolor")
+        return self.window.bgcolor
 
     @window_bgcolor.setter
     def window_bgcolor(self, value: Optional[str]):
-        self._set_attr("windowBgcolor", value)
+        self.window.bgcolor = value
 
     # window_width
     @property
     def window_width(self) -> OptionalNumber:
-        w = self._get_attr("windowWidth")
-        return float(w) if w else 0
+        return self.window.width
 
     @window_width.setter
     def window_width(self, value: OptionalNumber):
-        self._set_attr("windowWidth", value)
+        self.window.width = value
 
     # window_height
     @property
     def window_height(self) -> OptionalNumber:
-        h = self._get_attr("windowHeight")
-        return float(h) if h else 0
+        return self.window.height
 
     @window_height.setter
     def window_height(self, value: OptionalNumber):
-        self._set_attr("windowHeight", value)
+        self.window.height = value
 
     # window_top
     @property
     def window_top(self) -> OptionalNumber:
-        w = self._get_attr("windowTop")
-        return float(w) if w else 0
+        return self.window.top
 
     @window_top.setter
     def window_top(self, value: OptionalNumber):
-        self._set_attr("windowTop", value)
+        self.window.top = value
 
     # window_left
     @property
     def window_left(self) -> OptionalNumber:
-        h = self._get_attr("windowLeft")
-        return float(h) if h else 0
+        return self.window.left
 
     @window_left.setter
     def window_left(self, value: OptionalNumber):
-        self._set_attr("windowLeft", value)
+        self.window.left = value
 
     # window_max_width
     @property
     def window_max_width(self) -> OptionalNumber:
-        return self._get_attr("windowMaxWidth")
+        return self.window.max_width
 
     @window_max_width.setter
     def window_max_width(self, value: OptionalNumber):
-        self._set_attr("windowMaxWidth", value)
+        self.window.max_width = value
 
     # window_max_height
     @property
     def window_max_height(self) -> OptionalNumber:
-        return self._get_attr("windowMaxHeight")
+        return self.window.max_height
 
     @window_max_height.setter
     def window_max_height(self, value: OptionalNumber):
-        self._set_attr("windowMaxHeight", value)
+        self.window.max_height = value
 
     # window_min_width
     @property
     def window_min_width(self) -> OptionalNumber:
-        return self._get_attr("windowMinWidth")
+        return self.window.min_width
 
     @window_min_width.setter
     def window_min_width(self, value: OptionalNumber):
-        self._set_attr("windowMinWidth", value)
+        self.window.min_width = value
 
     # window_min_height
     @property
     def window_min_height(self) -> OptionalNumber:
-        return self._get_attr("windowMinHeight")
+        return self.window.min_height
 
     @window_min_height.setter
     def window_min_height(self, value: OptionalNumber):
-        self._set_attr("windowMinHeight", value)
+        self.window.min_height = value
 
     # window_opacity
     @property
     def window_opacity(self) -> OptionalNumber:
-        return self._get_attr("windowOpacity", data_type="float", def_value=1)
+        return self.window.opacity
 
     @window_opacity.setter
     def window_opacity(self, value: OptionalNumber):
-        self._set_attr("windowOpacity", value)
+        self.window.opacity = value
 
     # window_maximized
     @property
     def window_maximized(self) -> Optional[bool]:
-        return self._get_attr("windowMaximized", data_type="bool", def_value=False)
+        return self.window.maximized
 
     @window_maximized.setter
     def window_maximized(self, value: Optional[bool]):
-        self._set_attr("windowMaximized", value)
+        self.window.maximized = value
 
     # window_minimized
     @property
     def window_minimized(self) -> Optional[bool]:
-        return self._get_attr("windowMinimized", data_type="bool", def_value=False)
+        return self.window.minimized
 
     @window_minimized.setter
     def window_minimized(self, value: Optional[bool]):
-        self._set_attr("windowMinimized", value)
+        self.window.minimized = value
 
     # window_minimizable
     @property
     def window_minimizable(self) -> Optional[bool]:
-        return self._get_attr("windowMinimizable", data_type="bool", def_value=True)
+        return self.window.minimizable
 
     @window_minimizable.setter
     def window_minimizable(self, value: Optional[bool]):
-        self._set_attr("windowMinimizable", value)
+        self.window.minimizable = value
 
     # window_maximizable
     @property
     def window_maximizable(self) -> Optional[bool]:
-        return self._get_attr("windowMaximizable", data_type="bool", def_value=True)
+        return self.window.maximizable
 
     @window_maximizable.setter
     def window_maximizable(self, value: Optional[bool]):
-        self._set_attr("windowMaximizable", value)
+        self.window.maximizable = value
 
     # window_resizable
     @property
     def window_resizable(self) -> Optional[bool]:
-        return self._get_attr("windowResizable", data_type="bool", def_value=True)
+        return self.window.resizable
 
     @window_resizable.setter
     def window_resizable(self, value: Optional[bool]):
-        self._set_attr("windowResizable", value)
+        self.window.resizable = value
 
     # window_movable
     @property
     def window_movable(self) -> Optional[bool]:
-        return self._get_attr("windowMovable", data_type="bool", def_value=True)
+        return self.window.movable
 
     @window_movable.setter
     def window_movable(self, value: Optional[bool]):
-        self._set_attr("windowMovable", value)
+        self.window.movable = value
 
     # window_full_screen
     @property
     def window_full_screen(self) -> Optional[bool]:
-        return self._get_attr("windowFullScreen", data_type="bool", def_value=False)
+        return self.window.full_screen
 
     @window_full_screen.setter
     def window_full_screen(self, value: Optional[bool]):
-        self._set_attr("windowFullScreen", value)
+        self.window.full_screen = value
 
     # window_always_on_top
     @property
     def window_always_on_top(self) -> Optional[bool]:
-        return self._get_attr("windowAlwaysOnTop", data_type="bool", def_value=False)
+        return self.window.always_on_top
 
     @window_always_on_top.setter
     def window_always_on_top(self, value: Optional[bool]):
-        self._set_attr("windowAlwaysOnTop", value)
+        self.window.always_on_top = value
 
     # window_always_on_bottom
     @property
     def window_always_on_bottom(self) -> Optional[bool]:
-        return self._get_attr("windowAlwaysOnBottom", data_type="bool", def_value=False)
+        return self.window.always_on_bottom
 
     @window_always_on_bottom.setter
     def window_always_on_bottom(self, value: Optional[bool]):
-        self._set_attr("windowAlwaysOnBottom", value)
+        self.window_always_on_bottom = value
 
     # window_prevent_close
     @property
     def window_prevent_close(self) -> Optional[bool]:
-        return self._get_attr("windowPreventClose", data_type="bool", def_value=False)
+        return self.window.prevent_close
 
     @window_prevent_close.setter
     def window_prevent_close(self, value: Optional[bool]):
-        self._set_attr("windowPreventClose", value)
+        self.window.prevent_close = value
 
     # window_title_bar_hidden
     @property
     def window_title_bar_hidden(self) -> Optional[bool]:
-        return self._get_attr("windowTitleBarHidden", data_type="bool", def_value=False)
+        return self.window.title_bar_hidden
 
     @window_title_bar_hidden.setter
     def window_title_bar_hidden(self, value: Optional[bool]):
-        self._set_attr("windowTitleBarHidden", value)
+        self.window.title_bar_hidden = value
 
     # window_title_bar_buttons_hidden
     @property
     def window_title_bar_buttons_hidden(self) -> Optional[bool]:
-        return self._get_attr(
-            "windowTitleBarButtonsHidden", data_type="bool", def_value=False
-        )
+        return self.window.title_bar_buttons_hidden
 
     @window_title_bar_buttons_hidden.setter
     def window_title_bar_buttons_hidden(self, value: Optional[bool]):
-        self._set_attr("windowTitleBarButtonsHidden", value)
+        self.window.title_bar_buttons_hidden = value
 
     # window_skip_task_bar
     @property
     def window_skip_task_bar(self) -> Optional[bool]:
-        return self._get_attr("windowSkipTaskBar", data_type="bool", def_value=False)
+        return self.window.skip_task_bar
 
     @window_skip_task_bar.setter
     def window_skip_task_bar(self, value: Optional[bool]):
-        self._set_attr("windowSkipTaskBar", value)
+        self.window.skip_taskbar = value
 
     # window_frameless
     @property
     def window_frameless(self) -> Optional[bool]:
-        return self._get_attr("windowFrameless", data_type="bool", def_value=False)
+        return self.window.frameless
 
     @window_frameless.setter
     def window_frameless(self, value: Optional[bool]):
-        self._set_attr("windowFrameless", value)
+        self.window.frameless = value
 
     # window_progress_bar
     @property
     def window_progress_bar(self) -> OptionalNumber:
-        return self._get_attr("windowProgressBar")
+        return self.window.progress_bar
 
     @window_progress_bar.setter
     def window_progress_bar(self, value: OptionalNumber):
-        self._set_attr("windowProgressBar", value)
+        self.window.progress_bar = value
 
     # window_focused
     @property
     def window_focused(self) -> Optional[bool]:
-        return self._get_attr("windowFocused", data_type="bool", def_value=True)
+        return self.window.focused
 
     @window_focused.setter
     def window_focused(self, value: Optional[bool]):
-        self._set_attr("windowFocused", value)
+        self.window.focused = value
 
     # window_visible
     @property
     def window_visible(self) -> Optional[bool]:
-        return self._get_attr("windowVisible", data_type="bool")
+        return self.window.visible
 
     @window_visible.setter
     def window_visible(self, value: Optional[bool]):
-        self._set_attr("windowVisible", value)
+        self.window.visible = value
 
     # on_scroll_interval
     @property

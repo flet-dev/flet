@@ -147,6 +147,28 @@ Future setWindowProgressBar(double progress) async {
   }
 }
 
+Future setWindowAspectRatio(double aspectRatio) async {
+  if (isDesktop()) {
+    debugPrint("setWindowAspectRatio()");
+    debugPrint("ASPECT_RATIO: $aspectRatio");
+    await windowManager.setAspectRatio(aspectRatio);
+  }
+}
+
+Future setWindowBadgeLabel(String label) async {
+  if (isDesktop()) {
+    debugPrint("setWindowBadgeLabel()");
+    await windowManager.setBadgeLabel(label);
+  }
+}
+
+Future setWindowAlignment(Alignment alignment, [bool animate = true]) async {
+  if (isDesktop()) {
+    debugPrint("setWindowAlignment()");
+    await windowManager.setAlignment(alignment, animate: animate);
+  }
+}
+
 Future minimizeWindow() async {
   if (isDesktop() && !await windowManager.isMinimized()) {
     debugPrint("minimizeWindow()");
@@ -218,6 +240,13 @@ Future destroyWindow() async {
   if (isDesktop()) {
     debugPrint("destroyWindow()");
     await windowManager.destroy();
+  }
+}
+
+Future waitUntilReadyToShow() async {
+  if (isDesktop()) {
+    debugPrint("waitUntilReadyToShow()");
+    await windowManager.waitUntilReadyToShow();
   }
 }
 
