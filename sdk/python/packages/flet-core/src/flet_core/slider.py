@@ -161,6 +161,15 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
+        assert (
+            self.min is None or self.max is None or self.min <= self.max
+        ), "min must be less than or equal to max"
+        assert (
+            self.min is None or self.value is None or (self.value >= self.min)
+        ), "value must be greater than or equal to min"
+        assert (
+            self.max is None or self.value is None or (self.value <= self.max)
+        ), "value must be less than or equal to max"
         self._set_attr_json("overlayColor", self.__overlay_color)
 
     # value
@@ -170,11 +179,6 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     @value.setter
     def value(self, value: OptionalNumber):
-        if value is not None:
-            if self.min is not None:
-                assert value >= self.min, "value must be greater than or equal to min"
-            if self.max is not None:
-                assert value <= self.max, "value must be less than or equal to max"
         self._set_attr("value", value)
 
     # label
@@ -203,9 +207,6 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     @min.setter
     def min(self, value: OptionalNumber):
-        if value is not None:
-            if self.max is not None:
-                assert value <= self.max, "min must be less than or equal to max"
         self._set_attr("min", value)
 
     # secondary_track_value
@@ -242,9 +243,6 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     @max.setter
     def max(self, value: OptionalNumber):
-        if value is not None:
-            if self.min is not None:
-                assert value >= self.min, "max must be greater than or equal to min"
         self._set_attr("max", value)
 
     # divisions

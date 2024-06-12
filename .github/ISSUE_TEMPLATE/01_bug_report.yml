@@ -21,7 +21,11 @@ body:
     attributes:
       label: "Code"
       description: "If you want your issue to be quickly addressed provide some runnable code which reproduces the issue."
-      placeholder: ```py ```
+      placeholder: "
+      ```py 
+      # Your code here
+      ```
+      "
     validations:
       required: false
   - type: textarea
