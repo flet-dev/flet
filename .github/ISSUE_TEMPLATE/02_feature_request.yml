@@ -19,8 +19,8 @@ body:
   - type: textarea
     id: "suggestion"
     attributes:
-      label: "Suggest A Solution"
-      description: ""
+      label: "Suggest a solution"
+      description: "Share with us your idea on how to solve the problem. If you have multiple solutions, please present each one separately."
       placeholder: "A concise description of your preferred solution. Things to address include:
       
       * Details of the technical implementation, e.g. Flutter widget solving the problem.
