@@ -152,6 +152,9 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
   bool? _windowPreventClose;
   bool? _windowMinimized;
   bool? _windowMaximized;
+  Alignment? _windowAlignment;
+  double? _windowAspectRatio;
+  String? _windowBadgeLabel;
   bool? _windowVisible;
   bool? _windowFocused;
   String? _windowCenter;
@@ -308,6 +311,9 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     var windowFullScreen = widget.control.attrBool("windowFullScreen");
     var windowMinimized = widget.control.attrBool("windowMinimized");
     var windowMaximized = widget.control.attrBool("windowMaximized");
+    var windowAlignment = parseAlignment(widget.control, "windowAlignment");
+    var windowAspectRatio = widget.control.attrDouble("windowAspectRatio");
+    var windowBadgeLabel = widget.control.attrString("windowBadgeLabel");
     var windowOpacity = widget.control.attrDouble("windowOpacity");
     var windowMinimizable = widget.control.attrBool("windowMinimizable");
     var windowMaximizable = widget.control.attrBool("windowMaximizable");
@@ -322,18 +328,20 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     var windowVisible = widget.control.attrBool("windowVisible");
     var windowFocused = widget.control.attrBool("windowFocused");
     var windowDestroy = widget.control.attrBool("windowDestroy");
+    var windowWaitUntilReadyToShow =
+        widget.control.attrBool("windowWaitUntilReadyToShow");
     var windowSkipTaskBar = widget.control.attrBool("windowSkipTaskBar");
     var windowFrameless = widget.control.attrBool("windowFrameless");
     var windowProgressBar = widget.control.attrDouble("windowProgressBar");
 
     updateWindow() async {
-      // window title
+      // windowTitle
       if (_windowTitle != windowTitle) {
         setWindowTitle(windowTitle);
         _windowTitle = windowTitle;
       }
 
-      // window bgcolor
+      // windowBgcolor
       if (_windowBgcolor != windowBgcolor && windowBgcolor != null) {
         setWindowBackgroundColor(windowBgcolor);
         _windowBgcolor = windowBgcolor;
@@ -388,20 +396,20 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
         _windowLeft = windowLeft;
       }
 
-      // window opacity
+      // windowOpacity
       if (windowOpacity != null && windowOpacity != _windowOpacity) {
         await setWindowOpacity(windowOpacity);
         _windowOpacity = windowOpacity;
       }
 
-      // window minimizable
+      // windowMinimizable
       if (windowMinimizable != null &&
           windowMinimizable != _windowMinimizable) {
         await setWindowMinimizability(windowMinimizable);
         _windowMinimizable = windowMinimizable;
       }
 
-      // window minimize
+      // windowMinimized
       if (windowMinimized != _windowMinimized) {
         if (windowMinimized == true) {
           await minimizeWindow();
@@ -411,14 +419,14 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
         _windowMinimized = windowMinimized;
       }
 
-      // window maximizable
+      // windowMaximizable
       if (windowMaximizable != null &&
           windowMaximizable != _windowMaximizable) {
         await setWindowMaximizability(windowMaximizable);
         _windowMaximizable = windowMaximizable;
       }
 
-      // window maximize
+      // windowMaximized
       if (windowMaximized != _windowMaximized) {
         if (windowMaximized == true) {
           await maximizeWindow();
@@ -428,45 +436,65 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
         _windowMaximized = windowMaximized;
       }
 
-      // window resizable
+      // windowAlignment
+      if (windowAlignment != null && windowAlignment != _windowAlignment) {
+        await setWindowAlignment(windowAlignment);
+        _windowAlignment = windowAlignment;
+      }
+
+      // windowAspectRatio
+      if (windowAspectRatio != null &&
+          windowAspectRatio != _windowAspectRatio) {
+        await setWindowAspectRatio(windowAspectRatio);
+        _windowAspectRatio = windowAspectRatio;
+      }
+
+      // windowBadgeLabel
+      if (windowBadgeLabel != null && windowBadgeLabel != _windowBadgeLabel) {
+        await setWindowBadgeLabel(windowBadgeLabel);
+        _windowBadgeLabel = windowBadgeLabel;
+      }
+
+      // windowResizable
       if (windowResizable != null && windowResizable != _windowResizable) {
         await setWindowResizability(windowResizable);
         _windowResizable = windowResizable;
       }
 
-      // window movable
+      // windowMovable
       if (windowMovable != null && windowMovable != _windowMovable) {
         await setWindowMovability(windowMovable);
         _windowMovable = windowMovable;
       }
 
-      // window fullScreen
+      // windowFullScreen
       if (windowFullScreen != null && windowFullScreen != _windowFullScreen) {
         await setWindowFullScreen(windowFullScreen);
         _windowFullScreen = windowFullScreen;
       }
 
-      // window alwaysOnTop
+      // windowAlwaysOnTop
       if (windowAlwaysOnTop != null &&
           windowAlwaysOnTop != _windowAlwaysOnTop) {
         await setWindowAlwaysOnTop(windowAlwaysOnTop);
         _windowAlwaysOnTop = windowAlwaysOnTop;
       }
 
-      // window alwaysOnBottom
+      // windowAlwaysOnBottom
       if (windowAlwaysOnBottom != null &&
           windowAlwaysOnBottom != _windowAlwaysOnBottom) {
         await setWindowAlwaysOnBottom(windowAlwaysOnBottom);
         _windowAlwaysOnBottom = windowAlwaysOnBottom;
       }
 
-      // window preventClose
+      // windowPreventClose
       if (windowPreventClose != null &&
           windowPreventClose != _windowPreventClose) {
         await setWindowPreventClose(windowPreventClose);
         _windowPreventClose = windowPreventClose;
       }
 
+      // windowTitleBarHidden
       if (windowTitleBarHidden != null &&
           windowTitleBarHidden != _windowTitleBarHidden) {
         await setWindowTitleBarVisibility(
@@ -474,7 +502,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
         _windowTitleBarHidden = windowTitleBarHidden;
       }
 
-      // window visible
+      // windowVisible
       if (windowVisible != _windowVisible) {
         if (windowVisible == true) {
           await showWindow();
@@ -484,7 +512,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
         _windowVisible = windowVisible;
       }
 
-      // window focus
+      // windowFocused
       if (windowFocused != _windowFocused) {
         if (windowFocused == true) {
           await focusWindow();
@@ -494,40 +522,46 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
         _windowFocused = windowFocused;
       }
 
-      // window center
+      // windowCenter
       if (windowCenter != _windowCenter && windowFullScreen != true) {
         await centerWindow();
         _windowCenter = windowCenter;
       }
 
-      // window frameless
+      // windowFrameless
       if (windowFrameless != _windowFrameless && windowFrameless == true) {
         await setWindowFrameless();
         _windowFrameless = windowFrameless;
       }
 
-      // window progress
+      // windowProgressBar
       if (windowProgressBar != null &&
           windowProgressBar != _windowProgressBar) {
         await setWindowProgressBar(windowProgressBar);
         _windowProgressBar = windowProgressBar;
       }
 
+      // windowSkipTaskBar
       if (windowSkipTaskBar != null &&
           windowSkipTaskBar != _windowSkipTaskBar) {
         await setWindowSkipTaskBar(windowSkipTaskBar);
         _windowSkipTaskBar = windowSkipTaskBar;
       }
 
-      // window close
+      // windowClose
       if (windowClose != _windowClose) {
         await closeWindow();
         _windowClose = windowClose;
       }
 
-      // window destroy
+      // windowDestroy
       if (windowDestroy == true) {
         await destroyWindow();
+      }
+
+      // window waitUntilReadyToShow
+      if (windowWaitUntilReadyToShow == true) {
+        await waitUntilReadyToShow();
       }
     }
 
