@@ -36,7 +36,7 @@ class ThemeVisualDensityDeprecated(EnumMeta):
     def __getattribute__(self, item):
         if item == "ADAPTIVEPLATFORMDENSITY":
             warn(
-                "ADAPTIVEPLATFORMDENSITY is deprecated and will be removed in v1.0. "
+                "ADAPTIVEPLATFORMDENSITY is deprecated and will be removed in version 0.26.0. "
                 "Use ADAPTIVE_PLATFORM_DENSITY instead.",
                 DeprecationWarning,
                 stacklevel=2,
@@ -426,8 +426,8 @@ class DatePickerTheme:
     day_overlay_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
-    day_foreground_color: Union[None, str, Dict[Union[str, ControlState], str]] = (
-        field(default=None)
+    day_foreground_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
+        default=None
     )
     elevation: OptionalNumber = field(default=None)
     range_picker_elevation: OptionalNumber = field(default=None)
@@ -443,9 +443,9 @@ class DatePickerTheme:
     range_picker_bgcolor: Optional[str] = field(default=None)
     range_picker_header_bgcolor: Optional[str] = field(default=None)
     range_picker_header_foreground_color: Optional[str] = field(default=None)
-    today_foreground_color: Union[None, str, Dict[Union[str, ControlState], str]] = (
-        field(default=None)
-    )
+    today_foreground_color: Union[
+        None, str, Dict[Union[str, ControlState], str]
+    ] = field(default=None)
     range_picker_shape: Optional[OutlinedBorder] = field(default=None)
     range_picker_header_help_text_style: Optional[TextStyle] = field(default=None)
     range_picker_header_headline_text_style: Optional[TextStyle] = field(default=None)
@@ -458,9 +458,9 @@ class DatePickerTheme:
     year_bgcolor: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
-    year_foreground_color: Union[None, str, Dict[Union[str, ControlState], str]] = (
-        field(default=None)
-    )
+    year_foreground_color: Union[
+        None, str, Dict[Union[str, ControlState], str]
+    ] = field(default=None)
     year_overlay_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
@@ -590,12 +590,12 @@ class SearchBarTheme:
     elevation: Union[
         None, Union[int, float], Dict[Union[str, ControlState], Union[int, float]]
     ] = field(default=None)
-    text_style: Union[None, TextStyle, Dict[Union[str, ControlState], TextStyle]] = (
-        field(default=None)
-    )
-    hint_style: Union[None, TextStyle, Dict[Union[str, ControlState], TextStyle]] = (
-        field(default=None)
-    )
+    text_style: Union[
+        None, TextStyle, Dict[Union[str, ControlState], TextStyle]
+    ] = field(default=None)
+    hint_style: Union[
+        None, TextStyle, Dict[Union[str, ControlState], TextStyle]
+    ] = field(default=None)
     shape: Union[
         None, OutlinedBorder, Dict[Union[str, ControlState], OutlinedBorder]
     ] = field(default=None)

@@ -446,7 +446,7 @@ class PopupMenuButton(ConstrainedControl):
     def on_cancelled(self):
         warnings.warn(
             f"on_cancelled is deprecated/renamed since version 0.22.0 "
-            f"and will be removed in version 1.0. Use on_cancel instead.",
+            f"and will be removed in version 0.26.0. Use on_cancel instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
@@ -458,7 +458,7 @@ class PopupMenuButton(ConstrainedControl):
         if handler is not None:
             warnings.warn(
                 f"on_cancelled is deprecated/renamed since version 0.22.0 "
-                f"and will be removed in version 1.0. Use on_cancel instead.",
+                f"and will be removed in version 0.26.0. Use on_cancel instead.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )

@@ -171,7 +171,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
     def minimum(self) -> PaddingValue:
         warnings.warn(
             f"minimum is deprecated since version 0.23.0 "
-            f"and will be removed in version 1.0. Use minimum_padding instead.",
+            f"and will be removed in version 0.26.0. Use minimum_padding instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
@@ -183,7 +183,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
         if value is not None:
             warnings.warn(
                 f"minimum is deprecated since version 0.23.0 "
-                f"and will be removed in version 1.0. Use minimum_padding instead.",
+                f"and will be removed in version 0.26.0. Use minimum_padding instead.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )

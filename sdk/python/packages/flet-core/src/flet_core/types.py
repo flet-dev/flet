@@ -88,7 +88,7 @@ class MaterialStateDeprecated(EnumMeta):
         # Check if the call is coming from outside the enum module
         if not any(frame.filename.endswith("enum.py") for frame in inspect.stack()):
             warn(
-                "MaterialState enum is deprecated and will be removed in v1.0. "
+                "MaterialState enum is deprecated and will be removed in version 0.26.0. "
                 "Use ControlState enum instead.",
                 DeprecationWarning,
                 stacklevel=2,
