@@ -1,4 +1,3 @@
-import inspect
 from enum import Enum, EnumMeta
 from typing import Any, Callable, Dict, Optional, Protocol, Tuple, Union
 from warnings import warn
@@ -85,15 +84,24 @@ OptionalString = Optional[str]
 
 class MaterialStateDeprecated(EnumMeta):
     def __getattribute__(self, item):
-        # Check if the call is coming from outside the enum module
-        if not any(frame.filename.endswith("enum.py") for frame in inspect.stack()):
+        if item in [
+            "hovered",
+            "focused",
+            "pressed",
+            "dragged",
+            "selected",
+            "scrolledUnder",
+            "disabled",
+            "error",
+            "",
+        ]:
             warn(
                 "MaterialState enum is deprecated and will be removed in version 0.26.0. "
                 "Use ControlState enum instead.",
                 DeprecationWarning,
                 stacklevel=2,
             )
-        return super().__getattribute__(item)
+        return EnumMeta.__getattribute__(self, item)
 
 
 class MaterialState(Enum, metaclass=MaterialStateDeprecated):
