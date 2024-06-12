@@ -115,7 +115,7 @@ class _TabsControlState extends State<TabsControl>
           var overlayColorStr = widget.control.attrString("overlayColor");
           dynamic overlayColor;
           if (overlayColorStr != null) {
-            overlayColor = getMaterialStateProperty<Color?>(
+            overlayColor = getWidgetStateProperty<Color?>(
                     json.decode(overlayColorStr),
                     (jv) => parseColor(Theme.of(context), jv as String)) ??
                 TabBarTheme.of(context).overlayColor;

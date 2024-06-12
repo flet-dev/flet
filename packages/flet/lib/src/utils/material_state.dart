@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-MaterialStateProperty<T?>? getMaterialStateProperty<T>(dynamic jsonDictValue, T Function(dynamic) converterFromJson,
+WidgetStateProperty<T?>? getWidgetStateProperty<T>(
+    dynamic jsonDictValue, T Function(dynamic) converterFromJson,
     [T? defaultValue]) {
   if (jsonDictValue == null) {
     return null;
@@ -9,13 +10,14 @@ MaterialStateProperty<T?>? getMaterialStateProperty<T>(dynamic jsonDictValue, T 
   if (j is! Map<String, dynamic>) {
     j = {"": j};
   }
-  return MaterialStateFromJSON(j, converterFromJson, defaultValue);
+  return WidgetStateFromJSON(j, converterFromJson, defaultValue);
 }
 
-class MaterialStateFromJSON<T> extends MaterialStateProperty<T?> {
+class WidgetStateFromJSON<T> extends WidgetStateProperty<T?> {
   late final Map<String, T> _states;
   late final T? _defaultValue;
-  MaterialStateFromJSON(Map<String, dynamic>? jsonDictValue,
+
+  WidgetStateFromJSON(Map<String, dynamic>? jsonDictValue,
       T Function(dynamic) converterFromJson, T? defaultValue) {
     _defaultValue = defaultValue;
     _states = {};
@@ -29,8 +31,8 @@ class MaterialStateFromJSON<T> extends MaterialStateProperty<T?> {
   }
 
   @override
-  T? resolve(Set<MaterialState> states) {
-    //debugPrint("MaterialStateFromJSON states: $states, _states: $_states");
+  T? resolve(Set<WidgetState> states) {
+    //debugPrint("WidgetStateFromJSON states: $states, _states: $_states");
     // find specific state
     for (var state in states) {
       if (_states.containsKey(state.name)) {

@@ -45,7 +45,7 @@ class PolygonLayerControl extends StatelessWidget with FletStoreMixin {
             rotateLabel: polygon.control.attrBool("rotateLabel", false)!,
             label: polygon.control.attrString("label"),
             labelStyle: parseTextStyle(
-                    Theme.of(context), polygon.control, "labelStyle") ??
+                    Theme.of(context), polygon.control, "labelTextStyle") ??
                 const TextStyle(),
             strokeCap: strokeCap,
             strokeJoin: strokeJoin,
@@ -61,6 +61,9 @@ class PolygonLayerControl extends StatelessWidget with FletStoreMixin {
         polygonCulling: control.attrBool("polygonCulling", false)!,
         polygonLabels: control.attrBool("polygonLabels", true)!,
         drawLabelsLast: control.attrBool("drawLabelsLast", false)!,
+        simplificationTolerance:
+            control.attrDouble("simplificationTolerance", 0.5)!,
+        useAltRendering: control.attrBool("useAlternativeRendering", false)!,
       );
     });
   }

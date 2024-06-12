@@ -10,7 +10,7 @@ from flet_core.text_style import TextStyle
 from flet_core.textfield import KeyboardType, TextCapitalization
 from flet_core.types import (
     AnimationValue,
-    MaterialState,
+    ControlState,
     OffsetValue,
     OptionalNumber,
     ResponsiveNumber,
@@ -36,8 +36,8 @@ class SearchBar(ConstrainedControl):
         bar_leading: Optional[Control] = None,
         bar_trailing: Optional[List[Control]] = None,
         bar_hint_text: Optional[str] = None,
-        bar_bgcolor: Union[None, str, Dict[MaterialState, str]] = None,
-        bar_overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
+        bar_bgcolor: Union[None, str, Dict[ControlState, str]] = None,
+        bar_overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         view_leading: Optional[Control] = None,
         view_trailing: Optional[List[Control]] = None,
         view_elevation: OptionalNumber = None,
@@ -226,20 +226,20 @@ class SearchBar(ConstrainedControl):
 
     # bar_bgcolor
     @property
-    def bar_bgcolor(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def bar_bgcolor(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__bar_bgcolor
 
     @bar_bgcolor.setter
-    def bar_bgcolor(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def bar_bgcolor(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__bar_bgcolor = value
 
     # bar_overlay_color
     @property
-    def bar_overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def bar_overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__bar_overlay_color
 
     @bar_overlay_color.setter
-    def bar_overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def bar_overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__bar_overlay_color = value
 
     # view_leading

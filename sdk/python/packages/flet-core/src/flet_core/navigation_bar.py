@@ -16,6 +16,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    ControlState,
 )
 from flet_core.utils import deprecated
 
@@ -48,7 +49,7 @@ class NavigationBarDestination(Control):
         tooltip: Optional[str] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-    ) -> None:
+    ):
         Control.__init__(self, ref=ref, tooltip=tooltip, disabled=disabled, data=data)
         self.label = label
         self.icon = icon
@@ -211,9 +212,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         surface_tint_color: Optional[str] = None,
         border: Optional[Border] = None,
         animation_duration: Optional[int] = None,
-        overlay_color: Optional[
-            Union[Optional[str], Dict[MaterialState, Optional[str]]]
-        ] = None,
+        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         on_change: OptionalEventCallback = None,
         #
         # ConstrainedControl and AdaptiveControl
@@ -244,7 +243,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         adaptive: Optional[bool] = None,
-    ) -> None:
+    ):
         ConstrainedControl.__init__(
             self,
             ref=ref,
@@ -293,7 +292,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     def _get_control_name(self):
         return "navigationbar"
 
-    def before_update(self) -> None:
+    def before_update(self):
         super().before_update()
         self._set_attr_json("indicatorShape", self.__indicator_shape)
         self._set_attr_json("border", self.__border)
@@ -332,11 +331,11 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__overlay_color = value
 
     # bgcolor

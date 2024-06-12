@@ -47,15 +47,14 @@ Color? _getThemeColor(ThemeData theme, String colorName) {
     case "outlinevariant":
       return scheme.outlineVariant;
     case "background":
-      return scheme.background;
-    case "onbackground":
-      return scheme.onBackground;
     case "surface":
       return scheme.surface;
+    case "onbackground":
     case "onsurface":
       return scheme.onSurface;
     case "surfacevariant":
-      return scheme.surfaceVariant;
+    case "surfacecontainerhighest":
+      return scheme.surfaceContainerHighest;
     case "onsurfacevariant":
       return scheme.onSurfaceVariant;
     case "surfacetint":
@@ -240,7 +239,7 @@ extension ColorExtension on Color {
   }
 }
 
-MaterialStateProperty<Color?>? parseMaterialStateColor(
+WidgetStateProperty<Color?>? parseWidgetStateColor(
     ThemeData theme, Control control, String propName) {
   var v = control.attrString(propName, null);
   if (v == null) {
@@ -248,7 +247,7 @@ MaterialStateProperty<Color?>? parseMaterialStateColor(
   }
 
   final j1 = json.decode(v);
-  return getMaterialStateProperty<Color?>(
+  return getWidgetStateProperty<Color?>(
       j1, (jv) => HexColor.fromString(theme, jv as String), null);
 }
 

@@ -1,16 +1,12 @@
-import 'package:flet/flet.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_map/flutter_map.dart';
 
-AttributionAlignment? parseAttributionAlignment(
-    String propName, Control control,
-    [AttributionAlignment? defaultAlignment]) {
-  String? a = control.attrString(propName);
-  switch (a?.toLowerCase()) {
-    case "bottomleft":
-      return AttributionAlignment.bottomLeft;
-    case "bottomright":
-      return AttributionAlignment.bottomRight;
-    default:
-      return defaultAlignment;
+AttributionAlignment? parseAttributionAlignment(String? value,
+    [AttributionAlignment? defValue]) {
+  if (value == null) {
+    return defValue;
   }
+  return AttributionAlignment.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
 }

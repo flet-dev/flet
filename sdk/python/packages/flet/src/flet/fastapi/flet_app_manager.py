@@ -12,6 +12,7 @@ from flet.fastapi.oauth_state import OAuthState
 from flet_core.connection import Connection
 from flet_core.locks import NopeLock
 from flet_core.page import Page
+from flet_core.pubsub.pubsub_hub import PubSubHub
 from flet_core.utils.concurrency_utils import is_pyodide
 
 logger = logging.getLogger(flet_fastapi.__name__)
@@ -31,10 +32,25 @@ class FletAppManager:
         self.__evict_oauth_states_task = None
         self.__temp_dirs = {}
         self.__executor = ThreadPoolExecutor(thread_name_prefix="flet_fastapi")
+        self.__pubsubhubs_lock = threading.Lock() if not is_pyodide() else NopeLock()
+        self.__pubsubhubs = {}
 
     @property
     def executor(self):
         return self.__executor
+
+    def get_pubsubhub(
+        self, session_handler, loop: Optional[asyncio.AbstractEventLoop] = None
+    ):
+        with self.__pubsubhubs_lock:
+            psh = self.__pubsubhubs.get(session_handler, None)
+            if psh is None:
+                psh = PubSubHub(
+                    loop=loop or asyncio.get_running_loop(),
+                    executor=self.__executor,
+                )
+                self.__pubsubhubs[session_handler] = psh
+            return psh
 
     async def start(self):
         """

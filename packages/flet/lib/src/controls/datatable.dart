@@ -83,13 +83,13 @@ class _DataTableControlState extends State<DataTableControl>
           checkboxHorizontalMargin:
               widget.control.attrDouble("checkboxHorizontalMargin"),
           columnSpacing: widget.control.attrDouble("columnSpacing"),
-          dataRowColor: parseMaterialStateColor(
+          dataRowColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "dataRowColor"),
           dataRowMinHeight: widget.control.attrDouble("dataRowMinHeight"),
           dataRowMaxHeight: widget.control.attrDouble("dataRowMaxHeight"),
           dataTextStyle: parseTextStyle(
               Theme.of(context), widget.control, "dataTextStyle"),
-          headingRowColor: parseMaterialStateColor(
+          headingRowColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "headingRowColor"),
           headingRowHeight: widget.control.attrDouble("headingRowHeight"),
           headingTextStyle: parseTextStyle(
@@ -135,7 +135,7 @@ class _DataTableControlState extends State<DataTableControl>
             return DataRow(
                 key: ValueKey(row.control.id),
                 selected: row.control.attrBool("selected", false)!,
-                color: parseMaterialStateColor(
+                color: parseWidgetStateColor(
                     Theme.of(context), row.control, "color"),
                 onSelectChanged: row.control.attrBool("onSelectChanged", false)!
                     ? (selected) {

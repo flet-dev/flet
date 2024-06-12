@@ -7,7 +7,7 @@ from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
-    MaterialState,
+    ControlState,
     MouseCursor,
     OffsetValue,
     ResponsiveNumber,
@@ -62,7 +62,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         thumb_color: Optional[str] = None,
         interaction: Optional[SliderInteraction] = None,
         secondary_active_color: Optional[str] = None,
-        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
+        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         secondary_track_value: OptionalNumber = None,
         mouse_cursor: Optional[MouseCursor] = None,
         on_change=None,
@@ -267,11 +267,11 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__overlay_color = value
 
     # autofocus

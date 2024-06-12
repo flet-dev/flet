@@ -5,6 +5,7 @@ To generate/update these values run:
 
 sh ci/generate_material_icons_python.sh
 """
+import random
 
 TEN_K = "ten_k"
 TEN_K_SHARP = "ten_k_sharp"
@@ -8859,3 +8860,10 @@ ZOOM_OUT_MAP = "zoom_out_map"
 ZOOM_OUT_MAP_SHARP = "zoom_out_map_sharp"
 ZOOM_OUT_MAP_ROUNDED = "zoom_out_map_rounded"
 ZOOM_OUT_MAP_OUTLINED = "zoom_out_map_outlined"
+
+icons_list = [v for k, v in vars().items() if k.isupper()]
+
+
+def random_icon() -> str:
+    """Return a random icons from the icons defined in this module."""
+    return random.choice(icons_list)

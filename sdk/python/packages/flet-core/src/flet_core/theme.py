@@ -20,7 +20,7 @@ from flet_core.types import (
     Brightness,
     ClipBehavior,
     MarginValue,
-    MaterialState,
+    ControlState,
     MouseCursor,
     OffsetValue,
     PaddingValue,
@@ -127,13 +127,13 @@ class TextTheme:
 
 @dataclass
 class ScrollbarTheme:
-    thumb_visibility: Union[None, bool, Dict[MaterialState, bool]] = field(default=None)
-    thickness: Union[None, float, Dict[MaterialState, float]] = field(default=None)
-    track_visibility: Union[None, bool, Dict[MaterialState, bool]] = field(default=None)
+    thumb_visibility: Union[None, bool, Dict[ControlState, bool]] = field(default=None)
+    thickness: Union[None, float, Dict[ControlState, float]] = field(default=None)
+    track_visibility: Union[None, bool, Dict[ControlState, bool]] = field(default=None)
     radius: Optional[float] = field(default=None)
-    thumb_color: Union[None, str, Dict[MaterialState, str]] = field(default=None)
-    track_color: Union[None, str, Dict[MaterialState, str]] = field(default=None)
-    track_border_color: Union[None, str, Dict[MaterialState, str]] = field(default=None)
+    thumb_color: Union[None, str, Dict[ControlState, str]] = field(default=None)
+    track_color: Union[None, str, Dict[ControlState, str]] = field(default=None)
+    track_border_color: Union[None, str, Dict[ControlState, str]] = field(default=None)
     cross_axis_margin: Optional[float] = field(default=None)
     main_axis_margin: Optional[float] = field(default=None)
     min_thumb_length: Optional[float] = field(default=None)
@@ -150,9 +150,9 @@ class TabsTheme:
     indicator_tab_size: Optional[bool] = field(default=None)
     label_color: Optional[str] = field(default=None)
     unselected_label_color: Optional[str] = field(default=None)
-    overlay_color: Union[None, str, Dict[MaterialState, str]] = field(default=None)
+    overlay_color: Union[None, str, Dict[ControlState, str]] = field(default=None)
     mouse_cursor: Union[
-        None, MouseCursor, Dict[Union[str, MaterialState], MouseCursor]
+        None, MouseCursor, Dict[Union[str, ControlState], MouseCursor]
     ] = field(default=None)
     label_padding: PaddingValue = field(default=None)
     label_text_style: Optional[TextStyle] = field(default=None)
@@ -297,29 +297,29 @@ class BottomAppBarTheme:
 
 @dataclass
 class RadioTheme:
-    fill_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    fill_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
-    overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    overlay_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
     splash_radius: OptionalNumber = field(default=None)
     height: OptionalNumber = field(default=None)
     visual_density: Optional[ThemeVisualDensity] = field(default=None)
     mouse_cursor: Union[
-        None, MouseCursor, Dict[Union[str, MaterialState], MouseCursor]
+        None, MouseCursor, Dict[Union[str, ControlState], MouseCursor]
     ] = field(default=None)
 
 
 @dataclass
 class CheckboxTheme:
-    overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    overlay_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
-    check_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    check_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
-    fill_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    fill_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
     splash_radius: OptionalNumber = field(default=None)
@@ -327,7 +327,7 @@ class CheckboxTheme:
     visual_density: Optional[ThemeVisualDensity] = field(default=None)
     shape: Optional[OutlinedBorder] = field(default=None)
     mouse_cursor: Union[
-        None, MouseCursor, Dict[Union[str, MaterialState], MouseCursor]
+        None, MouseCursor, Dict[Union[str, ControlState], MouseCursor]
     ] = field(default=None)
 
 
@@ -345,27 +345,27 @@ class BadgeTheme:
 
 @dataclass
 class SwitchTheme:
-    thumb_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    thumb_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
-    track_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    track_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
-    overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    overlay_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
-    track_outline_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    track_outline_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
-    thumb_icon: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    thumb_icon: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
     track_outline_width: Union[
-        None, Union[int, float], Dict[Union[str, MaterialState], Union[int, float]]
+        None, Union[int, float], Dict[Union[str, ControlState], Union[int, float]]
     ] = field(default=None)
     splash_radius: OptionalNumber = field(default=None)
     mouse_cursor: Union[
-        None, MouseCursor, Dict[Union[str, MaterialState], MouseCursor]
+        None, MouseCursor, Dict[Union[str, ControlState], MouseCursor]
     ] = field(default=None)
 
 
@@ -417,18 +417,18 @@ class DatePickerTheme:
     shadow_color: Optional[str] = field(default=None)
     divider_color: Optional[str] = field(default=None)
     header_bgcolor: Optional[str] = field(default=None)
-    today_bgcolor: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    today_bgcolor: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
-    day_bgcolor: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    day_bgcolor: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
-    day_overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    day_overlay_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
-    day_foreground_color: Union[
-        None, str, Dict[Union[str, MaterialState], str]
-    ] = field(default=None)
+    day_foreground_color: Union[None, str, Dict[Union[str, ControlState], str]] = (
+        field(default=None)
+    )
     elevation: OptionalNumber = field(default=None)
     range_picker_elevation: OptionalNumber = field(default=None)
     day_text_style: Optional[TextStyle] = field(default=None)
@@ -443,25 +443,25 @@ class DatePickerTheme:
     range_picker_bgcolor: Optional[str] = field(default=None)
     range_picker_header_bgcolor: Optional[str] = field(default=None)
     range_picker_header_foreground_color: Optional[str] = field(default=None)
-    today_foreground_color: Union[
-        None, str, Dict[Union[str, MaterialState], str]
-    ] = field(default=None)
+    today_foreground_color: Union[None, str, Dict[Union[str, ControlState], str]] = (
+        field(default=None)
+    )
     range_picker_shape: Optional[OutlinedBorder] = field(default=None)
     range_picker_header_help_text_style: Optional[TextStyle] = field(default=None)
     range_picker_header_headline_text_style: Optional[TextStyle] = field(default=None)
     range_picker_surface_tint_color: Optional[str] = field(default=None)
     range_selection_bgcolor: Optional[str] = field(default=None)
     range_selection_overlay_color: Union[
-        None, str, Dict[Union[str, MaterialState], str]
+        None, str, Dict[Union[str, ControlState], str]
     ] = field(default=None)
     today_border_side: Optional[BorderSide] = field(default=None)
-    year_bgcolor: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    year_bgcolor: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
-    year_foreground_color: Union[
-        None, str, Dict[Union[str, MaterialState], str]
-    ] = field(default=None)
-    year_overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    year_foreground_color: Union[None, str, Dict[Union[str, ControlState], str]] = (
+        field(default=None)
+    )
+    year_overlay_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
 
@@ -570,7 +570,7 @@ class PopupMenuTheme:
     shape: Optional[OutlinedBorder] = field(default=None)
     menu_position: Optional[PopupMenuPosition] = field(default=None)
     mouse_cursor: Union[
-        None, MouseCursor, Dict[Union[str, MaterialState], MouseCursor]
+        None, MouseCursor, Dict[Union[str, ControlState], MouseCursor]
     ] = field(default=None)
 
 
@@ -578,31 +578,31 @@ class PopupMenuTheme:
 class SearchBarTheme:
     bgcolor: Optional[str] = field(default=None)
     text_capitalization: Optional[TextCapitalization] = field(default=None)
-    shadow_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    shadow_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
-    surface_tint_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    surface_tint_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
-    overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    overlay_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
     elevation: Union[
-        None, Union[int, float], Dict[Union[str, MaterialState], Union[int, float]]
+        None, Union[int, float], Dict[Union[str, ControlState], Union[int, float]]
     ] = field(default=None)
-    text_style: Union[
-        None, TextStyle, Dict[Union[str, MaterialState], TextStyle]
-    ] = field(default=None)
-    hint_style: Union[
-        None, TextStyle, Dict[Union[str, MaterialState], TextStyle]
-    ] = field(default=None)
+    text_style: Union[None, TextStyle, Dict[Union[str, ControlState], TextStyle]] = (
+        field(default=None)
+    )
+    hint_style: Union[None, TextStyle, Dict[Union[str, ControlState], TextStyle]] = (
+        field(default=None)
+    )
     shape: Union[
-        None, OutlinedBorder, Dict[Union[str, MaterialState], OutlinedBorder]
+        None, OutlinedBorder, Dict[Union[str, ControlState], OutlinedBorder]
     ] = field(default=None)
     padding: Union[
         None,
         Union[int, float, Padding],
-        Dict[Union[str, MaterialState], Union[int, float, Padding]],
+        Dict[Union[str, ControlState], Union[int, float, Padding]],
     ] = field(default=None)
 
 
@@ -640,7 +640,7 @@ class NavigationDrawerTheme:
     elevation: OptionalNumber = field(default=None)
     tile_height: OptionalNumber = field(default=None)
     label_text_style: Union[
-        None, TextStyle, Dict[Union[str, MaterialState], TextStyle]
+        None, TextStyle, Dict[Union[str, ControlState], TextStyle]
     ] = field(default=None)
     indicator_shape: Optional[OutlinedBorder] = field(default=None)
 
@@ -651,13 +651,13 @@ class NavigationBarTheme:
     shadow_color: Optional[str] = field(default=None)
     surface_tint_color: Optional[str] = field(default=None)
     indicator_color: Optional[str] = field(default=None)
-    overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    overlay_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
     elevation: OptionalNumber = field(default=None)
     height: OptionalNumber = field(default=None)
     label_text_style: Union[
-        None, TextStyle, Dict[Union[str, MaterialState], TextStyle]
+        None, TextStyle, Dict[Union[str, ControlState], TextStyle]
     ] = field(default=None)
     indicator_shape: Optional[OutlinedBorder] = field(default=None)
     label_behavior: Optional[NavigationBarLabelBehavior] = field(default=None)
