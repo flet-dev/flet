@@ -36,7 +36,6 @@ class Option(Control):
         data: Any = None,
     ):
         Control.__init__(self, ref=ref, disabled=disabled, visible=visible, data=data)
-        assert key is not None or text is not None, "key or text must be specified"
         self.key = key
         self.text = text
         self.content = content
@@ -56,6 +55,9 @@ class Option(Control):
 
     def before_update(self):
         super().before_update()
+        assert (
+            self.key is not None or self.text is not None
+        ), "key or text must be specified"
         self._set_attr_json("alignment", self.__alignment)
         if isinstance(self.__text_style, TextStyle):
             self._set_attr_json("textStyle", self.__text_style)
