@@ -1,4 +1,5 @@
 import asyncio
+from functools import partial
 import json
 import logging
 import threading
@@ -24,6 +25,7 @@ from typing import (
     Union,
     cast,
 )
+from typing_extensions import ParamSpec
 from urllib.parse import urlparse
 
 import flet_core
@@ -106,6 +108,9 @@ except ImportError:
 
 
 AT = TypeVar("AT", bound=Authorization)
+
+InputT = ParamSpec("InputT")
+RetT = TypeVar("RetT")
 
 
 @dataclass
@@ -484,7 +489,6 @@ class Page(AdaptiveControl):
             n = 0
             for line in results:
                 for id in line.split(" "):
-
                     added_controls[n]._Control__uid = id
 
                     # add to index
@@ -535,10 +539,10 @@ class Page(AdaptiveControl):
 
     def run_task(
         self,
-        handler: Callable[..., Awaitable[Any]],
-        *args: Any,
-        **kwargs: Any,
-    ) -> Future:
+        handler: Callable[InputT, Awaitable[RetT]],
+        *args: InputT.args,
+        **kwargs: InputT.kwargs,
+    ) -> Future[RetT]:
         _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
 
@@ -561,17 +565,21 @@ class Page(AdaptiveControl):
 
         return wrapper
 
-    def run_thread(self, handler: Callable[..., Any], *args: Any) -> None:
+    def run_thread(
+        self,
+        handler: Callable[InputT, Any],
+        *args: InputT.args,
+        **kwargs: InputT.kwargs,
+    ) -> None:
         handler_with_context = self.__context_wrapper(handler)
         if is_pyodide():
-            handler_with_context(*args)
+            handler_with_context(*args, **kwargs)
         else:
             assert self.__loop
             self.__loop.call_soon_threadsafe(
                 self.__loop.run_in_executor,
                 self.__executor,
-                handler_with_context,
-                *args,
+                partial(handler_with_context, *args, **kwargs),
             )
 
     def go(
