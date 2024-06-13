@@ -23,7 +23,7 @@ from typing import (
     Type,
     TypeVar,
     Union,
-    cast,
+    cast
 )
 from typing_extensions import ParamSpec
 from urllib.parse import urlparse
@@ -542,7 +542,7 @@ class Page(AdaptiveControl):
         handler: Callable[InputT, Awaitable[RetT]],
         *args: InputT.args,
         **kwargs: InputT.kwargs,
-    ) -> Future[RetT]:
+    ) -> "Future[RetT]":
         _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
 
