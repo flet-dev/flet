@@ -1,5 +1,5 @@
 import time
-from typing import Any, Optional, Union, List
+from typing import Any, List, Optional, Union
 
 from flet_core.alignment import Alignment
 from flet_core.control import Control, OptionalNumber
@@ -23,6 +23,7 @@ class Option(Control):
         self,
         key: Optional[str] = None,
         text: Optional[str] = None,
+        content: Optional[Control] = None,
         alignment: Optional[Alignment] = None,
         text_style: Optional[TextStyle] = None,
         on_click=None,
@@ -35,9 +36,9 @@ class Option(Control):
         data: Any = None,
     ):
         Control.__init__(self, ref=ref, disabled=disabled, visible=visible, data=data)
-        assert key is not None or text is not None, "key or text must be specified"
         self.key = key
         self.text = text
+        self.content = content
         self.on_click = on_click
         self.alignment = alignment
         self.text_style = text_style
@@ -45,8 +46,18 @@ class Option(Control):
     def _get_control_name(self):
         return "dropdownoption"
 
+    def _get_children(self):
+        children = []
+        if self.__content is not None:
+            self.__content._set_attr_internal("n", "content")
+            children.append(self.__content)
+        return children
+
     def before_update(self):
         super().before_update()
+        assert (
+            self.key is not None or self.text is not None
+        ), "key or text must be specified"
         self._set_attr_json("alignment", self.__alignment)
         if isinstance(self.__text_style, TextStyle):
             self._set_attr_json("textStyle", self.__text_style)
@@ -68,6 +79,15 @@ class Option(Control):
     @text.setter
     def text(self, value: Optional[str]):
         self._set_attr("text", value)
+
+    # content
+    @property
+    def content(self) -> Optional[Control]:
+        return self.__content
+
+    @content.setter
+    def content(self, value: Optional[Control]):
+        self.__content = value
 
     # alignment
     @property
