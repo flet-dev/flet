@@ -129,6 +129,20 @@ class PageDisconnectedException(Exception):
         super().__init__(message)
 
 
+class BrowserContextMenu:
+    def __init__(self, page: "Page"):
+        self.page = page
+        self.disabled = False
+
+    def enable(self, wait_timeout: Optional[float] = 10):
+        self.page._invoke_method("enableBrowserContextMenu", wait_timeout=wait_timeout)
+        self.disabled = False
+
+    def disable(self, wait_timeout: Optional[float] = 10):
+        self.page._invoke_method("disableBrowserContextMenu", wait_timeout=wait_timeout)
+        self.disabled = True
+
+
 class Window:
     def __init__(self, page: "Page"):
         self.page = page
@@ -522,6 +536,7 @@ class Page(AdaptiveControl):
         self._id = "page"
         self._Control__uid = "page"
         self.window = Window(self)
+        self.browser_context_menu = BrowserContextMenu(self)
         self.__conn = conn
         self.__next_control_id = 1
         self.__snapshot: Dict[str, Dict[str, Any]] = {}
@@ -1170,12 +1185,6 @@ class Page(AdaptiveControl):
         return await self._invoke_method_async(
             "getClipboard", wait_for_result=True, wait_timeout=wait_timeout
         )
-
-    def enable_browser_context_menu(self, wait_timeout: Optional[float] = 10):
-        self._invoke_method("enableBrowserContextMenu", wait_timeout=wait_timeout)
-
-    def disable_browser_context_menu(self, wait_timeout: Optional[float] = 10):
-        self._invoke_method("disableBrowserContextMenu", wait_timeout=wait_timeout)
 
     def launch_url(
         self,
