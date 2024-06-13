@@ -14,6 +14,7 @@
 * NEW: `dropdown.Option.text_style` property ([#3293](https://github.com/flet-dev/flet/issues/3293))
 * NEW: `dropdown.Option.content` property ([#3456](https://github.com/flet-dev/flet/issues/3456))
 * NEW: `Video.configuration` property ([#3074](https://github.com/flet-dev/flet/issues/3074))
+* NEW: Enable Impeller on Android and macOS ([#3458](https://github.com/flet-dev/flet/issues/3458))
 * NEW: AutoComplete: add selected_index read-only property ([#3298](https://github.com/flet-dev/flet/issues/3298))
 * NEW: Renamed `NavigationDestination` to `NavigationBarDestination` ([#3172](https://github.com/flet-dev/flet/issues/3172))
 * CHANGED: Prettify "build" command cli output ([#3407](https://github.com/flet-dev/flet/issues/3407))
