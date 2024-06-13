@@ -23,6 +23,20 @@ class AppView(Enum):
     FLET_APP_HIDDEN = "flet_app_hidden"
 
 
+class WindowEventType(Enum):
+    CLOSE = "close"
+    FOCUS = "focus"
+    BLUR = "blur"
+    MAXIMIZE = "maximize"
+    UNMAXIMIZE = "unmaximize"
+    MINIMIZE = "minimize"
+    RESTORE = "restore"
+    RESIZE = "resize"
+    RESIZED = "resized"
+    MOVE = "move"
+    MOVED = "moved"
+
+
 class WebRenderer(Enum):
     AUTO = "auto"
     HTML = "html"
