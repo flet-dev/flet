@@ -2,20 +2,21 @@ import functools
 import warnings
 
 
-def deprecated(reason: str, version: str, delete_version: str):
+def deprecated(reason: str, version: str, delete_version: str, is_method=True):
     """
-    A decorator function that marks a function as deprecated.
+    A decorator function that marks a function/method/property/event as deprecated.
 
     :param reason: The reason for deprecation.
     :param version: The version from which the function was deprecated.
     :param delete_version: The version in which the function will be removed from the API.
+    :param is_method: if the deprecated item is a method (True) or property/function/event (False)
     """
 
     def decorator(func):
         @functools.wraps(func)
         def new_func(*args, **kwargs):
             warnings.warn(
-                f"Call to {func.__name__}() is deprecated in version {version} "
+                f"{func.__name__}{'()' if is_method else ''} is deprecated in version {version} "
                 f"and will be removed in version {delete_version}. {reason}",
                 category=DeprecationWarning,
                 stacklevel=2,
@@ -25,15 +26,6 @@ def deprecated(reason: str, version: str, delete_version: str):
         return new_func
 
     return decorator
-
-
-def deprecation_warning(d: str, reason: str, version: str, delete_version: str) -> None:
-    warnings.warn(
-        f"{d} is deprecated in version {version} "
-        f"and will be removed in version {delete_version}. {reason}",
-        category=DeprecationWarning,
-        stacklevel=2,
-    )
 
 
 def deprecated_class(reason: str, version: str, delete_version: str):
