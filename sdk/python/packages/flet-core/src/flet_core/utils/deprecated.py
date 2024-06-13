@@ -2,7 +2,7 @@ import functools
 import warnings
 
 
-def deprecated(reason, version, delete_version):
+def deprecated(reason: str, version: str, delete_version: str):
     """
     A decorator function that marks a function as deprecated.
 
@@ -25,6 +25,15 @@ def deprecated(reason, version, delete_version):
         return new_func
 
     return decorator
+
+
+def deprecation_warning(d: str, reason: str, version: str, delete_version: str) -> None:
+    warnings.warn(
+        f"{d} is deprecated in version {version} "
+        f"and will be removed in version {delete_version}. {reason}",
+        category=DeprecationWarning,
+        stacklevel=2,
+    )
 
 
 def deprecated_class(reason: str, version: str, delete_version: str):

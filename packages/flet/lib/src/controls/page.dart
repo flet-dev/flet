@@ -153,8 +153,9 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
   bool? _windowMinimized;
   bool? _windowMaximized;
   Alignment? _windowAlignment;
-  double? _windowAspectRatio;
   String? _windowBadgeLabel;
+  String? _windowIcon;
+  bool? _windowHasShadow;
   bool? _windowVisible;
   bool? _windowFocused;
   String? _windowCenter;
@@ -312,8 +313,9 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     var windowMinimized = widget.control.attrBool("windowMinimized");
     var windowMaximized = widget.control.attrBool("windowMaximized");
     var windowAlignment = parseAlignment(widget.control, "windowAlignment");
-    var windowAspectRatio = widget.control.attrDouble("windowAspectRatio");
     var windowBadgeLabel = widget.control.attrString("windowBadgeLabel");
+    var windowIcon = widget.control.attrString("windowIcon");
+    var windowHasShadow = widget.control.attrBool("windowShadow");
     var windowOpacity = widget.control.attrDouble("windowOpacity");
     var windowMinimizable = widget.control.attrBool("windowMinimizable");
     var windowMaximizable = widget.control.attrBool("windowMaximizable");
@@ -335,233 +337,242 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     var windowProgressBar = widget.control.attrDouble("windowProgressBar");
 
     updateWindow() async {
-      // windowTitle
-      if (_windowTitle != windowTitle) {
-        setWindowTitle(windowTitle);
-        _windowTitle = windowTitle;
-      }
-
-      // windowBgcolor
-      if (_windowBgcolor != windowBgcolor && windowBgcolor != null) {
-        setWindowBackgroundColor(windowBgcolor);
-        _windowBgcolor = windowBgcolor;
-      }
-
-      // window size
-      if ((windowWidth != null || windowHeight != null) &&
-          (windowWidth != _windowWidth || windowHeight != _windowHeight) &&
-          windowFullScreen != true &&
-          (defaultTargetPlatform != TargetPlatform.macOS ||
-              (defaultTargetPlatform == TargetPlatform.macOS &&
-                  windowMaximized != true &&
-                  windowMinimized != true))) {
-        debugPrint("setWindowSize: $windowWidth, $windowHeight");
-        await setWindowSize(windowWidth, windowHeight);
-        _windowWidth = windowWidth;
-        _windowHeight = windowHeight;
-      }
-
-      // window min size
-      if ((windowMinWidth != null || windowMinHeight != null) &&
-          (windowMinWidth != _windowMinWidth ||
-              windowMinHeight != _windowMinHeight)) {
-        debugPrint("setWindowMinSize: $windowMinWidth, $windowMinHeight");
-        await setWindowMinSize(windowMinWidth, windowMinHeight);
-        _windowMinWidth = windowMinWidth;
-        _windowMinHeight = windowMinHeight;
-      }
-
-      // window max size
-      if ((windowMaxWidth != null || windowMaxHeight != null) &&
-          (windowMaxWidth != _windowMaxWidth ||
-              windowMaxHeight != _windowMaxHeight)) {
-        debugPrint("setWindowMaxSize: $windowMaxWidth, $windowMaxHeight");
-        await setWindowMaxSize(windowMaxWidth, windowMaxHeight);
-        _windowMaxWidth = windowMaxWidth;
-        _windowMaxHeight = windowMaxHeight;
-      }
-
-      // window position
-      if ((windowTop != null || windowLeft != null) &&
-          (windowTop != _windowTop || windowLeft != _windowLeft) &&
-          windowFullScreen != true &&
-          (windowCenter == null || windowCenter == "") &&
-          (defaultTargetPlatform != TargetPlatform.macOS ||
-              (defaultTargetPlatform == TargetPlatform.macOS &&
-                  windowMaximized != true &&
-                  windowMinimized != true))) {
-        debugPrint("setWindowPosition: $windowTop, $windowLeft");
-        await setWindowPosition(windowTop, windowLeft);
-        _windowTop = windowTop;
-        _windowLeft = windowLeft;
-      }
-
-      // windowOpacity
-      if (windowOpacity != null && windowOpacity != _windowOpacity) {
-        await setWindowOpacity(windowOpacity);
-        _windowOpacity = windowOpacity;
-      }
-
-      // windowMinimizable
-      if (windowMinimizable != null &&
-          windowMinimizable != _windowMinimizable) {
-        await setWindowMinimizability(windowMinimizable);
-        _windowMinimizable = windowMinimizable;
-      }
-
-      // windowMinimized
-      if (windowMinimized != _windowMinimized) {
-        if (windowMinimized == true) {
-          await minimizeWindow();
-        } else if (windowMinimized == false && windowMaximized == false) {
-          await restoreWindow();
+      try {
+        // windowTitle
+        if (_windowTitle != windowTitle) {
+          setWindowTitle(windowTitle);
+          _windowTitle = windowTitle;
         }
-        _windowMinimized = windowMinimized;
-      }
 
-      // windowMaximizable
-      if (windowMaximizable != null &&
-          windowMaximizable != _windowMaximizable) {
-        await setWindowMaximizability(windowMaximizable);
-        _windowMaximizable = windowMaximizable;
-      }
-
-      // windowMaximized
-      if (windowMaximized != _windowMaximized) {
-        if (windowMaximized == true) {
-          await maximizeWindow();
-        } else if (windowMaximized == false) {
-          await unmaximizeWindow();
+        // windowBgcolor
+        if (_windowBgcolor != windowBgcolor && windowBgcolor != null) {
+          setWindowBackgroundColor(windowBgcolor);
+          _windowBgcolor = windowBgcolor;
         }
-        _windowMaximized = windowMaximized;
-      }
 
-      // windowAlignment
-      if (windowAlignment != null && windowAlignment != _windowAlignment) {
-        await setWindowAlignment(windowAlignment);
-        _windowAlignment = windowAlignment;
-      }
-
-      // windowAspectRatio
-      if (windowAspectRatio != null &&
-          windowAspectRatio != _windowAspectRatio) {
-        await setWindowAspectRatio(windowAspectRatio);
-        _windowAspectRatio = windowAspectRatio;
-      }
-
-      // windowBadgeLabel
-      if (windowBadgeLabel != null && windowBadgeLabel != _windowBadgeLabel) {
-        await setWindowBadgeLabel(windowBadgeLabel);
-        _windowBadgeLabel = windowBadgeLabel;
-      }
-
-      // windowResizable
-      if (windowResizable != null && windowResizable != _windowResizable) {
-        await setWindowResizability(windowResizable);
-        _windowResizable = windowResizable;
-      }
-
-      // windowMovable
-      if (windowMovable != null && windowMovable != _windowMovable) {
-        await setWindowMovability(windowMovable);
-        _windowMovable = windowMovable;
-      }
-
-      // windowFullScreen
-      if (windowFullScreen != null && windowFullScreen != _windowFullScreen) {
-        await setWindowFullScreen(windowFullScreen);
-        _windowFullScreen = windowFullScreen;
-      }
-
-      // windowAlwaysOnTop
-      if (windowAlwaysOnTop != null &&
-          windowAlwaysOnTop != _windowAlwaysOnTop) {
-        await setWindowAlwaysOnTop(windowAlwaysOnTop);
-        _windowAlwaysOnTop = windowAlwaysOnTop;
-      }
-
-      // windowAlwaysOnBottom
-      if (windowAlwaysOnBottom != null &&
-          windowAlwaysOnBottom != _windowAlwaysOnBottom) {
-        await setWindowAlwaysOnBottom(windowAlwaysOnBottom);
-        _windowAlwaysOnBottom = windowAlwaysOnBottom;
-      }
-
-      // windowPreventClose
-      if (windowPreventClose != null &&
-          windowPreventClose != _windowPreventClose) {
-        await setWindowPreventClose(windowPreventClose);
-        _windowPreventClose = windowPreventClose;
-      }
-
-      // windowTitleBarHidden
-      if (windowTitleBarHidden != null &&
-          windowTitleBarHidden != _windowTitleBarHidden) {
-        await setWindowTitleBarVisibility(
-            windowTitleBarHidden, windowTitleBarButtonsHidden);
-        _windowTitleBarHidden = windowTitleBarHidden;
-      }
-
-      // windowVisible
-      if (windowVisible != _windowVisible) {
-        if (windowVisible == true) {
-          await showWindow();
-        } else if (windowVisible == false) {
-          await hideWindow();
+        // window size
+        if ((windowWidth != null || windowHeight != null) &&
+            (windowWidth != _windowWidth || windowHeight != _windowHeight) &&
+            windowFullScreen != true &&
+            (defaultTargetPlatform != TargetPlatform.macOS ||
+                (defaultTargetPlatform == TargetPlatform.macOS &&
+                    windowMaximized != true &&
+                    windowMinimized != true))) {
+          debugPrint("setWindowSize: $windowWidth, $windowHeight");
+          await setWindowSize(windowWidth, windowHeight);
+          _windowWidth = windowWidth;
+          _windowHeight = windowHeight;
         }
-        _windowVisible = windowVisible;
-      }
 
-      // windowFocused
-      if (windowFocused != _windowFocused) {
-        if (windowFocused == true) {
-          await focusWindow();
-        } else if (windowFocused == false) {
-          await blurWindow();
+        // window min size
+        if ((windowMinWidth != null || windowMinHeight != null) &&
+            (windowMinWidth != _windowMinWidth ||
+                windowMinHeight != _windowMinHeight)) {
+          debugPrint("setWindowMinSize: $windowMinWidth, $windowMinHeight");
+          await setWindowMinSize(windowMinWidth, windowMinHeight);
+          _windowMinWidth = windowMinWidth;
+          _windowMinHeight = windowMinHeight;
         }
-        _windowFocused = windowFocused;
-      }
 
-      // windowCenter
-      if (windowCenter != _windowCenter && windowFullScreen != true) {
-        await centerWindow();
-        _windowCenter = windowCenter;
-      }
+        // window max size
+        if ((windowMaxWidth != null || windowMaxHeight != null) &&
+            (windowMaxWidth != _windowMaxWidth ||
+                windowMaxHeight != _windowMaxHeight)) {
+          debugPrint("setWindowMaxSize: $windowMaxWidth, $windowMaxHeight");
+          await setWindowMaxSize(windowMaxWidth, windowMaxHeight);
+          _windowMaxWidth = windowMaxWidth;
+          _windowMaxHeight = windowMaxHeight;
+        }
 
-      // windowFrameless
-      if (windowFrameless != _windowFrameless && windowFrameless == true) {
-        await setWindowFrameless();
-        _windowFrameless = windowFrameless;
-      }
+        // window position
+        if ((windowTop != null || windowLeft != null) &&
+            (windowTop != _windowTop || windowLeft != _windowLeft) &&
+            windowFullScreen != true &&
+            (windowCenter == null || windowCenter == "") &&
+            (defaultTargetPlatform != TargetPlatform.macOS ||
+                (defaultTargetPlatform == TargetPlatform.macOS &&
+                    windowMaximized != true &&
+                    windowMinimized != true))) {
+          debugPrint("setWindowPosition: $windowTop, $windowLeft");
+          await setWindowPosition(windowTop, windowLeft);
+          _windowTop = windowTop;
+          _windowLeft = windowLeft;
+        }
 
-      // windowProgressBar
-      if (windowProgressBar != null &&
-          windowProgressBar != _windowProgressBar) {
-        await setWindowProgressBar(windowProgressBar);
-        _windowProgressBar = windowProgressBar;
-      }
+        // windowOpacity
+        if (windowOpacity != null && windowOpacity != _windowOpacity) {
+          await setWindowOpacity(windowOpacity);
+          _windowOpacity = windowOpacity;
+        }
 
-      // windowSkipTaskBar
-      if (windowSkipTaskBar != null &&
-          windowSkipTaskBar != _windowSkipTaskBar) {
-        await setWindowSkipTaskBar(windowSkipTaskBar);
-        _windowSkipTaskBar = windowSkipTaskBar;
-      }
+        // windowMinimizable
+        if (windowMinimizable != null &&
+            windowMinimizable != _windowMinimizable) {
+          await setWindowMinimizability(windowMinimizable);
+          _windowMinimizable = windowMinimizable;
+        }
 
-      // windowClose
-      if (windowClose != _windowClose) {
-        await closeWindow();
-        _windowClose = windowClose;
-      }
+        // windowMinimized
+        if (windowMinimized != _windowMinimized) {
+          if (windowMinimized == true) {
+            await minimizeWindow();
+          } else if (windowMinimized == false && windowMaximized == false) {
+            await restoreWindow();
+          }
+          _windowMinimized = windowMinimized;
+        }
 
-      // windowDestroy
-      if (windowDestroy == true) {
-        await destroyWindow();
-      }
+        // windowMaximizable
+        if (windowMaximizable != null &&
+            windowMaximizable != _windowMaximizable) {
+          await setWindowMaximizability(windowMaximizable);
+          _windowMaximizable = windowMaximizable;
+        }
 
-      // window waitUntilReadyToShow
-      if (windowWaitUntilReadyToShow == true) {
-        await waitUntilReadyToShow();
+        // windowMaximized
+        if (windowMaximized != _windowMaximized) {
+          if (windowMaximized == true) {
+            await maximizeWindow();
+          } else if (windowMaximized == false) {
+            await unmaximizeWindow();
+          }
+          _windowMaximized = windowMaximized;
+        }
+
+        // windowAlignment
+        if (windowAlignment != null && windowAlignment != _windowAlignment) {
+          await setWindowAlignment(windowAlignment);
+          _windowAlignment = windowAlignment;
+        }
+
+        // windowBadgeLabel
+        if (windowBadgeLabel != null && windowBadgeLabel != _windowBadgeLabel) {
+          await setWindowBadgeLabel(windowBadgeLabel);
+          _windowBadgeLabel = windowBadgeLabel;
+        }
+
+        // windowIcon
+        if (windowIcon != null && windowIcon != _windowIcon) {
+          await setWindowIcon(windowIcon);
+          _windowIcon = windowIcon;
+        }
+
+        // windowHasShadow
+        if (windowHasShadow != null && windowHasShadow != _windowHasShadow) {
+          await setWindowShadow(windowHasShadow);
+          _windowHasShadow = windowHasShadow;
+        }
+
+        // windowResizable
+        if (windowResizable != null && windowResizable != _windowResizable) {
+          await setWindowResizability(windowResizable);
+          _windowResizable = windowResizable;
+        }
+
+        // windowMovable
+        if (windowMovable != null && windowMovable != _windowMovable) {
+          await setWindowMovability(windowMovable);
+          _windowMovable = windowMovable;
+        }
+
+        // windowFullScreen
+        if (windowFullScreen != null && windowFullScreen != _windowFullScreen) {
+          await setWindowFullScreen(windowFullScreen);
+          _windowFullScreen = windowFullScreen;
+        }
+
+        // windowAlwaysOnTop
+        if (windowAlwaysOnTop != null &&
+            windowAlwaysOnTop != _windowAlwaysOnTop) {
+          await setWindowAlwaysOnTop(windowAlwaysOnTop);
+          _windowAlwaysOnTop = windowAlwaysOnTop;
+        }
+
+        // windowAlwaysOnBottom
+        if (windowAlwaysOnBottom != null &&
+            windowAlwaysOnBottom != _windowAlwaysOnBottom) {
+          await setWindowAlwaysOnBottom(windowAlwaysOnBottom);
+          _windowAlwaysOnBottom = windowAlwaysOnBottom;
+        }
+
+        // windowPreventClose
+        if (windowPreventClose != null &&
+            windowPreventClose != _windowPreventClose) {
+          await setWindowPreventClose(windowPreventClose);
+          _windowPreventClose = windowPreventClose;
+        }
+
+        // windowTitleBarHidden
+        if (windowTitleBarHidden != null &&
+            windowTitleBarHidden != _windowTitleBarHidden) {
+          await setWindowTitleBarVisibility(
+              windowTitleBarHidden, windowTitleBarButtonsHidden);
+          _windowTitleBarHidden = windowTitleBarHidden;
+        }
+
+        // windowVisible
+        if (windowVisible != _windowVisible) {
+          if (windowVisible == true) {
+            await showWindow();
+          } else if (windowVisible == false) {
+            await hideWindow();
+          }
+          _windowVisible = windowVisible;
+        }
+
+        // windowFocused
+        if (windowFocused != _windowFocused) {
+          if (windowFocused == true) {
+            await focusWindow();
+          } else if (windowFocused == false) {
+            await blurWindow();
+          }
+          _windowFocused = windowFocused;
+        }
+
+        // windowCenter
+        if (windowCenter != _windowCenter && windowFullScreen != true) {
+          await centerWindow();
+          _windowCenter = windowCenter;
+        }
+
+        // windowFrameless
+        if (windowFrameless != _windowFrameless && windowFrameless == true) {
+          await setWindowFrameless();
+          _windowFrameless = windowFrameless;
+        }
+
+        // windowProgressBar
+        if (windowProgressBar != null &&
+            windowProgressBar != _windowProgressBar) {
+          await setWindowProgressBar(windowProgressBar);
+          _windowProgressBar = windowProgressBar;
+        }
+
+        // windowSkipTaskBar
+        if (windowSkipTaskBar != null &&
+            windowSkipTaskBar != _windowSkipTaskBar) {
+          await setWindowSkipTaskBar(windowSkipTaskBar);
+          _windowSkipTaskBar = windowSkipTaskBar;
+        }
+
+        // windowClose
+        if (windowClose != _windowClose) {
+          await closeWindow();
+          _windowClose = windowClose;
+        }
+
+        // windowDestroy
+        if (windowDestroy == true) {
+          await destroyWindow();
+        }
+
+        // window waitUntilReadyToShow
+        if (windowWaitUntilReadyToShow == true) {
+          await waitUntilReadyToShow();
+        }
+      } catch (e) {
+        debugPrint("ERROR updating window: $e");
       }
     }
 
