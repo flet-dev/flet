@@ -3,6 +3,7 @@ from typing import Any, Optional
 from flet_core.alignment import Alignment
 from flet_core.map.map_layer import MapLayer
 from flet_core.ref import Ref
+from flet_core.types import OptionalEventCallback
 
 
 class SimpleAttribution(MapLayer):
@@ -19,7 +20,7 @@ class SimpleAttribution(MapLayer):
         text: str,
         alignment: Optional[Alignment] = None,
         bgcolor: Optional[str] = None,
-        on_click=None,
+        on_click: OptionalEventCallback = None,
         #
         # MapLayer
         #
@@ -80,5 +81,5 @@ class SimpleAttribution(MapLayer):
         return self._get_event_handler("click")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallback):
         self._add_event_handler("click", handler)
