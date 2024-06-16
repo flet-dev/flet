@@ -7,7 +7,7 @@ from flet_core.control import Control
 from flet_core.ref import Ref
 
 
-class LocationAccuracy(Enum):
+class GeolocatorPositionAccuracy(Enum):
     LOWEST = "lowest"
     LOW = "low"
     MEDIUM = "medium"
@@ -17,7 +17,7 @@ class LocationAccuracy(Enum):
     REDUCED = "reduced"
 
 
-class LocationPermission(Enum):
+class GeolocatorPermissionStatus(Enum):
     DENIED = "denied"
     DENIED_FOREVER = "deniedForever"
     WHILE_IN_USE = "whileInUse"
@@ -70,7 +70,9 @@ class Geolocator(Control):
 
     def get_current_position(
         self,
-        accuracy: Optional[LocationAccuracy] = LocationAccuracy.BEST,
+        accuracy: Optional[
+            GeolocatorPositionAccuracy
+        ] = GeolocatorPositionAccuracy.BEST,
         wait_timeout: Optional[float] = 25,
     ) -> GeolocatorPosition:
         output = self.invoke_method(
@@ -78,7 +80,7 @@ class Geolocator(Control):
             {
                 "accuracy": (
                     accuracy.value
-                    if isinstance(accuracy, LocationAccuracy)
+                    if isinstance(accuracy, GeolocatorPositionAccuracy)
                     else accuracy
                 )
             },
@@ -93,7 +95,9 @@ class Geolocator(Control):
 
     async def get_current_position_async(
         self,
-        accuracy: Optional[LocationAccuracy] = LocationAccuracy.BEST,
+        accuracy: Optional[
+            GeolocatorPositionAccuracy
+        ] = GeolocatorPositionAccuracy.BEST,
         wait_timeout: Optional[float] = 25,
     ) -> GeolocatorPosition:
         output = await self.invoke_method_async(
@@ -101,7 +105,7 @@ class Geolocator(Control):
             {
                 "accuracy": (
                     accuracy.value
-                    if isinstance(accuracy, LocationAccuracy)
+                    if isinstance(accuracy, GeolocatorPositionAccuracy)
                     else accuracy
                 )
             },
@@ -146,43 +150,45 @@ class Geolocator(Control):
             else GeolocatorPosition()
         )
 
-    def has_permission(self, wait_timeout: Optional[float] = 25) -> LocationPermission:
-        p = self.invoke_method(
-            "has_permission",
-            wait_for_result=True,
-            wait_timeout=wait_timeout,
-        )
-        return LocationPermission(p)
-
-    async def has_permission_async(
+    def get_permission_status(
         self, wait_timeout: Optional[float] = 25
-    ) -> LocationPermission:
-        p = await self.invoke_method_async(
-            "has_permission",
+    ) -> GeolocatorPermissionStatus:
+        p = self.invoke_method(
+            "get_permission_status",
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        return LocationPermission(p)
+        return GeolocatorPermissionStatus(p)
+
+    async def get_permission_status_async(
+        self, wait_timeout: Optional[float] = 25
+    ) -> GeolocatorPermissionStatus:
+        p = await self.invoke_method_async(
+            "get_permission_status",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return GeolocatorPermissionStatus(p)
 
     def request_permission(
         self, wait_timeout: Optional[float] = 25
-    ) -> LocationPermission:
+    ) -> GeolocatorPermissionStatus:
         p = self.invoke_method(
             "request_permission",
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        return LocationPermission(p)
+        return GeolocatorPermissionStatus(p)
 
     async def request_permission_async(
         self, wait_timeout: Optional[float] = 25
-    ) -> LocationPermission:
+    ) -> GeolocatorPermissionStatus:
         p = await self.invoke_method_async(
             "request_permission",
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        return LocationPermission(p)
+        return GeolocatorPermissionStatus(p)
 
     def is_location_service_enabled(self, wait_timeout: Optional[float] = 10) -> bool:
         enabled = self.invoke_method(
