@@ -53,7 +53,7 @@ class _GeolocatorControlState extends State<GeolocatorControl>
           case "request_permission":
             var permission = await Geolocator.requestPermission();
             return permission.name;
-          case "has_permission":
+          case "get_permission_status":
             var permission = await Geolocator.checkPermission();
             return permission.name;
           case "is_location_service_enabled":

@@ -7,21 +7,21 @@ import '../models/window_media_data.dart';
 
 Future setWindowTitle(String title) async {
   if (isDesktop()) {
-    debugPrint("setWindowTitle()");
+    debugPrint("setWindowTitle($title)");
     await windowManager.setTitle(title);
   }
 }
 
 Future setWindowBackgroundColor(Color bgcolor) async {
   if (isDesktop()) {
-    debugPrint("setWindowBackgroundColor()");
+    debugPrint("setWindowBackgroundColor($bgcolor)");
     await windowManager.setBackgroundColor(bgcolor);
   }
 }
 
 Future setWindowSize(double? width, double? height) async {
   if (isDesktop()) {
-    debugPrint("setWindowSize()");
+    debugPrint("setWindowSize($width, $height)");
     var currentSize = await windowManager.getSize();
     await windowManager.setSize(
         Size(width ?? currentSize.width, height ?? currentSize.height),
@@ -31,21 +31,21 @@ Future setWindowSize(double? width, double? height) async {
 
 Future setWindowMinSize(double? minWidth, double? minHeight) async {
   if (isDesktop()) {
-    debugPrint("setWindowMinSize()");
+    debugPrint("setWindowMinSize($minWidth, $minHeight)");
     await windowManager.setMinimumSize(Size(minWidth ?? 0, minHeight ?? 0));
   }
 }
 
 Future setWindowMaxSize(double? maxWidth, double? maxHeight) async {
   if (isDesktop()) {
-    debugPrint("setWindowMaxSize()");
+    debugPrint("setWindowMaxSize($maxWidth, $maxHeight)");
     await windowManager.setMaximumSize(Size(maxWidth ?? -1, maxHeight ?? -1));
   }
 }
 
 Future setWindowPosition(double? top, double? left) async {
   if (isDesktop()) {
-    debugPrint("setWindowPosition()");
+    debugPrint("setWindowPosition($top, $left)");
     var currentPos = await windowManager.getPosition();
     await windowManager.setPosition(
         Offset(left ?? currentPos.dx, top ?? currentPos.dy),
@@ -55,56 +55,63 @@ Future setWindowPosition(double? top, double? left) async {
 
 Future setWindowOpacity(double opacity) async {
   if (isDesktop()) {
-    debugPrint("setWindowOpacity()");
+    debugPrint("setWindowOpacity($opacity)");
     await windowManager.setOpacity(opacity);
   }
 }
 
 Future setWindowMinimizability(bool minimizable) async {
   if (isDesktop()) {
-    debugPrint("setWindowMinimizability()");
+    debugPrint("setWindowMinimizability($minimizable)");
     await windowManager.setMinimizable(minimizable);
   }
 }
 
 Future setWindowMaximizability(bool maximizable) async {
   if (isDesktop()) {
-    debugPrint("setWindowMaximizability()");
+    debugPrint("setWindowMaximizability($maximizable)");
     await windowManager.setMaximizable(maximizable);
   }
 }
 
 Future setWindowResizability(bool resizable) async {
   if (isDesktop()) {
-    debugPrint("setWindowResizability()");
+    debugPrint("setWindowResizability($resizable)");
     await windowManager.setResizable(resizable);
   }
 }
 
 Future setWindowMovability(bool movable) async {
   if (isDesktop()) {
-    debugPrint("setWindowMovability()");
+    debugPrint("setWindowMovability($movable)");
     await windowManager.setMovable(movable);
   }
 }
 
 Future setWindowFullScreen(bool fullScreen) async {
   if (isDesktop() && await windowManager.isFullScreen() != fullScreen) {
-    debugPrint("setWindowFullScreen()");
+    debugPrint("setWindowFullScreen($fullScreen)");
     await windowManager.setFullScreen(fullScreen);
   }
 }
 
 Future setWindowAlwaysOnTop(bool alwaysOnTop) async {
   if (isDesktop() && await windowManager.isAlwaysOnTop() != alwaysOnTop) {
-    debugPrint("setWindowAlwaysOnTop()");
+    debugPrint("setWindowAlwaysOnTop($alwaysOnTop)");
     await windowManager.setAlwaysOnTop(alwaysOnTop);
+  }
+}
+
+Future setWindowAlwaysOnBottom(bool alwaysOnBottom) async {
+  if (isDesktop()) {
+    debugPrint("setWindowAlwaysOnBottom($alwaysOnBottom)");
+    await windowManager.setAlwaysOnBottom(alwaysOnBottom);
   }
 }
 
 Future setWindowPreventClose(bool preventClose) async {
   if (isDesktop()) {
-    debugPrint("setWindowPreventClose()");
+    debugPrint("setWindowPreventClose($preventClose)");
     await windowManager.setPreventClose(preventClose);
   }
 }
@@ -121,7 +128,7 @@ Future setWindowTitleBarVisibility(
 
 Future setWindowSkipTaskBar(bool skipTaskBar) async {
   if (isDesktop()) {
-    debugPrint("setWindowSkipTaskBar()");
+    debugPrint("setWindowSkipTaskBar($skipTaskBar)");
     await windowManager.setSkipTaskbar(skipTaskBar);
   }
 }
@@ -135,8 +142,37 @@ Future setWindowFrameless() async {
 
 Future setWindowProgressBar(double progress) async {
   if (isDesktop()) {
-    debugPrint("setWindowProgressBar()");
+    debugPrint("setWindowProgressBar($progress)");
     await windowManager.setProgressBar(progress);
+  }
+}
+
+Future setWindowShadow(bool hasShadow) async {
+  if (isDesktop()) {
+    debugPrint("setWindowHasShadow($hasShadow)");
+    debugPrint("${windowManager.hasShadow()}");
+    await windowManager.setHasShadow(hasShadow);
+  }
+}
+
+Future setWindowBadgeLabel(String label) async {
+  if (isDesktop()) {
+    debugPrint("setWindowBadgeLabel($label)");
+    await windowManager.setBadgeLabel(label);
+  }
+}
+
+Future setWindowIcon(String iconPath) async {
+  if (isWindowsDesktop()) {
+    debugPrint("setWindowIcon($iconPath)");
+    await windowManager.setIcon(iconPath);
+  }
+}
+
+Future setWindowAlignment(Alignment alignment, [bool animate = true]) async {
+  if (isDesktop()) {
+    debugPrint("setWindowAlignment($alignment, animate: $animate)");
+    await windowManager.setAlignment(alignment, animate: animate);
   }
 }
 
@@ -211,6 +247,13 @@ Future destroyWindow() async {
   if (isDesktop()) {
     debugPrint("destroyWindow()");
     await windowManager.destroy();
+  }
+}
+
+Future waitUntilReadyToShow() async {
+  if (isDesktop()) {
+    debugPrint("waitUntilReadyToShow()");
+    await windowManager.waitUntilReadyToShow();
   }
 }
 

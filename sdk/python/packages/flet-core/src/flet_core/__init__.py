@@ -144,7 +144,12 @@ from flet_core.flashlight import Flashlight
 from flet_core.flet_app import FletApp
 from flet_core.floating_action_button import FloatingActionButton
 from flet_core.form_field_control import InputBorder
-from flet_core.geolocator import Geolocator, LocationAccuracy
+from flet_core.geolocator import (
+    Geolocator,
+    GeolocatorPositionAccuracy,
+    GeolocatorPermissionStatus,
+    GeolocatorPosition,
+)
 from flet_core.gesture_detector import (
     DragEndEvent,
     DragStartEvent,

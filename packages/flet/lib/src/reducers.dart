@@ -59,8 +59,13 @@ AppState appReducer(AppState state, dynamic action) {
       }
       controls[page.id] = page.copyWith(attrs: pageAttrs);
       action.backend.updateControlState("page", props, client: false);
-      action.backend.triggerControlEvent("page", "resize",
-          "${action.newPageSize.width},${action.newPageSize.height}");
+      action.backend.triggerControlEvent(
+          "page",
+          "resized",
+          jsonEncode({
+            "width": action.newPageSize.width,
+            "height": action.newPageSize.height
+          }));
     }
 
     return state.copyWith(
