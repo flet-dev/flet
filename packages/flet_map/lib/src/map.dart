@@ -122,6 +122,9 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
                   triggerEvent(config.control, "pointer_down", {
                     "lat": latlng.latitude,
                     "long": latlng.longitude,
+                    "gx": e.position.dx,
+                    "gy": e.position.dy,
+                    "kind": e.kind.name,
                   });
                 }
               : null,
@@ -130,6 +133,9 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
                   triggerEvent(config.control, "pointer_cancel", {
                     "lat": latlng.latitude,
                     "long": latlng.longitude,
+                    "gx": e.position.dx,
+                    "gy": e.position.dy,
+                    "kind": e.kind.name,
                   });
                 }
               : null,
@@ -138,6 +144,9 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
                   triggerEvent(config.control, "pointer_up", {
                     "lat": latlng.latitude,
                     "long": latlng.longitude,
+                    "gx": e.position.dx,
+                    "gy": e.position.dy,
+                    "kind": e.kind.name,
                   });
                 }
               : null,

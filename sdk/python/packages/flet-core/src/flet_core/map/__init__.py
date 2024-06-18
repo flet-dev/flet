@@ -7,7 +7,7 @@ from flet_core.map.map_configuration import (
     MapInteractionConfiguration,
     MapInteractiveFlag,
     MapMultiFingerGesture,
-    TapEvent,
+    MapTapEvent,
     MapEvent,
     MapEventSource,
 )

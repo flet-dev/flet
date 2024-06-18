@@ -1,11 +1,11 @@
 import json
 from dataclasses import dataclass, field
 from enum import Enum, IntFlag
-from typing import Optional, Union
+from typing import Optional, Union, Callable
 
-from flet_core import ControlEvent
 from flet_core.control import OptionalNumber, Control
 from flet_core.event_handler import EventHandler
+from flet_core.types import ControlEvent, OptionalEventCallback
 
 
 @dataclass
@@ -50,6 +50,15 @@ class MapMultiFingerGesture(IntFlag):
     ALL = (1 << 0) | (1 << 1) | (1 << 2)
 
 
+class MapPointerDeviceType(Enum):
+    TOUCH = "touch"
+    MOUSE = "mouse"
+    STYLUS = "stylus"
+    INVERTED_STYLUS = "invertedStylus"
+    TRACKPAD = "trackpad"
+    UNKNOWN = "unknown"
+
+
 @dataclass
 class MapInteractionConfiguration:
     enable_multi_finger_gesture_race: Optional[bool] = field(default=None)
@@ -74,24 +83,44 @@ class MapConfiguration(Control):
         keep_alive: Optional[bool] = None,
         max_zoom: OptionalNumber = None,
         min_zoom: OptionalNumber = None,
-        on_tap=None,
-        on_secondary_tap=None,
-        on_long_press=None,
-        on_init=None,
-        on_event=None,
+        on_init: OptionalEventCallback = None,
+        on_tap: Optional[Callable[["MapTapEvent"], None]] = None,
+        on_secondary_tap: Optional[Callable[["MapTapEvent"], None]] = None,
+        on_long_press: Optional[Callable[["MapTapEvent"], None]] = None,
+        on_event: Optional[Callable[["MapEvent"], None]] = None,
+        on_position_change: Optional[Callable[["MapPositionChangeEvent"], None]] = None,
+        on_pointer_down: Optional[Callable[["MapPointerEvent"], None]] = None,
+        on_pointer_cancel: Optional[Callable[["MapPointerEvent"], None]] = None,
+        on_pointer_up: Optional[Callable[["MapPointerEvent"], None]] = None,
     ):
         Control.__init__(self)
-        self.__on_tap = EventHandler(lambda e: TapEvent(**json.loads(e.data)))
+        self.__on_tap = EventHandler(lambda e: MapTapEvent(e))
         self._add_event_handler("tap", self.__on_tap.get_handler())
 
-        self.__on_secondary_tap = EventHandler(lambda e: TapEvent(**json.loads(e.data)))
+        self.__on_secondary_tap = EventHandler(lambda e: MapTapEvent(e))
         self._add_event_handler("secondary_tap", self.__on_secondary_tap.get_handler())
 
-        self.__on_long_press = EventHandler(lambda e: TapEvent(**json.loads(e.data)))
+        self.__on_long_press = EventHandler(lambda e: MapTapEvent(e))
         self._add_event_handler("long_press", self.__on_long_press.get_handler())
 
-        self.__on_event = EventHandler(lambda e: MapEvent(**json.loads(e.data)))
+        self.__on_event = EventHandler(lambda e: MapEvent(e))
         self._add_event_handler("event", self.__on_event.get_handler())
+
+        self.__on_position_change = EventHandler(lambda e: MapPositionChangeEvent(e))
+        self._add_event_handler(
+            "position_change", self.__on_position_change.get_handler()
+        )
+
+        self.__on_pointer_down = EventHandler(lambda e: MapPointerEvent(e))
+        self._add_event_handler("pointer_down", self.__on_pointer_down.get_handler())
+
+        self.__on_pointer_cancel = EventHandler(lambda e: MapPointerEvent(e))
+        self._add_event_handler(
+            "pointer_cancel", self.__on_pointer_cancel.get_handler()
+        )
+
+        self.__on_pointer_up = EventHandler(lambda e: MapPointerEvent(e))
+        self._add_event_handler("pointer_up", self.__on_pointer_up.get_handler())
 
         self.bgcolor = bgcolor
         self.initial_center = initial_center
@@ -106,6 +135,10 @@ class MapConfiguration(Control):
         self.on_init = on_init
         self.on_long_press = on_long_press
         self.on_event = on_event
+        self.on_position_change = on_position_change
+        self.on_pointer_down = on_pointer_down
+        self.on_pointer_cancel = on_pointer_cancel
+        self.on_pointer_up = on_pointer_up
 
     def _get_control_name(self):
         return "map_configuration"
@@ -197,7 +230,7 @@ class MapConfiguration(Control):
         return self.__on_tap
 
     @on_tap.setter
-    def on_tap(self, handler):
+    def on_tap(self, handler: Optional[Callable[["MapTapEvent"], None]]):
         self.__on_tap.subscribe(handler)
         self._set_attr("onTap", True if handler is not None else None)
 
@@ -207,7 +240,7 @@ class MapConfiguration(Control):
         return self.__on_secondary_tap
 
     @on_secondary_tap.setter
-    def on_secondary_tap(self, handler):
+    def on_secondary_tap(self, handler: Optional[Callable[["MapTapEvent"], None]]):
         self.__on_secondary_tap.subscribe(handler)
         self._set_attr("onSecondaryTap", True if handler is not None else None)
 
@@ -217,7 +250,7 @@ class MapConfiguration(Control):
         return self.__on_long_press
 
     @on_long_press.setter
-    def on_long_press(self, handler):
+    def on_long_press(self, handler: Optional[Callable[["MapTapEvent"], None]]):
         self.__on_long_press.subscribe(handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
@@ -227,7 +260,7 @@ class MapConfiguration(Control):
         return self.__on_event
 
     @on_event.setter
-    def on_event(self, handler):
+    def on_event(self, handler: Optional[Callable[["MapEvent"], None]]):
         self.__on_event.subscribe(handler)
         self._set_attr("onEvent", True if handler is not None else None)
 
@@ -237,18 +270,88 @@ class MapConfiguration(Control):
         return self._get_event_handler("init")
 
     @on_init.setter
-    def on_init(self, handler):
+    def on_init(self, handler: OptionalEventCallback):
         self._add_event_handler("init", handler)
         self._set_attr("onInit", True if handler is not None else None)
 
+    # on_position_change
+    @property
+    def on_position_change(self):
+        return self.__on_position_change
 
-class TapEvent(ControlEvent):
-    def __init__(self, lat, long, gx, gy, lx, ly) -> None:
-        self.local_x: Optional[float] = lx
-        self.local_y: Optional[float] = ly
-        self.global_x: float = gx
-        self.global_y: float = gy
-        self.coordinates: MapLatitudeLongitude = MapLatitudeLongitude(lat, long)
+    @on_position_change.setter
+    def on_position_change(
+        self, handler: Optional[Callable[["MapPositionChangeEvent"], None]]
+    ):
+        self.__on_position_change.subscribe(handler)
+        self._set_attr("onPositionChange", True if handler is not None else None)
+
+    # on_pointer_down
+    @property
+    def on_pointer_down(self):
+        return self.__on_pointer_down
+
+    @on_pointer_down.setter
+    def on_pointer_down(self, handler: Optional[Callable[["MapPointerEvent"], None]]):
+        self.__on_pointer_down.subscribe(handler)
+        self._set_attr("onPointerDown", True if handler is not None else None)
+
+    # on_pointer_cancel
+    @property
+    def on_pointer_cancel(self):
+        return self.__on_pointer_cancel
+
+    @on_pointer_cancel.setter
+    def on_pointer_cancel(self, handler: Optional[Callable[["MapPointerEvent"], None]]):
+        self.__on_pointer_cancel.subscribe(handler)
+        self._set_attr("onPointerCancel", True if handler is not None else None)
+
+    # on_pointer_up
+    @property
+    def on_pointer_up(self):
+        return self.__on_pointer_up
+
+    @on_pointer_up.setter
+    def on_pointer_up(self, handler: Optional[Callable[["MapPointerEvent"], None]]):
+        self.__on_pointer_up.subscribe(handler)
+        self._set_attr("onPointerUp", True if handler is not None else None)
+
+
+class MapTapEvent(ControlEvent):
+    def __init__(self, e: ControlEvent) -> None:
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.local_x: Optional[float] = d["lx"]
+        self.local_y: Optional[float] = d["ly"]
+        self.global_x: float = d["gx"]
+        self.global_y: float = d["gy"]
+        self.coordinates: MapLatitudeLongitude = MapLatitudeLongitude(
+            d["lat"], d["long"]
+        )
+
+
+class MapPositionChangeEvent(ControlEvent):
+    def __init__(self, e: ControlEvent) -> None:
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.min_zoom: Optional[float] = d["min_zoom"]
+        self.max_zoom: Optional[float] = d["max_zoom"]
+        self.rot: float = d["rot"]
+        self.coordinates: MapLatitudeLongitude = MapLatitudeLongitude(
+            d["lat"], d["long"]
+        )
+
+
+class MapPointerEvent(ControlEvent):
+    def __init__(self, e: ControlEvent) -> None:
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.device_type: MapPointerDeviceType = MapPointerDeviceType(d["kind"])
+        self.global_y: float = d["gy"]
+        self.global_x: float = d["gx"]
+        self.coordinates: MapLatitudeLongitude = MapLatitudeLongitude(
+            d["lat"], d["long"]
+        )
 
 
 class MapEventSource(Enum):
@@ -275,10 +378,14 @@ class MapEventSource(Enum):
 
 
 class MapEvent(ControlEvent):
-    def __init__(self, src, c_lat, c_long, zoom, min_zoom, max_zoom, rot) -> None:
-        self.source: MapEventSource = MapEventSource(src)
-        self.center: MapLatitudeLongitude = MapLatitudeLongitude(c_lat, c_long)
-        self.zoom: float = zoom
-        self.min_zoom: float = min_zoom
-        self.max_zoom: float = max_zoom
-        self.rotation: float = rot
+    def __init__(self, e: ControlEvent) -> None:
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.source: MapEventSource = MapEventSource(d["src"])
+        self.center: MapLatitudeLongitude = MapLatitudeLongitude(
+            d["c_lat"], d["c_long"]
+        )
+        self.zoom: float = d["zoom"]
+        self.min_zoom: float = d["min_zoom"]
+        self.max_zoom: float = d["max_zoom"]
+        self.rotation: float = d["rot"]
