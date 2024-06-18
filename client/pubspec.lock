@@ -239,21 +239,21 @@ packages:
       path: "../packages/flet"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.0"
   flet_audio:
     dependency: "direct main"
     description:
       path: "../packages/flet_audio"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.0"
   flet_audio_recorder:
     dependency: "direct main"
     description:
       path: "../packages/flet_audio_recorder"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.0"
   flet_flashlight:
     dependency: "direct main"
     description:
@@ -274,7 +274,7 @@ packages:
       path: "../packages/flet_lottie"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.0"
   flet_map:
     dependency: "direct main"
     description:
@@ -295,21 +295,21 @@ packages:
       path: "../packages/flet_rive"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.0"
   flet_video:
     dependency: "direct main"
     description:
       path: "../packages/flet_video"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.0"
   flet_webview:
     dependency: "direct main"
     description:
       path: "../packages/flet_webview"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.0"
   flutter:
     dependency: "direct main"
     description: flutter

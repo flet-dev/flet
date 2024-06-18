@@ -171,7 +171,7 @@ class CircleAvatar(ConstrainedControl):
     def foreground_image_url(self) -> Optional[str]:
         warnings.warn(
             f"foreground_image_url is deprecated since version 0.22.0 "
-            f"and will be removed in version 1.0. Use foreground_image_src instead.",
+            f"and will be removed in version 0.26.0. Use foreground_image_src instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
@@ -183,7 +183,7 @@ class CircleAvatar(ConstrainedControl):
         if value is not None:
             warnings.warn(
                 f"foreground_image_url is deprecated since version 0.22.0 "
-                f"and will be removed in version 1.0. Use foreground_image_src instead.",
+                f"and will be removed in version 0.26.0. Use foreground_image_src instead.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
@@ -193,7 +193,7 @@ class CircleAvatar(ConstrainedControl):
     def background_image_url(self) -> Optional[str]:
         warnings.warn(
             f"background_image_url is deprecated since version 0.22.0 "
-            f"and will be removed in version 1.0. Use background_image_src instead.",
+            f"and will be removed in version 0.26.0. Use background_image_src instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
@@ -205,7 +205,7 @@ class CircleAvatar(ConstrainedControl):
         if value is not None:
             warnings.warn(
                 f"background_image_url is deprecated since version 0.22.0 "
-                f"and will be removed in version 1.0. Use background_image_src instead.",
+                f"and will be removed in version 0.26.0. Use background_image_src instead.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )

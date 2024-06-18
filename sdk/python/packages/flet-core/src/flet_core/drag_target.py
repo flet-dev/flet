@@ -213,7 +213,7 @@ class DragTargetAcceptEvent(ControlEvent):
     def __init__(self, src_id, x, y) -> None:
         warn(
             f"{self.__class__.__name__} is deprecated since version 0.22.0 "
-            f"and will be removed in version 1.0. Use DragTargetEvent instead.",
+            f"and will be removed in version 0.26.0. Use DragTargetEvent instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
