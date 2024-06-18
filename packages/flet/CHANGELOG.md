@@ -17,10 +17,13 @@
 * NEW: Renamed `NavigationDestination` to `NavigationBarDestination` ([#3172](https://github.com/flet-dev/flet/issues/3172))
 * CHANGED: Prettify "build" command cli output ([#3407](https://github.com/flet-dev/flet/issues/3407))
 * CHANGED: Set colorScheme.primary as defaultSideColor ([#3421](https://github.com/flet-dev/flet/issues/3421))
+* CHANGED: feat(map): add missing py-events, better typing ([#3464](https://github.com/flet-dev/flet/issues/3464))
 * CHORE: Refactor `numbers.dart` utils ([#3263](https://github.com/flet-dev/flet/issues/3263))
 * CHORE: Global Code Refactoring/Clean-up ([#3186](https://github.com/flet-dev/flet/issues/3186))
 * CHORE: Cleanup ([#3406](https://github.com/flet-dev/flet/issues/3406))
 * CHORE: Error handling enhancements ([#3175](https://github.com/flet-dev/flet/issues/3175))
+* CHORE: Improve type hint for run_task and run_thread ([#3459](https://github.com/flet-dev/flet/issues/3459))
+* CHORE: Move `page.window_*` and `page.browser_context_menu_*` properties to `Window` and `BrowserContextMenu` classes ([#3463](https://github.com/flet-dev/flet/issues/3463))
 * FIX: `Container.on_tap_down` not called when `on_click` is not provided ([#3442](https://github.com/flet-dev/flet/issues/3442))
 * FIX: SnackBar bug #3311 ([#3313](https://github.com/flet-dev/flet/issues/3313))
 
