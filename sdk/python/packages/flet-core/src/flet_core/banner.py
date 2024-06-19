@@ -106,8 +106,8 @@ class Banner(Control):
     def before_update(self):
         super().before_update()
         assert self.__content.visible, "content must be visible"
-        assert (
-            len(list(filter(lambda a: a.visible, self.__actions))) > 0
+        assert any(
+            a.visible for a in self.__actions
         ), "actions must contain at minimum one visible action Control"
 
         self._set_attr_json("contentPadding", self.__content_padding)

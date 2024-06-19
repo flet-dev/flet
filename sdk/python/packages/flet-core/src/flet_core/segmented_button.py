@@ -189,8 +189,8 @@ class SegmentedButton(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        assert (
-            len(filter(lambda segment: segment.visible, self.__segments)) > 0
+        assert any(
+            segment.visible for segment in self.__segments
         ), "segments must have at minimum one visible Segment"
         assert (
             len(self.selected) > 0 or self.allow_empty_selection

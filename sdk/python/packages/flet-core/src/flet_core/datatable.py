@@ -254,8 +254,8 @@ class DataRow(Control):
 
     def before_update(self):
         super().before_update()
-        assert (
-            len(list(filter(lambda cell: cell.visible, self.__cells))) > 0
+        assert any(
+            cell.visible for cell in self.__cells
         ), "cells must contain at minimum one visible DataCell"
         self._set_attr_json("color", self.__color)
 
