@@ -83,7 +83,7 @@ ButtonStyle? buttonStyleFromJSON(ThemeData theme, Map<String, dynamic>? json,
 
 FloatingActionButtonLocation parseFloatingActionButtonLocation(
     Control control, String propName, FloatingActionButtonLocation defValue) {
-  Map<String, FloatingActionButtonLocation> fabLocations = {
+  const Map<String, FloatingActionButtonLocation> fabLocations = {
     "centerdocked": FloatingActionButtonLocation.centerDocked,
     "centerfloat": FloatingActionButtonLocation.centerFloat,
     "centertop": FloatingActionButtonLocation.centerTop,
