@@ -2,7 +2,7 @@ name: flet_rive
 description: Flet Rive control
 homepage: https://flet.dev
 repository: https://github.com/flet-dev/flet/packages/flet_rive
-version: 0.23.0
+version: 0.23.1
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
