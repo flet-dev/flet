@@ -2,6 +2,7 @@
 
 # 0.23.1
 
+* FIX: Fix parseFloatingActionButtonLocation() to work on desktop ([#3496](https://github.com/flet-dev/flet/issues/3496))
 * FIX: Flet 0.23 crashes on Ubuntu 22.04 ([#3495](https://github.com/flet-dev/flet/issues/3495))
 * FIX: View.floating_action_button_location: conditionally use _set_attr.
 * FIX: Import `ParamSpec` from `typing` for Python >3.10.

@@ -83,26 +83,26 @@ ButtonStyle? buttonStyleFromJSON(ThemeData theme, Map<String, dynamic>? json,
 
 FloatingActionButtonLocation parseFloatingActionButtonLocation(
     Control control, String propName, FloatingActionButtonLocation defValue) {
-  List<FloatingActionButtonLocation> fabLocations = [
-    FloatingActionButtonLocation.centerDocked,
-    FloatingActionButtonLocation.centerFloat,
-    FloatingActionButtonLocation.centerTop,
-    FloatingActionButtonLocation.endContained,
-    FloatingActionButtonLocation.endDocked,
-    FloatingActionButtonLocation.endFloat,
-    FloatingActionButtonLocation.endTop,
-    FloatingActionButtonLocation.miniCenterDocked,
-    FloatingActionButtonLocation.miniCenterFloat,
-    FloatingActionButtonLocation.miniCenterTop,
-    FloatingActionButtonLocation.miniEndFloat,
-    FloatingActionButtonLocation.miniEndTop,
-    FloatingActionButtonLocation.miniStartDocked,
-    FloatingActionButtonLocation.miniStartFloat,
-    FloatingActionButtonLocation.miniStartTop,
-    FloatingActionButtonLocation.startDocked,
-    FloatingActionButtonLocation.startFloat,
-    FloatingActionButtonLocation.startTop
-  ];
+  const Map<String, FloatingActionButtonLocation> fabLocations = {
+    "centerdocked": FloatingActionButtonLocation.centerDocked,
+    "centerfloat": FloatingActionButtonLocation.centerFloat,
+    "centertop": FloatingActionButtonLocation.centerTop,
+    "endcontained": FloatingActionButtonLocation.endContained,
+    "enddocked": FloatingActionButtonLocation.endDocked,
+    "endfloat": FloatingActionButtonLocation.endFloat,
+    "endtop": FloatingActionButtonLocation.endTop,
+    "minicenterdocked": FloatingActionButtonLocation.miniCenterDocked,
+    "minicenterfloat": FloatingActionButtonLocation.miniCenterFloat,
+    "minicentertop": FloatingActionButtonLocation.miniCenterTop,
+    "miniendfloat": FloatingActionButtonLocation.miniEndFloat,
+    "miniendtop": FloatingActionButtonLocation.miniEndTop,
+    "ministartdocked": FloatingActionButtonLocation.miniStartDocked,
+    "ministartfloat": FloatingActionButtonLocation.miniStartFloat,
+    "ministarttop": FloatingActionButtonLocation.miniStartTop,
+    "startdocked": FloatingActionButtonLocation.startDocked,
+    "startfloat": FloatingActionButtonLocation.startFloat,
+    "starttop": FloatingActionButtonLocation.startTop
+  };
 
   try {
     OffsetDetails? fabLocationOffsetDetails = parseOffset(control, propName);
@@ -113,11 +113,8 @@ FloatingActionButtonLocation parseFloatingActionButtonLocation(
       return defValue;
     }
   } catch (e) {
-    return fabLocations.firstWhere(
-        (l) =>
-            l.toString().split('.').last.toLowerCase() ==
-            control.attrString(propName, "")!.toLowerCase(),
-        orElse: () => defValue);
+    var key = control.attrString(propName, "")!.toLowerCase();
+    return fabLocations.containsKey(key) ? fabLocations[key]! : defValue;
   }
 }
 
