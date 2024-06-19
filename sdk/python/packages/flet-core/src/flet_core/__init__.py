@@ -213,6 +213,11 @@ from flet_core.page import (
     RouteChangeEvent,
     ViewPopEvent,
     context,
+    WindowEvent,
+    WindowResizeEvent,
+    Window,
+    WindowEventType,
+    BrowserContextMenu,
 )
 from flet_core.pagelet import Pagelet
 from flet_core.painting import (

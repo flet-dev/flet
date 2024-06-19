@@ -1,3 +1,10 @@
+# 0.23.1
+
+* FIX: View.floating_action_button_location: conditionally use _set_attr.
+* FIX: Import `ParamSpec` from `typing` for Python >3.10.
+* FIX: replace `len(list(filter(...)))` by `any(...)`.
+* FIX: Make window and browser_context_menu private, and expose respective getters.
+
 # 0.23.0
 
 * NEW: `PermissionHandler` control ([#3276](https://github.com/flet-dev/flet/issues/3276))

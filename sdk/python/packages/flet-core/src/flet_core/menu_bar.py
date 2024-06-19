@@ -19,9 +19,7 @@ from flet_core.types import (
 @dataclass
 class MenuStyle:
     alignment: Optional[Alignment] = field(default=None)
-    bgcolor: Union[None, str, Dict[Union[str, ControlState], str]] = field(
-        default=None
-    )
+    bgcolor: Union[None, str, Dict[Union[str, ControlState], str]] = field(default=None)
     shadow_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
@@ -95,8 +93,8 @@ class MenuBar(Control):
 
     def before_update(self):
         super().before_update()
-        assert (
-            len(list(filter(lambda c: c.visible, self.__controls))) > 0
+        assert any(
+            c.visible for c in self.__controls
         ), "MenuBar must have at minimum one visible control"
         if self.__style is not None:
             self.__style.side = self._wrap_attr_dict(self.__style.side)
