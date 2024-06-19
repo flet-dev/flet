@@ -1,5 +1,4 @@
 import asyncio
-from functools import partial
 import json
 import logging
 import threading
@@ -10,6 +9,7 @@ from concurrent.futures import ThreadPoolExecutor, Future
 from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
+from functools import partial
 from typing import (
     Any,
     Awaitable,
@@ -22,10 +22,11 @@ from typing import (
     Type,
     TypeVar,
     Union,
-    cast
+    cast,
 )
-from typing_extensions import ParamSpec
 from urllib.parse import urlparse
+
+from typing_extensions import ParamSpec
 
 import flet_core
 from flet_core.adaptive_control import AdaptiveControl
@@ -541,8 +542,8 @@ class Page(AdaptiveControl):
         Control.__init__(self)
         self._id = "page"
         self._Control__uid = "page"
-        self.window = Window(self)
-        self.browser_context_menu = BrowserContextMenu(self)
+        self.__window = Window(self)
+        self.__browser_context_menu = BrowserContextMenu(self)
         self.__conn = conn
         self.__next_control_id = 1
         self.__snapshot: Dict[str, Dict[str, Any]] = {}
@@ -657,7 +658,7 @@ class Page(AdaptiveControl):
         self._set_attr_json("theme", self.__theme)
         self._set_attr_json("localeConfiguration", self.__locale_configuration)
         self._set_attr_json("darkTheme", self.__dark_theme)
-        self._set_attr_json("windowAlignment", self.window.alignment)
+        self._set_attr_json("windowAlignment", self.__window.alignment)
 
         # keyboard event
         if self.__on_keyboard_event.count() > 0:
@@ -1276,7 +1277,7 @@ class Page(AdaptiveControl):
         delete_version="0.26.0",
     )
     def window_to_front(self) -> None:
-        self.window.to_front()
+        self.__window.to_front()
 
     @deprecated(
         reason="Use Page.window.to_front() method instead.",
@@ -1284,7 +1285,7 @@ class Page(AdaptiveControl):
         delete_version="0.26.0",
     )
     async def window_to_front_async(self):
-        self.window.to_front()
+        self.__window.to_front()
 
     def scroll_to(
         self,
@@ -1663,7 +1664,7 @@ class Page(AdaptiveControl):
         delete_version="0.26.0",
     )
     def window_destroy(self) -> None:
-        self.window.destroy()
+        self.__window.destroy()
 
     @deprecated(
         reason="Use Page.window.destroy() method instead.",
@@ -1671,7 +1672,7 @@ class Page(AdaptiveControl):
         delete_version="0.26.0",
     )
     async def window_destroy_async(self):
-        self.window.destroy()
+        self.__window.destroy()
 
     @deprecated(
         reason="Use Page.window.center() method instead.",
@@ -1679,7 +1680,7 @@ class Page(AdaptiveControl):
         delete_version="0.26.0",
     )
     def window_center(self) -> None:
-        self.window.center()
+        self.__window.center()
 
     @deprecated(
         reason="Use Page.window.center() method instead.",
@@ -1687,7 +1688,7 @@ class Page(AdaptiveControl):
         delete_version="0.26.0",
     )
     async def window_center_async(self):
-        self.window.center()
+        self.__window.center()
 
     @deprecated(
         reason="Use Page.window.close() method instead.",
@@ -1695,7 +1696,7 @@ class Page(AdaptiveControl):
         delete_version="0.26.0",
     )
     def window_close(self) -> None:
-        self.window.close()
+        self.__window.close()
 
     @deprecated(
         reason="Use Page.window.close() method instead.",
@@ -1703,7 +1704,7 @@ class Page(AdaptiveControl):
         delete_version="0.26.0",
     )
     async def window_close_async(self):
-        self.window.close()
+        self.__window.close()
 
     # query
     @property
@@ -1951,6 +1952,16 @@ class Page(AdaptiveControl):
     def vertical_alignment(self, value: MainAxisAlignment):
         self.__default_view.vertical_alignment = value
 
+    # window
+    @property
+    def window(self) -> Window:
+        return self.__window
+
+    # browser_context_menu
+    @property
+    def browser_context_menu(self) -> BrowserContextMenu:
+        return self.__browser_context_menu
+
     # spacing
     @property
     def spacing(self) -> OptionalNumber:
@@ -2159,7 +2170,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_bgcolor(self) -> Optional[str]:
-        return self.window.bgcolor
+        return self.__window.bgcolor
 
     @window_bgcolor.setter
     @deprecated(
@@ -2169,7 +2180,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_bgcolor(self, value: Optional[str]):
-        self.window.bgcolor = value
+        self.__window.bgcolor = value
 
     # window_width
     @property
@@ -2180,7 +2191,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_width(self) -> OptionalNumber:
-        return self.window.width
+        return self.__window.width
 
     @window_width.setter
     @deprecated(
@@ -2190,7 +2201,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_width(self, value: OptionalNumber):
-        self.window.width = value
+        self.__window.width = value
 
     # window_height
     @property
@@ -2201,7 +2212,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_height(self) -> OptionalNumber:
-        return self.window.height
+        return self.__window.height
 
     @window_height.setter
     @deprecated(
@@ -2211,7 +2222,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_height(self, value: OptionalNumber):
-        self.window.height = value
+        self.__window.height = value
 
     # window_top
     @property
@@ -2222,7 +2233,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_top(self) -> OptionalNumber:
-        return self.window.top
+        return self.__window.top
 
     @window_top.setter
     @deprecated(
@@ -2232,7 +2243,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_top(self, value: OptionalNumber):
-        self.window.top = value
+        self.__window.top = value
 
     # window_left
     @property
@@ -2243,7 +2254,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_left(self) -> OptionalNumber:
-        return self.window.left
+        return self.__window.left
 
     @window_left.setter
     @deprecated(
@@ -2253,7 +2264,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_left(self, value: OptionalNumber):
-        self.window.left = value
+        self.__window.left = value
 
     # window_max_width
     @property
@@ -2264,7 +2275,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_max_width(self) -> OptionalNumber:
-        return self.window.max_width
+        return self.__window.max_width
 
     @window_max_width.setter
     @deprecated(
@@ -2274,7 +2285,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_max_width(self, value: OptionalNumber):
-        self.window.max_width = value
+        self.__window.max_width = value
 
     # window_max_height
     @property
@@ -2285,7 +2296,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_max_height(self) -> OptionalNumber:
-        return self.window.max_height
+        return self.__window.max_height
 
     @window_max_height.setter
     @deprecated(
@@ -2295,7 +2306,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_max_height(self, value: OptionalNumber):
-        self.window.max_height = value
+        self.__window.max_height = value
 
     # window_min_width
     @property
@@ -2306,7 +2317,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_min_width(self) -> OptionalNumber:
-        return self.window.min_width
+        return self.__window.min_width
 
     @window_min_width.setter
     @deprecated(
@@ -2316,7 +2327,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_min_width(self, value: OptionalNumber):
-        self.window.min_width = value
+        self.__window.min_width = value
 
     # window_min_height
     @property
@@ -2327,7 +2338,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_min_height(self) -> OptionalNumber:
-        return self.window.min_height
+        return self.__window.min_height
 
     @window_min_height.setter
     @deprecated(
@@ -2337,7 +2348,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_min_height(self, value: OptionalNumber):
-        self.window.min_height = value
+        self.__window.min_height = value
 
     # window_opacity
     @property
@@ -2348,7 +2359,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_opacity(self) -> OptionalNumber:
-        return self.window.opacity
+        return self.__window.opacity
 
     @window_opacity.setter
     @deprecated(
@@ -2358,7 +2369,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_opacity(self, value: OptionalNumber):
-        self.window.opacity = value
+        self.__window.opacity = value
 
     # window_maximized
     @property
@@ -2369,7 +2380,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_maximized(self) -> Optional[bool]:
-        return self.window.maximized
+        return self.__window.maximized
 
     @window_maximized.setter
     @deprecated(
@@ -2379,7 +2390,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_maximized(self, value: Optional[bool]):
-        self.window.maximized = value
+        self.__window.maximized = value
 
     # window_minimized
     @property
@@ -2390,7 +2401,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_minimized(self) -> Optional[bool]:
-        return self.window.minimized
+        return self.__window.minimized
 
     @window_minimized.setter
     @deprecated(
@@ -2400,7 +2411,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_minimized(self, value: Optional[bool]):
-        self.window.minimized = value
+        self.__window.minimized = value
 
     # window_minimizable
     @property
@@ -2411,7 +2422,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_minimizable(self) -> Optional[bool]:
-        return self.window.minimizable
+        return self.__window.minimizable
 
     @window_minimizable.setter
     @deprecated(
@@ -2421,7 +2432,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_minimizable(self, value: Optional[bool]):
-        self.window.minimizable = value
+        self.__window.minimizable = value
 
     # window_maximizable
     @property
@@ -2432,7 +2443,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_maximizable(self) -> Optional[bool]:
-        return self.window.maximizable
+        return self.__window.maximizable
 
     @window_maximizable.setter
     @deprecated(
@@ -2442,7 +2453,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_maximizable(self, value: Optional[bool]):
-        self.window.maximizable = value
+        self.__window.maximizable = value
 
     # window_resizable
     @property
@@ -2453,7 +2464,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_resizable(self) -> Optional[bool]:
-        return self.window.resizable
+        return self.__window.resizable
 
     @window_resizable.setter
     @deprecated(
@@ -2463,7 +2474,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_resizable(self, value: Optional[bool]):
-        self.window.resizable = value
+        self.__window.resizable = value
 
     # window_movable
     @property
@@ -2474,7 +2485,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_movable(self) -> Optional[bool]:
-        return self.window.movable
+        return self.__window.movable
 
     @window_movable.setter
     @deprecated(
@@ -2484,7 +2495,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_movable(self, value: Optional[bool]):
-        self.window.movable = value
+        self.__window.movable = value
 
     # window_full_screen
     @property
@@ -2495,7 +2506,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_full_screen(self) -> Optional[bool]:
-        return self.window.full_screen
+        return self.__window.full_screen
 
     @window_full_screen.setter
     @deprecated(
@@ -2505,7 +2516,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_full_screen(self, value: Optional[bool]):
-        self.window.full_screen = value
+        self.__window.full_screen = value
 
     # window_always_on_top
     @property
@@ -2516,7 +2527,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_always_on_top(self) -> Optional[bool]:
-        return self.window.always_on_top
+        return self.__window.always_on_top
 
     @window_always_on_top.setter
     @deprecated(
@@ -2526,7 +2537,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_always_on_top(self, value: Optional[bool]):
-        self.window.always_on_top = value
+        self.__window.always_on_top = value
 
     # window_always_on_bottom
     @property
@@ -2537,7 +2548,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_always_on_bottom(self) -> Optional[bool]:
-        return self.window.always_on_bottom
+        return self.__window.always_on_bottom
 
     @window_always_on_bottom.setter
     @deprecated(
@@ -2558,7 +2569,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_prevent_close(self) -> Optional[bool]:
-        return self.window.prevent_close
+        return self.__window.prevent_close
 
     @window_prevent_close.setter
     @deprecated(
@@ -2568,7 +2579,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_prevent_close(self, value: Optional[bool]):
-        self.window.prevent_close = value
+        self.__window.prevent_close = value
 
     # window_title_bar_hidden
     @property
@@ -2579,7 +2590,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_title_bar_hidden(self) -> Optional[bool]:
-        return self.window.title_bar_hidden
+        return self.__window.title_bar_hidden
 
     @window_title_bar_hidden.setter
     @deprecated(
@@ -2589,7 +2600,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_title_bar_hidden(self, value: Optional[bool]):
-        self.window.title_bar_hidden = value
+        self.__window.title_bar_hidden = value
 
     # window_title_bar_buttons_hidden
     @property
@@ -2600,7 +2611,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_title_bar_buttons_hidden(self) -> Optional[bool]:
-        return self.window.title_bar_buttons_hidden
+        return self.__window.title_bar_buttons_hidden
 
     @window_title_bar_buttons_hidden.setter
     @deprecated(
@@ -2610,7 +2621,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_title_bar_buttons_hidden(self, value: Optional[bool]):
-        self.window.title_bar_buttons_hidden = value
+        self.__window.title_bar_buttons_hidden = value
 
     # window_skip_task_bar
     @property
@@ -2621,7 +2632,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_skip_task_bar(self) -> Optional[bool]:
-        return self.window.skip_task_bar
+        return self.__window.skip_task_bar
 
     @window_skip_task_bar.setter
     @deprecated(
@@ -2631,7 +2642,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_skip_task_bar(self, value: Optional[bool]):
-        self.window.skip_taskbar = value
+        self.__window.skip_taskbar = value
 
     # window_frameless
     @property
@@ -2642,7 +2653,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_frameless(self) -> Optional[bool]:
-        return self.window.frameless
+        return self.__window.frameless
 
     @window_frameless.setter
     @deprecated(
@@ -2652,7 +2663,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_frameless(self, value: Optional[bool]):
-        self.window.frameless = value
+        self.__window.frameless = value
 
     # window_progress_bar
     @property
@@ -2663,7 +2674,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_progress_bar(self) -> OptionalNumber:
-        return self.window.progress_bar
+        return self.__window.progress_bar
 
     @window_progress_bar.setter
     @deprecated(
@@ -2673,7 +2684,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_progress_bar(self, value: OptionalNumber):
-        self.window.progress_bar = value
+        self.__window.progress_bar = value
 
     # window_focused
     @property
@@ -2684,7 +2695,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_focused(self) -> Optional[bool]:
-        return self.window.focused
+        return self.__window.focused
 
     @window_focused.setter
     @deprecated(
@@ -2694,7 +2705,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_focused(self, value: Optional[bool]):
-        self.window.focused = value
+        self.__window.focused = value
 
     # window_visible
     @property
@@ -2705,7 +2716,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_visible(self) -> Optional[bool]:
-        return self.window.visible
+        return self.__window.visible
 
     @window_visible.setter
     @deprecated(
@@ -2715,7 +2726,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def window_visible(self, value: Optional[bool]):
-        self.window.visible = value
+        self.__window.visible = value
 
     # on_scroll_interval
     @property
@@ -2744,7 +2755,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def on_resize(self):
-        return self.window.on_resized
+        return self.__window.on_resized
 
     @on_resize.setter
     @deprecated(
@@ -2754,7 +2765,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def on_resize(self, handler: OptionalEventCallback):
-        self.window.on_resized.subscribe(handler)
+        self.__window.on_resized.subscribe(handler)
 
     # on_platform_brightness_change
     @property
@@ -2812,7 +2823,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def on_window_event(self):
-        return self.window.on_event
+        return self.__window.on_event
 
     @on_window_event.setter
     @deprecated(
@@ -2822,7 +2833,7 @@ class Page(AdaptiveControl):
         is_method=False,
     )
     def on_window_event(self, handler: "Optional[Callable[[WindowEvent], None]]"):
-        self.window.on_event.subscribe(handler)
+        self.__window.on_event.subscribe(handler)
 
     # on_media_change
     @property
