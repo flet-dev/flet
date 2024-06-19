@@ -181,10 +181,13 @@ class View(ScrollableControl, AdaptiveControl):
         self, value: Union[FloatingActionButtonLocation, OffsetValue]
     ):
         self.__floating_action_button_location = value
-        self._set_attr(
-            "floatingActionButtonLocation",
-            value.value if isinstance(value, FloatingActionButtonLocation) else value,
-        )
+        if isinstance(value, (FloatingActionButtonLocation, str)):
+            self._set_attr(
+                "floatingActionButtonLocation",
+                value.value
+                if isinstance(value, FloatingActionButtonLocation)
+                else value,
+            )
 
     # navigation_bar
     @property
