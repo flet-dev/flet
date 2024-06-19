@@ -26,7 +26,10 @@ from typing import (
 )
 from urllib.parse import urlparse
 
-from typing_extensions import ParamSpec
+try:
+    from typing import ParamSpec
+except ImportError:
+    from typing_extensions import ParamSpec
 
 import flet_core
 from flet_core.adaptive_control import AdaptiveControl
