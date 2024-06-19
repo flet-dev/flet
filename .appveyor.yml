@@ -119,15 +119,15 @@ for:
             cd packages/flet
             echo "Running flet tests"
             flutter test || exit 1
-            dart pub publish --force
+            dart pub publish --force || exit 1
             cd $APPVEYOR_BUILD_FOLDER
 
-            sleep 10
+            sleep 120
 
             for dir in packages/flet_*; do
               cd "$dir"
               echo "Publishing $dir package"
-              dart pub publish --force
+              dart pub publish --force || exit 1
               cd "$APPVEYOR_BUILD_FOLDER"
             done
 
