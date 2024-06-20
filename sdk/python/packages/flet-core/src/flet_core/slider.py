@@ -135,7 +135,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
-        self.value = value if value else min
+        self.value = value if value is None else min
         self.label = label
         self.min = min
         self.max = max
