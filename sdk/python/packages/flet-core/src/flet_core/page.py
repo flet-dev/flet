@@ -1415,26 +1415,24 @@ class Page(AdaptiveControl):
     def open(self, control: Control) -> None:
         if not hasattr(control, "open"):
             raise ValueError("control has no open attribute")
+
+        control.open = True
+
+        if isinstance(control, NavigationDrawer):
+            if control.position == NavigationDrawerPosition.END:
+                if self.end_drawer != control:
+                    self.end_drawer = control
+                    self.update()
+            else:
+                if self.drawer != control:
+                    self.drawer = control
+                    self.update()
         else:
-            control.open = True
-            if isinstance(control, NavigationDrawer):
-                if control.position == NavigationDrawerPosition.END:
-                    if self.end_drawer == control:
-                        control.update()
-                        return
-                    else:
-                        self.end_drawer = control
-                else:
-                    if self.drawer == control:
-                        control.update()
-                        return
-                    else:
-                        self.drawer = control
-                self.update()  # called only if the new drawer is different from the current one
-            elif control not in self.__offstage.controls:
+            if control not in self.__offstage.controls:
                 self.__offstage.controls.append(control)
                 self.__offstage.update()
-            return
+
+        control.update()
 
     @staticmethod
     def close(control: Control) -> None:
