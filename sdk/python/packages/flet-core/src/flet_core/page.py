@@ -2763,7 +2763,7 @@ class Page(AdaptiveControl):
     def on_resized(self):
         return self.__on_resized
 
-    @on_resize.setter
+    @on_resized.setter
     def on_resized(self, handler: "Optional[Callable[[WindowResizeEvent], None]]"):
         self.__on_resized.subscribe(handler)
 
