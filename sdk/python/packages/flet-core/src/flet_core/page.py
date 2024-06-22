@@ -155,12 +155,10 @@ class Window:
         self.page = page
         self.__alignment = None
         self.__on_event = EventHandler(lambda e: WindowEvent(e))
-        self.__on_resized = EventHandler(lambda e: WindowResizeEvent(e))
         self.page._add_event_handler(
             "window_event",
             self.__on_event.get_handler(),
         )
-        self.page._add_event_handler("resized", self.__on_resized.get_handler())
 
     # bgcolor
     @property
@@ -500,15 +498,6 @@ class Window:
     def on_event(self, handler: "Optional[Callable[[WindowEvent], None]]"):
         self.__on_event.subscribe(handler)
 
-    # on_resize
-    @property
-    def on_resized(self):
-        return self.__on_resized
-
-    @on_resized.setter
-    def on_resized(self, handler: "Optional[Callable[[WindowReisizeEvent], None]]"):
-        self.__on_resized.subscribe(handler)
-
 
 class Page(AdaptiveControl):
     """
@@ -589,6 +578,8 @@ class Page(AdaptiveControl):
             "app_lifecycle_state_change",
             self.__on_app_lifecycle_state_change.get_handler(),
         )
+        self.__on_resized = EventHandler(lambda e: WindowResizeEvent(e))
+        self._add_event_handler("resized", self.__on_resized.get_handler())
 
         self.__last_route = None
 
@@ -2750,23 +2741,31 @@ class Page(AdaptiveControl):
     # on_resize
     @property
     @deprecated(
-        reason="Use Page.window.on_resized instead.",
+        reason="Use Page.on_resized instead.",
         version="0.23.0",
         delete_version="0.26.0",
         is_method=False,
     )
     def on_resize(self):
-        return self.__window.on_resized
+        return self.__on_resized
 
     @on_resize.setter
     @deprecated(
-        reason="Use Page.window.on_resized instead.",
+        reason="Use on_resized instead.",
         version="0.23.0",
         delete_version="0.26.0",
         is_method=False,
     )
-    def on_resize(self, handler: OptionalEventCallback):
-        self.__window.on_resized.subscribe(handler)
+    def on_resize(self, handler: "Optional[Callable[[WindowResizeEvent], None]]"):
+        self.__on_resized.subscribe(handler)
+
+    @property
+    def on_resized(self):
+        return self.__on_resized
+
+    @on_resize.setter
+    def on_resized(self, handler: "Optional[Callable[[WindowResizeEvent], None]]"):
+        self.__on_resized.subscribe(handler)
 
     # on_platform_brightness_change
     @property
