@@ -74,7 +74,7 @@ body:
     id: "flet-version"
     attributes:
       label: "Flet version"
-      description: "run `pip show flet` in your terminal to view your Flet version"
+      placeholder: "run `pip show flet` in your terminal to view your Flet version"
     validations:
       required: true
   - type: dropdown
