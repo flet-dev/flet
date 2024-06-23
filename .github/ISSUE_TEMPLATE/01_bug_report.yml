@@ -70,7 +70,7 @@ body:
       description: "For example: Debian 11.2"
     validations:
       required: true
-  - type: input
+  - type: textarea
     id: "flet-version"
     attributes:
       label: "Flet version"
