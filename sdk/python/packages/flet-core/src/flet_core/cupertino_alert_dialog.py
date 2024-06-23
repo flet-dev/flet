@@ -1,5 +1,6 @@
 from typing import Any, List, Optional
 
+from flet_core.types import OptionalEventCallback
 from flet_core.control import Control
 from flet_core.ref import Ref
 
@@ -91,7 +92,7 @@ class CupertinoAlertDialog(Control):
         title: Optional[Control] = None,
         content: Optional[Control] = None,
         actions: Optional[List[Control]] = None,
-        on_dismiss=None,
+        on_dismiss: OptionalEventCallback = None,
         #
         # Control
         #
@@ -178,9 +179,9 @@ class CupertinoAlertDialog(Control):
 
     # on_dismiss
     @property
-    def on_dismiss(self):
+    def on_dismiss(self) -> OptionalEventCallback:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler):
+    def on_dismiss(self, handler: OptionalEventCallback):
         self._add_event_handler("dismiss", handler)

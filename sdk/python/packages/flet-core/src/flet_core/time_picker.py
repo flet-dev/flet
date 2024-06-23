@@ -18,8 +18,9 @@ class TimePickerEntryMode(Enum):
 
 
 class TimePickerEntryModeChangeEvent(ControlEvent):
-    def __init__(self, entry_mode) -> None:
-        self.entry_mode: Optional[TimePickerEntryMode] = TimePickerEntryMode(entry_mode)
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        self.entry_mode: Optional[TimePickerEntryMode] = TimePickerEntryMode(e.data)
 
 
 class TimePicker(Control):
@@ -260,7 +261,7 @@ class TimePicker(Control):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallback:
         return self._get_event_handler("change")
 
     @on_change.setter
@@ -269,7 +270,7 @@ class TimePicker(Control):
 
     # on_dismiss
     @property
-    def on_dismiss(self):
+    def on_dismiss(self) -> OptionalEventCallback:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter

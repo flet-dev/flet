@@ -10,6 +10,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallback,
 )
 
 
@@ -79,7 +80,7 @@ class CupertinoSwitch(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallback = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -230,27 +231,27 @@ class CupertinoSwitch(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallback:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallback):
         self._add_event_handler("change", handler)
 
     # on_focus
     @property
-    def on_focus(self):
+    def on_focus(self) -> OptionalEventCallback:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler):
+    def on_focus(self, handler: OptionalEventCallback):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self):
+    def on_blur(self) -> OptionalEventCallback:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler):
+    def on_blur(self, handler: OptionalEventCallback):
         self._add_event_handler("blur", handler)

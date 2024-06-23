@@ -1,5 +1,6 @@
 from typing import Any, Optional
 
+from flet_core.types import OptionalEventCallback
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 
@@ -45,23 +46,23 @@ class Semantics(Control):
         link: Optional[bool] = None,
         header: Optional[bool] = None,
         image: Optional[bool] = None,
-        on_tap=None,
-        on_double_tap=None,
-        on_increase=None,
-        on_decrease=None,
-        on_dismiss=None,
-        on_scroll_left=None,
-        on_scroll_right=None,
-        on_scroll_up=None,
-        on_scroll_down=None,
-        on_copy=None,
-        on_cut=None,
-        on_paste=None,
-        on_long_press=None,
-        on_move_cursor_forward_by_character=None,
-        on_move_cursor_backward_by_character=None,
-        on_did_gain_accessibility_focus=None,
-        on_did_lose_accessibility_focus=None,
+            on_tap: OptionalEventCallback = None,
+            on_double_tap: OptionalEventCallback = None,
+            on_increase: OptionalEventCallback = None,
+            on_decrease: OptionalEventCallback = None,
+            on_dismiss: OptionalEventCallback = None,
+            on_scroll_left: OptionalEventCallback = None,
+            on_scroll_right: OptionalEventCallback = None,
+            on_scroll_up: OptionalEventCallback = None,
+            on_scroll_down: OptionalEventCallback = None,
+            on_copy: OptionalEventCallback = None,
+            on_cut: OptionalEventCallback = None,
+            on_paste: OptionalEventCallback = None,
+            on_long_press: OptionalEventCallback = None,
+            on_move_cursor_forward_by_character: OptionalEventCallback = None,
+            on_move_cursor_backward_by_character: OptionalEventCallback = None,
+            on_did_gain_accessibility_focus: OptionalEventCallback = None,
+            on_did_lose_accessibility_focus: OptionalEventCallback = None,
         #
         # Control
         #
@@ -388,141 +389,141 @@ class Semantics(Control):
 
     # on_tap
     @property
-    def on_tap(self):
+    def on_tap(self) -> OptionalEventCallback:
         return self._get_event_handler("tap")
 
     @on_tap.setter
-    def on_tap(self, handler):
+    def on_tap(self, handler: OptionalEventCallback):
         self._add_event_handler("tap", handler)
         self._set_attr("onTap", True if handler is not None else None)
 
     # on_double_tap
     @property
-    def on_double_tap(self):
+    def on_double_tap(self) -> OptionalEventCallback:
         return self._get_event_handler("double_tap")
 
     @on_double_tap.setter
-    def on_double_tap(self, handler):
+    def on_double_tap(self, handler: OptionalEventCallback):
         self._add_event_handler("double_tap", handler)
         self._set_attr("onDoubleTap", True if handler is not None else None)
 
     # on_increase
     @property
-    def on_increase(self):
+    def on_increase(self) -> OptionalEventCallback:
         return self._get_event_handler("increase")
 
     @on_increase.setter
-    def on_increase(self, handler):
+    def on_increase(self, handler: OptionalEventCallback):
         self._add_event_handler("increase", handler)
         self._set_attr("onIncrease", True if handler is not None else None)
 
     # on_decrease
     @property
-    def on_decrease(self):
+    def on_decrease(self) -> OptionalEventCallback:
         return self._get_event_handler("decrease")
 
     @on_decrease.setter
-    def on_decrease(self, handler):
+    def on_decrease(self, handler: OptionalEventCallback):
         self._add_event_handler("decrease", handler)
         self._set_attr("onDecrease", True if handler is not None else None)
 
     # on_dismiss
     @property
-    def on_dismiss(self):
+    def on_dismiss(self) -> OptionalEventCallback:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler):
+    def on_dismiss(self, handler: OptionalEventCallback):
         self._add_event_handler("dismiss", handler)
         self._set_attr("onDismiss", True if handler is not None else None)
 
     # on_scroll_left
     @property
-    def on_scroll_left(self):
+    def on_scroll_left(self) -> OptionalEventCallback:
         return self._get_event_handler("scroll_left")
 
     @on_scroll_left.setter
-    def on_scroll_left(self, handler):
+    def on_scroll_left(self, handler: OptionalEventCallback):
         self._add_event_handler("scroll_left", handler)
         self._set_attr("onScrollLeft", True if handler is not None else None)
 
     # on_scroll_right
     @property
-    def on_scroll_right(self):
+    def on_scroll_right(self) -> OptionalEventCallback:
         return self._get_event_handler("scroll_right")
 
     @on_scroll_right.setter
-    def on_scroll_right(self, handler):
+    def on_scroll_right(self, handler: OptionalEventCallback):
         self._add_event_handler("scroll_right", handler)
         self._set_attr("onScrollRight", True if handler is not None else None)
 
     # on_scroll_up
     @property
-    def on_scroll_up(self):
+    def on_scroll_up(self) -> OptionalEventCallback:
         return self._get_event_handler("scroll_up")
 
     @on_scroll_up.setter
-    def on_scroll_up(self, handler):
+    def on_scroll_up(self, handler: OptionalEventCallback):
         self._add_event_handler("scroll_up", handler)
         self._set_attr("onScrollUp", True if handler is not None else None)
 
     # on_scroll_down
     @property
-    def on_scroll_down(self):
+    def on_scroll_down(self) -> OptionalEventCallback:
         return self._get_event_handler("scroll_down")
 
     @on_scroll_down.setter
-    def on_scroll_down(self, handler):
+    def on_scroll_down(self, handler: OptionalEventCallback):
         self._add_event_handler("scroll_down", handler)
         self._set_attr("onScrollDown", True if handler is not None else None)
 
     # on_copy
     @property
-    def on_copy(self):
+    def on_copy(self) -> OptionalEventCallback:
         return self._get_event_handler("copy")
 
     @on_copy.setter
-    def on_copy(self, handler):
+    def on_copy(self, handler: OptionalEventCallback):
         self._add_event_handler("copy", handler)
         self._set_attr("onCopy", True if handler is not None else None)
 
     # on_cut
     @property
-    def on_cut(self):
+    def on_cut(self) -> OptionalEventCallback:
         return self._get_event_handler("cut")
 
     @on_cut.setter
-    def on_cut(self, handler):
+    def on_cut(self, handler: OptionalEventCallback):
         self._add_event_handler("cut", handler)
         self._set_attr("onCut", True if handler is not None else None)
 
     # on_paste
     @property
-    def on_paste(self):
+    def on_paste(self) -> OptionalEventCallback:
         return self._get_event_handler("paste")
 
     @on_paste.setter
-    def on_paste(self, handler):
+    def on_paste(self, handler: OptionalEventCallback):
         self._add_event_handler("paste", handler)
         self._set_attr("onPaste", True if handler is not None else None)
 
     # on_long_press
     @property
-    def on_long_press(self):
+    def on_long_press(self) -> OptionalEventCallback:
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler):
+    def on_long_press(self, handler: OptionalEventCallback):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # on_move_cursor_forward_by_character
     @property
-    def on_move_cursor_forward_by_character(self):
+    def on_move_cursor_forward_by_character(self) -> OptionalEventCallback:
         return self._get_event_handler("move_cursor_forward_by_character")
 
     @on_move_cursor_forward_by_character.setter
-    def on_move_cursor_forward_by_character(self, handler):
+    def on_move_cursor_forward_by_character(self, handler: OptionalEventCallback):
         self._add_event_handler("move_cursor_forward_by_character", handler)
         self._set_attr(
             "onMoveCursorForwardByCharacter", True if handler is not None else None
@@ -530,11 +531,11 @@ class Semantics(Control):
 
     # on_move_cursor_backward_by_character
     @property
-    def on_move_cursor_backward_by_character(self):
+    def on_move_cursor_backward_by_character(self) -> OptionalEventCallback:
         return self._get_event_handler("move_cursor_backward_by_character")
 
     @on_move_cursor_backward_by_character.setter
-    def on_move_cursor_backward_by_character(self, handler):
+    def on_move_cursor_backward_by_character(self, handler: OptionalEventCallback):
         self._add_event_handler("move_cursor_backward_by_character", handler)
         self._set_attr(
             "onMoveCursorBackwardByCharacter", True if handler is not None else None
@@ -542,11 +543,11 @@ class Semantics(Control):
 
     # on_did_gain_accessibility_focus
     @property
-    def on_did_gain_accessibility_focus(self):
+    def on_did_gain_accessibility_focus(self) -> OptionalEventCallback:
         return self._get_event_handler("did_gain_accessibility_focus")
 
     @on_did_gain_accessibility_focus.setter
-    def on_did_gain_accessibility_focus(self, handler):
+    def on_did_gain_accessibility_focus(self, handler: OptionalEventCallback):
         self._add_event_handler("did_gain_accessibility_focus", handler)
         self._set_attr(
             "onDidGainAccessibilityFocus", True if handler is not None else None
@@ -554,11 +555,11 @@ class Semantics(Control):
 
     # on_did_lose_accessibility_focus
     @property
-    def on_did_lose_accessibility_focus(self):
+    def on_did_lose_accessibility_focus(self) -> OptionalEventCallback:
         return self._get_event_handler("did_lose_accessibility_focus")
 
     @on_did_lose_accessibility_focus.setter
-    def on_did_lose_accessibility_focus(self, handler):
+    def on_did_lose_accessibility_focus(self, handler: OptionalEventCallback):
         self._add_event_handler("did_lose_accessibility_focus", handler)
         self._set_attr(
             "onDidLoseAccessibilityFocus", True if handler is not None else None

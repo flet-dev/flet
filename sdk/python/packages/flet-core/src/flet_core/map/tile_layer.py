@@ -270,7 +270,7 @@ class TileLayer(MapLayer):
 
     # on_image_error
     @property
-    def on_image_error(self):
+    def on_image_error(self) -> OptionalEventCallback:
         return self._get_event_handler("imageError")
 
     @on_image_error.setter

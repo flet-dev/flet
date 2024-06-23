@@ -12,6 +12,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallback,
 )
 
 
@@ -59,7 +60,7 @@ class BottomAppBar(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+            on_animation_end: OptionalEventCallback = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

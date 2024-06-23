@@ -11,6 +11,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallback,
 )
 
 try:
@@ -44,7 +45,7 @@ class Markdown(ConstrainedControl):
         code_style: Optional[TextStyle] = None,
         auto_follow_links: Optional[bool] = None,
         auto_follow_links_target: Optional[str] = None,
-        on_tap_link=None,
+        on_tap_link: OptionalEventCallback = None,
         #
         # ConstrainedControl
         #
@@ -70,7 +71,7 @@ class Markdown(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallback = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -192,9 +193,9 @@ class Markdown(ConstrainedControl):
 
     # on_tap_link
     @property
-    def on_tap_link(self):
+    def on_tap_link(self) -> OptionalEventCallback:
         return self._get_event_handler("tap_link")
 
     @on_tap_link.setter
-    def on_tap_link(self, handler):
+    def on_tap_link(self, handler: OptionalEventCallback):
         self._add_event_handler("tap_link", handler)

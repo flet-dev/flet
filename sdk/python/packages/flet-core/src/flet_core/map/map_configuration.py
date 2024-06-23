@@ -266,7 +266,7 @@ class MapConfiguration(Control):
 
     # on_init
     @property
-    def on_init(self):
+    def on_init(self) -> OptionalEventCallback:
         return self._get_event_handler("init")
 
     @on_init.setter

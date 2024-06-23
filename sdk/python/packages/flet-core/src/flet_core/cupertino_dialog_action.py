@@ -1,5 +1,6 @@
 from typing import Any, Optional
 
+from flet_core.types import OptionalEventCallback
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
@@ -65,7 +66,7 @@ class CupertinoDialogAction(Control):
         is_default_action: Optional[bool] = None,
         is_destructive_action: Optional[bool] = None,
         text_style: Optional[TextStyle] = None,
-        on_click=None,
+        on_click: OptionalEventCallback = None,
         #
         # Specific
         #
@@ -131,11 +132,11 @@ class CupertinoDialogAction(Control):
 
     # on_click
     @property
-    def on_click(self):
+    def on_click(self) -> OptionalEventCallback:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalEventCallback):
         self._add_event_handler("click", handler)
 
     # content

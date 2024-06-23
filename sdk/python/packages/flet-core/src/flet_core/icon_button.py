@@ -17,6 +17,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     UrlTarget,
+    OptionalEventCallback,
 )
 from flet_core.utils import deprecated
 
@@ -85,9 +86,9 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         url_target: Optional[UrlTarget] = None,
         mouse_cursor: Optional[MouseCursor] = None,
         visual_density: Optional[ThemeVisualDensity] = None,
-        on_click=None,
-        on_focus=None,
-        on_blur=None,
+        on_click: OptionalEventCallback = None,
+        on_focus: OptionalEventCallback = None,
+        on_blur: OptionalEventCallback = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -113,7 +114,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallback = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -395,11 +396,11 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     # on_click
     @property
-    def on_click(self):
+    def on_click(self) -> OptionalEventCallback:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalEventCallback):
         self._add_event_handler("click", handler)
 
     # content
@@ -422,20 +423,20 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     # on_focus
     @property
-    def on_focus(self):
+    def on_focus(self) -> OptionalEventCallback:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler):
+    def on_focus(self, handler: OptionalEventCallback):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self):
+    def on_blur(self) -> OptionalEventCallback:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler):
+    def on_blur(self, handler: OptionalEventCallback):
         self._add_event_handler("blur", handler)
 
     # alignment

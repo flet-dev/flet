@@ -16,6 +16,7 @@ from flet_core.types import (
     ScaleValue,
     ClipBehavior,
     ControlState,
+    OptionalEventCallback,
 )
 
 
@@ -92,11 +93,11 @@ class Chip(ConstrainedControl):
         clip_behavior: Optional[ClipBehavior] = None,
         visual_density: Optional[ThemeVisualDensity] = None,
         border_side: Optional[BorderSide] = None,
-        on_click=None,
-        on_delete=None,
-        on_select=None,
-        on_focus=None,
-        on_blur=None,
+            on_click: OptionalEventCallback = None,
+            on_delete: OptionalEventCallback = None,
+            on_select: OptionalEventCallback = None,
+            on_focus: OptionalEventCallback = None,
+            on_blur: OptionalEventCallback = None,
         #
         # ConstrainedControl
         #
@@ -121,7 +122,7 @@ class Chip(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+            on_animation_end: OptionalEventCallback = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -448,7 +449,7 @@ class Chip(ConstrainedControl):
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalEventCallback):
         self._add_event_handler("click", handler)
         self._set_attr("onclick", True if handler is not None else None)
 
@@ -458,7 +459,7 @@ class Chip(ConstrainedControl):
         return self._get_event_handler("delete")
 
     @on_delete.setter
-    def on_delete(self, handler):
+    def on_delete(self, handler: OptionalEventCallback):
         self._add_event_handler("delete", handler)
         self._set_attr("onDelete", True if handler is not None else None)
 
@@ -468,7 +469,7 @@ class Chip(ConstrainedControl):
         return self._get_event_handler("select")
 
     @on_select.setter
-    def on_select(self, handler):
+    def on_select(self, handler: OptionalEventCallback):
         self._add_event_handler("select", handler)
         self._set_attr("onSelect", True if handler is not None else None)
 
@@ -478,7 +479,7 @@ class Chip(ConstrainedControl):
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler):
+    def on_focus(self, handler: OptionalEventCallback):
         self._add_event_handler("focus", handler)
 
     # on_blur
@@ -487,5 +488,5 @@ class Chip(ConstrainedControl):
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler):
+    def on_blur(self, handler: OptionalEventCallback):
         self._add_event_handler("blur", handler)

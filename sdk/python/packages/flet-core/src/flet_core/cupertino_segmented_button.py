@@ -10,6 +10,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     PaddingValue,
+    OptionalEventCallback,
 )
 
 
@@ -31,7 +32,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
         border_color: Optional[str] = None,
         padding: PaddingValue = None,
         click_color: Optional[str] = None,
-        on_change=None,
+        on_change: OptionalEventCallback = None,
         #
         # ConstrainedControl
         #
@@ -57,7 +58,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallback = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -185,9 +186,9 @@ class CupertinoSegmentedButton(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallback:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallback):
         self._add_event_handler("change", handler)

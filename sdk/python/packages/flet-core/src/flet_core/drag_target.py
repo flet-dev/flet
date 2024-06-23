@@ -127,12 +127,8 @@ class DragTarget(Control):
             data=data,
         )
 
-        def convert_event_data(e):
-            d = json.loads(e.data)
-            return DragTargetEvent(**d)
-
-        self.__on_accept = EventHandler(convert_event_data)
-        self.__on_move = EventHandler(convert_event_data)
+        self.__on_accept = EventHandler(lambda e: DragTargetEvent(e))
+        self.__on_move = EventHandler(lambda e: DragTargetEvent(e))
         self._add_event_handler("accept", self.__on_accept.get_handler())
         self._add_event_handler("move", self.__on_move.get_handler())
 
@@ -210,20 +206,24 @@ class DragTarget(Control):
 
 
 class DragTargetAcceptEvent(ControlEvent):
-    def __init__(self, src_id, x, y) -> None:
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
         warn(
             f"{self.__class__.__name__} is deprecated since version 0.22.0 "
             f"and will be removed in version 0.26.0. Use DragTargetEvent instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
-        self.src_id: float = src_id
-        self.x: float = x
-        self.y: float = y
+        self.src_id: float = d["src_id"]
+        self.x: float = d["x"]
+        self.y: float = d["y"]
 
 
 class DragTargetEvent(ControlEvent):
-    def __init__(self, src_id, x, y) -> None:
-        self.src_id: float = src_id
-        self.x: float = x
-        self.y: float = y
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.src_id: float = d["src_id"]
+        self.x: float = d["x"]
+        self.y: float = d["y"]

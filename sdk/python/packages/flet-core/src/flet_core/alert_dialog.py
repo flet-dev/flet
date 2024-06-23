@@ -417,7 +417,7 @@ class AlertDialog(AdaptiveControl):
 
     # on_dismiss
     @property
-    def on_dismiss(self):
+    def on_dismiss(self) -> OptionalEventCallback:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter

@@ -16,6 +16,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TextAlign,
+    OptionalEventCallback,
 )
 from flet_core.utils import deprecated
 
@@ -90,10 +91,10 @@ class Video(ConstrainedControl):
         pitch: OptionalNumber = None,
         configuration: Optional[VideoConfiguration] = None,
         subtitle_configuration: Optional[VideoSubtitleConfiguration] = None,
-        on_loaded=None,
-        on_enter_fullscreen=None,
-        on_exit_fullscreen=None,
-        on_error=None,
+        on_loaded: OptionalEventCallback = None,
+        on_enter_fullscreen: OptionalEventCallback = None,
+        on_exit_fullscreen: OptionalEventCallback = None,
+        on_error: OptionalEventCallback = None,
         #
         # ConstrainedControl
         #
@@ -117,7 +118,7 @@ class Video(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallback = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -558,36 +559,36 @@ class Video(ConstrainedControl):
         return self._get_event_handler("enter_fullscreen")
 
     @on_enter_fullscreen.setter
-    def on_enter_fullscreen(self, handler):
+    def on_enter_fullscreen(self, handler: OptionalEventCallback):
         self._add_event_handler("enter_fullscreen", handler)
         self._set_attr("onEnterFullscreen", True if handler is not None else None)
 
     # on_exit_fullscreen
     @property
-    def on_exit_fullscreen(self):
+    def on_exit_fullscreen(self) -> OptionalEventCallback:
         return self._get_event_handler("exit_fullscreen")
 
     @on_exit_fullscreen.setter
-    def on_exit_fullscreen(self, handler):
+    def on_exit_fullscreen(self, handler: OptionalEventCallback):
         self._add_event_handler("exit_fullscreen", handler)
         self._set_attr("onExitFullscreen", True if handler is not None else None)
 
     # on_loaded
     @property
-    def on_loaded(self):
+    def on_loaded(self) -> OptionalEventCallback:
         return self._get_event_handler("loaded")
 
     @on_loaded.setter
-    def on_loaded(self, handler):
+    def on_loaded(self, handler: OptionalEventCallback):
         self._set_attr("onLoaded", True if handler is not None else None)
         self._add_event_handler("loaded", handler)
 
     # on_error
     @property
-    def on_error(self):
+    def on_error(self) -> OptionalEventCallback:
         return self._get_event_handler("error")
 
     @on_error.setter
-    def on_error(self, handler):
+    def on_error(self, handler: OptionalEventCallback):
         self._set_attr("onError", True if handler is not None else None)
         self._add_event_handler("error", handler)

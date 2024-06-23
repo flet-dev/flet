@@ -77,7 +77,7 @@ class SimpleAttribution(MapLayer):
 
     # on_click
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallback:
         return self._get_event_handler("click")
 
     @on_change.setter
