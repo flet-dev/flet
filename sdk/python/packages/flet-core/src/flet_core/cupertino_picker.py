@@ -9,7 +9,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallback,
+    OptionalEventCallable,
 )
 
 
@@ -34,7 +34,7 @@ class CupertinoPicker(ConstrainedControl):
         squeeze: OptionalNumber = None,
         diameter_ratio: OptionalNumber = None,
         off_axis_fraction: OptionalNumber = None,
-        on_change: OptionalEventCallback = None,
+        on_change: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -60,7 +60,7 @@ class CupertinoPicker(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallback = None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -214,9 +214,9 @@ class CupertinoPicker(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallback:
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallback):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)

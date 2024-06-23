@@ -6,7 +6,7 @@ from flet_core.navigation_bar import NavigationBarDestination
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
-    OptionalEventCallback,
+    OptionalEventCallable,
     OffsetValue,
     OptionalNumber,
     ResponsiveNumber,
@@ -63,7 +63,7 @@ class CupertinoNavigationBar(ConstrainedControl):
         inactive_color: Optional[str] = None,
         border: Optional[Border] = None,
         icon_size: OptionalNumber = None,
-        on_change: OptionalEventCallback = None,
+        on_change: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -88,7 +88,7 @@ class CupertinoNavigationBar(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallback = None,
+        on_animation_end: OptionalEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -206,9 +206,9 @@ class CupertinoNavigationBar(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallback:
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallback):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)

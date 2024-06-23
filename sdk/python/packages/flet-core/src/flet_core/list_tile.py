@@ -17,7 +17,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     UrlTarget,
-    OptionalEventCallback,
+    OptionalEventCallable,
 )
 
 
@@ -136,7 +136,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallback = None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -539,38 +539,38 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # on_click
     @property
-    def on_click(self) -> OptionalEventCallback:
+    def on_click(self) -> OptionalEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler: OptionalEventCallback):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)
         self._set_attr("onclick", True if handler is not None else None)
 
     # on_long_press
     @property
-    def on_long_press(self) -> OptionalEventCallback:
+    def on_long_press(self) -> OptionalEventCallable:
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler: OptionalEventCallback):
+    def on_long_press(self, handler: OptionalEventCallable):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # on_focus
     @property
-    def on_focus(self) -> OptionalEventCallback:
+    def on_focus(self) -> OptionalEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler: OptionalEventCallback):
+    def on_focus(self, handler: OptionalEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self) -> OptionalEventCallback:
+    def on_blur(self) -> OptionalEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler: OptionalEventCallback):
+    def on_blur(self, handler: OptionalEventCallable):
         self._add_event_handler("blur", handler)

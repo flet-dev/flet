@@ -13,7 +13,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     ClipBehavior,
-    OptionalEventCallback,
+    OptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -101,7 +101,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallback = None,
+        on_animation_end: OptionalEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

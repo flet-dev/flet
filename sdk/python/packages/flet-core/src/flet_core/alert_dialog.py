@@ -10,7 +10,7 @@ from flet_core.types import (
     ClipBehavior,
     MainAxisAlignment,
     PaddingValue,
-    OptionalEventCallback,
+    OptionalEventCallable,
 )
 
 
@@ -91,7 +91,7 @@ class AlertDialog(AdaptiveControl):
         title_text_style: Optional[TextStyle] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         semantics_label: Optional[str] = None,
-        on_dismiss: OptionalEventCallback = None,
+        on_dismiss: OptionalEventCallable = None,
         #
         # AdaptiveControl
         #
@@ -417,9 +417,9 @@ class AlertDialog(AdaptiveControl):
 
     # on_dismiss
     @property
-    def on_dismiss(self) -> OptionalEventCallback:
+    def on_dismiss(self) -> OptionalEventCallable:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler: OptionalEventCallback):
+    def on_dismiss(self, handler: OptionalEventCallable):
         self._add_event_handler("dismiss", handler)

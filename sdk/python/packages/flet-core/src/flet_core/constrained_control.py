@@ -8,7 +8,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallback,
+    OptionalEventCallable,
 )
 
 
@@ -45,7 +45,7 @@ class ConstrainedControl(Control):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallback = None,
+        on_animation_end: OptionalEventCallable = None,
     ):
         Control.__init__(
             self,
@@ -250,10 +250,10 @@ class ConstrainedControl(Control):
 
     # on_animation_end
     @property
-    def on_animation_end(self) -> OptionalEventCallback:
+    def on_animation_end(self) -> OptionalEventCallable:
         return self._get_event_handler("animation_end")
 
     @on_animation_end.setter
-    def on_animation_end(self, handler: OptionalEventCallback):
+    def on_animation_end(self, handler: OptionalEventCallable):
         self._add_event_handler("animation_end", handler)
         self._set_attr("onAnimationEnd", True if handler is not None else None)

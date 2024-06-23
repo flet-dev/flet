@@ -13,7 +13,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     UrlTarget,
-    OptionalEventCallback,
+    OptionalEventCallable,
 )
 
 
@@ -87,7 +87,7 @@ class FloatingActionButton(ConstrainedControl):
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
         mouse_cursor: Optional[MouseCursor] = None,
-        on_click: OptionalEventCallback = None,
+        on_click: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -113,7 +113,7 @@ class FloatingActionButton(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallback = None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -242,11 +242,11 @@ class FloatingActionButton(ConstrainedControl):
 
     # on_click
     @property
-    def on_click(self) -> OptionalEventCallback:
+    def on_click(self) -> OptionalEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler: OptionalEventCallback):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)
 
     # content

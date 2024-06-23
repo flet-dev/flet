@@ -14,7 +14,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallback,
+    OptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -48,7 +48,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         on_confirm_dismiss: Optional[
             Callable[["DismissibleDismissEvent"], None]
         ] = None,
-        on_resize: OptionalEventCallback = None,
+        on_resize: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -73,7 +73,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallback = None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -284,7 +284,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("resize")
 
     @on_resize.setter
-    def on_resize(self, handler: OptionalEventCallback):
+    def on_resize(self, handler: OptionalEventCallable):
         self._add_event_handler("resize", handler)
         self._set_attr("onResize", True if handler is not None else None)
 

@@ -11,7 +11,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallback,
+    OptionalEventCallable,
 )
 
 
@@ -51,7 +51,7 @@ class CupertinoDatePicker(ConstrainedControl):
         use_24h_format: Optional[bool] = None,
         date_picker_mode: Optional[CupertinoDatePickerMode] = None,
         date_order: Optional[CupertinoDatePickerDateOrder] = None,
-        on_change: OptionalEventCallback = None,
+        on_change: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -77,7 +77,7 @@ class CupertinoDatePicker(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallback = None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -249,9 +249,9 @@ class CupertinoDatePicker(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallback:
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallback):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)

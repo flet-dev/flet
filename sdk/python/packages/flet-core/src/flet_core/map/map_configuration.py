@@ -5,7 +5,7 @@ from typing import Optional, Union, Callable
 
 from flet_core.control import OptionalNumber, Control
 from flet_core.event_handler import EventHandler
-from flet_core.types import ControlEvent, OptionalEventCallback
+from flet_core.types import ControlEvent, OptionalEventCallable
 
 
 @dataclass
@@ -83,7 +83,7 @@ class MapConfiguration(Control):
         keep_alive: Optional[bool] = None,
         max_zoom: OptionalNumber = None,
         min_zoom: OptionalNumber = None,
-        on_init: OptionalEventCallback = None,
+        on_init: OptionalEventCallable = None,
         on_tap: Optional[Callable[["MapTapEvent"], None]] = None,
         on_secondary_tap: Optional[Callable[["MapTapEvent"], None]] = None,
         on_long_press: Optional[Callable[["MapTapEvent"], None]] = None,
@@ -266,11 +266,11 @@ class MapConfiguration(Control):
 
     # on_init
     @property
-    def on_init(self) -> OptionalEventCallback:
+    def on_init(self) -> OptionalEventCallable:
         return self._get_event_handler("init")
 
     @on_init.setter
-    def on_init(self, handler: OptionalEventCallback):
+    def on_init(self, handler: OptionalEventCallable):
         self._add_event_handler("init", handler)
         self._set_attr("onInit", True if handler is not None else None)
 

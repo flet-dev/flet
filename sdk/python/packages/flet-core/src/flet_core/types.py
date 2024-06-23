@@ -359,7 +359,7 @@ class StrokeJoin(Enum):
 
 
 # Events
-OptionalEventCallback = Optional[Callable[[ControlEvent], None]]
+OptionalEventCallable = Optional[Callable[[ControlEvent], None]]
 
 # Wrapper
 Wrapper = Callable[..., Any]

@@ -10,7 +10,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallback,
+    OptionalEventCallable,
 )
 
 
@@ -86,9 +86,9 @@ class RangeSlider(ConstrainedControl):
         active_color: Optional[str] = None,
         inactive_color: Optional[str] = None,
         overlay_color: Union[None, str, Dict[ControlState, str]] = None,
-        on_change: OptionalEventCallback = None,
-        on_change_start: OptionalEventCallback = None,
-        on_change_end: OptionalEventCallback = None,
+        on_change: OptionalEventCallable = None,
+        on_change_start: OptionalEventCallable = None,
+        on_change_end: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -114,7 +114,7 @@ class RangeSlider(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallback = None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -270,27 +270,27 @@ class RangeSlider(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallback:
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallback):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # on_change_start
     @property
-    def on_change_start(self) -> OptionalEventCallback:
+    def on_change_start(self) -> OptionalEventCallable:
         return self._get_event_handler("change_start")
 
     @on_change_start.setter
-    def on_change_start(self, handler: OptionalEventCallback):
+    def on_change_start(self, handler: OptionalEventCallable):
         self._add_event_handler("change_start", handler)
 
     # on_change_end
     @property
-    def on_change_end(self) -> OptionalEventCallback:
+    def on_change_end(self) -> OptionalEventCallable:
         return self._get_event_handler("change_end")
 
     @on_change_end.setter
-    def on_change_end(self, handler: OptionalEventCallback):
+    def on_change_end(self, handler: OptionalEventCallable):
         self._add_event_handler("change_end", handler)

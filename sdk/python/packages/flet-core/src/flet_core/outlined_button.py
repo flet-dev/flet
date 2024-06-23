@@ -14,7 +14,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     UrlTarget,
-    OptionalEventCallback,
+    OptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -53,11 +53,11 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
         clip_behavior: Optional[ClipBehavior] = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
-        on_click: OptionalEventCallback = None,
-        on_long_press: OptionalEventCallback = None,
-        on_hover: OptionalEventCallback = None,
-        on_focus: OptionalEventCallback = None,
-        on_blur: OptionalEventCallback = None,
+        on_click: OptionalEventCallable = None,
+        on_long_press: OptionalEventCallable = None,
+        on_hover: OptionalEventCallable = None,
+        on_focus: OptionalEventCallable = None,
+        on_blur: OptionalEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -83,7 +83,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallback = None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -223,20 +223,20 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
 
     # on_click
     @property
-    def on_click(self) -> OptionalEventCallback:
+    def on_click(self) -> OptionalEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler: OptionalEventCallback):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)
 
     # on_long_press
     @property
-    def on_long_press(self) -> OptionalEventCallback:
+    def on_long_press(self) -> OptionalEventCallable:
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler: OptionalEventCallback):
+    def on_long_press(self, handler: OptionalEventCallable):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
@@ -270,28 +270,28 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
 
     # on_hover
     @property
-    def on_hover(self) -> OptionalEventCallback:
+    def on_hover(self) -> OptionalEventCallable:
         return self._get_event_handler("hover")
 
     @on_hover.setter
-    def on_hover(self, handler: OptionalEventCallback):
+    def on_hover(self, handler: OptionalEventCallable):
         self._add_event_handler("hover", handler)
         self._set_attr("onHover", True if handler is not None else None)
 
     # on_focus
     @property
-    def on_focus(self) -> OptionalEventCallback:
+    def on_focus(self) -> OptionalEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler: OptionalEventCallback):
+    def on_focus(self, handler: OptionalEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self) -> OptionalEventCallback:
+    def on_blur(self) -> OptionalEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler: OptionalEventCallback):
+    def on_blur(self, handler: OptionalEventCallable):
         self._add_event_handler("blur", handler)

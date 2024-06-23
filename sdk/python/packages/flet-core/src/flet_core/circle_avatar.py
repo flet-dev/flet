@@ -10,7 +10,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallback,
+    OptionalEventCallable,
 )
 
 
@@ -83,7 +83,7 @@ class CircleAvatar(ConstrainedControl):
         radius: OptionalNumber = None,
         min_radius: OptionalNumber = None,
         max_radius: OptionalNumber = None,
-        on_image_error: OptionalEventCallback = None,
+        on_image_error: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -109,7 +109,7 @@ class CircleAvatar(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallback = None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -292,5 +292,5 @@ class CircleAvatar(ConstrainedControl):
         return self._get_event_handler("imageError")
 
     @on_image_error.setter
-    def on_image_error(self, handler: OptionalEventCallback):
+    def on_image_error(self, handler: OptionalEventCallable):
         self._add_event_handler("imageError", handler)

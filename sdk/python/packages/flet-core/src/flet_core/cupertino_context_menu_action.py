@@ -1,6 +1,6 @@
 from typing import Any, Optional
 
-from flet_core.types import OptionalEventCallback
+from flet_core.types import OptionalEventCallable
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.control import Control
 from flet_core.ref import Ref
@@ -22,7 +22,7 @@ class CupertinoContextMenuAction(AdaptiveControl):
         is_default_action: Optional[bool] = None,
         is_destructive_action: Optional[bool] = None,
         trailing_icon: Optional[str] = None,
-        on_click: OptionalEventCallback = None,
+        on_click: OptionalEventCallable = None,
         #
         # Control
         #
@@ -102,9 +102,9 @@ class CupertinoContextMenuAction(AdaptiveControl):
 
     # on_click
     @property
-    def on_click(self) -> OptionalEventCallback:
+    def on_click(self) -> OptionalEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler: OptionalEventCallback):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)

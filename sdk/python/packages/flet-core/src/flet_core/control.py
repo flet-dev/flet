@@ -21,7 +21,7 @@ from flet_core.types import (
     OptionalNumber,
     ResponsiveNumber,
     SupportsStr,
-    OptionalEventCallback,
+    OptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -72,7 +72,7 @@ class Control:
         self.data = data
         self.rtl = rtl
 
-        self.__event_handlers: Dict[str, OptionalEventCallback] = {}
+        self.__event_handlers: Dict[str, OptionalEventCallable] = {}
         self.parent: Optional[Control] = None
 
     def is_isolated(self) -> bool:
@@ -102,11 +102,11 @@ class Control:
         )
 
     def _add_event_handler(
-        self, event_name: str, handler: OptionalEventCallback
+        self, event_name: str, handler: OptionalEventCallable
     ) -> None:
         self.__event_handlers[event_name] = handler
 
-    def _get_event_handler(self, event_name: str) -> OptionalEventCallback:
+    def _get_event_handler(self, event_name: str) -> OptionalEventCallable:
         return self.__event_handlers.get(event_name)
 
     def _get_attr(

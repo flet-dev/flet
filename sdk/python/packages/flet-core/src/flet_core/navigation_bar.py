@@ -9,7 +9,7 @@ from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
-    OptionalEventCallback,
+    OptionalEventCallable,
     MaterialState,
     OffsetValue,
     OptionalNumber,
@@ -213,7 +213,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         border: Optional[Border] = None,
         animation_duration: Optional[int] = None,
         overlay_color: Union[None, str, Dict[ControlState, str]] = None,
-        on_change: OptionalEventCallback = None,
+        on_change: OptionalEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -412,9 +412,9 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallback:
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallback):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)

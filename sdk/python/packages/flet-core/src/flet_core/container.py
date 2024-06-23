@@ -30,7 +30,7 @@ from flet_core.types import (
     ScaleValue,
     ThemeMode,
     UrlTarget,
-    OptionalEventCallback,
+    OptionalEventCallable,
 )
 
 
@@ -97,10 +97,10 @@ class Container(ConstrainedControl, AdaptiveControl):
         theme: Optional[Theme] = None,
         theme_mode: Optional[ThemeMode] = None,
         color_filter: Optional[ColorFilter] = None,
-        on_click: OptionalEventCallback = None,
+        on_click: OptionalEventCallable = None,
         on_tap_down: Optional[Callable[["ContainerTapEvent"], None]] = None,
-        on_long_press: OptionalEventCallback = None,
-        on_hover: OptionalEventCallback = None,
+        on_long_press: OptionalEventCallable = None,
+        on_hover: OptionalEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -126,7 +126,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallback = None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -487,7 +487,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler: OptionalEventCallback):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)
         self._set_attr("onClick", True if handler is not None else None)
 
@@ -507,7 +507,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler: OptionalEventCallback):
+    def on_long_press(self, handler: OptionalEventCallable):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
@@ -517,7 +517,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("hover")
 
     @on_hover.setter
-    def on_hover(self, handler: OptionalEventCallback):
+    def on_hover(self, handler: OptionalEventCallable):
         self._add_event_handler("hover", handler)
         self._set_attr("onHover", True if handler is not None else None)
 

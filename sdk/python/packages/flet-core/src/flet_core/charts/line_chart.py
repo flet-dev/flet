@@ -16,7 +16,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallback,
+    OptionalEventCallable,
 )
 
 
@@ -43,7 +43,7 @@ class LineChart(ConstrainedControl):
         baseline_y: OptionalNumber = None,
         min_y: OptionalNumber = None,
         max_y: OptionalNumber = None,
-            on_chart_event: Optional[Callable[["LineChartEvent"], None]] = None,
+        on_chart_event: Optional[Callable[["LineChartEvent"], None]] = None,
         #
         # ConstrainedControl
         #
@@ -68,7 +68,7 @@ class LineChart(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-            on_animation_end: OptionalEventCallback = None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

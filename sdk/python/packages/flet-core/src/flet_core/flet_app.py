@@ -8,7 +8,7 @@ from flet_core.types import (
     OffsetValue,
     RotateValue,
     ScaleValue,
-    OptionalEventCallback,
+    OptionalEventCallable,
 )
 
 
@@ -18,7 +18,7 @@ class FletApp(ConstrainedControl):
         url: Optional[str] = None,
         reconnect_interval_ms: Optional[int] = None,
         reconnect_timeout_ms: Optional[int] = None,
-        on_error: OptionalEventCallback = None,
+        on_error: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -42,7 +42,7 @@ class FletApp(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallback = None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -114,9 +114,9 @@ class FletApp(ConstrainedControl):
 
     # on_error
     @property
-    def on_error(self) -> OptionalEventCallback:
+    def on_error(self) -> OptionalEventCallable:
         return self._get_event_handler("error")
 
     @on_error.setter
-    def on_error(self, handler: OptionalEventCallback):
+    def on_error(self, handler: OptionalEventCallable):
         self._add_event_handler("error", handler)

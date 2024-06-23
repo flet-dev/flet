@@ -14,7 +14,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallback,
+    OptionalEventCallable,
 )
 
 
@@ -130,7 +130,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallback = None,
+        on_animation_end: OptionalEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -366,11 +366,11 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     # on_tap
     @property
-    def on_tap(self) -> OptionalEventCallback:
+    def on_tap(self) -> OptionalEventCallable:
         return self._get_event_handler("tap")
 
     @on_tap.setter
-    def on_tap(self, handler: OptionalEventCallback):
+    def on_tap(self, handler: OptionalEventCallable):
         self._add_event_handler("tap", handler)
         self._set_attr("onTap", True if handler is not None else None)
 
@@ -415,21 +415,21 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     # on_multi_long_press
     @property
-    def on_multi_long_press(self) -> OptionalEventCallback:
+    def on_multi_long_press(self) -> OptionalEventCallable:
         return self._get_event_handler("multi_long_press")
 
     @on_multi_long_press.setter
-    def on_multi_long_press(self, handler: OptionalEventCallback):
+    def on_multi_long_press(self, handler: OptionalEventCallable):
         self._add_event_handler("multi_long_press", handler)
         self._set_attr("onMultiLongPress", True if handler is not None else None)
 
     # on_secondary_tap
     @property
-    def on_secondary_tap(self) -> OptionalEventCallback:
+    def on_secondary_tap(self) -> OptionalEventCallable:
         return self._get_event_handler("secondary_tap")
 
     @on_secondary_tap.setter
-    def on_secondary_tap(self, handler: OptionalEventCallback):
+    def on_secondary_tap(self, handler: OptionalEventCallable):
         self._add_event_handler("secondary_tap", handler)
         self._set_attr("onSecondaryTap", True if handler is not None else None)
 

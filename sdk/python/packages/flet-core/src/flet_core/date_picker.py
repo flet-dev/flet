@@ -7,7 +7,7 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.textfield import KeyboardType
-from flet_core.types import ResponsiveNumber, OptionalEventCallback
+from flet_core.types import ResponsiveNumber, OptionalEventCallable
 from flet_core.utils import deprecated
 
 try:
@@ -98,8 +98,8 @@ class DatePicker(Control):
         field_label_text: Optional[str] = None,
         switch_to_calendar_icon: Optional[str] = None,
         switch_to_input_icon: Optional[str] = None,
-        on_change: OptionalEventCallback = None,
-        on_dismiss: OptionalEventCallback = None,
+        on_change: OptionalEventCallable = None,
+        on_dismiss: OptionalEventCallable = None,
         on_entry_mode_change: Optional[
             Callable[[DatePickerEntryModeChangeEvent], None]
         ] = None,
@@ -356,20 +356,20 @@ class DatePicker(Control):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallback:
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallback):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # on_dismiss
     @property
-    def on_dismiss(self) -> OptionalEventCallback:
+    def on_dismiss(self) -> OptionalEventCallable:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler: OptionalEventCallback):
+    def on_dismiss(self, handler: OptionalEventCallable):
         self._add_event_handler("dismiss", handler)
 
     # on_entry_mode_change

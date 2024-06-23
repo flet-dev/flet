@@ -12,7 +12,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallback,
+    OptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -35,10 +35,10 @@ class MenuItemButton(ConstrainedControl):
         trailing: Optional[Control] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         style: Optional[ButtonStyle] = None,
-        on_click: OptionalEventCallback = None,
-        on_hover: OptionalEventCallback = None,
-        on_focus: OptionalEventCallback = None,
-        on_blur: OptionalEventCallback = None,
+        on_click: OptionalEventCallable = None,
+        on_hover: OptionalEventCallable = None,
+        on_focus: OptionalEventCallable = None,
+        on_blur: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -64,7 +64,7 @@ class MenuItemButton(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallback = None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -225,28 +225,28 @@ class MenuItemButton(ConstrainedControl):
 
     # on_hover
     @property
-    def on_hover(self) -> OptionalEventCallback:
+    def on_hover(self) -> OptionalEventCallable:
         return self._get_event_handler("hover")
 
     @on_hover.setter
-    def on_hover(self, handler: OptionalEventCallback):
+    def on_hover(self, handler: OptionalEventCallable):
         self._add_event_handler("hover", handler)
         self._set_attr("onHover", True if handler is not None else None)
 
     # on_focus
     @property
-    def on_focus(self) -> OptionalEventCallback:
+    def on_focus(self) -> OptionalEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler: OptionalEventCallback):
+    def on_focus(self, handler: OptionalEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self) -> OptionalEventCallback:
+    def on_blur(self) -> OptionalEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler: OptionalEventCallback):
+    def on_blur(self, handler: OptionalEventCallable):
         self._add_event_handler("blur", handler)

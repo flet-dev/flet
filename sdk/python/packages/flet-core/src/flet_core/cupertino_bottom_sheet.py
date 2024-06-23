@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import PaddingValue, OptionalEventCallback
+from flet_core.types import PaddingValue, OptionalEventCallable
 
 
 class CupertinoBottomSheet(Control):
@@ -22,7 +22,7 @@ class CupertinoBottomSheet(Control):
         bgcolor: Optional[str] = None,
         height: OptionalNumber = None,
         padding: PaddingValue = None,
-        on_dismiss: OptionalEventCallback = None,
+        on_dismiss: OptionalEventCallable = None,
         #
         # Control
         #
@@ -119,9 +119,9 @@ class CupertinoBottomSheet(Control):
 
     # on_dismiss
     @property
-    def on_dismiss(self) -> OptionalEventCallback:
+    def on_dismiss(self) -> OptionalEventCallable:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler: OptionalEventCallback):
+    def on_dismiss(self, handler: OptionalEventCallable):
         self._add_event_handler("dismiss", handler)

@@ -16,7 +16,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallback,
+    OptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -54,9 +54,9 @@ class SearchBar(ConstrainedControl):
         keyboard_type: Optional[KeyboardType] = None,
         view_surface_tint_color: Optional[str] = None,
         autofocus: Optional[bool] = None,
-        on_tap: OptionalEventCallback = None,
-        on_submit: OptionalEventCallback = None,
-        on_change: OptionalEventCallback = None,
+        on_tap: OptionalEventCallable = None,
+        on_submit: OptionalEventCallable = None,
+        on_change: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -78,7 +78,7 @@ class SearchBar(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallback = None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -409,30 +409,30 @@ class SearchBar(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallback:
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallback):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
         self._set_attr("onchange", True if handler is not None else None)
 
     # on_tap
     @property
-    def on_tap(self) -> OptionalEventCallback:
+    def on_tap(self) -> OptionalEventCallable:
         return self._get_event_handler("tap")
 
     @on_tap.setter
-    def on_tap(self, handler: OptionalEventCallback):
+    def on_tap(self, handler: OptionalEventCallable):
         self._add_event_handler("tap", handler)
         self._set_attr("ontap", True if handler is not None else None)
 
     # on_submit
     @property
-    def on_submit(self) -> OptionalEventCallback:
+    def on_submit(self) -> OptionalEventCallable:
         return self._get_event_handler("submit")
 
     @on_submit.setter
-    def on_submit(self, handler: OptionalEventCallback):
+    def on_submit(self, handler: OptionalEventCallable):
         self._add_event_handler("submit", handler)
         self._set_attr("onsubmit", True if handler is not None else None)

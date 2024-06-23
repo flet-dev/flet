@@ -8,7 +8,7 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
-    OptionalEventCallback,
+    OptionalEventCallable,
     OffsetValue,
     OptionalNumber,
     PaddingValue,
@@ -233,7 +233,7 @@ class NavigationRail(ConstrainedControl):
         group_alignment: OptionalNumber = None,
         selected_label_text_style: Optional[TextStyle] = None,
         unselected_label_text_style: Optional[TextStyle] = None,
-        on_change: OptionalEventCallback = None,
+        on_change: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -348,11 +348,11 @@ class NavigationRail(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallback:
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallback):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # selected_index

@@ -2,7 +2,7 @@ import asyncio
 from typing import Callable
 
 from flet_core.control_event import ControlEvent
-from flet_core.types import OptionalEventCallback
+from flet_core.types import OptionalEventCallable
 
 
 class EventHandler:
@@ -31,7 +31,7 @@ class EventHandler:
 
         return fn
 
-    def subscribe(self, handler: OptionalEventCallback):
+    def subscribe(self, handler: OptionalEventCallable):
         if handler is not None:
             self.__handlers[handler] = True
 

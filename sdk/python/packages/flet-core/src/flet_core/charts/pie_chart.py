@@ -13,7 +13,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallback,
+    OptionalEventCallable,
 )
 
 
@@ -26,7 +26,7 @@ class PieChart(ConstrainedControl):
         sections_space: OptionalNumber = None,
         start_degree_offset: OptionalNumber = None,
         animate: AnimationValue = None,
-            on_chart_event: Optional[Callable[["PieChartEvent"], None]] = None,
+        on_chart_event: Optional[Callable[["PieChartEvent"], None]] = None,
         #
         # ConstrainedControl
         #
@@ -51,7 +51,7 @@ class PieChart(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-            on_animation_end: OptionalEventCallback = None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
