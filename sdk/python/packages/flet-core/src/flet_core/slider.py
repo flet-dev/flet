@@ -13,6 +13,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 
@@ -65,11 +66,11 @@ class Slider(ConstrainedControl, AdaptiveControl):
         overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         secondary_track_value: OptionalNumber = None,
         mouse_cursor: Optional[MouseCursor] = None,
-        on_change=None,
-        on_change_start=None,
-        on_change_end=None,
-        on_focus=None,
-        on_blur=None,
+        on_change: OptionalEventCallable = None,
+        on_change_start: OptionalEventCallable = None,
+        on_change_end: OptionalEventCallable = None,
+        on_focus: OptionalEventCallable = None,
+        on_blur: OptionalEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -95,7 +96,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -310,45 +311,45 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # on_change_start
     @property
-    def on_change_start(self):
+    def on_change_start(self) -> OptionalEventCallable:
         return self._get_event_handler("change_start")
 
     @on_change_start.setter
-    def on_change_start(self, handler):
+    def on_change_start(self, handler: OptionalEventCallable):
         self._add_event_handler("change_start", handler)
 
     # on_change_end
     @property
-    def on_change_end(self):
+    def on_change_end(self) -> OptionalEventCallable:
         return self._get_event_handler("change_end")
 
     @on_change_end.setter
-    def on_change_end(self, handler):
+    def on_change_end(self, handler: OptionalEventCallable):
         self._add_event_handler("change_end", handler)
 
     # on_focus
     @property
-    def on_focus(self):
+    def on_focus(self) -> OptionalEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler):
+    def on_focus(self, handler: OptionalEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self):
+    def on_blur(self) -> OptionalEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler):
+    def on_blur(self, handler: OptionalEventCallable):
         self._add_event_handler("blur", handler)

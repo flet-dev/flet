@@ -1,5 +1,5 @@
 import json
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union, Callable
 
 from flet_core.border import Border, BorderSide
 from flet_core.constrained_control import ConstrainedControl
@@ -19,13 +19,16 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     ClipBehavior,
+    OptionalEventCallable,
 )
 
 
 class DataColumnSortEvent(ControlEvent):
-    def __init__(self, i, a) -> None:
-        self.column_index: int = i
-        self.ascending: bool = a
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.column_index: int = d["i"]
+        self.ascending: bool = d["a"]
 
 
 class DataColumn(Control):
@@ -34,7 +37,7 @@ class DataColumn(Control):
         label: Control,
         numeric: Optional[bool] = None,
         tooltip: Optional[str] = None,
-        on_sort=None,
+        on_sort: Optional[Callable[[DataColumnSortEvent], None]] = None,
         #
         # Control
         #
@@ -45,9 +48,7 @@ class DataColumn(Control):
     ):
         Control.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
-        self.__on_sort = EventHandler(
-            lambda e: DataColumnSortEvent(**json.loads(e.data))
-        )
+        self.__on_sort = EventHandler(lambda e: DataColumnSortEvent(e))
         self._add_event_handler("sort", self.__on_sort.get_handler())
 
         self.label = label
@@ -99,7 +100,7 @@ class DataColumn(Control):
         return self.__on_sort
 
     @on_sort.setter
-    def on_sort(self, handler):
+    def on_sort(self, handler: Optional[Callable[[DataColumnSortEvent], None]]):
         self.__on_sort.subscribe(handler)
         self._set_attr("onSort", True if handler is not None else None)
 
@@ -110,11 +111,11 @@ class DataCell(Control):
         content: Control,
         placeholder: Optional[bool] = None,
         show_edit_icon: Optional[bool] = None,
-        on_tap=None,
-        on_double_tap=None,
-        on_long_press=None,
-        on_tap_cancel=None,
-        on_tap_down=None,
+        on_tap: OptionalEventCallable = None,
+        on_double_tap: OptionalEventCallable = None,
+        on_long_press: OptionalEventCallable = None,
+        on_tap_cancel: OptionalEventCallable = None,
+        on_tap_down: Optional[Callable[[TapEvent], None]] = None,
         #
         # Control
         #
@@ -125,7 +126,7 @@ class DataCell(Control):
     ):
         Control.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
-        self.__on_tap_down = EventHandler(lambda e: TapEvent(**json.loads(e.data)))
+        self.__on_tap_down = EventHandler(lambda e: TapEvent(e))
         self._add_event_handler("tap_down", self.__on_tap_down.get_handler())
 
         self.content = content
@@ -176,41 +177,41 @@ class DataCell(Control):
 
     # on_double_tap
     @property
-    def on_double_tap(self):
+    def on_double_tap(self) -> OptionalEventCallable:
         return self._get_event_handler("double_tap")
 
     @on_double_tap.setter
-    def on_double_tap(self, handler):
+    def on_double_tap(self, handler: OptionalEventCallable):
         self._add_event_handler("double_tap", handler)
         self._set_attr("onDoubleTap", True if handler is not None else None)
 
     # on_long_press
     @property
-    def on_long_press(self):
+    def on_long_press(self) -> OptionalEventCallable:
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler):
+    def on_long_press(self, handler: OptionalEventCallable):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # on_tap
     @property
-    def on_tap(self):
+    def on_tap(self) -> OptionalEventCallable:
         return self._get_event_handler("tap")
 
     @on_tap.setter
-    def on_tap(self, handler):
+    def on_tap(self, handler: OptionalEventCallable):
         self._add_event_handler("tap", handler)
         self._set_attr("onTap", True if handler is not None else None)
 
     # on_tap_cancel
     @property
-    def on_tap_cancel(self):
+    def on_tap_cancel(self) -> OptionalEventCallable:
         return self._get_event_handler("tap_cancel")
 
     @on_tap_cancel.setter
-    def on_tap_cancel(self, handler):
+    def on_tap_cancel(self, handler: OptionalEventCallable):
         self._add_event_handler("tap_cancel", handler)
         self._set_attr("onTapCancel", True if handler is not None else None)
 
@@ -220,7 +221,7 @@ class DataCell(Control):
         return self.__on_tap_down
 
     @on_tap_down.setter
-    def on_tap_down(self, handler):
+    def on_tap_down(self, handler: Optional[Callable[[TapEvent], None]]):
         self.__on_tap_down.subscribe(handler)
         self._set_attr("onTapDown", True if handler is not None else None)
 
@@ -231,8 +232,8 @@ class DataRow(Control):
         cells: List[DataCell],
         color: Union[None, str, Dict[ControlState, str]] = None,
         selected: Optional[bool] = None,
-        on_long_press=None,
-        on_select_changed=None,
+        on_long_press: OptionalEventCallable = None,
+        on_select_changed: OptionalEventCallable = None,
         #
         # Control
         #
@@ -294,21 +295,21 @@ class DataRow(Control):
 
     # on_long_press
     @property
-    def on_long_press(self):
+    def on_long_press(self) -> OptionalEventCallable:
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler):
+    def on_long_press(self, handler: OptionalEventCallable):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # on_select_changed
     @property
-    def on_select_changed(self):
+    def on_select_changed(self) -> OptionalEventCallable:
         return self._get_event_handler("select_changed")
 
     @on_select_changed.setter
-    def on_select_changed(self, handler):
+    def on_select_changed(self, handler: OptionalEventCallable):
         self._add_event_handler("select_changed", handler)
         self._set_attr("onSelectChanged", True if handler is not None else None)
 
@@ -340,7 +341,7 @@ class DataTable(ConstrainedControl):
         heading_text_style: Optional[TextStyle] = None,
         horizontal_margin: OptionalNumber = None,
         clip_behavior: Optional[ClipBehavior] = None,
-        on_select_all=None,
+        on_select_all: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -366,7 +367,7 @@ class DataTable(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -692,11 +693,11 @@ class DataTable(ConstrainedControl):
 
     # on_select_all
     @property
-    def on_select_all(self):
+    def on_select_all(self) -> OptionalEventCallable:
         return self._get_event_handler("select_all")
 
     @on_select_all.setter
-    def on_select_all(self, handler):
+    def on_select_all(self, handler: OptionalEventCallable):
         self._add_event_handler("select_all", handler)
         self._set_attr("onSelectAll", True if handler is not None else None)
 

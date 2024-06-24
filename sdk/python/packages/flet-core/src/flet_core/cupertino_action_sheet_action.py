@@ -9,6 +9,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 
@@ -27,7 +28,7 @@ class CupertinoActionSheetAction(ConstrainedControl):
         content: Optional[Control] = None,
         is_default_action: Optional[bool] = None,
         is_destructive_action: Optional[bool] = None,
-        on_click=None,
+        on_click: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -53,7 +54,7 @@ class CupertinoActionSheetAction(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -149,9 +150,9 @@ class CupertinoActionSheetAction(ConstrainedControl):
 
     # on_click
     @property
-    def on_click(self):
+    def on_click(self) -> OptionalEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)

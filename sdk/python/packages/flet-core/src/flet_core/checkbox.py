@@ -17,6 +17,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 
@@ -75,9 +76,9 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         is_error: Optional[bool] = None,
         visual_density: Optional[ThemeVisualDensity] = None,
         mouse_cursor: Optional[MouseCursor] = None,
-        on_change=None,
-        on_focus=None,
-        on_blur=None,
+        on_change: OptionalEventCallable = None,
+        on_focus: OptionalEventCallable = None,
+        on_blur: OptionalEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -103,7 +104,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -362,7 +363,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # on_focus
@@ -371,7 +372,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler):
+    def on_focus(self, handler: OptionalEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
@@ -380,5 +381,5 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler):
+    def on_blur(self, handler: OptionalEventCallable):
         self._add_event_handler("blur", handler)

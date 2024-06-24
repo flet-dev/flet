@@ -5,7 +5,7 @@ from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
-    OptionalEventCallback,
+    OptionalEventCallable,
     OptionalNumber,
     PaddingValue,
 )
@@ -180,8 +180,8 @@ class NavigationDrawer(Control):
         surface_tint_color: Optional[str] = None,
         tile_padding: PaddingValue = None,
         position: Optional[NavigationDrawerPosition] = None,
-        on_change: OptionalEventCallback = None,
-        on_dismiss: OptionalEventCallback = None,
+        on_change: OptionalEventCallable = None,
+        on_dismiss: OptionalEventCallable = None,
         #
         # Control
         #
@@ -324,18 +324,18 @@ class NavigationDrawer(Control):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallback:
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallback):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # on_dismiss
     @property
-    def on_dismiss(self) -> OptionalEventCallback:
+    def on_dismiss(self) -> OptionalEventCallable:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler: OptionalEventCallback):
+    def on_dismiss(self, handler: OptionalEventCallable):
         self._add_event_handler("dismiss", handler)

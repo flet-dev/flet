@@ -3,7 +3,7 @@ from typing import Any, Optional
 from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import OptionalEventCallback
+from flet_core.types import OptionalEventCallable
 
 
 class TextSourceAttribution(Control):
@@ -21,7 +21,7 @@ class TextSourceAttribution(Control):
         text: str,
         text_style: Optional[TextStyle] = None,
         prepend_copyright: Optional[bool] = None,
-        on_click: OptionalEventCallback = None,
+        on_click: OptionalEventCallable = None,
         #
         # Control
         #
@@ -79,9 +79,9 @@ class TextSourceAttribution(Control):
 
     # on_click
     @property
-    def on_click(self):
+    def on_click(self) -> OptionalEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler: OptionalEventCallback):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)

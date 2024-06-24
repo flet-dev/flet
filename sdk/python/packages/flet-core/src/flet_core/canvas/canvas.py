@@ -1,5 +1,6 @@
 import json
-from typing import Any, List, Optional, Union
+from dataclasses import dataclass
+from typing import Any, List, Optional, Union, Callable
 
 from flet_core.canvas.shape import Shape
 from flet_core.constrained_control import ConstrainedControl
@@ -13,6 +14,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -48,7 +50,7 @@ class Canvas(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -82,11 +84,7 @@ class Canvas(ConstrainedControl):
             data=data,
         )
 
-        def convert_custom_paint_resize_event_data(e):
-            d = json.loads(e.data)
-            return CanvasResizeEvent(**d)
-
-        self.__on_resize = EventHandler(convert_custom_paint_resize_event_data)
+        self.__on_resize = EventHandler(lambda e: CanvasResizeEvent(e))
         self._add_event_handler("resize", self.__on_resize.get_handler())
 
         self.shapes = shapes
@@ -148,15 +146,15 @@ class Canvas(ConstrainedControl):
         return self.__on_resize
 
     @on_resize.setter
-    def on_resize(self, handler):
+    def on_resize(self, handler: Optional[Callable[["CanvasResizeEvent"], None]]):
         self.__on_resize.subscribe(handler)
-        if handler is not None:
-            self._set_attr("onresize", True)
-        else:
-            self._set_attr("onresize", None)
+        self._set_attr("onresize", True if handler is not None else None)
 
 
+@dataclass
 class CanvasResizeEvent(ControlEvent):
-    def __init__(self, w, h) -> None:
-        self.width: float = w
-        self.height: float = h
+    def __init__(self, e: ControlEvent) -> None:
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.width: float = d["w"]
+        self.height: float = d["h"]

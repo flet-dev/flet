@@ -14,6 +14,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TextAlign,
+    OptionalEventCallable,
 )
 
 try:
@@ -94,7 +95,7 @@ class Text(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

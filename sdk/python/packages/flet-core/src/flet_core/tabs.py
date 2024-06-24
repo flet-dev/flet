@@ -17,6 +17,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TabAlignment,
+    OptionalEventCallable,
 )
 
 
@@ -162,7 +163,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         enable_feedback: Optional[str] = None,
         mouse_cursor: Optional[MouseCursor] = None,
         clip_behavior: Optional[ClipBehavior] = None,
-        on_change=None,
+        on_change: OptionalEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -188,7 +189,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -272,11 +273,11 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # selected_index

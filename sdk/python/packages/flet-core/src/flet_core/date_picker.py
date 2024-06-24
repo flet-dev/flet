@@ -1,13 +1,13 @@
 from datetime import date, datetime
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, Callable
 
 from flet_core import ControlEvent
 from flet_core.control import Control, OptionalNumber
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.textfield import KeyboardType
-from flet_core.types import ResponsiveNumber
+from flet_core.types import ResponsiveNumber, OptionalEventCallable
 from flet_core.utils import deprecated
 
 try:
@@ -29,8 +29,9 @@ class DatePickerEntryMode(Enum):
 
 
 class DatePickerEntryModeChangeEvent(ControlEvent):
-    def __init__(self, entry_mode) -> None:
-        self.entry_mode: Optional[DatePickerEntryMode] = DatePickerEntryMode(entry_mode)
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        self.entry_mode: Optional[DatePickerEntryMode] = DatePickerEntryMode(e.data)
 
 
 class DatePicker(Control):
@@ -97,9 +98,11 @@ class DatePicker(Control):
         field_label_text: Optional[str] = None,
         switch_to_calendar_icon: Optional[str] = None,
         switch_to_input_icon: Optional[str] = None,
-        on_change=None,
-        on_dismiss=None,
-        on_entry_mode_change=None,
+        on_change: OptionalEventCallable = None,
+        on_dismiss: OptionalEventCallable = None,
+        on_entry_mode_change: Optional[
+            Callable[[DatePickerEntryModeChangeEvent], None]
+        ] = None,
         #
         # ConstrainedControl
         #
@@ -353,20 +356,20 @@ class DatePicker(Control):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # on_dismiss
     @property
-    def on_dismiss(self):
+    def on_dismiss(self) -> OptionalEventCallable:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler):
+    def on_dismiss(self, handler: OptionalEventCallable):
         self._add_event_handler("dismiss", handler)
 
     # on_entry_mode_change
@@ -375,5 +378,7 @@ class DatePicker(Control):
         return self.__on_entry_mode_change
 
     @on_entry_mode_change.setter
-    def on_entry_mode_change(self, handler):
+    def on_entry_mode_change(
+        self, handler: Optional[Callable[[DatePickerEntryModeChangeEvent], None]]
+    ):
         self.__on_entry_mode_change.subscribe(handler)
