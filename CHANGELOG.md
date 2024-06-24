@@ -1,5 +1,17 @@
 # Flet changelog
 
+# 0.23.2
+
+* CHANGED: Enhance Typing of Event Handlers ([#3523](https://github.com/flet-dev/flet/issues/3523))
+* CHANGED: Delete Page.window.on_resize | deprecate Page.on_resize in favor of Page.on_resized ([#3516](https://github.com/flet-dev/flet/issues/3516))
+* CHANGED: View is not opened on tap ([#3513](https://github.com/flet-dev/flet/issues/3513))
+* FIXED: `Slider.value` defaults to `min` ([#3503](https://github.com/flet-dev/flet/issues/3503))
+* FIXED: add "hide" and "show" to WindowEventType enum ([#3505](https://github.com/flet-dev/flet/issues/3505))
+* FIXED: TypeError raised for isinstance check with Union in before_update method ([#3499](https://github.com/flet-dev/flet/issues/3499))
+* FIXED: Corrected `isinstance` check in `SnackBar.before_update` to use a tuple of types instead of Union, resolving TypeError: "Subscripted generics cannot be used with class and instance checks".
+* FIXED: `Page.open()` breaking after multiple calls.
+* FIXED: Typo in on_resized setter decorator
+
 # 0.23.1
 
 * FIX: Fix parseFloatingActionButtonLocation() to work on desktop ([#3496](https://github.com/flet-dev/flet/issues/3496))
