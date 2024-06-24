@@ -176,7 +176,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     # value
     @property
     def value(self) -> OptionalNumber:
-        return self._get_attr("value", data_type="float", def_value=0)
+        return self._get_attr("value", data_type="float", def_value=self.min or 0)
 
     @value.setter
     def value(self, value: OptionalNumber):

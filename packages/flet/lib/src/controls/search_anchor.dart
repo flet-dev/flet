@@ -202,7 +202,6 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
               if (onTap) {
                 widget.backend.triggerControlEvent(widget.control.id, "tap");
               }
-              controller.openView();
             },
             onSubmitted: onSubmit
                 ? (String value) {

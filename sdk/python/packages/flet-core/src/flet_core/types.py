@@ -26,6 +26,8 @@ class WindowEventType(Enum):
     CLOSE = "close"
     FOCUS = "focus"
     BLUR = "blur"
+    HIDE = "hide"
+    SHOW = "show"
     MAXIMIZE = "maximize"
     UNMAXIMIZE = "unmaximize"
     MINIMIZE = "minimize"
