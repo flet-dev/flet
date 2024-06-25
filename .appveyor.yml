@@ -432,7 +432,7 @@ for:
 
       # publish package
       - sh: |
-          if [[ "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
+          if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
               twine upload packages/flet-core/dist/* packages/flet-runtime/dist/* packages/flet-embed/dist/* packages/flet/dist/* packages/flet-pyodide/dist/*
           fi
 
