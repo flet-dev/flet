@@ -385,6 +385,7 @@ for:
     install:
       - python --version
       - cd sdk/python
+      - pip install --upgrade importlib-metadata==7.2.1
       - pip install --upgrade setuptools wheel twine poetry tomlkit virtualenv
       - poetry install
 
