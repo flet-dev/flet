@@ -57,7 +57,6 @@ class FilePickerResultEvent(ControlEvent):
                 self.files.append(FilePickerFile(**fd))
 
 
-@dataclass
 class FilePickerUploadEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
