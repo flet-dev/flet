@@ -133,7 +133,7 @@ class _ListViewControlState extends State<ListViewControl> {
 
         child = ScrollableControl(
             control: widget.control,
-            scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
+            scrollDirection: scrollDirection,
             scrollController: _controller,
             backend: widget.backend,
             parentAdaptive: adaptive,

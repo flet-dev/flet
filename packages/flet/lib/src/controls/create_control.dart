@@ -101,6 +101,8 @@ import 'semantics_service.dart';
 import 'shader_mask.dart';
 import 'shake_detector.dart';
 import 'slider.dart';
+import 'sliver_grid_view.dart';
+import 'sliver_list_view.dart';
 import 'snack_bar.dart';
 import 'stack.dart';
 import 'submenu_button.dart';
@@ -695,8 +697,26 @@ Widget createWidget(
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           backend: backend);
+    case "sliver_list_view":
+      return SliverListViewControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
     case "gridview":
       return GridViewControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
+    case "sliver_grid_view":
+      return SliverGridViewControl(
           key: key,
           parent: parent,
           control: controlView.control,
