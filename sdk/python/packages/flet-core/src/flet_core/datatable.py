@@ -27,8 +27,8 @@ class DataColumnSortEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.column_index: int = d["i"]
-        self.ascending: bool = d["a"]
+        self.column_index: int = d.get("i")
+        self.ascending: bool = d.get("a")
 
 
 class DataColumn(Control):

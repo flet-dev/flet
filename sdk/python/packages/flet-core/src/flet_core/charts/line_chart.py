@@ -352,8 +352,8 @@ class LineChartEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.type: str = d["type"]
-        self.spots: List[LineChartEventSpot] = d["spots"]
+        self.type: str = d.get("type")
+        self.spots: List[LineChartEventSpot] = d.get("spots")
 
 
 class LineChartEventSpot:

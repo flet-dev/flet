@@ -180,7 +180,7 @@ class PieChartEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.type: str = d["type"]
-        self.section_index: int = d["section_index"]
-        # self.radius: float = d["radius"]
-        # self.angle: float = d["angle"]
+        self.type: str = d.get("type")
+        self.section_index: int = d.get("section_index")
+        # self.radius: float = d.get("radius")
+        # self.angle: float = d.get("angle")

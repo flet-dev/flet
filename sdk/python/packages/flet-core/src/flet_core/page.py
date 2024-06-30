@@ -1116,7 +1116,7 @@ class Page(AdaptiveControl):
     async def __on_authorize_async(self, e) -> None:
         assert self.__authorization
         d = json.loads(e.data)
-        state = d["state"]
+        state = d.get("state")
         assert state == self.__authorization.state
 
         if not self.web:
@@ -1129,8 +1129,8 @@ class Page(AdaptiveControl):
 
                 self.window_to_front()
         login_evt = LoginEvent(
-            error=d["error"],
-            error_description=d["error_description"],
+            error=d.get("error"),
+            error_description=d.get("error_description"),
             page=self,
             control=self,
             target="page",
@@ -1140,7 +1140,7 @@ class Page(AdaptiveControl):
         if not login_evt.error:
             # perform token request
 
-            code = d["code"]
+            code = d.get("code")
             assert code not in [None, ""]
             try:
                 await self.__authorization.request_token_async(code)
