@@ -293,14 +293,14 @@ class DismissibleDismissEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.direction = DismissDirection(d["direction"])
+        self.direction: DismissDirection = DismissDirection(d.get("direction"))
 
 
 class DismissibleUpdateEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.direction = DismissDirection(d["direction"])
-        self.progress = d["progress"]
-        self.reached = d["reached"]
-        self.previous_reached = d["previous_reached"]
+        self.direction: DismissDirection = DismissDirection(d.get("direction"))
+        self.progress: float = d.get("progress")
+        self.reached: bool = d.get("reached")
+        self.previous_reached: bool = d.get("previous_reached")

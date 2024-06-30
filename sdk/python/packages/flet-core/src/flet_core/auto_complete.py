@@ -99,5 +99,5 @@ class AutoCompleteSelectEvent(ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
         self.selection: AutoCompleteSuggestion = AutoCompleteSuggestion(
-            key=d["key"], value=d["value"]
+            key=d.get("key"), value=d.get("value")
         )

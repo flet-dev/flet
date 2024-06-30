@@ -154,5 +154,5 @@ class CanvasResizeEvent(ControlEvent):
     def __init__(self, e: ControlEvent) -> None:
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.width: float = d["w"]
-        self.height: float = d["h"]
+        self.width: float = d.get("w")
+        self.height: float = d.get("h")
