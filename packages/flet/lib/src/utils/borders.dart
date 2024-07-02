@@ -90,6 +90,7 @@ BorderSide? borderSideFromJSON(ThemeData? theme, dynamic json,
           color:
               parseColor(theme, json['c'], defaultSideColor ?? Colors.black)!,
           width: parseDouble(json['w'], 1)!,
+          strokeAlign: parseDouble(json['sa'], BorderSide.strokeAlignInside)!,
           style: BorderStyle.solid)
       : null;
 }
