@@ -97,8 +97,10 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     double pressedOpacity = widget.control.attrDouble("opacityOnClick", 0.4)!;
     double minSize = widget.control.attrDouble("minSize", 44.0)!;
     String url = widget.control.attrString("url", "")!;
-    Color disabledColor = widget.control.attrColor("disabledColor", context) ??
-        CupertinoColors.quaternarySystemFill;
+    Color disabledColor =
+        widget.control.attrColor("disabledBgcolor", context) ??
+            widget.control.attrColor("disabledColor", context) ?? // deprecated
+            CupertinoColors.quaternarySystemFill;
     Color? bgColor = widget.control.attrColor("bgColor", context);
     Color? color = widget.control.attrColor("color", context);
     AlignmentGeometry alignment =
