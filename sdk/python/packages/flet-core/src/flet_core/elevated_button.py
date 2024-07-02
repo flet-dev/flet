@@ -154,7 +154,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     def before_update(self):
         super().before_update()
         assert (
-                self.text or self.icon or (self.__content and self.__content.visible)
+            self.text or self.icon or (self.__content and self.__content.visible)
         ), "at minimum, text, icon or a visible content must be provided"
         if any([self.__color, self.__bgcolor, self.__elevation]):
             self.__style = self.__style or ButtonStyle()
@@ -175,6 +175,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
             self.__style.side = self._wrap_attr_dict(self.__style.side)
             self.__style.shape = self._wrap_attr_dict(self.__style.shape)
             self.__style.padding = self._wrap_attr_dict(self.__style.padding)
+            self.__style.text_style = self._wrap_attr_dict(self.__style.text_style)
         self._set_attr_json("style", self.__style)
 
     def _get_children(self):
