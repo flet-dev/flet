@@ -4,11 +4,15 @@ import 'package:flet/src/utils/transforms.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import 'alignment.dart';
 import 'borders.dart';
 import 'colors.dart';
 import 'edge_insets.dart';
 import 'material_state.dart';
+import 'mouse.dart';
 import 'numbers.dart';
+import 'text.dart';
+import 'theme.dart';
 
 ButtonStyle? parseButtonStyle(ThemeData theme, Control control, String propName,
     {required Color defaultForegroundColor,
@@ -54,31 +58,41 @@ ButtonStyle? buttonStyleFromJSON(ThemeData theme, Map<String, dynamic>? json,
     return null;
   }
   return ButtonStyle(
-      foregroundColor: getWidgetStateProperty<Color?>(json["color"],
-          (jv) => parseColor(theme, jv as String), defaultForegroundColor),
-      backgroundColor: getWidgetStateProperty<Color?>(json["bgcolor"],
-          (jv) => parseColor(theme, jv as String), defaultBackgroundColor),
-      overlayColor: getWidgetStateProperty<Color?>(json["overlay_color"],
-          (jv) => parseColor(theme, jv as String), defaultOverlayColor),
-      shadowColor: getWidgetStateProperty<Color?>(json["shadow_color"],
-          (jv) => parseColor(theme, jv as String), defaultShadowColor),
-      surfaceTintColor: getWidgetStateProperty<Color?>(
-          json["surface_tint_color"],
-          (jv) => parseColor(theme, jv as String),
-          defaultSurfaceTintColor),
-      elevation: getWidgetStateProperty(
-          json["elevation"], (jv) => parseDouble(jv, 0)!, defaultElevation),
-      animationDuration: json["animation_duration"] != null
-          ? Duration(milliseconds: parseInt(json["animation_duration"], 0)!)
-          : null,
-      padding: getWidgetStateProperty<EdgeInsetsGeometry?>(
-          json["padding"], (jv) => edgeInsetsFromJson(jv), defaultPadding),
-      side: getWidgetStateProperty<BorderSide?>(
-          json["side"],
-          (jv) => borderSideFromJSON(theme, jv, theme.colorScheme.outline),
-          defaultBorderSide),
-      shape: getWidgetStateProperty<OutlinedBorder?>(
-          json["shape"], (jv) => outlinedBorderFromJSON(jv), defaultShape));
+    foregroundColor: getWidgetStateProperty<Color?>(json["color"],
+        (jv) => parseColor(theme, jv as String), defaultForegroundColor),
+    backgroundColor: getWidgetStateProperty<Color?>(json["bgcolor"],
+        (jv) => parseColor(theme, jv as String), defaultBackgroundColor),
+    overlayColor: getWidgetStateProperty<Color?>(json["overlay_color"],
+        (jv) => parseColor(theme, jv as String), defaultOverlayColor),
+    shadowColor: getWidgetStateProperty<Color?>(json["shadow_color"],
+        (jv) => parseColor(theme, jv as String), defaultShadowColor),
+    surfaceTintColor: getWidgetStateProperty<Color?>(json["surface_tint_color"],
+        (jv) => parseColor(theme, jv as String), defaultSurfaceTintColor),
+    elevation: getWidgetStateProperty(
+        json["elevation"], (jv) => parseDouble(jv, 0)!, defaultElevation),
+    animationDuration: json["animation_duration"] != null
+        ? Duration(milliseconds: parseInt(json["animation_duration"], 0)!)
+        : null,
+    padding: getWidgetStateProperty<EdgeInsetsGeometry?>(
+        json["padding"], (jv) => edgeInsetsFromJson(jv), defaultPadding),
+    side: getWidgetStateProperty<BorderSide?>(
+        json["side"],
+        (jv) => borderSideFromJSON(theme, jv, theme.colorScheme.outline),
+        defaultBorderSide),
+    shape: getWidgetStateProperty<OutlinedBorder?>(
+        json["shape"], (jv) => outlinedBorderFromJSON(jv), defaultShape),
+    iconColor: getWidgetStateProperty<Color?>(json["icon_color"],
+        (jv) => parseColor(theme, jv as String), defaultForegroundColor),
+    alignment: alignmentFromJson(json["alignment"]),
+    enableFeedback: parseBool(json["enable_feedback"]),
+    textStyle: getWidgetStateProperty<TextStyle?>(
+        json["text_style"], (jv) => textStyleFromJson(theme, jv)),
+    iconSize: getWidgetStateProperty<double?>(
+        json["icon_size"], (jv) => parseDouble(jv)),
+    visualDensity: parseVisualDensity(json["visual_density"]),
+    mouseCursor: getWidgetStateProperty<MouseCursor?>(
+        json["mouse_cursor"], (jv) => parseMouseCursor(jv)),
+  );
 }
 
 FloatingActionButtonLocation parseFloatingActionButtonLocation(

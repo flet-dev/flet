@@ -7,7 +7,6 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.theme import ThemeVisualDensity
 from flet_core.types import (
     AnimationValue,
     MouseCursor,
@@ -18,6 +17,8 @@ from flet_core.types import (
     ScaleValue,
     UrlTarget,
     OptionalEventCallable,
+    ThemeVisualDensity,
+    VisualDensity,
 )
 
 
@@ -103,7 +104,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         icon_color: Optional[str] = None,
         text_color: Optional[str] = None,
         shape: Optional[OutlinedBorder] = None,
-        visual_density: Optional[ThemeVisualDensity] = None,
+        visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
         mouse_cursor: Optional[MouseCursor] = None,
         title_text_style: Optional[TextStyle] = None,
         subtitle_text_style: Optional[TextStyle] = None,
@@ -493,13 +494,13 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # visual_density
     @property
-    def visual_density(self) -> Optional[ThemeVisualDensity]:
+    def visual_density(self) -> Union[None, ThemeVisualDensity, VisualDensity]:
         return self.__visual_density
 
     @visual_density.setter
-    def visual_density(self, value: Optional[ThemeVisualDensity]):
+    def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, ThemeVisualDensity)
+        self._set_enum_attr("visualDensity", value, ThemeVisualDensity, VisualDensity)
 
     # shape
     @property

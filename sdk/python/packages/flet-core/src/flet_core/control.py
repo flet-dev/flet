@@ -141,7 +141,7 @@ class Control:
         self._set_attr_internal(name, value, dirty)
 
     def _set_enum_attr(
-        self, name: str, value: V, enum_type: Type[Enum], dirty: bool = True
+        self, name: str, value: V, *enum_type: Type[Enum], dirty: bool = True
     ) -> None:
         self._set_attr_internal(
             name, value.value if isinstance(value, enum_type) else value, dirty

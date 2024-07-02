@@ -14,6 +14,7 @@ class EmbedJsonEncoder(json.JSONEncoder):
             return {
                 "w": obj.width,
                 "c": obj.color,
+                "sa": obj.stroke_align,
             }
         elif isinstance(obj, Border):
             return {

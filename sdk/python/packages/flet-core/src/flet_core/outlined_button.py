@@ -142,6 +142,9 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
+        assert (
+            self.text or self.icon or (self.__content and self.__content.visible)
+        ), "at minimum, text, icon or a visible content must be provided"
         if self.__style is not None:
             self.__style.side = self._wrap_attr_dict(self.__style.side)
             self.__style.shape = self._wrap_attr_dict(self.__style.shape)

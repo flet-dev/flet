@@ -36,7 +36,7 @@ from flet_core.autofill_group import (
 from flet_core.badge import Badge
 from flet_core.banner import Banner
 from flet_core.blur import Blur, BlurTileMode
-from flet_core.border import Border, BorderSide
+from flet_core.border import Border, BorderSide, BorderSideStrokeAlign
 from flet_core.border_radius import BorderRadius
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.bottom_sheet import BottomSheet
@@ -321,7 +321,6 @@ from flet_core.theme import (
     TabsTheme,
     TextTheme,
     Theme,
-    ThemeVisualDensity,
     TimePickerTheme,
     TooltipTheme,
 )
@@ -361,6 +360,8 @@ from flet_core.types import (
     TabAlignment,
     TextAlign,
     ThemeMode,
+    ThemeVisualDensity,
+    VisualDensity,
     UrlTarget,
     VerticalAlignment,
     StrokeCap,
