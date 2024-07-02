@@ -44,7 +44,7 @@ class CupertinoButton(ConstrainedControl):
         url_target: Optional[UrlTarget] = None,
         on_click: OptionalEventCallable = None,
         #
-        # Common
+            # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
@@ -127,8 +127,8 @@ class CupertinoButton(ConstrainedControl):
     def before_update(self):
         super().before_update()
         assert (
-            self.text or self.__content
-        ), "at minimum, text or content must be provided"
+                self.text or self.icon or (self.__content and self.__content.visible)
+        ), "at minimum, text, icon or a visible content must be provided"
         self._set_attr_json("padding", self.__padding)
         self._set_attr_json("borderRadius", self.__border_radius)
         self._set_attr_json("alignment", self.__alignment)

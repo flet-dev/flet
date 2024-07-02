@@ -38,6 +38,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
   Widget build(BuildContext context) {
     debugPrint("CupertinoButton build: ${widget.control.id}");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    var theme = Theme.of(context);
 
     var contentCtrls =
         widget.children.where((c) => c.name == "content" && c.isVisible);
@@ -59,7 +60,11 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     if (icon != null) {
       children.add(Icon(
         selected ? selectedIcon : icon,
-        color: selected ? selectedIconColor : iconColor,
+        color: selected
+            ? selectedIconColor
+            : disabled
+                ? theme.disabledColor
+                : iconColor,
         size: iconSize,
       ));
     }
@@ -103,7 +108,6 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
 
     EdgeInsets? padding = parseEdgeInsets(widget.control, "padding");
 
-    var theme = Theme.of(context);
     var style = parseButtonStyle(Theme.of(context), widget.control, "style",
         defaultForegroundColor: theme.colorScheme.primary,
         defaultBackgroundColor: Colors.transparent,
@@ -117,18 +121,21 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
             ? const StadiumBorder()
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
-    if (padding == null && style != null) {
+    if (style != null) {
+      Set<WidgetState> widgetStates = selected ? {WidgetState.selected} : {};
+
+      // Check if the widget is disabled and update the foregroundColor accordingly
+      // backgroundColor is not updated here, as it is handled by disabledColor
+      if (disabled) {
+        style = style.copyWith(
+          foregroundColor: WidgetStatePropertyAll(theme.disabledColor),
+        );
+      }
+
+      // Resolve color, background color, and padding based on widget states
+      color = style.foregroundColor?.resolve(widgetStates);
+      bgColor = style.backgroundColor?.resolve(widgetStates);
       padding = style.padding?.resolve({}) as EdgeInsets?;
-    }
-
-    if (bgColor == null && style != null) {
-      bgColor = style.backgroundColor
-          ?.resolve(selected ? {WidgetState.selected} : {});
-    }
-
-    if (color == null && style != null) {
-      color = style.foregroundColor
-          ?.resolve(selected ? {WidgetState.selected} : {});
     }
 
     if (color != null) {
