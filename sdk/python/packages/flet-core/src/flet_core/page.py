@@ -1207,6 +1207,22 @@ class Page(AdaptiveControl):
             "getClipboard", wait_for_result=True, wait_timeout=wait_timeout
         )
 
+    def take_screenshot(self, of: str, wait_timeout: Optional[float] = 10):
+        return self._invoke_method(
+            "takeScreenshot",
+            {"data": of},
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+
+    async def take_screenshot_async(self, of: str, wait_timeout: Optional[float] = 10):
+        return await self._invoke_method_async(
+            "takeScreenshot",
+            {"data": of},
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+
     def launch_url(
         self,
         url: str,
