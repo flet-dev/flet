@@ -1,9 +1,8 @@
-import dataclasses
-from dataclasses import field
+from dataclasses import dataclass, field
 from typing import List, Optional
 
 
-@dataclasses.dataclass
+@dataclass
 class ChartPointLine:
     color: Optional[str] = field(default=None)
     width: Optional[float] = field(default=None)

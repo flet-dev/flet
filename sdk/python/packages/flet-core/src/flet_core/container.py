@@ -1,5 +1,6 @@
 import json
-from typing import Any, List, Optional, Tuple, Union
+from dataclasses import dataclass, field
+from typing import Any, List, Optional, Tuple, Union, Callable
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
@@ -29,7 +30,14 @@ from flet_core.types import (
     ScaleValue,
     ThemeMode,
     UrlTarget,
+    OptionalEventCallable,
 )
+
+
+@dataclass
+class ColorFilter:
+    color: Optional[str] = field(default=None)
+    blend_mode: Optional[BlendMode] = field(default=None)
 
 
 class Container(ConstrainedControl, AdaptiveControl):
@@ -88,10 +96,11 @@ class Container(ConstrainedControl, AdaptiveControl):
         url_target: Optional[UrlTarget] = None,
         theme: Optional[Theme] = None,
         theme_mode: Optional[ThemeMode] = None,
-        on_click=None,
-        on_tap_down=None,
-        on_long_press=None,
-        on_hover=None,
+        color_filter: Optional[ColorFilter] = None,
+        on_click: OptionalEventCallable = None,
+        on_tap_down: Optional[Callable[["ContainerTapEvent"], None]] = None,
+        on_long_press: OptionalEventCallable = None,
+        on_hover: OptionalEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -117,7 +126,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -159,11 +168,7 @@ class Container(ConstrainedControl, AdaptiveControl):
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
-        def convert_container_tap_event_data(e):
-            d = json.loads(e.data)
-            return ContainerTapEvent(**d)
-
-        self.__on_tap_down = EventHandler(convert_container_tap_event_data)
+        self.__on_tap_down = EventHandler(lambda e: ContainerTapEvent(e))
         self._add_event_handler("tap_down", self.__on_tap_down.get_handler())
 
         self.content = content
@@ -191,6 +196,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.url_target = url_target
         self.theme = theme
         self.theme_mode = theme_mode
+        self.color_filter = color_filter
         self.on_click = on_click
         self.on_tap_down = on_tap_down
         self.on_long_press = on_long_press
@@ -211,6 +217,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("blur", self.__blur)
         self._set_attr_json("shadow", self.__shadow if self.__shadow else None)
         self._set_attr_json("theme", self.__theme)
+        self._set_attr_json("colorFilter", self.__color_filter)
 
     def _get_children(self):
         children = []
@@ -305,6 +312,15 @@ class Container(ConstrainedControl, AdaptiveControl):
     @shadow.setter
     def shadow(self, value: Union[None, BoxShadow, List[BoxShadow]]):
         self.__shadow = value if value is not None else []
+
+    # color_filter
+    @property
+    def color_filter(self) -> Optional[ColorFilter]:
+        return self.__color_filter
+
+    @color_filter.setter
+    def color_filter(self, value: Optional[ColorFilter]):
+        self.__color_filter = value
 
     # border
     @property
@@ -471,7 +487,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)
         self._set_attr("onClick", True if handler is not None else None)
 
@@ -481,7 +497,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         return self.__on_tap_down
 
     @on_tap_down.setter
-    def on_tap_down(self, handler):
+    def on_tap_down(self, handler: Optional[Callable[["ContainerTapEvent"], None]]):
         self.__on_tap_down.subscribe(handler)
         self._set_attr("onTapDown", True if handler is not None else None)
 
@@ -491,7 +507,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler):
+    def on_long_press(self, handler: OptionalEventCallable):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
@@ -501,14 +517,16 @@ class Container(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("hover")
 
     @on_hover.setter
-    def on_hover(self, handler):
+    def on_hover(self, handler: OptionalEventCallable):
         self._add_event_handler("hover", handler)
         self._set_attr("onHover", True if handler is not None else None)
 
 
 class ContainerTapEvent(ControlEvent):
-    def __init__(self, lx, ly, gx, gy) -> None:
-        self.local_x: float = lx
-        self.local_y: float = ly
-        self.global_x: float = gx
-        self.global_y: float = gy
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.local_x: float = d["lx"]
+        self.local_y: float = d["ly"]
+        self.global_x: float = d["gx"]
+        self.global_y: float = d["gy"]

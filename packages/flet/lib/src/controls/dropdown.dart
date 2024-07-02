@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../models/control_view_model.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
@@ -94,19 +95,28 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
       }
 
       var items = itemsView.controlViews
-          .map((v) => v.control)
-          .where((c) => c.name == null && c.isVisible)
-          .map<DropdownMenuItem<String>>((Control itemCtrl) {
+          .where((c) => c.control.name == null && c.control.isVisible)
+          .map<DropdownMenuItem<String>>((ControlViewModel itemCtrlView) {
+        var itemCtrl = itemCtrlView.control;
         bool itemDisabled = disabled || itemCtrl.isDisabled;
         TextStyle? textStyle =
             parseTextStyle(Theme.of(context), itemCtrl, "textStyle");
         if (itemDisabled && textStyle != null) {
           textStyle = textStyle.apply(color: Theme.of(context).disabledColor);
         }
-        Widget itemChild = Text(
-          itemCtrl.attrs["text"] ?? itemCtrl.attrs["key"] ?? itemCtrl.id,
-          style: textStyle,
-        );
+        var contentCtrls = itemCtrlView.children
+            .where((c) => c.name == "content" && c.isVisible);
+        Widget? itemChild;
+        if (contentCtrls.isNotEmpty) {
+          // custom content
+          itemChild = createControl(
+              itemCtrlView.control, contentCtrls.first.id, itemDisabled);
+        } else {
+          itemChild = Text(
+            itemCtrl.attrs["text"] ?? itemCtrl.attrs["key"] ?? itemCtrl.id,
+            style: textStyle,
+          );
+        }
         var align = parseAlignment(itemCtrl, "alignment");
         if (align != null) {
           itemChild = Container(alignment: align, child: itemChild);

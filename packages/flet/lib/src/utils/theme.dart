@@ -11,6 +11,7 @@ import 'alignment.dart';
 import 'borders.dart';
 import 'buttons.dart';
 import 'colors.dart';
+import 'dismissible.dart';
 import 'drawing.dart';
 import 'edge_insets.dart';
 import 'icons.dart';
@@ -51,10 +52,10 @@ CupertinoThemeData fixCupertinoTheme(
     CupertinoThemeData cupertinoTheme, ThemeData theme) {
   return cupertinoTheme.copyWith(
       applyThemeToAll: true,
-      barBackgroundColor: theme.colorScheme.background,
+      barBackgroundColor: theme.colorScheme.surface,
       textTheme: cupertinoTheme.textTheme.copyWith(
           navTitleTextStyle: cupertinoTheme.textTheme.navTitleTextStyle
-              .copyWith(color: theme.colorScheme.onBackground)));
+              .copyWith(color: theme.colorScheme.onSurface)));
 }
 
 ThemeData parseTheme(Control control, String propName, Brightness? brightness,
@@ -95,9 +96,8 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
   theme = theme.copyWith(
     visualDensity:
         parseVisualDensity(json?["visual_density"], theme.visualDensity)!,
-    pageTransitionsTheme: json?["page_transitions"] != null
-        ? parsePageTransitions(json?["page_transitions"])
-        : theme.pageTransitionsTheme,
+    pageTransitionsTheme: parsePageTransitions(
+        json?["page_transitions"], theme.pageTransitionsTheme)!,
     colorScheme: parseColorScheme(theme, json?["color_scheme"]),
     textTheme: parseTextTheme(theme, theme.textTheme, json?["text_theme"]),
     primaryTextTheme: parseTextTheme(
@@ -200,11 +200,9 @@ ColorScheme? parseColorScheme(ThemeData theme, Map<String, dynamic>? j) {
     onError: parseColor(null, j["on_error"]),
     errorContainer: parseColor(null, j["error_container"]),
     onErrorContainer: parseColor(null, j["on_error_container"]),
-    background: parseColor(null, j["background"]),
-    onBackground: parseColor(null, j["on_background"]),
     surface: parseColor(null, j["surface"]),
     onSurface: parseColor(null, j["on_surface"]),
-    surfaceVariant: parseColor(null, j["surface_variant"]),
+    surfaceContainerHighest: parseColor(null, j["surface_variant"]),
     onSurfaceVariant: parseColor(null, j["on_surface_variant"]),
     outline: parseColor(null, j["outline"]),
     outlineVariant: parseColor(null, j["outline_variant"]),
@@ -251,17 +249,17 @@ ScrollbarThemeData? parseScrollBarTheme(
     return null;
   }
   return theme.scrollbarTheme.copyWith(
-    trackVisibility: getMaterialStateProperty<bool?>(
+    trackVisibility: getWidgetStateProperty<bool?>(
         j["track_visibility"], (jv) => parseBool(jv)),
-    trackColor: getMaterialStateProperty<Color?>(
+    trackColor: getWidgetStateProperty<Color?>(
         j["track_color"], (jv) => parseColor(theme, jv as String)),
-    trackBorderColor: getMaterialStateProperty<Color?>(
+    trackBorderColor: getWidgetStateProperty<Color?>(
         j["track_border_color"], (jv) => parseColor(theme, jv as String)),
-    thumbVisibility: getMaterialStateProperty<bool?>(
+    thumbVisibility: getWidgetStateProperty<bool?>(
         j["thumb_visibility"], (jv) => parseBool(jv)),
-    thumbColor: getMaterialStateProperty<Color?>(
+    thumbColor: getWidgetStateProperty<Color?>(
         j["thumb_color"], (jv) => parseColor(theme, jv as String)),
-    thickness: getMaterialStateProperty<double?>(
+    thickness: getWidgetStateProperty<double?>(
         j["thickness"], (jv) => parseDouble(jv, 0)!),
     radius: j["radius"] != null
         ? Radius.circular(parseDouble(j["radius"], 0)!)
@@ -281,7 +279,7 @@ TabBarTheme? parseTabBarTheme(ThemeData theme, Map<String, dynamic>? j) {
   var indicatorColor = parseColor(theme, j["indicator_color"]);
 
   return theme.tabBarTheme.copyWith(
-    overlayColor: getMaterialStateProperty<Color?>(
+    overlayColor: getWidgetStateProperty<Color?>(
         j["overlay_color"], (jv) => parseColor(theme, jv as String)),
     dividerColor: parseColor(theme, j["divider_color"]),
     indicatorColor: indicatorColor,
@@ -306,7 +304,7 @@ TabBarTheme? parseTabBarTheme(ThemeData theme, Map<String, dynamic>? j) {
             insets:
                 edgeInsetsFromJson(j["indicator_padding"]) ?? EdgeInsets.zero)
         : null,
-    mouseCursor: getMaterialStateProperty<MouseCursor?>(
+    mouseCursor: getWidgetStateProperty<MouseCursor?>(
         j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
     labelPadding: edgeInsetsFromJson(j["label_padding"]),
     dividerHeight: parseDouble(j["divider_height"]),
@@ -334,18 +332,22 @@ VisualDensity? parseVisualDensity(String? density, [VisualDensity? defValue]) {
   }
 }
 
-PageTransitionsTheme parsePageTransitions(Map<String, dynamic>? json) {
+PageTransitionsTheme? parsePageTransitions(Map<String, dynamic>? json,
+    [PageTransitionsTheme? defValue]) {
+  if (json == null) {
+    return defValue;
+  }
   return PageTransitionsTheme(builders: {
     TargetPlatform.android: parseTransitionsBuilder(
-        json?["android"], const FadeUpwardsPageTransitionsBuilder()),
+        json["android"], const FadeUpwardsPageTransitionsBuilder()),
     TargetPlatform.iOS: parseTransitionsBuilder(
-        json?["ios"], const CupertinoPageTransitionsBuilder()),
+        json["ios"], const CupertinoPageTransitionsBuilder()),
     TargetPlatform.linux: parseTransitionsBuilder(
-        json?["linux"], const ZoomPageTransitionsBuilder()),
+        json["linux"], const ZoomPageTransitionsBuilder()),
     TargetPlatform.macOS: parseTransitionsBuilder(
-        json?["macos"], const ZoomPageTransitionsBuilder()),
+        json["macos"], const ZoomPageTransitionsBuilder()),
     TargetPlatform.windows: parseTransitionsBuilder(
-        json?["windows"], const ZoomPageTransitionsBuilder()),
+        json["windows"], const ZoomPageTransitionsBuilder()),
   });
 }
 
@@ -415,7 +417,7 @@ ChipThemeData? parseChipTheme(ThemeData theme, Map<String, dynamic>? j) {
   }
 
   return theme.chipTheme.copyWith(
-    color: getMaterialStateProperty<Color?>(
+    color: getWidgetStateProperty<Color?>(
         j["color"], (jv) => parseColor(theme, jv as String)),
     backgroundColor: parseColor(theme, j["bgcolor"]),
     shadowColor: parseColor(theme, j["shadow_color"]),
@@ -469,7 +471,7 @@ FloatingActionButtonThemeData? parseFloatingActionButtonTheme(
     extendedPadding: edgeInsetsFromJson(j["extended_padding"]),
     extendedTextStyle: parseTextStyle("extended_text_style"),
     extendedIconLabelSpacing: parseDouble(j["extended_icon_label_spacing"]),
-    mouseCursor: getMaterialStateProperty<MouseCursor?>(
+    mouseCursor: getWidgetStateProperty<MouseCursor?>(
         j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
     iconSize: parseDouble(j["icon_size"]),
   );
@@ -552,13 +554,13 @@ RadioThemeData? parseRadioTheme(ThemeData theme, Map<String, dynamic>? j) {
   }
 
   return theme.radioTheme.copyWith(
-    fillColor: getMaterialStateProperty<Color?>(
+    fillColor: getWidgetStateProperty<Color?>(
         j["fill_color"], (jv) => parseColor(theme, jv as String)),
     splashRadius: parseDouble(j["splash_radius"]),
-    overlayColor: getMaterialStateProperty<Color?>(
+    overlayColor: getWidgetStateProperty<Color?>(
         j["overlay_color"], (jv) => parseColor(theme, jv as String)),
     visualDensity: parseVisualDensity(j["visual_density"]),
-    mouseCursor: getMaterialStateProperty<MouseCursor?>(
+    mouseCursor: getWidgetStateProperty<MouseCursor?>(
         j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
   );
 }
@@ -570,19 +572,19 @@ CheckboxThemeData? parseCheckboxTheme(
   }
 
   return theme.checkboxTheme.copyWith(
-    fillColor: getMaterialStateProperty<Color?>(
+    fillColor: getWidgetStateProperty<Color?>(
         j["fill_color"], (jv) => parseColor(theme, jv as String)),
     splashRadius: parseDouble(j["splash_radius"]),
-    overlayColor: getMaterialStateProperty<Color?>(
+    overlayColor: getWidgetStateProperty<Color?>(
         j["overlay_color"], (jv) => parseColor(theme, jv as String)),
     visualDensity: parseVisualDensity(j["visual_density"]),
-    checkColor: getMaterialStateProperty<Color?>(
+    checkColor: getWidgetStateProperty<Color?>(
         j["check_color"], (jv) => parseColor(theme, jv as String)),
     side: j["border_side"] != null
         ? borderSideFromJSON(theme, j["border_side"], null)
         : null,
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    mouseCursor: getMaterialStateProperty<MouseCursor?>(
+    mouseCursor: getWidgetStateProperty<MouseCursor?>(
         j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
   );
 }
@@ -613,23 +615,21 @@ SwitchThemeData? parseSwitchTheme(ThemeData theme, Map<String, dynamic>? j) {
   }
 
   return theme.switchTheme.copyWith(
-    thumbColor: getMaterialStateProperty<Color?>(
+    thumbColor: getWidgetStateProperty<Color?>(
         j["thumb_color"], (jv) => parseColor(theme, jv as String)),
-    trackColor: getMaterialStateProperty<Color?>(
+    trackColor: getWidgetStateProperty<Color?>(
         j["track_color"], (jv) => parseColor(theme, jv as String)),
-    overlayColor: getMaterialStateProperty<Color?>(
+    overlayColor: getWidgetStateProperty<Color?>(
         j["overlay_color"], (jv) => parseColor(theme, jv as String)),
     splashRadius:
         j["splash_radius"] != null ? parseDouble(j["splash_radius"]) : null,
-    thumbIcon: getMaterialStateProperty<Icon?>(
+    thumbIcon: getWidgetStateProperty<Icon?>(
         j["thumb_icon"], (jv) => Icon(parseIcon(jv as String))),
-    trackOutlineColor: getMaterialStateProperty<Color?>(
-        j["track_outline_color"],
-        (jv) => parseColor(theme, jv as String),
-        null),
-    trackOutlineWidth: getMaterialStateProperty<double?>(
+    trackOutlineColor: getWidgetStateProperty<Color?>(j["track_outline_color"],
+        (jv) => parseColor(theme, jv as String), null),
+    trackOutlineWidth: getWidgetStateProperty<double?>(
         j["track_outline_width"], (jv) => parseDouble(jv)),
-    mouseCursor: getMaterialStateProperty<MouseCursor?>(
+    mouseCursor: getWidgetStateProperty<MouseCursor?>(
         j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
   );
 }
@@ -668,17 +668,11 @@ SnackBarThemeData? parseSnackBarTheme(
         parseColor(theme, j["disabled_action_bgcolor"]),
     elevation: parseDouble(j["elevation"]),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    behavior: j["behavior"] != null
-        ? SnackBarBehavior.values.firstWhereOrNull(
-            (c) => c.name.toLowerCase() == j["behavior"].toLowerCase())
-        : null,
+    behavior: parseSnackBarBehavior(j["behavior"]),
     contentTextStyle: parseTextStyle("content_text_style"),
     width: parseDouble(j["width"]),
     insetPadding: edgeInsetsFromJson(j["inset_padding"]),
-    dismissDirection: j["dismiss_direction"] != null
-        ? DismissDirection.values.firstWhereOrNull(
-            (c) => c.name.toLowerCase() == j["dismiss_direction"].toLowerCase())
-        : null,
+    dismissDirection: parseDismissDirection(j["dismiss_direction"]),
     showCloseIcon: parseBool(j["show_close_icon"]),
     actionOverflowThreshold: parseDouble(j["action_overflow_threshold"]),
   );
@@ -724,18 +718,18 @@ DatePickerThemeData? parseDatePickerTheme(
     shadowColor: parseColor(theme, j["shadow_color"]),
     cancelButtonStyle: buttonStyleFromJSON(theme, j["cancel_button_style"]),
     confirmButtonStyle: buttonStyleFromJSON(theme, j["confirm_button_style"]),
-    dayBackgroundColor: getMaterialStateProperty<Color?>(
+    dayBackgroundColor: getWidgetStateProperty<Color?>(
         j["day_bgcolor"], (jv) => parseColor(theme, jv as String)),
     yearStyle: parseTextStyle("year_text_style"),
     dayStyle: parseTextStyle("day_text_style"),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    dayOverlayColor: getMaterialStateProperty<Color?>(
+    dayOverlayColor: getWidgetStateProperty<Color?>(
         j["day_overlay_color"], (jv) => parseColor(theme, jv as String)),
     headerBackgroundColor: parseColor(theme, j["header_bgcolor"]),
-    dayForegroundColor: getMaterialStateProperty<Color?>(
+    dayForegroundColor: getWidgetStateProperty<Color?>(
         j["day_foreground_color"], (jv) => parseColor(theme, jv as String)),
     rangePickerElevation: parseDouble(j["range_picker_elevation"]),
-    todayBackgroundColor: getMaterialStateProperty<Color?>(
+    todayBackgroundColor: getWidgetStateProperty<Color?>(
         j["today_bgcolor"], (jv) => parseColor(theme, jv as String)),
     headerForegroundColor: parseColor(theme, j["header_foreground_color"]),
     headerHeadlineStyle: parseTextStyle("header_headline_text_style"),
@@ -746,7 +740,7 @@ DatePickerThemeData? parseDatePickerTheme(
     rangePickerHeaderForegroundColor:
         parseColor(theme, j["range_picker_header_foreground_color"]),
     rangePickerShadowColor: parseColor(theme, j["range_picker_shadow_color"]),
-    todayForegroundColor: getMaterialStateProperty<Color?>(
+    todayForegroundColor: getWidgetStateProperty<Color?>(
         j["today_foreground_color"], (jv) => parseColor(theme, jv as String)),
     rangePickerShape: j["range_picker_shape"] != null
         ? outlinedBorderFromJSON(j["range_picker_shape"])
@@ -759,17 +753,17 @@ DatePickerThemeData? parseDatePickerTheme(
         parseColor(theme, j["range_picker_surface_tint_color"]),
     rangeSelectionBackgroundColor:
         parseColor(theme, j["range_selection_bgcolor"]),
-    rangeSelectionOverlayColor: getMaterialStateProperty<Color?>(
+    rangeSelectionOverlayColor: getWidgetStateProperty<Color?>(
         j["range_selection_overlay_color"],
         (jv) => parseColor(theme, jv as String)),
     todayBorder: j["today_border_side"] != null
         ? borderSideFromJSON(theme, j["today_border_side"])
         : null,
-    yearBackgroundColor: getMaterialStateProperty<Color?>(
+    yearBackgroundColor: getWidgetStateProperty<Color?>(
         j["year_bgcolor"], (jv) => parseColor(theme, jv as String)),
-    yearForegroundColor: getMaterialStateProperty<Color?>(
+    yearForegroundColor: getWidgetStateProperty<Color?>(
         j["year_foreground_color"], (jv) => parseColor(theme, jv as String)),
-    yearOverlayColor: getMaterialStateProperty<Color?>(
+    yearOverlayColor: getWidgetStateProperty<Color?>(
         j["year_overlay_color"], (jv) => parseColor(theme, jv as String)),
     weekdayStyle: parseTextStyle("weekday_text_style"),
   );
@@ -953,7 +947,7 @@ PopupMenuThemeData? parsePopupMenuTheme(
     shadowColor: parseColor(theme, j["shadow_color"]),
     iconColor: parseColor(theme, j["icon_color"]),
     textStyle: parseTextStyle("text_style"),
-    labelTextStyle: getMaterialStateProperty<TextStyle?>(
+    labelTextStyle: getWidgetStateProperty<TextStyle?>(
         j["label_text_style"], (jv) => parseTextStyle(jv)),
     enableFeedback: parseBool(j["enable_feedback"]),
     elevation: parseDouble(j["elevation"]),
@@ -962,7 +956,7 @@ PopupMenuThemeData? parsePopupMenuTheme(
         ? PopupMenuPosition.values.firstWhereOrNull(
             (c) => c.name.toLowerCase() == j["menu_position"].toLowerCase())
         : null,
-    mouseCursor: getMaterialStateProperty<MouseCursor?>(
+    mouseCursor: getWidgetStateProperty<MouseCursor?>(
         j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
   );
@@ -979,27 +973,27 @@ SearchBarThemeData? parseSearchBarTheme(
   }
 
   return theme.searchBarTheme.copyWith(
-    surfaceTintColor: getMaterialStateProperty<Color?>(
+    surfaceTintColor: getWidgetStateProperty<Color?>(
         j["surface_tint_color"], (jv) => parseColor(theme, jv as String)),
-    shadowColor: getMaterialStateProperty<Color?>(
+    shadowColor: getWidgetStateProperty<Color?>(
         j["shadow_color"], (jv) => parseColor(theme, jv as String)),
-    elevation: getMaterialStateProperty<double?>(
+    elevation: getWidgetStateProperty<double?>(
         j["elevation"], (jv) => parseDouble(jv)),
-    backgroundColor: getMaterialStateProperty<Color?>(
+    backgroundColor: getWidgetStateProperty<Color?>(
         j["bgcolor"], (jv) => parseColor(theme, jv as String)),
-    overlayColor: getMaterialStateProperty<Color?>(
+    overlayColor: getWidgetStateProperty<Color?>(
         j["overlay_color"], (jv) => parseColor(theme, jv as String)),
-    textStyle: getMaterialStateProperty<TextStyle?>(
+    textStyle: getWidgetStateProperty<TextStyle?>(
         j["text_style"], (jv) => parseTextStyle(jv)),
-    hintStyle: getMaterialStateProperty<TextStyle?>(
+    hintStyle: getWidgetStateProperty<TextStyle?>(
         j["hint_style"], (jv) => parseTextStyle(jv)),
-    shape: getMaterialStateProperty<OutlinedBorder?>(
+    shape: getWidgetStateProperty<OutlinedBorder?>(
         j["shape"], (jv) => outlinedBorderFromJSON(jv)),
     textCapitalization: j["text_capitalization"] != null
         ? TextCapitalization.values.firstWhereOrNull((c) =>
             c.name.toLowerCase() == j["text_capitalization"].toLowerCase())
         : null,
-    padding: getMaterialStateProperty<EdgeInsetsGeometry?>(
+    padding: getWidgetStateProperty<EdgeInsetsGeometry?>(
         j["padding"], (jv) => edgeInsetsFromJson(jv)),
   );
 }
@@ -1069,7 +1063,7 @@ NavigationDrawerThemeData? parseNavigationDrawerTheme(
     elevation: parseDouble(j["elevation"]),
     //indicatorSize: ,
     tileHeight: parseDouble(j["tile_height"]),
-    labelTextStyle: getMaterialStateProperty<TextStyle?>(
+    labelTextStyle: getWidgetStateProperty<TextStyle?>(
         j["label_text_style"], (jv) => parseTextStyle(jv)),
     indicatorShape: j["indicator_shape"] != null
         ? outlinedBorderFromJSON(j["indicator_shape"])
@@ -1092,11 +1086,11 @@ NavigationBarThemeData? parseNavigationBarTheme(
     shadowColor: parseColor(theme, j["shadow_color"]),
     surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
     indicatorColor: parseColor(theme, j["indicator_color"]),
-    overlayColor: getMaterialStateProperty<Color?>(
+    overlayColor: getWidgetStateProperty<Color?>(
         j["overlay_color"], (jv) => parseColor(theme, jv as String)),
     elevation: parseDouble(j["elevation"]),
     height: parseDouble(j["height"]),
-    labelTextStyle: getMaterialStateProperty<TextStyle?>(
+    labelTextStyle: getWidgetStateProperty<TextStyle?>(
         j["label_text_style"], (jv) => parseTextStyle(jv)),
     indicatorShape: j["indicator_shape"] != null
         ? outlinedBorderFromJSON(j["indicator_shape"])

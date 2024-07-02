@@ -33,7 +33,6 @@ class AutoCompleteControl extends StatelessWidget {
         backend.triggerControlEvent(
             control.id,
             "select",
-            //suggestions.indexOf(selection).toString()
             json.encode(AutoCompleteSuggestion(
                     key: selection.key, value: selection.value)
                 .toJson()));

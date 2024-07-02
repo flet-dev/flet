@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -7,6 +6,7 @@ import '../utils/colors.dart';
 import '../utils/debouncer.dart';
 import '../utils/desktop.dart';
 import '../utils/mouse.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'cupertino_slider.dart';
 import 'flet_store_mixin.dart';
@@ -92,11 +92,10 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
       int? divisions = widget.control.attrInt("divisions");
       int round = widget.control.attrInt("round", 0)!;
 
-      var interaction = SliderInteraction.values.firstWhereOrNull((e) =>
-          e.name.toLowerCase() ==
-          widget.control.attrString("interaction", "")!.toLowerCase());
+      var interaction =
+          parseSliderInteraction(widget.control.attrString("interaction"));
 
-      var overlayColor = parseMaterialStateColor(
+      var overlayColor = parseWidgetStateColor(
           Theme.of(context), widget.control, "overlayColor");
 
       debugPrint("SliderControl build: ${widget.control.id}");

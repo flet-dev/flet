@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Any, List, Optional, Union
 from warnings import warn
 
@@ -6,7 +5,7 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_span import TextSpan
-from flet_core.text_style import TextStyle
+from flet_core.text_style import TextStyle, TextThemeStyle, TextOverflow
 from flet_core.types import (
     AnimationValue,
     FontWeight,
@@ -15,37 +14,13 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TextAlign,
+    OptionalEventCallable,
 )
 
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
-
-
-class TextOverflow(Enum):
-    CLIP = "clip"
-    ELLIPSIS = "ellipsis"
-    FADE = "fade"
-    VISIBLE = "visible"
-
-
-class TextThemeStyle(Enum):
-    DISPLAY_LARGE = "displayLarge"
-    DISPLAY_MEDIUM = "displayMedium"
-    DISPLAY_SMALL = "displaySmall"
-    HEADLINE_LARGE = "headlineLarge"
-    HEADLINE_MEDIUM = "headlineMedium"
-    HEADLINE_SMALL = "headlineSmall"
-    TITLE_LARGE = "titleLarge"
-    TITLE_MEDIUM = "titleMedium"
-    TITLE_SMALL = "titleSmall"
-    LABEL_LARGE = "labelLarge"
-    LABEL_MEDIUM = "labelMedium"
-    LABEL_SMALL = "labelSmall"
-    BODY_LARGE = "bodyLarge"
-    BODY_MEDIUM = "bodyMedium"
-    BODY_SMALL = "bodySmall"
 
 
 class Text(ConstrainedControl):
@@ -120,7 +95,7 @@ class Text(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

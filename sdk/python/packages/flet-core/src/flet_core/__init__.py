@@ -73,8 +73,8 @@ from flet_core.checkbox import Checkbox
 from flet_core.chip import Chip
 from flet_core.circle_avatar import CircleAvatar
 from flet_core.column import Column
-from flet_core.container import Container, ContainerTapEvent
-from flet_core.control import Control, OptionalNumber
+from flet_core.container import Container, ContainerTapEvent, ColorFilter
+from flet_core.control import Control
 from flet_core.control_event import ControlEvent
 from flet_core.cupertino_action_sheet import CupertinoActionSheet
 from flet_core.cupertino_action_sheet_action import CupertinoActionSheetAction
@@ -140,11 +140,16 @@ from flet_core.file_picker import (
 )
 from flet_core.filled_button import FilledButton
 from flet_core.filled_tonal_button import FilledTonalButton
-from flet_core.flet_app import FletApp
 from flet_core.flashlight import Flashlight
+from flet_core.flet_app import FletApp
 from flet_core.floating_action_button import FloatingActionButton
 from flet_core.form_field_control import InputBorder
-from flet_core.geolocator import Geolocator, LocationAccuracy
+from flet_core.geolocator import (
+    Geolocator,
+    GeolocatorPositionAccuracy,
+    GeolocatorPermissionStatus,
+    GeolocatorPosition,
+)
 from flet_core.gesture_detector import (
     DragEndEvent,
     DragStartEvent,
@@ -171,7 +176,7 @@ from flet_core.haptic_feedback import HapticFeedback
 from flet_core.icon import Icon
 from flet_core.icon_button import IconButton
 from flet_core.image import Image
-from flet_core.list_tile import ListTile, ListTileTitleAlignment, ListTileStyle
+from flet_core.list_tile import ListTile, ListTileStyle, ListTileTitleAlignment
 from flet_core.list_view import ListView
 from flet_core.lottie import Lottie
 from flet_core.margin import Margin
@@ -180,10 +185,15 @@ from flet_core.menu_bar import MenuBar, MenuStyle
 from flet_core.menu_item_button import MenuItemButton
 from flet_core.navigation_bar import (
     NavigationBar,
-    NavigationBarLabelBehavior,
+    NavigationBarDestination,
     NavigationDestination,
+    NavigationBarLabelBehavior,
 )
-from flet_core.navigation_drawer import NavigationDrawer, NavigationDrawerDestination
+from flet_core.navigation_drawer import (
+    NavigationDrawer,
+    NavigationDrawerDestination,
+    NavigationDrawerPosition,
+)
 from flet_core.navigation_rail import (
     NavigationRail,
     NavigationRailDestination,
@@ -203,6 +213,11 @@ from flet_core.page import (
     RouteChangeEvent,
     ViewPopEvent,
     context,
+    WindowEvent,
+    WindowResizeEvent,
+    Window,
+    WindowEventType,
+    BrowserContextMenu,
 )
 from flet_core.pagelet import Pagelet
 from flet_core.painting import (
@@ -213,7 +228,11 @@ from flet_core.painting import (
     PaintSweepGradient,
     StrokeJoin,
 )
-from flet_core.permission_handler import PermissionHandler
+from flet_core.permission_handler import (
+    PermissionHandler,
+    PermissionType,
+    PermissionStatus,
+)
 from flet_core.popup_menu_button import (
     PopupMenuButton,
     PopupMenuItem,
@@ -247,10 +266,17 @@ from flet_core.submenu_button import SubmenuButton
 from flet_core.switch import Switch
 from flet_core.tabs import Tab, Tabs
 from flet_core.template_route import TemplateRoute
-from flet_core.text import Text, TextOverflow, TextThemeStyle
+from flet_core.text import Text
 from flet_core.text_button import TextButton
 from flet_core.text_span import TextSpan
-from flet_core.text_style import TextDecoration, TextDecorationStyle, TextStyle
+from flet_core.text_style import (
+    TextDecoration,
+    TextDecorationStyle,
+    TextStyle,
+    TextOverflow,
+    TextThemeStyle,
+    TextBaseline,
+)
 from flet_core.textfield import (
     InputFilter,
     KeyboardType,
@@ -313,6 +339,7 @@ from flet_core.types import (
     BoxShape,
     Brightness,
     ClipBehavior,
+    OptionalEventCallable,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     FontWeight,
@@ -320,13 +347,17 @@ from flet_core.types import (
     ImageRepeat,
     LabelPosition,
     MainAxisAlignment,
+    ControlState,
     MaterialState,
     MouseCursor,
     NotchShape,
+    Number,
+    OptionalNumber,
     Orientation,
     PaddingValue,
     PagePlatform,
     ScrollMode,
+    SupportsStr,
     TabAlignment,
     TextAlign,
     ThemeMode,

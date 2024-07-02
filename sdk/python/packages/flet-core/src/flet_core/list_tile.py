@@ -17,6 +17,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     UrlTarget,
+    OptionalEventCallable,
 )
 
 
@@ -107,6 +108,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         title_text_style: Optional[TextStyle] = None,
         subtitle_text_style: Optional[TextStyle] = None,
         leading_and_trailing_text_style: Optional[TextStyle] = None,
+        min_height: OptionalNumber = None,
         on_click=None,
         on_long_press=None,
         #
@@ -134,7 +136,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -207,6 +209,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         self.title_text_style = title_text_style
         self.subtitle_text_style = subtitle_text_style
         self.leading_and_trailing_text_style = leading_and_trailing_text_style
+        self.min_height = min_height
 
     def _get_control_name(self):
         return "listtile"
@@ -303,6 +306,15 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @horizontal_spacing.setter
     def horizontal_spacing(self, value: OptionalNumber):
         self._set_attr("horizontalSpacing", value)
+
+    # min_height
+    @property
+    def min_height(self) -> OptionalNumber:
+        return self._get_attr("minHeight", data_type="float")
+
+    @min_height.setter
+    def min_height(self, value: OptionalNumber):
+        self._set_attr("minHeight", value)
 
     # hover_color
     @property
@@ -527,38 +539,38 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # on_click
     @property
-    def on_click(self):
+    def on_click(self) -> OptionalEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)
         self._set_attr("onclick", True if handler is not None else None)
 
     # on_long_press
     @property
-    def on_long_press(self):
+    def on_long_press(self) -> OptionalEventCallable:
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler):
+    def on_long_press(self, handler: OptionalEventCallable):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # on_focus
     @property
-    def on_focus(self):
+    def on_focus(self) -> OptionalEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler):
+    def on_focus(self, handler: OptionalEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self):
+    def on_blur(self) -> OptionalEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler):
+    def on_blur(self, handler: OptionalEventCallable):
         self._add_event_handler("blur", handler)

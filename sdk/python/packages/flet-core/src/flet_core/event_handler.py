@@ -1,6 +1,8 @@
 import asyncio
+from typing import Callable
 
 from flet_core.control_event import ControlEvent
+from flet_core.types import OptionalEventCallable
 
 
 class EventHandler:
@@ -29,13 +31,13 @@ class EventHandler:
 
         return fn
 
-    def subscribe(self, handler):
+    def subscribe(self, handler: OptionalEventCallable):
         if handler is not None:
             self.__handlers[handler] = True
 
-    def unsubscribe(self, handler):
+    def unsubscribe(self, handler: Callable[[ControlEvent], None]):
         if handler in self.__handlers:
             self.__handlers.pop(handler)
 
-    def count(self):
+    def count(self) -> int:
         return len(self.__handlers)

@@ -1,19 +1,21 @@
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Union, Callable
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
-from flet_core.scrollable_control import ScrollableControl
+from flet_core.scrollable_control import ScrollableControl, OnScrollEvent
 from flet_core.types import (
     AnimationValue,
     CrossAxisAlignment,
     MainAxisAlignment,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     ScrollMode,
+    OptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -88,7 +90,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -99,7 +101,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         scroll: Optional[ScrollMode] = None,
         auto_scroll: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
-        on_scroll: Any = None,
+        on_scroll: Optional[Callable[[OnScrollEvent], None]] = None,
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -157,6 +159,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     def _get_children(self):
         return self.__controls
 
+    # Public methods
     def clean(self):
         super().clean()
         self.__controls.clear()
@@ -164,7 +167,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @deprecated(
         reason="Use clean() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def clean_async(self):
         self.clean()

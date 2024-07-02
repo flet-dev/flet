@@ -10,6 +10,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     ImageFit,
+    OptionalEventCallable,
 )
 from flet_core.video import FilterQuality
 
@@ -59,7 +60,7 @@ class Lottie(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+            on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -187,10 +188,10 @@ class Lottie(ConstrainedControl):
 
     # on_error
     @property
-    def on_error(self):
+    def on_error(self) -> OptionalEventCallable:
         return self._get_event_handler("error")
 
     @on_error.setter
-    def on_error(self, handler):
+    def on_error(self, handler: OptionalEventCallable):
         self._add_event_handler("error", handler)
         self._set_attr("onError", True if handler is not None else None)

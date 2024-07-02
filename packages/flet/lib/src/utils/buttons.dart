@@ -54,58 +54,55 @@ ButtonStyle? buttonStyleFromJSON(ThemeData theme, Map<String, dynamic>? json,
     return null;
   }
   return ButtonStyle(
-      foregroundColor: getMaterialStateProperty<Color?>(
-          json["color"],
+      foregroundColor: getWidgetStateProperty<Color?>(json["color"],
           (jv) => parseColor(theme, jv as String), defaultForegroundColor),
-      backgroundColor: getMaterialStateProperty<Color?>(
-          json["bgcolor"],
+      backgroundColor: getWidgetStateProperty<Color?>(json["bgcolor"],
           (jv) => parseColor(theme, jv as String), defaultBackgroundColor),
-      overlayColor: getMaterialStateProperty<Color?>(
-          json["overlay_color"],
+      overlayColor: getWidgetStateProperty<Color?>(json["overlay_color"],
           (jv) => parseColor(theme, jv as String), defaultOverlayColor),
-      shadowColor: getMaterialStateProperty<Color?>(json["shadow_color"],
+      shadowColor: getWidgetStateProperty<Color?>(json["shadow_color"],
           (jv) => parseColor(theme, jv as String), defaultShadowColor),
-      surfaceTintColor: getMaterialStateProperty<Color?>(
+      surfaceTintColor: getWidgetStateProperty<Color?>(
           json["surface_tint_color"],
           (jv) => parseColor(theme, jv as String),
           defaultSurfaceTintColor),
-      elevation: getMaterialStateProperty(
+      elevation: getWidgetStateProperty(
           json["elevation"], (jv) => parseDouble(jv, 0)!, defaultElevation),
       animationDuration: json["animation_duration"] != null
           ? Duration(milliseconds: parseInt(json["animation_duration"], 0)!)
           : null,
-      padding: getMaterialStateProperty<EdgeInsetsGeometry?>(
+      padding: getWidgetStateProperty<EdgeInsetsGeometry?>(
           json["padding"], (jv) => edgeInsetsFromJson(jv), defaultPadding),
-      side: getMaterialStateProperty<BorderSide?>(
+      side: getWidgetStateProperty<BorderSide?>(
           json["side"],
           (jv) => borderSideFromJSON(theme, jv, theme.colorScheme.outline),
           defaultBorderSide),
-      shape: getMaterialStateProperty<OutlinedBorder?>(
+      shape: getWidgetStateProperty<OutlinedBorder?>(
           json["shape"], (jv) => outlinedBorderFromJSON(jv), defaultShape));
 }
 
 FloatingActionButtonLocation parseFloatingActionButtonLocation(
     Control control, String propName, FloatingActionButtonLocation defValue) {
-  List<FloatingActionButtonLocation> fabLocations = [
-    FloatingActionButtonLocation.centerDocked,
-    FloatingActionButtonLocation.centerFloat,
-    FloatingActionButtonLocation.centerTop,
-    FloatingActionButtonLocation.endContained,
-    FloatingActionButtonLocation.endDocked,
-    FloatingActionButtonLocation.endFloat,
-    FloatingActionButtonLocation.endTop,
-    FloatingActionButtonLocation.miniCenterDocked,
-    FloatingActionButtonLocation.miniCenterFloat,
-    FloatingActionButtonLocation.miniCenterTop,
-    FloatingActionButtonLocation.miniEndFloat,
-    FloatingActionButtonLocation.miniEndTop,
-    FloatingActionButtonLocation.miniStartDocked,
-    FloatingActionButtonLocation.miniStartFloat,
-    FloatingActionButtonLocation.miniStartTop,
-    FloatingActionButtonLocation.startDocked,
-    FloatingActionButtonLocation.startFloat,
-    FloatingActionButtonLocation.startTop
-  ];
+  const Map<String, FloatingActionButtonLocation> fabLocations = {
+    "centerdocked": FloatingActionButtonLocation.centerDocked,
+    "centerfloat": FloatingActionButtonLocation.centerFloat,
+    "centertop": FloatingActionButtonLocation.centerTop,
+    "endcontained": FloatingActionButtonLocation.endContained,
+    "enddocked": FloatingActionButtonLocation.endDocked,
+    "endfloat": FloatingActionButtonLocation.endFloat,
+    "endtop": FloatingActionButtonLocation.endTop,
+    "minicenterdocked": FloatingActionButtonLocation.miniCenterDocked,
+    "minicenterfloat": FloatingActionButtonLocation.miniCenterFloat,
+    "minicentertop": FloatingActionButtonLocation.miniCenterTop,
+    "miniendfloat": FloatingActionButtonLocation.miniEndFloat,
+    "miniendtop": FloatingActionButtonLocation.miniEndTop,
+    "ministartdocked": FloatingActionButtonLocation.miniStartDocked,
+    "ministartfloat": FloatingActionButtonLocation.miniStartFloat,
+    "ministarttop": FloatingActionButtonLocation.miniStartTop,
+    "startdocked": FloatingActionButtonLocation.startDocked,
+    "startfloat": FloatingActionButtonLocation.startFloat,
+    "starttop": FloatingActionButtonLocation.startTop
+  };
 
   try {
     OffsetDetails? fabLocationOffsetDetails = parseOffset(control, propName);
@@ -116,11 +113,8 @@ FloatingActionButtonLocation parseFloatingActionButtonLocation(
       return defValue;
     }
   } catch (e) {
-    return fabLocations.firstWhere(
-        (l) =>
-            l.toString().split('.').last.toLowerCase() ==
-            control.attrString(propName, "")!.toLowerCase(),
-        orElse: () => defValue);
+    var key = control.attrString(propName, "")!.toLowerCase();
+    return fabLocations.containsKey(key) ? fabLocations[key]! : defValue;
   }
 }
 

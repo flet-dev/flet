@@ -13,6 +13,7 @@ for line in __import__("sys").stdin:
         print("{} = \"{}\"".format(match2.group(1).upper(), match2.group(1)))
 ' >> "$output_file"
 """
+import random
 
 PRIMARY = "primary"
 ON_PRIMARY = "onprimary"
@@ -62,3 +63,11 @@ TERTIARY_SYSTEM_GROUPED_BACKGROUND = "tertiarySystemGroupedBackground"
 SEPARATOR = "separator"
 OPAQUE_SEPARATOR = "opaqueSeparator"
 LINK = "link"
+
+
+colors_list = [v for k, v in vars().items() if k.isupper()]
+
+
+def random_color() -> str:
+    """Return a random color from the colors defined in this module."""
+    return random.choice(colors_list)

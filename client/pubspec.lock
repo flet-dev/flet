@@ -161,6 +161,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  dart_earcut:
+    dependency: transitive
+    description:
+      name: dart_earcut
+      sha256: "41b493147e30a051efb2da1e3acb7f38fe0db60afba24ac1ea5684cee272721e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   dbus:
     dependency: transitive
     description:
@@ -231,77 +239,77 @@ packages:
       path: "../packages/flet"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.2"
   flet_audio:
     dependency: "direct main"
     description:
       path: "../packages/flet_audio"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.2"
   flet_audio_recorder:
     dependency: "direct main"
     description:
       path: "../packages/flet_audio_recorder"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.2"
   flet_flashlight:
     dependency: "direct main"
     description:
       path: "../packages/flet_flashlight"
       relative: true
     source: path
-    version: "0.23.0"
+    version: "0.23.2"
   flet_geolocator:
     dependency: "direct main"
     description:
       path: "../packages/flet_geolocator"
       relative: true
     source: path
-    version: "0.23.0"
+    version: "0.23.2"
   flet_lottie:
     dependency: "direct main"
     description:
       path: "../packages/flet_lottie"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.2"
   flet_map:
     dependency: "direct main"
     description:
       path: "../packages/flet_map"
       relative: true
     source: path
-    version: "0.23.0"
+    version: "0.23.2"
   flet_permission_handler:
     dependency: "direct main"
     description:
       path: "../packages/flet_permission_handler"
       relative: true
     source: path
-    version: "0.23.0"
+    version: "0.23.2"
   flet_rive:
     dependency: "direct main"
     description:
       path: "../packages/flet_rive"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.2"
   flet_video:
     dependency: "direct main"
     description:
       path: "../packages/flet_video"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.2"
   flet_webview:
     dependency: "direct main"
     description:
       path: "../packages/flet_webview"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -345,10 +353,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_map
-      sha256: cda8d72135b697f519287258b5294a57ce2f2a5ebf234f0e406aad4dc14c9399
+      sha256: ead3532d99548140346684cf737a4c0a6f59f02f62ee4e406597f8364afbf1a2
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.0"
+    version: "7.0.0"
   flutter_markdown:
     dependency: transitive
     description:
@@ -493,10 +501,10 @@ packages:
     dependency: transitive
     description:
       name: intl
-      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
+      sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
       url: "https://pub.dev"
     source: hosted
-    version: "0.18.1"
+    version: "0.19.0"
   js:
     dependency: transitive
     description:
@@ -525,26 +533,26 @@ packages:
     dependency: transitive
     description:
       name: leak_tracker
-      sha256: "78eb209deea09858f5269f5a5b02be4049535f568c07b275096836f01ea323fa"
+      sha256: "7f0df31977cb2c0b88585095d168e689669a2cc9b97c309665e3386f3e9d341a"
       url: "https://pub.dev"
     source: hosted
-    version: "10.0.0"
+    version: "10.0.4"
   leak_tracker_flutter_testing:
     dependency: transitive
     description:
       name: leak_tracker_flutter_testing
-      sha256: b46c5e37c19120a8a01918cfaf293547f47269f7cb4b0058f21531c2465d6ef0
+      sha256: "06e98f569d004c1315b991ded39924b21af84cf14cc94791b8aea337d25b57f8"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.1"
+    version: "3.0.3"
   leak_tracker_testing:
     dependency: transitive
     description:
       name: leak_tracker_testing
-      sha256: a597f72a664dbd293f3bfc51f9ba69816f84dcd403cdac7066cb3f6003f3ab47
+      sha256: "6ba465d5d76e67ddf503e1161d1f4a6bc42306f9d66ca1e8f079a47290fb06d3"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.1"
+    version: "3.0.1"
   lints:
     dependency: transitive
     description:
@@ -565,10 +573,10 @@ packages:
     dependency: transitive
     description:
       name: logger
-      sha256: "8c94b8c219e7e50194efc8771cd0e9f10807d8d3e219af473d89b06cc2ee4e04"
+      sha256: af05cc8714f356fd1f3888fb6741cbe9fbe25cdb6eedbab80e1a6db21047d4a4
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "2.3.0"
   logging:
     dependency: transitive
     description:
@@ -685,10 +693,10 @@ packages:
     dependency: transitive
     description:
       name: meta
-      sha256: d584fa6707a52763a52446f02cc621b077888fb63b93bbcb1143a7be5a0c0c04
+      sha256: "7687075e408b093f36e6bbf6c91878cc0d4cd10f409506f7bc996f68220b9136"
       url: "https://pub.dev"
     source: hosted
-    version: "1.11.0"
+    version: "1.12.0"
   mgrs_dart:
     dependency: transitive
     description:
@@ -1178,10 +1186,10 @@ packages:
     dependency: transitive
     description:
       name: test_api
-      sha256: "5c2f730018264d276c20e4f1503fd1308dfbbae39ec8ee63c5236311ac06954b"
+      sha256: "9955ae474176f7ac8ee4e989dadfb411a58c30415bcfb648fa04b2b8a03afa7f"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.1"
+    version: "0.7.0"
   torch_light:
     dependency: transitive
     description:
@@ -1338,10 +1346,10 @@ packages:
     dependency: transitive
     description:
       name: vm_service
-      sha256: b3d56ff4341b8f182b96aceb2fa20e3dcb336b9f867bc0eafc0de10f1048e957
+      sha256: "3923c89304b715fb1eb6423f017651664a03bf5f4b29983627c4da791f74a4ec"
       url: "https://pub.dev"
     source: hosted
-    version: "13.0.0"
+    version: "14.2.1"
   volume_controller:
     dependency: transitive
     description:
@@ -1434,10 +1442,10 @@ packages:
     dependency: transitive
     description:
       name: window_manager
-      sha256: b3c895bdf936c77b83c5254bec2e6b3f066710c1f89c38b20b8acc382b525494
+      sha256: "8699323b30da4cdbe2aa2e7c9de567a6abd8a97d9a5c850a3c86dcd0b34bbfbf"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.8"
+    version: "0.3.9"
   window_to_front:
     dependency: transitive
     description:
@@ -1480,4 +1488,4 @@ packages:
     version: "3.1.2"
 sdks:
   dart: ">=3.3.0 <4.0.0"
-  flutter: ">=3.16.6"
+  flutter: ">=3.18.0-18.0.pre.54"

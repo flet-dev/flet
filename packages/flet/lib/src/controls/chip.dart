@@ -93,7 +93,7 @@ class _ChipControlState extends State<ChipControl> {
         widget.control.attrColor("selectedShadowColor", context);
     Color? shadowColor = widget.control.attrColor("shadowColor", context);
     var color =
-        parseMaterialStateColor(Theme.of(context), widget.control, "color");
+        parseWidgetStateColor(Theme.of(context), widget.control, "color");
 
     BorderSide? borderSide =
         parseBorderSide(Theme.of(context), widget.control, "borderSide");

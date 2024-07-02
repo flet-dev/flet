@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union
+from typing import List, Optional, Union, Callable
 
 from flet_core import Control
 from flet_core.adaptive_control import AdaptiveControl
@@ -10,7 +10,7 @@ from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.floating_action_button import FloatingActionButton
 from flet_core.navigation_bar import NavigationBar
 from flet_core.navigation_drawer import NavigationDrawer
-from flet_core.scrollable_control import ScrollableControl
+from flet_core.scrollable_control import ScrollableControl, OnScrollEvent
 from flet_core.types import (
     CrossAxisAlignment,
     FloatingActionButtonLocation,
@@ -57,7 +57,7 @@ class View(ScrollableControl, AdaptiveControl):
         auto_scroll: Optional[bool] = None,
         fullscreen_dialog: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
-        on_scroll: Any = None,
+        on_scroll: Optional[Callable[[OnScrollEvent], None]] = None,
         #
         # AdaptiveControl
         #
@@ -181,10 +181,13 @@ class View(ScrollableControl, AdaptiveControl):
         self, value: Union[FloatingActionButtonLocation, OffsetValue]
     ):
         self.__floating_action_button_location = value
-        self._set_attr(
-            "floatingActionButtonLocation",
-            value.value if isinstance(value, FloatingActionButtonLocation) else value,
-        )
+        if isinstance(value, (FloatingActionButtonLocation, str)):
+            self._set_attr(
+                "floatingActionButtonLocation",
+                value.value
+                if isinstance(value, FloatingActionButtonLocation)
+                else value,
+            )
 
     # navigation_bar
     @property
@@ -268,3 +271,7 @@ class View(ScrollableControl, AdaptiveControl):
     @fullscreen_dialog.setter
     def fullscreen_dialog(self, value: Optional[bool]):
         self._set_attr("fullscreenDialog", value)
+
+    # Magic methods
+    def __contains__(self, item: Control) -> bool:
+        return item in self.__controls

@@ -27,7 +27,7 @@ Radius? parseRadius(Control control, String propName, [Radius? defaultValue]) {
 }
 
 Border? parseBorder(ThemeData theme, Control control, String propName,
-    {Color? defaultSideColor}) {
+    [Color? defaultSideColor]) {
   var v = control.attrString(propName, null);
   if (v == null) {
     return null;
@@ -119,7 +119,7 @@ OutlinedBorder? outlinedBorderFromJSON(Map<String, dynamic> json) {
   return null;
 }
 
-MaterialStateBorderSide? parseMaterialStateBorderSide(
+WidgetStateBorderSide? parseWidgetStateBorderSide(
     ThemeData theme, Control control, String propName) {
   var v = control.attrString(propName, null);
   if (v == null) {
@@ -131,15 +131,15 @@ MaterialStateBorderSide? parseMaterialStateBorderSide(
     j = {"": j};
   }
 
-  return MaterialStateBorderSideFromJSON(
+  return WidgetStateBorderSideFromJSON(
       j, (jv) => borderSideFromJSON(theme, jv, null), BorderSide.none);
 }
 
-class MaterialStateBorderSideFromJSON extends MaterialStateBorderSide {
+class WidgetStateBorderSideFromJSON extends WidgetStateBorderSide {
   late final Map<String, BorderSide?> _states;
   late final BorderSide _defaultValue;
 
-  MaterialStateBorderSideFromJSON(
+  WidgetStateBorderSideFromJSON(
       Map<String, dynamic>? jsonDictValue,
       BorderSide? Function(dynamic) converterFromJson,
       BorderSide defaultValue) {
@@ -155,7 +155,7 @@ class MaterialStateBorderSideFromJSON extends MaterialStateBorderSide {
   }
 
   @override
-  BorderSide? resolve(Set<MaterialState> states) {
+  BorderSide? resolve(Set<WidgetState> states) {
     // find specific state
     for (var state in states) {
       if (_states.containsKey(state.name)) {

@@ -1,11 +1,16 @@
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control, OptionalNumber
 from flet_core.padding import Padding
 from flet_core.ref import Ref
-from flet_core.types import MarginValue, PaddingValue, ClipBehavior
+from flet_core.types import (
+    MarginValue,
+    PaddingValue,
+    ClipBehavior,
+    OptionalEventCallable,
+)
 
 
 class SnackBarBehavior(Enum):
@@ -80,8 +85,8 @@ class SnackBar(Control):
         shape: Optional[OutlinedBorder] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         action_overflow_threshold: OptionalNumber = None,
-        on_action=None,
-        on_visible=None,
+        on_action: OptionalEventCallable = None,
+        on_visible: OptionalEventCallable = None,
         #
         # Control
         #
@@ -129,7 +134,7 @@ class SnackBar(Control):
         super().before_update()
         self._set_attr_json("shape", self.__shape)
         self._set_attr_json("padding", self.__padding)
-        if isinstance(self.__margin, Union[int, float, Padding]) and not self.width:
+        if isinstance(self.__margin, (int, float, Padding)) and not self.width:
             # margin and width cannot be set together - if width is set, margin is ignored
             self._set_attr_json("margin", self.__margin)
 
@@ -297,18 +302,18 @@ class SnackBar(Control):
 
     # on_action
     @property
-    def on_action(self):
+    def on_action(self) -> OptionalEventCallable:
         return self._get_event_handler("action")
 
     @on_action.setter
-    def on_action(self, handler):
+    def on_action(self, handler: OptionalEventCallable):
         self._add_event_handler("action", handler)
 
     # on_visible
     @property
-    def on_visible(self):
+    def on_visible(self) -> OptionalEventCallable:
         return self._get_event_handler("visible")
 
     @on_visible.setter
-    def on_visible(self, handler):
+    def on_visible(self, handler: OptionalEventCallable):
         self._add_event_handler("visible", handler)

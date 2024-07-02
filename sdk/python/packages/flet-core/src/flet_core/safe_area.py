@@ -12,6 +12,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 
@@ -47,7 +48,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -171,7 +172,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
     def minimum(self) -> PaddingValue:
         warnings.warn(
             f"minimum is deprecated since version 0.23.0 "
-            f"and will be removed in version 1.0. Use minimum_padding instead.",
+            f"and will be removed in version 0.26.0. Use minimum_padding instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
@@ -183,7 +184,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
         if value is not None:
             warnings.warn(
                 f"minimum is deprecated since version 0.23.0 "
-                f"and will be removed in version 1.0. Use minimum_padding instead.",
+                f"and will be removed in version 0.26.0. Use minimum_padding instead.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )

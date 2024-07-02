@@ -1,88 +1,69 @@
 from enum import Enum
-import json
 from typing import Any, Optional
-from dataclasses import dataclass, field
+
 from flet_core.control import Control
 from flet_core.ref import Ref
 
 
-@dataclass
-class PermissionStatus:
-    is_granted: Optional[bool] = field(default=None)
-    is_denied: Optional[bool] = field(default=None)
-    is_permanently_denied: Optional[bool] = field(default=None)
-    is_limited: Optional[bool] = field(default=None)
-    is_provisional: Optional[bool] = field(default=None)
-    is_restricted: Optional[bool] = field(default=None)
+class PermissionStatus(Enum):
+    GRANTED = "granted"
+    DENIED = "denied"
+    PERMANENTLY_DENIED = "permanentlyDenied"
+    LIMITED = "limited"
+    PROVISIONAL = "provisional"
+    RESTRICTED = "restricted"
 
 
-class PermissionTemplate(Control):
-    def __init__(self, permission_of, invoke_method, invoke_method_async):
-
-        self.__permission_of = permission_of
-        self.invoke_method = invoke_method
-        self.invoke_method_async = invoke_method_async
-
-    def check_permission(self, wait_timeout: Optional[float] = 5) -> PermissionStatus:
-        permission = self.invoke_method(
-            "checkPermission",
-            {"permissionOf": self.__permission_of},
-            wait_for_result=True,
-            wait_timeout=wait_timeout,
-        )
-        if permission != "null":
-            return PermissionStatus(**json.loads(permission))
-        else:
-            return PermissionStatus()
-
-    async def check_permission_async(self, wait_timeout: Optional[float] = 5) -> PermissionStatus:
-        permission = await self.invoke_method_async(
-            "checkPermission",
-            {"permissionOf": self.__permission_of},
-            wait_for_result=True,
-            wait_timeout=wait_timeout,
-        )
-        if permission != "null":
-            return PermissionStatus(**json.loads(permission))
-        else:
-            return PermissionStatus()
-
-    def request_permission(self, wait_timeout: Optional[float] = 25) -> PermissionStatus:
-        permission = self.invoke_method(
-            "requestPermission",
-            {"permissionOf": self.__permission_of},
-            wait_for_result=True,
-            wait_timeout=wait_timeout,
-        )
-        if permission != "null":
-            return PermissionStatus(**json.loads(permission))
-        else:
-            return PermissionStatus()
-
-    async def request_permission_async(
-        self, wait_timeout: Optional[float] = 25
-    ) -> PermissionStatus:
-        permission = await self.invoke_method_async(
-            "requestPermission",
-            {"permissionOf": self.__permission_of},
-            wait_for_result=True,
-            wait_timeout=wait_timeout,
-        )
-        if permission != "null":
-            return PermissionStatus(**json.loads(permission))
-        else:
-            return PermissionStatus()
+class PermissionType(Enum):
+    ACCESS_MEDIA_LOCATION = "accessMediaLocation"
+    ACCESS_NOTIFICATION_POLICY = "accessNotificationPolicy"
+    ACTIVITY_RECOGNITION = "activityRecognition"
+    APP_TRACKING_TRANSPARENCY = "appTrackingTransparency"
+    ASSISTANT = "assistant"
+    AUDIO = "audio"
+    BACKGROUND_REFRESH = "backgroundRefresh"
+    BLUETOOTH = "bluetooth"
+    BLUETOOTH_ADVERTISE = "bluetoothAdvertise"
+    BLUETOOTH_CONNECT = "bluetoothConnect"
+    BLUETOOTH_SCAN = "bluetoothScan"
+    CALENDAR_FULL_ACCESS = "calendarFullAccess"
+    CALENDAR_WRITE_ONLY = "calendarWriteOnly"
+    CAMERA = "camera"
+    CONTACTS = "contacts"
+    CRITICAL_ALERTS = "criticalAlerts"
+    IGNORE_BATTERY_OPTIMIZATIONS = "ignoreBatteryOptimizations"
+    LOCATION = "location"
+    LOCATION_ALWAYS = "locationAlways"
+    LOCATION_WHEN_IN_USE = "locationWhenInUse"
+    MANAGE_EXTERNAL_STORAGE = "manageExternalStorage"
+    MEDIA_LIBRARY = "mediaLibrary"
+    MICROPHONE = "microphone"
+    NEARBY_WIFI_DEVICES = "nearbyWifiDevices"
+    NOTIFICATION = "notification"
+    PHONE = "phone"
+    PHOTOS = "photos"
+    PHOTOS_ADD_ONLY = "photosAddOnly"
+    REMINDERS = "reminders"
+    REQUEST_INSTALL_PACKAGES = "requestInstallPackages"
+    SCHEDULE_EXACT_ALARM = "scheduleExactAlarm"
+    SENSORS = "sensors"
+    SENSORS_ALWAYS = "sensorsAlways"
+    SMS = "sms"
+    SPEECH = "speech"
+    STORAGE = "storage"
+    SYSTEM_ALERT_WINDOW = "systemAlertWindow"
+    UNKNOWN = "unknown"
+    VIDEOS = "videos"
 
 
 class PermissionHandler(Control):
     """
     A control that allows you check and request permission from your device.
-    This control is non-visual and should be added to `page.overlay` list
-
+    This control is non-visual and should be added to `page.overlay` list.
 
     -----
 
-    Online docs: https://flet.dev/docs/controls/flet_permission_handler
+    Online docs: https://flet.dev/docs/controls/permissionhandler
     """
 
     def __init__(
@@ -97,123 +78,66 @@ class PermissionHandler(Control):
             ref=ref,
             data=data,
         )
-        self.accessMediaLocation = PermissionTemplate(
-            "accessMediaLocation", self.invoke_method, self.invoke_method_async
-        )
-        self.accessNotificationPolicy = PermissionTemplate(
-            "accessNotificationPolicy", self.invoke_method, self.invoke_method_async
-        )
-        self.activityRecognition = PermissionTemplate(
-            "activityRecognition", self.invoke_method, self.invoke_method_async
-        )
-        self.appTrackingTransparency = PermissionTemplate(
-            "appTrackingTransparency", self.invoke_method, self.invoke_method_async
-        )
-        self.assistant = PermissionTemplate(
-            "assistant", self.invoke_method, self.invoke_method_async
-        )
-        self.audio = PermissionTemplate(
-            "audio", self.invoke_method, self.invoke_method_async
-        )
-        self.backgroundRefresh = PermissionTemplate(
-            "backgroundRefresh", self.invoke_method, self.invoke_method_async
-        )
-        self.bluetooth = PermissionTemplate(
-            "bluetooth", self.invoke_method, self.invoke_method_async
-        )
-        self.bluetoothAdvertise = PermissionTemplate(
-            "bluetoothAdvertise", self.invoke_method, self.invoke_method_async
-        )
-        self.bluetoothConnect = PermissionTemplate(
-            "bluetoothConnect", self.invoke_method, self.invoke_method_async
-        )
-        self.bluetoothScan = PermissionTemplate(
-            "bluetoothScan", self.invoke_method, self.invoke_method_async
-        )
-        self.calendarFullAccess = PermissionTemplate(
-            "calendarFullAccess", self.invoke_method, self.invoke_method_async
-        )
-        self.calendarWriteOnly = PermissionTemplate(
-            "calendarWriteOnly", self.invoke_method, self.invoke_method_async
-        )
-        self.camera = PermissionTemplate(
-            "camera", self.invoke_method, self.invoke_method_async
-        )
-        self.contacts = PermissionTemplate(
-            "contacts", self.invoke_method, self.invoke_method_async
-        )
-        self.criticalAlerts = PermissionTemplate(
-            "criticalAlerts", self.invoke_method, self.invoke_method_async
-        )
-        self.ignoreBatteryOptimizations = PermissionTemplate(
-            "ignoreBatteryOptimizations", self.invoke_method, self.invoke_method_async
-        )
-        self.location = PermissionTemplate(
-            "location", self.invoke_method, self.invoke_method_async
-        )
-        self.locationAlways = PermissionTemplate(
-            "locationAlways", self.invoke_method, self.invoke_method_async
-        )
-        self.locationWhenInUse = PermissionTemplate(
-            "locationWhenInUse", self.invoke_method, self.invoke_method_async
-        )
-        self.manageExternalStorage = PermissionTemplate(
-            "manageExternalStorage", self.invoke_method, self.invoke_method_async
-        )
-        self.mediaLibrary = PermissionTemplate(
-            "mediaLibrary", self.invoke_method, self.invoke_method_async
-        )
-        self.microphone = PermissionTemplate(
-            "microphone", self.invoke_method, self.invoke_method_async
-        )
-        self.nearbyWifiDevices = PermissionTemplate(
-            "nearbyWifiDevices", self.invoke_method, self.invoke_method_async
-        )
-        self.notification = PermissionTemplate(
-            "notification", self.invoke_method, self.invoke_method_async
-        )
-        self.phone = PermissionTemplate(
-            "phone", self.invoke_method, self.invoke_method_async
-        )
-        self.photos = PermissionTemplate(
-            "photos", self.invoke_method, self.invoke_method_async
-        )
-        self.photosAddOnly = PermissionTemplate(
-            "photosAddOnly", self.invoke_method, self.invoke_method_async
-        )
-        self.reminders = PermissionTemplate(
-            "reminders", self.invoke_method, self.invoke_method_async
-        )
-        self.requestInstallPackages = PermissionTemplate(
-            "requestInstallPackages", self.invoke_method, self.invoke_method_async
-        )
-        self.scheduleExactAlarm = PermissionTemplate(
-            "scheduleExactAlarm", self.invoke_method, self.invoke_method_async
-        )
-        self.sensors = PermissionTemplate(
-            "sensors", self.invoke_method, self.invoke_method_async
-        )
-        self.sensorsAlways = PermissionTemplate(
-            "sensorsAlways", self.invoke_method, self.invoke_method_async
-        )
-        self.sms = PermissionTemplate(
-            "sms", self.invoke_method, self.invoke_method_async
-        )
-        self.speech = PermissionTemplate(
-            "speech", self.invoke_method, self.invoke_method_async
-        )
-        self.storage = PermissionTemplate(
-            "storage", self.invoke_method, self.invoke_method_async
-        )
-        self.systemAlertWindow = PermissionTemplate(
-            "systemAlertWindow", self.invoke_method, self.invoke_method_async
-        )
-        self.unknown = PermissionTemplate(
-            "unknown", self.invoke_method, self.invoke_method_async
-        )
-        self.videos = PermissionTemplate(
-            "videos", self.invoke_method, self.invoke_method_async
-        )
 
     def _get_control_name(self):
         return "permission_handler"
+
+    def check_permission(
+        self, of: PermissionType, wait_timeout: Optional[float] = 25
+    ) -> Optional[PermissionStatus]:
+        out = self.invoke_method(
+            "check_permission",
+            {"of": of.value if isinstance(of, PermissionType) else of},
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return PermissionStatus(out) if out is not None else None
+
+    async def check_permission_async(
+        self, of: PermissionType, wait_timeout: Optional[float] = 25
+    ) -> Optional[PermissionStatus]:
+        out = await self.invoke_method_async(
+            "check_permission",
+            {"of": of.value if isinstance(of, PermissionType) else of},
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return PermissionStatus(out) if out is not None else None
+
+    def request_permission(
+        self, of: PermissionType, wait_timeout: Optional[float] = 25
+    ) -> Optional[PermissionStatus]:
+        out = self.invoke_method(
+            "request_permission",
+            {"of": of.value if isinstance(of, PermissionType) else of},
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return PermissionStatus(out) if out is not None else None
+
+    async def request_permission_async(
+        self, of: PermissionType, wait_timeout: Optional[float] = 25
+    ) -> Optional[PermissionStatus]:
+        out = await self.invoke_method_async(
+            "request_permission",
+            {"of": of.value if isinstance(of, PermissionType) else of},
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return PermissionStatus(out) if out is not None else None
+
+    def open_app_settings(self, wait_timeout: Optional[float] = 10) -> bool:
+        opened = self.invoke_method(
+            "open_app_settings",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return opened == "true"
+
+    async def open_app_settings_async(self, wait_timeout: Optional[float] = 10) -> bool:
+        opened = await self.invoke_method_async(
+            "open_app_settings",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return opened == "true"

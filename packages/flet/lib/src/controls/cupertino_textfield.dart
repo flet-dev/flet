@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +7,7 @@ import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/form_field.dart';
 import '../utils/gradient.dart';
+import '../utils/images.dart';
 import '../utils/shadows.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
@@ -192,11 +192,10 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
       border = parseBorder(Theme.of(context), widget.control, "border");
       // adaptive TextField is being created
     } catch (e) {
-      FormFieldInputBorder inputBorder = FormFieldInputBorder.values.firstWhere(
-        ((b) =>
-            b.name == widget.control.attrString("border", "")!.toLowerCase()),
-        orElse: () => FormFieldInputBorder.outline,
-      );
+      FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
+        widget.control.attrString("border"),
+        FormFieldInputBorder.outline,
+      )!;
 
       if (inputBorder == FormFieldInputBorder.outline) {
         border = Border.all(color: borderColor, width: borderWidth);
@@ -225,9 +224,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
 
     BoxDecoration? defaultDecoration = const CupertinoTextField().decoration;
     var gradient = parseGradient(Theme.of(context), widget.control, "gradient");
-    var blendMode = BlendMode.values.firstWhereOrNull((e) =>
-        e.name.toLowerCase() ==
-        widget.control.attrString("blendMode", "")!.toLowerCase());
+    var blendMode = parseBlendMode(widget.control.attrString("blendMode"));
 
     var bgColor = widget.control.attrColor("bgColor", context);
     // for adaptive TextField use label for placeholder

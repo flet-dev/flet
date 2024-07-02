@@ -1,9 +1,8 @@
-import dataclasses
-from dataclasses import field
+from dataclasses import dataclass, field
 from typing import List, Optional
 
 
-@dataclasses.dataclass
+@dataclass
 class ChartGridLines:
     interval: Optional[float] = field(default=None)
     color: Optional[str] = field(default=None)

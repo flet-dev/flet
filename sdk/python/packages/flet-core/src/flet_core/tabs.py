@@ -9,7 +9,7 @@ from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
     ClipBehavior,
-    MaterialState,
+    ControlState,
     MouseCursor,
     OffsetValue,
     PaddingValue,
@@ -17,6 +17,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TabAlignment,
+    OptionalEventCallable,
 )
 
 
@@ -156,13 +157,13 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         is_secondary: Optional[bool] = None,
         label_color: Optional[str] = None,
         unselected_label_color: Optional[str] = None,
-        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
+        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         divider_height: OptionalNumber = None,
         indicator_thickness: OptionalNumber = None,
         enable_feedback: Optional[str] = None,
         mouse_cursor: Optional[MouseCursor] = None,
         clip_behavior: Optional[ClipBehavior] = None,
-        on_change=None,
+        on_change: OptionalEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -188,7 +189,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -272,11 +273,11 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # selected_index
@@ -447,9 +448,9 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__overlay_color = value

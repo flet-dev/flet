@@ -9,12 +9,13 @@ from flet_core.theme import ThemeVisualDensity
 from flet_core.types import (
     AnimationValue,
     LabelPosition,
-    MaterialState,
+    ControlState,
     MouseCursor,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 try:
@@ -60,17 +61,17 @@ class Radio(ConstrainedControl, AdaptiveControl):
         label_style: Optional[TextStyle] = None,
         value: Optional[str] = None,
         autofocus: Optional[bool] = None,
-        fill_color: Union[None, str, Dict[MaterialState, str]] = None,
+        fill_color: Union[None, str, Dict[ControlState, str]] = None,
         active_color: Optional[str] = None,
-        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
+        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         hover_color: Optional[str] = None,
         focus_color: Optional[str] = None,
         splash_radius: OptionalNumber = None,
         toggleable: Optional[bool] = None,
         visual_density: Optional[ThemeVisualDensity] = None,
         mouse_cursor: Optional[MouseCursor] = None,
-        on_focus=None,
-        on_blur=None,
+        on_focus: OptionalEventCallable = None,
+        on_blur: OptionalEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -96,7 +97,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -258,38 +259,38 @@ class Radio(ConstrainedControl, AdaptiveControl):
 
     # fill_color
     @property
-    def fill_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def fill_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__fill_color
 
     @fill_color.setter
-    def fill_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def fill_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__fill_color = value
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__overlay_color = value
 
     # on_focus
     @property
-    def on_focus(self):
+    def on_focus(self) -> OptionalEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler):
+    def on_focus(self, handler: OptionalEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self):
+    def on_blur(self) -> OptionalEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler):
+    def on_blur(self, handler: OptionalEventCallable):
         self._add_event_handler("blur", handler)
 
     # autofocus

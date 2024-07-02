@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -7,6 +6,7 @@ import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
 import '../utils/mouse.dart';
+import '../utils/others.dart';
 import '../utils/text.dart';
 import '../utils/theme.dart';
 import 'create_control.dart';
@@ -73,12 +73,9 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
       var trailingCtrls =
           children.where((c) => c.name == "trailing" && c.isVisible);
 
-      var titleAlignment = ListTileTitleAlignment.values.firstWhereOrNull((e) =>
-          e.name.toLowerCase() ==
-          control.attrString("titleAlignment", "")!.toLowerCase());
-      var style = ListTileStyle.values.firstWhereOrNull((e) =>
-          e.name.toLowerCase() ==
-          control.attrString("style", "")!.toLowerCase());
+      var titleAlignment =
+          parseListTileTitleAlignment(control.attrString("titleAlignment"));
+      var style = parseListTileStyle(control.attrString("style"));
 
       bool selected = control.attrBool("selected", false)!;
       bool dense = control.attrBool("dense", false)!;
@@ -131,6 +128,7 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
         enableFeedback: enableFeedback,
         minLeadingWidth: minLeadingWidth,
         minVerticalPadding: minVerticalPadding,
+        minTileHeight: control.attrDouble("minHeight"),
         selectedTileColor: control.attrColor("selectedTileColor", context),
         selectedColor: control.attrColor("selectedColor", context),
         focusColor: control.attrColor("focusColor", context),

@@ -5,11 +5,12 @@ from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
-    MaterialState,
+    ControlState,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 
@@ -84,10 +85,10 @@ class RangeSlider(ConstrainedControl):
         round: Optional[int] = None,
         active_color: Optional[str] = None,
         inactive_color: Optional[str] = None,
-        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
-        on_change=None,
-        on_change_start=None,
-        on_change_end=None,
+        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
+        on_change: OptionalEventCallable = None,
+        on_change_start: OptionalEventCallable = None,
+        on_change_end: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -113,7 +114,7 @@ class RangeSlider(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -260,36 +261,36 @@ class RangeSlider(ConstrainedControl):
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__overlay_color = value
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # on_change_start
     @property
-    def on_change_start(self):
+    def on_change_start(self) -> OptionalEventCallable:
         return self._get_event_handler("change_start")
 
     @on_change_start.setter
-    def on_change_start(self, handler):
+    def on_change_start(self, handler: OptionalEventCallable):
         self._add_event_handler("change_start", handler)
 
     # on_change_end
     @property
-    def on_change_end(self):
+    def on_change_end(self) -> OptionalEventCallable:
         return self._get_event_handler("change_end")
 
     @on_change_end.setter
-    def on_change_end(self, handler):
+    def on_change_end(self, handler: OptionalEventCallable):
         self._add_event_handler("change_end", handler)

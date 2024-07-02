@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flet/flet.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -38,10 +39,55 @@ LatLngBounds? latLngBoundsFromJson(Map<String, dynamic> json) {
       latLngFromJson(json['corner_1']), latLngFromJson(json['corner_2']));
 }
 
-InteractionOptions? parseInteractionOptions(Control control, String propName) {
+PatternFit? parsePatternFit(String? value,
+    [PatternFit? defValue = PatternFit.none]) {
+  if (value == null) {
+    return defValue;
+  }
+  return PatternFit.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+StrokePattern? parseStrokePattern(Control control, String propName,
+    [StrokePattern? defValue]) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return defValue;
+  }
+
+  final j1 = json.decode(v);
+  return strokePatternFromJson(j1);
+}
+
+StrokePattern? strokePatternFromJson(Map<String, dynamic> json) {
+  if (json['type'] == 'dotted') {
+    return StrokePattern.dotted(
+      spacingFactor: parseDouble(json['spacing_factor'], 1)!,
+      patternFit: parsePatternFit(json['pattern_fit'], PatternFit.none)!,
+    );
+  } else if (json['type'] == 'solid') {
+    return const StrokePattern.solid();
+  } else if (json['type'] == 'dash') {
+    var segments = json['segments'];
+    return StrokePattern.dashed(
+      patternFit: parsePatternFit(json['pattern_fit'], PatternFit.none)!,
+      segments: segments != null
+          ? (jsonDecode(segments) as List)
+              .map((e) => parseDouble(e))
+              .whereNotNull()
+              .toList()
+          : [],
+    );
+  }
+  return null;
+}
+
+InteractionOptions parseInteractionOptions(Control control, String propName,
+    [InteractionOptions defValue = const InteractionOptions()]) {
   var v = control.attrString(propName);
   if (v == null) {
-    return null;
+    return defValue;
   }
 
   final j1 = json.decode(v);
@@ -52,7 +98,6 @@ InteractionOptions interactionOptionsFromJSON(dynamic json) {
   return InteractionOptions(
       enableMultiFingerGestureRace:
           parseBool(json["enable_multi_finger_gesture_race"], false)!,
-      enableScrollWheel: parseBool(json["enable_scroll_wheel"], false)!,
       pinchMoveThreshold: parseDouble(json["pinch_move_threshold"], 40.0)!,
       scrollWheelVelocity: parseDouble(json["scroll_wheel_velocity"], 0.005)!,
       pinchZoomThreshold: parseDouble(json["pinch_zoom_threshold"], 0.5)!,
@@ -68,16 +113,10 @@ InteractionOptions interactionOptionsFromJSON(dynamic json) {
 
 EvictErrorTileStrategy? parseEvictErrorTileStrategy(String? strategy,
     [EvictErrorTileStrategy? defValue]) {
-  switch (strategy?.toLowerCase()) {
-    case "dispose":
-      return EvictErrorTileStrategy.dispose;
-    case "notvisible":
-      return EvictErrorTileStrategy.notVisible;
-    case "notvisiblerespectmargin":
-      return EvictErrorTileStrategy.notVisibleRespectMargin;
-    case "none":
-      return EvictErrorTileStrategy.none;
-    default:
-      return defValue;
+  if (strategy == null) {
+    return defValue;
   }
+  return EvictErrorTileStrategy.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == strategy.toLowerCase()) ??
+      defValue;
 }

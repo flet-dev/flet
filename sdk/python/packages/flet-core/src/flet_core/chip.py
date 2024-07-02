@@ -15,7 +15,8 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     ClipBehavior,
-    MaterialState,
+    ControlState,
+    OptionalEventCallable,
 )
 
 
@@ -87,16 +88,16 @@ class Chip(ConstrainedControl):
         selected_shadow_color: Optional[str] = None,
         autofocus: Optional[bool] = None,
         surface_tint_color: Optional[str] = None,
-        color: Union[None, str, Dict[Union[MaterialState, str], str]] = None,
+        color: Union[None, str, Dict[Union[ControlState, str], str]] = None,
         click_elevation: OptionalNumber = None,
         clip_behavior: Optional[ClipBehavior] = None,
         visual_density: Optional[ThemeVisualDensity] = None,
         border_side: Optional[BorderSide] = None,
-        on_click=None,
-        on_delete=None,
-        on_select=None,
-        on_focus=None,
-        on_blur=None,
+            on_click: OptionalEventCallable = None,
+            on_delete: OptionalEventCallable = None,
+            on_select: OptionalEventCallable = None,
+            on_focus: OptionalEventCallable = None,
+            on_blur: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -121,7 +122,7 @@ class Chip(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+            on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -316,11 +317,11 @@ class Chip(ConstrainedControl):
 
     # color
     @property
-    def color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__color
 
     @color.setter
-    def color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__color = value
 
     # autofocus
@@ -448,7 +449,7 @@ class Chip(ConstrainedControl):
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)
         self._set_attr("onclick", True if handler is not None else None)
 
@@ -458,7 +459,7 @@ class Chip(ConstrainedControl):
         return self._get_event_handler("delete")
 
     @on_delete.setter
-    def on_delete(self, handler):
+    def on_delete(self, handler: OptionalEventCallable):
         self._add_event_handler("delete", handler)
         self._set_attr("onDelete", True if handler is not None else None)
 
@@ -468,7 +469,7 @@ class Chip(ConstrainedControl):
         return self._get_event_handler("select")
 
     @on_select.setter
-    def on_select(self, handler):
+    def on_select(self, handler: OptionalEventCallable):
         self._add_event_handler("select", handler)
         self._set_attr("onSelect", True if handler is not None else None)
 
@@ -478,7 +479,7 @@ class Chip(ConstrainedControl):
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler):
+    def on_focus(self, handler: OptionalEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
@@ -487,5 +488,5 @@ class Chip(ConstrainedControl):
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler):
+    def on_blur(self, handler: OptionalEventCallable):
         self._add_event_handler("blur", handler)
