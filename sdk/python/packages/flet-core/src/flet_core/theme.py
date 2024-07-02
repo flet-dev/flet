@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field
-from enum import Enum, EnumMeta
+from enum import Enum
 from typing import Dict, List, Optional, Union
-from warnings import warn
 
 from flet_core.alignment import Alignment
 from flet_core.border import BorderSide
@@ -24,32 +23,14 @@ from flet_core.types import (
     MouseCursor,
     OffsetValue,
     PaddingValue,
+    ThemeVisualDensity,
+    VisualDensity,
 )
 
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
-
-
-class ThemeVisualDensityDeprecated(EnumMeta):
-    def __getattribute__(self, item):
-        if item == "ADAPTIVEPLATFORMDENSITY":
-            warn(
-                "ADAPTIVEPLATFORMDENSITY is deprecated and will be removed in version 0.26.0. "
-                "Use ADAPTIVE_PLATFORM_DENSITY instead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-        return EnumMeta.__getattribute__(self, item)
-
-
-class ThemeVisualDensity(Enum, metaclass=ThemeVisualDensityDeprecated):
-    STANDARD = "standard"
-    COMPACT = "compact"
-    COMFORTABLE = "comfortable"
-    ADAPTIVEPLATFORMDENSITY = "adaptivePlatformDensity"
-    ADAPTIVE_PLATFORM_DENSITY = "adaptivePlatformDensity"
 
 
 PageTransitionString = Literal["fadeUpwards", "openUpwards", "zoom", "cupertino"]
@@ -305,7 +286,7 @@ class RadioTheme:
     )
     splash_radius: OptionalNumber = field(default=None)
     height: OptionalNumber = field(default=None)
-    visual_density: Optional[ThemeVisualDensity] = field(default=None)
+    visual_density: Union[None, ThemeVisualDensity, VisualDensity] = field(default=None)
     mouse_cursor: Union[
         None, MouseCursor, Dict[Union[str, ControlState], MouseCursor]
     ] = field(default=None)
@@ -324,7 +305,7 @@ class CheckboxTheme:
     )
     splash_radius: OptionalNumber = field(default=None)
     border_side: Optional[BorderSide] = field(default=None)
-    visual_density: Optional[ThemeVisualDensity] = field(default=None)
+    visual_density: Union[None, ThemeVisualDensity, VisualDensity] = field(default=None)
     shape: Optional[OutlinedBorder] = field(default=None)
     mouse_cursor: Union[
         None, MouseCursor, Dict[Union[str, ControlState], MouseCursor]
@@ -509,7 +490,7 @@ class ListTileTheme:
     enable_feedback: Optional[bool] = field(default=None)
     dense: Optional[bool] = field(default=None)
     shape: Optional[OutlinedBorder] = field(default=None)
-    visual_density: Optional[ThemeVisualDensity] = field(default=None)
+    visual_density: Union[None, ThemeVisualDensity, VisualDensity] = field(default=None)
     content_padding: PaddingValue = field(default=None)
     min_vertical_padding: PaddingValue = field(default=None)
     horizontal_spacing: OptionalNumber = field(default=None)

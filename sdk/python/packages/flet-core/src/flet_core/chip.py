@@ -6,7 +6,6 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.theme import ThemeVisualDensity
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -17,6 +16,8 @@ from flet_core.types import (
     ClipBehavior,
     ControlState,
     OptionalEventCallable,
+    ThemeVisualDensity,
+    VisualDensity,
 )
 
 
@@ -91,13 +92,13 @@ class Chip(ConstrainedControl):
         color: Union[None, str, Dict[Union[ControlState, str], str]] = None,
         click_elevation: OptionalNumber = None,
         clip_behavior: Optional[ClipBehavior] = None,
-        visual_density: Optional[ThemeVisualDensity] = None,
+        visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
         border_side: Optional[BorderSide] = None,
-            on_click: OptionalEventCallable = None,
-            on_delete: OptionalEventCallable = None,
-            on_select: OptionalEventCallable = None,
-            on_focus: OptionalEventCallable = None,
-            on_blur: OptionalEventCallable = None,
+        on_click: OptionalEventCallable = None,
+        on_delete: OptionalEventCallable = None,
+        on_select: OptionalEventCallable = None,
+        on_focus: OptionalEventCallable = None,
+        on_blur: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -122,7 +123,7 @@ class Chip(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-            on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -416,13 +417,13 @@ class Chip(ConstrainedControl):
 
     # visual_density
     @property
-    def visual_density(self) -> Optional[ThemeVisualDensity]:
+    def visual_density(self) -> Union[None, ThemeVisualDensity, VisualDensity]:
         return self.__visual_density
 
     @visual_density.setter
-    def visual_density(self, value: Optional[ThemeVisualDensity]):
+    def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, ThemeVisualDensity)
+        self._set_enum_attr("visualDensity", value, ThemeVisualDensity, VisualDensity)
 
     # clip_behavior
     @property

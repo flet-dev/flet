@@ -321,7 +321,6 @@ from flet_core.theme import (
     TabsTheme,
     TextTheme,
     Theme,
-    ThemeVisualDensity,
     TimePickerTheme,
     TooltipTheme,
 )
@@ -361,6 +360,8 @@ from flet_core.types import (
     TabAlignment,
     TextAlign,
     ThemeMode,
+    ThemeVisualDensity,
+    VisualDensity,
     UrlTarget,
     VerticalAlignment,
     StrokeCap,
