@@ -313,7 +313,8 @@ AppState appReducer(AppState state, dynamic action) {
           if (controlId != null) {
             try {
               takeScreenshot(controlId, state.controls[controlId])
-                  .then((value) => sendMethodResult(result: value))
+                  .then(
+                      (value) => sendMethodResult(result: base64Encode(value)))
                   .onError((error, stackTrace) =>
                       sendMethodResult(error: error?.toString()));
             } catch (e) {
