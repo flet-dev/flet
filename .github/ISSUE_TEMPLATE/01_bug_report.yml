@@ -1,7 +1,16 @@
 name: Bug Report
-description: "You are about to report a bug with Flet. We'd appreciate if you'd first search through our open issues and docs, to make sure the issue isn't already known."
+description: "You found a bug in Flet causing your application to crash or behave abnormally? Help us know more about it by providing as much details as possible."
 
 body:
+  - type: markdown
+    attributes:
+      value: |
+        If you are looking for support, please check out our documentation, discord server
+        or consider asking a question on Stack Overflow:
+
+          - https://flet.dev/docs
+          - https://discord.gg/dzWXP8SHG8
+          - https://stackoverflow.com/questions/tagged/flet?sort=frequent
   - type: checkboxes
     attributes:
       label: "Duplicate Check"
@@ -19,15 +28,28 @@ body:
   - type: textarea
     id: "code"
     attributes:
-      label: "Code"
-      description: "If you want your issue to be quickly addressed provide some runnable code which reproduces the issue."
-      placeholder: "
-      ```py 
-      # Your code here
-      ```
-      "
+      label: "Code sample"
+      description: |
+        Please create a minimal reproducible and runnable sample that shows the problem
+        and attach it below between the lines with the backticks.
+        
+        Alternatively, you can create a public GitHub repository or use an existing one to share your sample.
+        
+        Without this we will unlikely be able to progress on the issue, and because of that
+        we regretfully will have to close it.
+        
+        Note: Please do not upload screenshots of text. Instead, use code blocks
+        or the above mentioned ways to upload your code sample.
+      value: |
+        <details open><summary>Logs</summary>
+        
+        ```python
+        [Paste your code here]
+        ```
+        
+        </details>
     validations:
-      required: false
+      required: true
   - type: textarea
     id: "to-reproduce"
     attributes:
@@ -47,9 +69,15 @@ body:
   - type: textarea
     id: "screenshots"
     attributes:
-      label: "Screenshots"
-      description: "One image is worth a thousand words. If you can, please add screenshots to help explain the issue."
-      placeholder: "Please do not paste screenshots of logs or errors. Share them as text instead."
+      label: "Screenshots / Videos"
+      description: "One image is worth a thousand words. If you can, please provide screenshots or videos to help visually explain your issue."
+      value: |
+        <details open>
+        <summary>Screenshots / Video demonstration</summary>
+        
+        [Upload media here]
+        
+        </details>
     validations:
       required: false
   - type: dropdown
@@ -97,6 +125,29 @@ body:
       placeholder: I suggest...
     validations:
       required: false
+  - type: textarea
+    attributes:
+      label: Logs
+      description: |
+        Include the full logs of the commands you are running between the lines
+        with the backticks below. If you are running any `flet` commands,
+        please include the output of running them with `--verbose` (maximum verbosity); for example,
+        the output of running `flet build apk --verbose`.
+
+        If the logs are too large to be uploaded to GitHub, you may upload
+        them as a `txt` file or use online tools like https://pastebin.com to
+        share it.
+
+        Note: Please do not upload screenshots of text. Instead, use code blocks
+        or the above mentioned ways to upload logs.
+      value: |
+        <details open><summary>Logs</summary>
+
+        ```console
+        [Paste your logs here]
+        ```
+
+        </details>
   - type: textarea
     id: "additional-details"
     attributes:
