@@ -7,7 +7,6 @@ from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.theme import ThemeVisualDensity
 from flet_core.types import (
     AnimationValue,
     MouseCursor,
@@ -18,6 +17,8 @@ from flet_core.types import (
     ScaleValue,
     UrlTarget,
     OptionalEventCallable,
+    ThemeVisualDensity,
+    VisualDensity,
 )
 from flet_core.utils import deprecated
 
@@ -85,7 +86,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
         mouse_cursor: Optional[MouseCursor] = None,
-        visual_density: Optional[ThemeVisualDensity] = None,
+        visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
         on_click: OptionalEventCallable = None,
         on_focus: OptionalEventCallable = None,
         on_blur: OptionalEventCallable = None,
@@ -386,13 +387,13 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     # visual_density
     @property
-    def visual_density(self) -> Optional[ThemeVisualDensity]:
+    def visual_density(self) -> Union[None, ThemeVisualDensity, VisualDensity]:
         return self.__visual_density
 
     @visual_density.setter
-    def visual_density(self, value: Optional[ThemeVisualDensity]):
+    def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, ThemeVisualDensity)
+        self._set_enum_attr("visualDensity", value, ThemeVisualDensity, VisualDensity)
 
     # on_click
     @property

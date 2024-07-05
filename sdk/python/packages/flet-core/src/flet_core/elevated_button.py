@@ -153,35 +153,29 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        if (
-            self.__color is not None
-            or self.__bgcolor is not None
-            or self.__elevation is not None
-        ):
-            if self.__style is None:
-                self.__style = ButtonStyle()
-            if self.__style.color != self.__color or self.disabled:
-                # if the color is set through the style, use it
-                if not (
-                    self.__class__.__name__ in ["FilledButton", "FilledTonalButton"]
-                    and self.__style.color
-                    and not self.disabled
-                ):
-                    self.__style.color = self.__color if not self.disabled else None
-            if self.__style.bgcolor != self.__bgcolor or self.disabled:
-                # if the bgcolor is set through the style, use it
-                if not (
-                    self.__class__.__name__ in ["FilledButton", "FilledTonalButton"]
-                    and self.__style.bgcolor
-                    and not self.disabled
-                ):
-                    self.__style.bgcolor = self.__bgcolor if not self.disabled else None
-            if self.__style.elevation != self.__elevation:
-                self.__style.elevation = self.__elevation
-        if self.__style is not None:
+        assert (
+            self.text or self.icon or (self.__content and self.__content.visible)
+        ), "at minimum, text, icon or a visible content must be provided"
+        if any([self.__color, self.__bgcolor, self.__elevation]):
+            self.__style = self.__style or ButtonStyle()
+        if self.__style:
+            self.__style.color = (
+                self.__style.color if self.__style.color is not None else self.color
+            )
+            self.__style.bgcolor = (
+                self.__style.bgcolor
+                if self.__style.bgcolor is not None
+                else self.bgcolor
+            )
+            self.__style.elevation = (
+                self.__style.elevation
+                if self.__style.elevation is not None
+                else self.elevation
+            )
             self.__style.side = self._wrap_attr_dict(self.__style.side)
             self.__style.shape = self._wrap_attr_dict(self.__style.shape)
             self.__style.padding = self._wrap_attr_dict(self.__style.padding)
+            self.__style.text_style = self._wrap_attr_dict(self.__style.text_style)
         self._set_attr_json("style", self.__style)
 
     def _get_children(self):

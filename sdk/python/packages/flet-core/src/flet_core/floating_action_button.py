@@ -176,6 +176,9 @@ class FloatingActionButton(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
+        assert (
+            self.text or self.icon or (self.__content and self.__content.visible)
+        ), "at minimum, text, icon or a visible content must be provided"
         self._set_attr_json("shape", self.__shape)
 
     def _get_children(self):
