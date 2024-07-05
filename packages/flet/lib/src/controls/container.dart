@@ -249,9 +249,10 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                     : null,
                 child: child);
 
-        if ((onClick || onLongPress || onHover || url != "") && !disabled) {
+        if ((onClick || onLongPress || onHover || onTapDown || url != "") &&
+            !disabled) {
           result = MouseRegion(
-            cursor: onClick || url != ""
+            cursor: onClick || onTapDown || url != ""
                 ? SystemMouseCursors.click
                 : MouseCursor.defer,
             onEnter: onHover
