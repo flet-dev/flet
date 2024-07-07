@@ -2827,7 +2827,7 @@ class Page(AdaptiveControl):
 
     @on_window_event.setter
     @deprecated(
-        "Use Page.on_window_event instead.",
+        "Use Page.window.on_event instead.",
         version="0.23.0",
         delete_version="0.26.0",
         is_method=False,
