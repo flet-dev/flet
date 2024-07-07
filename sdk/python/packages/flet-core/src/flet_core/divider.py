@@ -57,6 +57,7 @@ class Divider(Control):
         #
         ref: Optional[Ref] = None,
         opacity: OptionalNumber = None,
+        tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):
@@ -65,6 +66,7 @@ class Divider(Control):
             self,
             ref=ref,
             opacity=opacity,
+            tooltip=tooltip,
             visible=visible,
             data=data,
         )
