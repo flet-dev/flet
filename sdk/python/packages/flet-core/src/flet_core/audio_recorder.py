@@ -1,11 +1,25 @@
 import json
 from enum import Enum
-from typing import Any, Optional
+from typing import Any, Optional, Callable
 
 from flet_core.control import Control, OptionalNumber
+from flet_core.control_event import ControlEvent
+from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.types import OptionalEventCallable
 from flet_core.utils import deprecated
+
+
+class AudioRecorderState(Enum):
+    STOPPED = "stopped"
+    RECORDING = "recording"
+    PAUSED = "paused"
+
+
+class AudioRecorderStateChangeEvent(ControlEvent):
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        self.state: AudioRecorderState = AudioRecorderState(e.data)
 
 
 class AudioEncoder(Enum):
@@ -38,7 +52,9 @@ class AudioRecorder(Control):
         channels_num: OptionalNumber = None,
         sample_rate: OptionalNumber = None,
         bit_rate: OptionalNumber = None,
-        on_state_changed=None,
+        on_state_changed: Optional[
+            Callable[[AudioRecorderStateChangeEvent], None]
+        ] = None,
         #
         # Control
         #
@@ -50,6 +66,11 @@ class AudioRecorder(Control):
             ref=ref,
             data=data,
         )
+        self.__on_state_changed = EventHandler(
+            lambda e: AudioRecorderStateChangeEvent(e)
+        )
+        self._add_event_handler("state_changed", self.__on_state_changed.get_handler())
+
         self.audio_encoder = audio_encoder
         self.suppress_noise = suppress_noise
         self.cancel_echo = cancel_echo
@@ -288,5 +309,7 @@ class AudioRecorder(Control):
         return self._get_event_handler("state_changed")
 
     @on_state_changed.setter
-    def on_state_changed(self, handler: OptionalEventCallable):
-        self._add_event_handler("state_changed", handler)
+    def on_state_changed(
+        self, handler: Optional[Callable[[AudioRecorderStateChangeEvent], None]]
+    ):
+        self.__on_state_changed.subscribe(handler)

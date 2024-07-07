@@ -28,7 +28,12 @@ from flet_core.audio import (
     AudioPositionChangeEvent,
     AudioStateChangeEvent,
 )
-from flet_core.audio_recorder import AudioEncoder, AudioRecorder
+from flet_core.audio_recorder import (
+    AudioEncoder,
+    AudioRecorder,
+    AudioRecorderState,
+    AudioRecorderStateChangeEvent,
+)
 from flet_core.auto_complete import (
     AutoComplete,
     AutoCompleteSuggestion,
