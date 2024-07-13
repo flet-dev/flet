@@ -26,24 +26,25 @@ class NavigationRailLabelType(Enum):
 
 class NavigationRailDestination(Control):
     def __init__(
-            self,
-            icon: Optional[str] = None,
-            icon_content: Optional[Control] = None,
-            selected_icon: Optional[str] = None,
-            selected_icon_content: Optional[Control] = None,
-            label: Optional[str] = None,
-            label_content: Optional[Control] = None,
-            padding: PaddingValue = None,
-            indicator_color: Optional[str] = None,
-            indicator_shape: Optional[OutlinedBorder] = None,
-            #
-            # Control
-            #
-            ref: Optional[Ref] = None,
-            disabled: Optional[bool] = None,
-            data: Any = None,
+        self,
+        icon: Optional[str] = None,
+        icon_content: Optional[Control] = None,
+        selected_icon: Optional[str] = None,
+        selected_icon_content: Optional[Control] = None,
+        label: Optional[str] = None,
+        label_content: Optional[Control] = None,
+        padding: PaddingValue = None,
+        indicator_color: Optional[str] = None,
+        indicator_shape: Optional[OutlinedBorder] = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+        rtl: Optional[bool] = None,
     ) -> None:
-        Control.__init__(self, ref=ref, disabled=disabled, data=data)
+        Control.__init__(self, ref=ref, disabled=disabled, data=data, rtl=rtl)
         self.label = label
         self.icon = icon
         self.icon_content = icon_content
@@ -262,6 +263,7 @@ class NavigationRail(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = False,
     ):
         ConstrainedControl.__init__(
             self,
@@ -290,6 +292,7 @@ class NavigationRail(ConstrainedControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
         )
 
         self.destinations = destinations
@@ -408,7 +411,7 @@ class NavigationRail(ConstrainedControl):
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
-        assert value is None or value >= 0, "elevation cannot be negative"
+        assert value is None or value > 0, "elevation cannot be negative"
         self._set_attr("elevation", value)
 
     # extended

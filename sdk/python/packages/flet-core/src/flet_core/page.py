@@ -1122,11 +1122,9 @@ class Page(AdaptiveControl):
         if not self.web:
             if self.platform in ["ios", "android"]:
                 # close web view on mobile
-
                 self.close_in_app_web_view()
             else:
                 # activate desktop window
-
                 self.window_to_front()
         login_evt = LoginEvent(
             error=d["error"],

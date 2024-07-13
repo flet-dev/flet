@@ -81,13 +81,13 @@ class _NavigationRailControlState extends State<NavigationRailControl>
               "NavigationRail constraints.maxHeight: ${constraints.maxHeight}");
 
           if (constraints.maxHeight == double.infinity &&
-              widget.control.attrs["height"] == null) {
+              widget.control.attrDouble("height") == null) {
             return const ErrorControl("Error displaying NavigationRail",
                 description:
                     "Control's height is unbounded. Either set \"expand\" property, set a fixed \"height\" or nest NavigationRail inside another control with a fixed height.");
           }
 
-          return NavigationRail(
+          var rail = NavigationRail(
               labelType: extended ? NavigationRailLabelType.none : labelType,
               extended: extended,
               elevation: widget.control.attrDouble("elevation", 0),
@@ -154,6 +154,9 @@ class _NavigationRailControlState extends State<NavigationRailControl>
                             parentAdaptive: widget.parentAdaptive)
                         : Text(label));
               }).toList());
+
+          return constrainedControl(
+              context, rail, widget.parent, widget.control);
         },
       );
     });
