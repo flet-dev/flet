@@ -90,7 +90,7 @@ class _NavigationRailControlState extends State<NavigationRailControl>
           var rail = NavigationRail(
               labelType: extended ? NavigationRailLabelType.none : labelType,
               extended: extended,
-              elevation: widget.control.attrDouble("elevation", 0),
+              elevation: widget.control.attrDouble("elevation"),
               selectedLabelTextStyle: parseTextStyle(
                   Theme.of(context), widget.control, "selectedLabelTextStyle"),
               unselectedLabelTextStyle: parseTextStyle(Theme.of(context),
