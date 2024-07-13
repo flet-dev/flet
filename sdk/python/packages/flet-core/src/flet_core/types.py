@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from enum import Enum, EnumMeta
 from typing import Any, Callable, Dict, Optional, Protocol, Tuple, Union
 from warnings import warn
@@ -390,6 +391,16 @@ class VisualDensity(Enum):
     COMPACT = "compact"
     COMFORTABLE = "comfortable"
     ADAPTIVE_PLATFORM_DENSITY = "adaptivePlatformDensity"
+
+
+@dataclass
+class Duration:
+    days: int = 0
+    hours: int = 0
+    minutes: int = 0
+    seconds: int = 0
+    milliseconds: int = 0
+    microseconds: int = 0
 
 
 # Events

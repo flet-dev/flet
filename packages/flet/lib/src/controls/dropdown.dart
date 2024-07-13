@@ -176,7 +176,7 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         icon: iconCtrl.isNotEmpty
             ? createControl(widget.control, iconCtrl.first.id, disabled)
             : null,
-        hint: iconCtrl.isNotEmpty
+        hint: hintCtrl.isNotEmpty
             ? createControl(widget.control, hintCtrl.first.id, disabled)
             : null,
         decoration: buildInputDecoration(

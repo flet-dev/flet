@@ -58,6 +58,7 @@ import 'divider.dart';
 import 'drag_target.dart';
 import 'draggable.dart';
 import 'dropdown.dart';
+import 'dropdown_menu.dart';
 import 'elevated_button.dart';
 import 'error.dart';
 import 'expansion_panel.dart';
@@ -820,6 +821,15 @@ Widget createWidget(
           control: controlView.control,
           parentDisabled: parentDisabled,
           backend: backend);
+    case "dropdownmenu":
+      return DropdownMenuControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
     case "dropdown":
       return DropdownControl(
           key: key,
@@ -1218,15 +1228,14 @@ Widget _positionedControl(
 }
 
 Widget _sizedControl(Widget widget, Control? parent, Control control) {
-  var width = control.attrDouble("width", null);
-  var height = control.attrDouble("height", null);
-  if (width != null || height != null) {
-    if (control.type != "container" && control.type != "image") {
-      widget = ConstrainedBox(
-        constraints: BoxConstraints.tightFor(width: width, height: height),
-        child: widget,
-      );
-    }
+  var width = control.attrDouble("width");
+  var height = control.attrDouble("height");
+  if ((width != null || height != null) &&
+      !["container", "image"].contains(control.type)) {
+    widget = ConstrainedBox(
+      constraints: BoxConstraints.tightFor(width: width, height: height),
+      child: widget,
+    );
   }
   var animation = parseAnimation(control, "animateSize");
   if (animation != null) {

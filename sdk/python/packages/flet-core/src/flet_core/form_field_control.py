@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Any, Optional, Union
 
+from flet_core.border import BorderSide
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -15,6 +16,7 @@ from flet_core.types import (
     ScaleValue,
     VerticalAlignment,
     OptionalEventCallable,
+    Duration,
 )
 
 try:
@@ -69,7 +71,19 @@ class FormFieldControl(ConstrainedControl):
         suffix_icon: Optional[str] = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
-        rtl: Optional[bool] = None,
+        #
+        # InputDecorationTheme
+        #
+        icon_color: Optional[str] = None,
+        prefix_icon_color: Optional[str] = None,
+        suffix_icon_color: Optional[str] = None,
+        focus_color: Optional[str] = None,
+        align_label_with_hint: Optional[bool] = None,
+        floating_label_text_style: Optional[TextStyle] = None,
+        active_indicator_border_side: Optional[BorderSide] = None,
+        hint_fade_duration: Optional[Duration] = None,
+        error_max_lines: OptionalNumber = None,
+        helper_max_lines: OptionalNumber = None,
         #
         # ConstrainedControl
         #
@@ -100,6 +114,7 @@ class FormFieldControl(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -170,6 +185,16 @@ class FormFieldControl(ConstrainedControl):
         self.suffix_style = suffix_style
         self.hover_color = hover_color
         self.fill_color = fill_color
+        self.icon_color = icon_color
+        self.prefix_icon_color = prefix_icon_color
+        self.suffix_icon_color = suffix_icon_color
+        self.focus_color = focus_color
+        self.align_label_with_hint = align_label_with_hint
+        self.floating_label_text_style = floating_label_text_style
+        self.active_indicator_border_side = active_indicator_border_side
+        self.hint_fade_duration = hint_fade_duration
+        self.error_max_lines = error_max_lines
+        self.helper_max_lines = helper_max_lines
 
     def before_update(self):
         super().before_update()
@@ -183,6 +208,11 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr_json("errorStyle", self.__error_style)
         self._set_attr_json("prefixStyle", self.__prefix_style)
         self._set_attr_json("suffixStyle", self.__suffix_style)
+        self._set_attr_json("floatingLabelTextStyle", self.__floating_label_text_style)
+        self._set_attr_json(
+            "activeIndicatorBorderSide", self.__active_indicator_border_side
+        )
+        self._set_attr_json("hintFadeDuration", self.__hint_fade_duration)
 
     def _get_children(self):
         children = []
@@ -530,3 +560,93 @@ class FormFieldControl(ConstrainedControl):
     @hover_color.setter
     def hover_color(self, value: Optional[str]):
         self._set_attr("hoverColor", value)
+
+    # icon_color
+    @property
+    def icon_color(self) -> Optional[str]:
+        return self._get_attr("iconColor")
+
+    @icon_color.setter
+    def icon_color(self, value: Optional[str]):
+        self._set_attr("iconColor", value)
+
+    # prefix_icon_color
+    @property
+    def prefix_icon_color(self) -> Optional[str]:
+        return self._get_attr("prefixIconColor")
+
+    @prefix_icon_color.setter
+    def prefix_icon_color(self, value: Optional[str]):
+        self._set_attr("prefixIconColor", value)
+
+    # suffix_icon_color
+    @property
+    def suffix_icon_color(self) -> Optional[str]:
+        return self._get_attr("suffixIconColor")
+
+    @suffix_icon_color.setter
+    def suffix_icon_color(self, value: Optional[str]):
+        self._set_attr("suffixIconColor", value)
+
+    # focus_color
+    @property
+    def focus_color(self) -> Optional[str]:
+        return self._get_attr("focusColor")
+
+    @focus_color.setter
+    def focus_color(self, value: Optional[str]):
+        self._set_attr("focusColor", value)
+
+    # align_label_with_hint
+    @property
+    def align_label_with_hint(self) -> Optional[bool]:
+        return self._get_attr("alignLabelWithHint", data_type="bool", def_value=False)
+
+    @align_label_with_hint.setter
+    def align_label_with_hint(self, value: Optional[bool]):
+        self._set_attr("alignLabelWithHint", value)
+
+    # floating_label_text_style
+    @property
+    def floating_label_text_style(self) -> Optional[TextStyle]:
+        return self.__floating_label_text_style
+
+    @floating_label_text_style.setter
+    def floating_label_text_style(self, value: Optional[TextStyle]):
+        self.__floating_label_text_style = value
+
+    # active_indicator_border_side
+    @property
+    def active_indicator_border_side(self) -> Optional[BorderSide]:
+        return self.__active_indicator_border_side
+
+    @active_indicator_border_side.setter
+    def active_indicator_border_side(self, value: Optional[BorderSide]):
+        self.__active_indicator_border_side = value
+
+    # hint_fade_duration
+    @property
+    def hint_fade_duration(self) -> Optional[Duration]:
+        return self.__hint_fade_duration
+
+    @hint_fade_duration.setter
+    def hint_fade_duration(self, value: Optional[Duration]):
+        self.__hint_fade_duration = value
+
+    # error_max_lines
+    @property
+    def error_max_lines(self) -> Optional[int]:
+        return self._get_attr("errorMaxLines", data_type="int")
+
+    @error_max_lines.setter
+    def error_max_lines(self, value: Optional[int]):
+        self._set_attr("errorMaxLines", value)
+
+    # helper_max_lines
+    @property
+    def helper_max_lines(self) -> Optional[int]:
+        return self._get_attr("helperMaxLines", data_type="int")
+
+    @helper_max_lines.setter
+    def helper_max_lines(self, value: Optional[int]):
+        self._set_attr("helperMaxLines", value)
