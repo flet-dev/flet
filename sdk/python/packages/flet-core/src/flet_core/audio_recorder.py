@@ -229,7 +229,7 @@ class AudioRecorder(Control):
 
     # suppress_noise
     @property
-    def suppress_noise(self) -> Optional[bool]:
+    def suppress_noise(self) -> bool:
         return self._get_attr("suppressNoise", data_type="bool", def_value=False)
 
     @suppress_noise.setter
@@ -238,7 +238,7 @@ class AudioRecorder(Control):
 
     # cancel_echo
     @property
-    def cancel_echo(self) -> Optional[bool]:
+    def cancel_echo(self) -> bool:
         return self._get_attr("cancelEcho", data_type="bool", def_value=False)
 
     @cancel_echo.setter
@@ -247,7 +247,7 @@ class AudioRecorder(Control):
 
     # auto_gain
     @property
-    def auto_gain(self) -> Optional[bool]:
+    def auto_gain(self) -> bool:
         return self._get_attr("autoGain", data_type="bool", def_value=False)
 
     @auto_gain.setter

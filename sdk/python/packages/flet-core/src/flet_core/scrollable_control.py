@@ -86,7 +86,7 @@ class ScrollableControl(Control):
 
     # auto_scroll
     @property
-    def auto_scroll(self) -> Optional[str]:
+    def auto_scroll(self) -> bool:
         return self._get_attr("autoScroll", data_type="bool", def_value=False)
 
     @auto_scroll.setter
@@ -95,7 +95,7 @@ class ScrollableControl(Control):
 
     # reverse
     @property
-    def reverse(self) -> Optional[bool]:
+    def reverse(self) -> bool:
         return self._get_attr("reverse", data_type="bool", def_value=False)
 
     @reverse.setter

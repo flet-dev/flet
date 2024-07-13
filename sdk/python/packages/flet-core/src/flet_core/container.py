@@ -380,7 +380,7 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # image_opacity
     @property
-    def image_opacity(self) -> OptionalNumber:
+    def image_opacity(self) -> float:
         return self._get_attr("imageOpacity", data_type="float", def_value=1.0)
 
     @image_opacity.setter
@@ -418,7 +418,7 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # ink
     @property
-    def ink(self) -> Optional[bool]:
+    def ink(self) -> bool:
         return self._get_attr("ink", data_type="bool", def_value=False)
 
     @ink.setter

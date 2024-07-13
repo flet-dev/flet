@@ -151,7 +151,7 @@ class MenuItemButton(ConstrainedControl):
 
     # focus_on_hover
     @property
-    def focus_on_hover(self) -> Optional[bool]:
+    def focus_on_hover(self) -> bool:
         return self._get_attr("focusOnHover", data_type="bool", def_value=True)
 
     @focus_on_hover.setter
@@ -160,7 +160,7 @@ class MenuItemButton(ConstrainedControl):
 
     # close_on_click
     @property
-    def close_on_click(self) -> Optional[bool]:
+    def close_on_click(self) -> bool:
         return self._get_attr("closeOnClick", data_type="bool", def_value=True)
 
     @close_on_click.setter

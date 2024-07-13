@@ -265,7 +265,7 @@ class View(ScrollableControl, AdaptiveControl):
 
     # fullscreen_dialog
     @property
-    def fullscreen_dialog(self) -> Optional[bool]:
+    def fullscreen_dialog(self) -> bool:
         return self._get_attr("fullscreenDialog", data_type="bool", def_value=False)
 
     @fullscreen_dialog.setter

@@ -59,7 +59,7 @@ class CupertinoContextMenu(AdaptiveControl):
 
     # enable_haptic_feedback
     @property
-    def enable_haptic_feedback(self) -> Optional[bool]:
+    def enable_haptic_feedback(self) -> bool:
         return self._get_attr("enableHapticFeedback", data_type="bool", def_value=False)
 
     @enable_haptic_feedback.setter

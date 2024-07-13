@@ -187,7 +187,7 @@ class BarChartRod(Control):
 
     # selected
     @property
-    def selected(self) -> Optional[bool]:
+    def selected(self) -> bool:
         return self._get_attr("selected", data_type="bool", def_value=False)
 
     @selected.setter
@@ -196,7 +196,7 @@ class BarChartRod(Control):
 
     # show_tooltip
     @property
-    def show_tooltip(self) -> Optional[bool]:
+    def show_tooltip(self) -> bool:
         return self._get_attr("showTooltip", data_type="bool", def_value=True)
 
     @show_tooltip.setter

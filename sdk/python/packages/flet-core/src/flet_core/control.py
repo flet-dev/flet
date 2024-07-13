@@ -236,7 +236,7 @@ class Control:
 
     # expand_loose
     @property
-    def expand_loose(self) -> Optional[bool]:
+    def expand_loose(self) -> bool:
         return self._get_attr("expandLoose", data_type="bool", def_value=False)
 
     @expand_loose.setter
@@ -245,7 +245,7 @@ class Control:
 
     # rtl
     @property
-    def rtl(self) -> Optional[bool]:
+    def rtl(self) -> bool:
         return self._get_attr("rtl", data_type="bool", def_value=False)
 
     @rtl.setter
@@ -263,7 +263,7 @@ class Control:
 
     # opacity
     @property
-    def opacity(self) -> Optional[float]:
+    def opacity(self) -> float:
         return self._get_attr("opacity", data_type="float", def_value=1.0)
 
     @opacity.setter
@@ -284,7 +284,7 @@ class Control:
 
     # visible
     @property
-    def visible(self) -> Optional[bool]:
+    def visible(self) -> bool:
         return self._get_attr("visible", data_type="bool", def_value=True)
 
     @visible.setter
@@ -293,7 +293,7 @@ class Control:
 
     # disabled
     @property
-    def disabled(self) -> Optional[bool]:
+    def disabled(self) -> bool:
         return self._get_attr("disabled", data_type="bool", def_value=False)
 
     @disabled.setter

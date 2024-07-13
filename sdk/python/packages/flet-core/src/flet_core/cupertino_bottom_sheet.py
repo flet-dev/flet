@@ -65,7 +65,7 @@ class CupertinoBottomSheet(Control):
 
     # open
     @property
-    def open(self) -> Optional[bool]:
+    def open(self) -> bool:
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
@@ -74,7 +74,7 @@ class CupertinoBottomSheet(Control):
 
     # modal
     @property
-    def modal(self) -> Optional[bool]:
+    def modal(self) -> bool:
         return self._get_attr("modal", data_type="bool", def_value=False)
 
     @modal.setter
@@ -92,8 +92,8 @@ class CupertinoBottomSheet(Control):
 
     # height
     @property
-    def height(self) -> OptionalNumber:
-        return self._get_attr("height", data_type="float", def_value=220)
+    def height(self) -> float:
+        return self._get_attr("height", data_type="float", def_value=220.0)
 
     @height.setter
     def height(self, value: OptionalNumber):
