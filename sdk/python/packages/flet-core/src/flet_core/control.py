@@ -513,7 +513,6 @@ class Control:
         content = self.build()
 
         # fix for UserControl
-
         if content is not None:
             if isinstance(content, Control) and hasattr(self, "controls"):
                 self.controls = [content]
@@ -524,13 +523,11 @@ class Control:
             ):
                 self.controls = content
         # remove control from index
-
         if self.__uid and index is not None and self.__uid in index:
             del index[self.__uid]
         commands = []
 
         # main command
-
         command = self._build_command(False)
         command.indent = indent
         command.values.append(self._get_control_name())
