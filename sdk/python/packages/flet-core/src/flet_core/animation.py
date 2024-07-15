@@ -47,7 +47,7 @@ class AnimationCurve(Enum):
     ELASTIC_IN_OUT = "elasticInOut"
     ELASTIC_OUT = "elasticOut"
     FAST_LINEAR_TO_SLOW_EASE_IN = "fastLinearToSlowEaseIn"
-    FAST_OUT_SLOWIN = "fastOutSlowIn"
+    FAST_OUT_SLOW_IN = "fastOutSlowIn"
     LINEAR = "linear"
     LINEAR_TO_EASE_OUT = "linearToEaseOut"
     SLOW_MIDDLE = "slowMiddle"

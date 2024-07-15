@@ -16,7 +16,7 @@ from flet_core.types import (
     ScaleValue,
     VerticalAlignment,
     OptionalEventCallable,
-    Duration,
+    DurationValue,
 )
 
 try:
@@ -81,7 +81,7 @@ class FormFieldControl(ConstrainedControl):
         align_label_with_hint: Optional[bool] = None,
         floating_label_text_style: Optional[TextStyle] = None,
         active_indicator_border_side: Optional[BorderSide] = None,
-        hint_fade_duration: Optional[Duration] = None,
+        hint_fade_duration: DurationValue = None,
         error_max_lines: OptionalNumber = None,
         helper_max_lines: OptionalNumber = None,
         #
@@ -626,11 +626,11 @@ class FormFieldControl(ConstrainedControl):
 
     # hint_fade_duration
     @property
-    def hint_fade_duration(self) -> Optional[Duration]:
+    def hint_fade_duration(self) -> DurationValue:
         return self.__hint_fade_duration
 
     @hint_fade_duration.setter
-    def hint_fade_duration(self, value: Optional[Duration]):
+    def hint_fade_duration(self, value: DurationValue):
         self.__hint_fade_duration = value
 
     # error_max_lines

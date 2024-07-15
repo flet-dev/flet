@@ -6,6 +6,7 @@ import '../models/control.dart';
 import '../models/control_view_model.dart';
 import '../utils/buttons.dart';
 import '../utils/edge_insets.dart';
+import '../utils/form_field.dart';
 import '../utils/icons.dart';
 import '../utils/menu.dart';
 import '../utils/text.dart';
@@ -212,6 +213,8 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
             : selectedSuffixIcon != null
                 ? Icon(parseIcon(selectedSuffixIcon))
                 : null,
+        inputDecorationTheme:
+            buildInputDecorationTheme(context, widget.control, _focused),
         onSelected: disabled
             ? null
             : (String? value) {

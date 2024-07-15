@@ -403,6 +403,8 @@ class Duration:
     microseconds: int = 0
 
 
+DurationValue = Union[int, Duration, None]
+
 # Events
 OptionalEventCallable = Optional[Callable[[ControlEvent], None]]
 

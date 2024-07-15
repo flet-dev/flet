@@ -1,28 +1,24 @@
-import time
 from typing import Any, List, Optional, Union
 
 from flet_core.border import BorderSide
-from flet_core.menu_bar import MenuStyle
-from flet_core.textfield import InputFilter, TextCapitalization
-from flet_core.dropdown import Dropdown, Option
-from flet_core.alignment import Alignment
 from flet_core.buttons import ButtonStyle
 from flet_core.control import Control, OptionalNumber
+from flet_core.dropdown import Option
 from flet_core.form_field_control import FormFieldControl, InputBorder
+from flet_core.menu_bar import MenuStyle
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.textfield import InputFilter, TextCapitalization
 from flet_core.types import (
     AnimationValue,
-    BorderRadiusValue,
     OffsetValue,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
-    Duration,
+    DurationValue,
 )
-from flet_core.utils import deprecated
 
 
 class DropdownMenuOption(Option):
@@ -193,7 +189,7 @@ class DropdownMenu(FormFieldControl):
         align_label_with_hint: Optional[bool] = None,
         floating_label_text_style: Optional[TextStyle] = None,
         active_indicator_border_side: Optional[BorderSide] = None,
-        hint_fade_duration: Optional[Duration] = None,
+        hint_fade_duration: DurationValue = None,
         error_max_lines: OptionalNumber = None,
         helper_max_lines: OptionalNumber = None,
         #

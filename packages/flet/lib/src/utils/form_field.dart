@@ -161,15 +161,8 @@ InputDecoration buildInputDecoration(
       suffixStyle: parseTextStyle(theme, control, "suffixStyle"));
 }
 
-InputDecorationTheme buildInputDecorationTheme(
-    BuildContext context,
-    Control control,
-    Control? prefix,
-    Control? suffix,
-    Widget? customSuffix,
-    bool focused,
-    bool disabled,
-    bool? adaptive) {
+InputDecorationTheme buildInputDecorationTheme(BuildContext context,
+    Control control, bool focused) {
   FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
     control.attrString("border"),
     FormFieldInputBorder.outline,

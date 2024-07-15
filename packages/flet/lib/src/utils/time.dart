@@ -14,7 +14,10 @@ Duration? parseDuration(Control control, String propName,
   return durationFromJSON(j1);
 }
 
-Duration? durationFromJSON(Map<String, dynamic> json) {
+Duration durationFromJSON(dynamic json) {
+  if (json is int || json is double) {
+    return Duration(seconds: parseInt(json, 0)!);
+  }
   return Duration(
       days: parseInt(json["days"], 0)!,
       hours: parseInt(json["hours"], 0)!,
