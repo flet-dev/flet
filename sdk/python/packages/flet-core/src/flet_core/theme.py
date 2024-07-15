@@ -710,4 +710,6 @@ class Theme:
     text_theme: Optional[TextTheme] = field(default=None)
     time_picker_theme: Optional[TimePickerTheme] = field(default=None)
     tooltip_theme: Optional[TooltipTheme] = field(default=None)
-    visual_density: ThemeVisualDensity = field(default=ThemeVisualDensity.STANDARD)
+    visual_density: Union[ThemeVisualDensity, VisualDensity] = field(
+        default=VisualDensity.STANDARD
+    )

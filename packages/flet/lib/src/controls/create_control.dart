@@ -71,6 +71,7 @@ import 'haptic_feedback.dart';
 import 'icon.dart';
 import 'icon_button.dart';
 import 'image.dart';
+import 'interactive_viewer.dart';
 import 'linechart.dart';
 import 'list_tile.dart';
 import 'list_view.dart';
@@ -643,6 +644,15 @@ Widget createWidget(
           parentAdaptive: parentAdaptive);
     case "listtile":
       return ListTileControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
+    case "interactiveviewer":
+      return InteractiveViewerControl(
           key: key,
           parent: parent,
           control: controlView.control,
