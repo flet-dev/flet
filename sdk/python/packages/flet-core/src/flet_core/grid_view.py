@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union, Callable
+from typing import Any, List, Optional, Union, Callable, Sequence
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
@@ -67,7 +67,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     def __init__(
         self,
-        controls: Optional[List[Control]] = None,
+        controls: Optional[Sequence[Control]] = None,
         horizontal: Optional[bool] = None,
         runs_count: Optional[int] = None,
         max_extent: Optional[int] = None,
@@ -160,7 +160,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.__controls: List[Control] = []
-        self.controls = controls
+        self.controls = list(controls) if controls is not None else None
         self.horizontal = horizontal
         self.runs_count = runs_count
         self.max_extent = max_extent

@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union, Callable
+from typing import Any, List, Optional, Union, Callable, Sequence
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
@@ -59,7 +59,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     def __init__(
         self,
-        controls: Optional[List[Control]] = None,
+        controls: Optional[Sequence[Control]] = None,
         horizontal: Optional[bool] = None,
         spacing: OptionalNumber = None,
         item_extent: OptionalNumber = None,
@@ -151,7 +151,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.__controls: List[Control] = []
-        self.controls = controls
+        self.controls = list(controls) if controls is not None else None
         self.horizontal = horizontal
         self.spacing = spacing
         self.divider_thickness = divider_thickness

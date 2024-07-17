@@ -1,5 +1,5 @@
 import time
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Union, Sequence
 
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
@@ -30,7 +30,7 @@ class SubmenuButton(ConstrainedControl):
     def __init__(
         self,
         content: Optional[Control] = None,
-        controls: Optional[List[Control]] = None,
+        controls: Optional[Sequence[Control]] = None,
         leading: Optional[Control] = None,
         trailing: Optional[Control] = None,
         clip_behavior: Optional[ClipBehavior] = None,
@@ -105,7 +105,7 @@ class SubmenuButton(ConstrainedControl):
         )
 
         self.content = content
-        self.controls = controls
+        self.controls = list(controls) if controls is not None else None
         self.leading = leading
         self.trailing = trailing
         self.clip_behavior = clip_behavior

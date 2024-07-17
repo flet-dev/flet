@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union, Callable
+from typing import Any, List, Optional, Sequence, Union, Callable
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
@@ -58,7 +58,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     def __init__(
         self,
-        controls: Optional[List[Control]] = None,
+        controls: Optional[Sequence[Control]] = None,
         alignment: Optional[MainAxisAlignment] = None,
         horizontal_alignment: Optional[CrossAxisAlignment] = None,
         spacing: OptionalNumber = None,
@@ -145,7 +145,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
-        self.controls = controls
+        self.controls = list(controls) if controls is not None else None
         self.horizontal_alignment = horizontal_alignment
         self.alignment = alignment
         self.spacing = spacing
