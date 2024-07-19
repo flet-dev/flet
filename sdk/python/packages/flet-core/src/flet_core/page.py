@@ -495,7 +495,7 @@ class Window:
         return self.__on_event
 
     @on_event.setter
-    def on_event(self, handler: "Optional[Callable[[WindowEvent], None]]"):
+    def on_event(self, handler: "Optional[Callable[[WindowEvent], Union[None, Coroutine[None, None, None]]]]"):
         self.__on_event.subscribe(handler)
 
 
