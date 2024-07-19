@@ -313,19 +313,19 @@ class Control:
     def update(self) -> None:
         assert (
             self.__page
-        ), f"{self.__class__.__qualname__} Control must be added to the page first."
+        ), f"{self.__class__.__qualname__} Control must be added to the page first"
         self.__page.update(self)
 
     async def update_async(self) -> None:
         assert (
             self.__page
-        ), f"{self.__class__.__qualname__} Control must be added to the page first."
+        ), f"{self.__class__.__qualname__} Control must be added to the page"
         await self.__page.update_async(self)
 
     def clean(self) -> None:
         assert (
             self.__page
-        ), f"{self.__class__.__qualname__} must be added to the page first."
+        ), f"{self.__class__.__qualname__} Control must be added to the page"
         self.__page._clean(self)
 
     @deprecated(
@@ -343,7 +343,7 @@ class Control:
     ) -> Optional[str]:
         assert (
             self.__page
-        ), f"{self.__class__.__qualname__} must be added to the page first."
+        ), f"{self.__class__.__qualname__} Control must be added to the page first"
         return self.__page._invoke_method(
             control_id=self.uid,
             method_name=method_name,
@@ -361,7 +361,7 @@ class Control:
     ):
         assert (
             self.__page
-        ), f"{self.__class__.__qualname__} must be added to the page first."
+        ), f"{self.__class__.__qualname__} Control must be added to the page first"
         return self.__page._invoke_method_async(
             control_id=self.uid,
             method_name=method_name,
