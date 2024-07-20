@@ -108,7 +108,7 @@ class LocalAuthentication(Control):
             },
         )
 
-        return True if sr == "true" else False
+        return sr == "true"
 
     async def authenticate_async(
         self,

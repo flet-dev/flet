@@ -43,7 +43,7 @@ class _LocalAuthenticationControlState
                 // check's if device is supported
                 final bool canAuthenticate = await auth.isDeviceSupported();
                 // creates a map of retrieved data to convert into string
-                final Map output = {
+                final Map<String, bool> output = {
                   "biometrics": availableBiometrics.isNotEmpty,
                   "weak": availableBiometrics.contains(BiometricType.weak),
                   "strong": availableBiometrics.contains(BiometricType.strong),
