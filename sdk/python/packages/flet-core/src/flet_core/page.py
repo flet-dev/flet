@@ -18,6 +18,7 @@ from typing import (
     Dict,
     List,
     Optional,
+    Sequence,
     Tuple,
     Type,
     TypeVar,
@@ -1854,7 +1855,7 @@ class Page(AdaptiveControl):
 
     @controls.setter
     def controls(self, value: Optional[Sequence[Control]]):
-        self.__default_view.controls = value if value is not None else []
+        self.__default_view.controls = list(value) if value is not None else []
 
     # appbar
     @property

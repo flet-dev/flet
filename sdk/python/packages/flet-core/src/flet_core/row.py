@@ -241,4 +241,4 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     @controls.setter
     def controls(self, value: Optional[Sequence[Control]]):
-        self.__controls = value if value else []
+        self.__controls = list(value) if value else []

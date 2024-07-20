@@ -239,7 +239,7 @@ class NavigationDrawer(Control):
 
     @controls.setter
     def controls(self, value: Optional[Sequence[Control]]):
-        self.__controls = value or []
+        self.__controls = list(value) if value is not  None else []
 
     # selected_index
     @property

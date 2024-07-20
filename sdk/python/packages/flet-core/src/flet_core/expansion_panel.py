@@ -318,7 +318,7 @@ class ExpansionPanelList(ConstrainedControl):
 
     @controls.setter
     def controls(self, value: Optional[Sequence[ExpansionPanel]]):
-        self.__controls = list (value) if value is not None else []
+        self.__controls = list(value) if value is not None else []
 
     # on_change
     @property

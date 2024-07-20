@@ -164,7 +164,7 @@ class Stack(ConstrainedControl, AdaptiveControl):
 
     @controls.setter
     def controls(self, value: Optional[Sequence[Control]]):
-        self.__controls = list (value) if value is not None else []
+        self.__controls = list(value) if value is not None else []
 
     # clip_behavior
     @property
