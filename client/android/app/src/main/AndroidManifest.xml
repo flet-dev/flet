@@ -5,6 +5,8 @@
       https://developer.android.com/about/versions/13/behavior-changes-13#granular-media-permissions -->
   <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
   <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+  <!-- Local Authentication Permission -->
+  <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
   <!-- Storage access permissions. Android 12 or lower. -->
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
