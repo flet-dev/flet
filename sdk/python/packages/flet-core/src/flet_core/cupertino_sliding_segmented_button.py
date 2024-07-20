@@ -91,7 +91,7 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
             disabled=disabled,
             data=data,
         )
-        self.controls = list(controls)
+        self.controls = controls
         self.padding = padding
         self.selected_index = selected_index
         self.bgcolor = bgcolor

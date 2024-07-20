@@ -1853,7 +1853,7 @@ class Page(AdaptiveControl):
         return self.__default_view.controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]):
+    def controls(self, value: Optional[Sequence[Control]]):
         self.__default_view.controls = value if value is not None else []
 
     # appbar

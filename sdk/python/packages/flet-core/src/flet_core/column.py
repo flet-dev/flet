@@ -145,7 +145,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
-        self.controls = list(controls) if controls is not None else None
+        self.controls = controls
         self.horizontal_alignment = horizontal_alignment
         self.alignment = alignment
         self.spacing = spacing
@@ -236,5 +236,5 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]):
-        self.__controls = value if value is not None else []
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list (value) if value is not None else []

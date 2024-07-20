@@ -84,7 +84,7 @@ class MenuBar(Control):
             data=data,
         )
 
-        self.controls = list(controls)
+        self.controls = controls
         self.clip_behavior = clip_behavior
         self.style = style
 

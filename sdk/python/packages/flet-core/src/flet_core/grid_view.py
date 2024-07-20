@@ -160,7 +160,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.__controls: List[Control] = []
-        self.controls = list(controls) if controls is not None else None
+        self.controls = controls
         self.horizontal = horizontal
         self.runs_count = runs_count
         self.max_extent = max_extent
@@ -272,8 +272,8 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value):
-        self.__controls = value if value is not None else []
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list (value) if value is not None else []
 
     # clip_behavior
     @property

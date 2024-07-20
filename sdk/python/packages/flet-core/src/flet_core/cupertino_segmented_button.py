@@ -94,7 +94,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
             disabled=disabled,
             data=data,
         )
-        self.controls = list(controls)
+        self.controls = controls
         self.padding = padding
         self.border_color = border_color
         self.selected_index = selected_index

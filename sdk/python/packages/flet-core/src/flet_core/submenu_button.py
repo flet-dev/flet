@@ -105,7 +105,7 @@ class SubmenuButton(ConstrainedControl):
         )
 
         self.content = content
-        self.controls = list(controls) if controls is not None else None
+        self.controls = controls
         self.leading = leading
         self.trailing = trailing
         self.clip_behavior = clip_behavior
@@ -167,8 +167,8 @@ class SubmenuButton(ConstrainedControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]):
-        self.__controls = value if value is not None else []
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list (value) if value is not None else []
 
     # leading
     @property

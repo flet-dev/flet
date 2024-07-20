@@ -199,7 +199,7 @@ class NavigationDrawer(Control):
         )
 
         self.open = open
-        self.controls = list(controls) if controls is not None else None
+        self.controls = controls
         self.selected_index = selected_index
         self.bgcolor = bgcolor
         self.elevation = elevation
@@ -238,7 +238,7 @@ class NavigationDrawer(Control):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]):
+    def controls(self, value: Optional[Sequence[Control]]):
         self.__controls = value or []
 
     # selected_index

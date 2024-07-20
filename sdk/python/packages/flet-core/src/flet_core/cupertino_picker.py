@@ -105,7 +105,7 @@ class CupertinoPicker(ConstrainedControl):
         self.off_axis_fraction = off_axis_fraction
         self.use_magnifier = use_magnifier
         self.item_extent = item_extent
-        self.controls = list(controls)
+        self.controls = controls
         self.looping = looping
         self.selected_index = selected_index
 
@@ -209,8 +209,8 @@ class CupertinoPicker(ConstrainedControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]):
-        self.__controls = value if value is not None else []
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list (value) if value is not None else []
 
     # on_change
     @property

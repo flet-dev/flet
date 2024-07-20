@@ -112,7 +112,7 @@ class SearchBar(ConstrainedControl):
         )
 
         self.value = value
-        self.controls = list(controls) if controls is not None else None
+        self.controls = controls
         self.bar_leading = bar_leading
         self.bar_trailing = bar_trailing
         self.bar_hint_text = bar_hint_text
@@ -395,8 +395,8 @@ class SearchBar(ConstrainedControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]):
-        self.__controls = value if value is not None else []
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list (value) if value is not None else []
 
     # value
     @property

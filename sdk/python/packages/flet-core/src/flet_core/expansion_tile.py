@@ -132,7 +132,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
-        self.controls = list(controls) if controls is not None else None
+        self.controls = controls
         self.controls_padding = controls_padding
         self.expanded_alignment = expanded_alignment
         self.expanded_cross_axis_alignment = expanded_cross_axis_alignment
@@ -193,8 +193,8 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]):
-        self.__controls = value if value is not None else []
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list (value) if value is not None else []
 
     # controls_padding
     @property

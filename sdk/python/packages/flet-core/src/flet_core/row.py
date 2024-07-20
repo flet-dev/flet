@@ -151,7 +151,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
-        self.controls = list(controls) if controls is not None else None
+        self.controls = controls
         self.alignment = alignment
         self.vertical_alignment = vertical_alignment
         self.spacing = spacing
@@ -240,5 +240,5 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]):
+    def controls(self, value: Optional[Sequence[Control]]):
         self.__controls = value if value else []
