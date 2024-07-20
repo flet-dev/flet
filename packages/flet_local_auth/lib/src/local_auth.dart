@@ -36,25 +36,21 @@ class _LocalAuthenticationControlState
             (methodName, args) async {
           switch (methodName) {
             case "supported":
-              try {
-                // get's available biometrics
-                final List<BiometricType> availableBiometrics =
-                    await auth.getAvailableBiometrics();
-                // check's if device is supported
-                final bool canAuthenticate = await auth.isDeviceSupported();
-                // creates a map of retrieved data to convert into string
-                final Map<String, bool> output = {
-                  "biometrics": availableBiometrics.isNotEmpty,
-                  "weak": availableBiometrics.contains(BiometricType.weak),
-                  "strong": availableBiometrics.contains(BiometricType.strong),
-                  "devicesupport": canAuthenticate,
-                };
-                debugPrint("$output");
-                return "$output";
-              } on Exception catch (_) {
-                debugPrint("An error has occured: $_");
-                return "0";
-              }
+              // get's available biometrics
+              final List<BiometricType> availableBiometrics =
+                  await auth.getAvailableBiometrics();
+              // check's if device is supported
+              final bool canAuthenticate = await auth.isDeviceSupported();
+              // creates a map of retrieved data to convert into string
+              final Map<String, bool> output = {
+                "biometrics": availableBiometrics.isNotEmpty,
+                "weak": availableBiometrics.contains(BiometricType.weak),
+                "strong": availableBiometrics.contains(BiometricType.strong),
+                "devicesupport": canAuthenticate,
+              };
+              debugPrint("$output");
+              return "$output";
+
             case "authenticate":
               try {
                 final bool didAuthenticate = await auth.authenticate(
@@ -70,7 +66,7 @@ class _LocalAuthenticationControlState
                 return "$didAuthenticate";
               } on Exception catch (_) {
                 debugPrint("An error has occured: $_");
-                return "0";
+                return "false";
               }
           }
           return null;

@@ -2,7 +2,6 @@ from typing import Any, Optional
 
 from flet_core.control import Control
 from flet_core.ref import Ref
-import json
 
 
 class LocalAuthentication(Control):
@@ -75,8 +74,7 @@ class LocalAuthentication(Control):
             "supported", wait_for_result=True, wait_timeout=wait_timeout
         )
 
-        sr.split(",")
-
+        sr = sr.split(",")
         biometrics = sr[0].split(" ")[1]
         weak = sr[1].split(" ")[1]
         strong = sr[2].split(" ")[1]
@@ -128,4 +126,4 @@ class LocalAuthentication(Control):
             },
         )
 
-        return True if sr == "true" else False
+        return sr == "true"
