@@ -57,6 +57,7 @@ class FormFieldControl(ConstrainedControl):
         hint_style: Optional[TextStyle] = None,
         helper_text: Optional[str] = None,
         helper_style: Optional[TextStyle] = None,
+        counter: Optional[Control] = None,
         counter_text: Optional[str] = None,
         counter_style: Optional[TextStyle] = None,
         error_text: Optional[str] = None,
@@ -156,6 +157,7 @@ class FormFieldControl(ConstrainedControl):
         self.hint_style = hint_style
         self.helper_text = helper_text
         self.helper_style = helper_style
+        self.counter = counter
         self.counter_text = counter_text
         self.counter_style = counter_style
         self.error_text = error_text
@@ -192,6 +194,9 @@ class FormFieldControl(ConstrainedControl):
         if isinstance(self.__suffix, Control):
             self.__suffix._set_attr_internal("n", "suffix")
             children.append(self.__suffix)
+        if isinstance(self.__counter, Control):
+            self.__counter._set_attr_internal("n", "counter")
+            children.append(self.__counter)
         return children
 
     # text_size
@@ -449,6 +454,15 @@ class FormFieldControl(ConstrainedControl):
     @prefix.setter
     def prefix(self, value: Optional[Control]):
         self.__prefix = value
+
+    # counter
+    @property
+    def counter(self) -> Optional[Control]:
+        return self.__counter
+
+    @counter.setter
+    def counter(self, value: Optional[Control]):
+        self.__counter = value
 
     # prefix_icon
     @property
