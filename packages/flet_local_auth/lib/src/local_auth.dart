@@ -33,18 +33,21 @@ class _LocalAuthenticationControlState
         final LocalAuthentication auth = LocalAuthentication();
 
         widget.backend.subscribeMethods(widget.control.id,
-            (meathodName, args) async {
-          switch (meathodName) {
+            (methodName, args) async {
+          switch (methodName) {
             case "supported":
               try {
+                // get's available biometrics
                 final List<BiometricType> availableBiometrics =
                     await auth.getAvailableBiometrics();
+                // check's if device is supported
                 final bool canAuthenticate = await auth.isDeviceSupported();
+                // creates a map of retrieved data to convert into string
                 final Map output = {
                   "biometrics": availableBiometrics.isNotEmpty,
                   "weak": availableBiometrics.contains(BiometricType.weak),
                   "strong": availableBiometrics.contains(BiometricType.strong),
-                  "devicesuport": canAuthenticate,
+                  "devicesupport": canAuthenticate,
                 };
                 debugPrint("$output");
                 return "$output";
@@ -55,6 +58,7 @@ class _LocalAuthenticationControlState
             case "authenticate":
               try {
                 final bool didAuthenticate = await auth.authenticate(
+                  // if no title is given, uses "Authentication required" as the title
                   localizedReason: args['title'] ?? "Authentication required",
                   options: AuthenticationOptions(
                     biometricOnly:

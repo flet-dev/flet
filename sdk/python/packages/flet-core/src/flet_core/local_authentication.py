@@ -2,26 +2,35 @@ from typing import Any, Optional
 
 from flet_core.control import Control
 from flet_core.ref import Ref
+import json
 
 
 class LocalAuthentication(Control):
     """
-    A control to use FlashLight. Works on iOS and Android. Based on torch_light Flutter widget (https://pub.dev/packages/torch_light).
+    A control to use native authentication. Works on iOS, Android and Windows. Based on local_auth Flutter widget (https://pub.dev/packages/local_auth).
 
-    Flashlight control is non-visual and should be added to `page.overlay` list.
+    LocalAuthentication control is non-visual and should be added to `page.overlay` list.
 
     Example:
     ```
     import flet as ft
 
     def main(page: ft.Page):
-        flashLight = ft.Flashlight()
-        page.overlay.append(flashLight)
-        page.add(
-            ft.TextButton("toggle", on_click: lambda _: flashlight.toggle())
-        )
+        auth = ft.LocalAuthentication()
 
-    ft.app(target=main)
+        def on_click(e):
+            print(
+                auth.authenticate(
+                    title="title", biometricsOnly=False, useErrorDialogs=True
+                )
+            )
+
+        page.overlay.append(auth)
+        page.add(ft.SafeArea(content=ft.TextButton(text="authenticate", on_click=on_click)))
+
+
+    ft.app(main)
+
     ```
 
     """
@@ -42,19 +51,51 @@ class LocalAuthentication(Control):
     def _get_control_name(self):
         return "localauthentication"
 
-    def supported(self, wait_timeout: Optional[int] = 5) -> bool:
+    def supported(self, wait_timeout: Optional[int] = 5) -> dict:
         sr = self.invoke_method(
             "supported", wait_for_result=True, wait_timeout=wait_timeout
         )
 
-        return sr
+        sr = sr.split(",")
+        biometrics = sr[0].split(" ")[1]
+        weak = sr[1].split(" ")[1]
+        strong = sr[2].split(" ")[1]
+        devicesupport = sr[3].split(" ")[1]
+        data = {
+            "biometrics": True if biometrics == "true" else False,
+            "weak": True if weak == "true" else False,
+            "strong": True if strong == "true" else False,
+            "devicesupport": True if devicesupport == "true" else False,
+        }
+
+        return data
+
+    async def supported_async(self, wait_timeout: Optional[int] = 5) -> dict:
+        sr = await self.invoke_method_async(
+            "supported", wait_for_result=True, wait_timeout=wait_timeout
+        )
+
+        sr.split(",")
+
+        biometrics = sr[0].split(" ")[1]
+        weak = sr[1].split(" ")[1]
+        strong = sr[2].split(" ")[1]
+        devicesupport = sr[3].split(" ")[1]
+        data = {
+            "biometrics": True if biometrics == "true" else False,
+            "weak": True if weak == "true" else False,
+            "strong": True if strong == "true" else False,
+            "devicesupport": True if devicesupport == "true" else False,
+        }
+
+        return data
 
     def authenticate(
         self,
-        title,
-        biometricsOnly,
+        title: str,
+        biometricsOnly: bool = False,
+        useErrorDialogs: bool = False,
         wait_timeout: Optional[int] = 60,
-        useErrorDialogs=False,
     ) -> bool:
         sr = self.invoke_method(
             "authenticate",
@@ -69,35 +110,22 @@ class LocalAuthentication(Control):
 
         return True if sr == "true" else False
 
-    async def turn_on_async(self, wait_timeout: Optional[int] = 5) -> bool:
+    async def authenticate_async(
+        self,
+        title: str,
+        biometricsOnly: bool = False,
+        useErrorDialogs: bool = False,
+        wait_timeout: Optional[int] = 60,
+    ) -> bool:
         sr = await self.invoke_method_async(
-            "on", wait_for_result=True, wait_timeout=wait_timeout
+            "authenticate",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+            arguments={
+                "title": title,
+                "biometricsOnly": str(biometricsOnly).lower(),
+                "useErrorDialogs": str(useErrorDialogs).lower(),
+            },
         )
-        if int(sr) == 1:
-            self.turned_on = True
-        return self.turned_on
 
-    def turn_off(self, wait_timeout: Optional[int] = 5) -> bool:
-        sr = self.invoke_method("off", wait_for_result=True, wait_timeout=wait_timeout)
-
-        if int(sr) == 1:
-            self.turned_on = False
-        return self.turned_on
-
-    async def turn_off_async(self, wait_timeout: Optional[int] = 5) -> bool:
-        sr = await self.invoke_method_async(
-            "off", wait_for_result=True, wait_timeout=wait_timeout
-        )
-        if int(sr) == 1:
-            self.turned_on = False
-        return self.turned_on
-
-    def toggle(self, wait_timeout: Optional[int] = 5) -> bool:
-        if self.turned_on:
-            return self.turn_off(wait_timeout)
-        return self.turn_on(wait_timeout)
-
-    async def toggle_async(self, wait_timeout: Optional[int] = 5) -> bool:
-        if self.turned_on:
-            return await self.turn_off_async(wait_timeout)
-        return await self.turn_on_async(wait_timeout)
+        return True if sr == "true" else False
