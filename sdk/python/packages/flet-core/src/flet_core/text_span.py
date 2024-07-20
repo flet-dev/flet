@@ -2,7 +2,11 @@ from typing import Any, List, Optional
 
 from flet_core.inline_span import InlineSpan
 from flet_core.text_style import TextStyle
-from flet_core.types import UrlTarget, OptionalEventCallable
+from flet_core.types import (
+    UrlTarget,
+    OptionalEventCallable,
+    DefaultOptionalEventCallable,
+)
 
 
 class TextSpan(InlineSpan):
@@ -95,30 +99,30 @@ class TextSpan(InlineSpan):
 
     # on_click
     @property
-    def on_click(self) -> OptionalEventCallable:
+    def on_click(self) -> DefaultOptionalEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler: OptionalEventCallable):
+    def on_click(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("click", handler)
         self._set_attr("onClick", True if handler is not None else None)
 
     # on_enter
     @property
-    def on_enter(self) -> OptionalEventCallable:
+    def on_enter(self) -> DefaultOptionalEventCallable:
         return self._get_event_handler("enter")
 
     @on_enter.setter
-    def on_enter(self, handler: OptionalEventCallable):
+    def on_enter(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("enter", handler)
         self._set_attr("onEnter", True if handler is not None else None)
 
     # on_exit
     @property
-    def on_exit(self) -> OptionalEventCallable:
+    def on_exit(self) -> DefaultOptionalEventCallable:
         return self._get_event_handler("exit")
 
     @on_exit.setter
-    def on_exit(self, handler: OptionalEventCallable):
+    def on_exit(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("exit", handler)
         self._set_attr("onExit", True if handler is not None else None)

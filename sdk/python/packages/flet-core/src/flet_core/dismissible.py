@@ -15,6 +15,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
+    DefaultOptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -43,8 +44,8 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         movement_duration: Optional[int] = None,
         resize_duration: Optional[int] = None,
         cross_axis_end_offset: OptionalNumber = None,
-        on_update: Optional[Callable[["DismissibleUpdateEvent"], None]] = None,
-        on_dismiss: Optional[Callable[["DismissibleDismissEvent"], None]] = None,
+        on_update: OptionalEventCallable["DismissibleUpdateEvent"] = None,
+        on_dismiss: OptionalEventCallable["DismissibleDismissEvent"] = None,
         on_confirm_dismiss: Optional[
             Callable[["DismissibleDismissEvent"], None]
         ] = None,
@@ -250,9 +251,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(
-        self, handler: Optional[Callable[["DismissibleDismissEvent"], None]]
-    ):
+    def on_dismiss(self, handler: OptionalEventCallable["DismissibleDismissEvent"]):
         self.__on_dismiss.subscribe(handler)
         self._set_attr("onDismiss", True if handler is not None else None)
 
@@ -263,7 +262,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
 
     @on_confirm_dismiss.setter
     def on_confirm_dismiss(
-        self, handler: Optional[Callable[["DismissibleDismissEvent"], None]]
+        self, handler: OptionalEventCallable["DismissibleDismissEvent"]
     ):
         self.__on_confirm_dismiss.subscribe(handler)
         self._set_attr("onConfirmDismiss", True if handler is not None else None)
@@ -274,7 +273,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("update")
 
     @on_update.setter
-    def on_update(self, handler: Optional[Callable[["DismissibleUpdateEvent"], None]]):
+    def on_update(self, handler: OptionalEventCallable["DismissibleUpdateEvent"]):
         self.__on_update.subscribe(handler)
         self._set_attr("onUpdate", True if handler is not None else None)
 
@@ -284,7 +283,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("resize")
 
     @on_resize.setter
-    def on_resize(self, handler: OptionalEventCallable):
+    def on_resize(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("resize", handler)
         self._set_attr("onResize", True if handler is not None else None)
 

@@ -18,6 +18,7 @@ from flet_core.types import (
     OptionalEventCallable,
     ThemeVisualDensity,
     VisualDensity,
+    DefaultOptionalEventCallable,
 )
 
 
@@ -450,7 +451,7 @@ class Chip(ConstrainedControl):
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler: OptionalEventCallable):
+    def on_click(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("click", handler)
         self._set_attr("onclick", True if handler is not None else None)
 
@@ -460,7 +461,7 @@ class Chip(ConstrainedControl):
         return self._get_event_handler("delete")
 
     @on_delete.setter
-    def on_delete(self, handler: OptionalEventCallable):
+    def on_delete(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("delete", handler)
         self._set_attr("onDelete", True if handler is not None else None)
 
@@ -470,7 +471,7 @@ class Chip(ConstrainedControl):
         return self._get_event_handler("select")
 
     @on_select.setter
-    def on_select(self, handler: OptionalEventCallable):
+    def on_select(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("select", handler)
         self._set_attr("onSelect", True if handler is not None else None)
 
@@ -480,7 +481,7 @@ class Chip(ConstrainedControl):
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler: OptionalEventCallable):
+    def on_focus(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
@@ -489,5 +490,5 @@ class Chip(ConstrainedControl):
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler: OptionalEventCallable):
+    def on_blur(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("blur", handler)

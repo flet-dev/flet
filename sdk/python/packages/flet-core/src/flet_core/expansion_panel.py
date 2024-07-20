@@ -12,6 +12,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
+    DefaultOptionalEventCallable,
 )
 
 
@@ -322,10 +323,10 @@ class ExpansionPanelList(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallable:
+    def on_change(self) -> DefaultOptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallable):
+    def on_change(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("change", handler)
         self._set_attr("onChange", True if handler is not None else None)

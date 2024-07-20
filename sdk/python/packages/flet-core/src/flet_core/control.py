@@ -22,6 +22,7 @@ from flet_core.types import (
     ResponsiveNumber,
     SupportsStr,
     OptionalEventCallable,
+    DefaultOptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -106,7 +107,7 @@ class Control:
     ) -> None:
         self.__event_handlers[event_name] = handler
 
-    def _get_event_handler(self, event_name: str) -> OptionalEventCallable:
+    def _get_event_handler(self, event_name: str) -> DefaultOptionalEventCallable:
         return self.__event_handlers.get(event_name)
 
     def _get_attr(

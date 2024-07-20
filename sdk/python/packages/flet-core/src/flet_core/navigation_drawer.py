@@ -8,6 +8,7 @@ from flet_core.types import (
     OptionalEventCallable,
     OptionalNumber,
     PaddingValue,
+    DefaultOptionalEventCallable,
 )
 
 
@@ -324,18 +325,18 @@ class NavigationDrawer(Control):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallable:
+    def on_change(self) -> DefaultOptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallable):
+    def on_change(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # on_dismiss
     @property
-    def on_dismiss(self) -> OptionalEventCallable:
+    def on_dismiss(self) -> DefaultOptionalEventCallable:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler: OptionalEventCallable):
+    def on_dismiss(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("dismiss", handler)

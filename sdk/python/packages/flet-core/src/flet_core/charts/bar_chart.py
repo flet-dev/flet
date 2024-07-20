@@ -1,5 +1,5 @@
 import json
-from typing import Any, List, Optional, Union, Callable
+from typing import Any, List, Optional, Union
 
 from flet_core.border import Border
 from flet_core.charts.bar_chart_group import BarChartGroup
@@ -39,7 +39,7 @@ class BarChart(ConstrainedControl):
         baseline_y: OptionalNumber = None,
         min_y: OptionalNumber = None,
         max_y: OptionalNumber = None,
-        on_chart_event: Optional[Callable[["BarChartEvent"], None]] = None,
+        on_chart_event: OptionalEventCallable["BarChartEvent"] = None,
         #
         # ConstrainedControl
         #
@@ -299,7 +299,7 @@ class BarChart(ConstrainedControl):
         return self.__on_chart_event
 
     @on_chart_event.setter
-    def on_chart_event(self, handler: Optional[Callable[["BarChartEvent"], None]]):
+    def on_chart_event(self, handler: OptionalEventCallable["BarChartEvent"]):
         self.__on_chart_event.subscribe(handler)
         self._set_attr("onChartEvent", True if handler is not None else None)
 

@@ -10,6 +10,7 @@ from flet_core.types import (
     PaddingValue,
     ClipBehavior,
     OptionalEventCallable,
+    DefaultOptionalEventCallable,
 )
 
 
@@ -302,18 +303,18 @@ class SnackBar(Control):
 
     # on_action
     @property
-    def on_action(self) -> OptionalEventCallable:
+    def on_action(self) -> DefaultOptionalEventCallable:
         return self._get_event_handler("action")
 
     @on_action.setter
-    def on_action(self, handler: OptionalEventCallable):
+    def on_action(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("action", handler)
 
     # on_visible
     @property
-    def on_visible(self) -> OptionalEventCallable:
+    def on_visible(self) -> DefaultOptionalEventCallable:
         return self._get_event_handler("visible")
 
     @on_visible.setter
-    def on_visible(self, handler: OptionalEventCallable):
+    def on_visible(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("visible", handler)

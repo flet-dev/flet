@@ -15,6 +15,7 @@ from flet_core.types import (
     ScaleValue,
     UrlTarget,
     OptionalEventCallable,
+    DefaultOptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -226,20 +227,20 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
 
     # on_click
     @property
-    def on_click(self) -> OptionalEventCallable:
+    def on_click(self) -> DefaultOptionalEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler: OptionalEventCallable):
+    def on_click(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("click", handler)
 
     # on_long_press
     @property
-    def on_long_press(self) -> OptionalEventCallable:
+    def on_long_press(self) -> DefaultOptionalEventCallable:
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler: OptionalEventCallable):
+    def on_long_press(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
@@ -273,28 +274,28 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
 
     # on_hover
     @property
-    def on_hover(self) -> OptionalEventCallable:
+    def on_hover(self) -> DefaultOptionalEventCallable:
         return self._get_event_handler("hover")
 
     @on_hover.setter
-    def on_hover(self, handler: OptionalEventCallable):
+    def on_hover(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("hover", handler)
         self._set_attr("onHover", True if handler is not None else None)
 
     # on_focus
     @property
-    def on_focus(self) -> OptionalEventCallable:
+    def on_focus(self) -> DefaultOptionalEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler: OptionalEventCallable):
+    def on_focus(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self) -> OptionalEventCallable:
+    def on_blur(self) -> DefaultOptionalEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler: OptionalEventCallable):
+    def on_blur(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("blur", handler)

@@ -13,6 +13,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
+    DefaultOptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -225,28 +226,28 @@ class MenuItemButton(ConstrainedControl):
 
     # on_hover
     @property
-    def on_hover(self) -> OptionalEventCallable:
+    def on_hover(self) -> DefaultOptionalEventCallable:
         return self._get_event_handler("hover")
 
     @on_hover.setter
-    def on_hover(self, handler: OptionalEventCallable):
+    def on_hover(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("hover", handler)
         self._set_attr("onHover", True if handler is not None else None)
 
     # on_focus
     @property
-    def on_focus(self) -> OptionalEventCallable:
+    def on_focus(self) -> DefaultOptionalEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler: OptionalEventCallable):
+    def on_focus(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self) -> OptionalEventCallable:
+    def on_blur(self) -> DefaultOptionalEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler: OptionalEventCallable):
+    def on_blur(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("blur", handler)

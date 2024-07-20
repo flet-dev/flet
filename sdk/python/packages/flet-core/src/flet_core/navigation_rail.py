@@ -15,6 +15,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    DefaultOptionalEventCallable,
 )
 
 
@@ -26,22 +27,22 @@ class NavigationRailLabelType(Enum):
 
 class NavigationRailDestination(Control):
     def __init__(
-            self,
-            icon: Optional[str] = None,
-            icon_content: Optional[Control] = None,
-            selected_icon: Optional[str] = None,
-            selected_icon_content: Optional[Control] = None,
-            label: Optional[str] = None,
-            label_content: Optional[Control] = None,
-            padding: PaddingValue = None,
-            indicator_color: Optional[str] = None,
-            indicator_shape: Optional[OutlinedBorder] = None,
-            #
-            # Control
-            #
-            ref: Optional[Ref] = None,
-            disabled: Optional[bool] = None,
-            data: Any = None,
+        self,
+        icon: Optional[str] = None,
+        icon_content: Optional[Control] = None,
+        selected_icon: Optional[str] = None,
+        selected_icon_content: Optional[Control] = None,
+        label: Optional[str] = None,
+        label_content: Optional[Control] = None,
+        padding: PaddingValue = None,
+        indicator_color: Optional[str] = None,
+        indicator_shape: Optional[OutlinedBorder] = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ) -> None:
         Control.__init__(self, ref=ref, disabled=disabled, data=data)
         self.label = label
@@ -348,11 +349,11 @@ class NavigationRail(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallable:
+    def on_change(self) -> DefaultOptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallable):
+    def on_change(self, handler: DefaultOptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # selected_index
