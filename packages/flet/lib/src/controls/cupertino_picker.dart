@@ -30,6 +30,44 @@ class CupertinoPickerControl extends StatefulWidget {
 }
 
 class _CupertinoPickerControlState extends State<CupertinoPickerControl> {
+  int _index = 0;
+  FixedExtentScrollController scrollController = FixedExtentScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController = FixedExtentScrollController(
+        initialItem: widget.control.attrInt("selectedIndex", _index)!);
+    scrollController.addListener(_manageScroll);
+  }
+
+  void _manageScroll() {
+    // https://stackoverflow.com/a/75283541
+    // Fixes https://github.com/flet-dev/flet/issues/3649
+    int previousIndex = 0;
+    bool isScrollUp = false;
+    bool isScrollDown = true;
+    if (previousIndex != scrollController.selectedItem) {
+      isScrollDown = previousIndex < scrollController.selectedItem;
+      isScrollUp = previousIndex > scrollController.selectedItem;
+
+      var previousIndexTemp = previousIndex;
+      previousIndex = scrollController.selectedItem;
+
+      if (isScrollUp) {
+        scrollController.jumpToItem(previousIndexTemp - 1);
+      } else if (isScrollDown) {
+        scrollController.jumpToItem(previousIndexTemp + 1);
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoPicker build: ${widget.control.id}");
@@ -43,7 +81,7 @@ class _CupertinoPickerControlState extends State<CupertinoPickerControl> {
     }).toList();
 
     double itemExtent = widget.control.attrDouble("itemExtent", _kItemExtent)!;
-    int? selectedIndex = widget.control.attrInt("selectedIndex");
+    int selectedIndex = widget.control.attrInt("selectedIndex", 0)!;
     double diameterRatio =
         widget.control.attrDouble("diameterRatio", _kDefaultDiameterRatio)!;
     double magnification = widget.control.attrDouble("magnification", 1.0)!;
@@ -54,6 +92,7 @@ class _CupertinoPickerControlState extends State<CupertinoPickerControl> {
     Color? backgroundColor = widget.control.attrColor("bgColor", context);
 
     Widget picker = CupertinoPicker(
+      scrollController: scrollController,
       backgroundColor: backgroundColor,
       diameterRatio: diameterRatio,
       magnification: magnification,
@@ -63,14 +102,12 @@ class _CupertinoPickerControlState extends State<CupertinoPickerControl> {
       useMagnifier: useMagnifier,
       looping: looping,
       onSelectedItemChanged: (int index) {
+        _index = index;
         widget.backend.updateControlState(
             widget.control.id, {"selectedIndex": index.toString()});
         widget.backend
             .triggerControlEvent(widget.control.id, "change", index.toString());
       },
-      scrollController: selectedIndex != null
-          ? FixedExtentScrollController(initialItem: selectedIndex)
-          : null,
       children: ctrls,
     );
 
