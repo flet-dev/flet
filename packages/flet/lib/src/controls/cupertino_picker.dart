@@ -31,6 +31,9 @@ class CupertinoPickerControl extends StatefulWidget {
 
 class _CupertinoPickerControlState extends State<CupertinoPickerControl> {
   int _index = 0;
+  int previousIndex = 0;
+  bool isScrollUp = false;
+  bool isScrollDown = true;
   FixedExtentScrollController scrollController = FixedExtentScrollController();
 
   @override
@@ -44,9 +47,6 @@ class _CupertinoPickerControlState extends State<CupertinoPickerControl> {
   void _manageScroll() {
     // https://stackoverflow.com/a/75283541
     // Fixes https://github.com/flet-dev/flet/issues/3649
-    int previousIndex = 0;
-    bool isScrollUp = false;
-    bool isScrollDown = true;
     if (previousIndex != scrollController.selectedItem) {
       isScrollDown = previousIndex < scrollController.selectedItem;
       isScrollUp = previousIndex > scrollController.selectedItem;
@@ -81,7 +81,6 @@ class _CupertinoPickerControlState extends State<CupertinoPickerControl> {
     }).toList();
 
     double itemExtent = widget.control.attrDouble("itemExtent", _kItemExtent)!;
-    int selectedIndex = widget.control.attrInt("selectedIndex", 0)!;
     double diameterRatio =
         widget.control.attrDouble("diameterRatio", _kDefaultDiameterRatio)!;
     double magnification = widget.control.attrDouble("magnification", 1.0)!;
