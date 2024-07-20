@@ -395,12 +395,12 @@ class VisualDensity(Enum):
 
 @dataclass
 class Duration:
-    days: int = 0
-    hours: int = 0
-    minutes: int = 0
-    seconds: int = 0
-    milliseconds: int = 0
     microseconds: int = 0
+    milliseconds: int = 0
+    seconds: int = 0
+    minutes: int = 0
+    hours: int = 0
+    days: int = 0
 
 
 DurationValue = Union[int, Duration, None]

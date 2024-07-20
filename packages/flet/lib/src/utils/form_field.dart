@@ -54,12 +54,13 @@ TextInputType? parseTextInputType(String? value, [TextInputType? defValue]) {
 InputDecoration buildInputDecoration(
     BuildContext context,
     Control control,
-    Control? prefix,
+    {Control? prefix,
     Control? suffix,
+    Control? counter,
     Widget? customSuffix,
-    bool focused,
-    bool disabled,
-    bool? adaptive) {
+    bool focused = false,
+    bool disabled = false,
+    bool? adaptive}) {
   String? label = control.attrString("label", "")!;
   FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
     control.attrString("border"),
@@ -143,6 +144,10 @@ InputDecoration buildInputDecoration(
       helperStyle: parseTextStyle(theme, control, "helperStyle"),
       counterText: control.attrString("counterText"),
       counterStyle: parseTextStyle(theme, control, "counterStyle"),
+      counter: counter != null
+          ? createControl(control, counter.id, control.isDisabled,
+              parentAdaptive: adaptive)
+          : null,
       errorText: control.attrString("errorText"),
       errorStyle: parseTextStyle(theme, control, "errorStyle"),
       prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
