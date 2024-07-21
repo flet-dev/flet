@@ -125,8 +125,8 @@ class CupertinoSegmentedButton(ConstrainedControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[Sequence[Control]]):
-        self.__controls = list(value) if value is not None else []
+    def controls(self, value: Sequence[Control]):
+        self.__controls = list(value)
 
     # border_color
     @property
