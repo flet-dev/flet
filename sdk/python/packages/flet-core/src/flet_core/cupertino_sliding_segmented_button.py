@@ -117,8 +117,8 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: List[Control]):
-        self.__controls = value
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list(value) if value is not None else []
 
     # selected_index
     @property

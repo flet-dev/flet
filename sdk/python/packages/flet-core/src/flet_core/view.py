@@ -75,7 +75,7 @@ class View(ScrollableControl, AdaptiveControl):
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
-        self.controls =list(controls) if controls is not None else []
+        self.controls = controls
         self.route = route
         self.appbar = appbar
         self.bottom_appbar = bottom_appbar
@@ -139,8 +139,8 @@ class View(ScrollableControl, AdaptiveControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: List[Control]):
-        self.__controls = value
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list(value) if value is not None else []
 
     # appbar
     @property
