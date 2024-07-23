@@ -36,7 +36,6 @@ class PolygonMarker(Control):
         visible: Optional[bool] = None,
         data: Any = None,
     ):
-
         Control.__init__(
             self,
             ref=ref,
@@ -60,8 +59,7 @@ class PolygonMarker(Control):
 
     def before_update(self):
         super().before_update()
-        if isinstance(self.__coordinates, list):
-            self._set_attr_json("coordinates", self.__coordinates)
+        self._set_attr_json("coordinates", self.__coordinates)
         if isinstance(self.__label_text_style, TextStyle):
             self._set_attr_json("labelTextStyle", self.__label_text_style)
 
@@ -151,11 +149,11 @@ class PolygonMarker(Control):
 
     # coordinates
     @property
-    def coordinates(self) -> Optional[List[MapLatitudeLongitude]]:
+    def coordinates(self) -> List[MapLatitudeLongitude]:
         return self.__coordinates
 
     @coordinates.setter
-    def coordinates(self, value: Optional[List[MapLatitudeLongitude]]):
+    def coordinates(self, value: List[MapLatitudeLongitude]):
         self.__coordinates = value
 
 
@@ -183,7 +181,6 @@ class PolygonLayer(MapLayer):
         visible: Optional[bool] = None,
         data: Any = None,
     ):
-
         MapLayer.__init__(
             self,
             ref=ref,
