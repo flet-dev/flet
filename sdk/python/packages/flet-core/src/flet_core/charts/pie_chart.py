@@ -1,4 +1,5 @@
 import json
+from enum import Enum
 from typing import Any, List, Optional, Union, Callable
 
 from flet_core.charts.pie_chart_section import PieChartSection
@@ -176,11 +177,31 @@ class PieChart(ConstrainedControl):
         self._set_attr("onChartEvent", True if handler is not None else None)
 
 
+class PieChartEventType(Enum):
+    POINTER_ENTER = "pointerEnter"
+    POINTER_EXIT = "pointerExit"
+    POINTER_HOVER = "pointerHover"
+    PAN_CANCEL = "panCancel"
+    PAN_DOWN = "panDown"
+    PAN_END = "panEnd"
+    PAN_START = "panStart"
+    PAN_UPDATE = "panUpdate"
+    LONG_PRESS_END = "longPressEnd"
+    LONG_PRESS_MOVE_UPDATE = "longPressMoveUpdate"
+    LONG_PRESS_START = "longPressStart"
+    TAP_CANCEL = "tapCancel"
+    TAP_DOWN = "tapDown"
+    TAP_UP = "tapUp"
+    UNDEFINED = "undefined"
+
+
 class PieChartEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.type: str = d.get("type")
-        self.section_index: int = d.get("section_index")
-        # self.radius: float = d.get("radius")
-        # self.angle: float = d.get("angle")
+        self.type: PieChartEventType = PieChartEventType(d.get("type"))
+        self.section_index: int = d["section_index"]
+        self.local_x: Optional[float] = d.get("lx")
+        self.local_y: Optional[float] = d.get("ly")
+        # self.radius: float = d["radius"]
+        # self.angle: float = d["angle"]

@@ -136,6 +136,3 @@ class OnScrollEvent(ControlEvent):
         self.direction: Optional[str] = d.get("dir")
         self.overscroll: Optional[float] = d.get("os")
         self.velocity: Optional[float] = d.get("v")
-
-    def __str__(self):
-        return f"{self.event_type}: pixels={self.pixels}, min_scroll_extent={self.min_scroll_extent}, max_scroll_extent={self.max_scroll_extent}, viewport_dimension={self.viewport_dimension}, scroll_delta={self.scroll_delta}, direction={self.direction}, overscroll={self.overscroll}, velocity={self.velocity}"
