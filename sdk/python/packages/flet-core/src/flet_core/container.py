@@ -526,7 +526,7 @@ class ContainerTapEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.local_x: float = d["lx"]
-        self.local_y: float = d["ly"]
-        self.global_x: float = d["gx"]
-        self.global_y: float = d["gy"]
+        self.local_x: float = d.get("lx")
+        self.local_y: float = d.get("ly")
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")

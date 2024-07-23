@@ -1218,15 +1218,14 @@ Widget _positionedControl(
 }
 
 Widget _sizedControl(Widget widget, Control? parent, Control control) {
-  var width = control.attrDouble("width", null);
-  var height = control.attrDouble("height", null);
-  if (width != null || height != null) {
-    if (control.type != "container" && control.type != "image") {
-      widget = ConstrainedBox(
-        constraints: BoxConstraints.tightFor(width: width, height: height),
-        child: widget,
-      );
-    }
+  var width = control.attrDouble("width");
+  var height = control.attrDouble("height");
+  if ((width != null || height != null) &&
+      !["container", "image"].contains(control.type)) {
+    widget = ConstrainedBox(
+      constraints: BoxConstraints.tightFor(width: width, height: height),
+      child: widget,
+    );
   }
   var animation = parseAnimation(control, "animateSize");
   if (animation != null) {
@@ -1237,10 +1236,7 @@ Widget _sizedControl(Widget widget, Control? parent, Control control) {
 }
 
 Widget _expandable(Widget widget, Control? parent, Control control) {
-  if (parent != null &&
-      (parent.type == "view" ||
-          parent.type == "column" ||
-          parent.type == "row")) {
+  if (parent != null && ["view", "column", "row"].contains(parent.type)) {
     int? expand = control.attrInt("expand");
     var expandLoose = control.attrBool("expandLoose");
     return expand != null

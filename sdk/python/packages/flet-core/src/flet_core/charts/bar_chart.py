@@ -308,7 +308,7 @@ class BarChartEvent(ControlEvent):
     def __init__(self, e: ControlEvent) -> None:
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.type: str = d["type"]
-        self.group_index: int = d["group_index"]
-        self.rod_index: int = d["rod_index"]
-        self.stack_item_index: int = d["stack_item_index"]
+        self.type: str = d.get("type")
+        self.group_index: int = d.get("group_index")
+        self.rod_index: int = d.get("rod_index")
+        self.stack_item_index: int = d.get("stack_item_index")
