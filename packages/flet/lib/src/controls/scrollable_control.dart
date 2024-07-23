@@ -9,10 +9,9 @@ import '../models/control.dart';
 import '../utils/animations.dart';
 import '../utils/desktop.dart';
 import '../utils/numbers.dart';
+import '../utils/others.dart';
 import '../widgets/adjustable_scroll_controller.dart';
 import 'flet_store_mixin.dart';
-
-enum ScrollMode { none, auto, adaptive, always, hidden }
 
 class ScrollableControl extends StatefulWidget {
   final Control control;
@@ -65,11 +64,8 @@ class _ScrollableControlState extends State<ScrollableControl>
   @override
   Widget build(BuildContext context) {
     return withPagePlatform((context, platform) {
-      ScrollMode scrollMode = ScrollMode.values.firstWhere(
-          (m) =>
-              m.name.toLowerCase() ==
-              widget.control.attrString("scroll", "")!.toLowerCase(),
-          orElse: () => ScrollMode.none);
+      ScrollMode scrollMode = parseScrollMode(
+          widget.control.attrString("scroll"), ScrollMode.none)!;
 
       var method = widget.control.attrString("method");
 
@@ -91,10 +87,8 @@ class _ScrollableControlState extends State<ScrollableControl>
         var params = Map<String, dynamic>.from(mj["p"] as Map);
 
         if (name == "scroll_to") {
-          var duration = parseInt(params["duration"]);
-          var curve = params["curve"] != null
-              ? parseCurve(params["curve"] as String)
-              : Curves.ease;
+          var duration = parseInt(params["duration"], 0)!;
+          var curve = parseCurve(params["curve"], Curves.ease)!;
           if (params["key"] != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               var key = FletAppServices.of(context).globalKeys[params["key"]];
@@ -111,7 +105,7 @@ class _ScrollableControlState extends State<ScrollableControl>
             });
           } else if (params["offset"] != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              var offset = parseDouble(params["offset"]);
+              var offset = parseDouble(params["offset"], 0)!;
               if (offset < 0) {
                 offset = _controller.position.maxScrollExtent + offset + 1;
               }
@@ -127,7 +121,7 @@ class _ScrollableControlState extends State<ScrollableControl>
             });
           } else if (params["delta"] != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              var delta = parseDouble(params["delta"]);
+              var delta = parseDouble(params["delta"], 0)!;
               var offset = _controller.position.pixels + delta;
               if (duration < 1) {
                 _controller.jumpTo(offset);

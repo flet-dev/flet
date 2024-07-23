@@ -1,3 +1,4 @@
+import warnings
 from typing import Any, Optional, Union
 
 from flet_core.alignment import Alignment
@@ -13,6 +14,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     UrlTarget,
+    OptionalEventCallable,
 )
 
 
@@ -34,6 +36,7 @@ class CupertinoButton(ConstrainedControl):
         bgcolor: Optional[str] = None,
         color: Optional[str] = None,
         disabled_color: Optional[str] = None,
+        disabled_bgcolor: Optional[str] = None,
         opacity_on_click: OptionalNumber = None,
         min_size: OptionalNumber = None,
         padding: PaddingValue = None,
@@ -41,9 +44,9 @@ class CupertinoButton(ConstrainedControl):
         border_radius: BorderRadiusValue = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
-        on_click=None,
+        on_click: OptionalEventCallable = None,
         #
-        # Common
+        # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
@@ -67,7 +70,7 @@ class CupertinoButton(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -105,6 +108,7 @@ class CupertinoButton(ConstrainedControl):
         )
 
         self.disabled_color = disabled_color
+        self.disabled_bgcolor = disabled_bgcolor
         self.text = text
         self.icon = icon
         self.icon_color = icon_color
@@ -125,6 +129,9 @@ class CupertinoButton(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
+        assert (
+            self.text or self.icon or (self.__content and self.__content.visible)
+        ), "at minimum, text, icon or a visible content must be provided"
         self._set_attr_json("padding", self.__padding)
         self._set_attr_json("borderRadius", self.__border_radius)
         self._set_attr_json("alignment", self.__alignment)
@@ -174,11 +181,33 @@ class CupertinoButton(ConstrainedControl):
     # disabled_color
     @property
     def disabled_color(self) -> Optional[str]:
+        warnings.warn(
+            f"disabled_color is deprecated since version 0.24.0 "
+            f"and will be removed in version 0.27.0. Use disabled_bgcolor instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
         return self._get_attr("disabledColor")
 
     @disabled_color.setter
     def disabled_color(self, value: Optional[str]):
         self._set_attr("disabledColor", value)
+        if value is not None:
+            warnings.warn(
+                f"disabled_color is deprecated since version 0.24.0 "
+                f"and will be removed in version 0.27.0. Use disabled_bgcolor instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
+
+    # disabled_bgcolor
+    @property
+    def disabled_bgcolor(self) -> Optional[str]:
+        return self._get_attr("disabledBgcolor")
+
+    @disabled_bgcolor.setter
+    def disabled_bgcolor(self, value: Optional[str]):
+        self._set_attr("disabledBgcolor", value)
 
     # opacity_on_click
     @property
@@ -253,17 +282,15 @@ class CupertinoButton(ConstrainedControl):
     @url_target.setter
     def url_target(self, value: Optional[UrlTarget]):
         self.__url_target = value
-        self._set_attr(
-            "urlTarget", value.value if isinstance(value, UrlTarget) else value
-        )
+        self._set_enum_attr("urlTarget", value, UrlTarget)
 
     # on_click
     @property
-    def on_click(self):
+    def on_click(self) -> OptionalEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)
 
     # content

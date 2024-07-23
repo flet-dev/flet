@@ -1,5 +1,4 @@
-import dataclasses
-from dataclasses import field
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
 
@@ -13,7 +12,7 @@ class ShadowBlurStyle(Enum):
     INNER = "inner"
 
 
-@dataclasses.dataclass
+@dataclass
 class BoxShadow:
     spread_radius: Optional[float] = field(default=None)
     blur_radius: Optional[float] = field(default=None)

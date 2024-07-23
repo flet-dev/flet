@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +7,7 @@ import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/form_field.dart';
 import '../utils/gradient.dart';
+import '../utils/images.dart';
 import '../utils/shadows.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
@@ -139,12 +139,9 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
           fontSize: textSize, color: _focused ? focusedColor ?? color : color);
     }
 
-    TextCapitalization? textCapitalization = TextCapitalization.values
-        .firstWhere(
-            (a) =>
-                a.name.toLowerCase() ==
-                widget.control.attrString("capitalization", "")!.toLowerCase(),
-            orElse: () => TextCapitalization.none);
+    TextCapitalization textCapitalization = parseTextCapitalization(
+        widget.control.attrString("textCapitalization"),
+        TextCapitalization.none)!;
 
     FilteringTextInputFormatter? inputFilter =
         parseInputFilter(widget.control, "inputFilter");
@@ -158,18 +155,13 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
       inputFormatters.add(TextCapitalizationFormatter(textCapitalization));
     }
 
-    TextInputType keyboardType =
-        parseTextInputType(widget.control.attrString("keyboardType", "")!);
+    TextInputType keyboardType = multiline
+        ? TextInputType.multiline
+        : parseTextInputType(
+            widget.control.attrString("keyboardType"), TextInputType.text)!;
 
-    if (multiline) {
-      keyboardType = TextInputType.multiline;
-    }
-
-    TextAlign textAlign = TextAlign.values.firstWhere(
-      ((b) =>
-          b.name == widget.control.attrString("textAlign", "")!.toLowerCase()),
-      orElse: () => TextAlign.start,
-    );
+    TextAlign textAlign = parseTextAlign(
+        widget.control.attrString("textAlign"), TextAlign.start)!;
 
     double? textVerticalAlign = widget.control.attrDouble("textVerticalAlign");
 
@@ -200,11 +192,10 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
       border = parseBorder(Theme.of(context), widget.control, "border");
       // adaptive TextField is being created
     } catch (e) {
-      FormFieldInputBorder inputBorder = FormFieldInputBorder.values.firstWhere(
-        ((b) =>
-            b.name == widget.control.attrString("border", "")!.toLowerCase()),
-        orElse: () => FormFieldInputBorder.outline,
-      );
+      FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
+        widget.control.attrString("border"),
+        FormFieldInputBorder.outline,
+      )!;
 
       if (inputBorder == FormFieldInputBorder.outline) {
         border = Border.all(color: borderColor, width: borderWidth);
@@ -233,9 +224,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
 
     BoxDecoration? defaultDecoration = const CupertinoTextField().decoration;
     var gradient = parseGradient(Theme.of(context), widget.control, "gradient");
-    var blendMode = BlendMode.values.firstWhereOrNull((e) =>
-        e.name.toLowerCase() ==
-        widget.control.attrString("blendMode", "")!.toLowerCase());
+    var blendMode = parseBlendMode(widget.control.attrString("blendMode"));
 
     var bgColor = widget.control.attrColor("bgColor", context);
     // for adaptive TextField use label for placeholder
@@ -272,9 +261,9 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
                 parseBoxShadow(Theme.of(context), widget.control, "shadow")),
         cursorHeight: widget.control.attrDouble("cursorHeight"),
         showCursor: widget.control.attrBool("showCursor"),
-        cursorWidth: widget.control.attrDouble("cursorWidth") ?? 2.0,
-        cursorRadius: parseRadius(widget.control, "cursorRadius") ??
-            const Radius.circular(2.0),
+        cursorWidth: widget.control.attrDouble("cursorWidth", 2.0)!,
+        cursorRadius: parseRadius(
+            widget.control, "cursorRadius", const Radius.circular(2.0))!,
         keyboardType: keyboardType,
         clearButtonSemanticLabel:
             widget.control.attrString("clearButtonSemanticsLabel"),

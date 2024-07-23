@@ -18,6 +18,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -52,7 +53,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
-        content: Optional[Control] = None,
+        content: Control,
         appbar: Union[AppBar, CupertinoAppBar, None] = None,
         navigation_bar: Union[NavigationBar, CupertinoNavigationBar, None] = None,
         bottom_app_bar: Optional[BottomAppBar] = None,
@@ -88,7 +89,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -147,13 +148,11 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         return "pagelet"
 
     def _get_children(self):
-        children = []
+        self.__content._set_attr_internal("n", "content")
+        children = [self.__content]
         if self.__appbar:
             self.__appbar._set_attr_internal("n", "appbar")
             children.append(self.__appbar)
-        if self.__content:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
         if self.__navigation_bar:
             self.__navigation_bar._set_attr_internal("n", "navigationbar")
             children.append(self.__navigation_bar)
@@ -176,6 +175,10 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
             children.append(self.__floating_action_button)
         return children
 
+    def before_update(self):
+        super().before_update()
+        assert self.__content.visible, "content must be visible"
+
     # Drawer
     #
     def show_drawer(self, drawer: NavigationDrawer):
@@ -186,7 +189,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use show_drawer() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def show_drawer_async(self, drawer: NavigationDrawer):
         self.show_drawer(drawer)
@@ -199,7 +202,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use close_end_drawer() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def close_drawer_async(self):
         self.close_end_drawer()
@@ -214,7 +217,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use show_end_drawer() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def show_end_drawer_async(self, end_drawer: NavigationDrawer):
         self.show_end_drawer(end_drawer)
@@ -227,7 +230,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use close_end_drawer() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def close_end_drawer_async(self):
         self.close_end_drawer()
@@ -243,20 +246,20 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
 
     # content
     @property
-    def content(self) -> Optional[Control]:
+    def content(self) -> Control:
         return self.__content
 
     @content.setter
-    def content(self, value: Optional[Control]):
+    def content(self, value: Control):
         self.__content = value
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # bottom_appbar

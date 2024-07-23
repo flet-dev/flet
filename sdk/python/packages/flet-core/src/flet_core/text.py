@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Any, List, Optional, Union
 from warnings import warn
 
@@ -6,7 +5,7 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_span import TextSpan
-from flet_core.text_style import TextStyle
+from flet_core.text_style import TextStyle, TextThemeStyle, TextOverflow
 from flet_core.types import (
     AnimationValue,
     FontWeight,
@@ -15,38 +14,13 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TextAlign,
+    OptionalEventCallable,
 )
 
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
-
-
-class TextOverflow(Enum):
-    NONE = None
-    CLIP = "clip"
-    ELLIPSIS = "ellipsis"
-    FADE = "fade"
-    VISIBLE = "visible"
-
-
-class TextThemeStyle(Enum):
-    DISPLAY_LARGE = "displayLarge"
-    DISPLAY_MEDIUM = "displayMedium"
-    DISPLAY_SMALL = "displaySmall"
-    HEADLINE_LARGE = "headlineLarge"
-    HEADLINE_MEDIUM = "headlineMedium"
-    HEADLINE_SMALL = "headlineSmall"
-    TITLE_LARGE = "titleLarge"
-    TITLE_MEDIUM = "titleMedium"
-    TITLE_SMALL = "titleSmall"
-    LABEL_LARGE = "labelLarge"
-    LABEL_MEDIUM = "labelMedium"
-    LABEL_SMALL = "labelSmall"
-    BODY_LARGE = "bodyLarge"
-    BODY_MEDIUM = "bodyMedium"
-    BODY_SMALL = "bodySmall"
 
 
 class Text(ConstrainedControl):
@@ -90,7 +64,7 @@ class Text(ConstrainedControl):
         style: Union[TextThemeStyle, TextStyle, None] = None,
         theme_style: Optional[TextThemeStyle] = None,
         max_lines: Optional[int] = None,
-        overflow: TextOverflow = TextOverflow.NONE,
+        overflow: Optional[TextOverflow] = None,
         selectable: Optional[bool] = None,
         no_wrap: Optional[bool] = None,
         color: Optional[str] = None,
@@ -121,7 +95,7 @@ class Text(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -181,9 +155,7 @@ class Text(ConstrainedControl):
         return "text"
 
     def _get_children(self):
-        children = []
-        children.extend(self.__spans)
-        return children
+        return self.__spans
 
     def before_update(self):
         super().before_update()
@@ -201,7 +173,7 @@ class Text(ConstrainedControl):
 
     # spans
     @property
-    def spans(self) -> Optional[List[TextSpan]]:
+    def spans(self) -> List[TextSpan]:
         return self.__spans
 
     @spans.setter
@@ -216,23 +188,21 @@ class Text(ConstrainedControl):
     @text_align.setter
     def text_align(self, value: Optional[TextAlign]):
         self.__text_align = value
-        self._set_attr(
-            "textAlign", value.value if isinstance(value, TextAlign) else value
-        )
+        self._set_enum_attr("textAlign", value, TextAlign)
 
     # font_family
     @property
-    def font_family(self):
+    def font_family(self) -> Optional[str]:
         return self._get_attr("fontFamily")
 
     @font_family.setter
-    def font_family(self, value):
+    def font_family(self, value: Optional[str]):
         self._set_attr("fontFamily", value)
 
     # size
     @property
     def size(self) -> OptionalNumber:
-        return self._get_attr("size")
+        return self._get_attr("size", data_type="float")
 
     @size.setter
     def size(self, value: OptionalNumber):
@@ -246,9 +216,7 @@ class Text(ConstrainedControl):
     @weight.setter
     def weight(self, value: Optional[FontWeight]):
         self.__weight = value
-        self._set_attr(
-            "weight", value.value if isinstance(value, FontWeight) else value
-        )
+        self._set_enum_attr("weight", value, FontWeight)
 
     # style
     @property
@@ -272,14 +240,13 @@ class Text(ConstrainedControl):
 
     # theme_style
     @property
-    def theme_style(self):
-        return self._get_attr("theme_style")
+    def theme_style(self) -> Optional[TextThemeStyle]:
+        return self.__theme_style
 
     @theme_style.setter
     def theme_style(self, value: Optional[TextThemeStyle]):
-        self._set_attr(
-            "theme_style", value.value if isinstance(value, TextThemeStyle) else value
-        )
+        self.__theme_style = value
+        self._set_enum_attr("theme_style", value, TextThemeStyle)
 
     # italic
     @property
@@ -319,32 +286,30 @@ class Text(ConstrainedControl):
 
     # overflow
     @property
-    def overflow(self) -> TextOverflow:
+    def overflow(self) -> Optional[TextOverflow]:
         return self.__overflow
 
     @overflow.setter
-    def overflow(self, value: TextOverflow):
+    def overflow(self, value: Optional[TextOverflow]):
         self.__overflow = value
-        self._set_attr(
-            "overflow", value.value if isinstance(value, TextOverflow) else value
-        )
+        self._set_enum_attr("overflow", value, TextOverflow)
 
     # color
     @property
-    def color(self):
+    def color(self) -> Optional[str]:
         return self._get_attr("color")
 
     @color.setter
-    def color(self, value):
+    def color(self, value: Optional[str]):
         self._set_attr("color", value)
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # semantics_label

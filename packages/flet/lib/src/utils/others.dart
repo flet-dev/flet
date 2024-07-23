@@ -1,0 +1,230 @@
+import 'package:collection/collection.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+
+Clip? parseClip(String? value, [Clip? defaultValue]) {
+  if (value == null) {
+    return defaultValue;
+  }
+  return Clip.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defaultValue;
+}
+
+Orientation? parseOrientation(String? value,
+    [Orientation? defaultOrientation]) {
+  if (value == null) {
+    return defaultOrientation;
+  }
+  return Orientation.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defaultOrientation;
+}
+
+StrokeCap? parseStrokeCap(String? value, [StrokeCap? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return StrokeCap.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+StrokeJoin? parseStrokeJoin(String? value, [StrokeJoin? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return StrokeJoin.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+BoxShape? parseBoxShape(String? value, [BoxShape? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return BoxShape.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+SliderInteraction? parseSliderInteraction(String? value,
+    [SliderInteraction? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return SliderInteraction.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+SnackBarBehavior? parseSnackBarBehavior(String? value,
+    [SnackBarBehavior? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return SnackBarBehavior.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+StackFit? parseStackFit(String? value, [StackFit? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return StackFit.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+DatePickerMode? parseDatePickerMode(String? value, [DatePickerMode? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return DatePickerMode.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+DatePickerEntryMode? parseDatePickerEntryMode(String? value,
+    [DatePickerEntryMode? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return DatePickerEntryMode.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+enum CardVariant { elevated, filled, outlined }
+
+CardVariant? parseCardVariant(String? value, [CardVariant? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return CardVariant.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+enum ScrollMode { none, auto, adaptive, always, hidden }
+
+ScrollMode? parseScrollMode(String? value, [ScrollMode? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return ScrollMode.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+enum LabelPosition { right, left }
+
+LabelPosition? parseLabelPosition(String? value, [LabelPosition? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return LabelPosition.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+CupertinoTimerPickerMode? parseCupertinoTimerPickerMode(String? value,
+    [CupertinoTimerPickerMode? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return CupertinoTimerPickerMode.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+ListTileControlAffinity? parseListTileControlAffinity(String? value,
+    [ListTileControlAffinity? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return ListTileControlAffinity.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+ListTileStyle? parseListTileStyle(String? value, [ListTileStyle? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return ListTileStyle.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+NavigationDestinationLabelBehavior? parseNavigationDestinationLabelBehavior(
+    String? value,
+    [NavigationDestinationLabelBehavior? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return NavigationDestinationLabelBehavior.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+PopupMenuPosition? parsePopupMenuPosition(String? value,
+    [PopupMenuPosition? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return PopupMenuPosition.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+Assertiveness? parseAssertiveness(String? value, [Assertiveness? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return Assertiveness.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+DatePickerDateOrder? parseDatePickerDateOrder(String? value,
+    [DatePickerDateOrder? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return DatePickerDateOrder.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+CupertinoDatePickerMode? parseCupertinoDatePickerMode(String? value,
+    [CupertinoDatePickerMode? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return CupertinoDatePickerMode.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+ListTileTitleAlignment? parseListTileTitleAlignment(String? value,
+    [ListTileTitleAlignment? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return ListTileTitleAlignment.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+TimePickerEntryMode? parseTimePickerEntryMode(String? value,
+    [TimePickerEntryMode? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return TimePickerEntryMode.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}

@@ -3,7 +3,13 @@ from typing import Any, Optional, Union
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
+from flet_core.types import (
+    AnimationValue,
+    OffsetValue,
+    RotateValue,
+    ScaleValue,
+    OptionalEventCallable,
+)
 
 
 class TransparentPointer(ConstrainedControl):
@@ -33,7 +39,7 @@ class TransparentPointer(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -74,11 +80,10 @@ class TransparentPointer(ConstrainedControl):
         return "transparentpointer"
 
     def _get_children(self):
-        children = []
         if self.__content is not None:
             self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
+            return [self.__content]
+        return []
 
     # content
     @property

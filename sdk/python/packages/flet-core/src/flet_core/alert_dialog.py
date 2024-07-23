@@ -6,7 +6,12 @@ from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import ClipBehavior, MainAxisAlignment, PaddingValue
+from flet_core.types import (
+    ClipBehavior,
+    MainAxisAlignment,
+    PaddingValue,
+    OptionalEventCallable,
+)
 
 
 class AlertDialog(AdaptiveControl):
@@ -17,43 +22,39 @@ class AlertDialog(AdaptiveControl):
     ```
     import flet as ft
 
+
     def main(page: ft.Page):
         page.title = "AlertDialog examples"
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
         dlg = ft.AlertDialog(
-            title=ft.Text("Hello, you!"), on_dismiss=lambda e: print("Dialog dismissed!")
+            title=ft.Text("Hi, this is a non-modal dialog!"),
+            on_dismiss=lambda e: page.add(ft.Text("Non-modal dialog dismissed")),
         )
 
-        def close_dlg(e):
-            dlg_modal.open = False
-            page.update()
+        def handle_close(e):
+            page.close(dlg_modal)
+            page.add(ft.Text(f"Modal dialog closed with action: {e.control.text}"))
 
         dlg_modal = ft.AlertDialog(
             modal=True,
             title=ft.Text("Please confirm"),
             content=ft.Text("Do you really want to delete all those files?"),
             actions=[
-                ft.TextButton("Yes", on_click=close_dlg),
-                ft.TextButton("No", on_click=close_dlg),
+                ft.TextButton("Yes", on_click=handle_close),
+                ft.TextButton("No", on_click=handle_close),
             ],
             actions_alignment=ft.MainAxisAlignment.END,
-            on_dismiss=lambda e: print("Modal dialog dismissed!"),
+            on_dismiss=lambda e: page.add(
+                ft.Text("Modal dialog dismissed"),
+            ),
         )
-
-        def open_dlg(e):
-            page.dialog = dlg
-            dlg.open = True
-            page.update()
-
-        def open_dlg_modal(e):
-            page.dialog = dlg_modal
-            dlg_modal.open = True
-            page.update()
 
         page.add(
-            ft.ElevatedButton("Open dialog", on_click=open_dlg),
-            ft.ElevatedButton("Open modal dialog", on_click=open_dlg_modal),
+            ft.ElevatedButton("Open dialog", on_click=lambda e: page.open(dlg)),
+            ft.ElevatedButton("Open modal dialog", on_click=lambda e: page.open(dlg_modal)),
         )
+
 
     ft.app(target=main)
     ```
@@ -90,7 +91,7 @@ class AlertDialog(AdaptiveControl):
         title_text_style: Optional[TextStyle] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         semantics_label: Optional[str] = None,
-        on_dismiss=None,
+        on_dismiss: OptionalEventCallable = None,
         #
         # AdaptiveControl
         #
@@ -109,11 +110,6 @@ class AlertDialog(AdaptiveControl):
         )
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
-
-        self.__title: Optional[Control] = None
-        self.__icon: Optional[Control] = None
-        self.__content: Optional[Control] = None
-        self.__actions: List[Control] = []
 
         self.open = open
         self.bgcolor = bgcolor
@@ -148,6 +144,9 @@ class AlertDialog(AdaptiveControl):
 
     def before_update(self):
         super().before_update()
+        assert (
+            self.__title or self.__content or self.__actions
+        ), "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions"
         self._set_attr_json("actionsPadding", self.__actions_padding)
         self._set_attr_json("contentPadding", self.__content_padding)
         self._set_attr_json("titlePadding", self.__title_padding)
@@ -332,7 +331,7 @@ class AlertDialog(AdaptiveControl):
 
     # actions
     @property
-    def actions(self) -> Optional[List[Control]]:
+    def actions(self) -> List[Control]:
         return self.__actions
 
     @actions.setter
@@ -409,19 +408,18 @@ class AlertDialog(AdaptiveControl):
     # clip_behavior
     @property
     def clip_behavior(self) -> Optional[ClipBehavior]:
-        return self._get_attr("clipBehavior")
+        return self.__clip_behavior
 
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
-        self._set_attr(
-            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
-        )
+        self.__clip_behavior = value
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
 
     # on_dismiss
     @property
-    def on_dismiss(self):
+    def on_dismiss(self) -> OptionalEventCallable:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler):
+    def on_dismiss(self, handler: OptionalEventCallable):
         self._add_event_handler("dismiss", handler)

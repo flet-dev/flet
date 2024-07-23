@@ -8,12 +8,13 @@ from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
     LabelPosition,
-    MaterialState,
+    ControlState,
     MouseCursor,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 
@@ -63,18 +64,18 @@ class Switch(ConstrainedControl, AdaptiveControl):
         focus_color: Optional[str] = None,
         inactive_thumb_color: Optional[str] = None,
         inactive_track_color: Optional[str] = None,
-        thumb_color: Union[None, str, Dict[MaterialState, str]] = None,
-        thumb_icon: Union[None, str, Dict[MaterialState, str]] = None,
-        track_color: Union[None, str, Dict[MaterialState, str]] = None,
+        thumb_color: Union[None, str, Dict[ControlState, str]] = None,
+        thumb_icon: Union[None, str, Dict[ControlState, str]] = None,
+        track_color: Union[None, str, Dict[ControlState, str]] = None,
         adaptive: Optional[bool] = None,
         hover_color: Optional[str] = None,
         splash_radius: OptionalNumber = None,
-        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
-        track_outline_color: Union[None, str, Dict[MaterialState, str]] = None,
+        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
+        track_outline_color: Union[None, str, Dict[ControlState, str]] = None,
         mouse_cursor: Optional[MouseCursor] = None,
-        on_change=None,
-        on_focus=None,
-        on_blur=None,
+            on_change: OptionalEventCallable = None,
+            on_focus: OptionalEventCallable = None,
+            on_blur: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -100,7 +101,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+            on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -203,20 +204,20 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     # track_outline_color
     @property
-    def track_outline_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def track_outline_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__track_outline_color
 
     @track_outline_color.setter
-    def track_outline_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def track_outline_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__track_outline_color = value
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__overlay_color = value
 
     # splash_radius
@@ -226,6 +227,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     @splash_radius.setter
     def splash_radius(self, value: OptionalNumber):
+        assert value is None or value >= 0, "splash_radius cannot be negative"
         self._set_attr("splashRadius", value)
 
     # label_style
@@ -245,9 +247,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     @label_position.setter
     def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
-        self._set_attr(
-            "labelPosition", value.value if isinstance(value, LabelPosition) else value
-        )
+        self._set_enum_attr("labelPosition", value, LabelPosition)
 
     # mouse_cursor
     @property
@@ -257,10 +257,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_attr(
-            "mouseCursor",
-            value.value if isinstance(value, MouseCursor) else value,
-        )
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # autofocus
     @property
@@ -273,99 +270,99 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     # active_color
     @property
-    def active_color(self):
+    def active_color(self) -> Optional[str]:
         return self._get_attr("activeColor")
 
     @active_color.setter
-    def active_color(self, value):
+    def active_color(self, value: Optional[str]):
         self._set_attr("activeColor", value)
 
     # active_track_color
     @property
-    def active_track_color(self):
+    def active_track_color(self) -> Optional[str]:
         return self._get_attr("activeTrackColor")
 
     @active_track_color.setter
-    def active_track_color(self, value):
+    def active_track_color(self, value: Optional[str]):
         self._set_attr("activeTrackColor", value)
 
     # focus_color
     @property
-    def focus_color(self):
+    def focus_color(self) -> Optional[str]:
         return self._get_attr("focusColor")
 
     @focus_color.setter
-    def focus_color(self, value):
+    def focus_color(self, value: Optional[str]):
         self._set_attr("focusColor", value)
 
     # inactive_thumb_color
     @property
-    def inactive_thumb_color(self):
+    def inactive_thumb_color(self) -> Optional[str]:
         return self._get_attr("inactiveThumbColor")
 
     @inactive_thumb_color.setter
-    def inactive_thumb_color(self, value):
+    def inactive_thumb_color(self, value: Optional[str]):
         self._set_attr("inactiveThumbColor", value)
 
     # inactive_track_color
     @property
-    def inactive_track_color(self):
+    def inactive_track_color(self) -> Optional[str]:
         return self._get_attr("inactiveTrackColor")
 
     @inactive_track_color.setter
-    def inactive_track_color(self, value):
+    def inactive_track_color(self, value: Optional[str]):
         self._set_attr("inactiveTrackColor", value)
 
     # thumb_color
     @property
-    def thumb_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def thumb_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__thumb_color
 
     @thumb_color.setter
-    def thumb_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def thumb_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__thumb_color = value
 
     # thumb_icon
     @property
-    def thumb_icon(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def thumb_icon(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__thumb_icon
 
     @thumb_icon.setter
-    def thumb_icon(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def thumb_icon(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__thumb_icon = value
 
     # track_color
     @property
-    def track_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def track_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__track_color
 
     @track_color.setter
-    def track_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def track_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__track_color = value
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # on_focus
     @property
-    def on_focus(self):
+    def on_focus(self) -> OptionalEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler):
+    def on_focus(self, handler: OptionalEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self):
+    def on_blur(self) -> OptionalEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler):
+    def on_blur(self, handler: OptionalEventCallable):
         self._add_event_handler("blur", handler)

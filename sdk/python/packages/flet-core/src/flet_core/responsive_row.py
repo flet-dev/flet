@@ -12,6 +12,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -82,7 +83,7 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -150,35 +151,30 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use clean() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def clean_async(self):
         self.clean()
 
     # horizontal_alignment
     @property
-    def alignment(self) -> MainAxisAlignment:
+    def alignment(self) -> Optional[MainAxisAlignment]:
         return self.__alignment
 
     @alignment.setter
-    def alignment(self, value: MainAxisAlignment):
+    def alignment(self, value: Optional[MainAxisAlignment]):
         self.__alignment = value
-        self._set_attr(
-            "alignment", value.value if isinstance(value, MainAxisAlignment) else value
-        )
+        self._set_enum_attr("alignment", value, MainAxisAlignment)
 
     # vertical_alignment
     @property
-    def vertical_alignment(self) -> CrossAxisAlignment:
+    def vertical_alignment(self) -> Optional[CrossAxisAlignment]:
         return self.__vertical_alignment
 
     @vertical_alignment.setter
-    def vertical_alignment(self, value: CrossAxisAlignment):
+    def vertical_alignment(self, value: Optional[CrossAxisAlignment]):
         self.__vertical_alignment = value
-        self._set_attr(
-            "verticalAlignment",
-            value.value if isinstance(value, CrossAxisAlignment) else value,
-        )
+        self._set_enum_attr("verticalAlignment", value, CrossAxisAlignment)
 
     # columns
     @property

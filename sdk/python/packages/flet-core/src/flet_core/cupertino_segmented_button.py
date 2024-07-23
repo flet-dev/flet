@@ -10,6 +10,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     PaddingValue,
+    OptionalEventCallable,
 )
 
 
@@ -31,7 +32,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
         border_color: Optional[str] = None,
         padding: PaddingValue = None,
         click_color: Optional[str] = None,
-        on_change=None,
+        on_change: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -57,7 +58,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -108,6 +109,12 @@ class CupertinoSegmentedButton(ConstrainedControl):
     def _get_children(self):
         return self.__controls
 
+    def before_update(self):
+        super().before_update()
+        assert (
+            len(self.__controls) >= 2
+        ), "CupertinoSegmentedButton must have at minimum two visible controls"
+
     def _before_build_command(self):
         super()._before_build_command()
         self._set_attr_json("padding", self.__padding)
@@ -119,7 +126,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
 
     @controls.setter
     def controls(self, value: List[Control]):
-        self.__controls = value if value is not None else []
+        self.__controls = value
 
     # border_color
     @property
@@ -179,9 +186,9 @@ class CupertinoSegmentedButton(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)

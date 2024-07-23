@@ -38,18 +38,20 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
   Widget build(BuildContext context) {
     debugPrint("CupertinoButton build: ${widget.control.id}");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    var theme = Theme.of(context);
 
-    var contentCtrls = widget.children.where((c) => c.name == "content");
+    var contentCtrls =
+        widget.children.where((c) => c.name == "content" && c.isVisible);
 
     String? text = widget.control.attrString("text");
-    IconData? icon = parseIcon(widget.control.attrString("icon", "")!);
+    IconData? icon = parseIcon(widget.control.attrString("icon"));
     Color? iconColor = widget.control.attrColor("iconColor", context);
 
     // IconButton props below
     double? iconSize = widget.control.attrDouble("iconSize");
     bool selected = widget.control.attrBool("selected", false)!;
     IconData? selectedIcon =
-        parseIcon(widget.control.attrString("selectedIcon", "")!);
+        parseIcon(widget.control.attrString("selectedIcon"));
     Color? selectedIconColor =
         widget.control.attrColor("selectedIconColor", context);
 
@@ -58,7 +60,11 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     if (icon != null) {
       children.add(Icon(
         selected ? selectedIcon : icon,
-        color: selected ? selectedIconColor : iconColor,
+        color: selected
+            ? selectedIconColor
+            : disabled
+                ? theme.disabledColor
+                : iconColor,
         size: iconSize,
       ));
     }
@@ -66,7 +72,10 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       children.add(Text(text));
     }
 
-    if (children.isNotEmpty) {
+    if (contentCtrls.isNotEmpty) {
+      content = createControl(widget.control, contentCtrls.first.id, disabled,
+          parentAdaptive: widget.parentAdaptive);
+    } else if (children.isNotEmpty) {
       if (children.length == 2) {
         children.insert(1, const SizedBox(width: 8));
         content = Row(
@@ -76,32 +85,31 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       } else {
         content = children.first;
       }
-    } else if (contentCtrls.isNotEmpty) {
-      content = createControl(widget.control, contentCtrls.first.id, disabled,
-          parentAdaptive: widget.parentAdaptive);
     }
 
     if (content == null) {
       return const ErrorControl(
-          "CupertinoButton has no content control. Please specify one.");
+        "CupertinoButton has nothing to display",
+        description: "Provide at minimum text or (visible) content",
+      );
     }
 
     double pressedOpacity = widget.control.attrDouble("opacityOnClick", 0.4)!;
     double minSize = widget.control.attrDouble("minSize", 44.0)!;
     String url = widget.control.attrString("url", "")!;
-    Color disabledColor = widget.control.attrColor("disabledColor", context) ??
-        CupertinoColors.quaternarySystemFill;
+    Color disabledColor =
+        widget.control.attrColor("disabledBgcolor", context) ??
+            widget.control.attrColor("disabledColor", context) ?? // deprecated
+            CupertinoColors.quaternarySystemFill;
     Color? bgColor = widget.control.attrColor("bgColor", context);
     Color? color = widget.control.attrColor("color", context);
     AlignmentGeometry alignment =
-        parseAlignment(widget.control, "alignment") ?? Alignment.center;
-    BorderRadius borderRadius =
-        parseBorderRadius(widget.control, "borderRadius") ??
-            const BorderRadius.all(Radius.circular(8.0));
+        parseAlignment(widget.control, "alignment", Alignment.center)!;
+    BorderRadius borderRadius = parseBorderRadius(widget.control,
+        "borderRadius", const BorderRadius.all(Radius.circular(8.0)))!;
 
     EdgeInsets? padding = parseEdgeInsets(widget.control, "padding");
 
-    var theme = Theme.of(context);
     var style = parseButtonStyle(Theme.of(context), widget.control, "style",
         defaultForegroundColor: theme.colorScheme.primary,
         defaultBackgroundColor: Colors.transparent,
@@ -115,18 +123,21 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
             ? const StadiumBorder()
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
-    if (padding == null && style != null) {
+    if (style != null) {
+      Set<WidgetState> widgetStates = selected ? {WidgetState.selected} : {};
+
+      // Check if the widget is disabled and update the foregroundColor accordingly
+      // backgroundColor is not updated here, as it is handled by disabledColor
+      if (disabled) {
+        style = style.copyWith(
+          foregroundColor: WidgetStatePropertyAll(theme.disabledColor),
+        );
+      }
+
+      // Resolve color, background color, and padding based on widget states
+      color = style.foregroundColor?.resolve(widgetStates);
+      bgColor = style.backgroundColor?.resolve(widgetStates);
       padding = style.padding?.resolve({}) as EdgeInsets?;
-    }
-
-    if (bgColor == null && style != null) {
-      bgColor = style.backgroundColor
-          ?.resolve(selected ? {MaterialState.selected} : {});
-    }
-
-    if (color == null && style != null) {
-      color = style.foregroundColor
-          ?.resolve(selected ? {MaterialState.selected} : {});
     }
 
     if (color != null) {

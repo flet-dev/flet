@@ -12,6 +12,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 
@@ -54,9 +55,9 @@ class ShaderMask(ConstrainedControl):
 
     def __init__(
         self,
+        shader: Gradient,
         content: Optional[Control] = None,
         blend_mode: Optional[BlendMode] = None,
-        shader: Optional[Gradient] = None,
         border_radius: BorderRadiusValue = None,
         #
         # ConstrainedControl
@@ -82,7 +83,7 @@ class ShaderMask(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -132,11 +133,10 @@ class ShaderMask(ConstrainedControl):
         self._set_attr_json("borderRadius", self.__border_radius)
 
     def _get_children(self):
-        children = []
-        if self.__content is not None:
+        if self.__content:
             self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
+            return [self.__content]
+        return []
 
     # content
     @property
@@ -155,9 +155,7 @@ class ShaderMask(ConstrainedControl):
     @blend_mode.setter
     def blend_mode(self, value: Optional[BlendMode]):
         self.__blend_mode = value
-        self._set_attr(
-            "blendMode", value.value if isinstance(value, BlendMode) else value
-        )
+        self._set_enum_attr("blendMode", value, BlendMode)
 
     # shader
     @property

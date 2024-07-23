@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -7,6 +6,7 @@ import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/mouse.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'flet_store_mixin.dart';
 
@@ -29,7 +29,7 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
   Widget build(BuildContext context) {
     debugPrint("PopupMenuButton build: ${control.id}");
 
-    var icon = parseIcon(control.attrString("icon", "")!);
+    var icon = parseIcon(control.attrString("icon"));
     var tooltip = control.attrString("tooltip", "")!;
     var iconSize = control.attrDouble("iconSize");
     var splashRadius = control.attrDouble("splashRadius");
@@ -39,11 +39,8 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
         (Theme.of(context).useMaterial3
             ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
             : null);
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.none);
+    var clipBehavior =
+        parseClip(control.attrString("clipBehavior"), Clip.none)!;
     var bgcolor = control.attrColor("bgcolor", context);
     var iconColor = control.attrColor("iconColor", context);
     var shadowColor = control.attrColor("shadowColor", context);
@@ -52,18 +49,17 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
         children.where((c) => c.name == "content" && c.isVisible);
     bool disabled = control.isDisabled || parentDisabled;
 
-    PopupMenuPosition? menuPosition = PopupMenuPosition.values.firstWhereOrNull(
-        (p) =>
-            p.name.toLowerCase() ==
-            control.attrString("menuPosition", "")!.toLowerCase());
+    PopupMenuPosition? menuPosition =
+        parsePopupMenuPosition(control.attrString("menuPosition"));
 
     Widget? child = contentCtrls.isNotEmpty
         ? createControl(control, contentCtrls.first.id, disabled)
         : null;
 
     var popupButton = withControls(
-        children.where((c) => c.name != "content").map((c) => c.id),
-        (content, viewModel) {
+        children
+            .where((c) => c.name != "content" && c.isVisible)
+            .map((c) => c.id), (content, viewModel) {
       return PopupMenuButton<String>(
           enabled: !disabled,
           icon: icon != null ? Icon(icon) : null,
@@ -76,7 +72,7 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
           elevation: elevation,
           enableFeedback: enableFeedback,
           padding:
-              parseEdgeInsets(control, "padding") ?? const EdgeInsets.all(8),
+              parseEdgeInsets(control, "padding", const EdgeInsets.all(8))!,
           color: bgcolor,
           clipBehavior: clipBehavior,
           shape: shape,
@@ -90,14 +86,14 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
           position: menuPosition,
           itemBuilder: (BuildContext context) =>
               viewModel.controlViews.map((cv) {
-                var itemIcon = parseIcon(cv.control.attrString("icon", "")!);
+                var itemIcon = parseIcon(cv.control.attrString("icon"));
                 var text = cv.control.attrString("text", "")!;
                 var checked = cv.control.attrBool("checked");
                 var height = cv.control.attrDouble("height", 48.0)!;
                 var padding = parseEdgeInsets(cv.control, "padding");
                 var disabled = cv.control.isDisabled || parentDisabled;
-                var contentCtrls =
-                    cv.children.where((c) => c.name == "content");
+                var contentCtrls = cv.children
+                    .where((c) => c.name == "content" && c.isVisible);
 
                 Widget? child;
                 if (contentCtrls.isNotEmpty) {

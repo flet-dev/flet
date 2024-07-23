@@ -104,8 +104,8 @@ class DragTarget(Control):
 
     def __init__(
         self,
+        content: Control,
         group: Optional[str] = None,
-        content: Optional[Control] = None,
         on_will_accept=None,
         on_accept=None,
         on_leave=None,
@@ -127,16 +127,10 @@ class DragTarget(Control):
             data=data,
         )
 
-        def convert_event_data(e):
-            d = json.loads(e.data)
-            return DragTargetEvent(**d)
-
-        self.__on_accept = EventHandler(convert_event_data)
-        self.__on_move = EventHandler(convert_event_data)
+        self.__on_accept = EventHandler(lambda e: DragTargetEvent(e))
+        self.__on_move = EventHandler(lambda e: DragTargetEvent(e))
         self._add_event_handler("accept", self.__on_accept.get_handler())
         self._add_event_handler("move", self.__on_move.get_handler())
-
-        self.__content: Optional[Control] = None
 
         self.group = group
         self.content = content
@@ -149,11 +143,12 @@ class DragTarget(Control):
         return "dragtarget"
 
     def _get_children(self):
-        children = []
-        if self.__content:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
+        self.__content._set_attr_internal("n", "content")
+        return [self.__content]
+
+    def before_update(self):
+        super().before_update()
+        assert self.__content.visible, "content must be visible"
 
     # group
     @property
@@ -166,11 +161,11 @@ class DragTarget(Control):
 
     # content
     @property
-    def content(self) -> Optional[Control]:
+    def content(self) -> Control:
         return self.__content
 
     @content.setter
-    def content(self, value: Optional[Control]):
+    def content(self, value: Control):
         self.__content = value
 
     # on_will_accept
@@ -211,20 +206,24 @@ class DragTarget(Control):
 
 
 class DragTargetAcceptEvent(ControlEvent):
-    def __init__(self, src_id, x, y) -> None:
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
         warn(
             f"{self.__class__.__name__} is deprecated since version 0.22.0 "
-            f"and will be removed in version 1.0. Use DragTargetEvent instead.",
+            f"and will be removed in version 0.26.0. Use DragTargetEvent instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
-        self.src_id: float = src_id
-        self.x: float = x
-        self.y: float = y
+        self.src_id: float = d.get("src_id")
+        self.x: float = d.get("x")
+        self.y: float = d.get("y")
 
 
 class DragTargetEvent(ControlEvent):
-    def __init__(self, src_id, x, y) -> None:
-        self.src_id: float = src_id
-        self.x: float = x
-        self.y: float = y
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.src_id: float = d.get("src_id")
+        self.x: float = d.get("x")
+        self.y: float = d.get("y")

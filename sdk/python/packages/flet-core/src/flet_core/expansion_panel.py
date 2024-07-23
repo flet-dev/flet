@@ -11,6 +11,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 
@@ -55,7 +56,7 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -120,11 +121,11 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgColor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgColor", value)
 
     # expanded
@@ -176,6 +177,15 @@ class ExpansionPanelList(ConstrainedControl):
     def __init__(
         self,
         controls: Optional[List[ExpansionPanel]] = None,
+        divider_color: Optional[str] = None,
+        elevation: OptionalNumber = None,
+        expanded_header_padding: PaddingValue = None,
+        expand_icon_color: Optional[str] = None,
+        spacing: OptionalNumber = None,
+        on_change: OptionalEventCallable = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -198,19 +208,10 @@ class ExpansionPanelList(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        divider_color: Optional[str] = None,
-        elevation: OptionalNumber = None,
-        expanded_header_padding: PaddingValue = None,
-        expand_icon_color: Optional[str] = None,
-        spacing: OptionalNumber = None,
-        on_change=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -266,20 +267,20 @@ class ExpansionPanelList(ConstrainedControl):
 
     # divider_color
     @property
-    def divider_color(self):
+    def divider_color(self) -> Optional[str]:
         return self._get_attr("dividerColor")
 
     @divider_color.setter
-    def divider_color(self, value):
+    def divider_color(self, value: Optional[str]):
         self._set_attr("dividerColor", value)
 
     # expanded_icon_color
     @property
-    def expanded_icon_color(self):
+    def expanded_icon_color(self) -> Optional[str]:
         return self._get_attr("expandedIconColor")
 
     @expanded_icon_color.setter
-    def expanded_icon_color(self, value):
+    def expanded_icon_color(self, value: Optional[str]):
         self._set_attr("expandedIconColor", value)
 
     # expanded_header_padding
@@ -294,16 +295,17 @@ class ExpansionPanelList(ConstrainedControl):
     # elevation
     @property
     def elevation(self) -> OptionalNumber:
-        return self._get_attr("elevation")
+        return self._get_attr("elevation", data_type="float")
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
+        assert value is None or value >= 0, "elevation cannot be negative"
         self._set_attr("elevation", value)
 
     # spacing
     @property
     def spacing(self) -> OptionalNumber:
-        return self._get_attr("spacing")
+        return self._get_attr("spacing", data_type="float")
 
     @spacing.setter
     def spacing(self, value: OptionalNumber):
@@ -320,10 +322,10 @@ class ExpansionPanelList(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
         self._set_attr("onChange", True if handler is not None else None)

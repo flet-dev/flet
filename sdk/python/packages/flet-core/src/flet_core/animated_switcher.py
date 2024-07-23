@@ -11,6 +11,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 try:
@@ -79,7 +80,7 @@ class AnimatedSwitcher(ConstrainedControl):
 
     def __init__(
         self,
-        content: Optional[Control] = None,
+        content: Control,
         duration: Optional[int] = None,
         reverse_duration: Optional[int] = None,
         switch_in_curve: Optional[AnimationCurve] = None,
@@ -109,7 +110,7 @@ class AnimatedSwitcher(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -157,27 +158,25 @@ class AnimatedSwitcher(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
+        assert self.__content.visible, "content must be visible"
 
     def _get_children(self):
-        children = []
-        if self.__content is not None:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
+        self.__content._set_attr_internal("n", "content")
+        return [self.__content]
 
     # content
     @property
-    def content(self) -> Optional[Control]:
+    def content(self) -> Control:
         return self.__content
 
     @content.setter
-    def content(self, value: Optional[Control]):
+    def content(self, value: Control):
         self.__content = value
 
     # duration
     @property
     def duration(self) -> Optional[int]:
-        return self._get_attr("duration")
+        return self._get_attr("duration", data_type="int", def_value=1000)
 
     @duration.setter
     def duration(self, value: Optional[int]):
@@ -186,7 +185,7 @@ class AnimatedSwitcher(ConstrainedControl):
     # reverse_duration
     @property
     def reverse_duration(self) -> Optional[int]:
-        return self._get_attr("reverseDuration")
+        return self._get_attr("reverseDuration", data_type="int", def_value=1000)
 
     @reverse_duration.setter
     def reverse_duration(self, value: Optional[int]):
@@ -200,9 +199,7 @@ class AnimatedSwitcher(ConstrainedControl):
     @switch_in_curve.setter
     def switch_in_curve(self, value: Optional[AnimationCurve]):
         self.__switch_in_curve = value
-        self._set_attr(
-            "switchInCurve", value.value if isinstance(value, AnimationCurve) else value
-        )
+        self._set_enum_attr("switchInCurve", value, AnimationCurve)
 
     # switch_out_curve
     @property
@@ -212,10 +209,7 @@ class AnimatedSwitcher(ConstrainedControl):
     @switch_out_curve.setter
     def switch_out_curve(self, value: Optional[AnimationCurve]):
         self.__switch_out_curve = value
-        self._set_attr(
-            "switchOutCurve",
-            value.value if isinstance(value, AnimationCurve) else value,
-        )
+        self._set_enum_attr("switchOutCurve", value, AnimationCurve)
 
     # transition
     @property

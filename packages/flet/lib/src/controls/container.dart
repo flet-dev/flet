@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -13,6 +12,7 @@ import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
 import '../utils/launch_url.dart';
+import '../utils/others.dart';
 import '../utils/shadows.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -74,8 +74,9 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
 
     var imageSrc = control.attrString("imageSrc", "")!;
     var imageSrcBase64 = control.attrString("imageSrcBase64", "")!;
-    var imageRepeat = parseImageRepeat(control, "imageRepeat");
-    var imageFit = parseBoxFit(control, "imageFit");
+    var imageRepeat = parseImageRepeat(
+        control.attrString("imageRepeat"), ImageRepeat.noRepeat)!;
+    var imageFit = parseBoxFit(control.attrString("imageFit"));
     var imageOpacity = control.attrDouble("imageOpacity", 1)!;
 
     Widget? child = contentCtrls.isNotEmpty
@@ -85,6 +86,8 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
 
     var animation = parseAnimation(control, "animate");
     var blur = parseBlur(control, "blur");
+    var colorFilter =
+        parseColorFilter(control, "colorFilter", Theme.of(context));
 
     return withPageArgs((context, pageArgs) {
       DecorationImage? image;
@@ -114,22 +117,14 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
       }
 
       var gradient = parseGradient(Theme.of(context), control, "gradient");
-      var blendMode = BlendMode.values.firstWhereOrNull((e) =>
-          e.name.toLowerCase() ==
-          control.attrString("blendMode", "")!.toLowerCase());
-      var shape = BoxShape.values.firstWhere(
-          (e) =>
-              e.name.toLowerCase() ==
-              control.attrString("shape", "")!.toLowerCase(),
-          orElse: () => BoxShape.rectangle);
+      var blendMode = parseBlendMode(control.attrString("blendMode"));
+      var shape =
+          parseBoxShape(control.attrString("shape"), BoxShape.rectangle)!;
 
       var borderRadius = parseBorderRadius(control, "borderRadius");
 
-      var clipBehavior = Clip.values.firstWhere(
-          (e) =>
-              e.name.toLowerCase() ==
-              control.attrString("clipBehavior", "")!.toLowerCase(),
-          orElse: () => borderRadius != null ? Clip.antiAlias : Clip.none);
+      var clipBehavior = parseClip(control.attrString("clipBehavior"),
+          borderRadius != null ? Clip.antiAlias : Clip.none)!;
 
       var boxDecor = BoxDecoration(
           color: bgColor,
@@ -137,14 +132,15 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
           image: image,
           backgroundBlendMode:
               bgColor != null || gradient != null ? blendMode : null,
-          border: parseBorder(Theme.of(context), control, "border"),
+          border: parseBorder(Theme.of(context), control, "border",
+              Theme.of(context).colorScheme.primary),
           borderRadius: borderRadius,
           shape: shape,
           boxShadow: parseBoxShadow(Theme.of(context), control, "shadow"));
 
       Widget? result;
 
-      if ((onClick || url != "" || onLongPress || onHover) &&
+      if ((onClick || url != "" || onLongPress || onHover || onTapDown) &&
           ink &&
           !disabled) {
         var ink = Material(
@@ -154,7 +150,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
               // Dummy callback to enable widget
               // see https://github.com/flutter/flutter/issues/50116#issuecomment-582047374
               // and https://github.com/flutter/flutter/blob/eed80afe2c641fb14b82a22279d2d78c19661787/packages/flutter/lib/src/material/ink_well.dart#L1125-L1129
-              onTap: onClick || url != ""
+              onTap: onClick || url != "" || onTapDown
                   ? () {
                       debugPrint("Container ${control.id} clicked!");
                       if (url != "") {
@@ -253,9 +249,10 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                     : null,
                 child: child);
 
-        if ((onClick || onLongPress || onHover || url != "") && !disabled) {
+        if ((onClick || onLongPress || onHover || onTapDown || url != "") &&
+            !disabled) {
           result = MouseRegion(
-            cursor: onClick || url != ""
+            cursor: onClick || onTapDown || url != ""
                 ? SystemMouseCursors.click
                 : MouseCursor.defer,
             onEnter: onHover
@@ -315,6 +312,9 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 borderRadius: borderRadius,
                 child: BackdropFilter(filter: blur, child: result))
             : ClipRect(child: BackdropFilter(filter: blur, child: result));
+      }
+      if (colorFilter != null) {
+        result = ColorFiltered(colorFilter: colorFilter, child: result);
       }
 
       return constrainedControl(context, result, parent, control);

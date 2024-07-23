@@ -1,10 +1,11 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/dismissible.dart';
 import '../utils/edge_insets.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -36,10 +37,12 @@ class _SnackBarControlState extends State<SnackBarControl> {
 
   Widget _createSnackBar() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    var contentCtrls = widget.children.where((c) => c.name == "content");
+    var contentCtrls =
+        widget.children.where((c) => c.name == "content" && c.isVisible);
 
     if (contentCtrls.isEmpty) {
-      return const ErrorControl("SnackBar does not have a content.");
+      return const ErrorControl(
+          "SnackBar.content must be provided and visible");
     }
 
     var actionName = widget.control.attrString("action", "")!;
@@ -52,21 +55,22 @@ class _SnackBarControlState extends State<SnackBarControl> {
               widget.backend.triggerControlEvent(widget.control.id, "action");
             })
         : null;
-    var clipBehavior = Clip.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            widget.control.attrString("clipBehavior", "")!.toLowerCase(),
-        orElse: () => Clip.hardEdge);
+    var clipBehavior =
+        parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
 
-    SnackBarBehavior? behavior = SnackBarBehavior.values.firstWhereOrNull((a) =>
-        a.name.toLowerCase() ==
-        widget.control.attrString("behavior", "")!.toLowerCase());
+    SnackBarBehavior? behavior =
+        parseSnackBarBehavior(widget.control.attrString("behavior"));
 
-    DismissDirection? dismissDirection = DismissDirection.values.firstWhere(
-        (a) =>
-            a.name.toLowerCase() ==
-            widget.control.attrString("dismissDirection", "")!.toLowerCase(),
-        orElse: () => DismissDirection.down);
+    DismissDirection? dismissDirection =
+        parseDismissDirection(widget.control.attrString("dismissDirection"));
+    var width = widget.control.attrDouble("width");
+    var margin = parseEdgeInsets(widget.control, "margin");
+
+    // required to avoid assertion errors
+    if (behavior != SnackBarBehavior.floating) {
+      margin = null;
+      width = null;
+    }
 
     return SnackBar(
         behavior: behavior,
@@ -85,9 +89,9 @@ class _SnackBarControlState extends State<SnackBarControl> {
             parentAdaptive: widget.parentAdaptive),
         backgroundColor: widget.control.attrColor("bgColor", context),
         action: action,
-        margin: parseEdgeInsets(widget.control, "margin"),
+        margin: margin,
         padding: parseEdgeInsets(widget.control, "padding"),
-        width: widget.control.attrDouble("width"),
+        width: width,
         elevation: widget.control.attrDouble("elevation"),
         duration:
             Duration(milliseconds: widget.control.attrInt("duration", 4000)!));

@@ -7,7 +7,6 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.theme import ThemeVisualDensity
 from flet_core.types import (
     AnimationValue,
     MouseCursor,
@@ -17,6 +16,9 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     UrlTarget,
+    OptionalEventCallable,
+    ThemeVisualDensity,
+    VisualDensity,
 )
 
 
@@ -102,11 +104,12 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         icon_color: Optional[str] = None,
         text_color: Optional[str] = None,
         shape: Optional[OutlinedBorder] = None,
-        visual_density: Optional[ThemeVisualDensity] = None,
+        visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
         mouse_cursor: Optional[MouseCursor] = None,
         title_text_style: Optional[TextStyle] = None,
         subtitle_text_style: Optional[TextStyle] = None,
         leading_and_trailing_text_style: Optional[TextStyle] = None,
+        min_height: OptionalNumber = None,
         on_click=None,
         on_long_press=None,
         #
@@ -134,7 +137,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -207,6 +210,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         self.title_text_style = title_text_style
         self.subtitle_text_style = subtitle_text_style
         self.leading_and_trailing_text_style = leading_and_trailing_text_style
+        self.min_height = min_height
 
     def _get_control_name(self):
         return "listtile"
@@ -304,6 +308,15 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     def horizontal_spacing(self, value: OptionalNumber):
         self._set_attr("horizontalSpacing", value)
 
+    # min_height
+    @property
+    def min_height(self) -> OptionalNumber:
+        return self._get_attr("minHeight", data_type="float")
+
+    @min_height.setter
+    def min_height(self, value: OptionalNumber):
+        self._set_attr("minHeight", value)
+
     # hover_color
     @property
     def hover_color(self) -> Optional[str]:
@@ -384,9 +397,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @style.setter
     def style(self, value: Optional[ListTileStyle]):
         self.__style = value
-        self._set_attr(
-            "style", value.value if isinstance(value, ListTileStyle) else value
-        )
+        self._set_enum_attr("style", value, ListTileStyle)
 
     # title_alignment
     @property
@@ -469,9 +480,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @url_target.setter
     def url_target(self, value: Optional[UrlTarget]):
         self.__url_target = value
-        self._set_attr(
-            "urlTarget", value.value if isinstance(value, UrlTarget) else value
-        )
+        self._set_enum_attr("urlTarget", value, UrlTarget)
 
     # mouse_cursor
     @property
@@ -481,22 +490,17 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_attr(
-            "mouseCursor", value.value if isinstance(value, MouseCursor) else value
-        )
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # visual_density
     @property
-    def visual_density(self) -> Optional[ThemeVisualDensity]:
+    def visual_density(self) -> Union[None, ThemeVisualDensity, VisualDensity]:
         return self.__visual_density
 
     @visual_density.setter
-    def visual_density(self, value: Optional[ThemeVisualDensity]):
+    def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_attr(
-            "visualDensity",
-            value.value if isinstance(value, ThemeVisualDensity) else value,
-        )
+        self._set_enum_attr("visualDensity", value, ThemeVisualDensity, VisualDensity)
 
     # shape
     @property
@@ -536,38 +540,38 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # on_click
     @property
-    def on_click(self):
+    def on_click(self) -> OptionalEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)
         self._set_attr("onclick", True if handler is not None else None)
 
     # on_long_press
     @property
-    def on_long_press(self):
+    def on_long_press(self) -> OptionalEventCallable:
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler):
+    def on_long_press(self, handler: OptionalEventCallable):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # on_focus
     @property
-    def on_focus(self):
+    def on_focus(self) -> OptionalEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler):
+    def on_focus(self, handler: OptionalEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self):
+    def on_blur(self) -> OptionalEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler):
+    def on_blur(self, handler: OptionalEventCallable):
         self._add_event_handler("blur", handler)

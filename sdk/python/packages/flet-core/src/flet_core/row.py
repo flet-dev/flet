@@ -1,19 +1,21 @@
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Union, Callable
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
-from flet_core.scrollable_control import ScrollableControl
+from flet_core.scrollable_control import ScrollableControl, OnScrollEvent
 from flet_core.types import (
     AnimationValue,
     CrossAxisAlignment,
     MainAxisAlignment,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     ScrollMode,
+    OptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -72,7 +74,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         scroll: Optional[ScrollMode] = None,
         auto_scroll: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
-        on_scroll: Any = None,
+        on_scroll: Optional[Callable[[OnScrollEvent], None]] = None,
         #
         # ConstrainedControl
         #
@@ -98,7 +100,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -163,6 +165,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     def _get_children(self):
         return self.__controls
 
+    # Public methods
     def clean(self):
         super().clean()
         self.__controls.clear()
@@ -170,7 +173,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @deprecated(
         reason="Use clean() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def clean_async(self):
         self.clean()
@@ -186,28 +189,23 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     # horizontal_alignment
     @property
-    def alignment(self) -> MainAxisAlignment:
+    def alignment(self) -> Optional[MainAxisAlignment]:
         return self.__alignment
 
     @alignment.setter
-    def alignment(self, value: MainAxisAlignment):
+    def alignment(self, value: Optional[MainAxisAlignment]):
         self.__alignment = value
-        self._set_attr(
-            "alignment", value.value if isinstance(value, MainAxisAlignment) else value
-        )
+        self._set_enum_attr("alignment", value, MainAxisAlignment)
 
     # vertical_alignment
     @property
-    def vertical_alignment(self) -> CrossAxisAlignment:
+    def vertical_alignment(self) -> Optional[CrossAxisAlignment]:
         return self.__vertical_alignment
 
     @vertical_alignment.setter
-    def vertical_alignment(self, value: CrossAxisAlignment):
+    def vertical_alignment(self, value: Optional[CrossAxisAlignment]):
         self.__vertical_alignment = value
-        self._set_attr(
-            "verticalAlignment",
-            value.value if isinstance(value, CrossAxisAlignment) else value,
-        )
+        self._set_enum_attr("verticalAlignment", value, CrossAxisAlignment)
 
     # spacing
     @property
@@ -230,7 +228,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     # run_spacing
     @property
     def run_spacing(self) -> OptionalNumber:
-        return self._get_attr("runSpacing")
+        return self._get_attr("runSpacing", data_type="float")
 
     @run_spacing.setter
     def run_spacing(self, value: OptionalNumber):
@@ -238,9 +236,9 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     # controls
     @property
-    def controls(self):
+    def controls(self) -> List[Control]:
         return self.__controls
 
     @controls.setter
     def controls(self, value: Optional[List[Control]]):
-        self.__controls = value if value is not None else []
+        self.__controls = value if value else []

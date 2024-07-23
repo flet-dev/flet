@@ -10,6 +10,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 
@@ -82,7 +83,7 @@ class CircleAvatar(ConstrainedControl):
         radius: OptionalNumber = None,
         min_radius: OptionalNumber = None,
         max_radius: OptionalNumber = None,
-        on_image_error=None,
+        on_image_error: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -108,7 +109,7 @@ class CircleAvatar(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -171,7 +172,7 @@ class CircleAvatar(ConstrainedControl):
     def foreground_image_url(self) -> Optional[str]:
         warnings.warn(
             f"foreground_image_url is deprecated since version 0.22.0 "
-            f"and will be removed in version 1.0. Use foreground_image_src instead.",
+            f"and will be removed in version 0.26.0. Use foreground_image_src instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
@@ -183,7 +184,7 @@ class CircleAvatar(ConstrainedControl):
         if value is not None:
             warnings.warn(
                 f"foreground_image_url is deprecated since version 0.22.0 "
-                f"and will be removed in version 1.0. Use foreground_image_src instead.",
+                f"and will be removed in version 0.26.0. Use foreground_image_src instead.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
@@ -193,7 +194,7 @@ class CircleAvatar(ConstrainedControl):
     def background_image_url(self) -> Optional[str]:
         warnings.warn(
             f"background_image_url is deprecated since version 0.22.0 "
-            f"and will be removed in version 1.0. Use background_image_src instead.",
+            f"and will be removed in version 0.26.0. Use background_image_src instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
@@ -205,7 +206,7 @@ class CircleAvatar(ConstrainedControl):
         if value is not None:
             warnings.warn(
                 f"background_image_url is deprecated since version 0.22.0 "
-                f"and will be removed in version 1.0. Use background_image_src instead.",
+                f"and will be removed in version 0.26.0. Use background_image_src instead.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
@@ -235,6 +236,7 @@ class CircleAvatar(ConstrainedControl):
 
     @radius.setter
     def radius(self, value: OptionalNumber):
+        assert value is None or value >= 0, "radius cannot be negative"
         self._set_attr("radius", value)
 
     # min_radius
@@ -244,6 +246,7 @@ class CircleAvatar(ConstrainedControl):
 
     @min_radius.setter
     def min_radius(self, value: OptionalNumber):
+        assert value is None or value >= 0, "min_radius cannot be negative"
         self._set_attr("minRadius", value)
 
     # max_radius
@@ -253,6 +256,7 @@ class CircleAvatar(ConstrainedControl):
 
     @max_radius.setter
     def max_radius(self, value: OptionalNumber):
+        assert value is None or value >= 0, "max_radius cannot be negative"
         self._set_attr("maxRadius", value)
 
     # color
@@ -288,5 +292,5 @@ class CircleAvatar(ConstrainedControl):
         return self._get_event_handler("imageError")
 
     @on_image_error.setter
-    def on_image_error(self, handler):
+    def on_image_error(self, handler: OptionalEventCallable):
         self._add_event_handler("imageError", handler)

@@ -15,6 +15,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 
@@ -33,7 +34,7 @@ class PopupMenuItem(Control):
         height: OptionalNumber = None,
         padding: PaddingValue = None,
         mouse_cursor: Optional[MouseCursor] = None,
-        on_click=None,
+        on_click: OptionalEventCallable = None,
         #
         # Control
         #
@@ -79,9 +80,7 @@ class PopupMenuItem(Control):
 
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
-        self._set_attr(
-            "mouseCursor", value.value if isinstance(value, MouseCursor) else value
-        )
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # icon
     @property
@@ -130,11 +129,11 @@ class PopupMenuItem(Control):
 
     # on_click
     @property
-    def on_click(self):
+    def on_click(self) -> OptionalEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)
 
 
@@ -197,9 +196,9 @@ class PopupMenuButton(ConstrainedControl):
         enable_feedback: Optional[bool] = None,
         shape: Optional[OutlinedBorder] = None,
         padding: PaddingValue = None,
-        on_cancelled=None,
-        on_open=None,
-        on_cancel=None,
+        on_cancelled: OptionalEventCallable = None,
+        on_open: OptionalEventCallable = None,
+        on_cancel: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -225,7 +224,7 @@ class PopupMenuButton(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -290,8 +289,7 @@ class PopupMenuButton(ConstrainedControl):
         if self.__content:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
-        children.extend(self.__items)
-        return children
+        return children + self.__items
 
     def before_update(self):
         super().before_update()
@@ -423,10 +421,7 @@ class PopupMenuButton(ConstrainedControl):
     @menu_position.setter
     def menu_position(self, value: PopupMenuPosition):
         self.__menu_position = value
-        self._set_attr(
-            "menuPosition",
-            value.value if isinstance(value, PopupMenuPosition) else value,
-        )
+        self._set_enum_attr("menuPosition", value, PopupMenuPosition)
 
     # clip_behavior
     @property
@@ -436,47 +431,44 @@ class PopupMenuButton(ConstrainedControl):
     @clip_behavior.setter
     def clip_behavior(self, value: ClipBehavior):
         self.__clip_behavior = value
-        self._set_attr(
-            "clipBehavior",
-            value.value if isinstance(value, ClipBehavior) else value,
-        )
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
 
     # on_cancel
     @property
-    def on_cancel(self):
+    def on_cancel(self) -> OptionalEventCallable:
         return self._get_event_handler("cancel")
 
     @on_cancel.setter
-    def on_cancel(self, handler):
+    def on_cancel(self, handler: OptionalEventCallable):
         self._add_event_handler("cancel", handler)
 
     # on_cancelled
     @property
-    def on_cancelled(self):
+    def on_cancelled(self) -> OptionalEventCallable:
         warnings.warn(
             f"on_cancelled is deprecated/renamed since version 0.22.0 "
-            f"and will be removed in version 1.0. Use on_cancel instead.",
+            f"and will be removed in version 0.26.0. Use on_cancel instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
         return self._get_event_handler("cancelled")
 
     @on_cancelled.setter
-    def on_cancelled(self, handler):
+    def on_cancelled(self, handler: OptionalEventCallable):
         self._add_event_handler("cancelled", handler)
         if handler is not None:
             warnings.warn(
                 f"on_cancelled is deprecated/renamed since version 0.22.0 "
-                f"and will be removed in version 1.0. Use on_cancel instead.",
+                f"and will be removed in version 0.26.0. Use on_cancel instead.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
 
     # on_open
     @property
-    def on_open(self):
+    def on_open(self) -> OptionalEventCallable:
         return self._get_event_handler("open")
 
     @on_open.setter
-    def on_open(self, handler):
+    def on_open(self, handler: OptionalEventCallable):
         self._add_event_handler("open", handler)

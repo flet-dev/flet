@@ -14,26 +14,15 @@ SystemUiOverlayStyle overlayStyleFromJson(
       : null;
 
   return SystemUiOverlayStyle(
-      statusBarColor: json["status_bar_color"] != null
-          ? HexColor.fromString(theme, json["status_bar_color"] ?? "")
-          : null,
-      systemNavigationBarColor: json["system_navigation_bar_color"] != null
-          ? HexColor.fromString(
-              theme, json["system_navigation_bar_color"] ?? "")
-          : null,
+      statusBarColor: parseColor(theme, json["status_bar_color"]),
+      systemNavigationBarColor:
+          parseColor(theme, json["system_navigation_bar_color"]),
       systemNavigationBarDividerColor:
-          json["system_navigation_bar_divider_color"] != null
-              ? HexColor.fromString(
-                  theme, json["system_navigation_bar_divider_color"] ?? "")
-              : null,
+          parseColor(theme, json["system_navigation_bar_divider_color"]),
       systemStatusBarContrastEnforced:
-          json["enforce_system_status_bar_contrast"] != null
-              ? parseBool(json["enforce_system_status_bar_contrast"])
-              : null,
+          parseBool(json["enforce_system_status_bar_contrast"]),
       systemNavigationBarContrastEnforced:
-          json["enforce_system_navigation_bar_contrast"] != null
-              ? parseBool(json["enforce_system_navigation_bar_contrast"])
-              : null,
+          parseBool(json["enforce_system_navigation_bar_contrast"]),
       systemNavigationBarIconBrightness: parseBrightness(
           json["system_navigation_bar_icon_brightness"], invertedBrightness),
       statusBarBrightness:
@@ -42,7 +31,11 @@ SystemUiOverlayStyle overlayStyleFromJson(
           json["status_bar_icon_brightness"], invertedBrightness));
 }
 
-Brightness? parseBrightness(dynamic value, [Brightness? defValue]) {
-  return Brightness.values.firstWhereOrNull((e) => e.toString() == value) ??
+Brightness? parseBrightness(String? value, [Brightness? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return Brightness.values
+          .firstWhereOrNull((e) => e.toString() == value.toLowerCase()) ??
       defValue;
 }

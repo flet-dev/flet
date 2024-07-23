@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import 'numbers.dart';
 
-ImplicitAnimationDetails? parseAnimation(Control control, String propName) {
+ImplicitAnimationDetails? parseAnimation(Control control, String propName,
+    [ImplicitAnimationDetails? defaultValue]) {
   var v = control.attrString(propName, null);
   if (v == null) {
-    return null;
+    return defaultValue;
   }
 
   final j1 = json.decode(v);
@@ -18,7 +19,8 @@ ImplicitAnimationDetails? parseAnimation(Control control, String propName) {
 ImplicitAnimationDetails animationFromJSON(dynamic json) {
   if (json is int) {
     return ImplicitAnimationDetails(
-        duration: Duration(milliseconds: parseInt(json)), curve: Curves.linear);
+        duration: Duration(milliseconds: parseInt(json, 0)!),
+        curve: Curves.linear);
   } else if (json is bool && json == true) {
     return ImplicitAnimationDetails(
         duration: const Duration(milliseconds: 1000), curve: Curves.linear);
@@ -36,12 +38,12 @@ class ImplicitAnimationDetails {
   factory ImplicitAnimationDetails.fromJson(Map<String, dynamic> json) {
     return ImplicitAnimationDetails(
         duration: Duration(milliseconds: json["duration"] as int),
-        curve: parseCurve(json["curve"]));
+        curve: parseCurve(json["curve"], Curves.linear)!);
   }
 }
 
-Curve parseCurve(String? s) {
-  switch (s?.toLowerCase()) {
+Curve? parseCurve(String? value, [Curve? defValue]) {
+  switch (value?.toLowerCase()) {
     case "bouncein":
       return Curves.bounceIn;
     case "bounceinout":
@@ -125,6 +127,6 @@ Curve parseCurve(String? s) {
     case "slowmiddle":
       return Curves.slowMiddle;
     default:
-      return Curves.linear;
+      return defValue;
   }
 }

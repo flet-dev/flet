@@ -2,6 +2,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control
 from flet_core.ref import Ref
+from flet_core.types import OptionalEventCallable
 
 
 class Draggable(Control):
@@ -113,12 +114,12 @@ class Draggable(Control):
 
     def __init__(
         self,
+        content: Control,
         group: Optional[str] = None,
-        content: Optional[Control] = None,
         content_when_dragging: Optional[Control] = None,
         content_feedback: Optional[Control] = None,
-        on_drag_start=None,
-        on_drag_complete=None,
+        on_drag_start: OptionalEventCallable = None,
+        on_drag_complete: OptionalEventCallable = None,
         #
         # Control
         #
@@ -136,10 +137,6 @@ class Draggable(Control):
             data=data,
         )
 
-        self.__content: Optional[Control] = None
-        self.__content_when_dragging: Optional[Control] = None
-        self.__content_feedback: Optional[Control] = None
-
         self.group = group
         self.content = content
         self.content_when_dragging = content_when_dragging
@@ -151,10 +148,8 @@ class Draggable(Control):
         return "draggable"
 
     def _get_children(self):
-        children = []
-        if self.__content:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
+        self.__content._set_attr_internal("n", "content")
+        children = [self.__content]
         if self.__content_when_dragging:
             self.__content_when_dragging._set_attr_internal(
                 "n", "content_when_dragging"
@@ -165,56 +160,60 @@ class Draggable(Control):
             children.append(self.__content_feedback)
         return children
 
+    def before_update(self):
+        super().before_update()
+        assert self.__content.visible, "content must be visible"
+
     # group
     @property
-    def group(self):
+    def group(self) -> Optional[str]:
         return self._get_attr("group")
 
     @group.setter
-    def group(self, value):
+    def group(self, value: Optional[str]):
         self._set_attr("group", value)
 
     # content
     @property
-    def content(self):
+    def content(self) -> Control:
         return self.__content
 
     @content.setter
-    def content(self, value):
+    def content(self, value: Control):
         self.__content = value
 
     # content_when_dragging
     @property
-    def content_when_dragging(self):
+    def content_when_dragging(self) -> Optional[Control]:
         return self.__content_when_dragging
 
     @content_when_dragging.setter
-    def content_when_dragging(self, value):
+    def content_when_dragging(self, value: Optional[Control]):
         self.__content_when_dragging = value
 
     # content_feedback
     @property
-    def content_feedback(self):
+    def content_feedback(self) -> Optional[Control]:
         return self.__content_feedback
 
     @content_feedback.setter
-    def content_feedback(self, value):
+    def content_feedback(self, value: Optional[Control]):
         self.__content_feedback = value
 
     # on_drag_start
     @property
-    def on_drag_start(self):
+    def on_drag_start(self) -> OptionalEventCallable:
         return self._get_event_handler("dragStart")
 
     @on_drag_start.setter
-    def on_drag_start(self, handler):
+    def on_drag_start(self, handler: OptionalEventCallable):
         self._add_event_handler("dragStart", handler)
 
     # on_drag_complete
     @property
-    def on_drag_complete(self):
+    def on_drag_complete(self) -> OptionalEventCallable:
         return self._get_event_handler("dragComplete")
 
     @on_drag_complete.setter
-    def on_drag_complete(self, handler):
+    def on_drag_complete(self, handler: OptionalEventCallable):
         self._add_event_handler("dragComplete", handler)

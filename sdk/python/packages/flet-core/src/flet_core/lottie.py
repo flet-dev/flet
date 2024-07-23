@@ -10,6 +10,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     ImageFit,
+    OptionalEventCallable,
 )
 from flet_core.video import FilterQuality
 
@@ -59,7 +60,7 @@ class Lottie(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+            on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -113,47 +114,47 @@ class Lottie(ConstrainedControl):
 
     # src
     @property
-    def src(self):
+    def src(self) -> Optional[str]:
         return self._get_attr("src")
 
     @src.setter
-    def src(self, value):
+    def src(self, value: Optional[str]):
         self._set_attr("src", value)
 
     # src_base64
     @property
-    def src_base64(self):
+    def src_base64(self) -> Optional[str]:
         return self._get_attr("srcBase64")
 
     @src_base64.setter
-    def src_base64(self, value):
+    def src_base64(self, value: Optional[str]):
         self._set_attr("srcBase64", value)
 
     # repeat
     @property
-    def repeat(self):
+    def repeat(self) -> Optional[bool]:
         return self._get_attr("repeat", def_value=True, data_type="bool")
 
     @repeat.setter
-    def repeat(self, value):
+    def repeat(self, value: Optional[bool]):
         self._set_attr("repeat", value)
 
     # animate
     @property
-    def animate(self):
+    def animate(self) -> Optional[bool]:
         return self._get_attr("animate", def_value=True, data_type="bool")
 
     @animate.setter
-    def animate(self, value):
+    def animate(self, value: Optional[bool]):
         self._set_attr("animate", value)
 
     # reverse
     @property
-    def reverse(self):
+    def reverse(self) -> Optional[bool]:
         return self._get_attr("reverse", def_value=False, data_type="bool")
 
     @reverse.setter
-    def reverse(self, value):
+    def reverse(self, value: Optional[bool]):
         self._set_attr("reverse", value)
 
     # filter_quality
@@ -164,9 +165,7 @@ class Lottie(ConstrainedControl):
     @filter_quality.setter
     def filter_quality(self, value: Optional[FilterQuality]):
         self.__filter_quality = value
-        self._set_attr(
-            "filterQuality", value.value if isinstance(value, FilterQuality) else value
-        )
+        self._set_enum_attr("filterQuality", value, FilterQuality)
 
     # fit
     @property
@@ -176,23 +175,23 @@ class Lottie(ConstrainedControl):
     @fit.setter
     def fit(self, value: Optional[ImageFit]):
         self.__fit = value
-        self._set_attr("fit", value.value if isinstance(value, ImageFit) else value)
+        self._set_enum_attr("fit", value, ImageFit)
 
     # background_loading
     @property
-    def background_loading(self):
+    def background_loading(self) -> Optional[bool]:
         return self._get_attr("backgroundLoading", data_type="bool")
 
     @background_loading.setter
-    def background_loading(self, value):
+    def background_loading(self, value: Optional[bool]):
         self._set_attr("backgroundLoading", value)
 
     # on_error
     @property
-    def on_error(self):
+    def on_error(self) -> OptionalEventCallable:
         return self._get_event_handler("error")
 
     @on_error.setter
-    def on_error(self, handler):
+    def on_error(self, handler: OptionalEventCallable):
         self._add_event_handler("error", handler)
         self._set_attr("onError", True if handler is not None else None)

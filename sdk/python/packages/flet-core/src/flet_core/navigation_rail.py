@@ -1,24 +1,21 @@
 from enum import Enum
-from typing import Any, List, Optional, Union
+from typing import Any, Callable, List, Optional, Union
 
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
+    OptionalEventCallable,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
 )
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
 
 
 class NavigationRailLabelType(Enum):
@@ -29,32 +26,29 @@ class NavigationRailLabelType(Enum):
 
 class NavigationRailDestination(Control):
     def __init__(
-        self,
-        icon: Optional[str] = None,
-        icon_content: Optional[Control] = None,
-        selected_icon: Optional[str] = None,
-        selected_icon_content: Optional[Control] = None,
-        label: Optional[str] = None,
-        label_content: Optional[Control] = None,
-        padding: PaddingValue = None,
-        indicator_color: Optional[str] = None,
-        indicator_shape: Optional[OutlinedBorder] = None,
-        #
-        # Control
-        #
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
-    ):
+            self,
+            icon: Optional[str] = None,
+            icon_content: Optional[Control] = None,
+            selected_icon: Optional[str] = None,
+            selected_icon_content: Optional[Control] = None,
+            label: Optional[str] = None,
+            label_content: Optional[Control] = None,
+            padding: PaddingValue = None,
+            indicator_color: Optional[str] = None,
+            indicator_shape: Optional[OutlinedBorder] = None,
+            #
+            # Control
+            #
+            ref: Optional[Ref] = None,
+            disabled: Optional[bool] = None,
+            data: Any = None,
+    ) -> None:
         Control.__init__(self, ref=ref, disabled=disabled, data=data)
         self.label = label
         self.icon = icon
-        self.__icon_content: Optional[Control] = None
         self.icon_content = icon_content
         self.selected_icon = selected_icon
-        self.__selected_icon_content: Optional[Control] = None
         self.selected_icon_content = selected_icon_content
-        self.__label_content: Optional[Control] = None
         self.label_content = label_content
         self.padding = padding
         self.indicator_color = indicator_color
@@ -63,7 +57,7 @@ class NavigationRailDestination(Control):
     def _get_control_name(self):
         return "navigationraildestination"
 
-    def before_update(self):
+    def before_update(self) -> None:
         super().before_update()
         self._set_attr_json("padding", self.__padding)
         if isinstance(self.__indicator_shape, OutlinedBorder):
@@ -93,6 +87,51 @@ class NavigationRailDestination(Control):
     def icon(self, value: Optional[str]):
         self._set_attr("icon", value)
 
+    # icon_content
+    @property
+    def icon_content(self) -> Optional[Control]:
+        return self.__icon_content
+
+    @icon_content.setter
+    def icon_content(self, value: Optional[Control]):
+        self.__icon_content = value
+
+    # selected_icon
+    @property
+    def selected_icon(self) -> Optional[str]:
+        return self._get_attr("selectedIcon")
+
+    @selected_icon.setter
+    def selected_icon(self, value: Optional[str]):
+        self._set_attr("selectedIcon", value)
+
+    # selected_icon_content
+    @property
+    def selected_icon_content(self) -> Optional[Control]:
+        return self.__selected_icon_content
+
+    @selected_icon_content.setter
+    def selected_icon_content(self, value: Optional[Control]):
+        self.__selected_icon_content = value
+
+    # label
+    @property
+    def label(self) -> Optional[str]:
+        return self._get_attr("label")
+
+    @label.setter
+    def label(self, value: Optional[str]):
+        self._set_attr("label", value)
+
+    # label_content
+    @property
+    def label_content(self) -> Optional[Control]:
+        return self.__label_content
+
+    @label_content.setter
+    def label_content(self, value: Optional[Control]):
+        self.__label_content = value
+
     # indicator_color
     @property
     def indicator_color(self) -> Optional[str]:
@@ -110,51 +149,6 @@ class NavigationRailDestination(Control):
     @indicator_shape.setter
     def indicator_shape(self, value: Optional[OutlinedBorder]):
         self.__indicator_shape = value
-
-    # icon_content
-    @property
-    def icon_content(self) -> Optional[Control]:
-        return self.__icon_content
-
-    @icon_content.setter
-    def icon_content(self, value: Optional[Control]):
-        self.__icon_content = value
-
-    # selected_icon
-    @property
-    def selected_icon(self):
-        return self._get_attr("selectedIcon")
-
-    @selected_icon.setter
-    def selected_icon(self, value):
-        self._set_attr("selectedIcon", value)
-
-    # selected_icon_content
-    @property
-    def selected_icon_content(self) -> Optional[Control]:
-        return self.__selected_icon_content
-
-    @selected_icon_content.setter
-    def selected_icon_content(self, value: Optional[Control]):
-        self.__selected_icon_content = value
-
-    # label
-    @property
-    def label(self):
-        return self._get_attr("label")
-
-    @label.setter
-    def label(self, value):
-        self._set_attr("label", value)
-
-    # label_content
-    @property
-    def label_content(self) -> Optional[Control]:
-        return self.__label_content
-
-    @label_content.setter
-    def label_content(self, value: Optional[Control]):
-        self.__label_content = value
 
     # padding
     @property
@@ -239,7 +233,7 @@ class NavigationRail(ConstrainedControl):
         group_alignment: OptionalNumber = None,
         selected_label_text_style: Optional[TextStyle] = None,
         unselected_label_text_style: Optional[TextStyle] = None,
-        on_change=None,
+        on_change: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -264,7 +258,7 @@ class NavigationRail(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: Callable[..., None] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -341,8 +335,7 @@ class NavigationRail(ConstrainedControl):
         if self.__trailing:
             self.__trailing._set_attr_internal("n", "trailing")
             children.append(self.__trailing)
-        children.extend(self.__destinations)
-        return children
+        return children + self.__destinations
 
     # destinations
     @property
@@ -351,15 +344,15 @@ class NavigationRail(ConstrainedControl):
 
     @destinations.setter
     def destinations(self, value: Optional[List[NavigationRailDestination]]):
-        self.__destinations = value if value is not None else []
+        self.__destinations = value if value else []
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # selected_index
@@ -415,6 +408,7 @@ class NavigationRail(ConstrainedControl):
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
+        assert value is None or value >= 0, "elevation cannot be negative"
         self._set_attr("elevation", value)
 
     # extended
@@ -465,7 +459,7 @@ class NavigationRail(ConstrainedControl):
     # min_width
     @property
     def min_width(self) -> OptionalNumber:
-        return self._get_attr("minWidth")
+        return self._get_attr("minWidth", data_type="float")
 
     @min_width.setter
     def min_width(self, value: OptionalNumber):
@@ -474,7 +468,7 @@ class NavigationRail(ConstrainedControl):
     # min_extended_width
     @property
     def min_extended_width(self) -> OptionalNumber:
-        return self._get_attr("minExtendedWidth")
+        return self._get_attr("minExtendedWidth", data_type="float")
 
     @min_extended_width.setter
     def min_extended_width(self, value: OptionalNumber):
@@ -483,7 +477,7 @@ class NavigationRail(ConstrainedControl):
     # group_alignment
     @property
     def group_alignment(self) -> OptionalNumber:
-        return self._get_attr("groupAlignment")
+        return self._get_attr("groupAlignment", data_type="float")
 
     @group_alignment.setter
     def group_alignment(self, value: OptionalNumber):

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 
 class CupertinoTimerPickerControl extends StatefulWidget {
@@ -36,11 +37,8 @@ class _CupertinoTimerPickerControlState
         widget.control.attrDouble("minuteInterval", 1)!.toInt();
     int secondInterval =
         widget.control.attrDouble("secondInterval", 1)!.toInt();
-    CupertinoTimerPickerMode mode = CupertinoTimerPickerMode.values.firstWhere(
-        (a) =>
-            a.name.toLowerCase() ==
-            widget.control.attrString("mode", "")!.toLowerCase(),
-        orElse: () => CupertinoTimerPickerMode.hms);
+    CupertinoTimerPickerMode mode = parseCupertinoTimerPickerMode(
+        widget.control.attrString("mode"), CupertinoTimerPickerMode.hms)!;
 
     Color? backgroundColor = widget.control.attrColor("bgColor", context);
 
@@ -50,8 +48,7 @@ class _CupertinoTimerPickerControlState
       minuteInterval: minuteInterval,
       secondInterval: secondInterval,
       itemExtent: widget.control.attrDouble("itemExtent", 32.0)!,
-      alignment:
-          parseAlignment(widget.control, "alignment") ?? Alignment.center,
+      alignment: parseAlignment(widget.control, "alignment", Alignment.center)!,
       backgroundColor: backgroundColor,
       onTimerDurationChanged: (Duration d) {
         widget.backend.updateControlState(

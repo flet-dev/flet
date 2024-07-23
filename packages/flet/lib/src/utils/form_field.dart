@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,8 +11,18 @@ import 'text.dart';
 
 enum FormFieldInputBorder { outline, underline, none }
 
-TextInputType parseTextInputType(String type) {
-  switch (type.toLowerCase()) {
+FormFieldInputBorder? parseFormFieldInputBorder(String? value,
+    [FormFieldInputBorder? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return FormFieldInputBorder.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+TextInputType? parseTextInputType(String? value, [TextInputType? defValue]) {
+  switch (value?.toLowerCase()) {
     case "datetime":
       return TextInputType.datetime;
     case "email":
@@ -34,8 +45,9 @@ TextInputType parseTextInputType(String type) {
       return TextInputType.url;
     case "visiblepassword":
       return TextInputType.visiblePassword;
+    default:
+      return defValue;
   }
-  return TextInputType.text;
 }
 
 InputDecoration buildInputDecoration(
@@ -48,15 +60,15 @@ InputDecoration buildInputDecoration(
     bool disabled,
     bool? adaptive) {
   String? label = control.attrString("label", "")!;
-  FormFieldInputBorder inputBorder = FormFieldInputBorder.values.firstWhere(
-    ((b) => b.name == control.attrString("border", "")!.toLowerCase()),
-    orElse: () => FormFieldInputBorder.outline,
-  );
-  var icon = parseIcon(control.attrString("icon", "")!);
+  FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
+    control.attrString("border"),
+    FormFieldInputBorder.outline,
+  )!;
+  var icon = parseIcon(control.attrString("icon"));
 
-  var prefixIcon = parseIcon(control.attrString("prefixIcon", "")!);
+  var prefixIcon = parseIcon(control.attrString("prefixIcon"));
   var prefixText = control.attrString("prefixText");
-  var suffixIcon = parseIcon(control.attrString("suffixIcon", "")!);
+  var suffixIcon = parseIcon(control.attrString("suffixIcon"));
   var suffixText = control.attrString("suffixText");
 
   var bgcolor = control.attrColor("bgcolor", context);

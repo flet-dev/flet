@@ -1,12 +1,10 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
-
-enum CardVariant { elevated, filled, outlined }
 
 class CardControl extends StatelessWidget {
   final Control? parent;
@@ -31,19 +29,12 @@ class CardControl extends StatelessWidget {
 
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
-    var clipBehavior = Clip.values.firstWhereOrNull(
-      (e) =>
-          e.name.toLowerCase() ==
-          control.attrString("clipBehavior", "")!.toLowerCase(),
-    );
+    var clipBehavior = parseClip(control.attrString("clipBehavior"));
 
     Widget? card;
 
-    CardVariant variant = CardVariant.values.firstWhere(
-        (v) =>
-            v.name.toLowerCase() ==
-            control.attrString("variant", "")!.toLowerCase(),
-        orElse: () => CardVariant.elevated);
+    CardVariant variant =
+        parseCardVariant(control.attrString("variant"), CardVariant.elevated)!;
 
     if (variant == CardVariant.outlined) {
       card = Card.outlined(

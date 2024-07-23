@@ -9,7 +9,7 @@ void main() {
   test("Light theme is parsed correctly from JSON", () {
     const t1 = '''{
         "color_scheme_seed": "red",
-        "brightness": "light1",
+        "brightness": "light",
         "use_material3": false
       }''';
 
@@ -18,7 +18,7 @@ void main() {
 
     expect(theme.brightness, Brightness.light);
     expect(theme.useMaterial3, false);
-    expect(theme.primaryColor, const Color(0xffbb1614));
+    expect(theme.primaryColor, const Color(0xff904a42));
   });
 
   test("Dark theme is parsed correctly from JSON", () {
@@ -32,6 +32,6 @@ void main() {
 
     expect(theme.brightness, Brightness.dark);
     expect(theme.useMaterial3, true);
-    expect(theme.primaryColor, const Color(0xff191c1d));
+    expect(theme.primaryColor, const Color(0xff0e1416));
   });
 }

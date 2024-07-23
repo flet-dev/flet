@@ -52,30 +52,25 @@ MenuStyle? menuStyleFromJSON(ThemeData theme, Map<String, dynamic> json,
     BorderSide? defaultBorderSide,
     OutlinedBorder? defaultShape]) {
   return MenuStyle(
-    alignment: json["alignment"] != null
-        ? alignmentFromJson(json["alignment"])
-        : defaultAlignment,
-    backgroundColor: getMaterialStateProperty<Color?>(
-        json["bgcolor"],
-        (jv) => HexColor.fromString(theme, jv as String),
-        defaultBackgroundColor),
-    shadowColor: getMaterialStateProperty<Color?>(json["shadow_color"],
-        (jv) => HexColor.fromString(theme, jv as String), defaultShadowColor),
-    surfaceTintColor: getMaterialStateProperty<Color?>(
-        json["surface_tint_color"],
-        (jv) => HexColor.fromString(theme, jv as String),
+    alignment: alignmentFromJson(json["alignment"], defaultAlignment)!,
+    backgroundColor: getWidgetStateProperty<Color?>(json["bgcolor"],
+        (jv) => parseColor(theme, jv as String), defaultBackgroundColor),
+    shadowColor: getWidgetStateProperty<Color?>(json["shadow_color"],
+        (jv) => parseColor(theme, jv as String), defaultShadowColor),
+    surfaceTintColor: getWidgetStateProperty<Color?>(json["surface_tint_color"],
+        (jv) => parseColor(theme, jv as String),
         defaultSurfaceTintColor),
-    elevation: getMaterialStateProperty<double?>(
-        json["elevation"], (jv) => parseDouble(jv), defaultElevation),
-    padding: getMaterialStateProperty<EdgeInsetsGeometry?>(
+    elevation: getWidgetStateProperty<double?>(
+        json["elevation"], (jv) => parseDouble(jv, 0)!, defaultElevation),
+    padding: getWidgetStateProperty<EdgeInsetsGeometry?>(
         json["padding"], (jv) => edgeInsetsFromJson(jv), defaultPadding),
-    side: getMaterialStateProperty<BorderSide?>(
+    side: getWidgetStateProperty<BorderSide?>(
         json["side"],
         (jv) => borderSideFromJSON(theme, jv, theme.colorScheme.outline),
         defaultBorderSide),
-    shape: getMaterialStateProperty<OutlinedBorder?>(
+    shape: getWidgetStateProperty<OutlinedBorder?>(
         json["shape"], (jv) => outlinedBorderFromJSON(jv), defaultShape),
-    mouseCursor: getMaterialStateProperty<MouseCursor?>(json["mouse_cursor"],
+    mouseCursor: getWidgetStateProperty<MouseCursor?>(json["mouse_cursor"],
         (jv) => parseMouseCursor(jv as String), defaultMouseCursor),
   );
 }

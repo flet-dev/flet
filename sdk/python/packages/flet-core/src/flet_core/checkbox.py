@@ -7,16 +7,18 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.theme import ThemeVisualDensity
 from flet_core.types import (
     AnimationValue,
     LabelPosition,
-    MaterialState,
+    ControlState,
     MouseCursor,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
+    ThemeVisualDensity,
+    VisualDensity,
 )
 
 
@@ -62,8 +64,8 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         label_style: Optional[TextStyle] = None,
         tristate: Optional[bool] = None,
         autofocus: Optional[bool] = None,
-        fill_color: Union[None, str, Dict[MaterialState, str]] = None,
-        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
+        fill_color: Union[None, str, Dict[ControlState, str]] = None,
+        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         check_color: Optional[str] = None,
         active_color: Optional[str] = None,
         hover_color: Optional[str] = None,
@@ -71,13 +73,13 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         semantics_label: Optional[str] = None,
         shape: Optional[OutlinedBorder] = None,
         splash_radius: OptionalNumber = None,
-        border_side: Union[None, BorderSide, Dict[MaterialState, BorderSide]] = None,
+        border_side: Union[None, BorderSide, Dict[ControlState, BorderSide]] = None,
         is_error: Optional[bool] = None,
-        visual_density: Optional[ThemeVisualDensity] = None,
+        visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
         mouse_cursor: Optional[MouseCursor] = None,
-        on_change=None,
-        on_focus=None,
-        on_blur=None,
+        on_change: OptionalEventCallable = None,
+        on_focus: OptionalEventCallable = None,
+        on_blur: OptionalEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -103,7 +105,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -215,9 +217,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     @label_position.setter
     def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
-        self._set_attr(
-            "labelPosition", value.value if isinstance(value, LabelPosition) else value
-        )
+        self._set_enum_attr("labelPosition", value, LabelPosition)
 
     # mouse_cursor
     @property
@@ -227,23 +227,17 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_attr(
-            "mouseCursor",
-            value.value if isinstance(value, MouseCursor) else value,
-        )
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # visual_density
     @property
-    def visual_density(self) -> Optional[ThemeVisualDensity]:
+    def visual_density(self) -> Union[None, ThemeVisualDensity, VisualDensity]:
         return self.__visual_density
 
     @visual_density.setter
-    def visual_density(self, value: Optional[ThemeVisualDensity]):
+    def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_attr(
-            "visualDensity",
-            value.value if isinstance(value, ThemeVisualDensity) else value,
-        )
+        self._set_enum_attr("visualDensity", value, ThemeVisualDensity, VisualDensity)
 
     # autofocus
     @property
@@ -292,20 +286,20 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     # fill_color
     @property
-    def fill_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def fill_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__fill_color
 
     @fill_color.setter
-    def fill_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def fill_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__fill_color = value
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__overlay_color = value
 
     # label_style
@@ -355,12 +349,12 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     # border_side
     @property
-    def border_side(self) -> Union[None, BorderSide, Dict[MaterialState, BorderSide]]:
+    def border_side(self) -> Union[None, BorderSide, Dict[ControlState, BorderSide]]:
         return self.__border_side
 
     @border_side.setter
     def border_side(
-        self, value: Union[None, BorderSide, Dict[MaterialState, BorderSide]]
+        self, value: Union[None, BorderSide, Dict[ControlState, BorderSide]]
     ):
         self.__border_side = value
 
@@ -370,7 +364,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # on_focus
@@ -379,7 +373,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler):
+    def on_focus(self, handler: OptionalEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
@@ -388,5 +382,5 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler):
+    def on_blur(self, handler: OptionalEventCallable):
         self._add_event_handler("blur", handler)

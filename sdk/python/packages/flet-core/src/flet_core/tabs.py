@@ -9,7 +9,7 @@ from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
     ClipBehavior,
-    MaterialState,
+    ControlState,
     MouseCursor,
     OffsetValue,
     PaddingValue,
@@ -17,6 +17,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TabAlignment,
+    OptionalEventCallable,
 )
 
 
@@ -156,13 +157,13 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         is_secondary: Optional[bool] = None,
         label_color: Optional[str] = None,
         unselected_label_color: Optional[str] = None,
-        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
+        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         divider_height: OptionalNumber = None,
         indicator_thickness: OptionalNumber = None,
         enable_feedback: Optional[str] = None,
         mouse_cursor: Optional[MouseCursor] = None,
         clip_behavior: Optional[ClipBehavior] = None,
-        on_change=None,
+        on_change: OptionalEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -188,7 +189,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -263,7 +264,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # tabs
     @property
-    def tabs(self) -> Optional[List[Tab]]:
+    def tabs(self) -> List[Tab]:
         return self.__tabs
 
     @tabs.setter
@@ -272,11 +273,11 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # selected_index
@@ -305,10 +306,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_attr(
-            "mouseCursor",
-            value.value if isinstance(value, MouseCursor) else value,
-        )
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # clip_behavior
     @property
@@ -318,10 +316,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_attr(
-            "clipBehavior",
-            value.value if isinstance(value, ClipBehavior) else value,
-        )
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
 
     # is_secondary
     @property
@@ -340,9 +335,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     @tab_alignment.setter
     def tab_alignment(self, value: Optional[TabAlignment]):
         self.__tab_alignment = value
-        self._set_attr(
-            "tabAlignment", value.value if isinstance(value, TabAlignment) else value
-        )
+        self._set_enum_attr("tabAlignment", value, TabAlignment)
 
     # animation_duration
     @property
@@ -374,10 +367,11 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     # indicator_thickness
     @property
     def indicator_thickness(self):
-        return self._get_attr("indicatorThickness", data_type="float", def_value=3.0)
+        return self._get_attr("indicatorThickness", data_type="float", def_value=2.0)
 
     @indicator_thickness.setter
     def indicator_thickness(self, value: OptionalNumber):
+        assert value is None or value > 0, "indicator_thickness must be greater than 0"
         self._set_attr("indicatorThickness", value)
 
     # divider_color
@@ -454,9 +448,9 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__overlay_color = value

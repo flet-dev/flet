@@ -1,5 +1,6 @@
 from typing import Any, Optional
 
+from flet_core.types import OptionalEventCallable
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 
@@ -36,9 +37,9 @@ class RadioGroup(Control):
 
     def __init__(
         self,
-        content: Optional[Control] = None,
+        content: Control,
         value: Optional[str] = None,
-        on_change=None,
+        on_change: OptionalEventCallable = None,
         #
         # Control
         #
@@ -66,10 +67,12 @@ class RadioGroup(Control):
         return "radiogroup"
 
     def _get_children(self):
-        if isinstance(self.__content, Control):
-            self.__content._set_attr_internal("n", "content")
-            return [self.__content]
-        return []
+        self.__content._set_attr_internal("n", "content")
+        return [self.__content]
+
+    def before_update(self):
+        super().before_update()
+        assert self.__content.visible, "content must be visible"
 
     # value
     @property
@@ -82,18 +85,18 @@ class RadioGroup(Control):
 
     # content
     @property
-    def content(self) -> Optional[Control]:
+    def content(self) -> Control:
         return self.__content
 
     @content.setter
-    def content(self, value: Optional[Control]):
+    def content(self, value: Control):
         self.__content = value
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)

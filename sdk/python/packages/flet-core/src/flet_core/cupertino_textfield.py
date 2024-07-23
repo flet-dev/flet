@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Any, List, Optional, Union
 
+from flet_core.autofill_group import AutofillHint
 from flet_core.border import Border
 from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient
@@ -18,6 +19,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TextAlign,
+    OptionalEventCallable,
 )
 
 
@@ -75,6 +77,7 @@ class CupertinoTextField(TextField):
         show_cursor: Optional[bool] = None,
         selection_color: Optional[str] = None,
         input_filter: Optional[InputFilter] = None,
+        autofill_hints: Union[None, AutofillHint, List[AutofillHint]] = None,
         on_change=None,
         on_submit=None,
         on_focus=None,
@@ -118,7 +121,7 @@ class CupertinoTextField(TextField):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -194,6 +197,7 @@ class CupertinoTextField(TextField):
             show_cursor=show_cursor,
             selection_color=selection_color,
             input_filter=input_filter,
+            autofill_hints=autofill_hints,
             on_change=on_change,
             on_submit=on_submit,
             on_focus=on_focus,
@@ -255,13 +259,11 @@ class CupertinoTextField(TextField):
     @blend_mode.setter
     def blend_mode(self, value: Optional[BlendMode]):
         self.__blend_mode = value
-        self._set_attr(
-            "blendMode", value.value if isinstance(value, BlendMode) else value
-        )
+        self._set_enum_attr("blendMode", value, BlendMode)
 
     # shadow
     @property
-    def shadow(self):
+    def shadow(self) -> Union[None, BoxShadow, List[BoxShadow]]:
         return self.__shadow
 
     @shadow.setter
@@ -286,18 +288,15 @@ class CupertinoTextField(TextField):
     @prefix_visibility_mode.setter
     def prefix_visibility_mode(self, value: Optional[VisibilityMode]):
         self.__prefix_visibility_mode = value
-        self._set_attr(
-            "prefixVisibilityMode",
-            value.value if isinstance(value, VisibilityMode) else value,
-        )
+        self._set_enum_attr("prefixVisibilityMode", value, VisibilityMode)
 
     # clear_button_semantics_label
     @property
-    def clear_button_semantics_label(self):
+    def clear_button_semantics_label(self) -> Optional[str]:
         return self._get_attr("clearButtonSemanticsLabel")
 
     @clear_button_semantics_label.setter
-    def clear_button_semantics_label(self, value):
+    def clear_button_semantics_label(self, value: Optional[str]):
         self._set_attr("clearButtonSemanticsLabel", value)
 
     # border

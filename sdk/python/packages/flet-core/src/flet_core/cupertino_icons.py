@@ -5,6 +5,7 @@ To generate/update these values run:
 
 sh ci/generate_cupertino_icons_python.sh
 """
+import random
 
 LEFT_CHEVRON = "cupertino_left_chevron"
 RIGHT_CHEVRON = "cupertino_right_chevron"
@@ -1344,3 +1345,11 @@ XMARK_SQUARE_FILL = "cupertino_xmark_square_fill"
 ZOOM_IN = "cupertino_zoom_in"
 ZOOM_OUT = "cupertino_zoom_out"
 ZZZ = "cupertino_zzz"
+
+
+icons_list = [v for k, v in vars().items() if k.isupper()]
+
+
+def random_icon() -> str:
+    """Return a random icons from the icons defined in this module."""
+    return random.choice(icons_list)

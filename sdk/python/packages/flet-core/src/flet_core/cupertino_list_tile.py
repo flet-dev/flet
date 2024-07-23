@@ -11,16 +11,17 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     UrlTarget,
+    OptionalEventCallable,
 )
 
 
 class CupertinoListTile(ConstrainedControl):
     """
-        An iOS-style list tile. The CupertinoListTile is a Cupertino equivalent of Material ListTile.
+    An iOS-style list tile. The CupertinoListTile is a Cupertino equivalent of Material ListTile.
 
-        Example:
+    Example:
 
-        ```
+    ```
     import flet as ft
 
 
@@ -43,11 +44,11 @@ class CupertinoListTile(ConstrainedControl):
         )
 
     ft.app(target=main)
-        ```
+    ```
 
-        -----
+    -----
 
-        Online docs: https://flet.dev/docs/controls/cupertinolisttile
+    Online docs: https://flet.dev/docs/controls/cupertinolisttile
     """
 
     def __init__(
@@ -66,7 +67,7 @@ class CupertinoListTile(ConstrainedControl):
         leading_size: OptionalNumber = None,
         leading_to_title: OptionalNumber = None,
         notched: Optional[bool] = None,
-        on_click=None,
+        on_click: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -92,7 +93,7 @@ class CupertinoListTile(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -287,9 +288,7 @@ class CupertinoListTile(ConstrainedControl):
     @url_target.setter
     def url_target(self, value: Optional[UrlTarget]):
         self.__url_target = value
-        self._set_attr(
-            "urlTarget", value.value if isinstance(value, UrlTarget) else value
-        )
+        self._set_enum_attr("urlTarget", value, UrlTarget)
 
     # toggle_inputs
     @property
@@ -302,10 +301,10 @@ class CupertinoListTile(ConstrainedControl):
 
     # on_click
     @property
-    def on_click(self):
+    def on_click(self) -> OptionalEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)
         self._set_attr("onclick", True if handler is not None else None)

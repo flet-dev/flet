@@ -9,6 +9,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 
@@ -68,7 +69,7 @@ class Icon(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -109,26 +110,26 @@ class Icon(ConstrainedControl):
 
     # name
     @property
-    def name(self):
+    def name(self) -> Optional[str]:
         return self._get_attr("name")
 
     @name.setter
-    def name(self, value):
+    def name(self, value: Optional[str]):
         self._set_attr("name", value)
 
     # color
     @property
-    def color(self):
+    def color(self) -> Optional[str]:
         return self._get_attr("color")
 
     @color.setter
-    def color(self, value):
+    def color(self, value: Optional[str]):
         self._set_attr("color", value)
 
     # size
     @property
     def size(self) -> OptionalNumber:
-        return self._get_attr("size")
+        return self._get_attr("size", data_type="float")
 
     @size.setter
     def size(self, value: OptionalNumber):
@@ -136,9 +137,9 @@ class Icon(ConstrainedControl):
 
     # semantics_label
     @property
-    def semantics_label(self):
+    def semantics_label(self) -> Optional[str]:
         return self._get_attr("semanticsLabel")
 
     @semantics_label.setter
-    def semantics_label(self, value):
+    def semantics_label(self, value: Optional[str]):
         self._set_attr("semanticsLabel", value)

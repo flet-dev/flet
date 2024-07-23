@@ -1,5 +1,6 @@
 import json
-from typing import Any, List, Optional, Tuple, Union
+from dataclasses import dataclass, field
+from typing import Any, List, Optional, Tuple, Union, Callable
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
@@ -29,7 +30,14 @@ from flet_core.types import (
     ScaleValue,
     ThemeMode,
     UrlTarget,
+    OptionalEventCallable,
 )
+
+
+@dataclass
+class ColorFilter:
+    color: Optional[str] = field(default=None)
+    blend_mode: Optional[BlendMode] = field(default=None)
 
 
 class Container(ConstrainedControl, AdaptiveControl):
@@ -88,10 +96,11 @@ class Container(ConstrainedControl, AdaptiveControl):
         url_target: Optional[UrlTarget] = None,
         theme: Optional[Theme] = None,
         theme_mode: Optional[ThemeMode] = None,
-        on_click=None,
-        on_tap_down=None,
-        on_long_press=None,
-        on_hover=None,
+        color_filter: Optional[ColorFilter] = None,
+        on_click: OptionalEventCallable = None,
+        on_tap_down: Optional[Callable[["ContainerTapEvent"], None]] = None,
+        on_long_press: OptionalEventCallable = None,
+        on_hover: OptionalEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -117,7 +126,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -159,11 +168,7 @@ class Container(ConstrainedControl, AdaptiveControl):
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
-        def convert_container_tap_event_data(e):
-            d = json.loads(e.data)
-            return ContainerTapEvent(**d)
-
-        self.__on_tap_down = EventHandler(convert_container_tap_event_data)
+        self.__on_tap_down = EventHandler(lambda e: ContainerTapEvent(e))
         self._add_event_handler("tap_down", self.__on_tap_down.get_handler())
 
         self.content = content
@@ -191,6 +196,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.url_target = url_target
         self.theme = theme
         self.theme_mode = theme_mode
+        self.color_filter = color_filter
         self.on_click = on_click
         self.on_tap_down = on_tap_down
         self.on_long_press = on_long_press
@@ -211,6 +217,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("blur", self.__blur)
         self._set_attr_json("shadow", self.__shadow if self.__shadow else None)
         self._set_attr_json("theme", self.__theme)
+        self._set_attr_json("colorFilter", self.__color_filter)
 
     def _get_children(self):
         children = []
@@ -283,7 +290,9 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # blur
     @property
-    def blur(self):
+    def blur(
+        self,
+    ) -> Union[None, float, int, Tuple[Union[float, int], Union[float, int]], Blur]:
         return self.__blur
 
     @blur.setter
@@ -297,12 +306,21 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # shadow
     @property
-    def shadow(self):
+    def shadow(self) -> Union[None, BoxShadow, List[BoxShadow]]:
         return self.__shadow
 
     @shadow.setter
     def shadow(self, value: Union[None, BoxShadow, List[BoxShadow]]):
         self.__shadow = value if value is not None else []
+
+    # color_filter
+    @property
+    def color_filter(self) -> Optional[ColorFilter]:
+        return self.__color_filter
+
+    @color_filter.setter
+    def color_filter(self, value: Optional[ColorFilter]):
+        self.__color_filter = value
 
     # border
     @property
@@ -324,20 +342,20 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # image_src
     @property
-    def image_src(self):
+    def image_src(self) -> Optional[str]:
         return self._get_attr("imageSrc")
 
     @image_src.setter
-    def image_src(self, value):
+    def image_src(self, value: Optional[str]):
         self._set_attr("imageSrc", value)
 
     # image_src_base64
     @property
-    def image_src_base64(self):
+    def image_src_base64(self) -> Optional[str]:
         return self._get_attr("imageSrcBase64")
 
     @image_src_base64.setter
-    def image_src_base64(self, value):
+    def image_src_base64(self, value: Optional[str]):
         self._set_attr("imageSrcBase64", value)
 
     # image_fit
@@ -348,9 +366,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @image_fit.setter
     def image_fit(self, value: Optional[ImageFit]):
         self.__image_fit = value
-        self._set_attr(
-            "imageFit", value.value if isinstance(value, ImageFit) else value
-        )
+        self._set_enum_attr("imageFit", value, ImageFit)
 
     # image_repeat
     @property
@@ -360,9 +376,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @image_repeat.setter
     def image_repeat(self, value: Optional[ImageRepeat]):
         self.__image_repeat = value
-        self._set_attr(
-            "imageRepeat", value.value if isinstance(value, ImageRepeat) else value
-        )
+        self._set_enum_attr("imageRepeat", value, ImageRepeat)
 
     # image_opacity
     @property
@@ -384,13 +398,13 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # shape
     @property
-    def shape(self):
+    def shape(self) -> Optional[BoxShape]:
         return self.__shape
 
     @shape.setter
     def shape(self, value: Optional[BoxShape]):
         self.__shape = value
-        self._set_attr("shape", value.value if isinstance(value, BoxShape) else value)
+        self._set_enum_attr("shape", value, BoxShape)
 
     # clip_behavior
     @property
@@ -400,9 +414,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_attr(
-            "clipBehavior", value.value if isinstance(value, ClipBehavior) else value
-        )
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
 
     # ink
     @property
@@ -415,11 +427,11 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # ink color
     @property
-    def ink_color(self):
+    def ink_color(self) -> Optional[str]:
         return self._get_attr("inkColor")
 
     @ink_color.setter
-    def ink_color(self, value):
+    def ink_color(self, value: Optional[str]):
         self._set_attr("inkColor", value)
 
     # animate
@@ -433,11 +445,11 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # url
     @property
-    def url(self):
+    def url(self) -> Optional[str]:
         return self._get_attr("url")
 
     @url.setter
-    def url(self, value):
+    def url(self, value: Optional[str]):
         self._set_attr("url", value)
 
     # url_target
@@ -448,9 +460,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @url_target.setter
     def url_target(self, value: Optional[UrlTarget]):
         self.__url_target = value
-        self._set_attr(
-            "urlTarget", value.value if isinstance(value, UrlTarget) else value
-        )
+        self._set_enum_attr("urlTarget", value, UrlTarget)
 
     # theme
     @property
@@ -469,9 +479,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @theme_mode.setter
     def theme_mode(self, value: Optional[ThemeMode]):
         self.__theme_mode = value
-        self._set_attr(
-            "themeMode", value.value if isinstance(value, ThemeMode) else value
-        )
+        self._set_enum_attr("themeMode", value, ThemeMode)
 
     # on_click
     @property
@@ -479,7 +487,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)
         self._set_attr("onClick", True if handler is not None else None)
 
@@ -489,7 +497,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         return self.__on_tap_down
 
     @on_tap_down.setter
-    def on_tap_down(self, handler):
+    def on_tap_down(self, handler: Optional[Callable[["ContainerTapEvent"], None]]):
         self.__on_tap_down.subscribe(handler)
         self._set_attr("onTapDown", True if handler is not None else None)
 
@@ -499,7 +507,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler):
+    def on_long_press(self, handler: OptionalEventCallable):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
@@ -509,17 +517,16 @@ class Container(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("hover")
 
     @on_hover.setter
-    def on_hover(self, handler):
+    def on_hover(self, handler: OptionalEventCallable):
         self._add_event_handler("hover", handler)
-        if handler is not None:
-            self._set_attr("onHover", True)
-        else:
-            self._set_attr("onHover", None)
+        self._set_attr("onHover", True if handler is not None else None)
 
 
 class ContainerTapEvent(ControlEvent):
-    def __init__(self, lx, ly, gx, gy) -> None:
-        self.local_x: float = lx
-        self.local_y: float = ly
-        self.global_x: float = gx
-        self.global_y: float = gy
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.local_x: float = d.get("lx")
+        self.local_y: float = d.get("ly")
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")

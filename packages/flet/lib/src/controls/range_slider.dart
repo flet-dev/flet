@@ -54,9 +54,9 @@ class _SliderControlState extends State<RangeSliderControl> {
   Widget build(BuildContext context) {
     debugPrint("RangeSliderControl build: ${widget.control.id}");
 
-    double startValue = widget.control.attrDouble("startvalue", 0)!;
-    double endValue = widget.control.attrDouble("endvalue", 0)!;
-    String? label = widget.control.attrString("label");
+    double startValue = widget.control.attrDouble("startValue", 0)!;
+    double endValue = widget.control.attrDouble("endValue", 0)!;
+    String label = widget.control.attrString("label", "")!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     double min = widget.control.attrDouble("min", 0)!;
@@ -70,16 +70,14 @@ class _SliderControlState extends State<RangeSliderControl> {
     var rangeSlider = RangeSlider(
         values: RangeValues(startValue, endValue),
         labels: RangeLabels(
-            (label ?? "")
-                .replaceAll("{value}", startValue.toStringAsFixed(round)),
-            (label ?? "")
-                .replaceAll("{value}", endValue.toStringAsFixed(round))),
+            (label).replaceAll("{value}", startValue.toStringAsFixed(round)),
+            (label).replaceAll("{value}", endValue.toStringAsFixed(round))),
         min: min,
         max: max,
         divisions: divisions,
         activeColor: widget.control.attrColor("activeColor", context),
         inactiveColor: widget.control.attrColor("inactiveColor", context),
-        overlayColor: parseMaterialStateColor(
+        overlayColor: parseWidgetStateColor(
             Theme.of(context), widget.control, "overlayColor"),
         onChanged: !disabled
             ? (RangeValues newValues) {

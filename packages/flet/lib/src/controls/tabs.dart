@@ -14,6 +14,7 @@ import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/material_state.dart';
 import '../utils/mouse.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 
 class TabsControl extends StatefulWidget {
@@ -114,10 +115,9 @@ class _TabsControlState extends State<TabsControl>
           var overlayColorStr = widget.control.attrString("overlayColor");
           dynamic overlayColor;
           if (overlayColorStr != null) {
-            overlayColor = getMaterialStateProperty<Color?>(
+            overlayColor = getWidgetStateProperty<Color?>(
                     json.decode(overlayColorStr),
-                    (jv) =>
-                        HexColor.fromString(Theme.of(context), jv as String)) ??
+                    (jv) => parseColor(Theme.of(context), jv as String)) ??
                 TabBarTheme.of(context).overlayColor;
           }
 
@@ -152,15 +152,13 @@ class _TabsControlState extends State<TabsControl>
           var enableFeedback = widget.control.attrBool("enableFeedback");
           var indicatorWeight =
               widget.control.attrDouble("indicatorThickness", 2.0)!;
-          var tabAlignment = parseTabAlignment(widget.control, "tabAlignment",
-              isScrollable ? TabAlignment.start : TabAlignment.fill);
+          var tabAlignment = parseTabAlignment(
+              widget.control.attrString("tabAlignment"),
+              isScrollable ? TabAlignment.start : TabAlignment.fill)!;
           var mouseCursor =
               parseMouseCursor(widget.control.attrString("mouseCursor"));
-          var clipBehavior = Clip.values.firstWhere(
-              (e) =>
-                  e.name.toLowerCase() ==
-                  widget.control.attrString("clipBehavior", "")!.toLowerCase(),
-              orElse: () => Clip.hardEdge);
+          var clipBehavior = parseClip(
+              widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
 
           var indicator = indicatorBorderRadius != null ||
                   indicatorBorderSide != null ||
@@ -189,7 +187,7 @@ class _TabsControlState extends State<TabsControl>
 
           var tabs = viewModel.controlViews.map((tabView) {
             var text = tabView.control.attrString("text");
-            var icon = parseIcon(tabView.control.attrString("icon", "")!);
+            var icon = parseIcon(tabView.control.attrString("icon"));
             var tabContentCtrls = tabView.children
                 .where((c) => c.name == "tab_content" && c.isVisible);
 

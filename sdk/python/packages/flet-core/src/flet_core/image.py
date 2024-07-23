@@ -13,6 +13,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 from flet_core.video import FilterQuality
 
@@ -89,7 +90,7 @@ class Image(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -143,11 +144,10 @@ class Image(ConstrainedControl):
         return "image"
 
     def _get_children(self):
-        children = []
         if self.__error_content is not None:
             self.__error_content._set_attr_internal("n", "error_content")
-            children.append(self.__error_content)
-        return children
+            return [self.__error_content]
+        return []
 
     def before_update(self):
         super().before_update()
@@ -201,9 +201,7 @@ class Image(ConstrainedControl):
     @repeat.setter
     def repeat(self, value: Optional[ImageRepeat]):
         self.__repeat = value
-        self._set_attr(
-            "repeat", value.value if isinstance(value, ImageRepeat) else value
-        )
+        self._set_enum_attr("repeat", value, ImageRepeat)
 
     # border_radius
     @property
@@ -216,11 +214,11 @@ class Image(ConstrainedControl):
 
     # color
     @property
-    def color(self):
+    def color(self) -> Optional[str]:
         return self._get_attr("color")
 
     @color.setter
-    def color(self, value):
+    def color(self, value: Optional[str]):
         self._set_attr("color", value)
 
     # color_blend_mode
@@ -231,9 +229,7 @@ class Image(ConstrainedControl):
     @color_blend_mode.setter
     def color_blend_mode(self, value: Optional[BlendMode]):
         self.__blend_mode = value
-        self._set_attr(
-            "colorBlendMode", value.value if isinstance(value, BlendMode) else value
-        )
+        self._set_enum_attr("colorBlendMode", value, BlendMode)
 
     # gapless_playback
     @property
@@ -255,11 +251,11 @@ class Image(ConstrainedControl):
 
     # semantics_label
     @property
-    def semantics_label(self):
+    def semantics_label(self) -> Optional[str]:
         return self._get_attr("semanticsLabel")
 
     @semantics_label.setter
-    def semantics_label(self, value):
+    def semantics_label(self, value: Optional[str]):
         self._set_attr("semanticsLabel", value)
 
     # error_content

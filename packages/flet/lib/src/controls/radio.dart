@@ -5,6 +5,7 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/mouse.dart';
+import '../utils/others.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 import 'cupertino_radio.dart';
@@ -12,7 +13,6 @@ import 'error.dart';
 import 'flet_store_mixin.dart';
 import 'list_tile.dart';
 
-enum LabelPosition { right, left }
 
 class RadioControl extends StatefulWidget {
   final Control? parent;
@@ -80,13 +80,10 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
 
       String label = widget.control.attrString("label", "")!;
       String value = widget.control.attrString("value", "")!;
-      LabelPosition labelPosition = LabelPosition.values.firstWhere(
-          (p) =>
-              p.name.toLowerCase() ==
-              widget.control.attrString("labelPosition", "")!.toLowerCase(),
-          orElse: () => LabelPosition.right);
+      LabelPosition labelPosition = parseLabelPosition(
+          widget.control.attrString("labelPosition"), LabelPosition.right)!;
       VisualDensity? visualDensity =
-          parseVisualDensity(widget.control.attrString("visualDensity"), null);
+          parseVisualDensity(widget.control.attrString("visualDensity"));
       bool autofocus = widget.control.attrBool("autofocus", false)!;
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
@@ -101,8 +98,7 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
         debugPrint("Radio StoreConnector build: ${widget.control.id}");
 
         if (viewModel.ancestor == null) {
-          return const ErrorControl(
-              "Radio control must be enclosed with RadioGroup.");
+          return const ErrorControl("Radio must be enclosed within RadioGroup");
         }
 
         String groupValue = viewModel.ancestor!.attrString("value", "")!;
@@ -112,17 +108,16 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
             autofocus: autofocus,
             focusNode: _focusNode,
             groupValue: groupValue,
-            mouseCursor: parseMouseCursor(
-                widget.control.attrString("mouseCursor"), null),
+            mouseCursor: parseMouseCursor(widget.control.attrString("mouseCursor")),
             value: value,
             activeColor: widget.control.attrColor("activeColor", context),
             focusColor: widget.control.attrColor("focusColor", context),
             hoverColor: widget.control.attrColor("hoverColor", context),
             splashRadius: widget.control.attrDouble("splashRadius"),
             toggleable: widget.control.attrBool("toggleable", false)!,
-            fillColor: parseMaterialStateColor(
+            fillColor: parseWidgetStateColor(
                 Theme.of(context), widget.control, "fillColor"),
-            overlayColor: parseMaterialStateColor(
+            overlayColor: parseWidgetStateColor(
                 Theme.of(context), widget.control, "overlayColor"),
             visualDensity: visualDensity,
             onChanged: !disabled

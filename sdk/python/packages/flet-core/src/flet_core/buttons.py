@@ -1,69 +1,106 @@
-import dataclasses
-from dataclasses import field
+from dataclasses import dataclass, field
 from typing import Dict, Optional, Union
 
+from flet_core.alignment import Alignment
 from flet_core.border import BorderSide
-from flet_core.types import BorderRadiusValue, MaterialState, PaddingValue
+from flet_core.text_style import TextStyle
+from flet_core.types import (
+    BorderRadiusValue,
+    ControlState,
+    PaddingValue,
+    Number,
+    ThemeVisualDensity,
+    VisualDensity,
+    MouseCursor,
+)
 
 
-@dataclasses.dataclass
+@dataclass
 class OutlinedBorder:
     pass
 
 
-@dataclasses.dataclass
+@dataclass
 class StadiumBorder(OutlinedBorder):
-    type: str = field(default="stadium")
+    def __post_init__(self):
+        self.type = "stadium"
 
 
-@dataclasses.dataclass
+@dataclass
 class RoundedRectangleBorder(OutlinedBorder):
-    type: str = field(default="roundedRectangle")
     radius: BorderRadiusValue = field(default=None)
 
+    def __post_init__(self):
+        self.type = "roundedRectangle"
 
-@dataclasses.dataclass
+
+@dataclass
 class CircleBorder(OutlinedBorder):
     type: str = field(default="circle")
 
 
-@dataclasses.dataclass
+@dataclass
 class BeveledRectangleBorder(OutlinedBorder):
-    type: str = field(default="beveledRectangle")
     radius: BorderRadiusValue = field(default=None)
 
+    def __post_init__(self):
+        self.type = "beveledRectangle"
 
-@dataclasses.dataclass
+
+@dataclass
 class ContinuousRectangleBorder(OutlinedBorder):
-    type: str = field(default="continuousRectangle")
     radius: BorderRadiusValue = field(default=None)
 
+    def __post_init__(self):
+        self.type = "continuousRectangle"
 
-@dataclasses.dataclass
+
+@dataclass
 class ButtonStyle:
-    color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(default=None)
-    bgcolor: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    color: Union[None, str, Dict[Union[str, ControlState], str]] = field(default=None)
+    bgcolor: Union[None, str, Dict[Union[str, ControlState], str]] = field(default=None)
+    overlay_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
-    overlay_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    shadow_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
-    shadow_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
-        default=None
-    )
-    surface_tint_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    surface_tint_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
     elevation: Union[
-        None, float, int, Dict[Union[str, MaterialState], Union[float, int]]
+        None, float, int, Dict[Union[str, ControlState], Union[float, int]]
     ] = field(default=None)
     animation_duration: Optional[int] = field(default=None)
-    padding: Union[PaddingValue, Dict[Union[str, MaterialState], PaddingValue]] = field(
+    padding: Union[PaddingValue, Dict[Union[str, ControlState], PaddingValue]] = field(
         default=None
     )
-    side: Union[None, BorderSide, Dict[Union[str, MaterialState], BorderSide]] = field(
+    side: Union[None, BorderSide, Dict[Union[str, ControlState], BorderSide]] = field(
         default=None
     )
     shape: Union[
-        None, OutlinedBorder, Dict[Union[str, MaterialState], OutlinedBorder]
+        None, OutlinedBorder, Dict[Union[str, ControlState], OutlinedBorder]
+    ] = field(default=None)
+    alignment: Union[
+        None, Alignment, Dict[Union[str, ControlState], Alignment]
+    ] = field(default=None)
+    enable_feedback: Union[None, bool, Dict[Union[str, ControlState], bool]] = field(
+        default=None
+    )
+    text_style: Union[
+        None, TextStyle, Dict[Union[str, ControlState], TextStyle]
+    ] = field(default=None)
+    icon_size: Union[None, Number, Dict[Union[str, ControlState], Number]] = field(
+        default=None
+    )
+    icon_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
+        default=None
+    )
+    visual_density: Union[
+        None,
+        Union[VisualDensity, ThemeVisualDensity],
+        Dict[Union[str, ControlState], Union[VisualDensity, ThemeVisualDensity]],
+    ] = field(default=None)
+    mouse_cursor: Union[
+        None, MouseCursor, Dict[Union[str, ControlState], MouseCursor]
     ] = field(default=None)

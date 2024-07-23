@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -63,11 +64,14 @@ FlLine? parseSelectedFlLine(ThemeData theme, Control control, String propName,
   }
   return FlLine(
       color: j['color'] != null
-          ? HexColor.fromString(theme, j['color'] as String) ?? Colors.black
+          ? parseColor(theme, j['color'] as String, Colors.black)!
           : defaultGetPointColor(color, gradient, 0),
-      strokeWidth: j['width'] != null ? parseDouble(j['width'], 3) : 3,
+      strokeWidth: parseDouble(j['width'], 2)!,
       dashArray: j['dash_pattern'] != null
-          ? (j['dash_pattern'] as List).map((e) => parseInt(e)).toList()
+          ? (j['dash_pattern'] as List)
+              .map((e) => parseInt(e))
+              .whereNotNull()
+              .toList()
           : null);
 }
 
@@ -78,11 +82,14 @@ FlLine? flineFromJSON(theme, j) {
   }
   return FlLine(
       color: j['color'] != null
-          ? HexColor.fromString(theme, j['color'] as String) ?? Colors.black
+          ? parseColor(theme, j['color'] as String) ?? Colors.black
           : Colors.black,
-      strokeWidth: j['width'] != null ? parseDouble(j['width'], 1) : 2,
+      strokeWidth: parseDouble(j['width'], 2)!,
       dashArray: j['dash_pattern'] != null
-          ? (j['dash_pattern'] as List).map((e) => parseInt(e)).toList()
+          ? (j['dash_pattern'] as List)
+              .map((e) => parseInt(e))
+              .whereNotNull()
+              .toList()
           : null);
 }
 
@@ -138,38 +145,32 @@ FlDotPainter? chartDotPainterFromJSON(
   if (type == "circle") {
     return FlDotCirclePainter(
         color: json['color'] != null
-            ? HexColor.fromString(theme, json['color'] as String) ??
-                Colors.green
+            ? parseColor(theme, json['color'] as String) ?? Colors.green
             : defaultGetPointColor(barColor, barGradient, percentage),
-        radius: json["radius"] != null ? parseDouble(json["radius"]) : null,
+        radius: parseDouble(json["radius"]),
         strokeColor: json['stroke_color'] != null
-            ? HexColor.fromString(theme, json['color'] as String) ??
+            ? parseColor(theme, json['color'] as String) ??
                 const Color.fromRGBO(76, 175, 80, 1)
             : defaultGetDotStrokeColor(barColor, barGradient, percentage),
-        strokeWidth: json["stroke_width"] != null
-            ? parseDouble(json["stroke_width"])
-            : 1.0);
+        strokeWidth: parseDouble(json["stroke_width"], 1.0)!);
   } else if (type == "square") {
     return FlDotSquarePainter(
         color: json['color'] != null
-            ? HexColor.fromString(theme, json['color'] as String) ??
-                Colors.green
+            ? parseColor(theme, json['color'] as String) ?? Colors.green
             : defaultGetPointColor(barColor, barGradient, percentage),
-        size: json["size"] != null ? parseDouble(json["size"]) : 4.0,
+        size: parseDouble(json["size"], 4.0)!,
         strokeColor: json['stroke_color'] != null
-            ? HexColor.fromString(theme, json['color'] as String) ??
+            ? parseColor(theme, json['color'] as String) ??
                 const Color.fromRGBO(76, 175, 80, 1)
             : defaultGetDotStrokeColor(barColor, barGradient, percentage),
-        strokeWidth: json["stroke_width"] != null
-            ? parseDouble(json["stroke_width"])
-            : 1.0);
+        strokeWidth: parseDouble(json["stroke_width"], 1.0)!);
   } else if (type == "cross") {
     return FlDotCrossPainter(
       color: json['color'] != null
-          ? HexColor.fromString(theme, json['color'] as String) ?? Colors.green
+          ? parseColor(theme, json['color'] as String) ?? Colors.green
           : defaultGetDotStrokeColor(barColor, barGradient, percentage),
-      size: json["size"] != null ? parseDouble(json["size"]) : 8.0,
-      width: json["width"] != null ? parseDouble(json["width"]) : 2.0,
+      size: parseDouble(json["size"], 8.0)!,
+      width: parseDouble(json["width"], 2.0)!,
     );
   }
   return null;

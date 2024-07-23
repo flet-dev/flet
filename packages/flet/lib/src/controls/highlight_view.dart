@@ -94,7 +94,7 @@ class HighlightView extends StatelessWidget {
 
     var d = BoxDecoration(
         color: theme[_rootKey]?.backgroundColor ??
-            Theme.of(context).colorScheme.surfaceVariant);
+            Theme.of(context).colorScheme.surfaceContainerHighest);
 
     if (decoration != null) {
       d = d.copyWith(borderRadius: (decoration as BoxDecoration).borderRadius);

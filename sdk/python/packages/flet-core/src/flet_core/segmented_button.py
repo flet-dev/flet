@@ -11,6 +11,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 
@@ -106,6 +107,16 @@ class SegmentedButton(ConstrainedControl):
     def __init__(
         self,
         segments: List[Segment],
+        style: Optional[ButtonStyle] = None,
+        allow_empty_selection: Optional[bool] = None,
+        allow_multiple_selection: Optional[bool] = None,
+        selected: Optional[Set] = None,
+        selected_icon: Optional[Control] = None,
+        show_selected_icon: Optional[bool] = None,
+        on_change: OptionalEventCallable = None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -128,21 +139,11 @@ class SegmentedButton(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        style: Optional[ButtonStyle] = None,
-        allow_empty_selection: Optional[bool] = None,
-        allow_multiple_selection: Optional[bool] = None,
-        selected: Optional[Set] = None,
-        selected_icon: Optional[Control] = None,
-        show_selected_icon: Optional[bool] = None,
-        on_change=None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -189,6 +190,15 @@ class SegmentedButton(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
+        assert any(
+            segment.visible for segment in self.__segments
+        ), "segments must have at minimum one visible Segment"
+        assert (
+            len(self.selected) > 0 or self.allow_empty_selection
+        ), "allow_empty_selection must be True for selected to be empty"
+        assert (
+            len(self.selected) < 2 or self.allow_multiple_selection
+        ), "allow_multiple_selection must be True for selected to have more than one item"
         if self.__style is None:
             self.__style = ButtonStyle()
             self.__style.side = self._wrap_attr_dict(self.__style.side)
@@ -197,10 +207,9 @@ class SegmentedButton(ConstrainedControl):
         self._set_attr_json("style", self.__style)
 
     def _get_children(self):
-        children = []
         for segment in self.segments:
             segment._set_attr_internal("n", "segment")
-            children.append(segment)
+        children: List[Control] = self.__segments
         if self.__selected_icon:
             self.__selected_icon._set_attr_internal("n", "selectedIcon")
             children.append(self.__selected_icon)
@@ -217,21 +226,21 @@ class SegmentedButton(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # segments
     @property
-    def segments(self):
+    def segments(self) -> List[Segment]:
         return self.__segments
 
     @segments.setter
-    def segments(self, value):
-        self.__segments = value if value is not None else []
+    def segments(self, value: List[Segment]):
+        self.__segments = value
 
     # allow_empty_selection
     @property

@@ -60,10 +60,19 @@ class CupertinoAppBarControl extends StatelessWidget
           ? createControl(control, middleCtrls.first.id, control.isDisabled,
               parentAdaptive: parentAdaptive)
           : null,
-      trailing: trailingCtrls.isNotEmpty
+      trailing: trailingCtrls.length == 1
           ? createControl(control, trailingCtrls.first.id, control.isDisabled,
               parentAdaptive: parentAdaptive)
-          : null,
+          : trailingCtrls.length > 1
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: trailingCtrls
+                      .map((c) => createControl(
+                          control, c.id, control.isDisabled,
+                          parentAdaptive: parentAdaptive))
+                      .toList(),
+                )
+              : null,
       backgroundColor: bgcolor,
     );
   }

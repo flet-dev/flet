@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Any
 
 from flet_core.border import Border
 from flet_core.control import Control
@@ -50,12 +50,11 @@ class CupertinoAppBar(Control):
         # Control
         #
         ref: Optional[Ref] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
-        Control.__init__(self, ref=ref)
-
-        self.__leading: Optional[Control] = None
-        self.__middle: Optional[Control] = None
-        self.__trailing: Optional[Control] = None
+        Control.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
         self.leading = leading
         self.middle = middle

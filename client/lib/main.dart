@@ -4,10 +4,14 @@ import 'package:flet/flet.dart';
 import 'package:flet_audio/flet_audio.dart' as flet_audio;
 import 'package:flet_audio_recorder/flet_audio_recorder.dart'
     as flet_audio_recorder;
+import 'package:flet_geolocator/flet_geolocator.dart' as flet_geolocator;
+import 'package:flet_permission_handler/flet_permission_handler.dart' as flet_permission_handler;
 import 'package:flet_lottie/flet_lottie.dart' as flet_lottie;
+import 'package:flet_map/flet_map.dart' as flet_map;
 import 'package:flet_rive/flet_rive.dart' as flet_rive;
 import 'package:flet_video/flet_video.dart' as flet_video;
 import 'package:flet_webview/flet_webview.dart' as flet_webview;
+import "package:flet_flashlight/flet_flashlight.dart" as flet_flashlight;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -25,10 +29,14 @@ void main([List<String>? args]) async {
   WidgetsFlutterBinding.ensureInitialized();
   flet_audio.ensureInitialized();
   flet_audio_recorder.ensureInitialized();
+  flet_geolocator.ensureInitialized();
+  flet_permission_handler.ensureInitialized();
   flet_lottie.ensureInitialized();
+  flet_map.ensureInitialized();
   flet_rive.ensureInitialized();
   flet_video.ensureInitialized();
   flet_webview.ensureInitialized();
+  flet_flashlight.ensureInitialized();
 
   var pageUrl = Uri.base.toString();
   var assetsDir = "";
@@ -88,10 +96,14 @@ void main([List<String>? args]) async {
     createControlFactories: [
       flet_audio.createControl,
       flet_audio_recorder.createControl,
+      flet_geolocator.createControl,
+      flet_permission_handler.createControl,
       flet_lottie.createControl,
+      flet_map.createControl,
       flet_rive.createControl,
       flet_video.createControl,
-      flet_webview.createControl
+      flet_webview.createControl,
+      flet_flashlight.createControl,
     ],
   ));
 }

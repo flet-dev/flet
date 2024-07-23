@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union
+from typing import List, Optional, Union, Callable
 
 from flet_core import Control
 from flet_core.adaptive_control import AdaptiveControl
@@ -10,7 +10,7 @@ from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.floating_action_button import FloatingActionButton
 from flet_core.navigation_bar import NavigationBar
 from flet_core.navigation_drawer import NavigationDrawer
-from flet_core.scrollable_control import ScrollableControl
+from flet_core.scrollable_control import ScrollableControl, OnScrollEvent
 from flet_core.types import (
     CrossAxisAlignment,
     FloatingActionButtonLocation,
@@ -57,7 +57,7 @@ class View(ScrollableControl, AdaptiveControl):
         auto_scroll: Optional[bool] = None,
         fullscreen_dialog: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
-        on_scroll: Any = None,
+        on_scroll: Optional[Callable[[OnScrollEvent], None]] = None,
         #
         # AdaptiveControl
         #
@@ -122,8 +122,7 @@ class View(ScrollableControl, AdaptiveControl):
         if self.__end_drawer:
             self.__end_drawer._set_attr_internal("n", "end")
             children.append(self.__end_drawer)
-        children.extend(self.__controls)
-        return children
+        return children + self.__controls
 
     # route
     @property
@@ -182,10 +181,13 @@ class View(ScrollableControl, AdaptiveControl):
         self, value: Union[FloatingActionButtonLocation, OffsetValue]
     ):
         self.__floating_action_button_location = value
-        self._set_attr(
-            "floatingActionButtonLocation",
-            value.value if isinstance(value, FloatingActionButtonLocation) else value,
-        )
+        if isinstance(value, (FloatingActionButtonLocation, str)):
+            self._set_attr(
+                "floatingActionButtonLocation",
+                value.value
+                if isinstance(value, FloatingActionButtonLocation)
+                else value,
+            )
 
     # navigation_bar
     @property
@@ -222,10 +224,7 @@ class View(ScrollableControl, AdaptiveControl):
     @horizontal_alignment.setter
     def horizontal_alignment(self, value: CrossAxisAlignment):
         self.__horizontal_alignment = value
-        self._set_attr(
-            "horizontalAlignment",
-            value.value if isinstance(value, CrossAxisAlignment) else value,
-        )
+        self._set_enum_attr("horizontalAlignment", value, CrossAxisAlignment)
 
     # vertical_alignment
     @property
@@ -235,15 +234,12 @@ class View(ScrollableControl, AdaptiveControl):
     @vertical_alignment.setter
     def vertical_alignment(self, value: MainAxisAlignment):
         self.__vertical_alignment = value
-        self._set_attr(
-            "verticalAlignment",
-            value.value if isinstance(value, MainAxisAlignment) else value,
-        )
+        self._set_enum_attr("verticalAlignment", value, MainAxisAlignment)
 
     # spacing
     @property
     def spacing(self) -> OptionalNumber:
-        return self._get_attr("spacing")
+        return self._get_attr("spacing", data_type="float")
 
     @spacing.setter
     def spacing(self, value: OptionalNumber):
@@ -260,11 +256,11 @@ class View(ScrollableControl, AdaptiveControl):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
 
     # fullscreen_dialog
@@ -275,3 +271,7 @@ class View(ScrollableControl, AdaptiveControl):
     @fullscreen_dialog.setter
     def fullscreen_dialog(self, value: Optional[bool]):
         self._set_attr("fullscreenDialog", value)
+
+    # Magic methods
+    def __contains__(self, item: Control) -> bool:
+        return item in self.__controls

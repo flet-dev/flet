@@ -4,6 +4,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.types import OptionalEventCallable
 from flet_core.utils import deprecated
 
 
@@ -61,18 +62,27 @@ class AudioRecorder(Control):
     def _get_control_name(self):
         return "audiorecorder"
 
-    def start_recording(self, output_path: str = None):
-        if not self.page.web and not output_path:
-            raise ValueError("output_path must be provided when not on web!")
-        self.invoke_method("start_recording", {"outputPath": output_path})
+    def start_recording(
+        self, output_path: str = None, wait_timeout: Optional[float] = 10
+    ) -> bool:
+        assert (
+            self.page.web or output_path
+        ), "output_path must be provided when not on web"
+        started = self.invoke_method(
+            "start_recording",
+            {"outputPath": output_path},
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return started == "true"
 
     @deprecated(
         reason="Use start_recording() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
-    async def start_recording_async(self, output_path: str):
-        self.start_recording(output_path)
+    async def start_recording_async(self, output_path: str) -> bool:
+        return self.start_recording(output_path)
 
     def is_recording(self, wait_timeout: Optional[float] = 5) -> bool:
         recording = self.invoke_method(
@@ -96,7 +106,7 @@ class AudioRecorder(Control):
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        return out if out != "null" else None
+        return out if out is not None else None
 
     async def stop_recording_async(
         self, wait_timeout: Optional[float] = 10
@@ -106,7 +116,7 @@ class AudioRecorder(Control):
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        return out if out != "null" else None
+        return out if out is not None else None
 
     def resume_recording(self):
         self.invoke_method("resume_recording")
@@ -114,7 +124,7 @@ class AudioRecorder(Control):
     @deprecated(
         reason="Use resume_recording() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def resume_recording_async(self):
         self.resume_recording()
@@ -125,7 +135,7 @@ class AudioRecorder(Control):
     @deprecated(
         reason="Use pause_recording() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def pause_recording_async(self):
         self.pause_recording()
@@ -274,9 +284,9 @@ class AudioRecorder(Control):
 
     # on_state_changed
     @property
-    def on_state_changed(self):
+    def on_state_changed(self) -> OptionalEventCallable:
         return self._get_event_handler("state_changed")
 
     @on_state_changed.setter
-    def on_state_changed(self, handler):
+    def on_state_changed(self, handler: OptionalEventCallable):
         self._add_event_handler("state_changed", handler)

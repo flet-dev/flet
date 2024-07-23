@@ -2,7 +2,7 @@ from typing import Any, List, Optional
 
 from flet_core.inline_span import InlineSpan
 from flet_core.text_style import TextStyle
-from flet_core.types import UrlTarget
+from flet_core.types import UrlTarget, OptionalEventCallable
 
 
 class TextSpan(InlineSpan):
@@ -13,9 +13,9 @@ class TextSpan(InlineSpan):
         spans: Optional[List[InlineSpan]] = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
-        on_click=None,
-        on_enter=None,
-        on_exit=None,
+        on_click: OptionalEventCallable = None,
+        on_enter: OptionalEventCallable = None,
+        on_exit: OptionalEventCallable = None,
         #
         # Control
         #
@@ -41,9 +41,7 @@ class TextSpan(InlineSpan):
         return "textspan"
 
     def _get_children(self):
-        children = []
-        children.extend(self.__spans)
-        return children
+        return self.__spans
 
     def before_update(self):
         super().before_update()
@@ -69,7 +67,7 @@ class TextSpan(InlineSpan):
 
     # spans
     @property
-    def spans(self) -> Optional[List[InlineSpan]]:
+    def spans(self) -> List[InlineSpan]:
         return self.__spans
 
     @spans.setter
@@ -78,11 +76,11 @@ class TextSpan(InlineSpan):
 
     # url
     @property
-    def url(self):
+    def url(self) -> Optional[str]:
         return self._get_attr("url")
 
     @url.setter
-    def url(self, value):
+    def url(self, value: Optional[str]):
         self._set_attr("url", value)
 
     # url_target
@@ -93,36 +91,34 @@ class TextSpan(InlineSpan):
     @url_target.setter
     def url_target(self, value: Optional[UrlTarget]):
         self.__url_target = value
-        self._set_attr(
-            "urlTarget", value.value if isinstance(value, UrlTarget) else value
-        )
+        self._set_enum_attr("urlTarget", value, UrlTarget)
 
     # on_click
     @property
-    def on_click(self):
+    def on_click(self) -> OptionalEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)
         self._set_attr("onClick", True if handler is not None else None)
 
     # on_enter
     @property
-    def on_enter(self):
+    def on_enter(self) -> OptionalEventCallable:
         return self._get_event_handler("enter")
 
     @on_enter.setter
-    def on_enter(self, handler):
+    def on_enter(self, handler: OptionalEventCallable):
         self._add_event_handler("enter", handler)
         self._set_attr("onEnter", True if handler is not None else None)
 
     # on_exit
     @property
-    def on_exit(self):
+    def on_exit(self) -> OptionalEventCallable:
         return self._get_event_handler("exit")
 
     @on_exit.setter
-    def on_exit(self, handler):
+    def on_exit(self, handler: OptionalEventCallable):
         self._add_event_handler("exit", handler)
         self._set_attr("onExit", True if handler is not None else None)

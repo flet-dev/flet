@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'error.dart';
 import 'flet_store_mixin.dart';
 import 'list_tile.dart';
-
-enum LabelPosition { right, left }
 
 class CupertinoRadioControl extends StatefulWidget {
   final Control? parent;
@@ -64,11 +63,8 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
 
     String label = widget.control.attrString("label", "")!;
     String value = widget.control.attrString("value", "")!;
-    LabelPosition labelPosition = LabelPosition.values.firstWhere(
-        (p) =>
-            p.name.toLowerCase() ==
-            widget.control.attrString("labelPosition", "")!.toLowerCase(),
-        orElse: () => LabelPosition.right);
+    LabelPosition labelPosition = parseLabelPosition(
+        widget.control.attrString("labelPosition"), LabelPosition.right)!;
     bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
@@ -94,7 +90,7 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
           fillColor: widget.control.attrColor("fillColor", context),
           focusColor: widget.control.attrColor("focusColor", context),
           toggleable: widget.control.attrBool("toggleable", false)!,
-          activeColor: HexColor.fromString(Theme.of(context),
+          activeColor: parseColor(Theme.of(context),
               widget.control.attrString("activeColor", "primary")!),
           inactiveColor: widget.control.attrColor("inactiveColor", context),
           onChanged: !disabled

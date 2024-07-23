@@ -11,6 +11,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     ImageFit,
+    OptionalEventCallable,
 )
 
 
@@ -25,7 +26,7 @@ class Rive(ConstrainedControl):
 
     def __init__(
         self,
-        src: str = None,
+        src: str,
         placeholder: Optional[Control] = None,
         artboard: Optional[str] = None,
         alignment: Optional[Alignment] = None,
@@ -57,7 +58,7 @@ class Rive(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -109,6 +110,7 @@ class Rive(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
+        assert self.src, "src must be provided"
         self._set_attr_json("alignment", self.__alignment)
 
     def _get_children(self):
@@ -123,8 +125,6 @@ class Rive(ConstrainedControl):
 
     @src.setter
     def src(self, value: Optional[str]):
-        if not value:
-            raise ValueError("Rive.src must be specified")
         self._set_attr("src", value)
 
     # alignment
@@ -180,4 +180,4 @@ class Rive(ConstrainedControl):
     @fit.setter
     def fit(self, value: Optional[ImageFit]):
         self.__fit = value
-        self._set_attr("fit", value.value if isinstance(value, ImageFit) else value)
+        self._set_enum_attr("fit", value, ImageFit)

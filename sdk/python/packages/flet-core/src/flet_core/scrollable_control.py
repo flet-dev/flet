@@ -1,6 +1,6 @@
 import json
 import time
-from typing import Any, Optional
+from typing import Optional, Callable
 
 from flet_core.animation import AnimationCurve
 from flet_core.control import Control, OptionalNumber
@@ -17,13 +17,10 @@ class ScrollableControl(Control):
         auto_scroll: Optional[bool] = None,
         reverse: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
-        on_scroll: Any = None,
+        on_scroll: Optional[Callable[["OnScrollEvent"], None]] = None,
     ):
-        def convert_on_scroll_event_data(e):
-            d = json.loads(e.data)
-            return OnScrollEvent(**d)
-
-        self.__on_scroll = EventHandler(convert_on_scroll_event_data)
+        Control.__init__(self)
+        self.__on_scroll = EventHandler(lambda e: OnScrollEvent(e))
         self._add_event_handler("onScroll", self.__on_scroll.get_handler())
 
         self.scroll = scroll
@@ -57,7 +54,7 @@ class ScrollableControl(Control):
     @deprecated(
         reason="Use scroll_to() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def scroll_to_async(
         self,
@@ -81,8 +78,10 @@ class ScrollableControl(Control):
             "scroll",
             value.value
             if isinstance(value, ScrollMode)
-            else "auto" if value is True
-            else None if value is False
+            else "auto"
+            if value is True
+            else None
+            if value is False
             else value,
         )
 
@@ -119,24 +118,24 @@ class ScrollableControl(Control):
         return self.__on_scroll
 
     @on_scroll.setter
-    def on_scroll(self, handler):
+    def on_scroll(self, handler: Optional[Callable[["OnScrollEvent"], None]]):
         self.__on_scroll.subscribe(handler)
         self._set_attr("onScroll", True if handler is not None else None)
 
 
 class OnScrollEvent(ControlEvent):
-    def __init__(
-        self, t, p, minse, maxse, vd, sd=None, dir=None, os=None, v=None
-    ) -> None:
-        self.event_type: str = t
-        self.pixels: float = p
-        self.min_scroll_extent: float = minse
-        self.max_scroll_extent: float = maxse
-        self.viewport_dimension: float = vd
-        self.scroll_delta: Optional[float] = sd
-        self.direction: Optional[str] = dir
-        self.overscroll: Optional[float] = os
-        self.velocity: Optional[float] = v
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.event_type: str = d.get("t")
+        self.pixels: float = d.get("p")
+        self.min_scroll_extent: float = d.get("minse")
+        self.max_scroll_extent: float = d.get("maxse")
+        self.viewport_dimension: float = d.get("vd")
+        self.scroll_delta: Optional[float] = d.get("sd")
+        self.direction: Optional[str] = d.get("dir")
+        self.overscroll: Optional[float] = d.get("os")
+        self.velocity: Optional[float] = d.get("v")
 
     def __str__(self):
         return f"{self.event_type}: pixels={self.pixels}, min_scroll_extent={self.min_scroll_extent}, max_scroll_extent={self.max_scroll_extent}, viewport_dimension={self.viewport_dimension}, scroll_delta={self.scroll_delta}, direction={self.direction}, overscroll={self.overscroll}, velocity={self.velocity}"

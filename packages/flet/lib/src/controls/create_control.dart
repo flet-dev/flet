@@ -171,15 +171,16 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
           parentAdaptive, nextChild, FletAppServices.of(context).server);
 
       // no theme defined? return widget!
-      if (id == "page" || controlView.control.attrString("theme") == null) {
+      var themeMode = ThemeMode.values.firstWhereOrNull((t) =>
+          t.name.toLowerCase() ==
+          controlView.control.attrString("themeMode", "")!.toLowerCase());
+      if (id == "page" ||
+          (controlView.control.attrString("theme") == null &&
+              themeMode == null)) {
         return widget;
       }
 
       // wrap into theme widget
-      var themeMode = ThemeMode.values.firstWhereOrNull((t) =>
-          t.name.toLowerCase() ==
-          controlView.control.attrString("themeMode", "")!.toLowerCase());
-
       ThemeData? parentTheme = (themeMode == null) ? Theme.of(context) : null;
 
       buildTheme(Brightness? brightness) {
@@ -213,7 +214,7 @@ Widget createWidget(
     bool? parentAdaptive,
     Widget? nextChild,
     FletControlBackend backend) {
-  switch (controlView.control.type) {
+  switch (controlView.control.type.toLowerCase()) {
     case "page":
       return PageControl(
           control: controlView.control,
@@ -994,7 +995,10 @@ Widget createWidget(
 Widget baseControl(
     BuildContext context, Widget widget, Control? parent, Control control) {
   return _expandable(
-      _tooltip(_opacity(context, widget, parent, control), parent, control),
+      _directionality(
+          _tooltip(_opacity(context, widget, parent, control), parent, control),
+          parent,
+          control),
       parent,
       control);
 }
@@ -1214,15 +1218,14 @@ Widget _positionedControl(
 }
 
 Widget _sizedControl(Widget widget, Control? parent, Control control) {
-  var width = control.attrDouble("width", null);
-  var height = control.attrDouble("height", null);
-  if (width != null || height != null) {
-    if (control.type != "container" && control.type != "image") {
-      widget = ConstrainedBox(
-        constraints: BoxConstraints.tightFor(width: width, height: height),
-        child: widget,
-      );
-    }
+  var width = control.attrDouble("width");
+  var height = control.attrDouble("height");
+  if ((width != null || height != null) &&
+      !["container", "image"].contains(control.type)) {
+    widget = ConstrainedBox(
+      constraints: BoxConstraints.tightFor(width: width, height: height),
+      child: widget,
+    );
   }
   var animation = parseAnimation(control, "animateSize");
   if (animation != null) {
@@ -1233,10 +1236,7 @@ Widget _sizedControl(Widget widget, Control? parent, Control control) {
 }
 
 Widget _expandable(Widget widget, Control? parent, Control control) {
-  if (parent != null &&
-      (parent.type == "view" ||
-          parent.type == "column" ||
-          parent.type == "row")) {
+  if (parent != null && ["view", "column", "row"].contains(parent.type)) {
     int? expand = control.attrInt("expand");
     var expandLoose = control.attrBool("expandLoose");
     return expand != null

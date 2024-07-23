@@ -2,6 +2,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.types import OptionalEventCallable
 
 
 class BottomSheet(Control):
@@ -12,34 +13,27 @@ class BottomSheet(Control):
     ```
     import flet as ft
 
+
     def main(page: ft.Page):
-        def bs_dismissed(e):
-            print("Dismissed!")
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-        def show_bs(e):
-            bs.open = True
-            bs.update()
-
-        def close_bs(e):
-            bs.open = False
-            bs.update()
-
+        def handle_dismissal(e):
+            page.add(ft.Text("Bottom sheet dismissed"))
         bs = ft.BottomSheet(
-            ft.Container(
-                ft.Column(
-                    [
-                        ft.Text("This is sheet's content!"),
-                        ft.ElevatedButton("Close bottom sheet", on_click=close_bs),
-                    ],
+            on_dismiss=handle_dismissal,
+            content=ft.Container(
+                padding=50,
+                content=ft.Column(
                     tight=True,
+                    controls=[
+                        ft.Text("This is bottom sheet's content!"),
+                        ft.ElevatedButton("Close bottom sheet", on_click=lambda _: page.close(bs)),
+                    ],
                 ),
-                padding=10,
             ),
-            open=True,
-            on_dismiss=bs_dismissed,
         )
-        page.overlay.append(bs)
-        page.add(ft.ElevatedButton("Display bottom sheet", on_click=show_bs))
+        page.add(ft.ElevatedButton("Display bottom sheet", on_click=lambda _: page.open(bs)))
+
 
     ft.app(target=main)
     ```
@@ -51,7 +45,7 @@ class BottomSheet(Control):
 
     def __init__(
         self,
-        content: Optional[Control] = None,
+        content: Control,
         open: bool = False,
         elevation: OptionalNumber = None,
         bgcolor: Optional[str] = None,
@@ -61,7 +55,7 @@ class BottomSheet(Control):
         use_safe_area: Optional[bool] = None,
         is_scroll_controlled: Optional[bool] = None,
         maintain_bottom_view_insets_padding: Optional[bool] = None,
-        on_dismiss=None,
+        on_dismiss: OptionalEventCallable = None,
         #
         # Control
         #
@@ -77,8 +71,6 @@ class BottomSheet(Control):
             visible=visible,
             data=data,
         )
-
-        self.__content: Optional[Control] = None
 
         self.open = open
         self.elevation = elevation
@@ -96,11 +88,12 @@ class BottomSheet(Control):
         return "bottomsheet"
 
     def _get_children(self):
-        children = []
-        if self.__content:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        return children
+        self.__content._set_attr_internal("n", "content")
+        return [self.__content]
+
+    def before_update(self):
+        super().before_update()
+        assert self.__content.visible, "content must be visible"
 
     # open
     @property
@@ -118,15 +111,16 @@ class BottomSheet(Control):
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
+        assert value is None or value >= 0, "elevation cannot be negative"
         self._set_attr("elevation", value)
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgColor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgColor", value)
 
     # dismissible
@@ -187,18 +181,18 @@ class BottomSheet(Control):
 
     # content
     @property
-    def content(self):
+    def content(self) -> Control:
         return self.__content
 
     @content.setter
-    def content(self, value):
+    def content(self, value: Control):
         self.__content = value
 
     # on_dismiss
     @property
-    def on_dismiss(self):
+    def on_dismiss(self) -> OptionalEventCallable:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler):
+    def on_dismiss(self, handler: OptionalEventCallable):
         self._add_event_handler("dismiss", handler)

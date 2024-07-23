@@ -10,6 +10,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 try:
@@ -39,8 +40,8 @@ class CupertinoRadio(ConstrainedControl):
         use_checkmark_style: Optional[bool] = None,
         toggleable: Optional[bool] = None,
         focus_color: Optional[str] = None,
-        on_focus=None,
-        on_blur=None,
+        on_focus: OptionalEventCallable = None,
+        on_blur: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -66,7 +67,7 @@ class CupertinoRadio(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -118,9 +119,6 @@ class CupertinoRadio(ConstrainedControl):
     def _get_control_name(self):
         return "cupertinoradio"
 
-    def before_update(self):
-        super().before_update()
-
     # value
     @property
     def value(self) -> Optional[str]:
@@ -147,9 +145,7 @@ class CupertinoRadio(ConstrainedControl):
     @label_position.setter
     def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
-        self._set_attr(
-            "labelPosition", value.value if isinstance(value, LabelPosition) else value
-        )
+        self._set_enum_attr("labelPosition", value, LabelPosition)
 
     # fill_color
     @property
@@ -180,20 +176,20 @@ class CupertinoRadio(ConstrainedControl):
 
     # on_focus
     @property
-    def on_focus(self):
+    def on_focus(self) -> OptionalEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler):
+    def on_focus(self, handler: OptionalEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self):
+    def on_blur(self) -> OptionalEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler):
+    def on_blur(self, handler: OptionalEventCallable):
         self._add_event_handler("blur", handler)
 
     # autofocus

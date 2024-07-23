@@ -7,11 +7,14 @@ import 'cupertino_icons.dart';
 import 'material_icons.dart';
 import 'material_state.dart';
 
-IconData? parseIcon(String iconName) {
+IconData? parseIcon(String? iconName, [IconData? defaultIcon]) {
+  if (iconName == null) {
+    return defaultIcon;
+  }
   return materialIcons[iconName.toLowerCase()] ?? cupertinoIcons[iconName.toLowerCase()];
 }
 
-MaterialStateProperty<Icon?>? parseMaterialStateIcon(
+WidgetStateProperty<Icon?>? parseWidgetStateIcon(
     ThemeData theme, Control control, String propName) {
   var v = control.attrString(propName, null);
   if (v == null) {
@@ -20,6 +23,6 @@ MaterialStateProperty<Icon?>? parseMaterialStateIcon(
 
   final j1 = json.decode(v);
 
-  return getMaterialStateProperty<Icon?>(
+  return getWidgetStateProperty<Icon?>(
       j1, (jv) => Icon(parseIcon(jv as String)));
 }
