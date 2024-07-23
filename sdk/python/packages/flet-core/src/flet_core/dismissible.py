@@ -117,7 +117,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
-        self.__on_dismiss = EventHandler(lambda e: DismissibleDismissEvent(e.data))
+        self.__on_dismiss = EventHandler(lambda e: DismissibleDismissEvent(e))
         self.__on_update = EventHandler(lambda e: DismissibleUpdateEvent(e))
         self.__on_confirm_dismiss = EventHandler(lambda e: DismissibleDismissEvent(e))
 
@@ -292,8 +292,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
 class DismissibleDismissEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
-        d = json.loads(e.data)
-        self.direction: DismissDirection = DismissDirection(d.get("direction"))
+        self.direction = DismissDirection(e.data)
 
 
 class DismissibleUpdateEvent(ControlEvent):
