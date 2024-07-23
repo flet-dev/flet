@@ -385,7 +385,7 @@ class Command(BaseCommand):
             )
 
             base_url = options.base_url.strip("/").strip()
-            project_name = options.product_name or slugify(
+            project_name = slugify(
                 options.project_name or python_app_path.name
             ).replace("-", "_")
             product_name = options.product_name or project_name

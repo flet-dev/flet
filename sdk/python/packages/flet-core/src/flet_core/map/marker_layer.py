@@ -31,7 +31,6 @@ class Marker(Control):
         visible: Optional[bool] = None,
         data: Any = None,
     ):
-
         Control.__init__(
             self,
             ref=ref,
@@ -135,7 +134,6 @@ class MarkerLayer(MapLayer):
         visible: Optional[bool] = None,
         data: Any = None,
     ):
-
         MapLayer.__init__(
             self,
             ref=ref,

@@ -64,6 +64,7 @@ class RichAttribution(MapLayer):
     def before_update(self):
         super().before_update()
         self._set_attr_json("popupBorderRadius", self.__popup_border_radius)
+        self._set_attr_json("alignment", self.__alignment)
 
     # permanent_height
     @property
