@@ -1,8 +1,8 @@
 from typing import Any, List, Optional
 
-from flet_core.types import OptionalEventCallable
 from flet_core.control import Control
 from flet_core.ref import Ref
+from flet_core.types import OptionalEventCallable
 
 
 class CupertinoAlertDialog(Control):
@@ -134,7 +134,7 @@ class CupertinoAlertDialog(Control):
 
     # open
     @property
-    def open(self) -> Optional[bool]:
+    def open(self) -> bool:
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
@@ -143,7 +143,7 @@ class CupertinoAlertDialog(Control):
 
     # modal
     @property
-    def modal(self) -> Optional[bool]:
+    def modal(self) -> bool:
         return self._get_attr("modal", data_type="bool", def_value=False)
 
     @modal.setter

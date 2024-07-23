@@ -154,7 +154,7 @@ class PolylineMarker(Control):
 
     # use_stroke_width_in_meter
     @property
-    def use_stroke_width_in_meter(self) -> Optional[bool]:
+    def use_stroke_width_in_meter(self) -> bool:
         return self._get_attr(
             "useStrokeWidthInMeter", data_type="bool", def_value=False
         )
@@ -183,8 +183,8 @@ class PolylineMarker(Control):
 
     # border_stroke_width
     @property
-    def border_stroke_width(self) -> OptionalNumber:
-        return self._get_attr("borderStrokeWidth", data_type="float", def_value=0)
+    def border_stroke_width(self) -> float:
+        return self._get_attr("borderStrokeWidth", data_type="float", def_value=0.0)
 
     @border_stroke_width.setter
     def border_stroke_width(self, value: OptionalNumber):
@@ -193,7 +193,7 @@ class PolylineMarker(Control):
 
     # stroke_width
     @property
-    def stroke_width(self) -> OptionalNumber:
+    def stroke_width(self) -> float:
         return self._get_attr("strokeWidth", data_type="float", def_value=1.0)
 
     @stroke_width.setter

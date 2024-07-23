@@ -65,7 +65,7 @@ class AutoComplete(Control):
 
     # suggestions_max_height
     @property
-    def suggestions_max_height(self) -> OptionalNumber:
+    def suggestions_max_height(self) -> float:
         return self._get_attr(
             "suggestionsMaxHeight", data_type="float", def_value=200.0
         )

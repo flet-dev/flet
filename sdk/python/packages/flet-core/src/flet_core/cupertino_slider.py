@@ -118,8 +118,8 @@ class CupertinoSlider(ConstrainedControl):
 
     # value
     @property
-    def value(self) -> OptionalNumber:
-        return self._get_attr("value", data_type="float", def_value=0)
+    def value(self) -> float:
+        return self._get_attr("value", data_type="float", def_value=0.0)
 
     @value.setter
     def value(self, value: OptionalNumber):
@@ -132,8 +132,8 @@ class CupertinoSlider(ConstrainedControl):
 
     # min
     @property
-    def min(self) -> OptionalNumber:
-        return self._get_attr("min", data_type="float", def_value=0)
+    def min(self) -> float:
+        return self._get_attr("min", data_type="float", def_value=0.0)
 
     @min.setter
     def min(self, value: OptionalNumber):
@@ -144,8 +144,8 @@ class CupertinoSlider(ConstrainedControl):
 
     # max
     @property
-    def max(self) -> OptionalNumber:
-        return self._get_attr("max", data_type="float", def_value=1)
+    def max(self) -> float:
+        return self._get_attr("max", data_type="float", def_value=1.0)
 
     @max.setter
     def max(self, value: OptionalNumber):
@@ -165,7 +165,7 @@ class CupertinoSlider(ConstrainedControl):
 
     # round
     @property
-    def round(self) -> Optional[int]:
+    def round(self) -> int:
         return self._get_attr("round", data_type="int", def_value=0)
 
     @round.setter

@@ -320,7 +320,7 @@ class FilePicker(Control):
 
     # allow_multiple
     @property
-    def allow_multiple(self) -> Optional[bool]:
+    def allow_multiple(self) -> bool:
         return self._get_attr("allowMultiple", data_type="bool", def_value=False)
 
     @allow_multiple.setter

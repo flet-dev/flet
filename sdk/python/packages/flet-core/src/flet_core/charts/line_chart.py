@@ -186,7 +186,7 @@ class LineChart(ConstrainedControl):
 
     # interactive
     @property
-    def interactive(self) -> Optional[bool]:
+    def interactive(self) -> bool:
         return self._get_attr("interactive", data_type="bool", def_value=True)
 
     @interactive.setter

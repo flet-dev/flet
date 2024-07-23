@@ -95,8 +95,8 @@ class CupertinoActivityIndicator(ConstrainedControl):
 
     # animating
     @property
-    def animating(self) -> Optional[bool]:
-        return self._get_attr("animating")
+    def animating(self) -> bool:
+        return self._get_attr("animating", data_type="bool", def_value=True)
 
     @animating.setter
     def animating(self, value: Optional[bool]):

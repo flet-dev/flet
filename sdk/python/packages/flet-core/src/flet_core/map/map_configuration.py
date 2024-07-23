@@ -181,7 +181,7 @@ class MapConfiguration(Control):
 
     # initial_rotation
     @property
-    def initial_rotation(self) -> OptionalNumber:
+    def initial_rotation(self) -> float:
         return self._get_attr("initialRotation", data_type="float", def_value=0.0)
 
     @initial_rotation.setter
@@ -190,7 +190,7 @@ class MapConfiguration(Control):
 
     # initial_zoom
     @property
-    def initial_zoom(self) -> OptionalNumber:
+    def initial_zoom(self) -> float:
         return self._get_attr("initialZoom", data_type="float", def_value=13.0)
 
     @initial_zoom.setter
@@ -199,7 +199,7 @@ class MapConfiguration(Control):
 
     # keep_alive
     @property
-    def keep_alive(self) -> Optional[bool]:
+    def keep_alive(self) -> bool:
         return self._get_attr("keepAlive", data_type="bool", def_value=False)
 
     @keep_alive.setter

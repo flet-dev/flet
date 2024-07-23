@@ -292,8 +292,8 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # min_leading_width
     @property
-    def min_leading_width(self) -> OptionalNumber:
-        return self._get_attr("minLeadingWidth", data_type="float", def_value=40)
+    def min_leading_width(self) -> float:
+        return self._get_attr("minLeadingWidth", data_type="float", def_value=40.0)
 
     @min_leading_width.setter
     def min_leading_width(self, value: OptionalNumber):
@@ -301,8 +301,8 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # horizontal_spacing
     @property
-    def horizontal_spacing(self) -> OptionalNumber:
-        return self._get_attr("horizontalSpacing", data_type="float", def_value=16)
+    def horizontal_spacing(self) -> float:
+        return self._get_attr("horizontalSpacing", data_type="float", def_value=16.0)
 
     @horizontal_spacing.setter
     def horizontal_spacing(self, value: OptionalNumber):
@@ -346,7 +346,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # min_vertical_padding
     @property
-    def min_vertical_padding(self) -> OptionalNumber:
+    def min_vertical_padding(self) -> float:
         return self._get_attr("minVerticalPadding", data_type="float", def_value=4.0)
 
     @min_vertical_padding.setter
@@ -373,7 +373,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # is_three_line
     @property
-    def is_three_line(self) -> Optional[bool]:
+    def is_three_line(self) -> bool:
         return self._get_attr("isThreeLine", data_type="bool", def_value=False)
 
     @is_three_line.setter
@@ -382,7 +382,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # enable_feedback
     @property
-    def enable_feedback(self) -> Optional[bool]:
+    def enable_feedback(self) -> bool:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
 
     @enable_feedback.setter
@@ -411,7 +411,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # selected
     @property
-    def selected(self) -> Optional[bool]:
+    def selected(self) -> bool:
         return self._get_attr("selected", data_type="bool", def_value=False)
 
     @selected.setter
@@ -420,7 +420,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # dense
     @property
-    def dense(self) -> Optional[bool]:
+    def dense(self) -> bool:
         return self._get_attr("dense", data_type="bool", def_value=False)
 
     @dense.setter
@@ -429,7 +429,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
@@ -438,7 +438,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # toggle_inputs
     @property
-    def toggle_inputs(self) -> Optional[bool]:
+    def toggle_inputs(self) -> bool:
         return self._get_attr("toggleInputs", data_type="bool", def_value=False)
 
     @toggle_inputs.setter

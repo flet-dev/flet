@@ -140,7 +140,7 @@ class CupertinoSwitch(ConstrainedControl):
 
     # value
     @property
-    def value(self) -> Optional[bool]:
+    def value(self) -> bool:
         return self._get_attr("value", data_type="bool", def_value=False)
 
     @value.setter
@@ -168,7 +168,7 @@ class CupertinoSwitch(ConstrainedControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter

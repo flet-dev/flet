@@ -142,7 +142,7 @@ class CupertinoCheckbox(ConstrainedControl):
 
     # tristate
     @property
-    def tristate(self) -> Optional[bool]:
+    def tristate(self) -> bool:
         return self._get_attr("tristate", data_type="bool", def_value=False)
 
     @tristate.setter
@@ -170,7 +170,7 @@ class CupertinoCheckbox(ConstrainedControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
