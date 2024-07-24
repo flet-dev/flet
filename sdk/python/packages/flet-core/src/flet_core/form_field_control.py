@@ -57,24 +57,23 @@ class FormFieldControl(ConstrainedControl):
         hover_color: Optional[str] = None,
         hint_text: Optional[str] = None,
         hint_style: Optional[TextStyle] = None,
+        helper: Optional[Control] = None,
         helper_text: Optional[str] = None,
         helper_style: Optional[TextStyle] = None,
-            counter: Optional[Control] = None,
+        counter: Optional[Control] = None,
         counter_text: Optional[str] = None,
-        counter_style: Optional[TextStyle] = None,
+        counter_text_style: Optional[TextStyle] = None,
+        error: Optional[Control] = None,
         error_text: Optional[str] = None,
-        error_style: Optional[TextStyle] = None,
+        error_text_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
         prefix_icon: Optional[str] = None,
         prefix_text: Optional[str] = None,
-        prefix_style: Optional[TextStyle] = None,
+        prefix_text_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
         suffix_icon: Optional[str] = None,
         suffix_text: Optional[str] = None,
-        suffix_style: Optional[TextStyle] = None,
-        #
-        # InputDecorationTheme
-        #
+        suffix_text_style: Optional[TextStyle] = None,
         icon_color: Optional[str] = None,
         prefix_icon_color: Optional[str] = None,
         suffix_icon_color: Optional[str] = None,
@@ -85,6 +84,7 @@ class FormFieldControl(ConstrainedControl):
         hint_fade_duration: DurationValue = None,
         error_max_lines: OptionalNumber = None,
         helper_max_lines: OptionalNumber = None,
+        hint_max_lines: OptionalNumber = None,
         #
         # ConstrainedControl
         #
@@ -174,17 +174,17 @@ class FormFieldControl(ConstrainedControl):
         self.helper_style = helper_style
         self.counter = counter
         self.counter_text = counter_text
-        self.counter_style = counter_style
+        self.counter_text_style = counter_text_style
         self.error_text = error_text
-        self.error_style = error_style
+        self.error_text_style = error_text_style
         self.prefix = prefix
         self.prefix_icon = prefix_icon
         self.prefix_text = prefix_text
-        self.prefix_style = prefix_style
+        self.prefix_text_style = prefix_text_style
         self.suffix = suffix
         self.suffix_icon = suffix_icon
         self.suffix_text = suffix_text
-        self.suffix_style = suffix_style
+        self.suffix_text_style = suffix_text_style
         self.hover_color = hover_color
         self.fill_color = fill_color
         self.icon_color = icon_color
@@ -197,6 +197,9 @@ class FormFieldControl(ConstrainedControl):
         self.hint_fade_duration = hint_fade_duration
         self.error_max_lines = error_max_lines
         self.helper_max_lines = helper_max_lines
+        self.hint_max_lines = hint_max_lines
+        self.error = error
+        self.helper = helper
 
     def before_update(self):
         super().before_update()
@@ -206,10 +209,10 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr_json("labelStyle", self.__label_style)
         self._set_attr_json("hintStyle", self.__hint_style)
         self._set_attr_json("helperStyle", self.__helper_style)
-        self._set_attr_json("counterStyle", self.__counter_style)
-        self._set_attr_json("errorStyle", self.__error_style)
-        self._set_attr_json("prefixStyle", self.__prefix_style)
-        self._set_attr_json("suffixStyle", self.__suffix_style)
+        self._set_attr_json("counterTextStyle", self.__counter_text_style)
+        self._set_attr_json("errorTextStyle", self.__error_text_style)
+        self._set_attr_json("prefixTextStyle", self.__prefix_text_style)
+        self._set_attr_json("suffixTextStyle", self.__suffix_text_style)
         self._set_attr_json("floatingLabelTextStyle", self.__floating_label_text_style)
         self._set_attr_json(
             "activeIndicatorBorderSide", self.__active_indicator_border_side
@@ -227,6 +230,12 @@ class FormFieldControl(ConstrainedControl):
         if isinstance(self.__counter, Control):
             self.__counter._set_attr_internal("n", "counter")
             children.append(self.__counter)
+        if isinstance(self.__error, Control):
+            self.__error._set_attr_internal("n", "error")
+            children.append(self.__error)
+        if isinstance(self.__helper, Control):
+            self.__helper._set_attr_internal("n", "helper")
+            children.append(self.__helper)
         return children
 
     # text_size
@@ -449,14 +458,14 @@ class FormFieldControl(ConstrainedControl):
     def counter_text(self, value: Optional[str]):
         self._set_attr("counterText", value)
 
-    # counter_style
+    # counter_text_style
     @property
-    def counter_style(self) -> Optional[TextStyle]:
-        return self.__counter_style
+    def counter_text_style(self) -> Optional[TextStyle]:
+        return self.__counter_text_style
 
-    @counter_style.setter
-    def counter_style(self, value: Optional[TextStyle]):
-        self.__counter_style = value
+    @counter_text_style.setter
+    def counter_text_style(self, value: Optional[TextStyle]):
+        self.__counter_text_style = value
 
     # error_text
     @property
@@ -467,14 +476,14 @@ class FormFieldControl(ConstrainedControl):
     def error_text(self, value: Optional[str]):
         self._set_attr("errorText", value)
 
-    # error_style
+    # error_text_style
     @property
-    def error_style(self) -> Optional[TextStyle]:
-        return self.__error_style
+    def error_text_style(self) -> Optional[TextStyle]:
+        return self.__error_text_style
 
-    @error_style.setter
-    def error_style(self, value: Optional[TextStyle]):
-        self.__error_style = value
+    @error_text_style.setter
+    def error_text_style(self, value: Optional[TextStyle]):
+        self.__error_text_style = value
 
     # prefix
     @property
@@ -484,6 +493,24 @@ class FormFieldControl(ConstrainedControl):
     @prefix.setter
     def prefix(self, value: Optional[Control]):
         self.__prefix = value
+
+    # error
+    @property
+    def error(self) -> Optional[Control]:
+        return self.__error
+
+    @error.setter
+    def error(self, value: Optional[Control]):
+        self.__error = value
+
+    # helper
+    @property
+    def helper(self) -> Optional[Control]:
+        return self.__helper
+
+    @helper.setter
+    def helper(self, value: Optional[Control]):
+        self.__helper = value
 
     # counter
     @property
@@ -512,14 +539,14 @@ class FormFieldControl(ConstrainedControl):
     def prefix_text(self, value: Optional[str]):
         self._set_attr("prefixText", value)
 
-    # prefix_style
+    # prefix_text_style
     @property
-    def prefix_style(self) -> Optional[TextStyle]:
-        return self.__prefix_style
+    def prefix_text_style(self) -> Optional[TextStyle]:
+        return self.__prefix_text_style
 
-    @prefix_style.setter
-    def prefix_style(self, value: Optional[TextStyle]):
-        self.__prefix_style = value
+    @prefix_text_style.setter
+    def prefix_text_style(self, value: Optional[TextStyle]):
+        self.__prefix_text_style = value
 
     # suffix
     @property
@@ -548,14 +575,14 @@ class FormFieldControl(ConstrainedControl):
     def suffix_text(self, value: Optional[str]):
         self._set_attr("suffixText", value)
 
-    # suffix_style
+    # suffix_text_style
     @property
-    def suffix_style(self) -> Optional[TextStyle]:
-        return self.__suffix_style
+    def suffix_text_style(self) -> Optional[TextStyle]:
+        return self.__suffix_text_style
 
-    @suffix_style.setter
-    def suffix_style(self, value: Optional[TextStyle]):
-        self.__suffix_style = value
+    @suffix_text_style.setter
+    def suffix_text_style(self, value: Optional[TextStyle]):
+        self.__suffix_text_style = value
 
     # fill_color
     @property
@@ -664,3 +691,12 @@ class FormFieldControl(ConstrainedControl):
     @helper_max_lines.setter
     def helper_max_lines(self, value: Optional[int]):
         self._set_attr("helperMaxLines", value)
+
+    # hint_max_lines
+    @property
+    def hint_max_lines(self) -> Optional[int]:
+        return self._get_attr("hintMaxLines", data_type="int")
+
+    @hint_max_lines.setter
+    def hint_max_lines(self, value: Optional[int]):
+        self._set_attr("hintMaxLines", value)

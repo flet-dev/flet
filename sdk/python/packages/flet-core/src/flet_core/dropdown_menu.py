@@ -124,7 +124,7 @@ class DropdownMenuOption(Option):
 
 class DropdownMenu(FormFieldControl):
     """
-
+    A dropdown menu control that allows users to select a single option from a list of options.
 
     -----
 
@@ -175,13 +175,13 @@ class DropdownMenu(FormFieldControl):
         helper_style: Optional[TextStyle] = None,
         counter_style: Optional[TextStyle] = None,
         error_text: Optional[str] = None,
+        error_text_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
         prefix_icon: Optional[str] = None,
+        prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
         suffix_icon: Optional[str] = None,
-        #
-        # InputDecorationTheme
-        #
+        suffix_style: Optional[TextStyle] = None,
         icon_color: Optional[str] = None,
         prefix_icon_color: Optional[str] = None,
         suffix_icon_color: Optional[str] = None,
@@ -223,13 +223,13 @@ class DropdownMenu(FormFieldControl):
             text_size=text_size,
             text_style=text_style,
             label=label,
-            border=border,
             label_style=label_style,
+            border=border,
             color=color,
-            focused_color=focused_color,
-            focused_bgcolor=focused_bgcolor,
             border_width=border_width,
             border_color=border_color,
+            focused_color=focused_color,
+            focused_bgcolor=focused_bgcolor,
             focused_border_width=focused_border_width,
             focused_border_color=focused_border_color,
             content_padding=content_padding,
@@ -241,15 +241,15 @@ class DropdownMenu(FormFieldControl):
             hint_style=hint_style,
             helper_text=helper_text,
             helper_style=helper_style,
-            counter_style=counter_style,
+            counter_text_style=counter_style,
             error_text=error_text,
+            error_text_style=error_text_style,
             prefix=prefix,
             prefix_icon=prefix_icon,
+            prefix_text_style=prefix_style,
             suffix=suffix,
             suffix_icon=suffix_icon,
-            #
-            # InputDecorationTheme
-            #
+            suffix_text_style=suffix_style,
             icon_color=icon_color,
             prefix_icon_color=prefix_icon_color,
             suffix_icon_color=suffix_icon_color,
@@ -260,9 +260,6 @@ class DropdownMenu(FormFieldControl):
             hint_fade_duration=hint_fade_duration,
             error_max_lines=error_max_lines,
             helper_max_lines=helper_max_lines,
-            #
-            # ConstrainedControl
-            #
             ref=ref,
             key=key,
             width=width,

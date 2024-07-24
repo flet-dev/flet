@@ -51,12 +51,12 @@ TextInputType? parseTextInputType(String? value, [TextInputType? defValue]) {
   }
 }
 
-InputDecoration buildInputDecoration(
-    BuildContext context,
-    Control control,
+InputDecoration buildInputDecoration(BuildContext context, Control control,
     {Control? prefix,
     Control? suffix,
     Control? counter,
+    Control? helper,
+    Control? error,
     Widget? customSuffix,
     bool focused = false,
     bool disabled = false,
@@ -126,48 +126,68 @@ InputDecoration buildInputDecoration(
   }
 
   return InputDecoration(
-      enabled: !disabled,
-      contentPadding: parseEdgeInsets(control, "contentPadding"),
-      isDense: control.attrBool("dense"),
-      label: label != "" ? Text(label) : null,
-      labelStyle: parseTextStyle(theme, control, "labelStyle"),
-      border: border,
-      enabledBorder: border,
-      focusedBorder: focusedBorder,
-      hoverColor: hoverColor,
-      icon: icon != null ? Icon(icon) : null,
-      filled: control.attrBool("filled", false)!,
-      fillColor: fillColor ?? (focused ? focusedBgcolor ?? bgcolor : bgcolor),
-      hintText: control.attrString("hintText"),
-      hintStyle: parseTextStyle(theme, control, "hintStyle"),
-      helperText: control.attrString("helperText"),
-      helperStyle: parseTextStyle(theme, control, "helperStyle"),
-      counterText: control.attrString("counterText"),
-      counterStyle: parseTextStyle(theme, control, "counterStyle"),
-      counter: counter != null
-          ? createControl(control, counter.id, control.isDisabled,
-              parentAdaptive: adaptive)
-          : null,
-      errorText: control.attrString("errorText"),
-      errorStyle: parseTextStyle(theme, control, "errorStyle"),
-      prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
-      prefixText: prefixText,
-      prefixStyle: parseTextStyle(theme, control, "prefixStyle"),
-      prefix: prefix != null
-          ? createControl(control, prefix.id, control.isDisabled,
-              parentAdaptive: adaptive)
-          : null,
-      suffix: suffix != null
-          ? createControl(control, suffix.id, control.isDisabled,
-              parentAdaptive: adaptive)
-          : null,
-      suffixIcon: suffixIcon != null ? Icon(suffixIcon) : customSuffix,
-      suffixText: suffixText,
-      suffixStyle: parseTextStyle(theme, control, "suffixStyle"));
+    enabled: !disabled,
+    contentPadding: parseEdgeInsets(control, "contentPadding"),
+    isDense: control.attrBool("dense"),
+    label: label != "" ? Text(label) : null,
+    labelStyle: parseTextStyle(theme, control, "labelStyle"),
+    border: border,
+    enabledBorder: border,
+    focusedBorder: focusedBorder,
+    hoverColor: hoverColor,
+    icon: icon != null ? Icon(icon) : null,
+    filled: control.attrBool("filled", false)!,
+    fillColor: fillColor ?? (focused ? focusedBgcolor ?? bgcolor : bgcolor),
+    hintText: control.attrString("hintText"),
+    hintStyle: parseTextStyle(theme, control, "hintStyle"),
+    helperText: control.attrString("helperText"),
+    helperStyle: parseTextStyle(theme, control, "helperStyle"),
+    counterText: control.attrString("counterText"),
+    counterStyle: parseTextStyle(theme, control, "counterTextStyle"),
+    counter: counter != null
+        ? createControl(control, counter.id, control.isDisabled,
+            parentAdaptive: adaptive)
+        : null,
+    helper: helper != null
+        ? createControl(control, helper.id, control.isDisabled,
+            parentAdaptive: adaptive)
+        : null,
+    error: error != null
+        ? createControl(control, error.id, control.isDisabled,
+            parentAdaptive: adaptive)
+        : null,
+    errorMaxLines: control.attrInt("errorMaxLines"),
+    helperMaxLines: control.attrInt("helperMaxLines"),
+    hintFadeDuration: parseDuration(control, "hintFadeDuration"),
+    hintMaxLines: control.attrInt("hintMaxLines"),
+    iconColor: control.attrColor("iconColor", context),
+    alignLabelWithHint: control.attrBool("alignLabelWithHint", false)!,
+    prefixIconColor: control.attrColor("prefixIconColor", context),
+    suffixIconColor: control.attrColor("suffixIconColor", context),
+    errorText: control.attrString("errorText"),
+    errorStyle: parseTextStyle(theme, control, "errorTextStyle"),
+    prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
+    prefixText: prefixText,
+    prefixStyle: parseTextStyle(theme, control, "prefixTextStyle"),
+    prefix: prefix != null
+        ? createControl(control, prefix.id, control.isDisabled,
+            parentAdaptive: adaptive)
+        : null,
+    suffix: suffix != null
+        ? createControl(control, suffix.id, control.isDisabled,
+            parentAdaptive: adaptive)
+        : null,
+    suffixIcon: suffixIcon != null ? Icon(suffixIcon) : customSuffix,
+    suffixText: suffixText,
+    suffixStyle: parseTextStyle(theme, control, "suffixTextStyle"),
+    focusColor: control.attrColor("focusColor", context),
+    floatingLabelStyle:
+        parseTextStyle(theme, control, "floatingLabelTextStyle"),
+  );
 }
 
-InputDecorationTheme buildInputDecorationTheme(BuildContext context,
-    Control control, bool focused) {
+InputDecorationTheme buildInputDecorationTheme(
+    BuildContext context, Control control, bool focused) {
   FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
     control.attrString("border"),
     FormFieldInputBorder.outline,
@@ -237,10 +257,10 @@ InputDecorationTheme buildInputDecorationTheme(BuildContext context,
     fillColor: fillColor ?? (focused ? focusedBgcolor ?? bgcolor : bgcolor),
     hintStyle: parseTextStyle(theme, control, "hintStyle"),
     helperStyle: parseTextStyle(theme, control, "helperStyle"),
-    counterStyle: parseTextStyle(theme, control, "counterStyle"),
-    errorStyle: parseTextStyle(theme, control, "errorStyle"),
-    prefixStyle: parseTextStyle(theme, control, "prefixStyle"),
-    suffixStyle: parseTextStyle(theme, control, "suffixStyle"),
+    counterStyle: parseTextStyle(theme, control, "counterTextStyle"),
+    errorStyle: parseTextStyle(theme, control, "errorTextStyle"),
+    prefixStyle: parseTextStyle(theme, control, "prefixTextStyle"),
+    suffixStyle: parseTextStyle(theme, control, "suffixTextStyle"),
     iconColor: control.attrColor("iconColor", context),
     alignLabelWithHint: control.attrBool("alignLabelWithHint", false)!,
     prefixIconColor: control.attrColor("prefixIconColor", context),
