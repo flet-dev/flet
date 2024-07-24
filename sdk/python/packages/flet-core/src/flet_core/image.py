@@ -233,7 +233,7 @@ class Image(ConstrainedControl):
 
     # gapless_playback
     @property
-    def gapless_playback(self) -> Optional[bool]:
+    def gapless_playback(self) -> bool:
         return self._get_attr("gaplessPlayback", data_type="bool", def_value=False)
 
     @gapless_playback.setter
@@ -242,7 +242,7 @@ class Image(ConstrainedControl):
 
     # exclude_from_semantics
     @property
-    def exclude_from_semantics(self) -> Optional[bool]:
+    def exclude_from_semantics(self) -> bool:
         return self._get_attr("excludeFromSemantics", data_type="bool", def_value=False)
 
     @exclude_from_semantics.setter

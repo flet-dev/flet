@@ -180,7 +180,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     # tight
     @property
-    def tight(self) -> Optional[bool]:
+    def tight(self) -> bool:
         return self._get_attr("tight", data_type="bool", def_value=False)
 
     @tight.setter
@@ -218,7 +218,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     # wrap
     @property
-    def wrap(self) -> Optional[bool]:
+    def wrap(self) -> bool:
         return self._get_attr("wrap", data_type="bool", def_value=False)
 
     @wrap.setter

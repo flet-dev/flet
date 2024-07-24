@@ -48,23 +48,22 @@ class FilePickerResultEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.path: Optional[str] = d["path"]
+        self.path: Optional[str] = d.get("path")
         self.files: Optional[List[FilePickerFile]] = None
-        files = d["files"]
+        files = d.get("files")
         if files is not None and isinstance(files, List):
             self.files = []
             for fd in files:
                 self.files.append(FilePickerFile(**fd))
 
 
-@dataclass
 class FilePickerUploadEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.file_name: str = d["file_name"]
-        self.progress: Optional[float] = d["progress"]
-        self.error: Optional[str] = d["error"]
+        self.file_name: str = d.get("file_name")
+        self.progress: Optional[float] = d.get("progress")
+        self.error: Optional[str] = d.get("error")
 
 
 class FilePicker(Control):
@@ -321,7 +320,7 @@ class FilePicker(Control):
 
     # allow_multiple
     @property
-    def allow_multiple(self) -> Optional[bool]:
+    def allow_multiple(self) -> bool:
         return self._get_attr("allowMultiple", data_type="bool", def_value=False)
 
     @allow_multiple.setter

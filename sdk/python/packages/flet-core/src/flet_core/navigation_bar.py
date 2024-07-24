@@ -10,7 +10,6 @@ from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OptionalEventCallable,
-    MaterialState,
     OffsetValue,
     OptionalNumber,
     ResponsiveNumber,
@@ -312,7 +311,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     # selected_index
     @property
-    def selected_index(self) -> Optional[int]:
+    def selected_index(self) -> int:
         return self._get_attr("selectedIndex", data_type="int", def_value=0)
 
     @selected_index.setter

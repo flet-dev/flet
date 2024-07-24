@@ -281,7 +281,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # dense
     @property
-    def dense(self) -> Optional[bool]:
+    def dense(self) -> bool:
         return self._get_attr("dense", data_type="bool")
 
     @dense.setter
@@ -290,7 +290,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # enable_feedback
     @property
-    def enable_feedback(self) -> Optional[bool]:
+    def enable_feedback(self) -> bool:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
 
     @enable_feedback.setter
@@ -319,7 +319,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # maintain_state
     @property
-    def maintain_state(self) -> Optional[bool]:
+    def maintain_state(self) -> bool:
         return self._get_attr("maintainState", data_type="bool", def_value=False)
 
     @maintain_state.setter
@@ -328,7 +328,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # initially_expanded
     @property
-    def initially_expanded(self) -> Optional[bool]:
+    def initially_expanded(self) -> bool:
         return self._get_attr("initiallyExpanded", data_type="bool", def_value=False)
 
     @initially_expanded.setter

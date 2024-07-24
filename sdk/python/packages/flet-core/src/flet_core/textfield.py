@@ -390,7 +390,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     # multiline
     @property
-    def multiline(self) -> Optional[bool]:
+    def multiline(self) -> bool:
         return self._get_attr("multiline", data_type="bool", def_value=False)
 
     @multiline.setter
@@ -431,7 +431,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     # read_only
     @property
-    def read_only(self) -> Optional[bool]:
+    def read_only(self) -> bool:
         return self._get_attr("readOnly", data_type="bool", def_value=False)
 
     @read_only.setter
@@ -440,7 +440,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     # shift_enter
     @property
-    def shift_enter(self) -> Optional[bool]:
+    def shift_enter(self) -> bool:
         return self._get_attr("shiftEnter", data_type="bool", def_value=False)
 
     @shift_enter.setter
@@ -449,7 +449,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     # password
     @property
-    def password(self) -> Optional[bool]:
+    def password(self) -> bool:
         return self._get_attr("password", data_type="bool", def_value=False)
 
     @password.setter
@@ -458,7 +458,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     # can_reveal_password
     @property
-    def can_reveal_password(self) -> Optional[bool]:
+    def can_reveal_password(self) -> bool:
         return self._get_attr("canRevealPassword", data_type="bool", def_value=False)
 
     @can_reveal_password.setter
@@ -467,7 +467,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
@@ -486,7 +486,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     # autocorrect
     @property
-    def autocorrect(self) -> Optional[bool]:
+    def autocorrect(self) -> bool:
         return self._get_attr("autocorrect", data_type="bool", def_value=True)
 
     @autocorrect.setter
@@ -495,7 +495,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     # show_cursor
     @property
-    def show_cursor(self) -> Optional[bool]:
+    def show_cursor(self) -> bool:
         return self._get_attr("showCursor", data_type="bool", def_value=True)
 
     @show_cursor.setter
@@ -504,7 +504,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     # enable_suggestions
     @property
-    def enable_suggestions(self) -> Optional[bool]:
+    def enable_suggestions(self) -> bool:
         return self._get_attr("enableSuggestions", data_type="bool", def_value=True)
 
     @enable_suggestions.setter
@@ -513,7 +513,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     # smart_dashes_type
     @property
-    def smart_dashes_type(self) -> Optional[bool]:
+    def smart_dashes_type(self) -> bool:
         return self._get_attr("smartDashesType", data_type="bool", def_value=True)
 
     @smart_dashes_type.setter
@@ -522,7 +522,7 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     # smart_quotes_type
     @property
-    def smart_quotes_type(self) -> Optional[bool]:
+    def smart_quotes_type(self) -> bool:
         return self._get_attr("smartQuotesType", data_type="bool", def_value=True)
 
     @smart_quotes_type.setter

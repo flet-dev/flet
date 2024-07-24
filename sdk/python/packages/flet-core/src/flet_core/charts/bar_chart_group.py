@@ -63,7 +63,7 @@ class BarChartGroup(Control):
 
     # group_vertically
     @property
-    def group_vertically(self) -> Optional[bool]:
+    def group_vertically(self) -> bool:
         return self._get_attr("groupVertically", data_type="bool", def_value=False)
 
     @group_vertically.setter

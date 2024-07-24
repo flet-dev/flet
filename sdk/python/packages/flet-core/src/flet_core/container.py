@@ -380,7 +380,7 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # image_opacity
     @property
-    def image_opacity(self) -> OptionalNumber:
+    def image_opacity(self) -> float:
         return self._get_attr("imageOpacity", data_type="float", def_value=1.0)
 
     @image_opacity.setter
@@ -418,7 +418,7 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # ink
     @property
-    def ink(self) -> Optional[bool]:
+    def ink(self) -> bool:
         return self._get_attr("ink", data_type="bool", def_value=False)
 
     @ink.setter
@@ -526,7 +526,7 @@ class ContainerTapEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.local_x: float = d["lx"]
-        self.local_y: float = d["ly"]
-        self.global_x: float = d["gx"]
-        self.global_y: float = d["gy"]
+        self.local_x: float = d.get("lx")
+        self.local_y: float = d.get("ly")
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")

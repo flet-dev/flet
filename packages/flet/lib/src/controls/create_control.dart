@@ -1246,10 +1246,7 @@ Widget _sizedControl(Widget widget, Control? parent, Control control) {
 }
 
 Widget _expandable(Widget widget, Control? parent, Control control) {
-  if (parent != null &&
-      (parent.type == "view" ||
-          parent.type == "column" ||
-          parent.type == "row")) {
+  if (parent != null && ["view", "column", "row"].contains(parent.type)) {
     int? expand = control.attrInt("expand");
     var expandLoose = control.attrBool("expandLoose");
     return expand != null

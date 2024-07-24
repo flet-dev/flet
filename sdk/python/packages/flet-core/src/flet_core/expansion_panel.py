@@ -130,7 +130,7 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
 
     # expanded
     @property
-    def expanded(self) -> Optional[bool]:
+    def expanded(self) -> bool:
         return self._get_attr("expanded", data_type="bool", def_value=False)
 
     @expanded.setter
@@ -139,7 +139,7 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
 
     # can_tap_header
     @property
-    def can_tap_header(self) -> Optional[bool]:
+    def can_tap_header(self) -> bool:
         return self._get_attr("canTapHeader", data_type="bool", def_value=False)
 
     @can_tap_header.setter

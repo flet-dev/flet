@@ -163,7 +163,7 @@ class _TextFieldControlState extends State<TextFieldControl>
       }
 
       TextCapitalization textCapitalization = parseTextCapitalization(
-          widget.control.attrString("textCapitalization"),
+          widget.control.attrString("capitalization"),
           TextCapitalization.none)!;
 
       FilteringTextInputFormatter? inputFilter =
