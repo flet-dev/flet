@@ -19,7 +19,7 @@ class ScrollableControl(Control):
         on_scroll_interval: OptionalNumber = None,
         on_scroll: Optional[Callable[["OnScrollEvent"], None]] = None,
     ):
-        Control.__init__(self)
+        super().__init__()
         self.__on_scroll = EventHandler(lambda e: OnScrollEvent(e))
         self._add_event_handler("onScroll", self.__on_scroll.get_handler())
 
