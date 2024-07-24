@@ -9,6 +9,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 
@@ -45,7 +46,7 @@ class CupertinoActivityIndicator(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -94,8 +95,8 @@ class CupertinoActivityIndicator(ConstrainedControl):
 
     # animating
     @property
-    def animating(self) -> Optional[bool]:
-        return self._get_attr("animating")
+    def animating(self) -> bool:
+        return self._get_attr("animating", data_type="bool", def_value=True)
 
     @animating.setter
     def animating(self, value: Optional[bool]):

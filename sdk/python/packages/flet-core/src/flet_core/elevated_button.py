@@ -14,6 +14,7 @@ from flet_core.types import (
     ScaleValue,
     ClipBehavior,
     UrlTarget,
+    OptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -55,11 +56,11 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         clip_behavior: Optional[ClipBehavior] = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
-        on_click=None,
-        on_long_press=None,
-        on_hover=None,
-        on_focus=None,
-        on_blur=None,
+        on_click: OptionalEventCallable = None,
+        on_long_press: OptionalEventCallable = None,
+        on_hover: OptionalEventCallable = None,
+        on_focus: OptionalEventCallable = None,
+        on_blur: OptionalEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -85,7 +86,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -152,35 +153,29 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        if (
-            self.__color is not None
-            or self.__bgcolor is not None
-            or self.__elevation is not None
-        ):
-            if self.__style is None:
-                self.__style = ButtonStyle()
-            if self.__style.color != self.__color or self.disabled:
-                # if the color is set through the style, use it
-                if not (
-                    self.__class__.__name__ in ["FilledButton", "FilledTonalButton"]
-                    and self.__style.color
-                    and not self.disabled
-                ):
-                    self.__style.color = self.__color if not self.disabled else None
-            if self.__style.bgcolor != self.__bgcolor or self.disabled:
-                # if the bgcolor is set through the style, use it
-                if not (
-                    self.__class__.__name__ in ["FilledButton", "FilledTonalButton"]
-                    and self.__style.bgcolor
-                    and not self.disabled
-                ):
-                    self.__style.bgcolor = self.__bgcolor if not self.disabled else None
-            if self.__style.elevation != self.__elevation:
-                self.__style.elevation = self.__elevation
-        if self.__style is not None:
+        assert (
+            self.text or self.icon or (self.__content and self.__content.visible)
+        ), "at minimum, text, icon or a visible content must be provided"
+        if any([self.__color, self.__bgcolor, self.__elevation]):
+            self.__style = self.__style or ButtonStyle()
+        if self.__style:
+            self.__style.color = (
+                self.__style.color if self.__style.color is not None else self.color
+            )
+            self.__style.bgcolor = (
+                self.__style.bgcolor
+                if self.__style.bgcolor is not None
+                else self.bgcolor
+            )
+            self.__style.elevation = (
+                self.__style.elevation
+                if self.__style.elevation is not None
+                else self.elevation
+            )
             self.__style.side = self._wrap_attr_dict(self.__style.side)
             self.__style.shape = self._wrap_attr_dict(self.__style.shape)
             self.__style.padding = self._wrap_attr_dict(self.__style.padding)
+            self.__style.text_style = self._wrap_attr_dict(self.__style.text_style)
         self._set_attr_json("style", self.__style)
 
     def _get_children(self):
@@ -196,7 +191,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use focus() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def focus_async(self):
         self.focus()
@@ -314,7 +309,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
@@ -333,28 +328,28 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     # on_hover
     @property
-    def on_hover(self):
+    def on_hover(self) -> OptionalEventCallable:
         return self._get_event_handler("hover")
 
     @on_hover.setter
-    def on_hover(self, handler):
+    def on_hover(self, handler: OptionalEventCallable):
         self._add_event_handler("hover", handler)
         self._set_attr("onHover", True if handler is not None else None)
 
     # on_focus
     @property
-    def on_focus(self):
+    def on_focus(self) -> OptionalEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler):
+    def on_focus(self, handler: OptionalEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self):
+    def on_blur(self) -> OptionalEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler):
+    def on_blur(self, handler: OptionalEventCallable):
         self._add_event_handler("blur", handler)

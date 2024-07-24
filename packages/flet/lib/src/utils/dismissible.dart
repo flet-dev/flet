@@ -6,6 +6,16 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import '../utils/numbers.dart';
 
+DismissDirection? parseDismissDirection(String? value,
+    [DismissDirection? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return DismissDirection.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
 Map<DismissDirection, double>? parseDismissThresholds(
     Control control, String propName) {
   var v = control.attrString(propName, null);
@@ -14,7 +24,7 @@ Map<DismissDirection, double>? parseDismissThresholds(
   }
 
   final j1 = json.decode(v);
-  return getDismissThresholds(j1, (jv) => parseDouble(jv));
+  return getDismissThresholds(j1, (jv) => parseDouble(jv, 0)!);
 }
 
 Map<DismissDirection, double>? getDismissThresholds<T>(
@@ -34,24 +44,14 @@ Map<DismissDirection, double> getDismissThresholdsFromJSON(
     Map<String, dynamic>? jsonDictValue, Function(dynamic) converterFromJson) {
   Map<DismissDirection, double> dismissDirectionMap = {};
 
-  Set<DismissDirection> directions = {
-    DismissDirection.vertical,
-    DismissDirection.horizontal,
-    DismissDirection.endToStart,
-    DismissDirection.startToEnd,
-    DismissDirection.up,
-    DismissDirection.down
-  };
-
   if (jsonDictValue != null) {
     jsonDictValue.forEach((directionStr, jv) {
       directionStr
           .split(",")
           .map((s) => s.trim().toLowerCase())
           .forEach((state) {
-        DismissDirection d = directions.firstWhere(
-            (e) => e.name.toLowerCase() == state,
-            orElse: () => DismissDirection.none);
+        DismissDirection d =
+            parseDismissDirection(state, DismissDirection.none)!;
         if (d != DismissDirection.none) {
           dismissDirectionMap[d] = converterFromJson(jv);
         }
@@ -60,14 +60,4 @@ Map<DismissDirection, double> getDismissThresholdsFromJSON(
   }
 
   return dismissDirectionMap;
-}
-
-DismissDirection? parseDismissDirection(String? direction,
-    [DismissDirection? defaultDirection]) {
-  if (direction == null) {
-    return defaultDirection;
-  }
-  return DismissDirection.values.firstWhereOrNull(
-          (a) => a.name.toLowerCase() == direction.toLowerCase()) ??
-      defaultDirection;
 }

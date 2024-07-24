@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Flet Discord server
+    url: https://discord.gg/dzWXP8SHG8
+    about: Join our Discord server to chat with the community and the dev-team, with faster response times.
+  - name: Flet Discussions
+    url: https://github.com/flet-dev/flet/discussions
+    about: Open a discussion to ask questions, share ideas, and connect with other community members.

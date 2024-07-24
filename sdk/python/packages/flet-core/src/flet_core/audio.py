@@ -3,6 +3,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.types import OptionalEventCallable
 from flet_core.utils import deprecated
 
 
@@ -49,11 +50,11 @@ class Audio(Control):
         balance: OptionalNumber = None,
         playback_rate: OptionalNumber = None,
         release_mode: Optional[ReleaseMode] = None,
-        on_loaded=None,
-        on_duration_changed=None,
-        on_state_changed=None,
-        on_position_changed=None,
-        on_seek_complete=None,
+        on_loaded: OptionalEventCallable = None,
+        on_duration_changed: OptionalEventCallable = None,
+        on_state_changed: OptionalEventCallable = None,
+        on_position_changed: OptionalEventCallable = None,
+        on_seek_complete: OptionalEventCallable = None,
         #
         # Control
         #
@@ -88,7 +89,7 @@ class Audio(Control):
     @deprecated(
         reason="Use play() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def play_async(self):
         self.play()
@@ -99,7 +100,7 @@ class Audio(Control):
     @deprecated(
         reason="Use pause() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def pause_async(self):
         self.pause()
@@ -110,7 +111,7 @@ class Audio(Control):
     @deprecated(
         reason="Use resume() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def resume_async(self):
         self.resume()
@@ -121,7 +122,7 @@ class Audio(Control):
     @deprecated(
         reason="Use release() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def release_async(self):
         self.release()
@@ -132,7 +133,7 @@ class Audio(Control):
     @deprecated(
         reason="Use seek() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def seek_async(self, position_milliseconds: int):
         self.seek(position_milliseconds)
@@ -193,7 +194,7 @@ class Audio(Control):
 
     # autoplay
     @property
-    def autoplay(self) -> Optional[bool]:
+    def autoplay(self) -> bool:
         return self._get_attr("autoplay", data_type="bool", def_value=False)
 
     @autoplay.setter
@@ -245,7 +246,7 @@ class Audio(Control):
         return self._get_event_handler("loaded")
 
     @on_loaded.setter
-    def on_loaded(self, handler):
+    def on_loaded(self, handler: OptionalEventCallable):
         self._add_event_handler("loaded", handler)
 
     # on_duration_changed
@@ -254,7 +255,7 @@ class Audio(Control):
         return self._get_event_handler("duration_changed")
 
     @on_duration_changed.setter
-    def on_duration_changed(self, handler):
+    def on_duration_changed(self, handler: OptionalEventCallable):
         self._add_event_handler("duration_changed", handler)
 
     # on_state_changed
@@ -263,7 +264,7 @@ class Audio(Control):
         return self._get_event_handler("state_changed")
 
     @on_state_changed.setter
-    def on_state_changed(self, handler):
+    def on_state_changed(self, handler: OptionalEventCallable):
         self._add_event_handler("state_changed", handler)
 
     # on_position_changed
@@ -272,12 +273,9 @@ class Audio(Control):
         return self._get_event_handler("position_changed")
 
     @on_position_changed.setter
-    def on_position_changed(self, handler):
+    def on_position_changed(self, handler: OptionalEventCallable):
         self._add_event_handler("position_changed", handler)
-        if handler is not None:
-            self._set_attr("onPositionChanged", True)
-        else:
-            self._set_attr("onPositionChanged", None)
+        self._set_attr("onPositionChanged", True if handler is not None else None)
 
     # on_seek_complete
     @property
@@ -285,5 +283,5 @@ class Audio(Control):
         return self._get_event_handler("seek_complete")
 
     @on_seek_complete.setter
-    def on_seek_complete(self, handler):
+    def on_seek_complete(self, handler: OptionalEventCallable):
         self._add_event_handler("seek_complete", handler)

@@ -1,10 +1,10 @@
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Union, Callable
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.scrollable_control import ScrollableControl
+from flet_core.scrollable_control import ScrollableControl, OnScrollEvent
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -13,6 +13,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     ClipBehavior,
+    OptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -74,7 +75,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         auto_scroll: Optional[bool] = None,
         reverse: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
-        on_scroll: Any = None,
+        on_scroll: Optional[Callable[[OnScrollEvent], None]] = None,
         #
         # ConstrainedControl
         #
@@ -100,7 +101,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -178,15 +179,15 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @deprecated(
         reason="Use clean() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def clean_async(self):
         self.clean()
 
     # horizontal
     @property
-    def horizontal(self) -> Optional[bool]:
-        return self._get_attr("horizontal")
+    def horizontal(self) -> bool:
+        return self._get_attr("horizontal", data_type="bool", def_value=False)
 
     @horizontal.setter
     def horizontal(self, value: Optional[bool]):
@@ -230,8 +231,8 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     # first_item_prototype
     @property
-    def first_item_prototype(self) -> Optional[bool]:
-        return self._get_attr("firstItemPrototype", data_type="bool")
+    def first_item_prototype(self) -> bool:
+        return self._get_attr("firstItemPrototype", data_type="bool", def_value=False)
 
     @first_item_prototype.setter
     def first_item_prototype(self, value: Optional[bool]):

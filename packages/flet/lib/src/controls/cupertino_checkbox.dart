@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'list_tile.dart';
 
-enum LabelPosition { right, left }
 
 class CupertinoCheckboxControl extends StatefulWidget {
   final Control? parent;
@@ -74,11 +74,8 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
     debugPrint("CupertinoCheckBox build: ${widget.control.id}");
 
     String label = widget.control.attrString("label", "")!;
-    LabelPosition labelPosition = LabelPosition.values.firstWhere(
-        (p) =>
-            p.name.toLowerCase() ==
-            widget.control.attrString("labelPosition", "")!.toLowerCase(),
-        orElse: () => LabelPosition.right);
+    LabelPosition labelPosition = parseLabelPosition(
+        widget.control.attrString("labelPosition"), LabelPosition.right)!;
     _tristate = widget.control.attrBool("tristate", false)!;
     bool autofocus = widget.control.attrBool("autofocus", false)!;
     bool disabled = widget.control.isDisabled || widget.parentDisabled;

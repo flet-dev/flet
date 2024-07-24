@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui' as ui;
 
+import 'package:collection/collection.dart';
 import 'package:flet/src/utils/others.dart';
 import 'package:flutter/material.dart';
 
@@ -21,6 +22,15 @@ Paint parsePaint(ThemeData theme, Control control, String propName) {
   return paintFromJSON(theme, j1);
 }
 
+PaintingStyle? parsePaintingStyle(String? value, [PaintingStyle? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return PaintingStyle.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
 List<double>? parsePaintStrokeDashPattern(Control control, String propName) {
   var v = control.attrString(propName, null);
   if (v == null) {
@@ -30,20 +40,20 @@ List<double>? parsePaintStrokeDashPattern(Control control, String propName) {
   final j1 = json.decode(v);
 
   return j1["stroke_dash_pattern"] != null
-      ? (j1["stroke_dash_pattern"] as List).map((e) => parseDouble(e)).toList()
+      ? (j1["stroke_dash_pattern"] as List)
+          .map((e) => parseDouble(e))
+          .whereNotNull()
+          .toList()
       : null;
 }
 
 Paint paintFromJSON(ThemeData? theme, Map<String, dynamic> json) {
-  //debugPrint("paintFromJSON: $json");
   var paint = Paint();
   if (json["color"] != null) {
     paint.color = parseColor(theme, json["color"] as String, Colors.black)!;
   }
   if (json["blend_mode"] != null) {
-    paint.blendMode = BlendMode.values.firstWhere(
-        (e) => e.name.toLowerCase() == json["blend_mode"].toLowerCase(),
-        orElse: () => BlendMode.srcOver);
+    paint.blendMode = parseBlendMode(json["blend_mode"], BlendMode.srcOver)!;
   }
   if (json["anti_alias"] != null) {
     paint.isAntiAlias = json["anti_alias"];
@@ -54,12 +64,9 @@ Paint paintFromJSON(ThemeData? theme, Map<String, dynamic> json) {
   if (json["gradient"] != null) {
     paint.shader = paintGradientFromJSON(theme, json["gradient"]);
   }
-  if (json["stroke_miter_limit"] != null) {
-    paint.strokeMiterLimit = parseDouble(json["stroke_miter_limit"]);
-  }
-  if (json["stroke_width"] != null) {
-    paint.strokeWidth = parseDouble(json["stroke_width"]);
-  }
+  paint.strokeMiterLimit = parseDouble(json["stroke_miter_limit"], 4)!;
+  paint.strokeWidth = parseDouble(json["stroke_width"], 0)!;
+
   if (json["stroke_cap"] != null) {
     paint.strokeCap = parseStrokeCap(json["stroke_cap"], StrokeCap.butt)!;
   }
@@ -67,9 +74,7 @@ Paint paintFromJSON(ThemeData? theme, Map<String, dynamic> json) {
     paint.strokeJoin = parseStrokeJoin(json["stroke_join"], StrokeJoin.miter)!;
   }
   if (json["style"] != null) {
-    paint.style = PaintingStyle.values.firstWhere(
-        (e) => e.name.toLowerCase() == json["style"].toLowerCase(),
-        orElse: () => PaintingStyle.fill);
+    paint.style = parsePaintingStyle(json["style"], PaintingStyle.fill)!;
   }
   return paint;
 }
@@ -87,13 +92,13 @@ ui.Gradient? paintGradientFromJSON(
   } else if (type == "radial") {
     return ui.Gradient.radial(
       offsetFromJson(json["center"])!,
-      parseDouble(json["radius"]),
+      parseDouble(json["radius"], 0)!,
       parseColors(theme, json["colors"]),
       parseStops(json["color_stops"]),
       parseTileMode(json["tile_mode"], TileMode.clamp)!,
       null,
       offsetFromJson(json["focal"]),
-      parseDouble(json["focal_radius"]),
+      parseDouble(json["focal_radius"], 0)!,
     );
   } else if (type == "sweep") {
     Offset center = offsetFromJson(json["center"])!;
@@ -102,8 +107,8 @@ ui.Gradient? paintGradientFromJSON(
         parseColors(theme, json["colors"]),
         parseStops(json["color_stops"]),
         parseTileMode(json["tile_mode"], TileMode.clamp)!,
-        parseDouble(json["start_angle"]),
-        parseDouble(json["end_angle"]),
+        parseDouble(json["start_angle"], 0)!,
+        parseDouble(json["end_angle"], 0)!,
         parseRotationToMatrix4(
             json["rotation"], Rect.fromCircle(center: center, radius: 10)));
   }
@@ -114,8 +119,8 @@ Offset? offsetFromJson(dynamic json) {
   if (json == null) {
     return null;
   } else if (json is List && json.length > 1) {
-    return Offset(parseDouble(json[0]), parseDouble(json[1]));
+    return Offset(parseDouble(json[0], 0)!, parseDouble(json[1], 0)!);
   } else {
-    return Offset(parseDouble(json["x"]), parseDouble(json["y"]));
+    return Offset(parseDouble(json["x"], 0)!, parseDouble(json["y"], 0)!);
   }
 }

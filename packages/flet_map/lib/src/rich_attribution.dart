@@ -25,15 +25,14 @@ class _RichAttributionControlState extends State<RichAttributionControl>
     with FletStoreMixin {
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-        "RichAttributionControl build: ${widget.control.id} (${widget.control.hashCode})");
+    debugPrint("RichAttributionControl build: ${widget.control.id}");
 
     return withControls(widget.control.childIds, (context, attributionsView) {
       debugPrint("RichAttributionControlState build: ${widget.control.id}");
 
       var attributions = attributionsView.controlViews
           .map((v) => v.control)
-          .where((c) => c.type == "maptextsourceattribution" && c.isVisible)
+          .where((c) => c.type == "map_text_source_attribution" && c.isVisible)
           .map((Control itemCtrl) {
         return TextSourceAttribution(
           itemCtrl.attrs["text"] ?? "Placeholder Text",
@@ -52,7 +51,12 @@ class _RichAttributionControlState extends State<RichAttributionControl>
         showFlutterMapAttribution:
             widget.control.attrBool("showFlutterMapAttribution", true)!,
         alignment: parseAttributionAlignment(
-            "alignment", widget.control, AttributionAlignment.bottomRight)!,
+            widget.control.attrString("alignment"),
+            AttributionAlignment.bottomRight)!,
+        popupBorderRadius:
+            parseBorderRadius(widget.control, "popupBorderRadius"),
+        popupInitialDisplayDuration: Duration(
+            seconds: widget.control.attrInt("popupInitialDisplayDuration", 0)!),
       );
     });
   }

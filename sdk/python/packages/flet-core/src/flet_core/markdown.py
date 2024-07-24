@@ -11,6 +11,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 try:
@@ -44,7 +45,7 @@ class Markdown(ConstrainedControl):
         code_style: Optional[TextStyle] = None,
         auto_follow_links: Optional[bool] = None,
         auto_follow_links_target: Optional[str] = None,
-        on_tap_link=None,
+        on_tap_link: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -70,7 +71,7 @@ class Markdown(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -134,7 +135,7 @@ class Markdown(ConstrainedControl):
 
     # selectable
     @property
-    def selectable(self) -> Optional[bool]:
+    def selectable(self) -> bool:
         return self._get_attr("selectable", data_type="bool", def_value=False)
 
     @selectable.setter
@@ -171,7 +172,7 @@ class Markdown(ConstrainedControl):
 
     # auto_follow_links
     @property
-    def auto_follow_links(self) -> Optional[bool]:
+    def auto_follow_links(self) -> bool:
         return cast(
             Optional[bool],
             self._get_attr("autoFollowLinks", data_type="bool", def_value=False),
@@ -192,9 +193,9 @@ class Markdown(ConstrainedControl):
 
     # on_tap_link
     @property
-    def on_tap_link(self):
+    def on_tap_link(self) -> OptionalEventCallable:
         return self._get_event_handler("tap_link")
 
     @on_tap_link.setter
-    def on_tap_link(self, handler):
+    def on_tap_link(self, handler: OptionalEventCallable):
         self._add_event_handler("tap_link", handler)

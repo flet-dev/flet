@@ -161,6 +161,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  dart_earcut:
+    dependency: transitive
+    description:
+      name: dart_earcut
+      sha256: "41b493147e30a051efb2da1e3acb7f38fe0db60afba24ac1ea5684cee272721e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   dbus:
     dependency: transitive
     description:
@@ -231,49 +239,49 @@ packages:
       path: "../packages/flet"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.2"
   flet_audio:
     dependency: "direct main"
     description:
       path: "../packages/flet_audio"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.2"
   flet_audio_recorder:
     dependency: "direct main"
     description:
       path: "../packages/flet_audio_recorder"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.2"
   flet_flashlight:
     dependency: "direct main"
     description:
       path: "../packages/flet_flashlight"
       relative: true
     source: path
-    version: "0.23.0"
+    version: "0.23.2"
   flet_geolocator:
     dependency: "direct main"
     description:
       path: "../packages/flet_geolocator"
       relative: true
     source: path
-    version: "0.23.0"
+    version: "0.23.2"
   flet_lottie:
     dependency: "direct main"
     description:
       path: "../packages/flet_lottie"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.2"
   flet_map:
     dependency: "direct main"
     description:
       path: "../packages/flet_map"
       relative: true
     source: path
-    version: "0.23.0"
+    version: "0.23.2"
   flet_mobile_ads:
     dependency: "direct main"
     description:
@@ -287,28 +295,28 @@ packages:
       path: "../packages/flet_permission_handler"
       relative: true
     source: path
-    version: "0.23.0"
+    version: "0.23.2"
   flet_rive:
     dependency: "direct main"
     description:
       path: "../packages/flet_rive"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.2"
   flet_video:
     dependency: "direct main"
     description:
       path: "../packages/flet_video"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.2"
   flet_webview:
     dependency: "direct main"
     description:
       path: "../packages/flet_webview"
       relative: true
     source: path
-    version: "0.22.1"
+    version: "0.23.2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -352,10 +360,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_map
-      sha256: cda8d72135b697f519287258b5294a57ce2f2a5ebf234f0e406aad4dc14c9399
+      sha256: ead3532d99548140346684cf737a4c0a6f59f02f62ee4e406597f8364afbf1a2
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.0"
+    version: "7.0.0"
   flutter_markdown:
     dependency: transitive
     description:
@@ -580,10 +588,10 @@ packages:
     dependency: transitive
     description:
       name: logger
-      sha256: "8c94b8c219e7e50194efc8771cd0e9f10807d8d3e219af473d89b06cc2ee4e04"
+      sha256: af05cc8714f356fd1f3888fb6741cbe9fbe25cdb6eedbab80e1a6db21047d4a4
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "2.3.0"
   logging:
     dependency: transitive
     description:
@@ -1188,7 +1196,7 @@ packages:
       sha256: "5c2f730018264d276c20e4f1503fd1308dfbbae39ec8ee63c5236311ac06954b"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.1"
+    version: "0.7.0"
   torch_light:
     dependency: transitive
     description:
@@ -1441,10 +1449,10 @@ packages:
     dependency: transitive
     description:
       name: window_manager
-      sha256: b3c895bdf936c77b83c5254bec2e6b3f066710c1f89c38b20b8acc382b525494
+      sha256: "8699323b30da4cdbe2aa2e7c9de567a6abd8a97d9a5c850a3c86dcd0b34bbfbf"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.8"
+    version: "0.3.9"
   window_to_front:
     dependency: transitive
     description:

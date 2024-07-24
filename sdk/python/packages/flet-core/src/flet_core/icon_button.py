@@ -7,7 +7,6 @@ from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.theme import ThemeVisualDensity
 from flet_core.types import (
     AnimationValue,
     MouseCursor,
@@ -17,6 +16,9 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     UrlTarget,
+    OptionalEventCallable,
+    ThemeVisualDensity,
+    VisualDensity,
 )
 from flet_core.utils import deprecated
 
@@ -84,10 +86,10 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
         mouse_cursor: Optional[MouseCursor] = None,
-        visual_density: Optional[ThemeVisualDensity] = None,
-        on_click=None,
-        on_focus=None,
-        on_blur=None,
+        visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
+        on_click: OptionalEventCallable = None,
+        on_focus: OptionalEventCallable = None,
+        on_blur: OptionalEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -113,7 +115,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -205,7 +207,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use focus() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def focus_async(self):
         self.focus()
@@ -329,7 +331,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     # selected
     @property
-    def selected(self) -> Optional[bool]:
+    def selected(self) -> bool:
         return self._get_attr("selected", data_type="bool", def_value=False)
 
     @selected.setter
@@ -338,7 +340,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     # enable_feedback
     @property
-    def enable_feedback(self) -> Optional[bool]:
+    def enable_feedback(self) -> bool:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
 
     @enable_feedback.setter
@@ -385,21 +387,21 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     # visual_density
     @property
-    def visual_density(self) -> Optional[ThemeVisualDensity]:
+    def visual_density(self) -> Union[None, ThemeVisualDensity, VisualDensity]:
         return self.__visual_density
 
     @visual_density.setter
-    def visual_density(self, value: Optional[ThemeVisualDensity]):
+    def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, ThemeVisualDensity)
+        self._set_enum_attr("visualDensity", value, ThemeVisualDensity, VisualDensity)
 
     # on_click
     @property
-    def on_click(self):
+    def on_click(self) -> OptionalEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)
 
     # content
@@ -413,7 +415,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
@@ -422,20 +424,20 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     # on_focus
     @property
-    def on_focus(self):
+    def on_focus(self) -> OptionalEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler):
+    def on_focus(self, handler: OptionalEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self):
+    def on_blur(self) -> OptionalEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler):
+    def on_blur(self, handler: OptionalEventCallable):
         self._add_event_handler("blur", handler)
 
     # alignment

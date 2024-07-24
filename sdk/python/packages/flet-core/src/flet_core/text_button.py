@@ -13,6 +13,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     UrlTarget,
+    OptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -50,11 +51,11 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         autofocus: Optional[bool] = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
-        on_click=None,
-        on_long_press=None,
-        on_hover=None,
-        on_focus=None,
-        on_blur=None,
+        on_click: OptionalEventCallable = None,
+        on_long_press: OptionalEventCallable = None,
+        on_hover: OptionalEventCallable = None,
+        on_focus: OptionalEventCallable = None,
+        on_blur: OptionalEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -80,7 +81,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -157,7 +158,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use focus() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def focus_async(self):
         self.focus()
@@ -219,20 +220,20 @@ class TextButton(ConstrainedControl, AdaptiveControl):
 
     # on_click
     @property
-    def on_click(self):
+    def on_click(self) -> OptionalEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)
 
     # on_long_press
     @property
-    def on_long_press(self):
+    def on_long_press(self) -> OptionalEventCallable:
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler):
+    def on_long_press(self, handler: OptionalEventCallable):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
@@ -247,7 +248,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
@@ -256,28 +257,28 @@ class TextButton(ConstrainedControl, AdaptiveControl):
 
     # on_hover
     @property
-    def on_hover(self):
+    def on_hover(self) -> OptionalEventCallable:
         return self._get_event_handler("hover")
 
     @on_hover.setter
-    def on_hover(self, handler):
+    def on_hover(self, handler: OptionalEventCallable):
         self._add_event_handler("hover", handler)
         self._set_attr("onHover", True if handler is not None else None)
 
     # on_focus
     @property
-    def on_focus(self):
+    def on_focus(self) -> OptionalEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler):
+    def on_focus(self, handler: OptionalEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self):
+    def on_blur(self) -> OptionalEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler):
+    def on_blur(self, handler: OptionalEventCallable):
         self._add_event_handler("blur", handler)

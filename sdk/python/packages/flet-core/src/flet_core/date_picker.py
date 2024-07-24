@@ -1,13 +1,13 @@
 from datetime import date, datetime
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, Callable
 
 from flet_core import ControlEvent
 from flet_core.control import Control, OptionalNumber
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.textfield import KeyboardType
-from flet_core.types import ResponsiveNumber
+from flet_core.types import ResponsiveNumber, OptionalEventCallable
 from flet_core.utils import deprecated
 
 try:
@@ -29,49 +29,49 @@ class DatePickerEntryMode(Enum):
 
 
 class DatePickerEntryModeChangeEvent(ControlEvent):
-    def __init__(self, entry_mode) -> None:
-        self.entry_mode: Optional[DatePickerEntryMode] = DatePickerEntryMode(entry_mode)
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        self.entry_mode: Optional[DatePickerEntryMode] = DatePickerEntryMode(e.data)
 
 
 class DatePicker(Control):
     """
     A Material-style date picker dialog.
 
-    It is added to [`page.overlay`](page#overlay) and called using its `pick_date()` method.
+    It is added to [`page.overlay`](page#overlay) and can be opened by setting `open=True` or by calling `Page.open()` method.
 
     Depending on the `date_picker_entry_mode`, it will show either a Calendar or an Input (TextField) for picking a date.
 
     Example:
     ```
-    import datetime
     import flet as ft
 
-    def main(page: ft.Page):
-        def change_date(e):
-            print(f"Date picker changed, value is {date_picker.value}")
 
-        def date_picker_dismissed(e):
-            print(f"Date picker dismissed, value is {date_picker.value}")
+    def main(page):
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-        date_picker = ft.DatePicker(
-            on_change=change_date,
-            on_dismiss=date_picker_dismissed,
-            first_date=datetime.datetime(2023, 10, 1),
-            last_date=datetime.datetime(2024, 10, 1),
+        def handle_date_change(e: ft.ControlEvent):
+            page.add(ft.Text(f"Date changed: {e.control.value.strftime('%Y-%m-%d %H:%M %p')}"))
+
+        cupertino_date_picker = ft.CupertinoDatePicker(
+            date_picker_mode=ft.CupertinoDatePickerMode.DATE_AND_TIME,
+            on_change=handle_date_change,
+        )
+        page.add(
+            ft.CupertinoFilledButton(
+                "Open CupertinoDatePicker",
+                on_click=lambda e: page.open(
+                    ft.CupertinoBottomSheet(
+                        cupertino_date_picker,
+                        height=216,
+                        padding=ft.padding.only(top=6),
+                    )
+                ),
+            )
         )
 
-        page.overlay.append(date_picker)
 
-        date_button = ft.ElevatedButton(
-            "Pick date",
-            icon=ft.icons.CALENDAR_MONTH,
-            on_click=lambda _: date_picker.pick_date(),
-        )
-
-        page.add(date_button)
-
-
-    ft.app(target=main)
+    ft.app(main)
     ```
 
     -----
@@ -98,9 +98,11 @@ class DatePicker(Control):
         field_label_text: Optional[str] = None,
         switch_to_calendar_icon: Optional[str] = None,
         switch_to_input_icon: Optional[str] = None,
-        on_change=None,
-        on_dismiss=None,
-        on_entry_mode_change=None,
+        on_change: OptionalEventCallable = None,
+        on_dismiss: OptionalEventCallable = None,
+        on_entry_mode_change: Optional[
+            Callable[[DatePickerEntryModeChangeEvent], None]
+        ] = None,
         #
         # ConstrainedControl
         #
@@ -161,21 +163,26 @@ class DatePicker(Control):
     def before_update(self):
         super().before_update()
 
+    @deprecated(
+        reason="Use Page.open() method instead.",
+        version="0.23.0",
+        delete_version="0.26.0",
+    )
     def pick_date(self):
         self.open = True
         self.update()
 
     @deprecated(
-        reason="Use pick_date() method instead.",
+        reason="Use Page.open() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def pick_date_async(self):
         self.pick_date()
 
     # open
     @property
-    def open(self) -> Optional[bool]:
+    def open(self) -> bool:
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
@@ -349,20 +356,20 @@ class DatePicker(Control):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # on_dismiss
     @property
-    def on_dismiss(self):
+    def on_dismiss(self) -> OptionalEventCallable:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler):
+    def on_dismiss(self, handler: OptionalEventCallable):
         self._add_event_handler("dismiss", handler)
 
     # on_entry_mode_change
@@ -371,5 +378,7 @@ class DatePicker(Control):
         return self.__on_entry_mode_change
 
     @on_entry_mode_change.setter
-    def on_entry_mode_change(self, handler):
+    def on_entry_mode_change(
+        self, handler: Optional[Callable[[DatePickerEntryModeChangeEvent], None]]
+    ):
         self.__on_entry_mode_change.subscribe(handler)

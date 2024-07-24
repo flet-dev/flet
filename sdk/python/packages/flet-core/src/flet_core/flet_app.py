@@ -3,7 +3,13 @@ from typing import Any, Optional, Union
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import AnimationValue, OffsetValue, RotateValue, ScaleValue
+from flet_core.types import (
+    AnimationValue,
+    OffsetValue,
+    RotateValue,
+    ScaleValue,
+    OptionalEventCallable,
+)
 
 
 class FletApp(ConstrainedControl):
@@ -12,7 +18,7 @@ class FletApp(ConstrainedControl):
         url: Optional[str] = None,
         reconnect_interval_ms: Optional[int] = None,
         reconnect_timeout_ms: Optional[int] = None,
-        on_error=None,
+        on_error: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -36,7 +42,7 @@ class FletApp(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -108,9 +114,9 @@ class FletApp(ConstrainedControl):
 
     # on_error
     @property
-    def on_error(self):
+    def on_error(self) -> OptionalEventCallable:
         return self._get_event_handler("error")
 
     @on_error.setter
-    def on_error(self, handler):
+    def on_error(self, handler: OptionalEventCallable):
         self._add_event_handler("error", handler)

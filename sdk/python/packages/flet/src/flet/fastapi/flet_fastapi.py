@@ -1,5 +1,17 @@
+import asyncio
 from contextlib import asynccontextmanager
-from typing import Any, Callable, Coroutine, Dict, List, Optional, Sequence, Type, Union
+from typing import (
+    Any,
+    Awaitable,
+    Callable,
+    Coroutine,
+    Dict,
+    List,
+    Optional,
+    Sequence,
+    Type,
+    Union,
+)
 
 import fastapi
 import flet.fastapi
@@ -39,8 +51,8 @@ class FastAPI(fastapi.FastAPI):
                 Callable[[Request, Any], Coroutine[Any, Any, Response]],
             ]
         ] = None,
-        on_startup: Optional[Sequence[Callable[[], Any]]] = None,
-        on_shutdown: Optional[Sequence[Callable[[], Any]]] = None,
+        on_startup: Optional[Sequence[Callable[[], Optional[Awaitable]]]] = None,
+        on_shutdown: Optional[Sequence[Callable[[], Optional[Awaitable]]]] = None,
         terms_of_service: Optional[str] = None,
         contact: Optional[Dict[str, Union[str, Any]]] = None,
         license_info: Optional[Dict[str, Union[str, Any]]] = None,
@@ -63,11 +75,18 @@ class FastAPI(fastapi.FastAPI):
             await flet.fastapi.app_manager.start()
             if on_startup:
                 for h in on_startup:
-                    h()
+                    if asyncio.iscoroutinefunction(h):
+                        await h()
+                    else:
+                        h()
+
             yield
             if on_shutdown:
                 for h in on_shutdown:
-                    h()
+                    if asyncio.iscoroutinefunction(h):
+                        await h()
+                    else:
+                        h()
             await flet.fastapi.app_manager.shutdown()
 
         super().__init__(

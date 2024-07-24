@@ -11,6 +11,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     UrlTarget,
+    OptionalEventCallable,
 )
 
 
@@ -66,7 +67,7 @@ class CupertinoListTile(ConstrainedControl):
         leading_size: OptionalNumber = None,
         leading_to_title: OptionalNumber = None,
         notched: Optional[bool] = None,
-        on_click=None,
+        on_click: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -92,7 +93,7 @@ class CupertinoListTile(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -182,7 +183,7 @@ class CupertinoListTile(ConstrainedControl):
 
     # leading_size
     @property
-    def leading_size(self) -> OptionalNumber:
+    def leading_size(self) -> float:
         return self._get_attr("leadingSize", data_type="float", def_value=30.0)
 
     @leading_size.setter
@@ -191,7 +192,7 @@ class CupertinoListTile(ConstrainedControl):
 
     # leading_to_title
     @property
-    def leading_to_title(self) -> OptionalNumber:
+    def leading_to_title(self) -> float:
         return self._get_attr("leadingToTitle", data_type="float", def_value=12.0)
 
     @leading_to_title.setter
@@ -245,7 +246,7 @@ class CupertinoListTile(ConstrainedControl):
 
     # notched
     @property
-    def notched(self) -> Optional[bool]:
+    def notched(self) -> bool:
         return self._get_attr("notched", data_type="bool", def_value=False)
 
     @notched.setter
@@ -291,7 +292,7 @@ class CupertinoListTile(ConstrainedControl):
 
     # toggle_inputs
     @property
-    def toggle_inputs(self) -> Optional[bool]:
+    def toggle_inputs(self) -> bool:
         return self._get_attr("toggleInputs", data_type="bool", def_value=False)
 
     @toggle_inputs.setter
@@ -300,10 +301,10 @@ class CupertinoListTile(ConstrainedControl):
 
     # on_click
     @property
-    def on_click(self):
+    def on_click(self) -> OptionalEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)
         self._set_attr("onclick", True if handler is not None else None)

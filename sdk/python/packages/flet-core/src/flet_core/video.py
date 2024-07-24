@@ -16,6 +16,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TextAlign,
+    OptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -90,10 +91,10 @@ class Video(ConstrainedControl):
         pitch: OptionalNumber = None,
         configuration: Optional[VideoConfiguration] = None,
         subtitle_configuration: Optional[VideoSubtitleConfiguration] = None,
-        on_loaded=None,
-        on_enter_fullscreen=None,
-        on_exit_fullscreen=None,
-        on_error=None,
+        on_loaded: OptionalEventCallable = None,
+        on_enter_fullscreen: OptionalEventCallable = None,
+        on_exit_fullscreen: OptionalEventCallable = None,
+        on_error: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -117,7 +118,7 @@ class Video(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -196,7 +197,7 @@ class Video(ConstrainedControl):
     @deprecated(
         reason="Use play() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def play_async(self):
         self.play()
@@ -207,7 +208,7 @@ class Video(ConstrainedControl):
     @deprecated(
         reason="Use pause() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def pause_async(self):
         self.pause()
@@ -218,7 +219,7 @@ class Video(ConstrainedControl):
     @deprecated(
         reason="Use play_or_pause() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def play_or_pause_async(self):
         self.play_or_pause()
@@ -229,7 +230,7 @@ class Video(ConstrainedControl):
     @deprecated(
         reason="Use stop() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def stop_async(self):
         self.stop()
@@ -240,7 +241,7 @@ class Video(ConstrainedControl):
     @deprecated(
         reason="Use next() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def next_async(self):
         self.next()
@@ -251,7 +252,7 @@ class Video(ConstrainedControl):
     @deprecated(
         reason="Use previous() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def previous_async(self):
         self.previous()
@@ -285,7 +286,7 @@ class Video(ConstrainedControl):
     @deprecated(
         reason="Use playlist_add() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def playlist_add_async(self, media: VideoMedia):
         self.playlist_add(media)
@@ -298,7 +299,7 @@ class Video(ConstrainedControl):
     @deprecated(
         reason="Use playlist_remove() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def playlist_remove_async(self, media_index: int):
         self.playlist_remove(media_index)
@@ -415,7 +416,7 @@ class Video(ConstrainedControl):
 
     # wakelock
     @property
-    def wakelock(self) -> Optional[bool]:
+    def wakelock(self) -> bool:
         return self._get_attr("wakelock", data_type="bool", def_value=True)
 
     @wakelock.setter
@@ -424,7 +425,7 @@ class Video(ConstrainedControl):
 
     # autoplay
     @property
-    def autoplay(self) -> Optional[bool]:
+    def autoplay(self) -> bool:
         return self._get_attr("autoPlay", data_type="bool", def_value=False)
 
     @autoplay.setter
@@ -433,7 +434,7 @@ class Video(ConstrainedControl):
 
     # muted
     @property
-    def muted(self) -> Optional[bool]:
+    def muted(self) -> bool:
         return self._get_attr("muted", data_type="bool", def_value=False)
 
     @muted.setter
@@ -442,7 +443,7 @@ class Video(ConstrainedControl):
 
     # shuffle_playlist
     @property
-    def shuffle_playlist(self) -> Optional[bool]:
+    def shuffle_playlist(self) -> bool:
         return self._get_attr("shufflePlaylist", data_type="bool", def_value=False)
 
     @shuffle_playlist.setter
@@ -451,7 +452,7 @@ class Video(ConstrainedControl):
 
     # show_controls
     @property
-    def show_controls(self) -> Optional[bool]:
+    def show_controls(self) -> bool:
         return self._get_attr("showControls", data_type="bool", def_value=True)
 
     @show_controls.setter
@@ -497,7 +498,7 @@ class Video(ConstrainedControl):
 
     # pause_upon_entering_background_mode
     @property
-    def pause_upon_entering_background_mode(self) -> Optional[bool]:
+    def pause_upon_entering_background_mode(self) -> bool:
         return cast(
             bool,
             self._get_attr(
@@ -511,7 +512,7 @@ class Video(ConstrainedControl):
 
     # resume_upon_entering_foreground_mode
     @property
-    def resume_upon_entering_foreground_mode(self) -> Optional[bool]:
+    def resume_upon_entering_foreground_mode(self) -> bool:
         return cast(
             bool,
             self._get_attr(
@@ -558,36 +559,36 @@ class Video(ConstrainedControl):
         return self._get_event_handler("enter_fullscreen")
 
     @on_enter_fullscreen.setter
-    def on_enter_fullscreen(self, handler):
+    def on_enter_fullscreen(self, handler: OptionalEventCallable):
         self._add_event_handler("enter_fullscreen", handler)
         self._set_attr("onEnterFullscreen", True if handler is not None else None)
 
     # on_exit_fullscreen
     @property
-    def on_exit_fullscreen(self):
+    def on_exit_fullscreen(self) -> OptionalEventCallable:
         return self._get_event_handler("exit_fullscreen")
 
     @on_exit_fullscreen.setter
-    def on_exit_fullscreen(self, handler):
+    def on_exit_fullscreen(self, handler: OptionalEventCallable):
         self._add_event_handler("exit_fullscreen", handler)
         self._set_attr("onExitFullscreen", True if handler is not None else None)
 
     # on_loaded
     @property
-    def on_loaded(self):
+    def on_loaded(self) -> OptionalEventCallable:
         return self._get_event_handler("loaded")
 
     @on_loaded.setter
-    def on_loaded(self, handler):
+    def on_loaded(self, handler: OptionalEventCallable):
         self._set_attr("onLoaded", True if handler is not None else None)
         self._add_event_handler("loaded", handler)
 
     # on_error
     @property
-    def on_error(self):
+    def on_error(self) -> OptionalEventCallable:
         return self._get_event_handler("error")
 
     @on_error.setter
-    def on_error(self, handler):
+    def on_error(self, handler: OptionalEventCallable):
         self._set_attr("onError", True if handler is not None else None)
         self._add_event_handler("error", handler)

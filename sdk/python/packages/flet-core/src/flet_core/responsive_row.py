@@ -12,6 +12,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -82,7 +83,7 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -150,7 +151,7 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use clean() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def clean_async(self):
         self.clean()

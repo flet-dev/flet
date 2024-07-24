@@ -20,13 +20,9 @@ SystemUiOverlayStyle overlayStyleFromJson(
       systemNavigationBarDividerColor:
           parseColor(theme, json["system_navigation_bar_divider_color"]),
       systemStatusBarContrastEnforced:
-          json["enforce_system_status_bar_contrast"] != null
-              ? parseBool(json["enforce_system_status_bar_contrast"])
-              : null,
+          parseBool(json["enforce_system_status_bar_contrast"]),
       systemNavigationBarContrastEnforced:
-          json["enforce_system_navigation_bar_contrast"] != null
-              ? parseBool(json["enforce_system_navigation_bar_contrast"])
-              : null,
+          parseBool(json["enforce_system_navigation_bar_contrast"]),
       systemNavigationBarIconBrightness: parseBrightness(
           json["system_navigation_bar_icon_brightness"], invertedBrightness),
       statusBarBrightness:

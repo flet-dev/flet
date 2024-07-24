@@ -183,9 +183,9 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
             textCapitalization: textCapitalization,
             autoFocus: widget.control.attrBool("autoFocus", false)!,
             hintText: widget.control.attrString("barHintText"),
-            backgroundColor: parseMaterialStateColor(
+            backgroundColor: parseWidgetStateColor(
                 Theme.of(context), widget.control, "barBgcolor"),
-            overlayColor: parseMaterialStateColor(
+            overlayColor: parseWidgetStateColor(
                 Theme.of(context), widget.control, "barOverlayColor"),
             leading: barLeadingCtrls.isNotEmpty
                 ? createControl(
@@ -202,7 +202,6 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
               if (onTap) {
                 widget.backend.triggerControlEvent(widget.control.id, "tap");
               }
-              controller.openView();
             },
             onSubmitted: onSubmit
                 ? (String value) {

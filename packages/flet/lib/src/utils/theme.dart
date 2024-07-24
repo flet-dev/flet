@@ -11,6 +11,7 @@ import 'alignment.dart';
 import 'borders.dart';
 import 'buttons.dart';
 import 'colors.dart';
+import 'dismissible.dart';
 import 'drawing.dart';
 import 'edge_insets.dart';
 import 'icons.dart';
@@ -51,10 +52,10 @@ CupertinoThemeData fixCupertinoTheme(
     CupertinoThemeData cupertinoTheme, ThemeData theme) {
   return cupertinoTheme.copyWith(
       applyThemeToAll: true,
-      barBackgroundColor: theme.colorScheme.background,
+      barBackgroundColor: theme.colorScheme.surface,
       textTheme: cupertinoTheme.textTheme.copyWith(
           navTitleTextStyle: cupertinoTheme.textTheme.navTitleTextStyle
-              .copyWith(color: theme.colorScheme.onBackground)));
+              .copyWith(color: theme.colorScheme.onSurface)));
 }
 
 ThemeData parseTheme(Control control, String propName, Brightness? brightness,
@@ -95,9 +96,8 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
   theme = theme.copyWith(
     visualDensity:
         parseVisualDensity(json?["visual_density"], theme.visualDensity)!,
-    pageTransitionsTheme: json?["page_transitions"] != null
-        ? parsePageTransitions(json?["page_transitions"])
-        : theme.pageTransitionsTheme,
+    pageTransitionsTheme: parsePageTransitions(
+        json?["page_transitions"], theme.pageTransitionsTheme)!,
     colorScheme: parseColorScheme(theme, json?["color_scheme"]),
     textTheme: parseTextTheme(theme, theme.textTheme, json?["text_theme"]),
     primaryTextTheme: parseTextTheme(
@@ -200,11 +200,9 @@ ColorScheme? parseColorScheme(ThemeData theme, Map<String, dynamic>? j) {
     onError: parseColor(null, j["on_error"]),
     errorContainer: parseColor(null, j["error_container"]),
     onErrorContainer: parseColor(null, j["on_error_container"]),
-    background: parseColor(null, j["background"]),
-    onBackground: parseColor(null, j["on_background"]),
     surface: parseColor(null, j["surface"]),
     onSurface: parseColor(null, j["on_surface"]),
-    surfaceVariant: parseColor(null, j["surface_variant"]),
+    surfaceContainerHighest: parseColor(null, j["surface_variant"]),
     onSurfaceVariant: parseColor(null, j["on_surface_variant"]),
     outline: parseColor(null, j["outline"]),
     outlineVariant: parseColor(null, j["outline_variant"]),
@@ -251,30 +249,25 @@ ScrollbarThemeData? parseScrollBarTheme(
     return null;
   }
   return theme.scrollbarTheme.copyWith(
-    trackVisibility: getMaterialStateProperty<bool?>(
+    trackVisibility: getWidgetStateProperty<bool?>(
         j["track_visibility"], (jv) => parseBool(jv)),
-    trackColor: getMaterialStateProperty<Color?>(
+    trackColor: getWidgetStateProperty<Color?>(
         j["track_color"], (jv) => parseColor(theme, jv as String)),
-    trackBorderColor: getMaterialStateProperty<Color?>(
+    trackBorderColor: getWidgetStateProperty<Color?>(
         j["track_border_color"], (jv) => parseColor(theme, jv as String)),
-    thumbVisibility: getMaterialStateProperty<bool?>(
+    thumbVisibility: getWidgetStateProperty<bool?>(
         j["thumb_visibility"], (jv) => parseBool(jv)),
-    thumbColor: getMaterialStateProperty<Color?>(
+    thumbColor: getWidgetStateProperty<Color?>(
         j["thumb_color"], (jv) => parseColor(theme, jv as String)),
-    thickness: getMaterialStateProperty<double?>(
-        j["thickness"], (jv) => parseDouble(jv)),
-    radius:
-        j["radius"] != null ? Radius.circular(parseDouble(j["radius"])) : null,
-    crossAxisMargin: j["cross_axis_margin"] != null
-        ? parseDouble(j["cross_axis_margin"])
+    thickness: getWidgetStateProperty<double?>(
+        j["thickness"], (jv) => parseDouble(jv, 0)!),
+    radius: j["radius"] != null
+        ? Radius.circular(parseDouble(j["radius"], 0)!)
         : null,
-    mainAxisMargin: j["main_axis_margin"] != null
-        ? parseDouble(j["main_axis_margin"])
-        : null,
-    minThumbLength: j["min_thumb_length"] != null
-        ? parseDouble(j["min_thumb_length"])
-        : null,
-    interactive: j["interactive"] != null ? parseBool(j["interactive"]) : null,
+    crossAxisMargin: parseDouble(j["cross_axis_margin"]),
+    mainAxisMargin: parseDouble(j["main_axis_margin"]),
+    minThumbLength: parseDouble(j["min_thumb_length"]),
+    interactive: parseBool(j["interactive"]),
   );
 }
 
@@ -286,13 +279,13 @@ TabBarTheme? parseTabBarTheme(ThemeData theme, Map<String, dynamic>? j) {
   var indicatorColor = parseColor(theme, j["indicator_color"]);
 
   return theme.tabBarTheme.copyWith(
-    overlayColor: getMaterialStateProperty<Color?>(
+    overlayColor: getWidgetStateProperty<Color?>(
         j["overlay_color"], (jv) => parseColor(theme, jv as String)),
     dividerColor: parseColor(theme, j["divider_color"]),
     indicatorColor: indicatorColor,
     labelColor: parseColor(theme, j["label_color"]),
     unselectedLabelColor: parseColor(theme, j["unselected_label_color"]),
-    indicatorSize: parseBool(j["indicator_tab_size"], false)
+    indicatorSize: parseBool(j["indicator_tab_size"], false)!
         ? TabBarIndicatorSize.tab
         : TabBarIndicatorSize.label,
     indicator: j["indicator_border_radius"] != null ||
@@ -311,11 +304,10 @@ TabBarTheme? parseTabBarTheme(ThemeData theme, Map<String, dynamic>? j) {
             insets:
                 edgeInsetsFromJson(j["indicator_padding"]) ?? EdgeInsets.zero)
         : null,
-    mouseCursor: getMaterialStateProperty<MouseCursor?>(
+    mouseCursor: getWidgetStateProperty<MouseCursor?>(
         j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
     labelPadding: edgeInsetsFromJson(j["label_padding"]),
-    dividerHeight:
-        j["divider_height"] != null ? parseDouble(j["divider_height"]) : null,
+    dividerHeight: parseDouble(j["divider_height"]),
     labelStyle: j["label_text_style"] != null
         ? textStyleFromJson(theme, j["label_text_style"])
         : null,
@@ -340,18 +332,22 @@ VisualDensity? parseVisualDensity(String? density, [VisualDensity? defValue]) {
   }
 }
 
-PageTransitionsTheme parsePageTransitions(Map<String, dynamic>? json) {
+PageTransitionsTheme? parsePageTransitions(Map<String, dynamic>? json,
+    [PageTransitionsTheme? defValue]) {
+  if (json == null) {
+    return defValue;
+  }
   return PageTransitionsTheme(builders: {
     TargetPlatform.android: parseTransitionsBuilder(
-        json?["android"], const FadeUpwardsPageTransitionsBuilder()),
+        json["android"], const FadeUpwardsPageTransitionsBuilder()),
     TargetPlatform.iOS: parseTransitionsBuilder(
-        json?["ios"], const CupertinoPageTransitionsBuilder()),
+        json["ios"], const CupertinoPageTransitionsBuilder()),
     TargetPlatform.linux: parseTransitionsBuilder(
-        json?["linux"], const ZoomPageTransitionsBuilder()),
+        json["linux"], const ZoomPageTransitionsBuilder()),
     TargetPlatform.macOS: parseTransitionsBuilder(
-        json?["macos"], const ZoomPageTransitionsBuilder()),
+        json["macos"], const ZoomPageTransitionsBuilder()),
     TargetPlatform.windows: parseTransitionsBuilder(
-        json?["windows"], const ZoomPageTransitionsBuilder()),
+        json["windows"], const ZoomPageTransitionsBuilder()),
   });
 }
 
@@ -368,7 +364,7 @@ DialogTheme? parseDialogTheme(ThemeData theme, Map<String, dynamic>? j) {
     shadowColor: parseColor(theme, j["shadow_color"]),
     surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
     iconColor: parseColor(theme, j["icon_color"]),
-    elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
+    elevation: parseDouble(j["elevation"]),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
     titleTextStyle: parseTextStyle("title_text_style"),
     contentTextStyle: parseTextStyle("content_text_style"),
@@ -388,13 +384,11 @@ BottomSheetThemeData? parseBottomSheetTheme(
     shadowColor: parseColor(theme, j["shadow_color"]),
     surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
     dragHandleColor: parseColor(theme, j["drag_handle_color"]),
-    elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
+    elevation: parseDouble(j["elevation"]),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    showDragHandle:
-        j["show_drag_handle"] != null ? parseBool(j["show_drag_handle"]) : null,
+    showDragHandle: parseBool(j["show_drag_handle"]),
     modalBackgroundColor: parseColor(theme, j["modal_bgcolor"]),
-    modalElevation:
-        j["modal_elevation"] != null ? parseDouble(j["modal_elevation"]) : null,
+    modalElevation: parseDouble(j["modal_elevation"]),
     clipBehavior: parseClip(j["clip_behavior"]),
   );
 }
@@ -408,7 +402,7 @@ CardTheme? parseCardTheme(ThemeData theme, Map<String, dynamic>? j) {
       color: parseColor(theme, j["color"]),
       shadowColor: parseColor(theme, j["shadow_color"]),
       surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-      elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
+      elevation: parseDouble(j["elevation"]),
       shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
       clipBehavior: parseClip(j["clip_behavior"]),
       margin: edgeInsetsFromJson(j["margin"]));
@@ -423,12 +417,12 @@ ChipThemeData? parseChipTheme(ThemeData theme, Map<String, dynamic>? j) {
   }
 
   return theme.chipTheme.copyWith(
-    color: getMaterialStateProperty<Color?>(
+    color: getWidgetStateProperty<Color?>(
         j["color"], (jv) => parseColor(theme, jv as String)),
     backgroundColor: parseColor(theme, j["bgcolor"]),
     shadowColor: parseColor(theme, j["shadow_color"]),
     surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-    elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
+    elevation: parseDouble(j["elevation"]),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
     padding: edgeInsetsFromJson(j["padding"]),
     labelPadding: edgeInsetsFromJson(j["label_padding"]),
@@ -447,10 +441,8 @@ ChipThemeData? parseChipTheme(ThemeData theme, Map<String, dynamic>? j) {
             (b) => b.name.toLowerCase() == j["brightness"].toLowerCase())
         : null,
     selectedShadowColor: parseColor(theme, j["selected_shadow_color"]),
-    showCheckmark:
-        j["show_checkmark"] != null ? parseBool(j["show_checkmark"]) : null,
-    pressElevation:
-        j["click_elevation"] != null ? parseDouble(j["click_elevation"]) : null,
+    showCheckmark: parseBool(j["show_checkmark"]),
+    pressElevation: parseDouble(j["click_elevation"]),
   );
 }
 
@@ -469,28 +461,19 @@ FloatingActionButtonThemeData? parseFloatingActionButtonTheme(
     focusColor: parseColor(theme, j["focus_color"]),
     foregroundColor: parseColor(theme, j["foreground_color"]),
     splashColor: parseColor(theme, j["splash_color"]),
-    elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
-    focusElevation:
-        j["focus_elevation"] != null ? parseDouble(j["focus_elevation"]) : null,
-    hoverElevation:
-        j["hover_elevation"] != null ? parseDouble(j["hover_elevation"]) : null,
-    highlightElevation: j["highlight_elevation"] != null
-        ? parseDouble(j["highlight_elevation"])
-        : null,
-    disabledElevation: j["disabled_elevation"] != null
-        ? parseDouble(j["disabled_elevation"])
-        : null,
+    elevation: parseDouble(j["elevation"]),
+    focusElevation: parseDouble(j["focus_elevation"]),
+    hoverElevation: parseDouble(j["hover_elevation"]),
+    highlightElevation: parseDouble(j["highlight_elevation"]),
+    disabledElevation: parseDouble(j["disabled_elevation"]),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    enableFeedback:
-        j["enable_feedback"] != null ? parseBool(j["enable_feedback"]) : null,
+    enableFeedback: parseBool(j["enable_feedback"]),
     extendedPadding: edgeInsetsFromJson(j["extended_padding"]),
     extendedTextStyle: parseTextStyle("extended_text_style"),
-    extendedIconLabelSpacing: j["extended_icon_label_spacing"] != null
-        ? parseDouble(j["extended_icon_label_spacing"])
-        : null,
-    mouseCursor: getMaterialStateProperty<MouseCursor?>(
+    extendedIconLabelSpacing: parseDouble(j["extended_icon_label_spacing"]),
+    mouseCursor: getWidgetStateProperty<MouseCursor?>(
         j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
-    iconSize: j["icon_size"] != null ? parseDouble(j["icon_size"]) : null,
+    iconSize: parseDouble(j["icon_size"]),
   );
 }
 
@@ -505,25 +488,21 @@ NavigationRailThemeData? parseNavigationRailTheme(
 
   return theme.navigationRailTheme.copyWith(
     backgroundColor: parseColor(theme, j["bgcolor"]),
-    elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
+    elevation: parseDouble(j["elevation"]),
     indicatorColor: parseColor(theme, j["indicator_color"]),
     unselectedLabelTextStyle: parseTextStyle("unselected_label_text_style"),
     selectedLabelTextStyle: parseTextStyle("selected_label_text_style"),
-    minWidth: j["min_width"] != null ? parseDouble(j["min_width"]) : null,
+    minWidth: parseDouble(j["min_width"]),
     labelType: j["label_type"] != null
         ? NavigationRailLabelType.values
             .firstWhereOrNull((c) => c.name == j["label_type"])
         : null,
-    groupAlignment:
-        j["group_alignment"] != null ? parseDouble(j["group_alignment"]) : null,
+    groupAlignment: parseDouble(j["group_alignment"]),
     indicatorShape: j["indicator_shape"] != null
         ? outlinedBorderFromJSON(j["indicator_shape"])
         : null,
-    minExtendedWidth: j["min_extended_width"] != null
-        ? parseDouble(j["min_extended_width"])
-        : null,
-    useIndicator:
-        j["use_indicator"] != null ? parseBool(j["use_indicator"]) : null,
+    minExtendedWidth: parseDouble(j["min_extended_width"]),
+    useIndicator: parseBool(j["use_indicator"]),
   );
 }
 
@@ -544,16 +523,11 @@ AppBarTheme? parseAppBarTheme(ThemeData theme, Map<String, dynamic>? j) {
     titleTextStyle: parseTextStyle("title_text_style"),
     toolbarTextStyle: parseTextStyle("toolbar_text_style"),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
-    centerTitle:
-        j["center_title"] != null ? parseBool(j["center_title"]) : null,
-    titleSpacing:
-        j["title_spacing"] != null ? parseDouble(j["title_spacing"]) : null,
-    scrolledUnderElevation: j["scroll_elevation"] != null
-        ? parseDouble(j["scroll_elevation"])
-        : null,
-    toolbarHeight:
-        j["toolbar_height"] != null ? parseDouble(j["toolbar_height"]) : null,
+    elevation: parseDouble(j["elevation"]),
+    centerTitle: parseBool(j["center_title"]),
+    titleSpacing: parseDouble(j["title_spacing"]),
+    scrolledUnderElevation: parseDouble(j["scroll_elevation"]),
+    toolbarHeight: parseDouble(j["toolbar_height"]),
   );
 }
 
@@ -567,8 +541,8 @@ BottomAppBarTheme? parseBottomAppBarTheme(
     color: parseColor(theme, j["color"]),
     shadowColor: parseColor(theme, j["shadow_color"]),
     surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
-    elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
-    height: j["height"] != null ? parseDouble(j["height"]) : null,
+    elevation: parseDouble(j["elevation"]),
+    height: parseDouble(j["height"]),
     padding: edgeInsetsFromJson(j["padding"]),
     //shape:
   );
@@ -580,14 +554,13 @@ RadioThemeData? parseRadioTheme(ThemeData theme, Map<String, dynamic>? j) {
   }
 
   return theme.radioTheme.copyWith(
-    fillColor: getMaterialStateProperty<Color?>(
+    fillColor: getWidgetStateProperty<Color?>(
         j["fill_color"], (jv) => parseColor(theme, jv as String)),
-    splashRadius:
-        j["splash_radius"] != null ? parseDouble(j["splash_radius"]) : null,
-    overlayColor: getMaterialStateProperty<Color?>(
+    splashRadius: parseDouble(j["splash_radius"]),
+    overlayColor: getWidgetStateProperty<Color?>(
         j["overlay_color"], (jv) => parseColor(theme, jv as String)),
     visualDensity: parseVisualDensity(j["visual_density"]),
-    mouseCursor: getMaterialStateProperty<MouseCursor?>(
+    mouseCursor: getWidgetStateProperty<MouseCursor?>(
         j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
   );
 }
@@ -599,20 +572,19 @@ CheckboxThemeData? parseCheckboxTheme(
   }
 
   return theme.checkboxTheme.copyWith(
-    fillColor: getMaterialStateProperty<Color?>(
+    fillColor: getWidgetStateProperty<Color?>(
         j["fill_color"], (jv) => parseColor(theme, jv as String)),
-    splashRadius:
-        j["splash_radius"] != null ? parseDouble(j["splash_radius"]) : null,
-    overlayColor: getMaterialStateProperty<Color?>(
+    splashRadius: parseDouble(j["splash_radius"]),
+    overlayColor: getWidgetStateProperty<Color?>(
         j["overlay_color"], (jv) => parseColor(theme, jv as String)),
     visualDensity: parseVisualDensity(j["visual_density"]),
-    checkColor: getMaterialStateProperty<Color?>(
+    checkColor: getWidgetStateProperty<Color?>(
         j["check_color"], (jv) => parseColor(theme, jv as String)),
     side: j["border_side"] != null
         ? borderSideFromJSON(theme, j["border_side"], null)
         : null,
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    mouseCursor: getMaterialStateProperty<MouseCursor?>(
+    mouseCursor: getWidgetStateProperty<MouseCursor?>(
         j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
   );
 }
@@ -632,8 +604,8 @@ BadgeThemeData? parseBadgeTheme(ThemeData theme, Map<String, dynamic>? j) {
     alignment: alignmentFromJson(j["alignment"]),
     textColor: parseColor(theme, j["text_color"]),
     offset: j["offset"] != null ? offsetFromJson(j["offset"]) : null,
-    smallSize: j["small_size"] != null ? parseDouble(j["small_size"]) : null,
-    largeSize: j["large_size"] != null ? parseDouble(j["large_size"]) : null,
+    smallSize: parseDouble(j["small_size"]),
+    largeSize: parseDouble(j["large_size"]),
   );
 }
 
@@ -643,23 +615,21 @@ SwitchThemeData? parseSwitchTheme(ThemeData theme, Map<String, dynamic>? j) {
   }
 
   return theme.switchTheme.copyWith(
-    thumbColor: getMaterialStateProperty<Color?>(
+    thumbColor: getWidgetStateProperty<Color?>(
         j["thumb_color"], (jv) => parseColor(theme, jv as String)),
-    trackColor: getMaterialStateProperty<Color?>(
+    trackColor: getWidgetStateProperty<Color?>(
         j["track_color"], (jv) => parseColor(theme, jv as String)),
-    overlayColor: getMaterialStateProperty<Color?>(
+    overlayColor: getWidgetStateProperty<Color?>(
         j["overlay_color"], (jv) => parseColor(theme, jv as String)),
     splashRadius:
         j["splash_radius"] != null ? parseDouble(j["splash_radius"]) : null,
-    thumbIcon: getMaterialStateProperty<Icon?>(
+    thumbIcon: getWidgetStateProperty<Icon?>(
         j["thumb_icon"], (jv) => Icon(parseIcon(jv as String))),
-    trackOutlineColor: getMaterialStateProperty<Color?>(
-        j["track_outline_color"],
-        (jv) => parseColor(theme, jv as String),
-        null),
-    trackOutlineWidth: getMaterialStateProperty<double?>(
+    trackOutlineColor: getWidgetStateProperty<Color?>(j["track_outline_color"],
+        (jv) => parseColor(theme, jv as String), null),
+    trackOutlineWidth: getWidgetStateProperty<double?>(
         j["track_outline_width"], (jv) => parseDouble(jv)),
-    mouseCursor: getMaterialStateProperty<MouseCursor?>(
+    mouseCursor: getWidgetStateProperty<MouseCursor?>(
         j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
   );
 }
@@ -671,12 +641,10 @@ DividerThemeData? parseDividerTheme(ThemeData theme, Map<String, dynamic>? j) {
 
   return theme.dividerTheme.copyWith(
     color: parseColor(theme, j["color"]),
-    space: j["space"] != null ? parseDouble(j["space"]) : null,
-    thickness: j["thickness"] != null ? parseDouble(j["thickness"]) : null,
-    indent:
-        j["leading_indent"] != null ? parseDouble(j["leading_indent"]) : null,
-    endIndent:
-        j["trailing_indent"] != null ? parseDouble(j["trailing_indent"]) : null,
+    space: parseDouble(j["space"]),
+    thickness: parseDouble(j["thickness"]),
+    indent: parseDouble(j["leading_indent"]),
+    endIndent: parseDouble(j["trailing_indent"]),
   );
 }
 
@@ -698,24 +666,15 @@ SnackBarThemeData? parseSnackBarTheme(
     disabledActionTextColor: parseColor(theme, j["disabled_action_text_color"]),
     disabledActionBackgroundColor:
         parseColor(theme, j["disabled_action_bgcolor"]),
-    elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
+    elevation: parseDouble(j["elevation"]),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    behavior: j["behavior"] != null
-        ? SnackBarBehavior.values.firstWhereOrNull(
-            (c) => c.name.toLowerCase() == j["behavior"].toLowerCase())
-        : null,
+    behavior: parseSnackBarBehavior(j["behavior"]),
     contentTextStyle: parseTextStyle("content_text_style"),
-    width: j["width"] != null ? parseDouble(j["width"]) : null,
+    width: parseDouble(j["width"]),
     insetPadding: edgeInsetsFromJson(j["inset_padding"]),
-    dismissDirection: j["dismiss_direction"] != null
-        ? DismissDirection.values.firstWhereOrNull(
-            (c) => c.name.toLowerCase() == j["dismiss_direction"].toLowerCase())
-        : null,
-    showCloseIcon:
-        j["show_close_icon"] != null ? parseBool(j["show_close_icon"]) : null,
-    actionOverflowThreshold: j["action_overflow_threshold"] != null
-        ? parseDouble(j["action_overflow_threshold"])
-        : null,
+    dismissDirection: parseDismissDirection(j["dismiss_direction"]),
+    showCloseIcon: parseBool(j["show_close_icon"]),
+    actionOverflowThreshold: parseDouble(j["action_overflow_threshold"]),
   );
 }
 
@@ -731,7 +690,7 @@ MaterialBannerThemeData? parseBannerTheme(
 
   return theme.bannerTheme.copyWith(
     backgroundColor: parseColor(theme, j["bgcolor"]),
-    elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
+    elevation: parseDouble(j["elevation"]),
     dividerColor: parseColor(theme, j["divider_color"]),
     padding: edgeInsetsFromJson(j["padding"]),
     leadingPadding: edgeInsetsFromJson(j["leading_padding"]),
@@ -753,26 +712,24 @@ DatePickerThemeData? parseDatePickerTheme(
 
   return theme.datePickerTheme.copyWith(
     backgroundColor: parseColor(theme, j["bgcolor"]),
-    elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
+    elevation: parseDouble(j["elevation"]),
     dividerColor: parseColor(theme, j["divider_color"]),
     surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
     shadowColor: parseColor(theme, j["shadow_color"]),
     cancelButtonStyle: buttonStyleFromJSON(theme, j["cancel_button_style"]),
     confirmButtonStyle: buttonStyleFromJSON(theme, j["confirm_button_style"]),
-    dayBackgroundColor: getMaterialStateProperty<Color?>(
+    dayBackgroundColor: getWidgetStateProperty<Color?>(
         j["day_bgcolor"], (jv) => parseColor(theme, jv as String)),
     yearStyle: parseTextStyle("year_text_style"),
     dayStyle: parseTextStyle("day_text_style"),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    dayOverlayColor: getMaterialStateProperty<Color?>(
+    dayOverlayColor: getWidgetStateProperty<Color?>(
         j["day_overlay_color"], (jv) => parseColor(theme, jv as String)),
     headerBackgroundColor: parseColor(theme, j["header_bgcolor"]),
-    dayForegroundColor: getMaterialStateProperty<Color?>(
+    dayForegroundColor: getWidgetStateProperty<Color?>(
         j["day_foreground_color"], (jv) => parseColor(theme, jv as String)),
-    rangePickerElevation: j["range_picker_elevation"] != null
-        ? parseDouble(j["range_picker_elevation"])
-        : null,
-    todayBackgroundColor: getMaterialStateProperty<Color?>(
+    rangePickerElevation: parseDouble(j["range_picker_elevation"]),
+    todayBackgroundColor: getWidgetStateProperty<Color?>(
         j["today_bgcolor"], (jv) => parseColor(theme, jv as String)),
     headerForegroundColor: parseColor(theme, j["header_foreground_color"]),
     headerHeadlineStyle: parseTextStyle("header_headline_text_style"),
@@ -783,7 +740,7 @@ DatePickerThemeData? parseDatePickerTheme(
     rangePickerHeaderForegroundColor:
         parseColor(theme, j["range_picker_header_foreground_color"]),
     rangePickerShadowColor: parseColor(theme, j["range_picker_shadow_color"]),
-    todayForegroundColor: getMaterialStateProperty<Color?>(
+    todayForegroundColor: getWidgetStateProperty<Color?>(
         j["today_foreground_color"], (jv) => parseColor(theme, jv as String)),
     rangePickerShape: j["range_picker_shape"] != null
         ? outlinedBorderFromJSON(j["range_picker_shape"])
@@ -796,17 +753,17 @@ DatePickerThemeData? parseDatePickerTheme(
         parseColor(theme, j["range_picker_surface_tint_color"]),
     rangeSelectionBackgroundColor:
         parseColor(theme, j["range_selection_bgcolor"]),
-    rangeSelectionOverlayColor: getMaterialStateProperty<Color?>(
+    rangeSelectionOverlayColor: getWidgetStateProperty<Color?>(
         j["range_selection_overlay_color"],
         (jv) => parseColor(theme, jv as String)),
     todayBorder: j["today_border_side"] != null
         ? borderSideFromJSON(theme, j["today_border_side"])
         : null,
-    yearBackgroundColor: getMaterialStateProperty<Color?>(
+    yearBackgroundColor: getWidgetStateProperty<Color?>(
         j["year_bgcolor"], (jv) => parseColor(theme, jv as String)),
-    yearForegroundColor: getMaterialStateProperty<Color?>(
+    yearForegroundColor: getWidgetStateProperty<Color?>(
         j["year_foreground_color"], (jv) => parseColor(theme, jv as String)),
-    yearOverlayColor: getMaterialStateProperty<Color?>(
+    yearOverlayColor: getWidgetStateProperty<Color?>(
         j["year_overlay_color"], (jv) => parseColor(theme, jv as String)),
     weekdayStyle: parseTextStyle("weekday_text_style"),
   );
@@ -824,7 +781,7 @@ TimePickerThemeData? parseTimePickerTheme(
 
   return theme.timePickerTheme.copyWith(
     backgroundColor: parseColor(theme, j["bgcolor"]),
-    elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
+    elevation: parseDouble(j["elevation"]),
     padding: edgeInsetsFromJson(j["padding"]),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
     dayPeriodBorderSide: j["day_period_border_side"] != null
@@ -891,25 +848,17 @@ ListTileThemeData? parseListTileTheme(
     contentPadding: edgeInsetsFromJson(j["content_padding"]),
     selectedColor: parseColor(theme, j["selected_color"]),
     selectedTileColor: parseColor(theme, j["selected_tile_color"]),
-    isThreeLine:
-        j["is_three_line"] != null ? parseBool(j["is_three_line"]) : null,
+    isThreeLine: parseBool(j["is_three_line"]),
     visualDensity: parseVisualDensity(j["visual_density"]),
     titleTextStyle: parseTextStyle("title_text_style"),
     subtitleTextStyle: parseTextStyle("subtitle_text_style"),
-    minVerticalPadding: j["min_vertical_padding"] != null
-        ? parseDouble(j["min_vertical_padding"])
-        : null,
-    enableFeedback:
-        j["enable_feedback"] != null ? parseBool(j["enable_feedback"]) : null,
-    dense: j["dense"] != null ? parseBool(j["dense"]) : null,
+    minVerticalPadding: parseDouble(j["min_vertical_padding"]),
+    enableFeedback: parseBool(j["enable_feedback"]),
+    dense: parseBool(j["dense"]),
     // style:
-    horizontalTitleGap: j["horizontal_spacing"] != null
-        ? parseDouble(j["horizontal_spacing"])
-        : null,
+    horizontalTitleGap: parseDouble(j["horizontal_spacing"]),
     // titleAlignment: j["title_alignment"] != null ? alignmentFromJson(j["title_alignment"]) : null,
-    minLeadingWidth: j["min_leading_width"] != null
-        ? parseDouble(j["min_leading_width"])
-        : null,
+    minLeadingWidth: parseDouble(j["min_leading_width"]),
     leadingAndTrailingTextStyle:
         parseTextStyle("leading_and_trailing_text_style"),
   );
@@ -925,11 +874,9 @@ TooltipThemeData? parseTooltipTheme(ThemeData theme, Map<String, dynamic>? j) {
   }
 
   return theme.tooltipTheme.copyWith(
-    enableFeedback: j["enable_feedback"] != null,
-    height: j["height"] != null ? parseDouble(j["height"]) : null,
-    excludeFromSemantics: j["exclude_from_semantics"] != null
-        ? parseBool(j["exclude_from_semantics"])
-        : null,
+    enableFeedback: parseBool(j["enable_feedback"]),
+    height: parseDouble(j["height"]),
+    excludeFromSemantics: parseBool(j["exclude_from_semantics"]),
     textStyle: parseTextStyle("text_style"),
   );
 }
@@ -980,9 +927,7 @@ ProgressIndicatorThemeData? parseProgressIndicatorTheme(
     circularTrackColor: parseColor(theme, j["circular_track_color"]),
     linearTrackColor: parseColor(theme, j["linear_track_color"]),
     refreshBackgroundColor: parseColor(theme, j["refresh_bgcolor"]),
-    linearMinHeight: j["linear_min_height"] != null
-        ? parseDouble(j["linear_min_height"])
-        : null,
+    linearMinHeight: parseDouble(j["linear_min_height"]),
   );
 }
 
@@ -1002,16 +947,16 @@ PopupMenuThemeData? parsePopupMenuTheme(
     shadowColor: parseColor(theme, j["shadow_color"]),
     iconColor: parseColor(theme, j["icon_color"]),
     textStyle: parseTextStyle("text_style"),
-    labelTextStyle: getMaterialStateProperty<TextStyle?>(
-        j["label_text_style"], (jv) => parseTextStyle(jv)),
-    enableFeedback: parseBool(j["enable_feedback"], true),
-    elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
-    iconSize: j["icon_size"] != null ? parseDouble(j["icon_size"]) : null,
+    labelTextStyle: getWidgetStateProperty<TextStyle?>(
+        j["label_text_style"], (jv) => textStyleFromJson(theme, jv)),
+    enableFeedback: parseBool(j["enable_feedback"]),
+    elevation: parseDouble(j["elevation"]),
+    iconSize: parseDouble(j["icon_size"]),
     position: j["menu_position"] != null
         ? PopupMenuPosition.values.firstWhereOrNull(
             (c) => c.name.toLowerCase() == j["menu_position"].toLowerCase())
         : null,
-    mouseCursor: getMaterialStateProperty<MouseCursor?>(
+    mouseCursor: getWidgetStateProperty<MouseCursor?>(
         j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
   );
@@ -1023,32 +968,28 @@ SearchBarThemeData? parseSearchBarTheme(
     return null;
   }
 
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
-
   return theme.searchBarTheme.copyWith(
-    surfaceTintColor: getMaterialStateProperty<Color?>(
+    surfaceTintColor: getWidgetStateProperty<Color?>(
         j["surface_tint_color"], (jv) => parseColor(theme, jv as String)),
-    shadowColor: getMaterialStateProperty<Color?>(
+    shadowColor: getWidgetStateProperty<Color?>(
         j["shadow_color"], (jv) => parseColor(theme, jv as String)),
-    elevation: getMaterialStateProperty<double?>(
+    elevation: getWidgetStateProperty<double?>(
         j["elevation"], (jv) => parseDouble(jv)),
-    backgroundColor: getMaterialStateProperty<Color?>(
+    backgroundColor: getWidgetStateProperty<Color?>(
         j["bgcolor"], (jv) => parseColor(theme, jv as String)),
-    overlayColor: getMaterialStateProperty<Color?>(
+    overlayColor: getWidgetStateProperty<Color?>(
         j["overlay_color"], (jv) => parseColor(theme, jv as String)),
-    textStyle: getMaterialStateProperty<TextStyle?>(
-        j["text_style"], (jv) => parseTextStyle(jv)),
-    hintStyle: getMaterialStateProperty<TextStyle?>(
-        j["hint_style"], (jv) => parseTextStyle(jv)),
-    shape: getMaterialStateProperty<OutlinedBorder?>(
+    textStyle: getWidgetStateProperty<TextStyle?>(
+        j["text_style"], (jv) => textStyleFromJson(theme, jv)),
+    hintStyle: getWidgetStateProperty<TextStyle?>(
+        j["hint_style"], (jv) => textStyleFromJson(theme, jv)),
+    shape: getWidgetStateProperty<OutlinedBorder?>(
         j["shape"], (jv) => outlinedBorderFromJSON(jv)),
     textCapitalization: j["text_capitalization"] != null
         ? TextCapitalization.values.firstWhereOrNull((c) =>
             c.name.toLowerCase() == j["text_capitalization"].toLowerCase())
         : null,
-    padding: getMaterialStateProperty<EdgeInsetsGeometry?>(
+    padding: getWidgetStateProperty<EdgeInsetsGeometry?>(
         j["padding"], (jv) => edgeInsetsFromJson(jv)),
   );
 }
@@ -1067,7 +1008,7 @@ SearchViewThemeData? parseSearchViewTheme(
     backgroundColor: parseColor(theme, j["bgcolor"]),
     surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
     dividerColor: parseColor(theme, j["divider_color"]),
-    elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
+    elevation: parseDouble(j["elevation"]),
     headerHintStyle: parseTextStyle("header_hint_text_style"),
     headerTextStyle: parseTextStyle("header_text_style"),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
@@ -1091,14 +1032,10 @@ BottomNavigationBarThemeData? parseBottomNavigationBarTheme(
     backgroundColor: parseColor(theme, j["bgcolor"]),
     selectedItemColor: parseColor(theme, j["selected_item_color"]),
     unselectedItemColor: parseColor(theme, j["unselected_item_color"]),
-    elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
-    enableFeedback: parseBool(j["enable_feedback"], true),
-    showSelectedLabels: j["show_selected_labels"] != null
-        ? parseBool(j["show_selected_labels"])
-        : null,
-    showUnselectedLabels: j["show_unselected_labels"] != null
-        ? parseBool(j["show_unselected_labels"])
-        : null,
+    elevation: parseDouble(j["elevation"]),
+    enableFeedback: parseBool(j["enable_feedback"]),
+    showSelectedLabels: parseBool(j["show_selected_labels"]),
+    showUnselectedLabels: parseBool(j["show_unselected_labels"]),
     selectedLabelStyle: parseTextStyle("selected_label_text_style"),
     unselectedLabelStyle: parseTextStyle("unselected_label_text_style"),
   );
@@ -1110,20 +1047,16 @@ NavigationDrawerThemeData? parseNavigationDrawerTheme(
     return null;
   }
 
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
-
   return theme.navigationDrawerTheme.copyWith(
     backgroundColor: parseColor(theme, j["bgcolor"]),
     shadowColor: parseColor(theme, j["shadow_color"]),
     surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
     indicatorColor: parseColor(theme, j["indicator_color"]),
-    elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
+    elevation: parseDouble(j["elevation"]),
     //indicatorSize: ,
-    tileHeight: j["tile_height"] != null ? parseDouble(j["tile_height"]) : null,
-    labelTextStyle: getMaterialStateProperty<TextStyle?>(
-        j["label_text_style"], (jv) => parseTextStyle(jv)),
+    tileHeight: parseDouble(j["tile_height"]),
+    labelTextStyle: getWidgetStateProperty<TextStyle?>(
+        j["label_text_style"], (jv) => textStyleFromJson(theme, jv)),
     indicatorShape: j["indicator_shape"] != null
         ? outlinedBorderFromJSON(j["indicator_shape"])
         : null,
@@ -1136,21 +1069,17 @@ NavigationBarThemeData? parseNavigationBarTheme(
     return null;
   }
 
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
-
   return theme.navigationBarTheme.copyWith(
     backgroundColor: parseColor(theme, j["bgcolor"]),
     shadowColor: parseColor(theme, j["shadow_color"]),
     surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
     indicatorColor: parseColor(theme, j["indicator_color"]),
-    overlayColor: getMaterialStateProperty<Color?>(
+    overlayColor: getWidgetStateProperty<Color?>(
         j["overlay_color"], (jv) => parseColor(theme, jv as String)),
-    elevation: j["elevation"] != null ? parseDouble(j["elevation"]) : null,
-    height: j["height"] != null ? parseDouble(j["height"]) : null,
-    labelTextStyle: getMaterialStateProperty<TextStyle?>(
-        j["label_text_style"], (jv) => parseTextStyle(jv)),
+    elevation: parseDouble(j["elevation"]),
+    height: parseDouble(j["height"]),
+    labelTextStyle: getWidgetStateProperty<TextStyle?>(
+        j["label_text_style"], (jv) => textStyleFromJson(theme, jv)),
     indicatorShape: j["indicator_shape"] != null
         ? outlinedBorderFromJSON(j["indicator_shape"])
         : null,
@@ -1181,13 +1110,12 @@ IconThemeData? parseIconTheme(ThemeData theme, Map<String, dynamic>? j) {
   return theme.iconTheme.copyWith(
     color: parseColor(theme, j["color"]),
     applyTextScaling: parseBool(j["apply_text_scaling"]),
-    fill: j["fill"] != null ? parseDouble(j["fill"]) : null,
-    opacity: j["opacity"] != null ? parseDouble(j["opacity"]) : null,
-    size: j["size"] != null ? parseDouble(j["size"]) : null,
-    opticalSize:
-        j["optical_size"] != null ? parseDouble(j["optical_size"]) : null,
-    grade: j["grade"] != null ? parseDouble(j["grade"]) : null,
-    weight: j["weight"] != null ? parseDouble(j["weight"]) : null,
+    fill: parseDouble(j["fill"]),
+    opacity: parseDouble(j["opacity"]),
+    size: parseDouble(j["size"]),
+    opticalSize: parseDouble(j["optical_size"]),
+    grade: parseDouble(j["grade"]),
+    weight: parseDouble(j["weight"]),
     shadows:
         j["shadows"] != null ? boxShadowsFromJSON(theme, j["shadows"]) : null,
   );

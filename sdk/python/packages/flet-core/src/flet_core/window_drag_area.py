@@ -9,6 +9,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 
@@ -71,7 +72,7 @@ class WindowDragArea(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -132,7 +133,7 @@ class WindowDragArea(ConstrainedControl):
 
     # maximizable
     @property
-    def maximizable(self) -> Optional[bool]:
+    def maximizable(self) -> bool:
         return self._get_attr("maximizable", data_type="bool", def_value=True)
 
     @maximizable.setter

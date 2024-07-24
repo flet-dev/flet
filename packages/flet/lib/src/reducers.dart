@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flet/src/utils/browser_context_menu.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -58,8 +59,13 @@ AppState appReducer(AppState state, dynamic action) {
       }
       controls[page.id] = page.copyWith(attrs: pageAttrs);
       action.backend.updateControlState("page", props, client: false);
-      action.backend.triggerControlEvent("page", "resize",
-          "${action.newPageSize.width},${action.newPageSize.height}");
+      action.backend.triggerControlEvent(
+          "page",
+          "resized",
+          jsonEncode({
+            "width": action.newPageSize.width,
+            "height": action.newPageSize.height
+          }));
     }
 
     return state.copyWith(
@@ -291,6 +297,14 @@ AppState appReducer(AppState state, dynamic action) {
               .then((value) => sendMethodResult(result: value))
               .onError((error, stackTrace) =>
                   sendMethodResult(error: error?.toString()));
+          break;
+        case "enableBrowserContextMenu":
+          enableBrowserContextMenu().onError((error, stackTrace) =>
+              sendMethodResult(error: error?.toString()));
+          break;
+        case "disableBrowserContextMenu":
+          disableBrowserContextMenu().onError((error, stackTrace) =>
+              sendMethodResult(error: error?.toString()));
           break;
         case "windowToFront":
           windowToFront();

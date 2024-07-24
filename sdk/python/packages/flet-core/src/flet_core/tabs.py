@@ -9,7 +9,7 @@ from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
     ClipBehavior,
-    MaterialState,
+    ControlState,
     MouseCursor,
     OffsetValue,
     PaddingValue,
@@ -17,6 +17,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TabAlignment,
+    OptionalEventCallable,
 )
 
 
@@ -156,13 +157,13 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         is_secondary: Optional[bool] = None,
         label_color: Optional[str] = None,
         unselected_label_color: Optional[str] = None,
-        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
+        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         divider_height: OptionalNumber = None,
         indicator_thickness: OptionalNumber = None,
         enable_feedback: Optional[str] = None,
         mouse_cursor: Optional[MouseCursor] = None,
         clip_behavior: Optional[ClipBehavior] = None,
-        on_change=None,
+        on_change: OptionalEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -188,7 +189,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -272,16 +273,16 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # selected_index
     @property
-    def selected_index(self) -> Optional[int]:
+    def selected_index(self) -> int:
         return self._get_attr("selectedIndex", data_type="int", def_value=0)
 
     @selected_index.setter
@@ -290,7 +291,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # scrollable
     @property
-    def scrollable(self) -> Optional[bool]:
+    def scrollable(self) -> bool:
         return self._get_attr("scrollable", data_type="bool", def_value=True)
 
     @scrollable.setter
@@ -319,7 +320,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # is_secondary
     @property
-    def is_secondary(self) -> Optional[bool]:
+    def is_secondary(self) -> bool:
         return self._get_attr("isSecondary", data_type="bool", def_value=False)
 
     @is_secondary.setter
@@ -347,7 +348,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # divider_height
     @property
-    def divider_height(self):
+    def divider_height(self) -> float:
         return self._get_attr("dividerHeight", data_type="float", def_value=1.0)
 
     @divider_height.setter
@@ -365,7 +366,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # indicator_thickness
     @property
-    def indicator_thickness(self):
+    def indicator_thickness(self) -> float:
         return self._get_attr("indicatorThickness", data_type="float", def_value=2.0)
 
     @indicator_thickness.setter
@@ -420,7 +421,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # indicator_tab_size
     @property
-    def indicator_tab_size(self) -> Optional[bool]:
+    def indicator_tab_size(self) -> bool:
         return self._get_attr("indicatorTabSize", data_type="bool", def_value=False)
 
     @indicator_tab_size.setter
@@ -447,9 +448,9 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__overlay_color = value

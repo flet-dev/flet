@@ -1,5 +1,5 @@
 import json
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union, Callable
 
 from flet_core.border import Border, BorderSide
 from flet_core.constrained_control import ConstrainedControl
@@ -13,19 +13,22 @@ from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
-    MaterialState,
+    ControlState,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     ClipBehavior,
+    OptionalEventCallable,
 )
 
 
 class DataColumnSortEvent(ControlEvent):
-    def __init__(self, i, a) -> None:
-        self.column_index: int = i
-        self.ascending: bool = a
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.column_index: int = d.get("i")
+        self.ascending: bool = d.get("a")
 
 
 class DataColumn(Control):
@@ -34,7 +37,7 @@ class DataColumn(Control):
         label: Control,
         numeric: Optional[bool] = None,
         tooltip: Optional[str] = None,
-        on_sort=None,
+        on_sort: Optional[Callable[[DataColumnSortEvent], None]] = None,
         #
         # Control
         #
@@ -45,9 +48,7 @@ class DataColumn(Control):
     ):
         Control.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
-        self.__on_sort = EventHandler(
-            lambda e: DataColumnSortEvent(**json.loads(e.data))
-        )
+        self.__on_sort = EventHandler(lambda e: DataColumnSortEvent(e))
         self._add_event_handler("sort", self.__on_sort.get_handler())
 
         self.label = label
@@ -77,7 +78,7 @@ class DataColumn(Control):
 
     # numeric
     @property
-    def numeric(self) -> Optional[bool]:
+    def numeric(self) -> bool:
         return self._get_attr("numeric", data_type="bool", def_value=False)
 
     @numeric.setter
@@ -99,7 +100,7 @@ class DataColumn(Control):
         return self.__on_sort
 
     @on_sort.setter
-    def on_sort(self, handler):
+    def on_sort(self, handler: Optional[Callable[[DataColumnSortEvent], None]]):
         self.__on_sort.subscribe(handler)
         self._set_attr("onSort", True if handler is not None else None)
 
@@ -110,11 +111,11 @@ class DataCell(Control):
         content: Control,
         placeholder: Optional[bool] = None,
         show_edit_icon: Optional[bool] = None,
-        on_tap=None,
-        on_double_tap=None,
-        on_long_press=None,
-        on_tap_cancel=None,
-        on_tap_down=None,
+        on_tap: OptionalEventCallable = None,
+        on_double_tap: OptionalEventCallable = None,
+        on_long_press: OptionalEventCallable = None,
+        on_tap_cancel: OptionalEventCallable = None,
+        on_tap_down: Optional[Callable[[TapEvent], None]] = None,
         #
         # Control
         #
@@ -125,7 +126,7 @@ class DataCell(Control):
     ):
         Control.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
 
-        self.__on_tap_down = EventHandler(lambda e: TapEvent(**json.loads(e.data)))
+        self.__on_tap_down = EventHandler(lambda e: TapEvent(e))
         self._add_event_handler("tap_down", self.__on_tap_down.get_handler())
 
         self.content = content
@@ -158,7 +159,7 @@ class DataCell(Control):
 
     # placeholder
     @property
-    def placeholder(self) -> Optional[bool]:
+    def placeholder(self) -> bool:
         return self._get_attr("placeholder", data_type="bool", def_value=False)
 
     @placeholder.setter
@@ -167,7 +168,7 @@ class DataCell(Control):
 
     # show_edit_icon
     @property
-    def show_edit_icon(self) -> Optional[bool]:
+    def show_edit_icon(self) -> bool:
         return self._get_attr("showEditIcon", data_type="bool", def_value=False)
 
     @show_edit_icon.setter
@@ -176,41 +177,41 @@ class DataCell(Control):
 
     # on_double_tap
     @property
-    def on_double_tap(self):
+    def on_double_tap(self) -> OptionalEventCallable:
         return self._get_event_handler("double_tap")
 
     @on_double_tap.setter
-    def on_double_tap(self, handler):
+    def on_double_tap(self, handler: OptionalEventCallable):
         self._add_event_handler("double_tap", handler)
         self._set_attr("onDoubleTap", True if handler is not None else None)
 
     # on_long_press
     @property
-    def on_long_press(self):
+    def on_long_press(self) -> OptionalEventCallable:
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler):
+    def on_long_press(self, handler: OptionalEventCallable):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # on_tap
     @property
-    def on_tap(self):
+    def on_tap(self) -> OptionalEventCallable:
         return self._get_event_handler("tap")
 
     @on_tap.setter
-    def on_tap(self, handler):
+    def on_tap(self, handler: OptionalEventCallable):
         self._add_event_handler("tap", handler)
         self._set_attr("onTap", True if handler is not None else None)
 
     # on_tap_cancel
     @property
-    def on_tap_cancel(self):
+    def on_tap_cancel(self) -> OptionalEventCallable:
         return self._get_event_handler("tap_cancel")
 
     @on_tap_cancel.setter
-    def on_tap_cancel(self, handler):
+    def on_tap_cancel(self, handler: OptionalEventCallable):
         self._add_event_handler("tap_cancel", handler)
         self._set_attr("onTapCancel", True if handler is not None else None)
 
@@ -220,7 +221,7 @@ class DataCell(Control):
         return self.__on_tap_down
 
     @on_tap_down.setter
-    def on_tap_down(self, handler):
+    def on_tap_down(self, handler: Optional[Callable[[TapEvent], None]]):
         self.__on_tap_down.subscribe(handler)
         self._set_attr("onTapDown", True if handler is not None else None)
 
@@ -229,10 +230,10 @@ class DataRow(Control):
     def __init__(
         self,
         cells: List[DataCell],
-        color: Union[None, str, Dict[MaterialState, str]] = None,
+        color: Union[None, str, Dict[ControlState, str]] = None,
         selected: Optional[bool] = None,
-        on_long_press=None,
-        on_select_changed=None,
+        on_long_press: OptionalEventCallable = None,
+        on_select_changed: OptionalEventCallable = None,
         #
         # Control
         #
@@ -254,8 +255,8 @@ class DataRow(Control):
 
     def before_update(self):
         super().before_update()
-        assert (
-                len(list(filter(lambda cell: cell.visible, self.__cells))) > 0
+        assert any(
+            cell.visible for cell in self.__cells
         ), "cells must contain at minimum one visible DataCell"
         self._set_attr_json("color", self.__color)
 
@@ -276,16 +277,16 @@ class DataRow(Control):
 
     # color
     @property
-    def color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__color
 
     @color.setter
-    def color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__color = value
 
     # selected
     @property
-    def selected(self) -> Optional[bool]:
+    def selected(self) -> bool:
         return self._get_attr("selected", data_type="bool", def_value=False)
 
     @selected.setter
@@ -294,21 +295,21 @@ class DataRow(Control):
 
     # on_long_press
     @property
-    def on_long_press(self):
+    def on_long_press(self) -> OptionalEventCallable:
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler):
+    def on_long_press(self, handler: OptionalEventCallable):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # on_select_changed
     @property
-    def on_select_changed(self):
+    def on_select_changed(self) -> OptionalEventCallable:
         return self._get_event_handler("select_changed")
 
     @on_select_changed.setter
-    def on_select_changed(self, handler):
+    def on_select_changed(self, handler: OptionalEventCallable):
         self._add_event_handler("select_changed", handler)
         self._set_attr("onSelectChanged", True if handler is not None else None)
 
@@ -328,19 +329,19 @@ class DataTable(ConstrainedControl):
         vertical_lines: Optional[BorderSide] = None,
         checkbox_horizontal_margin: OptionalNumber = None,
         column_spacing: OptionalNumber = None,
-        data_row_color: Union[None, str, Dict[MaterialState, str]] = None,
+        data_row_color: Union[None, str, Dict[ControlState, str]] = None,
         data_row_min_height: OptionalNumber = None,
         data_row_max_height: OptionalNumber = None,
         data_text_style: Optional[TextStyle] = None,
         bgcolor: Optional[str] = None,
         gradient: Optional[Gradient] = None,
         divider_thickness: OptionalNumber = None,
-        heading_row_color: Union[None, str, Dict[MaterialState, str]] = None,
+        heading_row_color: Union[None, str, Dict[ControlState, str]] = None,
         heading_row_height: OptionalNumber = None,
         heading_text_style: Optional[TextStyle] = None,
         horizontal_margin: OptionalNumber = None,
         clip_behavior: Optional[ClipBehavior] = None,
-        on_select_all=None,
+        on_select_all: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -366,7 +367,7 @@ class DataTable(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -437,12 +438,23 @@ class DataTable(ConstrainedControl):
         visible_columns = list(filter(lambda column: column.visible, self.__columns))
         visible_rows = list(filter(lambda row: row.visible, self.__rows))
         assert (
-                len(visible_columns) > 0
+            len(visible_columns) > 0
         ), "columns must contain at minimum one visible DataColumn"
         assert all(
             len(list(filter(lambda c: c.visible, row.cells))) == len(visible_columns)
             for row in visible_rows
-        ), "each visible DataRow must contain exactly as many visible DataCells as there are visible DataColumns"
+        ), f"each visible DataRow must contain exactly as many visible DataCells as there are visible DataColumns ({len(visible_columns)})"
+        assert (
+            self.data_row_min_height is None
+            or self.data_row_max_height is None
+            or (self.data_row_min_height <= self.data_row_max_height)
+        ), "data_row_min_height must be less than or equal to data_row_max_height"
+        assert (
+            self.divider_thickness is None or self.divider_thickness >= 0
+        ), "divider_thickness must be greater than or equal to 0"
+        assert self.sort_column_index is None or (
+            0 <= self.sort_column_index < len(visible_columns)
+        ), f"sort_column_index must be greater than or equal to 0 and less than the number of columns ({len(visible_columns)})"
         self._set_attr_json("border", self.__border)
         self._set_attr_json("gradient", self.__gradient)
         self._set_attr_json("borderRadius", self.__border_radius)
@@ -536,7 +548,7 @@ class DataTable(ConstrainedControl):
 
     # divider_thickness
     @property
-    def divider_thickness(self) -> OptionalNumber:
+    def divider_thickness(self) -> float:
         return self._get_attr("dividerThickness", data_type="float", def_value=1.0)
 
     @divider_thickness.setter
@@ -554,11 +566,11 @@ class DataTable(ConstrainedControl):
 
     # data_row_color
     @property
-    def data_row_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def data_row_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__data_row_color
 
     @data_row_color.setter
-    def data_row_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def data_row_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__data_row_color = value
 
     # data_row_min_height
@@ -608,11 +620,11 @@ class DataTable(ConstrainedControl):
 
     # heading_row_color
     @property
-    def heading_row_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def heading_row_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__heading_row_color
 
     @heading_row_color.setter
-    def heading_row_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def heading_row_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__heading_row_color = value
 
     # heading_row_height
@@ -635,7 +647,7 @@ class DataTable(ConstrainedControl):
 
     # show_bottom_border
     @property
-    def show_bottom_border(self) -> Optional[bool]:
+    def show_bottom_border(self) -> bool:
         return self._get_attr("showBottomBorder", data_type="bool", def_value=False)
 
     @show_bottom_border.setter
@@ -644,7 +656,7 @@ class DataTable(ConstrainedControl):
 
     # show_checkbox_column
     @property
-    def show_checkbox_column(self) -> Optional[bool]:
+    def show_checkbox_column(self) -> bool:
         return self._get_attr("showCheckboxColumn", data_type="bool", def_value=False)
 
     @show_checkbox_column.setter
@@ -653,7 +665,7 @@ class DataTable(ConstrainedControl):
 
     # sort_ascending
     @property
-    def sort_ascending(self) -> Optional[bool]:
+    def sort_ascending(self) -> bool:
         return self._get_attr("sortAscending", data_type="bool", def_value=False)
 
     @sort_ascending.setter
@@ -681,11 +693,11 @@ class DataTable(ConstrainedControl):
 
     # on_select_all
     @property
-    def on_select_all(self):
+    def on_select_all(self) -> OptionalEventCallable:
         return self._get_event_handler("select_all")
 
     @on_select_all.setter
-    def on_select_all(self, handler):
+    def on_select_all(self, handler: OptionalEventCallable):
         self._add_event_handler("select_all", handler)
         self._set_attr("onSelectAll", True if handler is not None else None)
 

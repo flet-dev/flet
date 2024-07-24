@@ -1,5 +1,5 @@
 import json
-from typing import List, Optional, Union, Any
+from typing import List, Optional, Union, Any, Callable
 
 from flet_core.border import Border
 from flet_core.charts.chart_axis import ChartAxis
@@ -16,6 +16,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 
@@ -42,7 +43,7 @@ class LineChart(ConstrainedControl):
         baseline_y: OptionalNumber = None,
         min_y: OptionalNumber = None,
         max_y: OptionalNumber = None,
-        on_chart_event=None,
+        on_chart_event: Optional[Callable[["LineChartEvent"], None]] = None,
         #
         # ConstrainedControl
         #
@@ -67,7 +68,7 @@ class LineChart(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -103,11 +104,7 @@ class LineChart(ConstrainedControl):
             data=data,
         )
 
-        def convert_linechart_event_data(e):
-            d = json.loads(e.data)
-            return LineChartEvent(**d)
-
-        self.__on_chart_event = EventHandler(convert_linechart_event_data)
+        self.__on_chart_event = EventHandler(lambda e: LineChartEvent(e))
         self._add_event_handler("chart_event", self.__on_chart_event.get_handler())
 
         self.data_series = data_series
@@ -189,7 +186,7 @@ class LineChart(ConstrainedControl):
 
     # interactive
     @property
-    def interactive(self) -> Optional[bool]:
+    def interactive(self) -> bool:
         return self._get_attr("interactive", data_type="bool", def_value=True)
 
     @interactive.setter
@@ -293,52 +290,52 @@ class LineChart(ConstrainedControl):
 
     @baseline_x.setter
     def baseline_x(self, value: OptionalNumber):
-        self._set_attr("baselinex", value)
+        self._set_attr("baselineX", value)
 
     # baseline_y
     @property
     def baseline_y(self) -> OptionalNumber:
-        return self._get_attr("baseliney", data_type="float")
+        return self._get_attr("baselineY", data_type="float")
 
     @baseline_y.setter
     def baseline_y(self, value: OptionalNumber):
-        self._set_attr("baseliney", value)
+        self._set_attr("baselineY", value)
 
     # min_x
     @property
     def min_x(self) -> OptionalNumber:
-        return self._get_attr("minx", data_type="float")
+        return self._get_attr("minX", data_type="float")
 
     @min_x.setter
     def min_x(self, value: OptionalNumber):
-        self._set_attr("minx", value)
+        self._set_attr("minX", value)
 
     # max_x
     @property
     def max_x(self) -> OptionalNumber:
-        return self._get_attr("maxx", data_type="float")
+        return self._get_attr("maxX", data_type="float")
 
     @max_x.setter
     def max_x(self, value: OptionalNumber):
-        self._set_attr("maxx", value)
+        self._set_attr("maxX", value)
 
     # min_y
     @property
     def min_y(self) -> OptionalNumber:
-        return self._get_attr("miny", data_type="float")
+        return self._get_attr("minY", data_type="float")
 
     @min_y.setter
     def min_y(self, value: OptionalNumber):
-        self._set_attr("miny", value)
+        self._set_attr("minY", value)
 
     # max_y
     @property
     def max_y(self) -> OptionalNumber:
-        return self._get_attr("maxy", data_type="float")
+        return self._get_attr("maxY", data_type="float")
 
     @max_y.setter
     def max_y(self, value: OptionalNumber):
-        self._set_attr("maxy", value)
+        self._set_attr("maxY", value)
 
     # on_chart_event
     @property
@@ -346,21 +343,20 @@ class LineChart(ConstrainedControl):
         return self.__on_chart_event
 
     @on_chart_event.setter
-    def on_chart_event(self, handler):
+    def on_chart_event(self, handler: Optional[Callable[["LineChartEvent"], None]]):
         self.__on_chart_event.subscribe(handler)
-        if handler is not None:
-            self._set_attr("onChartEvent", True)
-        else:
-            self._set_attr("onChartEvent", None)
+        self._set_attr("onChartEvent", True if handler is not None else None)
 
 
 class LineChartEvent(ControlEvent):
-    def __init__(self, type, spots) -> None:
-        self.type: str = type
-        self.spots: List[LineChartEventSpot] = spots
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.type: str = d.get("type")
+        self.spots: List[LineChartEventSpot] = d.get("spots")
 
 
 class LineChartEventSpot:
-    def __init__(self, bar_index, spot_index) -> None:
+    def __init__(self, bar_index, spot_index):
         self.bar_index: int = bar_index
         self.spot_index: int = spot_index

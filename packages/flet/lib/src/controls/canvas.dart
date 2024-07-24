@@ -15,6 +15,7 @@ import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/dash_path.dart';
 import '../utils/drawing.dart';
+import '../utils/images.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
 import '../utils/transforms.dart';
@@ -232,11 +233,8 @@ class FletCustomPainter extends CustomPainter {
 
   void drawColor(Canvas canvas, ControlTreeViewModel shape) {
     var color = shape.control.attrColor("color", context) ?? Colors.black;
-    var blendMode = BlendMode.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            shape.control.attrString("blendMode", "")!.toLowerCase(),
-        orElse: () => BlendMode.srcOver);
+    var blendMode = parseBlendMode(
+        shape.control.attrString("blendMode"), BlendMode.srcOver)!;
     canvas.drawColor(color, blendMode);
   }
 
@@ -344,56 +342,63 @@ class FletCustomPainter extends CustomPainter {
     for (var elem in (j as List)) {
       var type = elem["type"];
       if (type == "moveto") {
-        path.moveTo(parseDouble(elem["x"]), parseDouble(elem["y"]));
+        path.moveTo(parseDouble(elem["x"], 0)!, parseDouble(elem["y"], 0)!);
       } else if (type == "lineto") {
-        path.lineTo(parseDouble(elem["x"]), parseDouble(elem["y"]));
+        path.lineTo(parseDouble(elem["x"], 0)!, parseDouble(elem["y"], 0)!);
       } else if (type == "arc") {
         path.addArc(
-            Rect.fromLTWH(parseDouble(elem["x"]), parseDouble(elem["y"]),
-                parseDouble(elem["width"]), parseDouble(elem["height"])),
-            parseDouble(elem["start_angle"]),
-            parseDouble(elem["sweep_angle"]));
+            Rect.fromLTWH(
+                parseDouble(elem["x"], 0)!,
+                parseDouble(elem["y"], 0)!,
+                parseDouble(elem["width"], 0)!,
+                parseDouble(elem["height"], 0)!),
+            parseDouble(elem["start_angle"], 0)!,
+            parseDouble(elem["sweep_angle"], 0)!);
       } else if (type == "arcto") {
-        path.arcToPoint(Offset(parseDouble(elem["x"]), parseDouble(elem["y"])),
-            radius: Radius.circular(parseDouble(elem["radius"])),
-            rotation: parseDouble(elem["rotation"]),
-            largeArc: parseBool(elem["large_arc"]),
-            clockwise: parseBool(elem["clockwise"]));
+        path.arcToPoint(
+            Offset(parseDouble(elem["x"], 0)!, parseDouble(elem["y"], 0)!),
+            radius: Radius.circular(parseDouble(elem["radius"], 0)!),
+            rotation: parseDouble(elem["rotation"], 0)!,
+            largeArc: parseBool(elem["large_arc"], false)!,
+            clockwise: parseBool(elem["clockwise"], true)!);
       } else if (type == "oval") {
         path.addOval(Rect.fromLTWH(
-            parseDouble(elem["x"]),
-            parseDouble(elem["y"]),
-            parseDouble(elem["width"]),
-            parseDouble(elem["height"])));
+            parseDouble(elem["x"], 0)!,
+            parseDouble(elem["y"], 0)!,
+            parseDouble(elem["width"], 0)!,
+            parseDouble(elem["height"], 0)!));
       } else if (type == "rect") {
         var borderRadius = elem["border_radius"] != null
             ? borderRadiusFromJSON(elem["border_radius"])
             : null;
         path.addRRect(RRect.fromRectAndCorners(
-            Rect.fromLTWH(parseDouble(elem["x"]), parseDouble(elem["y"]),
-                parseDouble(elem["width"]), parseDouble(elem["height"])),
+            Rect.fromLTWH(
+                parseDouble(elem["x"], 0)!,
+                parseDouble(elem["y"], 0)!,
+                parseDouble(elem["width"], 0)!,
+                parseDouble(elem["height"], 0)!),
             topLeft: borderRadius?.topLeft ?? Radius.zero,
             topRight: borderRadius?.topRight ?? Radius.zero,
             bottomLeft: borderRadius?.bottomLeft ?? Radius.zero,
             bottomRight: borderRadius?.bottomRight ?? Radius.zero));
       } else if (type == "conicto") {
         path.conicTo(
-            parseDouble(elem["cp1x"]),
-            parseDouble(elem["cp1y"]),
-            parseDouble(elem["x"]),
-            parseDouble(elem["y"]),
-            parseDouble(elem["w"]));
+            parseDouble(elem["cp1x"], 0)!,
+            parseDouble(elem["cp1y"], 0)!,
+            parseDouble(elem["x"], 0)!,
+            parseDouble(elem["y"], 0)!,
+            parseDouble(elem["w"], 0)!);
       } else if (type == "cubicto") {
         path.cubicTo(
-            parseDouble(elem["cp1x"]),
-            parseDouble(elem["cp1y"]),
-            parseDouble(elem["cp2x"]),
-            parseDouble(elem["cp2y"]),
-            parseDouble(elem["x"]),
-            parseDouble(elem["y"]));
+            parseDouble(elem["cp1x"], 0)!,
+            parseDouble(elem["cp1y"], 0)!,
+            parseDouble(elem["cp2x"], 0)!,
+            parseDouble(elem["cp2y"], 0)!,
+            parseDouble(elem["x"], 0)!,
+            parseDouble(elem["y"], 0)!);
       } else if (type == "subpath") {
         path.addPath(buildPath(elem["elements"]),
-            Offset(parseDouble(elem["x"]), parseDouble(elem["y"])));
+            Offset(parseDouble(elem["x"], 0)!, parseDouble(elem["y"], 0)!));
       } else if (type == "close") {
         path.close();
       }

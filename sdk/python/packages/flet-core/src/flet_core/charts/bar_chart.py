@@ -1,5 +1,5 @@
 import json
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Union, Callable
 
 from flet_core.border import Border
 from flet_core.charts.bar_chart_group import BarChartGroup
@@ -16,6 +16,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 
@@ -38,7 +39,7 @@ class BarChart(ConstrainedControl):
         baseline_y: OptionalNumber = None,
         min_y: OptionalNumber = None,
         max_y: OptionalNumber = None,
-        on_chart_event=None,
+        on_chart_event: Optional[Callable[["BarChartEvent"], None]] = None,
         #
         # ConstrainedControl
         #
@@ -63,7 +64,7 @@ class BarChart(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -99,11 +100,7 @@ class BarChart(ConstrainedControl):
             data=data,
         )
 
-        def convert_linechart_event_data(e):
-            d = json.loads(e.data)
-            return BarChartEvent(**d)
-
-        self.__on_chart_event = EventHandler(convert_linechart_event_data)
+        self.__on_chart_event = EventHandler(lambda e: BarChartEvent(e))
         self._add_event_handler("chart_event", self.__on_chart_event.get_handler())
 
         self.bar_groups = bar_groups
@@ -190,7 +187,7 @@ class BarChart(ConstrainedControl):
 
     # interactive
     @property
-    def interactive(self) -> Optional[bool]:
+    def interactive(self) -> bool:
         return self._get_attr("interactive", data_type="bool", def_value=True)
 
     @interactive.setter
@@ -302,17 +299,16 @@ class BarChart(ConstrainedControl):
         return self.__on_chart_event
 
     @on_chart_event.setter
-    def on_chart_event(self, handler):
+    def on_chart_event(self, handler: Optional[Callable[["BarChartEvent"], None]]):
         self.__on_chart_event.subscribe(handler)
-        if handler is not None:
-            self._set_attr("onChartEvent", True)
-        else:
-            self._set_attr("onChartEvent", None)
+        self._set_attr("onChartEvent", True if handler is not None else None)
 
 
 class BarChartEvent(ControlEvent):
-    def __init__(self, type, group_index, rod_index, stack_item_index) -> None:
-        self.type: str = type
-        self.group_index: int = group_index
-        self.rod_index: int = rod_index
-        self.stack_item_index: int = stack_item_index
+    def __init__(self, e: ControlEvent) -> None:
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.type: str = d.get("type")
+        self.group_index: int = d.get("group_index")
+        self.rod_index: int = d.get("rod_index")
+        self.stack_item_index: int = d.get("stack_item_index")

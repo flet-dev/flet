@@ -15,8 +15,7 @@ class TextSourceAttributionControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-        "TextSourceAttributionControl build: ${control.id} (${control.hashCode})");
+    debugPrint("TextSourceAttributionControl build: ${control.id}");
 
     return TextSourceAttribution(
       control.attrString("text", "Placeholder Text")!,

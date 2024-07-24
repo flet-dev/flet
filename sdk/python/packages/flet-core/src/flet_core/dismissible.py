@@ -1,5 +1,5 @@
 import json
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional, Union, Callable
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
@@ -14,6 +14,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -42,10 +43,12 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         movement_duration: Optional[int] = None,
         resize_duration: Optional[int] = None,
         cross_axis_end_offset: OptionalNumber = None,
-        on_update=None,
-        on_dismiss=None,
-        on_confirm_dismiss=None,
-        on_resize=None,
+        on_update: Optional[Callable[["DismissibleUpdateEvent"], None]] = None,
+        on_dismiss: Optional[Callable[["DismissibleDismissEvent"], None]] = None,
+        on_confirm_dismiss: Optional[
+            Callable[["DismissibleDismissEvent"], None]
+        ] = None,
+        on_resize: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -70,7 +73,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -114,13 +117,9 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
-        self.__on_dismiss = EventHandler(lambda e: DismissibleDismissEvent(e.data))
-        self.__on_update = EventHandler(
-            lambda e: DismissibleUpdateEvent(**json.loads(e.data))
-        )
-        self.__on_confirm_dismiss = EventHandler(
-            lambda e: DismissibleDismissEvent(e.data)
-        )
+        self.__on_dismiss = EventHandler(lambda e: DismissibleDismissEvent(e))
+        self.__on_update = EventHandler(lambda e: DismissibleUpdateEvent(e))
+        self.__on_confirm_dismiss = EventHandler(lambda e: DismissibleDismissEvent(e))
 
         self._add_event_handler("dismiss", self.__on_dismiss.get_handler())
         self._add_event_handler("update", self.__on_update.get_handler())
@@ -165,7 +164,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use confirm_dismiss() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def confirm_dismiss_async(self, dismiss: bool):
         self.confirm_dismiss(dismiss)
@@ -251,7 +250,9 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler):
+    def on_dismiss(
+        self, handler: Optional[Callable[["DismissibleDismissEvent"], None]]
+    ):
         self.__on_dismiss.subscribe(handler)
         self._set_attr("onDismiss", True if handler is not None else None)
 
@@ -261,7 +262,9 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("confirm_dismiss")
 
     @on_confirm_dismiss.setter
-    def on_confirm_dismiss(self, handler):
+    def on_confirm_dismiss(
+        self, handler: Optional[Callable[["DismissibleDismissEvent"], None]]
+    ):
         self.__on_confirm_dismiss.subscribe(handler)
         self._set_attr("onConfirmDismiss", True if handler is not None else None)
 
@@ -271,7 +274,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("update")
 
     @on_update.setter
-    def on_update(self, handler):
+    def on_update(self, handler: Optional[Callable[["DismissibleUpdateEvent"], None]]):
         self.__on_update.subscribe(handler)
         self._set_attr("onUpdate", True if handler is not None else None)
 
@@ -281,21 +284,22 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("resize")
 
     @on_resize.setter
-    def on_resize(self, handler):
+    def on_resize(self, handler: OptionalEventCallable):
         self._add_event_handler("resize", handler)
         self._set_attr("onResize", True if handler is not None else None)
 
 
 class DismissibleDismissEvent(ControlEvent):
-    def __init__(self, direction: str) -> None:
-        self.direction: DismissDirection = DismissDirection(direction)
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        self.direction = DismissDirection(e.data)
 
 
 class DismissibleUpdateEvent(ControlEvent):
-    def __init__(
-        self, direction: str, progress: float, reached: bool, previous_reached: bool
-    ) -> None:
-        self.direction: DismissDirection = DismissDirection(direction)
-        self.progress = progress
-        self.reached = reached
-        self.previous_reached = previous_reached
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.direction: DismissDirection = DismissDirection(d.get("direction"))
+        self.progress: float = d.get("progress")
+        self.reached: bool = d.get("reached")
+        self.previous_reached: bool = d.get("previous_reached")

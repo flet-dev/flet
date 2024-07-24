@@ -1,7 +1,7 @@
 import json
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Callable
 
 from flet_core.control import Control
 from flet_core.control_event import ControlEvent
@@ -14,8 +14,11 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-FileTypeString = Literal["any", "media", "image", "video", "audio", "custom"]
-FilePickerState = Literal["pickFiles", "saveFile", "getDirectoryPath"]
+
+class FilePickerState(Enum):
+    PICK_FILES = "pickFiles"
+    SAVE_FILE = "saveFile"
+    GET_DIRECTORY_PATH = "getDirectoryPath"
 
 
 class FilePickerFileType(Enum):
@@ -42,20 +45,25 @@ class FilePickerFile:
 
 
 class FilePickerResultEvent(ControlEvent):
-    def __init__(self, path, files) -> None:
-        self.path: Optional[str] = path
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.path: Optional[str] = d.get("path")
         self.files: Optional[List[FilePickerFile]] = None
+        files = d.get("files")
         if files is not None and isinstance(files, List):
             self.files = []
             for fd in files:
                 self.files.append(FilePickerFile(**fd))
 
 
-@dataclass
 class FilePickerUploadEvent(ControlEvent):
-    file_name: str
-    progress: Optional[float]
-    error: Optional[str]
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.file_name: str = d.get("file_name")
+        self.progress: Optional[float] = d.get("progress")
+        self.error: Optional[str] = d.get("error")
 
 
 class FilePicker(Control):
@@ -103,43 +111,37 @@ class FilePicker(Control):
 
     def __init__(
         self,
-        on_result=None,
-        on_upload=None,
+        on_result: Optional[Callable[[FilePickerResultEvent], None]] = None,
+        on_upload: Optional[Callable[[FilePickerUploadEvent], None]] = None,
         #
         # Control
         #
         ref: Optional[Ref] = None,
-        visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
     ):
-
         Control.__init__(
             self,
             ref=ref,
-            visible=visible,
             disabled=disabled,
             data=data,
         )
 
         def convert_result_event_data(e):
-            d = json.loads(e.data)
-            self.__result = FilePickerResultEvent(**d)
+            self.__result = FilePickerResultEvent(e)
             return self.__result
 
         self.__on_result = EventHandler(convert_result_event_data)
         self._add_event_handler("result", self.__on_result.get_handler())
 
-        def convert_upload_event_data(e):
-            d = json.loads(e.data)
-            return FilePickerUploadEvent(**d)
-
-        self.__on_upload = EventHandler(convert_upload_event_data)
+        self.__on_upload = EventHandler(lambda e: FilePickerUploadEvent(e))
         self._add_event_handler("upload", self.__on_upload.get_handler())
 
         self.__result: Optional[FilePickerResultEvent] = None
         self.__upload: List[FilePickerUploadFile] = []
         self.__allowed_extensions: Optional[List[str]] = None
+        self.__state = None
+        self.__file_type = None
         self.on_result = on_result
         self.on_upload = on_upload
 
@@ -159,7 +161,7 @@ class FilePicker(Control):
         allowed_extensions: Optional[List[str]] = None,
         allow_multiple: Optional[bool] = False,
     ):
-        self.state = "pickFiles"
+        self.state = FilePickerState.PICK_FILES
         self.dialog_title = dialog_title
         self.initial_directory = initial_directory
         self.file_type = file_type
@@ -170,7 +172,7 @@ class FilePicker(Control):
     @deprecated(
         reason="Use pick_files() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def pick_files_async(
         self,
@@ -196,7 +198,7 @@ class FilePicker(Control):
         file_type: FilePickerFileType = FilePickerFileType.ANY,
         allowed_extensions: Optional[List[str]] = None,
     ):
-        self.state = "saveFile"
+        self.state = FilePickerState.SAVE_FILE
         self.dialog_title = dialog_title
         self.file_name = file_name
         self.initial_directory = initial_directory
@@ -207,7 +209,7 @@ class FilePicker(Control):
     @deprecated(
         reason="Use save_file() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def save_file_async(
         self,
@@ -226,7 +228,7 @@ class FilePicker(Control):
         dialog_title: Optional[str] = None,
         initial_directory: Optional[str] = None,
     ):
-        self.state = "getDirectoryPath"
+        self.state = FilePickerState.GET_DIRECTORY_PATH
         self.dialog_title = dialog_title
         self.initial_directory = initial_directory
         self.update()
@@ -234,7 +236,7 @@ class FilePicker(Control):
     @deprecated(
         reason="Use get_directory_path() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def get_directory_path_async(
         self,
@@ -250,7 +252,7 @@ class FilePicker(Control):
     @deprecated(
         reason="Use upload() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def upload_async(self, files: List[FilePickerUploadFile]):
         self.upload(files)
@@ -258,11 +260,12 @@ class FilePicker(Control):
     # state
     @property
     def state(self) -> Optional[FilePickerState]:
-        return self._get_attr("state")
+        return self.__state
 
     @state.setter
     def state(self, value: Optional[FilePickerState]):
-        self._set_attr("state", value)
+        self.__state = value
+        self._set_enum_attr("state", value, FilePickerState)
 
     # result
     @property
@@ -317,7 +320,7 @@ class FilePicker(Control):
 
     # allow_multiple
     @property
-    def allow_multiple(self) -> Optional[bool]:
+    def allow_multiple(self) -> bool:
         return self._get_attr("allowMultiple", data_type="bool", def_value=False)
 
     @allow_multiple.setter
@@ -330,7 +333,7 @@ class FilePicker(Control):
         return self.__on_result
 
     @on_result.setter
-    def on_result(self, handler):
+    def on_result(self, handler: Optional[Callable[[FilePickerResultEvent], None]]):
         self.__on_result.subscribe(handler)
 
     # on_upload
@@ -339,5 +342,5 @@ class FilePicker(Control):
         return self.__on_upload
 
     @on_upload.setter
-    def on_upload(self, handler):
+    def on_upload(self, handler: Optional[Callable[[FilePickerUploadEvent], None]]):
         self.__on_upload.subscribe(handler)

@@ -15,6 +15,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 
@@ -33,7 +34,7 @@ class PopupMenuItem(Control):
         height: OptionalNumber = None,
         padding: PaddingValue = None,
         mouse_cursor: Optional[MouseCursor] = None,
-        on_click=None,
+        on_click: OptionalEventCallable = None,
         #
         # Control
         #
@@ -65,8 +66,8 @@ class PopupMenuItem(Control):
 
     # checked
     @property
-    def checked(self) -> Optional[bool]:
-        return self._get_attr("checked", data_type="bool")
+    def checked(self) -> bool:
+        return self._get_attr("checked", data_type="bool", def_value=False)
 
     @checked.setter
     def checked(self, value: Optional[bool]):
@@ -101,8 +102,8 @@ class PopupMenuItem(Control):
 
     # height
     @property
-    def height(self) -> OptionalNumber:
-        return self._get_attr("height", data_type="float", def_value=48)
+    def height(self) -> float:
+        return self._get_attr("height", data_type="float", def_value=48.0)
 
     @height.setter
     def height(self, value: OptionalNumber):
@@ -128,11 +129,11 @@ class PopupMenuItem(Control):
 
     # on_click
     @property
-    def on_click(self):
+    def on_click(self) -> OptionalEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalEventCallable):
         self._add_event_handler("click", handler)
 
 
@@ -195,9 +196,9 @@ class PopupMenuButton(ConstrainedControl):
         enable_feedback: Optional[bool] = None,
         shape: Optional[OutlinedBorder] = None,
         padding: PaddingValue = None,
-        on_cancelled=None,
-        on_open=None,
-        on_cancel=None,
+        on_cancelled: OptionalEventCallable = None,
+        on_open: OptionalEventCallable = None,
+        on_cancel: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -223,7 +224,7 @@ class PopupMenuButton(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -378,7 +379,7 @@ class PopupMenuButton(ConstrainedControl):
 
     # enable_feedback
     @property
-    def enable_feedback(self) -> Optional[bool]:
+    def enable_feedback(self) -> bool:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
 
     @enable_feedback.setter
@@ -387,8 +388,8 @@ class PopupMenuButton(ConstrainedControl):
 
     # elevation
     @property
-    def elevation(self) -> OptionalNumber:
-        return self._get_attr("elevation", data_type="float", def_value=8)
+    def elevation(self) -> float:
+        return self._get_attr("elevation", data_type="float", def_value=8.0)
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
@@ -434,40 +435,40 @@ class PopupMenuButton(ConstrainedControl):
 
     # on_cancel
     @property
-    def on_cancel(self):
+    def on_cancel(self) -> OptionalEventCallable:
         return self._get_event_handler("cancel")
 
     @on_cancel.setter
-    def on_cancel(self, handler):
+    def on_cancel(self, handler: OptionalEventCallable):
         self._add_event_handler("cancel", handler)
 
     # on_cancelled
     @property
-    def on_cancelled(self):
+    def on_cancelled(self) -> OptionalEventCallable:
         warnings.warn(
             f"on_cancelled is deprecated/renamed since version 0.22.0 "
-            f"and will be removed in version 1.0. Use on_cancel instead.",
+            f"and will be removed in version 0.26.0. Use on_cancel instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
         return self._get_event_handler("cancelled")
 
     @on_cancelled.setter
-    def on_cancelled(self, handler):
+    def on_cancelled(self, handler: OptionalEventCallable):
         self._add_event_handler("cancelled", handler)
         if handler is not None:
             warnings.warn(
                 f"on_cancelled is deprecated/renamed since version 0.22.0 "
-                f"and will be removed in version 1.0. Use on_cancel instead.",
+                f"and will be removed in version 0.26.0. Use on_cancel instead.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
 
     # on_open
     @property
-    def on_open(self):
+    def on_open(self) -> OptionalEventCallable:
         return self._get_event_handler("open")
 
     @on_open.setter
-    def on_open(self, handler):
+    def on_open(self, handler: OptionalEventCallable):
         self._add_event_handler("open", handler)

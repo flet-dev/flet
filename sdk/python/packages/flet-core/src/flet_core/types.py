@@ -1,8 +1,10 @@
-from enum import Enum
-from typing import Dict, Tuple, Union
+from enum import Enum, EnumMeta
+from typing import Any, Callable, Dict, Optional, Protocol, Tuple, Union
+from warnings import warn
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
+from flet_core.control_event import ControlEvent
 from flet_core.margin import Margin
 from flet_core.padding import Padding
 from flet_core.transform import Offset, Rotate, Scale
@@ -20,6 +22,22 @@ class AppView(Enum):
     FLET_APP_HIDDEN = "flet_app_hidden"
 
 
+class WindowEventType(Enum):
+    CLOSE = "close"
+    FOCUS = "focus"
+    BLUR = "blur"
+    HIDE = "hide"
+    SHOW = "show"
+    MAXIMIZE = "maximize"
+    UNMAXIMIZE = "unmaximize"
+    MINIMIZE = "minimize"
+    RESTORE = "restore"
+    RESIZE = "resize"
+    RESIZED = "resized"
+    MOVE = "move"
+    MOVED = "moved"
+
+
 class WebRenderer(Enum):
     AUTO = "auto"
     HTML = "html"
@@ -33,19 +51,19 @@ class UrlTarget(Enum):
     TOP = "_top"
 
 
-PaddingValue = Union[None, int, float, Padding]
+PaddingValue = Optional[Union[int, float, Padding]]
 
-MarginValue = Union[None, int, float, Margin]
+MarginValue = Optional[Union[int, float, Margin]]
 
-BorderRadiusValue = Union[None, int, float, BorderRadius]
+BorderRadiusValue = Optional[Union[int, float, BorderRadius]]
 
-RotateValue = Union[None, int, float, Rotate]
+RotateValue = Optional[Union[int, float, Rotate]]
 
-ScaleValue = Union[None, int, float, Scale]
+ScaleValue = Optional[Union[int, float, Scale]]
 
-OffsetValue = Union[None, Offset, Tuple[Union[float, int], Union[float, int]]]
+OffsetValue = Optional[Union[Offset, Tuple[Union[float, int], Union[float, int]]]]
 
-AnimationValue = Union[None, bool, int, Animation]
+AnimationValue = Optional[Union[bool, int, Animation]]
 
 
 class FontWeight(Enum):
@@ -72,10 +90,49 @@ class NotchShape(Enum):
     CIRCULAR = "circular"
 
 
-ResponsiveNumber = Union[Dict[str, Union[int, float]], int, float]
+Number = Union[int, float]
+ResponsiveNumber = Union[Dict[str, Number], Number]
+OptionalNumber = Optional[Number]
+
+# str type alias
+OptionalString = Optional[str]
 
 
-class MaterialState(Enum):
+class MaterialStateDeprecated(EnumMeta):
+    def __getattribute__(self, item):
+        if item in [
+            "HOVERED",
+            "FOCUSED",
+            "PRESSED",
+            "DRAGGED",
+            "SELECTED",
+            "SCROLLED_UNDER",
+            "DISABLED",
+            "ERROR",
+            "DEFAULT",
+        ]:
+            warn(
+                "MaterialState enum is deprecated and will be removed in version 0.26.0. "
+                "Use ControlState enum instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+        return EnumMeta.__getattribute__(self, item)
+
+
+class MaterialState(Enum, metaclass=MaterialStateDeprecated):
+    HOVERED = "hovered"
+    FOCUSED = "focused"
+    PRESSED = "pressed"
+    DRAGGED = "dragged"
+    SELECTED = "selected"
+    SCROLLED_UNDER = "scrolledUnder"
+    DISABLED = "disabled"
+    ERROR = "error"
+    DEFAULT = ""
+
+
+class ControlState(Enum):
     HOVERED = "hovered"
     FOCUSED = "focused"
     PRESSED = "pressed"
@@ -298,6 +355,51 @@ class StrokeCap(Enum):
 
 
 class StrokeJoin(Enum):
-    MITER = "mitter"
+    MITER = "miter"
     ROUND = "round"
     BEVEL = "bevel"
+
+
+class ThemeVisualDensityDeprecated(EnumMeta):
+    def __getattribute__(self, item):
+        if item in [
+            "STANDARD",
+            "COMPACT",
+            "COMFORTABLE",
+            "ADAPTIVE_PLATFORM_DENSITY",
+        ]:
+            warn(
+                "ThemeVisualDensity enum is deprecated and will be removed in version 0.27.0. "
+                "Use VisualDensity enum instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+        return EnumMeta.__getattribute__(self, item)
+
+
+class ThemeVisualDensity(Enum, metaclass=ThemeVisualDensityDeprecated):
+    STANDARD = "standard"
+    COMPACT = "compact"
+    COMFORTABLE = "comfortable"
+    ADAPTIVEPLATFORMDENSITY = "adaptivePlatformDensity"
+    ADAPTIVE_PLATFORM_DENSITY = "adaptivePlatformDensity"
+
+
+class VisualDensity(Enum):
+    STANDARD = "standard"
+    COMPACT = "compact"
+    COMFORTABLE = "comfortable"
+    ADAPTIVE_PLATFORM_DENSITY = "adaptivePlatformDensity"
+
+
+# Events
+OptionalEventCallable = Optional[Callable[[ControlEvent], None]]
+
+# Wrapper
+Wrapper = Callable[..., Any]
+
+
+# Protocols
+class SupportsStr(Protocol):
+    def __str__(self) -> str:
+        ...

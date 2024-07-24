@@ -73,9 +73,9 @@ def test_datarow_color_multiple_material_states():
     r = ft.DataRow(
         cells=[ft.DataCell(content=ft.Text("Cell"))],
         color={
-            ft.MaterialState.SELECTED: "red",
-            ft.MaterialState.HOVERED: "blue",
-            ft.MaterialState.DEFAULT: "yellow",
+            ft.ControlState.SELECTED: "red",
+            ft.ControlState.HOVERED: "blue",
+            ft.ControlState.DEFAULT: "yellow",
         },
     )
     assert isinstance(r, ft.Control)

@@ -1,0 +1,46 @@
+name: Feature Request
+description: "You are about to create a feature request in Flet. We'd appreciate if you'd first search through our open issues and docs, to make sure the issue isn't already known."
+
+body:
+  - type: checkboxes
+    attributes:
+      label: "Duplicate Check"
+      options:
+        - label: "I have searched the [opened issues](https://github.com/flet-dev/flet/issues) and there are no duplicates"
+          required: true
+  - type: textarea
+    id: "describe-the-feature"
+    attributes:
+      label: "Describe the requested feature"
+      description: "Please present a concise description of the problem to be addressed by this feature request. Please be clear what parts of the problem are considered to be in-scope and out-of-scope."
+      placeholder: Tell us what feature you want...
+    validations:
+      required: true
+  - type: textarea
+    id: "suggestion"
+    attributes:
+      label: "Suggest a solution"
+      description: "Share with us your idea on how to solve the problem. If you have multiple solutions, please present each one separately."
+      placeholder: "A concise description of your preferred solution. Things to address include:
+      
+      * Details of the technical implementation, e.g. Flutter widget solving the problem.
+      * Tradeoffs made in design decisions
+      * Caveats and considerations for the future
+      
+      If there are multiple solutions, please present each one separately. Save comparisons for the very end."
+  - type: textarea
+    id: "screenshots"
+    attributes:
+      label: "Screenshots"
+      description: "One image is worth a thousand words. If you can, please add screenshots to help explain the feature."
+    validations:
+      required: false
+  - type: textarea
+    id: "additional-details"
+    attributes:
+      label: "Additional details"
+      description: "Add any other detail about the request here."
+    validations:
+      required: false
+
+

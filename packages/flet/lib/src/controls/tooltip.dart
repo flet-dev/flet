@@ -1,10 +1,10 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
+import '../utils/others.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 
@@ -38,8 +38,7 @@ class TooltipControl extends StatelessWidget {
     var border = parseBorder(Theme.of(context), control, "border");
     var borderRadius = parseBorderRadius(control, "borderRadius");
     var gradient = parseGradient(Theme.of(context), control, "gradient");
-    var shape = BoxShape.values.firstWhereOrNull((e) =>
-        e.name.toLowerCase() == control.attrString("shape", "")!.toLowerCase());
+    var shape = parseBoxShape(control.attrString("shape"));
 
     var defaultDecoration = TooltipTheme.of(context).decoration ??
         BoxDecoration(

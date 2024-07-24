@@ -1,9 +1,48 @@
+from dataclasses import dataclass
+from enum import Enum
 from typing import Any, Optional, List, Union
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.map import MapLatitudeLongitude
+from flet_core.map.map_layer import MapLayer
 from flet_core.ref import Ref
 from flet_core.types import StrokeCap, StrokeJoin
+
+
+class PatternFit(Enum):
+    SCALE_DOWN = "scaleDown"
+    SCALE_UP = "scaleUp"
+    APPEND_DOT = "appendDot"
+    EXTEND_FINAL_DASH = "extendFinalDash"
+
+
+@dataclass
+class StrokePattern:
+    pass
+
+
+@dataclass
+class SolidStrokePattern(StrokePattern):
+    def __post_init__(self):
+        self.type = "solid"
+
+
+@dataclass
+class DashedStrokePattern(StrokePattern):
+    segments: Optional[List[Union[float, int]]] = None
+    pattern_fit: Optional[PatternFit] = PatternFit.SCALE_UP
+
+    def __post_init__(self):
+        self.type = "dashed"
+
+
+@dataclass
+class DottedStrokePattern(StrokePattern):
+    spacing_factor: OptionalNumber = None
+    pattern_fit: Optional[PatternFit] = PatternFit.SCALE_UP
+
+    def __post_init__(self):
+        self.type = "dotted"
 
 
 class PolylineMarker(Control):
@@ -17,15 +56,15 @@ class PolylineMarker(Control):
 
     def __init__(
         self,
-        points: List[MapLatitudeLongitude],
+        coordinates: List[MapLatitudeLongitude],
         colors_stop: Optional[List[Union[float, int]]] = None,
         gradient_colors: Optional[List[str]] = None,
         border_color: Optional[str] = None,
         color: Optional[str] = None,
         stroke_width: OptionalNumber = None,
         border_stroke_width: OptionalNumber = None,
-        dotted: Optional[bool] = None,
         use_stroke_width_in_meter: Optional[bool] = None,
+        stroke_pattern: Optional[StrokePattern] = None,
         stroke_cap: Optional[StrokeCap] = None,
         stroke_join: Optional[StrokeJoin] = None,
         #
@@ -35,7 +74,6 @@ class PolylineMarker(Control):
         visible: Optional[bool] = None,
         data: Any = None,
     ):
-
         Control.__init__(
             self,
             ref=ref,
@@ -43,29 +81,29 @@ class PolylineMarker(Control):
             data=data,
         )
 
-        self.points = points
+        self.coordinates = coordinates
         self.border_color = border_color
         self.color = color
         self.border_stroke_width = border_stroke_width
-        self.dotted = dotted
         self.stroke_width = stroke_width
         self.stroke_cap = stroke_cap
         self.stroke_join = stroke_join
         self.colors_stop = colors_stop
         self.gradient_colors = gradient_colors
         self.use_stroke_width_in_meter = use_stroke_width_in_meter
+        self.stroke_pattern = stroke_pattern
 
     def _get_control_name(self):
-        return "mappolylinemarker"
+        return "map_polyline_marker"
 
     def before_update(self):
         super().before_update()
-        if isinstance(self.__points, list):
-            self._set_attr_json("points", self.__points)
+        self._set_attr_json("coordinates", self.__coordinates)
         if isinstance(self.__colors_stop, list):
             self._set_attr_json("colorsStop", self.__colors_stop)
         if isinstance(self.__gradient_colors, list):
             self._set_attr_json("gradientColors", self.__gradient_colors)
+        self._set_attr_json("strokePattern", self.__stroke_pattern)
 
     # stroke_cap
     @property
@@ -86,6 +124,15 @@ class PolylineMarker(Control):
     def gradient_colors(self, value: Optional[List[str]]):
         self.__gradient_colors = value
 
+    # stroke_pattern
+    @property
+    def stroke_pattern(self) -> Optional[StrokePattern]:
+        return self.__stroke_pattern
+
+    @stroke_pattern.setter
+    def stroke_pattern(self, value: Optional[StrokePattern]):
+        self.__stroke_pattern = value
+
     # colors_stop
     @property
     def colors_stop(self) -> Optional[List[Union[float, int]]]:
@@ -105,18 +152,9 @@ class PolylineMarker(Control):
         self.__stroke_join = value
         self._set_enum_attr("strokeJoin", value, StrokeJoin)
 
-    # dotted
-    @property
-    def dotted(self) -> Optional[bool]:
-        return self._get_attr("dotted", data_type="bool", def_value=False)
-
-    @dotted.setter
-    def dotted(self, value: Optional[bool]):
-        self._set_attr("dotted", value)
-
     # use_stroke_width_in_meter
     @property
-    def use_stroke_width_in_meter(self) -> Optional[bool]:
+    def use_stroke_width_in_meter(self) -> bool:
         return self._get_attr(
             "useStrokeWidthInMeter", data_type="bool", def_value=False
         )
@@ -145,36 +183,37 @@ class PolylineMarker(Control):
 
     # border_stroke_width
     @property
-    def border_stroke_width(self) -> OptionalNumber:
-        return self._get_attr("borderStrokeWidth", data_type="float", def_value=0)
+    def border_stroke_width(self) -> float:
+        return self._get_attr("borderStrokeWidth", data_type="float", def_value=0.0)
 
     @border_stroke_width.setter
     def border_stroke_width(self, value: OptionalNumber):
+        assert value is None or value >= 0, "border_stroke_width cannot be negative"
         self._set_attr("borderStrokeWidth", value)
 
     # stroke_width
     @property
-    def stroke_width(self) -> OptionalNumber:
-        return self._get_attr("StrokeWidth", data_type="float", def_value=1.0)
+    def stroke_width(self) -> float:
+        return self._get_attr("strokeWidth", data_type="float", def_value=1.0)
 
     @stroke_width.setter
     def stroke_width(self, value: OptionalNumber):
-        self._set_attr("StrokeWidth", value)
+        assert value is None or value >= 0, "stroke_width cannot be negative"
+        self._set_attr("strokeWidth", value)
 
-    # points
+    # coordinates
     @property
-    def points(self) -> Optional[List[MapLatitudeLongitude]]:
-        return self.__points
+    def coordinates(self) -> List[MapLatitudeLongitude]:
+        return self.__coordinates
 
-    @points.setter
-    def points(self, value: Optional[List[MapLatitudeLongitude]]):
-        self.__points = value
+    @coordinates.setter
+    def coordinates(self, value: List[MapLatitudeLongitude]):
+        self.__coordinates = value
 
 
-class PolylineLayer(Control):
+class PolylineLayer(MapLayer):
     """
     A layer to display PolylineMarkers.
-
 
     -----
 
@@ -184,16 +223,17 @@ class PolylineLayer(Control):
     def __init__(
         self,
         polylines: List[PolylineMarker],
-        polyline_culling: Optional[bool] = None,
+        culling_margin: OptionalNumber = None,
+        min_hittable_radius: OptionalNumber = None,
+        simplify_tolerance: OptionalNumber = None,
         #
-        # Control
+        # MapLayer
         #
         ref: Optional[Ref] = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):
-
-        Control.__init__(
+        MapLayer.__init__(
             self,
             ref=ref,
             visible=visible,
@@ -201,27 +241,15 @@ class PolylineLayer(Control):
         )
 
         self.polylines = polylines
-        self.polyline_culling = polyline_culling
+        self.culling_margin = culling_margin
+        self.min_hittable_radius = min_hittable_radius
+        self.simplify_tolerance = simplify_tolerance
 
     def _get_control_name(self):
-        return "mappolylinelayer"
+        return "map_polyline_layer"
 
     def _get_children(self):
         return self.__polylines
-
-    def add(self, *marker: PolylineMarker):
-        self.__polylines.extend(marker)
-        self.update()
-
-    def insert(self, at: int, *polylines: PolylineMarker) -> None:
-        for i, line in enumerate(polylines, start=at):
-            self.__polylines.insert(i, line)
-        self.update()
-
-    def remove(self, *polylines: PolylineMarker) -> None:
-        for line in polylines:
-            self.__polylines.remove(line)
-        self.update()
 
     # polylines
     @property
@@ -232,11 +260,31 @@ class PolylineLayer(Control):
     def polylines(self, value: List[PolylineMarker]):
         self.__polylines = value
 
-    # polyline_culling
+    # culling_margin
     @property
-    def polyline_culling(self) -> Optional[bool]:
-        return self._get_attr("polylineCulling", data_type="bool", def_value=False)
+    def culling_margin(self) -> float:
+        return self._get_attr("cullingMargin", data_type="float", def_value=10.0)
 
-    @polyline_culling.setter
-    def polyline_culling(self, value: Optional[bool]):
-        self._set_attr("polylineCulling", value)
+    @culling_margin.setter
+    def culling_margin(self, value: OptionalNumber):
+        self._set_attr("cullingMargin", value)
+
+    # simplification_tolerance
+    @property
+    def simplification_tolerance(self) -> float:
+        return self._get_attr(
+            "simplificationTolerance", data_type="float", def_value=0.4
+        )
+
+    @simplification_tolerance.setter
+    def simplification_tolerance(self, value: OptionalNumber):
+        self._set_attr("simplificationTolerance", value)
+
+    # min_hittable_radius
+    @property
+    def min_hittable_radius(self) -> float:
+        return self._get_attr("minHittableRadius", data_type="float", def_value=10.0)
+
+    @min_hittable_radius.setter
+    def min_hittable_radius(self, value: OptionalNumber):
+        self._set_attr("minHittableRadius", value)

@@ -7,7 +7,6 @@ from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.theme import ThemeVisualDensity
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
@@ -17,6 +16,9 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
+    ThemeVisualDensity,
+    VisualDensity,
 )
 
 
@@ -60,8 +62,8 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         collapsed_shape: Optional[OutlinedBorder] = None,
         dense: Optional[bool] = None,
         enable_feedback: Optional[bool] = None,
-        visual_density: Optional[ThemeVisualDensity] = None,
-        on_change=None,
+        visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
+        on_change: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -87,7 +89,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -279,7 +281,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # dense
     @property
-    def dense(self) -> Optional[bool]:
+    def dense(self) -> bool:
         return self._get_attr("dense", data_type="bool")
 
     @dense.setter
@@ -288,7 +290,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # enable_feedback
     @property
-    def enable_feedback(self) -> Optional[bool]:
+    def enable_feedback(self) -> bool:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
 
     @enable_feedback.setter
@@ -307,17 +309,17 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # visual_density
     @property
-    def visual_density(self) -> Optional[ThemeVisualDensity]:
+    def visual_density(self) -> Union[None, ThemeVisualDensity, VisualDensity]:
         return self.__visual_density
 
     @visual_density.setter
-    def visual_density(self, value: Optional[ThemeVisualDensity]):
+    def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, ThemeVisualDensity)
+        self._set_enum_attr("visualDensity", value, ThemeVisualDensity, VisualDensity)
 
     # maintain_state
     @property
-    def maintain_state(self) -> Optional[bool]:
+    def maintain_state(self) -> bool:
         return self._get_attr("maintainState", data_type="bool", def_value=False)
 
     @maintain_state.setter
@@ -326,7 +328,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # initially_expanded
     @property
-    def initially_expanded(self) -> Optional[bool]:
+    def initially_expanded(self) -> bool:
         return self._get_attr("initiallyExpanded", data_type="bool", def_value=False)
 
     @initially_expanded.setter
@@ -411,6 +413,6 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
         self._set_attr("onChange", True if handler is not None else None)

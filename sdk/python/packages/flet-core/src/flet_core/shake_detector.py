@@ -2,6 +2,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.types import OptionalEventCallable
 
 
 class ShakeDetector(Control):
@@ -39,7 +40,7 @@ class ShakeDetector(Control):
         shake_slop_time_ms: Optional[int] = None,
         shake_count_reset_time_ms: Optional[int] = None,
         shake_threshold_gravity: OptionalNumber = None,
-        on_shake=None,
+            on_shake: OptionalEventCallable = None,
         #
         # Control
         #
@@ -100,9 +101,9 @@ class ShakeDetector(Control):
 
     # on_shake
     @property
-    def on_shake(self):
+    def on_shake(self) -> OptionalEventCallable:
         return self._get_event_handler("shake")
 
     @on_shake.setter
-    def on_shake(self, handler):
+    def on_shake(self, handler: OptionalEventCallable):
         self._add_event_handler("shake", handler)

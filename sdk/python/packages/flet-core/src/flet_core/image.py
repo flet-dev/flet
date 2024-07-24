@@ -13,6 +13,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 from flet_core.video import FilterQuality
 
@@ -89,7 +90,7 @@ class Image(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -232,7 +233,7 @@ class Image(ConstrainedControl):
 
     # gapless_playback
     @property
-    def gapless_playback(self) -> Optional[bool]:
+    def gapless_playback(self) -> bool:
         return self._get_attr("gaplessPlayback", data_type="bool", def_value=False)
 
     @gapless_playback.setter
@@ -241,7 +242,7 @@ class Image(ConstrainedControl):
 
     # exclude_from_semantics
     @property
-    def exclude_from_semantics(self) -> Optional[bool]:
+    def exclude_from_semantics(self) -> bool:
         return self._get_attr("excludeFromSemantics", data_type="bool", def_value=False)
 
     @exclude_from_semantics.setter

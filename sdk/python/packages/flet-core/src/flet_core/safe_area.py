@@ -12,6 +12,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
 )
 
 
@@ -47,7 +48,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -112,7 +113,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
 
     # left
     @property
-    def left(self) -> Optional[bool]:
+    def left(self) -> bool:
         return self._get_attr("left", data_type="bool", def_value=True)
 
     @left.setter
@@ -121,7 +122,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
 
     # top
     @property
-    def top(self) -> Optional[bool]:
+    def top(self) -> bool:
         return self._get_attr("top", data_type="bool", def_value=True)
 
     @top.setter
@@ -130,7 +131,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
 
     # right
     @property
-    def right(self) -> Optional[bool]:
+    def right(self) -> bool:
         return self._get_attr("right", data_type="bool", def_value=True)
 
     @right.setter
@@ -139,7 +140,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
 
     # bottom
     @property
-    def bottom(self) -> Optional[bool]:
+    def bottom(self) -> bool:
         return self._get_attr("bottom", data_type="bool", def_value=True)
 
     @bottom.setter
@@ -148,7 +149,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
 
     # maintain_bottom_view_padding
     @property
-    def maintain_bottom_view_padding(self) -> Optional[bool]:
+    def maintain_bottom_view_padding(self) -> bool:
         return self._get_attr(
             "maintainBottomViewPadding", data_type="bool", def_value=False
         )
@@ -171,7 +172,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
     def minimum(self) -> PaddingValue:
         warnings.warn(
             f"minimum is deprecated since version 0.23.0 "
-            f"and will be removed in version 1.0. Use minimum_padding instead.",
+            f"and will be removed in version 0.26.0. Use minimum_padding instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
@@ -183,7 +184,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
         if value is not None:
             warnings.warn(
                 f"minimum is deprecated since version 0.23.0 "
-                f"and will be removed in version 1.0. Use minimum_padding instead.",
+                f"and will be removed in version 0.26.0. Use minimum_padding instead.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )

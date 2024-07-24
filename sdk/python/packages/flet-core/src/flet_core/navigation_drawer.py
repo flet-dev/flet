@@ -1,16 +1,18 @@
+from enum import Enum
 from typing import Any, List, Optional
 
 from flet_core.buttons import OutlinedBorder
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
-from flet_core.types import PaddingValue
+from flet_core.types import (
+    OptionalEventCallable,
+    OptionalNumber,
+    PaddingValue,
+)
 
 
 class NavigationDrawerDestination(Control):
-    """
-    Displays an icon with a label, for use in NavigationDrawer destinations.
-
-    """
+    """Displays an icon with a label, for use in NavigationDrawer destinations."""
 
     def __init__(
         self,
@@ -103,6 +105,11 @@ class NavigationDrawerDestination(Control):
         self._set_attr("label", value)
 
 
+class NavigationDrawerPosition(Enum):
+    START = "start"
+    END = "end"
+
+
 class NavigationDrawer(Control):
     """
     Material Design Navigation Drawer component.
@@ -116,67 +123,43 @@ class NavigationDrawer(Control):
 
 
     def main(page: ft.Page):
-        def item_selected_left(e):
-            print(e.control.selected_index)
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-        page.drawer = ft.NavigationDrawer(
-            elevation=40,
-            indicator_color=ft.colors.GREEN_200,
-            indicator_shape=ft.StadiumBorder(),
-            shadow_color=ft.colors.GREEN_900,
-            surface_tint_color=ft.colors.GREEN,
-            selected_index=-1,
-            on_change=item_selected_left,
+        def handle_dismissal(e):
+            page.add(ft.Text("Drawer dismissed"))
+
+        def handle_change(e):
+            page.add(ft.Text(f"Selected Index changed: {e.selected_index}"))
+            # page.close(drawer)
+
+        drawer = ft.NavigationDrawer(
+            on_dismiss=handle_dismissal,
+            on_change=handle_change,
             controls=[
                 ft.Container(height=12),
                 ft.NavigationDrawerDestination(
                     label="Item 1",
-                    icon=ft.icons.ABC,
-                    selected_icon_content=ft.Icon(ft.icons.ACCESS_ALARM),
+                    icon=ft.icons.DOOR_BACK_DOOR_OUTLINED,
+                    selected_icon_content=ft.Icon(ft.icons.DOOR_BACK_DOOR),
                 ),
                 ft.Divider(thickness=2),
                 ft.NavigationDrawerDestination(
-                    icon_content=ft.Icon(ft.icons.MAIL),
+                    icon_content=ft.Icon(ft.icons.MAIL_OUTLINED),
                     label="Item 2",
-                    selected_icon=ft.icons.PHISHING,
+                    selected_icon=ft.icons.MAIL,
                 ),
                 ft.NavigationDrawerDestination(
-                    icon_content=ft.Icon(ft.icons.PHONE),
+                    icon_content=ft.Icon(ft.icons.PHONE_OUTLINED),
                     label="Item 3",
-                    selected_icon=ft.icons.PHISHING,
+                    selected_icon=ft.icons.PHONE,
                 ),
             ],
         )
 
-        end_drawer = ft.NavigationDrawer(
-            controls=[
-                ft.NavigationDrawerDestination(
-                    icon=ft.icons.ADD_TO_HOME_SCREEN_SHARP, label="Item 1"
-                ),
-                ft.NavigationDrawerDestination(icon=ft.icons.ADD_COMMENT, label="Item 2"),
-            ],
-        )
-
-        def show_drawer(e):
-            page.drawer.open = True
-            page.drawer.update()
-
-        def show_end_drawer(e):
-            page.show_end_drawer(end_drawer)
-
-        page.add(
-            ft.Row(
-                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-                controls=[
-                    ft.ElevatedButton("Show drawer", on_click=show_drawer),
-                    ft.ElevatedButton("Show end drawer", on_click=show_end_drawer),
-                ],
-            )
-        )
+        page.add(ft.ElevatedButton("Show drawer", on_click=lambda e: page.open(drawer)))
 
 
     ft.app(main)
-
     ```
 
     -----
@@ -196,8 +179,9 @@ class NavigationDrawer(Control):
         shadow_color: Optional[str] = None,
         surface_tint_color: Optional[str] = None,
         tile_padding: PaddingValue = None,
-        on_change=None,
-        on_dismiss=None,
+        position: Optional[NavigationDrawerPosition] = None,
+        on_change: OptionalEventCallable = None,
+        on_dismiss: OptionalEventCallable = None,
         #
         # Control
         #
@@ -224,6 +208,7 @@ class NavigationDrawer(Control):
         self.shadow_color = shadow_color
         self.surface_tint_color = surface_tint_color
         self.tile_padding = tile_padding
+        self.position = position
         self.on_change = on_change
         self.on_dismiss = on_dismiss
 
@@ -240,7 +225,7 @@ class NavigationDrawer(Control):
 
     # open
     @property
-    def open(self) -> Optional[bool]:
+    def open(self) -> bool:
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
@@ -254,11 +239,11 @@ class NavigationDrawer(Control):
 
     @controls.setter
     def controls(self, value: Optional[List[Control]]):
-        self.__controls = value if value is not None else []
+        self.__controls = value or []
 
     # selected_index
     @property
-    def selected_index(self) -> Optional[int]:
+    def selected_index(self) -> int:
         return self._get_attr("selectedIndex", data_type="int", def_value=0)
 
     @selected_index.setter
@@ -267,12 +252,21 @@ class NavigationDrawer(Control):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[str]:
         return self._get_attr("bgcolor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: Optional[str]):
         self._set_attr("bgcolor", value)
+
+    # position
+    @property
+    def position(self) -> Optional[NavigationDrawerPosition]:
+        return self.__position
+
+    @position.setter
+    def position(self, value: Optional[NavigationDrawerPosition]):
+        self.__position = value or NavigationDrawerPosition.START
 
     # elevation
     @property
@@ -285,11 +279,11 @@ class NavigationDrawer(Control):
 
     # indicator_color
     @property
-    def indicator_color(self):
+    def indicator_color(self) -> Optional[str]:
         return self._get_attr("indicatorColor")
 
     @indicator_color.setter
-    def indicator_color(self, value):
+    def indicator_color(self, value: Optional[str]):
         self._set_attr("indicatorColor", value)
 
     # indicator_shape
@@ -303,20 +297,20 @@ class NavigationDrawer(Control):
 
     # shadow_color
     @property
-    def shadow_color(self):
+    def shadow_color(self) -> Optional[str]:
         return self._get_attr("shadowColor")
 
     @shadow_color.setter
-    def shadow_color(self, value):
+    def shadow_color(self, value: Optional[str]):
         self._set_attr("shadowColor", value)
 
     # surface_tint_color
     @property
-    def surface_tint_color(self):
+    def surface_tint_color(self) -> Optional[str]:
         return self._get_attr("surfaceTintColor")
 
     @surface_tint_color.setter
-    def surface_tint_color(self, value):
+    def surface_tint_color(self, value: Optional[str]):
         self._set_attr("surfaceTintColor", value)
 
     # tile_padding
@@ -330,18 +324,18 @@ class NavigationDrawer(Control):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalEventCallable):
         self._add_event_handler("change", handler)
 
     # on_dismiss
     @property
-    def on_dismiss(self):
+    def on_dismiss(self) -> OptionalEventCallable:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler):
+    def on_dismiss(self, handler: OptionalEventCallable):
         self._add_event_handler("dismiss", handler)

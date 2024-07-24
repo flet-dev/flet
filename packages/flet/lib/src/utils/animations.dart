@@ -19,7 +19,8 @@ ImplicitAnimationDetails? parseAnimation(Control control, String propName,
 ImplicitAnimationDetails animationFromJSON(dynamic json) {
   if (json is int) {
     return ImplicitAnimationDetails(
-        duration: Duration(milliseconds: parseInt(json)), curve: Curves.linear);
+        duration: Duration(milliseconds: parseInt(json, 0)!),
+        curve: Curves.linear);
   } else if (json is bool && json == true) {
     return ImplicitAnimationDetails(
         duration: const Duration(milliseconds: 1000), curve: Curves.linear);
@@ -41,8 +42,8 @@ class ImplicitAnimationDetails {
   }
 }
 
-Curve? parseCurve(String? s, [Curve? defaultValue]) {
-  switch (s?.toLowerCase()) {
+Curve? parseCurve(String? value, [Curve? defValue]) {
+  switch (value?.toLowerCase()) {
     case "bouncein":
       return Curves.bounceIn;
     case "bounceinout":
@@ -126,6 +127,6 @@ Curve? parseCurve(String? s, [Curve? defaultValue]) {
     case "slowmiddle":
       return Curves.slowMiddle;
     default:
-      return defaultValue;
+      return defValue;
   }
 }
