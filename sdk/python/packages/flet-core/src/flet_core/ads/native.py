@@ -114,6 +114,9 @@ class NativeAd(BaseAd):
             on_impression=on_impression,
             on_click=on_click,
             on_will_dismiss=on_will_dismiss,
+            #
+            # ConstrainedControl
+            #
             ref=ref,
             key=key,
             width=width,

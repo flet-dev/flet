@@ -9,6 +9,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    PagePlatform,
 )
 
 
@@ -93,6 +94,12 @@ class BaseAd(ConstrainedControl):
         self.on_click = on_click
         self.on_will_dismiss = on_will_dismiss
         self.unit_id = unit_id
+
+    def before_update(self):
+        assert self.page.platform in [
+            PagePlatform.ANDROID,
+            PagePlatform.IOS,
+        ], f"{self.__class__.__name__} is only supported on Mobile (Android and iOS). "
 
     @property
     def unit_id(self) -> str:
