@@ -63,7 +63,7 @@ class Shadow(Shape):
 
     # transparent_occluder
     @property
-    def transparent_occluder(self) -> Optional[bool]:
+    def transparent_occluder(self) -> bool:
         return self._get_attr("transparentOccluder", data_type="bool", def_value=False)
 
     @transparent_occluder.setter

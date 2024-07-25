@@ -196,8 +196,8 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     # horizontal
     @property
-    def horizontal(self) -> Optional[bool]:
-        return self._get_attr("horizontal")
+    def horizontal(self) -> bool:
+        return self._get_attr("horizontal", data_type="bool", def_value=False)
 
     @horizontal.setter
     def horizontal(self, value: Optional[bool]):

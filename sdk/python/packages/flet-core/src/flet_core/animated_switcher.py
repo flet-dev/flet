@@ -175,7 +175,7 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # duration
     @property
-    def duration(self) -> Optional[int]:
+    def duration(self) -> int:
         return self._get_attr("duration", data_type="int", def_value=1000)
 
     @duration.setter
@@ -184,7 +184,7 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # reverse_duration
     @property
-    def reverse_duration(self) -> Optional[int]:
+    def reverse_duration(self) -> int:
         return self._get_attr("reverseDuration", data_type="int", def_value=1000)
 
     @reverse_duration.setter

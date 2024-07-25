@@ -31,7 +31,6 @@ class Marker(Control):
         visible: Optional[bool] = None,
         data: Any = None,
     ):
-
         Control.__init__(
             self,
             ref=ref,
@@ -68,8 +67,8 @@ class Marker(Control):
 
     # rotate
     @property
-    def rotate(self) -> Optional[bool]:
-        return self._get_attr("rotate", data_type="bool")
+    def rotate(self) -> bool:
+        return self._get_attr("rotate", data_type="bool", def_value=False)
 
     @rotate.setter
     def rotate(self, value: Optional[bool]):
@@ -77,7 +76,7 @@ class Marker(Control):
 
     # height
     @property
-    def height(self) -> OptionalNumber:
+    def height(self) -> float:
         return self._get_attr("height", data_type="float", def_value=30.0)
 
     @height.setter
@@ -87,7 +86,7 @@ class Marker(Control):
 
     # width
     @property
-    def width(self) -> OptionalNumber:
+    def width(self) -> float:
         return self._get_attr("width", data_type="float", def_value=30.0)
 
     @width.setter
@@ -135,7 +134,6 @@ class MarkerLayer(MapLayer):
         visible: Optional[bool] = None,
         data: Any = None,
     ):
-
         MapLayer.__init__(
             self,
             ref=ref,
@@ -177,7 +175,7 @@ class MarkerLayer(MapLayer):
 
     # rotate
     @property
-    def rotate(self) -> Optional[bool]:
+    def rotate(self) -> bool:
         return self._get_attr("rotate", data_type="bool", def_value=False)
 
     @rotate.setter

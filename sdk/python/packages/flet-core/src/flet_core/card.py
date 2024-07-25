@@ -247,7 +247,7 @@ class Card(ConstrainedControl, AdaptiveControl):
 
     # is_semantic_container
     @property
-    def is_semantic_container(self) -> Optional[bool]:
+    def is_semantic_container(self) -> bool:
         return self._get_attr("isSemanticContainer", data_type="bool", def_value=True)
 
     @is_semantic_container.setter
@@ -256,7 +256,7 @@ class Card(ConstrainedControl, AdaptiveControl):
 
     # show_border_on_foreground
     @property
-    def show_border_on_foreground(self) -> Optional[bool]:
+    def show_border_on_foreground(self) -> bool:
         return self._get_attr(
             "showBorderOnForeground", data_type="bool", def_value=True
         )

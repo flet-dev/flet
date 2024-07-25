@@ -436,7 +436,7 @@ class Dropdown(FormFieldControl):
 
     # icon_size
     @property
-    def icon_size(self) -> OptionalNumber:
+    def icon_size(self) -> float:
         return self._get_attr("iconSize", data_type="float", def_value=24.0)
 
     @icon_size.setter
@@ -454,7 +454,7 @@ class Dropdown(FormFieldControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
@@ -463,7 +463,7 @@ class Dropdown(FormFieldControl):
 
     # enable_feedback
     @property
-    def enable_feedback(self) -> Optional[bool]:
+    def enable_feedback(self) -> bool:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
 
     @enable_feedback.setter
@@ -472,8 +472,8 @@ class Dropdown(FormFieldControl):
 
     # elevation
     @property
-    def elevation(self) -> OptionalNumber:
-        return self._get_attr("elevation", data_type="float", def_value=8)
+    def elevation(self) -> float:
+        return self._get_attr("elevation", data_type="float", def_value=8.0)
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):

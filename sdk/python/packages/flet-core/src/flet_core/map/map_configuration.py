@@ -181,7 +181,7 @@ class MapConfiguration(Control):
 
     # initial_rotation
     @property
-    def initial_rotation(self) -> OptionalNumber:
+    def initial_rotation(self) -> float:
         return self._get_attr("initialRotation", data_type="float", def_value=0.0)
 
     @initial_rotation.setter
@@ -190,7 +190,7 @@ class MapConfiguration(Control):
 
     # initial_zoom
     @property
-    def initial_zoom(self) -> OptionalNumber:
+    def initial_zoom(self) -> float:
         return self._get_attr("initialZoom", data_type="float", def_value=13.0)
 
     @initial_zoom.setter
@@ -199,7 +199,7 @@ class MapConfiguration(Control):
 
     # keep_alive
     @property
-    def keep_alive(self) -> Optional[bool]:
+    def keep_alive(self) -> bool:
         return self._get_attr("keepAlive", data_type="bool", def_value=False)
 
     @keep_alive.setter
@@ -321,12 +321,12 @@ class MapTapEvent(ControlEvent):
     def __init__(self, e: ControlEvent) -> None:
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.local_x: Optional[float] = d["lx"]
-        self.local_y: Optional[float] = d["ly"]
-        self.global_x: float = d["gx"]
-        self.global_y: float = d["gy"]
+        self.local_x: Optional[float] = d.get("lx")
+        self.local_y: Optional[float] = d.get("ly")
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")
         self.coordinates: MapLatitudeLongitude = MapLatitudeLongitude(
-            d["lat"], d["long"]
+            d.get("lat"), d.get("long")
         )
 
 
@@ -334,11 +334,11 @@ class MapPositionChangeEvent(ControlEvent):
     def __init__(self, e: ControlEvent) -> None:
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.min_zoom: Optional[float] = d["min_zoom"]
-        self.max_zoom: Optional[float] = d["max_zoom"]
-        self.rot: float = d["rot"]
+        self.min_zoom: Optional[float] = d.get("min_zoom")
+        self.max_zoom: Optional[float] = d.get("max_zoom")
+        self.rot: float = d.get("rot")
         self.coordinates: MapLatitudeLongitude = MapLatitudeLongitude(
-            d["lat"], d["long"]
+            d.get("lat"), d.get("long")
         )
 
 
@@ -346,11 +346,11 @@ class MapPointerEvent(ControlEvent):
     def __init__(self, e: ControlEvent) -> None:
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.device_type: MapPointerDeviceType = MapPointerDeviceType(d["kind"])
-        self.global_y: float = d["gy"]
-        self.global_x: float = d["gx"]
+        self.device_type: MapPointerDeviceType = MapPointerDeviceType(d.get("kind"))
+        self.global_y: float = d.get("gy")
+        self.global_x: float = d.get("gx")
         self.coordinates: MapLatitudeLongitude = MapLatitudeLongitude(
-            d["lat"], d["long"]
+            d.get("lat"), d.get("long")
         )
 
 
@@ -381,11 +381,11 @@ class MapEvent(ControlEvent):
     def __init__(self, e: ControlEvent) -> None:
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.source: MapEventSource = MapEventSource(d["src"])
+        self.source: MapEventSource = MapEventSource(d.get("src"))
         self.center: MapLatitudeLongitude = MapLatitudeLongitude(
-            d["c_lat"], d["c_long"]
+            d.get("c_lat"), d.get("c_long")
         )
-        self.zoom: float = d["zoom"]
-        self.min_zoom: float = d["min_zoom"]
-        self.max_zoom: float = d["max_zoom"]
-        self.rotation: float = d["rot"]
+        self.zoom: float = d.get("zoom")
+        self.min_zoom: float = d.get("min_zoom")
+        self.max_zoom: float = d.get("max_zoom")
+        self.rotation: float = d.get("rot")

@@ -186,8 +186,8 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     # horizontal
     @property
-    def horizontal(self) -> Optional[bool]:
-        return self._get_attr("horizontal")
+    def horizontal(self) -> bool:
+        return self._get_attr("horizontal", data_type="bool", def_value=False)
 
     @horizontal.setter
     def horizontal(self, value: Optional[bool]):
@@ -231,8 +231,8 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     # first_item_prototype
     @property
-    def first_item_prototype(self) -> Optional[bool]:
-        return self._get_attr("firstItemPrototype", data_type="bool")
+    def first_item_prototype(self) -> bool:
+        return self._get_attr("firstItemPrototype", data_type="bool", def_value=False)
 
     @first_item_prototype.setter
     def first_item_prototype(self, value: Optional[bool]):

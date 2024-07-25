@@ -147,7 +147,7 @@ class Rive(ConstrainedControl):
 
     # enable_antialiasing
     @property
-    def enable_antialiasing(self) -> Optional[bool]:
+    def enable_antialiasing(self) -> bool:
         return self._get_attr("enableAntiAliasing", def_value=True, data_type="bool")
 
     @enable_antialiasing.setter
@@ -165,7 +165,7 @@ class Rive(ConstrainedControl):
 
     # use_artboard_size
     @property
-    def use_artboard_size(self) -> Optional[bool]:
+    def use_artboard_size(self) -> bool:
         return self._get_attr("useArtBoardSize", def_value=False, data_type="bool")
 
     @use_artboard_size.setter

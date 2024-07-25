@@ -69,8 +69,8 @@ class LineChartDataPoint(Control):
 
     # x
     @property
-    def x(self) -> OptionalNumber:
-        return self._get_attr("x", data_type="float", def_value=0)
+    def x(self) -> float:
+        return self._get_attr("x", data_type="float", def_value=0.0)
 
     @x.setter
     def x(self, value: OptionalNumber):
@@ -78,8 +78,8 @@ class LineChartDataPoint(Control):
 
     # y
     @property
-    def y(self) -> OptionalNumber:
-        return self._get_attr("y", data_type="float", def_value=0)
+    def y(self) -> float:
+        return self._get_attr("y", data_type="float", def_value=0.0)
 
     @y.setter
     def y(self, value: OptionalNumber):
@@ -87,7 +87,7 @@ class LineChartDataPoint(Control):
 
     # selected
     @property
-    def selected(self) -> Optional[bool]:
+    def selected(self) -> bool:
         return self._get_attr("selected", data_type="bool", def_value=False)
 
     @selected.setter
@@ -96,7 +96,7 @@ class LineChartDataPoint(Control):
 
     # show_tooltip
     @property
-    def show_tooltip(self) -> Optional[bool]:
+    def show_tooltip(self) -> bool:
         return self._get_attr("showTooltip", data_type="bool", def_value=True)
 
     @show_tooltip.setter
@@ -153,7 +153,7 @@ class LineChartDataPoint(Control):
 
     # show_above_line
     @property
-    def show_above_line(self) -> Optional[bool]:
+    def show_above_line(self) -> bool:
         return self._get_attr("showAboveLine", data_type="bool", def_value=True)
 
     @show_above_line.setter
@@ -162,7 +162,7 @@ class LineChartDataPoint(Control):
 
     # show_below_line
     @property
-    def show_below_line(self) -> Optional[bool]:
+    def show_below_line(self) -> bool:
         return self._get_attr("showBelowLine", data_type="bool", def_value=True)
 
     @show_below_line.setter

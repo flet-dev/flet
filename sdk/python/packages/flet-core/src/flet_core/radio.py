@@ -203,7 +203,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
 
     # toggleable
     @property
-    def toggleable(self) -> Optional[bool]:
+    def toggleable(self) -> bool:
         return self._get_attr("toggleable", data_type="bool", def_value=False)
 
     @toggleable.setter
@@ -296,7 +296,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter

@@ -60,7 +60,7 @@ class Lottie(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-            on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -132,7 +132,7 @@ class Lottie(ConstrainedControl):
 
     # repeat
     @property
-    def repeat(self) -> Optional[bool]:
+    def repeat(self) -> bool:
         return self._get_attr("repeat", def_value=True, data_type="bool")
 
     @repeat.setter
@@ -141,7 +141,7 @@ class Lottie(ConstrainedControl):
 
     # animate
     @property
-    def animate(self) -> Optional[bool]:
+    def animate(self) -> bool:
         return self._get_attr("animate", def_value=True, data_type="bool")
 
     @animate.setter
@@ -150,7 +150,7 @@ class Lottie(ConstrainedControl):
 
     # reverse
     @property
-    def reverse(self) -> Optional[bool]:
+    def reverse(self) -> bool:
         return self._get_attr("reverse", def_value=False, data_type="bool")
 
     @reverse.setter

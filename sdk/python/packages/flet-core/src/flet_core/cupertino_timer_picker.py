@@ -122,7 +122,7 @@ class CupertinoTimerPicker(ConstrainedControl):
 
     # value
     @property
-    def value(self) -> Optional[int]:
+    def value(self) -> int:
         return self._get_attr("value", data_type="int", def_value=0)
 
     @value.setter
@@ -149,7 +149,7 @@ class CupertinoTimerPicker(ConstrainedControl):
 
     # second_interval
     @property
-    def second_interval(self) -> OptionalNumber:
+    def second_interval(self) -> int:
         return self._get_attr("secondInterval", data_type="int", def_value=1)
 
     @second_interval.setter
@@ -158,7 +158,7 @@ class CupertinoTimerPicker(ConstrainedControl):
 
     # item_extent
     @property
-    def item_extent(self) -> OptionalNumber:
+    def item_extent(self) -> float:
         return self._get_attr("itemExtent", data_type="float", def_value=32.0)
 
     @item_extent.setter
@@ -167,7 +167,7 @@ class CupertinoTimerPicker(ConstrainedControl):
 
     # minute_interval
     @property
-    def minute_interval(self) -> OptionalNumber:
+    def minute_interval(self) -> int:
         return self._get_attr("minuteInterval", data_type="int", def_value=1)
 
     @minute_interval.setter

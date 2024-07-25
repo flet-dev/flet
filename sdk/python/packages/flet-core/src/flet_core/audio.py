@@ -194,7 +194,7 @@ class Audio(Control):
 
     # autoplay
     @property
-    def autoplay(self) -> Optional[bool]:
+    def autoplay(self) -> bool:
         return self._get_attr("autoplay", data_type="bool", def_value=False)
 
     @autoplay.setter

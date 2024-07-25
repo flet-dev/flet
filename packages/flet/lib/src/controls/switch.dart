@@ -81,6 +81,8 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
       String label = widget.control.attrString("label", "")!;
       LabelPosition labelPosition = parseLabelPosition(
           widget.control.attrString("labelPosition"), LabelPosition.right)!;
+      double? width = widget.control.attrDouble("width");
+      double? height = widget.control.attrDouble("height");
       bool autofocus = widget.control.attrBool("autofocus", false)!;
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
@@ -134,6 +136,16 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
       });
 
       Widget result = s;
+      if (width != null || height != null) {
+        result = SizedBox(
+          width: width,
+          height: height,
+          child: FittedBox(
+            fit: BoxFit.fill,
+            child: result,
+          ),
+        );
+      }
       if (label != "") {
         var labelWidget = disabled
             ? Text(label, style: labelStyle)

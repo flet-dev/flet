@@ -263,7 +263,7 @@ class SearchBar(ConstrainedControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
@@ -344,7 +344,7 @@ class SearchBar(ConstrainedControl):
 
     # full_screen
     @property
-    def full_screen(self) -> Optional[bool]:
+    def full_screen(self) -> bool:
         return self._get_attr("fullScreen", data_type="bool", def_value=False)
 
     @full_screen.setter
