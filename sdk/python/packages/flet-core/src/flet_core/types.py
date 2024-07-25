@@ -1,14 +1,17 @@
 from dataclasses import dataclass
 from enum import Enum, EnumMeta
-from typing import Any, Callable, Dict, Optional, Protocol, Tuple, Union
+from typing import Any, Callable, Dict, Optional, Protocol, Tuple, Union, TYPE_CHECKING
 from warnings import warn
 
-from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
 from flet_core.control_event import ControlEvent
 from flet_core.margin import Margin
 from flet_core.padding import Padding
 from flet_core.transform import Offset, Rotate, Scale
+
+if TYPE_CHECKING:
+    pass
+
 
 WEB_BROWSER = "web_browser"
 FLET_APP = "flet_app"
@@ -64,7 +67,7 @@ ScaleValue = Optional[Union[int, float, Scale]]
 
 OffsetValue = Optional[Union[Offset, Tuple[Union[float, int], Union[float, int]]]]
 
-AnimationValue = Optional[Union[bool, int, Animation]]
+AnimationValue = Optional[Union[bool, int, "Animation"]]
 
 
 class FontWeight(Enum):

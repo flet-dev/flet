@@ -10,6 +10,7 @@ from flet_core.types import (
     PaddingValue,
     ClipBehavior,
     OptionalEventCallable,
+    DurationValue,
 )
 
 
@@ -77,7 +78,7 @@ class SnackBar(Control):
         action_color: Optional[str] = None,
         close_icon_color: Optional[str] = None,
         bgcolor: Optional[str] = None,
-        duration: Optional[int] = None,
+        duration: DurationValue = None,
         margin: MarginValue = None,
         padding: PaddingValue = None,
         width: OptionalNumber = None,
@@ -134,6 +135,7 @@ class SnackBar(Control):
         super().before_update()
         self._set_attr_json("shape", self.__shape)
         self._set_attr_json("padding", self.__padding)
+        self._set_attr_json("duration", self.__duration)
         if isinstance(self.__margin, (int, float, Padding)) and not self.width:
             # margin and width cannot be set together - if width is set, margin is ignored
             self._set_attr_json("margin", self.__margin)
@@ -203,12 +205,12 @@ class SnackBar(Control):
 
     # duration
     @property
-    def duration(self) -> Optional[int]:
-        return self._get_attr("duration", data_type="int")
+    def duration(self) -> DurationValue:
+        return self.__duration
 
     @duration.setter
-    def duration(self, value: Optional[int]):
-        self._set_attr("duration", value)
+    def duration(self, value: DurationValue):
+        self.__duration = value
 
     # action_overflow_threshold
     @property

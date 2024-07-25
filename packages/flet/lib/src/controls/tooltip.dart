@@ -6,6 +6,7 @@ import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/others.dart';
 import '../utils/text.dart';
+import '../utils/time.dart';
 import 'create_control.dart';
 
 class TooltipControl extends StatelessWidget {
@@ -30,9 +31,6 @@ class TooltipControl extends StatelessWidget {
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
     bool disabled = control.isDisabled || parentDisabled;
-
-    var showDuration = control.attrInt("showDuration");
-    var waitDuration = control.attrInt("waitDuration");
 
     var bgColor = control.attrString("bgColor");
     var border = parseBorder(Theme.of(context), control, "border");
@@ -72,12 +70,8 @@ class TooltipControl extends StatelessWidget {
             padding: parseEdgeInsets(control, "padding"),
             preferBelow: control.attrBool("preferBelow"),
             message: control.attrString("message"),
-            showDuration: showDuration != null
-                ? Duration(milliseconds: showDuration)
-                : null,
-            waitDuration: waitDuration != null
-                ? Duration(milliseconds: waitDuration)
-                : null,
+            showDuration: parseDuration(control, "showDuration"),
+            waitDuration: parseDuration(control, "waitDuration"),
             verticalOffset: control.attrDouble("verticalOffset"),
             textStyle: parseTextStyle(Theme.of(context), control, "textStyle"),
             textAlign: parseTextAlign(control.attrString("textAlign")),

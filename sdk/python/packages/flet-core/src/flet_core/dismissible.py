@@ -15,6 +15,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
+    DurationValue,
 )
 from flet_core.utils import deprecated
 
@@ -40,8 +41,8 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         secondary_background: Optional[Control] = None,
         dismiss_direction: Optional[DismissDirection] = None,
         dismiss_thresholds: Optional[Dict[DismissDirection, OptionalNumber]] = None,
-        movement_duration: Optional[int] = None,
-        resize_duration: Optional[int] = None,
+        movement_duration: DurationValue = None,
+        resize_duration: DurationValue = None,
         cross_axis_end_offset: OptionalNumber = None,
         on_update: Optional[Callable[["DismissibleUpdateEvent"], None]] = None,
         on_dismiss: Optional[Callable[["DismissibleDismissEvent"], None]] = None,
@@ -157,6 +158,8 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     def before_update(self):
         super().before_update()
         self._set_attr_json("dismissThresholds", self.__dismiss_thresholds)
+        self._set_attr_json("movementDuration", self.__movement_duration)
+        self._set_attr_json("resizeDuration", self.__resize_duration)
 
     def confirm_dismiss(self, dismiss: bool):
         self.invoke_method("confirm_dismiss", {"dismiss": str(dismiss).lower()})
@@ -196,23 +199,23 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     def secondary_background(self, value: Optional[Control]):
         self.__secondary_background = value
 
-    # movementDuration
+    # movement_duration
     @property
-    def movement_duration(self) -> Optional[int]:
-        return self._get_attr("movementDuration", data_type="int")
+    def movement_duration(self) -> DurationValue:
+        return self.__movement_duration
 
     @movement_duration.setter
-    def movement_duration(self, value: Optional[int]):
-        self._set_attr("movementDuration", value)
+    def movement_duration(self, value: DurationValue):
+        self.__movement_duration = value
 
-    # resizeDuration
+    # resize_duration
     @property
-    def resize_duration(self) -> Optional[int]:
-        return self._get_attr("resizeDuration", data_type="int")
+    def resize_duration(self) -> DurationValue:
+        return self.__resize_duration
 
     @resize_duration.setter
-    def resize_duration(self, value: Optional[int]):
-        self._set_attr("resizeDuration", value)
+    def resize_duration(self, value: DurationValue):
+        self.__resize_duration = value
 
     # crossAxisEndOffset
     @property

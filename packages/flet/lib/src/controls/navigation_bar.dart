@@ -6,6 +6,7 @@ import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/others.dart';
+import '../utils/time.dart';
 import 'create_control.dart';
 import 'cupertino_navigation_bar.dart';
 import 'flet_store_mixin.dart';
@@ -68,7 +69,6 @@ class _NavigationBarControlState extends State<NavigationBarControl>
       if (_selectedIndex != selectedIndex) {
         _selectedIndex = selectedIndex;
       }
-      var animationDuration = widget.control.attrInt("animationDuration");
 
       NavigationDestinationLabelBehavior? labelBehavior =
           parseNavigationDestinationLabelBehavior(
@@ -81,9 +81,8 @@ class _NavigationBarControlState extends State<NavigationBarControl>
         return NavigationBar(
             labelBehavior: labelBehavior,
             height: widget.control.attrDouble("height"),
-            animationDuration: animationDuration != null
-                ? Duration(milliseconds: animationDuration)
-                : null,
+            animationDuration:
+                parseDuration(widget.control, "animationDuration"),
             elevation: widget.control.attrDouble("elevation"),
             shadowColor: widget.control.attrColor("shadowColor", context),
             surfaceTintColor:

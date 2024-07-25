@@ -6,7 +6,7 @@ from flet_core.animation import AnimationCurve
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
-from flet_core.types import ScrollMode
+from flet_core.types import ScrollMode, DurationValue
 from flet_core.utils import deprecated
 
 
@@ -34,7 +34,7 @@ class ScrollableControl(Control):
         offset: Optional[float] = None,
         delta: Optional[float] = None,
         key: Optional[str] = None,
-        duration: Optional[int] = None,
+        duration: DurationValue = None,
         curve: Optional[AnimationCurve] = None,
     ):
         m = {

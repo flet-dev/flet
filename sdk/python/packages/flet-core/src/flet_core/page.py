@@ -77,6 +77,7 @@ from flet_core.types import (
     Wrapper,
     OptionalEventCallable,
     WindowEventType,
+    DurationValue,
 )
 from flet_core.utils import classproperty, deprecated
 from flet_core.utils.concurrency_utils import is_pyodide
@@ -1286,7 +1287,7 @@ class Page(AdaptiveControl):
         offset: Optional[float] = None,
         delta: Optional[float] = None,
         key: Optional[str] = None,
-        duration: Optional[int] = None,
+        duration: DurationValue = None,
         curve: Optional[AnimationCurve] = None,
     ) -> None:
         self.__default_view.scroll_to(

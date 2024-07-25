@@ -4,7 +4,7 @@ import '../models/control.dart';
 import 'numbers.dart';
 
 Duration? parseDuration(Control control, String propName,
-    {Duration? defaultValue}) {
+    [Duration? defaultValue]) {
   var v = control.attrString(propName, null);
   if (v == null) {
     return null;
@@ -14,9 +14,12 @@ Duration? parseDuration(Control control, String propName,
   return durationFromJSON(j1);
 }
 
-Duration durationFromJSON(dynamic json) {
+Duration? durationFromJSON(dynamic json) {
+  if (json == null) {
+    return null;
+  }
   if (json is int || json is double) {
-    return Duration(seconds: parseInt(json, 0)!);
+    return Duration(milliseconds: parseInt(json, 0)!);
   }
   return Duration(
       days: parseInt(json["days"], 0)!,

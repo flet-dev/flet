@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Dict, Optional, Union
+from typing import Dict, Union
 
 from flet_core.alignment import Alignment
 from flet_core.border import BorderSide
@@ -12,6 +12,7 @@ from flet_core.types import (
     ThemeVisualDensity,
     VisualDensity,
     MouseCursor,
+    DurationValue,
 )
 
 
@@ -71,7 +72,7 @@ class ButtonStyle:
     elevation: Union[
         None, float, int, Dict[Union[str, ControlState], Union[float, int]]
     ] = field(default=None)
-    animation_duration: Optional[int] = field(default=None)
+    animation_duration: DurationValue = field(default=None)
     padding: Union[PaddingValue, Dict[Union[str, ControlState], PaddingValue]] = field(
         default=None
     )

@@ -13,6 +13,7 @@ import 'mouse.dart';
 import 'numbers.dart';
 import 'text.dart';
 import 'theme.dart';
+import 'time.dart';
 
 ButtonStyle? parseButtonStyle(ThemeData theme, Control control, String propName,
     {Color? defaultForegroundColor,
@@ -70,9 +71,7 @@ ButtonStyle? buttonStyleFromJSON(ThemeData theme, Map<String, dynamic>? json,
         (jv) => parseColor(theme, jv as String), defaultSurfaceTintColor),
     elevation: getWidgetStateProperty(
         json["elevation"], (jv) => parseDouble(jv, 0)!, defaultElevation),
-    animationDuration: json["animation_duration"] != null
-        ? Duration(milliseconds: parseInt(json["animation_duration"], 0)!)
-        : null,
+    animationDuration: durationFromJSON(json["animation_duration"]),
     padding: getWidgetStateProperty<EdgeInsetsGeometry?>(
         json["padding"], (jv) => edgeInsetsFromJson(jv), defaultPadding),
     side: getWidgetStateProperty<BorderSide?>(

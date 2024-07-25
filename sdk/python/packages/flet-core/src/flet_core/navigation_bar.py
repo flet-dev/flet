@@ -16,6 +16,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     ControlState,
+    DurationValue,
 )
 from flet_core.utils import deprecated
 
@@ -210,7 +211,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         indicator_shape: Optional[OutlinedBorder] = None,
         surface_tint_color: Optional[str] = None,
         border: Optional[Border] = None,
-        animation_duration: Optional[int] = None,
+        animation_duration: DurationValue = None,
         overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         on_change: OptionalEventCallable = None,
         #
@@ -296,6 +297,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("indicatorShape", self.__indicator_shape)
         self._set_attr_json("border", self.__border)
         self._set_attr_json("overlayColor", self.__overlay_color)
+        self._set_attr_json("animationDuration", self.__animation_duration)
 
     def _get_children(self):
         return self.__destinations
@@ -402,12 +404,12 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     # animation_duration
     @property
-    def animation_duration(self) -> Optional[int]:
-        return self._get_attr("animationDuration", data_type="int")
+    def animation_duration(self) -> DurationValue:
+        return self.__animation_duration
 
     @animation_duration.setter
-    def animation_duration(self, value: Optional[int]):
-        self._set_attr("animationDuration", value)
+    def animation_duration(self, value: DurationValue):
+        self.__animation_duration = value
 
     # on_change
     @property

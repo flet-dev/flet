@@ -10,6 +10,7 @@ import '../utils/animations.dart';
 import '../utils/desktop.dart';
 import '../utils/numbers.dart';
 import '../utils/others.dart';
+import '../utils/time.dart';
 import '../widgets/adjustable_scroll_controller.dart';
 import 'flet_store_mixin.dart';
 
@@ -87,7 +88,8 @@ class _ScrollableControlState extends State<ScrollableControl>
         var params = Map<String, dynamic>.from(mj["p"] as Map);
 
         if (name == "scroll_to") {
-          var duration = parseInt(params["duration"], 0)!;
+          var duration = durationFromJSON(params["duration"]) ?? Duration.zero;
+
           var curve = parseCurve(params["curve"], Curves.ease)!;
           if (params["key"] != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -96,10 +98,7 @@ class _ScrollableControlState extends State<ScrollableControl>
                 var ctx = key.currentContext;
                 if (ctx != null) {
                   Scrollable.ensureVisible(ctx,
-                      duration: duration > 0
-                          ? Duration(milliseconds: duration)
-                          : Duration.zero,
-                      curve: curve);
+                      duration: duration, curve: curve);
                 }
               }
             });
@@ -109,12 +108,12 @@ class _ScrollableControlState extends State<ScrollableControl>
               if (offset < 0) {
                 offset = _controller.position.maxScrollExtent + offset + 1;
               }
-              if (duration < 1) {
+              if (duration.compareTo(const Duration(milliseconds: 1)) < 0) {
                 _controller.jumpTo(offset);
               } else {
                 _controller.animateTo(
                   offset,
-                  duration: Duration(milliseconds: duration),
+                  duration: duration,
                   curve: curve,
                 );
               }
@@ -123,12 +122,12 @@ class _ScrollableControlState extends State<ScrollableControl>
             WidgetsBinding.instance.addPostFrameCallback((_) {
               var delta = parseDouble(params["delta"], 0)!;
               var offset = _controller.position.pixels + delta;
-              if (duration < 1) {
+              if (duration.compareTo(const Duration(milliseconds: 1)) < 0) {
                 _controller.jumpTo(offset);
               } else {
                 _controller.animateTo(
                   offset,
-                  duration: Duration(milliseconds: duration),
+                  duration: duration,
                   curve: curve,
                 );
               }

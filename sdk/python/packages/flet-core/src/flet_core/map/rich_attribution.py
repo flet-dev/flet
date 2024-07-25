@@ -6,6 +6,7 @@ from flet_core.control import OptionalNumber
 from flet_core.map.map_layer import MapLayer
 from flet_core.map.text_source_attribution import TextSourceAttribution
 from flet_core.ref import Ref
+from flet_core.types import DurationValue
 
 
 class AttributionAlignment(Enum):
@@ -29,7 +30,7 @@ class RichAttribution(MapLayer):
         alignment: Optional[AttributionAlignment] = None,
         popup_bgcolor: Optional[str] = None,
         popup_border_radius: Optional[BorderRadius] = None,
-        popup_initial_display_duration: Optional[int] = None,
+        popup_initial_display_duration: DurationValue = None,
         permanent_height: OptionalNumber = None,
         show_flutter_map_attribution: Optional[bool] = None,
         #
@@ -65,6 +66,9 @@ class RichAttribution(MapLayer):
         super().before_update()
         self._set_attr_json("popupBorderRadius", self.__popup_border_radius)
         self._set_attr_json("alignment", self.__alignment)
+        self._set_attr_json(
+            "popupInitialDisplayDuration", self.__popup_initial_display_duration
+        )
 
     # permanent_height
     @property
@@ -78,17 +82,15 @@ class RichAttribution(MapLayer):
 
     # popup_initial_display_duration
     @property
-    def popup_initial_display_duration(self) -> int:
-        return self._get_attr(
-            "popupInitialDisplayDuration", data_type="int", def_value=0
-        )
+    def popup_initial_display_duration(self) -> DurationValue:
+        return self.__popup_initial_display_duration
 
     @popup_initial_display_duration.setter
-    def popup_initial_display_duration(self, value: Optional[int]):
-        assert (
-            value is None or value >= 0
+    def popup_initial_display_duration(self, value: DurationValue):
+        assert value is None or (
+            isinstance(value, int) and value >= 0
         ), "popup_initial_display_duration cannot be negative"
-        self._set_attr("popupInitialDisplayDuration", value)
+        self.__popup_initial_display_duration = value
 
     # popup_border_radius
     @property

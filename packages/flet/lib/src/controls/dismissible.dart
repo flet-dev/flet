@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/dismissible.dart';
+import '../utils/time.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -121,10 +122,10 @@ class _DismissibleControlState extends State<DismissibleControl> {
                     return completer.future;
                   }
                 : null,
-            movementDuration: Duration(
-                milliseconds: widget.control.attrInt("duration", 200)!),
-            resizeDuration: Duration(
-                milliseconds: widget.control.attrInt("resizeDuration", 300)!),
+            movementDuration: parseDuration(widget.control, "movementDuration",
+                const Duration(milliseconds: 200))!,
+            resizeDuration: parseDuration(widget.control, "resizeDuration",
+                const Duration(milliseconds: 300))!,
             crossAxisEndOffset:
                 widget.control.attrDouble("crossAxisEndOffset", 0.0)!,
             dismissThresholds: dismissThresholds ?? {},
