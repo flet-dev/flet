@@ -48,6 +48,8 @@ class LocalAuthentication(Control):
     def available(self, wait_timeout: Optional[int] = 5) -> dict:
         if self.platform == PagePlatform.MACOS:
             sr = is_available()
+        elif self.platform == PagePlatform.LINUX:
+            return False
         else:
             sr = (
                 self.invoke_method(
@@ -61,6 +63,8 @@ class LocalAuthentication(Control):
     async def available_async(self, wait_timeout: Optional[int] = 5) -> dict:
         if self.platform == PagePlatform.MACOS:
             sr = await is_available()
+        elif self.platform == PagePlatform.LINUX:
+            return False
         else:
             sr = (
                 await self.invoke_method_async(
@@ -79,6 +83,8 @@ class LocalAuthentication(Control):
     ) -> bool:
         if self.platform == PagePlatform.MACOS:
             sr = authenticate_mac(title)
+        if self.platform == PagePlatform.LINUX:
+            return False
         else:
             sr = (
                 self.invoke_method(
@@ -112,6 +118,8 @@ class LocalAuthentication(Control):
                 },
             )
             sr = sr == "true"
+        elif self.platform == PagePlatform.LINUX:
+            return False
         else:
             sr = await authenticate_mac(title)
 
