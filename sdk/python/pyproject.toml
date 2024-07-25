@@ -7,6 +7,10 @@ license = "Apache-2.0"
 
 [tool.poetry.dependencies]
 python = "<3.12,>=3.8"
+pyobjc-framework-localauthentication = {version = "^10.3.1", platform = "darwin"}
+pyobjc-core = {version = "^10.3.1", platform = "darwin"}
+pyobjc-framework-cocoa = {version = "^10.3.1", platform = "darwin"}
+pyobjc-framework-security = {version = "^10.3.1", platform = "darwin"}
 
 [tool.poetry.group.dev.dependencies]
 flet-core = {path = "packages/flet-core", develop = true}

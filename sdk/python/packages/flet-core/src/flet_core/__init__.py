@@ -178,7 +178,7 @@ from flet_core.icon_button import IconButton
 from flet_core.image import Image
 from flet_core.list_tile import ListTile, ListTileStyle, ListTileTitleAlignment
 from flet_core.list_view import ListView
-from flet_core.local_authentication import LocalAuthentication
+from flet_core.local_authentication.local_authentication import LocalAuthentication
 from flet_core.lottie import Lottie
 from flet_core.margin import Margin
 from flet_core.markdown import Markdown, MarkdownExtensionSet

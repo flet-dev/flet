@@ -28,55 +28,41 @@ class _LocalAuthenticationControlState
   Widget build(BuildContext context) {
     debugPrint("LocalAuthentication build: ${widget.control.id}");
 
-    if (Platform.isIOS || Platform.isAndroid || Platform.isWindows) {
-      () async {
-        final LocalAuthentication auth = LocalAuthentication();
+    () async {
+      final LocalAuthentication auth = LocalAuthentication();
 
-        widget.backend.subscribeMethods(widget.control.id,
-            (methodName, args) async {
-          switch (methodName) {
-            case "supported":
-              // get's available biometrics
-              final List<BiometricType> availableBiometrics =
-                  await auth.getAvailableBiometrics();
-              // check's if device is supported
-              final bool canAuthenticate = await auth.isDeviceSupported();
-              // creates a map of retrieved data to convert into string
-              final Map<String, bool> output = {
-                "biometrics": availableBiometrics.isNotEmpty,
-                "weak": availableBiometrics.contains(BiometricType.weak),
-                "strong": availableBiometrics.contains(BiometricType.strong),
-                "devicesupport": canAuthenticate,
-              };
-              debugPrint("$output");
-              return "$output";
+      widget.backend.subscribeMethods(widget.control.id,
+          (methodName, args) async {
+        switch (methodName) {
+          case "available":
+            // get's available biometrics
+            final List<BiometricType> availableBiometrics =
+                await auth.getAvailableBiometrics();
+            // check's if device is supported
+            final bool canAuthenticate = availableBiometrics.isNotEmpty;
+            debugPrint("canAuthenticate: $canAuthenticate");
+            return "$canAuthenticate";
 
-            case "authenticate":
-              try {
-                final bool didAuthenticate = await auth.authenticate(
-                  // if no title is given, uses "Authentication required" as the title
-                  localizedReason: args['title'] ?? "Authentication required",
-                  options: AuthenticationOptions(
+          case "authenticate":
+            try {
+              final bool didAuthenticate = await auth.authenticate(
+                // if no title is given, uses "Authentication required" as the title
+                localizedReason: args['title'] ?? "Authentication required",
+                options: AuthenticationOptions(
                     biometricOnly:
                         args['biometricsOnly'] == 'true' ? true : false,
-                    useErrorDialogs:
-                        args['useErrorDialogs'] == 'true' ? true : false,
-                  ),
-                );
-                return "$didAuthenticate";
-              } on Exception catch (_) {
-                debugPrint("An error has occured: $_");
-                return "false";
-              }
-          }
-          return null;
-        });
-      }();
+                    useErrorDialogs: true),
+              );
+              return "$didAuthenticate";
+            } on Exception catch (_) {
+              debugPrint("An error has occured: $_");
+              return "false";
+            }
+        }
+        return null;
+      });
+    }();
 
-      return const SizedBox.shrink();
-    } else {
-      return const ErrorControl(
-          "LocalAuthentication Control is not supported on this platform yet.");
-    }
+    return const SizedBox.shrink();
   }
 }

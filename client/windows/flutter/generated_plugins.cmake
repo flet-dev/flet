@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_windows
+  
   geolocator_windows
   local_auth_windows
   media_kit_libs_windows_video
