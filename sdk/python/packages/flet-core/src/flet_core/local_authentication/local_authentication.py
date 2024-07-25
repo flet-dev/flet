@@ -3,7 +3,7 @@ from typing import Any, Optional
 from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import PagePlatform
-from .mac_authentication import is_available, authenticate_mac
+from .mac_authentication import MacLocalAuth
 
 
 class LocalAuthentication(Control):
@@ -43,11 +43,13 @@ class LocalAuthentication(Control):
 
     def before_update(self):
         self.platform = self.page.platform
+        if self.platform == PagePlatform.MACOS:
+            self.maclocalauth = MacLocalAuth()
         return super().before_update()
 
     def available(self, wait_timeout: Optional[int] = 5) -> dict:
         if self.platform == PagePlatform.MACOS:
-            sr = is_available()
+            sr = self.maclocalauth.is_available()
         elif self.platform == PagePlatform.LINUX:
             return False
         else:
@@ -62,7 +64,7 @@ class LocalAuthentication(Control):
 
     async def available_async(self, wait_timeout: Optional[int] = 5) -> dict:
         if self.platform == PagePlatform.MACOS:
-            sr = await is_available()
+            sr = await self.maclocalauth.is_available()
         elif self.platform == PagePlatform.LINUX:
             return False
         else:
@@ -82,8 +84,8 @@ class LocalAuthentication(Control):
         wait_timeout: Optional[int] = 60,
     ) -> bool:
         if self.platform == PagePlatform.MACOS:
-            sr = authenticate_mac(title)
-        if self.platform == PagePlatform.LINUX:
+            sr = self.maclocalauth.authenticate_mac(title)
+        elif self.platform == PagePlatform.LINUX:
             return False
         else:
             sr = (
@@ -121,6 +123,6 @@ class LocalAuthentication(Control):
         elif self.platform == PagePlatform.LINUX:
             return False
         else:
-            sr = await authenticate_mac(title)
+            sr = await self.maclocalauth.authenticate_mac(title)
 
         return sr

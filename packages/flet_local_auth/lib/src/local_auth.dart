@@ -1,7 +1,3 @@
-import 'dart:developer';
-import 'dart:io' show Platform;
-import 'dart:io';
-
 import 'package:flet/flet.dart';
 import 'package:flutter/widgets.dart';
 import 'package:local_auth/local_auth.dart';
