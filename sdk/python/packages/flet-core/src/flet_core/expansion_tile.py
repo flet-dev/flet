@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Union, Sequence
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
@@ -40,7 +40,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         title: Control,
-        controls: Optional[List[Control]] = None,
+        controls: Optional[Sequence[Control]] = None,
         subtitle: Optional[Control] = None,
         leading: Optional[Control] = None,
         trailing: Optional[Control] = None,
@@ -193,8 +193,8 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]):
-        self.__controls = value if value is not None else []
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list(value) if value is not None else []
 
     # controls_padding
     @property
