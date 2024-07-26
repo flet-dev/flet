@@ -1,5 +1,7 @@
 from flet_core.ads.banner import BannerAd
 from flet_core.ads.interstitial import InterstitialAd
+
+"""
 from flet_core.ads.native import (
     NativeAd,
     NativeAdTemplateStyle,
@@ -7,3 +9,4 @@ from flet_core.ads.native import (
     NativeTemplateFontStyle,
     NativeAdTemplateType,
 )
+"""

@@ -85,9 +85,17 @@ class _NativeAdControlState extends State<NativeAdControl> with FletStoreMixin {
       final testAdUnitId = platform == TargetPlatform.iOS
           ? 'ca-app-pub-3940256099942544/3986624511'
           : 'ca-app-pub-3940256099942544/2247696110';
+      var factoryId = widget.control.attrString("factoryId");
+      var nativeTemplateStyle = parseNativeTemplateStyle(
+          Theme.of(context), widget.control, "templateStyle");
+      if (factoryId == null && nativeTemplateStyle == null) {
+        return const ErrorControl(
+            "factory_id or native_template_style is required");
+      }
 
       NativeAd nativeAd = NativeAd(
           adUnitId: widget.control.attrString("unitId", testAdUnitId)!,
+          factoryId: factoryId,
           listener: NativeAdListener(
             onAdLoaded: (ad) {
               debugPrint('$NativeAd loaded.');
@@ -132,8 +140,7 @@ class _NativeAdControlState extends State<NativeAdControl> with FletStoreMixin {
             },
           ),
           request: const AdRequest(),
-          nativeTemplateStyle: parseNativeTemplateStyle(
-              Theme.of(context), widget.control, "nativeTemplateStyle"));
+          nativeTemplateStyle: nativeTemplateStyle);
 
       if (!_isLoaded) {
         nativeAd.load();

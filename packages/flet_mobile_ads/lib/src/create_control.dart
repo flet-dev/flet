@@ -3,7 +3,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'banner.dart';
 import 'interstitial.dart';
-import 'native.dart';
 
 CreateControlFactory createControl = (CreateControlArgs args) {
   switch (args.control.type) {
@@ -13,9 +12,11 @@ CreateControlFactory createControl = (CreateControlArgs args) {
     case "interstitial_ad":
       return InterstitialAdControl(
           parent: args.parent, control: args.control, backend: args.backend);
+    /* TODO: Finalize NativeAdControl -> https://developers.google.com/admob/flutter/native/platforms
     case "native_ad":
       return NativeAdControl(
           parent: args.parent, control: args.control, backend: args.backend);
+    */
     default:
       return null;
   }

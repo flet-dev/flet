@@ -65,7 +65,8 @@ class NativeAd(BaseAd):
     def __init__(
         self,
         unit_id: str = None,
-        native_template_style: NativeAdTemplateStyle = None,
+            factory_id: str = None,
+            template_style: NativeAdTemplateStyle = None,
         on_load=None,
         on_error=None,
         on_open=None,
@@ -146,19 +147,29 @@ class NativeAd(BaseAd):
             data=data,
         )
 
-        self.native_template_style = native_template_style
+        self.template_style = template_style
+        self.factory_id = factory_id
 
     def _get_control_name(self):
         return "native_ad"
 
     def before_update(self):
         super().before_update()
-        self._set_attr_json("nativeTemplateStyle", self.__native_template_style)
+        self._set_attr_json("templateStyle", self.__template_style)
 
     @property
-    def native_template_style(self):
-        return self.__native_template_style
+    def template_style(self):
+        return self.__template_style
 
-    @native_template_style.setter
-    def native_template_style(self, value):
-        self.__native_template_style = value
+    @template_style.setter
+    def template_style(self, value):
+        self.__template_style = value
+
+    # factory_id
+    @property
+    def factory_id(self) -> Optional[str]:
+        return self._get_attr("factoryId")
+
+    @factory_id.setter
+    def factory_id(self, value: Optional[str]):
+        self._set_attr("factoryId", value)
