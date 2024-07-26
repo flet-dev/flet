@@ -27,7 +27,7 @@ class Map(ConstrainedControl):
     def __init__(
         self,
         layers: List[MapLayer],
-        configuration: Optional[MapConfiguration] = None,
+        configuration: MapConfiguration = MapConfiguration(),
         #
         # ConstrainedControl
         #
@@ -101,11 +101,11 @@ class Map(ConstrainedControl):
 
     # configuration
     @property
-    def configuration(self) -> Optional[MapConfiguration]:
+    def configuration(self) -> MapConfiguration:
         return self.__configuration
 
     @configuration.setter
-    def configuration(self, value: Optional[MapConfiguration]):
+    def configuration(self, value: MapConfiguration):
         self.__configuration = value
 
     # layers

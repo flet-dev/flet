@@ -134,7 +134,7 @@ class CupertinoAlertDialog(Control):
 
     # open
     @property
-    def open(self) -> Optional[bool]:
+    def open(self) -> bool:
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
@@ -143,7 +143,7 @@ class CupertinoAlertDialog(Control):
 
     # modal
     @property
-    def modal(self) -> Optional[bool]:
+    def modal(self) -> bool:
         return self._get_attr("modal", data_type="bool", def_value=False)
 
     @modal.setter

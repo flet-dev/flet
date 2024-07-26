@@ -194,7 +194,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     # tristate
     @property
-    def tristate(self) -> Optional[bool]:
+    def tristate(self) -> bool:
         return self._get_attr("tristate", data_type="bool", def_value=False)
 
     @tristate.setter
@@ -242,7 +242,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
@@ -341,7 +341,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     # is_error
     @property
-    def is_error(self) -> Optional[bool]:
+    def is_error(self) -> bool:
         return self._get_attr("isError", data_type="bool", def_value=False)
 
     @is_error.setter

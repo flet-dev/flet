@@ -353,8 +353,8 @@ class FormFieldControl(ConstrainedControl):
 
     # dense
     @property
-    def dense(self) -> Optional[bool]:
-        return self._get_attr("dense")
+    def dense(self) -> bool:
+        return self._get_attr("dense", data_type="bool", def_value=False)
 
     @dense.setter
     def dense(self, value: Optional[bool]):

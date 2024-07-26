@@ -142,7 +142,7 @@ class TileLayer(MapLayer):
 
     # tile_size
     @property
-    def tile_size(self) -> OptionalNumber:
+    def tile_size(self) -> float:
         return self._get_attr("tileSize", data_type="float", def_value=256.0)
 
     @tile_size.setter
@@ -152,8 +152,8 @@ class TileLayer(MapLayer):
 
     # min_native_zoom
     @property
-    def min_native_zoom(self) -> Optional[int]:
-        return self._get_attr("minNativeZoom", data_type="int", def_value=0)
+    def min_native_zoom(self) -> int:
+        return self._get_attr("minNativeZoom", data_type="int", def_value=0.0)
 
     @min_native_zoom.setter
     def min_native_zoom(self, value: Optional[int]):
@@ -162,7 +162,7 @@ class TileLayer(MapLayer):
 
     # max_native_zoom
     @property
-    def max_native_zoom(self) -> Optional[int]:
+    def max_native_zoom(self) -> int:
         return self._get_attr("maxNativeZoom", data_type="int", def_value=19)
 
     @max_native_zoom.setter
@@ -172,7 +172,7 @@ class TileLayer(MapLayer):
 
     # zoom_reverse
     @property
-    def zoom_reverse(self) -> Optional[bool]:
+    def zoom_reverse(self) -> bool:
         return self._get_attr("zoomReverse", data_type="bool", def_value=False)
 
     @zoom_reverse.setter
@@ -181,7 +181,7 @@ class TileLayer(MapLayer):
 
     # zoom_offset
     @property
-    def zoom_offset(self) -> OptionalNumber:
+    def zoom_offset(self) -> float:
         return self._get_attr("zoomOffset", data_type="float", def_value=0.0)
 
     @zoom_offset.setter
@@ -191,7 +191,7 @@ class TileLayer(MapLayer):
 
     # keep_buffer
     @property
-    def keep_buffer(self) -> Optional[int]:
+    def keep_buffer(self) -> int:
         return self._get_attr("keepBuffer", data_type="int", def_value=2)
 
     @keep_buffer.setter
@@ -200,7 +200,7 @@ class TileLayer(MapLayer):
 
     # pan_buffer
     @property
-    def pan_buffer(self) -> Optional[int]:
+    def pan_buffer(self) -> int:
         return self._get_attr("panBuffer", data_type="int", def_value=2)
 
     @pan_buffer.setter
@@ -209,7 +209,7 @@ class TileLayer(MapLayer):
 
     # enable_tms
     @property
-    def enable_tms(self) -> Optional[bool]:
+    def enable_tms(self) -> bool:
         return self._get_attr("enableTms", data_type="bool", def_value=False)
 
     @enable_tms.setter
@@ -218,7 +218,7 @@ class TileLayer(MapLayer):
 
     # enable_retina_mode
     @property
-    def enable_retina_mode(self) -> Optional[bool]:
+    def enable_retina_mode(self) -> bool:
         return self._get_attr("enableRetinaMode", data_type="bool", def_value=False)
 
     @enable_retina_mode.setter
@@ -227,7 +227,7 @@ class TileLayer(MapLayer):
 
     # max_zoom
     @property
-    def max_zoom(self) -> OptionalNumber:
+    def max_zoom(self) -> float:
         return self._get_attr("maxZoom", data_type="float", def_value=float("inf"))
 
     @max_zoom.setter
@@ -237,7 +237,7 @@ class TileLayer(MapLayer):
 
     # min_zoom
     @property
-    def min_zoom(self) -> OptionalNumber:
+    def min_zoom(self) -> float:
         return self._get_attr("minZoom", data_type="float", def_value=0.0)
 
     @min_zoom.setter

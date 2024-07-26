@@ -249,7 +249,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter

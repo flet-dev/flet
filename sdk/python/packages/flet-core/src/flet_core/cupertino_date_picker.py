@@ -181,7 +181,7 @@ class CupertinoDatePicker(ConstrainedControl):
 
     # item_extent
     @property
-    def item_extent(self) -> OptionalNumber:
+    def item_extent(self) -> float:
         return self._get_attr("itemExtent", data_type="float", def_value=32.0)
 
     @item_extent.setter
@@ -192,7 +192,7 @@ class CupertinoDatePicker(ConstrainedControl):
 
     # min_year
     @property
-    def min_year(self) -> Optional[int]:
+    def min_year(self) -> int:
         return self._get_attr("minYear", data_type="int", def_value=1)
 
     @min_year.setter
@@ -210,7 +210,7 @@ class CupertinoDatePicker(ConstrainedControl):
 
     # minute_interval
     @property
-    def minute_interval(self) -> Optional[int]:
+    def minute_interval(self) -> int:
         return self._get_attr("minuteInterval", data_type="int", def_value=1)
 
     @minute_interval.setter

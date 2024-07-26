@@ -168,7 +168,7 @@ class CupertinoRadio(ConstrainedControl):
 
     # toggleable
     @property
-    def toggleable(self) -> Optional[bool]:
+    def toggleable(self) -> bool:
         return self._get_attr("toggleable", data_type="bool", def_value=False)
 
     @toggleable.setter
@@ -195,7 +195,7 @@ class CupertinoRadio(ConstrainedControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
@@ -204,7 +204,7 @@ class CupertinoRadio(ConstrainedControl):
 
     # use_checkmark_style
     @property
-    def use_checkmark_style(self) -> Optional[bool]:
+    def use_checkmark_style(self) -> bool:
         return self._get_attr("useCheckmarkStyle", data_type="bool", def_value=False)
 
     @use_checkmark_style.setter

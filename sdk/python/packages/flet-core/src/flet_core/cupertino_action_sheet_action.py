@@ -124,7 +124,7 @@ class CupertinoActionSheetAction(ConstrainedControl):
 
     # is_default_action
     @property
-    def is_default_action(self) -> Optional[bool]:
+    def is_default_action(self) -> bool:
         return self._get_attr("isDefaultAction", data_type="bool", def_value=False)
 
     @is_default_action.setter
@@ -133,7 +133,7 @@ class CupertinoActionSheetAction(ConstrainedControl):
 
     # is_destructive_action
     @property
-    def is_destructive_action(self) -> Optional[bool]:
+    def is_destructive_action(self) -> bool:
         return self._get_attr("isDestructiveAction", data_type="bool", def_value=False)
 
     @is_destructive_action.setter

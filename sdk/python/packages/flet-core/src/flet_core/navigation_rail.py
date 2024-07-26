@@ -358,7 +358,7 @@ class NavigationRail(ConstrainedControl):
 
     # selected_index
     @property
-    def selected_index(self) -> Optional[int]:
+    def selected_index(self) -> int:
         return self._get_attr("selectedIndex", data_type="int", def_value=0)
 
     @selected_index.setter
@@ -414,7 +414,7 @@ class NavigationRail(ConstrainedControl):
 
     # extended
     @property
-    def extended(self) -> Optional[bool]:
+    def extended(self) -> bool:
         return self._get_attr("extended", data_type="bool", def_value=False)
 
     @extended.setter

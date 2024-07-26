@@ -114,8 +114,8 @@ class CupertinoDialogAction(Control):
 
     # is_default_action
     @property
-    def is_default_action(self) -> Optional[bool]:
-        return self._get_attr("isDefaultAction")
+    def is_default_action(self) -> bool:
+        return self._get_attr("isDefaultAction", data_type="bool", def_value=False)
 
     @is_default_action.setter
     def is_default_action(self, value: Optional[bool]):
@@ -123,8 +123,8 @@ class CupertinoDialogAction(Control):
 
     # is_destructive_action
     @property
-    def is_destructive_action(self) -> Optional[bool]:
-        return self._get_attr("isDestructiveAction")
+    def is_destructive_action(self) -> bool:
+        return self._get_attr("isDestructiveAction", data_type="bool", def_value=False)
 
     @is_destructive_action.setter
     def is_destructive_action(self, value: Optional[bool]):

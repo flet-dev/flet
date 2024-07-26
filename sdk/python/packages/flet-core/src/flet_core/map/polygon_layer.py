@@ -36,7 +36,6 @@ class PolygonMarker(Control):
         visible: Optional[bool] = None,
         data: Any = None,
     ):
-
         Control.__init__(
             self,
             ref=ref,
@@ -60,8 +59,7 @@ class PolygonMarker(Control):
 
     def before_update(self):
         super().before_update()
-        if isinstance(self.__coordinates, list):
-            self._set_attr_json("coordinates", self.__coordinates)
+        self._set_attr_json("coordinates", self.__coordinates)
         if isinstance(self.__label_text_style, TextStyle):
             self._set_attr_json("labelTextStyle", self.__label_text_style)
 
@@ -96,7 +94,7 @@ class PolygonMarker(Control):
 
     # rotate_label
     @property
-    def rotate_label(self) -> Optional[bool]:
+    def rotate_label(self) -> bool:
         return self._get_attr("rotateLabel", data_type="bool", def_value=False)
 
     @rotate_label.setter
@@ -114,7 +112,7 @@ class PolygonMarker(Control):
 
     # disable_holes_border
     @property
-    def disable_holes_border(self) -> Optional[bool]:
+    def disable_holes_border(self) -> bool:
         return self._get_attr("disableHolesBorder", data_type="bool", def_value=False)
 
     @disable_holes_border.setter
@@ -141,8 +139,8 @@ class PolygonMarker(Control):
 
     # border_stroke_width
     @property
-    def border_stroke_width(self) -> OptionalNumber:
-        return self._get_attr("borderStrokeWidth", data_type="float", def_value=0)
+    def border_stroke_width(self) -> float:
+        return self._get_attr("borderStrokeWidth", data_type="float", def_value=0.0)
 
     @border_stroke_width.setter
     def border_stroke_width(self, value: OptionalNumber):
@@ -151,11 +149,11 @@ class PolygonMarker(Control):
 
     # coordinates
     @property
-    def coordinates(self) -> Optional[List[MapLatitudeLongitude]]:
+    def coordinates(self) -> List[MapLatitudeLongitude]:
         return self.__coordinates
 
     @coordinates.setter
-    def coordinates(self, value: Optional[List[MapLatitudeLongitude]]):
+    def coordinates(self, value: List[MapLatitudeLongitude]):
         self.__coordinates = value
 
 
@@ -183,7 +181,6 @@ class PolygonLayer(MapLayer):
         visible: Optional[bool] = None,
         data: Any = None,
     ):
-
         MapLayer.__init__(
             self,
             ref=ref,
@@ -215,7 +212,7 @@ class PolygonLayer(MapLayer):
 
     # polygon_culling
     @property
-    def polygon_culling(self) -> Optional[bool]:
+    def polygon_culling(self) -> bool:
         return self._get_attr("polygonCulling", data_type="bool", def_value=False)
 
     @polygon_culling.setter
@@ -224,7 +221,7 @@ class PolygonLayer(MapLayer):
 
     # use_alternative_rendering
     @property
-    def use_alternative_rendering(self) -> Optional[bool]:
+    def use_alternative_rendering(self) -> bool:
         return self._get_attr(
             "useAlternativeRendering", data_type="bool", def_value=False
         )
@@ -235,7 +232,7 @@ class PolygonLayer(MapLayer):
 
     # polygon_labels
     @property
-    def polygon_labels(self) -> Optional[bool]:
+    def polygon_labels(self) -> bool:
         return self._get_attr("polygonLabels", data_type="bool", def_value=True)
 
     @polygon_labels.setter
@@ -244,7 +241,7 @@ class PolygonLayer(MapLayer):
 
     # simplification_tolerance
     @property
-    def simplification_tolerance(self) -> OptionalNumber:
+    def simplification_tolerance(self) -> float:
         return self._get_attr(
             "simplificationTolerance", data_type="float", def_value=0.5
         )
@@ -255,7 +252,7 @@ class PolygonLayer(MapLayer):
 
     # draw_labels_last
     @property
-    def draw_labels_last(self) -> Optional[bool]:
+    def draw_labels_last(self) -> bool:
         return self._get_attr("drawLabelsLast", data_type="bool", def_value=False)
 
     @draw_labels_last.setter

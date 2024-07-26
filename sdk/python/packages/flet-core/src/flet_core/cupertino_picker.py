@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Sequence, Union
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -25,7 +25,7 @@ class CupertinoPicker(ConstrainedControl):
 
     def __init__(
         self,
-        controls: List[Control],
+        controls: Sequence[Control],
         item_extent: OptionalNumber = None,
         selected_index: Optional[int] = None,
         bgcolor: Optional[str] = None,
@@ -118,7 +118,7 @@ class CupertinoPicker(ConstrainedControl):
 
     # squeeze
     @property
-    def squeeze(self) -> OptionalNumber:
+    def squeeze(self) -> float:
         return self._get_attr("squeeze", data_type="float", def_value=1.45)
 
     @squeeze.setter
@@ -138,7 +138,7 @@ class CupertinoPicker(ConstrainedControl):
 
     # use_magnifier
     @property
-    def use_magnifier(self) -> Optional[bool]:
+    def use_magnifier(self) -> bool:
         return self._get_attr("useMagnifier", data_type="bool", def_value=False)
 
     @use_magnifier.setter
@@ -147,7 +147,7 @@ class CupertinoPicker(ConstrainedControl):
 
     # magnification
     @property
-    def magnification(self) -> OptionalNumber:
+    def magnification(self) -> float:
         return self._get_attr("magnification", data_type="float", def_value=1.0)
 
     @magnification.setter
@@ -170,7 +170,7 @@ class CupertinoPicker(ConstrainedControl):
 
     # looping
     @property
-    def looping(self) -> Optional[bool]:
+    def looping(self) -> bool:
         return self._get_attr("looping", data_type="bool", def_value=False)
 
     @looping.setter
@@ -179,7 +179,7 @@ class CupertinoPicker(ConstrainedControl):
 
     # selected_index
     @property
-    def selected_index(self) -> Optional[int]:
+    def selected_index(self) -> int:
         return self._get_attr("selectedIndex", data_type="int", def_value=0)
 
     @selected_index.setter
@@ -188,7 +188,7 @@ class CupertinoPicker(ConstrainedControl):
 
     # diameter_ratio
     @property
-    def diameter_ratio(self) -> OptionalNumber:
+    def diameter_ratio(self) -> float:
         return self._get_attr("diameterRatio", data_type="float", def_value=1.07)
 
     @diameter_ratio.setter
@@ -197,7 +197,7 @@ class CupertinoPicker(ConstrainedControl):
 
     # off_axis_fraction
     @property
-    def off_axis_fraction(self) -> OptionalNumber:
+    def off_axis_fraction(self) -> float:
         return self._get_attr("offAxisFraction", data_type="float", def_value=0.0)
 
     @off_axis_fraction.setter
@@ -210,8 +210,8 @@ class CupertinoPicker(ConstrainedControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]):
-        self.__controls = value if value is not None else []
+    def controls(self, value: Sequence[Control]):
+        self.__controls = list(value)
 
     # on_change
     @property

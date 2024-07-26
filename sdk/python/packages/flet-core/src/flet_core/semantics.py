@@ -155,8 +155,8 @@ class Semantics(Control):
 
     # expanded
     @property
-    def expanded(self) -> Optional[bool]:
-        return self._get_attr("expanded", data_type="bool")
+    def expanded(self) -> bool:
+        return self._get_attr("expanded", data_type="bool", def_value=False)
 
     @expanded.setter
     def expanded(self, value: Optional[bool]):
@@ -173,8 +173,8 @@ class Semantics(Control):
 
     # textfield
     @property
-    def textfield(self) -> Optional[bool]:
-        return self._get_attr("textfield", data_type="bool")
+    def textfield(self) -> bool:
+        return self._get_attr("textfield", data_type="bool", def_value=False)
 
     @textfield.setter
     def textfield(self, value: Optional[bool]):
@@ -182,8 +182,8 @@ class Semantics(Control):
 
     # link
     @property
-    def link(self) -> Optional[bool]:
-        return self._get_attr("link", data_type="bool")
+    def link(self) -> bool:
+        return self._get_attr("link", data_type="bool", def_value=False)
 
     @link.setter
     def link(self, value: Optional[bool]):
@@ -191,8 +191,8 @@ class Semantics(Control):
 
     # image
     @property
-    def image(self) -> Optional[bool]:
-        return self._get_attr("image", data_type="bool")
+    def image(self) -> bool:
+        return self._get_attr("image", data_type="bool", def_value=False)
 
     @image.setter
     def image(self, value: Optional[bool]):
@@ -200,8 +200,8 @@ class Semantics(Control):
 
     # header
     @property
-    def header(self) -> Optional[bool]:
-        return self._get_attr("header", data_type="bool")
+    def header(self) -> bool:
+        return self._get_attr("header", data_type="bool", def_value=False)
 
     @header.setter
     def header(self, value: Optional[bool]):
@@ -209,8 +209,8 @@ class Semantics(Control):
 
     # selected
     @property
-    def selected(self) -> Optional[bool]:
-        return self._get_attr("selected", data_type="bool")
+    def selected(self) -> bool:
+        return self._get_attr("selected", data_type="bool", def_value=False)
 
     @selected.setter
     def selected(self, value: Optional[bool]):
@@ -218,8 +218,8 @@ class Semantics(Control):
 
     # button
     @property
-    def button(self) -> Optional[bool]:
-        return self._get_attr("button", data_type="bool")
+    def button(self) -> bool:
+        return self._get_attr("button", data_type="bool", def_value=False)
 
     @button.setter
     def button(self, value: Optional[bool]):
@@ -227,8 +227,8 @@ class Semantics(Control):
 
     # obscured
     @property
-    def obscured(self) -> Optional[bool]:
-        return self._get_attr("obscured", data_type="bool")
+    def obscured(self) -> bool:
+        return self._get_attr("obscured", data_type="bool", def_value=False)
 
     @obscured.setter
     def obscured(self, value: Optional[bool]):
@@ -236,8 +236,8 @@ class Semantics(Control):
 
     # multiline
     @property
-    def multiline(self) -> Optional[bool]:
-        return self._get_attr("multiline", data_type="bool")
+    def multiline(self) -> bool:
+        return self._get_attr("multiline", data_type="bool", def_value=False)
 
     @multiline.setter
     def multiline(self, value: Optional[bool]):
@@ -245,8 +245,8 @@ class Semantics(Control):
 
     # focusable
     @property
-    def focusable(self) -> Optional[bool]:
-        return self._get_attr("focusable", data_type="bool")
+    def focusable(self) -> bool:
+        return self._get_attr("focusable", data_type="bool", def_value=False)
 
     @focusable.setter
     def focusable(self, value: Optional[bool]):
@@ -254,8 +254,8 @@ class Semantics(Control):
 
     # read_only
     @property
-    def read_only(self) -> Optional[bool]:
-        return self._get_attr("readOnly", data_type="bool")
+    def read_only(self) -> bool:
+        return self._get_attr("readOnly", data_type="bool", def_value=False)
 
     @read_only.setter
     def read_only(self, value: Optional[bool]):
@@ -263,8 +263,8 @@ class Semantics(Control):
 
     # focused
     @property
-    def focused(self) -> Optional[bool]:
-        return self._get_attr("focus", data_type="bool")
+    def focused(self) -> bool:
+        return self._get_attr("focus", data_type="bool", def_value=False)
 
     @focused.setter
     def focused(self, value: Optional[bool]):
@@ -272,8 +272,8 @@ class Semantics(Control):
 
     # slider
     @property
-    def slider(self) -> Optional[bool]:
-        return self._get_attr("slider", data_type="bool")
+    def slider(self) -> bool:
+        return self._get_attr("slider", data_type="bool", def_value=False)
 
     @slider.setter
     def slider(self, value: Optional[bool]):
@@ -290,8 +290,8 @@ class Semantics(Control):
 
     # toggled
     @property
-    def toggled(self) -> Optional[bool]:
-        return self._get_attr("toggled", data_type="bool")
+    def toggled(self) -> bool:
+        return self._get_attr("toggled", data_type="bool", def_value=False)
 
     @toggled.setter
     def toggled(self, value: Optional[bool]):
@@ -308,8 +308,8 @@ class Semantics(Control):
 
     # checked
     @property
-    def checked(self) -> Optional[bool]:
-        return self._get_attr("checked", data_type="bool")
+    def checked(self) -> bool:
+        return self._get_attr("checked", data_type="bool", def_value=False)
 
     @checked.setter
     def checked(self, value: Optional[bool]):
@@ -371,8 +371,8 @@ class Semantics(Control):
 
     # container
     @property
-    def container(self) -> Optional[bool]:
-        return self._get_attr("container", data_type="bool")
+    def container(self) -> bool:
+        return self._get_attr("container", data_type="bool", def_value=False)
 
     @container.setter
     def container(self, value: Optional[bool]):
@@ -380,8 +380,8 @@ class Semantics(Control):
 
     # live_region
     @property
-    def live_region(self) -> Optional[bool]:
-        return self._get_attr("liveRegion", data_type="bool")
+    def live_region(self) -> bool:
+        return self._get_attr("liveRegion", data_type="bool", def_value=False)
 
     @live_region.setter
     def live_region(self, value: Optional[bool]):

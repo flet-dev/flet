@@ -141,7 +141,7 @@ class SnackBar(Control):
 
     # open
     @property
-    def open(self) -> Optional[bool]:
+    def open(self) -> bool:
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
@@ -150,7 +150,7 @@ class SnackBar(Control):
 
     # show_close_icon
     @property
-    def show_close_icon(self) -> Optional[bool]:
+    def show_close_icon(self) -> bool:
         return self._get_attr("showCloseIcon", data_type="bool", def_value=False)
 
     @show_close_icon.setter
@@ -213,7 +213,7 @@ class SnackBar(Control):
 
     # action_overflow_threshold
     @property
-    def action_overflow_threshold(self) -> OptionalNumber:
+    def action_overflow_threshold(self) -> float:
         return self._get_attr(
             "actionOverflowThreshold", data_type="float", def_value=0.25
         )

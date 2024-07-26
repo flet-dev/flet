@@ -98,7 +98,7 @@ class Arc(Shape):
 
     # use_center
     @property
-    def use_center(self) -> Optional[bool]:
+    def use_center(self) -> bool:
         return self._get_attr("useCenter", data_type="bool", def_value=False)
 
     @use_center.setter

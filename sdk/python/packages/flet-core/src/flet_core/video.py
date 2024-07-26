@@ -417,7 +417,7 @@ class Video(ConstrainedControl):
 
     # wakelock
     @property
-    def wakelock(self) -> Optional[bool]:
+    def wakelock(self) -> bool:
         return self._get_attr("wakelock", data_type="bool", def_value=True)
 
     @wakelock.setter
@@ -426,7 +426,7 @@ class Video(ConstrainedControl):
 
     # autoplay
     @property
-    def autoplay(self) -> Optional[bool]:
+    def autoplay(self) -> bool:
         return self._get_attr("autoPlay", data_type="bool", def_value=False)
 
     @autoplay.setter
@@ -435,7 +435,7 @@ class Video(ConstrainedControl):
 
     # muted
     @property
-    def muted(self) -> Optional[bool]:
+    def muted(self) -> bool:
         return self._get_attr("muted", data_type="bool", def_value=False)
 
     @muted.setter
@@ -444,7 +444,7 @@ class Video(ConstrainedControl):
 
     # shuffle_playlist
     @property
-    def shuffle_playlist(self) -> Optional[bool]:
+    def shuffle_playlist(self) -> bool:
         return self._get_attr("shufflePlaylist", data_type="bool", def_value=False)
 
     @shuffle_playlist.setter
@@ -453,7 +453,7 @@ class Video(ConstrainedControl):
 
     # show_controls
     @property
-    def show_controls(self) -> Optional[bool]:
+    def show_controls(self) -> bool:
         return self._get_attr("showControls", data_type="bool", def_value=True)
 
     @show_controls.setter
@@ -499,7 +499,7 @@ class Video(ConstrainedControl):
 
     # pause_upon_entering_background_mode
     @property
-    def pause_upon_entering_background_mode(self) -> Optional[bool]:
+    def pause_upon_entering_background_mode(self) -> bool:
         return cast(
             bool,
             self._get_attr(
@@ -513,7 +513,7 @@ class Video(ConstrainedControl):
 
     # resume_upon_entering_foreground_mode
     @property
-    def resume_upon_entering_foreground_mode(self) -> Optional[bool]:
+    def resume_upon_entering_foreground_mode(self) -> bool:
         return cast(
             bool,
             self._get_attr(

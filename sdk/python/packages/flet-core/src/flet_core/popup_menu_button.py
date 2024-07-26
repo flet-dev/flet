@@ -67,8 +67,8 @@ class PopupMenuItem(Control):
 
     # checked
     @property
-    def checked(self) -> Optional[bool]:
-        return self._get_attr("checked", data_type="bool")
+    def checked(self) -> bool:
+        return self._get_attr("checked", data_type="bool", def_value=False)
 
     @checked.setter
     def checked(self, value: Optional[bool]):
@@ -103,8 +103,8 @@ class PopupMenuItem(Control):
 
     # height
     @property
-    def height(self) -> OptionalNumber:
-        return self._get_attr("height", data_type="float", def_value=48)
+    def height(self) -> float:
+        return self._get_attr("height", data_type="float", def_value=48.0)
 
     @height.setter
     def height(self, value: OptionalNumber):
@@ -380,7 +380,7 @@ class PopupMenuButton(ConstrainedControl):
 
     # enable_feedback
     @property
-    def enable_feedback(self) -> Optional[bool]:
+    def enable_feedback(self) -> bool:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
 
     @enable_feedback.setter
@@ -389,8 +389,8 @@ class PopupMenuButton(ConstrainedControl):
 
     # elevation
     @property
-    def elevation(self) -> OptionalNumber:
-        return self._get_attr("elevation", data_type="float", def_value=8)
+    def elevation(self) -> float:
+        return self._get_attr("elevation", data_type="float", def_value=8.0)
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):

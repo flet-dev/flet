@@ -229,7 +229,7 @@ class Chip(ConstrainedControl):
 
     # selected
     @property
-    def selected(self) -> Optional[bool]:
+    def selected(self) -> bool:
         return self._get_attr("selected", data_type="bool", def_value=False)
 
     @selected.setter
@@ -238,7 +238,7 @@ class Chip(ConstrainedControl):
 
     # show_checkmark
     @property
-    def show_checkmark(self) -> Optional[bool]:
+    def show_checkmark(self) -> bool:
         return self._get_attr("showCheckmark", data_type="bool", def_value=True)
 
     @show_checkmark.setter
@@ -328,7 +328,7 @@ class Chip(ConstrainedControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter

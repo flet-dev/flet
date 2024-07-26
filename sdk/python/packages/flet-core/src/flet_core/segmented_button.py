@@ -245,7 +245,7 @@ class SegmentedButton(ConstrainedControl):
 
     # allow_empty_selection
     @property
-    def allow_empty_selection(self) -> Optional[bool]:
+    def allow_empty_selection(self) -> bool:
         return self._get_attr("allowEmptySelection", data_type="bool", def_value=False)
 
     @allow_empty_selection.setter
@@ -254,7 +254,7 @@ class SegmentedButton(ConstrainedControl):
 
     # allow_multiple_selection
     @property
-    def allow_multiple_selection(self) -> Optional[bool]:
+    def allow_multiple_selection(self) -> bool:
         return self._get_attr(
             "allowMultipleSelection", data_type="bool", def_value=False
         )
@@ -282,7 +282,7 @@ class SegmentedButton(ConstrainedControl):
 
     # show_selected_icon
     @property
-    def show_selected_icon(self) -> Optional[bool]:
+    def show_selected_icon(self) -> bool:
         return self._get_attr("showSelectedIcon", data_type="bool", def_value=True)
 
     @show_selected_icon.setter

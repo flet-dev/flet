@@ -61,7 +61,7 @@ class TextSourceAttribution(Control):
 
     # prepend_copyright
     @property
-    def prepend_copyright(self) -> Optional[bool]:
+    def prepend_copyright(self) -> bool:
         return self._get_attr("prependCopyright", data_type="bool", def_value=True)
 
     @prepend_copyright.setter

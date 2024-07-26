@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Sequence
 
 from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control
@@ -170,7 +170,7 @@ class NavigationDrawer(Control):
 
     def __init__(
         self,
-        controls: Optional[List[Control]] = None,
+        controls: Optional[Sequence[Control]] = None,
         open: bool = False,
         selected_index: Optional[int] = None,
         bgcolor: Optional[str] = None,
@@ -226,7 +226,7 @@ class NavigationDrawer(Control):
 
     # open
     @property
-    def open(self) -> Optional[bool]:
+    def open(self) -> bool:
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
@@ -239,12 +239,12 @@ class NavigationDrawer(Control):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]):
-        self.__controls = value or []
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list(value) if value is not  None else []
 
     # selected_index
     @property
-    def selected_index(self) -> Optional[int]:
+    def selected_index(self) -> int:
         return self._get_attr("selectedIndex", data_type="int", def_value=0)
 
     @selected_index.setter

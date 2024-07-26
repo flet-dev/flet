@@ -693,11 +693,11 @@ class TapEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.local_x: float = d["lx"]
-        self.local_y: float = d["ly"]
-        self.global_x: float = d["gx"]
-        self.global_y: float = d["gy"]
-        self.kind: str = d["kind"]
+        self.local_x: float = d.get("lx")
+        self.local_y: float = d.get("ly")
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")
+        self.kind: str = d.get("kind")
 
 
 class MultiTapEvent(ControlEvent):
@@ -710,117 +710,117 @@ class LongPressStartEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.local_x: float = d["lx"]
-        self.local_y: float = d["ly"]
-        self.global_x: float = d["gx"]
-        self.global_y: float = d["gy"]
+        self.local_x: float = d.get("lx")
+        self.local_y: float = d.get("ly")
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")
 
 
 class LongPressEndEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.local_x: float = d["lx"]
-        self.local_y: float = d["ly"]
-        self.global_x: float = d["gx"]
-        self.global_y: float = d["gy"]
-        self.velocity_x: float = d["vx"]
-        self.velocity_y: float = d["vy"]
+        self.local_x: float = d.get("lx")
+        self.local_y: float = d.get("ly")
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")
+        self.velocity_x: float = d.get("vx")
+        self.velocity_y: float = d.get("vy")
 
 
 class DragStartEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.kind: str = d["kind"]
-        self.local_x: float = d["lx"]
-        self.local_y: float = d["ly"]
-        self.global_x: float = d["gx"]
-        self.global_y: float = d["gy"]
-        self.timestamp: Optional[int] = d["ts"]
+        self.kind: str = d.get("kind")
+        self.local_x: float = d.get("lx")
+        self.local_y: float = d.get("ly")
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")
+        self.timestamp: Optional[int] = d.get("ts")
 
 
 class DragUpdateEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.delta_x: float = d["dx"]
-        self.delta_y: float = d["dy"]
-        self.primary_delta: Optional[float] = d["pd"]
-        self.local_x: float = d["lx"]
-        self.local_y: float = d["ly"]
-        self.global_x: float = d["gx"]
-        self.global_y: float = d["gy"]
-        self.timestamp: Optional[int] = d["ts"]
+        self.delta_x: float = d.get("dx")
+        self.delta_y: float = d.get("dy")
+        self.primary_delta: Optional[float] = d.get("pd")
+        self.local_x: float = d.get("lx")
+        self.local_y: float = d.get("ly")
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")
+        self.timestamp: Optional[int] = d.get("ts")
 
 
 class DragEndEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.primary_velocity: Optional[float] = d["pv"]
-        self.velocity_x: float = d["vx"]
-        self.velocity_y: float = d["vy"]
+        self.primary_velocity: Optional[float] = d.get("pv")
+        self.velocity_x: float = d.get("vx")
+        self.velocity_y: float = d.get("vy")
 
 
 class ScaleStartEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.focal_point_x: float = d["fpx"]
-        self.focal_point_y: float = d["fpy"]
-        self.local_focal_point_x: float = d["lfpx"]
-        self.local_focal_point_y: float = d["lfpy"]
-        self.pointer_count: int = d["pc"]
+        self.focal_point_x: float = d.get("fpx")
+        self.focal_point_y: float = d.get("fpy")
+        self.local_focal_point_x: float = d.get("lfpx")
+        self.local_focal_point_y: float = d.get("lfpy")
+        self.pointer_count: int = d.get("pc")
 
 
 class ScaleUpdateEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.focal_point_x: float = d["fpx"]
-        self.focal_point_y: float = d["fpy"]
-        self.focal_point_delta_x: float = d["fpdx"]
-        self.focal_point_delta_y: float = d["fpdy"]
-        self.local_focal_point_x: float = d["lfpx"]
-        self.local_focal_point_y: float = d["lfpy"]
-        self.pointer_count: int = d["pc"]
-        self.horizontal_scale: float = d["hs"]
-        self.vertical_scale: float = d["vs"]
-        self.scale: float = d["s"]
-        self.rotation: float = d["r"]
+        self.focal_point_x: float = d.get("fpx")
+        self.focal_point_y: float = d.get("fpy")
+        self.focal_point_delta_x: float = d.get("fpdx")
+        self.focal_point_delta_y: float = d.get("fpdy")
+        self.local_focal_point_x: float = d.get("lfpx")
+        self.local_focal_point_y: float = d.get("lfpy")
+        self.pointer_count: int = d.get("pc")
+        self.horizontal_scale: float = d.get("hs")
+        self.vertical_scale: float = d.get("vs")
+        self.scale: float = d.get("s")
+        self.rotation: float = d.get("r")
 
 
 class ScaleEndEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.pointer_count: int = d["pc"]
-        self.velocity_x: float = d["vx"]
-        self.velocity_y: float = d["vy"]
+        self.pointer_count: int = d.get("pc")
+        self.velocity_x: float = d.get("vx")
+        self.velocity_y: float = d.get("vy")
 
 
 class HoverEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.timestamp: float = d["ts"]
-        self.kind: str = d["kind"]
-        self.global_x: float = d["gx"]
-        self.global_y: float = d["gy"]
-        self.local_x: float = d["lx"]
-        self.local_y: float = d["ly"]
-        self.delta_x: Optional[float] = d["dx"]
-        self.delta_y: Optional[float] = d["dy"]
+        self.timestamp: float = d.get("ts")
+        self.kind: str = d.get("kind")
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")
+        self.local_x: float = d.get("lx")
+        self.local_y: float = d.get("ly")
+        self.delta_x: Optional[float] = d.get("dx")
+        self.delta_y: Optional[float] = d.get("dy")
 
 
 class ScrollEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.global_x: float = d["gx"]
-        self.global_y: float = d["gy"]
-        self.local_x: float = d["lx"]
-        self.local_y: float = d["ly"]
-        self.scroll_delta_x: Optional[float] = d["dx"]
-        self.scroll_delta_y: Optional[float] = d["dy"]
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")
+        self.local_x: float = d.get("lx")
+        self.local_y: float = d.get("ly")
+        self.scroll_delta_x: Optional[float] = d.get("dx")
+        self.scroll_delta_y: Optional[float] = d.get("dy")

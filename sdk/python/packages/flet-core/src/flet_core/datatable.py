@@ -28,8 +28,8 @@ class DataColumnSortEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.column_index: int = d["i"]
-        self.ascending: bool = d["a"]
+        self.column_index: int = d.get("i")
+        self.ascending: bool = d.get("a")
 
 
 class DataColumn(Control):
@@ -79,7 +79,7 @@ class DataColumn(Control):
 
     # numeric
     @property
-    def numeric(self) -> Optional[bool]:
+    def numeric(self) -> bool:
         return self._get_attr("numeric", data_type="bool", def_value=False)
 
     @numeric.setter
@@ -160,7 +160,7 @@ class DataCell(Control):
 
     # placeholder
     @property
-    def placeholder(self) -> Optional[bool]:
+    def placeholder(self) -> bool:
         return self._get_attr("placeholder", data_type="bool", def_value=False)
 
     @placeholder.setter
@@ -169,7 +169,7 @@ class DataCell(Control):
 
     # show_edit_icon
     @property
-    def show_edit_icon(self) -> Optional[bool]:
+    def show_edit_icon(self) -> bool:
         return self._get_attr("showEditIcon", data_type="bool", def_value=False)
 
     @show_edit_icon.setter
@@ -287,7 +287,7 @@ class DataRow(Control):
 
     # selected
     @property
-    def selected(self) -> Optional[bool]:
+    def selected(self) -> bool:
         return self._get_attr("selected", data_type="bool", def_value=False)
 
     @selected.setter
@@ -549,7 +549,7 @@ class DataTable(ConstrainedControl):
 
     # divider_thickness
     @property
-    def divider_thickness(self) -> OptionalNumber:
+    def divider_thickness(self) -> float:
         return self._get_attr("dividerThickness", data_type="float", def_value=1.0)
 
     @divider_thickness.setter
@@ -648,7 +648,7 @@ class DataTable(ConstrainedControl):
 
     # show_bottom_border
     @property
-    def show_bottom_border(self) -> Optional[bool]:
+    def show_bottom_border(self) -> bool:
         return self._get_attr("showBottomBorder", data_type="bool", def_value=False)
 
     @show_bottom_border.setter
@@ -657,7 +657,7 @@ class DataTable(ConstrainedControl):
 
     # show_checkbox_column
     @property
-    def show_checkbox_column(self) -> Optional[bool]:
+    def show_checkbox_column(self) -> bool:
         return self._get_attr("showCheckboxColumn", data_type="bool", def_value=False)
 
     @show_checkbox_column.setter
@@ -666,7 +666,7 @@ class DataTable(ConstrainedControl):
 
     # sort_ascending
     @property
-    def sort_ascending(self) -> Optional[bool]:
+    def sort_ascending(self) -> bool:
         return self._get_attr("sortAscending", data_type="bool", def_value=False)
 
     @sort_ascending.setter

@@ -133,7 +133,7 @@ class Banner(Control):
 
     # open
     @property
-    def open(self) -> Optional[bool]:
+    def open(self) -> bool:
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
@@ -142,7 +142,7 @@ class Banner(Control):
 
     # modal
     @property
-    def modal(self) -> Optional[bool]:
+    def modal(self) -> bool:
         return self._get_attr("modal", data_type="bool", def_value=False)
 
     @modal.setter
@@ -205,7 +205,7 @@ class Banner(Control):
 
     # force_actions_below
     @property
-    def force_actions_below(self) -> Optional[bool]:
+    def force_actions_below(self) -> bool:
         return self._get_attr("forceActionsBelow", data_type="bool", def_value=False)
 
     @force_actions_below.setter

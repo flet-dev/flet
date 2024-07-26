@@ -212,7 +212,7 @@ class CupertinoButton(ConstrainedControl):
 
     # opacity_on_click
     @property
-    def opacity_on_click(self) -> OptionalNumber:
+    def opacity_on_click(self) -> float:
         return self._get_attr("opacityOnClick", data_type="float", def_value=0.4)
 
     @opacity_on_click.setter
@@ -232,7 +232,7 @@ class CupertinoButton(ConstrainedControl):
 
     # min_size
     @property
-    def min_size(self) -> OptionalNumber:
+    def min_size(self) -> float:
         return self._get_attr("minSize", data_type="float", def_value=44.0)
 
     @min_size.setter

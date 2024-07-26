@@ -66,7 +66,7 @@ class AutoComplete(Control):
 
     # suggestions_max_height
     @property
-    def suggestions_max_height(self) -> OptionalNumber:
+    def suggestions_max_height(self) -> float:
         return self._get_attr(
             "suggestionsMaxHeight", data_type="float", def_value=200.0
         )
@@ -100,5 +100,5 @@ class AutoCompleteSelectEvent(ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
         self.selection: AutoCompleteSuggestion = AutoCompleteSuggestion(
-            key=d["key"], value=d["value"]
+            key=d.get("key"), value=d.get("value")
         )

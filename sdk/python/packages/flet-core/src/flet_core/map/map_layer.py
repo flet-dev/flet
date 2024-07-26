@@ -18,7 +18,6 @@ class MapLayer(Control):
         visible: Optional[bool] = None,
         data: Any = None,
     ):
-
         Control.__init__(
             self,
             ref=ref,

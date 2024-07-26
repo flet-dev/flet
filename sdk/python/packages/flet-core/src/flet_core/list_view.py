@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union, Callable
+from typing import Any, List, Optional, Union, Callable, Sequence
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
@@ -59,7 +59,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     def __init__(
         self,
-        controls: Optional[List[Control]] = None,
+        controls: Optional[Sequence[Control]] = None,
         horizontal: Optional[bool] = None,
         spacing: OptionalNumber = None,
         item_extent: OptionalNumber = None,
@@ -186,8 +186,8 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     # horizontal
     @property
-    def horizontal(self) -> Optional[bool]:
-        return self._get_attr("horizontal")
+    def horizontal(self) -> bool:
+        return self._get_attr("horizontal", data_type="bool", def_value=False)
 
     @horizontal.setter
     def horizontal(self, value: Optional[bool]):
@@ -231,8 +231,8 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     # first_item_prototype
     @property
-    def first_item_prototype(self) -> Optional[bool]:
-        return self._get_attr("firstItemPrototype", data_type="bool")
+    def first_item_prototype(self) -> bool:
+        return self._get_attr("firstItemPrototype", data_type="bool", def_value=False)
 
     @first_item_prototype.setter
     def first_item_prototype(self, value: Optional[bool]):
@@ -249,12 +249,12 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     # controls
     @property
-    def controls(self):
+    def controls(self) -> List[Control]:
         return self.__controls
 
     @controls.setter
-    def controls(self, value):
-        self.__controls = value if value is not None else []
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list(value) if value is not None else []
 
     # clip_behavior
     @property
