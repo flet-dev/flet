@@ -1,12 +1,12 @@
 import json
 import time
-from typing import Optional, Callable
+from typing import Optional
 
 from flet_core.animation import AnimationCurve
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
-from flet_core.types import ScrollMode
+from flet_core.types import ScrollMode, OptionalEventCallable
 from flet_core.utils import deprecated
 
 
@@ -17,7 +17,7 @@ class ScrollableControl(Control):
         auto_scroll: Optional[bool] = None,
         reverse: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
-        on_scroll: Optional[Callable[["OnScrollEvent"], None]] = None,
+        on_scroll: OptionalEventCallable["OnScrollEvent"] = None,
     ):
         super().__init__()
         self.__on_scroll = EventHandler(lambda e: OnScrollEvent(e))
@@ -118,7 +118,7 @@ class ScrollableControl(Control):
         return self.__on_scroll
 
     @on_scroll.setter
-    def on_scroll(self, handler: Optional[Callable[["OnScrollEvent"], None]]):
+    def on_scroll(self, handler: OptionalEventCallable["OnScrollEvent"]):
         self.__on_scroll.subscribe(handler)
         self._set_attr("onScroll", True if handler is not None else None)
 
