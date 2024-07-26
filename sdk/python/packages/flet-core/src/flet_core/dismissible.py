@@ -15,7 +15,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -283,7 +283,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("resize")
 
     @on_resize.setter
-    def on_resize(self, handler: DefaultOptionalEventCallable):
+    def on_resize(self, handler: OptionalControlEventCallable):
         self._add_event_handler("resize", handler)
         self._set_attr("onResize", True if handler is not None else None)
 

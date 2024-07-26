@@ -11,7 +11,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -293,5 +293,5 @@ class CircleAvatar(ConstrainedControl):
         return self._get_event_handler("imageError")
 
     @on_image_error.setter
-    def on_image_error(self, handler: DefaultOptionalEventCallable):
+    def on_image_error(self, handler: OptionalControlEventCallable):
         self._add_event_handler("imageError", handler)

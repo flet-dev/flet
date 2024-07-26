@@ -7,7 +7,7 @@ from flet_core.types import (
     PaddingValue,
     MarginValue,
     OptionalEventCallable,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -269,9 +269,9 @@ class Banner(Control):
 
     # on_visible
     @property
-    def on_visible(self) -> DefaultOptionalEventCallable:
+    def on_visible(self) -> OptionalControlEventCallable:
         return self._get_event_handler("visible")
 
     @on_visible.setter
-    def on_visible(self, handler: DefaultOptionalEventCallable):
+    def on_visible(self, handler: OptionalControlEventCallable):
         self._add_event_handler("visible", handler)

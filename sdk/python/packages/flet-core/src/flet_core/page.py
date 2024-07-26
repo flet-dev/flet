@@ -76,7 +76,7 @@ from flet_core.types import (
     ThemeMode,
     Wrapper,
     WindowEventType,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 from flet_core.utils import classproperty, deprecated
 from flet_core.utils.concurrency_utils import is_pyodide
@@ -2738,7 +2738,7 @@ class Page(AdaptiveControl):
         return self.__on_close
 
     @on_close.setter
-    def on_close(self, handler: DefaultOptionalEventCallable):
+    def on_close(self, handler: OptionalControlEventCallable):
         self.__on_close.subscribe(handler)
 
     # on_resize
@@ -2776,7 +2776,7 @@ class Page(AdaptiveControl):
         return self.__on_platform_brightness_change
 
     @on_platform_brightness_change.setter
-    def on_platform_brightness_change(self, handler: DefaultOptionalEventCallable):
+    def on_platform_brightness_change(self, handler: OptionalControlEventCallable):
         self.__on_platform_brightness_change.subscribe(handler)
 
     # on_app_lifecycle_change
@@ -2853,7 +2853,7 @@ class Page(AdaptiveControl):
         return self.__on_connect
 
     @on_connect.setter
-    def on_connect(self, handler: DefaultOptionalEventCallable):
+    def on_connect(self, handler: OptionalControlEventCallable):
         self.__on_connect.subscribe(handler)
 
     # on_disconnect
@@ -2862,7 +2862,7 @@ class Page(AdaptiveControl):
         return self.__on_disconnect
 
     @on_disconnect.setter
-    def on_disconnect(self, handler: DefaultOptionalEventCallable):
+    def on_disconnect(self, handler: OptionalControlEventCallable):
         self.__on_disconnect.subscribe(handler)
 
     # on_login
@@ -2880,7 +2880,7 @@ class Page(AdaptiveControl):
         return self.__on_logout
 
     @on_logout.setter
-    def on_logout(self, handler: DefaultOptionalEventCallable):
+    def on_logout(self, handler: OptionalControlEventCallable):
         self.__on_logout.subscribe(handler)
 
     # on_error
@@ -2889,7 +2889,7 @@ class Page(AdaptiveControl):
         return self.__on_error
 
     @on_error.setter
-    def on_error(self, handler: DefaultOptionalEventCallable):
+    def on_error(self, handler: OptionalControlEventCallable):
         self.__on_error.subscribe(handler)
 
     # on_scroll

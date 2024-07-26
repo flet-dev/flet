@@ -17,7 +17,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -410,30 +410,30 @@ class SearchBar(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self) -> DefaultOptionalEventCallable:
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: DefaultOptionalEventCallable):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
         self._set_attr("onchange", True if handler is not None else None)
 
     # on_tap
     @property
-    def on_tap(self) -> DefaultOptionalEventCallable:
+    def on_tap(self) -> OptionalControlEventCallable:
         return self._get_event_handler("tap")
 
     @on_tap.setter
-    def on_tap(self, handler: DefaultOptionalEventCallable):
+    def on_tap(self, handler: OptionalControlEventCallable):
         self._add_event_handler("tap", handler)
         self._set_attr("ontap", True if handler is not None else None)
 
     # on_submit
     @property
-    def on_submit(self) -> DefaultOptionalEventCallable:
+    def on_submit(self) -> OptionalControlEventCallable:
         return self._get_event_handler("submit")
 
     @on_submit.setter
-    def on_submit(self, handler: DefaultOptionalEventCallable):
+    def on_submit(self, handler: OptionalControlEventCallable):
         self._add_event_handler("submit", handler)
         self._set_attr("onsubmit", True if handler is not None else None)

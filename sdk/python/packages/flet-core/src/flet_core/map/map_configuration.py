@@ -8,7 +8,7 @@ from flet_core.event_handler import EventHandler
 from flet_core.types import (
     ControlEvent,
     OptionalEventCallable,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -270,11 +270,11 @@ class MapConfiguration(Control):
 
     # on_init
     @property
-    def on_init(self) -> DefaultOptionalEventCallable:
+    def on_init(self) -> OptionalControlEventCallable:
         return self._get_event_handler("init")
 
     @on_init.setter
-    def on_init(self, handler: DefaultOptionalEventCallable):
+    def on_init(self, handler: OptionalControlEventCallable):
         self._add_event_handler("init", handler)
         self._set_attr("onInit", True if handler is not None else None)
 

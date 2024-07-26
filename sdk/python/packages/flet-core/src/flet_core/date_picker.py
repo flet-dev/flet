@@ -10,7 +10,7 @@ from flet_core.textfield import KeyboardType
 from flet_core.types import (
     ResponsiveNumber,
     OptionalEventCallable,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -360,20 +360,20 @@ class DatePicker(Control):
 
     # on_change
     @property
-    def on_change(self) -> DefaultOptionalEventCallable:
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: DefaultOptionalEventCallable):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
 
     # on_dismiss
     @property
-    def on_dismiss(self) -> DefaultOptionalEventCallable:
+    def on_dismiss(self) -> OptionalControlEventCallable:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler: DefaultOptionalEventCallable):
+    def on_dismiss(self, handler: OptionalControlEventCallable):
         self._add_event_handler("dismiss", handler)
 
     # on_entry_mode_change

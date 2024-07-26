@@ -12,7 +12,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 try:
@@ -194,9 +194,9 @@ class Markdown(ConstrainedControl):
 
     # on_tap_link
     @property
-    def on_tap_link(self) -> DefaultOptionalEventCallable:
+    def on_tap_link(self) -> OptionalControlEventCallable:
         return self._get_event_handler("tap_link")
 
     @on_tap_link.setter
-    def on_tap_link(self, handler: DefaultOptionalEventCallable):
+    def on_tap_link(self, handler: OptionalControlEventCallable):
         self._add_event_handler("tap_link", handler)

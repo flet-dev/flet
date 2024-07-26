@@ -405,7 +405,7 @@ class VisualDensity(Enum):
 ControlEventType = TypeVar("ControlEventType", bound=ControlEvent)
 EventCallable = Callable[[ControlEventType], Any]
 OptionalEventCallable = Optional[EventCallable]
-DefaultOptionalEventCallable = OptionalEventCallable[ControlEvent]
+OptionalControlEventCallable = OptionalEventCallable[ControlEvent]
 
 
 # Wrapper

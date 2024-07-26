@@ -4,7 +4,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import DefaultOptionalEventCallable
+from flet_core.types import OptionalControlEventCallable
 from flet_core.utils import deprecated
 
 
@@ -284,9 +284,9 @@ class AudioRecorder(Control):
 
     # on_state_changed
     @property
-    def on_state_changed(self) -> DefaultOptionalEventCallable:
+    def on_state_changed(self) -> OptionalControlEventCallable:
         return self._get_event_handler("state_changed")
 
     @on_state_changed.setter
-    def on_state_changed(self, handler: DefaultOptionalEventCallable):
+    def on_state_changed(self, handler: OptionalControlEventCallable):
         self._add_event_handler("state_changed", handler)

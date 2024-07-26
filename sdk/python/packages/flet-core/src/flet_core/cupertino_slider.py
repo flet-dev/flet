@@ -10,7 +10,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -193,45 +193,45 @@ class CupertinoSlider(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self) -> DefaultOptionalEventCallable:
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: DefaultOptionalEventCallable):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
 
     # on_change_start
     @property
-    def on_change_start(self) -> DefaultOptionalEventCallable:
+    def on_change_start(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change_start")
 
     @on_change_start.setter
-    def on_change_start(self, handler: DefaultOptionalEventCallable):
+    def on_change_start(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change_start", handler)
 
     # on_change_end
     @property
-    def on_change_end(self) -> DefaultOptionalEventCallable:
+    def on_change_end(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change_end")
 
     @on_change_end.setter
-    def on_change_end(self, handler: DefaultOptionalEventCallable):
+    def on_change_end(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change_end", handler)
 
     # on_focus
     @property
-    def on_focus(self) -> DefaultOptionalEventCallable:
+    def on_focus(self) -> OptionalControlEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler: DefaultOptionalEventCallable):
+    def on_focus(self, handler: OptionalControlEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self) -> DefaultOptionalEventCallable:
+    def on_blur(self) -> OptionalControlEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler: DefaultOptionalEventCallable):
+    def on_blur(self, handler: OptionalControlEventCallable):
         self._add_event_handler("blur", handler)

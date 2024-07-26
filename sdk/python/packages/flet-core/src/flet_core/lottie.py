@@ -11,7 +11,7 @@ from flet_core.types import (
     ScaleValue,
     ImageFit,
     OptionalEventCallable,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 from flet_core.video import FilterQuality
 
@@ -189,10 +189,10 @@ class Lottie(ConstrainedControl):
 
     # on_error
     @property
-    def on_error(self) -> DefaultOptionalEventCallable:
+    def on_error(self) -> OptionalControlEventCallable:
         return self._get_event_handler("error")
 
     @on_error.setter
-    def on_error(self, handler: DefaultOptionalEventCallable):
+    def on_error(self, handler: OptionalControlEventCallable):
         self._add_event_handler("error", handler)
         self._set_attr("onError", True if handler is not None else None)

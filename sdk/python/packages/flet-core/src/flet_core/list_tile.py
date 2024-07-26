@@ -19,7 +19,7 @@ from flet_core.types import (
     OptionalEventCallable,
     ThemeVisualDensity,
     VisualDensity,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -541,38 +541,38 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # on_click
     @property
-    def on_click(self) -> DefaultOptionalEventCallable:
+    def on_click(self) -> OptionalControlEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler: DefaultOptionalEventCallable):
+    def on_click(self, handler: OptionalControlEventCallable):
         self._add_event_handler("click", handler)
         self._set_attr("onclick", True if handler is not None else None)
 
     # on_long_press
     @property
-    def on_long_press(self) -> DefaultOptionalEventCallable:
+    def on_long_press(self) -> OptionalControlEventCallable:
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler: DefaultOptionalEventCallable):
+    def on_long_press(self, handler: OptionalControlEventCallable):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # on_focus
     @property
-    def on_focus(self) -> DefaultOptionalEventCallable:
+    def on_focus(self) -> OptionalControlEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler: DefaultOptionalEventCallable):
+    def on_focus(self, handler: OptionalControlEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self) -> DefaultOptionalEventCallable:
+    def on_blur(self) -> OptionalControlEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler: DefaultOptionalEventCallable):
+    def on_blur(self, handler: OptionalControlEventCallable):
         self._add_event_handler("blur", handler)

@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control
 from flet_core.ref import Ref
-from flet_core.types import OptionalEventCallable, DefaultOptionalEventCallable
+from flet_core.types import OptionalEventCallable, OptionalControlEventCallable
 
 
 class SelectionArea(Control):
@@ -66,9 +66,9 @@ class SelectionArea(Control):
 
     # on_change
     @property
-    def on_change(self) -> DefaultOptionalEventCallable:
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: DefaultOptionalEventCallable):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)

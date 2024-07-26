@@ -9,7 +9,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -251,10 +251,10 @@ class ConstrainedControl(Control):
 
     # on_animation_end
     @property
-    def on_animation_end(self) -> DefaultOptionalEventCallable:
+    def on_animation_end(self) -> OptionalControlEventCallable:
         return self._get_event_handler("animation_end")
 
     @on_animation_end.setter
-    def on_animation_end(self, handler: DefaultOptionalEventCallable):
+    def on_animation_end(self, handler: OptionalControlEventCallable):
         self._add_event_handler("animation_end", handler)
         self._set_attr("onAnimationEnd", True if handler is not None else None)

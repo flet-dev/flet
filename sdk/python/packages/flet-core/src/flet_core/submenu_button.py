@@ -14,7 +14,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -241,7 +241,7 @@ class SubmenuButton(ConstrainedControl):
         return self._get_event_handler("open")
 
     @on_open.setter
-    def on_open(self, handler: DefaultOptionalEventCallable):
+    def on_open(self, handler: OptionalControlEventCallable):
         self._add_event_handler("open", handler)
         self._set_attr("onOpen", True if handler is not None else None)
 
@@ -251,7 +251,7 @@ class SubmenuButton(ConstrainedControl):
         return self._get_event_handler("close")
 
     @on_close.setter
-    def on_close(self, handler: DefaultOptionalEventCallable):
+    def on_close(self, handler: OptionalControlEventCallable):
         self._add_event_handler("close", handler)
         self._set_attr("onClose", True if handler is not None else None)
 
@@ -261,7 +261,7 @@ class SubmenuButton(ConstrainedControl):
         return self._get_event_handler("hover")
 
     @on_hover.setter
-    def on_hover(self, handler: DefaultOptionalEventCallable):
+    def on_hover(self, handler: OptionalControlEventCallable):
         self._add_event_handler("hover", handler)
         self._set_attr("onHover", True if handler is not None else None)
 
@@ -271,7 +271,7 @@ class SubmenuButton(ConstrainedControl):
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler: DefaultOptionalEventCallable):
+    def on_focus(self, handler: OptionalControlEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
@@ -280,5 +280,5 @@ class SubmenuButton(ConstrainedControl):
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler: DefaultOptionalEventCallable):
+    def on_blur(self, handler: OptionalControlEventCallable):
         self._add_event_handler("blur", handler)

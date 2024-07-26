@@ -19,7 +19,7 @@ from flet_core.types import (
     OptionalEventCallable,
     ThemeVisualDensity,
     VisualDensity,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -365,7 +365,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: DefaultOptionalEventCallable):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
 
     # on_focus
@@ -374,7 +374,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler: DefaultOptionalEventCallable):
+    def on_focus(self, handler: OptionalControlEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
@@ -383,5 +383,5 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler: DefaultOptionalEventCallable):
+    def on_blur(self, handler: OptionalControlEventCallable):
         self._add_event_handler("blur", handler)

@@ -12,7 +12,7 @@ from flet_core.types import (
     ScaleValue,
     UrlTarget,
     OptionalEventCallable,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -302,10 +302,10 @@ class CupertinoListTile(ConstrainedControl):
 
     # on_click
     @property
-    def on_click(self) -> DefaultOptionalEventCallable:
+    def on_click(self) -> OptionalControlEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler: DefaultOptionalEventCallable):
+    def on_click(self, handler: OptionalControlEventCallable):
         self._add_event_handler("click", handler)
         self._set_attr("onclick", True if handler is not None else None)

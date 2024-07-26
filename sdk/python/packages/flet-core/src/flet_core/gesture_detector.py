@@ -15,7 +15,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -367,11 +367,11 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     # on_tap
     @property
-    def on_tap(self) -> DefaultOptionalEventCallable:
+    def on_tap(self) -> OptionalControlEventCallable:
         return self._get_event_handler("tap")
 
     @on_tap.setter
-    def on_tap(self, handler: DefaultOptionalEventCallable):
+    def on_tap(self, handler: OptionalControlEventCallable):
         self._add_event_handler("tap", handler)
         self._set_attr("onTap", True if handler is not None else None)
 
@@ -416,21 +416,21 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     # on_multi_long_press
     @property
-    def on_multi_long_press(self) -> DefaultOptionalEventCallable:
+    def on_multi_long_press(self) -> OptionalControlEventCallable:
         return self._get_event_handler("multi_long_press")
 
     @on_multi_long_press.setter
-    def on_multi_long_press(self, handler: DefaultOptionalEventCallable):
+    def on_multi_long_press(self, handler: OptionalControlEventCallable):
         self._add_event_handler("multi_long_press", handler)
         self._set_attr("onMultiLongPress", True if handler is not None else None)
 
     # on_secondary_tap
     @property
-    def on_secondary_tap(self) -> DefaultOptionalEventCallable:
+    def on_secondary_tap(self) -> OptionalControlEventCallable:
         return self._get_event_handler("secondary_tap")
 
     @on_secondary_tap.setter
-    def on_secondary_tap(self, handler: DefaultOptionalEventCallable):
+    def on_secondary_tap(self, handler: OptionalControlEventCallable):
         self._add_event_handler("secondary_tap", handler)
         self._set_attr("onSecondaryTap", True if handler is not None else None)
 

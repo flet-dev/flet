@@ -11,7 +11,7 @@ from flet_core.types import (
     ScaleValue,
     PaddingValue,
     OptionalEventCallable,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -187,9 +187,9 @@ class CupertinoSegmentedButton(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self) -> DefaultOptionalEventCallable:
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: DefaultOptionalEventCallable):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)

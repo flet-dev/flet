@@ -9,7 +9,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -115,9 +115,9 @@ class FletApp(ConstrainedControl):
 
     # on_error
     @property
-    def on_error(self) -> DefaultOptionalEventCallable:
+    def on_error(self) -> OptionalControlEventCallable:
         return self._get_event_handler("error")
 
     @on_error.setter
-    def on_error(self, handler: DefaultOptionalEventCallable):
+    def on_error(self, handler: OptionalControlEventCallable):
         self._add_event_handler("error", handler)

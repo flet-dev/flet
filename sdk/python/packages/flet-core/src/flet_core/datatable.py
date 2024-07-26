@@ -20,7 +20,7 @@ from flet_core.types import (
     ScaleValue,
     ClipBehavior,
     OptionalEventCallable,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -178,41 +178,41 @@ class DataCell(Control):
 
     # on_double_tap
     @property
-    def on_double_tap(self) -> DefaultOptionalEventCallable:
+    def on_double_tap(self) -> OptionalControlEventCallable:
         return self._get_event_handler("double_tap")
 
     @on_double_tap.setter
-    def on_double_tap(self, handler: DefaultOptionalEventCallable):
+    def on_double_tap(self, handler: OptionalControlEventCallable):
         self._add_event_handler("double_tap", handler)
         self._set_attr("onDoubleTap", True if handler is not None else None)
 
     # on_long_press
     @property
-    def on_long_press(self) -> DefaultOptionalEventCallable:
+    def on_long_press(self) -> OptionalControlEventCallable:
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler: DefaultOptionalEventCallable):
+    def on_long_press(self, handler: OptionalControlEventCallable):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # on_tap
     @property
-    def on_tap(self) -> DefaultOptionalEventCallable:
+    def on_tap(self) -> OptionalControlEventCallable:
         return self._get_event_handler("tap")
 
     @on_tap.setter
-    def on_tap(self, handler: DefaultOptionalEventCallable):
+    def on_tap(self, handler: OptionalControlEventCallable):
         self._add_event_handler("tap", handler)
         self._set_attr("onTap", True if handler is not None else None)
 
     # on_tap_cancel
     @property
-    def on_tap_cancel(self) -> DefaultOptionalEventCallable:
+    def on_tap_cancel(self) -> OptionalControlEventCallable:
         return self._get_event_handler("tap_cancel")
 
     @on_tap_cancel.setter
-    def on_tap_cancel(self, handler: DefaultOptionalEventCallable):
+    def on_tap_cancel(self, handler: OptionalControlEventCallable):
         self._add_event_handler("tap_cancel", handler)
         self._set_attr("onTapCancel", True if handler is not None else None)
 
@@ -296,21 +296,21 @@ class DataRow(Control):
 
     # on_long_press
     @property
-    def on_long_press(self) -> DefaultOptionalEventCallable:
+    def on_long_press(self) -> OptionalControlEventCallable:
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler: DefaultOptionalEventCallable):
+    def on_long_press(self, handler: OptionalControlEventCallable):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # on_select_changed
     @property
-    def on_select_changed(self) -> DefaultOptionalEventCallable:
+    def on_select_changed(self) -> OptionalControlEventCallable:
         return self._get_event_handler("select_changed")
 
     @on_select_changed.setter
-    def on_select_changed(self, handler: DefaultOptionalEventCallable):
+    def on_select_changed(self, handler: OptionalControlEventCallable):
         self._add_event_handler("select_changed", handler)
         self._set_attr("onSelectChanged", True if handler is not None else None)
 
@@ -694,11 +694,11 @@ class DataTable(ConstrainedControl):
 
     # on_select_all
     @property
-    def on_select_all(self) -> DefaultOptionalEventCallable:
+    def on_select_all(self) -> OptionalControlEventCallable:
         return self._get_event_handler("select_all")
 
     @on_select_all.setter
-    def on_select_all(self, handler: DefaultOptionalEventCallable):
+    def on_select_all(self, handler: OptionalControlEventCallable):
         self._add_event_handler("select_all", handler)
         self._set_attr("onSelectAll", True if handler is not None else None)
 

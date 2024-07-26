@@ -3,7 +3,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import OptionalEventCallable, DefaultOptionalEventCallable
+from flet_core.types import OptionalEventCallable, OptionalControlEventCallable
 from flet_core.utils import deprecated
 
 
@@ -246,7 +246,7 @@ class Audio(Control):
         return self._get_event_handler("loaded")
 
     @on_loaded.setter
-    def on_loaded(self, handler: DefaultOptionalEventCallable):
+    def on_loaded(self, handler: OptionalControlEventCallable):
         self._add_event_handler("loaded", handler)
 
     # on_duration_changed
@@ -255,7 +255,7 @@ class Audio(Control):
         return self._get_event_handler("duration_changed")
 
     @on_duration_changed.setter
-    def on_duration_changed(self, handler: DefaultOptionalEventCallable):
+    def on_duration_changed(self, handler: OptionalControlEventCallable):
         self._add_event_handler("duration_changed", handler)
 
     # on_state_changed
@@ -264,7 +264,7 @@ class Audio(Control):
         return self._get_event_handler("state_changed")
 
     @on_state_changed.setter
-    def on_state_changed(self, handler: DefaultOptionalEventCallable):
+    def on_state_changed(self, handler: OptionalControlEventCallable):
         self._add_event_handler("state_changed", handler)
 
     # on_position_changed
@@ -273,7 +273,7 @@ class Audio(Control):
         return self._get_event_handler("position_changed")
 
     @on_position_changed.setter
-    def on_position_changed(self, handler: DefaultOptionalEventCallable):
+    def on_position_changed(self, handler: OptionalControlEventCallable):
         self._add_event_handler("position_changed", handler)
         self._set_attr("onPositionChanged", True if handler is not None else None)
 
@@ -283,5 +283,5 @@ class Audio(Control):
         return self._get_event_handler("seek_complete")
 
     @on_seek_complete.setter
-    def on_seek_complete(self, handler: DefaultOptionalEventCallable):
+    def on_seek_complete(self, handler: OptionalControlEventCallable):
         self._add_event_handler("seek_complete", handler)

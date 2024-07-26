@@ -3,7 +3,7 @@ from typing import Any, Optional
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import OptionalEventCallable, DefaultOptionalEventCallable
+from flet_core.types import OptionalEventCallable, OptionalControlEventCallable
 
 
 class CupertinoDialogAction(Control):
@@ -132,11 +132,11 @@ class CupertinoDialogAction(Control):
 
     # on_click
     @property
-    def on_click(self) -> DefaultOptionalEventCallable:
+    def on_click(self) -> OptionalControlEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler: DefaultOptionalEventCallable):
+    def on_click(self, handler: OptionalControlEventCallable):
         self._add_event_handler("click", handler)
 
     # content

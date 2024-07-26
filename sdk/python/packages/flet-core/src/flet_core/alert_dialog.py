@@ -11,7 +11,7 @@ from flet_core.types import (
     MainAxisAlignment,
     PaddingValue,
     OptionalEventCallable,
-    DefaultOptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -418,9 +418,9 @@ class AlertDialog(AdaptiveControl):
 
     # on_dismiss
     @property
-    def on_dismiss(self) -> DefaultOptionalEventCallable:
+    def on_dismiss(self) -> OptionalControlEventCallable:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler: DefaultOptionalEventCallable):
+    def on_dismiss(self, handler: OptionalControlEventCallable):
         self._add_event_handler("dismiss", handler)

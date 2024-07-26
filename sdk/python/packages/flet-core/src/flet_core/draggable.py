@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control
 from flet_core.ref import Ref
-from flet_core.types import OptionalEventCallable, DefaultOptionalEventCallable
+from flet_core.types import OptionalEventCallable, OptionalControlEventCallable
 
 
 class Draggable(Control):
@@ -202,18 +202,18 @@ class Draggable(Control):
 
     # on_drag_start
     @property
-    def on_drag_start(self) -> DefaultOptionalEventCallable:
+    def on_drag_start(self) -> OptionalControlEventCallable:
         return self._get_event_handler("dragStart")
 
     @on_drag_start.setter
-    def on_drag_start(self, handler: DefaultOptionalEventCallable):
+    def on_drag_start(self, handler: OptionalControlEventCallable):
         self._add_event_handler("dragStart", handler)
 
     # on_drag_complete
     @property
-    def on_drag_complete(self) -> DefaultOptionalEventCallable:
+    def on_drag_complete(self) -> OptionalControlEventCallable:
         return self._get_event_handler("dragComplete")
 
     @on_drag_complete.setter
-    def on_drag_complete(self, handler: DefaultOptionalEventCallable):
+    def on_drag_complete(self, handler: OptionalControlEventCallable):
         self._add_event_handler("dragComplete", handler)
