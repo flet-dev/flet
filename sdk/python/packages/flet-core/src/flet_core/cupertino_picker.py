@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Sequence, Union
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -24,7 +24,7 @@ class CupertinoPicker(ConstrainedControl):
 
     def __init__(
         self,
-        controls: List[Control],
+        controls: Sequence[Control],
         item_extent: OptionalNumber = None,
         selected_index: Optional[int] = None,
         bgcolor: Optional[str] = None,
@@ -209,8 +209,8 @@ class CupertinoPicker(ConstrainedControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]):
-        self.__controls = value if value is not None else []
+    def controls(self, value: Sequence[Control]):
+        self.__controls = list(value)
 
     # on_change
     @property

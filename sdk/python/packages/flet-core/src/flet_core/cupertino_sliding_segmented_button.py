@@ -1,4 +1,4 @@
-from typing import Any, Optional, Union, List
+from typing import Any, Optional, Sequence, Union, List
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber, Control
@@ -24,7 +24,7 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
 
     def __init__(
         self,
-        controls: List[Control],
+        controls: Sequence[Control],
         selected_index: Optional[int] = None,
         bgcolor: Optional[str] = None,
         thumb_color: Optional[str] = None,
@@ -117,8 +117,8 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: List[Control]):
-        self.__controls = value
+    def controls(self, value: Sequence[Control]):
+        self.__controls = list(value)
 
     # selected_index
     @property

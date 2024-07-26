@@ -1,5 +1,5 @@
 import time
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union, Sequence
 
 from flet_core.border import BorderSide
 from flet_core.buttons import OutlinedBorder
@@ -32,7 +32,7 @@ class SearchBar(ConstrainedControl):
 
     def __init__(
         self,
-        controls: Optional[List[Control]] = None,
+        controls: Optional[Sequence[Control]] = None,
         value: Optional[str] = None,
         bar_leading: Optional[Control] = None,
         bar_trailing: Optional[List[Control]] = None,
@@ -395,8 +395,8 @@ class SearchBar(ConstrainedControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]):
-        self.__controls = value if value is not None else []
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list(value) if value is not None else []
 
     # value
     @property
