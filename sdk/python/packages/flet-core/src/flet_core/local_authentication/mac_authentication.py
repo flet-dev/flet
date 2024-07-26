@@ -11,11 +11,7 @@ class MacLocalAuth:
         self.LAPolicyDeviceOwnerAuthentication = LAPolicyDeviceOwnerAuthentication
 
         c = ctypes.cdll.LoadLibrary(None)
-        PY3 = sys.version_info[0] >= 3
-        if PY3:
-            self.DISPATCH_TIME_FOREVER = sys.maxsize
-        else:
-            self.DISPATCH_TIME_FOREVER = sys.maxint
+        self.DISPATCH_TIME_FOREVER = sys.maxsize
         self.kTouchIdPolicy = LAPolicyDeviceOwnerAuthentication
         self.dispatch_semaphore_create = c.dispatch_semaphore_create
         self.dispatch_semaphore_create.restype = ctypes.c_void_p
