@@ -403,6 +403,20 @@ test-randomorder = ["pytest-randomly"]
 tox = ["tox"]
 
 [[package]]
+name = "dbus-python"
+version = "1.3.2"
+description = "Python bindings for libdbus"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "dbus-python-1.3.2.tar.gz", hash = "sha256:ad67819308618b5069537be237f8e68ca1c7fcc95ee4a121fe6845b1418248f8"},
+]
+
+[package.extras]
+doc = ["sphinx", "sphinx_rtd_theme"]
+test = ["tap.py"]
+
+[[package]]
 name = "distlib"
 version = "0.3.8"
 description = "Distribution utilities"
@@ -2173,4 +2187,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "<3.12.5,>=3.8"
-content-hash = "c6276f9c62bbeb31be4743229b53362a7c51b0615985b3f8bb095b67d3d56201"
+content-hash = "5c1b5ba8d5f543e06e084f5cbe28356a3e41349866b39e18bea33ac66023b0e7"

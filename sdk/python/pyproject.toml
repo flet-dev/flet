@@ -11,6 +11,7 @@ pyobjc-framework-localauthentication = {version = "^10.3.1", platform = "darwin"
 pyobjc-core = {version = "^10.3.1", platform = "darwin"}
 pyobjc-framework-cocoa = {version = "^10.3.1", platform = "darwin"}
 pyobjc-framework-security = {version = "^10.3.1", platform = "darwin"}
+dbus-python = {version = "^1.3.2", platform = "linux"}
 
 [tool.poetry.group.dev.dependencies]
 flet-core = {path = "packages/flet-core", develop = true}

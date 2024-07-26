@@ -4,6 +4,7 @@ from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import PagePlatform
 from .mac_authentication import MacLocalAuth
+from .linux_authentication import LinuxLocalAuth
 
 
 class LocalAuthentication(Control):
@@ -45,13 +46,15 @@ class LocalAuthentication(Control):
         self.platform = self.page.platform
         if self.platform == PagePlatform.MACOS:
             self.maclocalauth = MacLocalAuth()
+        elif self.platform == PagePlatform.LINUX:
+            self.linuxlocalauth = LinuxLocalAuth()
         return super().before_update()
 
     def available(self, wait_timeout: Optional[int] = 5) -> dict:
         if self.platform == PagePlatform.MACOS:
             sr = self.maclocalauth.is_available()
         elif self.platform == PagePlatform.LINUX:
-            return False
+            sr = True
         else:
             sr = (
                 self.invoke_method(
@@ -66,7 +69,7 @@ class LocalAuthentication(Control):
         if self.platform == PagePlatform.MACOS:
             sr = await self.maclocalauth.is_available()
         elif self.platform == PagePlatform.LINUX:
-            return False
+            sr = True
         else:
             sr = (
                 await self.invoke_method_async(
@@ -86,7 +89,7 @@ class LocalAuthentication(Control):
         if self.platform == PagePlatform.MACOS:
             sr = self.maclocalauth.authenticate_mac(title)
         elif self.platform == PagePlatform.LINUX:
-            return False
+            sr = self.linuxlocalauth.authenticate_linux() == 1
         else:
             sr = (
                 self.invoke_method(
@@ -109,7 +112,11 @@ class LocalAuthentication(Control):
         biometricsOnly: bool = False,
         wait_timeout: Optional[int] = 60,
     ) -> bool:
-        if not self.is_macos:
+        if self.platform == PagePlatform.MACOS:
+            sr = await self.maclocalauth.authenticate_mac(title)
+        elif self.platform == PagePlatform.LINUX:
+            sr = await self.linuxlocalauth.authenticate_linux() == 1
+        else:
             sr = await self.invoke_method_async(
                 "authenticate",
                 wait_for_result=True,
@@ -120,9 +127,5 @@ class LocalAuthentication(Control):
                 },
             )
             sr = sr == "true"
-        elif self.platform == PagePlatform.LINUX:
-            return False
-        else:
-            sr = await self.maclocalauth.authenticate_mac(title)
 
         return sr
