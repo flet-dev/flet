@@ -20,9 +20,9 @@ class LinuxLocalAuth:
         self.flags = 1  # AllowUserInteraction flag
         self.cancellation_id = ""  # No cancellation id
 
-    def authenticate_linux(self):
+    def authenticate_linux(self) -> bool:
         result = self.authority.CheckAuthorization(
             self.subject, self.action_id, self.details, self.flags, self.cancellation_id
         )
 
-        return result[0]
+        return result[0] == 1
