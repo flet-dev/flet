@@ -1,9 +1,13 @@
+import json
 from enum import Enum
 from typing import Any, Optional, Union, cast
 
+from flet_core import ControlEvent
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber
+from flet_core.control import OptionalNumber, Control
+from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
+from flet_core.text import TextSelection
 from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
@@ -28,6 +32,40 @@ class MarkdownExtensionSet(Enum):
     GITHUB_FLAVORED = "gitHubFlavored"
 
 
+class MarkdownSelectionChangedCause(Enum):
+    UNKNOWN = "unknown"
+    TAP = "tap"
+    DOUBLE_TAP = "doubleTap"
+    LONG_PRESS = "longPress"
+    FORCE_PRESS = "forcePress"
+    KEYBOARD = "keyboard"
+    TOOLBAR = "toolbar"
+    DRAG = "drag"
+    SCRIBBLE = "scribble"
+
+
+class MarkdownSelectionChangeEvent(ControlEvent):
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.text: str = d.get("text")
+        self.cause = MarkdownSelectionChangedCause(d.get("cause"))
+        start = d.get("start")
+        end = d.get("end")
+        self.selection = TextSelection(
+            start=start,
+            end=end,
+            selection=self.text[start:end] if start != -1 and end != -1 else "",
+            base_offset=d.get("base_offset"),
+            extent_offset=d.get("extent_offset"),
+            affinity=d.get("affinity"),
+            directional=d.get("directional"),
+            collapsed=d.get("collapsed"),
+            valid=d.get("valid"),
+            normalized=d.get("normalized"),
+        )
+
+
 class Markdown(ConstrainedControl):
     """
     Control for rendering text in markdown format.
@@ -45,7 +83,13 @@ class Markdown(ConstrainedControl):
         code_theme: Optional[str] = None,
         code_style: Optional[TextStyle] = None,
         auto_follow_links: Optional[bool] = None,
+        shrink_wrap: Optional[bool] = None,
+        fit_content: Optional[bool] = None,
+        soft_line_break: Optional[bool] = None,
         auto_follow_links_target: Optional[str] = None,
+        img_error_content: Optional[Control] = None,
+        on_tap_text: OptionalEventCallable = None,
+        on_selection_change: OptionalEventCallable = None,
         on_tap_link: OptionalEventCallable = None,
         #
         # ConstrainedControl
@@ -109,6 +153,14 @@ class Markdown(ConstrainedControl):
             data=data,
         )
 
+        self.__on_selection_change = EventHandler(
+            lambda e: MarkdownSelectionChangeEvent(e)
+        )
+
+        self._add_event_handler(
+            "selection_change", self.__on_selection_change.get_handler()
+        )
+
         self.value = value
         self.selectable = selectable
         self.extension_set = extension_set
@@ -117,6 +169,12 @@ class Markdown(ConstrainedControl):
         self.auto_follow_links = auto_follow_links
         self.auto_follow_links_target = auto_follow_links_target
         self.on_tap_link = on_tap_link
+        self.shrink_wrap = shrink_wrap
+        self.fit_content = fit_content
+        self.soft_line_break = soft_line_break
+        self.on_tap_text = on_tap_text
+        self.on_selection_change = on_selection_change
+        self.img_error_content = img_error_content
 
     def _get_control_name(self):
         return "markdown"
@@ -124,6 +182,12 @@ class Markdown(ConstrainedControl):
     def before_update(self):
         super().before_update()
         self._set_attr_json("codeStyle", self.__code_style)
+
+    def _get_children(self):
+        if self.__img_error_content is not None:
+            self.__img_error_content._set_attr_internal("n", "error")
+            return [self.__img_error_content]
+        return []
 
     # value
     @property
@@ -142,6 +206,33 @@ class Markdown(ConstrainedControl):
     @selectable.setter
     def selectable(self, value: Optional[bool]):
         self._set_attr("selectable", value)
+
+    # shrink_wrap
+    @property
+    def shrink_wrap(self) -> bool:
+        return self._get_attr("shrinkWrap", data_type="bool", def_value=True)
+
+    @shrink_wrap.setter
+    def shrink_wrap(self, value: Optional[bool]):
+        self._set_attr("shrinkWrap", value)
+
+    # fit_content
+    @property
+    def fit_content(self) -> bool:
+        return self._get_attr("fitContent", data_type="bool", def_value=True)
+
+    @fit_content.setter
+    def fit_content(self, value: Optional[bool]):
+        self._set_attr("fitContent", value)
+
+    # soft_line_break
+    @property
+    def soft_line_break(self) -> bool:
+        return self._get_attr("softLineBreak", data_type="bool", def_value=False)
+
+    @soft_line_break.setter
+    def soft_line_break(self, value: Optional[bool]):
+        self._set_attr("softLineBreak", value)
 
     # extension_set
     @property
@@ -192,6 +283,15 @@ class Markdown(ConstrainedControl):
     def auto_follow_links_target(self, value: Optional[str]):
         self._set_attr("autoFollowLinksTarget", value)
 
+    # img_error_content
+    @property
+    def img_error_content(self) -> Optional[Control]:
+        return self.__img_error_content
+
+    @img_error_content.setter
+    def img_error_content(self, value: Optional[Control]):
+        self.__img_error_content = value
+
     # on_tap_link
     @property
     def on_tap_link(self) -> OptionalControlEventCallable:
@@ -200,3 +300,32 @@ class Markdown(ConstrainedControl):
     @on_tap_link.setter
     def on_tap_link(self, handler: OptionalControlEventCallable):
         self._add_event_handler("tap_link", handler)
+
+    # on_tap_text
+    @property
+    def on_tap_text(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("tap_text")
+
+    @on_tap_text.setter
+    def on_tap_text(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("tap_text", handler)
+
+    # on_selection_change
+    @property
+    def on_selection_change(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("selection_change")
+
+    @on_selection_change.setter
+    def on_selection_change(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("selection_change", handler)
+
+    # on_selection_change
+    @property
+    def on_selection_change(self):
+        return self._get_event_handler("selection_change")
+
+    @on_selection_change.setter
+    def on_selection_change(
+        self, handler: OptionalEventCallable[MarkdownSelectionChangeEvent]
+    ):
+        self.__on_selection_change.subscribe(handler)
