@@ -242,6 +242,8 @@ Widget createWidget(
           key: key,
           parent: parent,
           control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
           backend: backend);
     case "fletapp":
       return FletAppControl(

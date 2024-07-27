@@ -14,6 +14,7 @@ import '../utils/animations.dart';
 import '../utils/borders.dart';
 import '../utils/charts.dart';
 import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/numbers.dart';
 import '../utils/shadows.dart';
@@ -324,9 +325,33 @@ class _LineChartControlState extends State<LineChartControl> {
                     }).toList();
                   },
                   touchTooltipData: LineTouchTooltipData(
-                    tooltipBgColor:
-                        widget.control.attrColor("tooltipBgColor", context) ??
-                            const Color.fromRGBO(96, 125, 139, 1),
+                    getTooltipColor: (LineBarSpot spot) => widget.control
+                        .attrColor("tooltipBgColor", context,
+                            const Color.fromRGBO(96, 125, 139, 1))!,
+                    tooltipRoundedRadius:
+                        widget.control.attrDouble("tooltipRoundedRadius", 4)!,
+                    tooltipMargin:
+                        widget.control.attrDouble("tooltipMargin", 16)!,
+                    tooltipPadding: parseEdgeInsets(
+                        widget.control,
+                        "tooltipPadding",
+                        const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8))!,
+                    maxContentWidth: widget.control
+                        .attrDouble("tooltipMaxContentWidth", 120)!,
+                    rotateAngle:
+                        widget.control.attrDouble("tooltipRotateAngle", 0.0)!,
+                    tooltipHorizontalOffset: widget.control
+                        .attrDouble("tooltipHorizontalOffset", 0)!,
+                    tooltipBorder: parseBorderSide(Theme.of(context),
+                            widget.control, "tooltipBorderSide") ??
+                        BorderSide.none,
+                    fitInsideHorizontally: widget.control
+                        .attrBool("tooltipFitInsideHorizontally", false)!,
+                    fitInsideVertically: widget.control
+                        .attrBool("tooltipFitInsideVertically", false)!,
+                    showOnTopOfTheChartBoxArea: widget.control
+                        .attrBool("tooltipShowOnTopOfChartBoxArea", false)!,
                     getTooltipItems: (touchedSpots) {
                       return touchedSpots.map((spot) {
                         var dp = viewModel.dataSeries[spot.barIndex]
