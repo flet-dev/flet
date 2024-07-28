@@ -10,7 +10,7 @@ import 'colors.dart';
 import 'numbers.dart';
 
 Gradient? parseGradient(ThemeData theme, Control control, String propName) {
-  var v = control.attrString(propName, null);
+  var v = control.attrString(propName);
   if (v == null) {
     return null;
   }
@@ -19,7 +19,10 @@ Gradient? parseGradient(ThemeData theme, Control control, String propName) {
   return gradientFromJSON(theme, j1);
 }
 
-Gradient? gradientFromJSON(ThemeData? theme, Map<String, dynamic> json) {
+Gradient? gradientFromJSON(ThemeData? theme, Map<String, dynamic>? json) {
+  if (json == null) {
+    return null;
+  }
   String type = json["type"];
   if (type == "linear") {
     return LinearGradient(

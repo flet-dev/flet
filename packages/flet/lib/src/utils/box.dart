@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -9,7 +10,7 @@ import 'colors.dart';
 
 List<BoxShadow> parseBoxShadow(
     ThemeData theme, Control control, String propName) {
-  var v = control.attrString(propName, null);
+  var v = control.attrString(propName);
   if (v == null) {
     return [];
   }
@@ -19,6 +20,9 @@ List<BoxShadow> parseBoxShadow(
 }
 
 List<BoxShadow> boxShadowsFromJSON(ThemeData theme, dynamic json) {
+  if (json == null) {
+    return [];
+  }
   if (json is List) {
     return json.map((e) => boxShadowFromJSON(theme, e)).toList();
   } else {
@@ -37,4 +41,30 @@ BoxShadow boxShadowFromJSON(ThemeData theme, dynamic json) {
           : BlurStyle.normal,
       blurRadius: parseDouble(json["blur_radius"], 0)!,
       spreadRadius: parseDouble(json["spread_radius"], 0)!);
+}
+
+BoxDecoration? parseBoxDecoration(
+    ThemeData theme, Control control, String propName) {
+  var v = control.attrString(propName);
+  if (v == null) {
+    return null;
+  }
+
+  final j1 = json.decode(v);
+  return boxDecorationFromJSON(theme, j1);
+}
+
+BoxDecoration? boxDecorationFromJSON(ThemeData theme, dynamic json) {
+  if (json == null) {
+    return null;
+  }
+  return BoxDecoration(
+    color: parseColor(theme, json["color"]),
+    border: borderFromJSON(theme, json["border"]),
+    shape: parseBoxShape(json["shape"], BoxShape.rectangle)!,
+    borderRadius: borderRadiusFromJSON(json["border_radius"]),
+    backgroundBlendMode: parseBlendMode(json["blend_mode"]),
+    boxShadow: boxShadowsFromJSON(theme, json["box_shadow"]),
+    gradient: gradientFromJSON(theme, json["gradient"]),
+  );
 }
