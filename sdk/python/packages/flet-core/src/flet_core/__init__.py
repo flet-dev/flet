@@ -40,6 +40,7 @@ from flet_core.border import Border, BorderSide, BorderSideStrokeAlign
 from flet_core.border_radius import BorderRadius
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.bottom_sheet import BottomSheet
+from flet_core.box import BoxShadow, ShadowBlurStyle, BoxDecoration, BoxShape
 from flet_core.buttons import (
     BeveledRectangleBorder,
     ButtonStyle,
@@ -185,6 +186,8 @@ from flet_core.markdown import (
     MarkdownExtensionSet,
     MarkdownSelectionChangeEvent,
     MarkdownSelectionChangedCause,
+    MarkdownStyleSheet,
+    MarkdownCodeTheme,
 )
 from flet_core.menu_bar import MenuBar, MenuStyle
 from flet_core.menu_item_button import MenuItemButton
@@ -262,7 +265,6 @@ from flet_core.selection_area import SelectionArea
 from flet_core.semantics import Semantics
 from flet_core.semantics_service import Assertiveness, SemanticsService
 from flet_core.shader_mask import ShaderMask
-from flet_core.box import BoxShadow, ShadowBlurStyle, BoxDecoration, BoxShape
 from flet_core.shake_detector import ShakeDetector
 from flet_core.slider import Slider, SliderInteraction
 from flet_core.snack_bar import DismissDirection, SnackBar, SnackBarBehavior

@@ -49,14 +49,18 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
         control.attrString("extensionSet"), md.ExtensionSet.none)!;
 
     TextStyle? codeStyle =
-        parseTextStyle(Theme.of(context), control, "codeStyle");
+        parseTextStyle(Theme.of(context), control, "codeStyle"); // DEPRECATED
 
-    var mdStyleSheet = MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-        code: codeStyle ??
-            Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(fontFamily: "monospace"));
+    var codeStyleSheet =
+        parseMarkdownStyleSheet(control, "codeStyleSheet", Theme.of(context)) ??
+            MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+                code: codeStyle ??
+                    Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(fontFamily: "monospace"));
+    var mdStyleSheet =
+        parseMarkdownStyleSheet(control, "mdStyleSheet", Theme.of(context));
 
     var autoFollowLinks = control.attrBool("autoFollowLinks", false)!;
     var autoFollowLinksTarget = control.attrString("autoFollowLinksTarget");
@@ -72,7 +76,7 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
           extensionSet: extensionSet,
           builders: {
             'code': CodeElementBuilder(
-                codeTheme.toLowerCase(), mdStyleSheet, selectable),
+                codeTheme.toLowerCase(), codeStyleSheet, selectable),
           },
           styleSheet: mdStyleSheet,
           imageBuilder: (Uri uri, String? title, String? alt) {
