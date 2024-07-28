@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Sequence, Union, Callable
+from typing import Any, Optional, Sequence, Union, Callable
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl

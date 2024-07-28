@@ -89,11 +89,6 @@ class FontWeight(Enum):
     W_900 = "w900"
 
 
-class BoxShape(Enum):
-    RECTANGLE = "rectangle"
-    CIRCLE = "circle"
-
-
 class NotchShape(Enum):
     AUTO = "auto"
     CIRCULAR = "circular"

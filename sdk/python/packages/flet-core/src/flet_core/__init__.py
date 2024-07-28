@@ -262,7 +262,7 @@ from flet_core.selection_area import SelectionArea
 from flet_core.semantics import Semantics
 from flet_core.semantics_service import Assertiveness, SemanticsService
 from flet_core.shader_mask import ShaderMask
-from flet_core.shadow import BoxShadow, ShadowBlurStyle
+from flet_core.box import BoxShadow, ShadowBlurStyle, BoxDecoration, BoxShape
 from flet_core.shake_detector import ShakeDetector
 from flet_core.slider import Slider, SliderInteraction
 from flet_core.snack_bar import DismissDirection, SnackBar, SnackBarBehavior
@@ -340,7 +340,6 @@ from flet_core.transparent_pointer import TransparentPointer
 from flet_core.types import (
     AppLifecycleState,
     BlendMode,
-    BoxShape,
     Brightness,
     ClipBehavior,
     OptionalEventCallable,

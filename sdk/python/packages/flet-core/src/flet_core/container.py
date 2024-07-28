@@ -12,13 +12,12 @@ from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
-from flet_core.shadow import BoxShadow
+from flet_core.box import BoxShadow, BoxShape
 from flet_core.theme import Theme
 from flet_core.types import (
     AnimationValue,
     BlendMode,
     BorderRadiusValue,
-    BoxShape,
     ClipBehavior,
     ImageFit,
     ImageRepeat,
