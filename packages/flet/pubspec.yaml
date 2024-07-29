@@ -44,6 +44,9 @@ dependencies:
   fl_chart: ^0.69.0
   fullscreen_window: ^1.1.0
 
+dependency_overrides:
+  web: ^1.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
