@@ -47,6 +47,7 @@ class Command(BaseCommand):
     def __init__(self, parser: argparse.ArgumentParser) -> None:
         super().__init__(parser)
 
+        self.emojis = {}
         self.dart_exe = None
         self.verbose = None
         self.flutter_dir = None
@@ -321,11 +322,15 @@ class Command(BaseCommand):
     def handle(self, options: argparse.Namespace) -> None:
         self.verbose = options.verbose
         self.flutter_dir = None
-        checkmark = (
-            "[green]✓[/]"
-            if options.no_rich_output or get_bool_env_var("FLET_BUILD_NO_RICH_OUTPUT")
-            else "✅"
+        no_rich_output = options.no_rich_output or get_bool_env_var(
+            "FLET_NO_RICH_OUTPUT"
         )
+        self.emojis = {
+            "checkmark": "[green]OK[/]" if no_rich_output else "✅",
+            "loading": "" if no_rich_output else "⏳",
+            "success": "" if no_rich_output else "🥳",
+            "directory": "" if no_rich_output else "📁",
+        }
         target_platform = options.target_platform.lower()
         # platform check
         current_platform = platform.system()
@@ -469,7 +474,7 @@ class Command(BaseCommand):
 
             # create Flutter project from a template
             self.status.update(
-                f"[bold blue]Creating Flutter bootstrap project from {template_url} with ref {template_ref} ⏳... ",
+                f"[bold blue]Creating Flutter bootstrap project from {template_url} with ref {template_ref} {self.emojis['loading']}... ",
             )
             try:
                 cookiecutter(
@@ -484,7 +489,7 @@ class Command(BaseCommand):
             except Exception as e:
                 self.cleanup(1, f"{e}")
             console.log(
-                f"Created Flutter bootstrap project from {template_url} with ref {template_ref} {checkmark}",
+                f"Created Flutter bootstrap project from {template_url} with ref {template_ref} {self.emojis['checkmark']}",
             )
 
             # load pubspec.yaml
@@ -512,7 +517,7 @@ class Command(BaseCommand):
 
             # copy icons to `flutter_dir`
             self.status.update(
-                "[bold blue]Customizing app icons and splash images ⏳... ",
+                f"[bold blue]Customizing app icons and splash images {self.emojis['loading']}... ",
             )
             assets_path = python_app_path.joinpath("assets")
             if assets_path.exists():
@@ -681,14 +686,18 @@ class Command(BaseCommand):
             pubspec["flutter_native_splash"]["ios"] = not options.no_ios_splash
             pubspec["flutter_native_splash"]["android"] = not options.no_android_splash
 
-            console.log(f"Customized app icons and splash images {checkmark}")
+            console.log(
+                f"Customized app icons and splash images {self.emojis['checkmark']}"
+            )
 
             # save pubspec.yaml
             with open(pubspec_path, "w", encoding="utf8") as f:
                 yaml.dump(pubspec, f)
 
             # generate icons
-            self.status.update("[bold blue]Generating app icons ⏳... ")
+            self.status.update(
+                f"[bold blue]Generating app icons {self.emojis['loading']}... "
+            )
             icons_result = self.run(
                 [self.dart_exe, "run", "flutter_launcher_icons"],
                 cwd=str(self.flutter_dir),
@@ -701,11 +710,11 @@ class Command(BaseCommand):
                     console.log(icons_result.stderr, style=error_style)
                 self.cleanup(icons_result.returncode, check_flutter_version=True)
 
-            console.log(f"Generated app icons {checkmark}")
+            console.log(f"Generated app icons {self.emojis['checkmark']}")
             # generate splash
             if target_platform in ["web", "ipa", "apk", "aab"]:
                 self.status.update(
-                    "[bold blue]Generating splash screens ⏳... ",
+                    f"[bold blue]Generating splash screens {self.emojis['loading']}... ",
                 )
                 splash_result = self.run(
                     [self.dart_exe, "run", "flutter_native_splash:create"],
@@ -719,7 +728,7 @@ class Command(BaseCommand):
                         console.log(splash_result.stderr, style=error_style)
                     self.cleanup(splash_result.returncode, check_flutter_version=True)
 
-                console.log(f"Generated splash screens {checkmark}")
+                console.log(f"Generated splash screens {self.emojis['checkmark']}")
 
             exclude_list = ["build"]
 
@@ -728,7 +737,7 @@ class Command(BaseCommand):
 
             # package Python app
             self.status.update(
-                f"[bold blue]Packaging Python app ⏳... ",
+                f"[bold blue]Packaging Python app {self.emojis['loading']}... ",
             )
             package_args = [
                 self.dart_exe,
@@ -798,11 +807,11 @@ class Command(BaseCommand):
             app_hash_path = self.flutter_dir.joinpath("app", "app.zip.hash")
             with open(app_hash_path, "w", encoding="utf8") as hf:
                 hf.write(calculate_file_hash(app_zip_path))
-            console.log(f"Packaged Python app {checkmark}")
+            console.log(f"Packaged Python app {self.emojis['checkmark']}")
 
             # run `flutter build`
             self.status.update(
-                f"[bold blue]Building [cyan]{self.platforms[target_platform]['status_text']}[/cyan] ⏳... ",
+                f"[bold blue]Building [cyan]{self.platforms[target_platform]['status_text']}[/cyan] {self.emojis['loading']}... ",
             )
             build_args = [
                 self.flutter_exe,
@@ -838,12 +847,12 @@ class Command(BaseCommand):
                     console.log(build_result.stderr, style=error_style)
                 self.cleanup(build_result.returncode, check_flutter_version=True)
             console.log(
-                f"Built [cyan]{self.platforms[target_platform]['status_text']}[/cyan] {checkmark}",
+                f"Built [cyan]{self.platforms[target_platform]['status_text']}[/cyan] {self.emojis['checkmark']}",
             )
 
             # copy build results to `out_dir`
             self.status.update(
-                f"[bold blue]Copying build to [cyan]{rel_out_dir}[/cyan] directory ⏳... ",
+                f"[bold blue]Copying build to [cyan]{rel_out_dir}[/cyan] directory {self.emojis['loading']}... ",
             )
             arch = platform.machine().lower()
             if arch == "x86_64" or arch == "amd64":
@@ -883,13 +892,13 @@ class Command(BaseCommand):
                 copy_tree(str(assets_path), str(out_dir))
 
             console.log(
-                f"Copied build to [cyan]{rel_out_dir}[/cyan] directory {checkmark}"
+                f"Copied build to [cyan]{rel_out_dir}[/cyan] directory {self.emojis['checkmark']}"
             )
 
             self.cleanup(
                 0,
-                message=f"Successfully built your [cyan]{self.platforms[target_platform]['status_text']}[/cyan]! 🥳 "
-                f"Find it in [cyan]{rel_out_dir}[/cyan] directory. 📂",
+                message=f"Successfully built your [cyan]{self.platforms[target_platform]['status_text']}[/cyan]! {self.emojis['success']} "
+                f"Find it in [cyan]{rel_out_dir}[/cyan] directory. {self.emojis['directory']}",
             )
 
     def create_pyodide_find_links(self):
@@ -955,7 +964,7 @@ class Command(BaseCommand):
                 console.log(f"Deleting Flutter bootstrap directory {self.flutter_dir}")
             shutil.rmtree(str(self.flutter_dir), ignore_errors=True, onerror=None)
         if exit_code == 0:
-            msg = message or "Success! 🥳"
+            msg = message or f"Success! {self.emojis['success']}"
             console.log(msg)
         else:
             msg = (
@@ -989,7 +998,9 @@ class Command(BaseCommand):
         sys.exit(exit_code)
 
     def run_flutter_doctor(self, style: Optional[Union[Style, str]] = None):
-        self.status.update("[bold blue]Running Flutter doctor ⏳... ")
+        self.status.update(
+            f"[bold blue]Running Flutter doctor {self.emojis['loading']}... "
+        )
         flutter_doctor = self.run(
             [self.flutter_exe, "doctor"],
             cwd=os.getcwd(),
