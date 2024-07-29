@@ -10,7 +10,7 @@ import sys
 import tempfile
 import urllib.request
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
 import yaml
 from packaging import version
@@ -838,7 +838,7 @@ class Command(BaseCommand):
                     console.log(build_result.stderr, style=error_style)
                 self.cleanup(build_result.returncode, check_flutter_version=True)
             console.log(
-                f"Built [cyan]{self.platforms[target_platform]['self.status_text']}[/cyan] {checkmark}",
+                f"Built [cyan]{self.platforms[target_platform]['status_text']}[/cyan] {checkmark}",
             )
 
             # copy build results to `out_dir`
@@ -985,10 +985,10 @@ class Command(BaseCommand):
                             )
                             console.log(flutter_msg, style=error_style)
             # run flutter doctor
-            self.run_flutter_doctor()
+            self.run_flutter_doctor(style=error_style)
         sys.exit(exit_code)
 
-    def run_flutter_doctor(self):
+    def run_flutter_doctor(self, style: Optional[Union[Style, str]] = None):
         self.status.update("[bold blue]Running Flutter doctor ⏳... ")
         flutter_doctor = self.run(
             [self.flutter_exe, "doctor"],
@@ -996,4 +996,4 @@ class Command(BaseCommand):
             capture_output=True,
         )
         if flutter_doctor.returncode == 0 and flutter_doctor.stdout:
-            console.log(flutter_doctor.stdout, style=error_style)
+            console.log(flutter_doctor.stdout, style=style)
