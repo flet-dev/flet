@@ -168,6 +168,8 @@ class Dropdown(FormFieldControl):
         padding: PaddingValue = None,
         icon_enabled_color: Optional[str] = None,
         icon_disabled_color: Optional[str] = None,
+        options_fill_horizontally: Optional[bool] = None,
+        disabled_hint_content: Optional[Control] = None,
         on_change: OptionalEventCallable = None,
         on_focus: OptionalEventCallable = None,
         on_blur: OptionalEventCallable = None,
@@ -309,6 +311,7 @@ class Dropdown(FormFieldControl):
         self.alignment = alignment
         self.elevation = elevation
         self.hint_content = hint_content
+        self.disabled_hint_content = disabled_hint_content
         self.icon_content = icon_content
         self.padding = padding
         self.enable_feedback = enable_feedback
@@ -321,6 +324,7 @@ class Dropdown(FormFieldControl):
         self.icon_enabled_color = icon_enabled_color
         self.icon_disabled_color = icon_disabled_color
         self.on_click = on_click
+        self.options_fill_horizontally = options_fill_horizontally
 
     def _get_control_name(self):
         return "dropdown"
@@ -345,6 +349,9 @@ class Dropdown(FormFieldControl):
             children.append(self.__hint_content)
         if isinstance(self.__icon_content, Control):
             self.__icon_content._set_attr_internal("n", "icon")
+            children.append(self.__icon_content)
+        if isinstance(self.__disabled_hint_content, Control):
+            self.__disabled_hint_content._set_attr_internal("n", "disabled_hint")
             children.append(self.__icon_content)
         return children
 
@@ -386,6 +393,15 @@ class Dropdown(FormFieldControl):
     @hint_content.setter
     def hint_content(self, value: Optional[Control]):
         self.__hint_content = value
+
+    # disabled_hint_content
+    @property
+    def disabled_hint_content(self) -> Optional[Control]:
+        return self.__disabled_hint_content
+
+    @disabled_hint_content.setter
+    def disabled_hint_content(self, value: Optional[Control]):
+        self.__disabled_hint_content = value
 
     # value
     @property
@@ -461,6 +477,17 @@ class Dropdown(FormFieldControl):
     @autofocus.setter
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
+
+    # options_fill_horizontally
+    @property
+    def options_fill_horizontally(self) -> bool:
+        return self._get_attr(
+            "optionsFillHorizontally", data_type="bool", def_value=False
+        )
+
+    @options_fill_horizontally.setter
+    def options_fill_horizontally(self, value: Optional[bool]):
+        self._set_attr("optionsFillHorizontally", value)
 
     # enable_feedback
     @property
