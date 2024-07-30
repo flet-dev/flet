@@ -70,7 +70,7 @@ class CupertinoAppBarControl extends StatelessWidget
                 )
               : null,
     );
-    return constrainedControl(context, bar, parent, control);
+    return baseControl(context, bar, parent, control);
   }
 
   @override

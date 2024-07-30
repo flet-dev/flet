@@ -92,7 +92,7 @@ class AppBarControl extends StatelessWidget
         toolbarTextStyle:
             parseTextStyle(Theme.of(context), control, "toolbarTextStyle"),
       );
-      return constrainedControl(context, appBar, parent, control);
+      return baseControl(context, appBar, parent, control);
     });
   }
 

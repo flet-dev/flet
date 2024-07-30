@@ -54,7 +54,7 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
       _selectedIndex = selectedIndex;
     }
 
-    var navDrawer = withControls(
+    return withControls(
         widget.children
             .where((c) => c.isVisible && c.name == null)
             .map((c) => c.id), (content, viewModel) {
@@ -102,9 +102,8 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
         children: children,
       );
 
-      return constrainedControl(context, drawer, widget.parent, widget.control);
+      return baseControl(context, drawer, widget.parent, widget.control);
     });
 
-    return navDrawer;
   }
 }
