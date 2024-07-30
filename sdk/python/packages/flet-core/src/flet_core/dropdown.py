@@ -352,7 +352,7 @@ class Dropdown(FormFieldControl):
             children.append(self.__icon_content)
         if isinstance(self.__disabled_hint_content, Control):
             self.__disabled_hint_content._set_attr_internal("n", "disabled_hint")
-            children.append(self.__icon_content)
+            children.append(self.__disabled_hint_content)
         return children
 
     def focus(self):
