@@ -174,7 +174,7 @@ class AppBar(AdaptiveControl):
 
     # toolbar_opacity
     @property
-    def toolbar_opacity(self) -> OptionalNumber:
+    def toolbar_opacity(self) -> float:
         return self._get_attr("toolbarOpacity", data_type="float", def_value=1.0)
 
     @toolbar_opacity.setter
@@ -213,7 +213,7 @@ class AppBar(AdaptiveControl):
 
     # automatically_imply_leading
     @property
-    def automatically_imply_leading(self) -> Optional[bool]:
+    def automatically_imply_leading(self) -> bool:
         return self._get_attr(
             "automaticallyImplyLeading", data_type="bool", def_value=True
         )
@@ -233,7 +233,7 @@ class AppBar(AdaptiveControl):
 
     # center_title
     @property
-    def center_title(self) -> Optional[bool]:
+    def center_title(self) -> bool:
         return self._get_attr("centerTitle", data_type="bool", def_value=False)
 
     @center_title.setter
@@ -288,7 +288,7 @@ class AppBar(AdaptiveControl):
 
     # is_secondary
     @property
-    def is_secondary(self) -> Optional[bool]:
+    def is_secondary(self) -> bool:
         return self._get_attr("isSecondary", data_type="bool", def_value=False)
 
     @is_secondary.setter
@@ -297,7 +297,7 @@ class AppBar(AdaptiveControl):
 
     # exclude_header_semantics
     @property
-    def exclude_header_semantics(self) -> Optional[bool]:
+    def exclude_header_semantics(self) -> bool:
         return self._get_attr(
             "excludeHeaderSemantics", data_type="bool", def_value=False
         )
@@ -308,7 +308,7 @@ class AppBar(AdaptiveControl):
 
     # force_material_transparency
     @property
-    def force_material_transparency(self) -> Optional[bool]:
+    def force_material_transparency(self) -> bool:
         return self._get_attr(
             "forceMaterialTransparency", data_type="bool", def_value=False
         )

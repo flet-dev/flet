@@ -1,5 +1,14 @@
 from enum import Enum, EnumMeta
-from typing import Any, Callable, Dict, Optional, Protocol, Tuple, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Optional,
+    Protocol,
+    Tuple,
+    TypeVar,
+    Union,
+)
 from warnings import warn
 
 from flet_core.animation import Animation
@@ -393,7 +402,11 @@ class VisualDensity(Enum):
 
 
 # Events
-OptionalEventCallable = Optional[Callable[[ControlEvent], None]]
+ControlEventType = TypeVar("ControlEventType", bound=ControlEvent)
+EventCallable = Callable[[ControlEventType], Any]
+OptionalEventCallable = Optional[EventCallable]
+OptionalControlEventCallable = OptionalEventCallable[ControlEvent]
+
 
 # Wrapper
 Wrapper = Callable[..., Any]

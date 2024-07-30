@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Sequence, Union
 
 from flet_core.alignment import Alignment
 from flet_core.border import BorderSide
@@ -57,7 +57,7 @@ class MenuBar(Control):
 
     def __init__(
         self,
-        controls: List[Control],
+        controls: Sequence[Control],
         clip_behavior: Optional[ClipBehavior] = None,
         style: Optional[MenuStyle] = None,
         #
@@ -116,8 +116,8 @@ class MenuBar(Control):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: List[Control]):
-        self.__controls = value
+    def controls(self, value: Sequence[Control]):
+        self.__controls = list(value)
 
     # clip_behavior
     @property

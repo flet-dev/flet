@@ -215,15 +215,15 @@ class DragTargetAcceptEvent(ControlEvent):
             category=DeprecationWarning,
             stacklevel=2,
         )
-        self.src_id: float = d["src_id"]
-        self.x: float = d["x"]
-        self.y: float = d["y"]
+        self.src_id: float = d.get("src_id")
+        self.x: float = d.get("x")
+        self.y: float = d.get("y")
 
 
 class DragTargetEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.src_id: float = d["src_id"]
-        self.x: float = d["x"]
-        self.y: float = d["y"]
+        self.src_id: float = d.get("src_id")
+        self.x: float = d.get("x")
+        self.y: float = d.get("y")

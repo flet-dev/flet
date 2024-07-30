@@ -64,10 +64,11 @@ class RichAttribution(MapLayer):
     def before_update(self):
         super().before_update()
         self._set_attr_json("popupBorderRadius", self.__popup_border_radius)
+        self._set_attr_json("alignment", self.__alignment)
 
     # permanent_height
     @property
-    def permanent_height(self) -> OptionalNumber:
+    def permanent_height(self) -> float:
         return self._get_attr("permanentHeight", data_type="float", def_value=24.0)
 
     @permanent_height.setter
@@ -77,7 +78,7 @@ class RichAttribution(MapLayer):
 
     # popup_initial_display_duration
     @property
-    def popup_initial_display_duration(self) -> Optional[int]:
+    def popup_initial_display_duration(self) -> int:
         return self._get_attr(
             "popupInitialDisplayDuration", data_type="int", def_value=0
         )
@@ -110,7 +111,7 @@ class RichAttribution(MapLayer):
 
     # show_flutter_map_attribution
     @property
-    def show_flutter_map_attribution(self) -> Optional[bool]:
+    def show_flutter_map_attribution(self) -> bool:
         return self._get_attr(
             "showFlutterMapAttribution", data_type="bool", def_value=True
         )

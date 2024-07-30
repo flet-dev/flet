@@ -125,7 +125,7 @@ class CupertinoAppBar(Control):
 
     # automatically_imply_leading
     @property
-    def automatically_imply_leading(self) -> Optional[bool]:
+    def automatically_imply_leading(self) -> bool:
         return self._get_attr(
             "automaticallyImplyLeading", data_type="bool", def_value=True
         )
@@ -136,7 +136,7 @@ class CupertinoAppBar(Control):
 
     # automatically_imply_middle
     @property
-    def automatically_imply_middle(self) -> Optional[bool]:
+    def automatically_imply_middle(self) -> bool:
         return self._get_attr(
             "automaticallyImplyMiddle", data_type="bool", def_value=True
         )
@@ -165,7 +165,7 @@ class CupertinoAppBar(Control):
 
     # transition_between_routes
     @property
-    def transition_between_routes(self) -> Optional[bool]:
+    def transition_between_routes(self) -> bool:
         return self._get_attr(
             "transitionBetweenRoutes", data_type="bool", def_value=True
         )

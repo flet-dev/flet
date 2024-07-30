@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Union, Sequence
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
@@ -74,7 +74,7 @@ class Stack(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
-        controls: Optional[List[Control]] = None,
+        controls: Optional[Sequence[Control]] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         alignment: Optional[Alignment] = None,
         fit: Optional[StackFit] = None,
@@ -163,8 +163,8 @@ class Stack(ConstrainedControl, AdaptiveControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value):
-        self.__controls = value if value is not None else []
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list(value) if value is not None else []
 
     # clip_behavior
     @property

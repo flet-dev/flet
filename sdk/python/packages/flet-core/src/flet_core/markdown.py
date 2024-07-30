@@ -12,6 +12,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 try:
@@ -135,7 +136,7 @@ class Markdown(ConstrainedControl):
 
     # selectable
     @property
-    def selectable(self) -> Optional[bool]:
+    def selectable(self) -> bool:
         return self._get_attr("selectable", data_type="bool", def_value=False)
 
     @selectable.setter
@@ -172,7 +173,7 @@ class Markdown(ConstrainedControl):
 
     # auto_follow_links
     @property
-    def auto_follow_links(self) -> Optional[bool]:
+    def auto_follow_links(self) -> bool:
         return cast(
             Optional[bool],
             self._get_attr("autoFollowLinks", data_type="bool", def_value=False),
@@ -193,9 +194,9 @@ class Markdown(ConstrainedControl):
 
     # on_tap_link
     @property
-    def on_tap_link(self) -> OptionalEventCallable:
+    def on_tap_link(self) -> OptionalControlEventCallable:
         return self._get_event_handler("tap_link")
 
     @on_tap_link.setter
-    def on_tap_link(self, handler: OptionalEventCallable):
+    def on_tap_link(self, handler: OptionalControlEventCallable):
         self._add_event_handler("tap_link", handler)

@@ -1,11 +1,12 @@
 import json
 from dataclasses import dataclass, field
-from typing import Any, Optional, List, Callable
+from typing import Any, Optional, List
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
+from flet_core.types import OptionalEventCallable
 
 
 @dataclass
@@ -65,7 +66,7 @@ class AutoComplete(Control):
 
     # suggestions_max_height
     @property
-    def suggestions_max_height(self) -> OptionalNumber:
+    def suggestions_max_height(self) -> float:
         return self._get_attr(
             "suggestionsMaxHeight", data_type="float", def_value=200.0
         )
@@ -90,7 +91,7 @@ class AutoComplete(Control):
         return self._get_event_handler("select")
 
     @on_select.setter
-    def on_select(self, handler: Optional[Callable[["AutoCompleteSelectEvent"], None]]):
+    def on_select(self, handler: OptionalEventCallable["AutoCompleteSelectEvent"]):
         self.__on_select.subscribe(handler)
 
 
@@ -99,5 +100,5 @@ class AutoCompleteSelectEvent(ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
         self.selection: AutoCompleteSuggestion = AutoCompleteSuggestion(
-            key=d["key"], value=d["value"]
+            key=d.get("key"), value=d.get("value")
         )

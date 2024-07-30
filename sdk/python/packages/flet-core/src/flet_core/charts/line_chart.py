@@ -1,5 +1,5 @@
 import json
-from typing import List, Optional, Union, Any, Callable
+from typing import List, Optional, Union, Any
 
 from flet_core.border import Border
 from flet_core.charts.chart_axis import ChartAxis
@@ -43,7 +43,7 @@ class LineChart(ConstrainedControl):
         baseline_y: OptionalNumber = None,
         min_y: OptionalNumber = None,
         max_y: OptionalNumber = None,
-        on_chart_event: Optional[Callable[["LineChartEvent"], None]] = None,
+        on_chart_event: OptionalEventCallable["LineChartEvent"] = None,
         #
         # ConstrainedControl
         #
@@ -186,7 +186,7 @@ class LineChart(ConstrainedControl):
 
     # interactive
     @property
-    def interactive(self) -> Optional[bool]:
+    def interactive(self) -> bool:
         return self._get_attr("interactive", data_type="bool", def_value=True)
 
     @interactive.setter
@@ -343,7 +343,7 @@ class LineChart(ConstrainedControl):
         return self.__on_chart_event
 
     @on_chart_event.setter
-    def on_chart_event(self, handler: Optional[Callable[["LineChartEvent"], None]]):
+    def on_chart_event(self, handler: OptionalEventCallable["LineChartEvent"]):
         self.__on_chart_event.subscribe(handler)
         self._set_attr("onChartEvent", True if handler is not None else None)
 
@@ -352,8 +352,8 @@ class LineChartEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.type: str = d["type"]
-        self.spots: List[LineChartEventSpot] = d["spots"]
+        self.type: str = d.get("type")
+        self.spots: List[LineChartEventSpot] = d.get("spots")
 
 
 class LineChartEventSpot:

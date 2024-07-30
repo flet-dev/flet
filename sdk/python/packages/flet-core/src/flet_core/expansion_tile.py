@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Union, Sequence
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
@@ -19,6 +19,7 @@ from flet_core.types import (
     OptionalEventCallable,
     ThemeVisualDensity,
     VisualDensity,
+    OptionalControlEventCallable,
 )
 
 
@@ -40,7 +41,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         title: Control,
-        controls: Optional[List[Control]] = None,
+        controls: Optional[Sequence[Control]] = None,
         subtitle: Optional[Control] = None,
         leading: Optional[Control] = None,
         trailing: Optional[Control] = None,
@@ -193,8 +194,8 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]):
-        self.__controls = value if value is not None else []
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list(value) if value is not None else []
 
     # controls_padding
     @property
@@ -281,7 +282,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # dense
     @property
-    def dense(self) -> Optional[bool]:
+    def dense(self) -> bool:
         return self._get_attr("dense", data_type="bool")
 
     @dense.setter
@@ -290,7 +291,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # enable_feedback
     @property
-    def enable_feedback(self) -> Optional[bool]:
+    def enable_feedback(self) -> bool:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
 
     @enable_feedback.setter
@@ -319,7 +320,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # maintain_state
     @property
-    def maintain_state(self) -> Optional[bool]:
+    def maintain_state(self) -> bool:
         return self._get_attr("maintainState", data_type="bool", def_value=False)
 
     @maintain_state.setter
@@ -328,7 +329,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # initially_expanded
     @property
-    def initially_expanded(self) -> Optional[bool]:
+    def initially_expanded(self) -> bool:
         return self._get_attr("initiallyExpanded", data_type="bool", def_value=False)
 
     @initially_expanded.setter
@@ -413,6 +414,6 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallable):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
         self._set_attr("onChange", True if handler is not None else None)

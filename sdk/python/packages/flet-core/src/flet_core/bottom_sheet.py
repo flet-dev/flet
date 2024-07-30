@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import OptionalEventCallable
+from flet_core.types import OptionalEventCallable, OptionalControlEventCallable
 
 
 class BottomSheet(Control):
@@ -97,7 +97,7 @@ class BottomSheet(Control):
 
     # open
     @property
-    def open(self) -> Optional[bool]:
+    def open(self) -> bool:
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
@@ -125,7 +125,7 @@ class BottomSheet(Control):
 
     # dismissible
     @property
-    def dismissible(self) -> Optional[bool]:
+    def dismissible(self) -> bool:
         return self._get_attr("dismissible", data_type="bool", def_value=True)
 
     @dismissible.setter
@@ -134,7 +134,7 @@ class BottomSheet(Control):
 
     # enable_drag
     @property
-    def enable_drag(self) -> Optional[bool]:
+    def enable_drag(self) -> bool:
         return self._get_attr("enableDrag", data_type="bool", def_value=False)
 
     @enable_drag.setter
@@ -143,7 +143,7 @@ class BottomSheet(Control):
 
     # show_drag_handle
     @property
-    def show_drag_handle(self) -> Optional[bool]:
+    def show_drag_handle(self) -> bool:
         return self._get_attr("showDragHandle", data_type="bool", def_value=False)
 
     @show_drag_handle.setter
@@ -152,7 +152,7 @@ class BottomSheet(Control):
 
     # use_safe_area
     @property
-    def use_safe_area(self) -> Optional[bool]:
+    def use_safe_area(self) -> bool:
         return self._get_attr("useSafeArea", data_type="bool", def_value=True)
 
     @use_safe_area.setter
@@ -161,7 +161,7 @@ class BottomSheet(Control):
 
     # is_scroll_controlled
     @property
-    def is_scroll_controlled(self) -> Optional[bool]:
+    def is_scroll_controlled(self) -> bool:
         return self._get_attr("isScrollControlled", data_type="bool", def_value=False)
 
     @is_scroll_controlled.setter
@@ -170,7 +170,7 @@ class BottomSheet(Control):
 
     # maintain_bottom_view_insets_padding
     @property
-    def maintain_bottom_view_insets_padding(self) -> Optional[bool]:
+    def maintain_bottom_view_insets_padding(self) -> bool:
         return self._get_attr(
             "maintainBottomViewInsetsPadding", data_type="bool", def_value=True
         )
@@ -190,9 +190,9 @@ class BottomSheet(Control):
 
     # on_dismiss
     @property
-    def on_dismiss(self) -> OptionalEventCallable:
+    def on_dismiss(self) -> OptionalControlEventCallable:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler: OptionalEventCallable):
+    def on_dismiss(self, handler: OptionalControlEventCallable):
         self._add_event_handler("dismiss", handler)

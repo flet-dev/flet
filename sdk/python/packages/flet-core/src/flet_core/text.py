@@ -250,7 +250,7 @@ class Text(ConstrainedControl):
 
     # italic
     @property
-    def italic(self) -> Optional[bool]:
+    def italic(self) -> bool:
         return self._get_attr("italic", data_type="bool", def_value=False)
 
     @italic.setter
@@ -259,7 +259,7 @@ class Text(ConstrainedControl):
 
     # no_wrap
     @property
-    def no_wrap(self) -> Optional[bool]:
+    def no_wrap(self) -> bool:
         return self._get_attr("italic", data_type="noWrap", def_value=False)
 
     @no_wrap.setter
@@ -268,7 +268,7 @@ class Text(ConstrainedControl):
 
     # selectable
     @property
-    def selectable(self) -> Optional[bool]:
+    def selectable(self) -> bool:
         return self._get_attr("selectable", data_type="bool", def_value=False)
 
     @selectable.setter
