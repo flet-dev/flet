@@ -55,8 +55,7 @@ ImageFilter? blurImageFilterFromJSON(dynamic json) {
   TileMode tileMode = TileMode.clamp;
   if (json == null) {
     return null;
-  }
-  else if (json is int || json is double) {
+  } else if (json is int || json is double) {
     sigmaX = sigmaY = parseDouble(json, 0)!;
   } else if (json is List && json.length > 1) {
     sigmaX = parseDouble(json[0], 0)!;

@@ -1,16 +1,13 @@
 import 'dart:convert';
-import 'dart:io' as io;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_highlight/theme_map.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:markdown/markdown.dart' as md;
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../utils/collections.dart';
+import '../utils/box.dart';
 import '../utils/images.dart';
 import '../utils/launch_url.dart';
 import '../utils/markdown.dart';
@@ -79,80 +76,29 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
           },
           styleSheet: mdStyleSheet,
           imageBuilder: (Uri uri, String? title, String? alt) {
-            Widget? image;
             String s = uri.toString();
             var srcBase64 = isBase64ImageString(s) ? s : null;
             var src = isUrlOrPath(s) ? s : null;
+            if (src == null && srcBase64 == null) {
+              return ErrorControl("Invalid image URI: $s");
+            }
             var errorContentCtrls =
                 children.where((c) => c.name == "error" && c.isVisible);
 
-            if (srcBase64 != null) {
-              try {
-                Uint8List bytes = base64Decode(srcBase64);
-                if (arrayIndexOf(
-                        bytes, Uint8List.fromList(utf8.encode(svgTag))) !=
-                    -1) {
-                  image = SvgPicture.memory(bytes,
-                      fit: BoxFit.contain, semanticsLabel: alt);
-                } else {
-                  image = Image.memory(bytes, semanticLabel: alt);
-                }
-              } catch (ex) {
-                return ErrorControl("Error decoding base64: ${ex.toString()}");
-              }
-            } else if (src != null) {
-              if (src.contains(svgTag)) {
-                image = SvgPicture.memory(Uint8List.fromList(utf8.encode(src)),
-                    fit: BoxFit.contain, semanticsLabel: alt);
-              } else {
-                var assetSrc =
-                    getAssetSrc(src, pageArgs.pageUri!, pageArgs.assetsDir);
+            var errorContent = errorContentCtrls.isNotEmpty
+                ? createControl(control, errorContentCtrls.first.id, disabled)
+                : null;
 
-                if (assetSrc.isFile) {
-                  // from File
-                  if (assetSrc.path.endsWith(".svg")) {
-                    image = getSvgPictureFromFile(
-                        src: assetSrc.path,
-                        fit: BoxFit.contain,
-                        blendMode: BlendMode.srcIn,
-                        semanticsLabel: alt,
-                        width: null,
-                        height: null,
-                        color: null);
-                  } else {
-                    image = Image.file(
-                      io.File(assetSrc.path),
-                      errorBuilder: errorContentCtrls.isNotEmpty
-                          ? (context, error, stackTrace) {
-                              return createControl(control,
-                                  errorContentCtrls.first.id, disabled);
-                            }
-                          : null,
-                    );
-                  }
-                } else {
-                  // URL
-                  if (assetSrc.path.endsWith(".svg")) {
-                    image = SvgPicture.network(assetSrc.path,
-                        fit: BoxFit.contain, semanticsLabel: alt);
-                  } else {
-                    image = Image.network(assetSrc.path,
-                        semanticLabel: alt,
-                        errorBuilder: errorContentCtrls.isNotEmpty
-                            ? (context, error, stackTrace) {
-                                return createControl(control,
-                                    errorContentCtrls.first.id, disabled);
-                              }
-                            : null);
-                  }
-                }
-              }
-            } else {
-              // src == null && srcBase64 == null
-              return ErrorControl("Invalid image source: $s");
-            }
-
-            return image;
+            return buildImage(
+              context: context,
+              control: control,
+              src: src,
+              srcBase64: srcBase64,
+              semanticsLabel: alt,
+              disabled: disabled,
+              pageArgs: pageArgs,
+              errorCtrl: errorContent,
+            );
           },
           shrinkWrap: control.attrBool("shrinkWrap", true)!,
           fitContent: control.attrBool("fitContent", true)!,
