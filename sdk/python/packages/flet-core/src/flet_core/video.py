@@ -3,6 +3,7 @@ from enum import Enum
 from typing import Any, Dict, List, Optional, Union, cast
 
 from flet_core.alignment import Alignment
+from flet_core.box import FilterQuality
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -20,13 +21,6 @@ from flet_core.types import (
     OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
-
-
-class FilterQuality(Enum):
-    NONE = "none"
-    LOW = "low"
-    MEDIUM = "medium"
-    HIGH = "high"
 
 
 class PlaylistMode(Enum):

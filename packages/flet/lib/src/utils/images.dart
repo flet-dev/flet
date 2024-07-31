@@ -49,11 +49,14 @@ ImageFilter? parseBlur(Control control, String propName,
   return blurImageFilterFromJSON(j1);
 }
 
-ImageFilter blurImageFilterFromJSON(dynamic json) {
+ImageFilter? blurImageFilterFromJSON(dynamic json) {
   double sigmaX = 0.0;
   double sigmaY = 0.0;
   TileMode tileMode = TileMode.clamp;
-  if (json is int || json is double) {
+  if (json == null) {
+    return null;
+  }
+  else if (json is int || json is double) {
     sigmaX = sigmaY = parseDouble(json, 0)!;
   } else if (json is List && json.length > 1) {
     sigmaX = parseDouble(json[0], 0)!;
@@ -80,6 +83,9 @@ ColorFilter? parseColorFilter(Control control, String propName, ThemeData theme,
 
 ColorFilter? colorFilterFromJSON(dynamic json, ThemeData theme,
     [ColorFilter? defValue]) {
+  if (json == null) {
+    return defValue;
+  }
   Color? color = parseColor(theme, json["color"]);
   BlendMode? blendMode = parseBlendMode(json["blend_mode"]);
   if (color == null || blendMode == null) {

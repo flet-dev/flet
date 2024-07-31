@@ -5,6 +5,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
 import '../models/control.dart';
+import '../models/page_args_model.dart';
 import 'alignment.dart';
 import 'box.dart';
 import 'edge_insets.dart';
@@ -28,19 +29,19 @@ md.ExtensionSet? parseMarkdownExtensionSet(String? value,
   }
 }
 
-MarkdownStyleSheet? parseMarkdownStyleSheet(
-    Control control, String propName, ThemeData theme) {
+MarkdownStyleSheet? parseMarkdownStyleSheet(Control control, String propName,
+    ThemeData theme, PageArgsModel? pageArgs) {
   dynamic j;
   var v = control.attrString(propName, null);
   if (v == null) {
     return null;
   }
   j = json.decode(v);
-  return markdownStyleSheetFromJson(theme, j);
+  return markdownStyleSheetFromJson(theme, j, pageArgs);
 }
 
-MarkdownStyleSheet markdownStyleSheetFromJson(
-    ThemeData theme, Map<String, dynamic> j) {
+MarkdownStyleSheet markdownStyleSheetFromJson(ThemeData theme,
+    Map<String, dynamic> j, PageArgsModel? pageArgs) {
   TextStyle? parseTextStyle(String propName) {
     return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
   }
@@ -97,12 +98,12 @@ MarkdownStyleSheet markdownStyleSheetFromJson(
     tableCellsPadding: edgeInsetsFromJson(
         j["table_cells_padding"], const EdgeInsets.fromLTRB(16, 8, 16, 8))!,
     tableCellsDecoration:
-        boxDecorationFromJSON(theme, j["table_cells_decoration"]) ??
+        boxDecorationFromJSON(theme, j["table_cells_decoration"], pageArgs) ??
             const BoxDecoration(),
     blockquotePadding: edgeInsetsFromJson(j["blockquote_padding"]) ??
         const EdgeInsets.all(8.0),
     blockquoteDecoration:
-        boxDecorationFromJSON(theme, j["blockquote_decoration"]) ??
+        boxDecorationFromJSON(theme, j["blockquote_decoration"], pageArgs) ??
             BoxDecoration(
               color: Colors.blue.shade100,
               borderRadius: BorderRadius.circular(2.0),
@@ -110,14 +111,14 @@ MarkdownStyleSheet markdownStyleSheetFromJson(
     codeblockPadding:
         edgeInsetsFromJson(j["codeblock_padding"], const EdgeInsets.all(8.0))!,
     codeblockDecoration:
-        boxDecorationFromJSON(theme, j["codeblock_decoration"]) ??
+        boxDecorationFromJSON(theme, j["codeblock_decoration"], pageArgs) ??
             BoxDecoration(
               color: theme.cardTheme.color ?? theme.cardColor,
               borderRadius: BorderRadius.circular(2.0),
             ),
-    horizontalRuleDecoration:
-        boxDecorationFromJSON(theme, j["horizontal_rule_decoration"]) ??
-            BoxDecoration(
+    horizontalRuleDecoration: boxDecorationFromJSON(
+            theme, j["horizontal_rule_decoration"], pageArgs) ??
+        BoxDecoration(
               border: Border(
                 top: BorderSide(
                   width: 5.0,

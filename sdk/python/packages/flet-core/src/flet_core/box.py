@@ -2,9 +2,30 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional, List, Union
 
+from flet_core.alignment import Alignment
 from flet_core.border import Border
 from flet_core.gradients import Gradient
-from flet_core.types import OffsetValue, BorderRadiusValue, BlendMode
+from flet_core.types import (
+    OffsetValue,
+    BorderRadiusValue,
+    BlendMode,
+    ImageFit,
+    OptionalNumber,
+    ImageRepeat,
+)
+
+
+@dataclass
+class ColorFilter:
+    color: Optional[str] = field(default=None)
+    blend_mode: Optional[BlendMode] = field(default=None)
+
+
+class FilterQuality(Enum):
+    NONE = "none"
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
 
 
 class ShadowBlurStyle(Enum):
@@ -29,9 +50,25 @@ class BoxShape(Enum):
 
 
 @dataclass
+class DecorationImage:
+    src: Optional[str] = None
+    src_base64: Optional[str] = None
+    color_filter: Optional[ColorFilter] = None
+    fit: Optional[ImageFit] = None
+    alignment: Optional[Alignment] = None
+    repeat: Optional[ImageRepeat] = None
+    match_text_direction: Optional[bool] = None
+    scale: OptionalNumber = None
+    opacity: OptionalNumber = None
+    filter_quality: Optional[FilterQuality] = None
+    invert_colors: Optional[bool] = None
+    anti_alias: Optional[bool] = None
+
+
+@dataclass
 class BoxDecoration:
-    color: Optional[str] = None
-    image: Optional[str] = None
+    bgcolor: Optional[str] = None
+    image: Optional[DecorationImage] = None
     border: Optional[Border] = None
     border_radius: BorderRadiusValue = None
     box_shadow: Union[None, BoxShadow, List[BoxShadow]] = None

@@ -51,22 +51,21 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
     TextStyle? codeStyle =
         parseTextStyle(Theme.of(context), control, "codeStyle"); // DEPRECATED
 
-    var codeStyleSheet =
-        parseMarkdownStyleSheet(control, "codeStyleSheet", Theme.of(context)) ??
-            MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-                code: codeStyle ??
-                    Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .copyWith(fontFamily: "monospace"));
-    var mdStyleSheet =
-        parseMarkdownStyleSheet(control, "mdStyleSheet", Theme.of(context));
-
     var autoFollowLinks = control.attrBool("autoFollowLinks", false)!;
     var autoFollowLinksTarget = control.attrString("autoFollowLinksTarget");
 
     return withPageArgs((context, pageArgs) {
       bool selectable = control.attrBool("selectable", false)!;
+      var codeStyleSheet = parseMarkdownStyleSheet(
+              control, "codeStyleSheet", Theme.of(context), pageArgs) ??
+          MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+              code: codeStyle ??
+                  Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(fontFamily: "monospace"));
+      var mdStyleSheet = parseMarkdownStyleSheet(
+          control, "mdStyleSheet", Theme.of(context), pageArgs);
       Widget markdown = MarkdownBody(
           data: value,
           selectable: selectable,

@@ -40,7 +40,15 @@ from flet_core.border import Border, BorderSide, BorderSideStrokeAlign
 from flet_core.border_radius import BorderRadius
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.bottom_sheet import BottomSheet
-from flet_core.box import BoxShadow, ShadowBlurStyle, BoxDecoration, BoxShape
+from flet_core.box import (
+    BoxShadow,
+    ShadowBlurStyle,
+    BoxDecoration,
+    BoxShape,
+    DecorationImage,
+    FilterQuality,
+    ColorFilter,
+)
 from flet_core.buttons import (
     BeveledRectangleBorder,
     ButtonStyle,
@@ -74,7 +82,7 @@ from flet_core.checkbox import Checkbox
 from flet_core.chip import Chip
 from flet_core.circle_avatar import CircleAvatar
 from flet_core.column import Column
-from flet_core.container import Container, ContainerTapEvent, ColorFilter
+from flet_core.container import Container, ContainerTapEvent
 from flet_core.control import Control
 from flet_core.control_event import ControlEvent
 from flet_core.cupertino_action_sheet import CupertinoActionSheet
@@ -376,7 +384,6 @@ from flet_core.types import (
 from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider
 from flet_core.video import (
-    FilterQuality,
     PlaylistMode,
     Video,
     VideoConfiguration,
