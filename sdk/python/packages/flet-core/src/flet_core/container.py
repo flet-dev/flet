@@ -1,11 +1,17 @@
 import json
+import warnings
 from typing import Any, List, Optional, Tuple, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
 from flet_core.blur import Blur
 from flet_core.border import Border
-from flet_core.box import BoxShadow, BoxShape, BoxDecoration, ColorFilter
+from flet_core.box import (
+    BoxShadow,
+    BoxShape,
+    ColorFilter,
+    DecorationImage,
+)
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
@@ -79,7 +85,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         shape: Optional[BoxShape] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         ink: Optional[bool] = None,
-        decoration: Optional[BoxDecoration] = None,
+        image: Optional[DecorationImage] = None,
         ink_color: Optional[str] = None,
         animate: AnimationValue = None,
         blur: Union[
@@ -195,7 +201,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.on_tap_down = on_tap_down
         self.on_long_press = on_long_press
         self.on_hover = on_hover
-        self.decoration = decoration
+        self.image = image
 
     def _get_control_name(self):
         return "container"
@@ -213,7 +219,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("shadow", self.__shadow if self.__shadow else None)
         self._set_attr_json("theme", self.__theme)
         self._set_attr_json("colorFilter", self.__color_filter)
-        self._set_attr_json("decoration", self.__decoration)
+        self._set_attr_json("image", self.__image)
 
     def _get_children(self):
         children = []
@@ -245,14 +251,14 @@ class Container(ConstrainedControl, AdaptiveControl):
     def padding(self, value: PaddingValue):
         self.__padding = value
 
-    # decoration
+    # image
     @property
-    def decoration(self) -> Optional[BoxDecoration]:
-        return self.__decoration
+    def image(self) -> Optional[DecorationImage]:
+        return self.__image
 
-    @decoration.setter
-    def decoration(self, value: Optional[BoxDecoration]):
-        self.__decoration = value
+    @image.setter
+    def image(self, value: Optional[DecorationImage]):
+        self.__image = value
 
     # margin
     @property
@@ -348,49 +354,114 @@ class Container(ConstrainedControl, AdaptiveControl):
     # image_src
     @property
     def image_src(self) -> Optional[str]:
+        warnings.warn(
+            f"image_src is deprecated since version 0.24.0 "
+            f"and will be removed in version 0.27.0. Use Container.image.src instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
         return self._get_attr("imageSrc")
 
     @image_src.setter
     def image_src(self, value: Optional[str]):
         self._set_attr("imageSrc", value)
+        if value is not None:
+            warnings.warn(
+                f"image_src is deprecated since version 0.24.0 "
+                f"and will be removed in version 0.27.0. Use Container.image.src instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
 
     # image_src_base64
     @property
     def image_src_base64(self) -> Optional[str]:
+        warnings.warn(
+            f"image_src_base64 is deprecated since version 0.24.0 "
+            f"and will be removed in version 0.27.0. Use Container.image.src_base64 instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
         return self._get_attr("imageSrcBase64")
 
     @image_src_base64.setter
     def image_src_base64(self, value: Optional[str]):
         self._set_attr("imageSrcBase64", value)
+        if value is not None:
+            warnings.warn(
+                f"image_src_base64 is deprecated since version 0.24.0 "
+                f"and will be removed in version 0.27.0. Use Container.image.src_base64 instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
 
     # image_fit
     @property
     def image_fit(self) -> Optional[ImageFit]:
+        warnings.warn(
+            f"image_fit is deprecated since version 0.24.0 "
+            f"and will be removed in version 0.27.0. Use Container.image.fit instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
         return self.__image_fit
 
     @image_fit.setter
     def image_fit(self, value: Optional[ImageFit]):
         self.__image_fit = value
         self._set_enum_attr("imageFit", value, ImageFit)
+        if value is not None:
+            warnings.warn(
+                f"image_fit is deprecated since version 0.24.0 "
+                f"and will be removed in version 0.27.0. Use Container.image.fit instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
 
     # image_repeat
     @property
     def image_repeat(self) -> Optional[ImageRepeat]:
+        warnings.warn(
+            f"image_repeat is deprecated since version 0.24.0 "
+            f"and will be removed in version 0.27.0. Use Container.image.repeat instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
         return self.__image_repeat
 
     @image_repeat.setter
     def image_repeat(self, value: Optional[ImageRepeat]):
         self.__image_repeat = value
         self._set_enum_attr("imageRepeat", value, ImageRepeat)
+        if value is not None:
+            warnings.warn(
+                f"image_repeat is deprecated since version 0.24.0 "
+                f"and will be removed in version 0.27.0. Use Container.image.repeat instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
 
     # image_opacity
     @property
     def image_opacity(self) -> float:
+        warnings.warn(
+            f"image_opacity is deprecated since version 0.24.0 "
+            f"and will be removed in version 0.27.0. Use Container.image.opacity instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
         return self._get_attr("imageOpacity", data_type="float", def_value=1.0)
 
     @image_opacity.setter
     def image_opacity(self, value: OptionalNumber):
         self._set_attr("imageOpacity", value)
+        if value is not None:
+            warnings.warn(
+                f"image_opacity is deprecated since version 0.24.0 "
+                f"and will be removed in version 0.27.0. Use Container.image.opacity instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
 
     # content
     @property

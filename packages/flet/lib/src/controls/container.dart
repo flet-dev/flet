@@ -101,18 +101,21 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
       var clipBehavior = parseClip(control.attrString("clipBehavior"),
           borderRadius != null ? Clip.antiAlias : Clip.none)!;
 
+      var decorationImage =
+          parseDecorationImage(Theme.of(context), control, "image", pageArgs);
+
       var boxDecoration = parseBoxDecoration(
               Theme.of(context), control, "decoration", pageArgs) ??
           BoxDecoration(
               color: bgColor,
               gradient: gradient,
-              image: image != null
+              image: decorationImage == null && image != null
                   ? DecorationImage(
                       image: image,
                       repeat: imageRepeat,
                       fit: imageFit,
                       opacity: imageOpacity)
-                  : null,
+                  : decorationImage,
               backgroundBlendMode:
                   bgColor != null || gradient != null ? blendMode : null,
               border: parseBorder(Theme.of(context), control, "border",

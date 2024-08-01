@@ -81,6 +81,17 @@ BoxDecoration? boxDecorationFromJSON(
   );
 }
 
+DecorationImage? parseDecorationImage(ThemeData theme, Control control,
+    String propName, PageArgsModel? pageArgs) {
+  var v = control.attrString(propName);
+  if (v == null) {
+    return null;
+  }
+
+  final j1 = json.decode(v);
+  return decorationImageFromJSON(theme, j1, pageArgs);
+}
+
 DecorationImage? decorationImageFromJSON(
     ThemeData theme, dynamic json, PageArgsModel? pageArgs) {
   if (json == null) {
