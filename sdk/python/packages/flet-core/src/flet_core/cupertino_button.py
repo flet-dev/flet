@@ -15,6 +15,7 @@ from flet_core.types import (
     ScaleValue,
     UrlTarget,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -286,11 +287,11 @@ class CupertinoButton(ConstrainedControl):
 
     # on_click
     @property
-    def on_click(self) -> OptionalEventCallable:
+    def on_click(self) -> OptionalControlEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler: OptionalEventCallable):
+    def on_click(self, handler: OptionalControlEventCallable):
         self._add_event_handler("click", handler)
 
     # content

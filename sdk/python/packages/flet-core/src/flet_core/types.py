@@ -1,6 +1,16 @@
 from dataclasses import dataclass
 from enum import Enum, EnumMeta
-from typing import Any, Callable, Dict, Optional, Protocol, Tuple, Union, TYPE_CHECKING
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Optional,
+    Protocol,
+    Tuple,
+    TypeVar,
+    Union,
+    TYPE_CHECKING
+)
 from warnings import warn
 
 from flet_core.border_radius import BorderRadius
@@ -409,7 +419,11 @@ class Duration:
 DurationValue = Union[int, Duration, None]
 
 # Events
-OptionalEventCallable = Optional[Callable[[ControlEvent], None]]
+ControlEventType = TypeVar("ControlEventType", bound=ControlEvent)
+EventCallable = Callable[[ControlEventType], Any]
+OptionalEventCallable = Optional[EventCallable]
+OptionalControlEventCallable = OptionalEventCallable[ControlEvent]
+
 
 # Wrapper
 Wrapper = Callable[..., Any]

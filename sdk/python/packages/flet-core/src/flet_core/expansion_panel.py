@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Sequence, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
@@ -12,6 +12,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -176,7 +177,7 @@ class ExpansionPanelList(ConstrainedControl):
 
     def __init__(
         self,
-        controls: Optional[List[ExpansionPanel]] = None,
+        controls: Optional[Sequence[ExpansionPanel]] = None,
         divider_color: Optional[str] = None,
         elevation: OptionalNumber = None,
         expanded_header_padding: PaddingValue = None,
@@ -317,15 +318,15 @@ class ExpansionPanelList(ConstrainedControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[List[ExpansionPanel]]):
-        self.__controls = value if value is not None else []
+    def controls(self, value: Optional[Sequence[ExpansionPanel]]):
+        self.__controls = list(value) if value is not None else []
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallable:
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallable):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
         self._set_attr("onChange", True if handler is not None else None)

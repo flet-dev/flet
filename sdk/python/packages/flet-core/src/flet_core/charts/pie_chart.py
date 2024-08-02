@@ -1,6 +1,6 @@
 import json
 from enum import Enum
-from typing import Any, List, Optional, Union, Callable
+from typing import Any, List, Optional, Union
 
 from flet_core.charts.pie_chart_section import PieChartSection
 from flet_core.constrained_control import ConstrainedControl
@@ -27,7 +27,7 @@ class PieChart(ConstrainedControl):
         sections_space: OptionalNumber = None,
         start_degree_offset: OptionalNumber = None,
         animate: AnimationValue = None,
-        on_chart_event: Optional[Callable[["PieChartEvent"], None]] = None,
+        on_chart_event: OptionalEventCallable["PieChartEvent"] = None,
         #
         # ConstrainedControl
         #
@@ -172,7 +172,7 @@ class PieChart(ConstrainedControl):
         return self.__on_chart_event
 
     @on_chart_event.setter
-    def on_chart_event(self, handler: Optional[Callable[["PieChartEvent"], None]]):
+    def on_chart_event(self, handler: OptionalEventCallable["PieChartEvent"]):
         self.__on_chart_event.subscribe(handler)
         self._set_attr("onChartEvent", True if handler is not None else None)
 

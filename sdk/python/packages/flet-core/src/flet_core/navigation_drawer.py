@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Sequence
 
 from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control
@@ -8,6 +8,7 @@ from flet_core.types import (
     OptionalEventCallable,
     OptionalNumber,
     PaddingValue,
+    OptionalControlEventCallable,
 )
 
 
@@ -169,7 +170,7 @@ class NavigationDrawer(Control):
 
     def __init__(
         self,
-        controls: Optional[List[Control]] = None,
+        controls: Optional[Sequence[Control]] = None,
         open: bool = False,
         selected_index: Optional[int] = None,
         bgcolor: Optional[str] = None,
@@ -238,8 +239,8 @@ class NavigationDrawer(Control):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]):
-        self.__controls = value or []
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list(value) if value is not  None else []
 
     # selected_index
     @property
@@ -324,18 +325,18 @@ class NavigationDrawer(Control):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallable:
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallable):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
 
     # on_dismiss
     @property
-    def on_dismiss(self) -> OptionalEventCallable:
+    def on_dismiss(self) -> OptionalControlEventCallable:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler: OptionalEventCallable):
+    def on_dismiss(self, handler: OptionalControlEventCallable):
         self._add_event_handler("dismiss", handler)

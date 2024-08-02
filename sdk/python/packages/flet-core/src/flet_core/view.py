@@ -1,4 +1,4 @@
-from typing import List, Optional, Union, Callable
+from typing import List, Optional, Union, Callable, Sequence
 
 from flet_core import Control
 from flet_core.adaptive_control import AdaptiveControl
@@ -35,7 +35,7 @@ class View(ScrollableControl, AdaptiveControl):
     def __init__(
         self,
         route: Optional[str] = None,
-        controls: Optional[List[Control]] = None,
+        controls: Optional[Sequence[Control]] = None,
         appbar: Union[AppBar, CupertinoAppBar, None] = None,
         bottom_appbar: Optional[BottomAppBar] = None,
         floating_action_button: Optional[FloatingActionButton] = None,
@@ -75,7 +75,7 @@ class View(ScrollableControl, AdaptiveControl):
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
-        self.controls = controls if controls is not None else []
+        self.controls = controls
         self.route = route
         self.appbar = appbar
         self.bottom_appbar = bottom_appbar
@@ -139,8 +139,8 @@ class View(ScrollableControl, AdaptiveControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: List[Control]):
-        self.__controls = value
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list(value) if value is not None else []
 
     # appbar
     @property
