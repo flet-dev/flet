@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, List, Optional, Union, Sequence
+from typing import Any, Optional, Union, Sequence
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
