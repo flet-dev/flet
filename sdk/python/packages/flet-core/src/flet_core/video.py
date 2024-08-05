@@ -96,6 +96,8 @@ class Video(ConstrainedControl):
         on_enter_fullscreen: OptionalEventCallable = None,
         on_exit_fullscreen: OptionalEventCallable = None,
         on_error: OptionalEventCallable = None,
+        on_completed: OptionalEventCallable = None,
+
         #
         # ConstrainedControl
         #
@@ -178,6 +180,8 @@ class Video(ConstrainedControl):
         self.on_exit_fullscreen = on_exit_fullscreen
         self.on_loaded = on_loaded
         self.on_error = on_error
+        self.on_completed = on_completed
+
 
     def _get_control_name(self):
         return "video"
@@ -593,3 +597,13 @@ class Video(ConstrainedControl):
     def on_error(self, handler: OptionalControlEventCallable):
         self._set_attr("onError", True if handler is not None else None)
         self._add_event_handler("error", handler)
+
+    # on_completed
+    @property
+    def on_completed(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("completed")
+
+    @on_completed.setter
+    def on_completed(self, handler: OptionalControlEventCallable):
+        self._set_attr("onCompleted", True if handler is not None else None)
+        self._add_event_handler("completed", handler)
