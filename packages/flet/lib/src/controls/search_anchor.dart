@@ -33,18 +33,33 @@ class SearchAnchorControl extends StatefulWidget {
 
 class _SearchAnchorControlState extends State<SearchAnchorControl> {
   late final SearchController _controller;
+  bool _focused = false;
+  late final FocusNode _focusNode;
+  String? _lastFocusValue;
 
   @override
   void initState() {
     super.initState();
     _controller = SearchController();
     _controller.addListener(_searchTextChanged);
+    _focusNode = FocusNode();
+    _focusNode.addListener(_onFocusChange);
   }
+
+  void _onFocusChange() {
+    setState(() {
+      _focused = _focusNode.hasFocus;
+    });
+    widget.backend.triggerControlEvent(
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
+    }
 
   @override
   void dispose() {
     _controller.removeListener(_searchTextChanged);
     _controller.dispose();
+    _focusNode.removeListener(_onFocusChange);
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -101,6 +116,12 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
         widget.control.attrString("textCapitalization"));
     TextInputType keyboardType = parseTextInputType(
         widget.control.attrString("keyboardType"), TextInputType.text)!;
+
+    var focusValue = widget.control.attrString("focus");
+    if (focusValue != null && focusValue != _lastFocusValue) {
+      _lastFocusValue = focusValue;
+      _focusNode.requestFocus();
+    }
 
     var method = widget.control.attrString("method");
 
@@ -182,6 +203,7 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
             keyboardType: keyboardType,
             textCapitalization: textCapitalization,
             autoFocus: widget.control.attrBool("autoFocus", false)!,
+            focusNode: _focusNode,
             hintText: widget.control.attrString("barHintText"),
             backgroundColor: parseWidgetStateColor(
                 Theme.of(context), widget.control, "barBgcolor"),

@@ -19,10 +19,6 @@ from flet_core.margin import Margin
 from flet_core.padding import Padding
 from flet_core.transform import Offset, Rotate, Scale
 
-if TYPE_CHECKING:
-    pass
-
-
 WEB_BROWSER = "web_browser"
 FLET_APP = "flet_app"
 FLET_APP_WEB = "flet_app_web"
@@ -92,11 +88,6 @@ class FontWeight(Enum):
     W_700 = "w700"
     W_800 = "w800"
     W_900 = "w900"
-
-
-class BoxShape(Enum):
-    RECTANGLE = "rectangle"
-    CIRCLE = "circle"
 
 
 class NotchShape(Enum):

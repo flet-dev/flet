@@ -58,6 +58,8 @@ class SearchBar(ConstrainedControl):
         on_tap: OptionalEventCallable = None,
         on_submit: OptionalEventCallable = None,
         on_change: OptionalEventCallable = None,
+        on_focus: OptionalEventCallable = None,
+        on_blur: OptionalEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -131,6 +133,8 @@ class SearchBar(ConstrainedControl):
         self.divider_color = divider_color
         self.full_screen = full_screen
         self.capitalization = capitalization
+        self.on_focus = on_focus
+        self.on_blur = on_blur
         self.on_tap = on_tap
         self.on_submit = on_submit
         self.on_change = on_change
@@ -173,6 +177,10 @@ class SearchBar(ConstrainedControl):
         return children
 
     # Public methods
+    def focus(self):
+        self._set_attr_json("focus", str(time.time()))
+        self.update()
+
     def open_view(self):
         m = {
             "n": "openView",
@@ -417,6 +425,24 @@ class SearchBar(ConstrainedControl):
     def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
         self._set_attr("onchange", True if handler is not None else None)
+
+    # on_focus
+    @property
+    def on_focus(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("focus")
+
+    @on_focus.setter
+    def on_focus(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("focus", handler)
+
+    # on_blur
+    @property
+    def on_blur(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("blur")
+
+    @on_blur.setter
+    def on_blur(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("blur", handler)
 
     # on_tap
     @property

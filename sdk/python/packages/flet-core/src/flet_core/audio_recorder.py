@@ -101,22 +101,27 @@ class AudioRecorder(Control):
         return recording == "true"
 
     def stop_recording(self, wait_timeout: Optional[float] = 5) -> Optional[str]:
-        out = self.invoke_method(
+        return self.invoke_method(
             "stop_recording",
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        return out if out is not None else None
 
     async def stop_recording_async(
         self, wait_timeout: Optional[float] = 10
     ) -> Optional[str]:
-        out = await self.invoke_method_async(
+        return await self.invoke_method_async(
             "stop_recording",
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        return out if out is not None else None
+
+    def cancel_recording(self, wait_timeout: Optional[float] = 5) -> None:
+        self.invoke_method(
+            "cancel_recording",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
 
     def resume_recording(self):
         self.invoke_method("resume_recording")
