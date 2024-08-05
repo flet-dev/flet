@@ -249,6 +249,7 @@ from flet_core.permission_handler import (
     PermissionType,
     PermissionStatus,
 )
+from flet_core.placeholder import Placeholder
 from flet_core.popup_menu_button import (
     PopupMenuButton,
     PopupMenuItem,
