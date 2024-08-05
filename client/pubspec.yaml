@@ -60,6 +60,9 @@ dependencies:
   integration_test:
     sdk: flutter
 
+dependency_overrides:
+  web: ^1.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
