@@ -1,7 +1,7 @@
 import json
 from typing import List, Optional, Union, Any
 
-from flet_core.border import Border
+from flet_core.border import Border, BorderSide
 from flet_core.charts.chart_axis import ChartAxis
 from flet_core.charts.chart_grid_lines import ChartGridLines
 from flet_core.charts.line_chart_data import LineChartData
@@ -17,6 +17,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
+    PaddingValue,
 )
 
 
@@ -43,6 +44,16 @@ class LineChart(ConstrainedControl):
         baseline_y: OptionalNumber = None,
         min_y: OptionalNumber = None,
         max_y: OptionalNumber = None,
+        tooltip_rounded_radius: OptionalNumber = None,
+        tooltip_margin: OptionalNumber = None,
+        tooltip_padding: PaddingValue = None,
+        tooltip_max_content_width: OptionalNumber = None,
+        tooltip_rotate_angle: OptionalNumber = None,
+        tooltip_tooltip_horizontal_offset: OptionalNumber = None,
+        tooltip_tooltip_border_side: Optional[BorderSide] = None,
+        tooltip_fit_inside_horizontally: Optional[bool] = None,
+        tooltip_fit_inside_vertically: Optional[bool] = None,
+        tooltip_show_on_top_of_chart_box_area: Optional[bool] = None,
         on_chart_event: OptionalEventCallable["LineChartEvent"] = None,
         #
         # ConstrainedControl
@@ -128,6 +139,18 @@ class LineChart(ConstrainedControl):
         self.min_y = min_y
         self.max_y = max_y
         self.on_chart_event = on_chart_event
+        self.tooltip_rounded_radius = tooltip_rounded_radius
+        self.tooltip_margin = tooltip_margin
+        self.tooltip_padding = tooltip_padding
+        self.tooltip_max_content_width = tooltip_max_content_width
+        self.tooltip_rotate_angle = tooltip_rotate_angle
+        self.tooltip_horizontal_offset = tooltip_tooltip_horizontal_offset
+        self.tooltip_border_side = tooltip_tooltip_border_side
+        self.tooltip_fit_inside_horizontally = tooltip_fit_inside_horizontally
+        self.tooltip_fit_inside_vertically = tooltip_fit_inside_vertically
+        self.tooltip_show_on_top_of_chart_box_area = (
+            tooltip_show_on_top_of_chart_box_area
+        )
 
     def _get_control_name(self):
         return "linechart"
@@ -138,6 +161,8 @@ class LineChart(ConstrainedControl):
         self._set_attr_json("verticalGridLines", self.__vertical_grid_lines)
         self._set_attr_json("animate", self.__animate)
         self._set_attr_json("border", self.__border)
+        self._set_attr_json("tooltipBorderSide", self.__tooltip_border_side)
+        self._set_attr_json("tooltipPadding", self.__tooltip_padding)
 
     def _get_children(self):
         children = []
@@ -336,6 +361,95 @@ class LineChart(ConstrainedControl):
     @max_y.setter
     def max_y(self, value: OptionalNumber):
         self._set_attr("maxY", value)
+
+    # tooltip_rounded_radius
+    @property
+    def tooltip_rounded_radius(self) -> OptionalNumber:
+        return self._get_attr("tooltipRoundedRadius", data_type="float", def_value=4)
+
+    @tooltip_rounded_radius.setter
+    def tooltip_rounded_radius(self, value: OptionalNumber):
+        self._set_attr("tooltipRoundedRadius", value)
+
+    # tooltip_margin
+    @property
+    def tooltip_margin(self) -> OptionalNumber:
+        return self._get_attr("tooltipMargin", data_type="float", def_value=16)
+
+    @tooltip_margin.setter
+    def tooltip_margin(self, value: OptionalNumber):
+        self._set_attr("tooltipMargin", value)
+
+    # tooltip_padding
+    @property
+    def tooltip_padding(self) -> PaddingValue:
+        return self.__tooltip_padding
+
+    @tooltip_padding.setter
+    def tooltip_padding(self, value: PaddingValue):
+        self.__tooltip_padding = value
+
+    # tooltip_max_content_width
+    @property
+    def tooltip_max_content_width(self) -> OptionalNumber:
+        return self._get_attr(
+            "tooltipMaxContentWidth", data_type="float", def_value=120
+        )
+
+    @tooltip_max_content_width.setter
+    def tooltip_max_content_width(self, value: OptionalNumber):
+        self._set_attr("tooltipMaxContentWidth", value)
+
+    # tooltip_rotate_angle
+    @property
+    def tooltip_rotate_angle(self) -> OptionalNumber:
+        return self._get_attr("tooltipRotateAngle", data_type="float", def_value=0.0)
+
+    @tooltip_rotate_angle.setter
+    def tooltip_rotate_angle(self, value: OptionalNumber):
+        self._set_attr("tooltipRotateAngle", value)
+
+    # tooltip_fit_inside_vertically
+    @property
+    def tooltip_fit_inside_vertically(self) -> Optional[bool]:
+        return self._get_attr(
+            "tooltipFitInsideVertically", data_type="bool", def_value=False
+        )
+
+    @tooltip_fit_inside_vertically.setter
+    def tooltip_fit_inside_vertically(self, value: Optional[bool]):
+        self._set_attr("tooltipFitInsideVertically", value)
+
+    # tooltip_fit_inside_horizontally
+    @property
+    def tooltip_fit_inside_horizontally(self) -> Optional[bool]:
+        return self._get_attr(
+            "tooltipFitInsideHorizontally", data_type="bool", def_value=False
+        )
+
+    @tooltip_fit_inside_horizontally.setter
+    def tooltip_fit_inside_horizontally(self, value: Optional[bool]):
+        self._set_attr("tooltipFitInsideHorizontally", value)
+
+    # tooltip_show_on_top_of_chart_box_area
+    @property
+    def tooltip_show_on_top_of_chart_box_area(self) -> Optional[bool]:
+        return self._get_attr(
+            "tooltipShowOnTopOfChartBoxArea", data_type="bool", def_value=False
+        )
+
+    @tooltip_show_on_top_of_chart_box_area.setter
+    def tooltip_show_on_top_of_chart_box_area(self, value: Optional[bool]):
+        self._set_attr("tooltipShowOnTopOfChartBoxArea", value)
+
+    # tooltip_border_side
+    @property
+    def tooltip_border_side(self) -> Optional[BorderSide]:
+        return self.__tooltip_border_side
+
+    @tooltip_border_side.setter
+    def tooltip_border_side(self, value: Optional[BorderSide]):
+        self.__tooltip_border_side = value
 
     # on_chart_event
     @property

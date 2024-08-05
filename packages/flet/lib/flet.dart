@@ -38,7 +38,7 @@ export 'src/utils/others.dart';
 export 'src/utils/platform_utils_non_web.dart'
     if (dart.library.js) "src/utils/platform_utils_web.dart";
 export 'src/utils/responsive.dart';
-export 'src/utils/shadows.dart';
+export 'src/utils/box.dart';
 export 'src/utils/strings.dart';
 export 'src/utils/text.dart';
 export 'src/utils/textfield.dart';

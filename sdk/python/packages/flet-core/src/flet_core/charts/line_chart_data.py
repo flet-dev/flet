@@ -6,7 +6,7 @@ from flet_core.charts.line_chart_data_point import LineChartDataPoint
 from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
-from flet_core.shadow import BoxShadow
+from flet_core.box import BoxShadow
 
 
 class LineChartData(Control):

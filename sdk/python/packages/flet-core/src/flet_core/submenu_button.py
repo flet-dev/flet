@@ -1,5 +1,5 @@
 import time
-from typing import Any, List, Optional, Union, Sequence
+from typing import Any, Optional, Union, Sequence
 
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
