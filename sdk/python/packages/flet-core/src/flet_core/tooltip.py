@@ -5,9 +5,9 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.box import BoxShape
 from flet_core.types import (
     BorderRadiusValue,
-    BoxShape,
     MarginValue,
     PaddingValue,
     TextAlign,
@@ -139,7 +139,7 @@ class Tooltip(Control):
 
     # enable_feedback
     @property
-    def enable_feedback(self) -> Optional[bool]:
+    def enable_feedback(self) -> bool:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
 
     @enable_feedback.setter
@@ -148,7 +148,7 @@ class Tooltip(Control):
 
     # enable_tap_to_dismiss
     @property
-    def enable_tap_to_dismiss(self) -> Optional[bool]:
+    def enable_tap_to_dismiss(self) -> bool:
         return self._get_attr("enableTapToDismiss", data_type="bool", def_value=True)
 
     @enable_tap_to_dismiss.setter
@@ -157,7 +157,7 @@ class Tooltip(Control):
 
     # exclude_from_semantics
     @property
-    def exclude_from_semantics(self) -> Optional[bool]:
+    def exclude_from_semantics(self) -> bool:
         return self._get_attr("excludeFromSemantics", data_type="bool", def_value=False)
 
     @exclude_from_semantics.setter
@@ -258,7 +258,7 @@ class Tooltip(Control):
 
     # prefer_below
     @property
-    def prefer_below(self) -> Optional[bool]:
+    def prefer_below(self) -> bool:
         return self._get_attr("preferBelow", data_type="bool", def_value=False)
 
     @prefer_below.setter

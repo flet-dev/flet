@@ -18,6 +18,7 @@ from typing import (
     Dict,
     List,
     Optional,
+    Sequence,
     Tuple,
     Type,
     TypeVar,
@@ -75,8 +76,8 @@ from flet_core.types import (
     ScrollMode,
     ThemeMode,
     Wrapper,
-    OptionalEventCallable,
     WindowEventType,
+    OptionalControlEventCallable,
 )
 from flet_core.utils import classproperty, deprecated
 from flet_core.utils.concurrency_utils import is_pyodide
@@ -247,8 +248,8 @@ class Window:
 
     # opacity
     @property
-    def opacity(self) -> OptionalNumber:
-        return self.page._get_attr("windowOpacity", data_type="float", def_value=1)
+    def opacity(self) -> float:
+        return self.page._get_attr("windowOpacity", data_type="float", def_value=1.0)
 
     @opacity.setter
     def opacity(self, value: OptionalNumber):
@@ -256,7 +257,7 @@ class Window:
 
     # maximized
     @property
-    def maximized(self) -> Optional[bool]:
+    def maximized(self) -> bool:
         return self.page._get_attr("windowMaximized", data_type="bool", def_value=False)
 
     @maximized.setter
@@ -265,7 +266,7 @@ class Window:
 
     # minimized
     @property
-    def minimized(self) -> Optional[bool]:
+    def minimized(self) -> bool:
         return self.page._get_attr("windowMinimized", data_type="bool", def_value=False)
 
     @minimized.setter
@@ -274,7 +275,7 @@ class Window:
 
     # minimizable
     @property
-    def minimizable(self) -> Optional[bool]:
+    def minimizable(self) -> bool:
         return self.page._get_attr(
             "windowMinimizable", data_type="bool", def_value=True
         )
@@ -285,7 +286,7 @@ class Window:
 
     # maximizable
     @property
-    def maximizable(self) -> Optional[bool]:
+    def maximizable(self) -> bool:
         return self.page._get_attr(
             "windowMaximizable", data_type="bool", def_value=True
         )
@@ -296,7 +297,7 @@ class Window:
 
     # resizable
     @property
-    def resizable(self) -> Optional[bool]:
+    def resizable(self) -> bool:
         return self.page._get_attr("windowResizable", data_type="bool", def_value=True)
 
     @resizable.setter
@@ -305,7 +306,7 @@ class Window:
 
     # movable
     @property
-    def movable(self) -> Optional[bool]:
+    def movable(self) -> bool:
         return self.page._get_attr("windowMovable", data_type="bool", def_value=True)
 
     @movable.setter
@@ -314,7 +315,7 @@ class Window:
 
     # full_screen
     @property
-    def full_screen(self) -> Optional[bool]:
+    def full_screen(self) -> bool:
         return self.page._get_attr(
             "windowFullScreen", data_type="bool", def_value=False
         )
@@ -325,7 +326,7 @@ class Window:
 
     # always_on_top
     @property
-    def always_on_top(self) -> Optional[bool]:
+    def always_on_top(self) -> bool:
         return self.page._get_attr(
             "windowAlwaysOnTop", data_type="bool", def_value=False
         )
@@ -336,7 +337,7 @@ class Window:
 
     # prevent_close
     @property
-    def prevent_close(self) -> Optional[bool]:
+    def prevent_close(self) -> bool:
         return self.page._get_attr(
             "windowPreventClose", data_type="bool", def_value=False
         )
@@ -347,7 +348,7 @@ class Window:
 
     # title_bar_hidden
     @property
-    def title_bar_hidden(self) -> Optional[bool]:
+    def title_bar_hidden(self) -> bool:
         return self.page._get_attr(
             "windowTitleBarHidden", data_type="bool", def_value=False
         )
@@ -358,7 +359,7 @@ class Window:
 
     # title_bar_buttons_hidden
     @property
-    def title_bar_buttons_hidden(self) -> Optional[bool]:
+    def title_bar_buttons_hidden(self) -> bool:
         return self.page._get_attr(
             "windowTitleBarButtonsHidden", data_type="bool", def_value=False
         )
@@ -369,7 +370,7 @@ class Window:
 
     # skip_task_bar
     @property
-    def skip_task_bar(self) -> Optional[bool]:
+    def skip_task_bar(self) -> bool:
         return self.page._get_attr(
             "windowSkipTaskBar", data_type="bool", def_value=False
         )
@@ -380,7 +381,7 @@ class Window:
 
     # frameless
     @property
-    def frameless(self) -> Optional[bool]:
+    def frameless(self) -> bool:
         return self.page._get_attr("windowFrameless", data_type="bool", def_value=False)
 
     @frameless.setter
@@ -398,7 +399,7 @@ class Window:
 
     # focused
     @property
-    def focused(self) -> Optional[bool]:
+    def focused(self) -> bool:
         return self.page._get_attr("windowFocused", data_type="bool", def_value=True)
 
     @focused.setter
@@ -407,8 +408,8 @@ class Window:
 
     # visible
     @property
-    def visible(self) -> Optional[bool]:
-        return self.page._get_attr("windowVisible", data_type="bool")
+    def visible(self) -> bool:
+        return self.page._get_attr("windowVisible", data_type="bool", def_value=True)
 
     @visible.setter
     def visible(self, value: Optional[bool]):
@@ -416,7 +417,7 @@ class Window:
 
     # always_on_bottom
     @property
-    def always_on_bottom(self) -> Optional[bool]:
+    def always_on_bottom(self) -> bool:
         return self.page._get_attr(
             "windowAlwaysOnBottom", data_type="bool", def_value=False
         )
@@ -427,7 +428,7 @@ class Window:
 
     # wait_until_ready_to_show
     @property
-    def wait_until_ready_to_show(self) -> Optional[bool]:
+    def wait_until_ready_to_show(self) -> bool:
         return self.page._get_attr(
             "windowWaitUntilReadyToShow", data_type="bool", def_value=False
         )
@@ -438,7 +439,7 @@ class Window:
 
     # shadow
     @property
-    def shadow(self) -> Optional[bool]:
+    def shadow(self) -> bool:
         return self.page._get_attr("windowShadow", data_type="bool", def_value=False)
 
     @shadow.setter
@@ -495,7 +496,10 @@ class Window:
         return self.__on_event
 
     @on_event.setter
-    def on_event(self, handler: "Optional[Callable[[WindowEvent], None]]"):
+    def on_event(
+        self,
+        handler: "Optional[Callable[[WindowEvent], Union[None, Coroutine[None, None, None]]]]",
+    ):
         self.__on_event.subscribe(handler)
 
 
@@ -1116,7 +1120,7 @@ class Page(AdaptiveControl):
     async def __on_authorize_async(self, e) -> None:
         assert self.__authorization
         d = json.loads(e.data)
-        state = d["state"]
+        state = d.get("state")
         assert state == self.__authorization.state
 
         if not self.web:
@@ -1129,8 +1133,8 @@ class Page(AdaptiveControl):
 
                 self.window_to_front()
         login_evt = LoginEvent(
-            error=d["error"],
-            error_description=d["error_description"],
+            error=d.get("error"),
+            error_description=d.get("error_description"),
             page=self,
             control=self,
             target="page",
@@ -1140,7 +1144,7 @@ class Page(AdaptiveControl):
         if not login_evt.error:
             # perform token request
 
-            code = d["code"]
+            code = d.get("code")
             assert code not in [None, ""]
             try:
                 await self.__authorization.request_token_async(code)
@@ -1853,8 +1857,8 @@ class Page(AdaptiveControl):
         return self.__default_view.controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]):
-        self.__default_view.controls = value if value is not None else []
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__default_view.controls = list(value) if value is not None else []
 
     # appbar
     @property
@@ -1992,7 +1996,7 @@ class Page(AdaptiveControl):
 
     # auto_scroll
     @property
-    def auto_scroll(self) -> Optional[bool]:
+    def auto_scroll(self) -> bool:
         return self.__default_view.auto_scroll
 
     @auto_scroll.setter
@@ -2125,8 +2129,8 @@ class Page(AdaptiveControl):
 
     # rtl
     @property
-    def rtl(self) -> Optional[bool]:
-        return self._get_attr("rtl")
+    def rtl(self) -> bool:
+        return self._get_attr("rtl", data_type="bool", def_value=False)
 
     @rtl.setter
     def rtl(self, value: Optional[bool]):
@@ -2134,8 +2138,10 @@ class Page(AdaptiveControl):
 
     # show_semantics_debugger
     @property
-    def show_semantics_debugger(self) -> Optional[bool]:
-        return self._get_attr("showSemanticsDebugger")
+    def show_semantics_debugger(self) -> bool:
+        return self._get_attr(
+            "showSemanticsDebugger", data_type="bool", def_value=False
+        )
 
     @show_semantics_debugger.setter
     def show_semantics_debugger(self, value: Optional[bool]):
@@ -2735,7 +2741,7 @@ class Page(AdaptiveControl):
         return self.__on_close
 
     @on_close.setter
-    def on_close(self, handler: OptionalEventCallable):
+    def on_close(self, handler: OptionalControlEventCallable):
         self.__on_close.subscribe(handler)
 
     # on_resize
@@ -2773,7 +2779,7 @@ class Page(AdaptiveControl):
         return self.__on_platform_brightness_change
 
     @on_platform_brightness_change.setter
-    def on_platform_brightness_change(self, handler: OptionalEventCallable):
+    def on_platform_brightness_change(self, handler: OptionalControlEventCallable):
         self.__on_platform_brightness_change.subscribe(handler)
 
     # on_app_lifecycle_change
@@ -2850,7 +2856,7 @@ class Page(AdaptiveControl):
         return self.__on_connect
 
     @on_connect.setter
-    def on_connect(self, handler: OptionalEventCallable):
+    def on_connect(self, handler: OptionalControlEventCallable):
         self.__on_connect.subscribe(handler)
 
     # on_disconnect
@@ -2859,7 +2865,7 @@ class Page(AdaptiveControl):
         return self.__on_disconnect
 
     @on_disconnect.setter
-    def on_disconnect(self, handler: OptionalEventCallable):
+    def on_disconnect(self, handler: OptionalControlEventCallable):
         self.__on_disconnect.subscribe(handler)
 
     # on_login
@@ -2877,7 +2883,7 @@ class Page(AdaptiveControl):
         return self.__on_logout
 
     @on_logout.setter
-    def on_logout(self, handler: OptionalEventCallable):
+    def on_logout(self, handler: OptionalControlEventCallable):
         self.__on_logout.subscribe(handler)
 
     # on_error
@@ -2886,7 +2892,7 @@ class Page(AdaptiveControl):
         return self.__on_error
 
     @on_error.setter
-    def on_error(self, handler: OptionalEventCallable):
+    def on_error(self, handler: OptionalControlEventCallable):
         self.__on_error.subscribe(handler)
 
     # on_scroll

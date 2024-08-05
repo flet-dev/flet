@@ -54,7 +54,7 @@ class CircleMarker(Control):
 
     # use_radius_in_meter
     @property
-    def use_radius_in_meter(self) -> Optional[bool]:
+    def use_radius_in_meter(self) -> bool:
         return self._get_attr("useRadiusInMeter", data_type="bool", def_value=False)
 
     @use_radius_in_meter.setter

@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union, Callable
+from typing import Any, List, Optional, Union, Callable, Sequence
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
@@ -61,7 +61,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     def __init__(
         self,
-        controls: Optional[List[Control]] = None,
+        controls: Optional[Sequence[Control]] = None,
         alignment: Optional[MainAxisAlignment] = None,
         vertical_alignment: Optional[CrossAxisAlignment] = None,
         spacing: OptionalNumber = None,
@@ -180,7 +180,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     # tight
     @property
-    def tight(self) -> Optional[bool]:
+    def tight(self) -> bool:
         return self._get_attr("tight", data_type="bool", def_value=False)
 
     @tight.setter
@@ -218,7 +218,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     # wrap
     @property
-    def wrap(self) -> Optional[bool]:
+    def wrap(self) -> bool:
         return self._get_attr("wrap", data_type="bool", def_value=False)
 
     @wrap.setter
@@ -240,5 +240,5 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]):
-        self.__controls = value if value else []
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list(value) if value else []

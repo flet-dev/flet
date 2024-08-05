@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+from enum import Enum
 from typing import Any, List, Optional, Union
 from warnings import warn
 
@@ -21,6 +23,25 @@ try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
+
+
+class TextAffinity(Enum):
+    UPSTREAM = "upstream"
+    DOWNSTREAM = "downstream"
+
+
+@dataclass
+class TextSelection:
+    start: Optional[int] = None
+    end: Optional[int] = None
+    selection: Optional[str] = None
+    base_offset: Optional[int] = None
+    extent_offset: Optional[int] = None
+    affinity: Optional[TextAffinity] = None
+    directional: Optional[bool] = None
+    collapsed: Optional[bool] = None
+    valid: Optional[bool] = None
+    normalized: Optional[bool] = None
 
 
 class Text(ConstrainedControl):
@@ -250,7 +271,7 @@ class Text(ConstrainedControl):
 
     # italic
     @property
-    def italic(self) -> Optional[bool]:
+    def italic(self) -> bool:
         return self._get_attr("italic", data_type="bool", def_value=False)
 
     @italic.setter
@@ -259,7 +280,7 @@ class Text(ConstrainedControl):
 
     # no_wrap
     @property
-    def no_wrap(self) -> Optional[bool]:
+    def no_wrap(self) -> bool:
         return self._get_attr("italic", data_type="noWrap", def_value=False)
 
     @no_wrap.setter
@@ -268,7 +289,7 @@ class Text(ConstrainedControl):
 
     # selectable
     @property
-    def selectable(self) -> Optional[bool]:
+    def selectable(self) -> bool:
         return self._get_attr("selectable", data_type="bool", def_value=False)
 
     @selectable.setter

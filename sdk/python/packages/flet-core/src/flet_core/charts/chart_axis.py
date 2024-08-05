@@ -71,7 +71,7 @@ class ChartAxis(Control):
 
     # show_labels
     @property
-    def show_labels(self) -> Optional[bool]:
+    def show_labels(self) -> bool:
         return self._get_attr("showLabels", data_type="bool", def_value=True)
 
     @show_labels.setter
@@ -89,7 +89,7 @@ class ChartAxis(Control):
 
     # labels_interval
     @property
-    def labels_interval(self) -> OptionalNumber:
+    def labels_interval(self) -> float:
         return self._get_attr("labelsInterval", data_type="float", def_value=1.0)
 
     @labels_interval.setter

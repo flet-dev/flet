@@ -1,6 +1,5 @@
 import json
-from dataclasses import dataclass
-from typing import Any, List, Optional, Union, Callable
+from typing import Any, List, Optional, Union
 
 from flet_core.canvas.shape import Shape
 from flet_core.constrained_control import ConstrainedControl
@@ -146,15 +145,14 @@ class Canvas(ConstrainedControl):
         return self.__on_resize
 
     @on_resize.setter
-    def on_resize(self, handler: Optional[Callable[["CanvasResizeEvent"], None]]):
+    def on_resize(self, handler: OptionalEventCallable["CanvasResizeEvent"]):
         self.__on_resize.subscribe(handler)
         self._set_attr("onresize", True if handler is not None else None)
 
 
-@dataclass
 class CanvasResizeEvent(ControlEvent):
     def __init__(self, e: ControlEvent) -> None:
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.width: float = d["w"]
-        self.height: float = d["h"]
+        self.width: float = d.get("w")
+        self.height: float = d.get("h")

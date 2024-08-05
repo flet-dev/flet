@@ -1,24 +1,28 @@
 import json
-from dataclasses import dataclass, field
-from typing import Any, List, Optional, Tuple, Union, Callable
+import warnings
+from typing import Any, List, Optional, Tuple, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
 from flet_core.blur import Blur
 from flet_core.border import Border
+from flet_core.box import (
+    BoxShadow,
+    BoxShape,
+    ColorFilter,
+    DecorationImage,
+)
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
-from flet_core.shadow import BoxShadow
 from flet_core.theme import Theme
 from flet_core.types import (
     AnimationValue,
     BlendMode,
     BorderRadiusValue,
-    BoxShape,
     ClipBehavior,
     ImageFit,
     ImageRepeat,
@@ -31,13 +35,8 @@ from flet_core.types import (
     ThemeMode,
     UrlTarget,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
-
-
-@dataclass
-class ColorFilter:
-    color: Optional[str] = field(default=None)
-    blend_mode: Optional[BlendMode] = field(default=None)
 
 
 class Container(ConstrainedControl, AdaptiveControl):
@@ -86,6 +85,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         shape: Optional[BoxShape] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         ink: Optional[bool] = None,
+        image: Optional[DecorationImage] = None,
         ink_color: Optional[str] = None,
         animate: AnimationValue = None,
         blur: Union[
@@ -97,10 +97,10 @@ class Container(ConstrainedControl, AdaptiveControl):
         theme: Optional[Theme] = None,
         theme_mode: Optional[ThemeMode] = None,
         color_filter: Optional[ColorFilter] = None,
-        on_click: OptionalEventCallable = None,
-        on_tap_down: Optional[Callable[["ContainerTapEvent"], None]] = None,
-        on_long_press: OptionalEventCallable = None,
-        on_hover: OptionalEventCallable = None,
+        on_click: OptionalControlEventCallable = None,
+        on_tap_down: OptionalEventCallable["ContainerTapEvent"] = None,
+        on_long_press: OptionalControlEventCallable = None,
+        on_hover: OptionalControlEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -126,7 +126,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -201,6 +201,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.on_tap_down = on_tap_down
         self.on_long_press = on_long_press
         self.on_hover = on_hover
+        self.image = image
 
     def _get_control_name(self):
         return "container"
@@ -218,6 +219,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("shadow", self.__shadow if self.__shadow else None)
         self._set_attr_json("theme", self.__theme)
         self._set_attr_json("colorFilter", self.__color_filter)
+        self._set_attr_json("image", self.__image)
 
     def _get_children(self):
         children = []
@@ -248,6 +250,15 @@ class Container(ConstrainedControl, AdaptiveControl):
     @padding.setter
     def padding(self, value: PaddingValue):
         self.__padding = value
+
+    # image
+    @property
+    def image(self) -> Optional[DecorationImage]:
+        return self.__image
+
+    @image.setter
+    def image(self, value: Optional[DecorationImage]):
+        self.__image = value
 
     # margin
     @property
@@ -343,49 +354,114 @@ class Container(ConstrainedControl, AdaptiveControl):
     # image_src
     @property
     def image_src(self) -> Optional[str]:
+        warnings.warn(
+            f"image_src is deprecated since version 0.24.0 "
+            f"and will be removed in version 0.27.0. Use Container.image.src instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
         return self._get_attr("imageSrc")
 
     @image_src.setter
     def image_src(self, value: Optional[str]):
         self._set_attr("imageSrc", value)
+        if value is not None:
+            warnings.warn(
+                f"image_src is deprecated since version 0.24.0 "
+                f"and will be removed in version 0.27.0. Use Container.image.src instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
 
     # image_src_base64
     @property
     def image_src_base64(self) -> Optional[str]:
+        warnings.warn(
+            f"image_src_base64 is deprecated since version 0.24.0 "
+            f"and will be removed in version 0.27.0. Use Container.image.src_base64 instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
         return self._get_attr("imageSrcBase64")
 
     @image_src_base64.setter
     def image_src_base64(self, value: Optional[str]):
         self._set_attr("imageSrcBase64", value)
+        if value is not None:
+            warnings.warn(
+                f"image_src_base64 is deprecated since version 0.24.0 "
+                f"and will be removed in version 0.27.0. Use Container.image.src_base64 instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
 
     # image_fit
     @property
     def image_fit(self) -> Optional[ImageFit]:
+        warnings.warn(
+            f"image_fit is deprecated since version 0.24.0 "
+            f"and will be removed in version 0.27.0. Use Container.image.fit instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
         return self.__image_fit
 
     @image_fit.setter
     def image_fit(self, value: Optional[ImageFit]):
         self.__image_fit = value
         self._set_enum_attr("imageFit", value, ImageFit)
+        if value is not None:
+            warnings.warn(
+                f"image_fit is deprecated since version 0.24.0 "
+                f"and will be removed in version 0.27.0. Use Container.image.fit instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
 
     # image_repeat
     @property
     def image_repeat(self) -> Optional[ImageRepeat]:
+        warnings.warn(
+            f"image_repeat is deprecated since version 0.24.0 "
+            f"and will be removed in version 0.27.0. Use Container.image.repeat instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
         return self.__image_repeat
 
     @image_repeat.setter
     def image_repeat(self, value: Optional[ImageRepeat]):
         self.__image_repeat = value
         self._set_enum_attr("imageRepeat", value, ImageRepeat)
+        if value is not None:
+            warnings.warn(
+                f"image_repeat is deprecated since version 0.24.0 "
+                f"and will be removed in version 0.27.0. Use Container.image.repeat instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
 
     # image_opacity
     @property
-    def image_opacity(self) -> OptionalNumber:
+    def image_opacity(self) -> float:
+        warnings.warn(
+            f"image_opacity is deprecated since version 0.24.0 "
+            f"and will be removed in version 0.27.0. Use Container.image.opacity instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
         return self._get_attr("imageOpacity", data_type="float", def_value=1.0)
 
     @image_opacity.setter
     def image_opacity(self, value: OptionalNumber):
         self._set_attr("imageOpacity", value)
+        if value is not None:
+            warnings.warn(
+                f"image_opacity is deprecated since version 0.24.0 "
+                f"and will be removed in version 0.27.0. Use Container.image.opacity instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
 
     # content
     @property
@@ -418,7 +494,7 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # ink
     @property
-    def ink(self) -> Optional[bool]:
+    def ink(self) -> bool:
         return self._get_attr("ink", data_type="bool", def_value=False)
 
     @ink.setter
@@ -487,7 +563,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler: OptionalEventCallable):
+    def on_click(self, handler: OptionalControlEventCallable):
         self._add_event_handler("click", handler)
         self._set_attr("onClick", True if handler is not None else None)
 
@@ -497,7 +573,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         return self.__on_tap_down
 
     @on_tap_down.setter
-    def on_tap_down(self, handler: Optional[Callable[["ContainerTapEvent"], None]]):
+    def on_tap_down(self, handler: OptionalEventCallable["ContainerTapEvent"]):
         self.__on_tap_down.subscribe(handler)
         self._set_attr("onTapDown", True if handler is not None else None)
 
@@ -507,7 +583,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler: OptionalEventCallable):
+    def on_long_press(self, handler: OptionalControlEventCallable):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
@@ -517,7 +593,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("hover")
 
     @on_hover.setter
-    def on_hover(self, handler: OptionalEventCallable):
+    def on_hover(self, handler: OptionalControlEventCallable):
         self._add_event_handler("hover", handler)
         self._set_attr("onHover", True if handler is not None else None)
 
@@ -526,7 +602,7 @@ class ContainerTapEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.local_x: float = d["lx"]
-        self.local_y: float = d["ly"]
-        self.global_x: float = d["gx"]
-        self.global_y: float = d["gy"]
+        self.local_x: float = d.get("lx")
+        self.local_y: float = d.get("ly")
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")

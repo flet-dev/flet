@@ -14,6 +14,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -175,8 +176,8 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     # value
     @property
-    def value(self) -> OptionalNumber:
-        return self._get_attr("value", data_type="float", def_value=self.min or 0)
+    def value(self) -> float:
+        return self._get_attr("value", data_type="float", def_value=self.min or 0.0)
 
     @value.setter
     def value(self, value: OptionalNumber):
@@ -203,8 +204,8 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     # min
     @property
-    def min(self) -> OptionalNumber:
-        return self._get_attr("min", data_type="float", def_value=0)
+    def min(self) -> float:
+        return self._get_attr("min", data_type="float", def_value=0.0)
 
     @min.setter
     def min(self, value: OptionalNumber):
@@ -239,8 +240,8 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     # max
     @property
-    def max(self) -> OptionalNumber:
-        return self._get_attr("max", data_type="float", def_value=1)
+    def max(self) -> float:
+        return self._get_attr("max", data_type="float", def_value=1.0)
 
     @max.setter
     def max(self, value: OptionalNumber):
@@ -257,7 +258,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     # round
     @property
-    def round(self) -> Optional[int]:
+    def round(self) -> int:
         return self._get_attr("round", data_type="int", def_value=0)
 
     @round.setter
@@ -275,7 +276,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
@@ -311,45 +312,45 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallable:
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallable):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
 
     # on_change_start
     @property
-    def on_change_start(self) -> OptionalEventCallable:
+    def on_change_start(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change_start")
 
     @on_change_start.setter
-    def on_change_start(self, handler: OptionalEventCallable):
+    def on_change_start(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change_start", handler)
 
     # on_change_end
     @property
-    def on_change_end(self) -> OptionalEventCallable:
+    def on_change_end(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change_end")
 
     @on_change_end.setter
-    def on_change_end(self, handler: OptionalEventCallable):
+    def on_change_end(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change_end", handler)
 
     # on_focus
     @property
-    def on_focus(self) -> OptionalEventCallable:
+    def on_focus(self) -> OptionalControlEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler: OptionalEventCallable):
+    def on_focus(self, handler: OptionalControlEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self) -> OptionalEventCallable:
+    def on_blur(self) -> OptionalControlEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler: OptionalEventCallable):
+    def on_blur(self, handler: OptionalControlEventCallable):
         self._add_event_handler("blur", handler)

@@ -1,7 +1,8 @@
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
+from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
@@ -13,45 +14,27 @@ from flet_core.types import (
 )
 
 
-class WindowDragArea(ConstrainedControl):
+class Placeholder(ConstrainedControl):
     """
-    A control for drag to move, maximize and restore application window.
-
-    When you have hidden the title bar with `page.window_title_bar_hidden`, you can add this control to move the window position.
-
-    Example:
-    ```
-    import flet as ft
-
-    def main(page: ft.Page):
-        page.window_title_bar_hidden = True
-        page.window_title_bar_buttons_hidden = True
-
-        page.add(
-            ft.Row(
-                [
-                    ft.WindowDragArea(ft.Container(ft.Text("Drag this area to move, maximize and restore application window."), bgcolor=ft.colors.AMBER_300, padding=10), expand=True),
-                    ft.IconButton(ft.icons.CLOSE, on_click=lambda _: page.window_close())
-                ]
-            )
-        )
-
-    ft.app(target=main)
-    ```
+    A placeholder box.
 
     -----
 
-    Online docs: https://flet.dev/docs/controls/windowdragarea
+    Online docs: https://flet.dev/docs/controls/placeholder
     """
 
     def __init__(
         self,
-        content: Control,
-        maximizable: Optional[bool] = None,
+        content: Optional[Control] = None,
+        color: Optional[str] = None,
+        fallback_height: OptionalNumber = None,
+        fallback_width: OptionalNumber = None,
+        stroke_width: OptionalNumber = None,
         #
         # ConstrainedControl
         #
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -77,10 +60,12 @@ class WindowDragArea(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,
@@ -106,36 +91,64 @@ class WindowDragArea(ConstrainedControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
         )
 
         self.content = content
-        self.maximizable = maximizable
+        self.color = color
+        self.fallback_height = fallback_height
+        self.fallback_width = fallback_width
+        self.stroke_width = stroke_width
 
     def _get_control_name(self):
-        return "windowDragArea"
+        return "placeholder"
 
     def _get_children(self):
-        self.__content._set_attr_internal("n", "content")
-        return [self.__content]
+        return [self.content] if self.content is not None else []
 
-    def before_update(self):
-        super().before_update()
-        assert self.__content.visible, "content must be visible"
+    # fallback_height
+    @property
+    def fallback_height(self) -> float:
+        return self._get_attr("fallbackHeight", data_type="float", def_value=400.0)
+
+    @fallback_height.setter
+    def fallback_height(self, value: OptionalNumber):
+        assert value is None or value >= 0, "fallback_height cannot be negative"
+        self._set_attr("fallbackHeight", value)
+
+    # fallback_width
+    @property
+    def fallback_width(self) -> float:
+        return self._get_attr("fallbackWidth", data_type="float", def_value=400.0)
+
+    @fallback_width.setter
+    def fallback_width(self, value: OptionalNumber):
+        assert value is None or value >= 0, "fallback_width cannot be negative"
+        self._set_attr("fallbackWidth", value)
+
+    # stroke_width
+    @property
+    def stroke_width(self) -> float:
+        return self._get_attr("strokeWidth", data_type="float", def_value=2.0)
+
+    @stroke_width.setter
+    def stroke_width(self, value: OptionalNumber):
+        self._set_attr("strokeWidth", value)
+
+    # color
+    @property
+    def color(self) -> str:
+        return self._get_attr("color", def_value="bluegrey700")
+
+    @color.setter
+    def color(self, value: Optional[str]):
+        self._set_attr("color", value)
 
     # content
     @property
-    def content(self) -> Control:
+    def content(self) -> Optional[Control]:
         return self.__content
 
     @content.setter
-    def content(self, value: Control):
+    def content(self, value: Optional[Control]):
         self.__content = value
-
-    # maximizable
-    @property
-    def maximizable(self) -> bool:
-        return self._get_attr("maximizable", data_type="bool", def_value=True)
-
-    @maximizable.setter
-    def maximizable(self, value: Optional[bool]):
-        self._set_attr("maximizable", value)

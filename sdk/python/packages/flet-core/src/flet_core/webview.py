@@ -10,6 +10,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -193,27 +194,27 @@ class WebView(ConstrainedControl):
 
     # on_page_started
     @property
-    def on_page_started(self) -> OptionalEventCallable:
+    def on_page_started(self) -> OptionalControlEventCallable:
         return self._get_event_handler("page_started")
 
     @on_page_started.setter
-    def on_page_started(self, handler: OptionalEventCallable):
+    def on_page_started(self, handler: OptionalControlEventCallable):
         self._add_event_handler("page_started", handler)
 
     # on_page_ended
     @property
-    def on_page_ended(self) -> OptionalEventCallable:
+    def on_page_ended(self) -> OptionalControlEventCallable:
         return self._get_event_handler("page_ended")
 
     @on_page_ended.setter
-    def on_page_ended(self, handler: OptionalEventCallable):
+    def on_page_ended(self, handler: OptionalControlEventCallable):
         self._add_event_handler("page_ended", handler)
 
     # on_web_resource_error
     @property
-    def on_web_resource_error(self) -> OptionalEventCallable:
+    def on_web_resource_error(self) -> OptionalControlEventCallable:
         return self._get_event_handler("web_resource_error")
 
     @on_web_resource_error.setter
-    def on_web_resource_error(self, handler: OptionalEventCallable):
+    def on_web_resource_error(self, handler: OptionalControlEventCallable):
         self._add_event_handler("web_resource_error", handler)

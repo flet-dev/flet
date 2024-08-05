@@ -40,7 +40,7 @@ class ChartAxisLabel(Control):
 
     # value
     @property
-    def value(self) -> OptionalNumber:
+    def value(self) -> float:
         return self._get_attr("value", data_type="float", def_value=1.0)
 
     @value.setter

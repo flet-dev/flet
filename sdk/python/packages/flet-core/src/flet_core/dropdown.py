@@ -15,6 +15,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -110,11 +111,11 @@ class Option(Control):
 
     # on_click
     @property
-    def on_click(self) -> OptionalEventCallable:
+    def on_click(self) -> OptionalControlEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler: OptionalEventCallable):
+    def on_click(self, handler: OptionalControlEventCallable):
         self._add_event_handler("click", handler)
 
 
@@ -197,6 +198,7 @@ class Dropdown(FormFieldControl):
         hint_style: Optional[TextStyle] = None,
         helper_text: Optional[str] = None,
         helper_style: Optional[TextStyle] = None,
+        counter: Optional[Control] = None,
         counter_text: Optional[str] = None,
         counter_style: Optional[TextStyle] = None,
         error_text: Optional[str] = None,
@@ -287,6 +289,7 @@ class Dropdown(FormFieldControl):
             hint_style=hint_style,
             helper_text=helper_text,
             helper_style=helper_style,
+            counter=counter,
             counter_text=counter_text,
             counter_style=counter_style,
             error_text=error_text,
@@ -436,7 +439,7 @@ class Dropdown(FormFieldControl):
 
     # icon_size
     @property
-    def icon_size(self) -> OptionalNumber:
+    def icon_size(self) -> float:
         return self._get_attr("iconSize", data_type="float", def_value=24.0)
 
     @icon_size.setter
@@ -454,7 +457,7 @@ class Dropdown(FormFieldControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
@@ -463,7 +466,7 @@ class Dropdown(FormFieldControl):
 
     # enable_feedback
     @property
-    def enable_feedback(self) -> Optional[bool]:
+    def enable_feedback(self) -> bool:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
 
     @enable_feedback.setter
@@ -472,8 +475,8 @@ class Dropdown(FormFieldControl):
 
     # elevation
     @property
-    def elevation(self) -> OptionalNumber:
-        return self._get_attr("elevation", data_type="float", def_value=8)
+    def elevation(self) -> float:
+        return self._get_attr("elevation", data_type="float", def_value=8.0)
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
@@ -490,36 +493,36 @@ class Dropdown(FormFieldControl):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallable:
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallable):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
 
     # on_focus
     @property
-    def on_focus(self) -> OptionalEventCallable:
+    def on_focus(self) -> OptionalControlEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler: OptionalEventCallable):
+    def on_focus(self, handler: OptionalControlEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self) -> OptionalEventCallable:
+    def on_blur(self) -> OptionalControlEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler: OptionalEventCallable):
+    def on_blur(self, handler: OptionalControlEventCallable):
         self._add_event_handler("blur", handler)
 
     # on_click
     @property
-    def on_click(self) -> OptionalEventCallable:
+    def on_click(self) -> OptionalControlEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler: OptionalEventCallable):
+    def on_click(self, handler: OptionalControlEventCallable):
         self._add_event_handler("click", handler)

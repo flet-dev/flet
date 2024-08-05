@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional, Union, Sequence
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
@@ -51,7 +51,7 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
-        controls: Optional[List[Control]] = None,
+        controls: Optional[Sequence[Control]] = None,
         columns: Optional[ResponsiveNumber] = None,
         alignment: Optional[MainAxisAlignment] = None,
         vertical_alignment: Optional[CrossAxisAlignment] = None,
@@ -209,5 +209,5 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value):
-        self.__controls = value if value is not None else []
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list(value) if value is not None else []

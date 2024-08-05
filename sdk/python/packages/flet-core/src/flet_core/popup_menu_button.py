@@ -16,6 +16,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -66,8 +67,8 @@ class PopupMenuItem(Control):
 
     # checked
     @property
-    def checked(self) -> Optional[bool]:
-        return self._get_attr("checked", data_type="bool")
+    def checked(self) -> bool:
+        return self._get_attr("checked", data_type="bool", def_value=False)
 
     @checked.setter
     def checked(self, value: Optional[bool]):
@@ -102,8 +103,8 @@ class PopupMenuItem(Control):
 
     # height
     @property
-    def height(self) -> OptionalNumber:
-        return self._get_attr("height", data_type="float", def_value=48)
+    def height(self) -> float:
+        return self._get_attr("height", data_type="float", def_value=48.0)
 
     @height.setter
     def height(self, value: OptionalNumber):
@@ -129,11 +130,11 @@ class PopupMenuItem(Control):
 
     # on_click
     @property
-    def on_click(self) -> OptionalEventCallable:
+    def on_click(self) -> OptionalControlEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler: OptionalEventCallable):
+    def on_click(self, handler: OptionalControlEventCallable):
         self._add_event_handler("click", handler)
 
 
@@ -379,7 +380,7 @@ class PopupMenuButton(ConstrainedControl):
 
     # enable_feedback
     @property
-    def enable_feedback(self) -> Optional[bool]:
+    def enable_feedback(self) -> bool:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
 
     @enable_feedback.setter
@@ -388,8 +389,8 @@ class PopupMenuButton(ConstrainedControl):
 
     # elevation
     @property
-    def elevation(self) -> OptionalNumber:
-        return self._get_attr("elevation", data_type="float", def_value=8)
+    def elevation(self) -> float:
+        return self._get_attr("elevation", data_type="float", def_value=8.0)
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
@@ -435,16 +436,16 @@ class PopupMenuButton(ConstrainedControl):
 
     # on_cancel
     @property
-    def on_cancel(self) -> OptionalEventCallable:
+    def on_cancel(self) -> OptionalControlEventCallable:
         return self._get_event_handler("cancel")
 
     @on_cancel.setter
-    def on_cancel(self, handler: OptionalEventCallable):
+    def on_cancel(self, handler: OptionalControlEventCallable):
         self._add_event_handler("cancel", handler)
 
     # on_cancelled
     @property
-    def on_cancelled(self) -> OptionalEventCallable:
+    def on_cancelled(self) -> OptionalControlEventCallable:
         warnings.warn(
             f"on_cancelled is deprecated/renamed since version 0.22.0 "
             f"and will be removed in version 0.26.0. Use on_cancel instead.",
@@ -454,7 +455,7 @@ class PopupMenuButton(ConstrainedControl):
         return self._get_event_handler("cancelled")
 
     @on_cancelled.setter
-    def on_cancelled(self, handler: OptionalEventCallable):
+    def on_cancelled(self, handler: OptionalControlEventCallable):
         self._add_event_handler("cancelled", handler)
         if handler is not None:
             warnings.warn(
@@ -466,9 +467,9 @@ class PopupMenuButton(ConstrainedControl):
 
     # on_open
     @property
-    def on_open(self) -> OptionalEventCallable:
+    def on_open(self) -> OptionalControlEventCallable:
         return self._get_event_handler("open")
 
     @on_open.setter
-    def on_open(self, handler: OptionalEventCallable):
+    def on_open(self, handler: OptionalControlEventCallable):
         self._add_event_handler("open", handler)
