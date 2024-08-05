@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+from enum import Enum
 from typing import Any, List, Optional, Union
 from warnings import warn
 
@@ -21,6 +23,25 @@ try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
+
+
+class TextAffinity(Enum):
+    UPSTREAM = "upstream"
+    DOWNSTREAM = "downstream"
+
+
+@dataclass
+class TextSelection:
+    start: Optional[int] = None
+    end: Optional[int] = None
+    selection: Optional[str] = None
+    base_offset: Optional[int] = None
+    extent_offset: Optional[int] = None
+    affinity: Optional[TextAffinity] = None
+    directional: Optional[bool] = None
+    collapsed: Optional[bool] = None
+    valid: Optional[bool] = None
+    normalized: Optional[bool] = None
 
 
 class Text(ConstrainedControl):

@@ -2,9 +2,9 @@ from dataclasses import dataclass, field
 from enum import Enum, IntFlag
 from typing import List, Optional, Union
 
+from flet_core.box import BoxShadow
 from flet_core.control import OptionalNumber
 from flet_core.painting import Paint
-from flet_core.shadow import BoxShadow
 from flet_core.types import FontWeight
 
 

@@ -13,10 +13,21 @@ import '../models/control.dart';
 import '../utils/animations.dart';
 import '../utils/borders.dart';
 import '../utils/charts.dart';
+import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/text.dart';
 import 'charts.dart';
 import 'create_control.dart';
+
+TooltipDirection? parseTooltipDirection(String? value,
+    [TooltipDirection? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return TooltipDirection.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
 
 class BarChartEventData extends Equatable {
   final String eventType;
@@ -229,8 +240,26 @@ class _BarChartControlState extends State<BarChartControl> {
               barTouchData: BarTouchData(
                 enabled: interactive,
                 touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor:
-                      widget.control.attrColor("tooltipBgColor", context),
+                  getTooltipColor: (BarChartGroupData group) => widget.control
+                      .attrColor("tooltipBgColor", context,
+                          Theme.of(context).colorScheme.secondary)!,
+                  tooltipRoundedRadius:
+                      widget.control.attrDouble("tooltipRoundedRadius"),
+                  tooltipMargin: widget.control.attrDouble("tooltipMargin"),
+                  tooltipPadding:
+                      parseEdgeInsets(widget.control, "tooltipPadding"),
+                  maxContentWidth: widget.control.attrDouble("tooltipMaxWidth"),
+                  rotateAngle: widget.control.attrDouble("tooltipRotateAngle"),
+                  tooltipHorizontalOffset:
+                      widget.control.attrDouble("tooltipHorizontalOffset"),
+                  tooltipBorder: parseBorderSide(
+                      Theme.of(context), widget.control, "tooltipBorderSide"),
+                  fitInsideHorizontally:
+                      widget.control.attrBool("tooltipFitInsideHorizontally"),
+                  fitInsideVertically:
+                      widget.control.attrBool("tooltipFitInsideVertically"),
+                  direction: parseTooltipDirection(
+                      widget.control.attrString("tooltipDirection")),
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
                     var dp = viewModel.barGroups[groupIndex].barRods[rodIndex];
 
