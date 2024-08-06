@@ -65,7 +65,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   void _onCompleted(String? message) {
   debugPrint("Video onCompleted: $message");
   widget.backend
-      .triggerControlEvent(widget.control.id, "complete", message ?? "");
+      .triggerControlEvent(widget.control.id, "completed", message ?? "");
   }
 
   @override
