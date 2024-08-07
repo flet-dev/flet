@@ -71,7 +71,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   void _onTrackChanged(String? message) {
   debugPrint("Video onTrackChanged: $message");
   widget.backend
-      .triggerControlEvent(widget.control.id, "track", message ?? "");
+      .triggerControlEvent(widget.control.id, "track_changed", message ?? "");
   }
 
   @override
@@ -284,7 +284,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
           _onTrackChanged(event.index.toString());
         }
       });
-      
+
       return constrainedControl(context, video, widget.parent, widget.control);
     });
   }

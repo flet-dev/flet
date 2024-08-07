@@ -607,9 +607,9 @@ class Video(ConstrainedControl):
     # on_track_change
     @property
     def on_track_changed(self) -> OptionalControlEventCallable:
-        return self._get_event_handler("track")
+        return self._get_event_handler("track_changed")
 
     @on_track_changed.setter
     def on_track_changed(self, handler: OptionalControlEventCallable):
         self._set_attr("onTrackChanged", True if handler is not None else None)
-        self._add_event_handler("track", handler)
+        self._add_event_handler("track_changed", handler)
