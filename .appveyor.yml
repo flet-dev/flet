@@ -158,7 +158,7 @@ for:
 
     install:
       - dart pub global activate fvm
-      - set PATH=%LOCALAPPDATA%\Pub\Cache\bin;%LOCALAPPDATA%\fvm\default\bin;%PATH%
+      - set PATH=%LOCALAPPDATA%\Pub\Cache\bin;%USERPROFILE%\fvm\default\bin;%PATH%
       - fvm install %FLUTTER_VERSION%
       - fvm global %FLUTTER_VERSION%
       - flutter --version
