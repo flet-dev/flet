@@ -16,7 +16,7 @@ environment:
   matrix:
     - job_name: Build Flet package for Flutter
       job_group: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu
 
     - job_name: Build Flet for Windows
       job_group: build_flet
@@ -102,6 +102,7 @@ for:
           }
           Update-AppveyorBuild -Version $env:PKG_VER
       - pip3 install pyyaml
+      - dart pub global activate fvm
       - flutter upgrade --force
 
     build_script:
@@ -156,6 +157,7 @@ for:
         - job_name: Build Flet for Windows
 
     install:
+      - dart pub global activate fvm
       - flutter upgrade --force
 
     build_script:
@@ -195,6 +197,7 @@ for:
 
     install:
       - HOMEBREW_NO_AUTO_UPDATE=1 brew install cocoapods
+      - dart pub global activate fvm
       - flutter upgrade
       - flutter config --enable-macos-desktop
       - flutter doctor
