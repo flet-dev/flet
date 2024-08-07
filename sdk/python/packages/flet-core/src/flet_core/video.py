@@ -604,7 +604,7 @@ class Video(ConstrainedControl):
         self._set_attr("onCompleted", True if handler is not None else None)
         self._add_event_handler("completed", handler)
 
-    # on_track_change
+    # on_track_changed
     @property
     def on_track_changed(self) -> OptionalControlEventCallable:
         return self._get_event_handler("track_changed")
