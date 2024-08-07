@@ -10,6 +10,7 @@ skip_commits:
 
 environment:
   python_stack: python 3.10
+  FLUTTER_VERSION: 3.22.3
   GITHUB_TOKEN:
     secure: 9SKIwc3VSfYJ5IChvNR74hQprJ0DRmcV9pPX+8KyE6IXIdfMsX6ikeUmMhJGRu3ztkZaF45jmU7Xn/6tauXQXhDBxK1N8kFHFSAnq6LjUXyhS0TZKX/H+jDozBeVbCXp
 
@@ -28,55 +29,50 @@ environment:
       job_depends_on: build_flet_package
       APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
-    - job_name: Build Flet for Linux
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
-
-    - job_name: Build Flet for Linux ARM64
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
-      python_stack: ""
-
-    - job_name: Build Flet for web
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
-
-    # - job_name: Build Flet for iOS
+    # - job_name: Build Flet for Linux
     #   job_group: build_flet
     #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    - job_name: Test Python 3.8
-      job_group: python_tests
-      python_stack: python 3.8
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    # - job_name: Build Flet for Linux ARM64
+    #   job_group: build_flet
+    #   job_depends_on: build_flet_package
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
+    #   python_stack: ""
 
-    - job_name: Test Python 3.9
-      job_group: python_tests
-      python_stack: python 3.9
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    # - job_name: Build Flet for web
+    #   job_group: build_flet
+    #   job_depends_on: build_flet_package
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    - job_name: Test Python 3.10
-      job_group: python_tests
-      python_stack: python 3.10
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    # - job_name: Test Python 3.8
+    #   job_group: python_tests
+    #   python_stack: python 3.8
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    - job_name: Test Python 3.11
-      job_group: python_tests
-      python_stack: python 3.11
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    # - job_name: Test Python 3.9
+    #   job_group: python_tests
+    #   python_stack: python 3.9
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    - job_name: Build Python wheels
-      job_group: python_build
-      job_depends_on: python_tests, build_flet
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
-      TWINE_USERNAME: __token__
-      TWINE_PASSWORD:
-        secure: 174ncAbF5IjSIkmioPt62jeSnzmTlRNchUkE4QdjDWH8xK1olYtySXLJpo2q95HcP7lWJky1hv4APESiRRHnBWoY0XRFafzM/mbCDMzG1tZXiXZmpP1qzHAtRP2QSCIg18xh1TMktraUdTi7sbJnjjRhqzgbW1k0kLBxKw79MPFBhYQ/TiGcmaYWZbWVZNY3HCUCb6Dt7bG1OE2Ul9rD1gvs55xwO9Oq9FOVA1VnMYw=
-      TWINE_NON_INTERACTIVE: true
+    # - job_name: Test Python 3.10
+    #   job_group: python_tests
+    #   python_stack: python 3.10
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+
+    # - job_name: Test Python 3.11
+    #   job_group: python_tests
+    #   python_stack: python 3.11
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+
+    # - job_name: Build Python wheels
+    #   job_group: python_build
+    #   job_depends_on: python_tests, build_flet
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    #   TWINE_USERNAME: __token__
+    #   TWINE_PASSWORD:
+    #     secure: 174ncAbF5IjSIkmioPt62jeSnzmTlRNchUkE4QdjDWH8xK1olYtySXLJpo2q95HcP7lWJky1hv4APESiRRHnBWoY0XRFafzM/mbCDMzG1tZXiXZmpP1qzHAtRP2QSCIg18xh1TMktraUdTi7sbJnjjRhqzgbW1k0kLBxKw79MPFBhYQ/TiGcmaYWZbWVZNY3HCUCb6Dt7bG1OE2Ul9rD1gvs55xwO9Oq9FOVA1VnMYw=
+    #   TWINE_NON_INTERACTIVE: true
 
 matrix:
   fast_finish: true
@@ -103,7 +99,11 @@ for:
           Update-AppveyorBuild -Version $env:PKG_VER
       - pip3 install pyyaml
       - dart pub global activate fvm
-      - flutter upgrade --force
+      - export PATH=$HOME/.pub-cache/bin:$HOME/fvm/default/bin:$PATH
+      - fvm install $FLUTTER_VERSION
+      - fvm global $FLUTTER_VERSION
+      - flutter --version
+      #- flutter upgrade --force
 
     build_script:
       - sh: |
@@ -198,9 +198,13 @@ for:
     install:
       - HOMEBREW_NO_AUTO_UPDATE=1 brew install cocoapods
       - dart pub global activate fvm
-      - flutter upgrade
+      - export PATH=$HOME/.pub-cache/bin:$HOME/fvm/default/bin:$PATH
+      - fvm install $FLUTTER_VERSION
+      - fvm global $FLUTTER_VERSION
+      - flutter --version
+      #- flutter upgrade
       - flutter config --enable-macos-desktop
-      - flutter doctor
+      #- flutter doctor
 
     build_script:
       # Flutter macOS client
