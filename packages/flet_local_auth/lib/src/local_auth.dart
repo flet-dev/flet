@@ -1,4 +1,5 @@
 import 'package:flet/flet.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:local_auth/local_auth.dart';
 
@@ -34,7 +35,7 @@ class _LocalAuthenticationControlState
             // get's available biometrics
             final List<BiometricType> availableBiometrics =
                 await auth.getAvailableBiometrics();
-            // check's if device is supported
+
             final bool canAuthenticate = availableBiometrics.isNotEmpty;
             debugPrint("canAuthenticate: $canAuthenticate");
             return "$canAuthenticate";
@@ -43,16 +44,20 @@ class _LocalAuthenticationControlState
             try {
               final bool didAuthenticate = await auth.authenticate(
                 // if no title is given, uses "Authentication required" as the title
-                localizedReason: args['title'] ?? "Authentication required",
+                localizedReason:
+                    args['title'] ?? "Please Authenticate to continue",
                 options: AuthenticationOptions(
-                    biometricOnly:
-                        args['biometricsOnly'] == 'true' ? true : false,
-                    useErrorDialogs: true),
+                  biometricOnly: parseBool(args["biometricsOnly"], false)!,
+                  useErrorDialogs: parseBool(args["useErrorDialogs"], true)!,
+                  sensitiveTransaction:
+                      parseBool(args["sensitiveTransaction"], true)!,
+                ),
               );
-              return "$didAuthenticate";
-            } on Exception catch (_) {
-              debugPrint("An error has occured: $_");
-              return "false";
+              return '{"success": $didAuthenticate, "error": null}';
+            } on PlatformException catch (_) {
+              String? e = _.message;
+              debugPrint("An error has occured: $e");
+              return '{"success" : false, "error": "$e"}';
             }
         }
         return null;

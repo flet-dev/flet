@@ -25,4 +25,7 @@ class LinuxLocalAuth:
             self.subject, self.action_id, self.details, self.flags, self.cancellation_id
         )
 
-        return result[0] == 1
+        return {
+            "success": result,
+            "error": None,
+        }

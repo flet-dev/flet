@@ -1,5 +1,7 @@
 from typing import Any, Optional
+import json
 
+# import warnings
 from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import PagePlatform
@@ -43,19 +45,18 @@ class LocalAuthentication(Control):
         return "localauthentication"
 
     def before_update(self):
-        self.platform = self.page.platform
+        super().before_update()
         # Both macOS and Linux have platform dependant dependencies.
         # Hence initiating MacLocalAuth and LinuxLocalAuth after checking the platform
-        if self.platform == PagePlatform.MACOS:
-            self.maclocalauth = MacLocalAuth()
-        elif self.platform == PagePlatform.LINUX:
-            self.linuxlocalauth = LinuxLocalAuth()
-        return super().before_update()
+        if self.page.platform == PagePlatform.MACOS:
+            self.mac_local_auth = MacLocalAuth()
+        elif self.page.platform == PagePlatform.LINUX:
+            self.linux_local_auth = LinuxLocalAuth()
 
     def available(self, wait_timeout: Optional[int] = 5) -> bool:
-        if self.platform == PagePlatform.MACOS:
-            sr = self.maclocalauth.is_available()
-        elif self.platform == PagePlatform.LINUX:
+        if self.page.platform == PagePlatform.MACOS:
+            sr = self.mac_local_auth.is_available()
+        elif self.page.platform == PagePlatform.LINUX:
             # linux always has a user with password.
             # Even if not so, a popup asking to authenticate without asking password will be shown
             sr = True
@@ -66,13 +67,15 @@ class LocalAuthentication(Control):
                 )
                 == "true"
             )
+        # print(json.loads(sr))
+        # if sr_json["error"] != "null":
 
         return sr
 
     async def available_async(self, wait_timeout: Optional[int] = 5) -> bool:
-        if self.platform == PagePlatform.MACOS:
-            sr = await self.maclocalauth.is_available()
-        elif self.platform == PagePlatform.LINUX:
+        if self.page.platform == PagePlatform.MACOS:
+            sr = await self.mac_local_auth.is_available()
+        elif self.page.platform == PagePlatform.LINUX:
             # linux always has a user with password.
             # Even if not so, a popup asking to authenticate without asking password will be shown
             sr = True
@@ -88,50 +91,57 @@ class LocalAuthentication(Control):
 
     def authenticate(
         self,
-        title: str,
-        biometricsOnly: bool = False,
+        reason: Optional[str],
+        biometrics_only: bool = False,
+        use_error_dialogs: bool = True,
+        sensitive_transaction: bool = True,
         wait_timeout: Optional[int] = 60,
     ) -> bool:
-        if self.platform == PagePlatform.MACOS:
-            sr = self.maclocalauth.authenticate_mac(title)
-        elif self.platform == PagePlatform.LINUX:
-            sr = self.linuxlocalauth.authenticate_linux()
+        if self.page.platform == PagePlatform.MACOS:
+            sr = self.mac_local_auth.authenticate_mac(reason)
+        elif self.page.platform == PagePlatform.LINUX:
+            sr = self.linux_local_auth.authenticate_linux()
         else:
-            sr = (
-                self.invoke_method(
-                    "authenticate",
-                    wait_for_result=True,
-                    wait_timeout=wait_timeout,
-                    arguments={
-                        "title": title,
-                        "biometricsOnly": str(biometricsOnly).lower(),
-                    },
-                )
-                == "true"
+            sr = self.invoke_method(
+                "authenticate",
+                wait_for_result=True,
+                wait_timeout=wait_timeout,
+                arguments={
+                    "title": reason,
+                    "biometricsOnly": str(biometrics_only).lower(),
+                    "useErrorDialogs": str(use_error_dialogs).lower(),
+                    "sensitiveTransaction": str(sensitive_transaction).lower(),
+                },
             )
+            sr = json.loads(sr)
 
         return sr
 
     async def authenticate_async(
         self,
-        title: str,
-        biometricsOnly: bool = False,
+        reason: Optional[str],
+        biometrics_only: bool = False,
+        use_error_dialogs: bool = True,
+        sensitive_transaction: bool = True,
         wait_timeout: Optional[int] = 60,
     ) -> bool:
-        if self.platform == PagePlatform.MACOS:
-            sr = await self.maclocalauth.authenticate_mac(title)
-        elif self.platform == PagePlatform.LINUX:
-            sr = await self.linuxlocalauth.authenticate_linux()
+        if self.page.platform == PagePlatform.MACOS:
+            sr = self.mac_local_auth.authenticate_mac(reason)
+        elif self.page.platform == PagePlatform.LINUX:
+            sr = self.linux_local_auth.authenticate_linux()
         else:
             sr = await self.invoke_method_async(
                 "authenticate",
                 wait_for_result=True,
                 wait_timeout=wait_timeout,
                 arguments={
-                    "title": title,
-                    "biometricsOnly": str(biometricsOnly).lower(),
+                    "title": reason,
+                    "biometricsOnly": str(biometrics_only).lower(),
+                    "useErrorDialogs": str(use_error_dialogs).lower(),
+                    "sensitiveTransaction": str(sensitive_transaction).lower(),
                 },
             )
-            sr = sr == "true"
 
-        return sr
+            sr_json = json.loads(sr)
+
+        return sr_json

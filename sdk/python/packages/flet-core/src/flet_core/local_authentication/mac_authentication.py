@@ -45,7 +45,4 @@ class MacLocalAuth:
         context.evaluatePolicy_localizedReason_reply_(self.kTouchIdPolicy, reason, cb)
         self.dispatch_semaphore_wait(sema, self.DISPATCH_TIME_FOREVER)
 
-        # if res["error"]:
-        # raise Exception(res["error"])
-        print('res["success"]:', res["success"])
-        return res["success"]
+        return res
