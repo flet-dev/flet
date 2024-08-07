@@ -5,7 +5,6 @@ import json
 import os
 import pathlib
 import shutil
-import stat
 import sys
 import urllib.request
 import zipfile

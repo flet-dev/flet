@@ -1,5 +1,5 @@
 import time
-from typing import Any, List, Optional, Union, Sequence
+from typing import Any, Optional, Union, Sequence
 
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
@@ -14,6 +14,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -240,7 +241,7 @@ class SubmenuButton(ConstrainedControl):
         return self._get_event_handler("open")
 
     @on_open.setter
-    def on_open(self, handler: OptionalEventCallable):
+    def on_open(self, handler: OptionalControlEventCallable):
         self._add_event_handler("open", handler)
         self._set_attr("onOpen", True if handler is not None else None)
 
@@ -250,7 +251,7 @@ class SubmenuButton(ConstrainedControl):
         return self._get_event_handler("close")
 
     @on_close.setter
-    def on_close(self, handler: OptionalEventCallable):
+    def on_close(self, handler: OptionalControlEventCallable):
         self._add_event_handler("close", handler)
         self._set_attr("onClose", True if handler is not None else None)
 
@@ -260,7 +261,7 @@ class SubmenuButton(ConstrainedControl):
         return self._get_event_handler("hover")
 
     @on_hover.setter
-    def on_hover(self, handler: OptionalEventCallable):
+    def on_hover(self, handler: OptionalControlEventCallable):
         self._add_event_handler("hover", handler)
         self._set_attr("onHover", True if handler is not None else None)
 
@@ -270,7 +271,7 @@ class SubmenuButton(ConstrainedControl):
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler: OptionalEventCallable):
+    def on_focus(self, handler: OptionalControlEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
@@ -279,5 +280,5 @@ class SubmenuButton(ConstrainedControl):
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler: OptionalEventCallable):
+    def on_blur(self, handler: OptionalControlEventCallable):
         self._add_event_handler("blur", handler)

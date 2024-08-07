@@ -15,6 +15,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalControlEventCallable,
 )
 
 
@@ -348,11 +349,11 @@ class NavigationRail(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallable:
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallable):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
 
     # selected_index

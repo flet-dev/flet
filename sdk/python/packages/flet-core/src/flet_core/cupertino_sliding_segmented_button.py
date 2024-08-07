@@ -1,4 +1,4 @@
-from typing import Any, Optional, Sequence, Union, List
+from typing import Any, Optional, Sequence, Union
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber, Control
@@ -11,6 +11,7 @@ from flet_core.types import (
     ScaleValue,
     PaddingValue,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -161,9 +162,9 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallable:
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallable):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)

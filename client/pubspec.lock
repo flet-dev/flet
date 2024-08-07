@@ -213,10 +213,10 @@ packages:
     dependency: transitive
     description:
       name: file_picker
-      sha256: "29c90806ac5f5fb896547720b73b17ee9aed9bba540dc5d91fe29f8c5745b10a"
+      sha256: "824f5b9f389bfc4dddac3dea76cd70c51092d9dff0b2ece7ef4f53db8547d258"
       url: "https://pub.dev"
     source: hosted
-    version: "8.0.3"
+    version: "8.0.6"
   fixnum:
     dependency: transitive
     description:
@@ -229,10 +229,10 @@ packages:
     dependency: transitive
     description:
       name: fl_chart
-      sha256: "5a74434cc83bf64346efb562f1a06eefaf1bcb530dc3d96a104f631a1eff8d79"
+      sha256: d0f0d49112f2f4b192481c16d05b6418bd7820e021e265a3c22db98acf7ed7fb
       url: "https://pub.dev"
     source: hosted
-    version: "0.65.0"
+    version: "0.68.0"
   flet:
     dependency: "direct main"
     description:
@@ -368,10 +368,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_markdown
-      sha256: "21b085a1c185e46701373866144ced56cfb7a0c33f63c916bb8fe2d0c1491278"
+      sha256: "2e8a801b1ded5ea001a4529c97b1f213dcb11c6b20668e081cafb23468593514"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.19"
+    version: "0.7.3"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -940,26 +940,26 @@ packages:
     dependency: transitive
     description:
       name: record
-      sha256: "5c8e12c692a4800b33f5f8b6c821ea083b12bfdbd031b36ba9322c40a4eeecc9"
+      sha256: "4a5cf4d083d1ee49e0878823c4397d073f8eb0a775f31215d388e2bc47a9e867"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.4"
+    version: "5.1.2"
   record_android:
     dependency: transitive
     description:
       name: record_android
-      sha256: "805ecaa232a671aff2ee9ec4730ef6addb97c548d2db6b1fbd5197f1d4f47a5a"
+      sha256: "9ccf6a206dc72b486cf37893690e70c17610e8f05dba8da1a808e73dc2f49a04"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4"
+    version: "1.2.4"
   record_darwin:
     dependency: transitive
     description:
       name: record_darwin
-      sha256: ee8cb1bb1712d7ce38140ecabe70e5c286c02f05296d66043bee865ace7eb1b9
+      sha256: b038c26d1066eb81f4e7433bfb85f0d450ca3fac0002a7216b83a21b775ecf21
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
+    version: "1.1.1"
   record_linux:
     dependency: transitive
     description:
@@ -972,10 +972,10 @@ packages:
     dependency: transitive
     description:
       name: record_platform_interface
-      sha256: "3a4b56e94ecd2a0b2b43eb1fa6f94c5b8484334f5d38ef43959c4bf97fb374cf"
+      sha256: "11f8b03ea8a0e279b0e306571dbe0db0202c0b8e866495c9fa1ad2281d5e4c15"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.1.0"
   record_web:
     dependency: transitive
     description:
@@ -1100,10 +1100,10 @@ packages:
     dependency: transitive
     description:
       name: shared_preferences
-      sha256: "81429e4481e1ccfb51ede496e916348668fd0921627779233bd24cc3ff6abd02"
+      sha256: d3bbe5553a986e83980916ded2f0b435ef2e1893dfaa29d5a7a790d0eca12180
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.2"
+    version: "2.2.3"
   shared_preferences_android:
     dependency: transitive
     description:
@@ -1473,10 +1473,10 @@ packages:
     dependency: transitive
     description:
       name: win32
-      sha256: "464f5674532865248444b4c3daca12bd9bf2d7c47f759ce2617986e7229494a8"
+      sha256: a79dbe579cb51ecd6d30b17e0cae4e0ea15e2c0e66f69ad4198f22a6789e94f4
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.0"
+    version: "5.5.1"
   window_manager:
     dependency: transitive
     description:
@@ -1527,4 +1527,4 @@ packages:
     version: "3.1.2"
 sdks:
   dart: ">=3.4.0 <4.0.0"
-  flutter: ">=3.22.0"
+  flutter: ">=3.19.0"

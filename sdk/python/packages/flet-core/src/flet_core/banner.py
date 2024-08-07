@@ -3,7 +3,12 @@ from typing import Any, List, Optional
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import PaddingValue, MarginValue, OptionalEventCallable
+from flet_core.types import (
+    PaddingValue,
+    MarginValue,
+    OptionalEventCallable,
+    OptionalControlEventCallable,
+)
 
 
 class Banner(Control):
@@ -264,9 +269,9 @@ class Banner(Control):
 
     # on_visible
     @property
-    def on_visible(self) -> OptionalEventCallable:
+    def on_visible(self) -> OptionalControlEventCallable:
         return self._get_event_handler("visible")
 
     @on_visible.setter
-    def on_visible(self, handler: OptionalEventCallable):
+    def on_visible(self, handler: OptionalControlEventCallable):
         self._add_event_handler("visible", handler)

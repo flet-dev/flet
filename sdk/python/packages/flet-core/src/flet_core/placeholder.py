@@ -1,29 +1,40 @@
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
+from flet_core.control import Control
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    ResponsiveNumber,
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
-    OptionalControlEventCallable,
 )
 
 
-class FletApp(ConstrainedControl):
+class Placeholder(ConstrainedControl):
+    """
+    A placeholder box.
+
+    -----
+
+    Online docs: https://flet.dev/docs/controls/placeholder
+    """
+
     def __init__(
         self,
-        url: Optional[str] = None,
-        reconnect_interval_ms: Optional[int] = None,
-        reconnect_timeout_ms: Optional[int] = None,
-        on_error: OptionalEventCallable = None,
+        content: Optional[Control] = None,
+        color: Optional[str] = None,
+        fallback_height: OptionalNumber = None,
+        fallback_width: OptionalNumber = None,
+        stroke_width: OptionalNumber = None,
         #
         # ConstrainedControl
         #
         ref: Optional[Ref] = None,
+        key: Optional[str] = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
         left: OptionalNumber = None,
@@ -32,6 +43,7 @@ class FletApp(ConstrainedControl):
         bottom: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
         expand_loose: Optional[bool] = None,
+        col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         rotate: RotateValue = None,
         scale: ScaleValue = None,
@@ -48,10 +60,12 @@ class FletApp(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
             ref=ref,
+            key=key,
             width=width,
             height=height,
             left=left,
@@ -60,6 +74,7 @@ class FletApp(ConstrainedControl):
             bottom=bottom,
             expand=expand,
             expand_loose=expand_loose,
+            col=col,
             opacity=opacity,
             rotate=rotate,
             scale=scale,
@@ -76,48 +91,64 @@ class FletApp(ConstrainedControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
         )
 
-        self.url = url
-        self.reconnect_interval_ms = reconnect_interval_ms
-        self.reconnect_timeout_ms = reconnect_timeout_ms
-        self.on_error = on_error
+        self.content = content
+        self.color = color
+        self.fallback_height = fallback_height
+        self.fallback_width = fallback_width
+        self.stroke_width = stroke_width
 
     def _get_control_name(self):
-        return "fletapp"
+        return "placeholder"
 
-    # url
+    def _get_children(self):
+        return [self.content] if self.content is not None else []
+
+    # fallback_height
     @property
-    def url(self):
-        return self._get_attr("url")
+    def fallback_height(self) -> float:
+        return self._get_attr("fallbackHeight", data_type="float", def_value=400.0)
 
-    @url.setter
-    def url(self, value):
-        self._set_attr("url", value)
+    @fallback_height.setter
+    def fallback_height(self, value: OptionalNumber):
+        assert value is None or value >= 0, "fallback_height cannot be negative"
+        self._set_attr("fallbackHeight", value)
 
-    # reconnect_interval_ms
+    # fallback_width
     @property
-    def reconnect_interval_ms(self) -> Optional[int]:
-        return self._get_attr("reconnectIntervalMs")
+    def fallback_width(self) -> float:
+        return self._get_attr("fallbackWidth", data_type="float", def_value=400.0)
 
-    @reconnect_interval_ms.setter
-    def reconnect_interval_ms(self, value: Optional[int]):
-        self._set_attr("reconnectIntervalMs", value)
+    @fallback_width.setter
+    def fallback_width(self, value: OptionalNumber):
+        assert value is None or value >= 0, "fallback_width cannot be negative"
+        self._set_attr("fallbackWidth", value)
 
-    # reconnect_timeout_ms
+    # stroke_width
     @property
-    def reconnect_timeout_ms(self) -> Optional[int]:
-        return self._get_attr("reconnectTimeoutMs")
+    def stroke_width(self) -> float:
+        return self._get_attr("strokeWidth", data_type="float", def_value=2.0)
 
-    @reconnect_timeout_ms.setter
-    def reconnect_timeout_ms(self, value: Optional[int]):
-        self._set_attr("reconnectTimeoutMs", value)
+    @stroke_width.setter
+    def stroke_width(self, value: OptionalNumber):
+        self._set_attr("strokeWidth", value)
 
-    # on_error
+    # color
     @property
-    def on_error(self) -> OptionalControlEventCallable:
-        return self._get_event_handler("error")
+    def color(self) -> str:
+        return self._get_attr("color", def_value="bluegrey700")
 
-    @on_error.setter
-    def on_error(self, handler: OptionalControlEventCallable):
-        self._add_event_handler("error", handler)
+    @color.setter
+    def color(self, value: Optional[str]):
+        self._set_attr("color", value)
+
+    # content
+    @property
+    def content(self) -> Optional[Control]:
+        return self.__content
+
+    @content.setter
+    def content(self, value: Optional[Control]):
+        self.__content = value

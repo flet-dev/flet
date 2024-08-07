@@ -1,11 +1,15 @@
 import json
 from dataclasses import dataclass, field
 from enum import Enum, IntFlag
-from typing import Optional, Union, Callable
+from typing import Optional, Union
 
 from flet_core.control import OptionalNumber, Control
 from flet_core.event_handler import EventHandler
-from flet_core.types import ControlEvent, OptionalEventCallable
+from flet_core.types import (
+    ControlEvent,
+    OptionalEventCallable,
+    OptionalControlEventCallable,
+)
 
 
 @dataclass
@@ -84,14 +88,14 @@ class MapConfiguration(Control):
         max_zoom: OptionalNumber = None,
         min_zoom: OptionalNumber = None,
         on_init: OptionalEventCallable = None,
-        on_tap: Optional[Callable[["MapTapEvent"], None]] = None,
-        on_secondary_tap: Optional[Callable[["MapTapEvent"], None]] = None,
-        on_long_press: Optional[Callable[["MapTapEvent"], None]] = None,
-        on_event: Optional[Callable[["MapEvent"], None]] = None,
-        on_position_change: Optional[Callable[["MapPositionChangeEvent"], None]] = None,
-        on_pointer_down: Optional[Callable[["MapPointerEvent"], None]] = None,
-        on_pointer_cancel: Optional[Callable[["MapPointerEvent"], None]] = None,
-        on_pointer_up: Optional[Callable[["MapPointerEvent"], None]] = None,
+        on_tap: OptionalEventCallable["MapTapEvent"] = None,
+        on_secondary_tap: OptionalEventCallable["MapTapEvent"] = None,
+        on_long_press: OptionalEventCallable["MapTapEvent"] = None,
+        on_event: OptionalEventCallable["MapEvent"] = None,
+        on_position_change: OptionalEventCallable["MapPositionChangeEvent"] = None,
+        on_pointer_down: OptionalEventCallable["MapPointerEvent"] = None,
+        on_pointer_cancel: OptionalEventCallable["MapPointerEvent"] = None,
+        on_pointer_up: OptionalEventCallable["MapPointerEvent"] = None,
     ):
         Control.__init__(self)
         self.__on_tap = EventHandler(lambda e: MapTapEvent(e))
@@ -230,7 +234,7 @@ class MapConfiguration(Control):
         return self.__on_tap
 
     @on_tap.setter
-    def on_tap(self, handler: Optional[Callable[["MapTapEvent"], None]]):
+    def on_tap(self, handler: OptionalEventCallable["MapTapEvent"]):
         self.__on_tap.subscribe(handler)
         self._set_attr("onTap", True if handler is not None else None)
 
@@ -240,7 +244,7 @@ class MapConfiguration(Control):
         return self.__on_secondary_tap
 
     @on_secondary_tap.setter
-    def on_secondary_tap(self, handler: Optional[Callable[["MapTapEvent"], None]]):
+    def on_secondary_tap(self, handler: OptionalEventCallable["MapTapEvent"]):
         self.__on_secondary_tap.subscribe(handler)
         self._set_attr("onSecondaryTap", True if handler is not None else None)
 
@@ -250,7 +254,7 @@ class MapConfiguration(Control):
         return self.__on_long_press
 
     @on_long_press.setter
-    def on_long_press(self, handler: Optional[Callable[["MapTapEvent"], None]]):
+    def on_long_press(self, handler: OptionalEventCallable["MapTapEvent"]):
         self.__on_long_press.subscribe(handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
@@ -260,17 +264,17 @@ class MapConfiguration(Control):
         return self.__on_event
 
     @on_event.setter
-    def on_event(self, handler: Optional[Callable[["MapEvent"], None]]):
+    def on_event(self, handler: OptionalEventCallable["MapEvent"]):
         self.__on_event.subscribe(handler)
         self._set_attr("onEvent", True if handler is not None else None)
 
     # on_init
     @property
-    def on_init(self) -> OptionalEventCallable:
+    def on_init(self) -> OptionalControlEventCallable:
         return self._get_event_handler("init")
 
     @on_init.setter
-    def on_init(self, handler: OptionalEventCallable):
+    def on_init(self, handler: OptionalControlEventCallable):
         self._add_event_handler("init", handler)
         self._set_attr("onInit", True if handler is not None else None)
 
@@ -281,7 +285,7 @@ class MapConfiguration(Control):
 
     @on_position_change.setter
     def on_position_change(
-        self, handler: Optional[Callable[["MapPositionChangeEvent"], None]]
+        self, handler: OptionalEventCallable["MapPositionChangeEvent"]
     ):
         self.__on_position_change.subscribe(handler)
         self._set_attr("onPositionChange", True if handler is not None else None)
@@ -292,7 +296,7 @@ class MapConfiguration(Control):
         return self.__on_pointer_down
 
     @on_pointer_down.setter
-    def on_pointer_down(self, handler: Optional[Callable[["MapPointerEvent"], None]]):
+    def on_pointer_down(self, handler: OptionalEventCallable["MapPointerEvent"]):
         self.__on_pointer_down.subscribe(handler)
         self._set_attr("onPointerDown", True if handler is not None else None)
 
@@ -302,7 +306,7 @@ class MapConfiguration(Control):
         return self.__on_pointer_cancel
 
     @on_pointer_cancel.setter
-    def on_pointer_cancel(self, handler: Optional[Callable[["MapPointerEvent"], None]]):
+    def on_pointer_cancel(self, handler: OptionalEventCallable["MapPointerEvent"]):
         self.__on_pointer_cancel.subscribe(handler)
         self._set_attr("onPointerCancel", True if handler is not None else None)
 
@@ -312,7 +316,7 @@ class MapConfiguration(Control):
         return self.__on_pointer_up
 
     @on_pointer_up.setter
-    def on_pointer_up(self, handler: Optional[Callable[["MapPointerEvent"], None]]):
+    def on_pointer_up(self, handler: OptionalEventCallable["MapPointerEvent"]):
         self.__on_pointer_up.subscribe(handler)
         self._set_attr("onPointerUp", True if handler is not None else None)
 

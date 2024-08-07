@@ -11,7 +11,7 @@ from flet_core.navigation_bar import NavigationBarLabelBehavior
 from flet_core.navigation_rail import NavigationRailLabelType
 from flet_core.padding import Padding
 from flet_core.popup_menu_button import PopupMenuPosition
-from flet_core.shadow import BoxShadow
+from flet_core.box import BoxShadow
 from flet_core.snack_bar import DismissDirection, SnackBarBehavior
 from flet_core.text_style import TextStyle
 from flet_core.textfield import TextCapitalization

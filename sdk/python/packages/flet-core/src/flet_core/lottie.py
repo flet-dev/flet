@@ -1,5 +1,6 @@
 from typing import Any, Optional, Union
 
+from flet_core.box import FilterQuality
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -11,8 +12,8 @@ from flet_core.types import (
     ScaleValue,
     ImageFit,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
-from flet_core.video import FilterQuality
 
 
 class Lottie(ConstrainedControl):
@@ -188,10 +189,10 @@ class Lottie(ConstrainedControl):
 
     # on_error
     @property
-    def on_error(self) -> OptionalEventCallable:
+    def on_error(self) -> OptionalControlEventCallable:
         return self._get_event_handler("error")
 
     @on_error.setter
-    def on_error(self, handler: OptionalEventCallable):
+    def on_error(self, handler: OptionalControlEventCallable):
         self._add_event_handler("error", handler)
         self._set_attr("onError", True if handler is not None else None)

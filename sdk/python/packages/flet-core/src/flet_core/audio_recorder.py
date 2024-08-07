@@ -4,7 +4,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import OptionalEventCallable
+from flet_core.types import OptionalControlEventCallable
 from flet_core.utils import deprecated
 
 
@@ -101,22 +101,27 @@ class AudioRecorder(Control):
         return recording == "true"
 
     def stop_recording(self, wait_timeout: Optional[float] = 5) -> Optional[str]:
-        out = self.invoke_method(
+        return self.invoke_method(
             "stop_recording",
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        return out if out is not None else None
 
     async def stop_recording_async(
         self, wait_timeout: Optional[float] = 10
     ) -> Optional[str]:
-        out = await self.invoke_method_async(
+        return await self.invoke_method_async(
             "stop_recording",
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        return out if out is not None else None
+
+    def cancel_recording(self, wait_timeout: Optional[float] = 5) -> None:
+        self.invoke_method(
+            "cancel_recording",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
 
     def resume_recording(self):
         self.invoke_method("resume_recording")
@@ -284,9 +289,9 @@ class AudioRecorder(Control):
 
     # on_state_changed
     @property
-    def on_state_changed(self) -> OptionalEventCallable:
+    def on_state_changed(self) -> OptionalControlEventCallable:
         return self._get_event_handler("state_changed")
 
     @on_state_changed.setter
-    def on_state_changed(self, handler: OptionalEventCallable):
+    def on_state_changed(self, handler: OptionalControlEventCallable):
         self._add_event_handler("state_changed", handler)
