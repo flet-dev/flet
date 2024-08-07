@@ -10,7 +10,7 @@ skip_commits:
 
 environment:
   python_stack: python 3.10
-  FLUTTER_VERSION: 3.22.3
+  FLUTTER_VERSION: 3.24.0
   GITHUB_TOKEN:
     secure: 9SKIwc3VSfYJ5IChvNR74hQprJ0DRmcV9pPX+8KyE6IXIdfMsX6ikeUmMhJGRu3ztkZaF45jmU7Xn/6tauXQXhDBxK1N8kFHFSAnq6LjUXyhS0TZKX/H+jDozBeVbCXp
 
@@ -29,16 +29,16 @@ environment:
     #   job_depends_on: build_flet_package
     #   APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
-    # - job_name: Build Flet for Linux
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
-
-    - job_name: Build Flet for Linux ARM64
+    - job_name: Build Flet for Linux
       job_group: build_flet
       job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
-      python_stack: ""
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+
+    # - job_name: Build Flet for Linux ARM64
+    #   job_group: build_flet
+    #   job_depends_on: build_flet_package
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
+    #   python_stack: ""
 
     # - job_name: Build Flet for web
     #   job_group: build_flet
