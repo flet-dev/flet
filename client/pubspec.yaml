@@ -53,6 +53,8 @@ dependencies:
     path: ../packages/flet_webview
   flet_flashlight:
     path: ../packages/flet_flashlight
+  flet_local_auth:
+    path: ../packages/flet_local_auth
 
   url_strategy: ^0.2.0
   cupertino_icons: ^1.0.6

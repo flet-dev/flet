@@ -60,5 +60,7 @@
 		<string>Audio Recording</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
         <string>This app needs access to location when open.</string>
+		<key>NSFaceIDUsageDescription</key>
+		<string>This app needs access to FaceId to authenticate locally</string>
 	</dict>
 </plist>
