@@ -10,13 +10,14 @@ skip_commits:
 
 environment:
   python_stack: python 3.10
+  FLUTTER_VERSION: 3.24.0
   GITHUB_TOKEN:
     secure: 9SKIwc3VSfYJ5IChvNR74hQprJ0DRmcV9pPX+8KyE6IXIdfMsX6ikeUmMhJGRu3ztkZaF45jmU7Xn/6tauXQXhDBxK1N8kFHFSAnq6LjUXyhS0TZKX/H+jDozBeVbCXp
 
   matrix:
     - job_name: Build Flet package for Flutter
       job_group: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu
 
     - job_name: Build Flet for Windows
       job_group: build_flet
@@ -44,11 +45,6 @@ environment:
       job_depends_on: build_flet_package
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    # - job_name: Build Flet for iOS
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
-
     - job_name: Test Python 3.8
       job_group: python_tests
       python_stack: python 3.8
@@ -67,6 +63,11 @@ environment:
     - job_name: Test Python 3.11
       job_group: python_tests
       python_stack: python 3.11
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+
+    - job_name: Test Python 3.12
+      job_group: python_tests
+      python_stack: python 3.12
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
     - job_name: Build Python wheels
@@ -102,7 +103,7 @@ for:
           }
           Update-AppveyorBuild -Version $env:PKG_VER
       - pip3 install pyyaml
-      - flutter upgrade --force
+      - source ci/install_flutter.sh
 
     build_script:
       - sh: |
@@ -156,7 +157,11 @@ for:
         - job_name: Build Flet for Windows
 
     install:
-      - flutter upgrade --force
+      - dart pub global activate fvm
+      - set PATH=%LOCALAPPDATA%\Pub\Cache\bin;%USERPROFILE%\fvm\default\bin;%PATH%
+      - fvm install %FLUTTER_VERSION%
+      - fvm global %FLUTTER_VERSION%
+      - flutter --version
 
     build_script:
       - cd client
@@ -195,9 +200,7 @@ for:
 
     install:
       - HOMEBREW_NO_AUTO_UPDATE=1 brew install cocoapods
-      - flutter upgrade
-      - flutter config --enable-macos-desktop
-      - flutter doctor
+      - source ci/install_flutter.sh
 
     build_script:
       # Flutter macOS client
@@ -228,7 +231,7 @@ for:
     install:
       - sudo apt update --allow-releaseinfo-change
       - sudo apt install -y libmpv-dev mpv libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
-      - flutter upgrade --force
+      - source ci/install_flutter.sh
 
     build_script:
       - cd client
@@ -262,15 +265,7 @@ for:
       - sudo apt install -y clang libmpv-dev mpv libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
       - git clone https://github.com/flutter/flutter.git -b stable "$HOME/flutter"
       - export PATH="$PATH:$HOME/flutter/bin"
-      - flutter upgrade
-      - flutter doctor
-
-      # Fix Flutter on ARM
-      - pushd /tmp
-      - curl -O https://appveyordownloads.blob.core.windows.net/misc/shader_lib.tar.gz
-      - tar -zxf shader_lib.tar.gz
-      - cp -R shader_lib $HOME/flutter/bin/cache/artifacts/engine/linux-arm64
-      - popd
+      - source ci/install_flutter.sh
 
     build_script:
       - cd client
@@ -291,40 +286,6 @@ for:
         APPVEYOR_REPO_TAG: true
 
   # ======================================
-  #      Build Flet View for iOS
-  # ======================================
-
-  - matrix:
-      only:
-        - job_name: Build Flet for iOS
-
-    install:
-      - export LANG=en_US.UTF-8
-      - flutter upgrade
-      - flutter doctor
-
-    build_script:
-      # Flutter iOS client
-      - cd client
-      - cd ios
-      - rvm use 3.0
-      - ruby --version
-      - bundle install
-      - sh: |
-          export FLET_PACKAGE_VERSION="${APPVEYOR_BUILD_VERSION}"
-          if [[ ! -z "$APPVEYOR_PULL_REQUEST_NUMBER" ]]; then
-            bundle exec fastlane build_flutter      
-          elif [[ "$APPVEYOR_REPO_TAG" == "true" ]]; then
-            bundle exec fastlane upload_appstore
-          else
-            bundle exec fastlane build_ipa
-          fi
-
-    artifacts:
-      - path: client/build/flet.ipa
-        name: flet_ios
-
-  # ======================================
   #      Build Flet for web
   # ======================================
 
@@ -333,7 +294,7 @@ for:
         - job_name: Build Flet for web
 
     install:
-      - flutter upgrade --force
+      - source ci/install_flutter.sh
 
     build_script:
       # Flutter Web client
@@ -366,8 +327,9 @@ for:
     install:
       - python --version
       - cd sdk/python
-      - pip install --upgrade pip virtualenv
-      - pip install poetry
+      - python -m ensurepip --upgrade
+      - pip3 install --upgrade setuptools pip virtualenv
+      - pip3 install poetry
       - poetry install
 
     build: off
