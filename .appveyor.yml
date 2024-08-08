@@ -65,6 +65,11 @@ environment:
       python_stack: python 3.11
       APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
+    - job_name: Test Python 3.12
+      job_group: python_tests
+      python_stack: python 3.12
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+
     # - job_name: Build Python wheels
     #   job_group: python_build
     #   job_depends_on: python_tests, build_flet
