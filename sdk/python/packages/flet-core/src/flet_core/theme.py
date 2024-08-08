@@ -686,6 +686,7 @@ class Theme:
     divider_theme: Optional[DividerTheme] = field(default=None)
     # dropdown_menu_theme: Optional[DropdownMenuTheme] = field(default=None)
     expansion_tile_theme: Optional[ExpansionTileTheme] = field(default=None)
+    floating_action_button_theme: Optional[FloatingActionButtonTheme] = field(default=None)
     list_tile_theme: Optional[ListTileTheme] = field(default=None)
     navigation_bar_theme: Optional[NavigationBarTheme] = field(default=None)
     navigation_drawer_theme: Optional[NavigationDrawerTheme] = field(default=None)
