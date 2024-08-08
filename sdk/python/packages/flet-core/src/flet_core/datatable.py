@@ -20,6 +20,7 @@ from flet_core.types import (
     ScaleValue,
     ClipBehavior,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -27,8 +28,8 @@ class DataColumnSortEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.column_index: int = d["i"]
-        self.ascending: bool = d["a"]
+        self.column_index: int = d.get("i")
+        self.ascending: bool = d.get("a")
 
 
 class DataColumn(Control):
@@ -78,7 +79,7 @@ class DataColumn(Control):
 
     # numeric
     @property
-    def numeric(self) -> Optional[bool]:
+    def numeric(self) -> bool:
         return self._get_attr("numeric", data_type="bool", def_value=False)
 
     @numeric.setter
@@ -159,7 +160,7 @@ class DataCell(Control):
 
     # placeholder
     @property
-    def placeholder(self) -> Optional[bool]:
+    def placeholder(self) -> bool:
         return self._get_attr("placeholder", data_type="bool", def_value=False)
 
     @placeholder.setter
@@ -168,7 +169,7 @@ class DataCell(Control):
 
     # show_edit_icon
     @property
-    def show_edit_icon(self) -> Optional[bool]:
+    def show_edit_icon(self) -> bool:
         return self._get_attr("showEditIcon", data_type="bool", def_value=False)
 
     @show_edit_icon.setter
@@ -177,41 +178,41 @@ class DataCell(Control):
 
     # on_double_tap
     @property
-    def on_double_tap(self) -> OptionalEventCallable:
+    def on_double_tap(self) -> OptionalControlEventCallable:
         return self._get_event_handler("double_tap")
 
     @on_double_tap.setter
-    def on_double_tap(self, handler: OptionalEventCallable):
+    def on_double_tap(self, handler: OptionalControlEventCallable):
         self._add_event_handler("double_tap", handler)
         self._set_attr("onDoubleTap", True if handler is not None else None)
 
     # on_long_press
     @property
-    def on_long_press(self) -> OptionalEventCallable:
+    def on_long_press(self) -> OptionalControlEventCallable:
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler: OptionalEventCallable):
+    def on_long_press(self, handler: OptionalControlEventCallable):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # on_tap
     @property
-    def on_tap(self) -> OptionalEventCallable:
+    def on_tap(self) -> OptionalControlEventCallable:
         return self._get_event_handler("tap")
 
     @on_tap.setter
-    def on_tap(self, handler: OptionalEventCallable):
+    def on_tap(self, handler: OptionalControlEventCallable):
         self._add_event_handler("tap", handler)
         self._set_attr("onTap", True if handler is not None else None)
 
     # on_tap_cancel
     @property
-    def on_tap_cancel(self) -> OptionalEventCallable:
+    def on_tap_cancel(self) -> OptionalControlEventCallable:
         return self._get_event_handler("tap_cancel")
 
     @on_tap_cancel.setter
-    def on_tap_cancel(self, handler: OptionalEventCallable):
+    def on_tap_cancel(self, handler: OptionalControlEventCallable):
         self._add_event_handler("tap_cancel", handler)
         self._set_attr("onTapCancel", True if handler is not None else None)
 
@@ -286,7 +287,7 @@ class DataRow(Control):
 
     # selected
     @property
-    def selected(self) -> Optional[bool]:
+    def selected(self) -> bool:
         return self._get_attr("selected", data_type="bool", def_value=False)
 
     @selected.setter
@@ -295,21 +296,21 @@ class DataRow(Control):
 
     # on_long_press
     @property
-    def on_long_press(self) -> OptionalEventCallable:
+    def on_long_press(self) -> OptionalControlEventCallable:
         return self._get_event_handler("long_press")
 
     @on_long_press.setter
-    def on_long_press(self, handler: OptionalEventCallable):
+    def on_long_press(self, handler: OptionalControlEventCallable):
         self._add_event_handler("long_press", handler)
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # on_select_changed
     @property
-    def on_select_changed(self) -> OptionalEventCallable:
+    def on_select_changed(self) -> OptionalControlEventCallable:
         return self._get_event_handler("select_changed")
 
     @on_select_changed.setter
-    def on_select_changed(self, handler: OptionalEventCallable):
+    def on_select_changed(self, handler: OptionalControlEventCallable):
         self._add_event_handler("select_changed", handler)
         self._set_attr("onSelectChanged", True if handler is not None else None)
 
@@ -548,7 +549,7 @@ class DataTable(ConstrainedControl):
 
     # divider_thickness
     @property
-    def divider_thickness(self) -> OptionalNumber:
+    def divider_thickness(self) -> float:
         return self._get_attr("dividerThickness", data_type="float", def_value=1.0)
 
     @divider_thickness.setter
@@ -647,7 +648,7 @@ class DataTable(ConstrainedControl):
 
     # show_bottom_border
     @property
-    def show_bottom_border(self) -> Optional[bool]:
+    def show_bottom_border(self) -> bool:
         return self._get_attr("showBottomBorder", data_type="bool", def_value=False)
 
     @show_bottom_border.setter
@@ -656,7 +657,7 @@ class DataTable(ConstrainedControl):
 
     # show_checkbox_column
     @property
-    def show_checkbox_column(self) -> Optional[bool]:
+    def show_checkbox_column(self) -> bool:
         return self._get_attr("showCheckboxColumn", data_type="bool", def_value=False)
 
     @show_checkbox_column.setter
@@ -665,7 +666,7 @@ class DataTable(ConstrainedControl):
 
     # sort_ascending
     @property
-    def sort_ascending(self) -> Optional[bool]:
+    def sort_ascending(self) -> bool:
         return self._get_attr("sortAscending", data_type="bool", def_value=False)
 
     @sort_ascending.setter
@@ -693,11 +694,11 @@ class DataTable(ConstrainedControl):
 
     # on_select_all
     @property
-    def on_select_all(self) -> OptionalEventCallable:
+    def on_select_all(self) -> OptionalControlEventCallable:
         return self._get_event_handler("select_all")
 
     @on_select_all.setter
-    def on_select_all(self, handler: OptionalEventCallable):
+    def on_select_all(self, handler: OptionalControlEventCallable):
         self._add_event_handler("select_all", handler)
         self._set_attr("onSelectAll", True if handler is not None else None)
 

@@ -11,6 +11,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 try:
@@ -167,7 +168,7 @@ class CupertinoRadio(ConstrainedControl):
 
     # toggleable
     @property
-    def toggleable(self) -> Optional[bool]:
+    def toggleable(self) -> bool:
         return self._get_attr("toggleable", data_type="bool", def_value=False)
 
     @toggleable.setter
@@ -176,25 +177,25 @@ class CupertinoRadio(ConstrainedControl):
 
     # on_focus
     @property
-    def on_focus(self) -> OptionalEventCallable:
+    def on_focus(self) -> OptionalControlEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler: OptionalEventCallable):
+    def on_focus(self, handler: OptionalControlEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self) -> OptionalEventCallable:
+    def on_blur(self) -> OptionalControlEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler: OptionalEventCallable):
+    def on_blur(self, handler: OptionalControlEventCallable):
         self._add_event_handler("blur", handler)
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
@@ -203,7 +204,7 @@ class CupertinoRadio(ConstrainedControl):
 
     # use_checkmark_style
     @property
-    def use_checkmark_style(self) -> Optional[bool]:
+    def use_checkmark_style(self) -> bool:
         return self._get_attr("useCheckmarkStyle", data_type="bool", def_value=False)
 
     @use_checkmark_style.setter

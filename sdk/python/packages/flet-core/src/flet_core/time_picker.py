@@ -6,7 +6,12 @@ from flet_core import ControlEvent
 from flet_core.control import Control, OptionalNumber
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
-from flet_core.types import Orientation, ResponsiveNumber, OptionalEventCallable
+from flet_core.types import (
+    Orientation,
+    ResponsiveNumber,
+    OptionalEventCallable,
+    OptionalControlEventCallable,
+)
 from flet_core.utils import deprecated
 
 
@@ -160,7 +165,7 @@ class TimePicker(Control):
 
     # open
     @property
-    def open(self) -> Optional[bool]:
+    def open(self) -> bool:
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
@@ -261,20 +266,20 @@ class TimePicker(Control):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallable:
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallable):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
 
     # on_dismiss
     @property
-    def on_dismiss(self) -> OptionalEventCallable:
+    def on_dismiss(self) -> OptionalControlEventCallable:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler: OptionalEventCallable):
+    def on_dismiss(self, handler: OptionalControlEventCallable):
         self._add_event_handler("dismiss", handler)
 
     # on_entry_mode_change

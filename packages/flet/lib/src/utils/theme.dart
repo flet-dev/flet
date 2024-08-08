@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import '../models/control.dart';
 import 'alignment.dart';
 import 'borders.dart';
+import 'box.dart';
 import 'buttons.dart';
 import 'colors.dart';
 import 'dismissible.dart';
@@ -20,7 +21,6 @@ import 'menu.dart';
 import 'mouse.dart';
 import 'numbers.dart';
 import 'overlay_style.dart';
-import 'shadows.dart';
 import 'text.dart';
 
 class SystemUiOverlayStyleTheme
@@ -948,7 +948,7 @@ PopupMenuThemeData? parsePopupMenuTheme(
     iconColor: parseColor(theme, j["icon_color"]),
     textStyle: parseTextStyle("text_style"),
     labelTextStyle: getWidgetStateProperty<TextStyle?>(
-        j["label_text_style"], (jv) => parseTextStyle(jv)),
+        j["label_text_style"], (jv) => textStyleFromJson(theme, jv)),
     enableFeedback: parseBool(j["enable_feedback"]),
     elevation: parseDouble(j["elevation"]),
     iconSize: parseDouble(j["icon_size"]),
@@ -968,10 +968,6 @@ SearchBarThemeData? parseSearchBarTheme(
     return null;
   }
 
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
-
   return theme.searchBarTheme.copyWith(
     surfaceTintColor: getWidgetStateProperty<Color?>(
         j["surface_tint_color"], (jv) => parseColor(theme, jv as String)),
@@ -984,9 +980,9 @@ SearchBarThemeData? parseSearchBarTheme(
     overlayColor: getWidgetStateProperty<Color?>(
         j["overlay_color"], (jv) => parseColor(theme, jv as String)),
     textStyle: getWidgetStateProperty<TextStyle?>(
-        j["text_style"], (jv) => parseTextStyle(jv)),
+        j["text_style"], (jv) => textStyleFromJson(theme, jv)),
     hintStyle: getWidgetStateProperty<TextStyle?>(
-        j["hint_style"], (jv) => parseTextStyle(jv)),
+        j["hint_style"], (jv) => textStyleFromJson(theme, jv)),
     shape: getWidgetStateProperty<OutlinedBorder?>(
         j["shape"], (jv) => outlinedBorderFromJSON(jv)),
     textCapitalization: j["text_capitalization"] != null
@@ -1051,10 +1047,6 @@ NavigationDrawerThemeData? parseNavigationDrawerTheme(
     return null;
   }
 
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
-
   return theme.navigationDrawerTheme.copyWith(
     backgroundColor: parseColor(theme, j["bgcolor"]),
     shadowColor: parseColor(theme, j["shadow_color"]),
@@ -1064,7 +1056,7 @@ NavigationDrawerThemeData? parseNavigationDrawerTheme(
     //indicatorSize: ,
     tileHeight: parseDouble(j["tile_height"]),
     labelTextStyle: getWidgetStateProperty<TextStyle?>(
-        j["label_text_style"], (jv) => parseTextStyle(jv)),
+        j["label_text_style"], (jv) => textStyleFromJson(theme, jv)),
     indicatorShape: j["indicator_shape"] != null
         ? outlinedBorderFromJSON(j["indicator_shape"])
         : null,
@@ -1077,10 +1069,6 @@ NavigationBarThemeData? parseNavigationBarTheme(
     return null;
   }
 
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
-
   return theme.navigationBarTheme.copyWith(
     backgroundColor: parseColor(theme, j["bgcolor"]),
     shadowColor: parseColor(theme, j["shadow_color"]),
@@ -1091,7 +1079,7 @@ NavigationBarThemeData? parseNavigationBarTheme(
     elevation: parseDouble(j["elevation"]),
     height: parseDouble(j["height"]),
     labelTextStyle: getWidgetStateProperty<TextStyle?>(
-        j["label_text_style"], (jv) => parseTextStyle(jv)),
+        j["label_text_style"], (jv) => textStyleFromJson(theme, jv)),
     indicatorShape: j["indicator_shape"] != null
         ? outlinedBorderFromJSON(j["indicator_shape"])
         : null,

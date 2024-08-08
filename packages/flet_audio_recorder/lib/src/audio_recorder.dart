@@ -119,6 +119,9 @@ class _AudioRecorderControlState extends State<AudioRecorderControl>
             debugPrint("AudioRecorder.stopRecording($hashCode)");
             String? out = await recorder!.stop();
             return out;
+          case "cancel_recording":
+            debugPrint("AudioRecorder.cancelRecording($hashCode)");
+            await recorder!.cancel();
           case "resume_recording":
             debugPrint("AudioRecorder.resumeRecording($hashCode)");
             await recorder!.resume();

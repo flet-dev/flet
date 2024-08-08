@@ -18,6 +18,7 @@ from flet_core.types import (
     ScaleValue,
     TabAlignment,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -273,16 +274,16 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallable:
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallable):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
 
     # selected_index
     @property
-    def selected_index(self) -> Optional[int]:
+    def selected_index(self) -> int:
         return self._get_attr("selectedIndex", data_type="int", def_value=0)
 
     @selected_index.setter
@@ -291,7 +292,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # scrollable
     @property
-    def scrollable(self) -> Optional[bool]:
+    def scrollable(self) -> bool:
         return self._get_attr("scrollable", data_type="bool", def_value=True)
 
     @scrollable.setter
@@ -320,7 +321,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # is_secondary
     @property
-    def is_secondary(self) -> Optional[bool]:
+    def is_secondary(self) -> bool:
         return self._get_attr("isSecondary", data_type="bool", def_value=False)
 
     @is_secondary.setter
@@ -348,7 +349,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # divider_height
     @property
-    def divider_height(self):
+    def divider_height(self) -> float:
         return self._get_attr("dividerHeight", data_type="float", def_value=1.0)
 
     @divider_height.setter
@@ -366,7 +367,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # indicator_thickness
     @property
-    def indicator_thickness(self):
+    def indicator_thickness(self) -> float:
         return self._get_attr("indicatorThickness", data_type="float", def_value=2.0)
 
     @indicator_thickness.setter
@@ -421,7 +422,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # indicator_tab_size
     @property
-    def indicator_tab_size(self) -> Optional[bool]:
+    def indicator_tab_size(self) -> bool:
         return self._get_attr("indicatorTabSize", data_type="bool", def_value=False)
 
     @indicator_tab_size.setter

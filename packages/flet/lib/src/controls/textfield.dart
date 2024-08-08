@@ -125,6 +125,8 @@ class _TextFieldControlState extends State<TextFieldControl>
           widget.children.where((c) => c.name == "prefix" && c.isVisible);
       var suffixControls =
           widget.children.where((c) => c.name == "suffix" && c.isVisible);
+      var counterControls =
+          widget.children.where((c) => c.name == "counter" && c.isVisible);
 
       bool shiftEnter = widget.control.attrBool("shiftEnter", false)!;
       bool multiline =
@@ -157,7 +159,7 @@ class _TextFieldControlState extends State<TextFieldControl>
       }
 
       TextCapitalization textCapitalization = parseTextCapitalization(
-          widget.control.attrString("textCapitalization"),
+          widget.control.attrString("capitalization"),
           TextCapitalization.none)!;
 
       FilteringTextInputFormatter? inputFilter =
@@ -220,15 +222,15 @@ class _TextFieldControlState extends State<TextFieldControl>
                       .triggerControlEvent(widget.control.id, "submit", value);
                 }
               : null,
-          decoration: buildInputDecoration(
-              context,
-              widget.control,
-              prefixControls.isNotEmpty ? prefixControls.first : null,
-              suffixControls.isNotEmpty ? suffixControls.first : null,
-              revealPasswordIcon,
-              _focused,
-              disabled,
-              adaptive),
+          decoration: buildInputDecoration(context, widget.control,
+              prefix: prefixControls.isNotEmpty ? prefixControls.first : null,
+              suffix: suffixControls.isNotEmpty ? suffixControls.first : null,
+              counter:
+                  counterControls.isNotEmpty ? counterControls.first : null,
+              customSuffix: revealPasswordIcon,
+              focused: _focused,
+              disabled: disabled,
+              adaptive: adaptive),
           showCursor: widget.control.attrBool("showCursor"),
           textAlignVertical: textVerticalAlign != null
               ? TextAlignVertical(y: textVerticalAlign)

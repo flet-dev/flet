@@ -6,7 +6,7 @@ authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
 license = "Apache-2.0"
 
 [tool.poetry.dependencies]
-python = "<3.12,>=3.8"
+python = "<3.13,>=3.8"
 
 [tool.poetry.group.dev.dependencies]
 flet-core = {path = "packages/flet-core", develop = true}
@@ -17,7 +17,7 @@ black = "^22.12.0"
 tomlkit = "^0.11.6"
 cryptography = "^39.0.0"
 pyinstaller = "^5.8.0"
-pillow = "^9.4.0"
+pillow = "^10.4.0"
 pre-commit = "^2.21.0"
 hypercorn = "^0.14.4"
 gunicorn = "^21.2.0"

@@ -11,6 +11,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -270,27 +271,27 @@ class RangeSlider(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallable:
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallable):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
 
     # on_change_start
     @property
-    def on_change_start(self) -> OptionalEventCallable:
+    def on_change_start(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change_start")
 
     @on_change_start.setter
-    def on_change_start(self, handler: OptionalEventCallable):
+    def on_change_start(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change_start", handler)
 
     # on_change_end
     @property
-    def on_change_end(self) -> OptionalEventCallable:
+    def on_change_end(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change_end")
 
     @on_change_end.setter
-    def on_change_end(self, handler: OptionalEventCallable):
+    def on_change_end(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change_end", handler)

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
@@ -8,14 +7,13 @@ import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/animations.dart';
 import '../utils/borders.dart';
+import '../utils/box.dart';
 import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
 import '../utils/launch_url.dart';
 import '../utils/others.dart';
-import '../utils/shadows.dart';
 import 'create_control.dart';
-import 'error.dart';
 import 'flet_store_mixin.dart';
 
 class ContainerTapEvent {
@@ -91,31 +89,8 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
         parseColorFilter(control, "colorFilter", Theme.of(context));
 
     return withPageArgs((context, pageArgs) {
-      DecorationImage? image;
-
-      if (imageSrcBase64 != "") {
-        try {
-          Uint8List bytes = base64Decode(imageSrcBase64);
-          image = DecorationImage(
-              image: MemoryImage(bytes),
-              repeat: imageRepeat,
-              fit: imageFit,
-              opacity: imageOpacity);
-        } catch (ex) {
-          return ErrorControl("Error decoding base64: ${ex.toString()}");
-        }
-      } else if (imageSrc != "") {
-        var assetSrc =
-            getAssetSrc(imageSrc, pageArgs.pageUri!, pageArgs.assetsDir);
-
-        image = DecorationImage(
-            image: assetSrc.isFile
-                ? getFileImageProvider(assetSrc.path)
-                : NetworkImage(assetSrc.path),
-            repeat: imageRepeat,
-            fit: imageFit,
-            opacity: imageOpacity);
-      }
+      ImageProvider? image =
+          getImageProvider(imageSrc, imageSrcBase64, pageArgs);
 
       var gradient = parseGradient(Theme.of(context), control, "gradient");
       var blendMode = parseBlendMode(control.attrString("blendMode"));
@@ -127,17 +102,28 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
       var clipBehavior = parseClip(control.attrString("clipBehavior"),
           borderRadius != null ? Clip.antiAlias : Clip.none)!;
 
-      var boxDecor = BoxDecoration(
-          color: bgColor,
-          gradient: gradient,
-          image: image,
-          backgroundBlendMode:
-              bgColor != null || gradient != null ? blendMode : null,
-          border: parseBorder(Theme.of(context), control, "border",
-              Theme.of(context).colorScheme.primary),
-          borderRadius: borderRadius,
-          shape: shape,
-          boxShadow: parseBoxShadow(Theme.of(context), control, "shadow"));
+      var decorationImage =
+          parseDecorationImage(Theme.of(context), control, "image", pageArgs);
+
+      var boxDecoration = parseBoxDecoration(
+              Theme.of(context), control, "decoration", pageArgs) ??
+          BoxDecoration(
+              color: bgColor,
+              gradient: gradient,
+              image: decorationImage == null && image != null
+                  ? DecorationImage(
+                      image: image,
+                      repeat: imageRepeat,
+                      fit: imageFit,
+                      opacity: imageOpacity)
+                  : decorationImage,
+              backgroundBlendMode:
+                  bgColor != null || gradient != null ? blendMode : null,
+              border: parseBorder(Theme.of(context), control, "border",
+                  Theme.of(context).colorScheme.primary),
+              borderRadius: borderRadius,
+              shape: shape,
+              boxShadow: parseBoxShadow(Theme.of(context), control, "shadow"));
 
       Widget? result;
 
@@ -146,7 +132,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
           !disabled) {
         var ink = Material(
             color: Colors.transparent,
-            borderRadius: boxDecor.borderRadius,
+            borderRadius: boxDecoration.borderRadius,
             child: InkWell(
               // Dummy callback to enable widget
               // see https://github.com/flutter/flutter/issues/50116#issuecomment-582047374
@@ -204,7 +190,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 height: control.attrDouble("height"),
                 margin: parseEdgeInsets(control, "margin"),
                 clipBehavior: clipBehavior,
-                decoration: boxDecor,
+                decoration: boxDecoration,
                 child: ink,
               )
             : AnimatedContainer(
@@ -229,7 +215,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 padding: parseEdgeInsets(control, "padding"),
                 margin: parseEdgeInsets(control, "margin"),
                 alignment: parseAlignment(control, "alignment"),
-                decoration: boxDecor,
+                decoration: boxDecoration,
                 clipBehavior: clipBehavior,
                 child: child)
             : AnimatedContainer(
@@ -240,7 +226,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 padding: parseEdgeInsets(control, "padding"),
                 margin: parseEdgeInsets(control, "margin"),
                 alignment: parseAlignment(control, "alignment"),
-                decoration: boxDecor,
+                decoration: boxDecoration,
                 clipBehavior: clipBehavior,
                 onEnd: control.attrBool("onAnimationEnd", false)!
                     ? () {

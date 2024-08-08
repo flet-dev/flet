@@ -15,6 +15,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalControlEventCallable,
 )
 
 
@@ -26,22 +27,22 @@ class NavigationRailLabelType(Enum):
 
 class NavigationRailDestination(Control):
     def __init__(
-            self,
-            icon: Optional[str] = None,
-            icon_content: Optional[Control] = None,
-            selected_icon: Optional[str] = None,
-            selected_icon_content: Optional[Control] = None,
-            label: Optional[str] = None,
-            label_content: Optional[Control] = None,
-            padding: PaddingValue = None,
-            indicator_color: Optional[str] = None,
-            indicator_shape: Optional[OutlinedBorder] = None,
-            #
-            # Control
-            #
-            ref: Optional[Ref] = None,
-            disabled: Optional[bool] = None,
-            data: Any = None,
+        self,
+        icon: Optional[str] = None,
+        icon_content: Optional[Control] = None,
+        selected_icon: Optional[str] = None,
+        selected_icon_content: Optional[Control] = None,
+        label: Optional[str] = None,
+        label_content: Optional[Control] = None,
+        padding: PaddingValue = None,
+        indicator_color: Optional[str] = None,
+        indicator_shape: Optional[OutlinedBorder] = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ) -> None:
         Control.__init__(self, ref=ref, disabled=disabled, data=data)
         self.label = label
@@ -348,16 +349,16 @@ class NavigationRail(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallable:
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallable):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
 
     # selected_index
     @property
-    def selected_index(self) -> Optional[int]:
+    def selected_index(self) -> int:
         return self._get_attr("selectedIndex", data_type="int", def_value=0)
 
     @selected_index.setter
@@ -413,7 +414,7 @@ class NavigationRail(ConstrainedControl):
 
     # extended
     @property
-    def extended(self) -> Optional[bool]:
+    def extended(self) -> bool:
         return self._get_attr("extended", data_type="bool", def_value=False)
 
     @extended.setter

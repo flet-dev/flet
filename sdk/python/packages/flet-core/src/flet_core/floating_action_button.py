@@ -14,6 +14,7 @@ from flet_core.types import (
     ScaleValue,
     UrlTarget,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -245,11 +246,11 @@ class FloatingActionButton(ConstrainedControl):
 
     # on_click
     @property
-    def on_click(self) -> OptionalEventCallable:
+    def on_click(self) -> OptionalControlEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler: OptionalEventCallable):
+    def on_click(self, handler: OptionalControlEventCallable):
         self._add_event_handler("click", handler)
 
     # content
@@ -263,7 +264,7 @@ class FloatingActionButton(ConstrainedControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
@@ -281,7 +282,7 @@ class FloatingActionButton(ConstrainedControl):
 
     # mini
     @property
-    def mini(self) -> Optional[bool]:
+    def mini(self) -> bool:
         return self._get_attr("mini", data_type="bool", def_value=False)
 
     @mini.setter
@@ -310,7 +311,7 @@ class FloatingActionButton(ConstrainedControl):
 
     # enable_feedback
     @property
-    def enable_feedback(self) -> Optional[bool]:
+    def enable_feedback(self) -> bool:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
 
     @enable_feedback.setter
