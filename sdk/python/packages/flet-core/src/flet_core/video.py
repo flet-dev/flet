@@ -91,6 +91,7 @@ class Video(ConstrainedControl):
         on_exit_fullscreen: OptionalEventCallable = None,
         on_error: OptionalEventCallable = None,
         on_completed: OptionalEventCallable = None,
+        on_track_changed: OptionalEventCallable = None,
 
         #
         # ConstrainedControl
@@ -175,6 +176,7 @@ class Video(ConstrainedControl):
         self.on_loaded = on_loaded
         self.on_error = on_error
         self.on_completed = on_completed
+        self.on_track_changed = on_track_changed
 
 
     def _get_control_name(self):
@@ -601,3 +603,13 @@ class Video(ConstrainedControl):
     def on_completed(self, handler: OptionalControlEventCallable):
         self._set_attr("onCompleted", True if handler is not None else None)
         self._add_event_handler("completed", handler)
+
+    # on_track_changed
+    @property
+    def on_track_changed(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("track_changed")
+
+    @on_track_changed.setter
+    def on_track_changed(self, handler: OptionalControlEventCallable):
+        self._set_attr("onTrackChanged", True if handler is not None else None)
+        self._add_event_handler("track_changed", handler)
