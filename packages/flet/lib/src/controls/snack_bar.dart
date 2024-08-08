@@ -6,6 +6,7 @@ import '../utils/borders.dart';
 import '../utils/dismissible.dart';
 import '../utils/edge_insets.dart';
 import '../utils/others.dart';
+import '../utils/time.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -73,28 +74,29 @@ class _SnackBarControlState extends State<SnackBarControl> {
     }
 
     return SnackBar(
-        behavior: behavior,
-        clipBehavior: clipBehavior,
-        actionOverflowThreshold:
-            widget.control.attrDouble("actionOverflowThreshold"),
-        shape: parseOutlinedBorder(widget.control, "shape"),
-        onVisible: () {
-          debugPrint("SnackBar.onVisible(${widget.control.id})");
-          widget.backend.triggerControlEvent(widget.control.id, "visible");
-        },
-        dismissDirection: dismissDirection,
-        showCloseIcon: widget.control.attrBool("showCloseIcon"),
-        closeIconColor: widget.control.attrColor("closeIconColor", context),
-        content: createControl(widget.control, contentCtrls.first.id, disabled,
-            parentAdaptive: widget.parentAdaptive),
-        backgroundColor: widget.control.attrColor("bgColor", context),
-        action: action,
-        margin: margin,
-        padding: parseEdgeInsets(widget.control, "padding"),
-        width: width,
-        elevation: widget.control.attrDouble("elevation"),
-        duration:
-            Duration(milliseconds: widget.control.attrInt("duration", 4000)!));
+      behavior: behavior,
+      clipBehavior: clipBehavior,
+      actionOverflowThreshold:
+          widget.control.attrDouble("actionOverflowThreshold"),
+      shape: parseOutlinedBorder(widget.control, "shape"),
+      onVisible: () {
+        debugPrint("SnackBar.onVisible(${widget.control.id})");
+        widget.backend.triggerControlEvent(widget.control.id, "visible");
+      },
+      dismissDirection: dismissDirection,
+      showCloseIcon: widget.control.attrBool("showCloseIcon"),
+      closeIconColor: widget.control.attrColor("closeIconColor", context),
+      content: createControl(widget.control, contentCtrls.first.id, disabled,
+          parentAdaptive: widget.parentAdaptive),
+      backgroundColor: widget.control.attrColor("bgColor", context),
+      action: action,
+      margin: margin,
+      padding: parseEdgeInsets(widget.control, "padding"),
+      width: width,
+      elevation: widget.control.attrDouble("elevation"),
+      duration: parseDuration(
+          widget.control, "duration", const Duration(milliseconds: 4000))!,
+    );
   }
 
   @override

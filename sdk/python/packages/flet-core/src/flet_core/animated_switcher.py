@@ -12,6 +12,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
+    DurationValue,
 )
 
 try:
@@ -81,8 +82,8 @@ class AnimatedSwitcher(ConstrainedControl):
     def __init__(
         self,
         content: Control,
-        duration: Optional[int] = None,
-        reverse_duration: Optional[int] = None,
+        duration: DurationValue = None,
+        reverse_duration: DurationValue = None,
         switch_in_curve: Optional[AnimationCurve] = None,
         switch_out_curve: Optional[AnimationCurve] = None,
         transition: Optional[AnimatedSwitcherTransition] = None,
@@ -159,6 +160,8 @@ class AnimatedSwitcher(ConstrainedControl):
     def before_update(self):
         super().before_update()
         assert self.__content.visible, "content must be visible"
+        self._set_attr_json("duration", self.__duration)
+        self._set_attr_json("reverseDuration", self.__reverse_duration)
 
     def _get_children(self):
         self.__content._set_attr_internal("n", "content")
@@ -175,21 +178,21 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # duration
     @property
-    def duration(self) -> int:
-        return self._get_attr("duration", data_type="int", def_value=1000)
+    def duration(self) -> DurationValue:
+        return self.__duration
 
     @duration.setter
-    def duration(self, value: Optional[int]):
-        self._set_attr("duration", value)
+    def duration(self, value: DurationValue):
+        self.__duration = value
 
     # reverse_duration
     @property
-    def reverse_duration(self) -> int:
-        return self._get_attr("reverseDuration", data_type="int", def_value=1000)
+    def reverse_duration(self) -> DurationValue:
+        return self.__reverse_duration
 
     @reverse_duration.setter
-    def reverse_duration(self, value: Optional[int]):
-        self._set_attr("reverseDuration", value)
+    def reverse_duration(self, value: DurationValue):
+        self.__reverse_duration = value
 
     # switch_in_curve
     @property

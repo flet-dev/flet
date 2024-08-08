@@ -11,6 +11,7 @@ from flet_core.types import (
     MarginValue,
     PaddingValue,
     TextAlign,
+    DurationValue,
 )
 
 
@@ -79,8 +80,8 @@ class Tooltip(Control):
         text_style: Optional[TextStyle] = None,
         text_align: Optional[TextAlign] = None,
         prefer_below: Optional[bool] = None,
-        show_duration: Optional[int] = None,
-        wait_duration: Optional[int] = None,
+        show_duration: DurationValue = None,
+        wait_duration: DurationValue = None,
         enable_tap_to_dismiss: Optional[bool] = None,
         exclude_from_semantics: Optional[bool] = None,
         #
@@ -130,6 +131,8 @@ class Tooltip(Control):
         self._set_attr_json("borderRadius", self.__border_radius)
         self._set_attr_json("border", self.__border)
         self._set_attr_json("gradient", self.__gradient)
+        self._set_attr_json("showDuration", self.__show_duration)
+        self._set_attr_json("waitDuration", self.__wait_duration)
 
     def _get_children(self):
         if self.__content is not None:
@@ -285,21 +288,21 @@ class Tooltip(Control):
 
     # show_duration
     @property
-    def show_duration(self) -> Optional[int]:
-        return self._get_attr("showDuration", data_type="int")
+    def show_duration(self) -> DurationValue:
+        return self.__show_duration
 
     @show_duration.setter
-    def show_duration(self, value: Optional[int]):
-        self._set_attr("showDuration", value)
+    def show_duration(self, value: DurationValue):
+        self.__show_duration = value
 
     # wait_duration
     @property
-    def wait_duration(self) -> Optional[int]:
-        return self._get_attr("waitDuration", data_type="int")
+    def wait_duration(self) -> DurationValue:
+        return self.__wait_duration
 
     @wait_duration.setter
-    def wait_duration(self, value: Optional[int]):
-        self._set_attr("waitDuration", value)
+    def wait_duration(self, value: DurationValue):
+        self.__wait_duration = value
 
     # content
     @property

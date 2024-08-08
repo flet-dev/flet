@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from enum import Enum, EnumMeta
 from typing import (
     Any,
@@ -8,15 +9,20 @@ from typing import (
     Tuple,
     TypeVar,
     Union,
+    TYPE_CHECKING
 )
 from warnings import warn
 
-from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
 from flet_core.control_event import ControlEvent
 from flet_core.margin import Margin
 from flet_core.padding import Padding
 from flet_core.transform import Offset, Rotate, Scale
+
+WEB_BROWSER = "web_browser"
+FLET_APP = "flet_app"
+FLET_APP_WEB = "flet_app_web"
+FLET_APP_HIDDEN = "flet_app_hidden"
 
 
 class AppView(Enum):
@@ -67,7 +73,7 @@ ScaleValue = Optional[Union[int, float, Scale]]
 
 OffsetValue = Optional[Union[Offset, Tuple[Union[float, int], Union[float, int]]]]
 
-AnimationValue = Optional[Union[bool, int, Animation]]
+AnimationValue = Optional[Union[bool, int, "Animation"]]
 
 
 class FontWeight(Enum):
@@ -390,6 +396,18 @@ class VisualDensity(Enum):
     COMFORTABLE = "comfortable"
     ADAPTIVE_PLATFORM_DENSITY = "adaptivePlatformDensity"
 
+
+@dataclass
+class Duration:
+    microseconds: int = 0
+    milliseconds: int = 0
+    seconds: int = 0
+    minutes: int = 0
+    hours: int = 0
+    days: int = 0
+
+
+DurationValue = Union[int, Duration, None]
 
 # Events
 ControlEventType = TypeVar("ControlEventType", bound=ControlEvent)

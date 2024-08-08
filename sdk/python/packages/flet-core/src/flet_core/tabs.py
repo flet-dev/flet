@@ -19,6 +19,7 @@ from flet_core.types import (
     TabAlignment,
     OptionalEventCallable,
     OptionalControlEventCallable,
+    DurationValue,
 )
 
 
@@ -148,7 +149,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         selected_index: Optional[int] = None,
         scrollable: Optional[bool] = None,
         tab_alignment: Optional[TabAlignment] = None,
-        animation_duration: Optional[int] = None,
+        animation_duration: DurationValue = None,
         divider_color: Optional[str] = None,
         indicator_color: Optional[str] = None,
         indicator_border_radius: BorderRadiusValue = None,
@@ -259,6 +260,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("indicatorBorderRadius", self.__indicator_border_radius)
         self._set_attr_json("indicatorBorderSide", self.__indicator_border_side)
         self._set_attr_json("indicatorPadding", self.__indicator_padding)
+        self._set_attr_json("animationDuration", self.__animation_duration)
 
     def _get_children(self):
         return self.__tabs
@@ -340,12 +342,12 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # animation_duration
     @property
-    def animation_duration(self) -> Optional[int]:
-        return self._get_attr("animationDuration", data_type="int")
+    def animation_duration(self) -> DurationValue:
+        return self.__animation_duration
 
     @animation_duration.setter
-    def animation_duration(self, value: Optional[int]):
-        self._set_attr("animationDuration", value)
+    def animation_duration(self, value: DurationValue):
+        self.__animation_duration = value
 
     # divider_height
     @property

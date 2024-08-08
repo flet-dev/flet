@@ -15,6 +15,7 @@ import '../utils/icons.dart';
 import '../utils/material_state.dart';
 import '../utils/mouse.dart';
 import '../utils/others.dart';
+import '../utils/time.dart';
 import 'create_control.dart';
 
 class TabsControl extends StatefulWidget {
@@ -92,9 +93,8 @@ class _TabsControlState extends State<TabsControl>
             }
             _tabController = TabController(
                 length: viewModel.controlViews.length,
-                animationDuration: Duration(
-                    milliseconds:
-                        widget.control.attrInt("animationDuration", 50)!),
+                animationDuration: parseDuration(widget.control,
+                    "animationDuration", const Duration(milliseconds: 50))!,
                 vsync: this);
             _tabController!.addListener(_tabChanged);
           }
