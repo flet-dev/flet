@@ -334,6 +334,7 @@ for:
     install:
       - python --version
       - cd sdk/python
+      - python -m ensurepip --upgrade
       - pip install --upgrade setuptools
       - pip install --upgrade pip virtualenv
       - pip install poetry
