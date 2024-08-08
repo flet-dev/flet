@@ -267,13 +267,6 @@ for:
       - export PATH="$PATH:$HOME/flutter/bin"
       - source ci/install_flutter.sh
 
-      # Fix Flutter on ARM
-      # - pushd /tmp
-      # - curl -O https://appveyordownloads.blob.core.windows.net/misc/shader_lib.tar.gz
-      # - tar -zxf shader_lib.tar.gz
-      # - cp -R shader_lib $HOME/flutter/bin/cache/artifacts/engine/linux-arm64
-      # - popd
-
     build_script:
       - cd client
       - flutter build linux --build-name=$APPVEYOR_BUILD_VERSION
