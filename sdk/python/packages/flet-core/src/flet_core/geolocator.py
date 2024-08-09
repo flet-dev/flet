@@ -1,10 +1,14 @@
-import json
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Optional
 
 from flet_core.control import Control
 from flet_core.ref import Ref
+from flet_core.types import (
+    OptionalEventCallable,
+    OptionalControlEventCallable,
+)
+import json
 
 
 class GeolocatorPositionAccuracy(Enum):
@@ -58,12 +62,16 @@ class Geolocator(Control):
         #
         ref: Optional[Ref] = None,
         data: Any = None,
+        on_position: OptionalEventCallable = None,
+
     ):
         Control.__init__(
             self,
             ref=ref,
             data=data,
         )
+        self.on_position = on_position
+
 
     def _get_control_name(self):
         return "geolocator"
@@ -192,7 +200,7 @@ class Geolocator(Control):
 
     def is_location_service_enabled(self, wait_timeout: Optional[float] = 10) -> bool:
         enabled = self.invoke_method(
-            "request_permission",
+            "is_location_service_enabled",
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
@@ -245,3 +253,49 @@ class Geolocator(Control):
             wait_timeout=wait_timeout,
         )
         return opened == "true"
+
+    def service_enable(self, wait_timeout: Optional[float] = 10) -> bool:
+        opened = self.invoke_method(
+            "service_enable",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return opened == "true"
+
+    async def service_enable_async(
+        self, wait_timeout: Optional[float] = 10
+    ) -> bool:
+        opened = await self.invoke_method_async(
+            "service_enable",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return opened == "true"
+
+    def service_disable(self, wait_timeout: Optional[float] = 10) -> bool:
+        opened = self.invoke_method(
+            "service_disable",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return opened == "true"
+
+    async def service_disable_async(
+        self, wait_timeout: Optional[float] = 10
+    ) -> bool:
+        opened = await self.invoke_method_async(
+            "service_disable",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return opened == "true"
+
+    @property
+    def on_position(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("position")
+
+    @on_position.setter
+    def on_position(self, handler: OptionalControlEventCallable):
+        self._set_attr("onPosition", True if handler is not None else None)
+        self._add_event_handler("position", handler)
+
