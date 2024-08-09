@@ -37,7 +37,7 @@ class _NavigationRailControlState extends State<NavigationRailControl>
 
   void _destinationChanged(int index) {
     _selectedIndex = index;
-    debugPrint("Selected index: $_selectedIndex");
+    debugPrint("NavigationRail selectedIndex: $_selectedIndex");
     widget.backend.updateControlState(
         widget.control.id, {"selectedindex": _selectedIndex.toString()});
     widget.backend.triggerControlEvent(
@@ -87,7 +87,7 @@ class _NavigationRailControlState extends State<NavigationRailControl>
                     "Control's height is unbounded. Either set \"expand\" property, set a fixed \"height\" or nest NavigationRail inside another control with a fixed height.");
           }
 
-          var rail = NavigationRail(
+          var r = NavigationRail(
               labelType: extended ? NavigationRailLabelType.none : labelType,
               extended: extended,
               elevation: widget.control.attrDouble("elevation"),
@@ -156,11 +156,11 @@ class _NavigationRailControlState extends State<NavigationRailControl>
               }).toList());
 
           return constrainedControl(
-              context, rail, widget.parent, widget.control);
+              context, r, widget.parent, widget.control);
         },
       );
     });
 
-    return constrainedControl(context, rail, widget.parent, widget.control);
+    return rail;
   }
 }
