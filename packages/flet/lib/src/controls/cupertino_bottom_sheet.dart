@@ -49,9 +49,8 @@ class _CupertinoBottomSheetControlState
         : const SizedBox.shrink();
 
     if (contentCtrls.isNotEmpty &&
-        (contentCtrls.first.type == "cupertinopicker" ||
-            contentCtrls.first.type == "cupertinotimerpicker" ||
-            contentCtrls.first.type == "cupertinodatepicker")) {
+        ["cupertinopicker", "cupertinotimerpicker", "cupertinodatepicker"]
+            .contains(contentCtrls.first.type)) {
       content = Container(
         height: height,
         padding: padding,
@@ -112,8 +111,7 @@ class _CupertinoBottomSheetControlState
           if (shouldDismiss) {
             widget.backend
                 .updateControlState(widget.control.id, {"open": "false"});
-            widget.backend
-                .triggerControlEvent(widget.control.id, "dismiss", "");
+            widget.backend.triggerControlEvent(widget.control.id, "dismiss");
           }
         });
       });

@@ -1,5 +1,4 @@
 import flet_core as ft
-import pytest
 from flet_core.protocol import Command
 
 
@@ -11,7 +10,7 @@ def test_instance_no_attrs_set():
             indent=0,
             name=None,
             values=["navigationrail"],
-            attrs={},
+            attrs={"rtl": "false"},
             commands=[],
         )
     ], "Test failed"

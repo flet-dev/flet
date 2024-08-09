@@ -54,13 +54,12 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
       _selectedIndex = selectedIndex;
     }
 
-    var navDrawer = withControls(
+    return withControls(
         widget.children
             .where((c) => c.isVisible && c.name == null)
             .map((c) => c.id), (content, viewModel) {
       List<Widget> children = viewModel.controlViews.map((destView) {
         if (destView.control.type == "navigationdrawerdestination") {
-          var icon = parseIcon(destView.control.attrString("icon"));
           var iconContentCtrls = destView.children
               .where((c) => c.name == "icon_content" && c.isVisible);
           var selectedIcon =
@@ -73,7 +72,7 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
                 ? createControl(
                     destView.control, iconContentCtrls.first.id, disabled,
                     parentAdaptive: widget.parentAdaptive)
-                : Icon(icon),
+                : Icon(parseIcon(destView.control.attrString("icon"))),
             label: Text(destView.control.attrString("label", "")!),
             selectedIcon: selectedIconContentCtrls.isNotEmpty
                 ? createControl(destView.control,
@@ -88,7 +87,8 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
               parentAdaptive: widget.parentAdaptive);
         }
       }).toList();
-      return NavigationDrawer(
+
+      var drawer = NavigationDrawer(
         elevation: widget.control.attrDouble("elevation"),
         indicatorColor: widget.control.attrColor("indicatorColor", context),
         indicatorShape: parseOutlinedBorder(widget.control, "indicatorShape"),
@@ -101,8 +101,9 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
         onDestinationSelected: _destinationChanged,
         children: children,
       );
+
+      return baseControl(context, drawer, widget.parent, widget.control);
     });
 
-    return navDrawer;
   }
 }
