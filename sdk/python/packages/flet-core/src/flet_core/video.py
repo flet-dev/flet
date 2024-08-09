@@ -3,6 +3,7 @@ from enum import Enum
 from typing import Any, Dict, List, Optional, Union, cast
 
 from flet_core.alignment import Alignment
+from flet_core.box import FilterQuality
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -17,15 +18,9 @@ from flet_core.types import (
     ScaleValue,
     TextAlign,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
-
-
-class FilterQuality(Enum):
-    NONE = "none"
-    LOW = "low"
-    MEDIUM = "medium"
-    HIGH = "high"
 
 
 class PlaylistMode(Enum):
@@ -95,6 +90,9 @@ class Video(ConstrainedControl):
         on_enter_fullscreen: OptionalEventCallable = None,
         on_exit_fullscreen: OptionalEventCallable = None,
         on_error: OptionalEventCallable = None,
+        on_completed: OptionalEventCallable = None,
+        on_track_changed: OptionalEventCallable = None,
+
         #
         # ConstrainedControl
         #
@@ -177,6 +175,9 @@ class Video(ConstrainedControl):
         self.on_exit_fullscreen = on_exit_fullscreen
         self.on_loaded = on_loaded
         self.on_error = on_error
+        self.on_completed = on_completed
+        self.on_track_changed = on_track_changed
+
 
     def _get_control_name(self):
         return "video"
@@ -416,7 +417,7 @@ class Video(ConstrainedControl):
 
     # wakelock
     @property
-    def wakelock(self) -> Optional[bool]:
+    def wakelock(self) -> bool:
         return self._get_attr("wakelock", data_type="bool", def_value=True)
 
     @wakelock.setter
@@ -425,7 +426,7 @@ class Video(ConstrainedControl):
 
     # autoplay
     @property
-    def autoplay(self) -> Optional[bool]:
+    def autoplay(self) -> bool:
         return self._get_attr("autoPlay", data_type="bool", def_value=False)
 
     @autoplay.setter
@@ -434,7 +435,7 @@ class Video(ConstrainedControl):
 
     # muted
     @property
-    def muted(self) -> Optional[bool]:
+    def muted(self) -> bool:
         return self._get_attr("muted", data_type="bool", def_value=False)
 
     @muted.setter
@@ -443,7 +444,7 @@ class Video(ConstrainedControl):
 
     # shuffle_playlist
     @property
-    def shuffle_playlist(self) -> Optional[bool]:
+    def shuffle_playlist(self) -> bool:
         return self._get_attr("shufflePlaylist", data_type="bool", def_value=False)
 
     @shuffle_playlist.setter
@@ -452,7 +453,7 @@ class Video(ConstrainedControl):
 
     # show_controls
     @property
-    def show_controls(self) -> Optional[bool]:
+    def show_controls(self) -> bool:
         return self._get_attr("showControls", data_type="bool", def_value=True)
 
     @show_controls.setter
@@ -498,7 +499,7 @@ class Video(ConstrainedControl):
 
     # pause_upon_entering_background_mode
     @property
-    def pause_upon_entering_background_mode(self) -> Optional[bool]:
+    def pause_upon_entering_background_mode(self) -> bool:
         return cast(
             bool,
             self._get_attr(
@@ -512,7 +513,7 @@ class Video(ConstrainedControl):
 
     # resume_upon_entering_foreground_mode
     @property
-    def resume_upon_entering_foreground_mode(self) -> Optional[bool]:
+    def resume_upon_entering_foreground_mode(self) -> bool:
         return cast(
             bool,
             self._get_attr(
@@ -559,36 +560,56 @@ class Video(ConstrainedControl):
         return self._get_event_handler("enter_fullscreen")
 
     @on_enter_fullscreen.setter
-    def on_enter_fullscreen(self, handler: OptionalEventCallable):
+    def on_enter_fullscreen(self, handler: OptionalControlEventCallable):
         self._add_event_handler("enter_fullscreen", handler)
         self._set_attr("onEnterFullscreen", True if handler is not None else None)
 
     # on_exit_fullscreen
     @property
-    def on_exit_fullscreen(self) -> OptionalEventCallable:
+    def on_exit_fullscreen(self) -> OptionalControlEventCallable:
         return self._get_event_handler("exit_fullscreen")
 
     @on_exit_fullscreen.setter
-    def on_exit_fullscreen(self, handler: OptionalEventCallable):
+    def on_exit_fullscreen(self, handler: OptionalControlEventCallable):
         self._add_event_handler("exit_fullscreen", handler)
         self._set_attr("onExitFullscreen", True if handler is not None else None)
 
     # on_loaded
     @property
-    def on_loaded(self) -> OptionalEventCallable:
+    def on_loaded(self) -> OptionalControlEventCallable:
         return self._get_event_handler("loaded")
 
     @on_loaded.setter
-    def on_loaded(self, handler: OptionalEventCallable):
+    def on_loaded(self, handler: OptionalControlEventCallable):
         self._set_attr("onLoaded", True if handler is not None else None)
         self._add_event_handler("loaded", handler)
 
     # on_error
     @property
-    def on_error(self) -> OptionalEventCallable:
+    def on_error(self) -> OptionalControlEventCallable:
         return self._get_event_handler("error")
 
     @on_error.setter
-    def on_error(self, handler: OptionalEventCallable):
+    def on_error(self, handler: OptionalControlEventCallable):
         self._set_attr("onError", True if handler is not None else None)
         self._add_event_handler("error", handler)
+
+    # on_completed
+    @property
+    def on_completed(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("completed")
+
+    @on_completed.setter
+    def on_completed(self, handler: OptionalControlEventCallable):
+        self._set_attr("onCompleted", True if handler is not None else None)
+        self._add_event_handler("completed", handler)
+
+    # on_track_changed
+    @property
+    def on_track_changed(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("track_changed")
+
+    @on_track_changed.setter
+    def on_track_changed(self, handler: OptionalControlEventCallable):
+        self._set_attr("onTrackChanged", True if handler is not None else None)
+        self._add_event_handler("track_changed", handler)

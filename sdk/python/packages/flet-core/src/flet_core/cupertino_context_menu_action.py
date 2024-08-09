@@ -1,9 +1,9 @@
 from typing import Any, Optional
 
-from flet_core.types import OptionalEventCallable
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.control import Control
 from flet_core.ref import Ref
+from flet_core.types import OptionalEventCallable, OptionalControlEventCallable
 
 
 class CupertinoContextMenuAction(AdaptiveControl):
@@ -57,7 +57,7 @@ class CupertinoContextMenuAction(AdaptiveControl):
 
     # is_default_action
     @property
-    def is_default_action(self) -> Optional[bool]:
+    def is_default_action(self) -> bool:
         return self._get_attr("isDefaultAction", data_type="bool", def_value=False)
 
     @is_default_action.setter
@@ -66,7 +66,7 @@ class CupertinoContextMenuAction(AdaptiveControl):
 
     # is_destructive_action
     @property
-    def is_destructive_action(self) -> Optional[bool]:
+    def is_destructive_action(self) -> bool:
         return self._get_attr("isDestructiveAction", data_type="bool", def_value=False)
 
     @is_destructive_action.setter
@@ -102,9 +102,9 @@ class CupertinoContextMenuAction(AdaptiveControl):
 
     # on_click
     @property
-    def on_click(self) -> OptionalEventCallable:
+    def on_click(self) -> OptionalControlEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler: OptionalEventCallable):
+    def on_click(self, handler: OptionalControlEventCallable):
         self._add_event_handler("click", handler)

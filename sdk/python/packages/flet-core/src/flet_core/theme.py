@@ -11,7 +11,7 @@ from flet_core.navigation_bar import NavigationBarLabelBehavior
 from flet_core.navigation_rail import NavigationRailLabelType
 from flet_core.padding import Padding
 from flet_core.popup_menu_button import PopupMenuPosition
-from flet_core.shadow import BoxShadow
+from flet_core.box import BoxShadow
 from flet_core.snack_bar import DismissDirection, SnackBarBehavior
 from flet_core.text_style import TextStyle
 from flet_core.textfield import TextCapitalization
@@ -686,6 +686,7 @@ class Theme:
     divider_theme: Optional[DividerTheme] = field(default=None)
     # dropdown_menu_theme: Optional[DropdownMenuTheme] = field(default=None)
     expansion_tile_theme: Optional[ExpansionTileTheme] = field(default=None)
+    floating_action_button_theme: Optional[FloatingActionButtonTheme] = field(default=None)
     list_tile_theme: Optional[ListTileTheme] = field(default=None)
     navigation_bar_theme: Optional[NavigationBarTheme] = field(default=None)
     navigation_drawer_theme: Optional[NavigationDrawerTheme] = field(default=None)
@@ -710,4 +711,6 @@ class Theme:
     text_theme: Optional[TextTheme] = field(default=None)
     time_picker_theme: Optional[TimePickerTheme] = field(default=None)
     tooltip_theme: Optional[TooltipTheme] = field(default=None)
-    visual_density: ThemeVisualDensity = field(default=ThemeVisualDensity.STANDARD)
+    visual_density: Union[VisualDensity, ThemeVisualDensity] = field(
+        default=VisualDensity.STANDARD
+    )

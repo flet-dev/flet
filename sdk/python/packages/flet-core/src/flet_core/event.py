@@ -12,6 +12,6 @@ class Event:
         attrs = ", ".join(
             f"{k}={v!r}"
             for k, v in self.__dict__.items()
-            if k not in ["control", "page", "target"]  # ignore these keys
+            if k not in ["control", "page", "target", "data"]  # ignore these keys
         )
-        return f"{self.__class__.__name__}({attrs})"
+        return f"{self.__class__.__name__}({attrs}, data={self.data!r})"  # reinsert data as last arg

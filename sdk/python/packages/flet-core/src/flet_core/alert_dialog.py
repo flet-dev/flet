@@ -11,6 +11,7 @@ from flet_core.types import (
     MainAxisAlignment,
     PaddingValue,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -178,7 +179,7 @@ class AlertDialog(AdaptiveControl):
 
     # open
     @property
-    def open(self) -> Optional[bool]:
+    def open(self) -> bool:
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
@@ -241,7 +242,7 @@ class AlertDialog(AdaptiveControl):
 
     # scrollable
     @property
-    def scrollable(self) -> Optional[bool]:
+    def scrollable(self) -> bool:
         return self._get_attr("scrollable", data_type="bool", def_value=False)
 
     @scrollable.setter
@@ -277,7 +278,7 @@ class AlertDialog(AdaptiveControl):
 
     # modal
     @property
-    def modal(self) -> Optional[bool]:
+    def modal(self) -> bool:
         return self._get_attr("modal", data_type="bool", def_value=False)
 
     @modal.setter
@@ -417,9 +418,9 @@ class AlertDialog(AdaptiveControl):
 
     # on_dismiss
     @property
-    def on_dismiss(self) -> OptionalEventCallable:
+    def on_dismiss(self) -> OptionalControlEventCallable:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler: OptionalEventCallable):
+    def on_dismiss(self, handler: OptionalControlEventCallable):
         self._add_event_handler("dismiss", handler)

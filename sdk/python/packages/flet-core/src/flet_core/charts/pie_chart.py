@@ -1,5 +1,6 @@
 import json
-from typing import Any, List, Optional, Union, Callable
+from enum import Enum
+from typing import Any, List, Optional, Union
 
 from flet_core.charts.pie_chart_section import PieChartSection
 from flet_core.constrained_control import ConstrainedControl
@@ -26,7 +27,7 @@ class PieChart(ConstrainedControl):
         sections_space: OptionalNumber = None,
         start_degree_offset: OptionalNumber = None,
         animate: AnimationValue = None,
-        on_chart_event: Optional[Callable[["PieChartEvent"], None]] = None,
+        on_chart_event: OptionalEventCallable["PieChartEvent"] = None,
         #
         # ConstrainedControl
         #
@@ -171,16 +172,36 @@ class PieChart(ConstrainedControl):
         return self.__on_chart_event
 
     @on_chart_event.setter
-    def on_chart_event(self, handler: Optional[Callable[["PieChartEvent"], None]]):
+    def on_chart_event(self, handler: OptionalEventCallable["PieChartEvent"]):
         self.__on_chart_event.subscribe(handler)
         self._set_attr("onChartEvent", True if handler is not None else None)
+
+
+class PieChartEventType(Enum):
+    POINTER_ENTER = "pointerEnter"
+    POINTER_EXIT = "pointerExit"
+    POINTER_HOVER = "pointerHover"
+    PAN_CANCEL = "panCancel"
+    PAN_DOWN = "panDown"
+    PAN_END = "panEnd"
+    PAN_START = "panStart"
+    PAN_UPDATE = "panUpdate"
+    LONG_PRESS_END = "longPressEnd"
+    LONG_PRESS_MOVE_UPDATE = "longPressMoveUpdate"
+    LONG_PRESS_START = "longPressStart"
+    TAP_CANCEL = "tapCancel"
+    TAP_DOWN = "tapDown"
+    TAP_UP = "tapUp"
+    UNDEFINED = "undefined"
 
 
 class PieChartEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.type: str = d["type"]
+        self.type: PieChartEventType = PieChartEventType(d.get("type"))
         self.section_index: int = d["section_index"]
+        self.local_x: Optional[float] = d.get("lx")
+        self.local_y: Optional[float] = d.get("ly")
         # self.radius: float = d["radius"]
         # self.angle: float = d["angle"]

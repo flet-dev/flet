@@ -12,6 +12,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -226,11 +227,11 @@ class SegmentedButton(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self) -> OptionalEventCallable:
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler: OptionalEventCallable):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
 
     # segments
@@ -244,7 +245,7 @@ class SegmentedButton(ConstrainedControl):
 
     # allow_empty_selection
     @property
-    def allow_empty_selection(self) -> Optional[bool]:
+    def allow_empty_selection(self) -> bool:
         return self._get_attr("allowEmptySelection", data_type="bool", def_value=False)
 
     @allow_empty_selection.setter
@@ -253,7 +254,7 @@ class SegmentedButton(ConstrainedControl):
 
     # allow_multiple_selection
     @property
-    def allow_multiple_selection(self) -> Optional[bool]:
+    def allow_multiple_selection(self) -> bool:
         return self._get_attr(
             "allowMultipleSelection", data_type="bool", def_value=False
         )
@@ -281,7 +282,7 @@ class SegmentedButton(ConstrainedControl):
 
     # show_selected_icon
     @property
-    def show_selected_icon(self) -> Optional[bool]:
+    def show_selected_icon(self) -> bool:
         return self._get_attr("showSelectedIcon", data_type="bool", def_value=True)
 
     @show_selected_icon.setter

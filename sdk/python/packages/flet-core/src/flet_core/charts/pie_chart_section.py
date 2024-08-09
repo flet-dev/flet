@@ -134,7 +134,7 @@ class PieChartSection(Control):
 
     # title_position
     @property
-    def title_position(self) -> OptionalNumber:
+    def title_position(self) -> float:
         return self._get_attr("titlePosition", data_type="float", def_value=1.0)
 
     @title_position.setter

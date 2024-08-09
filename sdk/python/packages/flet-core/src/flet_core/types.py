@@ -1,5 +1,14 @@
 from enum import Enum, EnumMeta
-from typing import Any, Callable, Dict, Optional, Protocol, Tuple, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Optional,
+    Protocol,
+    Tuple,
+    TypeVar,
+    Union,
+)
 from warnings import warn
 
 from flet_core.animation import Animation
@@ -8,11 +17,6 @@ from flet_core.control_event import ControlEvent
 from flet_core.margin import Margin
 from flet_core.padding import Padding
 from flet_core.transform import Offset, Rotate, Scale
-
-WEB_BROWSER = "web_browser"
-FLET_APP = "flet_app"
-FLET_APP_WEB = "flet_app_web"
-FLET_APP_HIDDEN = "flet_app_hidden"
 
 
 class AppView(Enum):
@@ -78,11 +82,6 @@ class FontWeight(Enum):
     W_700 = "w700"
     W_800 = "w800"
     W_900 = "w900"
-
-
-class BoxShape(Enum):
-    RECTANGLE = "rectangle"
-    CIRCLE = "circle"
 
 
 class NotchShape(Enum):
@@ -393,7 +392,11 @@ class VisualDensity(Enum):
 
 
 # Events
-OptionalEventCallable = Optional[Callable[[ControlEvent], None]]
+ControlEventType = TypeVar("ControlEventType", bound=ControlEvent)
+EventCallable = Callable[[ControlEventType], Any]
+OptionalEventCallable = Optional[EventCallable]
+OptionalControlEventCallable = OptionalEventCallable[ControlEvent]
+
 
 # Wrapper
 Wrapper = Callable[..., Any]

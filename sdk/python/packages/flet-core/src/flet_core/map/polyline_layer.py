@@ -74,7 +74,6 @@ class PolylineMarker(Control):
         visible: Optional[bool] = None,
         data: Any = None,
     ):
-
         Control.__init__(
             self,
             ref=ref,
@@ -99,8 +98,7 @@ class PolylineMarker(Control):
 
     def before_update(self):
         super().before_update()
-        if isinstance(self.__coordinates, list):
-            self._set_attr_json("coordinates", self.__coordinates)
+        self._set_attr_json("coordinates", self.__coordinates)
         if isinstance(self.__colors_stop, list):
             self._set_attr_json("colorsStop", self.__colors_stop)
         if isinstance(self.__gradient_colors, list):
@@ -156,7 +154,7 @@ class PolylineMarker(Control):
 
     # use_stroke_width_in_meter
     @property
-    def use_stroke_width_in_meter(self) -> Optional[bool]:
+    def use_stroke_width_in_meter(self) -> bool:
         return self._get_attr(
             "useStrokeWidthInMeter", data_type="bool", def_value=False
         )
@@ -185,8 +183,8 @@ class PolylineMarker(Control):
 
     # border_stroke_width
     @property
-    def border_stroke_width(self) -> OptionalNumber:
-        return self._get_attr("borderStrokeWidth", data_type="float", def_value=0)
+    def border_stroke_width(self) -> float:
+        return self._get_attr("borderStrokeWidth", data_type="float", def_value=0.0)
 
     @border_stroke_width.setter
     def border_stroke_width(self, value: OptionalNumber):
@@ -195,7 +193,7 @@ class PolylineMarker(Control):
 
     # stroke_width
     @property
-    def stroke_width(self) -> OptionalNumber:
+    def stroke_width(self) -> float:
         return self._get_attr("strokeWidth", data_type="float", def_value=1.0)
 
     @stroke_width.setter
@@ -205,11 +203,11 @@ class PolylineMarker(Control):
 
     # coordinates
     @property
-    def coordinates(self) -> Optional[List[MapLatitudeLongitude]]:
+    def coordinates(self) -> List[MapLatitudeLongitude]:
         return self.__coordinates
 
     @coordinates.setter
-    def coordinates(self, value: Optional[List[MapLatitudeLongitude]]):
+    def coordinates(self, value: List[MapLatitudeLongitude]):
         self.__coordinates = value
 
 
@@ -235,7 +233,6 @@ class PolylineLayer(MapLayer):
         visible: Optional[bool] = None,
         data: Any = None,
     ):
-
         MapLayer.__init__(
             self,
             ref=ref,
@@ -265,8 +262,8 @@ class PolylineLayer(MapLayer):
 
     # culling_margin
     @property
-    def culling_margin(self) -> OptionalNumber:
-        return self._get_attr("cullingMargin", data_type="float", def_value=10)
+    def culling_margin(self) -> float:
+        return self._get_attr("cullingMargin", data_type="float", def_value=10.0)
 
     @culling_margin.setter
     def culling_margin(self, value: OptionalNumber):
@@ -274,7 +271,7 @@ class PolylineLayer(MapLayer):
 
     # simplification_tolerance
     @property
-    def simplification_tolerance(self) -> OptionalNumber:
+    def simplification_tolerance(self) -> float:
         return self._get_attr(
             "simplificationTolerance", data_type="float", def_value=0.4
         )
@@ -285,8 +282,8 @@ class PolylineLayer(MapLayer):
 
     # min_hittable_radius
     @property
-    def min_hittable_radius(self) -> OptionalNumber:
-        return self._get_attr("minHittableRadius", data_type="float", def_value=10)
+    def min_hittable_radius(self) -> float:
+        return self._get_attr("minHittableRadius", data_type="float", def_value=10.0)
 
     @min_hittable_radius.setter
     def min_hittable_radius(self, value: OptionalNumber):

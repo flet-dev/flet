@@ -1,5 +1,6 @@
 from typing import Any, Optional, Union
 
+from flet_core.box import FilterQuality
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -15,7 +16,6 @@ from flet_core.types import (
     ScaleValue,
     OptionalEventCallable,
 )
-from flet_core.video import FilterQuality
 
 try:
     from typing import Literal
@@ -233,7 +233,7 @@ class Image(ConstrainedControl):
 
     # gapless_playback
     @property
-    def gapless_playback(self) -> Optional[bool]:
+    def gapless_playback(self) -> bool:
         return self._get_attr("gaplessPlayback", data_type="bool", def_value=False)
 
     @gapless_playback.setter
@@ -242,7 +242,7 @@ class Image(ConstrainedControl):
 
     # exclude_from_semantics
     @property
-    def exclude_from_semantics(self) -> Optional[bool]:
+    def exclude_from_semantics(self) -> bool:
         return self._get_attr("excludeFromSemantics", data_type="bool", def_value=False)
 
     @exclude_from_semantics.setter

@@ -146,7 +146,7 @@ class ProgressRing(ConstrainedControl):
 
     # stroke_width
     @property
-    def stroke_width(self) -> OptionalNumber:
+    def stroke_width(self) -> float:
         return self._get_attr("strokeWidth", data_type="float", def_value=4.0)
 
     @stroke_width.setter
@@ -156,7 +156,7 @@ class ProgressRing(ConstrainedControl):
 
     # stroke_align
     @property
-    def stroke_align(self) -> OptionalNumber:
+    def stroke_align(self) -> float:
         return self._get_attr("strokeAlign", data_type="float", def_value=0.0)
 
     @stroke_align.setter

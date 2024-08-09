@@ -71,6 +71,7 @@ import 'haptic_feedback.dart';
 import 'icon.dart';
 import 'icon_button.dart';
 import 'image.dart';
+import 'interactive_viewer.dart';
 import 'linechart.dart';
 import 'list_tile.dart';
 import 'list_view.dart';
@@ -84,6 +85,7 @@ import 'outlined_button.dart';
 import 'page.dart';
 import 'pagelet.dart';
 import 'piechart.dart';
+import 'placeholder.dart';
 import 'popup_menu_button.dart';
 import 'progress_bar.dart';
 import 'progress_ring.dart';
@@ -242,6 +244,8 @@ Widget createWidget(
           key: key,
           parent: parent,
           control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
           backend: backend);
     case "fletapp":
       return FletAppControl(
@@ -444,6 +448,14 @@ Widget createWidget(
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           backend: backend);
+      case "placeholder":
+      return PlaceholderControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive);
     case "cupertinoslidingsegmentedbutton":
       return CupertinoSlidingSegmentedButtonControl(
           key: key,
@@ -643,6 +655,15 @@ Widget createWidget(
           parentAdaptive: parentAdaptive);
     case "listtile":
       return ListTileControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
+    case "interactiveviewer":
+      return InteractiveViewerControl(
           key: key,
           parent: parent,
           control: controlView.control,
@@ -1218,15 +1239,14 @@ Widget _positionedControl(
 }
 
 Widget _sizedControl(Widget widget, Control? parent, Control control) {
-  var width = control.attrDouble("width", null);
-  var height = control.attrDouble("height", null);
-  if (width != null || height != null) {
-    if (control.type != "container" && control.type != "image") {
-      widget = ConstrainedBox(
-        constraints: BoxConstraints.tightFor(width: width, height: height),
-        child: widget,
-      );
-    }
+  var width = control.attrDouble("width");
+  var height = control.attrDouble("height");
+  if ((width != null || height != null) &&
+      !["container", "image"].contains(control.type)) {
+    widget = ConstrainedBox(
+      constraints: BoxConstraints.tightFor(width: width, height: height),
+      child: widget,
+    );
   }
   var animation = parseAnimation(control, "animateSize");
   if (animation != null) {
@@ -1237,10 +1257,7 @@ Widget _sizedControl(Widget widget, Control? parent, Control control) {
 }
 
 Widget _expandable(Widget widget, Control? parent, Control control) {
-  if (parent != null &&
-      (parent.type == "view" ||
-          parent.type == "column" ||
-          parent.type == "row")) {
+  if (parent != null && ["view", "column", "row"].contains(parent.type)) {
     int? expand = control.attrInt("expand");
     var expandLoose = control.attrBool("expandLoose");
     return expand != null
