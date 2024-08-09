@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 import '../models/control.dart';
@@ -16,17 +17,47 @@ FilteringTextInputFormatter? parseInputFilter(
   return inputFilterFromJSON(j1);
 }
 
-FilteringTextInputFormatter inputFilterFromJSON(dynamic json) {
-  bool allow = true;
-  String? regexString = "";
-  String? replacementString = "";
+FilteringTextInputFormatter? inputFilterFromJSON(dynamic json) {
+  var regexString = json["regex_string"]?.toString();
+  if (json == null || regexString == null) {
+    return null;
+  }
+  return CustomFilteringTextInputFormatter.fromJSON(json);
+}
 
-  if (json != null) {
-    allow = parseBool(json["allow"], true)!;
-    regexString = json["regex_string"]?.toString();
-    replacementString = json["replacement_string"]?.toString();
+class CustomFilteringTextInputFormatter extends FilteringTextInputFormatter {
+  final RegExp _pattern;
+
+  CustomFilteringTextInputFormatter._(this._pattern,
+      {bool allow = true, String replacementString = ""})
+      : super(_pattern, allow: allow, replacementString: replacementString);
+
+  // Factory constructor to create an instance from JSON
+  factory CustomFilteringTextInputFormatter.fromJSON(
+      Map<String, dynamic> json) {
+    final pattern = RegExp(
+      json["regex_string"]?.toString() ?? "",
+      multiLine: parseBool(json["multiline"], false)!,
+      unicode: parseBool(json["unicode"], false)!,
+      caseSensitive: parseBool(json["case_sensitive"], true)!,
+      dotAll: parseBool(json["dot_all"], false)!,
+    );
+
+    return CustomFilteringTextInputFormatter._(pattern,
+        allow: parseBool(json["allow"], true)!,
+        replacementString: json["replacement_string"]?.toString() ?? "");
   }
 
-  return FilteringTextInputFormatter(RegExp(regexString ?? ""),
-      allow: allow, replacementString: replacementString ?? "");
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    debugPrint(
+        "oldValue: ${oldValue.text}, newValue: ${newValue.text}, hasMatch: ${_pattern.hasMatch(newValue.text)}");
+    // Check if the new value matches the regex pattern
+    if (_pattern.hasMatch(newValue.text)) {
+      return newValue; // Accept the new value if it matches the pattern
+    }
+    // If the new value does not match the pattern, return the old value
+    return oldValue;
+  }
 }
