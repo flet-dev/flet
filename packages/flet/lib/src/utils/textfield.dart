@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 import '../models/control.dart';
@@ -51,13 +50,10 @@ class CustomFilteringTextInputFormatter extends FilteringTextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-    debugPrint(
-        "oldValue: ${oldValue.text}, newValue: ${newValue.text}, hasMatch: ${_pattern.hasMatch(newValue.text)}");
-    // Check if the new value matches the regex pattern
+    // Check if the new value matches the regex pattern and return it if it does
     if (_pattern.hasMatch(newValue.text)) {
-      return newValue; // Accept the new value if it matches the pattern
+      return newValue;
     }
-    // If the new value does not match the pattern, return the old value
     return oldValue;
   }
 }
