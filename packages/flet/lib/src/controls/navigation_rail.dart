@@ -87,7 +87,7 @@ class _NavigationRailControlState extends State<NavigationRailControl>
                     "Control's height is unbounded. Either set \"expand\" property, set a fixed \"height\" or nest NavigationRail inside another control with a fixed height.");
           }
 
-          var r = NavigationRail(
+          return NavigationRail(
               labelType: extended ? NavigationRailLabelType.none : labelType,
               extended: extended,
               elevation: widget.control.attrDouble("elevation"),
@@ -154,13 +154,10 @@ class _NavigationRailControlState extends State<NavigationRailControl>
                             parentAdaptive: widget.parentAdaptive)
                         : Text(label));
               }).toList());
-
-          return constrainedControl(
-              context, r, widget.parent, widget.control);
         },
       );
     });
 
-    return rail;
+    return constrainedControl(context, rail, widget.parent, widget.control);
   }
 }
