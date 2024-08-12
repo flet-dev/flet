@@ -29,7 +29,7 @@
 		<key>NSPrincipalClass</key>
 		<string>NSApplication</string>
 		<key>NSMicrophoneUsageDescription</key>
-		<string>This app needs access to Audio Recording.</string>
+		<string>Audio Recording</string>
 		<key>NSLocationUsageDescription</key>
 		<string>This app needs access to location.</string>
 	</dict>

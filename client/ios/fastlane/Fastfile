@@ -1,0 +1,101 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+
+  before_all do
+    setup_ci
+  end
+
+  desc "Update project version"
+  lane :update_version do
+
+    if !ENV['FLET_PACKAGE_VERSION'].empty?
+      increment_version_number(
+        version_number: "$FLET_PACKAGE_VERSION"
+      )
+    end
+  end
+
+  desc "Build Flutter without codesign"
+  lane :build_flutter do
+    update_version
+
+    Dir.chdir "../.." do
+      sh("flutter", "build", "ios", "--release", "--no-codesign")
+    end
+  end
+
+  desc "Configure Flutter project without building it"
+  lane :config_flutter do
+    update_version
+
+    Dir.chdir "../.." do
+      sh("flutter", "build", "ios", "--release", "--no-codesign", "--config-only")
+    end
+  end
+
+  desc "Build for internal testing"
+  lane :build_ipa do
+    config_flutter
+
+    match(type: "development", readonly: true)
+    match(type: "adhoc", readonly: true)
+
+    gym(
+      export_method: "ad-hoc",
+      output_directory: "../build",
+      output_name: "flet.ipa",
+      xcargs: "-allowProvisioningUpdates",
+      export_options: {
+        provisioningProfiles: { 
+          "com.appveyor.flet" => "match AdHoc com.appveyor.flet"
+        }
+      }
+    )
+  end
+
+  desc "Upload to App Store"
+  lane :upload_appstore do
+    config_flutter
+
+    match(type: "development", readonly: true)
+    match(type: "appstore", readonly: true)
+
+    gym(
+      export_method: "app-store",
+      output_directory: "../build",
+      output_name: "flet.ipa",
+      xcargs: "-allowProvisioningUpdates",
+      export_options: {
+        provisioningProfiles: { 
+          "com.appveyor.flet" => "match AppStore com.appveyor.flet"
+        }
+      }
+    )
+
+    app_store_connect_api_key(is_key_content_base64: true)
+    
+    deliver(
+      skip_screenshots: true,
+      skip_metadata: true,
+      run_precheck_before_submit: false,
+      submit_for_review: false,
+      force: true
+    )    
+  end
+end

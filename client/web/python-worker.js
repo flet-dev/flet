@@ -1,5 +1,6 @@
-importScripts("https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js");
+importScripts("https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js");
 
+self.micropipIncludePre = false;
 self.pythonModuleName = null;
 self.initialized = false;
 self.flet_js = {}; // namespace for Python global functions
@@ -8,17 +9,21 @@ self.initPyodide = async function () {
     self.pyodide = await loadPyodide();
     self.pyodide.registerJsModule("flet_js", flet_js);
     flet_js.documentUrl = documentUrl;
+    await self.pyodide.loadPackage("micropip");
+    let pre = self.micropipIncludePre ? "True" : "False";
     await self.pyodide.runPythonAsync(`
-    import sys, runpy, traceback
+    import micropip
+    import os
     from pyodide.http import pyfetch
-    response = await pyfetch("assets/app/app.zip")
+    response = await pyfetch("app.tar.gz")
     await response.unpack_archive()
-    sys.path.append("__pypackages__")
-    try:
-        runpy.run_module("${self.pythonModuleName}", run_name="__main__")
-    except Exception as e:
-        traceback.print_exception(e)
+    if os.path.exists("requirements.txt"):
+        with open("requirements.txt", "r") as f:
+            deps = [line.rstrip() for line in f]
+            print("Loading requirements.txt:", deps)
+            await micropip.install(deps, pre=${pre})
   `);
+    pyodide.pyimport(self.pythonModuleName);
     await self.flet_js.start_connection(self.receiveCallback);
     self.postMessage("initialized");
 };
@@ -32,6 +37,7 @@ self.onmessage = async (event) => {
     if (!self.initialized) {
         self.initialized = true;
         self.documentUrl = event.data.documentUrl;
+        self.micropipIncludePre = event.data.micropipIncludePre;
         self.pythonModuleName = event.data.pythonModuleName;
         await self.initPyodide();
     } else {

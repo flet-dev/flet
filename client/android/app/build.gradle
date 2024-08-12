@@ -23,16 +23,10 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "{{ cookiecutter.org_name }}.{{ cookiecutter.project_name }}"
+    namespace "com.appveyor.flet"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion "25.1.8937393"
 
-    packagingOptions {
-        jniLibs {
-            useLegacyPackaging true
-        }
-    }
-    
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -47,15 +41,12 @@ android {
     }
 
     defaultConfig {
-        applicationId "{{ cookiecutter.org_name }}.{{ cookiecutter.project_name }}"
-        minSdkVersion 23
+        applicationId "com.appveyor.flet"
+        minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-
-        ndk {
-            abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86_64'
-        }
+        minSdkVersion 23
     }
 
     buildTypes {
