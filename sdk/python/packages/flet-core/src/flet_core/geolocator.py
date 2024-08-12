@@ -8,6 +8,8 @@ from flet_core.types import (
     OptionalEventCallable,
     OptionalControlEventCallable,
 )
+from flet_core.event_handler import EventHandler
+from flet_core.control_event import ControlEvent
 import json
 
 
@@ -62,7 +64,7 @@ class Geolocator(Control):
         #
         ref: Optional[Ref] = None,
         data: Any = None,
-        on_position: OptionalEventCallable = None,
+        on_position: OptionalEventCallable["PositionEvent"] = None,
 
     ):
         Control.__init__(
@@ -70,8 +72,9 @@ class Geolocator(Control):
             ref=ref,
             data=data,
         )
+        self.__on_position = EventHandler(lambda e: PositionEvent(e))
+        self._add_event_handler("position", self.__on_position.get_handler())
         self.on_position = on_position
-
 
     def _get_control_name(self):
         return "geolocator"
@@ -295,7 +298,14 @@ class Geolocator(Control):
         return self._get_event_handler("position")
 
     @on_position.setter
-    def on_position(self, handler: OptionalControlEventCallable):
+    def on_position(self, handler: OptionalEventCallable["PositionEvent"]):
+        self.__on_position.subscribe(handler)
         self._set_attr("onPosition", True if handler is not None else None)
-        self._add_event_handler("position", handler)
 
+
+class PositionEvent(ControlEvent):
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.latitude: float = d.get("latitude")
+        self.longitude: float = d.get("longitude")
