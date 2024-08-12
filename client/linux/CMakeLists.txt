@@ -4,10 +4,10 @@ project(runner LANGUAGES CXX)
 
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
-set(BINARY_NAME "flet")
+set(BINARY_NAME "{{ cookiecutter.project_name }}")
 # The unique GTK application identifier for this application. See:
 # https://wiki.gnome.org/HowDoI/ChooseApplicationID
-set(APPLICATION_ID "com.appveyor.flet")
+set(APPLICATION_ID "{{ cookiecutter.org_name }}.{{ cookiecutter.project_name }}")
 
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.
@@ -122,6 +122,21 @@ foreach(bundled_library ${PLUGIN_BUNDLED_LIBRARIES})
     DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
     COMPONENT Runtime)
 endforeach(bundled_library)
+
+# Link bundled libraries from plugins into main executable to enable dlopen
+# with only library name.
+# Will NOT be needed once: https://github.com/flutter/engine/pull/28525 lands in Flutter channel we are using
+# Alternative approach is to update plugin's RUNPATH before packaging:
+# chrpath -r \$ORIGIN ./build/linux/arm64/release/bundle/lib/libserious_python_linux_plugin.so
+foreach(plugin ${FLUTTER_PLUGIN_LIST})
+  if(${plugin}_bundled_libraries)
+    target_link_libraries(
+      ${BINARY_NAME}
+      PRIVATE
+      ${${plugin}_bundled_libraries}
+    )
+  endif()
+endforeach(plugin)
 
 # Copy the native assets provided by the build.dart from all packages.
 set(NATIVE_ASSETS_DIR "${PROJECT_BUILD_DIR}native_assets/linux/")

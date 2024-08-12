@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "Appveyor Systems Inc." "\0"
-            VALUE "FileDescription", "Flet description" "\0"
+            VALUE "CompanyName", "{{ cookiecutter.company_name }}" "\0"
+            VALUE "FileDescription", "{{ cookiecutter.product_name }}" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "Flet" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2023 Appveyor Systems Inc. All rights reserved. Licensed under the Apache License, Version 2.0" "\0"
-            VALUE "OriginalFilename", "flet.exe" "\0"
-            VALUE "ProductName", "Flet" "\0"
+            VALUE "InternalName", "{{ cookiecutter.project_name }}" "\0"
+            VALUE "LegalCopyright", "{{ cookiecutter.copyright }}" "\0"
+            VALUE "OriginalFilename", "{{ cookiecutter.project_name }}.exe" "\0"
+            VALUE "ProductName", "{{ cookiecutter.product_name }}" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

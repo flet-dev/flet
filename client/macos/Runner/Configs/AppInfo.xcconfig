@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = Flet
+PRODUCT_NAME = {{ cookiecutter.product_name }}
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.appveyor.flet
+PRODUCT_BUNDLE_IDENTIFIER = {{ cookiecutter.org_name }}.{{ cookiecutter.project_name }}
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 Appveyor Systems Inc. All rights reserved. Licensed under the Apache License, Version 2.0
+PRODUCT_COPYRIGHT = {{ cookiecutter.copyright }}. All rights reserved.
