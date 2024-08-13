@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/gradient.dart';
@@ -118,6 +119,9 @@ class _DataTableControlState extends State<DataTableControl>
             return DataColumn(
                 numeric: column.control.attrBool("numeric", false)!,
                 tooltip: column.control.attrString("tooltip"),
+                headingRowAlignment: parseMainAxisAlignment(
+                    column.control.attrString("headingRowAlignment")),
+                mouseCursor: WidgetStateMouseCursor.clickable,
                 onSort: column.control.attrBool("onSort", false)!
                     ? (columnIndex, ascending) {
                         widget.backend.triggerControlEvent(
@@ -147,7 +151,8 @@ class _DataTableControlState extends State<DataTableControl>
                     : null,
                 onLongPress: row.control.attrBool("onLongPress", false)!
                     ? () {
-                        widget.backend.triggerControlEvent(row.control.id, "long_press");
+                        widget.backend
+                            .triggerControlEvent(row.control.id, "long_press");
                       }
                     : null,
                 cells: row.children
