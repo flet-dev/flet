@@ -88,6 +88,10 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
       style: style,
       closeOnActivate: widget.control.attrBool("closeOnClick", true)!,
       requestFocusOnHover: widget.control.attrBool("focusOnHover", true)!,
+      semanticsLabel: widget.control.attrString("semanticsLabel"),
+      autofocus: widget.control.attrBool("autofocus", false)!,
+      overflowAxis: parseAxis(
+          widget.control.attrString("overflowAxis"), Axis.horizontal)!,
       onHover: onHover && !disabled
           ? (bool value) {
               widget.backend
