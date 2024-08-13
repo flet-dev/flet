@@ -102,7 +102,7 @@ class MarkdownStyleSheet:
     list_bullet_padding: PaddingValue = None
     table_head_text_style: Optional[TextStyle] = None
     table_body_text_style: Optional[TextStyle] = None
-    table_head_align: Optional[TextAlign] = None
+    table_head_text_align: Optional[TextAlign] = None
     table_padding: PaddingValue = None
     table_cells_padding: PaddingValue = None
     blockquote_padding: PaddingValue = None
@@ -119,7 +119,7 @@ class MarkdownStyleSheet:
     h4_alignment: Optional[MainAxisAlignment] = None
     h5_alignment: Optional[MainAxisAlignment] = None
     h6_alignment: Optional[MainAxisAlignment] = None
-    text_align: Optional[MainAxisAlignment] = None
+    text_alignment: Optional[MainAxisAlignment] = None
     ordered_list_alignment: Optional[MainAxisAlignment] = None
     unordered_list_alignment: Optional[MainAxisAlignment] = None
 
@@ -241,9 +241,9 @@ class Markdown(ConstrainedControl):
         img_error_content: Optional[Control] = None,
         code_style_sheet: Optional[MarkdownStyleSheet] = None,
         md_style_sheet: Optional[MarkdownStyleSheet] = None,
-            on_tap_text: OptionalControlEventCallable = None,
-            on_selection_change: OptionalControlEventCallable = None,
-            on_tap_link: OptionalControlEventCallable = None,
+        on_tap_text: OptionalControlEventCallable = None,
+        on_selection_change: OptionalControlEventCallable = None,
+        on_tap_link: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -269,7 +269,7 @@ class Markdown(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-            on_animation_end: OptionalControlEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

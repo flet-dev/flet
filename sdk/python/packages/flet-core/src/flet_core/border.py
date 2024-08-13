@@ -6,9 +6,9 @@ from flet_core.types import OptionalNumber
 
 
 class BorderSideStrokeAlign(Enum):
-    STROKE_ALIGN_INSIDE = -1.0
-    STROKE_ALIGN_CENTER = 0.0
-    STROKE_ALIGN_OUTSIDE = 1.0
+    INSIDE = -1.0
+    CENTER = 0.0
+    OUTSIDE = 1.0
 
 
 @dataclass

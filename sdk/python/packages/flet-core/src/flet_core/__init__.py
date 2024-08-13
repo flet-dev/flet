@@ -199,7 +199,7 @@ from flet_core.markdown import (
     Markdown,
     MarkdownExtensionSet,
     MarkdownSelectionChangeEvent,
-    MarkdownSelectionChangedCause,
+    MarkdownSelectionChangeCause,
     MarkdownStyleSheet,
     MarkdownCodeTheme,
 )
