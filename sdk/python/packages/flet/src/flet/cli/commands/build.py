@@ -323,7 +323,7 @@ class Command(BaseCommand):
         self.verbose = options.verbose
         self.flutter_dir = None
         no_rich_output = options.no_rich_output or get_bool_env_var(
-            "FLET_NO_RICH_OUTPUT"
+            "FLET_CLI_NO_RICH_OUTPUT"
         )
         self.emojis = {
             "checkmark": "[green]OK[/]" if no_rich_output else "✅",
