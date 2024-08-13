@@ -345,6 +345,8 @@ from flet_core.theme import (
     Theme,
     TimePickerTheme,
     TooltipTheme,
+    DataTableTheme,
+    ButtonTheme,
 )
 from flet_core.time_picker import (
     TimePicker,
