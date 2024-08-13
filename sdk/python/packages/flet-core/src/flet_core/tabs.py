@@ -5,6 +5,7 @@ from flet_core.border import BorderSide
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
@@ -17,7 +18,6 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TabAlignment,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 
@@ -157,14 +157,20 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         indicator_tab_size: Optional[bool] = None,
         is_secondary: Optional[bool] = None,
         label_color: Optional[str] = None,
+            label_padding: PaddingValue = None,
+            label_text_style: Optional[TextStyle] = None,
         unselected_label_color: Optional[str] = None,
+            unselected_label_text_style: Optional[TextStyle] = None,
         overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         divider_height: OptionalNumber = None,
         indicator_thickness: OptionalNumber = None,
         enable_feedback: Optional[str] = None,
         mouse_cursor: Optional[MouseCursor] = None,
+            padding: PaddingValue = None,
+            splash_border_radius: BorderRadiusValue = None,
         clip_behavior: Optional[ClipBehavior] = None,
-        on_change: OptionalEventCallable = None,
+            on_click: OptionalControlEventCallable = None,
+            on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -190,7 +196,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+            on_animation_end: OptionalControlEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -249,6 +255,12 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self.is_secondary = is_secondary
         self.mouse_cursor = mouse_cursor
         self.clip_behavior = clip_behavior
+        self.label_padding = label_padding
+        self.label_text_style = label_text_style
+        self.unselected_label_text_style = unselected_label_text_style
+        self.padding = padding
+        self.splash_border_radius = splash_border_radius
+        self.on_click = on_click
 
     def _get_control_name(self):
         return "tabs"
@@ -259,6 +271,12 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("indicatorBorderRadius", self.__indicator_border_radius)
         self._set_attr_json("indicatorBorderSide", self.__indicator_border_side)
         self._set_attr_json("indicatorPadding", self.__indicator_padding)
+        self._set_attr_json("indicatorTabSize", self.__indicator_tab_size)
+        self._set_attr_json("labelPadding", self.__label_padding)
+        self._set_attr_json("labelTextStyle", self.__label_text_style)
+        self._set_attr_json(
+            "unselectedLabelTextStyle", self.__unselected_label_text_style
+        )
 
     def _get_children(self):
         return self.__tabs
@@ -455,3 +473,57 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     @overlay_color.setter
     def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__overlay_color = value
+
+    # label_padding
+    @property
+    def label_padding(self) -> PaddingValue:
+        return self.__label_padding
+
+    @label_padding.setter
+    def label_padding(self, value: PaddingValue):
+        self.__label_padding = value
+
+    # label_text_style
+    @property
+    def label_text_style(self) -> Optional[TextStyle]:
+        return self.__label_text_style
+
+    @label_text_style.setter
+    def label_text_style(self, value: Optional[TextStyle]):
+        self.__label_text_style = value
+
+    # unselected_label_text_style
+    @property
+    def unselected_label_text_style(self) -> Optional[TextStyle]:
+        return self.__unselected_label_text_style
+
+    @unselected_label_text_style.setter
+    def unselected_label_text_style(self, value: Optional[TextStyle]):
+        self.__unselected_label_text_style = value
+
+    # padding
+    @property
+    def padding(self) -> PaddingValue:
+        return self.__padding
+
+    @padding.setter
+    def padding(self, value: PaddingValue):
+        self.__padding = value
+
+    # splash_border_radius
+    @property
+    def splash_border_radius(self) -> BorderRadiusValue:
+        return self.__splash_border_radius
+
+    @splash_border_radius.setter
+    def splash_border_radius(self, value: BorderRadiusValue):
+        self.__splash_border_radius = value
+
+    # on_click
+    @property
+    def on_click(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("click")
+
+    @on_click.setter
+    def on_click(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("click", handler)
