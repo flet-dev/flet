@@ -57,7 +57,7 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
         gaplessPlayback: control.attrBool("gaplessPlayback"),
         excludeFromSemantics: control.attrBool("excludeFromSemantics", false)!,
         filterQuality: parseFilterQuality(
-            control.attrString("filterQuality"), FilterQuality.low)!,
+            control.attrString("filterQuality"), FilterQuality.medium)!,
         disabled: disabled,
         pageArgs: pageArgs,
         errorCtrl: errorContentCtrls.isNotEmpty
