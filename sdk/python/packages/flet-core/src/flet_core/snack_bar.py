@@ -9,7 +9,6 @@ from flet_core.types import (
     MarginValue,
     PaddingValue,
     ClipBehavior,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 
@@ -86,8 +85,8 @@ class SnackBar(Control):
         shape: Optional[OutlinedBorder] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         action_overflow_threshold: OptionalNumber = None,
-        on_action: OptionalEventCallable = None,
-        on_visible: OptionalEventCallable = None,
+        on_action: OptionalControlEventCallable = None,
+        on_visible: OptionalControlEventCallable = None,
         #
         # Control
         #

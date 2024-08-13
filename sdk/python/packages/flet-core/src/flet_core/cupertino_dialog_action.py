@@ -66,7 +66,7 @@ class CupertinoDialogAction(Control):
         is_default_action: Optional[bool] = None,
         is_destructive_action: Optional[bool] = None,
         text_style: Optional[TextStyle] = None,
-        on_click: OptionalEventCallable = None,
+        on_click: OptionalControlEventCallable = None,
         #
         # Specific
         #

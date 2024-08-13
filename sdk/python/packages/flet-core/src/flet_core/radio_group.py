@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import OptionalEventCallable, OptionalControlEventCallable
+from flet_core.types import OptionalControlEventCallable
 
 
 class RadioGroup(Control):
@@ -39,7 +39,7 @@ class RadioGroup(Control):
         self,
         content: Control,
         value: Optional[str] = None,
-        on_change: OptionalEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
         #
         # Control
         #

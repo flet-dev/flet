@@ -8,7 +8,6 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
-    OptionalEventCallable,
     OffsetValue,
     OptionalNumber,
     PaddingValue,
@@ -234,7 +233,7 @@ class NavigationRail(ConstrainedControl):
         group_alignment: OptionalNumber = None,
         selected_label_text_style: Optional[TextStyle] = None,
         unselected_label_text_style: Optional[TextStyle] = None,
-        on_change: OptionalEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #

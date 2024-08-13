@@ -5,7 +5,6 @@ from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
-    OptionalEventCallable,
     OptionalNumber,
     PaddingValue,
     OptionalControlEventCallable,
@@ -181,8 +180,8 @@ class NavigationDrawer(Control):
         surface_tint_color: Optional[str] = None,
         tile_padding: PaddingValue = None,
         position: Optional[NavigationDrawerPosition] = None,
-        on_change: OptionalEventCallable = None,
-        on_dismiss: OptionalEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
+        on_dismiss: OptionalControlEventCallable = None,
         #
         # Control
         #
@@ -240,7 +239,7 @@ class NavigationDrawer(Control):
 
     @controls.setter
     def controls(self, value: Optional[Sequence[Control]]):
-        self.__controls = list(value) if value is not  None else []
+        self.__controls = list(value) if value is not None else []
 
     # selected_index
     @property

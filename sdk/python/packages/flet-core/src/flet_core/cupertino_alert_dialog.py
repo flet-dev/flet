@@ -92,7 +92,7 @@ class CupertinoAlertDialog(Control):
         title: Optional[Control] = None,
         content: Optional[Control] = None,
         actions: Optional[List[Control]] = None,
-        on_dismiss: OptionalEventCallable = None,
+        on_dismiss: OptionalControlEventCallable = None,
         #
         # Control
         #

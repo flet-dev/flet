@@ -9,7 +9,6 @@ from flet_core.ref import Ref
 from flet_core.types import (
     Orientation,
     ResponsiveNumber,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
@@ -91,8 +90,8 @@ class TimePicker(Control):
         confirm_text: Optional[str] = None,
         error_invalid_text: Optional[str] = None,
         orientation: Optional[Orientation] = None,
-        on_change: OptionalEventCallable = None,
-        on_dismiss: OptionalEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
+        on_dismiss: OptionalControlEventCallable = None,
         on_entry_mode_change: Optional[
             Callable[[TimePickerEntryModeChangeEvent], None]
         ] = None,

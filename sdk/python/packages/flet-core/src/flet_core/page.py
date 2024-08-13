@@ -78,6 +78,7 @@ from flet_core.types import (
     Wrapper,
     WindowEventType,
     OptionalControlEventCallable,
+    OptionalEventCallable,
 )
 from flet_core.utils import classproperty, deprecated
 from flet_core.utils.concurrency_utils import is_pyodide
@@ -498,7 +499,7 @@ class Window:
     @on_event.setter
     def on_event(
         self,
-        handler: "Optional[Callable[[WindowEvent], Union[None, Coroutine[None, None, None]]]]",
+        handler: OptionalEventCallable["WindowEvent"],
     ):
         self.__on_event.subscribe(handler)
 
@@ -2770,7 +2771,7 @@ class Page(AdaptiveControl):
         return self.__on_resized
 
     @on_resized.setter
-    def on_resized(self, handler: "Optional[Callable[[WindowResizeEvent], None]]"):
+    def on_resized(self, handler: OptionalEventCallable["WindowResizeEvent"]):
         self.__on_resized.subscribe(handler)
 
     # on_platform_brightness_change

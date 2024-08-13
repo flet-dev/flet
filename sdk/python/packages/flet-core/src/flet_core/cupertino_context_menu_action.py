@@ -22,7 +22,7 @@ class CupertinoContextMenuAction(AdaptiveControl):
         is_default_action: Optional[bool] = None,
         is_destructive_action: Optional[bool] = None,
         trailing_icon: Optional[str] = None,
-        on_click: OptionalEventCallable = None,
+        on_click: OptionalControlEventCallable = None,
         #
         # Control
         #

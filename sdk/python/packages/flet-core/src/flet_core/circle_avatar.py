@@ -84,7 +84,7 @@ class CircleAvatar(ConstrainedControl):
         radius: OptionalNumber = None,
         min_radius: OptionalNumber = None,
         max_radius: OptionalNumber = None,
-        on_image_error: OptionalEventCallable = None,
+        on_image_error: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -110,7 +110,7 @@ class CircleAvatar(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

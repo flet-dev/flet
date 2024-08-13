@@ -76,9 +76,9 @@ class Tooltip(Control):
         border: Optional[Border] = None,
         border_radius: BorderRadiusValue = None,
         shape: Optional[BoxShape] = None,
-            blend_mode: Optional[BlendMode] = None,
-            shadow: Union[None, BoxShadow, List[BoxShadow]] = None,
-            image: Optional[DecorationImage] = None,
+        blend_mode: Optional[BlendMode] = None,
+        shadow: Union[None, BoxShadow, List[BoxShadow]] = None,
+        image: Optional[DecorationImage] = None,
         message: Optional[str] = None,
         text_style: Optional[TextStyle] = None,
         text_align: Optional[TextAlign] = None,
@@ -132,13 +132,13 @@ class Tooltip(Control):
     def before_update(self):
         super().before_update()
         assert (
-                self.__blend_mode is None
-                or self.__gradient is not None
-                or self.bgcolor is not None
+            self.__blend_mode is None
+            or self.__gradient is not None
+            or self.bgcolor is not None
         ), "blend_mode applies to bgcolor or gradient, but no bgcolor or gradient was provided"
 
         assert (
-                self.__shape != BoxShape.CIRCLE or self.__border_radius is None
+            self.__shape != BoxShape.CIRCLE or self.__border_radius is None
         ), "border_radius is not supported with shape=BoxShape.CIRCLE"
         self._set_attr_json("margin", self.__margin)
         self._set_attr_json("padding", self.__padding)

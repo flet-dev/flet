@@ -6,6 +6,7 @@ from flet_core.control import Control
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
+from flet_core.types import OptionalControlEventCallable, OptionalEventCallable
 
 
 class DragTarget(Control):
@@ -106,10 +107,10 @@ class DragTarget(Control):
         self,
         content: Control,
         group: Optional[str] = None,
-        on_will_accept=None,
-        on_accept=None,
-        on_leave=None,
-        on_move=None,
+        on_will_accept: OptionalControlEventCallable = None,
+        on_accept: OptionalEventCallable["DragTargetEvent"] = None,
+        on_leave: OptionalControlEventCallable = None,
+        on_move: OptionalEventCallable["DragTargetEvent"] = None,
         #
         # Control
         #
@@ -174,7 +175,7 @@ class DragTarget(Control):
         return self._get_event_handler("will_accept")
 
     @on_will_accept.setter
-    def on_will_accept(self, handler):
+    def on_will_accept(self, handler: OptionalControlEventCallable):
         self._add_event_handler("will_accept", handler)
 
     # on_accept
@@ -183,7 +184,7 @@ class DragTarget(Control):
         return self.__on_accept
 
     @on_accept.setter
-    def on_accept(self, handler):
+    def on_accept(self, handler: OptionalEventCallable["DragTargetEvent"]):
         self.__on_accept.subscribe(handler)
 
     # on_leave
@@ -192,7 +193,7 @@ class DragTarget(Control):
         return self._get_event_handler("leave")
 
     @on_leave.setter
-    def on_leave(self, handler):
+    def on_leave(self, handler: OptionalControlEventCallable):
         self._add_event_handler("leave", handler)
 
     # on_move
@@ -201,7 +202,7 @@ class DragTarget(Control):
         return self.__on_move
 
     @on_move.setter
-    def on_move(self, handler):
+    def on_move(self, handler: OptionalEventCallable["DragTargetEvent"]):
         self.__on_move.subscribe(handler)
 
 

@@ -87,7 +87,7 @@ class MapConfiguration(Control):
         keep_alive: Optional[bool] = None,
         max_zoom: OptionalNumber = None,
         min_zoom: OptionalNumber = None,
-        on_init: OptionalEventCallable = None,
+        on_init: OptionalControlEventCallable = None,
         on_tap: OptionalEventCallable["MapTapEvent"] = None,
         on_secondary_tap: OptionalEventCallable["MapTapEvent"] = None,
         on_long_press: OptionalEventCallable["MapTapEvent"] = None,

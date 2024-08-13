@@ -4,7 +4,6 @@ from flet_core.inline_span import InlineSpan
 from flet_core.text_style import TextStyle
 from flet_core.types import (
     UrlTarget,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 
@@ -17,9 +16,9 @@ class TextSpan(InlineSpan):
         spans: Optional[List[InlineSpan]] = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
-        on_click: OptionalEventCallable = None,
-        on_enter: OptionalEventCallable = None,
-        on_exit: OptionalEventCallable = None,
+        on_click: OptionalControlEventCallable = None,
+        on_enter: OptionalControlEventCallable = None,
+        on_exit: OptionalControlEventCallable = None,
         #
         # Control
         #

@@ -38,7 +38,7 @@ class MarkdownExtensionSet(Enum):
     GITHUB_FLAVORED = "gitHubFlavored"
 
 
-class MarkdownSelectionChangedCause(Enum):
+class MarkdownSelectionChangeCause(Enum):
     UNKNOWN = "unknown"
     TAP = "tap"
     DOUBLE_TAP = "doubleTap"
@@ -55,7 +55,7 @@ class MarkdownSelectionChangeEvent(ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
         self.text: str = d.get("text")
-        self.cause = MarkdownSelectionChangedCause(d.get("cause"))
+        self.cause = MarkdownSelectionChangeCause(d.get("cause"))
         start = d.get("start")
         end = d.get("end")
         self.selection = TextSelection(
@@ -241,9 +241,9 @@ class Markdown(ConstrainedControl):
         img_error_content: Optional[Control] = None,
         code_style_sheet: Optional[MarkdownStyleSheet] = None,
         md_style_sheet: Optional[MarkdownStyleSheet] = None,
-        on_tap_text: OptionalEventCallable = None,
-        on_selection_change: OptionalEventCallable = None,
-        on_tap_link: OptionalEventCallable = None,
+            on_tap_text: OptionalControlEventCallable = None,
+            on_selection_change: OptionalControlEventCallable = None,
+            on_tap_link: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -269,7 +269,7 @@ class Markdown(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+            on_animation_end: OptionalControlEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

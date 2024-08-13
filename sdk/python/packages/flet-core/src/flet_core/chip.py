@@ -95,11 +95,11 @@ class Chip(ConstrainedControl):
         clip_behavior: Optional[ClipBehavior] = None,
         visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
         border_side: Optional[BorderSide] = None,
-        on_click: OptionalEventCallable = None,
-        on_delete: OptionalEventCallable = None,
-        on_select: OptionalEventCallable = None,
-        on_focus: OptionalEventCallable = None,
-        on_blur: OptionalEventCallable = None,
+        on_click: OptionalControlEventCallable = None,
+        on_delete: OptionalControlEventCallable = None,
+        on_select: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -124,7 +124,7 @@ class Chip(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

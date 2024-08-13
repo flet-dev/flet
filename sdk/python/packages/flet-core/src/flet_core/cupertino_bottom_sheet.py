@@ -26,7 +26,7 @@ class CupertinoBottomSheet(Control):
         bgcolor: Optional[str] = None,
         height: OptionalNumber = None,
         padding: PaddingValue = None,
-        on_dismiss: OptionalEventCallable = None,
+        on_dismiss: OptionalControlEventCallable = None,
         #
         # Control
         #

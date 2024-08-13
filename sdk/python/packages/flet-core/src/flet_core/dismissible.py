@@ -46,10 +46,8 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         cross_axis_end_offset: OptionalNumber = None,
         on_update: OptionalEventCallable["DismissibleUpdateEvent"] = None,
         on_dismiss: OptionalEventCallable["DismissibleDismissEvent"] = None,
-        on_confirm_dismiss: Optional[
-            Callable[["DismissibleDismissEvent"], None]
-        ] = None,
-        on_resize: OptionalEventCallable = None,
+        on_confirm_dismiss: OptionalEventCallable["DismissibleDismissEvent"] = None,
+        on_resize: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -74,7 +72,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

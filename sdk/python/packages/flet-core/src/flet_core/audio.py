@@ -3,7 +3,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import OptionalEventCallable, OptionalControlEventCallable
+from flet_core.types import OptionalControlEventCallable
 from flet_core.utils import deprecated
 
 
@@ -50,11 +50,11 @@ class Audio(Control):
         balance: OptionalNumber = None,
         playback_rate: OptionalNumber = None,
         release_mode: Optional[ReleaseMode] = None,
-        on_loaded: OptionalEventCallable = None,
-        on_duration_changed: OptionalEventCallable = None,
-        on_state_changed: OptionalEventCallable = None,
-        on_position_changed: OptionalEventCallable = None,
-        on_seek_complete: OptionalEventCallable = None,
+        on_loaded: OptionalControlEventCallable = None,
+        on_duration_changed: OptionalControlEventCallable = None,
+        on_state_changed: OptionalControlEventCallable = None,
+        on_position_changed: OptionalControlEventCallable = None,
+        on_seek_complete: OptionalControlEventCallable = None,
         #
         # Control
         #
