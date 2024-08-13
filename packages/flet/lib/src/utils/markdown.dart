@@ -53,7 +53,6 @@ MarkdownStyleSheet markdownStyleSheetFromJson(ThemeData theme,
     code: parseTextStyle("code_text_style") ??
         theme.textTheme.bodyMedium!.copyWith(fontFamily: "monospace"),
     h1: parseTextStyle("h1_text_style") ?? theme.textTheme.headlineSmall,
-    // theme.textTheme.headlineSmall,
     h1Padding: edgeInsetsFromJson(j["h1_padding"], EdgeInsets.zero)!,
     h2: parseTextStyle("h2_text_style") ?? theme.textTheme.titleLarge,
     h2Padding: edgeInsetsFromJson(j["h2_padding"], EdgeInsets.zero)!,
@@ -88,7 +87,8 @@ MarkdownStyleSheet markdownStyleSheetFromJson(ThemeData theme,
         const TextStyle(fontWeight: FontWeight.w600),
     tableBody:
         parseTextStyle("table_body_text_style") ?? theme.textTheme.bodyMedium,
-    tableHeadAlign: parseTextAlign(j["table_head_align"], TextAlign.center)!,
+    tableHeadAlign:
+        parseTextAlign(j["table_head_text_align"], TextAlign.center)!,
     tablePadding: edgeInsetsFromJson(
         j["table_padding"], const EdgeInsets.only(bottom: 4.0))!,
     tableBorder: TableBorder.all(
@@ -136,7 +136,7 @@ MarkdownStyleSheet markdownStyleSheetFromJson(ThemeData theme,
     h4Align: parseWrapAlignment(j["h4_alignment"], WrapAlignment.start)!,
     h5Align: parseWrapAlignment(j["h5_alignment"], WrapAlignment.start)!,
     h6Align: parseWrapAlignment(j["h6_alignment"], WrapAlignment.start)!,
-    textAlign: parseWrapAlignment(j["text_align"], WrapAlignment.start)!,
+    textAlign: parseWrapAlignment(j["text_alignment"], WrapAlignment.start)!,
     orderedListAlign:
         parseWrapAlignment(j["ordered_list_alignment"], WrapAlignment.start)!,
     unorderedListAlign:
