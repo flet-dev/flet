@@ -18,6 +18,11 @@ from flet_core.margin import Margin
 from flet_core.padding import Padding
 from flet_core.transform import Offset, Rotate, Scale
 
+WEB_BROWSER = "web_browser"
+FLET_APP = "flet_app"
+FLET_APP_WEB = "flet_app_web"
+FLET_APP_HIDDEN = "flet_app_hidden"
+
 
 class AppView(Enum):
     WEB_BROWSER = "web_browser"
