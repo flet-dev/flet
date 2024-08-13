@@ -21,8 +21,19 @@ from flet_core.alignment import Alignment, Axis
 from flet_core.animated_switcher import AnimatedSwitcher, AnimatedSwitcherTransition
 from flet_core.animation import Animation, AnimationCurve
 from flet_core.app_bar import AppBar
-from flet_core.audio import Audio
-from flet_core.audio_recorder import AudioEncoder, AudioRecorder
+from flet_core.audio import (
+    Audio,
+    AudioState,
+    AudioDurationChangeEvent,
+    AudioPositionChangeEvent,
+    AudioStateChangeEvent,
+)
+from flet_core.audio_recorder import (
+    AudioEncoder,
+    AudioRecorder,
+    AudioRecorderState,
+    AudioRecorderStateChangeEvent,
+)
 from flet_core.auto_complete import (
     AutoComplete,
     AutoCompleteSuggestion,
