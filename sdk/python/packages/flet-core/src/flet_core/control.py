@@ -73,7 +73,7 @@ class Control:
         self.data = data
         self.rtl = rtl
 
-        self.__event_handlers: Dict[str, OptionalEventCallable] = {}
+        self.__event_handlers: Dict[str, OptionalControlEventCallable] = {}
         self.parent: Optional[Control] = None
 
     def is_isolated(self) -> bool:
@@ -103,7 +103,7 @@ class Control:
         )
 
     def _add_event_handler(
-        self, event_name: str, handler: OptionalEventCallable
+        self, event_name: str, handler: OptionalControlEventCallable
     ) -> None:
         self.__event_handlers[event_name] = handler
 

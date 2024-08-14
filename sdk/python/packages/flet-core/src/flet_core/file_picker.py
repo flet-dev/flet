@@ -7,6 +7,7 @@ from flet_core.control import Control
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
+from flet_core.types import OptionalEventCallable
 from flet_core.utils import deprecated
 
 try:
@@ -329,18 +330,18 @@ class FilePicker(Control):
 
     # on_result
     @property
-    def on_result(self):
-        return self.__on_result
+    def on_result(self) -> OptionalEventCallable[FilePickerResultEvent]:
+        return self.__on_result.handler
 
     @on_result.setter
-    def on_result(self, handler: Optional[Callable[[FilePickerResultEvent], None]]):
-        self.__on_result.subscribe(handler)
+    def on_result(self, handler: OptionalEventCallable[FilePickerResultEvent]):
+        self.__on_result.handler = handler
 
     # on_upload
     @property
     def on_upload(self):
-        return self.__on_upload
+        return self.__on_upload.handler
 
     @on_upload.setter
-    def on_upload(self, handler: Optional[Callable[[FilePickerUploadEvent], None]]):
-        self.__on_upload.subscribe(handler)
+    def on_upload(self, handler: OptionalEventCallable[FilePickerUploadEvent]):
+        self.__on_upload.handler = handler

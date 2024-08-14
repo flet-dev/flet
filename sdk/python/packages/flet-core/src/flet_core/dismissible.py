@@ -247,34 +247,34 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
 
     # on_dismiss
     @property
-    def on_dismiss(self):
-        return self._get_event_handler("dismiss")
+    def on_dismiss(self) -> OptionalEventCallable["DismissibleDismissEvent"]:
+        return self.__on_dismiss.handler
 
     @on_dismiss.setter
     def on_dismiss(self, handler: OptionalEventCallable["DismissibleDismissEvent"]):
-        self.__on_dismiss.subscribe(handler)
+        self.__on_dismiss.handler = handler
         self._set_attr("onDismiss", True if handler is not None else None)
 
     # on_confirm_dismiss
     @property
-    def on_confirm_dismiss(self):
-        return self._get_event_handler("confirm_dismiss")
+    def on_confirm_dismiss(self) -> OptionalEventCallable["DismissibleDismissEvent"]:
+        return self.__on_confirm_dismiss.handler
 
     @on_confirm_dismiss.setter
     def on_confirm_dismiss(
         self, handler: OptionalEventCallable["DismissibleDismissEvent"]
     ):
-        self.__on_confirm_dismiss.subscribe(handler)
+        self.__on_confirm_dismiss.handler = handler
         self._set_attr("onConfirmDismiss", True if handler is not None else None)
 
     # on_update
     @property
-    def on_update(self):
-        return self._get_event_handler("update")
+    def on_update(self) -> OptionalEventCallable["DismissibleUpdateEvent"]:
+        return self.__on_update.handler
 
     @on_update.setter
     def on_update(self, handler: OptionalEventCallable["DismissibleUpdateEvent"]):
-        self.__on_update.subscribe(handler)
+        self.__on_update.handler = handler
         self._set_attr("onUpdate", True if handler is not None else None)
 
     # on_resize

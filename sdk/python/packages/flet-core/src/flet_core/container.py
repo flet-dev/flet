@@ -295,9 +295,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @blend_mode.setter
     def blend_mode(self, value: Optional[BlendMode]):
         self.__blend_mode = value
-        self._set_attr(
-            "blendMode", value.value if isinstance(value, BlendMode) else value
-        )
+        self._set_enum_attr("blendMode", value, BlendMode)
 
     # blur
     @property
@@ -569,12 +567,12 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # on_tap_down
     @property
-    def on_tap_down(self):
-        return self.__on_tap_down
+    def on_tap_down(self) -> OptionalEventCallable["ContainerTapEvent"]:
+        return self.__on_tap_down.handler
 
     @on_tap_down.setter
     def on_tap_down(self, handler: OptionalEventCallable["ContainerTapEvent"]):
-        self.__on_tap_down.subscribe(handler)
+        self.__on_tap_down.handler = handler
         self._set_attr("onTapDown", True if handler is not None else None)
 
     # on_long_press

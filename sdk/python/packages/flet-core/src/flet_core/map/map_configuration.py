@@ -230,42 +230,42 @@ class MapConfiguration(Control):
 
     # on_tap
     @property
-    def on_tap(self):
-        return self.__on_tap
+    def on_tap(self) -> OptionalEventCallable["MapTapEvent"]:
+        return self.__on_tap.handler
 
     @on_tap.setter
     def on_tap(self, handler: OptionalEventCallable["MapTapEvent"]):
-        self.__on_tap.subscribe(handler)
+        self.__on_tap.handler = handler
         self._set_attr("onTap", True if handler is not None else None)
 
     # on_secondary_tap
     @property
-    def on_secondary_tap(self):
-        return self.__on_secondary_tap
+    def on_secondary_tap(self) -> OptionalEventCallable["MapTapEvent"]:
+        return self.__on_secondary_tap.handler
 
     @on_secondary_tap.setter
     def on_secondary_tap(self, handler: OptionalEventCallable["MapTapEvent"]):
-        self.__on_secondary_tap.subscribe(handler)
+        self.__on_secondary_tap.handler = handler
         self._set_attr("onSecondaryTap", True if handler is not None else None)
 
     # on_long_press
     @property
-    def on_long_press(self):
-        return self.__on_long_press
+    def on_long_press(self) -> OptionalEventCallable["MapTapEvent"]:
+        return self.__on_long_press.handler
 
     @on_long_press.setter
     def on_long_press(self, handler: OptionalEventCallable["MapTapEvent"]):
-        self.__on_long_press.subscribe(handler)
+        self.__on_long_press.handler = handler
         self._set_attr("onLongPress", True if handler is not None else None)
 
     # on_event
     @property
-    def on_event(self):
-        return self.__on_event
+    def on_event(self) -> OptionalEventCallable["MapEvent"]:
+        return self.__on_event.handler
 
     @on_event.setter
     def on_event(self, handler: OptionalEventCallable["MapEvent"]):
-        self.__on_event.subscribe(handler)
+        self.__on_event.handler = handler
         self._set_attr("onEvent", True if handler is not None else None)
 
     # on_init
@@ -280,44 +280,44 @@ class MapConfiguration(Control):
 
     # on_position_change
     @property
-    def on_position_change(self):
-        return self.__on_position_change
+    def on_position_change(self) -> OptionalEventCallable["MapPositionChangeEvent"]:
+        return self.__on_position_change.handler
 
     @on_position_change.setter
     def on_position_change(
         self, handler: OptionalEventCallable["MapPositionChangeEvent"]
     ):
-        self.__on_position_change.subscribe(handler)
+        self.__on_position_change.handler = handler
         self._set_attr("onPositionChange", True if handler is not None else None)
 
     # on_pointer_down
     @property
-    def on_pointer_down(self):
-        return self.__on_pointer_down
+    def on_pointer_down(self) -> OptionalEventCallable["MapPointerEvent"]:
+        return self.__on_pointer_down.handler
 
     @on_pointer_down.setter
     def on_pointer_down(self, handler: OptionalEventCallable["MapPointerEvent"]):
-        self.__on_pointer_down.subscribe(handler)
+        self.__on_pointer_down.handler = handler
         self._set_attr("onPointerDown", True if handler is not None else None)
 
     # on_pointer_cancel
     @property
-    def on_pointer_cancel(self):
-        return self.__on_pointer_cancel
+    def on_pointer_cancel(self) -> OptionalEventCallable["MapPointerEvent"]:
+        return self.__on_pointer_cancel.handler
 
     @on_pointer_cancel.setter
     def on_pointer_cancel(self, handler: OptionalEventCallable["MapPointerEvent"]):
-        self.__on_pointer_cancel.subscribe(handler)
+        self.__on_pointer_cancel.handler = handler
         self._set_attr("onPointerCancel", True if handler is not None else None)
 
     # on_pointer_up
     @property
-    def on_pointer_up(self):
-        return self.__on_pointer_up
+    def on_pointer_up(self) -> OptionalEventCallable["MapPointerEvent"]:
+        return self.__on_pointer_up.handler
 
     @on_pointer_up.setter
     def on_pointer_up(self, handler: OptionalEventCallable["MapPointerEvent"]):
-        self.__on_pointer_up.subscribe(handler)
+        self.__on_pointer_up.handler = handler
         self._set_attr("onPointerUp", True if handler is not None else None)
 
 
