@@ -292,10 +292,11 @@ TabBarTheme? parseTabBarTheme(ThemeData theme, Map<String, dynamic>? j) {
             j["indicator_border_side"] != null ||
             j["indicator_padding"] != null
         ? UnderlineTabIndicator(
-            borderRadius: j["indicator_border_radius"] != null
-                ? borderRadiusFromJSON(j["indicator_border_radius"])
-                : const BorderRadius.only(
-                    topLeft: Radius.circular(2), topRight: Radius.circular(2)),
+            borderRadius: borderRadiusFromJSON(
+                j["indicator_border_radius"],
+                const BorderRadius.only(
+                    topLeft: Radius.circular(2),
+                    topRight: Radius.circular(2)))!,
             borderSide: borderSideFromJSON(
                     theme, j["indicator_border_side"], indicatorColor) ??
                 BorderSide(
