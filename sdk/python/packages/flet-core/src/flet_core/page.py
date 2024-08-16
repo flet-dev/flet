@@ -27,6 +27,8 @@ from typing import (
 )
 from urllib.parse import urlparse
 
+from flet_core.box import BoxDecoration
+
 try:
     from typing import ParamSpec
 except ImportError:
@@ -1907,6 +1909,24 @@ class Page(AdaptiveControl):
     @end_drawer.setter
     def end_drawer(self, value: Optional[NavigationDrawer]):
         self.__default_view.end_drawer = value
+
+    # decoration
+    @property
+    def decoration(self) -> Optional[BoxDecoration]:
+        return self.__default_view.decoration
+
+    @decoration.setter
+    def decoration(self, value: Optional[BoxDecoration]):
+        self.__default_view.decoration = value
+
+    # foreground_decoration
+    @property
+    def foreground_decoration(self) -> Optional[BoxDecoration]:
+        return self.__default_view.foreground_decoration
+
+    @foreground_decoration.setter
+    def foreground_decoration(self, value: Optional[BoxDecoration]):
+        self.__default_view.foreground_decoration = value
 
     # floating_action_button
     @property
