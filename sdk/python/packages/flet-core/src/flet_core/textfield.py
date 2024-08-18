@@ -1,6 +1,5 @@
 import dataclasses
 import time
-from dataclasses import field
 from enum import Enum
 from typing import Any, Optional, Union, List
 
@@ -54,18 +53,22 @@ class TextCapitalization(Enum):
 @dataclasses.dataclass
 class InputFilter:
     regex_string: str
-    allow: bool = field(default=True)
-    replacement_string: str = field(default="")
+    allow: bool = True
+    replacement_string: str = ""
+    multiline: bool = False
+    case_sensitive: bool = True
+    unicode: bool = False
+    dot_all: bool = False
 
 
 class NumbersOnlyInputFilter(InputFilter):
     def __init__(self):
-        super().__init__(regex_string=r"[0-9]")
+        super().__init__(regex_string=r"^[0-9]*$", allow=True, replacement_string="")
 
 
 class TextOnlyInputFilter(InputFilter):
     def __init__(self):
-        super().__init__(regex_string=r"[a-zA-Z]")
+        super().__init__(regex_string=r"^[a-zA-Z]*$", allow=True, replacement_string="")
 
 
 class TextField(FormFieldControl, AdaptiveControl):
@@ -130,7 +133,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         on_focus: OptionalEventCallable = None,
         on_blur: OptionalEventCallable = None,
         #
-        # FormField specific
+        # FormField
         #
         text_size: OptionalNumber = None,
         text_style: Optional[TextStyle] = None,
