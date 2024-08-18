@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flet/src/models/page_args_model.dart';
 import 'package:flet/src/utils/locale.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -337,7 +338,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     var windowFrameless = widget.control.attrBool("windowFrameless");
     var windowProgressBar = widget.control.attrDouble("windowProgressBar");
 
-    updateWindow() async {
+    updateWindow(PageArgsModel? pageArgs) async {
       try {
         // windowTitle
         if (_windowTitle != windowTitle) {
@@ -454,7 +455,13 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
 
         // windowIcon
         if (windowIcon != null && windowIcon != _windowIcon) {
-          await setWindowIcon(windowIcon);
+          if (pageArgs == null) {
+            await setWindowIcon(windowIcon);
+          } else {
+            var iconAssetSrc =
+                getAssetSrc(windowIcon, pageArgs.pageUri!, pageArgs.assetsDir);
+            await setWindowIcon(iconAssetSrc.path);
+          }
           _windowIcon = windowIcon;
         }
 
@@ -577,9 +584,8 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
       }
     }
 
-    updateWindow();
-
     return withPageArgs((context, pageArgs) {
+      updateWindow(pageArgs);
       debugPrint("Page fonts build: ${widget.control.id}");
 
       // load custom fonts
