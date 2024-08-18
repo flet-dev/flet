@@ -23,6 +23,7 @@ import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
 import '../utils/alignment.dart';
+import '../utils/box.dart';
 import '../utils/buttons.dart';
 import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
@@ -1131,14 +1132,28 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                 child: scaffold,
               );
             }
-
-            return Directionality(
+            var result = Directionality(
                 textDirection: textDirection,
                 child: widget.loadingPage != null
                     ? Stack(
                         children: [scaffold, widget.loadingPage!],
                       )
                     : scaffold);
+            return withPageArgs((context, pageArgs) {
+              var backgroundDecoration = parseBoxDecoration(
+                  Theme.of(context), control, "decoration", pageArgs);
+              var foregroundDecoration = parseBoxDecoration(
+                  Theme.of(context), control, "foregroundDecoration", pageArgs);
+              if (backgroundDecoration != null ||
+                  foregroundDecoration != null) {
+                return Container(
+                  decoration: backgroundDecoration,
+                  foregroundDecoration: foregroundDecoration,
+                  child: result,
+                );
+              }
+              return result;
+            });
           });
         });
   }
