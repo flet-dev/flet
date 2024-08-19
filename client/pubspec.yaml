@@ -66,7 +66,6 @@ dev_dependencies:
 
 dependency_overrides:
   geolocator: ^13.0.1
-  file_picker: ^8.1.1
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
