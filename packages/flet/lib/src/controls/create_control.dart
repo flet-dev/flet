@@ -58,6 +58,7 @@ import 'divider.dart';
 import 'drag_target.dart';
 import 'draggable.dart';
 import 'dropdown.dart';
+import 'dropdown_menu.dart';
 import 'elevated_button.dart';
 import 'error.dart';
 import 'expansion_panel.dart';
@@ -840,6 +841,15 @@ Widget createWidget(
           parent: parent,
           control: controlView.control,
           parentDisabled: parentDisabled,
+          backend: backend);
+    case "dropdownmenu":
+      return DropdownMenuControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
           backend: backend);
     case "dropdown":
       return DropdownControl(

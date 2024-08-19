@@ -137,6 +137,8 @@ from flet_core.divider import Divider
 from flet_core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet_core.draggable import Draggable
 from flet_core.dropdown import Dropdown
+from flet_core.dropdown_menu import DropdownMenu, DropdownMenuOption
+
 from flet_core.elevated_button import ElevatedButton
 from flet_core.expansion_panel import ExpansionPanel, ExpansionPanelList
 from flet_core.expansion_tile import ExpansionTile, TileAffinity
@@ -359,6 +361,7 @@ from flet_core.types import (
     BlendMode,
     Brightness,
     ClipBehavior,
+    Duration,
     OptionalEventCallable,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
