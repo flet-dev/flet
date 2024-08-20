@@ -141,12 +141,12 @@ class Canvas(ConstrainedControl):
 
     # on_resize
     @property
-    def on_resize(self):
-        return self.__on_resize
+    def on_resize(self) -> OptionalEventCallable["CanvasResizeEvent"]:
+        return self.__on_resize.handler
 
     @on_resize.setter
     def on_resize(self, handler: OptionalEventCallable["CanvasResizeEvent"]):
-        self.__on_resize.subscribe(handler)
+        self.__on_resize.handler = handler
         self._set_attr("onresize", True if handler is not None else None)
 
 
