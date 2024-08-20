@@ -67,6 +67,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     String? urlTarget = control.attrString("urlTarget");
     bool onLongPress = control.attrBool("onLongPress", false)!;
     bool onHover = control.attrBool("onHover", false)!;
+    bool ignoreInteractions = control.attrBool("ignoreInteractions", false)!;
     bool disabled = control.isDisabled || parentDisabled;
     bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
 
@@ -305,6 +306,10 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
       }
       if (colorFilter != null) {
         result = ColorFiltered(colorFilter: colorFilter, child: result);
+      }
+
+      if (ignoreInteractions) {
+        result = IgnorePointer(child: result);
       }
 
       return constrainedControl(context, result, parent, control);

@@ -98,6 +98,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         theme: Optional[Theme] = None,
         theme_mode: Optional[ThemeMode] = None,
         color_filter: Optional[ColorFilter] = None,
+        ignore_interactions: Optional[bool] = None,
         foreground_decoration: Optional[BoxDecoration] = None,
         on_click: OptionalControlEventCallable = None,
         on_tap_down: OptionalEventCallable["ContainerTapEvent"] = None,
@@ -199,6 +200,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.theme = theme
         self.theme_mode = theme_mode
         self.color_filter = color_filter
+        self.ignore_interactions = ignore_interactions
         self.on_click = on_click
         self.on_tap_down = on_tap_down
         self.on_long_press = on_long_press
@@ -405,6 +407,15 @@ class Container(ConstrainedControl, AdaptiveControl):
                 category=DeprecationWarning,
                 stacklevel=2,
             )
+
+    # ignore_interactions
+    @property
+    def ignore_interactions(self) -> Optional[bool]:
+        return self._get_attr("ignoreInteractions", data_type="bool", def_value=False)
+
+    @ignore_interactions.setter
+    def ignore_interactions(self, value: Optional[str]):
+        self._set_attr("ignoreInteractions", value)
 
     # image_fit
     @property
