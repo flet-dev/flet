@@ -7,6 +7,7 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.textfield import KeyboardType
+from flet_core.tooltip import Tooltip
 from flet_core.types import (
     ResponsiveNumber,
     OptionalEventCallable,
@@ -115,7 +116,7 @@ class DatePicker(Control):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        tooltip: Optional[str] = None,
+        tooltip: Optional[Union[str, Tooltip]] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

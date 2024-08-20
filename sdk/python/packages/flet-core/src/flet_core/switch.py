@@ -5,6 +5,7 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.tooltip import Tooltip
 from flet_core.types import (
     AnimationValue,
     LabelPosition,
@@ -103,7 +104,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
         on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        tooltip: Optional[Union[str, Tooltip]] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

@@ -3,12 +3,13 @@ from typing import Any, List, Optional, Union
 
 from flet_core.autofill_group import AutofillHint
 from flet_core.border import Border
+from flet_core.box import BoxShadow
 from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
-from flet_core.box import BoxShadow
 from flet_core.text_style import TextStyle
 from flet_core.textfield import InputFilter, KeyboardType, TextCapitalization, TextField
+from flet_core.tooltip import Tooltip
 from flet_core.types import (
     AnimationValue,
     BlendMode,
@@ -122,7 +123,7 @@ class CupertinoTextField(TextField):
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
         on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        tooltip: Optional[Union[str, Tooltip]] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

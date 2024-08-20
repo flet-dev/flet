@@ -1,7 +1,8 @@
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.tooltip import Tooltip
 
 
 class Divider(Control):
@@ -57,7 +58,7 @@ class Divider(Control):
         #
         ref: Optional[Ref] = None,
         opacity: OptionalNumber = None,
-        tooltip: Optional[str] = None,
+        tooltip: Optional[Union[str, Tooltip]] = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):
