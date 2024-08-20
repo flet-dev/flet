@@ -7,7 +7,7 @@ from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control
 from flet_core.ref import Ref
-from flet_core.tooltip import Tooltip
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OptionalEventCallable,
@@ -47,7 +47,7 @@ class NavigationBarDestination(Control):
         # Control
         #
         ref: Optional[Ref] = None,
-        tooltip: Optional[Union[str, Tooltip]] = None,
+        tooltip: TooltipValue = None,
         disabled: Optional[bool] = None,
         data: Any = None,
     ):
@@ -147,7 +147,7 @@ class NavigationDestination(NavigationBarDestination):
         # Control
         #
         ref: Optional[Ref] = None,
-        tooltip: Optional[Union[str, Tooltip]] = None,
+        tooltip: TooltipValue = None,
         disabled: Optional[bool] = None,
         data: Any = None,
     ) -> None:

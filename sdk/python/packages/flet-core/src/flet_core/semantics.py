@@ -1,8 +1,8 @@
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.tooltip import Tooltip
+from flet_core.tooltip import TooltipValue
 from flet_core.types import OptionalEventCallable, OptionalControlEventCallable
 
 
@@ -31,7 +31,7 @@ class Semantics(Control):
         read_only: Optional[bool] = None,
         focus: Optional[bool] = None,
         slider: Optional[bool] = None,
-        tooltip: Optional[Union[str, Tooltip]] = None,
+        tooltip: TooltipValue = None,
         toggled: Optional[bool] = None,
         max_value_length: OptionalNumber = None,
         checked: Optional[bool] = None,

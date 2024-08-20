@@ -6,7 +6,7 @@ from flet_core import ControlEvent
 from flet_core.control import Control, OptionalNumber
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
-from flet_core.tooltip import Tooltip
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     Orientation,
     ResponsiveNumber,
@@ -105,7 +105,7 @@ class TimePicker(Control):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        tooltip: Optional[Union[str, Tooltip]] = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

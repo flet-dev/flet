@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional, List
+from typing import Optional, List, Union
 
 from flet_core.border import Border
 from flet_core.box import BoxShape, DecorationImage, BoxShadow
@@ -49,3 +49,6 @@ class Tooltip:
     enable_tap_to_dismiss: Optional[bool] = None
     exclude_from_semantics: Optional[bool] = None
     trigger_mode: Optional[TooltipTriggerMode] = None
+
+
+TooltipValue = Optional[Union[str, "Tooltip"]]
