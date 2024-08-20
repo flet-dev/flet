@@ -4,6 +4,7 @@ import logging
 import threading
 import time
 import uuid
+import pathlib
 from asyncio import AbstractEventLoop
 from concurrent.futures import ThreadPoolExecutor, Future
 from contextvars import ContextVar
@@ -473,7 +474,7 @@ class Window:
 
     @icon.setter
     def icon(self, value: Optional[str]):
-        self.page._set_attr("windowIcon", value)
+        self.page._set_attr("windowIcon", str(pathlib.Path(value).resolve()).replace("\\", "/"))
 
     # Methods
     def destroy(self):
