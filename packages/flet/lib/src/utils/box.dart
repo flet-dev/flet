@@ -69,15 +69,56 @@ BoxDecoration? boxDecorationFromJSON(
   if (json == null) {
     return null;
   }
+  var shape = parseBoxShape(json["shape"], BoxShape.rectangle)!;
+  var borderRadius = borderRadiusFromJSON(json["border_radius"]);
+  var color = parseColor(theme, json["color"]);
+  var gradient = gradientFromJSON(theme, json["gradient"]);
+  var blendMode = parseBlendMode(json["blend_mode"]);
+
   return BoxDecoration(
-    color: parseColor(theme, json["bgcolor"]),
+    color: color,
     border: borderFromJSON(theme, json["border"]),
-    shape: parseBoxShape(json["shape"], BoxShape.rectangle)!,
-    borderRadius: borderRadiusFromJSON(json["border_radius"]),
-    backgroundBlendMode: parseBlendMode(json["blend_mode"]),
-    boxShadow: boxShadowsFromJSON(theme, json["box_shadow"]),
-    gradient: gradientFromJSON(theme, json["gradient"]),
+    shape: shape,
+    borderRadius: shape == BoxShape.circle ? null : borderRadius,
+    backgroundBlendMode: color != null || gradient != null ? blendMode : null,
+    boxShadow: boxShadowsFromJSON(theme, json["shadow"]),
+    gradient: gradient,
     image: decorationImageFromJSON(theme, json["image"], pageArgs),
+  );
+}
+
+BoxDecoration? boxDecorationFromDetails({
+  Color? color,
+  Border? border,
+  BoxShape? shape,
+  BorderRadius? borderRadius,
+  BlendMode? blendMode,
+  List<BoxShadow>? boxShadow,
+  Gradient? gradient,
+  DecorationImage? image,
+}) {
+  bool hasCustomProperties = color != null ||
+      border != null ||
+      borderRadius != null ||
+      gradient != null ||
+      shape != null ||
+      boxShadow != null ||
+      image != null;
+
+  // If no custom properties are provided, return null
+  if (!hasCustomProperties) {
+    return null;
+  }
+
+  return BoxDecoration(
+    color: color,
+    border: border,
+    backgroundBlendMode: color != null || gradient != null ? blendMode : null,
+    borderRadius: shape == BoxShape.circle ? null : borderRadius,
+    gradient: gradient,
+    shape: shape ?? BoxShape.rectangle,
+    boxShadow: boxShadow,
+    image: image,
   );
 }
 
@@ -113,7 +154,7 @@ DecorationImage? decorationImageFromJSON(
     scale: parseDouble(json["scale"], 1.0)!,
     opacity: parseDouble(json["opacity"], 1.0)!,
     filterQuality:
-        parseFilterQuality(json["filter_quality"], FilterQuality.low)!,
+        parseFilterQuality(json["filter_quality"], FilterQuality.medium)!,
     invertColors: parseBool(json["invert_colors"], false)!,
     isAntiAlias: parseBool(json["anti_alias"], false)!,
   );

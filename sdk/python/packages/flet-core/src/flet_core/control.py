@@ -17,11 +17,11 @@ from typing import (
 from flet_core.embed_json_encoder import EmbedJsonEncoder
 from flet_core.protocol import Command
 from flet_core.ref import Ref
+from flet_core.tooltip import Tooltip
 from flet_core.types import (
     OptionalNumber,
     ResponsiveNumber,
     SupportsStr,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
@@ -46,7 +46,7 @@ class Control:
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        tooltip: Optional[str] = None,
+        tooltip: Optional[Union[str, Tooltip]] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -87,6 +87,7 @@ class Control:
 
     def _before_build_command(self) -> None:
         self._set_attr_json("col", self.__col)
+        self._set_attr_json("tooltip", self.__tooltip)
 
     def did_mount(self):
         pass
@@ -276,12 +277,12 @@ class Control:
 
     # tooltip
     @property
-    def tooltip(self):
-        return self._get_attr("tooltip")
+    def tooltip(self) -> Optional[Union[str, Tooltip]]:
+        return self.__tooltip
 
     @tooltip.setter
-    def tooltip(self, value):
-        self._set_attr("tooltip", value)
+    def tooltip(self, value: Optional[Union[str, Tooltip]]):
+        self.__tooltip = value
 
     # visible
     @property
