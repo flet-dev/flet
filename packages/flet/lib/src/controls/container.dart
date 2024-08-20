@@ -124,7 +124,8 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
               borderRadius: borderRadius,
               shape: shape,
               boxShadow: parseBoxShadow(Theme.of(context), control, "shadow"));
-
+      var boxForegroundDecoration = parseBoxDecoration(
+          Theme.of(context), control, "foregroundDecoration", pageArgs);
       Widget? result;
 
       if ((onClick || url != "" || onLongPress || onHover || onTapDown) &&
@@ -191,6 +192,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 margin: parseEdgeInsets(control, "margin"),
                 clipBehavior: clipBehavior,
                 decoration: boxDecoration,
+                foregroundDecoration: boxForegroundDecoration,
                 child: ink,
               )
             : AnimatedContainer(
@@ -216,6 +218,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 margin: parseEdgeInsets(control, "margin"),
                 alignment: parseAlignment(control, "alignment"),
                 decoration: boxDecoration,
+                foregroundDecoration: boxForegroundDecoration,
                 clipBehavior: clipBehavior,
                 child: child)
             : AnimatedContainer(
@@ -227,6 +230,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 margin: parseEdgeInsets(control, "margin"),
                 alignment: parseAlignment(control, "alignment"),
                 decoration: boxDecoration,
+                foregroundDecoration: boxForegroundDecoration,
                 clipBehavior: clipBehavior,
                 onEnd: control.attrBool("onAnimationEnd", false)!
                     ? () {

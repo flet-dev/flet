@@ -49,43 +49,25 @@ class AppBarControl extends StatelessWidget
       var titleCtrls = children.where((c) => c.name == "title" && c.isVisible);
       var actionCtrls =
           children.where((c) => c.name == "action" && c.isVisible);
-
-      var leadingWidth = control.attrDouble("leadingWidth");
-      var elevation = control.attrDouble("elevation");
-      var toolbarOpacity = control.attrDouble("toolbarOpacity", 1)!;
-      var centerTitle = control.attrBool("centerTitle", false)!;
-      var automaticallyImplyLeading =
-          control.attrBool("automaticallyImplyLeading", true)!;
-      var color = control.attrColor("color", context);
-      var bgcolor = control.attrColor("bgcolor", context);
-      var shadowColor = control.attrColor("shadowColor", context);
-      var surfaceTintColor = control.attrColor("surfaceTintColor", context);
-      var elevationOnScroll = control.attrDouble("elevationOnScroll");
-      var forceMaterialTransparency =
-          control.attrBool("forceMaterialTransparency", false)!;
       var isSecondary = control.attrBool("isSecondary", false)!;
-      var excludeHeaderSemantics =
-          control.attrBool("excludeHeaderSemantics", false)!;
-      var titleSpacing = control.attrDouble("titleSpacing");
 
-      var clipBehavior = parseClip(control.attrString("clipBehavior"));
-
-      return AppBar(
+      var appBar = AppBar(
         leading: leadingCtrls.isNotEmpty
             ? createControl(control, leadingCtrls.first.id, control.isDisabled,
                 parentAdaptive: adaptive)
             : null,
-        leadingWidth: leadingWidth,
-        automaticallyImplyLeading: automaticallyImplyLeading,
+        leadingWidth: control.attrDouble("leadingWidth"),
+        automaticallyImplyLeading:
+            control.attrBool("automaticallyImplyLeading", true)!,
         title: titleCtrls.isNotEmpty
             ? createControl(control, titleCtrls.first.id, control.isDisabled,
                 parentAdaptive: adaptive)
             : null,
-        centerTitle: centerTitle,
+        centerTitle: control.attrBool("centerTitle", false)!,
         toolbarHeight: preferredSize.height,
-        foregroundColor: color,
-        backgroundColor: bgcolor,
-        elevation: elevation,
+        foregroundColor: control.attrColor("color", context),
+        backgroundColor: control.attrColor("bgcolor", context),
+        elevation: control.attrDouble("elevation"),
         actions: actionCtrls
             .map((c) => createControl(control, c.id, control.isDisabled,
                 parentAdaptive: adaptive))
@@ -93,21 +75,24 @@ class AppBarControl extends StatelessWidget
         systemOverlayStyle: Theme.of(context)
             .extension<SystemUiOverlayStyleTheme>()
             ?.systemUiOverlayStyle,
-        shadowColor: shadowColor,
-        surfaceTintColor: surfaceTintColor,
-        scrolledUnderElevation: elevationOnScroll,
-        forceMaterialTransparency: forceMaterialTransparency,
+        shadowColor: control.attrColor("shadowColor", context),
+        surfaceTintColor: control.attrColor("surfaceTintColor", context),
+        scrolledUnderElevation: control.attrDouble("elevationOnScroll"),
+        forceMaterialTransparency:
+            control.attrBool("forceMaterialTransparency", false)!,
         primary: !isSecondary,
-        titleSpacing: titleSpacing,
-        excludeHeaderSemantics: excludeHeaderSemantics,
-        clipBehavior: clipBehavior,
+        titleSpacing: control.attrDouble("titleSpacing"),
+        excludeHeaderSemantics:
+            control.attrBool("excludeHeaderSemantics", false)!,
+        clipBehavior: parseClip(control.attrString("clipBehavior")),
         titleTextStyle:
             parseTextStyle(Theme.of(context), control, "titleTextStyle"),
         shape: parseOutlinedBorder(control, "shape"),
-        toolbarOpacity: toolbarOpacity,
+        toolbarOpacity: control.attrDouble("toolbarOpacity", 1)!,
         toolbarTextStyle:
             parseTextStyle(Theme.of(context), control, "toolbarTextStyle"),
       );
+      return baseControl(context, appBar, parent, control);
     });
   }
 

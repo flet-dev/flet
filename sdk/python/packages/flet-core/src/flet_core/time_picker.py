@@ -284,11 +284,13 @@ class TimePicker(Control):
 
     # on_entry_mode_change
     @property
-    def on_entry_mode_change(self):
-        return self.__on_entry_mode_change
+    def on_entry_mode_change(
+        self,
+    ) -> OptionalEventCallable[TimePickerEntryModeChangeEvent]:
+        return self.__on_entry_mode_change.handler
 
     @on_entry_mode_change.setter
     def on_entry_mode_change(
-        self, handler: Optional[Callable[[TimePickerEntryModeChangeEvent], None]]
+        self, handler: OptionalEventCallable[TimePickerEntryModeChangeEvent]
     ):
-        self.__on_entry_mode_change.subscribe(handler)
+        self.__on_entry_mode_change.handler = handler

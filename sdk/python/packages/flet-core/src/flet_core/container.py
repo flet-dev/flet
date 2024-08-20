@@ -10,6 +10,7 @@ from flet_core.box import (
     BoxShadow,
     BoxShape,
     ColorFilter,
+    BoxDecoration,
     DecorationImage,
 )
 from flet_core.constrained_control import ConstrainedControl
@@ -98,6 +99,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         theme_mode: Optional[ThemeMode] = None,
         color_filter: Optional[ColorFilter] = None,
         ignore_interactions: Optional[bool] = None,
+        foreground_decoration: Optional[BoxDecoration] = None,
         on_click: OptionalControlEventCallable = None,
         on_tap_down: OptionalEventCallable["ContainerTapEvent"] = None,
         on_long_press: OptionalControlEventCallable = None,
@@ -204,6 +206,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.on_long_press = on_long_press
         self.on_hover = on_hover
         self.image = image
+        self.foreground_decoration = foreground_decoration
 
     def _get_control_name(self):
         return "container"
@@ -222,6 +225,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("theme", self.__theme)
         self._set_attr_json("colorFilter", self.__color_filter)
         self._set_attr_json("image", self.__image)
+        self._set_attr_json("foregroundDecoration", self.__foreground_decoration)
 
     def _get_children(self):
         children = []
@@ -262,6 +266,15 @@ class Container(ConstrainedControl, AdaptiveControl):
     def image(self, value: Optional[DecorationImage]):
         self.__image = value
 
+    # foreground_decoration
+    @property
+    def foreground_decoration(self) -> Optional[BoxDecoration]:
+        return self.__foreground_decoration
+
+    @foreground_decoration.setter
+    def foreground_decoration(self, value: Optional[BoxDecoration]):
+        self.__foreground_decoration = value
+
     # margin
     @property
     def margin(self) -> MarginValue:
@@ -297,9 +310,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @blend_mode.setter
     def blend_mode(self, value: Optional[BlendMode]):
         self.__blend_mode = value
-        self._set_attr(
-            "blendMode", value.value if isinstance(value, BlendMode) else value
-        )
+        self._set_enum_attr("blendMode", value, BlendMode)
 
     # blur
     @property
@@ -580,12 +591,12 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # on_tap_down
     @property
-    def on_tap_down(self):
-        return self.__on_tap_down
+    def on_tap_down(self) -> OptionalEventCallable["ContainerTapEvent"]:
+        return self.__on_tap_down.handler
 
     @on_tap_down.setter
     def on_tap_down(self, handler: OptionalEventCallable["ContainerTapEvent"]):
-        self.__on_tap_down.subscribe(handler)
+        self.__on_tap_down.handler = handler
         self._set_attr("onTapDown", True if handler is not None else None)
 
     # on_long_press

@@ -37,7 +37,7 @@ class _NavigationRailControlState extends State<NavigationRailControl>
 
   void _destinationChanged(int index) {
     _selectedIndex = index;
-    debugPrint("Selected index: $_selectedIndex");
+    debugPrint("NavigationRail selectedIndex: $_selectedIndex");
     widget.backend.updateControlState(
         widget.control.id, {"selectedindex": _selectedIndex.toString()});
     widget.backend.triggerControlEvent(
@@ -81,7 +81,7 @@ class _NavigationRailControlState extends State<NavigationRailControl>
               "NavigationRail constraints.maxHeight: ${constraints.maxHeight}");
 
           if (constraints.maxHeight == double.infinity &&
-              widget.control.attrs["height"] == null) {
+              widget.control.attrDouble("height") == null) {
             return const ErrorControl("Error displaying NavigationRail",
                 description:
                     "Control's height is unbounded. Either set \"expand\" property, set a fixed \"height\" or nest NavigationRail inside another control with a fixed height.");
@@ -90,7 +90,7 @@ class _NavigationRailControlState extends State<NavigationRailControl>
           return NavigationRail(
               labelType: extended ? NavigationRailLabelType.none : labelType,
               extended: extended,
-              elevation: widget.control.attrDouble("elevation", 0),
+              elevation: widget.control.attrDouble("elevation"),
               selectedLabelTextStyle: parseTextStyle(
                   Theme.of(context), widget.control, "selectedLabelTextStyle"),
               unselectedLabelTextStyle: parseTextStyle(Theme.of(context),

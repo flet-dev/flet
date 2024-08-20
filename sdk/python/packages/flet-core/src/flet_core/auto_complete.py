@@ -28,7 +28,7 @@ class AutoComplete(Control):
         self,
         suggestions: Optional[List[AutoCompleteSuggestion]] = None,
         suggestions_max_height: OptionalNumber = None,
-        on_select=None,
+        on_select: OptionalEventCallable["AutoCompleteSelectEvent"] = None,
         #
         # Control
         #
@@ -87,12 +87,12 @@ class AutoComplete(Control):
 
     # on_select
     @property
-    def on_select(self):
-        return self._get_event_handler("select")
+    def on_select(self) -> OptionalEventCallable["AutoCompleteSelectEvent"]:
+        return self.__on_select.handler
 
     @on_select.setter
     def on_select(self, handler: OptionalEventCallable["AutoCompleteSelectEvent"]):
-        self.__on_select.subscribe(handler)
+        self.__on_select.handler = handler
 
 
 class AutoCompleteSelectEvent(ControlEvent):
