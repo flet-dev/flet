@@ -87,7 +87,7 @@ class Control:
 
     def _before_build_command(self) -> None:
         self._set_attr_json("col", self.__col)
-        self._set_attr_json("tooltip", self.__tooltip)
+        self._set_attr_json("tooltip", self.tooltip)
 
     def did_mount(self):
         pass
@@ -274,15 +274,6 @@ class Control:
             value is None or 0.0 <= value <= 1.0
         ), "opacity must be between 0.0 and 1.0"
         self._set_attr("opacity", value)
-
-    # tooltip
-    @property
-    def tooltip(self) -> Optional[Union[str, Tooltip]]:
-        return self.__tooltip
-
-    @tooltip.setter
-    def tooltip(self, value: Optional[Union[str, Tooltip]]):
-        self.__tooltip = value
 
     # visible
     @property
