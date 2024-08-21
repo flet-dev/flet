@@ -157,20 +157,20 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         indicator_tab_size: Optional[bool] = None,
         is_secondary: Optional[bool] = None,
         label_color: Optional[str] = None,
-            label_padding: PaddingValue = None,
-            label_text_style: Optional[TextStyle] = None,
+        label_padding: PaddingValue = None,
+        label_text_style: Optional[TextStyle] = None,
         unselected_label_color: Optional[str] = None,
-            unselected_label_text_style: Optional[TextStyle] = None,
+        unselected_label_text_style: Optional[TextStyle] = None,
         overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         divider_height: OptionalNumber = None,
         indicator_thickness: OptionalNumber = None,
         enable_feedback: Optional[str] = None,
         mouse_cursor: Optional[MouseCursor] = None,
-            padding: PaddingValue = None,
-            splash_border_radius: BorderRadiusValue = None,
+        padding: PaddingValue = None,
+        splash_border_radius: BorderRadiusValue = None,
         clip_behavior: Optional[ClipBehavior] = None,
-            on_click: OptionalControlEventCallable = None,
-            on_change: OptionalControlEventCallable = None,
+        on_click: OptionalControlEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -196,7 +196,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-            on_animation_end: OptionalControlEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -271,7 +271,6 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("indicatorBorderRadius", self.__indicator_border_radius)
         self._set_attr_json("indicatorBorderSide", self.__indicator_border_side)
         self._set_attr_json("indicatorPadding", self.__indicator_padding)
-        self._set_attr_json("indicatorTabSize", self.__indicator_tab_size)
         self._set_attr_json("labelPadding", self.__label_padding)
         self._set_attr_json("labelTextStyle", self.__label_text_style)
         self._set_attr_json(

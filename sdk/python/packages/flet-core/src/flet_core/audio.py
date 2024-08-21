@@ -293,13 +293,13 @@ class Audio(Control):
     # on_duration_changed
     @property
     def on_duration_changed(self):
-        return self.__on_duration_changed
+        return self.__on_duration_changed.handler
 
     @on_duration_changed.setter
     def on_duration_changed(
         self, handler: OptionalEventCallable[AudioDurationChangeEvent]
     ):
-        self.__on_duration_changed.subscribe(handler)
+        self.__on_duration_changed.handler = handler
 
     # on_state_changed
     @property
@@ -313,13 +313,13 @@ class Audio(Control):
     # on_position_changed
     @property
     def on_position_changed(self):
-        return self.__on_position_changed
+        return self.__on_position_changed.handler
 
     @on_position_changed.setter
     def on_position_changed(
         self, handler: OptionalEventCallable[AudioPositionChangeEvent]
     ):
-        self.__on_position_changed.subscribe(handler)
+        self.__on_position_changed.handler = handler
         self._set_attr("onPositionChanged", True if handler is not None else None)
 
     # on_seek_complete
