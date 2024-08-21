@@ -378,11 +378,13 @@ class DatePicker(Control):
 
     # on_entry_mode_change
     @property
-    def on_entry_mode_change(self):
-        return self.__on_entry_mode_change
+    def on_entry_mode_change(
+        self,
+    ) -> OptionalEventCallable[DatePickerEntryModeChangeEvent]:
+        return self.__on_entry_mode_change.handler
 
     @on_entry_mode_change.setter
     def on_entry_mode_change(
-        self, handler: OptionalEventCallable["DatePickerEntryModeChangeEvent"]
+        self, handler: OptionalEventCallable[DatePickerEntryModeChangeEvent]
     ):
-        self.__on_entry_mode_change.subscribe(handler)
+        self.__on_entry_mode_change.handler = handler

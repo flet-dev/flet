@@ -171,7 +171,7 @@ class DragTarget(Control):
 
     # on_will_accept
     @property
-    def on_will_accept(self):
+    def on_will_accept(self) -> OptionalControlEventCallable:
         return self._get_event_handler("will_accept")
 
     @on_will_accept.setter
@@ -180,16 +180,16 @@ class DragTarget(Control):
 
     # on_accept
     @property
-    def on_accept(self):
-        return self.__on_accept
+    def on_accept(self) -> OptionalEventCallable["DragTargetEvent"]:
+        return self.__on_accept.handler
 
     @on_accept.setter
     def on_accept(self, handler: OptionalEventCallable["DragTargetEvent"]):
-        self.__on_accept.subscribe(handler)
+        self.__on_accept.handler = handler
 
     # on_leave
     @property
-    def on_leave(self):
+    def on_leave(self) -> OptionalControlEventCallable:
         return self._get_event_handler("leave")
 
     @on_leave.setter
@@ -198,12 +198,12 @@ class DragTarget(Control):
 
     # on_move
     @property
-    def on_move(self):
-        return self.__on_move
+    def on_move(self) -> OptionalEventCallable["DragTargetEvent"]:
+        return self.__on_move.handler
 
     @on_move.setter
     def on_move(self, handler: OptionalEventCallable["DragTargetEvent"]):
-        self.__on_move.subscribe(handler)
+        self.__on_move.handler = handler
 
 
 class DragTargetAcceptEvent(ControlEvent):

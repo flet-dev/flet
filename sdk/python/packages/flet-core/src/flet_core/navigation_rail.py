@@ -262,6 +262,7 @@ class NavigationRail(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = False,
     ):
         ConstrainedControl.__init__(
             self,
@@ -290,6 +291,7 @@ class NavigationRail(ConstrainedControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
         )
 
         self.destinations = destinations
@@ -408,7 +410,7 @@ class NavigationRail(ConstrainedControl):
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
-        assert value is None or value >= 0, "elevation cannot be negative"
+        assert value is None or value > 0, "elevation must be greater than 0"
         self._set_attr("elevation", value)
 
     # extended

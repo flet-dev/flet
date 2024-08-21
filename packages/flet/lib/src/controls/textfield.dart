@@ -360,3 +360,19 @@ class TextCapitalizationFormatter extends TextInputFormatter {
       .map((str) => inCaps(str))
       .join(" ");
 }
+
+class CustomNumberFormatter extends TextInputFormatter {
+  final String pattern;
+
+  CustomNumberFormatter(this.pattern);
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    final regExp = RegExp(pattern);
+    if (regExp.hasMatch(newValue.text)) {
+      return newValue;
+    }
+    // If newValue is invalid, keep the old value
+    return oldValue;
+  }
+}

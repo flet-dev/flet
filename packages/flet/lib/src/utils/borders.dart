@@ -58,9 +58,9 @@ OutlinedBorder? parseOutlinedBorder(Control control, String propName) {
   return outlinedBorderFromJSON(j1);
 }
 
-BorderRadius? borderRadiusFromJSON(dynamic json, [BorderRadius? defValue]) {
+BorderRadius? borderRadiusFromJSON(dynamic json, [BorderRadius? defaultValue]) {
   if (json == null) {
-    return defValue;
+    return defaultValue;
   }
   if (json is int || json is double) {
     return BorderRadius.all(Radius.circular(parseDouble(json, 0)!));

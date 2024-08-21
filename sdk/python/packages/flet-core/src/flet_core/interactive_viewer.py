@@ -18,6 +18,7 @@ from flet_core.types import (
     ScaleValue,
     OptionalControlEventCallable,
     Offset,
+    OptionalEventCallable,
 )
 
 
@@ -310,35 +311,41 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
 
     # on_interaction_start
     @property
-    def on_interaction_start(self):
-        return self._get_event_handler("interaction_start")
+    def on_interaction_start(
+        self,
+    ) -> OptionalEventCallable[InteractiveViewerInteractionStartEvent]:
+        return self.__on_interaction_start.handler
 
     @on_interaction_start.setter
     def on_interaction_start(
         self,
-        handler: Optional[Callable[[InteractiveViewerInteractionStartEvent], None]],
+        handler: OptionalEventCallable[InteractiveViewerInteractionStartEvent],
     ):
-        self.__on_interaction_start.subscribe(handler)
+        self.__on_interaction_start.handler = handler
 
     # on_interaction_update
     @property
-    def on_interaction_update(self):
-        return self._get_event_handler("interaction_update")
+    def on_interaction_update(
+        self,
+    ) -> OptionalEventCallable[InteractiveViewerInteractionUpdateEvent]:
+        return self.__on_interaction_update.handler
 
     @on_interaction_update.setter
     def on_interaction_update(
         self,
-        handler: Optional[Callable[[InteractiveViewerInteractionUpdateEvent], None]],
+        handler: OptionalEventCallable[InteractiveViewerInteractionUpdateEvent],
     ):
-        self.__on_interaction_update.subscribe(handler)
+        self.__on_interaction_update.handler = handler
 
     # on_interaction_end
     @property
-    def on_interaction_end(self):
-        return self._get_event_handler("interaction_end")
+    def on_interaction_end(
+        self,
+    ) -> OptionalEventCallable[InteractiveViewerInteractionEndEvent]:
+        return self.__on_interaction_end.handler
 
     @on_interaction_end.setter
     def on_interaction_end(
-        self, handler: Optional[Callable[[InteractiveViewerInteractionEndEvent], None]]
+        self, handler: OptionalEventCallable[InteractiveViewerInteractionEndEvent]
     ):
-        self.__on_interaction_end.subscribe(handler)
+        self.__on_interaction_end.handler = handler

@@ -510,11 +510,13 @@ class Markdown(ConstrainedControl):
 
     # on_selection_change
     @property
-    def on_selection_change(self):
-        return self._get_event_handler("selection_change")
+    def on_selection_change(
+        self,
+    ) -> OptionalEventCallable[MarkdownSelectionChangeEvent]:
+        return self.__on_selection_change.handler
 
     @on_selection_change.setter
     def on_selection_change(
         self, handler: OptionalEventCallable[MarkdownSelectionChangeEvent]
     ):
-        self.__on_selection_change.subscribe(handler)
+        self.__on_selection_change.handler = handler

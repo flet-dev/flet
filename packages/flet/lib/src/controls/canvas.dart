@@ -368,9 +368,7 @@ class FletCustomPainter extends CustomPainter {
             parseDouble(elem["width"], 0)!,
             parseDouble(elem["height"], 0)!));
       } else if (type == "rect") {
-        var borderRadius = elem["border_radius"] != null
-            ? borderRadiusFromJSON(elem["border_radius"])
-            : null;
+        var borderRadius = borderRadiusFromJSON(elem["border_radius"]);
         path.addRRect(RRect.fromRectAndCorners(
             Rect.fromLTWH(
                 parseDouble(elem["x"], 0)!,

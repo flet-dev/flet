@@ -1,6 +1,6 @@
 from datetime import time
 from enum import Enum
-from typing import Any, Optional, Union, Callable
+from typing import Any, Optional, Union
 
 from flet_core import ControlEvent
 from flet_core.control import Control, OptionalNumber
@@ -10,6 +10,7 @@ from flet_core.types import (
     Orientation,
     ResponsiveNumber,
     OptionalControlEventCallable,
+    OptionalEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -92,8 +93,8 @@ class TimePicker(Control):
         orientation: Optional[Orientation] = None,
         on_change: OptionalControlEventCallable = None,
         on_dismiss: OptionalControlEventCallable = None,
-        on_entry_mode_change: Optional[
-            Callable[[TimePickerEntryModeChangeEvent], None]
+        on_entry_mode_change: OptionalEventCallable[
+            TimePickerEntryModeChangeEvent
         ] = None,
         #
         # Control
@@ -283,11 +284,13 @@ class TimePicker(Control):
 
     # on_entry_mode_change
     @property
-    def on_entry_mode_change(self):
-        return self.__on_entry_mode_change
+    def on_entry_mode_change(
+        self,
+    ) -> OptionalEventCallable[TimePickerEntryModeChangeEvent]:
+        return self.__on_entry_mode_change.handler
 
     @on_entry_mode_change.setter
     def on_entry_mode_change(
-        self, handler: Optional[Callable[[TimePickerEntryModeChangeEvent], None]]
+        self, handler: OptionalEventCallable[TimePickerEntryModeChangeEvent]
     ):
-        self.__on_entry_mode_change.subscribe(handler)
+        self.__on_entry_mode_change.handler = handler

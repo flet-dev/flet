@@ -189,6 +189,7 @@ class NavigationDrawer(Control):
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
     ):
         Control.__init__(
             self,
@@ -196,6 +197,7 @@ class NavigationDrawer(Control):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
         )
 
         self.open = open

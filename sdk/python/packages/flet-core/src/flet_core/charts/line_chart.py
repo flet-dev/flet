@@ -454,12 +454,12 @@ class LineChart(ConstrainedControl):
 
     # on_chart_event
     @property
-    def on_chart_event(self):
-        return self.__on_chart_event
+    def on_chart_event(self) -> OptionalEventCallable["LineChartEvent"]:
+        return self.__on_chart_event.handler
 
     @on_chart_event.setter
     def on_chart_event(self, handler: OptionalEventCallable["LineChartEvent"]):
-        self.__on_chart_event.subscribe(handler)
+        self.__on_chart_event.handler = handler
         self._set_attr("onChartEvent", True if handler is not None else None)
 
 

@@ -110,12 +110,12 @@ class DataColumn(Control):
 
     # on_sort
     @property
-    def on_sort(self):
-        return self.__on_sort
+    def on_sort(self) -> OptionalEventCallable["DataColumnSortEvent"]:
+        return self.__on_sort.handler
 
     @on_sort.setter
-    def on_sort(self, handler: OptionalEventCallable[DataColumnSortEvent]):
-        self.__on_sort.subscribe(handler)
+    def on_sort(self, handler: OptionalEventCallable["DataColumnSortEvent"]):
+        self.__on_sort.handler = handler
         self._set_attr("onSort", True if handler is not None else None)
 
 
@@ -231,12 +231,12 @@ class DataCell(Control):
 
     # on_tap_down
     @property
-    def on_tap_down(self):
-        return self.__on_tap_down
+    def on_tap_down(self) -> OptionalEventCallable[TapEvent]:
+        return self.__on_tap_down.handler
 
     @on_tap_down.setter
-    def on_tap_down(self, handler: Optional[Callable[[TapEvent], None]]):
-        self.__on_tap_down.subscribe(handler)
+    def on_tap_down(self, handler: OptionalEventCallable[TapEvent]):
+        self.__on_tap_down.handler = handler
         self._set_attr("onTapDown", True if handler is not None else None)
 
 
