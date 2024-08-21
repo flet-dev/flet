@@ -9,7 +9,6 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 

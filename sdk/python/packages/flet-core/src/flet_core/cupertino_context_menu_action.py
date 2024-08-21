@@ -3,7 +3,7 @@ from typing import Any, Optional
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.control import Control
 from flet_core.ref import Ref
-from flet_core.types import OptionalEventCallable, OptionalControlEventCallable
+from flet_core.types import OptionalControlEventCallable
 
 
 class CupertinoContextMenuAction(AdaptiveControl):

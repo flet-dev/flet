@@ -1,5 +1,5 @@
 import json
-from typing import Any, Dict, Optional, Union, Callable
+from typing import Any, Dict, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl

@@ -10,7 +10,6 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     PaddingValue,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 

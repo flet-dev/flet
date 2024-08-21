@@ -6,7 +6,6 @@ from flet_core.navigation_bar import NavigationBarDestination
 from flet_core.ref import Ref
 from flet_core.types import (
     AnimationValue,
-    OptionalEventCallable,
     OffsetValue,
     OptionalNumber,
     ResponsiveNumber,

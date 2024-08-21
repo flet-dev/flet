@@ -11,7 +11,6 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     UrlTarget,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 

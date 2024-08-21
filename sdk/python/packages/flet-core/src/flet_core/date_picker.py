@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from enum import Enum
-from typing import Any, Optional, Union, Callable
+from typing import Any, Optional, Union
 
 from flet_core import ControlEvent
 from flet_core.control import Control, OptionalNumber

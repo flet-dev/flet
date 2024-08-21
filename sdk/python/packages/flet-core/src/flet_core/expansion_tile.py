@@ -62,10 +62,10 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         collapsed_shape: Optional[OutlinedBorder] = None,
         dense: Optional[bool] = None,
         enable_feedback: Optional[bool] = None,
-            show_trailing_icon: Optional[bool] = None,
-            min_tile_height: OptionalNumber = None,
+        show_trailing_icon: Optional[bool] = None,
+        min_tile_height: OptionalNumber = None,
         visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
-            on_change: OptionalControlEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -91,7 +91,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-            on_animation_end: OptionalControlEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

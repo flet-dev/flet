@@ -15,7 +15,6 @@ from flet_core.types import (
     ScaleValue,
     ClipBehavior,
     ControlState,
-    OptionalEventCallable,
     ThemeVisualDensity,
     VisualDensity,
     OptionalControlEventCallable,

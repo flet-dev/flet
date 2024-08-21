@@ -3,10 +3,10 @@ from typing import Any, List, Optional, Union
 
 from flet_core.autofill_group import AutofillHint
 from flet_core.border import Border
+from flet_core.box import BoxShadow, DecorationImage, BoxShape
 from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
-from flet_core.box import BoxShadow, DecorationImage, BoxShape
 from flet_core.text_style import TextStyle
 from flet_core.textfield import InputFilter, KeyboardType, TextCapitalization, TextField
 from flet_core.types import (

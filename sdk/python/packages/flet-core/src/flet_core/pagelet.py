@@ -18,7 +18,6 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
@@ -90,7 +89,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-            on_animation_end: OptionalControlEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
