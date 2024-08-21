@@ -123,7 +123,8 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 opacity: imageOpacity)
             : decorationImage,
       );
-
+      var boxForegroundDecoration = parseBoxDecoration(
+          Theme.of(context), control, "foregroundDecoration", pageArgs);
       Widget? result;
 
       var onAnimationEnd = control.attrBool("onAnimationEnd", false)!
