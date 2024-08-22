@@ -309,7 +309,7 @@ class AudioRecorder(Control):
     # on_state_changed
     @property
     def on_state_changed(self):
-        return self._get_event_handler("state_changed")
+        return self.__on_state_changed.handler
 
     @on_state_changed.setter
     def on_state_changed(
