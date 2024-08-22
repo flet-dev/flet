@@ -6,7 +6,7 @@ from typing import Any, Optional, Union, cast
 
 from flet_core.box import BoxDecoration
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber, Control
+from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
@@ -14,15 +14,15 @@ from flet_core.text import TextSelection
 from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
+    MainAxisAlignment,
     OffsetValue,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
+    PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
-    OptionalControlEventCallable,
-    PaddingValue,
     TextAlign,
-    MainAxisAlignment,
 )
 
 try:
@@ -498,15 +498,6 @@ class Markdown(ConstrainedControl):
     @on_tap_text.setter
     def on_tap_text(self, handler: OptionalControlEventCallable):
         self._add_event_handler("tap_text", handler)
-
-    # on_selection_change
-    @property
-    def on_selection_change(self) -> OptionalControlEventCallable:
-        return self._get_event_handler("selection_change")
-
-    @on_selection_change.setter
-    def on_selection_change(self, handler: OptionalControlEventCallable):
-        self._add_event_handler("selection_change", handler)
 
     # on_selection_change
     @property
