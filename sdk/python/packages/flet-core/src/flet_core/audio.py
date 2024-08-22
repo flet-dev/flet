@@ -308,7 +308,7 @@ class Audio(Control):
 
     @on_state_changed.setter
     def on_state_changed(self, handler: OptionalEventCallable[AudioStateChangeEvent]):
-        self.__on_state_changed.subscribe(handler)
+        self.__on_state_changed.handler = handler
 
     # on_position_changed
     @property

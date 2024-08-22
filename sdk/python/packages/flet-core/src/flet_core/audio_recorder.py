@@ -52,7 +52,7 @@ class AudioRecorder(Control):
         channels_num: OptionalNumber = None,
         sample_rate: OptionalNumber = None,
         bit_rate: OptionalNumber = None,
-        on_state_changed:OptionalEventCallable[AudioRecorderStateChangeEvent] =None,
+        on_state_changed: OptionalEventCallable[AudioRecorderStateChangeEvent] = None,
         #
         # Control
         #
@@ -312,5 +312,7 @@ class AudioRecorder(Control):
         return self._get_event_handler("state_changed")
 
     @on_state_changed.setter
-    def on_state_changed(self, handler: OptionalEventCallable[AudioRecorderStateChangeEvent]):
-        self.__on_state_changed.subscribe(handler)
+    def on_state_changed(
+        self, handler: OptionalEventCallable[AudioRecorderStateChangeEvent]
+    ):
+        self.__on_state_changed.handler = handler
