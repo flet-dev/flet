@@ -21,7 +21,6 @@ from flet_core.types import (
     OptionalNumber,
     ResponsiveNumber,
     SupportsStr,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated

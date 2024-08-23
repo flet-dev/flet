@@ -14,7 +14,6 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
@@ -28,7 +27,7 @@ class Option(Control):
         content: Optional[Control] = None,
         alignment: Optional[Alignment] = None,
         text_style: Optional[TextStyle] = None,
-        on_click: OptionalEventCallable = None,
+        on_click: OptionalControlEventCallable = None,
         #
         # Control
         #
@@ -170,10 +169,10 @@ class Dropdown(FormFieldControl):
         icon_disabled_color: Optional[str] = None,
         options_fill_horizontally: Optional[bool] = None,
         disabled_hint_content: Optional[Control] = None,
-        on_change: OptionalEventCallable = None,
-        on_focus: OptionalEventCallable = None,
-        on_blur: OptionalEventCallable = None,
-        on_click: OptionalEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
+        on_click: OptionalControlEventCallable = None,
         #
         # FormField specific
         #
@@ -234,7 +233,7 @@ class Dropdown(FormFieldControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

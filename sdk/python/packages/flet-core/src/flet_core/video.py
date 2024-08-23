@@ -86,13 +86,12 @@ class Video(ConstrainedControl):
         pitch: OptionalNumber = None,
         configuration: Optional[VideoConfiguration] = None,
         subtitle_configuration: Optional[VideoSubtitleConfiguration] = None,
-        on_loaded: OptionalEventCallable = None,
-        on_enter_fullscreen: OptionalEventCallable = None,
-        on_exit_fullscreen: OptionalEventCallable = None,
-        on_error: OptionalEventCallable = None,
-        on_completed: OptionalEventCallable = None,
-        on_track_changed: OptionalEventCallable = None,
-
+        on_loaded: OptionalControlEventCallable = None,
+        on_enter_fullscreen: OptionalControlEventCallable = None,
+        on_exit_fullscreen: OptionalControlEventCallable = None,
+        on_error: OptionalControlEventCallable = None,
+        on_completed: OptionalControlEventCallable = None,
+        on_track_changed: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -177,7 +176,6 @@ class Video(ConstrainedControl):
         self.on_error = on_error
         self.on_completed = on_completed
         self.on_track_changed = on_track_changed
-
 
     def _get_control_name(self):
         return "video"

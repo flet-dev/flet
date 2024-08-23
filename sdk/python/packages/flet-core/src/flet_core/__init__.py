@@ -17,12 +17,23 @@ from flet_core import (
 )
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alert_dialog import AlertDialog
-from flet_core.alignment import Alignment
+from flet_core.alignment import Alignment, Axis
 from flet_core.animated_switcher import AnimatedSwitcher, AnimatedSwitcherTransition
 from flet_core.animation import Animation, AnimationCurve
 from flet_core.app_bar import AppBar
-from flet_core.audio import Audio
-from flet_core.audio_recorder import AudioEncoder, AudioRecorder
+from flet_core.audio import (
+    Audio,
+    AudioState,
+    AudioDurationChangeEvent,
+    AudioPositionChangeEvent,
+    AudioStateChangeEvent,
+)
+from flet_core.audio_recorder import (
+    AudioEncoder,
+    AudioRecorder,
+    AudioRecorderState,
+    AudioRecorderStateChangeEvent,
+)
 from flet_core.auto_complete import (
     AutoComplete,
     AutoCompleteSuggestion,
@@ -199,7 +210,7 @@ from flet_core.markdown import (
     Markdown,
     MarkdownExtensionSet,
     MarkdownSelectionChangeEvent,
-    MarkdownSelectionChangedCause,
+    MarkdownSelectionChangeCause,
     MarkdownStyleSheet,
     MarkdownCodeTheme,
 )
@@ -345,6 +356,8 @@ from flet_core.theme import (
     Theme,
     TimePickerTheme,
     TooltipTheme,
+    DataTableTheme,
+    ButtonTheme,
 )
 from flet_core.time_picker import (
     TimePicker,

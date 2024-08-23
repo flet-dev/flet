@@ -10,7 +10,6 @@ from flet_core.types import (
     ClipBehavior,
     MainAxisAlignment,
     PaddingValue,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 
@@ -92,7 +91,7 @@ class AlertDialog(AdaptiveControl):
         title_text_style: Optional[TextStyle] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         semantics_label: Optional[str] = None,
-        on_dismiss: OptionalEventCallable = None,
+        on_dismiss: OptionalControlEventCallable = None,
         #
         # AdaptiveControl
         #

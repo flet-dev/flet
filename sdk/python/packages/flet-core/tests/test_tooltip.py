@@ -10,7 +10,7 @@ def test_instance_no_attrs_set():
             indent=0,
             name=None,
             values=["tooltip"],
-            attrs={},
+            attrs={"shadow": "[]"},
             commands=[],
         )
     ], "Test failed"

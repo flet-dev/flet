@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import OptionalEventCallable, OptionalControlEventCallable
+from flet_core.types import OptionalControlEventCallable
 
 
 class BottomSheet(Control):
@@ -55,7 +55,7 @@ class BottomSheet(Control):
         use_safe_area: Optional[bool] = None,
         is_scroll_controlled: Optional[bool] = None,
         maintain_bottom_view_insets_padding: Optional[bool] = None,
-        on_dismiss: OptionalEventCallable = None,
+        on_dismiss: OptionalControlEventCallable = None,
         #
         # Control
         #

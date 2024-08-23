@@ -71,7 +71,7 @@ class BoxDecoration:
     image: Optional[DecorationImage] = None
     border: Optional[Border] = None
     border_radius: BorderRadiusValue = None
-    box_shadow: Union[None, BoxShadow, List[BoxShadow]] = None
+    shadow: Union[None, BoxShadow, List[BoxShadow]] = None
     gradient: Optional[Gradient] = None
     shape: Optional[BoxShape] = None
     blend_mode: Optional[BlendMode] = None

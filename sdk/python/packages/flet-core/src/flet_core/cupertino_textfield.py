@@ -3,10 +3,10 @@ from typing import Any, List, Optional, Union
 
 from flet_core.autofill_group import AutofillHint
 from flet_core.border import Border
+from flet_core.box import BoxShadow, DecorationImage, BoxShape
 from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
-from flet_core.box import BoxShadow
 from flet_core.text_style import TextStyle
 from flet_core.textfield import InputFilter, KeyboardType, TextCapitalization, TextField
 from flet_core.types import (
@@ -19,7 +19,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TextAlign,
-    OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -50,6 +50,12 @@ class CupertinoTextField(TextField):
         prefix_visibility_mode: Optional[VisibilityMode] = None,
         suffix_visibility_mode: Optional[VisibilityMode] = None,
         clear_button_semantics_label: Optional[str] = None,
+        image: Optional[DecorationImage] = None,
+        enable_scribble: Optional[bool] = None,
+        padding: PaddingValue = None,
+        scroll_padding: PaddingValue = None,
+        obscuring_character: Optional[str] = None,
+        on_click: OptionalControlEventCallable = None,
         #
         # TextField
         #
@@ -121,7 +127,7 @@ class CupertinoTextField(TextField):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -213,6 +219,12 @@ class CupertinoTextField(TextField):
         self.prefix_visibility_mode = prefix_visibility_mode
         self.clear_button_semantics_label = clear_button_semantics_label
         self.border = border
+        self.image = image
+        self.enable_scribble = enable_scribble
+        self.padding = padding
+        self.scroll_padding = scroll_padding
+        self.obscuring_character = obscuring_character
+        self.on_click = on_click
 
     def _get_control_name(self):
         return "cupertinotextfield"
@@ -223,6 +235,9 @@ class CupertinoTextField(TextField):
         self._set_attr_json("shadow", self.__shadow if self.__shadow else None)
         self._set_attr_json("placeholderStyle", self.__placeholder_style)
         self._set_attr_json("border", self.__border)
+        self._set_attr_json("image", self.__image)
+        self._set_attr_json("padding", self.__padding)
+        self._set_attr_json("scrollPadding", self.__scroll_padding)
 
     # placeholder_text
     @property
@@ -270,6 +285,24 @@ class CupertinoTextField(TextField):
     def shadow(self, value: Union[None, BoxShadow, List[BoxShadow]]):
         self.__shadow = value if value is not None else []
 
+    # image
+    @property
+    def image(self) -> Optional[DecorationImage]:
+        return self.__image
+
+    @image.setter
+    def image(self, value: Optional[DecorationImage]):
+        self.__image = value
+
+    # shape
+    @property
+    def shape(self) -> Optional[BoxShape]:
+        return self.__shape
+
+    @shape.setter
+    def shape(self, value: Optional[BoxShape]):
+        self.__shape = value
+
     # suffix_visibility_mode
     @property
     def suffix_visibility_mode(self) -> Optional[VisibilityMode]:
@@ -298,6 +331,51 @@ class CupertinoTextField(TextField):
     @clear_button_semantics_label.setter
     def clear_button_semantics_label(self, value: Optional[str]):
         self._set_attr("clearButtonSemanticsLabel", value)
+
+    # obscuring_character
+    @property
+    def obscuring_character(self) -> Optional[str]:
+        return self._get_attr("obscuringCharacter")
+
+    @obscuring_character.setter
+    def obscuring_character(self, value: Optional[str]):
+        self._set_attr("obscuringCharacter", value)
+
+    # enable_scribble
+    @property
+    def enable_scribble(self) -> bool:
+        return self._get_attr("enableScribble", data_type="bool", def_value=True)
+
+    @enable_scribble.setter
+    def enable_scribble(self, value: Optional[bool]):
+        self._set_attr("enableScribble", value)
+
+    # padding
+    @property
+    def padding(self) -> PaddingValue:
+        return self.__padding
+
+    @padding.setter
+    def padding(self, value: PaddingValue):
+        self.__padding = value
+
+    # scroll_padding
+    @property
+    def scroll_padding(self) -> PaddingValue:
+        return self.__scroll_padding
+
+    @scroll_padding.setter
+    def scroll_padding(self, value: PaddingValue):
+        self.__scroll_padding = value
+
+    # on_click
+    @property
+    def on_click(self):
+        return self._get_event_handler("click")
+
+    @on_click.setter
+    def on_click(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("click", handler)
 
     # border
     @property

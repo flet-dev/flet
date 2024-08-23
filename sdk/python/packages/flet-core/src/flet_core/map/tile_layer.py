@@ -5,7 +5,7 @@ from flet_core.control import OptionalNumber
 from flet_core.map.map_configuration import MapLatitudeLongitudeBounds
 from flet_core.map.map_layer import MapLayer
 from flet_core.ref import Ref
-from flet_core.types import OptionalEventCallable, OptionalControlEventCallable
+from flet_core.types import OptionalControlEventCallable
 
 
 class MapTileLayerEvictErrorTileStrategy(Enum):
@@ -45,7 +45,7 @@ class TileLayer(MapLayer):
         min_zoom: OptionalNumber = None,
         error_image_src: Optional[str] = None,
         evict_error_tile_strategy: Optional[MapTileLayerEvictErrorTileStrategy] = None,
-        on_image_error: OptionalEventCallable = None,
+        on_image_error: OptionalControlEventCallable = None,
         #
         # MapLayer
         #

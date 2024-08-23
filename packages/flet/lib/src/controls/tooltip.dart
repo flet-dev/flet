@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/box.dart';
 import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
+import '../utils/images.dart';
 import '../utils/others.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
+import 'flet_store_mixin.dart';
 
-class TooltipControl extends StatelessWidget {
+class TooltipControl extends StatelessWidget with FletStoreMixin {
   final Control? parent;
   final Control control;
   final List<Control> children;
@@ -33,59 +36,50 @@ class TooltipControl extends StatelessWidget {
 
     var showDuration = control.attrInt("showDuration");
     var waitDuration = control.attrInt("waitDuration");
+    return withPageArgs((context, pageArgs) {
+      var decorationImage =
+          parseDecorationImage(Theme.of(context), control, "image", pageArgs);
+      var decoration = boxDecorationFromDetails(
+        gradient: parseGradient(Theme.of(context), control, "gradient"),
+        border: parseBorder(Theme.of(context), control, "border"),
+        borderRadius: parseBorderRadius(control, "borderRadius",
+            const BorderRadius.all(Radius.circular(4)))!,
+        shape: parseBoxShape(control.attrString("shape"), BoxShape.rectangle)!,
+        color: control.attrColor(
+            "bgColor", context, Colors.grey[700]!.withOpacity(0.9))!,
+        blendMode: parseBlendMode(control.attrString("blendMode")),
+        boxShadow: parseBoxShadow(Theme.of(context), control, "shadow"),
+        image: decorationImage,
+      );
 
-    var bgColor = control.attrString("bgColor");
-    var border = parseBorder(Theme.of(context), control, "border");
-    var borderRadius = parseBorderRadius(control, "borderRadius");
-    var gradient = parseGradient(Theme.of(context), control, "gradient");
-    var shape = parseBoxShape(control.attrString("shape"));
-
-    var defaultDecoration = TooltipTheme.of(context).decoration ??
-        BoxDecoration(
-          color: Colors.grey[700]!.withOpacity(0.9),
-          borderRadius: const BorderRadius.all(Radius.circular(4)),
-        );
-
-    BoxDecoration? decoration;
-    if (bgColor != null ||
-        border != null ||
-        borderRadius != null ||
-        gradient != null ||
-        shape != null) {
-      decoration = (defaultDecoration as BoxDecoration).copyWith(
-          color: control.attrColor("bgColor", context),
-          gradient: gradient,
-          border: border,
-          borderRadius: borderRadius,
-          shape: shape ?? BoxShape.rectangle);
-    }
-
-    return baseControl(
-        context,
-        Tooltip(
-            decoration: decoration,
-            enableFeedback: control.attrBool("enableFeedback"),
-            enableTapToDismiss: control.attrBool("enableTapToDismiss", true)!,
-            excludeFromSemantics: control.attrBool("excludeFromSemantics"),
-            height: control.attrDouble("height"),
-            margin: parseEdgeInsets(control, "margin"),
-            padding: parseEdgeInsets(control, "padding"),
-            preferBelow: control.attrBool("preferBelow"),
-            message: control.attrString("message"),
-            showDuration: showDuration != null
-                ? Duration(milliseconds: showDuration)
-                : null,
-            waitDuration: waitDuration != null
-                ? Duration(milliseconds: waitDuration)
-                : null,
-            verticalOffset: control.attrDouble("verticalOffset"),
-            textStyle: parseTextStyle(Theme.of(context), control, "textStyle"),
-            textAlign: parseTextAlign(control.attrString("textAlign")),
-            child: contentCtrls.isNotEmpty
-                ? createControl(control, contentCtrls.first.id, disabled,
-                    parentAdaptive: parentAdaptive)
-                : null),
-        parent,
-        control);
+      return baseControl(
+          context,
+          Tooltip(
+              decoration: decoration,
+              enableFeedback: control.attrBool("enableFeedback"),
+              enableTapToDismiss: control.attrBool("enableTapToDismiss", true)!,
+              excludeFromSemantics: control.attrBool("excludeFromSemantics"),
+              height: control.attrDouble("height"),
+              margin: parseEdgeInsets(control, "margin"),
+              padding: parseEdgeInsets(control, "padding"),
+              preferBelow: control.attrBool("preferBelow"),
+              message: control.attrString("message"),
+              showDuration: showDuration != null
+                  ? Duration(milliseconds: showDuration)
+                  : null,
+              waitDuration: waitDuration != null
+                  ? Duration(milliseconds: waitDuration)
+                  : null,
+              verticalOffset: control.attrDouble("verticalOffset"),
+              textStyle:
+                  parseTextStyle(Theme.of(context), control, "textStyle"),
+              textAlign: parseTextAlign(control.attrString("textAlign")),
+              child: contentCtrls.isNotEmpty
+                  ? createControl(control, contentCtrls.first.id, disabled,
+                      parentAdaptive: parentAdaptive)
+                  : null),
+          parent,
+          control);
+    });
   }
 }

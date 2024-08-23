@@ -6,7 +6,6 @@ from flet_core.text_style import TextStyle
 from flet_core.types import (
     PaddingValue,
     MarginValue,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 
@@ -71,7 +70,7 @@ class Banner(Control):
         elevation: OptionalNumber = None,
         margin: MarginValue = None,
         content_text_style: Optional[TextStyle] = None,
-        on_visible: OptionalEventCallable = None,
+        on_visible: OptionalControlEventCallable = None,
         #
         # Control
         #

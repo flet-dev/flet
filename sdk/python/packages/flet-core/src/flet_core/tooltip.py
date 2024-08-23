@@ -1,16 +1,17 @@
-from typing import Any, Optional
+from typing import Any, Optional, List, Union
 
 from flet_core.border import Border
+from flet_core.box import BoxShape, BoxShadow, DecorationImage
 from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.box import BoxShape
 from flet_core.types import (
     BorderRadiusValue,
     MarginValue,
     PaddingValue,
     TextAlign,
+    BlendMode,
 )
 
 
@@ -75,6 +76,9 @@ class Tooltip(Control):
         border: Optional[Border] = None,
         border_radius: BorderRadiusValue = None,
         shape: Optional[BoxShape] = None,
+        blend_mode: Optional[BlendMode] = None,
+        shadow: Union[None, BoxShadow, List[BoxShadow]] = None,
+        image: Optional[DecorationImage] = None,
         message: Optional[str] = None,
         text_style: Optional[TextStyle] = None,
         text_align: Optional[TextAlign] = None,
@@ -118,18 +122,32 @@ class Tooltip(Control):
         self.wait_duration = wait_duration
         self.enable_tap_to_dismiss = enable_tap_to_dismiss
         self.exclude_from_semantics = exclude_from_semantics
+        self.blend_mode = blend_mode
+        self.shadow = shadow
+        self.image = image
 
     def _get_control_name(self):
         return "tooltip"
 
     def before_update(self):
         super().before_update()
+        assert (
+            self.__blend_mode is None
+            or self.__gradient is not None
+            or self.bgcolor is not None
+        ), "blend_mode applies to bgcolor or gradient, but no bgcolor or gradient was provided"
+
+        assert (
+            self.__shape != BoxShape.CIRCLE or self.__border_radius is None
+        ), "border_radius is not supported with shape=BoxShape.CIRCLE"
         self._set_attr_json("margin", self.__margin)
         self._set_attr_json("padding", self.__padding)
         self._set_attr_json("textStyle", self.__text_style)
         self._set_attr_json("borderRadius", self.__border_radius)
         self._set_attr_json("border", self.__border)
         self._set_attr_json("gradient", self.__gradient)
+        self._set_attr_json("shadow", self.__shadow)
+        self._set_attr_json("image", self.__image)
 
     def _get_children(self):
         if self.__content is not None:
@@ -172,6 +190,34 @@ class Tooltip(Control):
     @margin.setter
     def margin(self, value: MarginValue):
         self.__margin = value
+
+    # blend_mode
+    @property
+    def blend_mode(self) -> Optional[BlendMode]:
+        return self.__blend_mode
+
+    @blend_mode.setter
+    def blend_mode(self, value: Optional[BlendMode]):
+        self.__blend_mode = value
+        self._set_enum_attr("blendMode", value, BlendMode)
+
+    # image
+    @property
+    def image(self) -> Optional[DecorationImage]:
+        return self.__image
+
+    @image.setter
+    def image(self, value: Optional[DecorationImage]):
+        self.__image = value
+
+    # shadow
+    @property
+    def shadow(self) -> Union[None, BoxShadow, List[BoxShadow]]:
+        return self.__shadow
+
+    @shadow.setter
+    def shadow(self, value: Union[None, BoxShadow, List[BoxShadow]]):
+        self.__shadow = value if value is not None else []
 
     # padding
     @property

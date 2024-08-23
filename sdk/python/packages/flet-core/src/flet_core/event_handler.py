@@ -1,5 +1,4 @@
 import asyncio
-from typing import Callable, Optional
 
 from flet_core.control_event import ControlEvent
 from flet_core.types import OptionalControlEventCallable
