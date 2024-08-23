@@ -916,7 +916,7 @@ class Page(AdaptiveControl):
                 for name in props:
                     if name != "i":
                         self._index[id]._set_attr(name, props[name], dirty=False)
-
+                        self.snapshot[id][name] = props[name]
     def run_task(
         self,
         handler: Callable[InputT, Awaitable[RetT]],
