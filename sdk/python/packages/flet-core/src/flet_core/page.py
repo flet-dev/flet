@@ -102,8 +102,7 @@ try:
     from flet_runtime.auth.oauth_provider import OAuthProvider
 except ImportError:
 
-    class OAuthProvider:
-        ...
+    class OAuthProvider: ...
 
     class Authorization:
         def __init__(
@@ -112,8 +111,7 @@ except ImportError:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ):
-            ...
+        ): ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -916,7 +914,9 @@ class Page(AdaptiveControl):
                 for name in props:
                     if name != "i":
                         self._index[id]._set_attr(name, props[name], dirty=False)
-                        self.snapshot[id][name] = props[name]
+                        if id in self.__snapshot:
+                            self.snapshot[id][name] = props[name]
+
     def run_task(
         self,
         handler: Callable[InputT, Awaitable[RetT]],
