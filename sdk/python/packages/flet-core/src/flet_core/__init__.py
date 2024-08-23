@@ -323,6 +323,7 @@ from flet_core.theme import (
     BadgeTheme,
     BannerTheme,
     BottomAppBarTheme,
+    BottomSheetTheme,
     BottomNavigationBarTheme,
     CardTheme,
     CheckboxTheme,
