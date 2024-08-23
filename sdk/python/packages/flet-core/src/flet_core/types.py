@@ -37,6 +37,8 @@ class WindowEventType(Enum):
     RESIZED = "resized"
     MOVE = "move"
     MOVED = "moved"
+    LEAVE_FULL_SCREEN = "leave-full-screen"
+    ENTER_FULL_SCREEN = "enter-full-screen"
 
 
 class WebRenderer(Enum):
@@ -401,4 +403,5 @@ Wrapper = Callable[..., Any]
 
 # Protocols
 class SupportsStr(Protocol):
-    def __str__(self) -> str: ...
+    def __str__(self) -> str:
+        ...
