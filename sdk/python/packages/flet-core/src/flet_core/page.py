@@ -5,7 +5,7 @@ import threading
 import time
 import uuid
 from asyncio import AbstractEventLoop
-from concurrent.futures import ThreadPoolExecutor, Future
+from concurrent.futures import Future, ThreadPoolExecutor
 from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -72,15 +72,15 @@ from flet_core.types import (
     FloatingActionButtonLocation,
     MainAxisAlignment,
     OffsetValue,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
     OptionalNumber,
     PaddingValue,
     PagePlatform,
     ScrollMode,
     ThemeMode,
-    Wrapper,
     WindowEventType,
-    OptionalControlEventCallable,
-    OptionalEventCallable,
+    Wrapper,
 )
 from flet_core.utils import classproperty, deprecated
 from flet_core.utils.concurrency_utils import is_pyodide
@@ -102,8 +102,7 @@ try:
     from flet_runtime.auth.oauth_provider import OAuthProvider
 except ImportError:
 
-    class OAuthProvider:
-        ...
+    class OAuthProvider: ...
 
     class Authorization:
         def __init__(
@@ -112,8 +111,7 @@ except ImportError:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ):
-            ...
+        ): ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -916,7 +914,9 @@ class Page(AdaptiveControl):
                 for name in props:
                     if name != "i":
                         self._index[id]._set_attr(name, props[name], dirty=False)
-                        self.snapshot[id][name] = props[name]
+                        if id in self.__snapshot:
+                            self.__snapshot[id][name] = props[name]
+
     def run_task(
         self,
         handler: Callable[InputT, Awaitable[RetT]],
