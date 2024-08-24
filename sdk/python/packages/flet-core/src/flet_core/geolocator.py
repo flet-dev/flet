@@ -294,12 +294,12 @@ class Geolocator(Control):
         return opened == "true"
 
     @property
-    def on_position(self) -> OptionalControlEventCallable:
-        return self._get_event_handler("position")
+    def on_position(self) -> OptionalEventCallable["PositionEvent"]:
+        return self.__on_position.handler
 
     @on_position.setter
     def on_position(self, handler: OptionalEventCallable["PositionEvent"]):
-        self.__on_position.subscribe(handler)
+        self.__on_position.handler = handler
         self._set_attr("onPosition", True if handler is not None else None)
 
 
