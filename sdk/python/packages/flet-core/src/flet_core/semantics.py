@@ -3,7 +3,7 @@ from typing import Any, Optional
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
-from flet_core.types import OptionalEventCallable, OptionalControlEventCallable
+from flet_core.types import OptionalControlEventCallable
 
 
 class Semantics(Control):
@@ -47,23 +47,23 @@ class Semantics(Control):
         link: Optional[bool] = None,
         header: Optional[bool] = None,
         image: Optional[bool] = None,
-        on_tap: OptionalEventCallable = None,
-        on_double_tap: OptionalEventCallable = None,
-        on_increase: OptionalEventCallable = None,
-        on_decrease: OptionalEventCallable = None,
-        on_dismiss: OptionalEventCallable = None,
-        on_scroll_left: OptionalEventCallable = None,
-        on_scroll_right: OptionalEventCallable = None,
-        on_scroll_up: OptionalEventCallable = None,
-        on_scroll_down: OptionalEventCallable = None,
-        on_copy: OptionalEventCallable = None,
-        on_cut: OptionalEventCallable = None,
-        on_paste: OptionalEventCallable = None,
-        on_long_press: OptionalEventCallable = None,
-        on_move_cursor_forward_by_character: OptionalEventCallable = None,
-        on_move_cursor_backward_by_character: OptionalEventCallable = None,
-        on_did_gain_accessibility_focus: OptionalEventCallable = None,
-        on_did_lose_accessibility_focus: OptionalEventCallable = None,
+        on_tap: OptionalControlEventCallable = None,
+        on_double_tap: OptionalControlEventCallable = None,
+        on_increase: OptionalControlEventCallable = None,
+        on_decrease: OptionalControlEventCallable = None,
+        on_dismiss: OptionalControlEventCallable = None,
+        on_scroll_left: OptionalControlEventCallable = None,
+        on_scroll_right: OptionalControlEventCallable = None,
+        on_scroll_up: OptionalControlEventCallable = None,
+        on_scroll_down: OptionalControlEventCallable = None,
+        on_copy: OptionalControlEventCallable = None,
+        on_cut: OptionalControlEventCallable = None,
+        on_paste: OptionalControlEventCallable = None,
+        on_long_press: OptionalControlEventCallable = None,
+        on_move_cursor_forward_by_character: OptionalControlEventCallable = None,
+        on_move_cursor_backward_by_character: OptionalControlEventCallable = None,
+        on_did_gain_accessibility_focus: OptionalControlEventCallable = None,
+        on_did_lose_accessibility_focus: OptionalControlEventCallable = None,
         #
         # Control
         #

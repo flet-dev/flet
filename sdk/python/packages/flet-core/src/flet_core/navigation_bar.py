@@ -10,7 +10,6 @@ from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
-    OptionalEventCallable,
     OffsetValue,
     OptionalNumber,
     ResponsiveNumber,
@@ -214,7 +213,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         border: Optional[Border] = None,
         animation_duration: Optional[int] = None,
         overlay_color: Union[None, str, Dict[ControlState, str]] = None,
-        on_change: OptionalEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #

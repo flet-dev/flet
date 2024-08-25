@@ -161,6 +161,8 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
       theme,
       json?["navigation_bar_theme"],
     ),
+    dataTableTheme: parseDataTableTheme(theme, json?["data_table_theme"]),
+    buttonTheme: parseButtonTheme(theme, json?["button_theme"]),
     segmentedButtonTheme: parseSegmentedButtonTheme(
       theme,
       json?["segmented_button_theme"],
@@ -240,6 +242,60 @@ TextTheme? parseTextTheme(
     titleLarge: parseTextStyle("title_large"),
     titleMedium: parseTextStyle("title_medium"),
     titleSmall: parseTextStyle("title_small"),
+  );
+}
+
+ButtonThemeData? parseButtonTheme(ThemeData theme, Map<String, dynamic>? j) {
+  if (j == null) {
+    return null;
+  }
+
+  return theme.buttonTheme.copyWith(
+    buttonColor: parseColor(null, j["button_color"]),
+    disabledColor: parseColor(null, j["disabled_color"]),
+    hoverColor: parseColor(null, j["hover_color"]),
+    focusColor: parseColor(null, j["focus_color"]),
+    highlightColor: parseColor(null, j["highlight_color"]),
+    splashColor: parseColor(null, j["splash_color"]),
+    colorScheme: parseColorScheme(theme, j["color_scheme"]),
+    alignedDropdown: parseBool(j["aligned_dropdown"]),
+    height: parseDouble(j["height"]),
+    minWidth: parseDouble(j["min_width"]),
+    shape: outlinedBorderFromJSON(j["shape"]),
+    padding: edgeInsetsFromJson(j["padding"]),
+  );
+}
+
+DataTableThemeData? parseDataTableTheme(
+    ThemeData theme, Map<String, dynamic>? j) {
+  if (j == null) {
+    return null;
+  }
+  TextStyle? parseTextStyle(String propName) {
+    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
+  }
+
+  return theme.dataTableTheme.copyWith(
+    checkboxHorizontalMargin: parseDouble(j["checkbox_horizontal_margin"]),
+    columnSpacing: parseDouble(j["column_spacing"]),
+    dataRowMaxHeight: parseDouble(j["data_row_max_height"]),
+    dataRowMinHeight: parseDouble(j["data_row_min_height"]),
+    dataRowColor: getWidgetStateProperty<Color?>(
+        j["data_row_color"], (jv) => parseColor(theme, jv as String)),
+    dataTextStyle: parseTextStyle("data_text_style"),
+    dividerThickness: parseDouble(j["divider_thickness"]),
+    horizontalMargin: parseDouble(j["horizontal_margin"]),
+    headingTextStyle: parseTextStyle("heading_text_style"),
+    headingRowColor: getWidgetStateProperty<Color?>(
+        j["heading_row_color"], (jv) => parseColor(theme, jv as String)),
+    headingRowHeight: parseDouble(j["heading_row_height"]),
+    dataRowCursor: getWidgetStateProperty<MouseCursor?>(
+        j["data_row_cursor"], (jv) => parseMouseCursor(jv)),
+    decoration: boxDecorationFromJSON(theme, j["decoration"], null),
+    // TODO: replace null with a proper PageArgsModel
+    headingRowAlignment: parseMainAxisAlignment(j["heading_row_alignment"]),
+    headingCellCursor: getWidgetStateProperty<MouseCursor?>(
+        j["heading_cell_cursor"], (jv) => parseMouseCursor(jv)),
   );
 }
 

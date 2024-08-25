@@ -214,6 +214,14 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
+        assert (
+                self.__blend_mode is None
+                or self.__gradient is not None
+                or self.bgcolor is not None
+        ), "blend_mode applies to bgcolor or gradient, but no bgcolor or gradient was provided"
+        assert (
+                self.__shape != BoxShape.CIRCLE or self.__border_radius is None
+        ), "border_radius is not supported with shape=BoxShape.CIRCLE"
         self._set_attr_json("borderRadius", self.__border_radius)
         self._set_attr_json("border", self.__border)
         self._set_attr_json("margin", self.__margin)

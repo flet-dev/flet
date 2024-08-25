@@ -17,7 +17,6 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
     ThemeVisualDensity,
     VisualDensity,
     OptionalControlEventCallable,
@@ -64,8 +63,10 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         collapsed_shape: Optional[OutlinedBorder] = None,
         dense: Optional[bool] = None,
         enable_feedback: Optional[bool] = None,
+        show_trailing_icon: Optional[bool] = None,
+        min_tile_height: OptionalNumber = None,
         visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
-        on_change: OptionalEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -91,7 +92,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -159,6 +160,8 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self.dense = dense
         self.enable_feedback = enable_feedback
         self.visual_density = visual_density
+        self.show_trailing_icon = show_trailing_icon
+        self.min_tile_height = min_tile_height
 
     def _get_control_name(self):
         return "expansiontile"
@@ -408,6 +411,24 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     @collapsed_shape.setter
     def collapsed_shape(self, value: Optional[OutlinedBorder]):
         self.__collapsed_shape = value
+
+    # show_trailing_icon
+    @property
+    def show_trailing_icon(self) -> bool:
+        return self._get_attr("showTrailingIcon", data_type="bool", def_value=True)
+
+    @show_trailing_icon.setter
+    def show_trailing_icon(self, value: Optional[bool]):
+        self._set_attr("showTrailingIcon", value)
+
+    # min_tile_height
+    @property
+    def min_tile_height(self) -> OptionalNumber:
+        return self._get_attr("minTileHeight")
+
+    @min_tile_height.setter
+    def min_tile_height(self, value: OptionalNumber):
+        self._set_attr("minTileHeight", value)
 
     # on_change
     @property

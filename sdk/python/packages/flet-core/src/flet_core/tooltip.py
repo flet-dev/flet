@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Optional, List, Union
 
 from flet_core.border import Border
+from flet_core.box import BoxShape, BoxShadow, DecorationImage
 from flet_core.box import BoxShape, DecorationImage, BoxShadow
 from flet_core.gradients import Gradient
 from flet_core.text_style import TextStyle

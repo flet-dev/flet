@@ -1,5 +1,11 @@
 import dataclasses
+from enum import Enum
 from typing import Union
+
+
+class Axis(Enum):
+    HORIZONTAL = "horizontal"
+    VERTICAL = "vertical"
 
 
 @dataclasses.dataclass

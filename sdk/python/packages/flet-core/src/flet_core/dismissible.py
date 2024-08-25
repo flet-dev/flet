@@ -1,5 +1,5 @@
 import json
-from typing import Any, Dict, Optional, Union, Callable
+from typing import Any, Dict, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
@@ -47,10 +47,8 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         cross_axis_end_offset: OptionalNumber = None,
         on_update: OptionalEventCallable["DismissibleUpdateEvent"] = None,
         on_dismiss: OptionalEventCallable["DismissibleDismissEvent"] = None,
-        on_confirm_dismiss: Optional[
-            Callable[["DismissibleDismissEvent"], None]
-        ] = None,
-        on_resize: OptionalEventCallable = None,
+        on_confirm_dismiss: OptionalEventCallable["DismissibleDismissEvent"] = None,
+        on_resize: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -75,7 +73,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

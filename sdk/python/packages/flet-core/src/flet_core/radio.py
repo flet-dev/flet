@@ -15,7 +15,6 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
     ThemeVisualDensity,
     VisualDensity,
     OptionalControlEventCallable,
@@ -73,8 +72,8 @@ class Radio(ConstrainedControl, AdaptiveControl):
         toggleable: Optional[bool] = None,
         visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
         mouse_cursor: Optional[MouseCursor] = None,
-        on_focus: OptionalEventCallable = None,
-        on_blur: OptionalEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -100,7 +99,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

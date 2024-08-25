@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from enum import Enum
-from typing import Any, Optional, Union, Callable
+from typing import Any, Optional, Union
 
 from flet_core import ControlEvent
 from flet_core.control import Control, OptionalNumber
@@ -103,10 +103,10 @@ class DatePicker(Control):
         field_label_text: Optional[str] = None,
         switch_to_calendar_icon: Optional[str] = None,
         switch_to_input_icon: Optional[str] = None,
-        on_change: OptionalEventCallable = None,
-        on_dismiss: OptionalEventCallable = None,
-        on_entry_mode_change: Optional[
-            Callable[[DatePickerEntryModeChangeEvent], None]
+        on_change: OptionalControlEventCallable = None,
+        on_dismiss: OptionalControlEventCallable = None,
+        on_entry_mode_change: OptionalEventCallable[
+            "DatePickerEntryModeChangeEvent"
         ] = None,
         #
         # ConstrainedControl

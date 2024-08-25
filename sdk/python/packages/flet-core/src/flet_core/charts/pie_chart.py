@@ -16,6 +16,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -53,7 +54,7 @@ class PieChart(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -201,7 +202,7 @@ class PieChartEvent(ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
         self.type: PieChartEventType = PieChartEventType(d.get("type"))
-        self.section_index: int = d["section_index"]
+        self.section_index: int = d.get("section_index")
         self.local_x: Optional[float] = d.get("lx")
         self.local_y: Optional[float] = d.get("ly")
         # self.radius: float = d["radius"]

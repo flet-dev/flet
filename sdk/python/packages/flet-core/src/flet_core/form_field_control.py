@@ -15,7 +15,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     VerticalAlignment,
-    OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 try:
@@ -97,7 +97,7 @@ class FormFieldControl(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

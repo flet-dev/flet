@@ -17,7 +17,6 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
@@ -56,11 +55,11 @@ class SearchBar(ConstrainedControl):
         keyboard_type: Optional[KeyboardType] = None,
         view_surface_tint_color: Optional[str] = None,
         autofocus: Optional[bool] = None,
-        on_tap: OptionalEventCallable = None,
-        on_submit: OptionalEventCallable = None,
-        on_change: OptionalEventCallable = None,
-        on_focus: OptionalEventCallable = None,
-        on_blur: OptionalEventCallable = None,
+        on_tap: OptionalControlEventCallable = None,
+        on_submit: OptionalControlEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -82,7 +81,7 @@ class SearchBar(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

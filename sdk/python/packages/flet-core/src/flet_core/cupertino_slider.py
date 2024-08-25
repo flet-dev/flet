@@ -10,7 +10,6 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 
@@ -36,11 +35,11 @@ class CupertinoSlider(ConstrainedControl):
         divisions: Optional[int] = None,
         active_color: Optional[str] = None,
         thumb_color: Optional[str] = None,
-        on_change: OptionalEventCallable = None,
-        on_change_start: OptionalEventCallable = None,
-        on_change_end: OptionalEventCallable = None,
-        on_focus: OptionalEventCallable = None,
-        on_blur: OptionalEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
+        on_change_start: OptionalControlEventCallable = None,
+        on_change_end: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -66,7 +65,7 @@ class CupertinoSlider(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

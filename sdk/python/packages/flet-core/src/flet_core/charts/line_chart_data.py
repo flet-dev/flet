@@ -1,12 +1,12 @@
 from typing import Any, List, Optional, Union
 
+from flet_core.box import BoxShadow
 from flet_core.charts.chart_point_line import ChartPointLine
 from flet_core.charts.chart_point_shape import ChartPointShape
 from flet_core.charts.line_chart_data_point import LineChartDataPoint
 from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
-from flet_core.box import BoxShadow
 
 
 class LineChartData(Control):

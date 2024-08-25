@@ -10,7 +10,6 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 
@@ -81,9 +80,9 @@ class WebView(ConstrainedControl):
         javascript_enabled: bool = True,
         prevent_link: str = "none",
         bgcolor: Optional[str] = None,
-        on_page_started: OptionalEventCallable = None,
-        on_page_ended: OptionalEventCallable = None,
-        on_web_resource_error: OptionalEventCallable = None,
+        on_page_started: OptionalControlEventCallable = None,
+        on_page_ended: OptionalControlEventCallable = None,
+        on_web_resource_error: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -109,7 +108,7 @@ class WebView(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

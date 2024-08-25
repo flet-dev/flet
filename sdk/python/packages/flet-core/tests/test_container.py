@@ -1,5 +1,4 @@
 import flet_core as ft
-import pytest
 from flet_core.protocol import Command
 
 
@@ -55,7 +54,7 @@ def test_gradient():
 
 
 def test_blend_mode_enum():
-    r = ft.Container(blend_mode=ft.BlendMode.LIGHTEN)
+    r = ft.Container(blend_mode=ft.BlendMode.LIGHTEN, bgcolor=ft.colors.RED)
     assert isinstance(r.blend_mode, ft.BlendMode)
     assert isinstance(r._get_attr("blendMode"), str)
     cmd = r._build_add_commands()
@@ -63,7 +62,7 @@ def test_blend_mode_enum():
 
 
 def test_blend_mode_str():
-    r = ft.Container(blend_mode="darken")
+    r = ft.Container(blend_mode="darken", bgcolor=ft.colors.RED)
     assert isinstance(r.blend_mode, str)
     assert isinstance(r._get_attr("blendMode"), str)
     cmd = r._build_add_commands()

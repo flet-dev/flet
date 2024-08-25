@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control
 from flet_core.ref import Ref
-from flet_core.types import OptionalEventCallable, OptionalControlEventCallable
+from flet_core.types import OptionalControlEventCallable
 
 
 class SelectionArea(Control):
@@ -32,7 +32,7 @@ class SelectionArea(Control):
     def __init__(
         self,
         content: Control,
-        on_change: OptionalEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
         #
         # Control
         #

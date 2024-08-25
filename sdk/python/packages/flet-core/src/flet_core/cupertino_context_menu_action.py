@@ -3,7 +3,7 @@ from typing import Any, Optional
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.control import Control
 from flet_core.ref import Ref
-from flet_core.types import OptionalEventCallable, OptionalControlEventCallable
+from flet_core.types import OptionalControlEventCallable
 
 
 class CupertinoContextMenuAction(AdaptiveControl):
@@ -22,7 +22,7 @@ class CupertinoContextMenuAction(AdaptiveControl):
         is_default_action: Optional[bool] = None,
         is_destructive_action: Optional[bool] = None,
         trailing_icon: Optional[str] = None,
-        on_click: OptionalEventCallable = None,
+        on_click: OptionalControlEventCallable = None,
         #
         # Control
         #

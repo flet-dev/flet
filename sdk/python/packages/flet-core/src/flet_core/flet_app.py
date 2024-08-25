@@ -9,7 +9,6 @@ from flet_core.types import (
     OffsetValue,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 
@@ -20,7 +19,7 @@ class FletApp(ConstrainedControl):
         url: Optional[str] = None,
         reconnect_interval_ms: Optional[int] = None,
         reconnect_timeout_ms: Optional[int] = None,
-        on_error: OptionalEventCallable = None,
+        on_error: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -44,7 +43,7 @@ class FletApp(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
