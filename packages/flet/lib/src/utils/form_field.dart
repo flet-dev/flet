@@ -146,7 +146,9 @@ InputDecoration buildInputDecoration(
           ? createControl(control, counter.id, control.isDisabled,
               parentAdaptive: adaptive)
           : null,
-      errorText: control.attrString("errorText"),
+      errorText: control.attrString("errorText") != ""
+          ? control.attrString("errorText")
+          : null,
       errorStyle: parseTextStyle(Theme.of(context), control, "errorStyle"),
       prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
       prefixText: prefixText,
