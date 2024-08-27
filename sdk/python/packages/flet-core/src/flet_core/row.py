@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union, Callable, Sequence
+from typing import Any, List, Optional, Union, Sequence
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
@@ -16,6 +16,7 @@ from flet_core.types import (
     ScaleValue,
     ScrollMode,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -74,7 +75,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         scroll: Optional[ScrollMode] = None,
         auto_scroll: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
-        on_scroll: Optional[Callable[[OnScrollEvent], None]] = None,
+        on_scroll: OptionalEventCallable[OnScrollEvent] = None,
         #
         # ConstrainedControl
         #
@@ -100,7 +101,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

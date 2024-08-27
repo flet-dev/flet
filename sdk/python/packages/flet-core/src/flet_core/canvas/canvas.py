@@ -14,6 +14,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -49,7 +50,7 @@ class Canvas(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -141,12 +142,12 @@ class Canvas(ConstrainedControl):
 
     # on_resize
     @property
-    def on_resize(self):
-        return self.__on_resize
+    def on_resize(self) -> OptionalEventCallable["CanvasResizeEvent"]:
+        return self.__on_resize.handler
 
     @on_resize.setter
     def on_resize(self, handler: OptionalEventCallable["CanvasResizeEvent"]):
-        self.__on_resize.subscribe(handler)
+        self.__on_resize.handler = handler
         self._set_attr("onresize", True if handler is not None else None)
 
 

@@ -4,7 +4,6 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
     PaddingValue,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 
@@ -26,7 +25,7 @@ class CupertinoBottomSheet(Control):
         bgcolor: Optional[str] = None,
         height: OptionalNumber = None,
         padding: PaddingValue = None,
-        on_dismiss: OptionalEventCallable = None,
+        on_dismiss: OptionalControlEventCallable = None,
         #
         # Control
         #

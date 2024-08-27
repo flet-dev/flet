@@ -1,6 +1,5 @@
 import dataclasses
 import time
-from dataclasses import field
 from enum import Enum
 from typing import Any, Optional, Union, List
 
@@ -10,6 +9,7 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.form_field_control import FormFieldControl, InputBorder
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
@@ -20,7 +20,6 @@ from flet_core.types import (
     ScaleValue,
     TextAlign,
     VerticalAlignment,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
@@ -54,18 +53,22 @@ class TextCapitalization(Enum):
 @dataclasses.dataclass
 class InputFilter:
     regex_string: str
-    allow: bool = field(default=True)
-    replacement_string: str = field(default="")
+    allow: bool = True
+    replacement_string: str = ""
+    multiline: bool = False
+    case_sensitive: bool = True
+    unicode: bool = False
+    dot_all: bool = False
 
 
 class NumbersOnlyInputFilter(InputFilter):
     def __init__(self):
-        super().__init__(regex_string=r"[0-9]")
+        super().__init__(regex_string=r"^[0-9]*$", allow=True, replacement_string="")
 
 
 class TextOnlyInputFilter(InputFilter):
     def __init__(self):
-        super().__init__(regex_string=r"[a-zA-Z]")
+        super().__init__(regex_string=r"^[a-zA-Z]*$", allow=True, replacement_string="")
 
 
 class TextField(FormFieldControl, AdaptiveControl):
@@ -125,12 +128,12 @@ class TextField(FormFieldControl, AdaptiveControl):
         selection_color: Optional[str] = None,
         input_filter: Optional[InputFilter] = None,
         autofill_hints: Union[None, AutofillHint, List[AutofillHint]] = None,
-        on_change: OptionalEventCallable = None,
-        on_submit: OptionalEventCallable = None,
-        on_focus: OptionalEventCallable = None,
-        on_blur: OptionalEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
+        on_submit: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
-        # FormField specific
+        # FormField
         #
         text_size: OptionalNumber = None,
         text_style: Optional[TextStyle] = None,
@@ -191,8 +194,8 @@ class TextField(FormFieldControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

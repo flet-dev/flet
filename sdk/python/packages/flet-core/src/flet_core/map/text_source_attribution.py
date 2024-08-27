@@ -3,7 +3,7 @@ from typing import Any, Optional
 from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import OptionalEventCallable, OptionalControlEventCallable
+from flet_core.types import OptionalControlEventCallable
 
 
 class TextSourceAttribution(Control):
@@ -21,7 +21,7 @@ class TextSourceAttribution(Control):
         text: str,
         text_style: Optional[TextStyle] = None,
         prepend_copyright: Optional[bool] = None,
-        on_click: OptionalEventCallable = None,
+        on_click: OptionalControlEventCallable = None,
         #
         # Control
         #

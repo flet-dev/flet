@@ -6,23 +6,24 @@ from typing import Any, Optional, Union, cast
 
 from flet_core.box import BoxDecoration
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber, Control
+from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.text import TextSelection
 from flet_core.text_style import TextStyle
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
+    MainAxisAlignment,
     OffsetValue,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
+    PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
-    OptionalControlEventCallable,
-    PaddingValue,
     TextAlign,
-    MainAxisAlignment,
 )
 
 try:
@@ -38,7 +39,7 @@ class MarkdownExtensionSet(Enum):
     GITHUB_FLAVORED = "gitHubFlavored"
 
 
-class MarkdownSelectionChangedCause(Enum):
+class MarkdownSelectionChangeCause(Enum):
     UNKNOWN = "unknown"
     TAP = "tap"
     DOUBLE_TAP = "doubleTap"
@@ -55,7 +56,7 @@ class MarkdownSelectionChangeEvent(ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
         self.text: str = d.get("text")
-        self.cause = MarkdownSelectionChangedCause(d.get("cause"))
+        self.cause = MarkdownSelectionChangeCause(d.get("cause"))
         start = d.get("start")
         end = d.get("end")
         self.selection = TextSelection(
@@ -102,7 +103,7 @@ class MarkdownStyleSheet:
     list_bullet_padding: PaddingValue = None
     table_head_text_style: Optional[TextStyle] = None
     table_body_text_style: Optional[TextStyle] = None
-    table_head_align: Optional[TextAlign] = None
+    table_head_text_align: Optional[TextAlign] = None
     table_padding: PaddingValue = None
     table_cells_padding: PaddingValue = None
     blockquote_padding: PaddingValue = None
@@ -119,7 +120,7 @@ class MarkdownStyleSheet:
     h4_alignment: Optional[MainAxisAlignment] = None
     h5_alignment: Optional[MainAxisAlignment] = None
     h6_alignment: Optional[MainAxisAlignment] = None
-    text_align: Optional[MainAxisAlignment] = None
+    text_alignment: Optional[MainAxisAlignment] = None
     ordered_list_alignment: Optional[MainAxisAlignment] = None
     unordered_list_alignment: Optional[MainAxisAlignment] = None
 
@@ -241,9 +242,9 @@ class Markdown(ConstrainedControl):
         img_error_content: Optional[Control] = None,
         code_style_sheet: Optional[MarkdownStyleSheet] = None,
         md_style_sheet: Optional[MarkdownStyleSheet] = None,
-        on_tap_text: OptionalEventCallable = None,
-        on_selection_change: OptionalEventCallable = None,
-        on_tap_link: OptionalEventCallable = None,
+        on_tap_text: OptionalControlEventCallable = None,
+        on_selection_change: OptionalControlEventCallable = None,
+        on_tap_link: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -269,8 +270,8 @@ class Markdown(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -501,20 +502,13 @@ class Markdown(ConstrainedControl):
 
     # on_selection_change
     @property
-    def on_selection_change(self) -> OptionalControlEventCallable:
-        return self._get_event_handler("selection_change")
-
-    @on_selection_change.setter
-    def on_selection_change(self, handler: OptionalControlEventCallable):
-        self._add_event_handler("selection_change", handler)
-
-    # on_selection_change
-    @property
-    def on_selection_change(self):
-        return self._get_event_handler("selection_change")
+    def on_selection_change(
+        self,
+    ) -> OptionalEventCallable[MarkdownSelectionChangeEvent]:
+        return self.__on_selection_change.handler
 
     @on_selection_change.setter
     def on_selection_change(
         self, handler: OptionalEventCallable[MarkdownSelectionChangeEvent]
     ):
-        self.__on_selection_change.subscribe(handler)
+        self.__on_selection_change.handler = handler

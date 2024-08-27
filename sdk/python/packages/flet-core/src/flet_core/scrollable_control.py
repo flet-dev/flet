@@ -114,12 +114,12 @@ class ScrollableControl(Control):
 
     # on_scroll
     @property
-    def on_scroll(self):
-        return self.__on_scroll
+    def on_scroll(self) -> OptionalEventCallable["OnScrollEvent"]:
+        return self.__on_scroll.handler
 
     @on_scroll.setter
     def on_scroll(self, handler: OptionalEventCallable["OnScrollEvent"]):
-        self.__on_scroll.subscribe(handler)
+        self.__on_scroll.handler = handler
         self._set_attr("onScroll", True if handler is not None else None)
 
 

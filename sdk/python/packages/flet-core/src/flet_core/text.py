@@ -8,6 +8,7 @@ from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_span import TextSpan
 from flet_core.text_style import TextStyle, TextThemeStyle, TextOverflow
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     FontWeight,
@@ -16,7 +17,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TextAlign,
-    OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 try:
@@ -116,8 +117,8 @@ class Text(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

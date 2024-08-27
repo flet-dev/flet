@@ -2,7 +2,7 @@ from typing import Any, List, Optional
 
 from flet_core.control import Control
 from flet_core.ref import Ref
-from flet_core.types import OptionalEventCallable, OptionalControlEventCallable
+from flet_core.types import OptionalControlEventCallable
 
 
 class CupertinoAlertDialog(Control):
@@ -92,7 +92,7 @@ class CupertinoAlertDialog(Control):
         title: Optional[Control] = None,
         content: Optional[Control] = None,
         actions: Optional[List[Control]] = None,
-        on_dismiss: OptionalEventCallable = None,
+        on_dismiss: OptionalControlEventCallable = None,
         #
         # Control
         #

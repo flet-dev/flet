@@ -6,6 +6,7 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -15,7 +16,6 @@ from flet_core.types import (
     ScaleValue,
     ClipBehavior,
     ControlState,
-    OptionalEventCallable,
     ThemeVisualDensity,
     VisualDensity,
     OptionalControlEventCallable,
@@ -95,11 +95,11 @@ class Chip(ConstrainedControl):
         clip_behavior: Optional[ClipBehavior] = None,
         visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
         border_side: Optional[BorderSide] = None,
-        on_click: OptionalEventCallable = None,
-        on_delete: OptionalEventCallable = None,
-        on_select: OptionalEventCallable = None,
-        on_focus: OptionalEventCallable = None,
-        on_blur: OptionalEventCallable = None,
+        on_click: OptionalControlEventCallable = None,
+        on_delete: OptionalControlEventCallable = None,
+        on_select: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -124,8 +124,8 @@ class Chip(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

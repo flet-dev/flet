@@ -131,9 +131,9 @@ class _AudioControlState extends State<AudioControl> with FletStoreMixin {
       };
 
       if (onPositionChanged) {
-        _onPositionChanged = (duration) {
+        _onPositionChanged = (position) {
           widget.backend.triggerControlEvent(
-              widget.control.id, "position_changed", duration.toString());
+              widget.control.id, "position_changed", position.toString());
         };
       }
 

@@ -10,6 +10,7 @@ from flet_core.gesture_detector import TapEvent
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
@@ -21,6 +22,7 @@ from flet_core.types import (
     ClipBehavior,
     OptionalEventCallable,
     OptionalControlEventCallable,
+    MainAxisAlignment,
 )
 
 
@@ -38,7 +40,8 @@ class DataColumn(Control):
         label: Control,
         numeric: Optional[bool] = None,
         tooltip: Optional[str] = None,
-        on_sort: Optional[Callable[[DataColumnSortEvent], None]] = None,
+        heading_row_alignment: Optional[MainAxisAlignment] = None,
+        on_sort: OptionalEventCallable[DataColumnSortEvent] = None,
         #
         # Control
         #
@@ -55,6 +58,7 @@ class DataColumn(Control):
         self.label = label
         self.numeric = numeric
         self.tooltip = tooltip
+        self.heading_row_alignment = heading_row_alignment
         self.on_sort = on_sort
 
     def _get_control_name(self):
@@ -95,14 +99,24 @@ class DataColumn(Control):
     def tooltip(self, value: Optional[str]):
         self._set_attr("tooltip", value)
 
+    # heading_row_alignment
+    @property
+    def heading_row_alignment(self) -> Optional[MainAxisAlignment]:
+        return self.__heading_row_alignment
+
+    @heading_row_alignment.setter
+    def heading_row_alignment(self, value: Optional[MainAxisAlignment]):
+        self.__heading_row_alignment = value
+        self._set_enum_attr("headingRowAlignment", value, MainAxisAlignment)
+
     # on_sort
     @property
-    def on_sort(self):
-        return self.__on_sort
+    def on_sort(self) -> OptionalEventCallable["DataColumnSortEvent"]:
+        return self.__on_sort.handler
 
     @on_sort.setter
-    def on_sort(self, handler: Optional[Callable[[DataColumnSortEvent], None]]):
-        self.__on_sort.subscribe(handler)
+    def on_sort(self, handler: OptionalEventCallable["DataColumnSortEvent"]):
+        self.__on_sort.handler = handler
         self._set_attr("onSort", True if handler is not None else None)
 
 
@@ -112,10 +126,10 @@ class DataCell(Control):
         content: Control,
         placeholder: Optional[bool] = None,
         show_edit_icon: Optional[bool] = None,
-        on_tap: OptionalEventCallable = None,
-        on_double_tap: OptionalEventCallable = None,
-        on_long_press: OptionalEventCallable = None,
-        on_tap_cancel: OptionalEventCallable = None,
+        on_tap: OptionalControlEventCallable = None,
+        on_double_tap: OptionalControlEventCallable = None,
+        on_long_press: OptionalControlEventCallable = None,
+        on_tap_cancel: OptionalControlEventCallable = None,
         on_tap_down: Optional[Callable[[TapEvent], None]] = None,
         #
         # Control
@@ -218,12 +232,12 @@ class DataCell(Control):
 
     # on_tap_down
     @property
-    def on_tap_down(self):
-        return self.__on_tap_down
+    def on_tap_down(self) -> OptionalEventCallable[TapEvent]:
+        return self.__on_tap_down.handler
 
     @on_tap_down.setter
-    def on_tap_down(self, handler: Optional[Callable[[TapEvent], None]]):
-        self.__on_tap_down.subscribe(handler)
+    def on_tap_down(self, handler: OptionalEventCallable[TapEvent]):
+        self.__on_tap_down.handler = handler
         self._set_attr("onTapDown", True if handler is not None else None)
 
 
@@ -233,8 +247,8 @@ class DataRow(Control):
         cells: List[DataCell],
         color: Union[None, str, Dict[ControlState, str]] = None,
         selected: Optional[bool] = None,
-        on_long_press: OptionalEventCallable = None,
-        on_select_changed: OptionalEventCallable = None,
+        on_long_press: OptionalControlEventCallable = None,
+        on_select_changed: OptionalControlEventCallable = None,
         #
         # Control
         #
@@ -342,7 +356,7 @@ class DataTable(ConstrainedControl):
         heading_text_style: Optional[TextStyle] = None,
         horizontal_margin: OptionalNumber = None,
         clip_behavior: Optional[ClipBehavior] = None,
-        on_select_all: OptionalEventCallable = None,
+        on_select_all: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -368,8 +382,8 @@ class DataTable(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

@@ -5,7 +5,7 @@ import threading
 import time
 import uuid
 from asyncio import AbstractEventLoop
-from concurrent.futures import ThreadPoolExecutor, Future
+from concurrent.futures import Future, ThreadPoolExecutor
 from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -26,6 +26,8 @@ from typing import (
     cast,
 )
 from urllib.parse import urlparse
+
+from flet_core.box import BoxDecoration
 
 try:
     from typing import ParamSpec
@@ -70,14 +72,15 @@ from flet_core.types import (
     FloatingActionButtonLocation,
     MainAxisAlignment,
     OffsetValue,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
     OptionalNumber,
     PaddingValue,
     PagePlatform,
     ScrollMode,
     ThemeMode,
-    Wrapper,
     WindowEventType,
-    OptionalControlEventCallable,
+    Wrapper,
 )
 from flet_core.utils import classproperty, deprecated
 from flet_core.utils.concurrency_utils import is_pyodide
@@ -99,8 +102,7 @@ try:
     from flet_runtime.auth.oauth_provider import OAuthProvider
 except ImportError:
 
-    class OAuthProvider:
-        ...
+    class OAuthProvider: ...
 
     class Authorization:
         def __init__(
@@ -109,8 +111,7 @@ except ImportError:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ):
-            ...
+        ): ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -492,15 +493,15 @@ class Window:
     # Events
     # on_event
     @property
-    def on_event(self):
-        return self.__on_event
+    def on_event(self) -> OptionalEventCallable["WindowEvent"]:
+        return self.__on_event.handler
 
     @on_event.setter
     def on_event(
         self,
-        handler: "Optional[Callable[[WindowEvent], Union[None, Coroutine[None, None, None]]]]",
+        handler: OptionalEventCallable["WindowEvent"],
     ):
-        self.__on_event.subscribe(handler)
+        self.__on_event.handler = handler
 
 
 class Page(AdaptiveControl):
@@ -657,10 +658,6 @@ class Page(AdaptiveControl):
         self._set_attr_json("localeConfiguration", self.__locale_configuration)
         self._set_attr_json("darkTheme", self.__dark_theme)
         self._set_attr_json("windowAlignment", self.__window.alignment)
-
-        # keyboard event
-        if self.__on_keyboard_event.count() > 0:
-            self._set_attr("onKeyboardEvent", True)
 
     def _get_control_name(self):
         return "page"
@@ -917,6 +914,8 @@ class Page(AdaptiveControl):
                 for name in props:
                     if name != "i":
                         self._index[id]._set_attr(name, props[name], dirty=False)
+                        if id in self.__snapshot:
+                            self.__snapshot[id][name] = props[name]
 
     def run_task(
         self,
@@ -1126,11 +1125,9 @@ class Page(AdaptiveControl):
         if not self.web:
             if self.platform in ["ios", "android"]:
                 # close web view on mobile
-
                 self.close_in_app_web_view()
             else:
                 # activate desktop window
-
                 self.window_to_front()
         login_evt = LoginEvent(
             error=d.get("error"),
@@ -1907,6 +1904,24 @@ class Page(AdaptiveControl):
     @end_drawer.setter
     def end_drawer(self, value: Optional[NavigationDrawer]):
         self.__default_view.end_drawer = value
+
+    # decoration
+    @property
+    def decoration(self) -> Optional[BoxDecoration]:
+        return self.__default_view.decoration
+
+    @decoration.setter
+    def decoration(self, value: Optional[BoxDecoration]):
+        self.__default_view.decoration = value
+
+    # foreground_decoration
+    @property
+    def foreground_decoration(self) -> Optional[BoxDecoration]:
+        return self.__default_view.foreground_decoration
+
+    @foreground_decoration.setter
+    def foreground_decoration(self, value: Optional[BoxDecoration]):
+        self.__default_view.foreground_decoration = value
 
     # floating_action_button
     @property
@@ -2737,12 +2752,12 @@ class Page(AdaptiveControl):
 
     # on_close
     @property
-    def on_close(self):
-        return self.__on_close
+    def on_close(self) -> OptionalControlEventCallable:
+        return self.__on_close.handler
 
     @on_close.setter
     def on_close(self, handler: OptionalControlEventCallable):
-        self.__on_close.subscribe(handler)
+        self.__on_close.handler = handler
 
     # on_resize
     @property
@@ -2752,8 +2767,8 @@ class Page(AdaptiveControl):
         delete_version="0.26.0",
         is_method=False,
     )
-    def on_resize(self):
-        return self.__on_resized
+    def on_resize(self) -> OptionalEventCallable["WindowResizeEvent"]:
+        return self.__on_resized.handler
 
     @on_resize.setter
     @deprecated(
@@ -2762,63 +2777,66 @@ class Page(AdaptiveControl):
         delete_version="0.26.0",
         is_method=False,
     )
-    def on_resize(self, handler: "Optional[Callable[[WindowResizeEvent], None]]"):
-        self.__on_resized.subscribe(handler)
+    def on_resize(self, handler: OptionalEventCallable["WindowResizeEvent"]):
+        self.__on_resized.handler = handler
 
     @property
-    def on_resized(self):
-        return self.__on_resized
+    def on_resized(self) -> OptionalEventCallable["WindowResizeEvent"]:
+        return self.__on_resized.handler
 
     @on_resized.setter
-    def on_resized(self, handler: "Optional[Callable[[WindowResizeEvent], None]]"):
-        self.__on_resized.subscribe(handler)
+    def on_resized(self, handler: OptionalEventCallable["WindowResizeEvent"]):
+        self.__on_resized.handler = handler
 
     # on_platform_brightness_change
     @property
-    def on_platform_brightness_change(self):
-        return self.__on_platform_brightness_change
+    def on_platform_brightness_change(self) -> OptionalControlEventCallable:
+        return self.__on_platform_brightness_change.handler
 
     @on_platform_brightness_change.setter
     def on_platform_brightness_change(self, handler: OptionalControlEventCallable):
-        self.__on_platform_brightness_change.subscribe(handler)
+        self.__on_platform_brightness_change.handler = handler
 
     # on_app_lifecycle_change
     @property
-    def on_app_lifecycle_state_change(self):
-        return self.__on_app_lifecycle_state_change
+    def on_app_lifecycle_state_change(
+        self,
+    ) -> OptionalEventCallable["AppLifecycleStateChangeEvent"]:
+        return self.__on_app_lifecycle_state_change.handler
 
     @on_app_lifecycle_state_change.setter
     def on_app_lifecycle_state_change(
-        self, handler: "Optional[Callable[[AppLifecycleStateChangeEvent], None]]"
+        self, handler: OptionalEventCallable["AppLifecycleStateChangeEvent"]
     ):
-        self.__on_app_lifecycle_state_change.subscribe(handler)
+        self.__on_app_lifecycle_state_change.handler = handler
 
     # on_route_change
     @property
-    def on_route_change(self):
-        return self.__on_route_change
+    def on_route_change(self) -> OptionalEventCallable["RouteChangeEvent"]:
+        return self.__on_route_change.handler
 
     @on_route_change.setter
-    def on_route_change(self, handler: "Optional[Callable[[RouteChangeEvent], None]]"):
-        self.__on_route_change.subscribe(handler)
+    def on_route_change(self, handler: OptionalEventCallable["RouteChangeEvent"]):
+        self.__on_route_change.handler = handler
 
     # on_view_pop
     @property
-    def on_view_pop(self):
-        return self.__on_view_pop
+    def on_view_pop(self) -> OptionalEventCallable["ViewPopEvent"]:
+        return self.__on_view_pop.handler
 
     @on_view_pop.setter
-    def on_view_pop(self, handler: "Optional[Callable[[ViewPopEvent], None]]"):
-        self.__on_view_pop.subscribe(handler)
+    def on_view_pop(self, handler: OptionalEventCallable["ViewPopEvent"]):
+        self.__on_view_pop.handler = handler
 
     # on_keyboard_event
     @property
-    def on_keyboard_event(self):
-        return self.__on_keyboard_event
+    def on_keyboard_event(self) -> OptionalEventCallable["KeyboardEvent"]:
+        return self.__on_keyboard_event.handler
 
     @on_keyboard_event.setter
-    def on_keyboard_event(self, handler: "Optional[Callable[[KeyboardEvent], None]]"):
-        self.__on_keyboard_event.subscribe(handler)
+    def on_keyboard_event(self, handler: OptionalEventCallable["KeyboardEvent"]):
+        self.__on_keyboard_event.handler = handler
+        self._set_attr("onKeyboardEvent", True if handler else None)
 
     # on_window_event
     @property
@@ -2828,72 +2846,72 @@ class Page(AdaptiveControl):
         delete_version="0.26.0",
         is_method=False,
     )
-    def on_window_event(self):
-        return self.__window.on_event
+    def on_window_event(self) -> OptionalEventCallable["WindowEvent"]:
+        return self.__window.on_event.handler
 
     @on_window_event.setter
     @deprecated(
-        "Use Page.on_window_event instead.",
+        "Use Page.window.on_event instead.",
         version="0.23.0",
         delete_version="0.26.0",
         is_method=False,
     )
-    def on_window_event(self, handler: "Optional[Callable[[WindowEvent], None]]"):
-        self.__window.on_event.subscribe(handler)
+    def on_window_event(self, handler: OptionalEventCallable["WindowEvent"]):
+        self.__window.on_event.handler = handler
 
     # on_media_change
     @property
-    def on_media_change(self):
-        return self.__on_page_media_change_event
+    def on_media_change(self) -> OptionalEventCallable["PageMediaData"]:
+        return self.__on_page_media_change_event.handler
 
     @on_media_change.setter
-    def on_media_change(self, handler: "Optional[Callable[[PageMediaData], None]]"):
-        self.__on_page_media_change_event.subscribe(handler)
+    def on_media_change(self, handler: OptionalEventCallable["PageMediaData"]):
+        self.__on_page_media_change_event.handler = handler
 
     # on_connect
     @property
-    def on_connect(self):
-        return self.__on_connect
+    def on_connect(self) -> OptionalControlEventCallable:
+        return self.__on_connect.handler
 
     @on_connect.setter
     def on_connect(self, handler: OptionalControlEventCallable):
-        self.__on_connect.subscribe(handler)
+        self.__on_connect.handler = handler
 
     # on_disconnect
     @property
-    def on_disconnect(self):
-        return self.__on_disconnect
+    def on_disconnect(self) -> OptionalControlEventCallable:
+        return self.__on_disconnect.handler
 
     @on_disconnect.setter
     def on_disconnect(self, handler: OptionalControlEventCallable):
-        self.__on_disconnect.subscribe(handler)
+        self.__on_disconnect.handler = handler
 
     # on_login
     @property
-    def on_login(self):
-        return self.__on_login
+    def on_login(self) -> OptionalEventCallable["LoginEvent"]:
+        return self.__on_login.handler
 
     @on_login.setter
-    def on_login(self, handler: "Optional[Callable[[LoginEvent], None]]"):
-        self.__on_login.subscribe(handler)
+    def on_login(self, handler: OptionalEventCallable["LoginEvent"]):
+        self.__on_login.handler = handler
 
     # on_logout
     @property
-    def on_logout(self):
-        return self.__on_logout
+    def on_logout(self) -> OptionalControlEventCallable:
+        return self.__on_logout.handler
 
     @on_logout.setter
     def on_logout(self, handler: OptionalControlEventCallable):
-        self.__on_logout.subscribe(handler)
+        self.__on_logout.handler = handler
 
     # on_error
     @property
-    def on_error(self):
-        return self.__on_error
+    def on_error(self) -> OptionalControlEventCallable:
+        return self.__on_error.handler
 
     @on_error.setter
     def on_error(self, handler: OptionalControlEventCallable):
-        self.__on_error.subscribe(handler)
+        self.__on_error.handler = handler
 
     # on_scroll
     @property

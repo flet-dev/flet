@@ -4,6 +4,7 @@ from flet_core.buttons import ButtonStyle
 from flet_core.control import Control, OptionalNumber
 from flet_core.elevated_button import ElevatedButton
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import ResponsiveNumber, UrlTarget
 
 
@@ -57,7 +58,7 @@ class FilledButton(ElevatedButton):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        tooltip: Optional[str] = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

@@ -8,6 +8,7 @@ from flet_core.control import OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -15,6 +16,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -52,8 +54,8 @@ class PieChart(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -168,12 +170,12 @@ class PieChart(ConstrainedControl):
 
     # on_chart_event
     @property
-    def on_chart_event(self):
-        return self.__on_chart_event
+    def on_chart_event(self) -> OptionalEventCallable["PieChartEvent"]:
+        return self.__on_chart_event.handler
 
     @on_chart_event.setter
     def on_chart_event(self, handler: OptionalEventCallable["PieChartEvent"]):
-        self.__on_chart_event.subscribe(handler)
+        self.__on_chart_event.handler = handler
         self._set_attr("onChartEvent", True if handler is not None else None)
 
 
@@ -200,7 +202,7 @@ class PieChartEvent(ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
         self.type: PieChartEventType = PieChartEventType(d.get("type"))
-        self.section_index: int = d["section_index"]
+        self.section_index: int = d.get("section_index")
         self.local_x: Optional[float] = d.get("lx")
         self.local_y: Optional[float] = d.get("ly")
         # self.radius: float = d["radius"]

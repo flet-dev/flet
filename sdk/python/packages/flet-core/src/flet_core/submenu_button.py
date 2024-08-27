@@ -6,6 +6,7 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.menu_bar import MenuStyle
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
@@ -13,7 +14,6 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
@@ -38,11 +38,11 @@ class SubmenuButton(ConstrainedControl):
         menu_style: Optional[MenuStyle] = None,
         style: Optional[ButtonStyle] = None,
         alignment_offset: OffsetValue = None,
-        on_open: OptionalEventCallable = None,
-        on_close: OptionalEventCallable = None,
-        on_hover: OptionalEventCallable = None,
-        on_focus: OptionalEventCallable = None,
-        on_blur: OptionalEventCallable = None,
+        on_open: OptionalControlEventCallable = None,
+        on_close: OptionalControlEventCallable = None,
+        on_hover: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -68,8 +68,8 @@ class SubmenuButton(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

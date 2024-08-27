@@ -228,3 +228,12 @@ TimePickerEntryMode? parseTimePickerEntryMode(String? value,
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
       defValue;
 }
+
+Axis? parseAxis(String? value, [Axis? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return Axis.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}

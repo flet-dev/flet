@@ -7,9 +7,9 @@ from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
-    OptionalEventCallable,
     OffsetValue,
     OptionalNumber,
     ResponsiveNumber,
@@ -46,7 +46,7 @@ class NavigationBarDestination(Control):
         # Control
         #
         ref: Optional[Ref] = None,
-        tooltip: Optional[str] = None,
+        tooltip: TooltipValue = None,
         disabled: Optional[bool] = None,
         data: Any = None,
     ):
@@ -146,7 +146,7 @@ class NavigationDestination(NavigationBarDestination):
         # Control
         #
         ref: Optional[Ref] = None,
-        tooltip: Optional[str] = None,
+        tooltip: TooltipValue = None,
         disabled: Optional[bool] = None,
         data: Any = None,
     ) -> None:
@@ -213,7 +213,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         border: Optional[Border] = None,
         animation_duration: Optional[int] = None,
         overlay_color: Union[None, str, Dict[ControlState, str]] = None,
-        on_change: OptionalEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #

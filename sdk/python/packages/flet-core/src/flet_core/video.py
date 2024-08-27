@@ -8,6 +8,7 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     ImageFit,
@@ -86,13 +87,12 @@ class Video(ConstrainedControl):
         pitch: OptionalNumber = None,
         configuration: Optional[VideoConfiguration] = None,
         subtitle_configuration: Optional[VideoSubtitleConfiguration] = None,
-        on_loaded: OptionalEventCallable = None,
-        on_enter_fullscreen: OptionalEventCallable = None,
-        on_exit_fullscreen: OptionalEventCallable = None,
-        on_error: OptionalEventCallable = None,
-        on_completed: OptionalEventCallable = None,
-        on_track_changed: OptionalEventCallable = None,
-
+        on_loaded: OptionalControlEventCallable = None,
+        on_enter_fullscreen: OptionalControlEventCallable = None,
+        on_exit_fullscreen: OptionalControlEventCallable = None,
+        on_error: OptionalControlEventCallable = None,
+        on_completed: OptionalControlEventCallable = None,
+        on_track_changed: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -117,7 +117,7 @@ class Video(ConstrainedControl):
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
         on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -177,7 +177,6 @@ class Video(ConstrainedControl):
         self.on_error = on_error
         self.on_completed = on_completed
         self.on_track_changed = on_track_changed
-
 
     def _get_control_name(self):
         return "video"

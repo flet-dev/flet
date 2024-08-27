@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import OptionalEventCallable, OptionalControlEventCallable
+from flet_core.types import OptionalControlEventCallable
 
 
 class ShakeDetector(Control):
@@ -40,7 +40,7 @@ class ShakeDetector(Control):
         shake_slop_time_ms: Optional[int] = None,
         shake_count_reset_time_ms: Optional[int] = None,
         shake_threshold_gravity: OptionalNumber = None,
-        on_shake: OptionalEventCallable = None,
+        on_shake: OptionalControlEventCallable = None,
         #
         # Control
         #

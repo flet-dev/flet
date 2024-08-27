@@ -1,22 +1,20 @@
+from dataclasses import dataclass
 from enum import Enum, EnumMeta
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    Optional,
-    Protocol,
-    Tuple,
-    TypeVar,
-    Union,
-)
+from typing import Any, Callable, Dict, Optional, Protocol, Tuple, Type, TypeVar, Union
 from warnings import warn
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
 from flet_core.control_event import ControlEvent
+from flet_core.event import Event
 from flet_core.margin import Margin
 from flet_core.padding import Padding
 from flet_core.transform import Offset, Rotate, Scale
+
+WEB_BROWSER = "web_browser"
+FLET_APP = "flet_app"
+FLET_APP_WEB = "flet_app_web"
+FLET_APP_HIDDEN = "flet_app_hidden"
 
 
 class AppView(Enum):
@@ -40,6 +38,8 @@ class WindowEventType(Enum):
     RESIZED = "resized"
     MOVE = "move"
     MOVED = "moved"
+    LEAVE_FULL_SCREEN = "leave-full-screen"
+    ENTER_FULL_SCREEN = "enter-full-screen"
 
 
 class WebRenderer(Enum):
@@ -68,6 +68,19 @@ ScaleValue = Optional[Union[int, float, Scale]]
 OffsetValue = Optional[Union[Offset, Tuple[Union[float, int], Union[float, int]]]]
 
 AnimationValue = Optional[Union[bool, int, Animation]]
+
+
+@dataclass
+class Duration:
+    microseconds: int = 0
+    milliseconds: int = 0
+    seconds: int = 0
+    minutes: int = 0
+    hours: int = 0
+    days: int = 0
+
+
+DurationValue = Union[int, Duration, None]
 
 
 class FontWeight(Enum):
@@ -393,9 +406,9 @@ class VisualDensity(Enum):
 
 # Events
 ControlEventType = TypeVar("ControlEventType", bound=ControlEvent)
-EventCallable = Callable[[ControlEventType], Any]
-OptionalEventCallable = Optional[EventCallable]
-OptionalControlEventCallable = OptionalEventCallable[ControlEvent]
+EventType = TypeVar("EventType", bound=Event)
+OptionalEventCallable = Optional[Type[Callable[[EventType], Any]]]
+OptionalControlEventCallable = Optional[Type[Callable[[ControlEventType], Any]]]
 
 
 # Wrapper

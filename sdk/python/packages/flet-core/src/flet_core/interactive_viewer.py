@@ -8,6 +8,7 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
@@ -16,8 +17,9 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
+    OptionalControlEventCallable,
     Offset,
+    OptionalEventCallable,
 )
 
 
@@ -26,7 +28,7 @@ class InteractiveViewerInteractionStartEvent(ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
         self.pointer_count: int = d.get("pc")
-        self.focal_point: Offset = Offset(d.get("fp_x"), d.get("fp_y"))
+        self.global_focal_point: Offset = Offset(d.get("fp_x"), d.get("fp_y"))
         self.local_focal_point: Offset = Offset(d.get("lfp_x"), d.get("lfp_y"))
 
 
@@ -35,7 +37,7 @@ class InteractiveViewerInteractionUpdateEvent(ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
         self.pointer_count: int = d.get("pc")
-        self.focal_point: Offset = Offset(d.get("fp_x"), d.get("fp_y"))
+        self.global_focal_point: Offset = Offset(d.get("fp_x"), d.get("fp_y"))
         self.local_focal_point: Offset = Offset(d.get("lfp_x"), d.get("lfp_y"))
         self.scale: float = d.get("s")
         self.horizontal_scale: float = d.get("hs")
@@ -108,8 +110,8 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -310,35 +312,41 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
 
     # on_interaction_start
     @property
-    def on_interaction_start(self):
-        return self._get_event_handler("interaction_start")
+    def on_interaction_start(
+        self,
+    ) -> OptionalEventCallable[InteractiveViewerInteractionStartEvent]:
+        return self.__on_interaction_start.handler
 
     @on_interaction_start.setter
     def on_interaction_start(
         self,
-        handler: Optional[Callable[[InteractiveViewerInteractionStartEvent], None]],
+        handler: OptionalEventCallable[InteractiveViewerInteractionStartEvent],
     ):
-        self.__on_interaction_start.subscribe(handler)
+        self.__on_interaction_start.handler = handler
 
     # on_interaction_update
     @property
-    def on_interaction_update(self):
-        return self._get_event_handler("interaction_update")
+    def on_interaction_update(
+        self,
+    ) -> OptionalEventCallable[InteractiveViewerInteractionUpdateEvent]:
+        return self.__on_interaction_update.handler
 
     @on_interaction_update.setter
     def on_interaction_update(
         self,
-        handler: Optional[Callable[[InteractiveViewerInteractionUpdateEvent], None]],
+        handler: OptionalEventCallable[InteractiveViewerInteractionUpdateEvent],
     ):
-        self.__on_interaction_update.subscribe(handler)
+        self.__on_interaction_update.handler = handler
 
     # on_interaction_end
     @property
-    def on_interaction_end(self):
-        return self._get_event_handler("interaction_end")
+    def on_interaction_end(
+        self,
+    ) -> OptionalEventCallable[InteractiveViewerInteractionEndEvent]:
+        return self.__on_interaction_end.handler
 
     @on_interaction_end.setter
     def on_interaction_end(
-        self, handler: Optional[Callable[[InteractiveViewerInteractionEndEvent], None]]
+        self, handler: OptionalEventCallable[InteractiveViewerInteractionEndEvent]
     ):
-        self.__on_interaction_end.subscribe(handler)
+        self.__on_interaction_end.handler = handler

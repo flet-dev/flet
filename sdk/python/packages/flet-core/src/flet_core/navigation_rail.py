@@ -8,7 +8,6 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
-    OptionalEventCallable,
     OffsetValue,
     OptionalNumber,
     PaddingValue,
@@ -234,7 +233,7 @@ class NavigationRail(ConstrainedControl):
         group_alignment: OptionalNumber = None,
         selected_label_text_style: Optional[TextStyle] = None,
         unselected_label_text_style: Optional[TextStyle] = None,
-        on_change: OptionalEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -263,6 +262,7 @@ class NavigationRail(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = False,
     ):
         ConstrainedControl.__init__(
             self,
@@ -291,6 +291,7 @@ class NavigationRail(ConstrainedControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
         )
 
         self.destinations = destinations
@@ -409,7 +410,7 @@ class NavigationRail(ConstrainedControl):
 
     @elevation.setter
     def elevation(self, value: OptionalNumber):
-        assert value is None or value >= 0, "elevation cannot be negative"
+        assert value is None or value > 0, "elevation must be greater than 0"
         self._set_attr("elevation", value)
 
     # extended
