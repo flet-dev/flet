@@ -17,6 +17,7 @@ from typing import (
 from flet_core.embed_json_encoder import EmbedJsonEncoder
 from flet_core.protocol import Command
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     OptionalNumber,
     ResponsiveNumber,
@@ -45,7 +46,7 @@ class Control:
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        tooltip: Optional[str] = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -86,6 +87,7 @@ class Control:
 
     def _before_build_command(self) -> None:
         self._set_attr_json("col", self.__col)
+        self._set_attr_json("tooltip", self.tooltip)
 
     def did_mount(self):
         pass
@@ -272,15 +274,6 @@ class Control:
             value is None or 0.0 <= value <= 1.0
         ), "opacity must be between 0.0 and 1.0"
         self._set_attr("opacity", value)
-
-    # tooltip
-    @property
-    def tooltip(self):
-        return self._get_attr("tooltip")
-
-    @tooltip.setter
-    def tooltip(self, value):
-        self._set_attr("tooltip", value)
 
     # visible
     @property

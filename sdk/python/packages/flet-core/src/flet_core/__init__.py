@@ -364,7 +364,7 @@ from flet_core.time_picker import (
     TimePickerEntryMode,
     TimePickerEntryModeChangeEvent,
 )
-from flet_core.tooltip import Tooltip
+from flet_core.tooltip import Tooltip, TooltipTriggerMode
 from flet_core.transform import Offset, Rotate, Scale
 from flet_core.transparent_pointer import TransparentPointer
 from flet_core.types import (

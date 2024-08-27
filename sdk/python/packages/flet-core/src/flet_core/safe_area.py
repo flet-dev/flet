@@ -5,6 +5,7 @@ from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -49,7 +50,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: Optional[str] = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

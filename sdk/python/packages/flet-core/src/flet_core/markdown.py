@@ -12,6 +12,7 @@ from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.text import TextSelection
 from flet_core.text_style import TextStyle
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     MainAxisAlignment,
@@ -270,7 +271,7 @@ class Markdown(ConstrainedControl):
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: Optional[str] = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

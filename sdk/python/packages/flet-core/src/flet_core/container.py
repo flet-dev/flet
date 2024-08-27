@@ -20,6 +20,7 @@ from flet_core.event_handler import EventHandler
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
 from flet_core.theme import Theme
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     BlendMode,
@@ -130,7 +131,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: Optional[str] = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

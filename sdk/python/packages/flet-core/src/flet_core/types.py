@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from enum import Enum, EnumMeta
 from typing import Any, Callable, Dict, Optional, Protocol, Tuple, Type, TypeVar, Union
 from warnings import warn
@@ -65,6 +66,19 @@ ScaleValue = Optional[Union[int, float, Scale]]
 OffsetValue = Optional[Union[Offset, Tuple[Union[float, int], Union[float, int]]]]
 
 AnimationValue = Optional[Union[bool, int, Animation]]
+
+
+@dataclass
+class Duration:
+    microseconds: int = 0
+    milliseconds: int = 0
+    seconds: int = 0
+    minutes: int = 0
+    hours: int = 0
+    days: int = 0
+
+
+DurationValue = Union[int, Duration, None]
 
 
 class FontWeight(Enum):
