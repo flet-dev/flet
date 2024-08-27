@@ -644,9 +644,7 @@ class Theme:
     badge_theme: Optional[BadgeTheme] = None
     banner_theme: Optional[BannerTheme] = None
     bottom_appbar_theme: Optional[BottomAppBarTheme] = None
-    bottom_navigation_bar_theme: Optional[BottomNavigationBarTheme] = field(
-        default=None
-    )
+    bottom_navigation_bar_theme: Optional[BottomNavigationBarTheme] = None
     bottom_sheet_theme: Optional[BottomSheetTheme] = None
     button_theme: Optional[ButtonTheme] = None
     card_theme: Optional[CardTheme] = None
@@ -659,9 +657,8 @@ class Theme:
     divider_theme: Optional[DividerTheme] = None
     # dropdown_menu_theme: Optional[DropdownMenuTheme] = None
     expansion_tile_theme: Optional[ExpansionTileTheme] = None
-    floating_action_button_theme: Optional[FloatingActionButtonTheme] = field(
-        default=None
-    )
+    floating_action_button_theme: Optional[FloatingActionButtonTheme] = None
+    icon_theme: Optional[IconTheme] = None
     list_tile_theme: Optional[ListTileTheme] = None
     navigation_bar_theme: Optional[NavigationBarTheme] = None
     navigation_drawer_theme: Optional[NavigationDrawerTheme] = None
