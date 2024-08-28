@@ -584,7 +584,7 @@ class Command(BaseCommand):
             python_app_path=options.script, target_platform=target_platform
         )
         try:
-            # compiler.compile_client()
+            compiler.compile_client()
             os.environ["FLET_WEB_PATH"] = str(
                 (Path(options.script).joinpath(".flet").joinpath("web").resolve())
             )
