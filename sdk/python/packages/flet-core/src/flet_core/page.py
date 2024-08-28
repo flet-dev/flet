@@ -474,7 +474,7 @@ class Window:
 
     @icon.setter
     def icon(self, value: Optional[str]):
-        self.page._set_attr("windowIcon", str(pathlib.Path(value).resolve()).replace("\\", "/"))
+        self.page._set_attr("windowIcon", str(next((p.resolve() for p in [pathlib.Path(value), pathlib.Path(f"assets/{value}")] if p.resolve().exists()), None)).replace("\\", "/"))
 
     # Methods
     def destroy(self):
