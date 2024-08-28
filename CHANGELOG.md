@@ -31,7 +31,7 @@
 * FIXED: `PieChartEvent.type` on web ([#3611](https://github.com/flet-dev/flet/issues/3611))
 * FIXED: `Switch.width` and `height` properties ([#3670](https://github.com/flet-dev/flet/issues/3670))
 * FIXED: parsing issues in `TextStyle` and `*Event` classes ([#3551](https://github.com/flet-dev/flet/issues/3551))
-* FIXED: issues with `*Button`s ([#3582](https://github.com/flet-dev/flet/issues/3582))(#3582)
+* FIXED: issues with `*Button`s ([#3582](https://github.com/flet-dev/flet/issues/3582))
 * Handle Multiple Trailing Controls in `CupertinoAppBar` ([#3603](https://github.com/flet-dev/flet/issues/3603))
 * Event: implement str and repr magic methods ([#3601](https://github.com/flet-dev/flet/issues/3601))
 * CHORE: remove handler-subscription and enhance event typing ([#3808](https://github.com/flet-dev/flet/issues/3808))
