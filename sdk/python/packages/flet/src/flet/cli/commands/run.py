@@ -1,6 +1,8 @@
 import argparse
 import os
 import platform
+import re
+import shutil
 import signal
 import subprocess
 import sys
@@ -8,8 +10,9 @@ import tempfile
 import threading
 import time
 from pathlib import Path
+from typing import Optional, Union
 from urllib.parse import quote, urlparse, urlunparse
-
+import yaml
 import qrcode
 from flet.cli.commands.base import BaseCommand
 from flet_core.utils import random_string
@@ -22,6 +25,439 @@ from flet_runtime.utils import (
 )
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
+from rich.console import Console, Style
+from flet_runtime.utils import (
+    copy_tree,
+    is_windows,
+    get_bool_env_var,
+)
+from rich.table import Table, Column
+from packaging import version
+import flet.version
+from flet.version import update_version
+
+if is_windows():
+    from ctypes import windll
+
+
+error_style = Style(color="red1")
+console = Console(log_path=False, style=Style(color="green", bold=True))
+
+
+class ClientCompiler:
+    MINIMAL_FLUTTER_VERSION = "3.19.0"
+    DEFAULT_TEMPLATE = "gh:andersou/flet-run-bootstrap-template"
+
+    def __init__(
+        self,
+        python_app_path=".",
+        target_platform=platform.system(),
+        webrenderer="canvaskit",
+    ) -> None:
+        self.python_app_path = python_app_path
+        self.web_renderer = webrenderer
+        self.template = self.DEFAULT_TEMPLATE
+        self.template_ref = None
+        self.emojis = {}
+        self.dart_exe = None
+        self.verbose = None
+        self.flutter_dir = None
+        self.flutter_exe = None
+        self.target_platform = target_platform.lower()
+        if self.target_platform == "darwin":
+            self.target_platform = "macos"
+        self.verbose = 0
+        self.platforms = {
+            "windows": {
+                "build_command": "windows",
+                "status_text": "Windows app",
+                "outputs": ["build/windows/x64/runner/Release/*"],
+                "dist": "windows",
+                "can_be_run_on": ["Windows"],
+            },
+            "macos": {
+                "build_command": "macos",
+                "status_text": "macOS bundle",
+                "outputs": ["build/macos/Build/Products/Release/Flet.app"],
+                "dist": "macos",
+                "can_be_run_on": ["Darwin"],
+            },
+            "linux": {
+                "build_command": "linux",
+                "status_text": "app for Linux",
+                "outputs": ["build/linux/{arch}/release/bundle/*"],
+                "dist": "linux",
+                "can_be_run_on": ["Linux"],
+            },
+            "web": {
+                "build_command": "web",
+                "status_text": "web app",
+                "outputs": ["build/web/*"],
+                "dist": "web",
+                "can_be_run_on": ["Darwin", "Windows", "Linux"],
+            },
+            "apk": {
+                "build_command": "apk",
+                "status_text": ".apk for Android",
+                "outputs": ["build/app/outputs/flutter-apk/*"],
+                "dist": "apk",
+                "can_be_run_on": ["Darwin", "Windows", "Linux"],
+            },
+            "aab": {
+                "build_command": "appbundle",
+                "status_text": ".aab bundle for Android",
+                "outputs": ["build/app/outputs/bundle/release/*"],
+                "dist": "aab",
+                "can_be_run_on": ["Darwin", "Windows", "Linux"],
+            },
+            "ipa": {
+                "build_command": "ipa",
+                "status_text": ".ipa bundle for iOS",
+                "outputs": ["build/ios/archive/*", "build/ios/ipa/*"],
+                "dist": "ipa",
+                "can_be_run_on": ["Darwin"],
+            },
+        }
+
+        # create and display build-platform-matrix table
+        self.platform_matrix_table = Table(
+            Column("Command", style="cyan", justify="left"),
+            Column("Platform", style="magenta", justify="center"),
+            title="Build Platform Matrix",
+            header_style="bold",
+            show_lines=True,
+        )
+        for p, info in self.platforms.items():
+            self.platform_matrix_table.add_row(
+                "flet build " + p,
+                ", ".join(info["can_be_run_on"]).replace("Darwin", "macOS"),
+                # style="bold red1" if p == target_platform else None,
+            )
+
+    def run(self, args, cwd, capture_output=True):
+        if is_windows():
+            # Source: https://stackoverflow.com/a/77374899/1435891
+            # Save the current console output code page and switch to 65001 (UTF-8)
+            previousCp = windll.kernel32.GetConsoleOutputCP()
+            windll.kernel32.SetConsoleOutputCP(65001)
+
+        if self.verbose > 0:
+            console.log(f"Run subprocess: {args}")
+
+        r = subprocess.run(
+            args,
+            cwd=cwd,
+            capture_output=capture_output,
+            text=True,
+            encoding="utf8",
+        )
+
+        if is_windows():
+            # Restore the previous output console code page.
+            windll.kernel32.SetConsoleOutputCP(previousCp)
+
+        return r
+
+    def compile_client(self) -> None:
+        self.flutter_dir = None
+        no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
+        self.emojis = {
+            "checkmark": "[green]OK[/]" if no_rich_output else "✅",
+            "loading": "" if no_rich_output else "⏳",
+            "success": "" if no_rich_output else "🥳",
+            "directory": "" if no_rich_output else "📁",
+        }
+        target_platform = self.target_platform
+        # platform check
+        current_platform = platform.system()
+        if current_platform not in self.platforms[target_platform]["can_be_run_on"]:
+            can_build_message = (
+                "can't"
+                if current_platform
+                not in self.platforms[target_platform]["can_be_run_on"]
+                else "can"
+            )
+            # replace "Darwin" with "macOS" for user-friendliness
+            current_platform = (
+                "macOS" if current_platform == "Darwin" else current_platform
+            )
+            # highlight the current platform in the build matrix table
+            self.platform_matrix_table.rows[
+                list(self.platforms.keys()).index(target_platform)
+            ].style = "bold red1"
+            console.log(self.platform_matrix_table)
+
+            message = f"You {can_build_message} build [cyan]{target_platform}[/] on [magenta]{current_platform}[/]."
+            self.cleanup(1, message)
+
+        with console.status(
+            f"[bold blue]Initializing {target_platform} build... ",
+            spinner="bouncingBall",
+        ) as self.status:
+            from cookiecutter.main import cookiecutter
+
+            # get `flutter` and `dart` executables from PATH
+            self.flutter_exe = self.find_flutter_batch("flutter")
+            self.dart_exe = self.find_flutter_batch("dart")
+
+            if self.verbose > 1:
+                console.log("Flutter executable:", self.flutter_exe)
+                console.log("Dart executable:", self.dart_exe)
+
+            python_app_path = Path(self.python_app_path).resolve()
+            if not os.path.exists(python_app_path) or not os.path.isdir(
+                python_app_path
+            ):
+                self.cleanup(
+                    1,
+                    f"Path to Flet app does not exist or is not a directory: {python_app_path}",
+                )
+
+            self.flutter_dir = Path(tempfile.gettempdir()).joinpath(
+                f"flet_flutter_build_{random_string(10)}"
+            )
+
+            if self.verbose > 0:
+                console.log("Flutter bootstrap directory:", self.flutter_dir)
+            self.flutter_dir.mkdir(exist_ok=True)
+
+            rel_out_dir = os.path.join(".flet", self.platforms[target_platform]["dist"])
+
+            out_dir = python_app_path.joinpath(rel_out_dir)
+
+            src_pubspec = None
+            src_pubspec_path = python_app_path.joinpath("pubspec.yaml")
+            if src_pubspec_path.exists():
+                with open(src_pubspec_path, encoding="utf8") as f:
+                    src_pubspec = pubspec = yaml.safe_load(f)
+
+            flutter_dependencies = (
+                src_pubspec["dependencies"]
+                if src_pubspec and src_pubspec["dependencies"]
+                else {}
+            )
+
+            # if options.flutter_packages:
+            #     for package in options.flutter_packages:
+            #         pspec = package.split(":")
+            #         flutter_dependencies[pspec[0]] = (
+            #             pspec[1] if len(pspec) > 1 else "any"
+            #         )
+
+            if self.verbose > 0:
+                console.log(
+                    f"Additional Flutter dependencies: {flutter_dependencies}"
+                    if flutter_dependencies
+                    else "No additional Flutter dependencies!"
+                )
+
+            template_data = {
+                "out_dir": self.flutter_dir.name,
+                "sep": os.sep,
+                "web_renderer": self.web_renderer,
+                "flutter": {"dependencies": list(flutter_dependencies.keys())},
+            }
+            # Remove None values from the dictionary
+            template_data = {k: v for k, v in template_data.items() if v is not None}
+
+            template_url = self.template
+            template_ref = self.template_ref
+
+            if not template_ref:
+                template_ref = (
+                    version.Version(flet.version.version).base_version
+                    if flet.version.version
+                    else update_version()
+                )
+
+            # create Flutter project from a template
+            self.status.update(
+                f"[bold blue]Creating Flutter bootstrap project from {template_url} with ref {template_ref} {self.emojis['loading']}... ",
+            )
+            try:
+                cookiecutter(
+                    template=template_url,
+                    # directory=options.template_dir,
+                    output_dir=str(self.flutter_dir.parent),
+                    no_input=True,
+                    overwrite_if_exists=True,
+                    extra_context=template_data,
+                )
+            except Exception as e:
+                console.log(e)
+                self.cleanup(1, f"{e}")
+            console.log(
+                f"Created Flutter bootstrap project from {template_url} with ref {template_ref} {self.emojis['checkmark']}",
+            )
+
+            # load pubspec.yaml
+            pubspec_path = str(self.flutter_dir.joinpath("pubspec.yaml"))
+            with open(pubspec_path, encoding="utf8") as f:
+                pubspec = yaml.safe_load(f)
+
+            # merge dependencies to a dest pubspec.yaml
+            for k, v in flutter_dependencies.items():
+                pubspec["dependencies"][k] = v
+
+            if src_pubspec and "dependency_overrides" in src_pubspec:
+                pubspec["dependency_overrides"] = {}
+                for k, v in src_pubspec["dependency_overrides"].items():
+                    pubspec["dependency_overrides"][k] = v
+
+            # # make sure project name is not named as any of dependencies
+            # for dep in pubspec["dependencies"].keys():
+            #     if dep == project_name:
+            #         self.cleanup(
+            #             1,
+            #             f"Project name cannot have the same name as one of its dependencies: {dep}. "
+            #             f"Use --project option to specify a different project name.",
+            #         )
+
+            # save pubspec.yaml
+            with open(pubspec_path, "w", encoding="utf8") as f:
+                yaml.dump(pubspec, f)
+
+            # run `flutter build`
+            self.status.update(
+                f"[bold blue]Building [cyan]{self.platforms[target_platform]['status_text']}[/cyan] {self.emojis['loading']}... ",
+            )
+            build_args = [
+                self.flutter_exe,
+                "build",
+                self.platforms[target_platform]["build_command"],
+            ]
+
+            if self.verbose > 1:
+                build_args.append("--verbose")
+            console.log(build_args)
+            build_result = self.run(
+                build_args, cwd=str(self.flutter_dir), capture_output=self.verbose < 1
+            )
+
+            if build_result.returncode != 0:
+                if build_result.stdout:
+                    console.log(build_result.stdout)
+                if build_result.stderr:
+                    console.log(build_result.stderr, style=error_style)
+                self.cleanup(build_result.returncode, check_flutter_version=True)
+            console.log(
+                f"Built [cyan]{self.platforms[target_platform]['status_text']}[/cyan] {self.emojis['checkmark']}",
+            )
+
+            # copy build results to `out_dir`
+            self.status.update(
+                f"[bold blue]Copying build to [cyan]{rel_out_dir}[/cyan] directory {self.emojis['loading']}... ",
+            )
+            arch = platform.machine().lower()
+            if arch == "x86_64" or arch == "amd64":
+                arch = "x64"
+            elif arch == "arm64" or arch == "aarch64":
+                arch = "arm64"
+
+            for build_output in self.platforms[target_platform]["outputs"]:
+                build_output_dir = str(self.flutter_dir.joinpath(build_output))
+
+                if self.verbose > 0:
+                    console.log("Copying build output from: " + build_output_dir)
+
+                build_output_glob = os.path.basename(build_output_dir)
+                build_output_dir = os.path.dirname(build_output_dir)
+                if not os.path.exists(build_output_dir):
+                    continue
+
+                if out_dir.exists():
+                    shutil.rmtree(str(out_dir), ignore_errors=False, onerror=None)
+                out_dir.mkdir(parents=True, exist_ok=True)
+
+                def ignore_build_output(path, files):
+                    if path == build_output_dir and build_output_glob != "*":
+                        return [f for f in os.listdir(path) if f != build_output_glob]
+                    return []
+
+                copy_tree(build_output_dir, str(out_dir), ignore=ignore_build_output)
+
+            assets_path = python_app_path.joinpath("assets")
+            if target_platform == "web" and assets_path.exists():
+                # copy `assets` directory contents to the output directory
+                copy_tree(str(assets_path), str(out_dir))
+
+            console.log(
+                f"Copied build to [cyan]{rel_out_dir}[/cyan] directory {self.emojis['checkmark']}"
+            )
+
+            self.cleanup(
+                0,
+                message=f"Successfully built your [cyan]{self.platforms[target_platform]['status_text']}[/cyan]! {self.emojis['success']} "
+                f"Find it in [cyan]{rel_out_dir}[/cyan] directory. {self.emojis['directory']}",
+            )
+
+    def find_flutter_batch(self, exe_filename: str):
+        batch_path = shutil.which(exe_filename)
+        if not batch_path:
+            self.cleanup(
+                1,
+                f"`{exe_filename}` command is not available in PATH. Install Flutter SDK.",
+            )
+            return
+        if is_windows() and batch_path.endswith(".file"):
+            return batch_path.replace(".file", ".bat")
+        return batch_path
+
+    def cleanup(
+        self, exit_code: int, message: Optional[str] = None, check_flutter_version=False
+    ):
+        if self.flutter_dir and os.path.exists(self.flutter_dir):
+            if self.verbose > 0:
+                console.log(f"Deleting Flutter bootstrap directory {self.flutter_dir}")
+            shutil.rmtree(str(self.flutter_dir), ignore_errors=True, onerror=None)
+        if exit_code == 0:
+            msg = message or f"Success! {self.emojis['success']}"
+            console.log(msg)
+        else:
+            msg = (
+                message
+                if message is not None
+                else "Error building Flet app - see the log of failed command above."
+            )
+            console.log(msg, style=error_style)
+
+            if check_flutter_version:
+                version_results = self.run(
+                    [self.flutter_exe, "--version"],
+                    cwd=os.getcwd(),
+                    capture_output=True,
+                )
+                if version_results.returncode == 0 and version_results.stdout:
+                    match = re.search(
+                        r"Flutter (\d+\.\d+\.\d+)", version_results.stdout
+                    )
+                    if match:
+                        flutter_version = version.parse(match.group(1))
+                        if flutter_version < version.parse(
+                            self.MINIMAL_FLUTTER_VERSION
+                        ):
+                            flutter_msg = (
+                                "Incorrect version of Flutter SDK installed. "
+                                + f"Flet build requires Flutter {self.MINIMAL_FLUTTER_VERSION} or above. "
+                                + f"You have {flutter_version}."
+                            )
+                            console.log(flutter_msg, style=error_style)
+            # run flutter doctor
+            self.run_flutter_doctor(style=error_style)
+
+        raise Exception(f"Exit code: {exit_code}\n {message}")
+
+    def run_flutter_doctor(self, style: Optional[Union[Style, str]] = None):
+        self.status.update(
+            f"[bold blue]Running Flutter doctor {self.emojis['loading']}... "
+        )
+        flutter_doctor = self.run(
+            [self.flutter_exe, "doctor"],
+            cwd=os.getcwd(),
+            capture_output=True,
+        )
+        if flutter_doctor.returncode == 0 and flutter_doctor.stdout:
+            console.log(flutter_doctor.stdout, style=style)
 
 
 class Command(BaseCommand):
@@ -129,7 +565,53 @@ class Command(BaseCommand):
             help="directories to ignore during watch. If more than one, separate with a comma.",
         )
 
+    def needs_recompile_client(self, script) -> bool:
+        python_app_path = Path(script).resolve()
+        src_pubspec_path = python_app_path.joinpath("pubspec.yaml")
+        if src_pubspec_path.exists():
+            return True
+        return False
+
+    def compile_client(self, options: argparse.Namespace) -> bool:
+        target_platform = platform.system().lower()
+        if options.web:
+            target_platform = "web"
+        elif options.ios:
+            target_platform = "ipa"
+        elif options.android:
+            target_platform = "apk"
+        compiler = ClientCompiler(
+            python_app_path=options.script, target_platform=target_platform
+        )
+        try:
+            # compiler.compile_client()
+            os.environ["FLET_WEB_PATH"] = str(
+                (Path(options.script).joinpath(".flet").joinpath("web").resolve())
+            )
+            os.environ["FLET_VIEW_PATH"] = str(
+                (
+                    Path(options.script)
+                    .joinpath(".flet")
+                    .joinpath(compiler.target_platform)
+                    .resolve()
+                )
+            )
+            print("FLET_WEB_PATH", os.environ["FLET_WEB_PATH"])
+            print("FLET_VIEW_PATH", os.environ["FLET_VIEW_PATH"])
+            return True
+        except Exception as e:
+            console.log(e, style=error_style)
+            print(e)
+            return False
+
     def handle(self, options: argparse.Namespace) -> None:
+        if self.needs_recompile_client(options.script):
+            print("Recompiling client...")
+            if self.compile_client(options):
+                print("Client recompiled successfully.")
+            else:
+                print("Client recompilation failed.")
+                print("Using default client")
         if options.module:
             script_path = str(options.script).replace(".", "/")
             if os.path.isdir(script_path):
@@ -290,7 +772,7 @@ class Handler(FileSystemEventHandler):
 
         if (
             self.watch_directory or event.src_path == self.script_path
-            ) and event.event_type in ["modified", "deleted", "created", "moved"]:
+        ) and event.event_type in ["modified", "deleted", "created", "moved"]:
 
             current_time = time.time()
             if (current_time - self.last_time) > 0.5 and self.is_running:
