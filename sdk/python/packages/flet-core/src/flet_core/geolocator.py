@@ -155,9 +155,7 @@ class Geolocator(Control):
         )
         output = self.invoke_method(
             "get_current_position",
-            {
-                "location_settings": self._convert_attr_json(ls),
-            },
+            {"location_settings": self._convert_attr_json(ls)},
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
@@ -182,9 +180,7 @@ class Geolocator(Control):
         )
         output = await self.invoke_method_async(
             "get_current_position",
-            {
-                "location_settings": self._convert_attr_json(ls),
-            },
+            {"location_settings": self._convert_attr_json(ls)},
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
@@ -265,28 +261,6 @@ class Geolocator(Control):
             wait_timeout=wait_timeout,
         )
         return GeolocatorPermissionStatus(p)
-
-    def get_service_status(
-        self, cancel_on_error: bool = False, wait_timeout: Optional[float] = 25
-    ) -> str:
-        p = self.invoke_method(
-            "get_service_status",
-            arguments={"cancel_on_error": str(cancel_on_error)},
-            wait_for_result=True,
-            wait_timeout=wait_timeout,
-        )
-        return p
-
-    async def get_service_status_async(
-        self, cancel_on_error: bool = False, wait_timeout: Optional[float] = 25
-    ) -> str:
-        p = await self.invoke_method_async(
-            "get_service_status",
-            arguments={"cancel_on_error": str(cancel_on_error)},
-            wait_for_result=True,
-            wait_timeout=wait_timeout,
-        )
-        return p
 
     def is_location_service_enabled(self, wait_timeout: Optional[float] = 10) -> bool:
         enabled = self.invoke_method(
