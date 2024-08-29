@@ -14,9 +14,9 @@ Duration? parseDuration(Control control, String propName,
   return durationFromJSON(j1);
 }
 
-Duration? durationFromJSON(dynamic json) {
+Duration? durationFromJSON(dynamic json, [Duration? defaultValue]) {
   if (json == null) {
-    return null;
+    return defaultValue;
   }
   if (json is int || json is double) {
     return Duration(milliseconds: parseInt(json, 0)!);

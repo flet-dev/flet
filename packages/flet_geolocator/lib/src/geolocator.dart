@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:flet/flet.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'utils/geolocator.dart';
@@ -24,7 +25,7 @@ class GeolocatorControl extends StatefulWidget {
 
 class _GeolocatorControlState extends State<GeolocatorControl>
     with FletStoreMixin {
-  StreamSubscription<Position>? _positionStream;
+  StreamSubscription<Position>? _onPositionChangedSubscription;
 
   @override
   void initState() {
@@ -34,92 +35,60 @@ class _GeolocatorControlState extends State<GeolocatorControl>
     widget.control.onRemove.add(_onRemove);
   }
 
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (widget.control.attrBool("onPositionChange", false)!) {
+      _onPositionChangedSubscription = Geolocator.getPositionStream(
+        locationSettings: parseLocationSettings(
+            widget.control, "locationSettings", Theme.of(context)),
+      ).listen(
+        (Position? newPosition) {
+          if (newPosition != null) {
+            _onPositionChange(newPosition);
+            debugPrint('Geolocator - ${newPosition}');
+          } else {
+            debugPrint('Geolocator: Position is null.');
+          }
+        },
+        onError: (Object error, StackTrace stackTrace) {
+          debugPrint('Geolocator Error getting stream position: $error');
+          widget.backend.triggerControlEvent(
+              widget.control.id, "error", error.toString());
+        },
+        onDone: () {
+          debugPrint('Geolocator: Done getting stream position.');
+        },
+      );
+    }
+  }
+
   void _onRemove() {
     debugPrint("Geolocator.remove($hashCode)");
+    _onPositionChangedSubscription?.cancel();
     widget.backend.unsubscribeMethods(widget.control.id);
   }
 
   @override
   void deactivate() {
     debugPrint("Geolocator.deactivate($hashCode)");
+    _onPositionChangedSubscription?.cancel();
     super.deactivate();
   }
 
-  void _onPosition(Position position) {
+  void _onPositionChange(Position position) {
     debugPrint("Geolocator onPosition: $position");
     final jsonData = jsonEncode({
-      "latitude": position.latitude,
-      "longitude": position.longitude,
+      "lat": position.latitude,
+      "long": position.longitude,
     });
-    widget.backend.triggerControlEvent(widget.control.id, "position", jsonData);
-  }
-
-  Future<bool> _enableLocationService() async {
-    late LocationSettings locationSettings;
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      locationSettings = AndroidSettings(
-          accuracy: LocationAccuracy.high,
-          distanceFilter: 0,
-          forceLocationManager: true,
-          intervalDuration: const Duration(seconds: 30),
-          // Needs this or when app goes in background, background service stops working
-          foregroundNotificationConfig: const ForegroundNotificationConfig(
-            notificationText:
-            "Location Updates",
-            notificationTitle: "Running in Background",
-            enableWakeLock: true,
-          )
-      );
-    } else if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS) {
-      locationSettings = AppleSettings(
-        accuracy: LocationAccuracy.bestForNavigation,
-        activityType: ActivityType.automotiveNavigation,
-        distanceFilter: 0,
-        pauseLocationUpdatesAutomatically: false,
-        showBackgroundLocationIndicator: true,
-        allowBackgroundLocationUpdates: true,
-      );
-    } else if (kIsWeb) {
-      locationSettings = WebSettings(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 0,
-        // maximumAge: Duration(minutes: 5)
-        maximumAge: Duration.zero,
-      );
-    } else {
-      locationSettings = LocationSettings(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 0,
-      );
-    }
-
-    _positionStream = Geolocator.getPositionStream(locationSettings: locationSettings,
-    ).listen(
-      (Position? position) {
-        if (position != null) {
-          _onPosition(position);
-          debugPrint('Geolocator: ${position.latitude}, ${position.longitude}, ${position}');
-        } else {
-          debugPrint('Geolocator: Position is null.');
-        }
-      },
-      onError: (e) {
-        debugPrint('Geolocator: Error getting stream position: $e');
-      },
-    );
-    return true;
-  }
-
-  Future<bool> _disableLocationService() async {
-    await _positionStream?.cancel();
-    return true;
+    widget.backend
+        .triggerControlEvent(widget.control.id, "positionChange", jsonData);
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint(
         "Geolocator build: ${widget.control.id} (${widget.control.hashCode})");
-    bool onPosition = widget.control.attrBool("onPosition", false)!;
 
     () async {
       widget.backend.subscribeMethods(widget.control.id,
@@ -134,15 +103,6 @@ class _GeolocatorControlState extends State<GeolocatorControl>
           case "is_location_service_enabled":
             var serviceEnabled = await Geolocator.isLocationServiceEnabled();
             return serviceEnabled.toString();
-          case "service_enable":
-            var serviceEnabled = false;
-            if (onPosition) {
-              serviceEnabled = await _enableLocationService();
-            }
-            return serviceEnabled.toString();
-          case "service_disable":
-            var serviceDisabled = await _disableLocationService();
-            return serviceDisabled.toString();
           case "open_app_settings":
             if (!kIsWeb) {
               var opened = await Geolocator.openAppSettings();
@@ -163,8 +123,11 @@ class _GeolocatorControlState extends State<GeolocatorControl>
             break;
           case "get_current_position":
             Position currentPosition = await Geolocator.getCurrentPosition(
-              desiredAccuracy: parseLocationAccuracy(
-                  args["accuracy"], LocationAccuracy.best)!,
+              locationSettings: locationSettingsFromJson(
+                  args["location_settings"] != null
+                      ? jsonDecode(args["location_settings"]!)
+                      : null,
+                  Theme.of(context)),
             );
             return positionToJson(currentPosition)!;
         }
