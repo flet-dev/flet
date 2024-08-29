@@ -470,11 +470,8 @@ class Window:
     # icon
     @property
     def icon(self) -> Optional[str]:
-        try:
-            return self.page._icon
-        except AttributeError:
-            return None
-
+        return getattr(self.page, '_icon', None)
+        
     @icon.setter
     def icon(self, value: Optional[str]):
         self.page._icon = value
