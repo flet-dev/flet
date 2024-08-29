@@ -308,7 +308,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
           obscureText: password && !_revealPassword,
           padding: parseEdgeInsets(
               widget.control, "padding", const EdgeInsets.all(7.0))!,
-          scribbleEnabled: widget.control.attrBool("scribbleEnabled", true)!,
+          scribbleEnabled: widget.control.attrBool("enableScribble", true)!,
           scrollPadding: parseEdgeInsets(
               widget.control, "scrollPadding", const EdgeInsets.all(20.0))!,
           obscuringCharacter:
