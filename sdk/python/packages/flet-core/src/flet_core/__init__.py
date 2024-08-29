@@ -169,6 +169,12 @@ from flet_core.geolocator import (
     GeolocatorPositionAccuracy,
     GeolocatorPermissionStatus,
     GeolocatorPosition,
+    GeolocatorActivityType,
+    GeolocatorAndroidSettings,
+    GeolocatorAppleSettings,
+    GeolocatorPositionChangeEvent,
+    GeolocatorSettings,
+    GeolocatorWebSettings,
 )
 from flet_core.gesture_detector import (
     DragEndEvent,
@@ -401,6 +407,7 @@ from flet_core.types import (
     VerticalAlignment,
     StrokeCap,
     StrokeJoin,
+    Duration,
 )
 from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider
