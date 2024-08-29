@@ -13,7 +13,6 @@
 * NEW: Add `focus`, `on_focus`, `on_blur` to `SearchBar` ([#3417](https://github.com/flet-dev/flet/issues/3417), [#3752](https://github.com/flet-dev/flet/issues/3752))
 * NEW: `--no-rich-output` flag to prevent rich output ([#3708](https://github.com/flet-dev/flet/issues/3708))
 * CHANGED: make `Tooltip` a dataclass which can be used in `Control.tooltip` ([#3837](https://github.com/flet-dev/flet/issues/3837))
-* CHANGED: Enable Impeller for macOS client.
 * CHANGED: wrap `View`s into a background container ([#3820](https://github.com/flet-dev/flet/issues/3820))
 * FIXED: export BottomSheetTheme ([#3858](https://github.com/flet-dev/flet/issues/3858))
 * FIXED: setting SearchBar.value to an empty string is not respected ([#3872](https://github.com/flet-dev/flet/issues/3872))
