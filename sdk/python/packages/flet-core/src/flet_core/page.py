@@ -470,10 +470,14 @@ class Window:
     # icon
     @property
     def icon(self) -> Optional[str]:
-        return self.page._get_attr("windowIcon")
+        try:
+            return self.page._icon
+        except AttributeError:
+            return None
 
     @icon.setter
     def icon(self, value: Optional[str]):
+        self.page._icon = value
         self.page._set_attr("windowIcon", str(next((p.resolve() for p in [pathlib.Path(value), pathlib.Path(f"assets/{value}")] if p.resolve().exists()), None)).replace("\\", "/"))
 
     # Methods
