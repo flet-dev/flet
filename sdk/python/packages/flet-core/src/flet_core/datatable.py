@@ -1,5 +1,5 @@
 import json
-from typing import Any, Dict, List, Optional, Union, Callable
+from typing import Any, Dict, List, Optional, Union
 
 from flet_core.border import Border, BorderSide
 from flet_core.constrained_control import ConstrainedControl
@@ -130,7 +130,7 @@ class DataCell(Control):
         on_double_tap: OptionalControlEventCallable = None,
         on_long_press: OptionalControlEventCallable = None,
         on_tap_cancel: OptionalControlEventCallable = None,
-        on_tap_down: Optional[Callable[[TapEvent], None]] = None,
+        on_tap_down: OptionalEventCallable[TapEvent] = None,
         #
         # Control
         #
