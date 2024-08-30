@@ -4,9 +4,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/box.dart';
 import '../models/control.dart';
 import '../models/control_tree_view_model.dart';
+import '../utils/box.dart';
 import '../utils/drawing.dart';
 import '../utils/numbers.dart';
 import 'colors.dart';
@@ -188,7 +188,11 @@ TextStyle? parseTextStyle(ThemeData theme, Control control, String propName) {
   return textStyleFromJson(theme, j);
 }
 
-TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
+TextStyle? textStyleFromJson(ThemeData theme, Map<String, dynamic>? json) {
+  if (json == null) {
+    return null;
+  }
+
   var fontWeight = json["weight"];
 
   List<FontVariation>? variations;

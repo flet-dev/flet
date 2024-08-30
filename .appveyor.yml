@@ -10,7 +10,7 @@ skip_commits:
 
 environment:
   python_stack: python 3.10
-  FLUTTER_VERSION: 3.24.0
+  FLUTTER_VERSION: 3.24.1
   GITHUB_TOKEN:
     secure: 9SKIwc3VSfYJ5IChvNR74hQprJ0DRmcV9pPX+8KyE6IXIdfMsX6ikeUmMhJGRu3ztkZaF45jmU7Xn/6tauXQXhDBxK1N8kFHFSAnq6LjUXyhS0TZKX/H+jDozBeVbCXp
 

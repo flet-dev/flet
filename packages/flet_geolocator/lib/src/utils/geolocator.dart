@@ -96,7 +96,8 @@ LocationSettings? locationSettingsFromJson(dynamic j, ThemeData? theme) {
                     j["foreground_notification_enable_wifi_lock"], false)!,
                 color: parseColor(theme, j["foreground_notification_color"]),
                 notificationChannelName:
-                    j["foreground_notification_channel_name"],
+                    j["foreground_notification_channel_name"] ??
+                        'Background Location',
                 setOngoing:
                     parseBool(j["foreground_notification_set_ongoing"], true)!)
             : null);

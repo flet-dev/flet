@@ -65,7 +65,10 @@ Paint paintFromJSON(ThemeData? theme, Map<String, dynamic> json) {
 }
 
 ui.Gradient? paintGradientFromJSON(
-    ThemeData? theme, Map<String, dynamic> json) {
+    ThemeData? theme, Map<String, dynamic>? json) {
+  if (json == null) {
+    return null;
+  }
   String type = json["type"];
   if (type == "linear") {
     return ui.Gradient.linear(

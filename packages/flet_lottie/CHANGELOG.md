@@ -1,3 +1,7 @@
+# 0.24.0
+
+Version follows parent `flet` package.
+
 # 0.23.2
 
 No changes in this release. Version bumped to follow parent `flet` package.
