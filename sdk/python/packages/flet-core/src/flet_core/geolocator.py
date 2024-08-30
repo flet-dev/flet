@@ -79,7 +79,6 @@ class GeolocatorAppleSettings(GeolocatorSettings):
 
 @dataclass
 class GeolocatorAndroidSettings(GeolocatorSettings):
-    activity_type: Optional[GeolocatorActivityType] = None
     force_location_manager: Optional[bool] = False
     interval_duration: DurationValue = False
     foreground_notification_text: Optional[str] = None

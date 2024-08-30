@@ -46,12 +46,17 @@ Tooltip? tooltipFromJSON(dynamic j, Widget widget, ThemeData theme) {
       child: widget,
     );
   }
+
+  /// The tooltip shape defaults to a rounded rectangle with a border radius of
+  /// 4.0. Tooltips will also default to an opacity of 90%
   var decoration = boxDecorationFromDetails(
     gradient: gradientFromJSON(theme, j["gradient"]),
     border: borderFromJSON(theme, j["border"]),
-    borderRadius: borderRadiusFromJSON(j["border_radius"]),
+    borderRadius:
+        borderRadiusFromJSON(j["border_radius"], BorderRadius.circular(4.0)),
     shape: parseBoxShape(j["shape"]),
-    color: parseColor(theme, j["bgcolor"]),
+    color: parseColor(theme, j["bgcolor"],
+        theme.brightness == Brightness.light ? Colors.grey[700] : Colors.white),
     blendMode: parseBlendMode(j["blend_mode"]),
     boxShadow: boxShadowsFromJSON(theme, j["box_shadow"]),
     image: decorationImageFromJSON(
