@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
 
   geolocator: ^13.0.1
+  collection: ^1.16.0
 
   flet:
     path: ../flet/

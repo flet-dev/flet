@@ -35,6 +35,7 @@ class _GeolocatorControlState extends State<GeolocatorControl>
     widget.control.onRemove.add(_onRemove);
   }
 
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (widget.control.attrBool("onPositionChange", false)!) {
@@ -45,7 +46,7 @@ class _GeolocatorControlState extends State<GeolocatorControl>
         (Position? newPosition) {
           if (newPosition != null) {
             _onPositionChange(newPosition);
-            debugPrint('Geolocator - ${newPosition}');
+            debugPrint('Geolocator - $newPosition');
           } else {
             debugPrint('Geolocator: Position is null.');
           }
