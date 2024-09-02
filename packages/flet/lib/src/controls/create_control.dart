@@ -1089,11 +1089,7 @@ Widget _opacity(
 Widget _tooltip(
     Widget widget, ThemeData theme, Control? parent, Control control) {
   var tooltip = parseTooltip(control, "tooltip", widget, theme);
-  return tooltip != null &&
-          !["iconbutton", "floatingactionbutton", "popupmenubutton"]
-              .contains(control.type)
-      ? tooltip
-      : widget;
+  return tooltip != null ? tooltip : widget;
 }
 
 Widget _aspectRatio(Widget widget, Control? parent, Control control) {
