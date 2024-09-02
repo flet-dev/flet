@@ -229,6 +229,7 @@ Widget buildImage({
             gaplessPlayback: gaplessPlayback ?? true,
             semanticLabel: semanticsLabel);
       }
+      return image;
     } catch (ex) {
       return ErrorControl("Error decoding base64: ${ex.toString()}");
     }
@@ -308,8 +309,7 @@ Widget buildImage({
         }
       }
     }
-
     return image;
   }
-  return const ErrorControl("Either src or src_base64 must be specified.");
+  return const ErrorControl("A valid src or src_base64 must be specified.");
 }
