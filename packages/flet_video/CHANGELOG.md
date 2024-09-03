@@ -1,3 +1,7 @@
+# 0.24.1
+
+Version follows parent `flet` package.
+
 # 0.24.0
 
 Version follows parent `flet` package.

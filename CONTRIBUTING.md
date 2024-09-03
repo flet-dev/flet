@@ -180,3 +180,18 @@ You will be able to see the debugging outputs of the flet client in this termina
     ```bash
     poetry run flet run -w -p 8550 playground/<your-main.py>
     ```
+
+## Releasing Flet
+
+* Create a new `prepare-{version}` branch in [flet-dev/flet](https://github.com/flet-dev/flet) repository.
+* For every package in `packages/flet*` directory:
+  * Update package version to `{version}` in `pubspec.yaml`.
+  * Add `# {version}` with new/changed/fixed items into `CHANGELOG.md`. Only `packages/flet/CHANGELOG.md` should contain real items; other packages could have just a stub.
+* Copy `# {version}` section from `packages/flet/CHANGELOG.md` to the root `CHANGELOG.md`.
+* Open terminal in `client` directory and run `flutter pub get` to update Flet dependency versions in `client/pubspec.lock`.
+* Create a new `{version}` branch in [flet-dev/flet-app-templates](https://github.com/flet-dev/flet-app-templates) repository from a previously released `{current-version}` branch.
+* Create a new `{version}` branch in [flet-dev/flet-build-template](https://github.com/flet-dev/flet-build-template) repository from a previously released `{current-version}` branch.
+* Create `Prepare Flet {version}` PR to merge into `main` branch.
+* In `Build Flet package for Flutter` job of [Flet CI build](https://ci.appveyor.com/project/flet-dev/flet) make sure analysis report of every `flet*` Flutter package has only 1 issue "Publishable packages can't have 'path' dependencies.".
+* Merge `Prepare Flet {version}` PR.
+* Create and push new `v{version}` tag (with `v` prefix).
