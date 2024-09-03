@@ -98,24 +98,30 @@ class _AudioRecorderControlState extends State<AudioRecorderControl>
         switch (methodName) {
           case "start_recording":
             if (await recorder!.hasPermission()) {
-              await recorder!.start(
-                  RecordConfig(
-                    encoder: audioEncoder,
-                    bitRate: bitRate,
-                    sampleRate: sampleRate,
-                    numChannels: numChannels,
-                    autoGain: autoGain,
-                    echoCancel: cancelEcho,
-                    noiseSuppress: suppressNoise,
-                  ),
-                  path: args["outputPath"] ??
-                      ""); // FIX: a better default value just in case
+              if (args["outputPath"] != null) {
+                await recorder!.start(
+                    RecordConfig(
+                      encoder: audioEncoder,
+                      bitRate: bitRate,
+                      sampleRate: sampleRate,
+                      numChannels: numChannels,
+                      autoGain: autoGain,
+                      echoCancel: cancelEcho,
+                      noiseSuppress: suppressNoise,
+                    ),
+                    path: args["outputPath"]!);
+                return "true";
+              }
+              break;
             }
             return null;
           case "stop_recording":
             debugPrint("AudioRecorder.stopRecording($hashCode)");
             String? out = await recorder!.stop();
             return out;
+          case "cancel_recording":
+            debugPrint("AudioRecorder.cancelRecording($hashCode)");
+            await recorder!.cancel();
           case "resume_recording":
             debugPrint("AudioRecorder.resumeRecording($hashCode)");
             await recorder!.resume();
@@ -129,7 +135,7 @@ class _AudioRecorderControlState extends State<AudioRecorderControl>
                   parseAudioEncoder(args["encoder"]) ?? AudioEncoder.wav);
               return isSupported.toString();
             }
-            return null;
+            break;
           case "is_paused":
             debugPrint("AudioRecorder.isPaused($hashCode)");
             bool isPaused = await recorder!.isPaused();

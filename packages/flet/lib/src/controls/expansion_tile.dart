@@ -58,11 +58,8 @@ class ExpansionTileControl extends StatelessWidget {
     var collapsedIconColor = control.attrColor("collapsedIconColor", context);
     var collapsedTextColor = control.attrColor("collapsedTextColor", context);
 
-    var affinity = ListTileControlAffinity.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            control.attrString("affinity", "")!.toLowerCase(),
-        orElse: () => ListTileControlAffinity.platform);
+    var affinity = parseListTileControlAffinity(
+        control.attrString("affinity"), ListTileControlAffinity.platform)!;
     var clipBehavior =
         parseClip(control.attrString("clipBehavior"), Clip.none)!;
 
@@ -105,6 +102,9 @@ class ExpansionTileControl extends StatelessWidget {
       onExpansionChanged: onChange,
       visualDensity: parseVisualDensity(control.attrString("visualDensity")),
       enableFeedback: control.attrBool("enableFeedback"),
+      showTrailingIcon: control.attrBool("showTrailingIcon", true)!,
+      enabled: !disabled,
+      minTileHeight: control.attrDouble("minTileHeight"),
       dense: control.attrBool("dense"),
       leading: leadingCtrls.isNotEmpty
           ? createControl(control, leadingCtrls.first.id, disabled,

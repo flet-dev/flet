@@ -124,6 +124,8 @@ async def app_async(
     def exit_gracefully(signum, frame):
         logger.debug("Gracefully terminating Flet app...")
         loop.call_soon_threadsafe(terminate.set)
+        signal.signal(signal.SIGINT, signal.SIG_DFL)
+        signal.signal(signal.SIGTERM, signal.SIG_DFL)
 
     signal.signal(signal.SIGINT, exit_gracefully)
     signal.signal(signal.SIGTERM, exit_gracefully)

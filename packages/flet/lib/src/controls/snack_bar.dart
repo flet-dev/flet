@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -59,12 +58,22 @@ class _SnackBarControlState extends State<SnackBarControl> {
     var clipBehavior =
         parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
 
-    SnackBarBehavior? behavior = SnackBarBehavior.values.firstWhereOrNull((a) =>
-        a.name.toLowerCase() ==
-        widget.control.attrString("behavior", "")!.toLowerCase());
+    SnackBarBehavior? behavior =
+        parseSnackBarBehavior(widget.control.attrString("behavior"));
 
     DismissDirection? dismissDirection =
         parseDismissDirection(widget.control.attrString("dismissDirection"));
+    var width = widget.control.attrDouble("width");
+    var margin = parseEdgeInsets(widget.control, "margin");
+
+    // if behavior is not floating, ignore margin and width
+    if (behavior != SnackBarBehavior.floating) {
+      margin = null;
+      width = null;
+    }
+
+    // if width is provided, margin is ignored (both can't be used together)
+    margin = (width != null && margin != null) ? null : margin;
 
     return SnackBar(
         behavior: behavior,
@@ -83,9 +92,9 @@ class _SnackBarControlState extends State<SnackBarControl> {
             parentAdaptive: widget.parentAdaptive),
         backgroundColor: widget.control.attrColor("bgColor", context),
         action: action,
-        margin: parseEdgeInsets(widget.control, "margin"),
+        margin: margin,
         padding: parseEdgeInsets(widget.control, "padding"),
-        width: widget.control.attrDouble("width"),
+        width: width,
         elevation: widget.control.attrDouble("elevation"),
         duration:
             Duration(milliseconds: widget.control.attrInt("duration", 4000)!));

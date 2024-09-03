@@ -1,14 +1,13 @@
-import dataclasses
-from dataclasses import field
+from dataclasses import dataclass, field
 from typing import Optional
 
 
-@dataclasses.dataclass
+@dataclass
 class ChartPointShape:
     pass
 
 
-@dataclasses.dataclass
+@dataclass
 class ChartCirclePoint(ChartPointShape):
     type: str = field(default="circle")
     color: Optional[str] = field(default=None)
@@ -17,7 +16,7 @@ class ChartCirclePoint(ChartPointShape):
     stroke_width: Optional[float] = field(default=None)
 
 
-@dataclasses.dataclass
+@dataclass
 class ChartSquarePoint(ChartPointShape):
     type: str = field(default="square")
     color: Optional[str] = field(default=None)
@@ -26,7 +25,7 @@ class ChartSquarePoint(ChartPointShape):
     stroke_width: Optional[float] = field(default=None)
 
 
-@dataclasses.dataclass
+@dataclass
 class ChartCrossPoint(ChartPointShape):
     type: str = field(default="cross")
     color: Optional[str] = field(default=None)

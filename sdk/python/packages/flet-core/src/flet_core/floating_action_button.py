@@ -4,6 +4,7 @@ from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
@@ -13,6 +14,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     UrlTarget,
+    OptionalControlEventCallable,
 )
 
 
@@ -86,7 +88,7 @@ class FloatingActionButton(ConstrainedControl):
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
         mouse_cursor: Optional[MouseCursor] = None,
-        on_click=None,
+        on_click: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -112,8 +114,8 @@ class FloatingActionButton(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -175,6 +177,9 @@ class FloatingActionButton(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
+        assert (
+            self.text or self.icon or (self.__content and self.__content.visible)
+        ), "at minimum, text, icon or a visible content must be provided"
         self._set_attr_json("shape", self.__shape)
 
     def _get_children(self):
@@ -241,11 +246,11 @@ class FloatingActionButton(ConstrainedControl):
 
     # on_click
     @property
-    def on_click(self):
+    def on_click(self) -> OptionalControlEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalControlEventCallable):
         self._add_event_handler("click", handler)
 
     # content
@@ -259,7 +264,7 @@ class FloatingActionButton(ConstrainedControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
@@ -277,7 +282,7 @@ class FloatingActionButton(ConstrainedControl):
 
     # mini
     @property
-    def mini(self) -> Optional[bool]:
+    def mini(self) -> bool:
         return self._get_attr("mini", data_type="bool", def_value=False)
 
     @mini.setter
@@ -306,7 +311,7 @@ class FloatingActionButton(ConstrainedControl):
 
     # enable_feedback
     @property
-    def enable_feedback(self) -> Optional[bool]:
+    def enable_feedback(self) -> bool:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
 
     @enable_feedback.setter

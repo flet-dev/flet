@@ -1,17 +1,18 @@
-import dataclasses
 import json
+from dataclasses import dataclass, field
 from typing import Any, Optional, List
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
+from flet_core.types import OptionalEventCallable
 
 
-@dataclasses.dataclass
+@dataclass
 class AutoCompleteSuggestion:
-    key: str = dataclasses.field(default=None)
-    value: str = dataclasses.field(default=None)
+    key: str = field(default=None)
+    value: str = field(default=None)
 
 
 class AutoComplete(Control):
@@ -27,7 +28,7 @@ class AutoComplete(Control):
         self,
         suggestions: Optional[List[AutoCompleteSuggestion]] = None,
         suggestions_max_height: OptionalNumber = None,
-        on_select=None,
+        on_select: OptionalEventCallable["AutoCompleteSelectEvent"] = None,
         #
         # Control
         #
@@ -45,11 +46,7 @@ class AutoComplete(Control):
             data=data,
         )
 
-        def convert_event_data(e):
-            d = json.loads(e.data)
-            return AutoCompleteSelectEvent(**d)
-
-        self.__on_select = EventHandler(convert_event_data)
+        self.__on_select = EventHandler(lambda e: AutoCompleteSelectEvent(e))
         self._add_event_handler("select", self.__on_select.get_handler())
 
         self.suggestions = suggestions
@@ -69,7 +66,7 @@ class AutoComplete(Control):
 
     # suggestions_max_height
     @property
-    def suggestions_max_height(self) -> OptionalNumber:
+    def suggestions_max_height(self) -> float:
         return self._get_attr(
             "suggestionsMaxHeight", data_type="float", def_value=200.0
         )
@@ -90,16 +87,18 @@ class AutoComplete(Control):
 
     # on_select
     @property
-    def on_select(self):
-        return self._get_event_handler("select")
+    def on_select(self) -> OptionalEventCallable["AutoCompleteSelectEvent"]:
+        return self.__on_select.handler
 
     @on_select.setter
-    def on_select(self, handler):
-        self.__on_select.subscribe(handler)
+    def on_select(self, handler: OptionalEventCallable["AutoCompleteSelectEvent"]):
+        self.__on_select.handler = handler
 
 
 class AutoCompleteSelectEvent(ControlEvent):
-    def __init__(self, key: str, value: str) -> None:
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
         self.selection: AutoCompleteSuggestion = AutoCompleteSuggestion(
-            key=key, value=value
+            key=d.get("key"), value=d.get("value")
         )

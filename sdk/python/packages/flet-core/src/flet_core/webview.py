@@ -3,12 +3,14 @@ from typing import Any, Optional, Union
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalControlEventCallable,
 )
 
 
@@ -78,9 +80,9 @@ class WebView(ConstrainedControl):
         javascript_enabled: bool = True,
         prevent_link: str = "none",
         bgcolor: Optional[str] = None,
-        on_page_started=None,
-        on_page_ended=None,
-        on_web_resource_error=None,
+        on_page_started: OptionalControlEventCallable = None,
+        on_page_ended: OptionalControlEventCallable = None,
+        on_web_resource_error: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -106,8 +108,8 @@ class WebView(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -192,27 +194,27 @@ class WebView(ConstrainedControl):
 
     # on_page_started
     @property
-    def on_page_started(self):
+    def on_page_started(self) -> OptionalControlEventCallable:
         return self._get_event_handler("page_started")
 
     @on_page_started.setter
-    def on_page_started(self, handler):
+    def on_page_started(self, handler: OptionalControlEventCallable):
         self._add_event_handler("page_started", handler)
 
     # on_page_ended
     @property
-    def on_page_ended(self):
+    def on_page_ended(self) -> OptionalControlEventCallable:
         return self._get_event_handler("page_ended")
 
     @on_page_ended.setter
-    def on_page_ended(self, handler):
+    def on_page_ended(self, handler: OptionalControlEventCallable):
         self._add_event_handler("page_ended", handler)
 
     # on_web_resource_error
     @property
-    def on_web_resource_error(self):
+    def on_web_resource_error(self) -> OptionalControlEventCallable:
         return self._get_event_handler("web_resource_error")
 
     @on_web_resource_error.setter
-    def on_web_resource_error(self, handler):
+    def on_web_resource_error(self, handler: OptionalControlEventCallable):
         self._add_event_handler("web_resource_error", handler)

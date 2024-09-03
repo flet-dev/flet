@@ -1,8 +1,9 @@
-from typing import Any, Optional, Union, List
+from typing import Any, Optional, Sequence, Union
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber, Control
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -10,6 +11,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     PaddingValue,
+    OptionalControlEventCallable,
 )
 
 
@@ -23,12 +25,12 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
 
     def __init__(
         self,
-        controls: List[Control],
+        controls: Sequence[Control],
         selected_index: Optional[int] = None,
         bgcolor: Optional[str] = None,
         thumb_color: Optional[str] = None,
         padding: PaddingValue = None,
-        on_change=None,
+        on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -54,8 +56,8 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -116,12 +118,12 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: List[Control]):
-        self.__controls = value
+    def controls(self, value: Sequence[Control]):
+        self.__controls = list(value)
 
     # selected_index
     @property
-    def selected_index(self) -> Optional[int]:
+    def selected_index(self) -> int:
         return self._get_attr("selectedIndex", data_type="int", def_value=0)
 
     @selected_index.setter
@@ -160,9 +162,9 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)

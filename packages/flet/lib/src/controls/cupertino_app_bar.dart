@@ -37,35 +37,40 @@ class CupertinoAppBarControl extends StatelessWidget
     var trailingCtrls = children.where(
         (c) => (c.name == "trailing" || c.name == "action") && c.isVisible);
 
-    var automaticallyImplyLeading =
-        control.attrBool("automaticallyImplyLeading", true)!;
-    var automaticallyImplyMiddle =
-        control.attrBool("automaticallyImplyMiddle", true)!;
-    var transitionBetweenRoutes =
-        control.attrBool("transitionBetweenRoutes", true)!;
-    var bgcolor = control.attrColor("bgcolor", context);
-
-    return CupertinoNavigationBar(
+    var bar = CupertinoNavigationBar(
       leading: leadingCtrls.isNotEmpty
           ? createControl(control, leadingCtrls.first.id, control.isDisabled,
               parentAdaptive: parentAdaptive)
           : null,
-      automaticallyImplyLeading: automaticallyImplyLeading,
-      automaticallyImplyMiddle: automaticallyImplyMiddle,
-      transitionBetweenRoutes: transitionBetweenRoutes,
+      automaticallyImplyLeading:
+          control.attrBool("automaticallyImplyLeading", true)!,
+      automaticallyImplyMiddle:
+          control.attrBool("automaticallyImplyMiddle", true)!,
+      transitionBetweenRoutes:
+          control.attrBool("transitionBetweenRoutes", true)!,
       border: parseBorder(Theme.of(context), control, "border"),
       previousPageTitle: control.attrString("previousPageTitle"),
       padding: parseEdgeInsetsDirectional(control, "padding"),
+      backgroundColor: control.attrColor("bgcolor", context),
       middle: middleCtrls.isNotEmpty
           ? createControl(control, middleCtrls.first.id, control.isDisabled,
               parentAdaptive: parentAdaptive)
           : null,
-      trailing: trailingCtrls.isNotEmpty
+      trailing: trailingCtrls.length == 1
           ? createControl(control, trailingCtrls.first.id, control.isDisabled,
-              parentAdaptive: parentAdaptive) // todo: wrap in row?
-          : null,
-      backgroundColor: bgcolor,
+              parentAdaptive: parentAdaptive)
+          : trailingCtrls.length > 1
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: trailingCtrls
+                      .map((c) => createControl(
+                          control, c.id, control.isDisabled,
+                          parentAdaptive: parentAdaptive))
+                      .toList(),
+                )
+              : null,
     );
+    return baseControl(context, bar, parent, control);
   }
 
   @override

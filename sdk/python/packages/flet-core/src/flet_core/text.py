@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from enum import Enum
 from typing import Any, List, Optional, Union
 from warnings import warn
@@ -6,7 +7,8 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_span import TextSpan
-from flet_core.text_style import TextStyle
+from flet_core.text_style import TextStyle, TextThemeStyle, TextOverflow
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     FontWeight,
@@ -15,6 +17,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     TextAlign,
+    OptionalControlEventCallable,
 )
 
 try:
@@ -23,29 +26,23 @@ except ImportError:
     from typing_extensions import Literal
 
 
-class TextOverflow(Enum):
-    CLIP = "clip"
-    ELLIPSIS = "ellipsis"
-    FADE = "fade"
-    VISIBLE = "visible"
+class TextAffinity(Enum):
+    UPSTREAM = "upstream"
+    DOWNSTREAM = "downstream"
 
 
-class TextThemeStyle(Enum):
-    DISPLAY_LARGE = "displayLarge"
-    DISPLAY_MEDIUM = "displayMedium"
-    DISPLAY_SMALL = "displaySmall"
-    HEADLINE_LARGE = "headlineLarge"
-    HEADLINE_MEDIUM = "headlineMedium"
-    HEADLINE_SMALL = "headlineSmall"
-    TITLE_LARGE = "titleLarge"
-    TITLE_MEDIUM = "titleMedium"
-    TITLE_SMALL = "titleSmall"
-    LABEL_LARGE = "labelLarge"
-    LABEL_MEDIUM = "labelMedium"
-    LABEL_SMALL = "labelSmall"
-    BODY_LARGE = "bodyLarge"
-    BODY_MEDIUM = "bodyMedium"
-    BODY_SMALL = "bodySmall"
+@dataclass
+class TextSelection:
+    start: Optional[int] = None
+    end: Optional[int] = None
+    selection: Optional[str] = None
+    base_offset: Optional[int] = None
+    extent_offset: Optional[int] = None
+    affinity: Optional[TextAffinity] = None
+    directional: Optional[bool] = None
+    collapsed: Optional[bool] = None
+    valid: Optional[bool] = None
+    normalized: Optional[bool] = None
 
 
 class Text(ConstrainedControl):
@@ -120,8 +117,8 @@ class Text(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -275,7 +272,7 @@ class Text(ConstrainedControl):
 
     # italic
     @property
-    def italic(self) -> Optional[bool]:
+    def italic(self) -> bool:
         return self._get_attr("italic", data_type="bool", def_value=False)
 
     @italic.setter
@@ -284,7 +281,7 @@ class Text(ConstrainedControl):
 
     # no_wrap
     @property
-    def no_wrap(self) -> Optional[bool]:
+    def no_wrap(self) -> bool:
         return self._get_attr("italic", data_type="noWrap", def_value=False)
 
     @no_wrap.setter
@@ -293,7 +290,7 @@ class Text(ConstrainedControl):
 
     # selectable
     @property
-    def selectable(self) -> Optional[bool]:
+    def selectable(self) -> bool:
         return self._get_attr("selectable", data_type="bool", def_value=False)
 
     @selectable.setter

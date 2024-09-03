@@ -6,6 +6,7 @@ from flet_core.control import Control
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
+from flet_core.types import OptionalControlEventCallable, OptionalEventCallable
 
 
 class DragTarget(Control):
@@ -106,10 +107,10 @@ class DragTarget(Control):
         self,
         content: Control,
         group: Optional[str] = None,
-        on_will_accept=None,
-        on_accept=None,
-        on_leave=None,
-        on_move=None,
+        on_will_accept: OptionalControlEventCallable = None,
+        on_accept: OptionalEventCallable["DragTargetEvent"] = None,
+        on_leave: OptionalControlEventCallable = None,
+        on_move: OptionalEventCallable["DragTargetEvent"] = None,
         #
         # Control
         #
@@ -127,12 +128,8 @@ class DragTarget(Control):
             data=data,
         )
 
-        def convert_event_data(e):
-            d = json.loads(e.data)
-            return DragTargetEvent(**d)
-
-        self.__on_accept = EventHandler(convert_event_data)
-        self.__on_move = EventHandler(convert_event_data)
+        self.__on_accept = EventHandler(lambda e: DragTargetEvent(e))
+        self.__on_move = EventHandler(lambda e: DragTargetEvent(e))
         self._add_event_handler("accept", self.__on_accept.get_handler())
         self._add_event_handler("move", self.__on_move.get_handler())
 
@@ -174,56 +171,60 @@ class DragTarget(Control):
 
     # on_will_accept
     @property
-    def on_will_accept(self):
+    def on_will_accept(self) -> OptionalControlEventCallable:
         return self._get_event_handler("will_accept")
 
     @on_will_accept.setter
-    def on_will_accept(self, handler):
+    def on_will_accept(self, handler: OptionalControlEventCallable):
         self._add_event_handler("will_accept", handler)
 
     # on_accept
     @property
-    def on_accept(self):
-        return self.__on_accept
+    def on_accept(self) -> OptionalEventCallable["DragTargetEvent"]:
+        return self.__on_accept.handler
 
     @on_accept.setter
-    def on_accept(self, handler):
-        self.__on_accept.subscribe(handler)
+    def on_accept(self, handler: OptionalEventCallable["DragTargetEvent"]):
+        self.__on_accept.handler = handler
 
     # on_leave
     @property
-    def on_leave(self):
+    def on_leave(self) -> OptionalControlEventCallable:
         return self._get_event_handler("leave")
 
     @on_leave.setter
-    def on_leave(self, handler):
+    def on_leave(self, handler: OptionalControlEventCallable):
         self._add_event_handler("leave", handler)
 
     # on_move
     @property
-    def on_move(self):
-        return self.__on_move
+    def on_move(self) -> OptionalEventCallable["DragTargetEvent"]:
+        return self.__on_move.handler
 
     @on_move.setter
-    def on_move(self, handler):
-        self.__on_move.subscribe(handler)
+    def on_move(self, handler: OptionalEventCallable["DragTargetEvent"]):
+        self.__on_move.handler = handler
 
 
 class DragTargetAcceptEvent(ControlEvent):
-    def __init__(self, src_id, x, y) -> None:
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
         warn(
             f"{self.__class__.__name__} is deprecated since version 0.22.0 "
-            f"and will be removed in version 1.0. Use DragTargetEvent instead.",
+            f"and will be removed in version 0.26.0. Use DragTargetEvent instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
-        self.src_id: float = src_id
-        self.x: float = x
-        self.y: float = y
+        self.src_id: float = d.get("src_id")
+        self.x: float = d.get("x")
+        self.y: float = d.get("y")
 
 
 class DragTargetEvent(ControlEvent):
-    def __init__(self, src_id, x, y) -> None:
-        self.src_id: float = src_id
-        self.x: float = x
-        self.y: float = y
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.src_id: float = d.get("src_id")
+        self.x: float = d.get("x")
+        self.y: float = d.get("y")

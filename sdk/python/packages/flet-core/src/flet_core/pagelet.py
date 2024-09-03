@@ -11,6 +11,7 @@ from flet_core.floating_action_button import FloatingActionButton
 from flet_core.navigation_bar import NavigationBar
 from flet_core.navigation_drawer import NavigationDrawer
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     FloatingActionButtonLocation,
@@ -18,6 +19,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -88,8 +90,8 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -188,7 +190,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use show_drawer() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def show_drawer_async(self, drawer: NavigationDrawer):
         self.show_drawer(drawer)
@@ -201,7 +203,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use close_end_drawer() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def close_drawer_async(self):
         self.close_end_drawer()
@@ -216,7 +218,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use show_end_drawer() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def show_end_drawer_async(self, end_drawer: NavigationDrawer):
         self.show_end_drawer(end_drawer)
@@ -229,7 +231,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use close_end_drawer() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def close_end_drawer_async(self):
         self.close_end_drawer()

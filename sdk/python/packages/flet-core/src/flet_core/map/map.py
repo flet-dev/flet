@@ -1,15 +1,18 @@
 from typing import Any, Optional, Union, List
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber, Control
+from flet_core.control import OptionalNumber
 from flet_core.map.map_configuration import MapConfiguration
+from flet_core.map.map_layer import MapLayer
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalControlEventCallable,
 )
 
 
@@ -24,8 +27,8 @@ class Map(ConstrainedControl):
 
     def __init__(
         self,
-        layers: List[Control] = None,
-        configuration: Optional[MapConfiguration] = None,
+        layers: List[MapLayer],
+        configuration: MapConfiguration = MapConfiguration(),
         #
         # ConstrainedControl
         #
@@ -51,8 +54,8 @@ class Map(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -99,18 +102,18 @@ class Map(ConstrainedControl):
 
     # configuration
     @property
-    def configuration(self) -> Optional[MapConfiguration]:
+    def configuration(self) -> MapConfiguration:
         return self.__configuration
 
     @configuration.setter
-    def configuration(self, value: Optional[MapConfiguration]):
+    def configuration(self, value: MapConfiguration):
         self.__configuration = value
 
     # layers
     @property
-    def layers(self) -> List[Control]:
+    def layers(self) -> List[MapLayer]:
         return self.__layers
 
     @layers.setter
-    def layers(self, value: List[Control]):
+    def layers(self, value: List[MapLayer]):
         self.__layers = value

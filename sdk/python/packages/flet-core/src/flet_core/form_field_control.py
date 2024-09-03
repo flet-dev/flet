@@ -5,6 +5,7 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
@@ -14,6 +15,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     VerticalAlignment,
+    OptionalControlEventCallable,
 )
 
 try:
@@ -56,6 +58,7 @@ class FormFieldControl(ConstrainedControl):
         hint_style: Optional[TextStyle] = None,
         helper_text: Optional[str] = None,
         helper_style: Optional[TextStyle] = None,
+        counter: Optional[Control] = None,
         counter_text: Optional[str] = None,
         counter_style: Optional[TextStyle] = None,
         error_text: Optional[str] = None,
@@ -94,8 +97,8 @@ class FormFieldControl(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -155,6 +158,7 @@ class FormFieldControl(ConstrainedControl):
         self.hint_style = hint_style
         self.helper_text = helper_text
         self.helper_style = helper_style
+        self.counter = counter
         self.counter_text = counter_text
         self.counter_style = counter_style
         self.error_text = error_text
@@ -191,6 +195,9 @@ class FormFieldControl(ConstrainedControl):
         if isinstance(self.__suffix, Control):
             self.__suffix._set_attr_internal("n", "suffix")
             children.append(self.__suffix)
+        if isinstance(self.__counter, Control):
+            self.__counter._set_attr_internal("n", "counter")
+            children.append(self.__counter)
         return children
 
     # text_size
@@ -352,8 +359,8 @@ class FormFieldControl(ConstrainedControl):
 
     # dense
     @property
-    def dense(self) -> Optional[bool]:
-        return self._get_attr("dense")
+    def dense(self) -> bool:
+        return self._get_attr("dense", data_type="bool", def_value=False)
 
     @dense.setter
     def dense(self, value: Optional[bool]):
@@ -362,7 +369,7 @@ class FormFieldControl(ConstrainedControl):
     # filled
     @property
     def filled(self) -> Optional[bool]:
-        return self._get_attr("filled", data_type=bool)
+        return self._get_attr("filled", data_type="bool")
 
     @filled.setter
     def filled(self, value: Optional[bool]):
@@ -448,6 +455,15 @@ class FormFieldControl(ConstrainedControl):
     @prefix.setter
     def prefix(self, value: Optional[Control]):
         self.__prefix = value
+
+    # counter
+    @property
+    def counter(self) -> Optional[Control]:
+        return self.__counter
+
+    @counter.setter
+    def counter(self, value: Optional[Control]):
+        self.__counter = value
 
     # prefix_icon
     @property

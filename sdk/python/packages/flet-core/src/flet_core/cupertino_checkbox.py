@@ -3,6 +3,7 @@ from typing import Any, Optional, Union
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     LabelPosition,
@@ -10,6 +11,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalControlEventCallable,
 )
 
 
@@ -48,9 +50,9 @@ class CupertinoCheckbox(ConstrainedControl):
         active_color: Optional[str] = None,
         inactive_color: Optional[str] = None,
         focus_color: Optional[str] = None,
-        on_change=None,
-        on_focus=None,
-        on_blur=None,
+        on_change: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -76,8 +78,8 @@ class CupertinoCheckbox(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -141,7 +143,7 @@ class CupertinoCheckbox(ConstrainedControl):
 
     # tristate
     @property
-    def tristate(self) -> Optional[bool]:
+    def tristate(self) -> bool:
         return self._get_attr("tristate", data_type="bool", def_value=False)
 
     @tristate.setter
@@ -169,7 +171,7 @@ class CupertinoCheckbox(ConstrainedControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
@@ -214,27 +216,27 @@ class CupertinoCheckbox(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
 
     # on_focus
     @property
-    def on_focus(self):
+    def on_focus(self) -> OptionalControlEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler):
+    def on_focus(self, handler: OptionalControlEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self):
+    def on_blur(self) -> OptionalControlEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler):
+    def on_blur(self, handler: OptionalControlEventCallable):
         self._add_event_handler("blur", handler)

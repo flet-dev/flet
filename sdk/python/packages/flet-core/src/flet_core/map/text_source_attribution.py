@@ -3,6 +3,7 @@ from typing import Any, Optional
 from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.types import OptionalControlEventCallable
 
 
 class TextSourceAttribution(Control):
@@ -20,7 +21,7 @@ class TextSourceAttribution(Control):
         text: str,
         text_style: Optional[TextStyle] = None,
         prepend_copyright: Optional[bool] = None,
-        on_click=None,
+        on_click: OptionalControlEventCallable = None,
         #
         # Control
         #
@@ -42,7 +43,7 @@ class TextSourceAttribution(Control):
         self.on_click = on_click
 
     def _get_control_name(self):
-        return "maptextsourceattribution"
+        return "map_text_source_attribution"
 
     def before_update(self):
         super().before_update()
@@ -60,7 +61,7 @@ class TextSourceAttribution(Control):
 
     # prepend_copyright
     @property
-    def prepend_copyright(self) -> Optional[bool]:
+    def prepend_copyright(self) -> bool:
         return self._get_attr("prependCopyright", data_type="bool", def_value=True)
 
     @prepend_copyright.setter
@@ -78,9 +79,9 @@ class TextSourceAttribution(Control):
 
     # on_click
     @property
-    def on_click(self):
+    def on_click(self) -> OptionalControlEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalControlEventCallable):
         self._add_event_handler("click", handler)

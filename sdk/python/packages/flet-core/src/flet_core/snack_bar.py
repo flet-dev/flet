@@ -1,11 +1,15 @@
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control, OptionalNumber
-from flet_core.padding import Padding
 from flet_core.ref import Ref
-from flet_core.types import MarginValue, PaddingValue, ClipBehavior
+from flet_core.types import (
+    MarginValue,
+    PaddingValue,
+    ClipBehavior,
+    OptionalControlEventCallable,
+)
 
 
 class SnackBarBehavior(Enum):
@@ -80,8 +84,8 @@ class SnackBar(Control):
         shape: Optional[OutlinedBorder] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         action_overflow_threshold: OptionalNumber = None,
-        on_action=None,
-        on_visible=None,
+        on_action: OptionalControlEventCallable = None,
+        on_visible: OptionalControlEventCallable = None,
         #
         # Control
         #
@@ -129,13 +133,11 @@ class SnackBar(Control):
         super().before_update()
         self._set_attr_json("shape", self.__shape)
         self._set_attr_json("padding", self.__padding)
-        if isinstance(self.__margin, Union[int, float, Padding]) and not self.width:
-            # margin and width cannot be set together - if width is set, margin is ignored
-            self._set_attr_json("margin", self.__margin)
+        self._set_attr_json("margin", self.__margin)
 
     # open
     @property
-    def open(self) -> Optional[bool]:
+    def open(self) -> bool:
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
@@ -144,7 +146,7 @@ class SnackBar(Control):
 
     # show_close_icon
     @property
-    def show_close_icon(self) -> Optional[bool]:
+    def show_close_icon(self) -> bool:
         return self._get_attr("showCloseIcon", data_type="bool", def_value=False)
 
     @show_close_icon.setter
@@ -207,7 +209,7 @@ class SnackBar(Control):
 
     # action_overflow_threshold
     @property
-    def action_overflow_threshold(self) -> OptionalNumber:
+    def action_overflow_threshold(self) -> float:
         return self._get_attr(
             "actionOverflowThreshold", data_type="float", def_value=0.25
         )
@@ -297,18 +299,18 @@ class SnackBar(Control):
 
     # on_action
     @property
-    def on_action(self):
+    def on_action(self) -> OptionalControlEventCallable:
         return self._get_event_handler("action")
 
     @on_action.setter
-    def on_action(self, handler):
+    def on_action(self, handler: OptionalControlEventCallable):
         self._add_event_handler("action", handler)
 
     # on_visible
     @property
-    def on_visible(self):
+    def on_visible(self) -> OptionalControlEventCallable:
         return self._get_event_handler("visible")
 
     @on_visible.setter
-    def on_visible(self, handler):
+    def on_visible(self, handler: OptionalControlEventCallable):
         self._add_event_handler("visible", handler)

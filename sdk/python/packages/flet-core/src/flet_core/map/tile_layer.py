@@ -1,9 +1,11 @@
 from enum import Enum
 from typing import Any, Optional, List, Dict
 
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import OptionalNumber
 from flet_core.map.map_configuration import MapLatitudeLongitudeBounds
+from flet_core.map.map_layer import MapLayer
 from flet_core.ref import Ref
+from flet_core.types import OptionalControlEventCallable
 
 
 class MapTileLayerEvictErrorTileStrategy(Enum):
@@ -12,10 +14,10 @@ class MapTileLayerEvictErrorTileStrategy(Enum):
     NOT_VISIBLE_RESPECT_MARGIN = "notVisibleRespectMargin"
 
 
-class TileLayer(Control):
+class TileLayer(MapLayer):
     """
-    The Map's main item.
-    It displays square raster images in a continuous grid, sourced from the provided utl_template.
+    The Map's main layer.
+    Displays square raster images in a continuous grid, sourced from the provided utl_template.
 
     -----
 
@@ -24,7 +26,7 @@ class TileLayer(Control):
 
     def __init__(
         self,
-        url_template: str = None,
+        url_template: str,
         fallback_url: Optional[str] = None,
         subdomains: Optional[List[str]] = None,
         tile_bounds: Optional[MapLatitudeLongitudeBounds] = None,
@@ -43,16 +45,16 @@ class TileLayer(Control):
         min_zoom: OptionalNumber = None,
         error_image_src: Optional[str] = None,
         evict_error_tile_strategy: Optional[MapTileLayerEvictErrorTileStrategy] = None,
-        on_image_error=None,
+        on_image_error: OptionalControlEventCallable = None,
         #
-        # Control
+        # MapLayer
         #
         ref: Optional[Ref] = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):
 
-        Control.__init__(
+        MapLayer.__init__(
             self,
             ref=ref,
             visible=visible,
@@ -81,10 +83,11 @@ class TileLayer(Control):
         self.additional_options = additional_options
 
     def _get_control_name(self):
-        return "maptilelayer"
+        return "map_tile_layer"
 
     def before_update(self):
         super().before_update()
+        assert self.url_template, "url_template is required"
         if isinstance(self.__tile_bounds, MapLatitudeLongitudeBounds):
             self._set_attr_json("tileBounds", self.__tile_bounds)
         if isinstance(self.__subdomains, list):
@@ -139,34 +142,37 @@ class TileLayer(Control):
 
     # tile_size
     @property
-    def tile_size(self) -> OptionalNumber:
+    def tile_size(self) -> float:
         return self._get_attr("tileSize", data_type="float", def_value=256.0)
 
     @tile_size.setter
     def tile_size(self, value: OptionalNumber):
+        assert value is None or value >= 0, "tile_size cannot be negative"
         self._set_attr("tileSize", value)
 
     # min_native_zoom
     @property
-    def min_native_zoom(self) -> Optional[int]:
-        return self._get_attr("minNativeZoom", data_type="int", def_value=0)
+    def min_native_zoom(self) -> int:
+        return self._get_attr("minNativeZoom", data_type="int", def_value=0.0)
 
     @min_native_zoom.setter
     def min_native_zoom(self, value: Optional[int]):
+        assert value is None or value >= 0, "min_native_zoom cannot be negative"
         self._set_attr("minNativeZoom", value)
 
     # max_native_zoom
     @property
-    def max_native_zoom(self) -> Optional[int]:
+    def max_native_zoom(self) -> int:
         return self._get_attr("maxNativeZoom", data_type="int", def_value=19)
 
     @max_native_zoom.setter
     def max_native_zoom(self, value: Optional[int]):
+        assert value is None or value >= 0, "max_native_zoom cannot be negative"
         self._set_attr("maxNativeZoom", value)
 
     # zoom_reverse
     @property
-    def zoom_reverse(self) -> Optional[bool]:
+    def zoom_reverse(self) -> bool:
         return self._get_attr("zoomReverse", data_type="bool", def_value=False)
 
     @zoom_reverse.setter
@@ -175,16 +181,17 @@ class TileLayer(Control):
 
     # zoom_offset
     @property
-    def zoom_offset(self) -> OptionalNumber:
+    def zoom_offset(self) -> float:
         return self._get_attr("zoomOffset", data_type="float", def_value=0.0)
 
     @zoom_offset.setter
     def zoom_offset(self, value: OptionalNumber):
+        assert value is None or value >= 0, "zoom_offset cannot be negative"
         self._set_attr("zoomOffset", value)
 
     # keep_buffer
     @property
-    def keep_buffer(self) -> Optional[int]:
+    def keep_buffer(self) -> int:
         return self._get_attr("keepBuffer", data_type="int", def_value=2)
 
     @keep_buffer.setter
@@ -193,7 +200,7 @@ class TileLayer(Control):
 
     # pan_buffer
     @property
-    def pan_buffer(self) -> Optional[int]:
+    def pan_buffer(self) -> int:
         return self._get_attr("panBuffer", data_type="int", def_value=2)
 
     @pan_buffer.setter
@@ -202,7 +209,7 @@ class TileLayer(Control):
 
     # enable_tms
     @property
-    def enable_tms(self) -> Optional[bool]:
+    def enable_tms(self) -> bool:
         return self._get_attr("enableTms", data_type="bool", def_value=False)
 
     @enable_tms.setter
@@ -211,7 +218,7 @@ class TileLayer(Control):
 
     # enable_retina_mode
     @property
-    def enable_retina_mode(self) -> Optional[bool]:
+    def enable_retina_mode(self) -> bool:
         return self._get_attr("enableRetinaMode", data_type="bool", def_value=False)
 
     @enable_retina_mode.setter
@@ -220,20 +227,22 @@ class TileLayer(Control):
 
     # max_zoom
     @property
-    def max_zoom(self) -> OptionalNumber:
+    def max_zoom(self) -> float:
         return self._get_attr("maxZoom", data_type="float", def_value=float("inf"))
 
     @max_zoom.setter
     def max_zoom(self, value: OptionalNumber):
+        assert value is None or value >= 0, "max_zoom cannot be negative"
         self._set_attr("maxZoom", value)
 
     # min_zoom
     @property
-    def min_zoom(self) -> OptionalNumber:
+    def min_zoom(self) -> float:
         return self._get_attr("minZoom", data_type="float", def_value=0.0)
 
     @min_zoom.setter
     def min_zoom(self, value: OptionalNumber):
+        assert value is None or value >= 0, "min_zoom cannot be negative"
         self._set_attr("minZoom", value)
 
     # error_image_src
@@ -261,9 +270,9 @@ class TileLayer(Control):
 
     # on_image_error
     @property
-    def on_image_error(self):
+    def on_image_error(self) -> OptionalControlEventCallable:
         return self._get_event_handler("imageError")
 
     @on_image_error.setter
-    def on_image_error(self, handler):
+    def on_image_error(self, handler: OptionalControlEventCallable):
         self._add_event_handler("imageError", handler)

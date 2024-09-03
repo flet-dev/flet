@@ -5,12 +5,14 @@ from typing import Any, Optional, Union
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalControlEventCallable,
 )
 
 
@@ -50,7 +52,7 @@ class CupertinoDatePicker(ConstrainedControl):
         use_24h_format: Optional[bool] = None,
         date_picker_mode: Optional[CupertinoDatePickerMode] = None,
         date_order: Optional[CupertinoDatePickerDateOrder] = None,
-        on_change=None,
+        on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -76,8 +78,8 @@ class CupertinoDatePicker(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -179,7 +181,7 @@ class CupertinoDatePicker(ConstrainedControl):
 
     # item_extent
     @property
-    def item_extent(self) -> OptionalNumber:
+    def item_extent(self) -> float:
         return self._get_attr("itemExtent", data_type="float", def_value=32.0)
 
     @item_extent.setter
@@ -190,7 +192,7 @@ class CupertinoDatePicker(ConstrainedControl):
 
     # min_year
     @property
-    def min_year(self) -> Optional[int]:
+    def min_year(self) -> int:
         return self._get_attr("minYear", data_type="int", def_value=1)
 
     @min_year.setter
@@ -208,7 +210,7 @@ class CupertinoDatePicker(ConstrainedControl):
 
     # minute_interval
     @property
-    def minute_interval(self) -> Optional[int]:
+    def minute_interval(self) -> int:
         return self._get_attr("minuteInterval", data_type="int", def_value=1)
 
     @minute_interval.setter
@@ -248,9 +250,9 @@ class CupertinoDatePicker(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)

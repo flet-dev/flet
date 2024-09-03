@@ -2,7 +2,7 @@ name: flet_permission_handler
 description: Flet PermissionHandler control
 homepage: https://flet.dev
 repository: https://github.com/flet-dev/flet/packages/flet_permission_handler
-version: 0.23.0
+version: 0.24.1
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
@@ -14,6 +14,7 @@ dependencies:
 
   collection: ^1.16.0
   permission_handler: ^11.3.1
+  permission_handler_html: ^0.1.3+2
 
   flet:
     path: ../flet/

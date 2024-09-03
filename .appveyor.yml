@@ -10,6 +10,7 @@ skip_commits:
 
 environment:
   python_stack: python 3.12
+  FLUTTER_VERSION: 3.24.1
   GITHUB_TOKEN:
     secure: 9SKIwc3VSfYJ5IChvNR74hQprJ0DRmcV9pPX+8KyE6IXIdfMsX6ikeUmMhJGRu3ztkZaF45jmU7Xn/6tauXQXhDBxK1N8kFHFSAnq6LjUXyhS0TZKX/H+jDozBeVbCXp
   TWINE_USERNAME: __token__
@@ -20,7 +21,7 @@ environment:
   matrix:
     - job_name: Build Flet package for Flutter
       job_group: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu
 
     - job_name: Build Flet for Windows
       job_group: build_flet
@@ -92,6 +93,11 @@ environment:
       python_stack: python 3.12
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
+    - job_name: Test Python 3.12
+      job_group: python_tests
+      python_stack: python 3.12
+      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+
     - job_name: Build Python wheels
       job_group: python_build
       job_depends_on: python_tests, build_flet, build_flet_linux
@@ -121,7 +127,7 @@ for:
           }
           Update-AppveyorBuild -Version $env:PKG_VER
       - pip3 install pyyaml
-      - flutter upgrade --force
+      - source ci/install_flutter.sh
 
     build_script:
       - sh: |
@@ -130,75 +136,40 @@ for:
             echo $PUB_DEV_TOKEN | base64 --decode > $HOME/.config/dart/pub-credentials.json
 
             # patch pubspecs
-            python3 ci/patch_pubspec.py packages/flet/pubspec.yaml $PKG_VER
-            python3 ci/patch_pubspec.py packages/flet_audio/pubspec.yaml $PKG_VER
-            python3 ci/patch_pubspec.py packages/flet_audio_recorder/pubspec.yaml $PKG_VER
-            python3 ci/patch_pubspec.py packages/flet_lottie/pubspec.yaml $PKG_VER
-            python3 ci/patch_pubspec.py packages/flet_rive/pubspec.yaml $PKG_VER
-            python3 ci/patch_pubspec.py packages/flet_video/pubspec.yaml $PKG_VER
-            python3 ci/patch_pubspec.py packages/flet_webview/pubspec.yaml $PKG_VER
+            for dir in packages/flet*; do
+              echo "Patching $dir/pubspec.yaml"
+              python3 ci/patch_pubspec.py $dir/pubspec.yaml $PKG_VER
+            done
 
             cd packages/flet
-            flutter test
+            echo "Running flet tests"
+            flutter test || exit 1
             dart pub publish --force || exit 1
             cd $APPVEYOR_BUILD_FOLDER
 
-            sleep 10
+            sleep 120
 
-            cd packages/flet_audio
-            dart pub publish --force || exit 1
-            cd $APPVEYOR_BUILD_FOLDER
-
-            cd packages/flet_audio_recorder
-            dart pub publish --force || exit 1
-            cd $APPVEYOR_BUILD_FOLDER
-
-            cd packages/flet_lottie
-            dart pub publish --force || exit 1
-            cd $APPVEYOR_BUILD_FOLDER
-
-            cd packages/flet_rive
-            dart pub publish --force || exit 1
-            cd $APPVEYOR_BUILD_FOLDER
-
-            cd packages/flet_video
-            dart pub publish --force || exit 1
-            cd $APPVEYOR_BUILD_FOLDER
-
-            cd packages/flet_webview
-            dart pub publish --force || exit 1
-            cd $APPVEYOR_BUILD_FOLDER
+            for dir in packages/flet_*; do
+              cd "$dir"
+              echo "Publishing $dir package"
+              dart pub publish --force || exit 1
+              cd "$APPVEYOR_BUILD_FOLDER"
+            done
 
           else
 
             cd packages/flet
-            flutter test
+            echo "Running flet tests"
+            flutter test || exit 1
             dart pub publish --dry-run
             cd $APPVEYOR_BUILD_FOLDER
 
-            cd packages/flet_audio
-            dart pub publish --dry-run
-            cd $APPVEYOR_BUILD_FOLDER
-
-            cd packages/flet_audio_recorder
-            dart pub publish --dry-run
-            cd $APPVEYOR_BUILD_FOLDER
-
-            cd packages/flet_lottie
-            dart pub publish --dry-run
-            cd $APPVEYOR_BUILD_FOLDER
-
-            cd packages/flet_rive
-            dart pub publish --dry-run
-            cd $APPVEYOR_BUILD_FOLDER
-
-            cd packages/flet_video
-            dart pub publish --dry-run
-            cd $APPVEYOR_BUILD_FOLDER
-
-            cd packages/flet_webview
-            dart pub publish --dry-run
-            cd $APPVEYOR_BUILD_FOLDER
+            for dir in packages/flet_*; do
+              cd "$dir"
+              echo "Dry-run publishing $dir package"
+              dart pub publish --dry-run
+              cd "$APPVEYOR_BUILD_FOLDER"
+            done
           fi
 
   # ======================================
@@ -210,9 +181,11 @@ for:
         - job_name: Build Flet for Windows
 
     install:
-      - python --version
-      - pip install --upgrade setuptools wheel twine poetry tomlkit virtualenv
-      - flutter upgrade --force
+      - dart pub global activate fvm
+      - set PATH=%LOCALAPPDATA%\Pub\Cache\bin;%USERPROFILE%\fvm\default\bin;%PATH%
+      - fvm install %FLUTTER_VERSION%
+      - fvm global %FLUTTER_VERSION%
+      - flutter --version
 
     build_script:
       - ps: $env:flet_sdk_root="$env:APPVEYOR_BUILD_FOLDER\sdk\python"
@@ -290,9 +263,7 @@ for:
     install:
       - . ci/common.sh
       - HOMEBREW_NO_AUTO_UPDATE=1 brew install cocoapods
-      - flutter upgrade
-      - flutter config --enable-macos-desktop
-      - flutter doctor
+      - source ci/install_flutter.sh
 
     build_script:
       # Flutter macOS client
@@ -353,7 +324,7 @@ for:
             git clone https://github.com/flutter/flutter.git -b stable "$HOME/flutter"
             export PATH="$PATH:$HOME/flutter/bin"
           fi
-      - flutter upgrade --force
+      - source ci/install_flutter.sh
 
     build_script:
       - pushd client
@@ -477,8 +448,9 @@ for:
     install:
       - python --version
       - cd sdk/python
-      - pip install --upgrade pip virtualenv
-      - pip install poetry
+      - python -m ensurepip --upgrade
+      - pip3 install --upgrade setuptools pip virtualenv
+      - pip3 install poetry
       - poetry install
 
     build: off

@@ -2,7 +2,10 @@ from enum import Enum
 from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
+from flet_core.control_event import ControlEvent
+from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
+from flet_core.types import OptionalControlEventCallable, OptionalEventCallable
 from flet_core.utils import deprecated
 
 
@@ -10,6 +13,32 @@ class ReleaseMode(Enum):
     RELEASE = "release"
     LOOP = "loop"
     STOP = "stop"
+
+
+class AudioState(Enum):
+    STOPPED = "stopped"
+    PLAYING = "playing"
+    PAUSED = "paused"
+    COMPLETED = "completed"
+    DISPOSED = "disposed"
+
+
+class AudioStateChangeEvent(ControlEvent):
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        self.state: AudioState = AudioState(e.data)
+
+
+class AudioPositionChangeEvent(ControlEvent):
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        self.position: int = int(e.data)
+
+
+class AudioDurationChangeEvent(ControlEvent):
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        self.duration: int = int(e.data)
 
 
 class Audio(Control):
@@ -49,11 +78,11 @@ class Audio(Control):
         balance: OptionalNumber = None,
         playback_rate: OptionalNumber = None,
         release_mode: Optional[ReleaseMode] = None,
-        on_loaded=None,
-        on_duration_changed=None,
-        on_state_changed=None,
-        on_position_changed=None,
-        on_seek_complete=None,
+        on_loaded: OptionalControlEventCallable = None,
+        on_duration_changed: OptionalEventCallable[AudioDurationChangeEvent] = None,
+        on_state_changed: OptionalEventCallable[AudioStateChangeEvent] = None,
+        on_position_changed: OptionalEventCallable[AudioPositionChangeEvent] = None,
+        on_seek_complete: OptionalControlEventCallable = None,
         #
         # Control
         #
@@ -64,6 +93,19 @@ class Audio(Control):
             self,
             ref=ref,
             data=data,
+        )
+
+        self.__on_state_changed = EventHandler(lambda e: AudioStateChangeEvent(e))
+        self._add_event_handler("state_changed", self.__on_state_changed.get_handler())
+
+        self.__on_position_changed = EventHandler(lambda e: AudioPositionChangeEvent(e))
+        self._add_event_handler(
+            "position_changed", self.__on_position_changed.get_handler()
+        )
+
+        self.__on_duration_changed = EventHandler(lambda e: AudioDurationChangeEvent(e))
+        self._add_event_handler(
+            "duration_changed", self.__on_duration_changed.get_handler()
         )
 
         self.src = src
@@ -88,7 +130,7 @@ class Audio(Control):
     @deprecated(
         reason="Use play() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def play_async(self):
         self.play()
@@ -99,7 +141,7 @@ class Audio(Control):
     @deprecated(
         reason="Use pause() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def pause_async(self):
         self.pause()
@@ -110,7 +152,7 @@ class Audio(Control):
     @deprecated(
         reason="Use resume() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def resume_async(self):
         self.resume()
@@ -121,7 +163,7 @@ class Audio(Control):
     @deprecated(
         reason="Use release() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def release_async(self):
         self.release()
@@ -132,7 +174,7 @@ class Audio(Control):
     @deprecated(
         reason="Use seek() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def seek_async(self, position_milliseconds: int):
         self.seek(position_milliseconds)
@@ -193,7 +235,7 @@ class Audio(Control):
 
     # autoplay
     @property
-    def autoplay(self) -> Optional[bool]:
+    def autoplay(self) -> bool:
         return self._get_attr("autoplay", data_type="bool", def_value=False)
 
     @autoplay.setter
@@ -245,39 +287,40 @@ class Audio(Control):
         return self._get_event_handler("loaded")
 
     @on_loaded.setter
-    def on_loaded(self, handler):
+    def on_loaded(self, handler: OptionalControlEventCallable):
         self._add_event_handler("loaded", handler)
 
     # on_duration_changed
     @property
     def on_duration_changed(self):
-        return self._get_event_handler("duration_changed")
+        return self.__on_duration_changed.handler
 
     @on_duration_changed.setter
-    def on_duration_changed(self, handler):
-        self._add_event_handler("duration_changed", handler)
+    def on_duration_changed(
+        self, handler: OptionalEventCallable[AudioDurationChangeEvent]
+    ):
+        self.__on_duration_changed.handler = handler
 
     # on_state_changed
     @property
     def on_state_changed(self):
-        return self._get_event_handler("state_changed")
+        return self.__on_state_changed.handler
 
     @on_state_changed.setter
-    def on_state_changed(self, handler):
-        self._add_event_handler("state_changed", handler)
+    def on_state_changed(self, handler: OptionalEventCallable[AudioStateChangeEvent]):
+        self.__on_state_changed.handler = handler
 
     # on_position_changed
     @property
     def on_position_changed(self):
-        return self._get_event_handler("position_changed")
+        return self.__on_position_changed.handler
 
     @on_position_changed.setter
-    def on_position_changed(self, handler):
-        self._add_event_handler("position_changed", handler)
-        if handler is not None:
-            self._set_attr("onPositionChanged", True)
-        else:
-            self._set_attr("onPositionChanged", None)
+    def on_position_changed(
+        self, handler: OptionalEventCallable[AudioPositionChangeEvent]
+    ):
+        self.__on_position_changed.handler = handler
+        self._set_attr("onPositionChanged", True if handler is not None else None)
 
     # on_seek_complete
     @property
@@ -285,5 +328,5 @@ class Audio(Control):
         return self._get_event_handler("seek_complete")
 
     @on_seek_complete.setter
-    def on_seek_complete(self, handler):
+    def on_seek_complete(self, handler: OptionalControlEventCallable):
         self._add_event_handler("seek_complete", handler)

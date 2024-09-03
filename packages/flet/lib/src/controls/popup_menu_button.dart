@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -31,7 +30,6 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
     debugPrint("PopupMenuButton build: ${control.id}");
 
     var icon = parseIcon(control.attrString("icon"));
-    var tooltip = control.attrString("tooltip", "")!;
     var iconSize = control.attrDouble("iconSize");
     var splashRadius = control.attrDouble("splashRadius");
     var elevation = control.attrDouble("elevation");
@@ -50,10 +48,8 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
         children.where((c) => c.name == "content" && c.isVisible);
     bool disabled = control.isDisabled || parentDisabled;
 
-    PopupMenuPosition? menuPosition = PopupMenuPosition.values.firstWhereOrNull(
-        (p) =>
-            p.name.toLowerCase() ==
-            control.attrString("menuPosition", "")!.toLowerCase());
+    PopupMenuPosition? menuPosition =
+        parsePopupMenuPosition(control.attrString("menuPosition"));
 
     Widget? child = contentCtrls.isNotEmpty
         ? createControl(control, contentCtrls.first.id, disabled)
@@ -65,8 +61,8 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
             .map((c) => c.id), (content, viewModel) {
       return PopupMenuButton<String>(
           enabled: !disabled,
+          tooltip: null,
           icon: icon != null ? Icon(icon) : null,
-          tooltip: tooltip,
           iconSize: iconSize,
           splashRadius: splashRadius,
           shadowColor: shadowColor,
@@ -147,10 +143,12 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
               }).toList(),
           child: child);
     });
-
+    debugPrint('SHOW: ${control.attrString("tooltip", "") != ""}');
     return constrainedControl(
         context,
-        TooltipVisibility(visible: tooltip != "", child: popupButton),
+        TooltipVisibility(
+            visible: control.attrString("tooltip") == null,
+            child: popupButton),
         parent,
         control);
   }

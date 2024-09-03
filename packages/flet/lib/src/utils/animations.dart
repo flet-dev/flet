@@ -42,8 +42,8 @@ class ImplicitAnimationDetails {
   }
 }
 
-Curve? parseCurve(String? s, [Curve? defaultValue]) {
-  switch (s?.toLowerCase()) {
+Curve? parseCurve(String? value, [Curve? defValue]) {
+  switch (value?.toLowerCase()) {
     case "bouncein":
       return Curves.bounceIn;
     case "bounceinout":
@@ -127,6 +127,6 @@ Curve? parseCurve(String? s, [Curve? defaultValue]) {
     case "slowmiddle":
       return Curves.slowMiddle;
     default:
-      return defaultValue;
+      return defValue;
   }
 }

@@ -5,16 +5,19 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.theme import ThemeVisualDensity
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     LabelPosition,
-    MaterialState,
+    ControlState,
     MouseCursor,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    ThemeVisualDensity,
+    VisualDensity,
+    OptionalControlEventCallable,
 )
 
 try:
@@ -60,17 +63,17 @@ class Radio(ConstrainedControl, AdaptiveControl):
         label_style: Optional[TextStyle] = None,
         value: Optional[str] = None,
         autofocus: Optional[bool] = None,
-        fill_color: Union[None, str, Dict[MaterialState, str]] = None,
+        fill_color: Union[None, str, Dict[ControlState, str]] = None,
         active_color: Optional[str] = None,
-        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
+        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         hover_color: Optional[str] = None,
         focus_color: Optional[str] = None,
         splash_radius: OptionalNumber = None,
         toggleable: Optional[bool] = None,
-        visual_density: Optional[ThemeVisualDensity] = None,
+        visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
         mouse_cursor: Optional[MouseCursor] = None,
-        on_focus=None,
-        on_blur=None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -96,8 +99,8 @@ class Radio(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -201,7 +204,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
 
     # toggleable
     @property
-    def toggleable(self) -> Optional[bool]:
+    def toggleable(self) -> bool:
         return self._get_attr("toggleable", data_type="bool", def_value=False)
 
     @toggleable.setter
@@ -210,13 +213,13 @@ class Radio(ConstrainedControl, AdaptiveControl):
 
     # visual_density
     @property
-    def visual_density(self) -> Optional[ThemeVisualDensity]:
+    def visual_density(self) -> Union[None, ThemeVisualDensity, VisualDensity]:
         return self.__visual_density
 
     @visual_density.setter
-    def visual_density(self, value: Optional[ThemeVisualDensity]):
+    def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, ThemeVisualDensity)
+        self._set_enum_attr("visualDensity", value, ThemeVisualDensity, VisualDensity)
 
     # label
     @property
@@ -258,43 +261,43 @@ class Radio(ConstrainedControl, AdaptiveControl):
 
     # fill_color
     @property
-    def fill_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def fill_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__fill_color
 
     @fill_color.setter
-    def fill_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def fill_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__fill_color = value
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__overlay_color = value
 
     # on_focus
     @property
-    def on_focus(self):
+    def on_focus(self) -> OptionalControlEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler):
+    def on_focus(self, handler: OptionalControlEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self):
+    def on_blur(self) -> OptionalControlEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler):
+    def on_blur(self, handler: OptionalControlEventCallable):
         self._add_event_handler("blur", handler)
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter

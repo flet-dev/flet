@@ -14,6 +14,8 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
+    OptionalControlEventCallable,
 )
 
 
@@ -129,7 +131,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalControlEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -170,47 +172,37 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
-        self.__on_tap_down = EventHandler(lambda e: TapEvent(**json.loads(e.data)))
+        self.__on_tap_down = EventHandler(lambda e: TapEvent(e))
         self._add_event_handler("tap_down", self.__on_tap_down.get_handler())
 
-        self.__on_tap_up = EventHandler(lambda e: TapEvent(**json.loads(e.data)))
+        self.__on_tap_up = EventHandler(lambda e: TapEvent(e))
         self._add_event_handler("tap_up", self.__on_tap_up.get_handler())
 
-        self.__on_multi_tap = EventHandler(
-            lambda e: MultiTapEvent(e.data.lower() == "true")
-        )
+        self.__on_multi_tap = EventHandler(lambda e: MultiTapEvent(e))
         self._add_event_handler("multi_tap", self.__on_multi_tap.get_handler())
 
-        self.__on_secondary_tap_down = EventHandler(
-            lambda e: TapEvent(**json.loads(e.data))
-        )
+        self.__on_secondary_tap_down = EventHandler(lambda e: TapEvent(e))
         self._add_event_handler(
             "secondary_tap_down", self.__on_secondary_tap_down.get_handler()
         )
 
-        self.__on_secondary_tap_up = EventHandler(
-            lambda e: TapEvent(**json.loads(e.data))
-        )
+        self.__on_secondary_tap_up = EventHandler(lambda e: TapEvent(e))
         self._add_event_handler(
             "secondary_tap_up", self.__on_secondary_tap_up.get_handler()
         )
 
-        self.__on_long_press_start = EventHandler(
-            lambda e: LongPressStartEvent(**json.loads(e.data))
-        )
+        self.__on_long_press_start = EventHandler(lambda e: LongPressStartEvent(e))
         self._add_event_handler(
             "long_press_start", self.__on_long_press_start.get_handler()
         )
 
-        self.__on_long_press_end = EventHandler(
-            lambda e: LongPressEndEvent(**json.loads(e.data))
-        )
+        self.__on_long_press_end = EventHandler(lambda e: LongPressEndEvent(e))
         self._add_event_handler(
             "long_press_end", self.__on_long_press_end.get_handler()
         )
 
         self.__on_secondary_long_press_start = EventHandler(
-            lambda e: LongPressStartEvent(**json.loads(e.data))
+            lambda e: LongPressStartEvent(e)
         )
         self._add_event_handler(
             "secondary_long_press_start",
@@ -218,100 +210,76 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         )
 
         self.__on_secondary_long_press_end = EventHandler(
-            lambda e: LongPressEndEvent(**json.loads(e.data))
+            lambda e: LongPressEndEvent(e)
         )
         self._add_event_handler(
             "secondary_long_press_end",
             self.__on_secondary_long_press_end.get_handler(),
         )
-        self.__on_double_tap_down = EventHandler(
-            lambda e: TapEvent(**json.loads(e.data))
-        )
+        self.__on_double_tap_down = EventHandler(lambda e: TapEvent(e))
         self._add_event_handler(
             "double_tap_down", self.__on_double_tap_down.get_handler()
         )
 
         # on_horizontal_drag
 
-        self.__on_horizontal_drag_start = EventHandler(
-            lambda e: DragStartEvent(**json.loads(e.data))
-        )
+        self.__on_horizontal_drag_start = EventHandler(lambda e: DragStartEvent(e))
         self._add_event_handler(
             "horizontal_drag_start", self.__on_horizontal_drag_start.get_handler()
         )
-        self.__on_horizontal_drag_update = EventHandler(
-            lambda e: DragUpdateEvent(**json.loads(e.data))
-        )
+        self.__on_horizontal_drag_update = EventHandler(lambda e: DragUpdateEvent(e))
         self._add_event_handler(
             "horizontal_drag_update", self.__on_horizontal_drag_update.get_handler()
         )
-        self.__on_horizontal_drag_end = EventHandler(
-            lambda e: DragEndEvent(**json.loads(e.data))
-        )
+        self.__on_horizontal_drag_end = EventHandler(lambda e: DragEndEvent(e))
         self._add_event_handler(
             "horizontal_drag_end", self.__on_horizontal_drag_end.get_handler()
         )
 
         # on_vertical_drag
 
-        self.__on_vertical_drag_start = EventHandler(
-            lambda e: DragStartEvent(**json.loads(e.data))
-        )
+        self.__on_vertical_drag_start = EventHandler(lambda e: DragStartEvent(e))
         self._add_event_handler(
             "vertical_drag_start", self.__on_vertical_drag_start.get_handler()
         )
-        self.__on_vertical_drag_update = EventHandler(
-            lambda e: DragUpdateEvent(**json.loads(e.data))
-        )
+        self.__on_vertical_drag_update = EventHandler(lambda e: DragUpdateEvent(e))
         self._add_event_handler(
             "vertical_drag_update", self.__on_vertical_drag_update.get_handler()
         )
-        self.__on_vertical_drag_end = EventHandler(
-            lambda e: DragEndEvent(**json.loads(e.data))
-        )
+        self.__on_vertical_drag_end = EventHandler(lambda e: DragEndEvent(e))
         self._add_event_handler(
             "vertical_drag_end", self.__on_vertical_drag_end.get_handler()
         )
 
         # on_pan
 
-        self.__on_pan_start = EventHandler(
-            lambda e: DragStartEvent(**json.loads(e.data))
-        )
+        self.__on_pan_start = EventHandler(lambda e: DragStartEvent(e))
         self._add_event_handler("pan_start", self.__on_pan_start.get_handler())
-        self.__on_pan_update = EventHandler(
-            lambda e: DragUpdateEvent(**json.loads(e.data))
-        )
+        self.__on_pan_update = EventHandler(lambda e: DragUpdateEvent(e))
         self._add_event_handler("pan_update", self.__on_pan_update.get_handler())
-        self.__on_pan_end = EventHandler(lambda e: DragEndEvent(**json.loads(e.data)))
+        self.__on_pan_end = EventHandler(lambda e: DragEndEvent(e))
         self._add_event_handler("pan_end", self.__on_pan_end.get_handler())
 
         # on_scale
 
-        self.__on_scale_start = EventHandler(
-            lambda e: ScaleStartEvent(**json.loads(e.data))
-        )
+        self.__on_scale_start = EventHandler(lambda e: ScaleStartEvent(e))
         self._add_event_handler("scale_start", self.__on_scale_start.get_handler())
-        self.__on_scale_update = EventHandler(
-            lambda e: ScaleUpdateEvent(**json.loads(e.data))
-        )
+        self.__on_scale_update = EventHandler(lambda e: ScaleUpdateEvent(e))
         self._add_event_handler("scale_update", self.__on_scale_update.get_handler())
-        self.__on_scale_end = EventHandler(
-            lambda e: ScaleEndEvent(**json.loads(e.data))
-        )
+        self.__on_scale_end = EventHandler(lambda e: ScaleEndEvent(e))
         self._add_event_handler("scale_end", self.__on_scale_end.get_handler())
 
         # on_hover
 
-        self.__on_hover = EventHandler(lambda e: HoverEvent(**json.loads(e.data)))
+        self.__on_hover = EventHandler(lambda e: HoverEvent(e))
         self._add_event_handler("hover", self.__on_hover.get_handler())
-        self.__on_enter = EventHandler(lambda e: HoverEvent(**json.loads(e.data)))
+        self.__on_enter = EventHandler(lambda e: HoverEvent(e))
         self._add_event_handler("enter", self.__on_enter.get_handler())
-        self.__on_exit = EventHandler(lambda e: HoverEvent(**json.loads(e.data)))
+        self.__on_exit = EventHandler(lambda e: HoverEvent(e))
         self._add_event_handler("exit", self.__on_exit.get_handler())
 
         # on_scroll
-        self.__on_scroll = EventHandler(lambda e: ScrollEvent(**json.loads(e.data)))
+        self.__on_scroll = EventHandler(lambda e: ScrollEvent(e))
         self._add_event_handler("scroll", self.__on_scroll.get_handler())
 
         self.content = content
@@ -399,42 +367,42 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     # on_tap
     @property
-    def on_tap(self):
+    def on_tap(self) -> OptionalControlEventCallable:
         return self._get_event_handler("tap")
 
     @on_tap.setter
-    def on_tap(self, handler):
+    def on_tap(self, handler: OptionalControlEventCallable):
         self._add_event_handler("tap", handler)
         self._set_attr("onTap", True if handler is not None else None)
 
     # on_tap_down
     @property
-    def on_tap_down(self):
-        return self.__on_tap_down
+    def on_tap_down(self) -> OptionalEventCallable["TapEvent"]:
+        return self.__on_tap_down.handler
 
     @on_tap_down.setter
-    def on_tap_down(self, handler):
-        self.__on_tap_down.subscribe(handler)
+    def on_tap_down(self, handler: OptionalEventCallable["TapEvent"]):
+        self.__on_tap_down.handler = handler
         self._set_attr("onTapDown", True if handler is not None else None)
 
     # on_tap_up
     @property
-    def on_tap_up(self):
-        return self.__on_tap_up
+    def on_tap_up(self) -> OptionalEventCallable["TapEvent"]:
+        return self.__on_tap_up.handler
 
     @on_tap_up.setter
-    def on_tap_up(self, handler):
-        self.__on_tap_up.subscribe(handler)
+    def on_tap_up(self, handler: OptionalEventCallable["TapEvent"]):
+        self.__on_tap_up.handler = handler
         self._set_attr("onTapUp", True if handler is not None else None)
 
     # on_multi_tap
     @property
-    def on_multi_tap(self):
-        return self.__on_multi_tap
+    def on_multi_tap(self) -> OptionalEventCallable["MultiTapEvent"]:
+        return self.__on_multi_tap.handler
 
     @on_multi_tap.setter
-    def on_multi_tap(self, handler):
-        self.__on_multi_tap.subscribe(handler)
+    def on_multi_tap(self, handler: OptionalEventCallable["MultiTapEvent"]):
+        self.__on_multi_tap.handler = handler
         self._set_attr("onMultiTap", True if handler is not None else None)
 
     # multi_tap_touches
@@ -448,84 +416,92 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     # on_multi_long_press
     @property
-    def on_multi_long_press(self):
+    def on_multi_long_press(self) -> OptionalControlEventCallable:
         return self._get_event_handler("multi_long_press")
 
     @on_multi_long_press.setter
-    def on_multi_long_press(self, handler):
+    def on_multi_long_press(self, handler: OptionalControlEventCallable):
         self._add_event_handler("multi_long_press", handler)
         self._set_attr("onMultiLongPress", True if handler is not None else None)
 
     # on_secondary_tap
     @property
-    def on_secondary_tap(self):
+    def on_secondary_tap(self) -> OptionalControlEventCallable:
         return self._get_event_handler("secondary_tap")
 
     @on_secondary_tap.setter
-    def on_secondary_tap(self, handler):
+    def on_secondary_tap(self, handler: OptionalControlEventCallable):
         self._add_event_handler("secondary_tap", handler)
         self._set_attr("onSecondaryTap", True if handler is not None else None)
 
     # on_tap_down
     @property
-    def on_secondary_tap_down(self):
-        return self.__on_secondary_tap_down
+    def on_secondary_tap_down(self) -> OptionalEventCallable["TapEvent"]:
+        return self.__on_secondary_tap_down.handler
 
     @on_secondary_tap_down.setter
-    def on_secondary_tap_down(self, handler):
-        self.__on_secondary_tap_down.subscribe(handler)
+    def on_secondary_tap_down(self, handler: OptionalEventCallable["TapEvent"]):
+        self.__on_secondary_tap_down.handler = handler
         self._set_attr("onSecondaryTapDown", True if handler is not None else None)
 
     # on_secondary_tap_up
     @property
-    def on_secondary_tap_up(self):
-        return self.__on_secondary_tap_up
+    def on_secondary_tap_up(self) -> OptionalEventCallable["TapEvent"]:
+        return self.__on_secondary_tap_up.handler
 
     @on_secondary_tap_up.setter
-    def on_secondary_tap_up(self, handler):
-        self.__on_secondary_tap_up.subscribe(handler)
+    def on_secondary_tap_up(self, handler: OptionalEventCallable["TapEvent"]):
+        self.__on_secondary_tap_up.handler = handler
         self._set_attr("onSecondaryTapUp", True if handler is not None else None)
 
     # on_long_press_start
     @property
-    def on_long_press_start(self):
-        return self.__on_long_press_start
+    def on_long_press_start(self) -> OptionalEventCallable["LongPressStartEvent"]:
+        return self.__on_long_press_start.handler
 
     @on_long_press_start.setter
-    def on_long_press_start(self, handler):
-        self.__on_long_press_start.subscribe(handler)
+    def on_long_press_start(
+        self, handler: OptionalEventCallable["LongPressStartEvent"]
+    ):
+        self.__on_long_press_start.handler = handler
         self._set_attr("onLongPressStart", True if handler is not None else None)
 
     # on_long_press_end
     @property
-    def on_long_press_end(self):
-        return self.__on_long_press_end
+    def on_long_press_end(self) -> OptionalEventCallable["LongPressEndEvent"]:
+        return self.__on_long_press_end.handler
 
     @on_long_press_end.setter
-    def on_long_press_end(self, handler):
-        self.__on_long_press_end.subscribe(handler)
+    def on_long_press_end(self, handler: OptionalEventCallable["LongPressEndEvent"]):
+        self.__on_long_press_end.handler = handler
         self._set_attr("onLongPressEnd", True if handler is not None else None)
 
     # on_secondary_long_press_start
     @property
-    def on_secondary_long_press_start(self):
-        return self.__on_secondary_long_press_start
+    def on_secondary_long_press_start(
+        self,
+    ) -> OptionalEventCallable["LongPressStartEvent"]:
+        return self.__on_secondary_long_press_start.handler
 
     @on_secondary_long_press_start.setter
-    def on_secondary_long_press_start(self, handler):
-        self.__on_secondary_long_press_start.subscribe(handler)
+    def on_secondary_long_press_start(
+        self, handler: OptionalEventCallable["LongPressStartEvent"]
+    ):
+        self.__on_secondary_long_press_start.handler = handler
         self._set_attr(
             "onSecondaryLongPressStart", True if handler is not None else None
         )
 
     # on_secondary_long_press_end
     @property
-    def on_secondary_long_press_end(self):
-        return self.__on_secondary_long_press_end
+    def on_secondary_long_press_end(self) -> OptionalEventCallable["LongPressEndEvent"]:
+        return self.__on_secondary_long_press_end.handler
 
     @on_secondary_long_press_end.setter
-    def on_secondary_long_press_end(self, handler):
-        self.__on_secondary_long_press_end.subscribe(handler)
+    def on_secondary_long_press_end(
+        self, handler: OptionalEventCallable["LongPressEndEvent"]
+    ):
+        self.__on_secondary_long_press_end.handler = handler
         self._set_attr("onSecondaryLongPressEnd", True if handler is not None else None)
 
     # on_double_tap
@@ -534,290 +510,319 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         return self._get_event_handler("double_tap")
 
     @on_double_tap.setter
-    def on_double_tap(self, handler):
+    def on_double_tap(self, handler: OptionalEventCallable["TapEvent"]):
         self._add_event_handler("double_tap", handler)
         self._set_attr("onDoubleTap", True if handler is not None else None)
 
     # on_double_tap_down
     @property
-    def on_double_tap_down(self):
-        return self.__on_double_tap_down
+    def on_double_tap_down(self) -> OptionalEventCallable["TapEvent"]:
+        return self.__on_double_tap_down.handler
 
     @on_double_tap_down.setter
-    def on_double_tap_down(self, handler):
-        self.__on_double_tap_down.subscribe(handler)
+    def on_double_tap_down(self, handler: OptionalEventCallable["TapEvent"]):
+        self.__on_double_tap_down.handler = handler
         self._set_attr("onDoubleTapDown", True if handler is not None else None)
 
     # on_horizontal_drag_start
     @property
-    def on_horizontal_drag_start(self):
-        return self.__on_horizontal_drag_start
+    def on_horizontal_drag_start(self) -> OptionalEventCallable["DragStartEvent"]:
+        return self.__on_horizontal_drag_start.handler
 
     @on_horizontal_drag_start.setter
-    def on_horizontal_drag_start(self, handler):
-        self.__on_horizontal_drag_start.subscribe(handler)
+    def on_horizontal_drag_start(
+        self, handler: OptionalEventCallable["DragStartEvent"]
+    ):
+        self.__on_horizontal_drag_start.handler = handler
         self._set_attr("onHorizontalDragStart", True if handler is not None else None)
 
     # on_horizontal_drag_update
     @property
-    def on_horizontal_drag_update(self):
-        return self.__on_horizontal_drag_update
+    def on_horizontal_drag_update(self) -> OptionalEventCallable["DragUpdateEvent"]:
+        return self.__on_horizontal_drag_update.handler
 
     @on_horizontal_drag_update.setter
-    def on_horizontal_drag_update(self, handler):
-        self.__on_horizontal_drag_update.subscribe(handler)
+    def on_horizontal_drag_update(
+        self, handler: OptionalEventCallable["DragUpdateEvent"]
+    ):
+        self.__on_horizontal_drag_update.handler = handler
         self._set_attr("onHorizontalDragUpdate", True if handler is not None else None)
 
     # on_horizontal_drag_end
     @property
-    def on_horizontal_drag_end(self):
-        return self.__on_horizontal_drag_end
+    def on_horizontal_drag_end(self) -> OptionalEventCallable["DragEndEvent"]:
+        return self.__on_horizontal_drag_end.handler
 
     @on_horizontal_drag_end.setter
-    def on_horizontal_drag_end(self, handler):
-        self.__on_horizontal_drag_end.subscribe(handler)
+    def on_horizontal_drag_end(self, handler: OptionalEventCallable["DragEndEvent"]):
+        self.__on_horizontal_drag_end.handler = handler
         self._set_attr("onHorizontalDragEnd", True if handler is not None else None)
 
     # on_vertical_drag_start
     @property
-    def on_vertical_drag_start(self):
-        return self.__on_vertical_drag_start
+    def on_vertical_drag_start(self) -> OptionalEventCallable["DragStartEvent"]:
+        return self.__on_vertical_drag_start.handler
 
     @on_vertical_drag_start.setter
-    def on_vertical_drag_start(self, handler):
-        self.__on_vertical_drag_start.subscribe(handler)
+    def on_vertical_drag_start(self, handler: OptionalEventCallable["DragStartEvent"]):
+        self.__on_vertical_drag_start.handler = handler
         self._set_attr("onVerticalDragStart", True if handler is not None else None)
 
     # on_vertical_drag_update
     @property
-    def on_vertical_drag_update(self):
-        return self.__on_vertical_drag_update
+    def on_vertical_drag_update(self) -> OptionalEventCallable["DragUpdateEvent"]:
+        return self.__on_vertical_drag_update.handler
 
     @on_vertical_drag_update.setter
-    def on_vertical_drag_update(self, handler):
-        self.__on_vertical_drag_update.subscribe(handler)
+    def on_vertical_drag_update(
+        self, handler: OptionalEventCallable["DragUpdateEvent"]
+    ):
+        self.__on_vertical_drag_update.handler = handler
         self._set_attr("onVerticalDragUpdate", True if handler is not None else None)
 
     # on_vertical_drag_end
     @property
-    def on_vertical_drag_end(self):
-        return self.__on_vertical_drag_end
+    def on_vertical_drag_end(self) -> OptionalEventCallable["DragEndEvent"]:
+        return self.__on_vertical_drag_end.handler
 
     @on_vertical_drag_end.setter
-    def on_vertical_drag_end(self, handler):
-        self.__on_vertical_drag_end.subscribe(handler)
+    def on_vertical_drag_end(self, handler: OptionalEventCallable["DragEndEvent"]):
+        self.__on_vertical_drag_end.handler = handler
         self._set_attr("onVerticalDragEnd", True if handler is not None else None)
 
     # on_pan_start
     @property
-    def on_pan_start(self):
-        return self.__on_pan_start
+    def on_pan_start(self) -> OptionalEventCallable["DragStartEvent"]:
+        return self.__on_pan_start.handler
 
     @on_pan_start.setter
-    def on_pan_start(self, handler):
-        self.__on_pan_start.subscribe(handler)
+    def on_pan_start(self, handler: OptionalEventCallable["DragStartEvent"]):
+        self.__on_pan_start.handler = handler
         self._set_attr("onPanStart", True if handler is not None else None)
 
     # on_pan_updatevertical_drag
     @property
-    def on_pan_update(self):
-        return self.__on_pan_update
+    def on_pan_update(self) -> OptionalEventCallable["DragUpdateEvent"]:
+        return self.__on_pan_update.handler
 
     @on_pan_update.setter
-    def on_pan_update(self, handler):
-        self.__on_pan_update.subscribe(handler)
+    def on_pan_update(self, handler: OptionalEventCallable["DragUpdateEvent"]):
+        self.__on_pan_update.handler = handler
         self._set_attr("onPanUpdate", True if handler is not None else None)
 
     # on_pan_end
     @property
-    def on_pan_end(self):
-        return self.__on_pan_end
+    def on_pan_end(self) -> OptionalEventCallable["DragEndEvent"]:
+        return self.__on_pan_end.handler
 
     @on_pan_end.setter
-    def on_pan_end(self, handler):
-        self.__on_pan_end.subscribe(handler)
+    def on_pan_end(self, handler: OptionalEventCallable["DragEndEvent"]):
+        self.__on_pan_end.handler = handler
         self._set_attr("onPanEnd", True if handler is not None else None)
 
     # on_scale_start
     @property
-    def on_scale_start(self):
-        return self.__on_scale_start
+    def on_scale_start(self) -> OptionalEventCallable["ScaleStartEvent"]:
+        return self.__on_scale_start.handler
 
     @on_scale_start.setter
-    def on_scale_start(self, handler):
-        self.__on_scale_start.subscribe(handler)
+    def on_scale_start(self, handler: OptionalEventCallable["ScaleStartEvent"]):
+        self.__on_scale_start.handler = handler
         self._set_attr("onScaleStart", True if handler is not None else None)
 
     # on_scale_update
     @property
-    def on_scale_update(self):
-        return self.__on_scale_update
+    def on_scale_update(self) -> OptionalEventCallable["ScaleUpdateEvent"]:
+        return self.__on_scale_update.handler
 
     @on_scale_update.setter
-    def on_scale_update(self, handler):
-        self.__on_scale_update.subscribe(handler)
+    def on_scale_update(self, handler: OptionalEventCallable["ScaleUpdateEvent"]):
+        self.__on_scale_update.handler = handler
         self._set_attr("onScaleUpdate", True if handler is not None else None)
 
     # on_scale_end
     @property
-    def on_scale_end(self):
-        return self.__on_scale_end
+    def on_scale_end(self) -> OptionalEventCallable["ScaleEndEvent"]:
+        return self.__on_scale_end.handler
 
     @on_scale_end.setter
-    def on_scale_end(self, handler):
-        self.__on_scale_end.subscribe(handler)
+    def on_scale_end(self, handler: OptionalEventCallable["ScaleEndEvent"]):
+        self.__on_scale_end.handler = handler
         self._set_attr("onScaleEnd", True if handler is not None else None)
 
     # on_hover
     @property
-    def on_hover(self):
-        return self.__on_hover
+    def on_hover(self) -> OptionalEventCallable["HoverEvent"]:
+        return self.__on_hover.handler
 
     @on_hover.setter
-    def on_hover(self, handler):
-        self.__on_hover.subscribe(handler)
+    def on_hover(self, handler: OptionalEventCallable["HoverEvent"]):
+        self.__on_hover.handler = handler
         self._set_attr("onHover", True if handler is not None else None)
 
     # on_enter
     @property
-    def on_enter(self):
-        return self.__on_enter
+    def on_enter(self) -> OptionalEventCallable["HoverEvent"]:
+        return self.__on_enter.handler
 
     @on_enter.setter
-    def on_enter(self, handler):
-        self.__on_enter.subscribe(handler)
+    def on_enter(self, handler: OptionalEventCallable["HoverEvent"]):
+        self.__on_enter.handler = handler
         self._set_attr("onEnter", True if handler is not None else None)
 
     # on_exit
     @property
-    def on_exit(self):
-        return self.__on_exit
+    def on_exit(self) -> OptionalEventCallable["HoverEvent"]:
+        return self.__on_exit.handler
 
     @on_exit.setter
-    def on_exit(self, handler):
-        self.__on_exit.subscribe(handler)
+    def on_exit(self, handler: OptionalEventCallable["HoverEvent"]):
+        self.__on_exit.handler = handler
         self._set_attr("onExit", True if handler is not None else None)
 
     # on_scroll
     @property
-    def on_scroll(self):
-        return self.__on_scroll
+    def on_scroll(self) -> OptionalEventCallable["ScrollEvent"]:
+        return self.__on_scroll.handler
 
     @on_scroll.setter
-    def on_scroll(self, handler):
-        self.__on_scroll.subscribe(handler)
+    def on_scroll(self, handler: OptionalEventCallable["ScrollEvent"]):
+        self.__on_scroll.handler = handler
         self._set_attr("onScroll", True if handler is not None else None)
 
 
 class TapEvent(ControlEvent):
-    def __init__(self, lx, ly, gx, gy, kind) -> None:
-        self.local_x: float = lx
-        self.local_y: float = ly
-        self.global_x: float = gx
-        self.global_y: float = gy
-        self.kind: str = kind
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.local_x: float = d.get("lx")
+        self.local_y: float = d.get("ly")
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")
+        self.kind: str = d.get("kind")
 
 
 class MultiTapEvent(ControlEvent):
-    def __init__(self, correct_touches: bool) -> None:
-        self.correct_touches: bool = correct_touches
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        self.correct_touches: bool = e.data.lower() == "true"
 
 
 class LongPressStartEvent(ControlEvent):
-    def __init__(self, lx, ly, gx, gy) -> None:
-        self.local_x: float = lx
-        self.local_y: float = ly
-        self.global_x: float = gx
-        self.global_y: float = gy
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.local_x: float = d.get("lx")
+        self.local_y: float = d.get("ly")
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")
 
 
 class LongPressEndEvent(ControlEvent):
-    def __init__(self, lx, ly, gx, gy, vx, vy) -> None:
-        self.local_x: float = lx
-        self.local_y: float = ly
-        self.global_x: float = gx
-        self.global_y: float = gy
-        self.velocity_x: float = vx
-        self.velocity_y: float = vy
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.local_x: float = d.get("lx")
+        self.local_y: float = d.get("ly")
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")
+        self.velocity_x: float = d.get("vx")
+        self.velocity_y: float = d.get("vy")
 
 
 class DragStartEvent(ControlEvent):
-    def __init__(self, lx, ly, gx, gy, kind, ts) -> None:
-        self.kind: str = kind
-        self.local_x: float = lx
-        self.local_y: float = ly
-        self.global_x: float = gx
-        self.global_y: float = gy
-        self.timestamp: Optional[int] = ts
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.kind: str = d.get("kind")
+        self.local_x: float = d.get("lx")
+        self.local_y: float = d.get("ly")
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")
+        self.timestamp: Optional[int] = d.get("ts")
 
 
 class DragUpdateEvent(ControlEvent):
-    def __init__(self, dx, dy, pd, lx, ly, gx, gy, ts) -> None:
-        self.delta_x: float = dx
-        self.delta_y: float = dy
-        self.primary_delta: Optional[float] = pd
-        self.local_x: float = lx
-        self.local_y: float = ly
-        self.global_x: float = gx
-        self.global_y: float = gy
-        self.timestamp: Optional[int] = ts
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.delta_x: float = d.get("dx")
+        self.delta_y: float = d.get("dy")
+        self.primary_delta: Optional[float] = d.get("pd")
+        self.local_x: float = d.get("lx")
+        self.local_y: float = d.get("ly")
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")
+        self.timestamp: Optional[int] = d.get("ts")
 
 
 class DragEndEvent(ControlEvent):
-    def __init__(self, pv, vx, vy) -> None:
-        self.primary_velocity: Optional[float] = pv
-        self.velocity_x: float = vx
-        self.velocity_y: float = vy
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.primary_velocity: Optional[float] = d.get("pv")
+        self.velocity_x: float = d.get("vx")
+        self.velocity_y: float = d.get("vy")
 
 
 class ScaleStartEvent(ControlEvent):
-    def __init__(self, fpx, fpy, lfpx, lfpy, pc) -> None:
-        self.focal_point_x: float = fpx
-        self.focal_point_y: float = fpy
-        self.local_focal_point_x: float = lfpx
-        self.local_focal_point_y: float = lfpy
-        self.pointer_count: int = pc
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.focal_point_x: float = d.get("fpx")
+        self.focal_point_y: float = d.get("fpy")
+        self.local_focal_point_x: float = d.get("lfpx")
+        self.local_focal_point_y: float = d.get("lfpy")
+        self.pointer_count: int = d.get("pc")
 
 
 class ScaleUpdateEvent(ControlEvent):
-    def __init__(self, fpx, fpy, fpdx, fpdy, lfpx, lfpy, pc, hs, vs, s, r) -> None:
-        self.focal_point_x: float = fpx
-        self.focal_point_y: float = fpy
-        self.focal_point_delta_x: float = fpdx
-        self.focal_point_delta_y: float = fpdy
-        self.local_focal_point_x: float = lfpx
-        self.local_focal_point_y: float = lfpy
-        self.pointer_count: int = pc
-        self.horizontal_scale: float = hs
-        self.vertical_scale: float = vs
-        self.scale: float = s
-        self.rotation: float = r
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.focal_point_x: float = d.get("fpx")
+        self.focal_point_y: float = d.get("fpy")
+        self.focal_point_delta_x: float = d.get("fpdx")
+        self.focal_point_delta_y: float = d.get("fpdy")
+        self.local_focal_point_x: float = d.get("lfpx")
+        self.local_focal_point_y: float = d.get("lfpy")
+        self.pointer_count: int = d.get("pc")
+        self.horizontal_scale: float = d.get("hs")
+        self.vertical_scale: float = d.get("vs")
+        self.scale: float = d.get("s")
+        self.rotation: float = d.get("r")
 
 
 class ScaleEndEvent(ControlEvent):
-    def __init__(self, pc, vx, vy) -> None:
-        self.pointer_count: int = pc
-        self.velocity_x: float = vx
-        self.velocity_y: float = vy
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.pointer_count: int = d.get("pc")
+        self.velocity_x: float = d.get("vx")
+        self.velocity_y: float = d.get("vy")
 
 
 class HoverEvent(ControlEvent):
-    def __init__(self, ts, kind, gx, gy, lx, ly, dx=None, dy=None) -> None:
-        self.timestamp: float = ts
-        self.kind: str = kind
-        self.global_x: float = gx
-        self.global_y: float = gy
-        self.local_x: float = lx
-        self.local_y: float = ly
-        self.delta_x: Optional[float] = dx
-        self.delta_y: Optional[float] = dy
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.timestamp: float = d.get("ts")
+        self.kind: str = d.get("kind")
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")
+        self.local_x: float = d.get("lx")
+        self.local_y: float = d.get("ly")
+        self.delta_x: Optional[float] = d.get("dx")
+        self.delta_y: Optional[float] = d.get("dy")
 
 
 class ScrollEvent(ControlEvent):
-    def __init__(self, gx, gy, lx, ly, dx=None, dy=None) -> None:
-        self.global_x: float = gx
-        self.global_y: float = gy
-        self.local_x: float = lx
-        self.local_y: float = ly
-        self.scroll_delta_x: Optional[float] = dx
-        self.scroll_delta_y: Optional[float] = dy
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")
+        self.local_x: float = d.get("lx")
+        self.local_y: float = d.get("ly")
+        self.scroll_delta_x: Optional[float] = d.get("dx")
+        self.scroll_delta_y: Optional[float] = d.get("dy")

@@ -3,7 +3,11 @@ from typing import Any, List, Optional
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import PaddingValue, MarginValue
+from flet_core.types import (
+    PaddingValue,
+    MarginValue,
+    OptionalControlEventCallable,
+)
 
 
 class Banner(Control):
@@ -16,31 +20,33 @@ class Banner(Control):
     ```
     import flet as ft
 
-    def main(page):
-        def close_banner(e):
-            page.banner.open = False
-            page.update()
 
-        page.banner = ft.Banner(
+    def main(page):
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+
+        def close_banner(e):
+            page.close(banner)
+            page.add(ft.Text("Action clicked: " + e.control.text))
+
+        action_button_style = ft.ButtonStyle(color=ft.colors.BLUE)
+        banner = ft.Banner(
             bgcolor=ft.colors.AMBER_100,
             leading=ft.Icon(ft.icons.WARNING_AMBER_ROUNDED, color=ft.colors.AMBER, size=40),
             content=ft.Text(
-                "Oops, there were some errors while trying to delete the file. What would you like me to do?"
+                value="Oops, there were some errors while trying to delete the file. What would you like me to do?",
+                color=ft.colors.BLACK,
             ),
             actions=[
-                ft.TextButton("Retry", on_click=close_banner),
-                ft.TextButton("Ignore", on_click=close_banner),
-                ft.TextButton("Cancel", on_click=close_banner),
+                ft.TextButton(text="Retry", style=action_button_style, on_click=close_banner),
+                ft.TextButton(text="Ignore", style=action_button_style, on_click=close_banner),
+                ft.TextButton(text="Cancel", style=action_button_style, on_click=close_banner),
             ],
         )
 
-        def show_banner_click(e):
-            page.banner.open = True
-            page.update()
+        page.add(ft.ElevatedButton("Show Banner", on_click=lambda e: page.open(banner)))
 
-        page.add(ft.ElevatedButton("Show Banner", on_click=show_banner_click))
 
-    ft.app(target=main)
+    ft.app(main)
     ```
 
     -----
@@ -64,7 +70,7 @@ class Banner(Control):
         elevation: OptionalNumber = None,
         margin: MarginValue = None,
         content_text_style: Optional[TextStyle] = None,
-        on_visible=None,
+        on_visible: OptionalControlEventCallable = None,
         #
         # Control
         #
@@ -104,8 +110,8 @@ class Banner(Control):
     def before_update(self):
         super().before_update()
         assert self.__content.visible, "content must be visible"
-        assert (
-            len(list(filter(lambda a: a.visible, self.__actions))) > 0
+        assert any(
+            a.visible for a in self.__actions
         ), "actions must contain at minimum one visible action Control"
 
         self._set_attr_json("contentPadding", self.__content_padding)
@@ -126,7 +132,7 @@ class Banner(Control):
 
     # open
     @property
-    def open(self) -> Optional[bool]:
+    def open(self) -> bool:
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
@@ -135,7 +141,7 @@ class Banner(Control):
 
     # modal
     @property
-    def modal(self) -> Optional[bool]:
+    def modal(self) -> bool:
         return self._get_attr("modal", data_type="bool", def_value=False)
 
     @modal.setter
@@ -198,7 +204,7 @@ class Banner(Control):
 
     # force_actions_below
     @property
-    def force_actions_below(self) -> Optional[bool]:
+    def force_actions_below(self) -> bool:
         return self._get_attr("forceActionsBelow", data_type="bool", def_value=False)
 
     @force_actions_below.setter
@@ -262,9 +268,9 @@ class Banner(Control):
 
     # on_visible
     @property
-    def on_visible(self):
+    def on_visible(self) -> OptionalControlEventCallable:
         return self._get_event_handler("visible")
 
     @on_visible.setter
-    def on_visible(self, handler):
+    def on_visible(self, handler: OptionalControlEventCallable):
         self._add_event_handler("visible", handler)

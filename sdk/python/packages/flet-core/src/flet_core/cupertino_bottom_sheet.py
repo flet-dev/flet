@@ -2,7 +2,10 @@ from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.types import PaddingValue
+from flet_core.types import (
+    PaddingValue,
+    OptionalControlEventCallable,
+)
 
 
 class CupertinoBottomSheet(Control):
@@ -22,7 +25,7 @@ class CupertinoBottomSheet(Control):
         bgcolor: Optional[str] = None,
         height: OptionalNumber = None,
         padding: PaddingValue = None,
-        on_dismiss=None,
+        on_dismiss: OptionalControlEventCallable = None,
         #
         # Control
         #
@@ -65,7 +68,7 @@ class CupertinoBottomSheet(Control):
 
     # open
     @property
-    def open(self) -> Optional[bool]:
+    def open(self) -> bool:
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
@@ -74,7 +77,7 @@ class CupertinoBottomSheet(Control):
 
     # modal
     @property
-    def modal(self) -> Optional[bool]:
+    def modal(self) -> bool:
         return self._get_attr("modal", data_type="bool", def_value=False)
 
     @modal.setter
@@ -92,8 +95,8 @@ class CupertinoBottomSheet(Control):
 
     # height
     @property
-    def height(self) -> OptionalNumber:
-        return self._get_attr("height", data_type="float", def_value=220)
+    def height(self) -> float:
+        return self._get_attr("height", data_type="float", def_value=220.0)
 
     @height.setter
     def height(self, value: OptionalNumber):
@@ -119,9 +122,9 @@ class CupertinoBottomSheet(Control):
 
     # on_dismiss
     @property
-    def on_dismiss(self):
+    def on_dismiss(self) -> OptionalControlEventCallable:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler):
+    def on_dismiss(self, handler: OptionalControlEventCallable):
         self._add_event_handler("dismiss", handler)

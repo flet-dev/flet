@@ -1,20 +1,23 @@
 import time
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union, Sequence
 
 from flet_core.border import BorderSide
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.textfield import TextCapitalization, KeyboardType
+from flet_core.textfield import KeyboardType, TextCapitalization
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
-    MaterialState,
+    ControlState,
     OffsetValue,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -30,13 +33,13 @@ class SearchBar(ConstrainedControl):
 
     def __init__(
         self,
-        controls: Optional[List[Control]] = None,
+        controls: Optional[Sequence[Control]] = None,
         value: Optional[str] = None,
         bar_leading: Optional[Control] = None,
         bar_trailing: Optional[List[Control]] = None,
         bar_hint_text: Optional[str] = None,
-        bar_bgcolor: Union[None, str, Dict[MaterialState, str]] = None,
-        bar_overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
+        bar_bgcolor: Union[None, str, Dict[ControlState, str]] = None,
+        bar_overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         view_leading: Optional[Control] = None,
         view_trailing: Optional[List[Control]] = None,
         view_elevation: OptionalNumber = None,
@@ -52,9 +55,11 @@ class SearchBar(ConstrainedControl):
         keyboard_type: Optional[KeyboardType] = None,
         view_surface_tint_color: Optional[str] = None,
         autofocus: Optional[bool] = None,
-        on_tap=None,
-        on_submit=None,
-        on_change=None,
+        on_tap: OptionalControlEventCallable = None,
+        on_submit: OptionalControlEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -76,8 +81,8 @@ class SearchBar(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -128,6 +133,8 @@ class SearchBar(ConstrainedControl):
         self.divider_color = divider_color
         self.full_screen = full_screen
         self.capitalization = capitalization
+        self.on_focus = on_focus
+        self.on_blur = on_blur
         self.on_tap = on_tap
         self.on_submit = on_submit
         self.on_change = on_change
@@ -169,6 +176,11 @@ class SearchBar(ConstrainedControl):
             children.append(i)
         return children
 
+    # Public methods
+    def focus(self):
+        self._set_attr_json("focus", str(time.time()))
+        self.update()
+
     def open_view(self):
         m = {
             "n": "openView",
@@ -181,7 +193,7 @@ class SearchBar(ConstrainedControl):
     @deprecated(
         reason="Use open_view() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def open_view_async(self):
         self.open_view()
@@ -199,7 +211,7 @@ class SearchBar(ConstrainedControl):
     @deprecated(
         reason="Use close_view() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def close_view_async(self, text: str = ""):
         self.close_view(text=text)
@@ -224,20 +236,20 @@ class SearchBar(ConstrainedControl):
 
     # bar_bgcolor
     @property
-    def bar_bgcolor(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def bar_bgcolor(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__bar_bgcolor
 
     @bar_bgcolor.setter
-    def bar_bgcolor(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def bar_bgcolor(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__bar_bgcolor = value
 
     # bar_overlay_color
     @property
-    def bar_overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def bar_overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__bar_overlay_color
 
     @bar_overlay_color.setter
-    def bar_overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def bar_overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__bar_overlay_color = value
 
     # view_leading
@@ -260,7 +272,7 @@ class SearchBar(ConstrainedControl):
 
     # autofocus
     @property
-    def autofocus(self) -> Optional[bool]:
+    def autofocus(self) -> bool:
         return self._get_attr("autofocus", data_type="bool", def_value=False)
 
     @autofocus.setter
@@ -341,7 +353,7 @@ class SearchBar(ConstrainedControl):
 
     # full_screen
     @property
-    def full_screen(self) -> Optional[bool]:
+    def full_screen(self) -> bool:
         return self._get_attr("fullScreen", data_type="bool", def_value=False)
 
     @full_screen.setter
@@ -392,8 +404,8 @@ class SearchBar(ConstrainedControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]):
-        self.__controls = value if value is not None else []
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list(value) if value is not None else []
 
     # value
     @property
@@ -406,30 +418,48 @@ class SearchBar(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
         self._set_attr("onchange", True if handler is not None else None)
 
+    # on_focus
+    @property
+    def on_focus(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("focus")
+
+    @on_focus.setter
+    def on_focus(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("focus", handler)
+
+    # on_blur
+    @property
+    def on_blur(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("blur")
+
+    @on_blur.setter
+    def on_blur(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("blur", handler)
+
     # on_tap
     @property
-    def on_tap(self):
+    def on_tap(self) -> OptionalControlEventCallable:
         return self._get_event_handler("tap")
 
     @on_tap.setter
-    def on_tap(self, handler):
+    def on_tap(self, handler: OptionalControlEventCallable):
         self._add_event_handler("tap", handler)
         self._set_attr("ontap", True if handler is not None else None)
 
     # on_submit
     @property
-    def on_submit(self):
+    def on_submit(self) -> OptionalControlEventCallable:
         return self._get_event_handler("submit")
 
     @on_submit.setter
-    def on_submit(self, handler):
+    def on_submit(self, handler: OptionalControlEventCallable):
         self._add_event_handler("submit", handler)
         self._set_attr("onsubmit", True if handler is not None else None)

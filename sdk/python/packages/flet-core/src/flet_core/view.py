@@ -1,16 +1,17 @@
-from typing import Any, List, Optional, Union
+from typing import List, Optional, Union, Sequence
 
-from flet_core import Control
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.app_bar import AppBar
 from flet_core.bottom_app_bar import BottomAppBar
+from flet_core.box import BoxDecoration
+from flet_core.control import Control
 from flet_core.control import OptionalNumber
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.floating_action_button import FloatingActionButton
 from flet_core.navigation_bar import NavigationBar
 from flet_core.navigation_drawer import NavigationDrawer
-from flet_core.scrollable_control import ScrollableControl
+from flet_core.scrollable_control import ScrollableControl, OnScrollEvent
 from flet_core.types import (
     CrossAxisAlignment,
     FloatingActionButtonLocation,
@@ -18,6 +19,7 @@ from flet_core.types import (
     OffsetValue,
     PaddingValue,
     ScrollMode,
+    OptionalEventCallable,
 )
 
 
@@ -35,7 +37,7 @@ class View(ScrollableControl, AdaptiveControl):
     def __init__(
         self,
         route: Optional[str] = None,
-        controls: Optional[List[Control]] = None,
+        controls: Optional[Sequence[Control]] = None,
         appbar: Union[AppBar, CupertinoAppBar, None] = None,
         bottom_appbar: Optional[BottomAppBar] = None,
         floating_action_button: Optional[FloatingActionButton] = None,
@@ -50,6 +52,8 @@ class View(ScrollableControl, AdaptiveControl):
         spacing: OptionalNumber = None,
         padding: PaddingValue = None,
         bgcolor: Optional[str] = None,
+        decoration: Optional[BoxDecoration] = None,
+        foreground_decoration: Optional[BoxDecoration] = None,
         #
         # ScrollableControl
         #
@@ -57,7 +61,7 @@ class View(ScrollableControl, AdaptiveControl):
         auto_scroll: Optional[bool] = None,
         fullscreen_dialog: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
-        on_scroll: Any = None,
+        on_scroll: OptionalEventCallable[OnScrollEvent] = None,
         #
         # AdaptiveControl
         #
@@ -75,7 +79,7 @@ class View(ScrollableControl, AdaptiveControl):
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
-        self.controls = controls if controls is not None else []
+        self.controls = controls
         self.route = route
         self.appbar = appbar
         self.bottom_appbar = bottom_appbar
@@ -92,6 +96,8 @@ class View(ScrollableControl, AdaptiveControl):
         self.scroll = scroll
         self.auto_scroll = auto_scroll
         self.fullscreen_dialog = fullscreen_dialog
+        self.decoration = decoration
+        self.foreground_decoration = foreground_decoration
 
     def _get_control_name(self):
         return "view"
@@ -105,6 +111,8 @@ class View(ScrollableControl, AdaptiveControl):
             self._set_attr_json(
                 "floatingActionButtonLocation", self.__floating_action_button_location
             )
+        self._set_attr_json("decoration", self.__decoration)
+        self._set_attr_json("foregroundDecoration", self.__foreground_decoration)
 
     def _get_children(self):
         children = []
@@ -139,8 +147,8 @@ class View(ScrollableControl, AdaptiveControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: List[Control]):
-        self.__controls = value
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list(value) if value is not None else []
 
     # appbar
     @property
@@ -181,10 +189,13 @@ class View(ScrollableControl, AdaptiveControl):
         self, value: Union[FloatingActionButtonLocation, OffsetValue]
     ):
         self.__floating_action_button_location = value
-        self._set_attr(
-            "floatingActionButtonLocation",
-            value.value if isinstance(value, FloatingActionButtonLocation) else value,
-        )
+        if isinstance(value, (FloatingActionButtonLocation, str)):
+            self._set_attr(
+                "floatingActionButtonLocation",
+                value.value
+                if isinstance(value, FloatingActionButtonLocation)
+                else value,
+            )
 
     # navigation_bar
     @property
@@ -262,9 +273,31 @@ class View(ScrollableControl, AdaptiveControl):
 
     # fullscreen_dialog
     @property
-    def fullscreen_dialog(self) -> Optional[bool]:
+    def fullscreen_dialog(self) -> bool:
         return self._get_attr("fullscreenDialog", data_type="bool", def_value=False)
 
     @fullscreen_dialog.setter
     def fullscreen_dialog(self, value: Optional[bool]):
         self._set_attr("fullscreenDialog", value)
+
+    # foreground_decoration
+    @property
+    def foreground_decoration(self) -> Optional[BoxDecoration]:
+        return self.__foreground_decoration
+
+    @foreground_decoration.setter
+    def foreground_decoration(self, value: Optional[BoxDecoration]):
+        self.__foreground_decoration = value
+
+    # decoration
+    @property
+    def decoration(self) -> Optional[BoxDecoration]:
+        return self.__decoration
+
+    @decoration.setter
+    def decoration(self, value: Optional[BoxDecoration]):
+        self.__decoration = value
+
+    # Magic methods
+    def __contains__(self, item: Control) -> bool:
+        return item in self.__controls

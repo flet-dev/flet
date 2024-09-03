@@ -6,7 +6,13 @@ from flet_core import ControlEvent
 from flet_core.control import Control, OptionalNumber
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
-from flet_core.types import Orientation, ResponsiveNumber
+from flet_core.tooltip import TooltipValue
+from flet_core.types import (
+    Orientation,
+    ResponsiveNumber,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
+)
 from flet_core.utils import deprecated
 
 
@@ -18,50 +24,55 @@ class TimePickerEntryMode(Enum):
 
 
 class TimePickerEntryModeChangeEvent(ControlEvent):
-    def __init__(self, entry_mode) -> None:
-        self.entry_mode: Optional[TimePickerEntryMode] = TimePickerEntryMode(entry_mode)
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        self.entry_mode: Optional[TimePickerEntryMode] = TimePickerEntryMode(e.data)
 
 
 class TimePicker(Control):
     """
     A Material-style time picker dialog.
 
-    It is added to [`page.overlay`](page#overlay) and called using its `pick_time()` method.
+    It is added to [`page.overlay`](page#overlay) and can be opened by setting `open=True` or by calling `Page.open()` method.
 
     Depending on the `time_picker_entry_mode`, it will show either a Dial or an Input (hour and minute text fields) for picking a time.
 
     Example:
     ```
-    import datetime
     import flet as ft
 
-    def main(page: ft.Page):
-        def change_time(e):
-            print(f"Time picker changed, value (minute) is {time_picker.value.minute}")
 
-        def dismissed(e):
-            print(f"Time picker dismissed, value is {time_picker.value}")
+    def main(page: ft.Page):
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+
+        def handle_change(e):
+            page.add(ft.Text(f"TimePicker change: {time_picker.value}"))
+
+        def handle_dismissal(e):
+            page.add(ft.Text(f"TimePicker dismissed: {time_picker.value}"))
+
+        def handle_entry_mode_change(e):
+            page.add(ft.Text(f"TimePicker Entry mode changed to {e.entry_mode}"))
 
         time_picker = ft.TimePicker(
             confirm_text="Confirm",
             error_invalid_text="Time out of range",
             help_text="Pick your time slot",
-            on_change=change_time,
-            on_dismiss=dismissed,
+            on_change=handle_change,
+            on_dismiss=handle_dismissal,
+            on_entry_mode_change=handle_entry_mode_change,
         )
 
-        page.overlay.append(time_picker)
-
-        date_button = ft.ElevatedButton(
-            "Pick time",
-            icon=ft.icons.TIME_TO_LEAVE,
-            on_click=lambda _: time_picker.pick_time(),
+        page.add(
+            ft.ElevatedButton(
+                "Pick time",
+                icon=ft.icons.TIME_TO_LEAVE,
+                on_click=lambda _: page.open(time_picker),
+            )
         )
 
-        page.add(date_button)
 
-
-    ft.app(target=main)
+    ft.app(main)
     ```
 
     -----
@@ -81,9 +92,11 @@ class TimePicker(Control):
         confirm_text: Optional[str] = None,
         error_invalid_text: Optional[str] = None,
         orientation: Optional[Orientation] = None,
-        on_change=None,
-        on_dismiss=None,
-        on_entry_mode_change=None,
+        on_change: OptionalControlEventCallable = None,
+        on_dismiss: OptionalControlEventCallable = None,
+        on_entry_mode_change: OptionalEventCallable[
+            TimePickerEntryModeChangeEvent
+        ] = None,
         #
         # Control
         #
@@ -92,7 +105,7 @@ class TimePicker(Control):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        tooltip: Optional[str] = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -110,7 +123,9 @@ class TimePicker(Control):
             data=data,
         )
 
-        self.__on_entry_mode_change = EventHandler(lambda e: TimePickerEntryModeChangeEvent(e.data))
+        self.__on_entry_mode_change = EventHandler(
+            lambda e: TimePickerEntryModeChangeEvent(e.data)
+        )
         self._add_event_handler(
             "entryModeChange", self.__on_entry_mode_change.get_handler()
         )
@@ -132,21 +147,26 @@ class TimePicker(Control):
     def _get_control_name(self):
         return "timepicker"
 
+    @deprecated(
+        reason="Use Page.open() method instead.",
+        version="0.23.0",
+        delete_version="0.26.0",
+    )
     def pick_time(self):
         self.open = True
         self.update()
 
     @deprecated(
-        reason="Use pick_time() method instead.",
+        reason="Use Page.open() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def pick_time_async(self):
         self.pick_time()
 
     # open
     @property
-    def open(self) -> Optional[bool]:
+    def open(self) -> bool:
         return self._get_attr("open", data_type="bool", def_value=False)
 
     @open.setter
@@ -247,27 +267,31 @@ class TimePicker(Control):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
 
     # on_dismiss
     @property
-    def on_dismiss(self):
+    def on_dismiss(self) -> OptionalControlEventCallable:
         return self._get_event_handler("dismiss")
 
     @on_dismiss.setter
-    def on_dismiss(self, handler):
+    def on_dismiss(self, handler: OptionalControlEventCallable):
         self._add_event_handler("dismiss", handler)
 
     # on_entry_mode_change
     @property
-    def on_entry_mode_change(self):
-        return self.__on_entry_mode_change
+    def on_entry_mode_change(
+        self,
+    ) -> OptionalEventCallable[TimePickerEntryModeChangeEvent]:
+        return self.__on_entry_mode_change.handler
 
     @on_entry_mode_change.setter
-    def on_entry_mode_change(self, handler):
-        self.__on_entry_mode_change.subscribe(handler)
+    def on_entry_mode_change(
+        self, handler: OptionalEventCallable[TimePickerEntryModeChangeEvent]
+    ):
+        self.__on_entry_mode_change.handler = handler

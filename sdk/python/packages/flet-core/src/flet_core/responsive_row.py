@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union, Sequence
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
@@ -12,6 +12,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -50,7 +51,7 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
-        controls: Optional[List[Control]] = None,
+        controls: Optional[Sequence[Control]] = None,
         columns: Optional[ResponsiveNumber] = None,
         alignment: Optional[MainAxisAlignment] = None,
         vertical_alignment: Optional[CrossAxisAlignment] = None,
@@ -82,7 +83,7 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalControlEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -150,7 +151,7 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
     @deprecated(
         reason="Use clean() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def clean_async(self):
         self.clean()
@@ -208,5 +209,5 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value):
-        self.__controls = value if value is not None else []
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list(value) if value is not None else []

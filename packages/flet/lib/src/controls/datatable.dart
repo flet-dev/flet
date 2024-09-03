@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/gradient.dart';
@@ -83,13 +84,13 @@ class _DataTableControlState extends State<DataTableControl>
           checkboxHorizontalMargin:
               widget.control.attrDouble("checkboxHorizontalMargin"),
           columnSpacing: widget.control.attrDouble("columnSpacing"),
-          dataRowColor: parseMaterialStateColor(
+          dataRowColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "dataRowColor"),
           dataRowMinHeight: widget.control.attrDouble("dataRowMinHeight"),
           dataRowMaxHeight: widget.control.attrDouble("dataRowMaxHeight"),
           dataTextStyle: parseTextStyle(
               Theme.of(context), widget.control, "dataTextStyle"),
-          headingRowColor: parseMaterialStateColor(
+          headingRowColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "headingRowColor"),
           headingRowHeight: widget.control.attrDouble("headingRowHeight"),
           headingTextStyle: parseTextStyle(
@@ -118,6 +119,9 @@ class _DataTableControlState extends State<DataTableControl>
             return DataColumn(
                 numeric: column.control.attrBool("numeric", false)!,
                 tooltip: column.control.attrString("tooltip"),
+                headingRowAlignment: parseMainAxisAlignment(
+                    column.control.attrString("headingRowAlignment")),
+                mouseCursor: WidgetStateMouseCursor.clickable,
                 onSort: column.control.attrBool("onSort", false)!
                     ? (columnIndex, ascending) {
                         widget.backend.triggerControlEvent(
@@ -135,7 +139,7 @@ class _DataTableControlState extends State<DataTableControl>
             return DataRow(
                 key: ValueKey(row.control.id),
                 selected: row.control.attrBool("selected", false)!,
-                color: parseMaterialStateColor(
+                color: parseWidgetStateColor(
                     Theme.of(context), row.control, "color"),
                 onSelectChanged: row.control.attrBool("onSelectChanged", false)!
                     ? (selected) {
@@ -147,7 +151,8 @@ class _DataTableControlState extends State<DataTableControl>
                     : null,
                 onLongPress: row.control.attrBool("onLongPress", false)!
                     ? () {
-                        widget.backend.triggerControlEvent(row.control.id, "long_press");
+                        widget.backend
+                            .triggerControlEvent(row.control.id, "long_press");
                       }
                     : null,
                 cells: row.children

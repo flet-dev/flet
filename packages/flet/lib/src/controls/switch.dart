@@ -5,13 +5,12 @@ import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/mouse.dart';
+import '../utils/others.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 import 'cupertino_switch.dart';
 import 'flet_store_mixin.dart';
 import 'list_tile.dart';
-
-enum LabelPosition { right, left }
 
 class SwitchControl extends StatefulWidget {
   final Control? parent;
@@ -80,11 +79,10 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
       }
 
       String label = widget.control.attrString("label", "")!;
-      LabelPosition labelPosition = LabelPosition.values.firstWhere(
-          (p) =>
-              p.name.toLowerCase() ==
-              widget.control.attrString("labelPosition", "")!.toLowerCase(),
-          orElse: () => LabelPosition.right);
+      LabelPosition labelPosition = parseLabelPosition(
+          widget.control.attrString("labelPosition"), LabelPosition.right)!;
+      double? width = widget.control.attrDouble("width");
+      double? height = widget.control.attrDouble("height");
       bool autofocus = widget.control.attrBool("autofocus", false)!;
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
@@ -111,11 +109,11 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
               widget.control.attrColor("inactiveThumbColor", context),
           inactiveTrackColor:
               widget.control.attrColor("inactiveTrackColor", context),
-          thumbColor: parseMaterialStateColor(
+          thumbColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "thumbColor"),
-          thumbIcon: parseMaterialStateIcon(
+          thumbIcon: parseWidgetStateIcon(
               Theme.of(context), widget.control, "thumbIcon"),
-          trackColor: parseMaterialStateColor(
+          trackColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "trackColor"),
           focusColor: widget.control.attrColor("focusColor", context),
           value: _value,
@@ -123,9 +121,9 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
               parseMouseCursor(widget.control.attrString("mouseCursor")),
           splashRadius: widget.control.attrDouble("splashRadius"),
           hoverColor: widget.control.attrColor("hoverColor", context),
-          overlayColor: parseMaterialStateColor(
+          overlayColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "overlayColor"),
-          trackOutlineColor: parseMaterialStateColor(
+          trackOutlineColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "trackOutlineColor"),
           onChanged: !disabled
               ? (bool value) {
@@ -138,6 +136,16 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
       });
 
       Widget result = s;
+      if (width != null || height != null) {
+        result = SizedBox(
+          width: width,
+          height: height,
+          child: FittedBox(
+            fit: BoxFit.fill,
+            child: result,
+          ),
+        );
+      }
       if (label != "") {
         var labelWidget = disabled
             ? Text(label, style: labelStyle)

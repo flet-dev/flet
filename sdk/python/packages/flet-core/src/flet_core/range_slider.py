@@ -3,13 +3,15 @@ from typing import Any, Dict, Optional, Union
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
-    MaterialState,
+    ControlState,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalControlEventCallable,
 )
 
 
@@ -84,10 +86,10 @@ class RangeSlider(ConstrainedControl):
         round: Optional[int] = None,
         active_color: Optional[str] = None,
         inactive_color: Optional[str] = None,
-        overlay_color: Union[None, str, Dict[MaterialState, str]] = None,
-        on_change=None,
-        on_change_start=None,
-        on_change_end=None,
+        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
+        on_change: OptionalControlEventCallable = None,
+        on_change_start: OptionalControlEventCallable = None,
+        on_change_end: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -113,8 +115,8 @@ class RangeSlider(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -260,36 +262,36 @@ class RangeSlider(ConstrainedControl):
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[MaterialState, str]]:
+    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[MaterialState, str]]):
+    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__overlay_color = value
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
 
     # on_change_start
     @property
-    def on_change_start(self):
+    def on_change_start(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change_start")
 
     @on_change_start.setter
-    def on_change_start(self, handler):
+    def on_change_start(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change_start", handler)
 
     # on_change_end
     @property
-    def on_change_end(self):
+    def on_change_end(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change_end")
 
     @on_change_end.setter
-    def on_change_end(self, handler):
+    def on_change_end(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change_end", handler)

@@ -4,6 +4,7 @@ from flet_core.alignment import Alignment
 from flet_core.control import Control, OptionalNumber
 from flet_core.cupertino_button import CupertinoButton
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import BorderRadiusValue, PaddingValue, ResponsiveNumber, UrlTarget
 
 
@@ -31,12 +32,21 @@ class CupertinoFilledButton(CupertinoButton):
     def __init__(
         self,
         text: Optional[str] = None,
+        icon: Optional[str] = None,
+        icon_color: Optional[str] = None,
+        content: Optional[Control] = None,
         disabled_color: Optional[str] = None,
         opacity_on_click: OptionalNumber = None,
         min_size: OptionalNumber = None,
         padding: PaddingValue = None,
         alignment: Optional[Alignment] = None,
         border_radius: BorderRadiusValue = None,
+        url: Optional[str] = None,
+        url_target: Optional[UrlTarget] = None,
+        on_click=None,
+        #
+        # ConstrainedControl
+        #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
@@ -45,19 +55,10 @@ class CupertinoFilledButton(CupertinoButton):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        tooltip: Optional[str] = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Specific
-        #
-        icon: Optional[str] = None,
-        icon_color: Optional[str] = None,
-        content: Optional[Control] = None,
-        url: Optional[str] = None,
-        url_target: Optional[UrlTarget] = None,
-        on_click=None,
     ):
         CupertinoButton.__init__(
             self,

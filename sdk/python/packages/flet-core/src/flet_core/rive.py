@@ -4,6 +4,7 @@ from flet_core.alignment import Alignment
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber, Control
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -11,6 +12,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     ImageFit,
+    OptionalControlEventCallable,
 )
 
 
@@ -57,8 +59,8 @@ class Rive(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -146,7 +148,7 @@ class Rive(ConstrainedControl):
 
     # enable_antialiasing
     @property
-    def enable_antialiasing(self) -> Optional[bool]:
+    def enable_antialiasing(self) -> bool:
         return self._get_attr("enableAntiAliasing", def_value=True, data_type="bool")
 
     @enable_antialiasing.setter
@@ -164,7 +166,7 @@ class Rive(ConstrainedControl):
 
     # use_artboard_size
     @property
-    def use_artboard_size(self) -> Optional[bool]:
+    def use_artboard_size(self) -> bool:
         return self._get_attr("useArtBoardSize", def_value=False, data_type="bool")
 
     @use_artboard_size.setter

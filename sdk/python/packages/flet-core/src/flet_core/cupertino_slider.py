@@ -3,12 +3,14 @@ from typing import Any, Optional, Union
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalControlEventCallable,
 )
 
 
@@ -33,11 +35,11 @@ class CupertinoSlider(ConstrainedControl):
         divisions: Optional[int] = None,
         active_color: Optional[str] = None,
         thumb_color: Optional[str] = None,
-        on_change=None,
-        on_change_start=None,
-        on_change_end=None,
-        on_focus=None,
-        on_blur=None,
+        on_change: OptionalControlEventCallable = None,
+        on_change_start: OptionalControlEventCallable = None,
+        on_change_end: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -63,8 +65,8 @@ class CupertinoSlider(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -117,8 +119,8 @@ class CupertinoSlider(ConstrainedControl):
 
     # value
     @property
-    def value(self) -> OptionalNumber:
-        return self._get_attr("value", data_type="float", def_value=0)
+    def value(self) -> float:
+        return self._get_attr("value", data_type="float", def_value=0.0)
 
     @value.setter
     def value(self, value: OptionalNumber):
@@ -131,8 +133,8 @@ class CupertinoSlider(ConstrainedControl):
 
     # min
     @property
-    def min(self) -> OptionalNumber:
-        return self._get_attr("min", data_type="float", def_value=0)
+    def min(self) -> float:
+        return self._get_attr("min", data_type="float", def_value=0.0)
 
     @min.setter
     def min(self, value: OptionalNumber):
@@ -143,8 +145,8 @@ class CupertinoSlider(ConstrainedControl):
 
     # max
     @property
-    def max(self) -> OptionalNumber:
-        return self._get_attr("max", data_type="float", def_value=1)
+    def max(self) -> float:
+        return self._get_attr("max", data_type="float", def_value=1.0)
 
     @max.setter
     def max(self, value: OptionalNumber):
@@ -164,7 +166,7 @@ class CupertinoSlider(ConstrainedControl):
 
     # round
     @property
-    def round(self) -> Optional[int]:
+    def round(self) -> int:
         return self._get_attr("round", data_type="int", def_value=0)
 
     @round.setter
@@ -191,45 +193,45 @@ class CupertinoSlider(ConstrainedControl):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
 
     # on_change_start
     @property
-    def on_change_start(self):
+    def on_change_start(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change_start")
 
     @on_change_start.setter
-    def on_change_start(self, handler):
+    def on_change_start(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change_start", handler)
 
     # on_change_end
     @property
-    def on_change_end(self):
+    def on_change_end(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change_end")
 
     @on_change_end.setter
-    def on_change_end(self, handler):
+    def on_change_end(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change_end", handler)
 
     # on_focus
     @property
-    def on_focus(self):
+    def on_focus(self) -> OptionalControlEventCallable:
         return self._get_event_handler("focus")
 
     @on_focus.setter
-    def on_focus(self, handler):
+    def on_focus(self, handler: OptionalControlEventCallable):
         self._add_event_handler("focus", handler)
 
     # on_blur
     @property
-    def on_blur(self):
+    def on_blur(self) -> OptionalControlEventCallable:
         return self._get_event_handler("blur")
 
     @on_blur.setter
-    def on_blur(self, handler):
+    def on_blur(self, handler: OptionalControlEventCallable):
         self._add_event_handler("blur", handler)

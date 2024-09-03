@@ -2,6 +2,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.types import OptionalControlEventCallable
 
 
 class RadioGroup(Control):
@@ -38,7 +39,7 @@ class RadioGroup(Control):
         self,
         content: Control,
         value: Optional[str] = None,
-        on_change=None,
+        on_change: OptionalControlEventCallable = None,
         #
         # Control
         #
@@ -93,9 +94,9 @@ class RadioGroup(Control):
 
     # on_change
     @property
-    def on_change(self):
+    def on_change(self) -> OptionalControlEventCallable:
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)

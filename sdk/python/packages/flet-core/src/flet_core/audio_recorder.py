@@ -3,8 +3,23 @@ from enum import Enum
 from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
+from flet_core.control_event import ControlEvent
+from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
+from flet_core.types import OptionalEventCallable
 from flet_core.utils import deprecated
+
+
+class AudioRecorderState(Enum):
+    STOPPED = "stopped"
+    RECORDING = "recording"
+    PAUSED = "paused"
+
+
+class AudioRecorderStateChangeEvent(ControlEvent):
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        self.state: AudioRecorderState = AudioRecorderState(e.data)
 
 
 class AudioEncoder(Enum):
@@ -37,7 +52,7 @@ class AudioRecorder(Control):
         channels_num: OptionalNumber = None,
         sample_rate: OptionalNumber = None,
         bit_rate: OptionalNumber = None,
-        on_state_changed=None,
+        on_state_changed: OptionalEventCallable[AudioRecorderStateChangeEvent] = None,
         #
         # Control
         #
@@ -49,6 +64,11 @@ class AudioRecorder(Control):
             ref=ref,
             data=data,
         )
+        self.__on_state_changed = EventHandler(
+            lambda e: AudioRecorderStateChangeEvent(e)
+        )
+        self._add_event_handler("state_changed", self.__on_state_changed.get_handler())
+
         self.audio_encoder = audio_encoder
         self.suppress_noise = suppress_noise
         self.cancel_echo = cancel_echo
@@ -61,18 +81,27 @@ class AudioRecorder(Control):
     def _get_control_name(self):
         return "audiorecorder"
 
-    def start_recording(self, output_path: str = None):
-        if not self.page.web and not output_path:
-            raise ValueError("output_path must be provided when not on web!")
-        self.invoke_method("start_recording", {"outputPath": output_path})
+    def start_recording(
+        self, output_path: str = None, wait_timeout: Optional[float] = 10
+    ) -> bool:
+        assert (
+            self.page.web or output_path
+        ), "output_path must be provided when not on web"
+        started = self.invoke_method(
+            "start_recording",
+            {"outputPath": output_path},
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return started == "true"
 
     @deprecated(
         reason="Use start_recording() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
-    async def start_recording_async(self, output_path: str):
-        self.start_recording(output_path)
+    async def start_recording_async(self, output_path: str) -> bool:
+        return self.start_recording(output_path)
 
     def is_recording(self, wait_timeout: Optional[float] = 5) -> bool:
         recording = self.invoke_method(
@@ -91,22 +120,27 @@ class AudioRecorder(Control):
         return recording == "true"
 
     def stop_recording(self, wait_timeout: Optional[float] = 5) -> Optional[str]:
-        out = self.invoke_method(
+        return self.invoke_method(
             "stop_recording",
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        return out if out != "null" else None
 
     async def stop_recording_async(
         self, wait_timeout: Optional[float] = 10
     ) -> Optional[str]:
-        out = await self.invoke_method_async(
+        return await self.invoke_method_async(
             "stop_recording",
             wait_for_result=True,
             wait_timeout=wait_timeout,
         )
-        return out if out != "null" else None
+
+    def cancel_recording(self, wait_timeout: Optional[float] = 5) -> None:
+        self.invoke_method(
+            "cancel_recording",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
 
     def resume_recording(self):
         self.invoke_method("resume_recording")
@@ -114,7 +148,7 @@ class AudioRecorder(Control):
     @deprecated(
         reason="Use resume_recording() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def resume_recording_async(self):
         self.resume_recording()
@@ -125,7 +159,7 @@ class AudioRecorder(Control):
     @deprecated(
         reason="Use pause_recording() method instead.",
         version="0.21.0",
-        delete_version="1.0",
+        delete_version="0.26.0",
     )
     async def pause_recording_async(self):
         self.pause_recording()
@@ -219,7 +253,7 @@ class AudioRecorder(Control):
 
     # suppress_noise
     @property
-    def suppress_noise(self) -> Optional[bool]:
+    def suppress_noise(self) -> bool:
         return self._get_attr("suppressNoise", data_type="bool", def_value=False)
 
     @suppress_noise.setter
@@ -228,7 +262,7 @@ class AudioRecorder(Control):
 
     # cancel_echo
     @property
-    def cancel_echo(self) -> Optional[bool]:
+    def cancel_echo(self) -> bool:
         return self._get_attr("cancelEcho", data_type="bool", def_value=False)
 
     @cancel_echo.setter
@@ -237,7 +271,7 @@ class AudioRecorder(Control):
 
     # auto_gain
     @property
-    def auto_gain(self) -> Optional[bool]:
+    def auto_gain(self) -> bool:
         return self._get_attr("autoGain", data_type="bool", def_value=False)
 
     @auto_gain.setter
@@ -275,8 +309,10 @@ class AudioRecorder(Control):
     # on_state_changed
     @property
     def on_state_changed(self):
-        return self._get_event_handler("state_changed")
+        return self.__on_state_changed.handler
 
     @on_state_changed.setter
-    def on_state_changed(self, handler):
-        self._add_event_handler("state_changed", handler)
+    def on_state_changed(
+        self, handler: OptionalEventCallable[AudioRecorderStateChangeEvent]
+    ):
+        self.__on_state_changed.handler = handler

@@ -20,7 +20,7 @@ class TileLayerControl extends StatelessWidget with FletStoreMixin {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("TileLayerControl build: ${control.id} (${control.hashCode})");
+    debugPrint("TileLayerControl build: ${control.id}");
 
     return withPageArgs((context, pageArgs) {
       var errorImageSrc = control.attrString("errorImageSrc");

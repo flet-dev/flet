@@ -15,6 +15,7 @@ import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/dash_path.dart';
 import '../utils/drawing.dart';
+import '../utils/images.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
 import '../utils/transforms.dart';
@@ -232,11 +233,8 @@ class FletCustomPainter extends CustomPainter {
 
   void drawColor(Canvas canvas, ControlTreeViewModel shape) {
     var color = shape.control.attrColor("color", context) ?? Colors.black;
-    var blendMode = BlendMode.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            shape.control.attrString("blendMode", "")!.toLowerCase(),
-        orElse: () => BlendMode.srcOver);
+    var blendMode = parseBlendMode(
+        shape.control.attrString("blendMode"), BlendMode.srcOver)!;
     canvas.drawColor(color, blendMode);
   }
 
@@ -370,9 +368,7 @@ class FletCustomPainter extends CustomPainter {
             parseDouble(elem["width"], 0)!,
             parseDouble(elem["height"], 0)!));
       } else if (type == "rect") {
-        var borderRadius = elem["border_radius"] != null
-            ? borderRadiusFromJSON(elem["border_radius"])
-            : null;
+        var borderRadius = borderRadiusFromJSON(elem["border_radius"]);
         path.addRRect(RRect.fromRectAndCorners(
             Rect.fromLTWH(
                 parseDouble(elem["x"], 0)!,

@@ -3,6 +3,7 @@ from typing import Any, Optional
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.types import OptionalControlEventCallable
 
 
 class CupertinoDialogAction(Control):
@@ -13,23 +14,42 @@ class CupertinoDialogAction(Control):
     ```
     import flet as ft
 
+
     def main(page: ft.Page):
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+
+        def dialog_dismissed(e):
+            page.add(ft.Text("Dialog dismissed"))
+
+        def handle_action_click(e):
+            page.add(ft.Text(f"Action clicked: {e.control.text}"))
+            page.close(cupertino_alert_dialog)
+
         cupertino_alert_dialog = ft.CupertinoAlertDialog(
             title=ft.Text("Cupertino Alert Dialog"),
-            content=ft.Text("body"),
-            on_dismiss=lambda e: print("Dismissed!"),
+            content=ft.Text("Do you want to delete this file?"),
+            on_dismiss=dialog_dismissed,
             actions=[
                 ft.CupertinoDialogAction(
-                    "OK",
+                    text="Yes",
                     is_destructive_action=True,
+                    on_click=handle_action_click,
                 ),
-                ft.CupertinoDialogAction(text="Cancel", is_default_action=False),
+                ft.CupertinoDialogAction(
+                    text="No",
+                    is_default_action=True,
+                    on_click=handle_action_click
+                ),
             ],
         )
 
         page.add(
-            ft.OutlinedButton("Open Cupertino Dialog", on_click=lambda e: page.show_dialog(cupertino_alert_dialog)),
+            ft.CupertinoFilledButton(
+                text="Open CupertinoAlertDialog",
+                on_click=lambda e: page.open(cupertino_alert_dialog),
+            )
         )
+
 
     ft.app(target=main)
     ```
@@ -46,7 +66,7 @@ class CupertinoDialogAction(Control):
         is_default_action: Optional[bool] = None,
         is_destructive_action: Optional[bool] = None,
         text_style: Optional[TextStyle] = None,
-        on_click=None,
+        on_click: OptionalControlEventCallable = None,
         #
         # Specific
         #
@@ -94,8 +114,8 @@ class CupertinoDialogAction(Control):
 
     # is_default_action
     @property
-    def is_default_action(self) -> Optional[bool]:
-        return self._get_attr("isDefaultAction")
+    def is_default_action(self) -> bool:
+        return self._get_attr("isDefaultAction", data_type="bool", def_value=False)
 
     @is_default_action.setter
     def is_default_action(self, value: Optional[bool]):
@@ -103,8 +123,8 @@ class CupertinoDialogAction(Control):
 
     # is_destructive_action
     @property
-    def is_destructive_action(self) -> Optional[bool]:
-        return self._get_attr("isDestructiveAction")
+    def is_destructive_action(self) -> bool:
+        return self._get_attr("isDestructiveAction", data_type="bool", def_value=False)
 
     @is_destructive_action.setter
     def is_destructive_action(self, value: Optional[bool]):
@@ -112,11 +132,11 @@ class CupertinoDialogAction(Control):
 
     # on_click
     @property
-    def on_click(self):
+    def on_click(self) -> OptionalControlEventCallable:
         return self._get_event_handler("click")
 
     @on_click.setter
-    def on_click(self, handler):
+    def on_click(self, handler: OptionalControlEventCallable):
         self._add_event_handler("click", handler)
 
     # content

@@ -14,7 +14,7 @@ IconData? parseIcon(String? iconName, [IconData? defaultIcon]) {
   return materialIcons[iconName.toLowerCase()] ?? cupertinoIcons[iconName.toLowerCase()];
 }
 
-MaterialStateProperty<Icon?>? parseMaterialStateIcon(
+WidgetStateProperty<Icon?>? parseWidgetStateIcon(
     ThemeData theme, Control control, String propName) {
   var v = control.attrString(propName, null);
   if (v == null) {
@@ -23,6 +23,6 @@ MaterialStateProperty<Icon?>? parseMaterialStateIcon(
 
   final j1 = json.decode(v);
 
-  return getMaterialStateProperty<Icon?>(
+  return getWidgetStateProperty<Icon?>(
       j1, (jv) => Icon(parseIcon(jv as String)));
 }

@@ -15,6 +15,7 @@ import '../utils/icons.dart';
 import '../utils/material_state.dart';
 import '../utils/mouse.dart';
 import '../utils/others.dart';
+import '../utils/text.dart';
 import 'create_control.dart';
 
 class TabsControl extends StatefulWidget {
@@ -115,7 +116,7 @@ class _TabsControlState extends State<TabsControl>
           var overlayColorStr = widget.control.attrString("overlayColor");
           dynamic overlayColor;
           if (overlayColorStr != null) {
-            overlayColor = getMaterialStateProperty<Color?>(
+            overlayColor = getWidgetStateProperty<Color?>(
                     json.decode(overlayColorStr),
                     (jv) => parseColor(Theme.of(context), jv as String)) ??
                 TabBarTheme.of(context).overlayColor;
@@ -159,6 +160,19 @@ class _TabsControlState extends State<TabsControl>
               parseMouseCursor(widget.control.attrString("mouseCursor"));
           var clipBehavior = parseClip(
               widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
+          var padding = parseEdgeInsets(widget.control, "padding");
+          var labelPadding = parseEdgeInsets(widget.control, "labelPadding");
+          var labelStyle = parseTextStyle(
+              Theme.of(context), widget.control, "labelTextStyle");
+          var unselectedLabelStyle = parseTextStyle(
+              Theme.of(context), widget.control, "unselectedLabelTextStyle");
+          var splashBorderRadius =
+              parseBorderRadius(widget.control, "splashBorderRadius");
+
+          void onTap(int index) {
+            widget.backend.triggerControlEvent(
+                widget.control.id, "click", index.toString());
+          }
 
           var indicator = indicatorBorderRadius != null ||
                   indicatorBorderSide != null ||
@@ -232,7 +246,14 @@ class _TabsControlState extends State<TabsControl>
                 labelColor: labelColor,
                 unselectedLabelColor: unselectedLabelColor,
                 overlayColor: overlayColor,
-                tabs: tabs);
+                tabs: tabs,
+                padding: padding,
+                labelPadding: labelPadding,
+                labelStyle: labelStyle,
+                unselectedLabelStyle: unselectedLabelStyle,
+                splashBorderRadius: splashBorderRadius,
+                indicatorPadding: indicatorPadding ?? EdgeInsets.zero,
+                onTap: onTap);
           } else {
             tabBar = TabBar(
                 tabAlignment: tabAlignment,
@@ -249,7 +270,14 @@ class _TabsControlState extends State<TabsControl>
                 labelColor: labelColor,
                 unselectedLabelColor: unselectedLabelColor,
                 overlayColor: overlayColor,
-                tabs: tabs);
+                tabs: tabs,
+                padding: padding,
+                labelPadding: labelPadding,
+                labelStyle: labelStyle,
+                unselectedLabelStyle: unselectedLabelStyle,
+                splashBorderRadius: splashBorderRadius,
+                indicatorPadding: indicatorPadding ?? EdgeInsets.zero,
+                onTap: onTap);
           }
 
           debugPrint("tabs.length: ${tabBar.tabs.length}");

@@ -1,7 +1,8 @@
 import json
+from enum import Enum
 from typing import Any, List, Optional, Union
 
-from flet_core.border import Border
+from flet_core.border import Border, BorderSide
 from flet_core.charts.bar_chart_group import BarChartGroup
 from flet_core.charts.chart_axis import ChartAxis
 from flet_core.charts.chart_grid_lines import ChartGridLines
@@ -10,13 +11,23 @@ from flet_core.control import OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalEventCallable,
+    PaddingValue,
+    OptionalControlEventCallable,
 )
+
+
+class TooltipDirection(Enum):
+    AUTO = "auto"
+    UP = "below"
+    DOWN = "above"
 
 
 class BarChart(ConstrainedControl):
@@ -38,7 +49,17 @@ class BarChart(ConstrainedControl):
         baseline_y: OptionalNumber = None,
         min_y: OptionalNumber = None,
         max_y: OptionalNumber = None,
-        on_chart_event=None,
+        tooltip_rounded_radius: OptionalNumber = None,
+        tooltip_margin: OptionalNumber = None,
+        tooltip_padding: PaddingValue = None,
+        tooltip_max_content_width: OptionalNumber = None,
+        tooltip_rotate_angle: OptionalNumber = None,
+        tooltip_tooltip_horizontal_offset: OptionalNumber = None,
+        tooltip_tooltip_border_side: Optional[BorderSide] = None,
+        tooltip_fit_inside_horizontally: Optional[bool] = None,
+        tooltip_fit_inside_vertically: Optional[bool] = None,
+        tooltip_direction: Optional[TooltipDirection] = None,
+        on_chart_event: OptionalEventCallable["BarChartEvent"] = None,
         #
         # ConstrainedControl
         #
@@ -63,8 +84,8 @@ class BarChart(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -99,11 +120,7 @@ class BarChart(ConstrainedControl):
             data=data,
         )
 
-        def convert_linechart_event_data(e):
-            d = json.loads(e.data)
-            return BarChartEvent(**d)
-
-        self.__on_chart_event = EventHandler(convert_linechart_event_data)
+        self.__on_chart_event = EventHandler(lambda e: BarChartEvent(e))
         self._add_event_handler("chart_event", self.__on_chart_event.get_handler())
 
         self.bar_groups = bar_groups
@@ -123,6 +140,16 @@ class BarChart(ConstrainedControl):
         self.min_y = min_y
         self.max_y = max_y
         self.on_chart_event = on_chart_event
+        self.tooltip_rounded_radius = tooltip_rounded_radius
+        self.tooltip_margin = tooltip_margin
+        self.tooltip_padding = tooltip_padding
+        self.tooltip_direction = tooltip_direction
+        self.tooltip_max_content_width = tooltip_max_content_width
+        self.tooltip_rotate_angle = tooltip_rotate_angle
+        self.tooltip_horizontal_offset = tooltip_tooltip_horizontal_offset
+        self.tooltip_border_side = tooltip_tooltip_border_side
+        self.tooltip_fit_inside_horizontally = tooltip_fit_inside_horizontally
+        self.tooltip_fit_inside_vertically = tooltip_fit_inside_vertically
 
     def _get_control_name(self):
         return "barchart"
@@ -133,6 +160,8 @@ class BarChart(ConstrainedControl):
         self._set_attr_json("verticalGridLines", self.__vertical_grid_lines)
         self._set_attr_json("animate", self.__animate)
         self._set_attr_json("border", self.__border)
+        self._set_attr_json("tooltipBorderSide", self.__tooltip_border_side)
+        self._set_attr_json("tooltipPadding", self.__tooltip_padding)
 
     def _get_children(self):
         children = []
@@ -190,7 +219,7 @@ class BarChart(ConstrainedControl):
 
     # interactive
     @property
-    def interactive(self) -> Optional[bool]:
+    def interactive(self) -> bool:
         return self._get_attr("interactive", data_type="bool", def_value=True)
 
     @interactive.setter
@@ -296,23 +325,104 @@ class BarChart(ConstrainedControl):
     def max_y(self, value: OptionalNumber):
         self._set_attr("maxy", value)
 
+    # tooltip_rounded_radius
+    @property
+    def tooltip_rounded_radius(self) -> OptionalNumber:
+        return self._get_attr("tooltipRoundedRadius", data_type="float")
+
+    @tooltip_rounded_radius.setter
+    def tooltip_rounded_radius(self, value: OptionalNumber):
+        self._set_attr("tooltipRoundedRadius", value)
+
+    # tooltip_margin
+    @property
+    def tooltip_margin(self) -> OptionalNumber:
+        return self._get_attr("tooltipMargin", data_type="float")
+
+    @tooltip_margin.setter
+    def tooltip_margin(self, value: OptionalNumber):
+        self._set_attr("tooltipMargin", value)
+
+    # tooltip_padding
+    @property
+    def tooltip_padding(self) -> PaddingValue:
+        return self.__tooltip_padding
+
+    @tooltip_padding.setter
+    def tooltip_padding(self, value: PaddingValue):
+        self.__tooltip_padding = value
+
+    # tooltip_max_content_width
+    @property
+    def tooltip_max_content_width(self) -> OptionalNumber:
+        return self._get_attr("tooltipMaxContentWidth", data_type="float")
+
+    @tooltip_max_content_width.setter
+    def tooltip_max_content_width(self, value: OptionalNumber):
+        self._set_attr("tooltipMaxContentWidth", value)
+
+    # tooltip_rotate_angle
+    @property
+    def tooltip_rotate_angle(self) -> OptionalNumber:
+        return self._get_attr("tooltipRotateAngle", data_type="float")
+
+    @tooltip_rotate_angle.setter
+    def tooltip_rotate_angle(self, value: OptionalNumber):
+        self._set_attr("tooltipRotateAngle", value)
+
+    # tooltip_fit_inside_vertically
+    @property
+    def tooltip_fit_inside_vertically(self) -> Optional[bool]:
+        return self._get_attr("tooltipFitInsideVertically", data_type="bool")
+
+    @tooltip_fit_inside_vertically.setter
+    def tooltip_fit_inside_vertically(self, value: Optional[bool]):
+        self._set_attr("tooltipFitInsideVertically", value)
+
+    # tooltip_fit_inside_horizontally
+    @property
+    def tooltip_fit_inside_horizontally(self) -> Optional[bool]:
+        return self._get_attr("tooltipFitInsideHorizontally", data_type="bool")
+
+    @tooltip_fit_inside_horizontally.setter
+    def tooltip_fit_inside_horizontally(self, value: Optional[bool]):
+        self._set_attr("tooltipFitInsideHorizontally", value)
+
+    # tooltip_border_side
+    @property
+    def tooltip_border_side(self) -> Optional[BorderSide]:
+        return self.__tooltip_border_side
+
+    @tooltip_border_side.setter
+    def tooltip_border_side(self, value: Optional[BorderSide]):
+        self.__tooltip_border_side = value
+
+    # tooltip_direction
+    @property
+    def tooltip_direction(self) -> Optional[TooltipDirection]:
+        return self.__tooltip_direction
+
+    @tooltip_direction.setter
+    def tooltip_direction(self, value: Optional[TooltipDirection]):
+        self.__tooltip_direction = value
+        self._set_enum_attr("tooltipDirection", value, TooltipDirection)
+
     # on_chart_event
     @property
-    def on_chart_event(self):
-        return self.__on_chart_event
+    def on_chart_event(self) -> OptionalEventCallable["BarChartEvent"]:
+        return self.__on_chart_event.handler
 
     @on_chart_event.setter
-    def on_chart_event(self, handler):
-        self.__on_chart_event.subscribe(handler)
-        if handler is not None:
-            self._set_attr("onChartEvent", True)
-        else:
-            self._set_attr("onChartEvent", None)
+    def on_chart_event(self, handler: OptionalEventCallable["BarChartEvent"]):
+        self.__on_chart_event.handler = handler
+        self._set_attr("onChartEvent", True if handler is not None else None)
 
 
 class BarChartEvent(ControlEvent):
-    def __init__(self, type, group_index, rod_index, stack_item_index) -> None:
-        self.type: str = type
-        self.group_index: int = group_index
-        self.rod_index: int = rod_index
-        self.stack_item_index: int = stack_item_index
+    def __init__(self, e: ControlEvent) -> None:
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.type: str = d.get("type")
+        self.group_index: int = d.get("group_index")
+        self.rod_index: int = d.get("rod_index")
+        self.stack_item_index: int = d.get("stack_item_index")

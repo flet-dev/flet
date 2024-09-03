@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../models/control_view_model.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
@@ -75,6 +76,8 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
           widget.children.where((c) => c.name == "icon" && c.isVisible);
       var hintCtrl =
           widget.children.where((c) => c.name == "hint" && c.isVisible);
+      var disabledHintCtrl = widget.children
+          .where((c) => c.name == "disabled_hint" && c.isVisible);
 
       var color = widget.control.attrColor("color", context);
       var focusedColor = widget.control.attrColor("focusedColor", context);
@@ -94,19 +97,28 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
       }
 
       var items = itemsView.controlViews
-          .map((v) => v.control)
-          .where((c) => c.name == null && c.isVisible)
-          .map<DropdownMenuItem<String>>((Control itemCtrl) {
+          .where((c) => c.control.name == null && c.control.isVisible)
+          .map<DropdownMenuItem<String>>((ControlViewModel itemCtrlView) {
+        var itemCtrl = itemCtrlView.control;
         bool itemDisabled = disabled || itemCtrl.isDisabled;
         TextStyle? textStyle =
             parseTextStyle(Theme.of(context), itemCtrl, "textStyle");
         if (itemDisabled && textStyle != null) {
           textStyle = textStyle.apply(color: Theme.of(context).disabledColor);
         }
-        Widget itemChild = Text(
-          itemCtrl.attrs["text"] ?? itemCtrl.attrs["key"] ?? itemCtrl.id,
-          style: textStyle,
-        );
+        var contentCtrls = itemCtrlView.children
+            .where((c) => c.name == "content" && c.isVisible);
+        Widget? itemChild;
+        if (contentCtrls.isNotEmpty) {
+          // custom content
+          itemChild = createControl(
+              itemCtrlView.control, contentCtrls.first.id, itemDisabled);
+        } else {
+          itemChild = Text(
+            itemCtrl.attrs["text"] ?? itemCtrl.attrs["key"] ?? itemCtrl.id,
+            style: textStyle,
+          );
+        }
         var align = parseAlignment(itemCtrl, "alignment");
         if (align != null) {
           itemChild = Container(alignment: align, child: itemChild);
@@ -137,6 +149,8 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
           .where((c) => c.control.name == "prefix" && c.control.isVisible);
       var suffixControls = itemsView.controlViews
           .where((c) => c.control.name == "suffix" && c.control.isVisible);
+      var counterControls = itemsView.controlViews
+          .where((c) => c.control.name == "counter" && c.control.isVisible);
 
       var focusValue = widget.control.attrString("focus");
       if (focusValue != null && focusValue != _lastFocusValue) {
@@ -162,22 +176,28 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         iconSize: widget.control.attrDouble("iconSize", 24.0)!,
         borderRadius: borderRadius,
         alignment: alignment ?? AlignmentDirectional.centerStart,
-        isExpanded: alignment != null,
+        isExpanded: widget.control.attrBool("optionsFillHorizontally", false)!,
         icon: iconCtrl.isNotEmpty
             ? createControl(widget.control, iconCtrl.first.id, disabled)
             : null,
-        hint: iconCtrl.isNotEmpty
+        hint: hintCtrl.isNotEmpty
             ? createControl(widget.control, hintCtrl.first.id, disabled)
             : null,
-        decoration: buildInputDecoration(
-            context,
-            widget.control,
-            prefixControls.isNotEmpty ? prefixControls.first.control : null,
-            suffixControls.isNotEmpty ? suffixControls.first.control : null,
-            null,
-            _focused,
-            disabled,
-            widget.parentAdaptive),
+        disabledHint: disabledHintCtrl.isNotEmpty
+            ? createControl(widget.control, disabledHintCtrl.first.id, disabled)
+            : null,
+        decoration: buildInputDecoration(context, widget.control,
+            prefix:
+                prefixControls.isNotEmpty ? prefixControls.first.control : null,
+            suffix:
+                suffixControls.isNotEmpty ? suffixControls.first.control : null,
+            counter: counterControls.isNotEmpty
+                ? counterControls.first.control
+                : null,
+            customSuffix: null,
+            focused: _focused,
+            disabled: disabled,
+            adaptive: widget.parentAdaptive),
         onTap: !disabled
             ? () {
                 widget.backend.triggerControlEvent(widget.control.id, "click");

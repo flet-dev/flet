@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/gradient.dart';
+import '../utils/images.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -27,11 +28,8 @@ class ShaderMaskControl extends StatelessWidget {
 
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
-    var blendMode = BlendMode.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            control.attrString("blendMode", "")!.toLowerCase(),
-        orElse: () => BlendMode.modulate);
+    var blendMode =
+        parseBlendMode(control.attrString("blendMode"), BlendMode.modulate)!;
     bool disabled = control.isDisabled || parentDisabled;
 
     var gradient = parseGradient(Theme.of(context), control, "shader");

@@ -3,6 +3,7 @@ from typing import Any, Optional, Union
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -10,6 +11,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     StrokeCap,
+    OptionalControlEventCallable,
 )
 
 
@@ -86,8 +88,8 @@ class ProgressRing(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -145,7 +147,7 @@ class ProgressRing(ConstrainedControl):
 
     # stroke_width
     @property
-    def stroke_width(self) -> OptionalNumber:
+    def stroke_width(self) -> float:
         return self._get_attr("strokeWidth", data_type="float", def_value=4.0)
 
     @stroke_width.setter
@@ -155,7 +157,7 @@ class ProgressRing(ConstrainedControl):
 
     # stroke_align
     @property
-    def stroke_align(self) -> OptionalNumber:
+    def stroke_align(self) -> float:
         return self._get_attr("strokeAlign", data_type="float", def_value=0.0)
 
     @stroke_align.setter

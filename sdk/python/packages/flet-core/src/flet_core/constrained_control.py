@@ -2,12 +2,14 @@ from typing import Any, Optional, Union
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalControlEventCallable,
 )
 
 
@@ -19,7 +21,7 @@ class ConstrainedControl(Control):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        tooltip: Optional[str] = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -44,7 +46,7 @@ class ConstrainedControl(Control):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalControlEventCallable = None,
     ):
         Control.__init__(
             self,
@@ -249,10 +251,10 @@ class ConstrainedControl(Control):
 
     # on_animation_end
     @property
-    def on_animation_end(self):
+    def on_animation_end(self) -> OptionalControlEventCallable:
         return self._get_event_handler("animation_end")
 
     @on_animation_end.setter
-    def on_animation_end(self, handler):
+    def on_animation_end(self, handler: OptionalControlEventCallable):
         self._add_event_handler("animation_end", handler)
         self._set_attr("onAnimationEnd", True if handler is not None else None)

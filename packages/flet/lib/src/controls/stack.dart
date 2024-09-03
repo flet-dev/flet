@@ -29,11 +29,7 @@ class StackControl extends StatelessWidget {
     var clipBehavior =
         parseClip(control.attrString("clipBehavior"), Clip.hardEdge)!;
 
-    StackFit fit = StackFit.values.firstWhere(
-        (e) =>
-            e.name.toLowerCase() ==
-            control.attrString("fit", "")!.toLowerCase(),
-        orElse: () => StackFit.loose);
+    StackFit fit = parseStackFit(control.attrString("fit"), StackFit.loose)!;
     var ctrls = children
         .where((c) => c.isVisible)
         .map((c) =>

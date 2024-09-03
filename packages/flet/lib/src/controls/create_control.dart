@@ -13,6 +13,7 @@ import '../models/control_view_model.dart';
 import '../models/page_media_view_model.dart';
 import '../utils/animations.dart';
 import '../utils/theme.dart';
+import '../utils/tooltip.dart';
 import '../utils/transforms.dart';
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
@@ -71,6 +72,7 @@ import 'haptic_feedback.dart';
 import 'icon.dart';
 import 'icon_button.dart';
 import 'image.dart';
+import 'interactive_viewer.dart';
 import 'linechart.dart';
 import 'list_tile.dart';
 import 'list_view.dart';
@@ -84,6 +86,7 @@ import 'outlined_button.dart';
 import 'page.dart';
 import 'pagelet.dart';
 import 'piechart.dart';
+import 'placeholder.dart';
 import 'popup_menu_button.dart';
 import 'progress_bar.dart';
 import 'progress_ring.dart';
@@ -110,7 +113,6 @@ import 'text.dart';
 import 'text_button.dart';
 import 'textfield.dart';
 import 'time_picker.dart';
-import 'tooltip.dart';
 import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
 import 'window_drag_area.dart';
@@ -171,15 +173,16 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
           parentAdaptive, nextChild, FletAppServices.of(context).server);
 
       // no theme defined? return widget!
-      if (id == "page" || controlView.control.attrString("theme") == null) {
+      var themeMode = ThemeMode.values.firstWhereOrNull((t) =>
+          t.name.toLowerCase() ==
+          controlView.control.attrString("themeMode", "")!.toLowerCase());
+      if (id == "page" ||
+          (controlView.control.attrString("theme") == null &&
+              themeMode == null)) {
         return widget;
       }
 
       // wrap into theme widget
-      var themeMode = ThemeMode.values.firstWhereOrNull((t) =>
-          t.name.toLowerCase() ==
-          controlView.control.attrString("themeMode", "")!.toLowerCase());
-
       ThemeData? parentTheme = (themeMode == null) ? Theme.of(context) : null;
 
       buildTheme(Brightness? brightness) {
@@ -241,6 +244,8 @@ Widget createWidget(
           key: key,
           parent: parent,
           control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
           backend: backend);
     case "fletapp":
       return FletAppControl(
@@ -443,6 +448,14 @@ Widget createWidget(
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           backend: backend);
+    case "placeholder":
+      return PlaceholderControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive);
     case "cupertinoslidingsegmentedbutton":
       return CupertinoSlidingSegmentedButtonControl(
           key: key,
@@ -579,14 +592,6 @@ Widget createWidget(
           children: controlView.children,
           parentDisabled: parentDisabled,
           backend: backend);
-    case "tooltip":
-      return TooltipControl(
-          key: key,
-          parent: parent,
-          control: controlView.control,
-          children: controlView.children,
-          parentDisabled: parentDisabled,
-          parentAdaptive: parentAdaptive);
     case "transparentpointer":
       return TransparentPointerControl(
           key: key,
@@ -642,6 +647,15 @@ Widget createWidget(
           parentAdaptive: parentAdaptive);
     case "listtile":
       return ListTileControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
+    case "interactiveviewer":
+      return InteractiveViewerControl(
           key: key,
           parent: parent,
           control: controlView.control,
@@ -995,7 +1009,12 @@ Widget baseControl(
     BuildContext context, Widget widget, Control? parent, Control control) {
   return _expandable(
       _directionality(
-          _tooltip(_opacity(context, widget, parent, control), parent, control),
+          _tooltip(
+            _opacity(context, widget, parent, control),
+            Theme.of(context),
+            parent,
+            control,
+          ),
           parent,
           control),
       parent,
@@ -1019,6 +1038,7 @@ Widget constrainedControl(
                                   _tooltip(
                                       _opacity(
                                           context, widget, parent, control),
+                                      Theme.of(context),
                                       parent,
                                       control),
                                   parent,
@@ -1066,18 +1086,10 @@ Widget _opacity(
   return widget;
 }
 
-Widget _tooltip(Widget widget, Control? parent, Control control) {
-  var tooltip = control.attrString("tooltip");
-  return tooltip != null &&
-          !["iconbutton", "floatingactionbutton", "popupmenubutton"]
-              .contains(control.type)
-      ? Tooltip(
-          message: tooltip,
-          padding: const EdgeInsets.all(4.0),
-          waitDuration: const Duration(milliseconds: 800),
-          child: widget,
-        )
-      : widget;
+Widget _tooltip(
+    Widget widget, ThemeData theme, Control? parent, Control control) {
+  var tooltip = parseTooltip(control, "tooltip", widget, theme);
+  return tooltip != null ? tooltip : widget;
 }
 
 Widget _aspectRatio(Widget widget, Control? parent, Control control) {
@@ -1217,15 +1229,14 @@ Widget _positionedControl(
 }
 
 Widget _sizedControl(Widget widget, Control? parent, Control control) {
-  var width = control.attrDouble("width", null);
-  var height = control.attrDouble("height", null);
-  if (width != null || height != null) {
-    if (control.type != "container" && control.type != "image") {
-      widget = ConstrainedBox(
-        constraints: BoxConstraints.tightFor(width: width, height: height),
-        child: widget,
-      );
-    }
+  var width = control.attrDouble("width");
+  var height = control.attrDouble("height");
+  if ((width != null || height != null) &&
+      !["container", "image"].contains(control.type)) {
+    widget = ConstrainedBox(
+      constraints: BoxConstraints.tightFor(width: width, height: height),
+      child: widget,
+    );
   }
   var animation = parseAnimation(control, "animateSize");
   if (animation != null) {
@@ -1236,10 +1247,7 @@ Widget _sizedControl(Widget widget, Control? parent, Control control) {
 }
 
 Widget _expandable(Widget widget, Control? parent, Control control) {
-  if (parent != null &&
-      (parent.type == "view" ||
-          parent.type == "column" ||
-          parent.type == "row")) {
+  if (parent != null && ["view", "column", "row"].contains(parent.type)) {
     int? expand = control.attrInt("expand");
     var expandLoose = control.attrBool("expandLoose");
     return expand != null

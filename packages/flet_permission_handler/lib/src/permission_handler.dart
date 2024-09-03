@@ -1,5 +1,7 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/widgets.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 import 'utils/permission_handler.dart';
 
 class PermissionHandlerControl extends StatefulWidget {
@@ -41,17 +43,28 @@ class _PermissionHandlerControlState extends State<PermissionHandlerControl>
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-        "PermissionHandler build: ${widget.control.id} (${widget.control.hashCode})");
-    
+    debugPrint("PermissionHandler build: ${widget.control.id}");
+
     () async {
       widget.backend.subscribeMethods(widget.control.id,
           (methodName, args) async {
         switch (methodName) {
-          case "checkPermission":
-            return await checkPermission(args['permissionOf']!);
-          case "requestPermission":
-            return await requestPermission(args['permissionOf']!);
+          case "check_permission":
+            return await parsePermission(args['of'])?.status.then((value) {
+              debugPrint("PermissionHandler.check_permission: $value");
+              return value.name;
+            });
+          case "request_permission":
+            var p = parsePermission(args['of']);
+            if (p != null) {
+              Future<PermissionStatus> permissionStatus = p.request();
+              return await permissionStatus.then((value) async {
+                return value.name;
+              });
+            }
+            break;
+          case "open_app_settings":
+            return await openAppSettings().then((value) => value.toString());
         }
         return null;
       });

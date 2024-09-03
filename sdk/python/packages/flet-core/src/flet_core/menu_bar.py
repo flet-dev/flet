@@ -1,47 +1,45 @@
-import dataclasses
-from dataclasses import field
-from typing import Any, Dict, List, Optional, Union
+from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional, Sequence, Union
 
 from flet_core.alignment import Alignment
 from flet_core.border import BorderSide
 from flet_core.buttons import OutlinedBorder
-from flet_core.control import Control, OptionalNumber
+from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     ClipBehavior,
-    MaterialState,
+    ControlState,
     MouseCursor,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
 )
 
 
-@dataclasses.dataclass
+@dataclass
 class MenuStyle:
     alignment: Optional[Alignment] = field(default=None)
-    bgcolor: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    bgcolor: Union[None, str, Dict[Union[str, ControlState], str]] = field(default=None)
+    shadow_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
-    shadow_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
-        default=None
-    )
-    surface_tint_color: Union[None, str, Dict[Union[str, MaterialState], str]] = field(
+    surface_tint_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
         default=None
     )
     elevation: Union[
-        None, float, int, Dict[Union[str, MaterialState], Union[float, int]]
+        None, float, int, Dict[Union[str, ControlState], Union[float, int]]
     ] = field(default=None)
-    padding: Union[PaddingValue, Dict[Union[str, MaterialState], PaddingValue]] = field(
+    padding: Union[PaddingValue, Dict[Union[str, ControlState], PaddingValue]] = field(
         default=None
     )
-    side: Union[None, BorderSide, Dict[Union[str, MaterialState], BorderSide]] = field(
+    side: Union[None, BorderSide, Dict[Union[str, ControlState], BorderSide]] = field(
         default=None
     )
     shape: Union[
-        None, OutlinedBorder, Dict[Union[str, MaterialState], OutlinedBorder]
+        None, OutlinedBorder, Dict[Union[str, ControlState], OutlinedBorder]
     ] = field(default=None)
     mouse_cursor: Union[
-        None, MouseCursor, Dict[Union[str, MaterialState], MouseCursor]
+        None, MouseCursor, Dict[Union[str, ControlState], MouseCursor]
     ] = field(default=None)
 
 
@@ -59,7 +57,7 @@ class MenuBar(Control):
 
     def __init__(
         self,
-        controls: List[Control],
+        controls: Sequence[Control],
         clip_behavior: Optional[ClipBehavior] = None,
         style: Optional[MenuStyle] = None,
         #
@@ -95,8 +93,8 @@ class MenuBar(Control):
 
     def before_update(self):
         super().before_update()
-        assert (
-            len(list(filter(lambda c: c.visible, self.__controls))) > 0
+        assert any(
+            c.visible for c in self.__controls
         ), "MenuBar must have at minimum one visible control"
         if self.__style is not None:
             self.__style.side = self._wrap_attr_dict(self.__style.side)
@@ -118,8 +116,8 @@ class MenuBar(Control):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: List[Control]):
-        self.__controls = value
+    def controls(self, value: Sequence[Control]):
+        self.__controls = list(value)
 
     # clip_behavior
     @property

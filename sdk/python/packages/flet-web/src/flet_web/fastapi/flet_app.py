@@ -32,9 +32,6 @@ logger = logging.getLogger(flet_fastapi.__name__)
 DEFAULT_FLET_SESSION_TIMEOUT = 3600
 DEFAULT_FLET_OAUTH_STATE_TIMEOUT = 600
 
-_pubsubhubs_lock = asyncio.Lock()
-_pubsubhubs = {}
-
 
 class FletApp(LocalConnection):
     def __init__(
@@ -97,13 +94,9 @@ class FletApp(LocalConnection):
             else ""
         )
 
-        async with _pubsubhubs_lock:
-            psh = _pubsubhubs.get(self.__session_handler, None)
-            if psh is None:
-                psh = PubSubHub(loop=self.__loop, executor=app_manager.executor)
-                _pubsubhubs[self.__session_handler] = psh
-            self.pubsubhub = psh
-
+        self.pubsubhub = app_manager.get_pubsubhub(
+            self.__session_handler, loop=self.__loop
+        )
         self.page_url = str(websocket.url).rsplit("/", 1)[0]
         self.page_name = websocket.url.path.rsplit("/", 1)[0].lstrip("/")
 

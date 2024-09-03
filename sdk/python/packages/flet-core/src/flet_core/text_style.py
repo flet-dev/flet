@@ -1,12 +1,40 @@
-import dataclasses
-from dataclasses import field
+from dataclasses import dataclass, field
 from enum import Enum, IntFlag
 from typing import List, Optional, Union
 
-from flet_core.control import OptionalNumber
+from flet_core.box import BoxShadow
 from flet_core.painting import Paint
-from flet_core.shadow import BoxShadow
-from flet_core.types import FontWeight
+from flet_core.types import FontWeight, OptionalNumber
+
+
+class TextOverflow(Enum):
+    CLIP = "clip"
+    ELLIPSIS = "ellipsis"
+    FADE = "fade"
+    VISIBLE = "visible"
+
+
+class TextBaseline(Enum):
+    ALPHABETIC = "alphabetic"
+    IDEOGRAPHIC = "ideographic"
+
+
+class TextThemeStyle(Enum):
+    DISPLAY_LARGE = "displayLarge"
+    DISPLAY_MEDIUM = "displayMedium"
+    DISPLAY_SMALL = "displaySmall"
+    HEADLINE_LARGE = "headlineLarge"
+    HEADLINE_MEDIUM = "headlineMedium"
+    HEADLINE_SMALL = "headlineSmall"
+    TITLE_LARGE = "titleLarge"
+    TITLE_MEDIUM = "titleMedium"
+    TITLE_SMALL = "titleSmall"
+    LABEL_LARGE = "labelLarge"
+    LABEL_MEDIUM = "labelMedium"
+    LABEL_SMALL = "labelSmall"
+    BODY_LARGE = "bodyLarge"
+    BODY_MEDIUM = "bodyMedium"
+    BODY_SMALL = "bodySmall"
 
 
 class TextDecoration(IntFlag):
@@ -24,7 +52,7 @@ class TextDecorationStyle(Enum):
     WAVY = "wavy"
 
 
-@dataclasses.dataclass
+@dataclass
 class TextStyle:
     size: OptionalNumber = field(default=None)
     height: OptionalNumber = field(default=None)
@@ -40,3 +68,6 @@ class TextStyle:
     shadow: Union[None, BoxShadow, List[BoxShadow]] = field(default=None)
     foreground: Optional[Paint] = field(default=None)
     letter_spacing: OptionalNumber = field(default=None)
+    word_spacing: OptionalNumber = field(default=None)
+    overflow: Optional[TextOverflow] = field(default=None)
+    baseline: Optional[TextBaseline] = field(default=None)

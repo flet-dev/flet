@@ -1,0 +1,157 @@
+name: Bug Report
+description: "You found a bug in Flet causing your application to crash or behave abnormally? Help us know more about it by providing as much details as possible."
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        If you are looking for support, please check out our documentation, discord server
+        or consider asking a question on Stack Overflow:
+
+          - https://flet.dev/docs
+          - https://discord.gg/dzWXP8SHG8
+          - https://stackoverflow.com/questions/tagged/flet?sort=frequent
+  - type: checkboxes
+    attributes:
+      label: "Duplicate Check"
+      options:
+        - label: "I have searched the [opened issues](https://github.com/flet-dev/flet/issues) and there are no duplicates"
+          required: true
+  - type: textarea
+    id: "describe-the-bug"
+    attributes:
+      label: "Describe the bug"
+      description: "A clear and concise description of the bug."
+      placeholder: Tell us in details what you see.
+    validations:
+      required: true
+  - type: textarea
+    id: "code"
+    attributes:
+      label: "Code sample"
+      description: |
+        Please create a minimal reproducible and runnable sample that shows the problem
+        and attach it below between the lines with the backticks.
+        
+        Alternatively, you can create a public GitHub repository or use an existing one to share your sample.
+        
+        Without this we will unlikely be able to progress on the issue, and because of that
+        we regretfully will have to close it.
+        
+        Note: Please do not upload screenshots of text. Instead, use code blocks
+        or the above mentioned ways to upload your code sample.
+      value: |
+        <details open><summary>Code</summary>
+        
+        ```python
+        [Paste your code here]
+        ```
+        
+        </details>
+    validations:
+      required: true
+  - type: textarea
+    id: "to-reproduce"
+    attributes:
+      label: "To reproduce"
+      description: "Bug reports with clear reproduction will get prioritized higher and addressed more quickly."
+      placeholder: "Steps to reproduce: 1. Run the repro code 2. Click on '...' 3. Scroll down to '...' 4. See error '...'"
+    validations:
+      required: true
+  - type: textarea
+    id: "expected-behavior"
+    attributes:
+      label: "Expected behavior"
+      description: "A clear and concise description of what you expected to happen."
+      placeholder: Tell us what you expected to see.
+    validations:
+      required: false
+  - type: textarea
+    id: "screenshots"
+    attributes:
+      label: "Screenshots / Videos"
+      description: "One image is worth a thousand words. If you can, please provide screenshots or videos to help visually explain your issue."
+      value: |
+        <details open>
+        <summary>Captures</summary>
+        
+        [Upload media here]
+        
+        </details>
+    validations:
+      required: false
+  - type: dropdown
+    id: "os"
+    attributes:
+      label: "Operating System"
+      multiple: false
+      options:
+        - macOS
+        - Linux
+        - Windows
+    validations:
+      required: true
+  - type: input
+    id: "os-version"
+    attributes:
+      label: "Operating system details"
+      description: "For example: Debian 11.2"
+    validations:
+      required: true
+  - type: input
+    id: "flet-version"
+    attributes:
+      label: "Flet version"
+      description: "run `pip show flet` in your terminal to view your Flet version"
+    validations:
+      required: true
+  - type: dropdown
+    id: "regression"
+    attributes:
+      label: "Regression"
+      description: "Is the reported bug a regression (used to work in a previous Flet version)?"
+      multiple: false
+      options:
+        - "No, it isn't"
+        - "Yes, it used to work in a previous Flet version (please specify the version in additional details)"
+        - "I'm not sure / I don't know"
+    validations:
+      required: true
+  - type: textarea
+    id: "suggestion"
+    attributes:
+      label: "Suggestions"
+      description: "Any suggestions on how to fix your issue?"
+      placeholder: I suggest...
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Logs
+      description: |
+        Include the full logs of the commands you are running between the lines
+        with the backticks below. If you are running any `flet` commands,
+        please include the output of running them with `--verbose` (maximum verbosity); for example,
+        the output of running `flet build apk --verbose`.
+
+        If the logs are too large to be uploaded to GitHub, you may upload
+        them as a `txt` file or use online tools like https://pastebin.com to
+        share it.
+
+        Note: Please do not upload screenshots of text. Instead, use code blocks
+        or the above mentioned ways to upload logs.
+      value: |
+        <details open><summary>Logs</summary>
+
+        ```console
+        [Paste your logs here]
+        ```
+
+        </details>
+  - type: textarea
+    id: "additional-details"
+    attributes:
+      label: "Additional details"
+      description: "Add any other detail about the issue here. Ex: happens only on specific conditions, etc."
+    validations:
+      required: false

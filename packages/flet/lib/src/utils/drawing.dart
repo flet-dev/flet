@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:ui' as ui;
 
-import 'package:flet/src/utils/others.dart';
 import 'package:collection/collection.dart';
+import 'package:flet/src/utils/others.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -20,6 +20,15 @@ Paint parsePaint(ThemeData theme, Control control, String propName) {
   final j1 = json.decode(v);
 
   return paintFromJSON(theme, j1);
+}
+
+PaintingStyle? parsePaintingStyle(String? value, [PaintingStyle? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return PaintingStyle.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
 }
 
 List<double>? parsePaintStrokeDashPattern(Control control, String propName) {
@@ -43,39 +52,23 @@ Paint paintFromJSON(ThemeData? theme, Map<String, dynamic> json) {
   if (json["color"] != null) {
     paint.color = parseColor(theme, json["color"] as String, Colors.black)!;
   }
-  if (json["blend_mode"] != null) {
-    paint.blendMode = BlendMode.values.firstWhere(
-        (e) => e.name.toLowerCase() == json["blend_mode"].toLowerCase(),
-        orElse: () => BlendMode.srcOver);
-  }
-  if (json["anti_alias"] != null) {
-    paint.isAntiAlias = json["anti_alias"];
-  }
-  if (json["blur_image"] != null) {
-    paint.imageFilter = blurImageFilterFromJSON(json["blur_image"]);
-  }
-  if (json["gradient"] != null) {
-    paint.shader = paintGradientFromJSON(theme, json["gradient"]);
-  }
+  paint.blendMode = parseBlendMode(json["blend_mode"], BlendMode.srcOver)!;
+  paint.isAntiAlias = parseBool(json["anti_alias"], true)!;
+  paint.imageFilter = blurImageFilterFromJSON(json["blur_image"]);
+  paint.shader = paintGradientFromJSON(theme, json["gradient"]);
   paint.strokeMiterLimit = parseDouble(json["stroke_miter_limit"], 4)!;
   paint.strokeWidth = parseDouble(json["stroke_width"], 0)!;
-
-  if (json["stroke_cap"] != null) {
-    paint.strokeCap = parseStrokeCap(json["stroke_cap"], StrokeCap.butt)!;
-  }
-  if (json["stroke_join"] != null) {
-    paint.strokeJoin = parseStrokeJoin(json["stroke_join"], StrokeJoin.miter)!;
-  }
-  if (json["style"] != null) {
-    paint.style = PaintingStyle.values.firstWhere(
-        (e) => e.name.toLowerCase() == json["style"].toLowerCase(),
-        orElse: () => PaintingStyle.fill);
-  }
+  paint.strokeCap = parseStrokeCap(json["stroke_cap"], StrokeCap.butt)!;
+  paint.strokeJoin = parseStrokeJoin(json["stroke_join"], StrokeJoin.miter)!;
+  paint.style = parsePaintingStyle(json["style"], PaintingStyle.fill)!;
   return paint;
 }
 
 ui.Gradient? paintGradientFromJSON(
-    ThemeData? theme, Map<String, dynamic> json) {
+    ThemeData? theme, Map<String, dynamic>? json) {
+  if (json == null) {
+    return null;
+  }
   String type = json["type"];
   if (type == "linear") {
     return ui.Gradient.linear(

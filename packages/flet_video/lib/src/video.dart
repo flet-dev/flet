@@ -62,6 +62,18 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
         .triggerControlEvent(widget.control.id, "error", message ?? "");
   }
 
+  void _onCompleted(String? message) {
+  debugPrint("Video onCompleted: $message");
+  widget.backend
+      .triggerControlEvent(widget.control.id, "completed", message ?? "");
+  }
+
+  void _onTrackChanged(String? message) {
+  debugPrint("Video onTrackChanged: $message");
+  widget.backend
+      .triggerControlEvent(widget.control.id, "track_changed", message ?? "");
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint("Video build: ${widget.control.id}");
@@ -91,6 +103,8 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
           subtitleConfiguration?["subtitleViewConfiguration"];
 
       bool onError = widget.control.attrBool("onError", false)!;
+      bool onCompleted = widget.control.attrBool("onCompleted", false)!;
+      bool onTrackChanged = widget.control.attrBool("onTrackChanged", false)!;
 
       double? volume = widget.control.attrDouble("volume");
       double? pitch = widget.control.attrDouble("pitch");
@@ -256,6 +270,18 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       player.stream.error.listen((event) {
         if (onError) {
           _onError(event.toString());
+        }
+      });
+
+      player.stream.completed.listen((event) {
+        if (onCompleted) {
+          _onCompleted(event.toString());
+        }
+      });
+
+      player.stream.playlist.listen((event) {
+        if (onTrackChanged) {
+          _onTrackChanged(event.index.toString());
         }
       });
 

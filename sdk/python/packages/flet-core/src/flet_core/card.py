@@ -6,6 +6,7 @@ from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
@@ -14,6 +15,7 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalControlEventCallable,
 )
 
 
@@ -103,8 +105,8 @@ class Card(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -246,7 +248,7 @@ class Card(ConstrainedControl, AdaptiveControl):
 
     # is_semantic_container
     @property
-    def is_semantic_container(self) -> Optional[bool]:
+    def is_semantic_container(self) -> bool:
         return self._get_attr("isSemanticContainer", data_type="bool", def_value=True)
 
     @is_semantic_container.setter
@@ -255,7 +257,7 @@ class Card(ConstrainedControl, AdaptiveControl):
 
     # show_border_on_foreground
     @property
-    def show_border_on_foreground(self) -> Optional[bool]:
+    def show_border_on_foreground(self) -> bool:
         return self._get_attr(
             "showBorderOnForeground", data_type="bool", def_value=True
         )

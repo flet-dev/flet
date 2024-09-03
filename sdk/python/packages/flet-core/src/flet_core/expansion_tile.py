@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union, Sequence
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
@@ -7,7 +7,7 @@ from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
-from flet_core.theme import ThemeVisualDensity
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
@@ -17,6 +17,9 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    ThemeVisualDensity,
+    VisualDensity,
+    OptionalControlEventCallable,
 )
 
 
@@ -38,7 +41,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         title: Control,
-        controls: Optional[List[Control]] = None,
+        controls: Optional[Sequence[Control]] = None,
         subtitle: Optional[Control] = None,
         leading: Optional[Control] = None,
         trailing: Optional[Control] = None,
@@ -60,8 +63,10 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         collapsed_shape: Optional[OutlinedBorder] = None,
         dense: Optional[bool] = None,
         enable_feedback: Optional[bool] = None,
-        visual_density: Optional[ThemeVisualDensity] = None,
-        on_change=None,
+        show_trailing_icon: Optional[bool] = None,
+        min_tile_height: OptionalNumber = None,
+        visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
+        on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -87,8 +92,8 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -155,6 +160,8 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self.dense = dense
         self.enable_feedback = enable_feedback
         self.visual_density = visual_density
+        self.show_trailing_icon = show_trailing_icon
+        self.min_tile_height = min_tile_height
 
     def _get_control_name(self):
         return "expansiontile"
@@ -191,8 +198,8 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         return self.__controls
 
     @controls.setter
-    def controls(self, value: Optional[List[Control]]):
-        self.__controls = value if value is not None else []
+    def controls(self, value: Optional[Sequence[Control]]):
+        self.__controls = list(value) if value is not None else []
 
     # controls_padding
     @property
@@ -279,7 +286,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # dense
     @property
-    def dense(self) -> Optional[bool]:
+    def dense(self) -> bool:
         return self._get_attr("dense", data_type="bool")
 
     @dense.setter
@@ -288,7 +295,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # enable_feedback
     @property
-    def enable_feedback(self) -> Optional[bool]:
+    def enable_feedback(self) -> bool:
         return self._get_attr("enableFeedback", data_type="bool", def_value=True)
 
     @enable_feedback.setter
@@ -307,17 +314,17 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # visual_density
     @property
-    def visual_density(self) -> Optional[ThemeVisualDensity]:
+    def visual_density(self) -> Union[None, ThemeVisualDensity, VisualDensity]:
         return self.__visual_density
 
     @visual_density.setter
-    def visual_density(self, value: Optional[ThemeVisualDensity]):
+    def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, ThemeVisualDensity)
+        self._set_enum_attr("visualDensity", value, ThemeVisualDensity, VisualDensity)
 
     # maintain_state
     @property
-    def maintain_state(self) -> Optional[bool]:
+    def maintain_state(self) -> bool:
         return self._get_attr("maintainState", data_type="bool", def_value=False)
 
     @maintain_state.setter
@@ -326,7 +333,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # initially_expanded
     @property
-    def initially_expanded(self) -> Optional[bool]:
+    def initially_expanded(self) -> bool:
         return self._get_attr("initiallyExpanded", data_type="bool", def_value=False)
 
     @initially_expanded.setter
@@ -405,12 +412,30 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     def collapsed_shape(self, value: Optional[OutlinedBorder]):
         self.__collapsed_shape = value
 
+    # show_trailing_icon
+    @property
+    def show_trailing_icon(self) -> bool:
+        return self._get_attr("showTrailingIcon", data_type="bool", def_value=True)
+
+    @show_trailing_icon.setter
+    def show_trailing_icon(self, value: Optional[bool]):
+        self._set_attr("showTrailingIcon", value)
+
+    # min_tile_height
+    @property
+    def min_tile_height(self) -> OptionalNumber:
+        return self._get_attr("minTileHeight")
+
+    @min_tile_height.setter
+    def min_tile_height(self, value: OptionalNumber):
+        self._set_attr("minTileHeight", value)
+
     # on_change
     @property
     def on_change(self):
         return self._get_event_handler("change")
 
     @on_change.setter
-    def on_change(self, handler):
+    def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("change", handler)
         self._set_attr("onChange", True if handler is not None else None)

@@ -8,6 +8,7 @@ from flet_core.container import Container
 from flet_core.control import OptionalNumber
 from flet_core.image import Image
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -15,6 +16,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     ImageFit,
+    OptionalControlEventCallable,
 )
 
 try:
@@ -91,8 +93,8 @@ class MatplotlibChart(Container):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

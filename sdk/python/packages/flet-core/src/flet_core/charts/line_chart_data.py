@@ -1,12 +1,12 @@
 from typing import Any, List, Optional, Union
 
+from flet_core.box import BoxShadow
 from flet_core.charts.chart_point_line import ChartPointLine
 from flet_core.charts.chart_point_shape import ChartPointShape
 from flet_core.charts.line_chart_data_point import LineChartDataPoint
 from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
-from flet_core.shadow import BoxShadow
 
 
 class LineChartData(Control):
@@ -104,7 +104,7 @@ class LineChartData(Control):
 
     # stroke_width
     @property
-    def stroke_width(self) -> OptionalNumber:
+    def stroke_width(self) -> float:
         return self._get_attr("strokeWidth", data_type="float", def_value=1.0)
 
     @stroke_width.setter
@@ -113,7 +113,7 @@ class LineChartData(Control):
 
     # curved
     @property
-    def curved(self) -> Optional[bool]:
+    def curved(self) -> bool:
         return self._get_attr("curved", data_type="bool", def_value=False)
 
     @curved.setter
@@ -140,7 +140,7 @@ class LineChartData(Control):
 
     # stroke_cap_round
     @property
-    def stroke_cap_round(self) -> Optional[bool]:
+    def stroke_cap_round(self) -> bool:
         return self._get_attr("strokeCapRound", data_type="bool", def_value=False)
 
     @stroke_cap_round.setter
@@ -149,7 +149,7 @@ class LineChartData(Control):
 
     # prevent_curve_over_shooting
     @property
-    def prevent_curve_over_shooting(self) -> Optional[bool]:
+    def prevent_curve_over_shooting(self) -> bool:
         return self._get_attr(
             "preventCurveOverShooting", data_type="bool", def_value=False
         )

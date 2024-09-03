@@ -15,15 +15,38 @@ import '../utils/borders.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 
+const eventMap = {
+  "FlPointerEnterEvent": "pointerEnter",
+  "FlPointerExitEvent": "pointerExit",
+  "FlPointerHoverEvent": "pointerHover",
+  "FlPanCancelEvent": "panCancel",
+  "FlPanDownEvent": "panDown",
+  "FlPanEndEvent": "panEnd",
+  "FlPanStartEvent": "panStart",
+  "FlPanUpdateEvent": "panUpdate",
+  "FlLongPressEnd": "longPressEnd",
+  "FlLongPressMoveUpdate": "longPressMoveUpdate",
+  "FlLongPressStart": "longPressStart",
+  "FlTapCancelEvent": "tapCancel",
+  "FlTapDownEvent": "tapDown",
+  "FlTapUpEvent": "tapUp",
+};
+
 class PieChartEventData extends Equatable {
   final String eventType;
   final int? sectionIndex;
+  final Offset? localPosition;
 
-  const PieChartEventData(
-      {required this.eventType, required this.sectionIndex});
+  const PieChartEventData({required this.eventType,
+    required this.sectionIndex,
+    this.localPosition});
 
-  Map<String, dynamic> toJson() =>
-      <String, dynamic>{'type': eventType, 'section_index': sectionIndex};
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'type': eventType,
+        'section_index': sectionIndex,
+        "lx": localPosition?.dx,
+        "ly": localPosition?.dy
+      };
 
   @override
   List<Object?> get props => [eventType, sectionIndex];
@@ -118,20 +141,18 @@ class _PieChartControlState extends State<PieChartControl> {
               pieTouchData: PieTouchData(
                 enabled: true,
                 touchCallback: widget.control.attrBool("onChartEvent", false)!
-                    ? (evt, resp) {
-                        var eventData = resp != null &&
-                                resp.touchedSection != null
-                            ? PieChartEventData(
-                                eventType: evt.runtimeType
-                                    .toString()
-                                    .substring(2), // remove "Fl"
-                                sectionIndex:
-                                    resp.touchedSection!.touchedSectionIndex)
-                            : PieChartEventData(
-                                eventType: evt.runtimeType
-                                    .toString()
-                                    .substring(2), // remove "Fl"
-                                sectionIndex: null);
+                    ? (FlTouchEvent evt, PieTouchResponse? resp) {
+                        var type = evt.toString();
+                        var eventData = PieChartEventData(
+                          // grab the event type found in between '' quotes
+                          eventType: eventMap[type.substring(
+                                  type.indexOf("'") + 1,
+                                  type.lastIndexOf("'"))] ??
+                              "undefined",
+                          sectionIndex:
+                              resp?.touchedSection?.touchedSectionIndex,
+                          localPosition: evt.localPosition,
+                        );
                         if (eventData != _eventData) {
                           _eventData = eventData;
                           debugPrint(

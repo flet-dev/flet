@@ -158,8 +158,8 @@ class Badge(Control):
 
     # label_visible
     @property
-    def label_visible(self) -> Optional[bool]:
-        return self._get_attr("isLabelVisible")
+    def label_visible(self) -> bool:
+        return self._get_attr("isLabelVisible", data_type="bool", def_value=True)
 
     @label_visible.setter
     def label_visible(self, value: Optional[bool]):

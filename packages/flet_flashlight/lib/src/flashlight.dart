@@ -30,22 +30,22 @@ class _FlashlightControlState extends State<FlashlightControl> {
     if (Platform.isIOS || Platform.isAndroid) {
       () async {
         widget.backend.subscribeMethods(widget.control.id,
-            (meathodName, args) async {
-          switch (meathodName) {
+            (methodName, args) async {
+          switch (methodName) {
             case "on":
               try {
                 await TorchLight.enableTorch();
                 return "1";
-              } on Exception catch (_) {
-                debugPrint("Couldn't enable Flash: $_");
+              } on Exception catch (e) {
+                debugPrint("Couldn't enable Flash: $e");
                 return "0";
               }
             case "off":
               try {
                 await TorchLight.disableTorch();
                 return "1";
-              } on Exception catch (_) {
-                debugPrint("Couldn't disable Flash");
+              } on Exception catch (e) {
+                debugPrint("Couldn't disable Flash: $e");
                 return "0";
               }
           }

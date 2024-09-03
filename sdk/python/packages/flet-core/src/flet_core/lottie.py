@@ -1,8 +1,10 @@
 from typing import Any, Optional, Union
 
+from flet_core.box import FilterQuality
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -10,8 +12,8 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     ImageFit,
+    OptionalControlEventCallable,
 )
-from flet_core.video import FilterQuality
 
 
 class Lottie(ConstrainedControl):
@@ -59,8 +61,8 @@ class Lottie(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -131,7 +133,7 @@ class Lottie(ConstrainedControl):
 
     # repeat
     @property
-    def repeat(self) -> Optional[bool]:
+    def repeat(self) -> bool:
         return self._get_attr("repeat", def_value=True, data_type="bool")
 
     @repeat.setter
@@ -140,7 +142,7 @@ class Lottie(ConstrainedControl):
 
     # animate
     @property
-    def animate(self) -> Optional[bool]:
+    def animate(self) -> bool:
         return self._get_attr("animate", def_value=True, data_type="bool")
 
     @animate.setter
@@ -149,7 +151,7 @@ class Lottie(ConstrainedControl):
 
     # reverse
     @property
-    def reverse(self) -> Optional[bool]:
+    def reverse(self) -> bool:
         return self._get_attr("reverse", def_value=False, data_type="bool")
 
     @reverse.setter
@@ -187,10 +189,10 @@ class Lottie(ConstrainedControl):
 
     # on_error
     @property
-    def on_error(self):
+    def on_error(self) -> OptionalControlEventCallable:
         return self._get_event_handler("error")
 
     @on_error.setter
-    def on_error(self, handler):
+    def on_error(self, handler: OptionalControlEventCallable):
         self._add_event_handler("error", handler)
         self._set_attr("onError", True if handler is not None else None)

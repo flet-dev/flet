@@ -5,12 +5,14 @@ from flet_core.animation import AnimationCurve
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    OptionalControlEventCallable,
 )
 
 try:
@@ -109,8 +111,8 @@ class AnimatedSwitcher(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -174,7 +176,7 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # duration
     @property
-    def duration(self) -> Optional[int]:
+    def duration(self) -> int:
         return self._get_attr("duration", data_type="int", def_value=1000)
 
     @duration.setter
@@ -183,7 +185,7 @@ class AnimatedSwitcher(ConstrainedControl):
 
     # reverse_duration
     @property
-    def reverse_duration(self) -> Optional[int]:
+    def reverse_duration(self) -> int:
         return self._get_attr("reverseDuration", data_type="int", def_value=1000)
 
     @reverse_duration.setter

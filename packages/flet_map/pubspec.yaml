@@ -2,7 +2,7 @@ name: flet_map
 description: Flet Map control
 homepage: https://flet.dev
 repository: https://github.com/flet-dev/flet/packages/flet_map
-version: 0.23.0
+version: 0.24.1
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
 
   collection: ^1.16.0
-  flutter_map: ^6.1.0
+  flutter_map: ^7.0.0
   latlong2: ^0.9.1
 
   flet:

@@ -1,3 +1,97 @@
+# 0.24.1
+
+* FIXED: `Tooltip` displays wrong message when used with `IconButton`, `FloatingActionButton` and `PopupMenuButton` ([#3922](https://github.com/flet-dev/flet/issues/3922))
+* FIXED: `Image.src.base64` ([#3919](https://github.com/flet-dev/flet/issues/3919))
+
+# 0.24.0
+
+* NEW: `Placeholder` Control ([#3646](https://github.com/flet-dev/flet/issues/3646))
+* NEW: `InteractiveViewer` Control ([#3645](https://github.com/flet-dev/flet/issues/3645))
+* NEW: Adding Background/Foreground Services to GeoLocator UPDATE ([#3803](https://github.com/flet-dev/flet/issues/3803))
+* NEW: `Container.ignore_interactions` property ([#3639](https://github.com/flet-dev/flet/issues/3639))
+* NEW: Add `rtl` prop to more controls ([#3641](https://github.com/flet-dev/flet/issues/3641))
+* NEW: `TextField.counter` property ([#3676](https://github.com/flet-dev/flet/issues/3676))
+* NEW: window.icon: make the usage of relative paths possible ([#3825](https://github.com/flet-dev/flet/issues/3825))
+* NEW: Add event to `flet_video` to know what song is playing ([#3772](https://github.com/flet-dev/flet/issues/3772))
+* NEW: adds `floating_action_button_theme` property to `Theme` ([#3771](https://github.com/flet-dev/flet/issues/3771))
+* NEW: Added `on_completed` event to `flet_video` ([#3758](https://github.com/flet-dev/flet/issues/3758))
+* NEW: Add `focus`, `on_focus`, `on_blur` to `SearchBar` ([#3417](https://github.com/flet-dev/flet/issues/3417), [#3752](https://github.com/flet-dev/flet/issues/3752))
+* NEW: `--no-rich-output` flag to prevent rich output ([#3708](https://github.com/flet-dev/flet/issues/3708))
+* CHANGED: make `Tooltip` a dataclass which can be used in `Control.tooltip` ([#3837](https://github.com/flet-dev/flet/issues/3837))
+* CHANGED: wrap `View`s into a background container ([#3820](https://github.com/flet-dev/flet/issues/3820))
+* FIXED: export BottomSheetTheme ([#3858](https://github.com/flet-dev/flet/issues/3858))
+* FIXED: setting SearchBar.value to an empty string is not respected ([#3872](https://github.com/flet-dev/flet/issues/3872))
+* FIXED: add full-screen events to WindowEventType ([#3857](https://github.com/flet-dev/flet/issues/3857))
+* FIXED: snackbar margin ([#3856](https://github.com/flet-dev/flet/issues/3856))
+* FIXED: not error on inputfield when errorText is empty ([#3855](https://github.com/flet-dev/flet/issues/3855))
+* FIXED: `flet.map` is not available after building app ([#3845](https://github.com/flet-dev/flet/issues/3845))
+* FIXED: `InputFilter` clears `TextField` when an invalid character is entered ([#3779](https://github.com/flet-dev/flet/issues/3779))
+* FIXED: `Dropdown.alignment` not respected ([#3737](https://github.com/flet-dev/flet/issues/3737))
+* FIXED: scrolling issues in `CupertinoPicker` ([#3678](https://github.com/flet-dev/flet/issues/3678))
+* FIXED: scrolling controls are not able to scroll due to wrong super class call ([#3702](https://github.com/flet-dev/flet/issues/3702))
+* FIXED: Dismissible ([#3690](https://github.com/flet-dev/flet/issues/3690))
+* FIXED: `PieChartEvent.type` on web ([#3611](https://github.com/flet-dev/flet/issues/3611))
+* FIXED: `Switch.width` and `height` properties ([#3670](https://github.com/flet-dev/flet/issues/3670))
+* FIXED: parsing issues in `TextStyle` and `*Event` classes ([#3551](https://github.com/flet-dev/flet/issues/3551))
+* FIXED: issues with `*Button`s ([#3582](https://github.com/flet-dev/flet/issues/3582))
+* Handle Multiple Trailing Controls in `CupertinoAppBar` ([#3603](https://github.com/flet-dev/flet/issues/3603))
+* Event: implement str and repr magic methods ([#3601](https://github.com/flet-dev/flet/issues/3601))
+* CHORE: remove handler-subscription and enhance event typing ([#3808](https://github.com/flet-dev/flet/issues/3808))
+* CHORE: improve type hint for OptionalEventCallable ([#3659](https://github.com/flet-dev/flet/issues/3659))
+* CHORE: Using `Sequence` instead of `list` ([#3661](https://github.com/flet-dev/flet/issues/3661))
+* CHORE: Bump Flutter packages ([#3719](https://github.com/flet-dev/flet/issues/3719))
+* CHORE: Cleanup ([#3640](https://github.com/flet-dev/flet/issues/3640))
+
+# 0.23.2
+
+* CHANGED: Enhance Typing of Event Handlers ([#3523](https://github.com/flet-dev/flet/issues/3523))
+* CHANGED: Delete Page.window.on_resize | deprecate Page.on_resize in favor of Page.on_resized ([#3516](https://github.com/flet-dev/flet/issues/3516))
+* CHANGED: View is not opened on tap ([#3513](https://github.com/flet-dev/flet/issues/3513))
+* FIXED: `Slider.value` defaults to `min` ([#3503](https://github.com/flet-dev/flet/issues/3503))
+* FIXED: add "hide" and "show" to WindowEventType enum ([#3505](https://github.com/flet-dev/flet/issues/3505))
+* FIXED: TypeError raised for isinstance check with Union in before_update method ([#3499](https://github.com/flet-dev/flet/issues/3499))
+* FIXED: Corrected `isinstance` check in `SnackBar.before_update` to use a tuple of types instead of Union, resolving TypeError: "Subscripted generics cannot be used with class and instance checks".
+* FIXED: `Page.open()` breaking after multiple calls.
+* FIXED: Typo in on_resized setter decorator
+
+# 0.23.1
+
+* FIX: Fix parseFloatingActionButtonLocation() to work on desktop ([#3496](https://github.com/flet-dev/flet/issues/3496))
+* FIX: Flet 0.23 crashes on Ubuntu 22.04 ([#3495](https://github.com/flet-dev/flet/issues/3495))
+* FIX: View.floating_action_button_location: conditionally use _set_attr.
+* FIX: Import `ParamSpec` from `typing` for Python >3.10.
+* FIX: replace `len(list(filter(...)))` by `any(...)`.
+* FIX: Make window and browser_context_menu private, and expose respective getters.
+
+# 0.23.0
+
+* NEW: `PermissionHandler` control ([#3276](https://github.com/flet-dev/flet/issues/3276))
+* NEW: `Map` control ([#3093](https://github.com/flet-dev/flet/issues/3093))
+* NEW: `Geolocator control` ([#3179](https://github.com/flet-dev/flet/issues/3179))
+* NEW: `AutoFillGroup` Control ([#3047](https://github.com/flet-dev/flet/issues/3047))
+* NEW: Migrated to Flutter 3.22 ([#3396](https://github.com/flet-dev/flet/issues/3396))
+* NEW: An ability to access PubSubHub from outside Flet app ([#3446](https://github.com/flet-dev/flet/issues/3446))
+* NEW: `TextStyle` props: `overflow`, `word_spacing`, `baseline` ([#3435](https://github.com/flet-dev/flet/issues/3435))
+* NEW: Enable/disable browser context menu ([#3434](https://github.com/flet-dev/flet/issues/3434))
+* NEW: `Container.color_filter` property ([#3392](https://github.com/flet-dev/flet/issues/3392))
+* NEW: `dropdown.Option.text_style` property ([#3293](https://github.com/flet-dev/flet/issues/3293))
+* NEW: `dropdown.Option.content` property ([#3456](https://github.com/flet-dev/flet/issues/3456))
+* NEW: `Video.configuration` property ([#3074](https://github.com/flet-dev/flet/issues/3074))
+* NEW: Enable Impeller on Android and macOS ([#3458](https://github.com/flet-dev/flet/issues/3458))
+* NEW: AutoComplete: add selected_index read-only property ([#3298](https://github.com/flet-dev/flet/issues/3298))
+* NEW: Renamed `NavigationDestination` to `NavigationBarDestination` ([#3172](https://github.com/flet-dev/flet/issues/3172))
+* CHANGED: Prettify "build" command cli output ([#3407](https://github.com/flet-dev/flet/issues/3407))
+* CHANGED: Set colorScheme.primary as defaultSideColor ([#3421](https://github.com/flet-dev/flet/issues/3421))
+* CHANGED: feat(map): add missing py-events, better typing ([#3464](https://github.com/flet-dev/flet/issues/3464))
+* CHORE: Refactor `numbers.dart` utils ([#3263](https://github.com/flet-dev/flet/issues/3263))
+* CHORE: Global Code Refactoring/Clean-up ([#3186](https://github.com/flet-dev/flet/issues/3186))
+* CHORE: Cleanup ([#3406](https://github.com/flet-dev/flet/issues/3406))
+* CHORE: Error handling enhancements ([#3175](https://github.com/flet-dev/flet/issues/3175))
+* CHORE: Improve type hint for run_task and run_thread ([#3459](https://github.com/flet-dev/flet/issues/3459))
+* CHORE: Move `page.window_*` and `page.browser_context_menu_*` properties to `Window` and `BrowserContextMenu` classes ([#3463](https://github.com/flet-dev/flet/issues/3463))
+* FIX: `Container.on_tap_down` not called when `on_click` is not provided ([#3442](https://github.com/flet-dev/flet/issues/3442))
+* FIX: SnackBar bug #3311 ([#3313](https://github.com/flet-dev/flet/issues/3313))
+
 # 0.22.1
 
 * `AutoComplete` control ([#3003](https://github.com/flet-dev/flet/issues/3003))

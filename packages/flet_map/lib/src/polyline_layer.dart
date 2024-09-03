@@ -20,35 +20,31 @@ class PolylineLayerControl extends StatelessWidget with FletStoreMixin {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-        "PolylineLayerControl build: ${control.id} (${control.hashCode})");
+    debugPrint("PolylineLayerControl build: ${control.id}");
 
     return withControls(control.childIds, (context, polylinesView) {
       debugPrint("PolylineLayerControlState build: ${control.id}");
 
       var polylines = polylinesView.controlViews
           .where((c) =>
-              c.control.type == "mappolylinemarker" && c.control.isVisible)
-          .map((polyline) {
-        var strokeCap = StrokeCap.values.firstWhereOrNull((e) =>
-            e.name.toLowerCase() ==
-            control.attrString("strokeCap", "")!.toLowerCase());
-        var strokeJoin = StrokeJoin.values.firstWhereOrNull((e) =>
-            e.name.toLowerCase() ==
-            control.attrString("strokeJoin", "")!.toLowerCase());
-        var points = polyline.control.attrString("points");
+              c.control.type == "map_polyline_marker" && c.control.isVisible)
+          .map<Polyline>((polyline) {
+        var coordinates = polyline.control.attrString("coordinates");
         var colorsStop = polyline.control.attrString("colorsStop");
         var gradientColors = polyline.control.attrString("gradientColors");
         return Polyline(
             borderStrokeWidth:
                 polyline.control.attrDouble("borderStrokeWidth", 0)!,
-            borderColor: polyline.control.attrColor("borderColor", context) ??
-                const Color(0xFFFFFF00),
-            color: polyline.control.attrColor("color", context) ??
-                const Color(0xFF00FF00),
-            isDotted: polyline.control.attrBool("dotted", false)!,
-            strokeCap: strokeCap ?? StrokeCap.round,
-            strokeJoin: strokeJoin ?? StrokeJoin.round,
+            borderColor: polyline.control
+                .attrColor("borderColor", context, const Color(0xFFFFFF00))!,
+            color: polyline.control
+                .attrColor("color", context, const Color(0xFF00FF00))!,
+            pattern: parseStrokePattern(polyline.control, "strokePattern") ??
+                const StrokePattern.solid(),
+            strokeCap: parseStrokeCap(
+                polyline.control.attrString("strokeCap"), StrokeCap.round)!,
+            strokeJoin: parseStrokeJoin(
+                polyline.control.attrString("strokeJoin"), StrokeJoin.round)!,
             strokeWidth: polyline.control.attrDouble("strokeWidth", 1.0)!,
             useStrokeWidthInMeter:
                 polyline.control.attrBool("useStrokeWidthInMeter", false)!,
@@ -64,8 +60,8 @@ class PolylineLayerControl extends StatelessWidget with FletStoreMixin {
                     .whereNotNull()
                     .toList()
                 : null,
-            points: points != null
-                ? (jsonDecode(points) as List)
+            points: coordinates != null
+                ? (jsonDecode(coordinates) as List)
                     .map((e) => latLngFromJson(e))
                     .toList()
                 : []);
@@ -73,7 +69,10 @@ class PolylineLayerControl extends StatelessWidget with FletStoreMixin {
 
       return PolylineLayer(
         polylines: polylines,
-        polylineCulling: control.attrBool("polylineCulling", false)!,
+        cullingMargin: control.attrDouble("cullingMargin", 10)!,
+        minimumHitbox: control.attrDouble("minHittableRadius", 10)!,
+        simplificationTolerance:
+            control.attrDouble("simplificationTolerance", 0.4)!,
       );
     });
   }
