@@ -183,6 +183,8 @@ for:
         - job_name: Build Flet for Windows
 
     install:
+      - python --version
+      - pip3 install --upgrade setuptools wheel twine poetry tomlkit virtualenv
       - dart pub global activate fvm
       - set PATH=%LOCALAPPDATA%\Pub\Cache\bin;%USERPROFILE%\fvm\default\bin;%PATH%
       - fvm install %FLUTTER_VERSION%
