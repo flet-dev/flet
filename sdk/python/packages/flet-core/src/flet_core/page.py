@@ -1724,7 +1724,7 @@ class Page(AdaptiveControl):
 
     # loop
     @property
-    def loop(self) -> AbstractEventLoop:
+    def loop(self) -> asyncio.AbstractEventLoop:
         return self.__loop
 
     # executor
