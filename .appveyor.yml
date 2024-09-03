@@ -126,7 +126,7 @@ for:
             $env:PKG_VER = "$($cv.major).$($cv.minor+1).0+$($env:APPVEYOR_BUILD_NUMBER)"
           }
           Update-AppveyorBuild -Version $env:PKG_VER
-      - pip3 install pyyaml
+      - pip3 install --upgrade setuptools pyyaml
       - source ci/install_flutter.sh
 
     build_script:
