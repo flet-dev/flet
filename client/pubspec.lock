@@ -231,77 +231,77 @@ packages:
       path: "../packages/flet"
       relative: true
     source: path
-    version: "0.24.0"
+    version: "0.24.1"
   flet_audio:
     dependency: "direct main"
     description:
       path: "../packages/flet_audio"
       relative: true
     source: path
-    version: "0.24.0"
+    version: "0.24.1"
   flet_audio_recorder:
     dependency: "direct main"
     description:
       path: "../packages/flet_audio_recorder"
       relative: true
     source: path
-    version: "0.24.0"
+    version: "0.24.1"
   flet_flashlight:
     dependency: "direct main"
     description:
       path: "../packages/flet_flashlight"
       relative: true
     source: path
-    version: "0.24.0"
+    version: "0.24.1"
   flet_geolocator:
     dependency: "direct main"
     description:
       path: "../packages/flet_geolocator"
       relative: true
     source: path
-    version: "0.24.0"
+    version: "0.24.1"
   flet_lottie:
     dependency: "direct main"
     description:
       path: "../packages/flet_lottie"
       relative: true
     source: path
-    version: "0.24.0"
+    version: "0.24.1"
   flet_map:
     dependency: "direct main"
     description:
       path: "../packages/flet_map"
       relative: true
     source: path
-    version: "0.24.0"
+    version: "0.24.1"
   flet_permission_handler:
     dependency: "direct main"
     description:
       path: "../packages/flet_permission_handler"
       relative: true
     source: path
-    version: "0.24.0"
+    version: "0.24.1"
   flet_rive:
     dependency: "direct main"
     description:
       path: "../packages/flet_rive"
       relative: true
     source: path
-    version: "0.24.0"
+    version: "0.24.1"
   flet_video:
     dependency: "direct main"
     description:
       path: "../packages/flet_video"
       relative: true
     source: path
-    version: "0.24.0"
+    version: "0.24.1"
   flet_webview:
     dependency: "direct main"
     description:
       path: "../packages/flet_webview"
       relative: true
     source: path
-    version: "0.24.0"
+    version: "0.24.1"
   flutter:
     dependency: "direct main"
     description: flutter

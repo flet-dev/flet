@@ -1,5 +1,10 @@
 # Flet changelog
 
+# 0.24.1
+
+* FIXED: `Tooltip` displays wrong message when used with `IconButton`, `FloatingActionButton` and `PopupMenuButton` ([#3922](https://github.com/flet-dev/flet/issues/3922))
+* FIXED: `Image.src.base64` ([#3919](https://github.com/flet-dev/flet/issues/3919))
+
 # 0.24.0
 
 * NEW: `Placeholder` Control ([#3646](https://github.com/flet-dev/flet/issues/3646))
