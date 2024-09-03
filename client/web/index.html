@@ -104,9 +104,9 @@
   <script>
     window.addEventListener('load', function () {
       var loading = document.querySelector('#loading');
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
+      _flutter.loader.load({
+        serviceWorkerSettings: {
+          serviceWorkerVersion: {{flutter_service_worker_version}},
         }
       }).then(function (engineInitializer) {
         loading.classList.add('main_done');
