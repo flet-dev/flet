@@ -34,13 +34,6 @@
   <!-- useColorEmoji -->
 
   <!-- pyodideCode -->
-
-  <script>
-    // The value below is injected by flutter build, do not touch.
-    var serviceWorkerVersion = null;
-  </script>
-  <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js" defer></script>
 </head>
 
 <body>
@@ -101,31 +94,6 @@
     </style>
     <img src="icons/loading-animation.png" alt="Loading..." />
   </div>
-  <script>
-    window.addEventListener('load', function () {
-      var loading = document.querySelector('#loading');
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        }
-      }).then(function (engineInitializer) {
-        loading.classList.add('main_done');
-        return engineInitializer.initializeEngine({
-          renderer: webRenderer,
-          useColorEmoji: useColorEmoji,
-        });
-      }).then(function (appRunner) {
-        loading.classList.add('init_done');
-        return appRunner.runApp();
-      }).then(function (app) {
-        // Wait a few milliseconds so users can see the "zoooom" animation
-        // before getting rid of the "loading" div.
-        window.setTimeout(function () {
-          loading.remove();
-        }, 200);
-      });
-    });
-  </script>
+  <script src="flutter_bootstrap.js" async></script>
 </body>
-
 </html>
