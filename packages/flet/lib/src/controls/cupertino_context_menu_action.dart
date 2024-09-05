@@ -50,8 +50,8 @@ class _CupertinoContextMenuActionControlState
           widget.control.attrBool("isDestructiveAction", false)!,
       onPressed: () {
         if (!disabled) {
-          Navigator.of(context).pop();
           widget.backend.triggerControlEvent(widget.control.id, "click");
+          Navigator.of(context).pop();
         }
       },
       trailingIcon: trailingIcon,
