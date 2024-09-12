@@ -67,7 +67,7 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
         var onMapEvent = config.control.attrBool("onEvent", false)!;
         var onInit = config.control.attrBool("onInit", false)!;
         var onPointerDown = config.control.attrBool("onPointerDown", false)!;
-        var onPointerHover = config.control.attrBool("onPointerHover", false)!;
+        var onPointerHover = config.control.attrBool("onHover", false)!;
         var onPointerCancel =
             config.control.attrBool("onPointerCancel", false)!;
         var onPointerUp = config.control.attrBool("onPointerUp", false)!;
@@ -87,7 +87,7 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
           minZoom: config.control.attrDouble("minZoom"),
           onPointerHover: onPointerHover
               ? (PointerHoverEvent e, LatLng latlng) {
-                  triggerEvent(config.control, "pointer_hover", {
+                  triggerEvent(config.control, "hover", {
                     "lat": latlng.latitude,
                     "long": latlng.longitude,
                     "gx": e.position.dx,
