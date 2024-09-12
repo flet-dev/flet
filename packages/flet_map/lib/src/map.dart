@@ -92,6 +92,8 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
                     "long": latlng.longitude,
                     "gx": e.position.dx,
                     "gy": e.position.dy,
+                    "lx": e.localPosition.dx,
+                    "ly": e.localPosition.dy,
                     "kind": e.kind.name,
                   });
                 }
