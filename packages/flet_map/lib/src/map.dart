@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flet/flet.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -66,15 +67,17 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
         var onMapEvent = config.control.attrBool("onEvent", false)!;
         var onInit = config.control.attrBool("onInit", false)!;
         var onPointerDown = config.control.attrBool("onPointerDown", false)!;
+        var onPointerHover = config.control.attrBool("onPointerHover", false)!;
         var onPointerCancel =
             config.control.attrBool("onPointerCancel", false)!;
         var onPointerUp = config.control.attrBool("onPointerUp", false)!;
         var onPositionChange =
             config.control.attrBool("onPositionChange", false)!;
-
         return MapOptions(
           initialCenter: parseLatLng(
               config.control, "initialCenter", const LatLng(50.5, 30.51))!,
+          interactionOptions: parseInteractionOptions(config.control,
+              "interactionConfiguration", const InteractionOptions())!,
           backgroundColor: config.control
               .attrColor("backgroundColor", context, const Color(0x00000000))!,
           initialRotation: config.control.attrDouble("initialRotation", 0.0)!,
@@ -82,6 +85,17 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
           keepAlive: config.control.attrBool("keepAlive", false)!,
           maxZoom: config.control.attrDouble("maxZoom"),
           minZoom: config.control.attrDouble("minZoom"),
+          onPointerHover: onPointerHover
+              ? (PointerHoverEvent e, LatLng latlng) {
+                  triggerEvent(config.control, "pointer_hover", {
+                    "lat": latlng.latitude,
+                    "long": latlng.longitude,
+                    "gx": e.position.dx,
+                    "gy": e.position.dy,
+                    "kind": e.kind.name,
+                  });
+                }
+              : null,
           onTap: onTap
               ? (TapPosition pos, LatLng latlng) {
                   triggerEvent(config.control, "tap", {
