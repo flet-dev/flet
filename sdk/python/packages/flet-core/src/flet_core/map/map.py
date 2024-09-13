@@ -1,11 +1,12 @@
-from typing import Any, Optional, Union, List
+from typing import Any, Optional, Union, List, Tuple
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
-from flet_core.map.map_configuration import MapConfiguration
+from flet_core.map.map_configuration import MapConfiguration, MapLatitudeLongitude
 from flet_core.map.map_layer import MapLayer
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
+from flet_core.transform import Offset
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -13,6 +14,7 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalControlEventCallable,
+    Number,
 )
 
 
@@ -93,6 +95,72 @@ class Map(ConstrainedControl):
 
         self.configuration = configuration
         self.layers = layers
+
+    def move(
+        self,
+        coordinates: MapLatitudeLongitude,
+        zoom: Number,
+        offset: Union[Offset, Tuple[Union[Number], Union[Number]]] = Offset(0.0, 0.0),
+        wait_timeout: Optional[float] = 5,
+    ) -> bool:
+        if isinstance(offset, tuple):
+            offset = Offset(offset[0], offset[1])
+        result = self.invoke_method(
+            "move",
+            arguments={
+                "lat": str(coordinates.latitude),
+                "long": str(coordinates.longitude),
+                "zoom": str(zoom),
+                "ox": str(offset.x),
+                "oy": str(offset.y),
+            },
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return result == "true"
+
+    def move_and_rotate(
+        self,
+        coordinates: MapLatitudeLongitude,
+        zoom: Number,
+        degree: Number,
+        wait_timeout: Optional[float] = 5,
+    ) -> bool:
+        result = self.invoke_method(
+            "move_and_rotate",
+            arguments={
+                "lat": str(coordinates.latitude),
+                "long": str(coordinates.longitude),
+                "zoom": str(zoom),
+                "degree": str(degree),
+            },
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return result == "true"
+
+    def rotate_around_point(
+        self,
+        degree: Number,
+        point: Optional[Tuple[Union[Number], Union[Number]]] = None,
+        offset: Optional[Union[Offset, Tuple[Union[Number], Union[Number]]]] = None,
+        wait_timeout: Optional[float] = 5,
+    ) -> bool:
+        if isinstance(offset, tuple):
+            offset = Offset(offset[0], offset[1])
+        result = self.invoke_method(
+            "rotate_around_point",
+            arguments={
+                "degree": str(degree),
+                "ox": str(offset.x) if offset else "None",
+                "oy": str(offset.y) if offset else "None",
+                "px": str(point[0]) if point else "None",
+                "py": str(point[1]) if point else "None",
+            },
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return result == "true"
 
     def _get_control_name(self):
         return "map"

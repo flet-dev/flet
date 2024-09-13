@@ -10,6 +10,10 @@ from flet_core.map.map_configuration import (
     MapTapEvent,
     MapEvent,
     MapEventSource,
+    MapHoverEvent,
+    MapPointerDeviceType,
+    MapPointerEvent,
+    MapPositionChangeEvent,
 )
 from flet_core.map.marker_layer import Marker, MarkerLayer
 from flet_core.map.polygon_layer import PolygonMarker, PolygonLayer

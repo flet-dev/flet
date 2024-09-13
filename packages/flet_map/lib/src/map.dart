@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flet/flet.dart';
 import 'package:flutter/gestures.dart';
@@ -28,6 +29,8 @@ class MapControl extends StatefulWidget {
 }
 
 class _MapControlState extends State<MapControl> with FletStoreMixin {
+  final mapController = MapController();
+
   @override
   Widget build(BuildContext context) {
     debugPrint("Map build: ${widget.control.id} (${widget.control.hashCode})");
@@ -201,11 +204,68 @@ class _MapControlState extends State<MapControl> with FletStoreMixin {
       });
 
       Widget map = FlutterMap(
+        mapController: mapController,
         options: configuration.first,
         children: ctrls
             .map((c) => createControl(widget.control, c.id, disabled))
             .toList(),
       );
+
+      () async {
+        widget.backend.subscribeMethods(widget.control.id,
+            (methodName, args) async {
+          switch (methodName) {
+            case "move":
+              var lat = parseDouble(args["lat"]);
+              var long = parseDouble(args["long"]);
+              var zoom = parseDouble(args["zoom"]);
+              var ox = parseDouble(args["ox"]);
+              var oy = parseDouble(args["oy"]);
+              if (lat == null || long == null || zoom == null) {
+                break;
+              }
+              var result = mapController.move(LatLng(lat, long), zoom,
+                  offset: (ox != null && oy != null)
+                      ? Offset(ox, oy)
+                      : Offset.zero);
+              return result.toString();
+
+            case "move_and_rotate":
+              var lat = parseDouble(args["lat"]);
+              var long = parseDouble(args["long"]);
+              var zoom = parseDouble(args["zoom"]);
+              var degree = parseDouble(args["degree"]);
+              if (lat == null ||
+                  long == null ||
+                  zoom == null ||
+                  degree == null) {
+                break;
+              }
+              var result =
+                  mapController.moveAndRotate(LatLng(lat, long), zoom, degree);
+              return (result.moveSuccess || result.rotateSuccess).toString();
+            case "rotate_around_point":
+              var degree = parseDouble(args["degree"]);
+              var ox = parseDouble(args["ox"]);
+              var oy = parseDouble(args["oy"]);
+              var px = parseDouble(args["px"]);
+              var py = parseDouble(args["py"]);
+              var point = (px != null && py != null) ? Point(px, py) : null;
+              var offset = (ox != null && oy != null) ? Offset(ox, oy) : null;
+              if (degree == null) {
+                break;
+              }
+              if (point != null || offset != null) {
+                var result = mapController.rotateAroundPoint(degree,
+                    point: point, offset: offset);
+                return (result.moveSuccess || result.rotateSuccess).toString();
+              }
+              var result = mapController.rotate(degree);
+              return result.toString();
+          }
+          return null;
+        });
+      }();
 
       return constrainedControl(context, map, widget.parent, widget.control);
     });
