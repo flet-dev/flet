@@ -102,7 +102,8 @@ try:
     from flet_runtime.auth.oauth_provider import OAuthProvider
 except ImportError:
 
-    class OAuthProvider: ...
+    class OAuthProvider:
+        ...
 
     class Authorization:
         def __init__(
@@ -111,7 +112,8 @@ except ImportError:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ): ...
+        ):
+            ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -141,15 +143,19 @@ class PageDisconnectedException(Exception):
 class BrowserContextMenu:
     def __init__(self, page: "Page"):
         self.page = page
-        self.disabled = False
+        self.__disabled = False
 
     def enable(self, wait_timeout: Optional[float] = 10):
         self.page._invoke_method("enableBrowserContextMenu", wait_timeout=wait_timeout)
-        self.disabled = False
+        self.__disabled = False
 
     def disable(self, wait_timeout: Optional[float] = 10):
         self.page._invoke_method("disableBrowserContextMenu", wait_timeout=wait_timeout)
-        self.disabled = True
+        self.__disabled = True
+
+    @property
+    def disabled(self) -> bool:
+        return self.__disabled
 
 
 class Window:
