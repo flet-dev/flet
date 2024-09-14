@@ -9,13 +9,10 @@ import 'utils/map.dart';
 class PolygonLayerControl extends StatelessWidget with FletStoreMixin {
   final Control? parent;
   final Control control;
-  final List<Control> children;
 
   const PolygonLayerControl(
       {super.key,
-      required this.parent,
-      required this.control,
-      required this.children});
+      required this.parent, required this.control});
 
   @override
   Widget build(BuildContext context) {

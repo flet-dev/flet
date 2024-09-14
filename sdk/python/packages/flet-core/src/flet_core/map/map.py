@@ -1,5 +1,6 @@
 from typing import Any, Optional, Union, List, Tuple
 
+from flet_core import AnimationCurve
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.map.map_configuration import MapConfiguration, MapLatitudeLongitude
@@ -15,6 +16,7 @@ from flet_core.types import (
     ScaleValue,
     OptionalControlEventCallable,
     Number,
+    DurationValue,
 )
 
 
@@ -31,6 +33,8 @@ class Map(ConstrainedControl):
         self,
         layers: List[MapLayer],
         configuration: MapConfiguration = MapConfiguration(),
+        default_animation_curve: Optional[AnimationCurve] = None,
+        default_animation_duration: DurationValue = None,
         #
         # ConstrainedControl
         #
@@ -95,72 +99,136 @@ class Map(ConstrainedControl):
 
         self.configuration = configuration
         self.layers = layers
+        self.default_animation_curve = default_animation_curve
+        self.default_animation_duration = default_animation_duration
 
-    def move(
-        self,
-        coordinates: MapLatitudeLongitude,
-        zoom: Number,
-        offset: Union[Offset, Tuple[Union[Number], Union[Number]]] = Offset(0.0, 0.0),
-        wait_timeout: Optional[float] = 5,
-    ) -> bool:
-        if isinstance(offset, tuple):
-            offset = Offset(offset[0], offset[1])
-        result = self.invoke_method(
-            "move",
-            arguments={
-                "lat": str(coordinates.latitude),
-                "long": str(coordinates.longitude),
-                "zoom": str(zoom),
-                "ox": str(offset.x),
-                "oy": str(offset.y),
-            },
-            wait_for_result=True,
-            wait_timeout=wait_timeout,
-        )
-        return result == "true"
-
-    def move_and_rotate(
-        self,
-        coordinates: MapLatitudeLongitude,
-        zoom: Number,
-        degree: Number,
-        wait_timeout: Optional[float] = 5,
-    ) -> bool:
-        result = self.invoke_method(
-            "move_and_rotate",
-            arguments={
-                "lat": str(coordinates.latitude),
-                "long": str(coordinates.longitude),
-                "zoom": str(zoom),
-                "degree": str(degree),
-            },
-            wait_for_result=True,
-            wait_timeout=wait_timeout,
-        )
-        return result == "true"
-
-    def rotate_around_point(
+    def rotate_from(
         self,
         degree: Number,
-        point: Optional[Tuple[Union[Number], Union[Number]]] = None,
+        animation_curve: Optional[AnimationCurve] = None,
+    ):
+        animation_curve = animation_curve or self.__default_animation_curve
+        self.invoke_method(
+            "rotate_from",
+            arguments={
+                "degree": degree,
+                "curve": animation_curve.value if animation_curve else None,
+            },
+        )
+
+    def reset_rotation(
+        self,
+        animation_curve: Optional[AnimationCurve] = None,
+        animation_duration: DurationValue = None,
+    ):
+        animation_curve = animation_curve or self.__default_animation_curve
+        self.invoke_method(
+            "reset_rotation",
+            arguments={
+                "curve": animation_curve.value if animation_curve else None,
+                "duration": self._convert_attr_json(
+                    animation_duration or self.__default_animation_duration
+                ),
+            },
+        )
+
+    def zoom_in(
+        self,
+        animation_curve: Optional[AnimationCurve] = None,
+        animation_duration: DurationValue = None,
+    ):
+        animation_curve = animation_curve or self.__default_animation_curve
+        self.invoke_method(
+            "zoom_in",
+            arguments={
+                "curve": animation_curve.value if animation_curve else None,
+                "duration": self._convert_attr_json(
+                    animation_duration or self.__default_animation_duration
+                ),
+            },
+        )
+
+    def zoom_out(
+        self,
+        animation_curve: Optional[AnimationCurve] = None,
+        animation_duration: DurationValue = None,
+    ):
+        animation_curve = animation_curve or self.__default_animation_curve
+        self.invoke_method(
+            "zoom_out",
+            arguments={
+                "curve": animation_curve.value if animation_curve else None,
+                "duration": self._convert_attr_json(
+                    animation_duration or self.__default_animation_duration
+                ),
+            },
+        )
+
+    def zoom_to(
+        self,
+        zoom: Number,
+        animation_curve: Optional[AnimationCurve] = None,
+        animation_duration: DurationValue = None,
+    ):
+        animation_curve = animation_curve or self.__default_animation_curve
+        self.invoke_method(
+            "zoom_to",
+            arguments={
+                "zoom": zoom,
+                "curve": animation_curve.value if animation_curve else None,
+                "duration": self._convert_attr_json(
+                    animation_duration or self.__default_animation_duration
+                ),
+            },
+        )
+
+    def move_to(
+        self,
+        destination: Optional[MapLatitudeLongitude] = None,
+        zoom: OptionalNumber = None,
+        rotation: OptionalNumber = None,
+        animation_curve: Optional[AnimationCurve] = None,
+        animation_duration: DurationValue = None,
         offset: Optional[Union[Offset, Tuple[Union[Number], Union[Number]]]] = None,
-        wait_timeout: Optional[float] = 5,
-    ) -> bool:
+    ):
+        animation_curve = animation_curve or self.__default_animation_curve
         if isinstance(offset, tuple):
             offset = Offset(offset[0], offset[1])
-        result = self.invoke_method(
-            "rotate_around_point",
+        self.invoke_method(
+            "move_to",
             arguments={
-                "degree": str(degree),
-                "ox": str(offset.x) if offset else "None",
-                "oy": str(offset.y) if offset else "None",
-                "px": str(point[0]) if point else "None",
-                "py": str(point[1]) if point else "None",
+                "lat": str(destination.latitude) if destination else None,
+                "long": str(destination.longitude) if destination else None,
+                "zoom": zoom,
+                "ox": str(offset.x) if offset else None,
+                "oy": str(offset.y) if offset else None,
+                "rot": rotation,
+                "curve": animation_curve.value if animation_curve else None,
+                "duration": self._convert_attr_json(
+                    animation_duration or self.__default_animation_duration
+                ),
             },
-            wait_for_result=True,
-            wait_timeout=wait_timeout,
         )
-        return result == "true"
+
+    def center_on(
+        self,
+        point: Optional[MapLatitudeLongitude],
+        zoom: OptionalNumber,
+        animation_curve: Optional[AnimationCurve] = None,
+        animation_duration: DurationValue = None,
+    ):
+        self.invoke_method(
+            "animate_to",
+            arguments={
+                "lat": str(point.latitude) if point else None,
+                "long": str(point.longitude) if point else None,
+                "zoom": zoom,
+                "curve": animation_curve.value if animation_curve else None,
+                "duration": self._convert_attr_json(
+                    animation_duration or self.__default_animation_duration
+                ),
+            },
+        )
 
     def _get_control_name(self):
         return "map"
@@ -185,3 +253,28 @@ class Map(ConstrainedControl):
     @layers.setter
     def layers(self, value: List[MapLayer]):
         self.__layers = value
+
+    def before_update(self):
+        super().before_update()
+        self._set_attr_json(
+            "defaultAnimationDuration", self.__default_animation_duration
+        )
+
+    # default_animation_duration
+    @property
+    def default_animation_duration(self) -> DurationValue:
+        return self.__default_animation_duration
+
+    @default_animation_duration.setter
+    def default_animation_duration(self, value: DurationValue):
+        self.__default_animation_duration = value
+
+    # default_animation_curve
+    @property
+    def default_animation_curve(self) -> AnimationCurve:
+        return self.__default_animation_curve
+
+    @default_animation_curve.setter
+    def default_animation_curve(self, value: AnimationCurve):
+        self.__default_animation_curve = value
+        self._set_enum_attr("defaultAnimationCurve", value, AnimationCurve)
