@@ -42,8 +42,6 @@ class _MapControlState extends State<MapControl>
   Widget build(BuildContext context) {
     debugPrint("Map build: ${widget.control.id} (${widget.control.hashCode})");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    Curve? defaultAnimationCurve;
-    Duration? defaultAnimationDuration;
     List<String> acceptedChildrenTypes = [
       "map_circle_layer",
       "map_tile_layer",
@@ -68,6 +66,19 @@ class _MapControlState extends State<MapControl>
       widget.backend.triggerControlEvent(ctrl.id, eventName, d);
     }
 
+    Curve? defaultAnimationCurve;
+    Duration? defaultAnimationDuration;
+    var onTap = widget.control.attrBool("onTap", false)!;
+    var onLongPress = widget.control.attrBool("onLongPress", false)!;
+    var onSecondaryTap = widget.control.attrBool("onSecondaryTap", false)!;
+    var onMapEvent = widget.control.attrBool("onEvent", false)!;
+    var onInit = widget.control.attrBool("onInit", false)!;
+    var onPointerDown = widget.control.attrBool("onPointerDown", false)!;
+    var onPointerHover = widget.control.attrBool("onHover", false)!;
+    var onPointerCancel = widget.control.attrBool("onPointerCancel", false)!;
+    var onPointerUp = widget.control.attrBool("onPointerUp", false)!;
+    var onPositionChange = widget.control.attrBool("onPositionChange", false)!;
+
     return withControls(widget.control.childIds, (context, configurationsView) {
       var configuration = configurationsView.controlViews
           .where((c) => c.control.type == "map_configuration")
@@ -76,18 +87,6 @@ class _MapControlState extends State<MapControl>
             parseCurve(config.control.attrString("animationCurve"));
         defaultAnimationDuration =
             parseDuration(config.control, "animationDuration");
-        var onTap = config.control.attrBool("onTap", false)!;
-        var onLongPress = config.control.attrBool("onLongPress", false)!;
-        var onSecondaryTap = config.control.attrBool("onSecondaryTap", false)!;
-        var onMapEvent = config.control.attrBool("onEvent", false)!;
-        var onInit = config.control.attrBool("onInit", false)!;
-        var onPointerDown = config.control.attrBool("onPointerDown", false)!;
-        var onPointerHover = config.control.attrBool("onHover", false)!;
-        var onPointerCancel =
-            config.control.attrBool("onPointerCancel", false)!;
-        var onPointerUp = config.control.attrBool("onPointerUp", false)!;
-        var onPositionChange =
-            config.control.attrBool("onPositionChange", false)!;
         return MapOptions(
           initialCenter: parseLatLng(
               config.control, "initialCenter", const LatLng(50.5, 30.51))!,
@@ -102,7 +101,7 @@ class _MapControlState extends State<MapControl>
           minZoom: config.control.attrDouble("minZoom"),
           onPointerHover: onPointerHover
               ? (PointerHoverEvent e, LatLng latlng) {
-                  triggerEvent(config.control, "hover", {
+                  triggerEvent(widget.control, "hover", {
                     "lat": latlng.latitude,
                     "long": latlng.longitude,
                     "gx": e.position.dx,
@@ -115,7 +114,7 @@ class _MapControlState extends State<MapControl>
               : null,
           onTap: onTap
               ? (TapPosition pos, LatLng latlng) {
-                  triggerEvent(config.control, "tap", {
+                  triggerEvent(widget.control, "tap", {
                     "lat": latlng.latitude,
                     "long": latlng.longitude,
                     "gx": pos.global.dx,
@@ -127,7 +126,7 @@ class _MapControlState extends State<MapControl>
               : null,
           onLongPress: onLongPress
               ? (TapPosition pos, LatLng latlng) {
-                  triggerEvent(config.control, "long_press", {
+                  triggerEvent(widget.control, "long_press", {
                     "lat": latlng.latitude,
                     "long": latlng.longitude,
                     "gx": pos.global.dx,
@@ -139,7 +138,7 @@ class _MapControlState extends State<MapControl>
               : null,
           onPositionChanged: onPositionChange
               ? (MapCamera camera, bool hasGesture) {
-                  triggerEvent(config.control, "position_change", {
+                  triggerEvent(widget.control, "position_change", {
                     "lat": camera.center.latitude,
                     "long": camera.center.longitude,
                     "min_zoom": camera.minZoom,
@@ -150,7 +149,7 @@ class _MapControlState extends State<MapControl>
               : null,
           onPointerDown: onPointerDown
               ? (PointerDownEvent e, LatLng latlng) {
-                  triggerEvent(config.control, "pointer_down", {
+                  triggerEvent(widget.control, "pointer_down", {
                     "lat": latlng.latitude,
                     "long": latlng.longitude,
                     "gx": e.position.dx,
@@ -161,7 +160,7 @@ class _MapControlState extends State<MapControl>
               : null,
           onPointerCancel: onPointerCancel
               ? (PointerCancelEvent e, LatLng latlng) {
-                  triggerEvent(config.control, "pointer_cancel", {
+                  triggerEvent(widget.control, "pointer_cancel", {
                     "lat": latlng.latitude,
                     "long": latlng.longitude,
                     "gx": e.position.dx,
@@ -172,7 +171,7 @@ class _MapControlState extends State<MapControl>
               : null,
           onPointerUp: onPointerUp
               ? (PointerUpEvent e, LatLng latlng) {
-                  triggerEvent(config.control, "pointer_up", {
+                  triggerEvent(widget.control, "pointer_up", {
                     "lat": latlng.latitude,
                     "long": latlng.longitude,
                     "gx": e.position.dx,
@@ -183,7 +182,7 @@ class _MapControlState extends State<MapControl>
               : null,
           onSecondaryTap: onSecondaryTap
               ? (TapPosition pos, LatLng latlng) {
-                  triggerEvent(config.control, "secondary_tap", {
+                  triggerEvent(widget.control, "secondary_tap", {
                     "lat": latlng.latitude,
                     "long": latlng.longitude,
                     "gx": pos.global.dx,
@@ -195,7 +194,7 @@ class _MapControlState extends State<MapControl>
               : null,
           onMapEvent: onMapEvent
               ? (MapEvent e) {
-                  triggerEvent(config.control, "event", {
+                  triggerEvent(widget.control, "event", {
                     "src": e.source.name,
                     "c_lat": e.camera.center.latitude,
                     "c_long": e.camera.center.longitude,
@@ -209,7 +208,7 @@ class _MapControlState extends State<MapControl>
           onMapReady: onInit
               ? () {
                   debugPrint("Map ${widget.control.id} init");
-                  widget.backend.triggerControlEvent(config.control.id, "init");
+                  widget.backend.triggerControlEvent(widget.control.id, "init");
                 }
               : null,
         );

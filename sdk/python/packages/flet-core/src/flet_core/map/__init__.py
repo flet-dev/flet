@@ -1,12 +1,6 @@
 from flet_core.map.circle_layer import CircleMarker, CircleLayer
-from flet_core.map.map import Map
-from flet_core.map.map_configuration import (
-    MapConfiguration,
-    MapLatitudeLongitude,
-    MapLatitudeLongitudeBounds,
-    MapInteractionConfiguration,
-    MapInteractiveFlag,
-    MapMultiFingerGesture,
+from flet_core.map.map import (
+    Map,
     MapTapEvent,
     MapEvent,
     MapEventSource,
@@ -14,6 +8,14 @@ from flet_core.map.map_configuration import (
     MapPointerDeviceType,
     MapPointerEvent,
     MapPositionChangeEvent,
+)
+from flet_core.map.map_configuration import (
+    MapConfiguration,
+    MapLatitudeLongitude,
+    MapLatitudeLongitudeBounds,
+    MapInteractionConfiguration,
+    MapInteractiveFlag,
+    MapMultiFingerGesture,
 )
 from flet_core.map.marker_layer import Marker, MarkerLayer
 from flet_core.map.polygon_layer import PolygonMarker, PolygonLayer
