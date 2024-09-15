@@ -3,12 +3,14 @@ from dataclasses import dataclass, field
 from enum import Enum, IntFlag
 from typing import Optional, Union
 
+from flet_core.animation import AnimationCurve
 from flet_core.control import OptionalNumber, Control
 from flet_core.event_handler import EventHandler
 from flet_core.types import (
     ControlEvent,
     OptionalEventCallable,
     OptionalControlEventCallable,
+    DurationValue,
 )
 
 
@@ -87,6 +89,8 @@ class MapConfiguration(Control):
         keep_alive: Optional[bool] = None,
         max_zoom: OptionalNumber = None,
         min_zoom: OptionalNumber = None,
+        animation_curve: Optional[AnimationCurve] = None,
+        animation_duration: DurationValue = None,
         on_init: OptionalControlEventCallable = None,
         on_tap: OptionalEventCallable["MapTapEvent"] = None,
         on_hover: OptionalEventCallable["MapHoverEvent"] = None,
@@ -138,6 +142,8 @@ class MapConfiguration(Control):
         self.keep_alive = keep_alive
         self.max_zoom = max_zoom
         self.min_zoom = min_zoom
+        self.animation_curve = animation_curve
+        self.animation_duration = animation_duration
         self.on_tap = on_tap
         self.on_hover = on_hover
         self.on_secondary_tap = on_secondary_tap
@@ -154,12 +160,11 @@ class MapConfiguration(Control):
 
     def before_update(self):
         super().before_update()
-        if isinstance(self.__initial_center, MapLatitudeLongitude):
-            self._set_attr_json("initialCenter", self.__initial_center)
-        if isinstance(self.__interaction_configuration, MapInteractionConfiguration):
-            self._set_attr_json(
-                "interactionConfiguration", self.__interaction_configuration
-            )
+        self._set_attr_json("initialCenter", self.__initial_center)
+        self._set_attr_json(
+            "interactionConfiguration", self.__interaction_configuration
+        )
+        self._set_attr_json("animationDuration", self.__animation_duration)
 
     # bgcolor
     @property
@@ -232,6 +237,25 @@ class MapConfiguration(Control):
     @min_zoom.setter
     def min_zoom(self, value: OptionalNumber):
         self._set_attr("minZoom", value)
+
+    # animation_duration
+    @property
+    def animation_duration(self) -> DurationValue:
+        return self.__animation_duration
+
+    @animation_duration.setter
+    def animation_duration(self, value: DurationValue):
+        self.__animation_duration = value
+
+    # animation_curve
+    @property
+    def animation_curve(self) -> AnimationCurve:
+        return self.__animation_curve
+
+    @animation_curve.setter
+    def animation_curve(self, value: AnimationCurve):
+        self.__animation_curve = value
+        self._set_enum_attr("animationCurve", value, AnimationCurve)
 
     # on_tap
     @property

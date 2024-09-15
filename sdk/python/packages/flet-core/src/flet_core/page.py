@@ -1412,7 +1412,7 @@ class Page(AdaptiveControl):
 
     def open(self, control: Control) -> None:
         if not hasattr(control, "open"):
-            raise ValueError("control has no open attribute")
+            raise ValueError(f"{control.__class__.__qualname__} has no open attribute")
 
         control.open = True
 
@@ -1438,7 +1438,7 @@ class Page(AdaptiveControl):
             control.open = False
             control.update()
         else:
-            raise ValueError("control has no open attribute")
+            raise ValueError(f"{control.__class__.__qualname__} has no open attribute")
 
     #
     # SnackBar

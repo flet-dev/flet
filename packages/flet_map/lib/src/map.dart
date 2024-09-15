@@ -42,9 +42,8 @@ class _MapControlState extends State<MapControl>
   Widget build(BuildContext context) {
     debugPrint("Map build: ${widget.control.id} (${widget.control.hashCode})");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    // var defaultAnimationCurve = parseCurve(widget.control.attrString("defaultAnimationCurve"));
-    // var defaultAnimationDuration = parseDuration(widget.control, "defaultAnimationDuration");
-
+    Curve? defaultAnimationCurve;
+    Duration? defaultAnimationDuration;
     List<String> acceptedChildrenTypes = [
       "map_circle_layer",
       "map_tile_layer",
@@ -73,6 +72,10 @@ class _MapControlState extends State<MapControl>
       var configuration = configurationsView.controlViews
           .where((c) => c.control.type == "map_configuration")
           .map((config) {
+        defaultAnimationCurve =
+            parseCurve(config.control.attrString("animationCurve"));
+        defaultAnimationDuration =
+            parseDuration(config.control, "animationDuration");
         var onTap = config.control.attrBool("onTap", false)!;
         var onLongPress = config.control.attrBool("onLongPress", false)!;
         var onSecondaryTap = config.control.attrBool("onSecondaryTap", false)!;
@@ -220,6 +223,13 @@ class _MapControlState extends State<MapControl>
             .toList(),
       );
 
+      Duration? durationFromString(String? duration, [Duration? defaultValue]) {
+        if (duration != null) {
+          return durationFromJSON(json.decode(duration), defaultValue);
+        }
+        return null;
+      }
+
       () async {
         widget.backend.subscribeMethods(widget.control.id,
             (methodName, args) async {
@@ -227,27 +237,33 @@ class _MapControlState extends State<MapControl>
             case "rotate_from":
               var degree = parseDouble(args["degree"]);
               if (degree != null) {
-                _animatedMapController.animatedRotateFrom(degree,
-                    curve: parseCurve(args["curve"]));
+                _animatedMapController.animatedRotateFrom(
+                  degree,
+                  curve: parseCurve(args["curve"]) ?? defaultAnimationCurve,
+                );
               }
             case "reset_rotation":
               _animatedMapController.animatedRotateReset(
-                  curve: parseCurve(args["curve"]),
-                  duration: durationFromJSON(args["duration"]));
+                  curve: parseCurve(args["curve"], defaultAnimationCurve),
+                  duration: durationFromString(
+                      args["duration"], defaultAnimationDuration));
             case "zoom_in":
               _animatedMapController.animatedZoomIn(
-                  curve: parseCurve(args["curve"]),
-                  duration: durationFromJSON(args["duration"]));
+                  curve: parseCurve(args["curve"], defaultAnimationCurve),
+                  duration: durationFromString(
+                      args["duration"], defaultAnimationDuration));
             case "zoom_out":
               _animatedMapController.animatedZoomOut(
-                  curve: parseCurve(args["curve"]),
-                  duration: durationFromJSON(args["duration"]));
+                  curve: parseCurve(args["curve"], defaultAnimationCurve),
+                  duration: durationFromString(
+                      args["duration"], defaultAnimationDuration));
             case "zoom_to":
               var zoom = parseDouble(args["zoom"]);
               if (zoom != null) {
                 _animatedMapController.animatedZoomTo(zoom,
-                    curve: parseCurve(args["curve"]),
-                    duration: durationFromJSON(args["duration"]));
+                    curve: parseCurve(args["curve"], defaultAnimationCurve),
+                    duration: durationFromString(
+                        args["duration"], defaultAnimationDuration));
               }
             case "move_to":
               var zoom = parseDouble(args["zoom"]);
@@ -257,9 +273,10 @@ class _MapControlState extends State<MapControl>
               var oy = parseDouble(args["oy"]);
               _animatedMapController.animateTo(
                 zoom: zoom,
-                curve: parseCurve(args["curve"]),
+                curve: parseCurve(args["curve"], defaultAnimationCurve),
                 rotation: parseDouble(args["rot"]),
-                duration: durationFromJSON(args["duration"]),
+                duration: durationFromString(
+                    args["duration"], defaultAnimationDuration),
                 dest: (lat != null && long != null) ? LatLng(lat, long) : null,
                 offset:
                     (ox != null && oy != null) ? Offset(ox, oy) : Offset.zero,
@@ -272,8 +289,9 @@ class _MapControlState extends State<MapControl>
                 _animatedMapController.centerOnPoint(
                   LatLng(lat, long),
                   zoom: zoom,
-                  curve: parseCurve(args["curve"]),
-                  duration: durationFromJSON(args["duration"]),
+                  curve: parseCurve(args["curve"], defaultAnimationCurve),
+                  duration: durationFromString(
+                      args["duration"], defaultAnimationDuration),
                 );
               }
           }

@@ -323,14 +323,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_compass:
-    dependency: transitive
-    description:
-      name: flutter_compass
-      sha256: be642484f9f6975c1c6edff568281b001f2f1e604de27ecea18d97eebbdef22f
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.8.0"
   flutter_driver:
     dependency: transitive
     description: flutter
@@ -389,14 +381,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
-  flutter_map_location_marker:
-    dependency: transitive
-    description:
-      name: flutter_map_location_marker
-      sha256: "1971d9ad7c8bedb15cb6a03598c0a3ad66ac6f7f165ad90d801bd5f636120f38"
-      url: "https://pub.dev"
-    source: hosted
-    version: "9.1.1"
   flutter_markdown:
     dependency: transitive
     description:

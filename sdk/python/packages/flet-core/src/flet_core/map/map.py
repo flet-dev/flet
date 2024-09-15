@@ -33,8 +33,6 @@ class Map(ConstrainedControl):
         self,
         layers: List[MapLayer],
         configuration: MapConfiguration = MapConfiguration(),
-        default_animation_curve: Optional[AnimationCurve] = None,
-        default_animation_duration: DurationValue = None,
         #
         # ConstrainedControl
         #
@@ -99,15 +97,12 @@ class Map(ConstrainedControl):
 
         self.configuration = configuration
         self.layers = layers
-        self.default_animation_curve = default_animation_curve
-        self.default_animation_duration = default_animation_duration
 
     def rotate_from(
         self,
         degree: Number,
         animation_curve: Optional[AnimationCurve] = None,
     ):
-        animation_curve = animation_curve or self.__default_animation_curve
         self.invoke_method(
             "rotate_from",
             arguments={
@@ -121,14 +116,11 @@ class Map(ConstrainedControl):
         animation_curve: Optional[AnimationCurve] = None,
         animation_duration: DurationValue = None,
     ):
-        animation_curve = animation_curve or self.__default_animation_curve
         self.invoke_method(
             "reset_rotation",
             arguments={
                 "curve": animation_curve.value if animation_curve else None,
-                "duration": self._convert_attr_json(
-                    animation_duration or self.__default_animation_duration
-                ),
+                "duration": self._convert_attr_json(animation_duration),
             },
         )
 
@@ -137,14 +129,11 @@ class Map(ConstrainedControl):
         animation_curve: Optional[AnimationCurve] = None,
         animation_duration: DurationValue = None,
     ):
-        animation_curve = animation_curve or self.__default_animation_curve
         self.invoke_method(
             "zoom_in",
             arguments={
                 "curve": animation_curve.value if animation_curve else None,
-                "duration": self._convert_attr_json(
-                    animation_duration or self.__default_animation_duration
-                ),
+                "duration": self._convert_attr_json(animation_duration),
             },
         )
 
@@ -153,14 +142,11 @@ class Map(ConstrainedControl):
         animation_curve: Optional[AnimationCurve] = None,
         animation_duration: DurationValue = None,
     ):
-        animation_curve = animation_curve or self.__default_animation_curve
         self.invoke_method(
             "zoom_out",
             arguments={
                 "curve": animation_curve.value if animation_curve else None,
-                "duration": self._convert_attr_json(
-                    animation_duration or self.__default_animation_duration
-                ),
+                "duration": self._convert_attr_json(animation_duration),
             },
         )
 
@@ -170,15 +156,12 @@ class Map(ConstrainedControl):
         animation_curve: Optional[AnimationCurve] = None,
         animation_duration: DurationValue = None,
     ):
-        animation_curve = animation_curve or self.__default_animation_curve
         self.invoke_method(
             "zoom_to",
             arguments={
                 "zoom": zoom,
                 "curve": animation_curve.value if animation_curve else None,
-                "duration": self._convert_attr_json(
-                    animation_duration or self.__default_animation_duration
-                ),
+                "duration": self._convert_attr_json(animation_duration),
             },
         )
 
@@ -191,7 +174,6 @@ class Map(ConstrainedControl):
         animation_duration: DurationValue = None,
         offset: Optional[Union[Offset, Tuple[Union[Number], Union[Number]]]] = None,
     ):
-        animation_curve = animation_curve or self.__default_animation_curve
         if isinstance(offset, tuple):
             offset = Offset(offset[0], offset[1])
         self.invoke_method(
@@ -204,9 +186,7 @@ class Map(ConstrainedControl):
                 "oy": str(offset.y) if offset else None,
                 "rot": rotation,
                 "curve": animation_curve.value if animation_curve else None,
-                "duration": self._convert_attr_json(
-                    animation_duration or self.__default_animation_duration
-                ),
+                "duration": self._convert_attr_json(animation_duration),
             },
         )
 
@@ -224,9 +204,7 @@ class Map(ConstrainedControl):
                 "long": str(point.longitude) if point else None,
                 "zoom": zoom,
                 "curve": animation_curve.value if animation_curve else None,
-                "duration": self._convert_attr_json(
-                    animation_duration or self.__default_animation_duration
-                ),
+                "duration": self._convert_attr_json(animation_duration),
             },
         )
 
@@ -253,28 +231,3 @@ class Map(ConstrainedControl):
     @layers.setter
     def layers(self, value: List[MapLayer]):
         self.__layers = value
-
-    def before_update(self):
-        super().before_update()
-        self._set_attr_json(
-            "defaultAnimationDuration", self.__default_animation_duration
-        )
-
-    # default_animation_duration
-    @property
-    def default_animation_duration(self) -> DurationValue:
-        return self.__default_animation_duration
-
-    @default_animation_duration.setter
-    def default_animation_duration(self, value: DurationValue):
-        self.__default_animation_duration = value
-
-    # default_animation_curve
-    @property
-    def default_animation_curve(self) -> AnimationCurve:
-        return self.__default_animation_curve
-
-    @default_animation_curve.setter
-    def default_animation_curve(self, value: AnimationCurve):
-        self.__default_animation_curve = value
-        self._set_enum_attr("defaultAnimationCurve", value, AnimationCurve)
