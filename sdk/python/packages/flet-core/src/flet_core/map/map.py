@@ -5,9 +5,9 @@ from typing import Any, Optional, Union, List, Tuple
 from flet_core import AnimationCurve
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
+from flet_core.event_handler import EventHandler
 from flet_core.map.map_configuration import MapConfiguration, MapLatitudeLongitude
 from flet_core.map.map_layer import MapLayer
-from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.transform import Offset
@@ -266,8 +266,11 @@ class Map(ConstrainedControl):
     def _get_control_name(self):
         return "map"
 
+    def before_update(self):
+        self._set_attr_json("configuration", self.__configuration)
+
     def _get_children(self):
-        return self.__layers + [self.__configuration]
+        return self.__layers
 
     # configuration
     @property
