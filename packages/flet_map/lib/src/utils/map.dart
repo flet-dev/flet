@@ -12,10 +12,13 @@ LatLng? parseLatLng(Control control, String propName, [LatLng? defValue]) {
   }
 
   final j1 = json.decode(v);
-  return latLngFromJson(j1);
+  return latLngFromJson(j1, defValue);
 }
 
-LatLng latLngFromJson(Map<String, dynamic> j) {
+LatLng? latLngFromJson(Map<String, dynamic>? j, [LatLng? defValue]) {
+  if (j == null) {
+    return defValue;
+  }
   return LatLng(
       parseDouble(j['latitude'], 0)!, parseDouble(j['longitude'], 0)!);
 }
@@ -28,15 +31,20 @@ LatLngBounds? parseLatLngBounds(Control control, String propName,
   }
 
   final j1 = json.decode(v);
-  return latLngBoundsFromJson(j1);
+  return latLngBoundsFromJson(j1, defValue);
 }
 
-LatLngBounds? latLngBoundsFromJson(Map<String, dynamic> j) {
-  if (j['corner_1'] == null || j['corner_2'] == null) {
-    return null;
+LatLngBounds? latLngBoundsFromJson(Map<String, dynamic>? j,
+    [LatLngBounds? defValue]) {
+  if (j == null ||
+      j['corner_1'] == null ||
+      j['corner_2'] == null ||
+      latLngFromJson(j['corner_1']) == null ||
+      latLngFromJson(j['corner_2']) == null) {
+    return defValue;
   }
   return LatLngBounds(
-      latLngFromJson(j['corner_1']), latLngFromJson(j['corner_2']));
+      latLngFromJson(j['corner_1'])!, latLngFromJson(j['corner_2'])!);
 }
 
 PatternFit? parsePatternFit(String? value,
@@ -57,10 +65,14 @@ StrokePattern? parseStrokePattern(Control control, String propName,
   }
 
   final j1 = json.decode(v);
-  return strokePatternFromJson(j1);
+  return strokePatternFromJson(j1, defValue);
 }
 
-StrokePattern? strokePatternFromJson(Map<String, dynamic> j) {
+StrokePattern? strokePatternFromJson(Map<String, dynamic>? j,
+    [StrokePattern? defValue]) {
+  if (j == null) {
+    return defValue;
+  }
   if (j['type'] == 'dotted') {
     return StrokePattern.dotted(
       spacingFactor: parseDouble(j['spacing_factor'], 1)!,
@@ -80,7 +92,7 @@ StrokePattern? strokePatternFromJson(Map<String, dynamic> j) {
           : [],
     );
   }
-  return null;
+  return defValue;
 }
 
 InteractionOptions? parseInteractionOptions(Control control, String propName,
@@ -90,7 +102,7 @@ InteractionOptions? parseInteractionOptions(Control control, String propName,
     return defValue;
   }
   final j1 = json.decode(v);
-  return interactionOptionsFromJSON(j1);
+  return interactionOptionsFromJSON(j1, defValue);
 }
 
 InteractionOptions? interactionOptionsFromJSON(dynamic j,
