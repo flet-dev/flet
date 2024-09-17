@@ -4,7 +4,7 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
-import '../utils/desktop.dart';
+import '../utils/platform.dart';
 import 'create_control.dart';
 
 class RangeSliderControl extends StatefulWidget {

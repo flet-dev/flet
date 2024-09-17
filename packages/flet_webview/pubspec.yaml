@@ -13,7 +13,12 @@ dependencies:
     sdk: flutter
 
   collection: ^1.16.0
-  webview_flutter: ^4.2.4
+  webview_flutter: ^4.9.0
+  flutter_web_plugins:
+    sdk: flutter
+  webview_flutter_web: ^0.2.3+2
+  webview_flutter_platform_interface: ^2.4.0
+  abutil: ^0.1.2
 
   flet:
     path: ../flet/

@@ -10,7 +10,7 @@ import '../flet_app_services.dart';
 import '../flet_control_backend.dart';
 import '../flet_server.dart';
 import '../models/control.dart';
-import '../utils/desktop.dart';
+import '../utils/platform.dart';
 import '../utils/strings.dart';
 import 'flet_store_mixin.dart';
 

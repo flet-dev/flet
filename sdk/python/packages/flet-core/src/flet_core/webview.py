@@ -77,12 +77,15 @@ class WebView(ConstrainedControl):
     def __init__(
         self,
         url: str,
-        javascript_enabled: bool = True,
-        prevent_link: str = "none",
+        javascript_enabled: Optional[bool] = None,
+        enable_javascript: Optional[bool] = None,
+        prevent_link: Optional[str] = None,
         bgcolor: Optional[str] = None,
         on_page_started: OptionalControlEventCallable = None,
         on_page_ended: OptionalControlEventCallable = None,
         on_web_resource_error: OptionalControlEventCallable = None,
+        on_progress: OptionalControlEventCallable = None,
+        on_url_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -147,14 +150,36 @@ class WebView(ConstrainedControl):
 
         self.url = url
         self.javascript_enabled = javascript_enabled
+        self.enable_javascript = enable_javascript
         self.prevent_link = prevent_link
         self.bgcolor = bgcolor
         self.on_page_started = on_page_started
         self.on_page_ended = on_page_ended
         self.on_web_resource_error = on_web_resource_error
+        self.on_progress = on_progress
+        self.on_url_change = on_url_change
 
     def _get_control_name(self):
         return "webview"
+
+    def reload(self):
+        self.invoke_method("reload")
+
+    def can_go_back(self) -> bool:
+        o = self.invoke_method("can_go_back")
+        return o == "true"
+
+    def can_go_forward(self, wait_timeout: OptionalNumber = 10) -> bool:
+        o = self.invoke_method(
+            "can_go_forward", wait_for_result=True, wait_timeout=wait_timeout
+        )
+        return o == "true"
+
+    def go_back(self):
+        self.invoke_method("go_back")
+
+    def go_forward(self):
+        self.invoke_method("go_forward")
 
     # bgcolor
     @property
@@ -177,11 +202,20 @@ class WebView(ConstrainedControl):
     # javascript_enabled
     @property
     def javascript_enabled(self) -> bool:
-        return self._get_attr("javascriptEnabled")
+        return self._get_attr("javascriptEnabled", data_type="bool", def_value=False)
 
     @javascript_enabled.setter
-    def javascript_enabled(self, value: bool):
+    def javascript_enabled(self, value: Optional[bool]):
         self._set_attr("javascriptEnabled", value)
+
+    # enable_javascript
+    @property
+    def enable_javascript(self) -> bool:
+        return self._get_attr("enableJavascript", data_type="bool", def_value=False)
+
+    @enable_javascript.setter
+    def enable_javascript(self, value: Optional[bool]):
+        self._set_attr("enableJavascript", value)
 
     # prevent_link
     @property
@@ -218,3 +252,21 @@ class WebView(ConstrainedControl):
     @on_web_resource_error.setter
     def on_web_resource_error(self, handler: OptionalControlEventCallable):
         self._add_event_handler("web_resource_error", handler)
+
+    # on_progress
+    @property
+    def on_progress(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("progress")
+
+    @on_progress.setter
+    def on_progress(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("progress", handler)
+
+    # on_url_change
+    @property
+    def on_url_change(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("url_change")
+
+    @on_url_change.setter
+    def on_url_change(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("url_change", handler)

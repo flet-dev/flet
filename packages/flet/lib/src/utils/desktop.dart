@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/platform.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
@@ -299,21 +300,4 @@ Future<WindowMediaData> getWindowMediaData() async {
   } else {
     return Future.value(m);
   }
-}
-
-bool isDesktop() {
-  return !kIsWeb &&
-      (defaultTargetPlatform == TargetPlatform.windows ||
-          defaultTargetPlatform == TargetPlatform.macOS ||
-          defaultTargetPlatform == TargetPlatform.linux);
-}
-
-bool isMobile() {
-  return !kIsWeb &&
-      (defaultTargetPlatform == TargetPlatform.iOS ||
-          defaultTargetPlatform == TargetPlatform.android);
-}
-
-bool isWindowsDesktop() {
-  return !kIsWeb && (defaultTargetPlatform == TargetPlatform.windows);
 }

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/debouncer.dart';
-import '../utils/desktop.dart';
+import '../utils/platform.dart';
 import 'create_control.dart';
 
 class CupertinoSliderControl extends StatefulWidget {
