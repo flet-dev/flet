@@ -25,7 +25,7 @@ class CupertinoSliderControl extends StatefulWidget {
 
 class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
   double _value = 0;
-  final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
+  final _debouncer = Debouncer(milliseconds: isDesktopPlatform() ? 10 : 100);
 
   @override
   void dispose() {

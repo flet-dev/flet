@@ -419,5 +419,5 @@ from flet_core.video import (
     VideoSubtitleConfiguration,
 )
 from flet_core.view import View
-from flet_core.webview import WebView
+from flet_core.webview import WebView, WebviewRequestMethod, WebviewScrollEvent
 from flet_core.window_drag_area import WindowDragArea

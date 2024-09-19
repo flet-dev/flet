@@ -2,19 +2,15 @@ import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
 class WebviewWeb extends StatefulWidget {
-  final String url;
+  final Control control;
+  final FletControlBackend backend;
 
-  const WebviewWeb({Key? key, required this.url}) : super(key: key);
-
+  const WebviewWeb({super.key, required this.control, required this.backend});
   @override
-  State<WebviewWeb> createState() => _WebviewWebState(url: url);
+  State<WebviewWeb> createState() => _WebviewWebState();
 }
 
 class _WebviewWebState extends State<WebviewWeb> {
-  late String url;
-
-  _WebviewWebState({required this.url});
-
   @override
   Widget build(BuildContext context) {
     return const ErrorControl("Webview is not yet supported on this platform.");

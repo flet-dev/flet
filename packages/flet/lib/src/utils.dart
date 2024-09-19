@@ -7,7 +7,7 @@ import 'package:window_manager/window_manager.dart';
 import 'utils/platform.dart';
 
 Future setupDesktop() async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     WidgetsFlutterBinding.ensureInitialized();
     await windowManager.ensureInitialized();
 

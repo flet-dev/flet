@@ -1,7 +1,11 @@
+import json
+from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
+from flet_core.control_event import ControlEvent
+from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
@@ -11,7 +15,21 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     OptionalControlEventCallable,
+    OptionalEventCallable,
 )
+
+
+class WebviewRequestMethod(Enum):
+    GET = "get"
+    POST = "post"
+
+
+class WebviewScrollEvent(ControlEvent):
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.x: float = d.get("x", 0)
+        self.y: float = d.get("y", 0)
 
 
 class WebView(ConstrainedControl):
@@ -86,6 +104,7 @@ class WebView(ConstrainedControl):
         on_web_resource_error: OptionalControlEventCallable = None,
         on_progress: OptionalControlEventCallable = None,
         on_url_change: OptionalControlEventCallable = None,
+        on_scroll: OptionalEventCallable[WebviewScrollEvent] = None,
         #
         # ConstrainedControl
         #
@@ -147,6 +166,8 @@ class WebView(ConstrainedControl):
             disabled=disabled,
             data=data,
         )
+        self.__on_scroll = EventHandler(lambda e: WebviewScrollEvent(e))
+        self._add_event_handler("scroll", self.__on_scroll.get_handler())
 
         self.url = url
         self.javascript_enabled = javascript_enabled
@@ -158,6 +179,7 @@ class WebView(ConstrainedControl):
         self.on_web_resource_error = on_web_resource_error
         self.on_progress = on_progress
         self.on_url_change = on_url_change
+        self.on_scroll = on_scroll
 
     def _get_control_name(self):
         return "webview"
@@ -180,6 +202,56 @@ class WebView(ConstrainedControl):
 
     def go_forward(self):
         self.invoke_method("go_forward")
+
+    def enable_zoom(self):
+        self.invoke_method("enable_zoom")
+
+    def disable_zoom(self):
+        self.invoke_method("disable_zoom")
+
+    def clear_cache(self):
+        self.invoke_method("clear_cache")
+
+    def clear_local_storage(self):
+        self.invoke_method("clear_local_storage")
+
+    def get_current_url(self, wait_timeout: OptionalNumber = 10) -> Optional[str]:
+        return self.invoke_method(
+            "get_current_url", wait_for_result=True, wait_timeout=wait_timeout
+        )
+
+    def get_title(self, wait_timeout: OptionalNumber = 10) -> Optional[str]:
+        return self.invoke_method(
+            "get_title", wait_for_result=True, wait_timeout=wait_timeout
+        )
+
+    def get_user_agent(self, wait_timeout: OptionalNumber = 10) -> Optional[str]:
+        return self.invoke_method(
+            "get_user_agent", wait_for_result=True, wait_timeout=wait_timeout
+        )
+
+    def load_file(self, absolute_path: str):
+        self.invoke_method("load_file", arguments={"path": absolute_path})
+
+    def load_request(self, url: str, method: Optional[WebviewRequestMethod] = None):
+        self.invoke_method(
+            "load_request",
+            arguments={"url": url, "method": method.value if method else None},
+        )
+
+    def run_javascript(self, value: str):
+        self.invoke_method("run_javascript", arguments={"value": value})
+
+    def load_html(self, value: str, base_url: Optional[str] = None):
+        self.invoke_method(
+            "load_html", arguments={"value": value, "base_url": base_url}
+        )
+
+    def scroll_to(self, x: int, y: int):
+        self.invoke_method("scroll_to", arguments={"x": str(x), "y": str(y)})
+
+    def scroll_by(self, x: int, y: int):
+        self.invoke_method("scroll_by", arguments={"x": str(x), "y": str(y)})
 
     # bgcolor
     @property
@@ -270,3 +342,12 @@ class WebView(ConstrainedControl):
     @on_url_change.setter
     def on_url_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("url_change", handler)
+
+    # on_scroll
+    @property
+    def on_scroll(self) -> OptionalEventCallable[WebviewScrollEvent]:
+        return self.__on_scroll.handler
+
+    @on_scroll.setter
+    def on_scroll(self, handler: OptionalEventCallable[WebviewScrollEvent]):
+        self.__on_scroll.handler = handler

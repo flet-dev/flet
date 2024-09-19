@@ -721,7 +721,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                 overlayWidgets.add(const PageMedia());
               }
 
-              if (viewId == routesView.views.first.id && isDesktop()) {
+              if (viewId == routesView.views.first.id && isDesktopPlatform()) {
                 overlayWidgets.add(WindowMedia(dispatch: widget.dispatch));
               }
 

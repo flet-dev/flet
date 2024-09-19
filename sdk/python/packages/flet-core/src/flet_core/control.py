@@ -337,6 +337,9 @@ class Control:
         assert (
             self.__page
         ), f"{self.__class__.__qualname__} Control must be added to the page first"
+        if arguments:
+            # remove items with None values and convert other values to string
+            arguments = {k: str(v) for k, v in arguments.items() if v is not None}
         return self.__page._invoke_method(
             control_id=self.uid,
             method_name=method_name,
@@ -355,6 +358,9 @@ class Control:
         assert (
             self.__page
         ), f"{self.__class__.__qualname__} Control must be added to the page first"
+        if arguments:
+            # remove items with None values and convert other values to string
+            arguments = {k: str(v) for k, v in arguments.items() if v is not None}
         return self.__page._invoke_method_async(
             control_id=self.uid,
             method_name=method_name,

@@ -25,7 +25,7 @@ class RangeSliderControl extends StatefulWidget {
 }
 
 class _SliderControlState extends State<RangeSliderControl> {
-  final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
+  final _debouncer = Debouncer(milliseconds: isDesktopPlatform() ? 10 : 100);
 
   @override
   void initState() {
