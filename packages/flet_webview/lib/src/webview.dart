@@ -28,8 +28,8 @@ class WebViewControl extends StatelessWidget {
     if (isMobilePlatform() || isMacOSDesktop()) {
       var bgcolor =
           parseColor(Theme.of(context), control.attrString("bgcolor"));
-      view =
-          WebviewMobile(control: control, backend: backend, bgcolor: bgcolor);
+      view = WebviewMobileAndMac(
+          control: control, backend: backend, bgcolor: bgcolor);
     } else if (isWebPlatform()) {
       view = WebviewWeb(control: control, backend: backend);
     } else if (isWindowsDesktop() || isLinuxDesktop()) {

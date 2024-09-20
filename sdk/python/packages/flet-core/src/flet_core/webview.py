@@ -1,4 +1,5 @@
 import json
+import warnings
 from enum import Enum
 from typing import Any, Optional, Union
 
@@ -24,12 +25,38 @@ class WebviewRequestMethod(Enum):
     POST = "post"
 
 
+class WebviewLogLevelSeverity(Enum):
+    ERROR = "error"
+    WARNING = "warning"
+    DEBUG = "debug"
+    INFO = "info"
+    LOG = "log"
+
+
 class WebviewScrollEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
         self.x: float = d.get("x", 0)
         self.y: float = d.get("y", 0)
+
+
+class WebviewConsoleMessageEvent(ControlEvent):
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.message: str = d.get("message")
+        self.severity_level: WebviewLogLevelSeverity = WebviewLogLevelSeverity(
+            d.get("level")
+        )
+
+
+class WebviewJavaScriptEvent(ControlEvent):
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.message: str = d.get("message")
+        self.url: str = d.get("url")
 
 
 class WebView(ConstrainedControl):
@@ -105,6 +132,10 @@ class WebView(ConstrainedControl):
         on_progress: OptionalControlEventCallable = None,
         on_url_change: OptionalControlEventCallable = None,
         on_scroll: OptionalEventCallable[WebviewScrollEvent] = None,
+        on_console_message: OptionalEventCallable[WebviewConsoleMessageEvent] = None,
+        on_javascript_alert_dialog: OptionalEventCallable[
+            WebviewJavaScriptEvent
+        ] = None,
         #
         # ConstrainedControl
         #
@@ -168,6 +199,18 @@ class WebView(ConstrainedControl):
         )
         self.__on_scroll = EventHandler(lambda e: WebviewScrollEvent(e))
         self._add_event_handler("scroll", self.__on_scroll.get_handler())
+        self.__on_console_message = EventHandler(
+            lambda e: WebviewConsoleMessageEvent(e)
+        )
+        self._add_event_handler(
+            "console_message", self.__on_console_message.get_handler()
+        )
+        self.__on_javascript_alert_dialog = EventHandler(
+            lambda e: WebviewJavaScriptEvent(e)
+        )
+        self._add_event_handler(
+            "javascript_alert_dialog", self.__on_javascript_alert_dialog.get_handler()
+        )
 
         self.url = url
         self.javascript_enabled = javascript_enabled
@@ -180,6 +223,8 @@ class WebView(ConstrainedControl):
         self.on_progress = on_progress
         self.on_url_change = on_url_change
         self.on_scroll = on_scroll
+        self.on_console_message = on_console_message
+        self.on_javascript_alert_dialog = on_javascript_alert_dialog
 
     def _get_control_name(self):
         return "webview"
@@ -233,10 +278,12 @@ class WebView(ConstrainedControl):
     def load_file(self, absolute_path: str):
         self.invoke_method("load_file", arguments={"path": absolute_path})
 
-    def load_request(self, url: str, method: Optional[WebviewRequestMethod] = None):
+    def load_request(
+        self, url: str, method: WebviewRequestMethod = WebviewRequestMethod.GET
+    ):
         self.invoke_method(
             "load_request",
-            arguments={"url": url, "method": method.value if method else None},
+            arguments={"url": url, "method": method.value},
         )
 
     def run_javascript(self, value: str):
@@ -270,15 +317,35 @@ class WebView(ConstrainedControl):
     @url.setter
     def url(self, value: str):
         self._set_attr("url", value)
+        if self.page:
+            self.load_request(value, WebviewRequestMethod.GET)
 
     # javascript_enabled
     @property
     def javascript_enabled(self) -> bool:
+        warnings.warn(
+            f"javascript_enabled is deprecated since version 0.25.0 "
+            f"and will be removed in version 0.28.0. Use enable_javascript instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
         return self._get_attr("javascriptEnabled", data_type="bool", def_value=False)
 
     @javascript_enabled.setter
     def javascript_enabled(self, value: Optional[bool]):
         self._set_attr("javascriptEnabled", value)
+        if value is not None:
+            warnings.warn(
+                f"javascript_enabled is deprecated since version 0.25.0 "
+                f"and will be removed in version 0.28.0. Use enable_javascript instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
+            if self.page:
+                self.invoke_method(
+                    "set_javascript_mode",
+                    arguments={"value": str(value)},
+                )
 
     # enable_javascript
     @property
@@ -288,6 +355,11 @@ class WebView(ConstrainedControl):
     @enable_javascript.setter
     def enable_javascript(self, value: Optional[bool]):
         self._set_attr("enableJavascript", value)
+        if self.page and value is not None:
+            self.invoke_method(
+                "set_javascript_mode",
+                arguments={"value": str(value)},
+            )
 
     # prevent_link
     @property
@@ -351,3 +423,27 @@ class WebView(ConstrainedControl):
     @on_scroll.setter
     def on_scroll(self, handler: OptionalEventCallable[WebviewScrollEvent]):
         self.__on_scroll.handler = handler
+
+    # on_console_message
+    @property
+    def on_console_message(self) -> OptionalEventCallable[WebviewConsoleMessageEvent]:
+        return self.__on_console_message.handler
+
+    @on_console_message.setter
+    def on_console_message(
+        self, handler: OptionalEventCallable[WebviewConsoleMessageEvent]
+    ):
+        self.__on_console_message.handler = handler
+
+    # on_javascript_alert_dialog
+    @property
+    def on_javascript_alert_dialog(
+        self,
+    ) -> OptionalEventCallable[WebviewJavaScriptEvent]:
+        return self.__on_javascript_alert_dialog.handler
+
+    @on_javascript_alert_dialog.setter
+    def on_javascript_alert_dialog(
+        self, handler: OptionalEventCallable[WebviewJavaScriptEvent]
+    ):
+        self.__on_javascript_alert_dialog.handler = handler

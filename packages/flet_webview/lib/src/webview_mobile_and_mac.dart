@@ -5,19 +5,19 @@ import 'package:flet_webview/src/utils/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class WebviewMobile extends StatefulWidget {
+class WebviewMobileAndMac extends StatefulWidget {
   final Control control;
   final FletControlBackend backend;
   final Color? bgcolor;
 
-  const WebviewMobile(
+  const WebviewMobileAndMac(
       {super.key, required this.control, required this.backend, this.bgcolor});
 
   @override
-  State<WebviewMobile> createState() => _WebviewMobileState();
+  State<WebviewMobileAndMac> createState() => _WebviewMobileAndMacState();
 }
 
-class _WebviewMobileState extends State<WebviewMobile> {
+class _WebviewMobileAndMacState extends State<WebviewMobileAndMac> {
   late WebViewController controller;
 
   @override
@@ -28,16 +28,9 @@ class _WebviewMobileState extends State<WebviewMobile> {
     controller = WebViewController.fromPlatformCreationParams(params);
 
     var preventLink = widget.control.attrString("preventLink")?.trim();
-    var enableJavascript = widget.control.attrBool("enableJavascript") ??
-        widget.control.attrBool("javascriptEnabled", false)!;
-
     if (widget.bgcolor != null) {
       controller.setBackgroundColor(widget.bgcolor!);
     }
-
-    controller.setJavaScriptMode(enableJavascript
-        ? JavaScriptMode.unrestricted
-        : JavaScriptMode.disabled);
 
     controller.setNavigationDelegate(
       NavigationDelegate(
@@ -62,8 +55,8 @@ class _WebviewMobileState extends State<WebviewMobile> {
               .triggerControlEvent(widget.control.id, "page_ended", url);
         },
         onWebResourceError: (WebResourceError error) {
-          widget.backend.triggerControlEvent(
-              widget.control.id, "web_resource_error", "WebView error: $error");
+          widget.backend.triggerControlEvent(widget.control.id,
+              "web_resource_error", "WebView error: ${error.description}");
         },
         onNavigationRequest: (NavigationRequest request) {
           if (preventLink != null && request.url.startsWith(preventLink!)) {
@@ -74,7 +67,6 @@ class _WebviewMobileState extends State<WebviewMobile> {
       ),
     );
 
-    // todo: additional props
     controller.loadRequest(
         Uri.parse(widget.control.attrString("url", "https://flet.dev")!),
         method: parseLoadRequestMethod(
@@ -86,6 +78,25 @@ class _WebviewMobileState extends State<WebviewMobile> {
           jsonEncode({
             "x": position.x.toString(),
             "y": position.y.toString(),
+          }));
+    });
+    controller.setOnConsoleMessage((JavaScriptConsoleMessage message) {
+      widget.backend.triggerControlEvent(
+          widget.control.id,
+          "console_message",
+          jsonEncode({
+            "message": message.message,
+            "level": message.level.name,
+          }));
+    });
+    controller.setOnJavaScriptAlertDialog(
+        (JavaScriptAlertDialogRequest request) async {
+      widget.backend.triggerControlEvent(
+          widget.control.id,
+          "javascript_alert_dialog",
+          jsonEncode({
+            "message": request.message,
+            "url": request.url,
           }));
     });
 
@@ -161,12 +172,18 @@ class _WebviewMobileState extends State<WebviewMobile> {
             await controller.scrollTo(x, y);
           }
           break;
-
         case "scroll_by":
           var x = parseInt(args["x"]);
           var y = parseInt(args["y"]);
           if (x != null && y != null) {
             await controller.scrollBy(x, y);
+          }
+          break;
+        case "set_javascript_mode":
+          var value = parseBool(args["value"]);
+          if (value != null) {
+            await controller.setJavaScriptMode(
+                value ? JavaScriptMode.unrestricted : JavaScriptMode.disabled);
           }
           break;
       }
