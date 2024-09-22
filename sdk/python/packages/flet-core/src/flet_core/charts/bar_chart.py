@@ -26,8 +26,8 @@ from flet_core.types import (
 
 class TooltipDirection(Enum):
     AUTO = "auto"
-    UP = "below"
-    DOWN = "above"
+    TOP = "top"
+    BOTTOM = "bottom"
 
 
 class BarChart(ConstrainedControl):
