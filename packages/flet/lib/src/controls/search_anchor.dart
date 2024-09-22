@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/box.dart';
 import '../utils/colors.dart';
 import '../utils/form_field.dart';
 import '../utils/text.dart';
@@ -164,6 +165,9 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
         dividerColor: dividerColor,
         viewHintText: widget.control.attrString("viewHintText"),
         viewElevation: widget.control.attrDouble("viewElevation"),
+        headerHeight: widget.control.attrDouble("viewHeaderHeight"),
+        viewConstraints:
+            parseBoxConstraints(widget.control, "viewSizeConstraints"),
         viewShape: parseOutlinedBorder(widget.control, "viewShape"),
         viewTrailing: viewTrailingCtrls.isNotEmpty
             ? viewTrailingCtrls.map((ctrl) {

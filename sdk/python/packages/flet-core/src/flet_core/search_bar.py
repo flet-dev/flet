@@ -1,6 +1,7 @@
 import time
 from typing import Any, Dict, List, Optional, Union, Sequence
 
+from flet_core import BoxConstraints
 from flet_core.border import BorderSide
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
@@ -49,6 +50,8 @@ class SearchBar(ConstrainedControl):
         view_shape: Optional[OutlinedBorder] = None,
         view_header_text_style: Optional[TextStyle] = None,
         view_hint_text_style: Optional[TextStyle] = None,
+            view_size_constraints: Optional[BoxConstraints] = None,
+            view_header_height: OptionalNumber = None,
         divider_color: Optional[str] = None,
         capitalization: Optional[TextCapitalization] = None,
         full_screen: Optional[bool] = None,
@@ -141,6 +144,8 @@ class SearchBar(ConstrainedControl):
         self.keyboard_type = keyboard_type
         self.view_surface_tint_color = view_surface_tint_color
         self.autofocus = autofocus
+        self.view_header_height = view_header_height
+        self.view_size_constraints = view_size_constraints
 
     def _get_control_name(self):
         return "searchbar"
@@ -150,12 +155,10 @@ class SearchBar(ConstrainedControl):
         self._set_attr_json("barBgcolor", self.__bar_bgcolor)
         self._set_attr_json("barOverlayColor", self.__bar_overlay_color)
         self._set_attr_json("viewShape", self.__view_shape)
-        if isinstance(self.__view_header_text_style, TextStyle):
-            self._set_attr_json("viewHeaderTextStyle", self.__view_header_text_style)
-        if isinstance(self.__view_hint_text_style, TextStyle):
-            self._set_attr_json("viewHintTextStyle", self.__view_hint_text_style)
-        if isinstance(self.__view_side, BorderSide):
-            self._set_attr_json("viewSide", self.__view_side)
+        self._set_attr_json("viewHeaderTextStyle", self.__view_header_text_style)
+        self._set_attr_json("viewHintTextStyle", self.__view_hint_text_style)
+        self._set_attr_json("viewSide", self.__view_side)
+        self._set_attr_json("viewSizeConstraints", self.__view_size_constraints)
 
     def _get_children(self):
         children = []
@@ -297,6 +300,15 @@ class SearchBar(ConstrainedControl):
     def view_elevation(self, value: OptionalNumber):
         self._set_attr("viewElevation", value)
 
+    # view_header_height
+    @property
+    def view_header_height(self) -> OptionalNumber:
+        return self._get_attr("viewHeaderHeight")
+
+    @view_header_height.setter
+    def view_header_height(self, value: OptionalNumber):
+        self._set_attr("viewHeaderHeight", value)
+
     # view_bgcolor
     @property
     def view_bgcolor(self) -> Optional[str]:
@@ -350,6 +362,15 @@ class SearchBar(ConstrainedControl):
     @view_side.setter
     def view_side(self, value: Optional[BorderSide]):
         self.__view_side = value
+
+    # view_size_constraints
+    @property
+    def view_size_constraints(self) -> Optional[BoxConstraints]:
+        return self.__view_size_constraints
+
+    @view_size_constraints.setter
+    def view_size_constraints(self, value: Optional[BoxConstraints]):
+        self.__view_size_constraints = value
 
     # full_screen
     @property
