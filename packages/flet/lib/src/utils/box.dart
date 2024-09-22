@@ -18,6 +18,29 @@ import 'numbers.dart';
 import 'others.dart';
 import 'transforms.dart';
 
+BoxConstraints? parseBoxConstraints(Control control, String propName) {
+  var v = control.attrString(propName);
+  if (v == null) {
+    return null;
+  }
+
+  final j1 = json.decode(v);
+  return boxConstraintsFromJSON(j1);
+}
+
+BoxConstraints? boxConstraintsFromJSON(dynamic json,
+    [BoxConstraints? defValue]) {
+  if (json == null) {
+    return null;
+  }
+  return BoxConstraints(
+    minHeight: parseDouble(json["min_height"], 0.0)!,
+    minWidth: parseDouble(json["min_width"], 0.0)!,
+    maxHeight: parseDouble(json["max_height"], 0.0)!,
+    maxWidth: parseDouble(json["max_width"], 0.0)!,
+  );
+}
+
 List<BoxShadow> parseBoxShadow(
     ThemeData theme, Control control, String propName) {
   var v = control.attrString(propName);
