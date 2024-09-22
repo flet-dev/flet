@@ -3,10 +3,12 @@ import warnings
 from enum import Enum
 from typing import Any, Optional, Union
 
+from flet_core import PagePlatform
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
+from flet_core.exceptions import FletUnsupportedPlatformException
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
@@ -229,75 +231,114 @@ class WebView(ConstrainedControl):
     def _get_control_name(self):
         return "webview"
 
+    def _check_mobile_or_mac_platform(self):
+        assert self.page is not None, "WebView must be added to page first."
+        if self.page.platform not in [
+            PagePlatform.ANDROID,
+            PagePlatform.IOS,
+            PagePlatform.MACOS,
+        ]:
+            raise FletUnsupportedPlatformException(
+                "This method is supported on Android, iOS and macOS platforms only."
+            )
+
     def reload(self):
+        self._check_mobile_or_mac_platform()
         self.invoke_method("reload")
 
-    def can_go_back(self) -> bool:
-        o = self.invoke_method("can_go_back")
-        return o == "true"
+    def can_go_back(self, wait_timeout: OptionalNumber = 10) -> bool:
+        self._check_mobile_or_mac_platform()
+        return (
+            self.invoke_method(
+                "can_go_back",
+                wait_for_result=True,
+                wait_timeout=wait_timeout,
+            )
+            == "true"
+        )
 
     def can_go_forward(self, wait_timeout: OptionalNumber = 10) -> bool:
-        o = self.invoke_method(
-            "can_go_forward", wait_for_result=True, wait_timeout=wait_timeout
+        self._check_mobile_or_mac_platform()
+        return (
+            self.invoke_method(
+                "can_go_forward",
+                wait_for_result=True,
+                wait_timeout=wait_timeout,
+            )
+            == "true"
         )
-        return o == "true"
 
     def go_back(self):
+        self._check_mobile_or_mac_platform()
         self.invoke_method("go_back")
 
     def go_forward(self):
+        self._check_mobile_or_mac_platform()
         self.invoke_method("go_forward")
 
     def enable_zoom(self):
+        self._check_mobile_or_mac_platform()
         self.invoke_method("enable_zoom")
 
     def disable_zoom(self):
+        self._check_mobile_or_mac_platform()
         self.invoke_method("disable_zoom")
 
     def clear_cache(self):
+        self._check_mobile_or_mac_platform()
         self.invoke_method("clear_cache")
 
     def clear_local_storage(self):
+        self._check_mobile_or_mac_platform()
         self.invoke_method("clear_local_storage")
 
     def get_current_url(self, wait_timeout: OptionalNumber = 10) -> Optional[str]:
+        self._check_mobile_or_mac_platform()
         return self.invoke_method(
             "get_current_url", wait_for_result=True, wait_timeout=wait_timeout
         )
 
     def get_title(self, wait_timeout: OptionalNumber = 10) -> Optional[str]:
+        self._check_mobile_or_mac_platform()
         return self.invoke_method(
             "get_title", wait_for_result=True, wait_timeout=wait_timeout
         )
 
     def get_user_agent(self, wait_timeout: OptionalNumber = 10) -> Optional[str]:
+        self._check_mobile_or_mac_platform()
         return self.invoke_method(
             "get_user_agent", wait_for_result=True, wait_timeout=wait_timeout
         )
 
     def load_file(self, absolute_path: str):
+        self._check_mobile_or_mac_platform()
         self.invoke_method("load_file", arguments={"path": absolute_path})
 
     def load_request(
         self, url: str, method: WebviewRequestMethod = WebviewRequestMethod.GET
     ):
+        self._check_mobile_or_mac_platform()
         self.invoke_method(
             "load_request",
             arguments={"url": url, "method": method.value},
         )
 
     def run_javascript(self, value: str):
+        self._check_mobile_or_mac_platform()
         self.invoke_method("run_javascript", arguments={"value": value})
 
     def load_html(self, value: str, base_url: Optional[str] = None):
+        self._check_mobile_or_mac_platform()
         self.invoke_method(
             "load_html", arguments={"value": value, "base_url": base_url}
         )
 
     def scroll_to(self, x: int, y: int):
+        self._check_mobile_or_mac_platform()
         self.invoke_method("scroll_to", arguments={"x": str(x), "y": str(y)})
 
     def scroll_by(self, x: int, y: int):
+        self._check_mobile_or_mac_platform()
         self.invoke_method("scroll_by", arguments={"x": str(x), "y": str(y)})
 
     # bgcolor
