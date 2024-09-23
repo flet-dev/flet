@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -28,6 +30,15 @@ class TextControl extends StatelessWidget with FletStoreMixin {
       bool disabled = control.isDisabled || parentDisabled;
 
       String text = control.attrString("value", "")!;
+      var selectionColor = control.attrColor("selectionColor", context);
+      var selectionCursorColor =
+          control.attrColor("selectionCursorColor", context);
+      var selectionCursorWidth =
+          control.attrDouble("selectionCursorWidth", 2.0)!;
+      var selectionCursorHeight = control.attrDouble("selectionCursorHeight");
+      var showSelectionCursor = control.attrBool("showSelectionCursor", false)!;
+      var enableInteractiveSelection =
+          control.attrBool("enableInteractiveSelection", true)!;
 
       List<InlineSpan>? spans = parseTextSpans(
         Theme.of(context),
@@ -98,12 +109,49 @@ class TextControl extends StatelessWidget with FletStoreMixin {
       TextOverflow overflow =
           parseTextOverflow(control.attrString("overflow"), TextOverflow.clip)!;
 
+      onSelectionChanged(
+          TextSelection selection, SelectionChangedCause? cause) {
+        debugPrint("Markdown ${control.id} selection changed");
+        backend.triggerControlEvent(
+            control.id,
+            "selection_change",
+            jsonEncode({
+              "text": text ?? "",
+              "start": selection.start,
+              "end": selection.end,
+              "base_offset": selection.baseOffset,
+              "extent_offset": selection.extentOffset,
+              "affinity": selection.affinity.name,
+              "directional": selection.isDirectional,
+              "collapsed": selection.isCollapsed,
+              "valid": selection.isValid,
+              "normalized": selection.isNormalized,
+              "cause": cause?.name ?? "unknown",
+            }));
+      }
+
+      onTap() {
+        debugPrint("Markdown ${control.id} selection changed");
+        backend.triggerControlEvent(
+          control.id,
+          "selection_change",
+        );
+      }
+
       return control.attrBool("selectable", false)!
           ? (spans.isNotEmpty)
               ? SelectableText.rich(
                   TextSpan(text: text, style: style, children: spans),
                   maxLines: maxLines,
                   textAlign: textAlign,
+                  cursorColor: selectionCursorColor,
+                  cursorHeight: selectionCursorHeight,
+                  cursorWidth: selectionCursorWidth,
+                  semanticsLabel: semanticsLabel,
+                  showCursor: showSelectionCursor,
+                  enableInteractiveSelection: enableInteractiveSelection,
+                  onSelectionChanged: onSelectionChanged,
+                  onTap: onTap,
                 )
               : SelectableText(
                   text,
@@ -111,6 +159,13 @@ class TextControl extends StatelessWidget with FletStoreMixin {
                   maxLines: maxLines,
                   style: style,
                   textAlign: textAlign,
+                  cursorColor: selectionCursorColor,
+                  cursorHeight: selectionCursorHeight,
+                  cursorWidth: selectionCursorWidth,
+                  showCursor: showSelectionCursor,
+                  enableInteractiveSelection: enableInteractiveSelection,
+                  onSelectionChanged: onSelectionChanged,
+                  onTap: onTap,
                 )
           : (spans.isNotEmpty)
               ? Text.rich(

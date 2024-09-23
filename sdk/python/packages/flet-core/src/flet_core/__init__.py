@@ -305,7 +305,13 @@ from flet_core.submenu_button import SubmenuButton
 from flet_core.switch import Switch
 from flet_core.tabs import Tab, Tabs
 from flet_core.template_route import TemplateRoute
-from flet_core.text import Text, TextSelection, TextAffinity
+from flet_core.text import (
+    Text,
+    TextSelection,
+    TextAffinity,
+    TextSelectionChangeEvent,
+    TextSelectionChangeCause,
+)
 from flet_core.text_button import TextButton
 from flet_core.text_span import TextSpan
 from flet_core.text_style import (
