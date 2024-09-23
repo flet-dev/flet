@@ -414,6 +414,7 @@ from flet_core.types import (
     StrokeCap,
     StrokeJoin,
     Duration,
+    PointerDeviceType,
 )
 from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider

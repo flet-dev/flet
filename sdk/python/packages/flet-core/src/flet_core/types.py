@@ -360,6 +360,15 @@ class MouseCursor(Enum):
     ZOOM_OUT = "zoomOut"
 
 
+class PointerDeviceType(Enum):
+    TOUCH = "touch"
+    MOUSE = "mouse"
+    STYLUS = "stylus"
+    INVERTED_STYLUS = "invertedStylus"
+    TRACKPAD = "trackpad"
+    UNKNOWN = "unknown"
+
+
 class StrokeCap(Enum):
     ROUND = "round"
     SQUARE = "square"
