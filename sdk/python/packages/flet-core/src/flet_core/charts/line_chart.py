@@ -1,6 +1,7 @@
 import json
 from typing import List, Optional, Union, Any
 
+from flet_core.animation import AnimationValue
 from flet_core.border import Border, BorderSide
 from flet_core.charts.chart_axis import ChartAxis
 from flet_core.charts.chart_grid_lines import ChartGridLines
@@ -12,7 +13,6 @@ from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,

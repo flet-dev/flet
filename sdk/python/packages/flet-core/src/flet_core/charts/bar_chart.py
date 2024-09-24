@@ -2,6 +2,7 @@ import json
 from enum import Enum
 from typing import Any, List, Optional, Union
 
+from flet_core.animation import AnimationValue
 from flet_core.border import Border, BorderSide
 from flet_core.charts.bar_chart_group import BarChartGroup
 from flet_core.charts.chart_axis import ChartAxis
@@ -13,7 +14,6 @@ from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,

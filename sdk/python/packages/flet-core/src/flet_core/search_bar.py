@@ -1,6 +1,7 @@
 import time
 from typing import Any, Dict, List, Optional, Union, Sequence
 
+from flet_core.animation import AnimationValue
 from flet_core.border import BorderSide
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
@@ -10,7 +11,6 @@ from flet_core.text_style import TextStyle
 from flet_core.textfield import KeyboardType, TextCapitalization
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     ControlState,
     OffsetValue,
     OptionalNumber,

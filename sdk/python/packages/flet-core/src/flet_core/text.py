@@ -4,6 +4,7 @@ from enum import Enum
 from typing import Any, List, Optional, Union
 from warnings import warn
 
+from flet_core.animation import AnimationValue
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.control_event import ControlEvent
@@ -13,7 +14,6 @@ from flet_core.text_span import TextSpan
 from flet_core.text_style import TextStyle, TextThemeStyle, TextOverflow
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     FontWeight,
     OffsetValue,
     ResponsiveNumber,

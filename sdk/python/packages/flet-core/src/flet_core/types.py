@@ -3,7 +3,6 @@ from enum import Enum, EnumMeta
 from typing import Any, Callable, Dict, Optional, Protocol, Tuple, Type, TypeVar, Union
 from warnings import warn
 
-from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
 from flet_core.control_event import ControlEvent
 from flet_core.event import Event
@@ -66,8 +65,6 @@ RotateValue = Optional[Union[int, float, Rotate]]
 ScaleValue = Optional[Union[int, float, Scale]]
 
 OffsetValue = Optional[Union[Offset, Tuple[Union[float, int], Union[float, int]]]]
-
-AnimationValue = Optional[Union[bool, int, Animation]]
 
 
 @dataclass

@@ -1,13 +1,13 @@
 from enum import Enum
 from typing import Any, Callable, List, Optional, Union
 
+from flet_core.animation import AnimationValue
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.types import (
-    AnimationValue,
     OffsetValue,
     OptionalNumber,
     PaddingValue,
@@ -41,7 +41,7 @@ class NavigationRailDestination(Control):
         #
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
-            visible: Optional[bool] = None,
+        visible: Optional[bool] = None,
         data: Any = None,
     ) -> None:
         Control.__init__(self, ref=ref, disabled=disabled, visible=visible, data=data)

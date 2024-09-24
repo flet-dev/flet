@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 
 from flet_core.types import DurationValue
 
@@ -71,3 +71,6 @@ class AnimationStyle:
 
 def implicit(duration: int, curve: Optional[AnimationCurve] = None):
     return Animation(duration=duration, curve=curve)
+
+
+AnimationValue = Optional[Union[bool, int, Animation]]

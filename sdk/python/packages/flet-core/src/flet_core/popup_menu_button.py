@@ -3,6 +3,7 @@ from enum import Enum
 from typing import Any, List, Optional, Union
 
 from flet_core.animation import AnimationStyle
+from flet_core.animation import AnimationValue
 from flet_core.box import BoxConstraints
 from flet_core.buttons import OutlinedBorder, ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
@@ -10,7 +11,6 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     ClipBehavior,
     MouseCursor,
     OffsetValue,
@@ -199,14 +199,14 @@ class PopupMenuButton(ConstrainedControl):
         enable_feedback: Optional[bool] = None,
         shape: Optional[OutlinedBorder] = None,
         padding: PaddingValue = None,
-            menu_padding: PaddingValue = None,
-            style: Optional[ButtonStyle] = None,
-            popup_animation_style: Optional[AnimationStyle] = None,
-            size_constraints: Optional[BoxConstraints] = None,
+        menu_padding: PaddingValue = None,
+        style: Optional[ButtonStyle] = None,
+        popup_animation_style: Optional[AnimationStyle] = None,
+        size_constraints: Optional[BoxConstraints] = None,
         on_cancelled: OptionalControlEventCallable = None,
         on_open: OptionalControlEventCallable = None,
         on_cancel: OptionalControlEventCallable = None,
-            on_select: OptionalControlEventCallable = None,
+        on_select: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #

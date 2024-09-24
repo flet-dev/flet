@@ -1,5 +1,6 @@
 from typing import Any, Optional, Union, Dict
 
+from flet_core.animation import AnimationValue
 from flet_core.border import BorderSide
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
@@ -8,7 +9,6 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     OffsetValue,
     PaddingValue,
     ResponsiveNumber,
