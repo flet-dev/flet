@@ -13,7 +13,7 @@ from oauthlib.oauth2 import WebApplicationClient
 from oauthlib.oauth2.rfc6749.tokens import OAuth2Token
 
 from flet_runtime.auth.oauth_provider import OAuthProvider
-from flet_runtime.auth.oauth_token import OAuthToken
+from flet_runtime.auth.oauth_token import OAuthToken, WeChatOAuthToken
 from flet_runtime.auth.user import User
 
 
@@ -106,10 +106,7 @@ class Authorization:
     def __get_request_token_request(self, code: str):
         client = WebApplicationClient(self.provider.client_id)
         headers = self.__get_default_headers()
-        if (
-            self.provider.token_endpoint
-            == "https://api.weixin.qq.com/sns/oauth2/access_token"
-        ):
+        if self.is_wechat_oauth_provider():
             data = client.prepare_request_body(
                 secret=self.provider.client_secret,
                 code=code,
@@ -134,10 +131,7 @@ class Authorization:
     def __fetch_user_and_groups(self):
         assert self.__token is not None
         if self.fetch_user:
-            if (
-                self.provider.token_endpoint
-                == "https://api.weixin.qq.com/sns/oauth2/access_token"
-            ):
+            if self.is_wechat_oauth_provider():
                 self.user = self.provider._fetch_user(
                     self.__token.access_token, self.__token.openid
                 )
@@ -157,10 +151,7 @@ class Authorization:
     async def __fetch_user_and_groups_async(self):
         assert self.__token is not None
         if self.fetch_user:
-            if (
-                self.provider.token_endpoint
-                == "https://api.weixin.qq.com/sns/oauth2/access_token"
-            ):
+            if self.is_wechat_oauth_provider():
                 self.user = await self.provider._fetch_user(
                     self.__token.access_token, self.__token.openid
                 )
@@ -177,7 +168,24 @@ class Authorization:
                     self.__token.access_token
                 )
 
+    def is_wechat_oauth_provider(self):
+        return (
+            self.provider.token_endpoint
+            == "https://api.weixin.qq.com/sns/oauth2/access_token"
+        )
+
     def __convert_token(self, t: OAuth2Token):
+        if self.is_wechat_oauth_provider():
+            return WeChatOAuthToken(
+                access_token=t["access_token"],
+                scope=t.get("scope"),
+                token_type=t.get("token_type"),
+                expires_in=t.get("expires_in"),
+                expires_at=t.get("expires_at"),
+                refresh_token=t.get("refresh_token"),
+                openid=t.get("openid"),
+                unionid=t.get("unionid"),
+            )
         return OAuthToken(
             access_token=t["access_token"],
             scope=t.get("scope"),
@@ -185,8 +193,6 @@ class Authorization:
             expires_in=t.get("expires_in"),
             expires_at=t.get("expires_at"),
             refresh_token=t.get("refresh_token"),
-            openid=t.get("openid"),
-            unionid=t.get("unionid"),
         )
 
     def __refresh_token(self):

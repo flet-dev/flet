@@ -7,6 +7,15 @@ from flet_runtime.version import version
 
 
 class WeChatOAuthProvider(OAuthProvider):
+    """
+    OAuth provider for WeChat authentication.
+
+    WeChat's OAuth flow differs from standard implementations:
+    - Uses a unique 'code' parameter instead of typical 'access_token'
+    - Requires additional steps for user info retrieval
+    - Implements state parameter differently for security
+    """
+
     def __init__(
         self,
         client_id: str,
