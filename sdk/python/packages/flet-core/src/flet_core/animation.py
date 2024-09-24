@@ -2,6 +2,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
 
+from flet_core.types import DurationValue
+
 try:
     from typing import Literal
 except ImportError:
@@ -57,6 +59,14 @@ class AnimationCurve(Enum):
 class Animation:
     duration: int = field(default=1)
     curve: Optional[AnimationCurve] = field(default=None)
+
+
+@dataclass
+class AnimationStyle:
+    duration: DurationValue = None
+    reverse_duration: DurationValue = None
+    curve: Optional[AnimationCurve] = None
+    reverse_curve: Optional[AnimationCurve] = None
 
 
 def implicit(duration: int, curve: Optional[AnimationCurve] = None):

@@ -37,30 +37,18 @@ class BadgeControl extends StatelessWidget {
             parentAdaptive: parentAdaptive)
         : null;
 
-    var offsetDetails = parseOffset(control, "offset");
-
-    var bgColor = control.attrColor("bgcolor", context);
-
-    var textColor = control.attrColor("textColor", context);
-
-    bool isLabelVisible = control.attrBool("isLabelVisible", true)!;
-    var largeSize = control.attrDouble("largeSize");
-    var smallSize = control.attrDouble("smallSize");
-
     return baseControl(
         context,
         Badge(
           label: label != null ? Text(label) : null,
-          isLabelVisible: isLabelVisible,
-          offset: offsetDetails != null
-              ? Offset(offsetDetails.x, offsetDetails.y)
-              : null,
+          isLabelVisible: control.attrBool("isLabelVisible", true)!,
+          offset: parseOffset(control, "offset"),
           alignment: parseAlignment(control, "alignment"),
-          backgroundColor: bgColor,
-          largeSize: largeSize,
+          backgroundColor: control.attrColor("bgcolor", context),
+          largeSize: control.attrDouble("largeSize"),
           padding: parseEdgeInsets(control, "padding"),
-          smallSize: smallSize,
-          textColor: textColor,
+          smallSize: control.attrDouble("smallSize"),
+          textColor: control.attrColor("textColor", context),
           textStyle: parseTextStyle(Theme.of(context), control, "textStyle"),
           child: child,
         ),

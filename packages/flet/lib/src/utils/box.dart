@@ -64,7 +64,8 @@ List<BoxShadow> boxShadowsFromJSON(ThemeData theme, dynamic json) {
 }
 
 BoxShadow boxShadowFromJSON(ThemeData theme, dynamic json) {
-  var offset = json["offset"] != null ? offsetFromJSON(json["offset"]) : null;
+  var offset =
+      json["offset"] != null ? offsetDetailsFromJSON(json["offset"]) : null;
   return BoxShadow(
       color: parseColor(theme, json["color"], const Color(0xFF000000))!,
       offset: offset != null ? Offset(offset.x, offset.y) : Offset.zero,
