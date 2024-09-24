@@ -13,6 +13,8 @@ class OAuthToken:
         expires_in: Optional[int] = None,
         expires_at: Optional[float] = None,
         refresh_token: Optional[str] = None,
+        openid: Optional[str] = None,
+        unionid: Optional[str] = None,
     ) -> None:
         self.access_token = access_token
         self.scope = scope
@@ -20,6 +22,8 @@ class OAuthToken:
         self.expires_in = expires_in
         self.expires_at = expires_at
         self.refresh_token = refresh_token
+        self.openid = openid
+        self.unionid = unionid
 
     def to_json(self):
         return json.dumps(self, cls=EmbedJsonEncoder, separators=(",", ":"))

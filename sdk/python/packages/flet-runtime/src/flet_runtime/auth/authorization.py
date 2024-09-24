@@ -79,6 +79,7 @@ class Authorization:
             state=self.state,
             code_challenge=self.provider.code_challenge,
             code_challenge_method=self.provider.code_challenge_method,
+            appid=self.provider.client_id,
         )
         return authorization_url, self.state
 
@@ -104,6 +105,20 @@ class Authorization:
 
     def __get_request_token_request(self, code: str):
         client = WebApplicationClient(self.provider.client_id)
+        headers = self.__get_default_headers()
+        if (
+            self.provider.token_endpoint
+            == "https://api.weixin.qq.com/sns/oauth2/access_token"
+        ):
+            data = client.prepare_request_body(
+                secret=self.provider.client_secret,
+                code=code,
+                appid=self.provider.client_id,
+                include_client_id=False,
+            )
+            return httpx.Request(
+                "GET", self.provider.token_endpoint, params=data, headers=headers
+            )
         data = client.prepare_request_body(
             code=code,
             redirect_uri=self.provider.redirect_url,
@@ -111,7 +126,6 @@ class Authorization:
             include_client_id=True,
             code_verifier=self.provider.code_verifier,
         )
-        headers = self.__get_default_headers()
         headers["content-type"] = "application/x-www-form-urlencoded"
         return httpx.Request(
             "POST", self.provider.token_endpoint, content=data, headers=headers
@@ -120,7 +134,15 @@ class Authorization:
     def __fetch_user_and_groups(self):
         assert self.__token is not None
         if self.fetch_user:
-            self.user = self.provider._fetch_user(self.__token.access_token)
+            if (
+                self.provider.token_endpoint
+                == "https://api.weixin.qq.com/sns/oauth2/access_token"
+            ):
+                self.user = self.provider._fetch_user(
+                    self.__token.access_token, self.__token.openid
+                )
+            else:
+                self.user = self.provider._fetch_user(self.__token.access_token)
             if self.user is None and self.provider.user_endpoint is not None:
                 if self.provider.user_id_fn is None:
                     raise Exception(
@@ -135,7 +157,15 @@ class Authorization:
     async def __fetch_user_and_groups_async(self):
         assert self.__token is not None
         if self.fetch_user:
-            self.user = await self.provider._fetch_user_async(self.__token.access_token)
+            if (
+                self.provider.token_endpoint
+                == "https://api.weixin.qq.com/sns/oauth2/access_token"
+            ):
+                self.user = await self.provider._fetch_user(
+                    self.__token.access_token, self.__token.openid
+                )
+            else:
+                self.user = await self.provider._fetch_user(self.__token.access_token)
             if self.user is None and self.provider.user_endpoint is not None:
                 if self.provider.user_id_fn is None:
                     raise Exception(
@@ -155,6 +185,8 @@ class Authorization:
             expires_in=t.get("expires_in"),
             expires_at=t.get("expires_at"),
             refresh_token=t.get("refresh_token"),
+            openid=t.get("openid"),
+            unionid=t.get("unionid"),
         )
 
     def __refresh_token(self):
