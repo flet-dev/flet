@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/animations.dart';
 import '../utils/borders.dart';
+import '../utils/box.dart';
+import '../utils/buttons.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/mouse.dart';
@@ -75,6 +78,14 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
           color: bgcolor,
           clipBehavior: clipBehavior,
           shape: shape,
+          constraints: parseBoxConstraints(control, "sizeConstraints"),
+          style: parseButtonStyle(Theme.of(context), control, "style"),
+          popUpAnimationStyle:
+              parseAnimationStyle(control, "popupAnimationStyle"),
+          menuPadding: parseEdgeInsets(control, "menuPadding"),
+          onSelected: (String selection) {
+            backend.triggerControlEvent(control.id, "select", selection);
+          },
           onCanceled: () {
             backend.triggerControlEvent(control.id, "cancel");
             backend.triggerControlEvent(control.id, "cancelled"); // DEPRECATED
@@ -147,8 +158,7 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
     return constrainedControl(
         context,
         TooltipVisibility(
-            visible: control.attrString("tooltip") == null,
-            child: popupButton),
+            visible: control.attrString("tooltip") == null, child: popupButton),
         parent,
         control);
   }
