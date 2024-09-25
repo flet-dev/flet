@@ -300,7 +300,7 @@ for:
       - popd
 
       # publish
-      - publish_to_pypi packages/flet-desktop/dist/*
+      - publish_to_pypi packages/flet-desktop/dist/*.whl
 
     artifacts:
       - path: client/flet-macos.tar.gz
@@ -384,7 +384,7 @@ for:
       - popd
 
       # publish
-      - publish_to_pypi packages/flet-desktop/dist/*
+      - publish_to_pypi packages/flet-desktop/dist/*.whl
 
     artifacts:
       - path: client/flet-linux-*.tar.gz
@@ -431,7 +431,7 @@ for:
       - popd
 
       # publish
-      - publish_to_pypi packages/flet-web/dist/*
+      - publish_to_pypi packages/flet-web/dist/*.whl
 
     artifacts:
       - path: client/build/flet-web.tar.gz
@@ -502,9 +502,9 @@ for:
       # publish package
       - |
           publish_to_pypi \
-            packages/flet-core/dist/* \
-            packages/flet-cli/dist/* \
-            packages/flet/dist/*
+            packages/flet-core/dist/*.whl \
+            packages/flet-cli/dist/*.whl \
+            packages/flet/dist/*.whl
 
     artifacts:
       - path: sdk/python/packages/flet-core/dist/*
