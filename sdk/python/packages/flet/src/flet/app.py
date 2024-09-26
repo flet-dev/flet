@@ -14,7 +14,6 @@ from flet_core.event import Event
 from flet_core.page import Page
 from flet_core.types import AppView, WebRenderer
 from flet_core.utils import get_bool_env_var, is_embedded, is_linux_server, is_pyodide
-from flet_desktop import close_flet_view, open_flet_view_async
 
 logger = logging.getLogger(flet.__name__)
 
@@ -165,6 +164,8 @@ async def app_async(
             and not is_embedded()
             and url_prefix is None
         ):
+            from flet_desktop import close_flet_view, open_flet_view_async
+
             on_app_startup(conn.page_url)
 
             fvp, pid_file = await open_flet_view_async(
