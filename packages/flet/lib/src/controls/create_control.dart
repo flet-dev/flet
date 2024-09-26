@@ -1024,21 +1024,24 @@ Widget baseControl(
 Widget constrainedControl(
     BuildContext context, Widget widget, Control? parent, Control control) {
   return _expandable(
-      _positionedControl(
-          context,
-          _aspectRatio(
-              _offsetControl(
-                  context,
-                  _scaledControl(
+      _badge(
+          _positionedControl(
+              context,
+              _aspectRatio(
+                  _offsetControl(
                       context,
-                      _rotatedControl(
+                      _scaledControl(
                           context,
-                          _sizedControl(
-                              _directionality(
-                                  _tooltip(
-                                      _opacity(
-                                          context, widget, parent, control),
-                                      Theme.of(context),
+                          _rotatedControl(
+                              context,
+                              _sizedControl(
+                                  _directionality(
+                                      _tooltip(
+                                          _opacity(
+                                              context, widget, parent, control),
+                                          Theme.of(context),
+                                          parent,
+                                          control),
                                       parent,
                                       control),
                                   parent,
@@ -1089,7 +1092,12 @@ Widget _opacity(
 Widget _tooltip(
     Widget widget, ThemeData theme, Control? parent, Control control) {
   var tooltip = parseTooltip(control, "tooltip", widget, theme);
-  return tooltip != null ? tooltip : widget;
+  return tooltip ?? widget;
+}
+
+Widget _badge(Widget widget, Control? parent, Control control) {
+  var badge = Badge(label: const Text("Badge on a widget"), child: widget);
+  return badge;
 }
 
 Widget _aspectRatio(Widget widget, Control? parent, Control control) {
