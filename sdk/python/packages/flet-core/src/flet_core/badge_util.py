@@ -3,7 +3,8 @@ from typing import List, Optional, Union
 
 from flet_core.border import Border
 from flet_core.box import BoxShadow, BoxShape, DecorationImage
-from flet_core.control import Control
+
+# from flet_core.control import Control
 from flet_core.gradients import Gradient
 from flet_core.text_style import TextStyle
 from flet_core.types import (
@@ -23,7 +24,7 @@ from flet_core.types import (
 
 
 @dataclass
-class Badge:
+class Badgeutil:
     """Badges are used to show notifications, counts, or status information on navigation items such as NavigationBar or NavigationRail destinations
     or a button's icon."""
 
@@ -54,4 +55,4 @@ class Badge:
     # trigger_mode: Optional[TooltipTriggerMode] = None
 
 
-BadgeValue = Optional[Union[str, "Badge"]]
+BadgeValue = Optional[Union[str, "Badgeutil"]]

@@ -17,7 +17,7 @@ Badge? badgeFromJSON(dynamic j, Widget widget) {
   if (j == null) {
     return null;
   } else if (j is String) {
-    return Badge(label: const Text("Text Badge on a widget"), child: widget);
+    return Badge(label: Text(j), child: widget);
   }
   return Badge(label: const Text("Control Badge on a widget"), child: widget);
 }
