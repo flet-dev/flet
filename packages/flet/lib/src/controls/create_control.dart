@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/utils/badge_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -1096,7 +1097,8 @@ Widget _tooltip(
 }
 
 Widget _badge(Widget widget, Control? parent, Control control) {
-  var badge = Badge(label: const Text("Badge on a widget"), child: widget);
+  //var badge = Badge(label: const Text("Badge on a widget"), child: widget);
+  var badge = parseBadge(control, "badge", widget);
   return badge ?? widget;
 }
 
