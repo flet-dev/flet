@@ -24,9 +24,9 @@ from flet_core.types import (
 
 @dataclass
 class Badge:
-    """Tooltips provide text labels which help explain the function of a button or other user interface action."""
+    """Badges are used to show notifications, counts, or status information on navigation items such as NavigationBar or NavigationRail destinations
+    or a button's icon."""
 
-    content: Optional[Control] = None
     text: Optional[str] = None
 
     # message: Optional[str] = None
