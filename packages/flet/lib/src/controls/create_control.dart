@@ -1097,7 +1097,7 @@ Widget _tooltip(
 
 Widget _badge(Widget widget, Control? parent, Control control) {
   var badge = Badge(label: const Text("Badge on a widget"), child: widget);
-  return badge;
+  return badge ?? widget;
 }
 
 Widget _aspectRatio(Widget widget, Control? parent, Control control) {
