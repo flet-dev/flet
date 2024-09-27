@@ -23,6 +23,7 @@ Badge? badgeFromJSON(dynamic j, Widget widget) {
   return Badge(
     label: Text(j["text"]),
     isLabelVisible: parseBool(j["label_visible"]) ?? true,
+    offset: offsetFromJson(j["offset"]),
     child: widget,
   );
 }
