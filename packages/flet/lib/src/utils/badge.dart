@@ -8,7 +8,6 @@ Badge? parseBadge(
   var v = control.attrString(propName, null);
   if (v == null) {
     return null;
-    //return Badge(label: const Text("v==null Badge on a widget"), child: widget);
   }
   final j = json.decode(v);
   return badgeFromJSON(j, widget, theme);
@@ -37,27 +36,3 @@ Badge? badgeFromJSON(dynamic j, Widget widget, ThemeData theme) {
     child: widget,
   );
 }
-
-
-          // isLabelVisible: isLabelVisible,
-          // offset: offsetDetails != null
-          //     ? Offset(offsetDetails.x, offsetDetails.y)
-          //     : null,
-          // alignment: parseAlignment(control, "alignment"),
-          // backgroundColor: bgColor,
-          // largeSize: largeSize,
-          // padding: parseEdgeInsets(control, "padding"),
-          // smallSize: smallSize,
-          // textColor: textColor,
-          // textStyle: parseTextStyle(Theme.of(context), control, "textStyle"),
-
-    // text: Optional[str] = None
-    // offset: OffsetValue = None
-    // alignment: Optional[Alignment] = None
-    // bgcolor: Optional[str] = None
-    // label_visible: Optional[bool] = None
-    // large_size: OptionalNumber = None
-    // padding: Optional[PaddingValue] = None
-    // small_size: OptionalNumber = None
-    // text_color: Optional[str] = None
-    // text_style: Optional[TextStyle] = None

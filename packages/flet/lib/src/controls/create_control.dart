@@ -1099,7 +1099,6 @@ Widget _tooltip(
 
 Widget _badge(
     Widget widget, ThemeData theme, Control? parent, Control control) {
-  //var badge = Badge(label: const Text("Badge on a widget"), child: widget);
   var badge = parseBadge(control, "badge", widget, theme);
   return badge ?? widget;
 }
