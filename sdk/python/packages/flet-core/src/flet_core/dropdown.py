@@ -2,6 +2,7 @@ import time
 from typing import Any, List, Optional, Union
 
 from flet_core.alignment import Alignment
+from flet_core.badge import BadgeValue
 from flet_core.control import Control, OptionalNumber
 from flet_core.form_field_control import FormFieldControl, InputBorder
 from flet_core.ref import Ref
@@ -11,11 +12,11 @@ from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -236,6 +237,7 @@ class Dropdown(FormFieldControl):
         animate_offset: AnimationValue = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: BadgeValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -262,6 +264,7 @@ class Dropdown(FormFieldControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,

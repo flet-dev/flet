@@ -1,5 +1,6 @@
 from typing import Any, Optional, Union
 
+from flet_core.badge import BadgeValue
 from flet_core.buttons import ButtonStyle
 from flet_core.control import Control, OptionalNumber
 from flet_core.elevated_button import ElevatedButton
@@ -59,6 +60,7 @@ class FilledButton(ElevatedButton):
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: TooltipValue = None,
+        badge: BadgeValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -74,6 +76,7 @@ class FilledButton(ElevatedButton):
             col=col,
             opacity=opacity,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
