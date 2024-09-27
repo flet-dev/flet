@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Any, List, Optional, Union
 from warnings import warn
 
-from flet_core.badge_util import BadgeValue
+from flet_core.badge import BadgeValue
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref

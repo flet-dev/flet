@@ -14,7 +14,7 @@ from typing import (
     Union,
 )
 
-from flet_core.badge_util import BadgeValue
+from flet_core.badge import BadgeValue
 from flet_core.embed_json_encoder import EmbedJsonEncoder
 from flet_core.protocol import Command
 from flet_core.ref import Ref

@@ -1,6 +1,6 @@
 from typing import Any, Optional, Union
 
-from flet_core.badge_util import BadgeValue
+from flet_core.badge import BadgeValue
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
