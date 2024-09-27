@@ -24,6 +24,7 @@ Badge? badgeFromJSON(dynamic j, Widget widget) {
     label: Text(j["text"]),
     isLabelVisible: parseBool(j["label_visible"]) ?? true,
     offset: offsetFromJson(j["offset"]),
+    alignment: alignmentFromJson(j["alignment"]),
     child: widget,
   );
 }
