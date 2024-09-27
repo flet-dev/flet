@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flet/src/models/control.dart';
+import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
 Badge? parseBadge(Control control, String propName, Widget widget) {
@@ -19,5 +19,34 @@ Badge? badgeFromJSON(dynamic j, Widget widget) {
   } else if (j is String) {
     return Badge(label: Text(j), child: widget);
   }
-  return Badge(label: Text(j["text"]), child: widget);
+
+  return Badge(
+    label: Text(j["text"]),
+    isLabelVisible: parseBool(j["label_visible"]) ?? true,
+    child: widget,
+  );
 }
+
+
+          // isLabelVisible: isLabelVisible,
+          // offset: offsetDetails != null
+          //     ? Offset(offsetDetails.x, offsetDetails.y)
+          //     : null,
+          // alignment: parseAlignment(control, "alignment"),
+          // backgroundColor: bgColor,
+          // largeSize: largeSize,
+          // padding: parseEdgeInsets(control, "padding"),
+          // smallSize: smallSize,
+          // textColor: textColor,
+          // textStyle: parseTextStyle(Theme.of(context), control, "textStyle"),
+
+    // text: Optional[str] = None
+    // offset: OffsetValue = None
+    // alignment: Optional[Alignment] = None
+    // bgcolor: Optional[str] = None
+    // label_visible: Optional[bool] = None
+    // large_size: OptionalNumber = None
+    // padding: Optional[PaddingValue] = None
+    // small_size: OptionalNumber = None
+    // text_color: Optional[str] = None
+    // text_style: Optional[TextStyle] = None
