@@ -33,6 +33,7 @@ Badge? badgeFromJSON(dynamic j, Widget widget, ThemeData theme) {
     padding: edgeInsetsFromJson(j["padding"]),
     smallSize: parseDouble(j["small_size"]),
     textColor: parseColor(theme, j["text_color"]),
+    textStyle: textStyleFromJson(theme, j["text_style"]),
     child: widget,
   );
 }
