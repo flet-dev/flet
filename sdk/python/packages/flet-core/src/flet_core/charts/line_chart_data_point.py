@@ -1,5 +1,6 @@
 from typing import Any, Optional, Union
 
+from flet_core.badge import BadgeValue
 from flet_core.charts.chart_point_line import ChartPointLine
 from flet_core.charts.chart_point_shape import ChartPointShape
 from flet_core.control import Control, OptionalNumber
@@ -29,6 +30,7 @@ class LineChartDataPoint(Control):
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
+        badge: BadgeValue = None,
         data: Any = None,
     ):
 
@@ -38,6 +40,7 @@ class LineChartDataPoint(Control):
             disabled=disabled,
             visible=visible,
             data=data,
+            badge=badge,
         )
 
         self.x = x

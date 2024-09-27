@@ -1,5 +1,6 @@
 from typing import Any, List, Optional
 
+from flet_core.badge import BadgeValue
 from flet_core.border import BorderSide
 from flet_core.charts.bar_chart_rod_stack_item import BarChartRodStackItem
 from flet_core.control import Control, OptionalNumber
@@ -35,6 +36,7 @@ class BarChartRod(Control):
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
+        badge: BadgeValue = None,
         data: Any = None,
     ):
 
@@ -44,6 +46,7 @@ class BarChartRod(Control):
             disabled=disabled,
             visible=visible,
             data=data,
+            badge=badge,
         )
 
         self.rod_stack_items = rod_stack_items
