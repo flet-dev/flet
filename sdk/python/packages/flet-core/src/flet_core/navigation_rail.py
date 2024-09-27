@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Any, Callable, List, Optional, Union
 
+from flet_core.badge import BadgeValue
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control
@@ -9,12 +10,12 @@ from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalControlEventCallable,
     OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
 )
 
 
@@ -41,9 +42,10 @@ class NavigationRailDestination(Control):
         #
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
+        badge: BadgeValue = None,
         data: Any = None,
     ) -> None:
-        Control.__init__(self, ref=ref, disabled=disabled, data=data)
+        Control.__init__(self, ref=ref, disabled=disabled, data=data, badge=badge)
         self.label = label
         self.icon = icon
         self.icon_content = icon_content
