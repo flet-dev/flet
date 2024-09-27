@@ -28,6 +28,7 @@ Badge? badgeFromJSON(dynamic j, Widget widget, ThemeData theme) {
     alignment: alignmentFromJson(j["alignment"]),
     backgroundColor: parseColor(theme, j["bgcolor"]),
     largeSize: parseDouble(j["large_size"]),
+    padding: edgeInsetsFromJson(j["padding"]),
     child: widget,
   );
 }
