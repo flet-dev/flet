@@ -21,14 +21,17 @@ Badge? badgeFromJSON(dynamic j, Widget widget, ThemeData theme) {
     return Badge(label: Text(j), child: widget);
   }
 
+  String? label = j["text"];
+
   return Badge(
-    label: Text(j["text"]),
+    label: label != null ? Text(label) : null,
     isLabelVisible: parseBool(j["label_visible"]) ?? true,
     offset: offsetFromJson(j["offset"]),
     alignment: alignmentFromJson(j["alignment"]),
     backgroundColor: parseColor(theme, j["bgcolor"]),
     largeSize: parseDouble(j["large_size"]),
     padding: edgeInsetsFromJson(j["padding"]),
+    smallSize: parseDouble(j["small_size"]),
     child: widget,
   );
 }
