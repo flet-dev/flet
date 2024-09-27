@@ -24,7 +24,7 @@ from flet_core.types import (
 
 
 @dataclass
-class Badgeutil:
+class Badge:
     """Badges are used to show notifications, counts, or status information on navigation items such as NavigationBar or NavigationRail destinations
     or a button's icon."""
 
@@ -55,4 +55,4 @@ class Badgeutil:
     # trigger_mode: Optional[TooltipTriggerMode] = None
 
 
-BadgeValue = Optional[Union[str, "Badgeutil"]]
+BadgeValue = Optional[Union[str, "Badge"]]
