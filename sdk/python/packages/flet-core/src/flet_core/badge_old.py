@@ -7,7 +7,7 @@ from flet_core.text_style import TextStyle
 from flet_core.types import OffsetValue, PaddingValue
 
 
-class Badge(Control):
+class BadgeOld(Control):
     """
     A Material Design "badge".
 
