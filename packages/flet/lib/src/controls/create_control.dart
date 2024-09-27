@@ -20,7 +20,7 @@ import 'alert_dialog.dart';
 import 'animated_switcher.dart';
 import 'auto_complete.dart';
 import 'autofill_group.dart';
-import 'badge.dart';
+import 'badge_old.dart';
 import 'banner.dart';
 import 'barchart.dart';
 import 'bottom_app_bar.dart';
