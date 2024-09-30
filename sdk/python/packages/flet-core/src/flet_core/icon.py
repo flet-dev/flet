@@ -1,6 +1,7 @@
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, List
 
 from flet_core.animation import AnimationValue
+from flet_core.box import BoxShadow
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -51,6 +52,12 @@ class Icon(ConstrainedControl):
         color: Optional[str] = None,
         size: OptionalNumber = None,
         semantics_label: Optional[str] = None,
+        shadows: Union[BoxShadow, List[BoxShadow], None] = None,
+        fill: OptionalNumber = None,
+        apply_text_scaling: Optional[bool] = None,
+        grade: OptionalNumber = None,
+        weight: OptionalNumber = None,
+        optical_size: OptionalNumber = None,
         #
         # ConstrainedControl
         #
@@ -105,9 +112,18 @@ class Icon(ConstrainedControl):
         self.color = color
         self.size = size
         self.semantics_label = semantics_label
+        self.shadows = shadows
+        self.fill = fill
+        self.apply_text_scaling = apply_text_scaling
+        self.grade = grade
+        self.weight = weight
+        self.optical_size = optical_size
 
     def _get_control_name(self):
         return "icon"
+
+    def before_update(self):
+        self._set_attr_json("shadows", self.__shadows)
 
     # name
     @property
@@ -144,3 +160,57 @@ class Icon(ConstrainedControl):
     @semantics_label.setter
     def semantics_label(self, value: Optional[str]):
         self._set_attr("semanticsLabel", value)
+
+    # shadows
+    @property
+    def shadows(self) -> Union[BoxShadow, List[BoxShadow], None]:
+        return self.__shadows
+
+    @shadows.setter
+    def shadows(self, value: Union[BoxShadow, List[BoxShadow], None]):
+        self.__shadows = value
+
+    # fill
+    @property
+    def fill(self) -> OptionalNumber:
+        return self._get_attr("fill", data_type="float")
+
+    @fill.setter
+    def fill(self, value: OptionalNumber):
+        self._set_attr("fill", value)
+
+    # apply_text_scaling
+    @property
+    def apply_text_scaling(self) -> Optional[bool]:
+        return self._get_attr("applyTextScaling", data_type="bool")
+
+    @apply_text_scaling.setter
+    def apply_text_scaling(self, value: Optional[bool]):
+        self._set_attr("applyTextScaling", value)
+
+    # grade
+    @property
+    def grade(self) -> OptionalNumber:
+        return self._get_attr("grade", data_type="float")
+
+    @grade.setter
+    def grade(self, value: OptionalNumber):
+        self._set_attr("grade", value)
+
+    # weight
+    @property
+    def weight(self) -> OptionalNumber:
+        return self._get_attr("weight", data_type="float")
+
+    @weight.setter
+    def weight(self, value: OptionalNumber):
+        self._set_attr("weight", value)
+
+    # optical_size
+    @property
+    def optical_size(self) -> OptionalNumber:
+        return self._get_attr("opticalSize", data_type="float")
+
+    @optical_size.setter
+    def optical_size(self, value: OptionalNumber):
+        self._set_attr("opticalSize", value)

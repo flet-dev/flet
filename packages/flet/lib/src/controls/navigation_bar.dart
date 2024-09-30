@@ -49,8 +49,7 @@ class _NavigationBarControlState extends State<NavigationBarControl>
     debugPrint("NavigationBarControl build: ${widget.control.id}");
 
     return withPagePlatform((context, platform) {
-      bool? adaptive =
-          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+      bool? adaptive = widget.control.isAdaptive ?? widget.parentAdaptive;
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
@@ -70,16 +69,13 @@ class _NavigationBarControlState extends State<NavigationBarControl>
       }
       var animationDuration = widget.control.attrInt("animationDuration");
 
-      NavigationDestinationLabelBehavior? labelBehavior =
-          parseNavigationDestinationLabelBehavior(
-              widget.control.attrString("labelBehavior"));
-
       var navBar = withControls(
           widget.children
               .where((c) => c.isVisible && c.name == null)
               .map((c) => c.id), (content, viewModel) {
         return NavigationBar(
-            labelBehavior: labelBehavior,
+            labelBehavior: parseNavigationDestinationLabelBehavior(
+                widget.control.attrString("labelBehavior")),
             height: widget.control.attrDouble("height"),
             animationDuration: animationDuration != null
                 ? Duration(milliseconds: animationDuration)
@@ -107,20 +103,21 @@ class _NavigationBarControlState extends State<NavigationBarControl>
                   (c) => c.name == "selected_icon_content" && c.isVisible);
               var destinationDisabled =
                   !(disabled || destView.control.isDisabled);
+              var destinationAdaptive = destView.control.isAdaptive ?? adaptive;
               return NavigationDestination(
                   enabled: !destinationDisabled,
                   tooltip: destView.control.attrString("tooltip"),
                   icon: iconContentCtrls.isNotEmpty
                       ? createControl(destView.control,
                           iconContentCtrls.first.id, destinationDisabled,
-                          parentAdaptive: adaptive)
+                          parentAdaptive: destinationAdaptive)
                       : Icon(icon),
                   selectedIcon: selectedIconContentCtrls.isNotEmpty
                       ? createControl(
                           destView.control,
                           selectedIconContentCtrls.first.id,
                           destinationDisabled,
-                          parentAdaptive: adaptive)
+                          parentAdaptive: destinationAdaptive)
                       : selectedIcon != null
                           ? Icon(selectedIcon)
                           : null,

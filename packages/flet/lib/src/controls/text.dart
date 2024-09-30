@@ -30,7 +30,6 @@ class TextControl extends StatelessWidget with FletStoreMixin {
       bool disabled = control.isDisabled || parentDisabled;
 
       String text = control.attrString("value", "")!;
-      var selectionColor = control.attrColor("selectionColor", context);
       var selectionCursorColor =
           control.attrColor("selectionCursorColor", context);
       var selectionCursorWidth =

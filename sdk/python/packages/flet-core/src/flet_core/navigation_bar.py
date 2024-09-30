@@ -29,7 +29,7 @@ class NavigationBarLabelBehavior(Enum):
     ONLY_SHOW_SELECTED = "onlyShowSelected"
 
 
-class NavigationBarDestination(Control):
+class NavigationBarDestination(AdaptiveControl, Control):
     """Defines the appearance of the button items that are arrayed within the navigation bar.
 
     The value must be a list of two or more NavigationBarDestination instances."""
@@ -50,6 +50,10 @@ class NavigationBarDestination(Control):
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
         data: Any = None,
+        #
+        # AdaptiveControl
+        #
+        adaptive: Optional[bool] = None,
     ):
         Control.__init__(
             self,
@@ -59,6 +63,8 @@ class NavigationBarDestination(Control):
             visible=visible,
             data=data,
         )
+        AdaptiveControl.__init__(self, adaptive=adaptive)
+
         self.label = label
         self.icon = icon
         self.icon_content = icon_content

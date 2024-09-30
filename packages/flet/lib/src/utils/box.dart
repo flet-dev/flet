@@ -41,20 +41,22 @@ BoxConstraints? boxConstraintsFromJSON(dynamic json,
   );
 }
 
-List<BoxShadow> parseBoxShadow(
-    ThemeData theme, Control control, String propName) {
+List<BoxShadow>? parseBoxShadow(
+    ThemeData theme, Control control, String propName,
+    [List<BoxShadow>? defValue]) {
   var v = control.attrString(propName);
   if (v == null) {
-    return [];
+    return defValue;
   }
 
   final j1 = json.decode(v);
   return boxShadowsFromJSON(theme, j1);
 }
 
-List<BoxShadow> boxShadowsFromJSON(ThemeData theme, dynamic json) {
+List<BoxShadow>? boxShadowsFromJSON(ThemeData theme, dynamic json,
+    [List<BoxShadow>? defValue]) {
   if (json == null) {
-    return [];
+    return defValue;
   }
   if (json is List) {
     return json.map((e) => boxShadowFromJSON(theme, e)).toList();

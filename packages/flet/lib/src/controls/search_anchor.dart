@@ -52,7 +52,7 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
     });
     widget.backend.triggerControlEvent(
         widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
-    }
+  }
 
   @override
   void dispose() {
@@ -102,14 +102,6 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
     var viewTrailingCtrls =
         widget.children.where((c) => c.name == "viewTrailing" && c.isVisible);
 
-    var viewBgcolor = widget.control.attrColor("viewBgcolor", context);
-    var dividerColor = widget.control.attrColor("dividerColor", context);
-
-    TextStyle? viewHeaderTextStyle = parseTextStyle(
-        Theme.of(context), widget.control, "viewHeaderTextStyle");
-    TextStyle? viewHintTextStyle =
-        parseTextStyle(Theme.of(context), widget.control, "viewHintTextStyle");
-
     var textCapitalization = parseTextCapitalization(
         widget.control.attrString("textCapitalization"));
     TextInputType keyboardType = parseTextInputType(
@@ -155,13 +147,15 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
 
     Widget anchor = SearchAnchor(
         searchController: _controller,
-        headerHintStyle: viewHintTextStyle,
-        headerTextStyle: viewHeaderTextStyle,
+        headerHintStyle: parseTextStyle(
+            Theme.of(context), widget.control, "viewHintTextStyle"),
+        headerTextStyle: parseTextStyle(
+            Theme.of(context), widget.control, "viewHeaderTextStyle"),
         viewSide:
             parseBorderSide(Theme.of(context), widget.control, "viewSide"),
         isFullScreen: widget.control.attrBool("fullScreen", false),
-        viewBackgroundColor: viewBgcolor,
-        dividerColor: dividerColor,
+        viewBackgroundColor: widget.control.attrColor("viewBgcolor", context),
+        dividerColor: widget.control.attrColor("dividerColor", context),
         viewHintText: widget.control.attrString("viewHintText"),
         viewElevation: widget.control.attrDouble("viewElevation"),
         viewShape: parseOutlinedBorder(widget.control, "viewShape"),

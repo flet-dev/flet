@@ -257,6 +257,7 @@ Widget createWidget(
           children: controlView.children,
           control: controlView.control,
           parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
           backend: backend);
     case "divider":
       return DividerControl(

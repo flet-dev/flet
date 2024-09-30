@@ -4,6 +4,7 @@ from typing import Any, Optional, Union
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
 from flet_core.animation import AnimationValue
+from flet_core.box import BoxConstraints
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -88,6 +89,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         url_target: Optional[UrlTarget] = None,
         mouse_cursor: Optional[MouseCursor] = None,
         visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
+        size_constraints: Optional[BoxConstraints] = None,
         on_click: OptionalControlEventCallable = None,
         on_focus: OptionalControlEventCallable = None,
         on_blur: OptionalControlEventCallable = None,
@@ -181,6 +183,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self.on_blur = on_blur
         self.mouse_cursor = mouse_cursor
         self.visual_density = visual_density
+        self.size_constraints = size_constraints
 
     def _get_control_name(self):
         return "iconbutton"
@@ -194,6 +197,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("style", self.__style)
         self._set_attr_json("alignment", self.__alignment)
         self._set_attr_json("padding", self.__padding)
+        self._set_attr_json("sizeConstraints", self.__size_constraints)
 
     def _get_children(self):
         if self.__content is None:
@@ -329,6 +333,15 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @padding.setter
     def padding(self, value: PaddingValue):
         self.__padding = value
+
+    # size_constraints
+    @property
+    def size_constraints(self) -> Optional[BoxConstraints]:
+        return self.__size_constraints
+
+    @size_constraints.setter
+    def size_constraints(self, value: Optional[BoxConstraints]):
+        self.__size_constraints = value
 
     # selected
     @property
