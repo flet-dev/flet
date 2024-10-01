@@ -103,7 +103,7 @@ class _NavigationBarControlState extends State<NavigationBarControl>
               var destinationAdaptive = destView.control.isAdaptive ?? adaptive;
               return NavigationDestination(
                   enabled: !destinationDisabled,
-                  tooltip: destView.control.attrString("tooltip"),
+                  tooltip: destView.control.attrString("tooltip") ?? "",
                   icon: iconContentCtrls.isNotEmpty
                       ? createControl(destView.control,
                           iconContentCtrls.first.id, destinationDisabled,
