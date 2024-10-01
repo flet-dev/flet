@@ -48,7 +48,6 @@ class NavigationBarDestination(Control):
         #
         ref: Optional[Ref] = None,
         tooltip: TooltipValue = None,
-        badge: BadgeValue = None,
         disabled: Optional[bool] = None,
         data: Any = None,
     ):
@@ -56,7 +55,6 @@ class NavigationBarDestination(Control):
             self,
             ref=ref,
             tooltip=tooltip,
-            badge=badge,
             disabled=disabled,
             data=data,
         )
@@ -156,7 +154,6 @@ class NavigationDestination(NavigationBarDestination):
         #
         ref: Optional[Ref] = None,
         tooltip: TooltipValue = None,
-        badge: BadgeValue = None,
         disabled: Optional[bool] = None,
         data: Any = None,
     ) -> None:
@@ -170,7 +167,6 @@ class NavigationDestination(NavigationBarDestination):
             bgcolor,
             ref,
             tooltip,
-            badge,
             disabled,
             data,
         )

@@ -42,10 +42,14 @@ class NavigationRailDestination(Control):
         #
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
-        badge: BadgeValue = None,
         data: Any = None,
     ) -> None:
-        Control.__init__(self, ref=ref, disabled=disabled, data=data, badge=badge)
+        Control.__init__(
+            self,
+            ref=ref,
+            disabled=disabled,
+            data=data,
+        )
         self.label = label
         self.icon = icon
         self.icon_content = icon_content
