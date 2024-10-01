@@ -20,7 +20,6 @@ import 'alert_dialog.dart';
 import 'animated_switcher.dart';
 import 'auto_complete.dart';
 import 'autofill_group.dart';
-import 'badge_old.dart';
 import 'banner.dart';
 import 'barchart.dart';
 import 'bottom_app_bar.dart';
@@ -262,14 +261,6 @@ Widget createWidget(
     case "divider":
       return DividerControl(
           key: key, parent: parent, control: controlView.control);
-    case "badge":
-      return BadgeControl(
-          key: key,
-          parent: parent,
-          control: controlView.control,
-          children: controlView.children,
-          parentDisabled: parentDisabled,
-          parentAdaptive: parentAdaptive);
     case "selectionarea":
       return SelectionAreaControl(
           key: key,

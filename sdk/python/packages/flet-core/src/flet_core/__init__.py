@@ -45,7 +45,6 @@ from flet_core.autofill_group import (
     AutofillHint,
 )
 from flet_core.badge import Badge
-from flet_core.badge_old import BadgeOld
 from flet_core.banner import Banner
 from flet_core.blur import Blur, BlurTileMode
 from flet_core.border import Border, BorderSide, BorderSideStrokeAlign
