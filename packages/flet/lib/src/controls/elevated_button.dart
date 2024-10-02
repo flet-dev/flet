@@ -85,6 +85,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
                 backend: widget.backend);
       }
 
+      bool filled = true;
       String text = widget.control.attrString("text", "")!;
       String url = widget.control.attrString("url", "")!;
       IconData? icon = parseIcon(widget.control.attrString("icon"));
@@ -124,7 +125,8 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             }
           : null;
 
-      ElevatedButton? button;
+      ElevatedButton? elevatedButton;
+      FilledButton? filledButton;
 
       var theme = Theme.of(context);
 
@@ -147,7 +149,21 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
               description:
                   "\"icon\" must be specified together with \"text\".");
         }
-        button = ElevatedButton.icon(
+        elevatedButton = ElevatedButton.icon(
+            style: style,
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            onPressed: onPressed,
+            onLongPress: onLongPressHandler,
+            onHover: onHoverHandler,
+            clipBehavior: clipBehavior,
+            icon: Icon(
+              icon,
+              color: iconColor,
+            ),
+            label: Text(text));
+
+        filledButton = FilledButton.icon(
             style: style,
             autofocus: autofocus,
             focusNode: _focusNode,
@@ -161,7 +177,19 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             ),
             label: Text(text));
       } else if (contentCtrls.isNotEmpty) {
-        button = ElevatedButton(
+        elevatedButton = ElevatedButton(
+            style: style,
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            onPressed: onPressed,
+            onLongPress: onLongPressHandler,
+            onHover: onHoverHandler,
+            clipBehavior: clipBehavior,
+            child: createControl(
+                widget.control, contentCtrls.first.id, disabled,
+                parentAdaptive: adaptive));
+
+        filledButton = FilledButton(
             style: style,
             autofocus: autofocus,
             focusNode: _focusNode,
@@ -173,7 +201,16 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
                 widget.control, contentCtrls.first.id, disabled,
                 parentAdaptive: adaptive));
       } else {
-        button = ElevatedButton(
+        elevatedButton = ElevatedButton(
+            style: style,
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            onPressed: onPressed,
+            onLongPress: onLongPressHandler,
+            onHover: onHoverHandler,
+            clipBehavior: clipBehavior,
+            child: Text(text));
+        filledButton = FilledButton(
             style: style,
             autofocus: autofocus,
             focusNode: _focusNode,
@@ -189,8 +226,13 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
         _lastFocusValue = focusValue;
         _focusNode.requestFocus();
       }
-
-      return constrainedControl(context, button, widget.parent, widget.control);
+      if (filled) {
+        return constrainedControl(
+            context, filledButton, widget.parent, widget.control);
+      } else {
+        return constrainedControl(
+            context, elevatedButton, widget.parent, widget.control);
+      }
     });
   }
 }
