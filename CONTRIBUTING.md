@@ -140,7 +140,7 @@ If you added these through the terminal, close that terminal session and create 
 ### Building the Flutter client
 Open an instance of your IDE (preferably VS Code) at the `flet-dev/flet/client` directory.
 
-First, run `printenv | grep FLET` in the built-in terminal to make sure everything is set. You should see the above environment variables you set (`FLET_VIEW_PATH`, `FLET_WEB_PATH`) printed out.
+First, run `printenv | grep FLET` (or `gci env:* | findstr FLET` on Windows) in the built-in terminal to make sure everything is set. You should see the above environment variables you set (`FLET_VIEW_PATH`, `FLET_WEB_PATH`) printed out.
 
 -  To build the Flutter client for MacOS, run:
     ```
