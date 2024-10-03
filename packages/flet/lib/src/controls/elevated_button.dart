@@ -86,6 +86,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
       }
 
       bool filled = widget.control.attrBool("filled", false)!;
+      bool filledtonal = widget.control.attrBool("filledtonal", false)!;
       String text = widget.control.attrString("text", "")!;
       String url = widget.control.attrString("url", "")!;
       IconData? icon = parseIcon(widget.control.attrString("icon"));
@@ -127,6 +128,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
 
       ElevatedButton? elevatedButton;
       FilledButton? filledButton;
+      FilledButton? filledTonalButton;
 
       var theme = Theme.of(context);
 
@@ -176,6 +178,20 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
               color: iconColor,
             ),
             label: Text(text));
+
+        filledTonalButton = FilledButton.tonalIcon(
+            style: style,
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            onPressed: onPressed,
+            onLongPress: onLongPressHandler,
+            onHover: onHoverHandler,
+            clipBehavior: clipBehavior,
+            icon: Icon(
+              icon,
+              color: iconColor,
+            ),
+            label: Text(text));
       } else if (contentCtrls.isNotEmpty) {
         elevatedButton = ElevatedButton(
             style: style,
@@ -200,6 +216,18 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             child: createControl(
                 widget.control, contentCtrls.first.id, disabled,
                 parentAdaptive: adaptive));
+
+        filledTonalButton = FilledButton.tonal(
+            style: style,
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            onPressed: onPressed,
+            onLongPress: onLongPressHandler,
+            onHover: onHoverHandler,
+            clipBehavior: clipBehavior,
+            child: createControl(
+                widget.control, contentCtrls.first.id, disabled,
+                parentAdaptive: adaptive));
       } else {
         elevatedButton = ElevatedButton(
             style: style,
@@ -210,7 +238,18 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
             child: Text(text));
+
         filledButton = FilledButton(
+            style: style,
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            onPressed: onPressed,
+            onLongPress: onLongPressHandler,
+            onHover: onHoverHandler,
+            clipBehavior: clipBehavior,
+            child: Text(text));
+
+        filledTonalButton = FilledButton.tonal(
             style: style,
             autofocus: autofocus,
             focusNode: _focusNode,
@@ -229,6 +268,9 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
       if (filled) {
         return constrainedControl(
             context, filledButton, widget.parent, widget.control);
+      } else if (filledtonal) {
+        return constrainedControl(
+            context, filledTonalButton, widget.parent, widget.control);
       } else {
         return constrainedControl(
             context, elevatedButton, widget.parent, widget.control);
