@@ -37,6 +37,9 @@ class FilledButton(ElevatedButton):
         self,
         text: Optional[str] = None,
         adaptive: Optional[bool] = None,
+        color: Optional[str] = None,
+        bgcolor: Optional[str] = None,
+        elevation: OptionalNumber = None,
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
         style: Optional[ButtonStyle] = None,
@@ -80,9 +83,9 @@ class FilledButton(ElevatedButton):
             #
             # Specific
             #
-            color="onPrimary",
-            bgcolor="primary",
-            elevation=0,
+            color=color,
+            bgcolor=bgcolor,
+            elevation=elevation,
             style=style,
             text=text,
             icon=icon,
@@ -96,3 +99,5 @@ class FilledButton(ElevatedButton):
             on_hover=on_hover,
             adaptive=adaptive,
         )
+
+        self._set_attr("filled", True)

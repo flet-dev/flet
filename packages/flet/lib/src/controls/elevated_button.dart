@@ -85,7 +85,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
                 backend: widget.backend);
       }
 
-      bool filled = true;
+      bool filled = widget.control.attrBool("filled", false)!;
       String text = widget.control.attrString("text", "")!;
       String url = widget.control.attrString("url", "")!;
       IconData? icon = parseIcon(widget.control.attrString("icon"));
