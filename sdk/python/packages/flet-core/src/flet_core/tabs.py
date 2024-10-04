@@ -19,6 +19,7 @@ from flet_core.types import (
     ScaleValue,
     TabAlignment,
     OptionalControlEventCallable,
+    MarginValue,
 )
 
 
@@ -29,6 +30,9 @@ class Tab(AdaptiveControl):
         content: Optional[Control] = None,
         tab_content: Optional[Control] = None,
         icon: Optional[str] = None,
+            icon_content: Optional[Control] = None,
+            height: OptionalNumber = None,
+            icon_margin: MarginValue = None,
         #
         # Control and AdaptiveControl
         #
@@ -41,10 +45,11 @@ class Tab(AdaptiveControl):
 
         self.text = text
         self.icon = icon
-        self.__content: Optional[Control] = None
         self.content = content
-        self.__tab_content: Optional[Control] = None
         self.tab_content = tab_content
+        self.height = height
+        self.icon_margin = icon_margin
+        self.icon_content = icon_content
 
     def _get_control_name(self):
         return "tab"
@@ -57,20 +62,36 @@ class Tab(AdaptiveControl):
         if self.__content:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
+        if self.__icon_content:
+            self.__icon_content._set_attr_internal("n", "icon_content")
+            children.append(self.__icon_content)
         return children
+
+    def before_update(self):
+        super().before_update()
+        self._set_attr_json("iconMargin", self.__icon_margin)
 
     # text
     @property
-    def text(self):
+    def text(self) -> Optional[str]:
         return self._get_attr("text")
 
     @text.setter
     def text(self, value: Optional[str]):
         self._set_attr("text", value)
 
+    # height
+    @property
+    def height(self) -> Optional[float]:
+        return self._get_attr("height", data_type="float")
+
+    @height.setter
+    def height(self, value: OptionalNumber):
+        self._set_attr("height", value)
+
     # icon
     @property
-    def icon(self):
+    def icon(self) -> Optional[str]:
         return self._get_attr("icon")
 
     @icon.setter
@@ -79,7 +100,7 @@ class Tab(AdaptiveControl):
 
     # tab_content
     @property
-    def tab_content(self):
+    def tab_content(self) -> Optional[Control]:
         return self.__tab_content
 
     @tab_content.setter
@@ -88,12 +109,30 @@ class Tab(AdaptiveControl):
 
     # content
     @property
-    def content(self):
+    def content(self) -> Optional[Control]:
         return self.__content
 
     @content.setter
     def content(self, value: Optional[Control]):
         self.__content = value
+
+    # icon_content
+    @property
+    def icon_content(self) -> Optional[Control]:
+        return self.__icon_content
+
+    @icon_content.setter
+    def icon_content(self, value: Optional[Control]):
+        self.__icon_content = value
+
+    # icon_margin
+    @property
+    def icon_margin(self) -> MarginValue:
+        return self.__icon_margin
+
+    @icon_margin.setter
+    def icon_margin(self, value: MarginValue):
+        self.__icon_margin = value
 
 
 class Tabs(ConstrainedControl, AdaptiveControl):
