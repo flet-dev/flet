@@ -3,7 +3,6 @@ import time
 from enum import Enum
 from typing import Any, Optional, Union, List
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.autofill_group import AutofillHint
 from flet_core.control import Control, OptionalNumber
 from flet_core.form_field_control import FormFieldControl, InputBorder
@@ -71,7 +70,7 @@ class TextOnlyInputFilter(InputFilter):
         super().__init__(regex_string=r"^[a-zA-Z]*$", allow=True, replacement_string="")
 
 
-class TextField(FormFieldControl, AdaptiveControl):
+class TextField(FormFieldControl):
     """
     A text field lets the user enter text, either with hardware keyboard or with an onscreen keyboard.
 
@@ -174,7 +173,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
         #
-        # ConstrainedControl and AdaptiveControl
+        # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
@@ -228,6 +227,7 @@ class TextField(FormFieldControl, AdaptiveControl):
             disabled=disabled,
             data=data,
             rtl=rtl,
+            adaptive=adaptive,
             #
             # FormField
             #
@@ -270,8 +270,6 @@ class TextField(FormFieldControl, AdaptiveControl):
             suffix_text=suffix_text,
             suffix_style=suffix_style,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.value = value
         self.text_style = text_style

@@ -1,7 +1,6 @@
 import json
 from typing import Any, Optional, Union, Callable
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -53,7 +52,7 @@ class InteractiveViewerInteractionEndEvent(ControlEvent):
         self.scale_velocity: float = d.get("sv")
 
 
-class InteractiveViewer(ConstrainedControl, AdaptiveControl):
+class InteractiveViewer(ConstrainedControl):
     """
     InteractiveViewer allows users to pan, zoom, and rotate content.
 
@@ -86,7 +85,7 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
             Callable[[InteractiveViewerInteractionEndEvent], None]
         ] = None,
         #
-        # ConstrainedControl and AdaptiveControl
+        # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
@@ -146,9 +145,8 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.__on_interaction_start = EventHandler(
             lambda e: InteractiveViewerInteractionStartEvent(e)

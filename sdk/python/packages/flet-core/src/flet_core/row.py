@@ -1,6 +1,5 @@
 from typing import Any, List, Optional, Union, Sequence
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control
 from flet_core.ref import Ref
@@ -21,7 +20,7 @@ from flet_core.types import (
 from flet_core.utils import deprecated
 
 
-class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
+class Row(ConstrainedControl, ScrollableControl):
     """
     A control that displays its children in a horizontal array.
 
@@ -106,9 +105,6 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         rtl: Optional[bool] = None,
-        #
-        # Adaptive
-        #
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -140,6 +136,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
             disabled=disabled,
             data=data,
             rtl=rtl,
+            adaptive=adaptive,
         )
 
         ScrollableControl.__init__(
@@ -149,8 +146,6 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
             on_scroll_interval=on_scroll_interval,
             on_scroll=on_scroll,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.controls = controls
         self.alignment = alignment

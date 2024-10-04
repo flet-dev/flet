@@ -1,7 +1,6 @@
 from enum import Enum
 from typing import Any, List, Optional, Union, Sequence
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -23,7 +22,7 @@ class StackFit(Enum):
     PASS_THROUGH = "passThrough"
 
 
-class Stack(ConstrainedControl, AdaptiveControl):
+class Stack(ConstrainedControl):
     """
     A control that positions its children on top of each other.
 
@@ -79,7 +78,7 @@ class Stack(ConstrainedControl, AdaptiveControl):
         alignment: Optional[Alignment] = None,
         fit: Optional[StackFit] = None,
         #
-        # ConstrainedControl and AdaptiveControl
+        # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
@@ -137,9 +136,8 @@ class Stack(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.__controls: List[Control] = []
         self.controls = controls

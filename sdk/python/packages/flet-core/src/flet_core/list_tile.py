@@ -1,7 +1,6 @@
 from enum import Enum
 from typing import Any, Optional, Union
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -36,7 +35,7 @@ class ListTileStyle(Enum):
     DRAWER = "drawer"
 
 
-class ListTile(ConstrainedControl, AdaptiveControl):
+class ListTile(ConstrainedControl):
     """
     A single fixed-height row that typically contains some text as well as a leading or trailing icon.
 
@@ -114,7 +113,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         on_click=None,
         on_long_press=None,
         #
-        # ConstrainedControl and AdaptiveControl
+        # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
@@ -174,9 +173,8 @@ class ListTile(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.content_padding = content_padding
         self.leading = leading

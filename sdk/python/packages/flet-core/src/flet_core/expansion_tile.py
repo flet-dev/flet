@@ -1,7 +1,6 @@
 from enum import Enum
 from typing import Any, Optional, Union, Sequence
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
@@ -29,7 +28,7 @@ class TileAffinity(Enum):
     PLATFORM = "platform"
 
 
-class ExpansionTile(ConstrainedControl, AdaptiveControl):
+class ExpansionTile(ConstrainedControl):
     """
     A single-line ListTile with an expansion arrow icon that expands or collapses the tile to reveal or hide its controls.
 
@@ -97,9 +96,6 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # AdaptiveControl
-        #
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -131,9 +127,8 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.controls = controls
         self.controls_padding = controls_padding

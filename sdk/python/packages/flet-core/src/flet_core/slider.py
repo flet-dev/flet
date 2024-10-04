@@ -1,7 +1,6 @@
 from enum import Enum
 from typing import Any, Dict, Optional, Union
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -25,7 +24,7 @@ class SliderInteraction(Enum):
     SLIDE_THUMB = "slideThumb"
 
 
-class Slider(ConstrainedControl, AdaptiveControl):
+class Slider(ConstrainedControl):
     """
     A slider provides a visual indication of adjustable content, as well as the current setting in the total range of content.
 
@@ -73,7 +72,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         on_focus: OptionalControlEventCallable = None,
         on_blur: OptionalControlEventCallable = None,
         #
-        # ConstrainedControl and AdaptiveControl
+        # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
@@ -133,9 +132,8 @@ class Slider(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.value = value
         self.label = label

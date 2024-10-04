@@ -1,6 +1,5 @@
 from typing import Any, List, Optional
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
 from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control, OptionalNumber
@@ -14,7 +13,7 @@ from flet_core.types import (
 )
 
 
-class AlertDialog(AdaptiveControl):
+class AlertDialog(Control):
     """
     An alert dialog informs the user about situations that require acknowledgement. An alert dialog has an optional title and an optional list of actions. The title is displayed above the content and the actions are displayed below the content.
 
@@ -93,7 +92,7 @@ class AlertDialog(AdaptiveControl):
         semantics_label: Optional[str] = None,
         on_dismiss: OptionalControlEventCallable = None,
         #
-        # AdaptiveControl
+        # Control
         #
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
@@ -107,9 +106,8 @@ class AlertDialog(AdaptiveControl):
             disabled=disabled,
             visible=visible,
             data=data,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.open = open
         self.bgcolor = bgcolor

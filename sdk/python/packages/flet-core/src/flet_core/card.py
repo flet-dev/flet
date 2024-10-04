@@ -2,7 +2,6 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core import OutlinedBorder
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -25,7 +24,7 @@ class CardVariant(Enum):
     OUTLINED = "outlined"
 
 
-class Card(ConstrainedControl, AdaptiveControl):
+class Card(ConstrainedControl):
     """
     A material design card: a panel with slightly rounded corners and an elevation shadow.
 
@@ -82,7 +81,7 @@ class Card(ConstrainedControl, AdaptiveControl):
         show_border_on_foreground: Optional[bool] = None,
         variant: Optional[CardVariant] = None,
         #
-        # ConstrainedControl and AdaptiveControl
+        # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
@@ -142,9 +141,8 @@ class Card(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.content = content
         self.margin = margin

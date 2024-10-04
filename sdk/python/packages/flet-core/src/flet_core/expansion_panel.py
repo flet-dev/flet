@@ -1,6 +1,5 @@
 from typing import Any, Optional, Sequence, Union
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -15,7 +14,7 @@ from flet_core.types import (
 )
 
 
-class ExpansionPanel(ConstrainedControl, AdaptiveControl):
+class ExpansionPanel(ConstrainedControl):
     """
     A material expansion panel. It can either be expanded or collapsed. Its body is only visible when it is expanded.
 
@@ -60,9 +59,6 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # Adaptive
-        #
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -93,9 +89,8 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.header = header
         self.content = content

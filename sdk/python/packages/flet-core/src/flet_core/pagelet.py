@@ -1,6 +1,5 @@
 from typing import Any, Optional, Union
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.app_bar import AppBar
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.constrained_control import ConstrainedControl
@@ -24,7 +23,7 @@ from flet_core.types import (
 from flet_core.utils import deprecated
 
 
-class Pagelet(ConstrainedControl, AdaptiveControl):
+class Pagelet(ConstrainedControl):
     """
         Pagelet implements the basic Material Design visual layout structure.
 
@@ -96,9 +95,6 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         key: Optional[str] = None,
-        #
-        # AdaptiveControl
-        #
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -130,9 +126,8 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.content = content
         self.appbar = appbar

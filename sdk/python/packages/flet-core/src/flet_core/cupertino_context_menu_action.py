@@ -1,12 +1,11 @@
 from typing import Any, Optional
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import OptionalControlEventCallable
 
 
-class CupertinoContextMenuAction(AdaptiveControl):
+class CupertinoContextMenuAction(Control):
     """
     An action that can be added to a CupertinoContextMenu.
 
@@ -38,9 +37,8 @@ class CupertinoContextMenuAction(AdaptiveControl):
             disabled=disabled,
             visible=visible,
             data=data,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.is_default_action = is_default_action
         self.is_destructive_action = is_destructive_action
