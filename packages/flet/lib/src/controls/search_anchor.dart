@@ -7,7 +7,9 @@ import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/box.dart';
 import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/form_field.dart';
+import '../utils/numbers.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 
@@ -53,7 +55,7 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
     });
     widget.backend.triggerControlEvent(
         widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
-    }
+  }
 
   @override
   void dispose() {
@@ -207,6 +209,19 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
             autoFocus: widget.control.attrBool("autoFocus", false)!,
             focusNode: _focusNode,
             hintText: widget.control.attrString("barHintText"),
+            elevation: parseWidgetStateDouble(widget.control, "barElevation"),
+            shape: parseWidgetStateOutlinedBorder(widget.control, "barShape"),
+            padding: parseWidgetStateEdgeInsets(widget.control, "barPadding"),
+            textStyle: parseWidgetStateTextStyle(
+                Theme.of(context), widget.control, "barTextStyle"),
+            hintStyle: parseWidgetStateTextStyle(
+                Theme.of(context), widget.control, "barHintTextStyle"),
+            shadowColor: parseWidgetStateColor(
+                Theme.of(context), widget.control, "barShadowColor"),
+            surfaceTintColor: parseWidgetStateColor(
+                Theme.of(context), widget.control, "barSurfaceTintColor"),
+            side: parseWidgetStateBorderSide(
+                Theme.of(context), widget.control, "barBorderSide"),
             backgroundColor: parseWidgetStateColor(
                 Theme.of(context), widget.control, "barBgcolor"),
             overlayColor: parseWidgetStateColor(
@@ -222,11 +237,18 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
                         parentAdaptive: widget.parentAdaptive);
                   })
                 : null,
-            onTap: () {
-              if (onTap) {
-                widget.backend.triggerControlEvent(widget.control.id, "tap");
-              }
-            },
+            onTap: onTap
+                ? () {
+                    widget.backend
+                        .triggerControlEvent(widget.control.id, "tap");
+                  }
+                : null,
+            onTapOutside: widget.control.attrBool("onTapOutsideBar", false)!
+                ? (PointerDownEvent? event) {
+                    widget.backend.triggerControlEvent(
+                        widget.control.id, "tapOutsideBar");
+                  }
+                : null,
             onSubmitted: onSubmit
                 ? (String value) {
                     debugPrint("SearchBar.onSubmit: $value");
