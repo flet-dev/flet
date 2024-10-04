@@ -1,5 +1,6 @@
-from typing import List, Optional, Union, Sequence
+from typing import List, Optional, Union, Sequence, Any
 
+from flet_core.ref import Ref
 from flet_core.app_bar import AppBar
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.box import BoxDecoration
@@ -61,9 +62,18 @@ class View(ScrollableControl):
         fullscreen_dialog: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
         on_scroll: OptionalEventCallable[OnScrollEvent] = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        data: Any = None,
+        visible: Optional[bool] = None,
+        rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
     ):
-        Control.__init__(self, adaptive=adaptive)
+        Control.__init__(
+            self, adaptive=adaptive, data=data, ref=ref, rtl=rtl, visible=visible
+        )
 
         ScrollableControl.__init__(
             self,

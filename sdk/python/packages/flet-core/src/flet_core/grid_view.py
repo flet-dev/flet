@@ -106,6 +106,7 @@ class GridView(ConstrainedControl, ScrollableControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
         #
         # ScrollableControl
@@ -143,6 +144,7 @@ class GridView(ConstrainedControl, ScrollableControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
             adaptive=adaptive,
         )
 

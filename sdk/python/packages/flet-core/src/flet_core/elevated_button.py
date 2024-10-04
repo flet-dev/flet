@@ -62,7 +62,7 @@ class ElevatedButton(ConstrainedControl):
         on_focus: OptionalControlEventCallable = None,
         on_blur: OptionalControlEventCallable = None,
         #
-        # ConstrainedControl and AdaptiveControl
+        # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
@@ -91,6 +91,7 @@ class ElevatedButton(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -122,6 +123,7 @@ class ElevatedButton(ConstrainedControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
             adaptive=adaptive,
         )
 

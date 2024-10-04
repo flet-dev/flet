@@ -26,8 +26,21 @@ class NavigationDrawerDestination(Control):
         # Control
         #
         ref: Optional[Ref] = None,
+        rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
     ):
-        Control.__init__(self, ref=ref)
+        Control.__init__(
+            self,
+            ref=ref,
+            rtl=rtl,
+            adaptive=adaptive,
+            data=data,
+            visible=visible,
+            disabled=disabled,
+        )
         self.label = label
         self.bgcolor = bgcolor
         self.icon = icon
@@ -190,6 +203,7 @@ class NavigationDrawer(Control):
         visible: Optional[bool] = None,
         data: Any = None,
         rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
     ):
         Control.__init__(
             self,
@@ -198,6 +212,7 @@ class NavigationDrawer(Control):
             disabled=disabled,
             data=data,
             rtl=rtl,
+            adaptive=adaptive,
         )
 
         self.open = open

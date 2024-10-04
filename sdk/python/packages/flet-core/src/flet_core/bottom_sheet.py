@@ -63,6 +63,8 @@ class BottomSheet(Control):
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
     ):
         Control.__init__(
             self,
@@ -70,6 +72,8 @@ class BottomSheet(Control):
             disabled=disabled,
             visible=visible,
             data=data,
+            rtl=rtl,
+            adaptive=adaptive,
         )
 
         self.open = open

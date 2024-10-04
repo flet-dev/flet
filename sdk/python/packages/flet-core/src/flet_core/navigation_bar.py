@@ -48,8 +48,18 @@ class NavigationBarDestination(Control):
         tooltip: TooltipValue = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
     ):
-        Control.__init__(self, ref=ref, tooltip=tooltip, disabled=disabled, data=data)
+        Control.__init__(
+            self,
+            ref=ref,
+            tooltip=tooltip,
+            disabled=disabled,
+            data=data,
+            rtl=rtl,
+            adaptive=adaptive,
+        )
         self.label = label
         self.icon = icon
         self.icon_content = icon_content

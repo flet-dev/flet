@@ -91,11 +91,13 @@ class Image(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-            on_animation_end: OptionalControlEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -126,6 +128,8 @@ class Image(ConstrainedControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
+            adaptive=adaptive,
         )
 
         self.src = src

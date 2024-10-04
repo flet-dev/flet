@@ -102,6 +102,7 @@ class Slider(ConstrainedControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         adaptive: Optional[bool] = None,
+        rtl: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -132,6 +133,7 @@ class Slider(ConstrainedControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
             adaptive=adaptive,
         )
 

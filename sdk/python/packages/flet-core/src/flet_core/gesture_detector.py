@@ -134,6 +134,7 @@ class GestureDetector(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -164,6 +165,7 @@ class GestureDetector(ConstrainedControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
             adaptive=adaptive,
         )
 

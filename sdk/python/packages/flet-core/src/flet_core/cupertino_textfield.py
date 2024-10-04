@@ -133,6 +133,7 @@ class CupertinoTextField(TextField):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        adaptive: Optional[bool] = None,
     ):
         TextField.__init__(
             self,
@@ -159,6 +160,7 @@ class CupertinoTextField(TextField):
             visible=visible,
             disabled=disabled,
             data=data,
+            adaptive=adaptive,
             #
             # FormField
             #

@@ -115,7 +115,9 @@ class _NavigationRailControlState extends State<NavigationRailControl>
                   : null,
               selectedIndex: _selectedIndex,
               onDestinationSelected: _destinationChanged,
-              destinations: viewModel.controlViews.map((destView) {
+              destinations: viewModel.controlViews
+                  .where((c) => c.control.isVisible)
+                  .map((destView) {
                 var label = destView.control.attrString("label", "")!;
                 var labelContentCtrls = destView.children
                     .where((c) => c.name == "label_content" && c.isVisible);

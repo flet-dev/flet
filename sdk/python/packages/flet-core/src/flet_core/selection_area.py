@@ -38,11 +38,12 @@ class SelectionArea(Control):
         #
         ref: Optional[Ref] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
+        disabled: Optional[bool] = None,
     ):
         Control.__init__(
-            self,
-            ref=ref,
-            data=data,
+            self, ref=ref, data=data, rtl=rtl, adaptive=adaptive, disabled=disabled
         )
 
         self.content = content

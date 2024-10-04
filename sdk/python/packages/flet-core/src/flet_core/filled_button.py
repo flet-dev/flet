@@ -36,7 +36,6 @@ class FilledButton(ElevatedButton):
     def __init__(
         self,
         text: Optional[str] = None,
-        adaptive: Optional[bool] = None,
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
         style: Optional[ButtonStyle] = None,
@@ -48,7 +47,7 @@ class FilledButton(ElevatedButton):
         on_long_press=None,
         on_hover=None,
         #
-        # Control and AdaptiveControl
+        # Control
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
@@ -62,6 +61,8 @@ class FilledButton(ElevatedButton):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
     ):
         ElevatedButton.__init__(
             self,
@@ -77,6 +78,8 @@ class FilledButton(ElevatedButton):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
+            adaptive=adaptive,
             #
             # Specific
             #
@@ -94,5 +97,4 @@ class FilledButton(ElevatedButton):
             on_click=on_click,
             on_long_press=on_long_press,
             on_hover=on_hover,
-            adaptive=adaptive,
         )

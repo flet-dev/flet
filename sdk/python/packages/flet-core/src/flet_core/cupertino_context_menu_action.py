@@ -29,6 +29,7 @@ class CupertinoContextMenuAction(Control):
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
         adaptive: Optional[bool] = False,
     ):
         Control.__init__(
@@ -37,6 +38,7 @@ class CupertinoContextMenuAction(Control):
             disabled=disabled,
             visible=visible,
             data=data,
+            rtl=rtl,
             adaptive=adaptive,
         )
 

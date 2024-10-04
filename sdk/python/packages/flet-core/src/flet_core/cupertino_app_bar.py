@@ -54,9 +54,16 @@ class CupertinoAppBar(Control):
         disabled: Optional[bool] = None,
         data: Any = None,
         rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
     ):
         Control.__init__(
-            self, ref=ref, visible=visible, disabled=disabled, data=data, rtl=rtl
+            self,
+            ref=ref,
+            visible=visible,
+            disabled=disabled,
+            data=data,
+            rtl=rtl,
+            adaptive=adaptive,
         )
 
         self.leading = leading

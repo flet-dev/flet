@@ -118,6 +118,8 @@ class DragTarget(Control):
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
     ):
 
         Control.__init__(
@@ -126,6 +128,8 @@ class DragTarget(Control):
             disabled=disabled,
             visible=visible,
             data=data,
+            rtl=rtl,
+            adaptive=adaptive,
         )
 
         self.__on_accept = EventHandler(lambda e: DragTargetEvent(e))

@@ -32,10 +32,21 @@ class Tab(Control):
         # Control
         #
         ref: Optional[Ref] = None,
+            data: Any = None,
+            disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
+            rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
     ):
-        Control.__init__(self, ref=ref, visible=visible, adaptive=adaptive)
+        Control.__init__(
+            self,
+            ref=ref,
+            visible=visible,
+            adaptive=adaptive,
+            rtl=rtl,
+            disabled=disabled,
+            data=data,
+        )
 
         self.text = text
         self.icon = icon
@@ -198,6 +209,7 @@ class Tabs(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+            rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -228,6 +240,7 @@ class Tabs(ConstrainedControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
             adaptive=adaptive,
         )
 

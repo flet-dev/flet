@@ -56,7 +56,6 @@ class ResponsiveRow(ConstrainedControl):
         vertical_alignment: Optional[CrossAxisAlignment] = None,
         spacing: Optional[ResponsiveNumber] = None,
         run_spacing: Optional[ResponsiveNumber] = None,
-        rtl: Optional[bool] = None,
         #
         # ConstrainedControl
         #
@@ -86,9 +85,7 @@ class ResponsiveRow(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # AdaptiveControl
-        #
+        rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(

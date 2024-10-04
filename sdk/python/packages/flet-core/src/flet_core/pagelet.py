@@ -95,6 +95,7 @@ class Pagelet(ConstrainedControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         key: Optional[str] = None,
+        rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -126,6 +127,7 @@ class Pagelet(ConstrainedControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
             adaptive=adaptive,
         )
 
