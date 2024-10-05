@@ -319,6 +319,7 @@ from flet_core.text_style import (
     TextDecoration,
     TextDecorationStyle,
     TextStyle,
+    StrutStyle,
     TextOverflow,
     TextThemeStyle,
     TextBaseline,

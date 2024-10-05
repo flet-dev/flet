@@ -5,7 +5,11 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/autofill.dart';
 import '../utils/borders.dart';
+import '../utils/edge_insets.dart';
 import '../utils/form_field.dart';
+import '../utils/mouse.dart';
+import '../utils/others.dart';
+import '../utils/overlay_style.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
 import 'create_control.dart';
@@ -127,6 +131,10 @@ class _TextFieldControlState extends State<TextFieldControl>
           widget.children.where((c) => c.name == "suffix" && c.isVisible);
       var counterControls =
           widget.children.where((c) => c.name == "counter" && c.isVisible);
+      var errorCtrl =
+          widget.children.where((c) => c.name == "error" && c.isVisible);
+      var helperCtrl =
+          widget.children.where((c) => c.name == "helper" && c.isVisible);
 
       bool shiftEnter = widget.control.attrBool("shiftEnter", false)!;
       bool multiline =
@@ -134,19 +142,12 @@ class _TextFieldControlState extends State<TextFieldControl>
       int minLines = widget.control.attrInt("minLines", 1)!;
       int? maxLines = widget.control.attrInt("maxLines", multiline ? null : 1);
 
-      bool readOnly = widget.control.attrBool("readOnly", false)!;
       bool password = widget.control.attrBool("password", false)!;
       bool canRevealPassword =
           widget.control.attrBool("canRevealPassword", false)!;
-      bool onChange = widget.control.attrBool("onChange", false)!;
-
       var cursorColor = widget.control.attrColor("cursorColor", context);
       var selectionColor = widget.control.attrColor("selectionColor", context);
-
-      int? maxLength = widget.control.attrInt("maxLength");
-
       var textSize = widget.control.attrDouble("textSize");
-
       var color = widget.control.attrColor("color", context);
       var focusedColor = widget.control.attrColor("focusedColor", context);
 
@@ -187,22 +188,8 @@ class _TextFieldControlState extends State<TextFieldControl>
             });
       }
 
-      TextInputType keyboardType = multiline
-          ? TextInputType.multiline
-          : parseTextInputType(
-              widget.control.attrString("keyboardType"), TextInputType.text)!;
-
-      TextAlign textAlign = parseTextAlign(
-          widget.control.attrString("textAlign"), TextAlign.start)!;
-
       double? textVerticalAlign =
           widget.control.attrDouble("textVerticalAlign");
-
-      bool autocorrect = widget.control.attrBool("autocorrect", true)!;
-      bool enableSuggestions =
-          widget.control.attrBool("enableSuggestions", true)!;
-      bool smartDashesType = widget.control.attrBool("smartDashesType", true)!;
-      bool smartQuotesType = widget.control.attrBool("smartQuotesType", true)!;
 
       FocusNode focusNode = shiftEnter ? _shiftEnterfocusNode : _focusNode;
 
@@ -211,6 +198,7 @@ class _TextFieldControlState extends State<TextFieldControl>
         _lastFocusValue = focusValue;
         focusNode.requestFocus();
       }
+      var expand = widget.control.attrBool("expand", false)!;
 
       Widget textField = TextFormField(
           style: textStyle,
@@ -227,6 +215,8 @@ class _TextFieldControlState extends State<TextFieldControl>
               suffix: suffixControls.isNotEmpty ? suffixControls.first : null,
               counter:
                   counterControls.isNotEmpty ? counterControls.first : null,
+              error: errorCtrl.isNotEmpty ? errorCtrl.first : null,
+              helper: helperCtrl.isNotEmpty ? helperCtrl.first : null,
               customSuffix: revealPasswordIcon,
               focused: _focused,
               disabled: disabled,
@@ -238,31 +228,64 @@ class _TextFieldControlState extends State<TextFieldControl>
           cursorHeight: widget.control.attrDouble("cursorHeight"),
           cursorWidth: widget.control.attrDouble("cursorWidth", 2.0)!,
           cursorRadius: parseRadius(widget.control, "cursorRadius"),
-          keyboardType: keyboardType,
-          autocorrect: autocorrect,
-          enableSuggestions: enableSuggestions,
-          smartDashesType: smartDashesType
+          keyboardType: multiline
+              ? TextInputType.multiline
+              : parseTextInputType(widget.control.attrString("keyboardType"),
+                  TextInputType.text)!,
+          autocorrect: widget.control.attrBool("autocorrect", true)!,
+          enableSuggestions:
+              widget.control.attrBool("enableSuggestions", true)!,
+          smartDashesType: widget.control.attrBool("smartDashesType", true)!
               ? SmartDashesType.enabled
               : SmartDashesType.disabled,
-          smartQuotesType: smartQuotesType
+          smartQuotesType: widget.control.attrBool("smartQuotesType", true)!
               ? SmartQuotesType.enabled
               : SmartQuotesType.disabled,
-          textAlign: textAlign,
-          minLines: minLines,
-          maxLines: maxLines,
-          maxLength: maxLength,
-          readOnly: readOnly,
+          textAlign: parseTextAlign(
+              widget.control.attrString("textAlign"), TextAlign.start)!,
+          minLines: expand ? null : minLines,
+          maxLines: expand ? null : maxLines,
+          maxLength: widget.control.attrInt("maxLength"),
+          readOnly: widget.control.attrBool("readOnly", false)!,
           inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
           obscureText: password && !_revealPassword,
           controller: _controller,
           focusNode: focusNode,
           autofillHints: parseAutofillHints(widget.control, "autofillHints"),
+          expands: expand,
+          enableInteractiveSelection:
+              widget.control.attrBool("enableInteractiveSelection"),
+          canRequestFocus: widget.control.attrBool("canRequestFocus", true)!,
+          clipBehavior: parseClip(
+              widget.control.attrString("clipBehavior"), Clip.hardEdge)!,
+          cursorColor: cursorColor,
+          ignorePointers: widget.control.attrBool("ignorePointers"),
+          cursorErrorColor:
+              widget.control.attrColor("cursorErrorColor", context),
+          scribbleEnabled: widget.control.attrBool("enableScribble", true)!,
+          scrollPadding: parseEdgeInsets(
+              widget.control, "scrollPadding", const EdgeInsets.all(20.0))!,
+          keyboardAppearance:
+              parseBrightness(widget.control.attrString("keyboardBrightness")),
+          enableIMEPersonalizedLearning:
+              widget.control.attrBool("enableIMEPersonalizedLearning", true)!,
+          obscuringCharacter:
+              widget.control.attrString("obscuringCharacter", '•')!,
+          mouseCursor:
+              parseMouseCursor(widget.control.attrString("mouseCursor")),
+          cursorOpacityAnimates: widget.control.attrBool("animateCursorOpacity",
+              Theme.of(context).platform == TargetPlatform.iOS)!,
+          onTapAlwaysCalled:
+              widget.control.attrBool("animateCursorOpacity", false)!,
+          strutStyle: parseStrutStyle(widget.control, "strutStyle"),
+          onTap: () {
+            widget.backend.triggerControlEvent(widget.control.id, "click");
+          },
           onChanged: (String value) {
-            //debugPrint(value);
             _value = value;
             widget.backend
                 .updateControlState(widget.control.id, {"value": value});
-            if (onChange) {
+            if (widget.control.attrBool("onChange", false)!) {
               widget.backend
                   .triggerControlEvent(widget.control.id, "change", value);
             }
@@ -367,7 +390,8 @@ class CustomNumberFormatter extends TextInputFormatter {
   CustomNumberFormatter(this.pattern);
 
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
     final regExp = RegExp(pattern);
     if (regExp.hasMatch(newValue.text)) {
       return newValue;

@@ -6,13 +6,15 @@ from typing import Any, Optional, Union, List
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.animation import AnimationValue
 from flet_core.autofill_group import AutofillHint
+from flet_core.box import BoxConstraints
 from flet_core.control import Control, OptionalNumber
 from flet_core.form_field_control import FormFieldControl, InputBorder
 from flet_core.ref import Ref
-from flet_core.text_style import TextStyle
+from flet_core.text_style import TextStyle, StrutStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     BorderRadiusValue,
+    ClipBehavior,
     OffsetValue,
     PaddingValue,
     ResponsiveNumber,
@@ -21,6 +23,9 @@ from flet_core.types import (
     TextAlign,
     VerticalAlignment,
     OptionalControlEventCallable,
+    DurationValue,
+    Brightness,
+    MouseCursor,
 )
 from flet_core.utils import deprecated
 
@@ -122,13 +127,28 @@ class TextField(FormFieldControl, AdaptiveControl):
         smart_quotes_type: Optional[bool] = None,
         show_cursor: Optional[bool] = None,
         cursor_color: Optional[str] = None,
+        cursor_error_color: Optional[str] = None,
         cursor_width: OptionalNumber = None,
         cursor_height: OptionalNumber = None,
         cursor_radius: OptionalNumber = None,
         selection_color: Optional[str] = None,
         input_filter: Optional[InputFilter] = None,
+        obscuring_character: Optional[str] = None,
+        enable_interactive_selection: Optional[bool] = None,
+        enable_ime_personalized_learning: Optional[bool] = None,
+        can_request_focus: Optional[bool] = None,
+        ignore_pointers: Optional[bool] = None,
+        enable_scribble: Optional[bool] = None,
+        animate_cursor_opacity: Optional[bool] = None,
+        always_call_on_tap: Optional[bool] = None,
+        scroll_padding: PaddingValue = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        keyboard_brightness: Optional[Brightness] = None,
+        mouse_cursor: Optional[MouseCursor] = None,
+        strut_style: Optional[StrutStyle] = None,
         autofill_hints: Union[None, AutofillHint, List[AutofillHint]] = None,
         on_change: OptionalControlEventCallable = None,
+        on_click: OptionalControlEventCallable = None,
         on_submit: OptionalControlEventCallable = None,
         on_focus: OptionalControlEventCallable = None,
         on_blur: OptionalControlEventCallable = None,
@@ -158,11 +178,13 @@ class TextField(FormFieldControl, AdaptiveControl):
         hover_color: Optional[str] = None,
         hint_text: Optional[str] = None,
         hint_style: Optional[TextStyle] = None,
+        helper: Optional[Control] = None,
         helper_text: Optional[str] = None,
         helper_style: Optional[TextStyle] = None,
         counter: Optional[Control] = None,
         counter_text: Optional[str] = None,
         counter_style: Optional[TextStyle] = None,
+        error: Optional[Control] = None,
         error_text: Optional[str] = None,
         error_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
@@ -173,6 +195,16 @@ class TextField(FormFieldControl, AdaptiveControl):
         suffix_icon: Optional[str] = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
+        focus_color: Optional[str] = None,
+        align_label_with_hint: Optional[bool] = None,
+        hint_fade_duration: DurationValue = None,
+        hint_max_lines: Optional[int] = None,
+        helper_max_lines: Optional[int] = None,
+        error_max_lines: Optional[int] = None,
+        prefix_icon_color: Optional[str] = None,
+        prefix_icon_size_constraints: Optional[BoxConstraints] = None,
+        suffix_icon_color: Optional[str] = None,
+        suffix_icon_size_constraints: Optional[BoxConstraints] = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -254,11 +286,13 @@ class TextField(FormFieldControl, AdaptiveControl):
             hover_color=hover_color,
             hint_text=hint_text,
             hint_style=hint_style,
+            helper=helper,
             helper_text=helper_text,
             helper_style=helper_style,
             counter=counter,
             counter_text=counter_text,
             counter_style=counter_style,
+            error=error,
             error_text=error_text,
             error_style=error_style,
             prefix=prefix,
@@ -269,6 +303,16 @@ class TextField(FormFieldControl, AdaptiveControl):
             suffix_icon=suffix_icon,
             suffix_text=suffix_text,
             suffix_style=suffix_style,
+            focus_color=focus_color,
+            align_label_with_hint=align_label_with_hint,
+            hint_fade_duration=hint_fade_duration,
+            hint_max_lines=hint_max_lines,
+            helper_max_lines=helper_max_lines,
+            error_max_lines=error_max_lines,
+            prefix_icon_color=prefix_icon_color,
+            prefix_icon_size_constraints=prefix_icon_size_constraints,
+            suffix_icon_color=suffix_icon_color,
+            suffix_icon_size_constraints=suffix_icon_size_constraints,
         )
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
@@ -303,6 +347,21 @@ class TextField(FormFieldControl, AdaptiveControl):
         self.on_submit = on_submit
         self.on_focus = on_focus
         self.on_blur = on_blur
+        self.on_click = on_click
+        self.obscuring_character = obscuring_character
+        self.enable_scribble = enable_scribble
+        self.strut_style = strut_style
+        self.scroll_padding = scroll_padding
+        self.cursor_error_color = cursor_error_color
+        self.keyboard_brightness = keyboard_brightness
+        self.mouse_cursor = mouse_cursor
+        self.enable_interactive_selection = enable_interactive_selection
+        self.enable_ime_personalized_learning = enable_ime_personalized_learning
+        self.can_request_focus = can_request_focus
+        self.ignore_pointers = ignore_pointers
+        self.animate_cursor_opacity = animate_cursor_opacity
+        self.always_call_on_tap = always_call_on_tap
+        self.clip_behavior = clip_behavior
 
     def _get_control_name(self):
         return "textfield"
@@ -316,6 +375,8 @@ class TextField(FormFieldControl, AdaptiveControl):
         ), "min_lines can't be greater than max_lines"
         self._set_attr_json("inputFilter", self.__input_filter)
         self._set_attr_json("autofillHints", self.__autofill_hints)
+        self._set_attr_json("scrollPadding", self.__scroll_padding)
+        self._set_attr_json("strutStyle", self.__strut_style)
         if (
             (
                 self.bgcolor is not None
@@ -346,6 +407,55 @@ class TextField(FormFieldControl, AdaptiveControl):
     @value.setter
     def value(self, value: Optional[str]):
         self._set_attr("value", value)
+
+    # strut_style
+    @property
+    def strut_style(self) -> Optional[TextStyle]:
+        return self.__strut_style
+
+    @strut_style.setter
+    def strut_style(self, value: Optional[TextStyle]):
+        self.__strut_style = value
+
+    # cursor_error_color
+    @property
+    def cursor_error_color(self) -> Optional[str]:
+        return self._get_attr("cursorErrorColor")
+
+    @cursor_error_color.setter
+    def cursor_error_color(self, value: Optional[str]):
+        self._set_attr("cursorErrorColor", value)
+
+    # enable_interactive_selection
+    @property
+    def enable_interactive_selection(self) -> bool:
+        return self._get_attr(
+            "enableInteractiveSelection", data_type="bool", def_value=True
+        )
+
+    @enable_interactive_selection.setter
+    def enable_interactive_selection(self, value: Optional[bool]):
+        self._set_attr("enableInteractiveSelection", value)
+
+    # enable_ime_personalized_learning
+    @property
+    def enable_ime_personalized_learning(self) -> bool:
+        return self._get_attr(
+            "enableIMEPersonalizedLearning", data_type="bool", def_value=True
+        )
+
+    @enable_ime_personalized_learning.setter
+    def enable_ime_personalized_learning(self, value: Optional[bool]):
+        self._set_attr("enableIMEPersonalizedLearning", value)
+
+    # animate_cursor_opacity
+    @property
+    def animate_cursor_opacity(self) -> Optional[bool]:
+        return self._get_attr("animateCursorOpacity", data_type="bool")
+
+    @animate_cursor_opacity.setter
+    def animate_cursor_opacity(self, value: Optional[bool]):
+        self._set_attr("animateCursorOpacity", value)
 
     # keyboard_type
     @property
@@ -407,6 +517,90 @@ class TextField(FormFieldControl, AdaptiveControl):
             value is None or value == -1 or value > 0
         ), "max_length must be either equal to -1 or greater than 0"
         self._set_attr("maxLength", value)
+
+    # obscuring_character
+    @property
+    def obscuring_character(self) -> Optional[str]:
+        return self._get_attr("obscuringCharacter", def_value="•")
+
+    @obscuring_character.setter
+    def obscuring_character(self, value: Optional[str]):
+        self._set_attr("obscuringCharacter", value)
+
+    # enable_scribble
+    @property
+    def enable_scribble(self) -> bool:
+        return self._get_attr("enableScribble", data_type="bool", def_value=True)
+
+    @enable_scribble.setter
+    def enable_scribble(self, value: Optional[bool]):
+        self._set_attr("enableScribble", value)
+
+    # scroll_padding
+    @property
+    def scroll_padding(self) -> PaddingValue:
+        return self.__scroll_padding
+
+    @scroll_padding.setter
+    def scroll_padding(self, value: PaddingValue):
+        self.__scroll_padding = value
+
+    # keyboard_brightness
+    @property
+    def keyboard_brightness(self) -> Optional[Brightness]:
+        return self.__keyboard_brightness
+
+    @keyboard_brightness.setter
+    def keyboard_brightness(self, value: Optional[Brightness]):
+        self.__keyboard_brightness = value
+        self._set_enum_attr("keyboardBrightness", value, Brightness)
+
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self.__mouse_cursor
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
+
+    # ignore_pointers
+    @property
+    def ignore_pointers(self) -> bool:
+        return self._get_attr("ignorePointers", data_type="bool", def_value=False)
+
+    @ignore_pointers.setter
+    def ignore_pointers(self, value: Optional[bool]):
+        self._set_attr("ignorePointers", value)
+
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self.__clip_behavior
+
+    @clip_behavior.setter
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self.__clip_behavior = value
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+
+    # can_request_focus
+    @property
+    def can_request_focus(self) -> bool:
+        return self._get_attr("canRequestFocus", data_type="bool", def_value=True)
+
+    @can_request_focus.setter
+    def can_request_focus(self, value: Optional[bool]):
+        self._set_attr("canRequestFocus", value)
+
+    # always_call_on_tap
+    @property
+    def always_call_on_tap(self) -> bool:
+        return self._get_attr("alwaysCallOnTap", data_type="bool", def_value=False)
+
+    @always_call_on_tap.setter
+    def always_call_on_tap(self, value: Optional[bool]):
+        self._set_attr("alwaysCallOnTap", value)
 
     # read_only
     @property
@@ -617,3 +811,12 @@ class TextField(FormFieldControl, AdaptiveControl):
     @on_blur.setter
     def on_blur(self, handler: OptionalControlEventCallable):
         self._add_event_handler("blur", handler)
+
+    # on_click
+    @property
+    def on_click(self):
+        return self._get_event_handler("click")
+
+    @on_click.setter
+    def on_click(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("click", handler)

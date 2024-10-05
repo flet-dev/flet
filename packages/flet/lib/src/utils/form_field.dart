@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,9 +7,12 @@ import 'package:flutter/material.dart';
 import '../controls/create_control.dart';
 import '../models/control.dart';
 import 'borders.dart';
+import 'box.dart';
 import 'edge_insets.dart';
 import 'icons.dart';
+import 'numbers.dart';
 import 'text.dart';
+import 'time.dart';
 
 enum FormFieldInputBorder { outline, underline, none }
 
@@ -50,12 +55,12 @@ TextInputType? parseTextInputType(String? value, [TextInputType? defValue]) {
   }
 }
 
-InputDecoration buildInputDecoration(
-    BuildContext context,
-    Control control,
+InputDecoration buildInputDecoration(BuildContext context, Control control,
     {Control? prefix,
     Control? suffix,
     Control? counter,
+    Control? error,
+    Control? helper,
     Widget? customSuffix,
     bool focused = false,
     bool disabled = false,
@@ -146,12 +151,31 @@ InputDecoration buildInputDecoration(
           ? createControl(control, counter.id, control.isDisabled,
               parentAdaptive: adaptive)
           : null,
-      errorText: control.attrString("errorText") != ""
-          ? control.attrString("errorText")
+      error: error != null
+          ? createControl(control, error.id, control.isDisabled,
+              parentAdaptive: adaptive)
           : null,
+      helper: helper != null
+          ? createControl(control, helper.id, control.isDisabled,
+              parentAdaptive: adaptive)
+          : null,
+      prefixIconColor: control.attrColor("prefixIconColor", context),
+      suffixIconColor: control.attrColor("suffixIconColor", context),
+      prefixIconConstraints:
+          parseBoxConstraints(control, "prefixIconConstraints"),
+      suffixIconConstraints:
+          parseBoxConstraints(control, "suffixIconConstraints"),
+      focusColor: control.attrColor("focusColor", context),
+      errorMaxLines: control.attrInt("errorMaxLines"),
+      alignLabelWithHint: control.attrBool("alignLabelWithHint"),
+      errorText: control.attrString("errorText"),
       errorStyle: parseTextStyle(Theme.of(context), control, "errorStyle"),
       prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
-      prefixText: prefixText,
+      prefixText:
+          prefix == null ? prefixText : null, // ignored if prefix is set
+      hintFadeDuration: parseDuration(control, "hintFadeDuration"),
+      hintMaxLines: control.attrInt("hintMaxLines"),
+      helperMaxLines: control.attrInt("helperMaxLines"),
       prefixStyle: parseTextStyle(Theme.of(context), control, "prefixStyle"),
       prefix: prefix != null
           ? createControl(control, prefix.id, control.isDisabled,
@@ -162,12 +186,14 @@ InputDecoration buildInputDecoration(
               parentAdaptive: adaptive)
           : null,
       suffixIcon: suffixIcon != null ? Icon(suffixIcon) : customSuffix,
-      suffixText: suffixText,
+      suffixText:
+          suffix == null ? suffixText : null, // ignored if suffix is set
       suffixStyle: parseTextStyle(Theme.of(context), control, "suffixStyle"));
 }
 
-OverlayVisibilityMode parseVisibilityMode(String type) {
-  switch (type.toLowerCase()) {
+OverlayVisibilityMode? parseVisibilityMode(String? type,
+    [OverlayVisibilityMode? defValue]) {
+  switch (type?.toLowerCase()) {
     case "never":
       return OverlayVisibilityMode.never;
     case "notediting":
@@ -177,5 +203,31 @@ OverlayVisibilityMode parseVisibilityMode(String type) {
     case "always":
       return OverlayVisibilityMode.always;
   }
-  return OverlayVisibilityMode.always;
+  return defValue;
+}
+
+StrutStyle? parseStrutStyle(Control control, String propName) {
+  dynamic j;
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+  j = json.decode(v);
+  return strutStyleFromJson(j);
+}
+
+StrutStyle? strutStyleFromJson(Map<String, dynamic>? json) {
+  if (json == null) {
+    return null;
+  }
+
+  return StrutStyle(
+    fontSize: parseDouble(json["size"]),
+    fontWeight: getFontWeight(json["weight"]),
+    fontStyle: parseBool(json["italic"], false)! ? FontStyle.italic : null,
+    fontFamily: json["font_family"],
+    height: parseDouble(json["height"]),
+    leading: parseDouble(json["leading"]),
+    forceStrutHeight: parseBool(json["force_strut_height"]),
+  );
 }
