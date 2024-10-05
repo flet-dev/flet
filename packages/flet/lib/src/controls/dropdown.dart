@@ -147,8 +147,12 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
 
       var prefixControls = itemsView.controlViews
           .where((c) => c.control.name == "prefix" && c.control.isVisible);
+      var prefixIconControls = itemsView.controlViews
+          .where((c) => c.control.name == "prefix_icon" && c.control.isVisible);
       var suffixControls = itemsView.controlViews
           .where((c) => c.control.name == "suffix" && c.control.isVisible);
+      var suffixIconControls = itemsView.controlViews
+          .where((c) => c.control.name == "suffix_icon" && c.control.isVisible);
       var counterControls = itemsView.controlViews
           .where((c) => c.control.name == "counter" && c.control.isVisible);
       var errorCtrl = itemsView.controlViews
@@ -193,8 +197,14 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         decoration: buildInputDecoration(context, widget.control,
             prefix:
                 prefixControls.isNotEmpty ? prefixControls.first.control : null,
+            prefixIcon: prefixIconControls.isNotEmpty
+                ? prefixIconControls.first.control
+                : null,
             suffix:
                 suffixControls.isNotEmpty ? suffixControls.first.control : null,
+            suffixIcon: suffixIconControls.isNotEmpty
+                ? suffixIconControls.first.control
+                : null,
             counter: counterControls.isNotEmpty
                 ? counterControls.first.control
                 : null,

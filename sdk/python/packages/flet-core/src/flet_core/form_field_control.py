@@ -1,4 +1,5 @@
 from enum import Enum
+from types import NoneType
 from typing import Any, Optional, Union
 
 from flet_core.animation import AnimationValue
@@ -74,14 +75,14 @@ class FormFieldControl(ConstrainedControl):
         error_style: Optional[TextStyle] = None,
         error_max_lines: Optional[int] = None,
         prefix: Optional[Control] = None,
-        prefix_icon: Optional[str] = None,
+        prefix_icon: Union[None, str, Control] = None,
         prefix_icon_color: Optional[str] = None,
         prefix_icon_size_constraints: Optional[BoxConstraints] = None,
         prefix_text: Optional[str] = None,
         prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
         suffix_icon: Optional[str] = None,
-        suffix_icon_color: Optional[str] = None,
+        suffix_icon_color: Union[None, str, Control] = None,
         suffix_icon_size_constraints: Optional[BoxConstraints] = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
@@ -225,9 +226,15 @@ class FormFieldControl(ConstrainedControl):
         if isinstance(self.__prefix, Control):
             self.__prefix._set_attr_internal("n", "prefix")
             children.append(self.__prefix)
+        if isinstance(self.__prefix_icon, Control):
+            self.__prefix_icon._set_attr_internal("n", "prefix_icon")
+            children.append(self.__prefix_icon)
         if isinstance(self.__suffix, Control):
             self.__suffix._set_attr_internal("n", "suffix")
             children.append(self.__suffix)
+        if isinstance(self.__suffix_icon, Control):
+            self.__suffix_icon._set_attr_internal("n", "suffix_icon")
+            children.append(self.__suffix_icon)
         if isinstance(self.__counter, Control):
             self.__counter._set_attr_internal("n", "counter")
             children.append(self.__counter)
@@ -614,12 +621,14 @@ class FormFieldControl(ConstrainedControl):
 
     # prefix_icon
     @property
-    def prefix_icon(self) -> Optional[str]:
-        return self._get_attr("prefixIcon")
+    def prefix_icon(self) -> Union[None, str, Control]:
+        return self.__prefix_icon
 
     @prefix_icon.setter
-    def prefix_icon(self, value: Optional[str]):
-        self._set_attr("prefixIcon", value)
+    def prefix_icon(self, value: Union[None, str, Control]):
+        self.__prefix_icon = value
+        if isinstance(value, (str, NoneType)):
+            self._set_attr("prefixIcon", value)
 
     # prefix_text
     @property
@@ -650,12 +659,14 @@ class FormFieldControl(ConstrainedControl):
 
     # suffix_icon
     @property
-    def suffix_icon(self) -> Optional[str]:
-        return self._get_attr("suffixIcon")
+    def suffix_icon(self) -> Union[None, str, Control]:
+        return self.__suffix_icon
 
     @suffix_icon.setter
-    def suffix_icon(self, value: Optional[str]):
-        self._set_attr("suffixIcon", value)
+    def suffix_icon(self, value: Union[None, str, Control]):
+        self.__suffix_icon = value
+        if isinstance(value, (str, NoneType)):
+            self._set_attr("suffixIcon", value)
 
     # suffix_text
     @property

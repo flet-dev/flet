@@ -57,7 +57,9 @@ TextInputType? parseTextInputType(String? value, [TextInputType? defValue]) {
 
 InputDecoration buildInputDecoration(BuildContext context, Control control,
     {Control? prefix,
+    Control? prefixIcon,
     Control? suffix,
+    Control? suffixIcon,
     Control? counter,
     Control? error,
     Control? helper,
@@ -71,10 +73,17 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
     FormFieldInputBorder.outline,
   )!;
   var icon = parseIcon(control.attrString("icon"));
-
-  var prefixIcon = parseIcon(control.attrString("prefixIcon"));
+  var prefixIconData = parseIcon(control.attrString("prefixIcon"));
+  var prefixIconWidget = prefixIcon != null
+      ? createControl(control, prefixIcon.id, control.isDisabled,
+          parentAdaptive: adaptive)
+      : (prefixIconData != null ? Icon(prefixIconData) : null);
+  var suffixIconData = parseIcon(control.attrString("suffixIcon"));
+  var suffixIconWidget = suffixIcon != null
+      ? createControl(control, suffixIcon.id, control.isDisabled,
+          parentAdaptive: adaptive)
+      : (suffixIconData != null ? Icon(suffixIconData) : null);
   var prefixText = control.attrString("prefixText");
-  var suffixIcon = parseIcon(control.attrString("suffixIcon"));
   var suffixText = control.attrString("suffixText");
 
   var bgcolor = control.attrColor("bgcolor", context);
@@ -170,7 +179,7 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       alignLabelWithHint: control.attrBool("alignLabelWithHint"),
       errorText: control.attrString("errorText"),
       errorStyle: parseTextStyle(Theme.of(context), control, "errorStyle"),
-      prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
+      prefixIcon: prefixIconWidget,
       prefixText:
           prefix == null ? prefixText : null, // ignored if prefix is set
       hintFadeDuration: parseDuration(control, "hintFadeDuration"),
@@ -185,7 +194,7 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
           ? createControl(control, suffix.id, control.isDisabled,
               parentAdaptive: adaptive)
           : null,
-      suffixIcon: suffixIcon != null ? Icon(suffixIcon) : customSuffix,
+      suffixIcon: suffixIconWidget ?? customSuffix,
       suffixText:
           suffix == null ? suffixText : null, // ignored if suffix is set
       suffixStyle: parseTextStyle(Theme.of(context), control, "suffixStyle"));
