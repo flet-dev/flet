@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional, Union
 
 from flet_core.animation import AnimationValue
 from flet_core.constrained_control import ConstrainedControl
@@ -6,12 +6,12 @@ from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    ControlState,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     OptionalControlEventCallable,
+    ControlStateValue,
 )
 
 
@@ -86,7 +86,7 @@ class RangeSlider(ConstrainedControl):
         round: Optional[int] = None,
         active_color: Optional[str] = None,
         inactive_color: Optional[str] = None,
-        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
+        overlay_color: ControlStateValue[str] = None,
         on_change: OptionalControlEventCallable = None,
         on_change_start: OptionalControlEventCallable = None,
         on_change_end: OptionalControlEventCallable = None,
@@ -171,7 +171,7 @@ class RangeSlider(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        self._set_attr_json("overlayColor", self.__overlay_color)
+        self._set_control_state_attr_json("overlayColor", self.__overlay_color)
 
     # start_value
     @property
@@ -262,11 +262,11 @@ class RangeSlider(ConstrainedControl):
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
+    def overlay_color(self) -> ControlStateValue[str]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
+    def overlay_color(self, value: ControlStateValue[str]):
         self.__overlay_color = value
 
     # on_change

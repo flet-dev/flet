@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.animation import AnimationValue
@@ -15,8 +15,8 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ControlState,
     OptionalControlEventCallable,
+    ControlStateValue,
 )
 from flet_core.utils import deprecated
 
@@ -226,7 +226,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         surface_tint_color: Optional[str] = None,
         border: Optional[Border] = None,
         animation_duration: Optional[int] = None,
-        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
+        overlay_color: ControlStateValue[str] = None,
         on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
@@ -310,7 +310,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         super().before_update()
         self._set_attr_json("indicatorShape", self.__indicator_shape)
         self._set_attr_json("border", self.__border)
-        self._set_attr_json("overlayColor", self.__overlay_color)
+        self._set_control_state_attr_json("overlayColor", self.__overlay_color)
 
     def _get_children(self):
         return self.__destinations
@@ -345,11 +345,11 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
+    def overlay_color(self) -> ControlStateValue[str]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
+    def overlay_color(self, value: ControlStateValue[str]):
         self.__overlay_color = value
 
     # bgcolor

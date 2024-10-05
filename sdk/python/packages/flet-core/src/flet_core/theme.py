@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Optional, Union
+from typing import List, Optional, Union
 
 from flet_core.alignment import Alignment
 from flet_core.border import BorderSide
@@ -10,7 +10,6 @@ from flet_core.buttons import ButtonStyle, OutlinedBorder
 from flet_core.control import OptionalNumber
 from flet_core.navigation_bar import NavigationBarLabelBehavior
 from flet_core.navigation_rail import NavigationRailLabelType
-from flet_core.padding import Padding
 from flet_core.popup_menu_button import PopupMenuPosition
 from flet_core.snack_bar import DismissDirection, SnackBarBehavior
 from flet_core.text_style import TextStyle
@@ -26,6 +25,7 @@ from flet_core.types import (
     ThemeVisualDensity,
     VisualDensity,
     MainAxisAlignment,
+    ControlStateValue,
 )
 
 try:
@@ -106,13 +106,13 @@ class TextTheme:
 
 @dataclass
 class ScrollbarTheme:
-    thumb_visibility: Union[None, bool, Dict[ControlState, bool]] = None
-    thickness: Union[None, float, Dict[ControlState, float]] = None
-    track_visibility: Union[None, bool, Dict[ControlState, bool]] = None
+    thumb_visibility: ControlStateValue[bool] = None
+    thickness: ControlStateValue[OptionalNumber] = None
+    track_visibility: ControlStateValue[bool] = None
     radius: Optional[float] = None
-    thumb_color: Union[None, str, Dict[ControlState, str]] = None
-    track_color: Union[None, str, Dict[ControlState, str]] = None
-    track_border_color: Union[None, str, Dict[ControlState, str]] = None
+    thumb_color: ControlStateValue[str] = None
+    track_color: ControlStateValue[str] = None
+    track_border_color: ControlStateValue[str] = None
     cross_axis_margin: Optional[float] = None
     main_axis_margin: Optional[float] = None
     min_thumb_length: Optional[float] = None
@@ -129,8 +129,8 @@ class TabsTheme:
     indicator_tab_size: Optional[bool] = None
     label_color: Optional[str] = None
     unselected_label_color: Optional[str] = None
-    overlay_color: Union[None, str, Dict[ControlState, str]] = None
-    mouse_cursor: Union[None, MouseCursor, Dict[ControlState, MouseCursor]] = None
+    overlay_color: ControlStateValue[str] = None
+    mouse_cursor: ControlStateValue[MouseCursor] = None
     label_padding: PaddingValue = None
     label_text_style: Optional[TextStyle] = None
     unselected_label_text_style: Optional[TextStyle] = None
@@ -274,24 +274,24 @@ class BottomAppBarTheme:
 
 @dataclass
 class RadioTheme:
-    fill_color: Union[None, str, Dict[ControlState, str]] = None
-    overlay_color: Union[None, str, Dict[ControlState, str]] = None
+    fill_color: ControlStateValue[str] = None
+    overlay_color: ControlStateValue[str] = None
     splash_radius: OptionalNumber = None
     height: OptionalNumber = None
     visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None
-    mouse_cursor: Union[None, MouseCursor, Dict[ControlState, MouseCursor]] = None
+    mouse_cursor: ControlStateValue[MouseCursor] = None
 
 
 @dataclass
 class CheckboxTheme:
-    overlay_color: Union[None, str, Dict[ControlState, str]] = None
-    check_color: Union[None, str, Dict[ControlState, str]] = None
-    fill_color: Union[None, str, Dict[ControlState, str]] = None
+    overlay_color: ControlStateValue[str] = None
+    check_color: ControlStateValue[str] = None
+    fill_color: ControlStateValue[str] = None
     splash_radius: OptionalNumber = None
     border_side: Optional[BorderSide] = None
     visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None
     shape: Optional[OutlinedBorder] = None
-    mouse_cursor: Union[None, MouseCursor, Dict[ControlState, MouseCursor]] = None
+    mouse_cursor: ControlStateValue[MouseCursor] = None
 
 
 @dataclass
@@ -308,16 +308,14 @@ class BadgeTheme:
 
 @dataclass
 class SwitchTheme:
-    thumb_color: Union[None, str, Dict[ControlState, str]] = None
-    track_color: Union[None, str, Dict[ControlState, str]] = None
-    overlay_color: Union[None, str, Dict[ControlState, str]] = None
-    track_outline_color: Union[None, str, Dict[ControlState, str]] = None
-    thumb_icon: Union[None, str, Dict[ControlState, str]] = None
-    track_outline_width: Union[
-        None, Union[int, float], Dict[ControlState, Union[int, float]]
-    ] = None
+    thumb_color: ControlStateValue[str] = None
+    track_color: ControlStateValue[str] = None
+    overlay_color: ControlStateValue[str] = None
+    track_outline_color: ControlStateValue[str] = None
+    thumb_icon: ControlStateValue[str] = None
+    track_outline_width: ControlStateValue[OptionalNumber] = None
     splash_radius: OptionalNumber = None
-    mouse_cursor: Union[None, MouseCursor, Dict[ControlState, MouseCursor]] = None
+    mouse_cursor: ControlStateValue[MouseCursor] = None
 
 
 @dataclass
@@ -368,12 +366,10 @@ class DatePickerTheme:
     shadow_color: Optional[str] = None
     divider_color: Optional[str] = None
     header_bgcolor: Optional[str] = None
-    today_bgcolor: Union[None, str, Dict[ControlState, str]] = None
-    day_bgcolor: Union[None, str, Dict[ControlState, str]] = None
-    day_overlay_color: Union[None, str, Dict[ControlState, str]] = None
-    day_foreground_color: Union[None, str, Dict[ControlState, str]] = field(
-        default=None
-    )
+    today_bgcolor: ControlStateValue[str] = None
+    day_bgcolor: ControlStateValue[str] = None
+    day_overlay_color: ControlStateValue[str] = None
+    day_foreground_color: ControlStateValue[str] = None
     elevation: OptionalNumber = None
     range_picker_elevation: OptionalNumber = None
     day_text_style: Optional[TextStyle] = None
@@ -388,17 +384,17 @@ class DatePickerTheme:
     range_picker_bgcolor: Optional[str] = None
     range_picker_header_bgcolor: Optional[str] = None
     range_picker_header_foreground_color: Optional[str] = None
-    today_foreground_color: Union[None, str, Dict[ControlState, str]] = None
+    today_foreground_color: ControlStateValue[str] = None
     range_picker_shape: Optional[OutlinedBorder] = None
     range_picker_header_help_text_style: Optional[TextStyle] = None
     range_picker_header_headline_text_style: Optional[TextStyle] = None
     range_picker_surface_tint_color: Optional[str] = None
     range_selection_bgcolor: Optional[str] = None
-    range_selection_overlay_color: Union[None, str, Dict[ControlState, str]] = None
+    range_selection_overlay_color: ControlStateValue[str] = None
     today_border_side: Optional[BorderSide] = None
-    year_bgcolor: Union[None, str, Dict[ControlState, str]] = None
-    year_foreground_color: Union[None, str, Dict[ControlState, str]] = None
-    year_overlay_color: Union[None, str, Dict[ControlState, str]] = None
+    year_bgcolor: ControlStateValue[str] = None
+    year_foreground_color: ControlStateValue[str] = None
+    year_overlay_color: ControlStateValue[str] = None
 
 
 @dataclass
@@ -504,27 +500,31 @@ class PopupMenuTheme:
     icon_size: OptionalNumber = None
     shape: Optional[OutlinedBorder] = None
     menu_position: Optional[PopupMenuPosition] = None
-    mouse_cursor: Union[None, MouseCursor, Dict[ControlState, MouseCursor]] = None
+    mouse_cursor: ControlStateValue[MouseCursor] = None
 
 
 @dataclass
 class SearchBarTheme:
     bgcolor: Optional[str] = None
     text_capitalization: Optional[TextCapitalization] = None
-    shadow_color: Union[None, str, Dict[ControlState, str]] = None
-    surface_tint_color: Union[None, str, Dict[ControlState, str]] = None
-    overlay_color: Union[None, str, Dict[ControlState, str]] = None
-    elevation: Union[
-        None, Union[int, float], Dict[ControlState, Union[int, float]]
-    ] = None
-    text_style: Union[None, TextStyle, Dict[ControlState, TextStyle]] = None
-    hint_style: Union[None, TextStyle, Dict[ControlState, TextStyle]] = None
-    shape: Union[None, OutlinedBorder, Dict[ControlState, OutlinedBorder]] = None
-    padding: Union[
-        None,
-        Union[int, float, Padding],
-        Dict[ControlState, Union[int, float, Padding]],
-    ] = None
+    shadow_color: ControlStateValue[str] = None
+    surface_tint_color: ControlStateValue[str] = None
+    overlay_color: ControlStateValue[str] = None
+    elevation: ControlStateValue[OptionalNumber] = None
+    text_style: ControlStateValue[TextStyle] = None
+    hint_style: ControlStateValue[TextStyle] = None
+    shape: ControlStateValue[OutlinedBorder] = None
+    padding: ControlStateValue[PaddingValue] = None
+
+    def __post_init__(self):
+        if not isinstance(self.text_style, dict):
+            self.text_style = {ControlState.DEFAULT: self.text_style}
+        if not isinstance(self.hint_style, dict):
+            self.hint_style = {ControlState.DEFAULT: self.hint_style}
+        if not isinstance(self.shape, dict):
+            self.shape = {ControlState.DEFAULT: self.shape}
+        if not isinstance(self.padding, dict):
+            self.padding = {ControlState.DEFAULT: self.padding}
 
 
 @dataclass
@@ -560,8 +560,12 @@ class NavigationDrawerTheme:
     indicator_color: Optional[str] = None
     elevation: OptionalNumber = None
     tile_height: OptionalNumber = None
-    label_text_style: Union[None, TextStyle, Dict[ControlState, TextStyle]] = None
+    label_text_style: ControlStateValue[TextStyle] = None
     indicator_shape: Optional[OutlinedBorder] = None
+
+    def __post_init__(self):
+        if not isinstance(self.label_text_style, dict):
+            self.label_text_style = {ControlState.DEFAULT: self.label_text_style}
 
 
 @dataclass
@@ -570,12 +574,16 @@ class NavigationBarTheme:
     shadow_color: Optional[str] = None
     surface_tint_color: Optional[str] = None
     indicator_color: Optional[str] = None
-    overlay_color: Union[None, str, Dict[ControlState, str]] = None
+    overlay_color: ControlStateValue[str] = None
     elevation: OptionalNumber = None
     height: OptionalNumber = None
-    label_text_style: Union[None, TextStyle, Dict[ControlState, TextStyle]] = None
+    label_text_style: ControlStateValue[TextStyle] = None
     indicator_shape: Optional[OutlinedBorder] = None
     label_behavior: Optional[NavigationBarLabelBehavior] = None
+
+    def __post_init__(self):
+        if not isinstance(self.label_text_style, dict):
+            self.label_text_style = {ControlState.DEFAULT: self.label_text_style}
 
 
 @dataclass
@@ -603,19 +611,17 @@ class DataTableTheme:
     column_spacing: OptionalNumber = None
     data_row_max_height: OptionalNumber = None
     data_row_min_height: OptionalNumber = None
-    data_row_color: Union[None, str, Dict[ControlState, str]] = None
+    data_row_color: ControlStateValue[str] = None
     data_text_style: Optional[TextStyle] = None
     divider_thickness: OptionalNumber = None
     horizontal_margin: OptionalNumber = None
     heading_text_style: Optional[TextStyle] = None
-    heading_row_color: Union[None, str, Dict[ControlState, str]] = None
+    heading_row_color: ControlStateValue[str] = None
     heading_row_height: OptionalNumber = None
-    data_row_cursor: Union[None, MouseCursor, Dict[ControlState, MouseCursor]] = None
+    data_row_cursor: ControlStateValue[MouseCursor] = None
     decoration: Optional[BoxDecoration] = None
     heading_row_alignment: Optional[MainAxisAlignment] = None
-    heading_cell_cursor: Union[
-        None, MouseCursor, Dict[ControlState, MouseCursor]
-    ] = None
+    heading_cell_cursor: ControlStateValue[MouseCursor] = None
 
 
 @dataclass

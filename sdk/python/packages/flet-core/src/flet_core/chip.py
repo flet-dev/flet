@@ -1,4 +1,4 @@
-from typing import Any, Optional, Union, Dict
+from typing import Any, Optional, Union
 
 from flet_core.animation import AnimationValue
 from flet_core.border import BorderSide
@@ -15,10 +15,10 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     ClipBehavior,
-    ControlState,
     ThemeVisualDensity,
     VisualDensity,
     OptionalControlEventCallable,
+    ControlStateValue,
 )
 
 
@@ -90,7 +90,7 @@ class Chip(ConstrainedControl):
         selected_shadow_color: Optional[str] = None,
         autofocus: Optional[bool] = None,
         surface_tint_color: Optional[str] = None,
-        color: Union[None, str, Dict[Union[ControlState, str], str]] = None,
+        color: ControlStateValue[str] = None,
         click_elevation: OptionalNumber = None,
         clip_behavior: Optional[ClipBehavior] = None,
         visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
@@ -205,7 +205,7 @@ class Chip(ConstrainedControl):
         self._set_attr_json("labelStyle", self.__label_style)
         self._set_attr_json("padding", self.__padding)
         self._set_attr_json("shape", self.__shape)
-        self._set_attr_json("color", self.__color)
+        self._set_control_state_attr_json("color", self.__color)
 
     def _get_children(self):
         self.__label._set_attr_internal("n", "label")
@@ -319,11 +319,11 @@ class Chip(ConstrainedControl):
 
     # color
     @property
-    def color(self) -> Union[None, str, Dict[ControlState, str]]:
+    def color(self) -> ControlStateValue[str]:
         return self.__color
 
     @color.setter
-    def color(self, value: Union[None, str, Dict[ControlState, str]]):
+    def color(self, value: ControlStateValue[str]):
         self.__color = value
 
     # autofocus

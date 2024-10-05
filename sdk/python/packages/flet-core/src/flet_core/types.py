@@ -416,6 +416,9 @@ EventType = TypeVar("EventType", bound=Event)
 OptionalEventCallable = Optional[Type[Callable[[EventType], Any]]]
 OptionalControlEventCallable = Optional[Type[Callable[[ControlEventType], Any]]]
 
+# ControlState
+T = TypeVar("T")
+ControlStateValue = Union[None, T, Dict[ControlState, T]]
 
 # Wrapper
 Wrapper = Callable[..., Any]

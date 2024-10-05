@@ -179,6 +179,14 @@ class Control:
         if ov != nv:
             self._set_attr(name, nv)
 
+    def _set_control_state_attr_json(self, name: str, value: V) -> None:
+        if value is not None and not isinstance(value, dict):
+            value = {ControlState.DEFAULT: value}
+        ov = self._get_attr(name)
+        nv = self._convert_attr_json(value)
+        if ov != nv:
+            self._set_attr(name, nv)
+
     def _convert_attr_json(self, value: V) -> str:
         return (
             json.dumps(value, cls=EmbedJsonEncoder, separators=(",", ":"))

@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.animation import AnimationValue
@@ -10,7 +10,6 @@ from flet_core.text_style import TextStyle
 from flet_core.types import (
     BorderRadiusValue,
     ClipBehavior,
-    ControlState,
     MouseCursor,
     OffsetValue,
     PaddingValue,
@@ -20,6 +19,7 @@ from flet_core.types import (
     TabAlignment,
     OptionalControlEventCallable,
     MarginValue,
+    ControlStateValue,
 )
 
 
@@ -30,9 +30,9 @@ class Tab(AdaptiveControl):
         content: Optional[Control] = None,
         tab_content: Optional[Control] = None,
         icon: Optional[str] = None,
-            icon_content: Optional[Control] = None,
-            height: OptionalNumber = None,
-            icon_margin: MarginValue = None,
+        icon_content: Optional[Control] = None,
+        height: OptionalNumber = None,
+        icon_margin: MarginValue = None,
         #
         # Control and AdaptiveControl
         #
@@ -200,7 +200,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         label_text_style: Optional[TextStyle] = None,
         unselected_label_color: Optional[str] = None,
         unselected_label_text_style: Optional[TextStyle] = None,
-        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
+        overlay_color: ControlStateValue[str] = None,
         divider_height: OptionalNumber = None,
         indicator_thickness: OptionalNumber = None,
         enable_feedback: Optional[str] = None,
@@ -306,7 +306,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        self._set_attr_json("overlayColor", self.__overlay_color)
+        self._set_control_state_attr_json("overlayColor", self.__overlay_color)
         self._set_attr_json("indicatorBorderRadius", self.__indicator_border_radius)
         self._set_attr_json("indicatorBorderSide", self.__indicator_border_side)
         self._set_attr_json("indicatorPadding", self.__indicator_padding)
@@ -505,11 +505,11 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
+    def overlay_color(self) -> ControlStateValue[str]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
+    def overlay_color(self, value: ControlStateValue[str]):
         self.__overlay_color = value
 
     # label_padding
