@@ -268,6 +268,13 @@ class Command(BaseCommand):
             help="URL routing strategy (web only)",
         )
         parser.add_argument(
+            "--split-per-abi",
+            dest="split_per_abi",
+            action="store_true",
+            default=False,
+            help="Whether to split the APKs per ABIs.",
+        )
+        parser.add_argument(
             "--flutter-build-args",
             dest="flutter_build_args",
             action="append",
@@ -477,6 +484,7 @@ class Command(BaseCommand):
                 "web_renderer": options.web_renderer,
                 "use_color_emoji": "true" if options.use_color_emoji else "false",
                 "base_url": f"/{base_url}/" if base_url else "/",
+                "split_per_abi": options.split_per_abi,
                 "project_name": project_name,
                 "product_name": product_name,
                 "description": options.description,
@@ -798,6 +806,9 @@ class Command(BaseCommand):
                     ]
                 )
 
+            # print(package_args)
+            # exit(1)
+
             # site-packages variable
             if package_platform in ["Android", "iOS"]:
                 package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
@@ -848,8 +859,11 @@ class Command(BaseCommand):
                 self.platforms[target_platform]["flutter_build_command"],
             ]
 
+            if target_platform in "apk" and options.split_per_abi:
+                build_args.append("--split-per-abi")
+
             if target_platform in ["ipa"] and not options.team_id:
-                build_args.extend(["--no-codesign"])
+                build_args.append("--no-codesign")
 
             if options.build_number:
                 build_args.extend(["--build-number", str(options.build_number)])
