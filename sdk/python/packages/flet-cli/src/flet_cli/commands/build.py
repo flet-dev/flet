@@ -272,7 +272,28 @@ class Command(BaseCommand):
             dest="split_per_abi",
             action="store_true",
             default=False,
-            help="Whether to split the APKs per ABIs.",
+            help="whether to split the APKs per ABIs.",
+        )
+        parser.add_argument(
+            "--compile-app",
+            dest="compile_app",
+            action="store_true",
+            default=False,
+            help="compile app's .py files to .pyc",
+        )
+        parser.add_argument(
+            "--compile-packages",
+            dest="compile_packages",
+            action="store_true",
+            default=False,
+            help="compile site packages' .py files to .pyc",
+        )
+        parser.add_argument(
+            "--cleanup-on-compile",
+            dest="cleanup_on_compile",
+            action="store_true",
+            default=True,
+            help="remove unnecessary app and package files after compiling",
         )
         parser.add_argument(
             "--flutter-build-args",
@@ -806,9 +827,6 @@ class Command(BaseCommand):
                     ]
                 )
 
-            # print(package_args)
-            # exit(1)
-
             # site-packages variable
             if package_platform in ["Android", "iOS"]:
                 package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
@@ -824,6 +842,15 @@ class Command(BaseCommand):
             if target_platform == "web":
                 exclude_list.append("assets")
             package_args.extend(["--exclude", ",".join(exclude_list)])
+
+            if options.compile_app:
+                package_args.append("--compile-app")
+
+            if options.compile_packages:
+                package_args.append("--compile-packages")
+
+            if options.cleanup_on_compile:
+                package_args.append("--cleanup")
 
             if self.verbose > 1:
                 package_args.append("--verbose")
