@@ -31,6 +31,10 @@ def app(
     route_url_strategy="path",
     export_asgi_app=False,
 ):
+    if is_pyodide():
+        __run_pyodide(target)
+        return
+
     if export_asgi_app:
         from flet_web.fastapi.serve_fastapi_web_app import get_fastapi_web_app
 
