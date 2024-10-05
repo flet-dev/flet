@@ -101,8 +101,7 @@ class _NavigationBarControlState extends State<NavigationBarControl>
                   parseIcon(destView.control.attrString("selectedIcon"));
               var selectedIconContentCtrls = destView.children.where(
                   (c) => c.name == "selected_icon_content" && c.isVisible);
-              var destinationDisabled =
-                  !(disabled || destView.control.isDisabled);
+              var destinationDisabled = disabled || destView.control.isDisabled;
               var destinationAdaptive = destView.control.isAdaptive ?? adaptive;
               return NavigationDestination(
                   enabled: !destinationDisabled,
