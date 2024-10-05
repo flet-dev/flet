@@ -7,8 +7,6 @@ import re
 import shutil
 import subprocess
 import sys
-import tempfile
-import urllib.request
 from pathlib import Path
 from typing import Any, Optional, Union
 
@@ -16,20 +14,13 @@ import flet.version
 import toml
 import yaml
 from flet.version import update_version
-from flet_core.utils import (
-    calculate_file_hash,
-    copy_tree,
-    is_windows,
-    random_string,
-    slugify,
-)
+from flet_cli.commands.base import BaseCommand
+from flet_core.utils import calculate_file_hash, copy_tree, is_windows, slugify
 from flet_core.utils.platform_utils import get_bool_env_var
 from packaging import version
 from rich import print
 from rich.console import Console, Style
 from rich.table import Column, Table
-
-from flet_cli.commands.base import BaseCommand
 
 if is_windows():
     from ctypes import windll
@@ -40,6 +31,8 @@ MINIMAL_FLUTTER_VERSION = "3.19.0"
 
 error_style = Style(color="red1")
 console = Console(log_path=False, style=Style(color="green", bold=True))
+
+RESULT_FILE = "result"
 
 
 class Command(BaseCommand):
@@ -53,6 +46,7 @@ class Command(BaseCommand):
         self.emojis = {}
         self.dart_exe = None
         self.verbose = False
+        self.build_dir = None
         self.flutter_dir = None
         self.flutter_exe = None
         self.platforms = {
@@ -439,14 +433,6 @@ class Command(BaseCommand):
                     f"Use --module-name option to specify an entry point for your Flet app.",
                 )
 
-            self.flutter_dir = Path(tempfile.gettempdir()).joinpath(
-                f"flet_flutter_build_{random_string(10)}"
-            )
-
-            if self.verbose > 0:
-                console.log("Flutter bootstrap directory:", self.flutter_dir)
-            self.flutter_dir.mkdir(exist_ok=True)
-
             rel_out_dir = options.output_dir or os.path.join(
                 "build", self.platforms[target_platform]["dist"]
             )
@@ -457,7 +443,8 @@ class Command(BaseCommand):
                 else python_app_path.joinpath(rel_out_dir)
             )
 
-            build_dir = python_app_path.joinpath("build")
+            self.build_dir = python_app_path.joinpath("build")
+            self.flutter_dir = Path(self.build_dir).joinpath(f"flutter")
 
             pyproject_toml: Optional[dict[str, Any]] = None
             pyproject_toml_file = python_app_path.joinpath("pyproject.toml")
@@ -530,6 +517,7 @@ class Command(BaseCommand):
                     )
 
             # create Flutter project from a template
+            self.flutter_dir.mkdir(parents=True, exist_ok=True)
             self.status.update(
                 f"[bold blue]Creating Flutter bootstrap project from {template_url} with ref {template_ref} {self.emojis['loading']}... ",
             )
@@ -543,7 +531,9 @@ class Command(BaseCommand):
                     overwrite_if_exists=True,
                     extra_context=template_data,
                 )
+
             except Exception as e:
+                shutil.rmtree(self.flutter_dir)
                 self.cleanup(1, f"{e}")
             console.log(
                 f"Created Flutter bootstrap project from {template_url} with ref {template_ref} {self.emojis['checkmark']}",
@@ -830,7 +820,7 @@ class Command(BaseCommand):
             # site-packages variable
             if package_platform in ["Android", "iOS"]:
                 package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
-                    build_dir.joinpath("site-packages")
+                    self.build_dir.joinpath("site-packages")
                 )
 
             # exclude
@@ -1026,10 +1016,10 @@ class Command(BaseCommand):
     def cleanup(
         self, exit_code: int, message: Optional[str] = None, check_flutter_version=False
     ):
-        if self.flutter_dir and os.path.exists(self.flutter_dir):
-            if self.verbose > 0:
-                console.log(f"Deleting Flutter bootstrap directory {self.flutter_dir}")
-            shutil.rmtree(str(self.flutter_dir), ignore_errors=True, onerror=None)
+        if self.build_dir:
+            with open(str(self.build_dir.joinpath(RESULT_FILE)), "w") as f:
+                f.write(str(exit_code))
+
         if exit_code == 0:
             msg = message or f"Success! {self.emojis['success']}"
             console.log(msg)
