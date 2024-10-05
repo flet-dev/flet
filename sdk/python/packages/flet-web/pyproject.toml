@@ -6,13 +6,9 @@ authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
 license = "Apache-2.0"
 readme = "README.md"
 
-packages = [
-    { include = "flet_web", from = "src" },
-]
+packages = [{ include = "flet_web", from = "src" }]
 
-include = [
-    { path = "src/flet_web/web/**/*", format = ["sdist", "wheel"] },
-]
+include = [{ path = "src/flet_web/web/**/*", format = ["sdist", "wheel"] }]
 
 [tool.poetry.urls]
 homepage = "https://flet.dev"
@@ -21,8 +17,8 @@ documentation = "https://flet.dev/docs"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-fastapi = "^0"
-uvicorn = {extras = ["standard"], version = "^0"}
+fastapi = "*"
+uvicorn = { extras = ["standard"], version = "*" }
 
 [build-system]
 requires = ["poetry-core"]

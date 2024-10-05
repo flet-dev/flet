@@ -6,9 +6,7 @@ authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
 license = "Apache-2.0"
 readme = "README.md"
 
-packages = [
-    { include = "flet", from = "src" },
-]
+packages = [{ include = "flet", from = "src" }]
 
 [tool.poetry.urls]
 homepage = "https://flet.dev"
@@ -22,7 +20,7 @@ flet-cli = { version = "0.1.0", markers = "platform_system != 'embedded'" }
 flet-desktop = { version = "0.1.0", markers = "platform_system != 'desktop-light'" }
 flet-web = { version = "0.1.0", markers = "platform_system != 'embedded'" }
 oauthlib = { version = "^3.2.2", markers = "platform_system != 'Pyodide'" }
-httpx = { version = "^0", markers = "platform_system != 'Pyodide'" }
+httpx = { version = "*", markers = "platform_system != 'Pyodide'" }
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^2.6"

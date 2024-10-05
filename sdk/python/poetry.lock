@@ -492,7 +492,7 @@ flet-cli = {version = "0.1.0", markers = "platform_system != \"embedded\""}
 flet-core = "0.1.0"
 flet-desktop = {version = "0.1.0", markers = "platform_system != \"desktop-light\""}
 flet-web = {version = "0.1.0", markers = "platform_system != \"embedded\""}
-httpx = {version = "^0", markers = "platform_system != \"Pyodide\""}
+httpx = {version = "*", markers = "platform_system != \"Pyodide\""}
 oauthlib = {version = "^3.2.2", markers = "platform_system != \"Pyodide\""}
 
 [package.source]
@@ -510,7 +510,7 @@ develop = true
 
 [package.dependencies]
 cookiecutter = "^2.6.0"
-packaging = "^23.1"
+packaging = "*"
 qrcode = "^7.4.2"
 toml = "^0.10.2"
 watchdog = "^4.0.0"
@@ -558,8 +558,8 @@ files = []
 develop = true
 
 [package.dependencies]
-fastapi = "^0"
-uvicorn = {version = "^0", extras = ["standard"]}
+fastapi = "*"
+uvicorn = {version = "*", extras = ["standard"]}
 
 [package.source]
 type = "directory"
@@ -988,13 +988,13 @@ signedtoken = ["cryptography (>=3.0.0)", "pyjwt (>=2.0.0,<3)"]
 
 [[package]]
 name = "packaging"
-version = "23.2"
+version = "24.1"
 description = "Core utilities for Python packages"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "packaging-23.2-py3-none-any.whl", hash = "sha256:8c491190033a9af7e1d931d0b5dacc2ef47509b34dd0de67ed209b5203fc88c7"},
-    {file = "packaging-23.2.tar.gz", hash = "sha256:048fb0e9405036518eaaf48a55953c750c11e1a1b68e0dd1a9d62ed0c092cfc5"},
+    {file = "packaging-24.1-py3-none-any.whl", hash = "sha256:5b8f2217dbdbd2f7f384c41c628544e6d52f2d0f53c6d0c3ea61aa5d1d7ff124"},
+    {file = "packaging-24.1.tar.gz", hash = "sha256:026ed72c8ed3fcce5bf8950572258698927fd1dbda10a5e981cdf0ac37f4f002"},
 ]
 
 [[package]]

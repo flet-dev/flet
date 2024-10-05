@@ -6,9 +6,7 @@ authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
 license = "Apache-2.0"
 readme = "README.md"
 
-packages = [
-    { include = "flet_cli", from = "src" },
-]
+packages = [{ include = "flet_cli", from = "src" }]
 
 [tool.poetry.urls]
 homepage = "https://flet.dev"
@@ -18,7 +16,7 @@ documentation = "https://flet.dev/docs"
 [tool.poetry.dependencies]
 python = "^3.8"
 watchdog = "^4.0.0"
-packaging = "^23.1"
+packaging = "*"
 qrcode = "^7.4.2"
 toml = "^0.10.2"
 cookiecutter = "^2.6.0"
