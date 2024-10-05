@@ -1,5 +1,4 @@
 from enum import Enum
-from types import NoneType
 from typing import Any, Optional, Union
 
 from flet_core.animation import AnimationValue
@@ -627,7 +626,7 @@ class FormFieldControl(ConstrainedControl):
     @prefix_icon.setter
     def prefix_icon(self, value: Union[None, str, Control]):
         self.__prefix_icon = value
-        if isinstance(value, (str, NoneType)):
+        if isinstance(value, (str, type(None))):
             self._set_attr("prefixIcon", value)
 
     # prefix_text
@@ -665,7 +664,7 @@ class FormFieldControl(ConstrainedControl):
     @suffix_icon.setter
     def suffix_icon(self, value: Union[None, str, Control]):
         self.__suffix_icon = value
-        if isinstance(value, (str, NoneType)):
+        if isinstance(value, (str, type(None))):
             self._set_attr("suffixIcon", value)
 
     # suffix_text
