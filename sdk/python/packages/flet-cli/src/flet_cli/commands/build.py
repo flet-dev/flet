@@ -10,12 +10,12 @@ import sys
 import tempfile
 import urllib.request
 from pathlib import Path
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 import flet.version
+import toml
 import yaml
 from flet.version import update_version
-from flet_cli.commands.base import BaseCommand
 from flet_core.utils import (
     calculate_file_hash,
     copy_tree,
@@ -28,6 +28,8 @@ from packaging import version
 from rich import print
 from rich.console import Console, Style
 from rich.table import Column, Table
+
+from flet_cli.commands.base import BaseCommand
 
 if is_windows():
     from ctypes import windll
@@ -50,54 +52,61 @@ class Command(BaseCommand):
 
         self.emojis = {}
         self.dart_exe = None
-        self.verbose = None
+        self.verbose = False
         self.flutter_dir = None
         self.flutter_exe = None
         self.platforms = {
             "windows": {
-                "build_command": "windows",
+                "package_command_platform": "Windows",
+                "flutter_build_command": "windows",
                 "status_text": "Windows app",
                 "outputs": ["build/windows/x64/runner/Release/*"],
                 "dist": "windows",
                 "can_be_run_on": ["Windows"],
             },
             "macos": {
-                "build_command": "macos",
+                "package_command_platform": "Darwin",
+                "flutter_build_command": "macos",
                 "status_text": "macOS bundle",
                 "outputs": ["build/macos/Build/Products/Release/{product_name}.app"],
                 "dist": "macos",
                 "can_be_run_on": ["Darwin"],
             },
             "linux": {
-                "build_command": "linux",
+                "package_command_platform": "Linux",
+                "flutter_build_command": "linux",
                 "status_text": "app for Linux",
                 "outputs": ["build/linux/{arch}/release/bundle/*"],
                 "dist": "linux",
                 "can_be_run_on": ["Linux"],
             },
             "web": {
-                "build_command": "web",
+                "package_command_platform": "Pyodide",
+                "flutter_build_command": "web",
                 "status_text": "web app",
                 "outputs": ["build/web/*"],
                 "dist": "web",
                 "can_be_run_on": ["Darwin", "Windows", "Linux"],
             },
             "apk": {
-                "build_command": "apk",
+                "package_command_platform": "Android",
+                "flutter_build_command": "apk",
                 "status_text": ".apk for Android",
                 "outputs": ["build/app/outputs/flutter-apk/*"],
                 "dist": "apk",
                 "can_be_run_on": ["Darwin", "Windows", "Linux"],
             },
             "aab": {
-                "build_command": "appbundle",
+                "package_command_platform": "Android",
+                "flutter_build_command": "appbundle",
                 "status_text": ".aab bundle for Android",
                 "outputs": ["build/app/outputs/bundle/release/*"],
                 "dist": "aab",
                 "can_be_run_on": ["Darwin", "Windows", "Linux"],
             },
             "ipa": {
-                "build_command": "ipa",
+                "package_command_platform": "iOS",
+                "flutter_build_command": "ipa",
                 "status_text": ".ipa bundle for iOS",
                 "outputs": ["build/ios/archive/*", "build/ios/ipa/*"],
                 "dist": "ipa",
@@ -420,6 +429,14 @@ class Command(BaseCommand):
                 else python_app_path.joinpath(rel_out_dir)
             )
 
+            build_dir = python_app_path.joinpath("build")
+
+            pyproject_toml: Optional[dict[str, Any]] = None
+            pyproject_toml_file = python_app_path.joinpath("pyproject.toml")
+            if pyproject_toml_file.exists():
+                with pyproject_toml_file.open("r") as f:
+                    pyproject_toml = toml.loads(f.read())
+
             base_url = options.base_url.strip("/").strip()
             project_name = slugify(
                 options.project_name or python_app_path.name
@@ -741,65 +758,70 @@ class Command(BaseCommand):
 
                 console.log(f"Generated splash screens {self.emojis['checkmark']}")
 
-            exclude_list = ["build"]
-
-            if options.exclude:
-                exclude_list.extend(options.exclude)
-
             # package Python app
             self.status.update(
                 f"[bold blue]Packaging Python app {self.emojis['loading']}... ",
             )
+            package_platform = self.platforms[target_platform][
+                "package_command_platform"
+            ]
+
             package_args = [
                 self.dart_exe,
                 "run",
                 "serious_python:main",
                 "package",
                 str(python_app_path),
+                "--platform",
+                package_platform,
             ]
+
+            package_env = {}
+
+            # requirements
+            requirements_txt = python_app_path.joinpath("requirements.txt")
+            if requirements_txt.exists():
+                package_args.extend(["--requirements", f"-r,{requirements_txt}"])
+            elif pyproject_toml is not None:
+                from flet_cli.utils.convert_toml_to_requirements import (
+                    convert_toml_to_requirements,
+                )
+
+                package_args.extend(
+                    [
+                        "--requirements",
+                        ",".join(
+                            convert_toml_to_requirements(
+                                pyproject_toml, optional_lists=None
+                            )
+                        ),
+                    ]
+                )
+
+            # site-packages variable
+            if package_platform in ["Android", "iOS"]:
+                package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
+                    build_dir.joinpath("site-packages")
+                )
+
+            # exclude
+            exclude_list = ["build"]
+
+            if options.exclude:
+                exclude_list.extend(options.exclude)
+
             if target_platform == "web":
-                pip_platform, find_links_path = self.create_pyodide_find_links()
                 exclude_list.append("assets")
-                package_args.extend(
-                    [
-                        "--web",
-                        "--dep-mappings",
-                        "flet=flet-pyodide",
-                        "--req-deps",
-                        "flet-pyodide,micropip",
-                        "--platform",
-                        pip_platform,
-                        "--find-links",
-                        find_links_path,
-                        "--exclude",
-                        ",".join(exclude_list),
-                    ]
-                )
-            else:
-                if target_platform in ["apk", "aab", "ipa"]:
-                    package_args.extend(
-                        [
-                            "--mobile",
-                            "--platform",
-                            "mobile",
-                        ]
-                    )
-                package_args.extend(
-                    [
-                        "--dep-mappings",
-                        "flet=flet-embed",
-                        "--req-deps",
-                        "flet-embed",
-                        "--exclude",
-                        ",".join(exclude_list),
-                    ]
-                )
+            package_args.extend(["--exclude", ",".join(exclude_list)])
 
             if self.verbose > 1:
                 package_args.append("--verbose")
 
             package_result = self.run(
-                package_args, cwd=str(self.flutter_dir), capture_output=self.verbose < 1
+                package_args,
+                cwd=str(self.flutter_dir),
+                env=package_env,
+                capture_output=self.verbose < 1,
             )
 
             if package_result.returncode != 0:
@@ -814,10 +836,6 @@ class Command(BaseCommand):
             if not os.path.exists(app_zip_path):
                 self.cleanup(1, "Flet app package app/app.zip was not created.")
 
-            # create {flutter_dir}/app/app.hash
-            app_hash_path = self.flutter_dir.joinpath("app", "app.zip.hash")
-            with open(app_hash_path, "w", encoding="utf8") as hf:
-                hf.write(calculate_file_hash(app_zip_path))
             console.log(f"Packaged Python app {self.emojis['checkmark']}")
 
             # run `flutter build`
@@ -827,7 +845,7 @@ class Command(BaseCommand):
             build_args = [
                 self.flutter_exe,
                 "build",
-                self.platforms[target_platform]["build_command"],
+                self.platforms[target_platform]["flutter_build_command"],
             ]
 
             if target_platform in ["ipa"] and not options.team_id:
@@ -912,17 +930,6 @@ class Command(BaseCommand):
                 f"Find it in [cyan]{rel_out_dir}[/cyan] directory. {self.emojis['directory']}",
             )
 
-    def create_pyodide_find_links(self):
-        assert self.flutter_dir
-        with urllib.request.urlopen(f"{PYODIDE_ROOT_URL}/pyodide-lock.json") as j:
-            data = json.load(j)
-        find_links_path = str(self.flutter_dir.joinpath("find-links.html"))
-        with open(find_links_path, "w", encoding="utf8") as f:
-            for package in data["packages"].values():
-                file_name = package["file_name"]
-                f.write(f'<a href="{PYODIDE_ROOT_URL}/{file_name}">{file_name}</a>\n')
-        return f"{data['info']['platform']}_{data['info']['arch']}", find_links_path
-
     def copy_icon_image(self, src_path: Path, dest_path: Path, image_name: str):
         images = glob.glob(str(src_path.joinpath(f"{image_name}.*")))
         if len(images) > 0:
@@ -944,7 +951,7 @@ class Command(BaseCommand):
             return batch_path.replace(".file", ".bat")
         return batch_path
 
-    def run(self, args, cwd, capture_output=True):
+    def run(self, args, cwd, env: Optional[dict] = None, capture_output=True):
         if is_windows():
             # Source: https://stackoverflow.com/a/77374899/1435891
             # Save the current console output code page and switch to 65001 (UTF-8)
@@ -954,12 +961,19 @@ class Command(BaseCommand):
         if self.verbose > 0:
             console.log(f"Run subprocess: {args}")
 
+        cmd_env = None
+        if env is not None:
+            cmd_env = os.environ.copy()
+            for k, v in env.items():
+                cmd_env[k] = v
+
         r = subprocess.run(
             args,
             cwd=cwd,
             capture_output=capture_output,
             text=True,
             encoding="utf8",
+            env=cmd_env,
         )
 
         if is_windows():

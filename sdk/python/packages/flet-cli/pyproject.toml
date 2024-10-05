@@ -20,6 +20,7 @@ python = "^3.8"
 watchdog = "^4.0.0"
 packaging = "^23.1"
 qrcode = "^7.4.2"
+toml = "^0.10.2"
 cookiecutter = "^2.6.0"
 
 [build-system]
