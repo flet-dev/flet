@@ -957,8 +957,13 @@ class Command(BaseCommand):
 
             self.cleanup(
                 0,
-                message=f"Successfully built your [cyan]{self.platforms[target_platform]['status_text']}[/cyan]! {self.emojis['success']} "
-                f"Find it in [cyan]{rel_out_dir}[/cyan] directory. {self.emojis['directory']}",
+                message=(
+                    f"Successfully built your [cyan]{self.platforms[target_platform]['status_text']}[/cyan]! {self.emojis['success']} "
+                    f"Find it in [cyan]{rel_out_dir}[/cyan] directory. {self.emojis['directory']}"
+                    f"\nRun [cyan]python -m http.server --directory {rel_out_dir}[/cyan] command to start dev web server with your app. "
+                    if target_platform == "web"
+                    else ""
+                ),
             )
 
     def copy_icon_image(self, src_path: Path, dest_path: Path, image_name: str):
