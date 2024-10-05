@@ -19,8 +19,31 @@ def _convert_poetry_to_requirements(
             "The project section is missing from the TOML file. Exiting..."
         )
 
+    def format_dependency_version(dependency: str, version_value: Any):
+        suffix = ""
+        if isinstance(version_value, dict):
+            version = version_value["version"]
+            if version_value["markers"]:
+                suffix = f";{version_value['markers']}"
+        else:
+            version = version_value
+
+        sep = "=="
+        if version.startswith("^"):
+            sep = ">="
+            version = version[1:]
+        elif version.startswith("~"):
+            sep = "~="
+            version = version[1:]
+            return f"{dependency}~={version[1:]}"
+        elif "<" in version or ">" in version:
+            sep = ""
+            version = version.replace(" ", "")
+
+        return f"{dependency}{sep}{version}{suffix}"
+
     dependencies: set[str] = {
-        f"{dependency}{version}"
+        format_dependency_version(dependency, version)
         for dependency, version in project.get("dependencies", {}).items()
         if dependency != "python"
     }
@@ -35,7 +58,7 @@ def _convert_poetry_to_requirements(
             group: dict[str, Any] = groups[optional_list_to_include]
 
             optional_dependencies: set[str] = {
-                f"{dependency}{version}"
+                format_dependency_version(dependency, version)
                 for dependency, version in group.get("dependencies", {}).items()
             }
 
