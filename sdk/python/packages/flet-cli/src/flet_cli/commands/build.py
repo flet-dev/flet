@@ -579,6 +579,56 @@ class Command(BaseCommand):
                     else "No additional Flutter dependencies!"
                 )
 
+            info_plist = {}
+            macos_entitlements = []
+            android_permissions = {}
+            android_features = {}
+
+            # merge values from "--permissions" arg:
+            for p in options.permissions:
+                if p in self.cross_platform_permissions:
+                    info_plist.update(self.cross_platform_permissions[p]["info_plist"])
+                    macos_entitlements.extend(
+                        self.cross_platform_permissions[p]["macos_entitlements"]
+                    )
+                    android_permissions.update(
+                        self.cross_platform_permissions[p]["android_permissions"]
+                    )
+                    android_features.update(
+                        self.cross_platform_permissions[p]["android_features"]
+                    )
+
+            # parse --info-plist
+            for p in options.info_plist:
+                i = p.find("=")
+                if i > -1:
+                    k = p[:i]
+                    v = p[i + 1 :]
+                    info_plist[k] = (
+                        True if v == "True" else False if v == "False" else v
+                    )
+                else:
+                    self.cleanup(1, f"Invalid Info.plist option: {p}")
+
+            # parse --macos-entitlements
+            macos_entitlements.extend(options.macos_entitlements)
+
+            # parse --android-permissions
+            for p in options.android_permissions:
+                i = p.find("=")
+                if i > -1:
+                    android_permissions[p[:i]] = True if p[i + 1 :] == "True" else False
+                else:
+                    self.cleanup(1, f"Invalid Android permission option: {p}")
+
+            # parse --android-features
+            for p in options.android_features:
+                i = p.find("=")
+                if i > -1:
+                    android_features[p[:i]] = True if p[i + 1 :] == "True" else False
+                else:
+                    self.cleanup(1, f"Invalid Android feature option: {p}")
+
             template_data = {
                 "out_dir": self.flutter_dir.name,
                 "sep": os.sep,
@@ -595,6 +645,10 @@ class Command(BaseCommand):
                 "company_name": options.company_name,
                 "copyright": options.copyright,
                 "team_id": options.team_id,
+                "info_plist": info_plist,
+                "macos_entitlements": macos_entitlements,
+                "android_permissions": android_permissions,
+                "android_features": android_features,
                 "flutter": {"dependencies": list(flutter_dependencies.keys())},
             }
             # Remove None values from the dictionary
