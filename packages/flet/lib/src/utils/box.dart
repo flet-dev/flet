@@ -36,8 +36,8 @@ BoxConstraints? boxConstraintsFromJSON(dynamic json,
   return BoxConstraints(
     minHeight: parseDouble(json["min_height"], 0.0)!,
     minWidth: parseDouble(json["min_width"], 0.0)!,
-    maxHeight: parseDouble(json["max_height"], 0.0)!,
-    maxWidth: parseDouble(json["max_width"], 0.0)!,
+    maxHeight: parseDouble(json["max_height"], double.infinity)!,
+    maxWidth: parseDouble(json["max_width"], double.infinity)!,
   );
 }
 

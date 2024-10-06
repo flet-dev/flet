@@ -11,13 +11,13 @@ from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     BorderRadiusValue,
+    DurationValue,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
-    DurationValue,
 )
 from flet_core.utils import deprecated
 
@@ -227,6 +227,8 @@ class Dropdown(FormFieldControl):
         prefix_icon_size_constraints: Optional[BoxConstraints] = None,
         suffix_icon_color: Optional[str] = None,
         suffix_icon_size_constraints: Optional[BoxConstraints] = None,
+        size_constraints: Optional[BoxConstraints] = None,
+        collapsed: Optional[bool] = None,
         #
         # ConstrainedControl
         #
@@ -330,6 +332,8 @@ class Dropdown(FormFieldControl):
             prefix_icon_size_constraints=prefix_icon_size_constraints,
             suffix_icon_color=suffix_icon_color,
             suffix_icon_size_constraints=suffix_icon_size_constraints,
+            size_constraints=size_constraints,
+            collapsed=collapsed,
         )
 
         self.value = value

@@ -168,6 +168,8 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
           ? createControl(control, helper.id, control.isDisabled,
               parentAdaptive: adaptive)
           : null,
+      constraints: parseBoxConstraints(control, "sizeConstraints"),
+      isCollapsed: control.attrBool("collapsed"),
       prefixIconColor: control.attrColor("prefixIconColor", context),
       suffixIconColor: control.attrColor("suffixIconColor", context),
       prefixIconConstraints:

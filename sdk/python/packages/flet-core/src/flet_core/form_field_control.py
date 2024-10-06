@@ -10,14 +10,14 @@ from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     BorderRadiusValue,
+    DurationValue,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     VerticalAlignment,
-    OptionalControlEventCallable,
-    DurationValue,
 )
 
 try:
@@ -83,6 +83,8 @@ class FormFieldControl(ConstrainedControl):
         suffix_icon: Optional[str] = None,
         suffix_icon_color: Union[None, str, Control] = None,
         suffix_icon_size_constraints: Optional[BoxConstraints] = None,
+        size_constraints: Optional[BoxConstraints] = None,
+        collapsed: Optional[bool] = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
         rtl: Optional[bool] = None,
@@ -199,6 +201,8 @@ class FormFieldControl(ConstrainedControl):
         self.prefix_icon_size_constraints = prefix_icon_size_constraints
         self.suffix_icon_color = suffix_icon_color
         self.suffix_icon_size_constraints = suffix_icon_size_constraints
+        self.size_constraints = size_constraints
+        self.collapsed = collapsed
 
     def before_update(self):
         super().before_update()
@@ -219,6 +223,7 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr_json(
             "suffixIconSizeConstraints", self.__suffix_icon_size_constraints
         )
+        self._set_attr_json("sizeConstraints", self.__size_constraints)
 
     def _get_children(self):
         children = []
@@ -398,6 +403,24 @@ class FormFieldControl(ConstrainedControl):
     @suffix_icon_size_constraints.setter
     def suffix_icon_size_constraints(self, value: Optional[BoxConstraints]):
         self.__suffix_icon_size_constraints = value
+
+    # size_constraints
+    @property
+    def size_constraints(self) -> Optional[BoxConstraints]:
+        return self.__size_constraints
+
+    @size_constraints.setter
+    def size_constraints(self, value: Optional[BoxConstraints]):
+        self.__size_constraints = value
+
+    # collapsed
+    @property
+    def collapsed(self) -> Optional[bool]:
+        return self._get_attr("collapsed", data_type="bool")
+
+    @collapsed.setter
+    def collapsed(self, value: Optional[bool]):
+        self._set_attr("collapsed", value)
 
     # bgcolor
     @property
