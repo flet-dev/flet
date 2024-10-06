@@ -13,20 +13,20 @@ from pathlib import Path
 from typing import Optional, Union
 
 import yaml
-from packaging import version
-from rich.console import Console, Style
-from rich.table import Table, Column
-
-import flet.version
-from flet.cli.commands.base import BaseCommand
-from flet.version import update_version
 from flet_core.utils import random_string, slugify
 from flet_runtime.utils import (
     calculate_file_hash,
     copy_tree,
-    is_windows,
     get_bool_env_var,
+    is_windows,
 )
+from packaging import version
+from rich.console import Console, Style
+from rich.table import Column, Table
+
+import flet.version
+from flet.cli.commands.base import BaseCommand
+from flet.version import update_version
 
 if is_windows():
     from ctypes import windll
@@ -47,11 +47,13 @@ class Command(BaseCommand):
     def __init__(self, parser: argparse.ArgumentParser) -> None:
         super().__init__(parser)
 
+        self.no_rich_output = None
         self.emojis = {}
         self.dart_exe = None
         self.verbose = None
         self.flutter_dir = None
         self.flutter_exe = None
+        self.current_platform = platform.system()
         self.platforms = {
             "windows": {
                 "build_command": "windows",
@@ -322,31 +324,31 @@ class Command(BaseCommand):
     def handle(self, options: argparse.Namespace) -> None:
         self.verbose = options.verbose
         self.flutter_dir = None
-        no_rich_output = options.no_rich_output or get_bool_env_var(
+        self.no_rich_output = options.no_rich_output or get_bool_env_var(
             "FLET_CLI_NO_RICH_OUTPUT"
         )
         self.emojis = {
-            "checkmark": "[green]OK[/]" if no_rich_output else "✅",
-            "loading": "" if no_rich_output else "⏳",
-            "success": "" if no_rich_output else "🥳",
-            "directory": "" if no_rich_output else "📁",
+            "checkmark": "[green]OK[/]" if self.no_rich_output else "✅",
+            "loading": "" if self.no_rich_output else "⏳",
+            "success": "" if self.no_rich_output else "🥳",
+            "directory": "" if self.no_rich_output else "📁",
         }
         target_platform = options.target_platform.lower()
         # platform check
-        current_platform = platform.system()
         if (
-            current_platform not in self.platforms[target_platform]["can_be_run_on"]
+                self.current_platform
+                not in self.platforms[target_platform]["can_be_run_on"]
             or options.show_platform_matrix
         ):
             can_build_message = (
                 "can't"
-                if current_platform
+                if self.current_platform
                 not in self.platforms[target_platform]["can_be_run_on"]
                 else "can"
             )
             # replace "Darwin" with "macOS" for user-friendliness
-            current_platform = (
-                "macOS" if current_platform == "Darwin" else current_platform
+            self.current_platform = (
+                "macOS" if self.current_platform == "Darwin" else self.current_platform
             )
             # highlight the current platform in the build matrix table
             self.platform_matrix_table.rows[
@@ -354,7 +356,7 @@ class Command(BaseCommand):
             ].style = "bold red1"
             console.log(self.platform_matrix_table)
 
-            message = f"You {can_build_message} build [cyan]{target_platform}[/] on [magenta]{current_platform}[/]."
+            message = f"You {can_build_message} build [cyan]{target_platform}[/] on [magenta]{self.current_platform}[/]."
             self.cleanup(1, message)
 
         with console.status(
@@ -993,8 +995,12 @@ class Command(BaseCommand):
                                 + f"You have {flutter_version}."
                             )
                             console.log(flutter_msg, style=error_style)
-            # run flutter doctor
-            self.run_flutter_doctor(style=error_style)
+
+            # windows has been reported to raise encoding errors when running `flutter doctor`
+            # so skip running `flutter doctor` if no_rich_output is True and platform is Windows
+            if not (self.no_rich_output and self.current_platform == "Windows"):
+                self.run_flutter_doctor(style=error_style)
+
         sys.exit(exit_code)
 
     def run_flutter_doctor(self, style: Optional[Union[Style, str]] = None):
