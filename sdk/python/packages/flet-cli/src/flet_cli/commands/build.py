@@ -51,7 +51,7 @@ class Command(BaseCommand):
         self.flutter_exe = None
         self.platforms = {
             "windows": {
-                "package_command_platform": "Windows",
+                "package_platform": "Windows",
                 "flutter_build_command": "windows",
                 "status_text": "Windows app",
                 "outputs": ["build/windows/x64/runner/Release/*"],
@@ -59,7 +59,7 @@ class Command(BaseCommand):
                 "can_be_run_on": ["Windows"],
             },
             "macos": {
-                "package_command_platform": "Darwin",
+                "package_platform": "Darwin",
                 "flutter_build_command": "macos",
                 "status_text": "macOS bundle",
                 "outputs": ["build/macos/Build/Products/Release/{product_name}.app"],
@@ -67,7 +67,7 @@ class Command(BaseCommand):
                 "can_be_run_on": ["Darwin"],
             },
             "linux": {
-                "package_command_platform": "Linux",
+                "package_platform": "Linux",
                 "flutter_build_command": "linux",
                 "status_text": "app for Linux",
                 "outputs": ["build/linux/{arch}/release/bundle/*"],
@@ -75,7 +75,7 @@ class Command(BaseCommand):
                 "can_be_run_on": ["Linux"],
             },
             "web": {
-                "package_command_platform": "Pyodide",
+                "package_platform": "Pyodide",
                 "flutter_build_command": "web",
                 "status_text": "web app",
                 "outputs": ["build/web/*"],
@@ -83,7 +83,7 @@ class Command(BaseCommand):
                 "can_be_run_on": ["Darwin", "Windows", "Linux"],
             },
             "apk": {
-                "package_command_platform": "Android",
+                "package_platform": "Android",
                 "flutter_build_command": "apk",
                 "status_text": ".apk for Android",
                 "outputs": ["build/app/outputs/flutter-apk/*"],
@@ -91,7 +91,7 @@ class Command(BaseCommand):
                 "can_be_run_on": ["Darwin", "Windows", "Linux"],
             },
             "aab": {
-                "package_command_platform": "Android",
+                "package_platform": "Android",
                 "flutter_build_command": "appbundle",
                 "status_text": ".aab bundle for Android",
                 "outputs": ["build/app/outputs/bundle/release/*"],
@@ -99,12 +99,71 @@ class Command(BaseCommand):
                 "can_be_run_on": ["Darwin", "Windows", "Linux"],
             },
             "ipa": {
-                "package_command_platform": "iOS",
+                "package_platform": "iOS",
                 "flutter_build_command": "ipa",
                 "status_text": ".ipa bundle for iOS",
                 "outputs": ["build/ios/archive/*", "build/ios/ipa/*"],
                 "dist": "ipa",
                 "can_be_run_on": ["Darwin"],
+            },
+        }
+
+        self.cross_platform_permissions = {
+            "location": {
+                "info_plist": {
+                    "NSLocationWhenInUseUsageDescription": "This app uses location service when in use.",
+                    "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses location service.",
+                },
+                "macos_entitlements": [
+                    "com.apple.security.personal-information.location"
+                ],
+                "android_permissions": {
+                    "android.permission.ACCESS_FINE_LOCATION": True,
+                    "android.permission.ACCESS_COARSE_LOCATION": True,
+                    "android.permission.ACCESS_BACKGROUND_LOCATION": True,
+                },
+                "android_features": {
+                    "android.hardware.location.network": False,
+                    "android.hardware.location.gps": False,
+                },
+            },
+            "camera": {
+                "info_plist": {
+                    "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."
+                },
+                "macos_entitlements": ["com.apple.security.device.camera"],
+                "android_permissions": {
+                    "android.permission.CAMERA": True,
+                },
+                "android_features": {
+                    "android.hardware.camera": False,
+                    "android.hardware.camera.any": False,
+                    "android.hardware.camera.front": False,
+                    "android.hardware.camera.external": False,
+                    "android.hardware.camera.autofocus": False,
+                },
+            },
+            "microphone": {
+                "info_plist": {
+                    "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",
+                },
+                "macos_entitlements": ["com.apple.security.device.audio-input"],
+                "android_permissions": {
+                    "android.permission.RECORD_AUDIO": True,
+                },
+                "android_features": {},
+            },
+            "photo_library": {
+                "info_plist": {
+                    "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."
+                },
+                "macos_entitlements": [
+                    "com.apple.security.personal-information.photos-library"
+                ],
+                "android_permissions": {
+                    "android.permission.READ_MEDIA_VISUAL_USER_SELECTED": True,
+                },
+                "android_features": {},
             },
         }
 
@@ -302,6 +361,42 @@ class Command(BaseCommand):
             nargs="+",
             default=[],
             help="include extra Flutter Flet packages, such as flet_video, flet_audio, etc.",
+        )
+        parser.add_argument(
+            "--info-plist",
+            dest="info_plist",
+            nargs="+",
+            default=[],
+            help='the list of "<key>=<value>|True|False" pairs to add to Info.plist for macOS and iOS builds',
+        )
+        parser.add_argument(
+            "--macos-entitlements",
+            dest="macos_entitlements",
+            nargs="+",
+            default=[],
+            help="the list of entitlement strings for macOS builds",
+        )
+        parser.add_argument(
+            "--android-features",
+            dest="android_features",
+            nargs="+",
+            default=[],
+            help='the list of "<feature_name>=True|False" pairs to add to AndroidManifest.xml',
+        )
+        parser.add_argument(
+            "--android-permissions",
+            dest="android_permissions",
+            nargs="+",
+            default=[],
+            help='the list of "<permission_name>=True|False" pairs to add to AndroidManifest.xml',
+        )
+        parser.add_argument(
+            "--permissions",
+            dest="permissions",
+            nargs="+",
+            default=[],
+            choices=["location", "camera", "microphone", "photo_library"],
+            help="the list of cross-platform permissions for iOS, Android and macOS apps",
         )
         parser.add_argument(
             "--build-number",
@@ -781,9 +876,7 @@ class Command(BaseCommand):
             self.status.update(
                 f"[bold blue]Packaging Python app {self.emojis['loading']}... ",
             )
-            package_platform = self.platforms[target_platform][
-                "package_command_platform"
-            ]
+            package_platform = self.platforms[target_platform]["package_platform"]
 
             package_args = [
                 self.dart_exe,
