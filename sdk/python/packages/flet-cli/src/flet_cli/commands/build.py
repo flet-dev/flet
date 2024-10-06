@@ -114,9 +114,9 @@ class Command(BaseCommand):
                     "NSLocationWhenInUseUsageDescription": "This app uses location service when in use.",
                     "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses location service.",
                 },
-                "macos_entitlements": [
-                    "com.apple.security.personal-information.location"
-                ],
+                "macos_entitlements": {
+                    "com.apple.security.personal-information.location": True
+                },
                 "android_permissions": {
                     "android.permission.ACCESS_FINE_LOCATION": True,
                     "android.permission.ACCESS_COARSE_LOCATION": True,
@@ -131,10 +131,8 @@ class Command(BaseCommand):
                 "info_plist": {
                     "NSCameraUsageDescription": "This app uses the camera to capture photos and videos."
                 },
-                "macos_entitlements": ["com.apple.security.device.camera"],
-                "android_permissions": {
-                    "android.permission.CAMERA": True,
-                },
+                "macos_entitlements": {"com.apple.security.device.camera": True},
+                "android_permissions": {"android.permission.CAMERA": True},
                 "android_features": {
                     "android.hardware.camera": False,
                     "android.hardware.camera.any": False,
@@ -147,9 +145,11 @@ class Command(BaseCommand):
                 "info_plist": {
                     "NSMicrophoneUsageDescription": "This app uses microphone to record sounds.",
                 },
-                "macos_entitlements": ["com.apple.security.device.audio-input"],
+                "macos_entitlements": {"com.apple.security.device.audio-input": True},
                 "android_permissions": {
                     "android.permission.RECORD_AUDIO": True,
+                    "android.permission.WRITE_EXTERNAL_STORAGE": True,
+                    "android.permission.READ_EXTERNAL_STORAGE": True,
                 },
                 "android_features": {},
             },
@@ -157,11 +157,11 @@ class Command(BaseCommand):
                 "info_plist": {
                     "NSPhotoLibraryUsageDescription": "This app saves photos and videos to the photo library."
                 },
-                "macos_entitlements": [
-                    "com.apple.security.personal-information.photos-library"
-                ],
+                "macos_entitlements": {
+                    "com.apple.security.personal-information.photos-library": True
+                },
                 "android_permissions": {
-                    "android.permission.READ_MEDIA_VISUAL_USER_SELECTED": True,
+                    "android.permission.READ_MEDIA_VISUAL_USER_SELECTED": True
                 },
                 "android_features": {},
             },
@@ -374,21 +374,21 @@ class Command(BaseCommand):
             dest="macos_entitlements",
             nargs="+",
             default=[],
-            help="the list of entitlement strings for macOS builds",
+            help='the list of "<key>=<value>|True|False" entitlements for macOS builds',
         )
         parser.add_argument(
             "--android-features",
             dest="android_features",
             nargs="+",
             default=[],
-            help='the list of "<feature_name>=True|False" pairs to add to AndroidManifest.xml',
+            help='the list of "<feature_name>=True|False" features to add to AndroidManifest.xml',
         )
         parser.add_argument(
             "--android-permissions",
             dest="android_permissions",
             nargs="+",
             default=[],
-            help='the list of "<permission_name>=True|False" pairs to add to AndroidManifest.xml',
+            help='the list of "<permission_name>=True|False" permissions to add to AndroidManifest.xml',
         )
         parser.add_argument(
             "--permissions",
@@ -580,15 +580,20 @@ class Command(BaseCommand):
                 )
 
             info_plist = {}
-            macos_entitlements = []
-            android_permissions = {}
+            macos_entitlements = {
+                "com.apple.security.app-sandbox": False,
+                "com.apple.security.cs.allow-jit": True,
+                "com.apple.security.network.client": True,
+                "com.apple.security.network.server": True,
+            }
+            android_permissions = {"android.permission.INTERNET": True}
             android_features = {}
 
             # merge values from "--permissions" arg:
             for p in options.permissions:
                 if p in self.cross_platform_permissions:
                     info_plist.update(self.cross_platform_permissions[p]["info_plist"])
-                    macos_entitlements.extend(
+                    macos_entitlements.update(
                         self.cross_platform_permissions[p]["macos_entitlements"]
                     )
                     android_permissions.update(
@@ -611,7 +616,12 @@ class Command(BaseCommand):
                     self.cleanup(1, f"Invalid Info.plist option: {p}")
 
             # parse --macos-entitlements
-            macos_entitlements.extend(options.macos_entitlements)
+            for p in options.macos_entitlements:
+                i = p.find("=")
+                if i > -1:
+                    macos_entitlements[p[:i]] = True if p[i + 1 :] == "True" else False
+                else:
+                    self.cleanup(1, f"Invalid macOS entitlement option: {p}")
 
             # parse --android-permissions
             for p in options.android_permissions:
@@ -645,10 +655,12 @@ class Command(BaseCommand):
                 "company_name": options.company_name,
                 "copyright": options.copyright,
                 "team_id": options.team_id,
-                "info_plist": info_plist,
-                "macos_entitlements": macos_entitlements,
-                "android_permissions": android_permissions,
-                "android_features": android_features,
+                "options": {
+                    "info_plist": info_plist,
+                    "macos_entitlements": macos_entitlements,
+                    "android_permissions": android_permissions,
+                    "android_features": android_features,
+                },
                 "flutter": {"dependencies": list(flutter_dependencies.keys())},
             }
             # Remove None values from the dictionary
