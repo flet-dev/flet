@@ -4,9 +4,10 @@ import shutil
 import sys
 from pathlib import Path
 
+from flet_runtime.utils import is_macos, is_windows
+
 import flet.__pyinstaller.config as hook_config
 from flet.cli.commands.base import BaseCommand
-from flet_runtime.utils import is_macos, is_windows
 
 
 class Command(BaseCommand):
@@ -115,6 +116,13 @@ class Command(BaseCommand):
             help="Using this option creates a Manifest that will request elevation upon application start.(Windows)",
         )
         parser.add_argument(
+            "--pyinstaller-build-args",
+            dest="pyinstaller_build_args",
+            action="append",
+            nargs="*",
+            help="additional arguments for pyinstaller build command",
+        )
+        parser.add_argument(
             "-y",
             "--yes",
             dest="non_interactive",
@@ -165,6 +173,7 @@ class Command(BaseCommand):
 
         try:
             import PyInstaller.__main__
+
             from flet.__pyinstaller.utils import copy_flet_bin
 
             pyi_args = [options.script, "--noconfirm"]
@@ -204,6 +213,10 @@ class Command(BaseCommand):
                 pyi_args.append("--onedir")
             else:
                 pyi_args.append("--onefile")
+
+            if options.pyinstaller_build_args:
+                for pyinstaller_build_arg_arr in options.pyinstaller_build_args:
+                    pyi_args.extend(pyinstaller_build_arg_arr)
 
             # copy "bin"
             hook_config.temp_bin_dir = copy_flet_bin()

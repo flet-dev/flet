@@ -13,20 +13,20 @@ from pathlib import Path
 from typing import Optional, Union
 
 import yaml
-from packaging import version
-from rich.console import Console, Style
-from rich.table import Table, Column
-
-import flet.version
-from flet.cli.commands.base import BaseCommand
-from flet.version import update_version
 from flet_core.utils import random_string, slugify
 from flet_runtime.utils import (
     calculate_file_hash,
     copy_tree,
-    is_windows,
     get_bool_env_var,
+    is_windows,
 )
+from packaging import version
+from rich.console import Console, Style
+from rich.table import Column, Table
+
+import flet.version
+from flet.cli.commands.base import BaseCommand
+from flet.version import update_version
 
 if is_windows():
     from ctypes import windll
@@ -830,8 +830,7 @@ class Command(BaseCommand):
 
             if options.flutter_build_args:
                 for flutter_build_arg_arr in options.flutter_build_args:
-                    for flutter_build_arg in flutter_build_arg_arr:
-                        build_args.append(flutter_build_arg)
+                    build_args.extend(flutter_build_arg_arr)
 
             if self.verbose > 1:
                 build_args.append("--verbose")
