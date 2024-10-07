@@ -405,6 +405,27 @@ class Command(BaseCommand):
             help="deep linking URL in the format <sheme>://<host> to configure for iOS and Android builds",
         )
         parser.add_argument(
+            "--android-signing-key-store",
+            dest="android_signing_key_store",
+            help="path to an upload keystore .jks file for Android apps",
+        )
+        parser.add_argument(
+            "--android-signing-key-store-password",
+            dest="android_signing_key_store_password",
+            help="Android signing store password",
+        )
+        parser.add_argument(
+            "--android-signing-key-password",
+            dest="android_signing_key_password",
+            help="Android signing key password",
+        )
+        parser.add_argument(
+            "--android-signing-key-alias",
+            dest="android_signing_key_alias",
+            default="upload",
+            help='Android signing key alias. Default is "upload".',
+        )
+        parser.add_argument(
             "--build-number",
             dest="build_number",
             type=int,
@@ -681,6 +702,7 @@ class Command(BaseCommand):
                         if deep_linking_url
                         else None
                     ),
+                    "android_signing": options.android_signing_key_store is not None,
                 },
                 "flutter": {"dependencies": list(flutter_dependencies.keys())},
             }
@@ -1056,6 +1078,31 @@ class Command(BaseCommand):
                 self.platforms[target_platform]["flutter_build_command"],
             ]
 
+            build_env = {}
+
+            if options.android_signing_key_store:
+                build_env["FLET_ANDROID_SIGNING_KEY_STORE"] = (
+                    options.android_signing_key_store
+                )
+            if (
+                options.android_signing_key_store_password
+                or options.android_signing_key_password
+            ):
+                build_env["FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD"] = (
+                    options.android_signing_key_store_password
+                    if options.android_signing_key_store_password
+                    else options.android_signing_key_password
+                )
+                build_env["FLET_ANDROID_SIGNING_KEY_PASSWORD"] = (
+                    options.android_signing_key_password
+                    if options.android_signing_key_password
+                    else options.android_signing_key_store_password
+                )
+            if options.android_signing_key_alias:
+                build_env["FLET_ANDROID_SIGNING_KEY_ALIAS"] = (
+                    options.android_signing_key_alias
+                )
+
             if target_platform in "apk" and options.split_per_abi:
                 build_args.append("--split-per-abi")
 
@@ -1077,7 +1124,10 @@ class Command(BaseCommand):
                 build_args.append("--verbose")
 
             build_result = self.run(
-                build_args, cwd=str(self.flutter_dir), capture_output=self.verbose < 1
+                build_args,
+                cwd=str(self.flutter_dir),
+                env=build_env,
+                capture_output=self.verbose < 1,
             )
 
             if build_result.returncode != 0:
