@@ -126,9 +126,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             }
           : null;
 
-      ElevatedButton? elevatedButton;
-      FilledButton? filledButton;
-      FilledButton? filledTonalButton;
+      Widget? button;
 
       var theme = Theme.of(context);
 
@@ -151,47 +149,49 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
               description:
                   "\"icon\" must be specified together with \"text\".");
         }
-        elevatedButton = ElevatedButton.icon(
-            style: style,
-            autofocus: autofocus,
-            focusNode: _focusNode,
-            onPressed: onPressed,
-            onLongPress: onLongPressHandler,
-            onHover: onHoverHandler,
-            clipBehavior: clipBehavior,
-            icon: Icon(
-              icon,
-              color: iconColor,
-            ),
-            label: Text(text));
-
-        filledButton = FilledButton.icon(
-            style: style,
-            autofocus: autofocus,
-            focusNode: _focusNode,
-            onPressed: onPressed,
-            onLongPress: onLongPressHandler,
-            onHover: onHoverHandler,
-            clipBehavior: clipBehavior,
-            icon: Icon(
-              icon,
-              color: iconColor,
-            ),
-            label: Text(text));
-
-        filledTonalButton = FilledButton.tonalIcon(
-            style: style,
-            autofocus: autofocus,
-            focusNode: _focusNode,
-            onPressed: onPressed,
-            onLongPress: onLongPressHandler,
-            onHover: onHoverHandler,
-            clipBehavior: clipBehavior,
-            icon: Icon(
-              icon,
-              color: iconColor,
-            ),
-            label: Text(text));
+        if (filled) {
+          button = FilledButton.icon(
+              style: style,
+              autofocus: autofocus,
+              focusNode: _focusNode,
+              onPressed: onPressed,
+              onLongPress: onLongPressHandler,
+              onHover: onHoverHandler,
+              clipBehavior: clipBehavior,
+              icon: Icon(
+                icon,
+                color: iconColor,
+              ),
+              label: Text(text));
+        } else if (filledtonal) {
+          button = FilledButton.tonalIcon(
+              style: style,
+              autofocus: autofocus,
+              focusNode: _focusNode,
+              onPressed: onPressed,
+              onLongPress: onLongPressHandler,
+              onHover: onHoverHandler,
+              clipBehavior: clipBehavior,
+              icon: Icon(
+                icon,
+                color: iconColor,
+              ),
+              label: Text(text));
+        } else {
+          button = ElevatedButton.icon(
+              style: style,
+              autofocus: autofocus,
+              focusNode: _focusNode,
+              onPressed: onPressed,
+              onLongPress: onLongPressHandler,
+              onHover: onHoverHandler,
+              clipBehavior: clipBehavior,
+              icon: Icon(
+                icon,
+                color: iconColor,
+              ),
+              label: Text(text));
+        }
       } else {
         Widget? child;
         if (contentCtrls.isNotEmpty) {
@@ -201,35 +201,37 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
           child = Text(text);
         }
 
-        elevatedButton = ElevatedButton(
-            style: style,
-            autofocus: autofocus,
-            focusNode: _focusNode,
-            onPressed: onPressed,
-            onLongPress: onLongPressHandler,
-            onHover: onHoverHandler,
-            clipBehavior: clipBehavior,
-            child: child);
-
-        filledButton = FilledButton(
-            style: style,
-            autofocus: autofocus,
-            focusNode: _focusNode,
-            onPressed: onPressed,
-            onLongPress: onLongPressHandler,
-            onHover: onHoverHandler,
-            clipBehavior: clipBehavior,
-            child: child);
-
-        filledTonalButton = FilledButton.tonal(
-            style: style,
-            autofocus: autofocus,
-            focusNode: _focusNode,
-            onPressed: onPressed,
-            onLongPress: onLongPressHandler,
-            onHover: onHoverHandler,
-            clipBehavior: clipBehavior,
-            child: child);
+        if (filled) {
+          button = FilledButton(
+              style: style,
+              autofocus: autofocus,
+              focusNode: _focusNode,
+              onPressed: onPressed,
+              onLongPress: onLongPressHandler,
+              onHover: onHoverHandler,
+              clipBehavior: clipBehavior,
+              child: child);
+        } else if (filledtonal) {
+          button = FilledButton.tonal(
+              style: style,
+              autofocus: autofocus,
+              focusNode: _focusNode,
+              onPressed: onPressed,
+              onLongPress: onLongPressHandler,
+              onHover: onHoverHandler,
+              clipBehavior: clipBehavior,
+              child: child);
+        } else {
+          button = ElevatedButton(
+              style: style,
+              autofocus: autofocus,
+              focusNode: _focusNode,
+              onPressed: onPressed,
+              onLongPress: onLongPressHandler,
+              onHover: onHoverHandler,
+              clipBehavior: clipBehavior,
+              child: child);
+        }
       }
 
       var focusValue = widget.control.attrString("focus");
@@ -237,16 +239,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
         _lastFocusValue = focusValue;
         _focusNode.requestFocus();
       }
-      if (filled) {
-        return constrainedControl(
-            context, filledButton, widget.parent, widget.control);
-      } else if (filledtonal) {
-        return constrainedControl(
-            context, filledTonalButton, widget.parent, widget.control);
-      } else {
-        return constrainedControl(
-            context, elevatedButton, widget.parent, widget.control);
-      }
+      return constrainedControl(context, button, widget.parent, widget.control);
     });
   }
 }
