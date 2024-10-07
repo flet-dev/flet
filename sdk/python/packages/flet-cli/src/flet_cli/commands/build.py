@@ -198,6 +198,13 @@ class Command(BaseCommand):
             help="path to a directory with a Python program",
         )
         parser.add_argument(
+            "--arch",
+            dest="target_arch",
+            required=False,
+            choices=["arm64-v8a", "armeabi-v7a", "x86_64", "x86", "arm64"],
+            help="package for specific architecture only. Used with Android and macOS builds only.",
+        )
+        parser.add_argument(
             "--exclude",
             dest="exclude",
             nargs="+",
@@ -996,6 +1003,12 @@ class Command(BaseCommand):
                 "--platform",
                 package_platform,
             ]
+
+            if options.target_arch:
+                package_args.extend([
+                    "--arch",
+                    options.target_arch
+                ])
 
             package_env = {}
 
