@@ -9,6 +9,7 @@ import subprocess
 import sys
 from pathlib import Path
 from typing import Any, Optional, Union
+from urllib.parse import urlparse
 
 import flet.version
 import toml
@@ -399,6 +400,11 @@ class Command(BaseCommand):
             help="the list of cross-platform permissions for iOS, Android and macOS apps",
         )
         parser.add_argument(
+            "--deep-linking-url",
+            dest="deep_linking_url",
+            help="deep linking URL in the format <sheme>://<host> to configure for iOS and Android builds",
+        )
+        parser.add_argument(
             "--build-number",
             dest="build_number",
             type=int,
@@ -587,7 +593,10 @@ class Command(BaseCommand):
                 "com.apple.security.network.server": True,
             }
             android_permissions = {"android.permission.INTERNET": True}
-            android_features = {}
+            android_features = {
+                "android.software.leanback": False,
+                "android.hardware.touchscreen": False,
+            }
 
             # merge values from "--permissions" arg:
             for p in options.permissions:
@@ -639,6 +648,10 @@ class Command(BaseCommand):
                 else:
                     self.cleanup(1, f"Invalid Android feature option: {p}")
 
+            deep_linking_url = (
+                urlparse(options.deep_linking_url) if options.deep_linking_url else None
+            )
+
             template_data = {
                 "out_dir": self.flutter_dir.name,
                 "sep": os.sep,
@@ -660,6 +673,14 @@ class Command(BaseCommand):
                     "macos_entitlements": macos_entitlements,
                     "android_permissions": android_permissions,
                     "android_features": android_features,
+                    "deep_linking_url": (
+                        {
+                            "scheme": deep_linking_url.scheme,
+                            "netloc": deep_linking_url.netloc,
+                        }
+                        if deep_linking_url
+                        else None
+                    ),
                 },
                 "flutter": {"dependencies": list(flutter_dependencies.keys())},
             }
