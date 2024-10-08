@@ -245,7 +245,7 @@ for:
           } elseif (-not $env:APPVEYOR_PULL_REQUEST_NUMBER) {
             $wheels = (Get-ChildItem $env:flet_sdk_root/packages/flet-desktop/dist/*.whl | Select-Object -ExpandProperty FullName)
             foreach ($wheel in $wheels) {
-                curl.exe -F package=@$wheel https://$env:GEMFURY_TOKEN@push.fury.io/flet/
+                curl.exe -sF package=@$wheel https://$env:GEMFURY_TOKEN@push.fury.io/flet/
             }
           }
 
