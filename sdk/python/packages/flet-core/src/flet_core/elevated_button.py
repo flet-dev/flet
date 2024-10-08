@@ -1,5 +1,5 @@
 import time
-from typing import Any, Optional, Union
+from typing import Any, Dict, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import ButtonStyle
@@ -9,13 +9,14 @@ from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
+    ClipBehavior,
+    ControlState,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ClipBehavior,
     UrlTarget,
-    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -48,10 +49,10 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         text: Optional[str] = None,
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
-        color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
+        color: Union[None, str, Dict[ControlState, str]] = None,
+        bgcolor: Union[None, str, Dict[ControlState, str]] = None,
         content: Optional[Control] = None,
-        elevation: OptionalNumber = None,
+        elevation: Union[OptionalNumber, Dict[ControlState, OptionalNumber]] = None,
         style: Optional[ButtonStyle] = None,
         autofocus: Optional[bool] = None,
         clip_behavior: Optional[ClipBehavior] = None,
@@ -127,10 +128,6 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
-        self.__color = None
-        self.__bgcolor = None
-        self.__elevation = None
-
         self.text = text
         self.color = color
         self.bgcolor = bgcolor
@@ -157,27 +154,18 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         assert (
             self.text or self.icon or (self.__content and self.__content.visible)
         ), "at minimum, text, icon or a visible content must be provided"
+        style = ButtonStyle()
         if any([self.__color, self.__bgcolor, self.__elevation]):
-            self.__style = self.__style or ButtonStyle()
-        if self.__style:
-            self.__style.color = (
-                self.__style.color if self.__style.color is not None else self.color
-            )
-            self.__style.bgcolor = (
-                self.__style.bgcolor
-                if self.__style.bgcolor is not None
-                else self.bgcolor
-            )
-            self.__style.elevation = (
-                self.__style.elevation
-                if self.__style.elevation is not None
-                else self.elevation
-            )
-            self.__style.side = self._wrap_attr_dict(self.__style.side)
-            self.__style.shape = self._wrap_attr_dict(self.__style.shape)
-            self.__style.padding = self._wrap_attr_dict(self.__style.padding)
-            self.__style.text_style = self._wrap_attr_dict(self.__style.text_style)
-        self._set_attr_json("style", self.__style)
+            style = self.__style or style
+        if style:
+            style.color = style.color or self.__color
+            style.bgcolor = style.bgcolor or self.__bgcolor
+            style.elevation = style.elevation or self.__elevation
+            style.side = self._wrap_attr_dict(style.side)
+            style.shape = self._wrap_attr_dict(style.shape)
+            style.padding = self._wrap_attr_dict(style.padding)
+            style.text_style = self._wrap_attr_dict(style.text_style)
+        self._set_attr_json("style", style)
 
     def _get_children(self):
         if self.__content is None:
@@ -208,30 +196,31 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     # color
     @property
-    def color(self) -> Optional[str]:
+    def color(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__color
 
     @color.setter
-    def color(self, value: Optional[str]):
+    def color(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__color = value
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
+    def bgcolor(self) -> Union[None, str, Dict[ControlState, str]]:
         return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
+    def bgcolor(self, value: Union[None, str, Dict[ControlState, str]]):
         self.__bgcolor = value
-        self._set_attr("bgColor", value)
 
     # elevation
     @property
-    def elevation(self) -> OptionalNumber:
+    def elevation(self) -> Union[OptionalNumber, Dict[ControlState, OptionalNumber]]:
         return self.__elevation
 
     @elevation.setter
-    def elevation(self, value: OptionalNumber):
+    def elevation(
+        self, value: Union[OptionalNumber, Dict[ControlState, OptionalNumber]]
+    ):
         self.__elevation = value
 
     # style
