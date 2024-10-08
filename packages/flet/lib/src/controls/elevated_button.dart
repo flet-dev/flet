@@ -85,8 +85,8 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
                 backend: widget.backend);
       }
 
-      bool filled = widget.control.attrBool("filled", false)!;
-      bool filledtonal = widget.control.attrBool("filledtonal", false)!;
+      bool isFilledButton = widget.control.type == "filledbutton";
+      bool isFilledTonalButton = widget.control.type == "filledtonalbutton";
       String text = widget.control.attrString("text", "")!;
       String url = widget.control.attrString("url", "")!;
       IconData? icon = parseIcon(widget.control.attrString("icon"));
@@ -149,7 +149,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
               description:
                   "\"icon\" must be specified together with \"text\".");
         }
-        if (filled) {
+        if (isFilledButton) {
           button = FilledButton.icon(
               style: style,
               autofocus: autofocus,
@@ -163,7 +163,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
                 color: iconColor,
               ),
               label: Text(text));
-        } else if (filledtonal) {
+        } else if (isFilledTonalButton) {
           button = FilledButton.tonalIcon(
               style: style,
               autofocus: autofocus,
@@ -201,7 +201,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
           child = Text(text);
         }
 
-        if (filled) {
+        if (isFilledButton) {
           button = FilledButton(
               style: style,
               autofocus: autofocus,
@@ -211,7 +211,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
               onHover: onHoverHandler,
               clipBehavior: clipBehavior,
               child: child);
-        } else if (filledtonal) {
+        } else if (isFilledTonalButton) {
           button = FilledButton.tonal(
               style: style,
               autofocus: autofocus,

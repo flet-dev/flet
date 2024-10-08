@@ -100,4 +100,5 @@ class FilledButton(ElevatedButton):
             adaptive=adaptive,
         )
 
-        self._set_attr("filled", True)
+    def _get_control_name(self):
+        return "filledbutton"

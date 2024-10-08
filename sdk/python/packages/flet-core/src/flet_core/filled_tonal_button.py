@@ -100,4 +100,5 @@ class FilledTonalButton(ElevatedButton):
             adaptive=adaptive,
         )
 
-        self._set_attr("filledtonal", True)
+    def _get_control_name(self):
+        return "filledtonalbutton"
