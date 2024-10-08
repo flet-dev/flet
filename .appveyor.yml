@@ -243,7 +243,7 @@ for:
           if (($env:APPVEYOR_REPO_BRANCH -eq "main" -or $env:APPVEYOR_REPO_TAG_NAME) -and (-not $env:APPVEYOR_PULL_REQUEST_NUMBER)) {
               twine upload %flet_sdk_root%\packages\flet-desktop\dist\*
           } elseif (-not $env:APPVEYOR_PULL_REQUEST_NUMBER) {
-            $wheels = (Get-ChildItem #env:flet_sdk_root/packages/flet-desktop/dist/*.whl | Select-Object -ExpandProperty FullName)
+            $wheels = (Get-ChildItem $env:flet_sdk_root/packages/flet-desktop/dist/*.whl | Select-Object -ExpandProperty FullName)
             foreach ($wheel in $wheels) {
                 curl.exe -F package=@$wheel https://$env:GEMFURY_TOKEN@push.fury.io/flet/
             }
