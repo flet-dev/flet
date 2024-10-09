@@ -1,10 +1,10 @@
 """Convert a pyproject.toml file to a requirements.txt file."""
 
+# Based on: https://pypi.org/project/toml-to-requirements/
+
 from __future__ import annotations
 
 from typing import Any
-
-import toml
 
 
 def _convert_poetry_to_requirements(
