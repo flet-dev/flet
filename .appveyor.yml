@@ -231,9 +231,7 @@ for:
       - ps: |
           Get-ChildItem -Path dist/*-py3-none-any.whl | ForEach-Object {
               $win64_wheel = $_.Name -replace "-py3-none-any", "-py3-none-win_amd64"
-              $win32_wheel = $_.Name -replace "-py3-none-any", "-py3-none-win32"
-              Copy-Item $_.FullName dist/$win64_wheel
-              Move-Item $_.FullName dist/$win32_wheel
+              Move-Item $_.FullName dist/$win64_wheel
           }
       - cd %APPVEYOR_BUILD_FOLDER%
       - dir %flet_sdk_root%\packages\flet-desktop\dist
@@ -341,9 +339,8 @@ for:
       - pushd client
       - sh: |
           wheel_tags=(
-            "py3-none-manylinux_2_17_"
-            "py3-none-manylinux2014_"
-            "py3-none-musllinux_1_2_"
+            "py3-none-manylinux_2_17_{arch}.manylinux2014_{arch}"
+            "py3-none-musllinux_1_2_{arch}"
           )
           if [[ "$ARCH" == "amd64" ]]; then
               build_arch="x64"
@@ -381,7 +378,7 @@ for:
       - sh: |
           for file in dist/*-py3-none-any.whl; do
             for tag in "${wheel_tags[@]}"; do
-              wheel=$(echo "$file" | sed "s/-py3-none-any/-$tag$platform_arch/")
+              wheel=$(echo "$file" | sed "s/-py3-none-any/-$tag/ | sed "s/{arch}/$platform_arch/g")
               cp "$file" "$wheel"
             done
             rm "$file"
