@@ -1,6 +1,7 @@
 from typing import Any, Optional, Union
 
 from flet_core.alignment import Alignment
+from flet_core.badge import BadgeValue
 from flet_core.control import Control, OptionalNumber
 from flet_core.cupertino_button import CupertinoButton
 from flet_core.ref import Ref
@@ -56,6 +57,7 @@ class CupertinoFilledButton(CupertinoButton):
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: TooltipValue = None,
+        badge: BadgeValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -71,6 +73,7 @@ class CupertinoFilledButton(CupertinoButton):
             col=col,
             opacity=opacity,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,

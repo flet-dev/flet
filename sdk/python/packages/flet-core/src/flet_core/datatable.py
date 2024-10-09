@@ -1,6 +1,7 @@
 import json
 from typing import Any, Dict, List, Optional, Union
 
+from flet_core.badge import BadgeValue
 from flet_core.border import Border, BorderSide
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -14,15 +15,15 @@ from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
+    ClipBehavior,
     ControlState,
+    MainAxisAlignment,
     OffsetValue,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ClipBehavior,
-    OptionalEventCallable,
-    OptionalControlEventCallable,
-    MainAxisAlignment,
 )
 
 
@@ -384,6 +385,7 @@ class DataTable(ConstrainedControl):
         animate_offset: AnimationValue = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: BadgeValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -414,6 +416,7 @@ class DataTable(ConstrainedControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,

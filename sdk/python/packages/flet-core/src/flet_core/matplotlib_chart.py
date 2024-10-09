@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 from typing import Any, Optional, Union
 
 from flet_core import alignment
+from flet_core.badge import BadgeValue
 from flet_core.container import Container
 from flet_core.control import OptionalNumber
 from flet_core.image import Image
@@ -11,12 +12,12 @@ from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
+    ImageFit,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ImageFit,
-    OptionalControlEventCallable,
 )
 
 try:
@@ -95,6 +96,7 @@ class MatplotlibChart(Container):
         animate_offset: AnimationValue = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: BadgeValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -119,6 +121,7 @@ class MatplotlibChart(Container):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
