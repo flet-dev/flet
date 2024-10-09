@@ -9,13 +9,13 @@ from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
+    ClipBehavior,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ClipBehavior,
     UrlTarget,
-    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -160,19 +160,14 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         if any([self.__color, self.__bgcolor, self.__elevation]):
             self.__style = self.__style or ButtonStyle()
         if self.__style:
-            self.__style.color = (
-                self.__style.color if self.__style.color is not None else self.color
-            )
-            self.__style.bgcolor = (
-                self.__style.bgcolor
-                if self.__style.bgcolor is not None
-                else self.bgcolor
-            )
-            self.__style.elevation = (
-                self.__style.elevation
-                if self.__style.elevation is not None
-                else self.elevation
-            )
+            if self.__color is not None:
+                self.__style.color = self.__color
+
+            if self.__bgcolor is not None:
+                self.__style.bgcolor = self.__bgcolor
+
+            if self.__elevation is not None:
+                self.__style.elevation = self.__elevation
             self.__style.side = self._wrap_attr_dict(self.__style.side)
             self.__style.shape = self._wrap_attr_dict(self.__style.shape)
             self.__style.padding = self._wrap_attr_dict(self.__style.padding)
