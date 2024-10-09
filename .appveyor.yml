@@ -9,10 +9,16 @@ skip_commits:
     - "*.md"
 
 environment:
-  python_stack: python 3.10
+  python_stack: python 3.12
   FLUTTER_VERSION: 3.24.1
   GITHUB_TOKEN:
     secure: 9SKIwc3VSfYJ5IChvNR74hQprJ0DRmcV9pPX+8KyE6IXIdfMsX6ikeUmMhJGRu3ztkZaF45jmU7Xn/6tauXQXhDBxK1N8kFHFSAnq6LjUXyhS0TZKX/H+jDozBeVbCXp
+  TWINE_USERNAME: __token__
+  TWINE_PASSWORD:
+    secure: 174ncAbF5IjSIkmioPt62jeSnzmTlRNchUkE4QdjDWH8xK1olYtySXLJpo2q95HcP7lWJky1hv4APESiRRHnBWoY0XRFafzM/mbCDMzG1tZXiXZmpP1qzHAtRP2QSCIg18xh1TMktraUdTi7sbJnjjRhqzgbW1k0kLBxKw79MPFBhYQ/TiGcmaYWZbWVZNY3HCUCb6Dt7bG1OE2Ul9rD1gvs55xwO9Oq9FOVA1VnMYw=
+  TWINE_NON_INTERACTIVE: true
+  GEMFURY_TOKEN:
+    secure: trYGM65OQ1+HYnOYOe/NOHrofLpP3bz64nHwVWPJhiUIYll3MrrQd7ilFNp+zSkI
 
   matrix:
     - job_name: Build Flet package for Flutter
@@ -30,40 +36,64 @@ environment:
       APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
     - job_name: Build Flet for Linux
-      job_group: build_flet
+      job_group: build_flet_linux
       job_depends_on: build_flet_package
+      ARCH: amd64
+      PACKAGE_NAME: flet-desktop
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+
+    - job_name: Build Flet Light for Linux
+      job_group: build_flet_linux
+      job_depends_on: build_flet_package
+      ARCH: amd64
+      PACKAGE_NAME: flet-desktop-light
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
     - job_name: Build Flet for Linux ARM64
-      job_group: build_flet
+      job_group: build_flet_linux
       job_depends_on: build_flet_package
+      ARCH: arm64
+      PACKAGE_NAME: flet-desktop
+      python_stack: python 3.10
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
-      python_stack: ""
+
+    - job_name: Build Flet Light for Linux ARM64
+      job_group: build_flet_linux
+      job_depends_on: build_flet_package
+      ARCH: arm64
+      PACKAGE_NAME: flet-desktop-light
+      python_stack: python 3.10
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
 
     - job_name: Build Flet for web
       job_group: build_flet
       job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
     - job_name: Test Python 3.8
       job_group: python_tests
       python_stack: python 3.8
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
     - job_name: Test Python 3.9
       job_group: python_tests
       python_stack: python 3.9
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
     - job_name: Test Python 3.10
       job_group: python_tests
       python_stack: python 3.10
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
     - job_name: Test Python 3.11
       job_group: python_tests
       python_stack: python 3.11
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+
+    - job_name: Test Python 3.12
+      job_group: python_tests
+      python_stack: python 3.12
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
     - job_name: Test Python 3.12
       job_group: python_tests
@@ -72,12 +102,8 @@ environment:
 
     - job_name: Build Python wheels
       job_group: python_build
-      job_depends_on: python_tests, build_flet
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
-      TWINE_USERNAME: __token__
-      TWINE_PASSWORD:
-        secure: 174ncAbF5IjSIkmioPt62jeSnzmTlRNchUkE4QdjDWH8xK1olYtySXLJpo2q95HcP7lWJky1hv4APESiRRHnBWoY0XRFafzM/mbCDMzG1tZXiXZmpP1qzHAtRP2QSCIg18xh1TMktraUdTi7sbJnjjRhqzgbW1k0kLBxKw79MPFBhYQ/TiGcmaYWZbWVZNY3HCUCb6Dt7bG1OE2Ul9rD1gvs55xwO9Oq9FOVA1VnMYw=
-      TWINE_NON_INTERACTIVE: true
+      job_depends_on: python_tests, build_flet, build_flet_linux
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
 matrix:
   fast_finish: true
@@ -102,6 +128,8 @@ for:
             $env:PKG_VER = "$($cv.major).$($cv.minor+1).0+$($env:APPVEYOR_BUILD_NUMBER)"
           }
           Update-AppveyorBuild -Version $env:PKG_VER
+      - python3 -m ensurepip --upgrade
+      - pip3 install --upgrade setuptools
       - pip3 install pyyaml
       - source ci/install_flutter.sh
 
@@ -149,7 +177,7 @@ for:
           fi
 
   # ======================================
-  #      Build Flet View for Windows
+  #      Build Flet Client for Windows
   # ======================================
 
   - matrix:
@@ -157,6 +185,8 @@ for:
         - job_name: Build Flet for Windows
 
     install:
+      - python --version
+      - pip3 install --upgrade setuptools wheel twine poetry tomlkit virtualenv
       - dart pub global activate fvm
       - set PATH=%LOCALAPPDATA%\Pub\Cache\bin;%USERPROFILE%\fvm\default\bin;%PATH%
       - fvm install %FLUTTER_VERSION%
@@ -164,9 +194,23 @@ for:
       - flutter --version
 
     build_script:
+      - ps: $env:flet_sdk_root="$env:APPVEYOR_BUILD_FOLDER\sdk\python"
+      # patch version
+      - ps: |
+          $ErrorActionPreference = "Stop"
+          $env:PYPI_VER = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
+          $vp = "$env:flet_sdk_root/packages/flet-core/src/flet_core/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
+      - python ci/patch_toml_versions.py %flet_sdk_root%/packages/flet-desktop/pyproject.toml %PYPI_VER%
+      - python ci/patch_toml_versions.py %flet_sdk_root%/packages/flet-core/pyproject.toml %PYPI_VER%
+
       - cd client
-      - flutter build windows --build-name=%APPVEYOR_BUILD_VERSION%
       - set RELEASE_DIR=build\windows\x64\runner\Release
+      - flutter build windows --build-name=%APPVEYOR_BUILD_VERSION%
+      # - mkdir %RELEASE_DIR%
+      # - mkdir %RELEASE_DIR%\data
+      # - echo "Test!" > %RELEASE_DIR%\flet.bat
+      # - echo "Another thest!" > %RELEASE_DIR%\data\something.txt
+
       - copy "%WINDIR%\system32\msvcp140.dll" %RELEASE_DIR%
       - copy "%WINDIR%\system32\vcruntime140.dll" %RELEASE_DIR%
       - copy "%WINDIR%\system32\vcruntime140_1.dll" %RELEASE_DIR%
@@ -174,13 +218,42 @@ for:
       - ren build\windows\x64\runner\Release flet
       - cd build\windows\x64\runner
       - 7z a flet-windows.zip flet
+      - mkdir %flet_sdk_root%\packages\flet-desktop\src\flet_desktop\app
+      - xcopy flet %flet_sdk_root%\packages\flet-desktop\src\flet_desktop\app\flet\ /s /e
+
+      # install poetry env
+      - cd %flet_sdk_root%
+      - poetry install
+
+      # build "flet-desktop" package
+      - cd packages\flet-desktop
+      - poetry build
+      - ps: |
+          Get-ChildItem -Path dist/*-py3-none-any.whl | ForEach-Object {
+              $win64_wheel = $_.Name -replace "-py3-none-any", "-py3-none-win_amd64"
+              $win32_wheel = $_.Name -replace "-py3-none-any", "-py3-none-win32"
+              Copy-Item $_.FullName dist/$win64_wheel
+              Move-Item $_.FullName dist/$win32_wheel
+          }
       - cd %APPVEYOR_BUILD_FOLDER%
+      - dir %flet_sdk_root%\packages\flet-desktop\dist
+
+      # publish
+      - ps: |
+          if (($env:APPVEYOR_REPO_BRANCH -eq "main" -or $env:APPVEYOR_REPO_TAG_NAME) -and (-not $env:APPVEYOR_PULL_REQUEST_NUMBER)) {
+              twine upload %flet_sdk_root%\packages\flet-desktop\dist\*
+          } elseif (-not $env:APPVEYOR_PULL_REQUEST_NUMBER) {
+            $wheels = (Get-ChildItem $env:flet_sdk_root/packages/flet-desktop/dist/*.whl | Select-Object -ExpandProperty FullName)
+            foreach ($wheel in $wheels) {
+                curl.exe -sF package=@$wheel https://$env:GEMFURY_TOKEN@push.fury.io/flet/
+            }
+          }
 
     test: off
 
     artifacts:
       - path: client\build\windows\x64\runner\flet-windows.zip
-        name: flet_windows
+      - path: sdk\python\packages\flet-desktop\dist\*.whl
 
     deploy:
       provider: GitHub
@@ -191,7 +264,7 @@ for:
         APPVEYOR_REPO_TAG: true
 
   # ======================================
-  #      Build Flet View for macOS
+  #      Build Flet Client for macOS
   # ======================================
 
   - matrix:
@@ -199,89 +272,133 @@ for:
         - job_name: Build Flet for macOS
 
     install:
+      - . ci/common.sh
       - HOMEBREW_NO_AUTO_UPDATE=1 brew install cocoapods
       - source ci/install_flutter.sh
 
     build_script:
       # Flutter macOS client
-      - cd client
+      - pushd client
       - flutter build macos --build-name=$APPVEYOR_BUILD_VERSION
-      - tar -czvf flet-macos-amd64.tar.gz -C build/macos/Build/Products/Release Flet.app
+      - tar -czvf flet-macos.tar.gz -C build/macos/Build/Products/Release Flet.app
+      - mkdir -p $flet_sdk_root/packages/flet-desktop/src/flet_desktop/app
+      - cp flet-macos.tar.gz $flet_sdk_root/packages/flet-desktop/src/flet_desktop/app
+      - popd
+
+      # Python package
+      - patch_python_package_versions
+
+      # install poetry env
+      - cd $flet_sdk_root
+      - poetry install
+
+      # build "flet-desktop" package
+      - pushd packages/flet-desktop
+      - poetry build
+      - sh: |
+          for file in dist/*-py3-none-any.whl; do
+              arm64_wheel=$(echo "$file" | sed 's/-py3-none-any/-py3-none-macosx_12_0_arm64/')
+              x86_64_wheel=$(echo "$file" | sed 's/-py3-none-any/-py3-none-macosx_10_14_x86_64/')
+              cp "$file" "$arm64_wheel"
+              mv "$file" "$x86_64_wheel"
+          done
+      - popd
+
+      # publish
+      - publish_to_pypi packages/flet-desktop/dist/*.whl
 
     artifacts:
-      - path: client/flet-macos-amd64.tar.gz
-        name: flet_macos
+      - path: client/flet-macos.tar.gz
+      - path: sdk/python/packages/flet-desktop/dist/*.whl
 
     deploy:
       provider: GitHub
       auth_token: $(GITHUB_TOKEN)
       release: $(APPVEYOR_REPO_TAG_NAME)
-      artifact: flet_macos
       on:
         APPVEYOR_REPO_TAG: true
 
   # ======================================
-  #      Build Flet View for Linux
+  #      Build Flet Client for Linux
   # ======================================
 
   - matrix:
       only:
-        - job_name: Build Flet for Linux
+        - job_group: build_flet_linux
 
     install:
-      - sudo apt update --allow-releaseinfo-change
-      - sudo apt install -y libmpv-dev mpv libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
-      - source ci/install_flutter.sh
-
-    build_script:
-      - cd client
-      - flutter build linux --build-name=$APPVEYOR_BUILD_VERSION
-      - mv build/linux/x64/release/bundle build/linux/x64/release/flet
-      - tar -czvf flet-linux-amd64.tar.gz -C build/linux/x64/release flet
-
-    artifacts:
-      - path: client/flet-linux-amd64.tar.gz
-        name: flet_linux_amd64
-
-    deploy:
-      provider: GitHub
-      auth_token: $(GITHUB_TOKEN)
-      release: $(APPVEYOR_REPO_TAG_NAME)
-      artifact: flet_linux_amd64
-      on:
-        APPVEYOR_REPO_TAG: true
-
-  # ======================================
-  #    Build Flet View for Linux ARM64
-  # ======================================
-
-  - matrix:
-      only:
-        - job_name: Build Flet for Linux ARM64
-
-    install:
-      # Flutter SDK
+      - . ci/common.sh
       - sudo apt update --allow-releaseinfo-change
       - sudo apt install -y clang libmpv-dev mpv libgtk-3-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-doc gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
-      - git clone https://github.com/flutter/flutter.git -b stable "$HOME/flutter"
-      - export PATH="$PATH:$HOME/flutter/bin"
+      - sh: |
+          if [[ "$ARCH" == "arm64" ]]; then
+            git clone https://github.com/flutter/flutter.git -b stable "$HOME/flutter"
+            export PATH="$PATH:$HOME/flutter/bin"
+          fi
       - source ci/install_flutter.sh
 
     build_script:
-      - cd client
+      - pushd client
+      - sh: |
+          wheel_tags=(
+            "py3-none-manylinux_2_17_"
+            "py3-none-manylinux2014_"
+            "py3-none-musllinux_1_2_"
+          )
+          if [[ "$ARCH" == "amd64" ]]; then
+              build_arch="x64"
+              platform_arch="x86_64"
+
+          else
+              build_arch="arm64"
+              platform_arch="aarch64"
+          fi
+
+      - sh: |
+          if [[ "$PACKAGE_NAME" == "flet-desktop-light" ]]; then
+            sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' pubspec.yaml
+            sed -i '/--FAT_CLIENT_START--/,/--FAT_CLIENT_END--/d' lib/main.dart
+            patch_flet_desktop_package_name "flet-desktop-light"
+            artifact_suffix="-light"
+          fi
       - flutter build linux --build-name=$APPVEYOR_BUILD_VERSION
-      - mv build/linux/arm64/release/bundle build/linux/arm64/release/flet
-      - tar -czvf flet-linux-arm64.tar.gz -C build/linux/arm64/release flet
+      - mv build/linux/$build_arch/release/bundle build/linux/$build_arch/release/flet
+      - tar -czvf flet-linux$artifact_suffix-$ARCH.tar.gz -C build/linux/$build_arch/release flet
+      - mkdir -p $flet_sdk_root/packages/flet-desktop/src/flet_desktop/app
+      - cp flet-linux$artifact_suffix-$ARCH.tar.gz $flet_sdk_root/packages/flet-desktop/src/flet_desktop/app/flet-linux-$ARCH.tar.gz
+      - popd
+
+      # Python package
+      - patch_python_package_versions
+
+      # install poetry env
+      - cd $flet_sdk_root
+      - poetry install
+
+      # build "flet-desktop" package
+      - pushd packages/flet-desktop
+      - poetry build
+      - sh: |
+          for file in dist/*-py3-none-any.whl; do
+            for tag in "${wheel_tags[@]}"; do
+              wheel=$(echo "$file" | sed "s/-py3-none-any/-$tag$platform_arch/")
+              cp "$file" "$wheel"
+            done
+            rm "$file"
+          done
+      - popd
+
+      # publish
+      - publish_to_pypi packages/flet-desktop/dist/*.whl
 
     artifacts:
-      - path: client/flet-linux-arm64.tar.gz
-        name: flet_linux_arm64
+      - path: client/flet-linux-*.tar.gz
+      - path: sdk/python/packages/flet-desktop/dist/*.whl
 
     deploy:
       provider: GitHub
       auth_token: $(GITHUB_TOKEN)
       release: $(APPVEYOR_REPO_TAG_NAME)
-      artifact: flet_linux_arm64
       on:
         APPVEYOR_REPO_TAG: true
 
@@ -294,26 +411,41 @@ for:
         - job_name: Build Flet for web
 
     install:
-      - source ci/install_flutter.sh
+      - . ci/common.sh
+      - flutter upgrade --force
 
     build_script:
       # Flutter Web client
-      - cd client
+      - pushd client
       - flutter build web --release
       - rm -rf build/web/canvaskit
-      - ls -alR build/web
-      - cd ..
+      - cp -R build/web $flet_sdk_root/packages/flet-web/src/flet_web
+      - popd
       - tar -czvf client/build/flet-web.tar.gz -C client/build/web .
+
+      # Python package
+      - patch_python_package_versions
+
+      # install poetry env
+      - cd $flet_sdk_root
+      - poetry install
+
+      # build "flet-web" package
+      - pushd packages/flet-web
+      - poetry build
+      - popd
+
+      # publish
+      - publish_to_pypi packages/flet-web/dist/*.whl
 
     artifacts:
       - path: client/build/flet-web.tar.gz
-        name: flet_web
+      - path: sdk/python/packages/flet-web/dist/*.whl
 
     deploy:
       provider: GitHub
       auth_token: $(GITHUB_TOKEN)
       release: $(APPVEYOR_REPO_TAG_NAME)
-      artifact: flet_web
       on:
         APPVEYOR_REPO_TAG: true
 
@@ -345,62 +477,41 @@ for:
         - job_group: python_build
 
     install:
-      - python --version
-      - cd sdk/python
-      - pip install --upgrade importlib-metadata==7.2.1
-      - pip install --upgrade setuptools wheel twine poetry tomlkit virtualenv
-      - poetry install
+      - . ci/common.sh
 
     test: off
 
     build_script:
-      # patch version
-      - ps: |
-          $ErrorActionPreference = "Stop"
-          $env:PYPI_VER = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
-          $vp = "packages/flet-core/src/flet_core/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
-      - python3 patch_toml.py packages/flet/pyproject.toml $PYPI_VER
-      - python3 patch_toml.py packages/flet-embed/pyproject.toml $PYPI_VER
-      - python3 patch_toml.py packages/flet-runtime/pyproject.toml $PYPI_VER
-      - python3 patch_toml.py packages/flet-core/pyproject.toml $PYPI_VER
-      - python3 patch_toml.py packages/flet-pyodide/pyproject.toml $PYPI_VER
+      - patch_python_package_versions
+
+      # install poetry env
+      - cd $flet_sdk_root
+      - poetry install
 
       # build "flet-core" package
       - pushd packages/flet-core
       - poetry build
       - popd
 
-      # build "flet-runtime" package
-      - pushd packages/flet-runtime
-      - poetry build
-      - popd
-
-      # build "flet-embed" package
-      - pushd packages/flet-embed
+      # build "flet-cli" package
+      - pushd packages/flet-cli
       - poetry build
       - popd
 
       # build "flet" package
       - pushd packages/flet
-      - python3 download-web.py
       - poetry build
-      - python3 build-wheels.py
-      - popd
-
-      # build "flet-pyodide" package
-      - pushd packages/flet-pyodide
-      - poetry build
+      - $root/ci/update-flet-wheel-deps.sh dist
       - popd
 
       # publish package
-      - sh: |
-          if [[ ("$APPVEYOR_REPO_BRANCH" == "main" || "$APPVEYOR_REPO_TAG_NAME" != "") && "$APPVEYOR_PULL_REQUEST_NUMBER" == "" ]]; then
-              twine upload packages/flet-core/dist/* packages/flet-runtime/dist/* packages/flet-embed/dist/* packages/flet/dist/* packages/flet-pyodide/dist/*
-          fi
+      - |
+          publish_to_pypi \
+            packages/flet-core/dist/*.whl \
+            packages/flet-cli/dist/*.whl \
+            packages/flet/dist/*.whl
 
     artifacts:
       - path: sdk/python/packages/flet-core/dist/*
-      - path: sdk/python/packages/flet-runtime/dist/*
+      - path: sdk/python/packages/flet-cli/dist/*
       - path: sdk/python/packages/flet/dist/*
-      - path: sdk/python/packages/flet-embed/dist/*
-      - path: sdk/python/packages/flet-pyodide/dist/*
