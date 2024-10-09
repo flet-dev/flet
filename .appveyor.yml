@@ -21,19 +21,19 @@ environment:
     secure: trYGM65OQ1+HYnOYOe/NOHrofLpP3bz64nHwVWPJhiUIYll3MrrQd7ilFNp+zSkI
 
   matrix:
-    - job_name: Build Flet package for Flutter
-      job_group: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu
+    # - job_name: Build Flet package for Flutter
+    #   job_group: build_flet_package
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu
 
-    - job_name: Build Flet for Windows
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+    # - job_name: Build Flet for Windows
+    #   job_group: build_flet
+    #   job_depends_on: build_flet_package
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
 
-    - job_name: Build Flet for macOS
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
+    # - job_name: Build Flet for macOS
+    #   job_group: build_flet
+    #   job_depends_on: build_flet_package
+    #   APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
     - job_name: Build Flet for Linux
       job_group: build_flet_linux
@@ -42,68 +42,68 @@ environment:
       PACKAGE_NAME: flet-desktop
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    - job_name: Build Flet Light for Linux
-      job_group: build_flet_linux
-      job_depends_on: build_flet_package
-      ARCH: amd64
-      PACKAGE_NAME: flet-desktop-light
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    # - job_name: Build Flet Light for Linux
+    #   job_group: build_flet_linux
+    #   job_depends_on: build_flet_package
+    #   ARCH: amd64
+    #   PACKAGE_NAME: flet-desktop-light
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    - job_name: Build Flet for Linux ARM64
-      job_group: build_flet_linux
-      job_depends_on: build_flet_package
-      ARCH: arm64
-      PACKAGE_NAME: flet-desktop
-      python_stack: python 3.10
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
+    # - job_name: Build Flet for Linux ARM64
+    #   job_group: build_flet_linux
+    #   job_depends_on: build_flet_package
+    #   ARCH: arm64
+    #   PACKAGE_NAME: flet-desktop
+    #   python_stack: python 3.10
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
 
-    - job_name: Build Flet Light for Linux ARM64
-      job_group: build_flet_linux
-      job_depends_on: build_flet_package
-      ARCH: arm64
-      PACKAGE_NAME: flet-desktop-light
-      python_stack: python 3.10
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
+    # - job_name: Build Flet Light for Linux ARM64
+    #   job_group: build_flet_linux
+    #   job_depends_on: build_flet_package
+    #   ARCH: arm64
+    #   PACKAGE_NAME: flet-desktop-light
+    #   python_stack: python 3.10
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
 
-    - job_name: Build Flet for web
-      job_group: build_flet
-      job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    # - job_name: Build Flet for web
+    #   job_group: build_flet
+    #   job_depends_on: build_flet_package
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    - job_name: Test Python 3.8
-      job_group: python_tests
-      python_stack: python 3.8
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    # - job_name: Test Python 3.8
+    #   job_group: python_tests
+    #   python_stack: python 3.8
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    - job_name: Test Python 3.9
-      job_group: python_tests
-      python_stack: python 3.9
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    # - job_name: Test Python 3.9
+    #   job_group: python_tests
+    #   python_stack: python 3.9
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    - job_name: Test Python 3.10
-      job_group: python_tests
-      python_stack: python 3.10
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    # - job_name: Test Python 3.10
+    #   job_group: python_tests
+    #   python_stack: python 3.10
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    - job_name: Test Python 3.11
-      job_group: python_tests
-      python_stack: python 3.11
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    # - job_name: Test Python 3.11
+    #   job_group: python_tests
+    #   python_stack: python 3.11
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    - job_name: Test Python 3.12
-      job_group: python_tests
-      python_stack: python 3.12
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    # - job_name: Test Python 3.12
+    #   job_group: python_tests
+    #   python_stack: python 3.12
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    - job_name: Test Python 3.12
-      job_group: python_tests
-      python_stack: python 3.12
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+    # - job_name: Test Python 3.12
+    #   job_group: python_tests
+    #   python_stack: python 3.12
+    #   APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
 
-    - job_name: Build Python wheels
-      job_group: python_build
-      job_depends_on: python_tests, build_flet, build_flet_linux
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
+    # - job_name: Build Python wheels
+    #   job_group: python_build
+    #   job_depends_on: python_tests, build_flet, build_flet_linux
+    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
 matrix:
   fast_finish: true
@@ -384,8 +384,8 @@ for:
       - sh: |
           for file in dist/*-py3-none-any.whl; do
             for tag in "${wheel_tags[@]}"; do
-              wheel=$(echo "$file" | sed "s/-py3-none-any/-$tag/" | sed "s/{arch}/$platform_arch/g")
-              cp "$file" "$wheel"
+              wheel_tag=$(echo "$tag" | sed "s/{arch}/$platform_arch/g")
+              repackage_wheel_with_tag $file $wheel_tag
             done
             rm "$file"
           done
