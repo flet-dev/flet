@@ -18,6 +18,8 @@ git clone https://github.com/flet-dev/flet
 (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
 ```
 
+Be sure to add `%USERPROFILE%\AppData\Roaming\Python\Scripts` to `PATH`.
+
 #### macOS
 
 ```
@@ -77,6 +79,7 @@ The project uses [Black](https://github.com/psf/black) formatting style. All `.p
 IDE-specific Black integration guides:
 
 - [VSCode: Using Black to automatically format Python](https://dev.to/adamlombard/how-to-use-the-black-python-code-formatter-in-vscode-3lo0)
+- [Formatting Python in VS Code](https://code.visualstudio.com/docs/python/formatting)
 
 #### Type checking
 
@@ -91,7 +94,7 @@ Install `isort` extension for imports formatting: https://marketplace.visualstud
 ### pre-commit
 
 [pre-commit](https://pre-commit.com) is a dev dependency of Flet and is automatically installed by `poetry install`.
-To install the pre-commit hooks run: `pre-commit install`.
+To install the pre-commit hooks run: `poetry run pre-commit install`.
 Once installed, every time you commit, pre-commit will run the configured hooks against changed files.
 
 ## Possible installation error when working with a source package
@@ -115,8 +118,8 @@ export FLET_WEB_PATH="$HOME/{path-to-flet}/flet/client/build/web"
 ```
 
 - On Windows (open "System Properties" > "Environment Variables", then add a new environment variable):
-  - as "Variable name", enter `FLET_VIEW_PATH`, and as "Value", `%USERPROFILE%\{path-to-flet}\flet\client\build\windows\x64\runner\Release`
-  - as "Variable name", enter `FLET_WEB_PATH`, and as "Value", `%USERPROFILE%\{path-to-flet}\flet\client\build\web`
+  - as "Variable name", enter `FLET_VIEW_PATH`, and as "Value", `{path-to-flet}\flet\client\build\windows\x64\runner\Release`
+  - as "Variable name", enter `FLET_WEB_PATH`, and as "Value", `{path-to-flet}\flet\client\build\web`
 
 - On Linux (in `~/.bash_profile` or any other profile script):
 ```
@@ -137,7 +140,7 @@ If you added these through the terminal, close that terminal session and create 
 ### Building the Flutter client
 Open an instance of your IDE (preferably VS Code) at the `flet-dev/flet/client` directory.
 
-First, run `printenv | grep FLET` in the built-in terminal to make sure everything is set. You should see the above environment variables you set (`FLET_VIEW_PATH`, `FLET_WEB_PATH`) printed out.
+First, run `printenv | grep FLET` (or `gci env:* | findstr FLET` on Windows) in the built-in terminal to make sure everything is set. You should see the above environment variables you set (`FLET_VIEW_PATH`, `FLET_WEB_PATH`) printed out.
 
 -  To build the Flutter client for MacOS, run:
     ```
