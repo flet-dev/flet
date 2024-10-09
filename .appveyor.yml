@@ -378,7 +378,7 @@ for:
       - sh: |
           for file in dist/*-py3-none-any.whl; do
             for tag in "${wheel_tags[@]}"; do
-              wheel=$(echo "$file" | sed "s/-py3-none-any/-$tag/ | sed "s/{arch}/$platform_arch/g")
+              wheel=$(echo "$file" | sed "s/-py3-none-any/-$tag/" | sed "s/{arch}/$platform_arch/g")
               cp "$file" "$wheel"
             done
             rm "$file"
