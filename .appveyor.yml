@@ -504,7 +504,7 @@ for:
       # build "flet" package
       - pushd packages/flet
       - poetry build
-      - $root/ci/update-flet-wheel-deps.sh dist
+      - python $root/ci/update-flet-wheel-deps.py dist
       - popd
 
       # publish package
