@@ -207,6 +207,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         suffix_icon_size_constraints: Optional[BoxConstraints] = None,
         size_constraints: Optional[BoxConstraints] = None,
         collapsed: Optional[bool] = None,
+        fit_parent_size: Optional[bool] = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -317,6 +318,7 @@ class TextField(FormFieldControl, AdaptiveControl):
             suffix_icon_size_constraints=suffix_icon_size_constraints,
             size_constraints=size_constraints,
             collapsed=collapsed,
+            fit_parent_size=fit_parent_size,
         )
 
         AdaptiveControl.__init__(self, adaptive=adaptive)

@@ -85,9 +85,9 @@ class FormFieldControl(ConstrainedControl):
         suffix_icon_size_constraints: Optional[BoxConstraints] = None,
         size_constraints: Optional[BoxConstraints] = None,
         collapsed: Optional[bool] = None,
+        fit_parent_size: Optional[bool] = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
-        rtl: Optional[bool] = None,
         #
         # ConstrainedControl
         #
@@ -118,6 +118,7 @@ class FormFieldControl(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -203,6 +204,7 @@ class FormFieldControl(ConstrainedControl):
         self.suffix_icon_size_constraints = suffix_icon_size_constraints
         self.size_constraints = size_constraints
         self.collapsed = collapsed
+        self.fit_parent_size = fit_parent_size
 
     def before_update(self):
         super().before_update()
@@ -331,6 +333,15 @@ class FormFieldControl(ConstrainedControl):
     @align_label_with_hint.setter
     def align_label_with_hint(self, value: Optional[bool]):
         self._set_attr("alignLabelWithHint", value)
+
+    # fit_parent_size
+    @property
+    def fit_parent_size(self) -> Optional[bool]:
+        return self._get_attr("fitParentSize", data_type="bool", def_value=False)
+
+    @fit_parent_size.setter
+    def fit_parent_size(self, value: Optional[bool]):
+        self._set_attr("fitParentSize", value)
 
     # hint_fade_duration
     @property

@@ -222,7 +222,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
             }),
       );
     }
-    var expand = widget.control.attrBool("expand", false)!;
+    var fitParentSize = widget.control.attrBool("fitParentSize", false)!;
     BoxDecoration? defaultDecoration = const CupertinoTextField().decoration;
     var gradient = parseGradient(Theme.of(context), widget.control, "gradient");
     var blendMode = parseBlendMode(widget.control.attrString("blendMode"));
@@ -287,8 +287,8 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
               widget.control.attrString("prefixVisibilityMode"),
               OverlayVisibilityMode.always)!,
           textAlign: textAlign,
-          minLines: expand ? null : minLines,
-          maxLines: expand ? null : maxLines,
+          minLines: fitParentSize ? null : minLines,
+          maxLines: fitParentSize ? null : maxLines,
           maxLength: maxLength,
           prefix: prefixControls.isNotEmpty
               ? createControl(widget.control, prefixControls.first.id, disabled,
@@ -304,7 +304,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
           scrollPadding: parseEdgeInsets(widget.control, "scrollPadding", const EdgeInsets.all(20.0))!,
           obscuringCharacter: widget.control.attrString("obscuringCharacter", '•')!,
           cursorOpacityAnimates: widget.control.attrBool("animateCursorOpacity", Theme.of(context).platform == TargetPlatform.iOS)!,
-          expands: expand,
+          expands: fitParentSize,
           enableIMEPersonalizedLearning: widget.control.attrBool("enableIMEPersonalizedLearning", true)!,
           clipBehavior: parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!,
           cursorColor: cursorColor,

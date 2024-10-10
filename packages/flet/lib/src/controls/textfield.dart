@@ -202,7 +202,7 @@ class _TextFieldControlState extends State<TextFieldControl>
         _lastFocusValue = focusValue;
         focusNode.requestFocus();
       }
-      var expand = widget.control.attrBool("expand", false)!;
+      var fitParentSize = widget.control.attrBool("fitParentSize", false)!;
 
       Widget textField = TextFormField(
           style: textStyle,
@@ -249,8 +249,8 @@ class _TextFieldControlState extends State<TextFieldControl>
               : SmartQuotesType.disabled,
           textAlign: parseTextAlign(
               widget.control.attrString("textAlign"), TextAlign.start)!,
-          minLines: expand ? null : minLines,
-          maxLines: expand ? null : maxLines,
+          minLines: fitParentSize ? null : minLines,
+          maxLines: fitParentSize ? null : maxLines,
           maxLength: widget.control.attrInt("maxLength"),
           readOnly: widget.control.attrBool("readOnly", false)!,
           inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
@@ -258,7 +258,7 @@ class _TextFieldControlState extends State<TextFieldControl>
           controller: _controller,
           focusNode: focusNode,
           autofillHints: parseAutofillHints(widget.control, "autofillHints"),
-          expands: expand,
+          expands: fitParentSize,
           enableInteractiveSelection:
               widget.control.attrBool("enableInteractiveSelection"),
           canRequestFocus: widget.control.attrBool("canRequestFocus", true)!,

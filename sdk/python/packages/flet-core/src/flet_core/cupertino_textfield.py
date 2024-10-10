@@ -4,25 +4,25 @@ from typing import Any, List, Optional, Union
 from flet_core.animation import AnimationValue
 from flet_core.autofill_group import AutofillHint
 from flet_core.border import Border
-from flet_core.box import BoxShadow, DecorationImage, BoxShape
+from flet_core.box import BoxShadow, DecorationImage
 from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
-from flet_core.text_style import TextStyle, StrutStyle
+from flet_core.text_style import StrutStyle, TextStyle
 from flet_core.textfield import InputFilter, KeyboardType, TextCapitalization, TextField
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     BlendMode,
     BorderRadiusValue,
+    Brightness,
+    ClipBehavior,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     TextAlign,
-    OptionalControlEventCallable,
-    ClipBehavior,
-    Brightness,
 )
 
 
@@ -116,6 +116,7 @@ class CupertinoTextField(TextField):
         filled: Optional[bool] = None,
         prefix: Optional[Control] = None,
         suffix: Optional[Control] = None,
+        fit_parent_size: Optional[bool] = None,
         #
         # ConstrainedControl
         #
@@ -185,6 +186,7 @@ class CupertinoTextField(TextField):
             filled=filled,
             prefix=prefix,
             suffix=suffix,
+            fit_parent_size=fit_parent_size,
             #
             # TextField
             #
