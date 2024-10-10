@@ -229,12 +229,13 @@ for:
       - cd packages\flet-desktop
       - poetry build
       - ps: |
+          $ErrorActionPreference = "Continue"
           Get-ChildItem -Path dist/*-py3-none-any.whl | ForEach-Object {
-              $win64_wheel = $_.Name -replace "-py3-none-any", "-py3-none-win_amd64"
-              $win32_wheel = $_.Name -replace "-py3-none-any", "-py3-none-win32"
-              Copy-Item $_.FullName dist/$win64_wheel
-              Move-Item $_.FullName dist/$win32_wheel
+            python $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName "py3-none-win_amd64"
+            python $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName "py3-none-win32"
+            Remove-Item $_.FullName
           }
+          $ErrorActionPreference = "Stop"
       - cd %APPVEYOR_BUILD_FOLDER%
       - dir %flet_sdk_root%\packages\flet-desktop\dist
 
@@ -297,10 +298,9 @@ for:
       - poetry build
       - sh: |
           for file in dist/*-py3-none-any.whl; do
-              arm64_wheel=$(echo "$file" | sed 's/-py3-none-any/-py3-none-macosx_12_0_arm64/')
-              x86_64_wheel=$(echo "$file" | sed 's/-py3-none-any/-py3-none-macosx_10_14_x86_64/')
-              cp "$file" "$arm64_wheel"
-              mv "$file" "$x86_64_wheel"
+            python $root/ci/repackage_wheel_with_tag.py $file "py3-none-macosx_12_0_arm64"
+            python $root/ci/repackage_wheel_with_tag.py $file "py3-none-macosx_10_14_x86_64"
+            rm $file
           done
       - popd
 
@@ -345,7 +345,7 @@ for:
       - pushd client
       - sh: |
           wheel_tags=(
-            "py3-none-manylinux_2_17_{arch}.manylinux2014_{arch}"
+            "py3-none-manylinux_2_17_{arch},py3-none-manylinux2014_{arch}"
             "py3-none-musllinux_1_2_{arch}"
           )
           if [[ "$ARCH" == "amd64" ]]; then
@@ -384,8 +384,8 @@ for:
       - sh: |
           for file in dist/*-py3-none-any.whl; do
             for tag in "${wheel_tags[@]}"; do
-              wheel=$(echo "$file" | sed "s/-py3-none-any/-$tag/" | sed "s/{arch}/$platform_arch/g")
-              cp "$file" "$wheel"
+              wheel_tag=$(echo "$tag" | sed "s/{arch}/$platform_arch/g")
+              python $root/ci/repackage_wheel_with_tag.py $file $wheel_tag
             done
             rm "$file"
           done
@@ -504,7 +504,7 @@ for:
       # build "flet" package
       - pushd packages/flet
       - poetry build
-      - $root/ci/update-flet-wheel-deps.sh dist
+      - python $root/ci/update-flet-wheel-deps.py dist
       - popd
 
       # publish package
