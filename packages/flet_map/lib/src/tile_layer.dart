@@ -4,6 +4,7 @@ import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 
 import './utils/map.dart';
 
@@ -47,6 +48,8 @@ class TileLayerControl extends StatelessWidget with FletStoreMixin {
           subdomains: subdomains != null
               ? jsonDecode(subdomains).cast<String>()
               : ['a', 'b', 'c'],
+          tileProvider: CancellableNetworkTileProvider(),
+          tileDisplay: const TileDisplay.fadeIn(),
           tileSize: control.attrDouble("tileSize", 256)!,
           minNativeZoom: control.attrInt("minNativeZoom", 0)!,
           maxNativeZoom: control.attrInt("maxNativeZoom", 19)!,
