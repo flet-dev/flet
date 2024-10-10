@@ -3,7 +3,8 @@ import sys
 import tempfile
 from pathlib import Path
 
-import wheel.cli
+import wheel.cli.pack
+import wheel.cli.unpack
 
 
 def repackage_wheel(wheel_path, new_tag):
@@ -14,7 +15,7 @@ def repackage_wheel(wheel_path, new_tag):
         tmp_dir_path = Path(tmp_dir)
 
         # Unpack the wheel file
-        wheel.cli.unpack(wheel_path, tmp_dir)
+        wheel.cli.unpack.unpack(wheel_path, tmp_dir)
 
         # Print directory structure
         for root, dirs, files in os.walk(tmp_dir):
@@ -44,7 +45,7 @@ def repackage_wheel(wheel_path, new_tag):
             print(new_content)
 
         # Repack the wheel
-        wheel.cli.pack(".", str(Path(wheel_path).parent))
+        wheel.cli.pack.pack(".", str(Path(wheel_path).parent))
 
     print(f"Successfully generated {wheel_path} with {new_tag} tag.")
 
