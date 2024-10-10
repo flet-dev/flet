@@ -43,7 +43,7 @@ def repackage_wheel(wheel_path, new_tag):
                 content = f.read()
             new_content = content.replace(
                 "Tag: py3-none-any",
-                "\n".join([f"Tag: {t}" for t in new_tag.split(" ")]),
+                "\n".join([f"Tag: {t}" for t in new_tag.split(",")]),
             )
             with open(metadata_file, "w") as f:
                 f.write(new_content)

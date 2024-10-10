@@ -25,15 +25,15 @@ environment:
     #   job_group: build_flet_package
     #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu
 
-    # - job_name: Build Flet for Windows
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+    - job_name: Build Flet for Windows
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
 
-    # - job_name: Build Flet for macOS
-    #   job_group: build_flet
-    #   job_depends_on: build_flet_package
-    #   APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
+    - job_name: Build Flet for macOS
+      job_group: build_flet
+      job_depends_on: build_flet_package
+      APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
 
     - job_name: Build Flet for Linux
       job_group: build_flet_linux
@@ -57,13 +57,13 @@ environment:
     #   python_stack: python 3.10
     #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
 
-    # - job_name: Build Flet Light for Linux ARM64
-    #   job_group: build_flet_linux
-    #   job_depends_on: build_flet_package
-    #   ARCH: arm64
-    #   PACKAGE_NAME: flet-desktop-light
-    #   python_stack: python 3.10
-    #   APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
+    - job_name: Build Flet Light for Linux ARM64
+      job_group: build_flet_linux
+      job_depends_on: build_flet_package
+      ARCH: arm64
+      PACKAGE_NAME: flet-desktop-light
+      python_stack: python 3.10
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004-arm
 
     # - job_name: Build Flet for web
     #   job_group: build_flet
@@ -230,10 +230,9 @@ for:
       - poetry build
       - ps: |
           Get-ChildItem -Path dist/*-py3-none-any.whl | ForEach-Object {
-              $win64_wheel = $_.Name -replace "-py3-none-any", "-py3-none-win_amd64"
-              $win32_wheel = $_.Name -replace "-py3-none-any", "-py3-none-win32"
-              Copy-Item $_.FullName dist/$win64_wheel
-              Move-Item $_.FullName dist/$win32_wheel
+            python $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName "py3-none-win_amd64"
+            python $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName "py3-none-win32"
+            Remove-Item $_.FullName
           }
       - cd %APPVEYOR_BUILD_FOLDER%
       - dir %flet_sdk_root%\packages\flet-desktop\dist
@@ -297,10 +296,9 @@ for:
       - poetry build
       - sh: |
           for file in dist/*-py3-none-any.whl; do
-              arm64_wheel=$(echo "$file" | sed 's/-py3-none-any/-py3-none-macosx_12_0_arm64/')
-              x86_64_wheel=$(echo "$file" | sed 's/-py3-none-any/-py3-none-macosx_10_14_x86_64/')
-              cp "$file" "$arm64_wheel"
-              mv "$file" "$x86_64_wheel"
+            python $root/ci/repackage_wheel_with_tag.py $file "py3-none-macosx_12_0_arm64"
+            python $root/ci/repackage_wheel_with_tag.py $file "py3-none-macosx_10_14_x86_64"
+            rm $file
           done
       - popd
 
@@ -345,7 +343,7 @@ for:
       - pushd client
       - sh: |
           wheel_tags=(
-            "py3-none-manylinux_2_17_{arch} py3-none-manylinux2014_{arch}"
+            "py3-none-manylinux_2_17_{arch},py3-none-manylinux2014_{arch}"
             "py3-none-musllinux_1_2_{arch}"
           )
           if [[ "$ARCH" == "amd64" ]]; then
