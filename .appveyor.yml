@@ -229,11 +229,13 @@ for:
       - cd packages\flet-desktop
       - poetry build
       - ps: |
+          $ErrorActionPreference = "Continue"
           Get-ChildItem -Path dist/*-py3-none-any.whl | ForEach-Object {
             python $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName "py3-none-win_amd64"
             python $env:APPVEYOR_BUILD_FOLDER\ci\repackage_wheel_with_tag.py $_.FullName "py3-none-win32"
             Remove-Item $_.FullName
           }
+          $ErrorActionPreference = "Stop"
       - cd %APPVEYOR_BUILD_FOLDER%
       - dir %flet_sdk_root%\packages\flet-desktop\dist
 
