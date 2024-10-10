@@ -8,13 +8,13 @@ from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
+    ControlStateValue,
     MouseCursor,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
-    ControlStateValue,
 )
 
 
@@ -172,7 +172,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         assert (
             self.max is None or self.value is None or (self.value <= self.max)
         ), "value must be less than or equal to max"
-        self._set_control_state_attr_json("overlayColor", self.__overlay_color)
+        self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)
 
     # value
     @property

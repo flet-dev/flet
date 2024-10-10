@@ -8,14 +8,14 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
+    ControlStateValue,
     LabelPosition,
     MouseCursor,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
-    ControlStateValue,
 )
 
 
@@ -168,13 +168,13 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        self._set_control_state_attr_json("thumbColor", self.__thumb_color)
-        self._set_control_state_attr_json("overlayColor", self.__overlay_color)
-        self._set_control_state_attr_json(
-            "trackOutlineColor", self.__track_outline_color
+        self._set_attr_json("thumbColor", self.__thumb_color, wrap_attr_dict=True)
+        self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)
+        self._set_attr_json(
+            "trackOutlineColor", self.__track_outline_color, wrap_attr_dict=True
         )
-        self._set_control_state_attr_json("thumbIcon", self.__thumb_icon)
-        self._set_control_state_attr_json("trackColor", self.__track_color)
+        self._set_attr_json("thumbIcon", self.__thumb_icon, wrap_attr_dict=True)
+        self._set_attr_json("trackColor", self.__track_color, wrap_attr_dict=True)
         self._set_attr_json("labelStyle", self.__label_style)
 
     # value

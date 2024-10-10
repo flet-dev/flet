@@ -14,15 +14,15 @@ from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     BorderRadiusValue,
+    ClipBehavior,
+    ControlStateValue,
+    MainAxisAlignment,
     OffsetValue,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ClipBehavior,
-    OptionalEventCallable,
-    OptionalControlEventCallable,
-    MainAxisAlignment,
-    ControlStateValue,
 )
 
 
@@ -273,7 +273,7 @@ class DataRow(Control):
         assert any(
             cell.visible for cell in self.__cells
         ), "cells must contain at minimum one visible DataCell"
-        self._set_control_state_attr_json("color", self.__color)
+        self._set_attr_json("color", self.__color, wrap_attr_dict=True)
 
     def _get_children(self):
         return self.__cells

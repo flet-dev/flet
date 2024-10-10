@@ -10,13 +10,13 @@ from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
+    ControlStateValue,
     OffsetValue,
+    OptionalControlEventCallable,
     OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
-    ControlStateValue,
 )
 from flet_core.utils import deprecated
 
@@ -310,7 +310,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         super().before_update()
         self._set_attr_json("indicatorShape", self.__indicator_shape)
         self._set_attr_json("border", self.__border)
-        self._set_control_state_attr_json("overlayColor", self.__overlay_color)
+        self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)
 
     def _get_children(self):
         return self.__destinations

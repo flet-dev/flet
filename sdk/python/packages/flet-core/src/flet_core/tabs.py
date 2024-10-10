@@ -10,16 +10,16 @@ from flet_core.text_style import TextStyle
 from flet_core.types import (
     BorderRadiusValue,
     ClipBehavior,
+    ControlStateValue,
+    MarginValue,
     MouseCursor,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     TabAlignment,
-    OptionalControlEventCallable,
-    MarginValue,
-    ControlStateValue,
 )
 
 
@@ -306,7 +306,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        self._set_control_state_attr_json("overlayColor", self.__overlay_color)
+        self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)
         self._set_attr_json("indicatorBorderRadius", self.__indicator_border_radius)
         self._set_attr_json("indicatorBorderSide", self.__indicator_border_side)
         self._set_attr_json("indicatorPadding", self.__indicator_padding)

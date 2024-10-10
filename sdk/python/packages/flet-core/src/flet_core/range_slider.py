@@ -6,12 +6,12 @@ from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
+    ControlStateValue,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
-    ControlStateValue,
 )
 
 
@@ -171,7 +171,7 @@ class RangeSlider(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        self._set_control_state_attr_json("overlayColor", self.__overlay_color)
+        self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)
 
     # start_value
     @property

@@ -1,5 +1,5 @@
 import time
-from typing import Any, List, Optional, Union, Sequence
+from typing import Any, List, Optional, Sequence, Union
 
 from flet_core.animation import AnimationValue
 from flet_core.border import BorderSide
@@ -11,13 +11,13 @@ from flet_core.text_style import TextStyle
 from flet_core.textfield import KeyboardType, TextCapitalization
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
+    ControlStateValue,
     OffsetValue,
+    OptionalControlEventCallable,
     OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
-    ControlStateValue,
 )
 from flet_core.utils import deprecated
 
@@ -147,8 +147,10 @@ class SearchBar(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        self._set_control_state_attr_json("barBgcolor", self.__bar_bgcolor)
-        self._set_control_state_attr_json("barOverlayColor", self.__bar_overlay_color)
+        self._set_attr_json("barBgcolor", self.__bar_bgcolor, wrap_attr_dict=True)
+        self._set_attr_json(
+            "barOverlayColor", self.__bar_overlay_color, wrap_attr_dict=True
+        )
         self._set_attr_json("viewShape", self.__view_shape)
         self._set_attr_json("viewHeaderTextStyle", self.__view_header_text_style)
         self._set_attr_json("viewHintTextStyle", self.__view_hint_text_style)

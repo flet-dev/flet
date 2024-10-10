@@ -8,16 +8,16 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
+    ControlStateValue,
     LabelPosition,
     MouseCursor,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     ThemeVisualDensity,
     VisualDensity,
-    OptionalControlEventCallable,
-    ControlStateValue,
 )
 
 try:
@@ -161,8 +161,8 @@ class Radio(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        self._set_control_state_attr_json("fillColor", self.__fill_color)
-        self._set_control_state_attr_json("overlayColor", self.__overlay_color)
+        self._set_attr_json("fillColor", self.__fill_color, wrap_attr_dict=True)
+        self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)
         self._set_attr_json("labelStyle", self.__label_style)
 
     # value
