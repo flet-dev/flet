@@ -38,7 +38,7 @@ def update_metadata(metadata_file, version):
             if lines[i].startswith("Requires-Dist: flet-desktop "):
                 lines.insert(
                     i + 1,
-                    f"Requires-Dist: flet-desktop-light (=={version}) ; platform_system == 'Linux' and 'embedded' not in platform_version",
+                    f"Requires-Dist: flet-desktop-light (=={version}) ; platform_system == 'Linux' and 'embedded' not in platform_version\n",
                 )
             lines[i] = re.sub(
                 r'platform_system != "desktop-light"',
@@ -56,6 +56,7 @@ def update_metadata(metadata_file, version):
         file.writelines(lines)
 
 
+# Main logic
 def process_wheels(directory):
     # Find all wheel files
     wheel_files = find_wheel_files(directory)
