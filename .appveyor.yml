@@ -385,7 +385,7 @@ for:
           for file in dist/*-py3-none-any.whl; do
             for tag in "${wheel_tags[@]}"; do
               wheel_tag=$(echo "$tag" | sed "s/{arch}/$platform_arch/g")
-              repackage_wheel_with_tag $file $wheel_tag
+              python ci/repackage_wheel_with_tag.py $file $wheel_tag
             done
             rm "$file"
           done
