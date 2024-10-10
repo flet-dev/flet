@@ -39,13 +39,16 @@ def repackage_wheel(wheel_path, new_tag):
         for metadata_file in metadata_files:
             with open(metadata_file, "r") as f:
                 content = f.read()
-            new_content = content.replace("Tag: py3-none-any", f"Tag: {new_tag}")
+            new_content = content.replace(
+                "Tag: py3-none-any",
+                "\n".join([f"Tag: {t}" for t in new_tag.split(" ")]),
+            )
             with open(metadata_file, "w") as f:
                 f.write(new_content)
             print(new_content)
 
         # Repack the wheel
-        wheel.cli.pack.pack(".", str(Path(wheel_path).parent))
+        wheel.cli.pack.pack(".", str(Path(wheel_path).parent), None)
 
     print(f"Successfully generated {wheel_path} with {new_tag} tag.")
 

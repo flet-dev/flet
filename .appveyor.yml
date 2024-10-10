@@ -345,7 +345,7 @@ for:
       - pushd client
       - sh: |
           wheel_tags=(
-            "py3-none-manylinux_2_17_{arch}.manylinux2014_{arch}"
+            "py3-none-manylinux_2_17_{arch} py3-none-manylinux2014_{arch}"
             "py3-none-musllinux_1_2_{arch}"
           )
           if [[ "$ARCH" == "amd64" ]]; then
