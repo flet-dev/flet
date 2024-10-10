@@ -56,7 +56,6 @@ def update_metadata(metadata_file, version):
         file.writelines(lines)
 
 
-# Main logic
 def process_wheels(directory):
     # Find all wheel files
     wheel_files = find_wheel_files(directory)
