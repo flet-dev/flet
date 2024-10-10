@@ -1,7 +1,6 @@
 import json
 from typing import Any, Optional, Union
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
@@ -19,7 +18,7 @@ from flet_core.types import (
 )
 
 
-class GestureDetector(ConstrainedControl, AdaptiveControl):
+class GestureDetector(ConstrainedControl):
     """
     A control that detects gestures.
 
@@ -135,9 +134,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # AdaptiveControl
-        #
+        rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -168,9 +165,9 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.__on_tap_down = EventHandler(lambda e: TapEvent(e))
         self._add_event_handler("tap_down", self.__on_tap_down.get_handler())

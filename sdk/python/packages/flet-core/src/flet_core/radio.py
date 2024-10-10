@@ -1,6 +1,5 @@
 from typing import Any, Dict, Optional, Union
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -26,7 +25,7 @@ except ImportError:
     from typing_extensions import Literal
 
 
-class Radio(ConstrainedControl, AdaptiveControl):
+class Radio(ConstrainedControl):
     """
     Radio buttons let people select a single option from two or more choices.
 
@@ -75,7 +74,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         on_focus: OptionalControlEventCallable = None,
         on_blur: OptionalControlEventCallable = None,
         #
-        # ConstrainedControl and AdaptiveControl
+        # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
@@ -135,9 +134,8 @@ class Radio(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.value = value
         self.label = label

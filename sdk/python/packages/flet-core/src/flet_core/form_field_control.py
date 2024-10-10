@@ -71,7 +71,6 @@ class FormFieldControl(ConstrainedControl):
         suffix_icon: Optional[str] = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
-        rtl: Optional[bool] = None,
         #
         # ConstrainedControl
         #
@@ -102,6 +101,8 @@ class FormFieldControl(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        adaptive: Optional[bool] = None,
+        rtl: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -133,6 +134,7 @@ class FormFieldControl(ConstrainedControl):
             disabled=disabled,
             data=data,
             rtl=rtl,
+            adaptive=adaptive,
         )
 
         self.text_size = text_size

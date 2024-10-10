@@ -51,6 +51,7 @@ class Control:
         disabled: Optional[bool] = None,
         data: Any = None,
         rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
     ) -> None:
         super().__init__()
 
@@ -72,6 +73,7 @@ class Control:
         self.__data: Any = None
         self.data = data
         self.rtl = rtl
+        self.adaptive = adaptive
 
         self.__event_handlers: Dict[str, OptionalControlEventCallable] = {}
         self.parent: Optional[Control] = None
@@ -301,6 +303,15 @@ class Control:
     @data.setter
     def data(self, value: Optional[Any]):
         self.__data = value
+
+    # adaptive
+    @property
+    def adaptive(self) -> bool:
+        return self._get_attr("adaptive", data_type="bool", def_value=False)
+
+    @adaptive.setter
+    def adaptive(self, value: Optional[bool]):
+        self._set_attr("adaptive", value)
 
     # public methods
     def update(self) -> None:

@@ -61,6 +61,7 @@ class FilledTonalButton(ElevatedButton):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
     ):
         ElevatedButton.__init__(
@@ -77,6 +78,8 @@ class FilledTonalButton(ElevatedButton):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
+            adaptive=adaptive,
             #
             # Specific
             #
@@ -94,5 +97,4 @@ class FilledTonalButton(ElevatedButton):
             on_click=on_click,
             on_long_press=on_long_press,
             on_hover=on_hover,
-            adaptive=adaptive,
         )

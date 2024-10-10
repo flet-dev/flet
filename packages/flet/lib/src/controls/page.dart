@@ -739,7 +739,8 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                 .map((v) => v.attrString("route") ?? v.id)
                 .join();
 
-            pages = routesView.views.map((view) {
+            pages =
+                routesView.views.where((view) => view.isVisible).map((view) {
               var key = ValueKey(view.attrString("route") ?? view.id);
               var child = ViewControl(
                 parent: routesView.page,

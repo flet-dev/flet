@@ -1,7 +1,6 @@
 import json
 from typing import Any, Dict, Optional, Union
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
@@ -21,7 +20,7 @@ from flet_core.types import (
 from flet_core.utils import deprecated
 
 
-class Dismissible(ConstrainedControl, AdaptiveControl):
+class Dismissible(ConstrainedControl):
     """
     A control that can be dismissed by dragging in the indicated `dismiss_direction`. When dragged or flung in the
     specified `dismiss_direction`, it's content smoothly slides out of view.
@@ -79,9 +78,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         key: Optional[str] = None,
-        #
-        # Adaptive
-        #
+        rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -113,9 +110,9 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.__on_dismiss = EventHandler(lambda e: DismissibleDismissEvent(e))
         self.__on_update = EventHandler(lambda e: DismissibleUpdateEvent(e))

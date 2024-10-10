@@ -138,8 +138,18 @@ class DataCell(Control):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
     ):
-        Control.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
+        Control.__init__(
+            self,
+            ref=ref,
+            visible=visible,
+            disabled=disabled,
+            data=data,
+            rtl=rtl,
+            adaptive=adaptive,
+        )
 
         self.__on_tap_down = EventHandler(lambda e: TapEvent(e))
         self._add_event_handler("tap_down", self.__on_tap_down.get_handler())
@@ -256,8 +266,18 @@ class DataRow(Control):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
     ):
-        Control.__init__(self, ref=ref, visible=visible, disabled=disabled, data=data)
+        Control.__init__(
+            self,
+            ref=ref,
+            visible=visible,
+            disabled=disabled,
+            data=data,
+            rtl=rtl,
+            adaptive=adaptive,
+        )
 
         self.cells = cells
         self.color = color
@@ -387,6 +407,8 @@ class DataTable(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -417,6 +439,8 @@ class DataTable(ConstrainedControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
+            adaptive=adaptive,
         )
 
         self.columns = columns

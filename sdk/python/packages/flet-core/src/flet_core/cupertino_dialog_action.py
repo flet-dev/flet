@@ -74,6 +74,8 @@ class CupertinoDialogAction(Control):
         opacity: OptionalNumber = None,
         visible: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
     ):
         Control.__init__(
             self,
@@ -81,6 +83,8 @@ class CupertinoDialogAction(Control):
             opacity=opacity,
             visible=visible,
             data=data,
+            rtl=rtl,
+            adaptive=adaptive,
         )
 
         self.text = text

@@ -36,8 +36,18 @@ class Option(Control):
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
     ):
-        Control.__init__(self, ref=ref, disabled=disabled, visible=visible, data=data)
+        Control.__init__(
+            self,
+            ref=ref,
+            disabled=disabled,
+            visible=visible,
+            data=data,
+            rtl=rtl,
+            adaptive=adaptive,
+        )
         self.key = key
         self.text = text
         self.content = content

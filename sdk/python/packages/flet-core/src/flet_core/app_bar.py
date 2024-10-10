@@ -1,6 +1,5 @@
 from typing import List, Optional, Any
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control
 from flet_core.ref import Ref
@@ -8,7 +7,7 @@ from flet_core.text_style import TextStyle
 from flet_core.types import ClipBehavior, OptionalNumber
 
 
-class AppBar(AdaptiveControl):
+class AppBar(Control):
     """
     A material design app bar.
 
@@ -77,7 +76,7 @@ class AppBar(AdaptiveControl):
         toolbar_text_style: Optional[TextStyle] = None,
         shape: Optional[OutlinedBorder] = None,
         #
-        # AdaptiveControl
+        # Control
         #
         ref: Optional[Ref] = None,
         visible: Optional[bool] = None,
@@ -87,10 +86,14 @@ class AppBar(AdaptiveControl):
         adaptive: Optional[bool] = None,
     ):
         Control.__init__(
-            self, ref=ref, visible=visible, disabled=disabled, data=data, rtl=rtl
+            self,
+            ref=ref,
+            visible=visible,
+            disabled=disabled,
+            data=data,
+            rtl=rtl,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.leading = leading
         self.leading_width = leading_width

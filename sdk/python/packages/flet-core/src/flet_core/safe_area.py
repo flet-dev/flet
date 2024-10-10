@@ -1,7 +1,6 @@
 import warnings
 from typing import Any, Optional, Union
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -17,7 +16,7 @@ from flet_core.types import (
 )
 
 
-class SafeArea(ConstrainedControl, AdaptiveControl):
+class SafeArea(ConstrainedControl):
     def __init__(
         self,
         content: Control,
@@ -55,9 +54,6 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         rtl: Optional[bool] = None,
-        #
-        # Adaptive
-        #
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -86,9 +82,8 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
             disabled=disabled,
             data=data,
             rtl=rtl,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.content = content
         self.left = left

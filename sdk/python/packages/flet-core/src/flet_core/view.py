@@ -1,6 +1,6 @@
-from typing import List, Optional, Union, Sequence
+from typing import List, Optional, Union, Sequence, Any
 
-from flet_core.adaptive_control import AdaptiveControl
+from flet_core.ref import Ref
 from flet_core.app_bar import AppBar
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.box import BoxDecoration
@@ -23,7 +23,7 @@ from flet_core.types import (
 )
 
 
-class View(ScrollableControl, AdaptiveControl):
+class View(ScrollableControl):
     """
     View is the top most container for all other controls.
 
@@ -63,11 +63,17 @@ class View(ScrollableControl, AdaptiveControl):
         on_scroll_interval: OptionalNumber = None,
         on_scroll: OptionalEventCallable[OnScrollEvent] = None,
         #
-        # AdaptiveControl
+        # Control
         #
+        ref: Optional[Ref] = None,
+        data: Any = None,
+        visible: Optional[bool] = None,
+        rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
     ):
-        Control.__init__(self)
+        Control.__init__(
+            self, adaptive=adaptive, data=data, ref=ref, rtl=rtl, visible=visible
+        )
 
         ScrollableControl.__init__(
             self,
@@ -76,8 +82,6 @@ class View(ScrollableControl, AdaptiveControl):
             on_scroll_interval=on_scroll_interval,
             on_scroll=on_scroll,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.controls = controls
         self.route = route

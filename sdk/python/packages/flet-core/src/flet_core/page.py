@@ -34,7 +34,6 @@ except ImportError:
     from typing_extensions import ParamSpec
 
 import flet_core
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alert_dialog import AlertDialog
 from flet_core.alignment import Alignment
 from flet_core.animation import AnimationCurve
@@ -100,7 +99,8 @@ try:
     from flet.auth.oauth_provider import OAuthProvider
 except ImportError as e:
 
-    class OAuthProvider: ...
+    class OAuthProvider:
+        ...
 
     class Authorization:
         def __init__(
@@ -109,7 +109,8 @@ except ImportError as e:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ): ...
+        ):
+            ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -502,7 +503,7 @@ class Window:
         self.__on_event.handler = handler
 
 
-class Page(AdaptiveControl):
+class Page(Control):
     """
     Page is a container for `View` (https://flet.dev/docs/controls/view) controls.
 

@@ -1,7 +1,6 @@
 from enum import Enum
 from typing import Any, Callable, Dict, List, Optional, Union
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.border import Border
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
@@ -49,8 +48,18 @@ class NavigationBarDestination(Control):
         tooltip: TooltipValue = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
     ):
-        Control.__init__(self, ref=ref, tooltip=tooltip, disabled=disabled, data=data)
+        Control.__init__(
+            self,
+            ref=ref,
+            tooltip=tooltip,
+            disabled=disabled,
+            data=data,
+            rtl=rtl,
+            adaptive=adaptive,
+        )
         self.label = label
         self.icon = icon
         self.icon_content = icon_content
@@ -165,7 +174,7 @@ class NavigationDestination(NavigationBarDestination):
         )
 
 
-class NavigationBar(ConstrainedControl, AdaptiveControl):
+class NavigationBar(ConstrainedControl):
     """
     Material 3 Navigation Bar component.
 
@@ -215,7 +224,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         on_change: OptionalControlEventCallable = None,
         #
-        # ConstrainedControl and AdaptiveControl
+        # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         width: OptionalNumber = None,
@@ -271,9 +280,8 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.destinations = destinations
         self.selected_index = selected_index

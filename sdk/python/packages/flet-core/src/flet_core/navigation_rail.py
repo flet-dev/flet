@@ -41,9 +41,20 @@ class NavigationRailDestination(Control):
         #
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
     ) -> None:
-        Control.__init__(self, ref=ref, disabled=disabled, data=data)
+        Control.__init__(
+            self,
+            ref=ref,
+            disabled=disabled,
+            data=data,
+            rtl=rtl,
+            adaptive=adaptive,
+            visible=visible,
+        )
         self.label = label
         self.icon = icon
         self.icon_content = icon_content

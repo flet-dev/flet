@@ -1,7 +1,6 @@
 import time
 from typing import Any, Optional, Union
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -20,7 +19,7 @@ from flet_core.types import (
 from flet_core.utils import deprecated
 
 
-class OutlinedButton(ConstrainedControl, AdaptiveControl):
+class OutlinedButton(ConstrainedControl):
     """
     Outlined buttons are medium-emphasis buttons. They contain actions that are important, but aren’t the primary action in an app. Outlined buttons pair well with filled buttons to indicate an alternative, secondary action.
 
@@ -60,7 +59,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
         on_focus: OptionalControlEventCallable = None,
         on_blur: OptionalControlEventCallable = None,
         #
-        # ConstrainedControl and AdaptiveControl
+        # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
@@ -89,6 +88,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -120,8 +120,9 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
+            adaptive=adaptive,
         )
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.text = text
         self.icon = icon

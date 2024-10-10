@@ -1,6 +1,5 @@
 from typing import Any, Optional, Union, Sequence
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -17,7 +16,7 @@ from flet_core.types import (
 from flet_core.utils import deprecated
 
 
-class ResponsiveRow(ConstrainedControl, AdaptiveControl):
+class ResponsiveRow(ConstrainedControl):
     """
     ResponsiveRow allows aligning child controls to virtual columns. By default, a virtual grid has 12 columns, but that can be customized with `ResponsiveRow.columns` property.
 
@@ -57,7 +56,6 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         vertical_alignment: Optional[CrossAxisAlignment] = None,
         spacing: Optional[ResponsiveNumber] = None,
         run_spacing: Optional[ResponsiveNumber] = None,
-        rtl: Optional[bool] = None,
         #
         # ConstrainedControl
         #
@@ -87,9 +85,7 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # AdaptiveControl
-        #
+        rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -121,9 +117,8 @@ class ResponsiveRow(ConstrainedControl, AdaptiveControl):
             disabled=disabled,
             data=data,
             rtl=rtl,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.controls = controls
         self.alignment = alignment

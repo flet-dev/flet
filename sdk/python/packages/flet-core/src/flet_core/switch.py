@@ -1,6 +1,5 @@
 from typing import Any, Dict, Optional, Union
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
@@ -19,7 +18,7 @@ from flet_core.types import (
 )
 
 
-class Switch(ConstrainedControl, AdaptiveControl):
+class Switch(ConstrainedControl):
     """
     A toggle represents a physical switch that allows someone to choose between two mutually exclusive options.
 
@@ -68,7 +67,6 @@ class Switch(ConstrainedControl, AdaptiveControl):
         thumb_color: Union[None, str, Dict[ControlState, str]] = None,
         thumb_icon: Union[None, str, Dict[ControlState, str]] = None,
         track_color: Union[None, str, Dict[ControlState, str]] = None,
-        adaptive: Optional[bool] = None,
         hover_color: Optional[str] = None,
         splash_radius: OptionalNumber = None,
         overlay_color: Union[None, str, Dict[ControlState, str]] = None,
@@ -107,6 +105,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -137,9 +136,8 @@ class Switch(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.value = value
         self.label = label

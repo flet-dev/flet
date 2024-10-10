@@ -123,6 +123,7 @@ class Text(ConstrainedControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -154,6 +155,7 @@ class Text(ConstrainedControl):
             disabled=disabled,
             data=data,
             rtl=rtl,
+            adaptive=adaptive,
         )
 
         self.value = value

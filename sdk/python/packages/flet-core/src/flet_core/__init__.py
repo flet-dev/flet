@@ -15,7 +15,6 @@ from flet_core import (
     painting,
     transform,
 )
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alert_dialog import AlertDialog
 from flet_core.alignment import Alignment, Axis
 from flet_core.animated_switcher import AnimatedSwitcher, AnimatedSwitcherTransition

@@ -1,6 +1,5 @@
 from typing import Any, Optional, Sequence, Union, Callable
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control
 from flet_core.ref import Ref
@@ -20,7 +19,7 @@ from flet_core.types import (
 from flet_core.utils import deprecated
 
 
-class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
+class Column(ConstrainedControl, ScrollableControl):
     """
     Container allows to decorate a control with background color and border and position it with padding, margin and alignment.
 
@@ -95,14 +94,14 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
         #
-        # ScrollableControl and AdaptiveControl
+        # ScrollableControl
         #
         scroll: Optional[ScrollMode] = None,
         auto_scroll: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
         on_scroll: Optional[Callable[[OnScrollEvent], None]] = None,
-        adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -133,6 +132,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
             disabled=disabled,
             data=data,
             rtl=rtl,
+            adaptive=adaptive,
         )
 
         ScrollableControl.__init__(
@@ -142,8 +142,6 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
             on_scroll_interval=on_scroll_interval,
             on_scroll=on_scroll,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.controls = controls
         self.horizontal_alignment = horizontal_alignment

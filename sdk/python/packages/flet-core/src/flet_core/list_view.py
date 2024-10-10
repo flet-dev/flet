@@ -1,6 +1,5 @@
 from typing import Any, List, Optional, Union, Callable, Sequence
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
@@ -18,7 +17,7 @@ from flet_core.types import (
 from flet_core.utils import deprecated
 
 
-class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
+class ListView(ConstrainedControl, ScrollableControl):
     """
     A scrollable list of controls arranged linearly.
 
@@ -105,9 +104,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        #
-        # AdaptiveControl
-        #
+        rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -138,6 +135,8 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
+            adaptive=adaptive,
         )
 
         ScrollableControl.__init__(
@@ -147,8 +146,6 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
             on_scroll_interval=on_scroll_interval,
             on_scroll=on_scroll,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.__controls: List[Control] = []
         self.controls = controls

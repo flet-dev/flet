@@ -1,7 +1,6 @@
 import time
 from typing import Any, Optional, Union
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
@@ -24,7 +23,7 @@ from flet_core.types import (
 from flet_core.utils import deprecated
 
 
-class IconButton(ConstrainedControl, AdaptiveControl):
+class IconButton(ConstrainedControl):
     """
     An icon button is a round button with an icon in the middle that reacts to touches by filling with color (ink).
 
@@ -121,6 +120,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -152,8 +152,9 @@ class IconButton(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
+            adaptive=adaptive,
         )
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.icon = icon
         self.icon_size = icon_size

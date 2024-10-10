@@ -42,8 +42,19 @@ class PopupMenuItem(Control):
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        visible: Optional[bool] = None,
+        rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
     ):
-        Control.__init__(self, ref=ref, disabled=disabled, data=data)
+        Control.__init__(
+            self,
+            ref=ref,
+            disabled=disabled,
+            data=data,
+            visible=visible,
+            rtl=rtl,
+            adaptive=adaptive,
+        )
 
         self.checked = checked
         self.icon = icon

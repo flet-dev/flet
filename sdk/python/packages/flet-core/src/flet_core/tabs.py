@@ -1,6 +1,5 @@
 from typing import Any, Dict, List, Optional, Union
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.border import BorderSide
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -22,7 +21,7 @@ from flet_core.types import (
 )
 
 
-class Tab(AdaptiveControl):
+class Tab(Control):
     def __init__(
         self,
         text: Optional[str] = None,
@@ -30,14 +29,24 @@ class Tab(AdaptiveControl):
         tab_content: Optional[Control] = None,
         icon: Optional[str] = None,
         #
-        # Control and AdaptiveControl
+        # Control
         #
         ref: Optional[Ref] = None,
+            data: Any = None,
+            disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
+            rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
     ):
-        Control.__init__(self, ref=ref, visible=visible)
-        AdaptiveControl.__init__(self, adaptive=adaptive)
+        Control.__init__(
+            self,
+            ref=ref,
+            visible=visible,
+            adaptive=adaptive,
+            rtl=rtl,
+            disabled=disabled,
+            data=data,
+        )
 
         self.text = text
         self.icon = icon
@@ -96,7 +105,7 @@ class Tab(AdaptiveControl):
         self.__content = value
 
 
-class Tabs(ConstrainedControl, AdaptiveControl):
+class Tabs(ConstrainedControl):
     """
     The Tabs control is used for navigating frequently accessed, distinct content categories. Tabs allow for navigation between two or more content views and relies on text headers to articulate the different sections of content.
 
@@ -172,7 +181,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         on_click: OptionalControlEventCallable = None,
         on_change: OptionalControlEventCallable = None,
         #
-        # ConstrainedControl and AdaptiveControl
+        # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
@@ -200,6 +209,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+            rtl: Optional[bool] = None,
         adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
@@ -230,9 +240,9 @@ class Tabs(ConstrainedControl, AdaptiveControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.tabs = tabs
         self.selected_index = selected_index

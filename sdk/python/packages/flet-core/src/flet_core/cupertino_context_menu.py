@@ -1,11 +1,10 @@
 from typing import Any, List, Optional
 
-from flet_core.adaptive_control import AdaptiveControl
 from flet_core.control import Control
 from flet_core.ref import Ref
 
 
-class CupertinoContextMenu(AdaptiveControl):
+class CupertinoContextMenu(Control):
     """
     A full-screen modal route that opens up when the content is long-pressed.
 
@@ -26,7 +25,8 @@ class CupertinoContextMenu(AdaptiveControl):
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
         data: Any = None,
-        adaptive: Optional[bool] = False,
+        rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
     ):
         Control.__init__(
             self,
@@ -34,9 +34,9 @@ class CupertinoContextMenu(AdaptiveControl):
             disabled=disabled,
             visible=visible,
             data=data,
+            rtl=rtl,
+            adaptive=adaptive,
         )
-
-        AdaptiveControl.__init__(self, adaptive=adaptive)
 
         self.enable_haptic_feedback = enable_haptic_feedback
         self.content = content

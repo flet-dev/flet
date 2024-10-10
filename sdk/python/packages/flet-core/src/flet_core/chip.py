@@ -130,9 +130,8 @@ class Chip(ConstrainedControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         key: Optional[str] = None,
-        #
-        # Specific
-        #
+        rtl: Optional[bool] = None,
+        adaptive: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -163,6 +162,8 @@ class Chip(ConstrainedControl):
             visible=visible,
             disabled=disabled,
             data=data,
+            rtl=rtl,
+            adaptive=adaptive,
         )
 
         self.autofocus = autofocus
