@@ -3,7 +3,7 @@
 wheel=${1:?}
 new_tag=${2:?}
 
-echo "Re-packaging wheel $wheel_path with $new_tag"
+echo "Re-packaging wheel $wheel with $new_tag"
 
 # Define temporary directory and file
 tmp_dir=$(mktemp -d)
@@ -11,8 +11,10 @@ tmp_dir=$(mktemp -d)
 # Unpack the wheel file
 python -m wheel unpack --dest $tmp_dir $wheel
 
+ls -alR $tmp_dir
+
 # get unpacked wheel dir
-wheel_dir=$(realpath $(find $tmp_dir -maxdepth 1 -name "flet-*"))
+wheel_dir=$(realpath $(find $tmp_dir -maxdepth 1 -name "flet_*"))
 echo "wheel temp dir: $wheel_dir"
 
 pushd $wheel_dir
