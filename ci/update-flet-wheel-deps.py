@@ -29,28 +29,31 @@ def extract_version(wheel_file):
 
 # Process the METADATA file
 def update_metadata(metadata_file, version):
-    with open(metadata_file, "r+") as file:
-        content = file.read()
-        content = re.sub(
-            r'platform_system != "desktop-light"',
-            "(platform_system == 'Darwin' or platform_system == 'Windows') and 'embedded' not in platform_version",
-            content,
-        )
-        content = re.sub(
-            r'platform_system != "embedded"',
-            "(platform_system == 'Darwin' or platform_system == 'Linux' or platform_system == 'Windows') and 'embedded' not in platform_version",
-            content,
-        )
-        content = re.sub(
-            r"^Requires-Dist: flet-desktop ",
-            f"Requires-Dist: flet-desktop-light (=={version}) ; platform_system == 'Linux' and 'embedded' not in platform_version",
-            content,
-            flags=re.M,
-        )
+    with open(metadata_file, "r") as file:
+        lines = file.readlines()
 
-        file.seek(0)
-        file.write(content)
-        file.truncate()
+        i = 0
+        while i < len(lines):
+            # insert Requires-Dist: flet-desktop-light ...
+            if lines[i].startswith("Requires-Dist: flet-desktop "):
+                lines.insert(
+                    i + 1,
+                    f"Requires-Dist: flet-desktop-light (=={version}) ; platform_system == 'Linux' and 'embedded' not in platform_version",
+                )
+            lines[i] = re.sub(
+                r'platform_system != "desktop-light"',
+                "(platform_system == 'Darwin' or platform_system == 'Windows') and 'embedded' not in platform_version",
+                lines[i],
+            )
+            lines[i] = re.sub(
+                r'platform_system != "embedded"',
+                "(platform_system == 'Darwin' or platform_system == 'Linux' or platform_system == 'Windows') and 'embedded' not in platform_version",
+                lines[i],
+            )
+            i += 1
+
+    with open(metadata_file, "w") as file:
+        file.writelines(lines)
 
 
 # Main logic
