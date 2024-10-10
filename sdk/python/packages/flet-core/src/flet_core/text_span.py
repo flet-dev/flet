@@ -16,6 +16,8 @@ class TextSpan(InlineSpan):
         spans: Optional[List[InlineSpan]] = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
+        semantics_label: Optional[str] = None,
+        spell_out: Optional[bool] = None,
         on_click: OptionalControlEventCallable = None,
         on_enter: OptionalControlEventCallable = None,
         on_exit: OptionalControlEventCallable = None,
@@ -36,6 +38,8 @@ class TextSpan(InlineSpan):
         self.spans = spans
         self.url = url
         self.url_target = url_target
+        self.semantics_label = semantics_label
+        self.spell_out = spell_out
         self.on_click = on_click
         self.on_enter = on_enter
         self.on_exit = on_exit
@@ -58,6 +62,24 @@ class TextSpan(InlineSpan):
     @text.setter
     def text(self, value: Optional[str]):
         self._set_attr("text", value)
+
+    # semantics_label
+    @property
+    def semantics_label(self) -> Optional[str]:
+        return self._get_attr("semanticsLabel")
+
+    @semantics_label.setter
+    def semantics_label(self, value: Optional[str]):
+        self._set_attr("semanticsLabel", value)
+
+    # spell_out
+    @property
+    def spell_out(self) -> Optional[bool]:
+        return self._get_attr("spellOut")
+
+    @spell_out.setter
+    def spell_out(self, value: Optional[bool]):
+        self._set_attr("spellOut", value)
 
     # style
     @property

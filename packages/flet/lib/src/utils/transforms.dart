@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -14,10 +15,13 @@ RotationDetails? parseRotate(Control control, String propName,
   }
 
   final j1 = json.decode(v);
-  return rotateFromJSON(j1);
+  return rotateFromJSON(j1, defaultValue);
 }
 
-RotationDetails rotateFromJSON(dynamic json) {
+RotationDetails rotateFromJSON(dynamic json, [RotationDetails? defaultValue]) {
+  if (json == null) {
+    return defaultValue!;
+  }
   if (json is int || json is double) {
     return RotationDetails(
         angle: parseDouble(json, 0)!, alignment: Alignment.center);
@@ -34,10 +38,13 @@ ScaleDetails? parseScale(Control control, String propName,
   }
 
   final j1 = json.decode(v);
-  return scaleFromJSON(j1);
+  return scaleFromJSON(j1, defaultValue);
 }
 
-ScaleDetails scaleFromJSON(dynamic json) {
+ScaleDetails? scaleFromJSON(dynamic json, [ScaleDetails? defaultValue]) {
+  if (json == null) {
+    return defaultValue;
+  }
   if (json is int || json is double) {
     return ScaleDetails(
         scale: parseDouble(json),
@@ -49,31 +56,36 @@ ScaleDetails scaleFromJSON(dynamic json) {
   return ScaleDetails.fromJson(json);
 }
 
-OffsetDetails? parseOffset(Control control, String propName,
-    [OffsetDetails? defaultValue]) {
+Offset? parseOffset(Control control, String propName, [Offset? defaultValue]) {
   var v = control.attrString(propName, null);
   if (v == null) {
     return defaultValue;
   }
 
   final j1 = json.decode(v);
-  return offsetFromJSON(j1);
+  return offsetFromJSON(j1, defaultValue);
 }
 
-List<Offset>? parseOffsetList(Control control, String propName) {
+Offset? offsetFromJSON(dynamic json, [Offset? defaultValue]) {
+  if (json == null) {
+    return defaultValue;
+  }
+  var details = offsetDetailsFromJSON(json);
+  return Offset(details.x, details.y);
+}
+
+List<Offset>? parseOffsetList(Control control, String propName,
+    [List<Offset>? defaultValue]) {
   var v = control.attrString(propName, null);
   if (v == null) {
-    return null;
+    return defaultValue;
   }
 
   final j1 = json.decode(v);
-  return (j1 as List).map((e) {
-    var d = offsetFromJSON(e);
-    return Offset(d.x, d.y);
-  }).toList();
+  return (j1 as List).map((e) => offsetFromJSON(e)).whereNotNull().toList();
 }
 
-OffsetDetails offsetFromJSON(dynamic json) {
+OffsetDetails offsetDetailsFromJSON(dynamic json) {
   return OffsetDetails.fromJson(json);
 }
 
