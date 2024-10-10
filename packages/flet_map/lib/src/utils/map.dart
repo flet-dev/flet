@@ -15,9 +15,9 @@ LatLng? parseLatLng(Control control, String propName, [LatLng? defValue]) {
   return latLngFromJson(j1);
 }
 
-LatLng latLngFromJson(Map<String, dynamic> json) {
+LatLng latLngFromJson(Map<String, dynamic> j) {
   return LatLng(
-      parseDouble(json['latitude'], 0)!, parseDouble(json['longitude'], 0)!);
+      parseDouble(j['latitude'], 0)!, parseDouble(j['longitude'], 0)!);
 }
 
 LatLngBounds? parseLatLngBounds(Control control, String propName,
@@ -31,12 +31,12 @@ LatLngBounds? parseLatLngBounds(Control control, String propName,
   return latLngBoundsFromJson(j1);
 }
 
-LatLngBounds? latLngBoundsFromJson(Map<String, dynamic> json) {
-  if (json['corner_1'] == null || json['corner_2'] == null) {
+LatLngBounds? latLngBoundsFromJson(Map<String, dynamic> j) {
+  if (j['corner_1'] == null || j['corner_2'] == null) {
     return null;
   }
   return LatLngBounds(
-      latLngFromJson(json['corner_1']), latLngFromJson(json['corner_2']));
+      latLngFromJson(j['corner_1']), latLngFromJson(j['corner_2']));
 }
 
 PatternFit? parsePatternFit(String? value,
@@ -60,18 +60,18 @@ StrokePattern? parseStrokePattern(Control control, String propName,
   return strokePatternFromJson(j1);
 }
 
-StrokePattern? strokePatternFromJson(Map<String, dynamic> json) {
-  if (json['type'] == 'dotted') {
+StrokePattern? strokePatternFromJson(Map<String, dynamic> j) {
+  if (j['type'] == 'dotted') {
     return StrokePattern.dotted(
-      spacingFactor: parseDouble(json['spacing_factor'], 1)!,
-      patternFit: parsePatternFit(json['pattern_fit'], PatternFit.none)!,
+      spacingFactor: parseDouble(j['spacing_factor'], 1)!,
+      patternFit: parsePatternFit(j['pattern_fit'], PatternFit.none)!,
     );
-  } else if (json['type'] == 'solid') {
+  } else if (j['type'] == 'solid') {
     return const StrokePattern.solid();
-  } else if (json['type'] == 'dash') {
-    var segments = json['segments'];
+  } else if (j['type'] == 'dash') {
+    var segments = j['segments'];
     return StrokePattern.dashed(
-      patternFit: parsePatternFit(json['pattern_fit'], PatternFit.none)!,
+      patternFit: parsePatternFit(j['pattern_fit'], PatternFit.none)!,
       segments: segments != null
           ? (jsonDecode(segments) as List)
               .map((e) => parseDouble(e))
@@ -83,31 +83,34 @@ StrokePattern? strokePatternFromJson(Map<String, dynamic> json) {
   return null;
 }
 
-InteractionOptions parseInteractionOptions(Control control, String propName,
-    [InteractionOptions defValue = const InteractionOptions()]) {
+InteractionOptions? parseInteractionOptions(Control control, String propName,
+    [InteractionOptions? defValue]) {
   var v = control.attrString(propName);
   if (v == null) {
     return defValue;
   }
-
   final j1 = json.decode(v);
   return interactionOptionsFromJSON(j1);
 }
 
-InteractionOptions interactionOptionsFromJSON(dynamic json) {
+InteractionOptions? interactionOptionsFromJSON(dynamic j,
+    [InteractionOptions? defValue]) {
+  if (j == null) {
+    return defValue;
+  }
   return InteractionOptions(
       enableMultiFingerGestureRace:
-          parseBool(json["enable_multi_finger_gesture_race"], false)!,
-      pinchMoveThreshold: parseDouble(json["pinch_move_threshold"], 40.0)!,
-      scrollWheelVelocity: parseDouble(json["scroll_wheel_velocity"], 0.005)!,
-      pinchZoomThreshold: parseDouble(json["pinch_zoom_threshold"], 0.5)!,
-      rotationThreshold: parseDouble(json["rotation_threshold"], 20.0)!,
-      flags: parseInt(json["flags"], InteractiveFlag.all)!,
+          parseBool(j["enable_multi_finger_gesture_race"], false)!,
+      pinchMoveThreshold: parseDouble(j["pinch_move_threshold"], 40.0)!,
+      scrollWheelVelocity: parseDouble(j["scroll_wheel_velocity"], 0.005)!,
+      pinchZoomThreshold: parseDouble(j["pinch_zoom_threshold"], 0.5)!,
+      rotationThreshold: parseDouble(j["rotation_threshold"], 20.0)!,
+      flags: parseInt(j["flags"], InteractiveFlag.all)!,
       rotationWinGestures:
-          parseInt(json["rotation_win_gestures"], MultiFingerGesture.rotate)!,
-      pinchMoveWinGestures: parseInt(json["pinch_move_win_gestures"],
+          parseInt(j["rotation_win_gestures"], MultiFingerGesture.rotate)!,
+      pinchMoveWinGestures: parseInt(j["pinch_move_win_gestures"],
           MultiFingerGesture.pinchZoom | MultiFingerGesture.pinchMove)!,
-      pinchZoomWinGestures: parseInt(json["pinch_zoom_win_gestures"],
+      pinchZoomWinGestures: parseInt(j["pinch_zoom_win_gestures"],
           MultiFingerGesture.pinchZoom | MultiFingerGesture.pinchMove)!);
 }
 
