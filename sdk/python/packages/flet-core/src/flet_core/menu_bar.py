@@ -8,11 +8,12 @@ from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     ClipBehavior,
+    ControlState,
+    ControlStateValue,
     MouseCursor,
     OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
-    ControlStateValue,
 )
 
 
@@ -27,6 +28,16 @@ class MenuStyle:
     side: ControlStateValue[BorderSide] = None
     shape: ControlStateValue[OutlinedBorder] = None
     mouse_cursor: ControlStateValue[MouseCursor] = None
+
+    def __post_init__(self):
+        if not isinstance(self.padding, dict):
+            self.padding = {ControlState.DEFAULT: self.padding}
+
+        if not isinstance(self.side, dict):
+            self.side = {ControlState.DEFAULT: self.side}
+
+        if not isinstance(self.shape, dict):
+            self.shape = {ControlState.DEFAULT: self.shape}
 
 
 class MenuBar(Control):

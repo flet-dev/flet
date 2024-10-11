@@ -6,11 +6,12 @@ from flet_core.border import BorderSide
 from flet_core.text_style import TextStyle
 from flet_core.types import (
     BorderRadiusValue,
+    ControlState,
+    ControlStateValue,
+    MouseCursor,
+    OptionalNumber,
     PaddingValue,
     VisualDensity,
-    MouseCursor,
-    ControlStateValue,
-    OptionalNumber,
 )
 
 
@@ -73,3 +74,16 @@ class ButtonStyle:
     icon_color: ControlStateValue[str] = None
     visual_density: Optional[VisualDensity] = None
     mouse_cursor: ControlStateValue[MouseCursor] = None
+
+    def __post_init__(self):
+        if not isinstance(self.text_style, dict):
+            self.text_style = {ControlState.DEFAULT: self.text_style}
+
+        if not isinstance(self.padding, dict):
+            self.padding = {ControlState.DEFAULT: self.padding}
+
+        if not isinstance(self.side, dict):
+            self.side = {ControlState.DEFAULT: self.side}
+
+        if not isinstance(self.shape, dict):
+            self.shape = {ControlState.DEFAULT: self.shape}
