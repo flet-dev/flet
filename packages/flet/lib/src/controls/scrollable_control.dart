@@ -46,9 +46,7 @@ class _ScrollableControlState extends State<ScrollableControl>
     if (widget.scrollController != null) {
       _controller = widget.scrollController!;
     } else {
-      _controller = (isWindowsDesktop()
-          ? AdjustableScrollController()
-          : ScrollController());
+      _controller = ScrollController();
       _ownController = true;
     }
   }
