@@ -219,7 +219,7 @@ which python
 ```
 
 * Rbenv. Install with `brew`: https://github.com/rbenv/rbenv?tab=readme-ov-file#homebrew
-
+  * Install and switch to the latest Ruby:
 ```
 rbenv install 3.3.5
 rbenv global 3.3.5
@@ -232,7 +232,7 @@ ruby --version
 which ruby
 ```
 
-* VS Code. Install "Applce silicon" release: https://code.visualstudio.com/download
+* VS Code. Install "Apple silicon" release: https://code.visualstudio.com/download
 * GitHub Desktop: https://desktop.github.com/download/
 * Poetry: https://python-poetry.org/docs/#installing-with-the-official-installer
 
