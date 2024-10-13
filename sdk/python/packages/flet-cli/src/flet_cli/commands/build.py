@@ -1005,10 +1005,7 @@ class Command(BaseCommand):
             ]
 
             if options.target_arch:
-                package_args.extend([
-                    "--arch",
-                    options.target_arch
-                ])
+                package_args.extend(["--arch", options.target_arch])
 
             package_env = {}
 
@@ -1035,7 +1032,7 @@ class Command(BaseCommand):
             # site-packages variable
             if package_platform in ["Android", "iOS"]:
                 package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
-                    self.build_dir.joinpath("site-packages")
+                    self.build_dir / "site-packages"
                 )
 
             # exclude
@@ -1092,6 +1089,12 @@ class Command(BaseCommand):
             ]
 
             build_env = {}
+
+            # site-packages variable
+            if package_platform in ["Android", "iOS"]:
+                build_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
+                    self.build_dir / "site-packages"
+                )
 
             if options.android_signing_key_store:
                 build_env["FLET_ANDROID_SIGNING_KEY_STORE"] = (
@@ -1203,9 +1206,11 @@ class Command(BaseCommand):
                 message=(
                     f"Successfully built your [cyan]{self.platforms[target_platform]['status_text']}[/cyan]! {self.emojis['success']} "
                     f"Find it in [cyan]{rel_out_dir}[/cyan] directory. {self.emojis['directory']}"
-                    + (f"\nRun [cyan]python -m http.server --directory {rel_out_dir}[/cyan] command to start dev web server with your app. "
-                    if target_platform == "web"
-                    else "")
+                    + (
+                        f"\nRun [cyan]python -m http.server --directory {rel_out_dir}[/cyan] command to start dev web server with your app. "
+                        if target_platform == "web"
+                        else ""
+                    )
                 ),
             )
 
