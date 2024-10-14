@@ -199,3 +199,56 @@ You will be able to see the debugging outputs of the flet client in this termina
 * Merge `Prepare Flet {version}` PR.
 * Create and push new `v{version}` tag (with `v` prefix).
 * Update release notes at `https://github.com/flet-dev/flet/releases/tag/v{version}`.
+
+## New macOS environment for Flet developer
+
+* **Homebrew**: https://brew.sh/
+* **Pyenv**. Install with `brew`: https://github.com/pyenv/pyenv?tab=readme-ov-file#unixmacos
+  * Install and switch to the latest Python 3.12:
+
+```
+pyenv install 3.12.6
+pyenv global 3.12.6
+```
+
+Ensure Python version is 3.12.6 and location is `/Users/{user}/.pyenv/shims/python`:
+
+```
+python --version
+which python
+```
+
+* **Rbenv**. Install with `brew`: https://github.com/rbenv/rbenv?tab=readme-ov-file#homebrew
+  * Install and switch to the latest Ruby:
+```
+rbenv install 3.3.5
+rbenv global 3.3.5
+```
+
+Ensure Ruby version is 3.3.5 and location is `/Users/{user}/.rbenv/shims/ruby`:
+
+```
+ruby --version
+which ruby
+```
+
+* **VS Code**. Install "Apple silicon" release: https://code.visualstudio.com/download
+* **GitHub Desktop**: https://desktop.github.com/download/
+* **Poetry**: https://python-poetry.org/docs/#installing-with-the-official-installer
+
+Check Poetry version and make sure it's in PATH:
+
+```
+poetry --version
+```
+
+* **Rosetta 2** (x86 simulator for Apple Silicon):
+
+```
+sudo softwareupdate --install-rosetta --agree-to-license
+```
+
+* **Android Studio** for Android SDK required by Flutter: https://developer.android.com/studio
+* **XCode**: https://apps.apple.com/ca/app/xcode/id497799835?mt=12
+* **Flutter SDK**: Follow this guide to install Flutter SDK, Flutter plugin for VS Code, configure XCode and iOS simulators: https://docs.flutter.dev/get-started/install/macos/mobile-ios#install-the-flutter-sdk
+* **FVM** - Flutter Version Manager: https://fvm.app/documentation/getting-started/installation
