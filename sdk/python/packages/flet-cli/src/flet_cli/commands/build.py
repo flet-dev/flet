@@ -329,6 +329,7 @@ class Command(BaseCommand):
             "--split-per-abi",
             dest="split_per_abi",
             action="store_true",
+            default=None,
             help="whether to split the APKs per ABIs.",
         )
         parser.add_argument(
@@ -563,7 +564,7 @@ class Command(BaseCommand):
                 return d
 
             python_module_name = Path(
-                options.module_name or get_pyproject("tool.flet.module_name") or "main"
+                options.module_name or get_pyproject("tool.flet.app.module") or "main"
             ).stem
             python_module_filename = f"{python_module_name}.py"
             if not os.path.exists(
@@ -629,8 +630,12 @@ class Command(BaseCommand):
 
             split_per_abi = (
                 options.split_per_abi
-                or get_pyproject("tool.flet.android.split_per_abi")
-                or False
+                if options.split_per_abi is not None
+                else (
+                    get_pyproject("tool.flet.android.split_per_abi")
+                    if get_pyproject("tool.flet.android.split_per_abi") is not None
+                    else False
+                )
             )
 
             team_id = options.team_id or get_pyproject("tool.flet.ios.team")
@@ -754,12 +759,16 @@ class Command(BaseCommand):
                 "out_dir": self.flutter_dir.name,
                 "sep": os.sep,
                 "python_module_name": python_module_name,
-                "route_url_strategy": options.route_url_strategy
-                or get_pyproject("tool.flet.web.route_url_strategy")
-                or "path",
-                "web_renderer": options.web_renderer
-                or get_pyproject("tool.flet.web.renderer")
-                or "canvaskit",
+                "route_url_strategy": (
+                    options.route_url_strategy
+                    or get_pyproject("tool.flet.web.route_url_strategy")
+                    or "path"
+                ),
+                "web_renderer": (
+                    options.web_renderer
+                    or get_pyproject("tool.flet.web.renderer")
+                    or "canvaskit"
+                ),
                 "use_color_emoji": (
                     "true"
                     if (
@@ -772,12 +781,15 @@ class Command(BaseCommand):
                 "split_per_abi": split_per_abi,
                 "project_name": project_name,
                 "product_name": product_name,
-                "description": options.description
-                or get_pyproject("project.description")
-                or get_pyproject("tool.poetry.description"),
+                "description": (
+                    options.description
+                    or get_pyproject("project.description")
+                    or get_pyproject("tool.poetry.description")
+                ),
                 "org_name": options.org_name or get_pyproject("tool.flet.org"),
-                "company_name": options.company_name
-                or get_pyproject("tool.flet.company"),
+                "company_name": (
+                    options.company_name or get_pyproject("tool.flet.company")
+                ),
                 "copyright": options.copyright or get_pyproject("tool.flet.copyright"),
                 "team_id": team_id,
                 "options": {
@@ -1015,20 +1027,22 @@ class Command(BaseCommand):
                 )
 
                 # splash colors
-                if options.splash_color or get_pyproject("tool.flet.splash.color"):
-                    pubspec["flutter_native_splash"]["color"] = options.splash_color
+                splash_color = options.splash_color or get_pyproject(
+                    "tool.flet.splash.color"
+                )
+                if splash_color:
+                    pubspec["flutter_native_splash"]["color"] = splash_color
                     pubspec["flutter_native_splash"]["android_12"][
                         "color"
-                    ] = options.splash_color
-                if options.splash_dark_color or get_pyproject(
+                    ] = splash_color
+                splash_dark_color = options.splash_dark_color or get_pyproject(
                     "tool.flet.splash.dark_color"
-                ):
-                    pubspec["flutter_native_splash"][
-                        "color_dark"
-                    ] = options.splash_dark_color
+                )
+                if splash_dark_color:
+                    pubspec["flutter_native_splash"]["color_dark"] = splash_dark_color
                     pubspec["flutter_native_splash"]["android_12"][
                         "color_dark"
-                    ] = options.splash_dark_color
+                    ] = splash_dark_color
 
             # enable/disable splashes
             pubspec["flutter_native_splash"]["web"] = (
@@ -1108,17 +1122,24 @@ class Command(BaseCommand):
                 f"[bold blue]Packaging Python app {self.emojis['loading']}... ",
             )
 
+            package_app_path = str(python_app_path)
+            if get_pyproject("tool.flet.app.path"):
+                package_app_path = python_app_path.joinpath(
+                    get_pyproject("tool.flet.app.path")
+                )
+
             package_args = [
                 self.dart_exe,
                 "run",
                 "serious_python:main",
                 "package",
-                str(python_app_path),
+                package_app_path,
                 "--platform",
                 package_platform,
             ]
 
-            if options.target_arch:
+            target_arch = options.target_arch or get_pyproject("tool.flet.build_arch")
+            if target_arch:
                 package_args.extend(["--arch", options.target_arch])
 
             package_env = {}
@@ -1152,10 +1173,9 @@ class Command(BaseCommand):
             # exclude
             exclude_list = ["build"]
 
-            if options.exclude:
-                exclude_list.extend(
-                    options.exclude or get_pyproject("tool.flet.files.exclude")
-                )
+            app_exclude = options.exclude or get_pyproject("tool.flet.app.exclude")
+            if app_exclude:
+                exclude_list.extend(app_exclude)
 
             if target_platform == "web":
                 exclude_list.append("assets")
@@ -1236,11 +1256,12 @@ class Command(BaseCommand):
                     self.build_dir / "site-packages"
                 )
 
-            if options.android_signing_key_store:
-                build_env["FLET_ANDROID_SIGNING_KEY_STORE"] = (
-                    options.android_signing_key_store
-                    or get_pyproject("tool.flet.android.signing.key_store")
-                )
+            android_signing_key_store = (
+                options.android_signing_key_store
+                or get_pyproject("tool.flet.android.signing.key_store")
+            )
+            if android_signing_key_store:
+                build_env["FLET_ANDROID_SIGNING_KEY_STORE"] = android_signing_key_store
 
             key_store_password = (
                 options.android_signing_key_store_password
@@ -1256,11 +1277,13 @@ class Command(BaseCommand):
                 build_env["FLET_ANDROID_SIGNING_KEY_PASSWORD"] = (
                     key_password if key_password else key_store_password
                 )
-            if options.android_signing_key_alias:
-                build_env["FLET_ANDROID_SIGNING_KEY_ALIAS"] = (
-                    options.android_signing_key_alias
-                    or get_pyproject("tool.flet.android.signing.key_alias")
-                )
+
+            android_signing_key_alias = (
+                options.android_signing_key_alias
+                or get_pyproject("tool.flet.android.signing.key_alias")
+            )
+            if android_signing_key_alias:
+                build_env["FLET_ANDROID_SIGNING_KEY_ALIAS"] = android_signing_key_alias
 
             if target_platform in "apk" and split_per_abi:
                 build_args.append("--split-per-abi")
