@@ -277,21 +277,21 @@ class Command(BaseCommand):
             "--no-web-splash",
             dest="no_web_splash",
             action="store_true",
-            default=False,
+            default=None,
             help="disable web app splash screen",
         )
         parser.add_argument(
             "--no-ios-splash",
             dest="no_ios_splash",
             action="store_true",
-            default=False,
+            default=None,
             help="disable iOS app splash screen",
         )
         parser.add_argument(
             "--no-android-splash",
             dest="no_android_splash",
             action="store_true",
-            default=False,
+            default=None,
             help="disable Android app splash screen",
         )
         parser.add_argument(
@@ -305,56 +305,51 @@ class Command(BaseCommand):
             "--base-url",
             dest="base_url",
             type=str,
-            default="/",
             help="base URL for the app (web only)",
         )
         parser.add_argument(
             "--web-renderer",
             dest="web_renderer",
             choices=["canvaskit", "html"],
-            default="canvaskit",
             help="renderer to use (web only)",
         )
         parser.add_argument(
             "--use-color-emoji",
             dest="use_color_emoji",
             action="store_true",
-            default=False,
             help="enables color emojis with CanvasKit renderer (web only)",
         )
         parser.add_argument(
             "--route-url-strategy",
             dest="route_url_strategy",
             choices=["path", "hash"],
-            default="path",
             help="URL routing strategy (web only)",
         )
         parser.add_argument(
             "--split-per-abi",
             dest="split_per_abi",
             action="store_true",
-            default=False,
             help="whether to split the APKs per ABIs.",
         )
         parser.add_argument(
             "--compile-app",
             dest="compile_app",
             action="store_true",
-            default=False,
+            default=None,
             help="compile app's .py files to .pyc",
         )
         parser.add_argument(
             "--compile-packages",
             dest="compile_packages",
             action="store_true",
-            default=False,
+            default=None,
             help="compile site packages' .py files to .pyc",
         )
         parser.add_argument(
             "--cleanup-on-compile",
             dest="cleanup_on_compile",
             action="store_true",
-            default=True,
+            default=None,
             help="remove unnecessary app and package files after compiling",
         )
         parser.add_argument(
@@ -447,7 +442,6 @@ class Command(BaseCommand):
         parser.add_argument(
             "--module-name",
             dest="module_name",
-            default="main",
             help="python module name with an app entry point",
         )
         parser.add_argument(
@@ -543,6 +537,8 @@ class Command(BaseCommand):
                 console.log("Flutter executable:", self.flutter_exe)
                 console.log("Dart executable:", self.dart_exe)
 
+            package_platform = self.platforms[target_platform]["package_platform"]
+
             python_app_path = Path(options.python_app_path).resolve()
             if not os.path.exists(python_app_path) or not os.path.isdir(
                 python_app_path
@@ -561,13 +557,14 @@ class Command(BaseCommand):
             def get_pyproject(setting: str):
                 d = pyproject_toml
                 for k in setting.split("."):
-                    assert d
                     d = d.get(k)
                     if d is None:
                         return None
                 return d
 
-            python_module_name = Path(options.module_name).stem
+            python_module_name = Path(
+                options.module_name or get_pyproject("tool.flet.module_name") or "main"
+            ).stem
             python_module_filename = f"{python_module_name}.py"
             if not os.path.exists(
                 os.path.join(python_app_path, python_module_filename)
@@ -591,7 +588,11 @@ class Command(BaseCommand):
             self.build_dir = python_app_path.joinpath("build")
             self.flutter_dir = Path(self.build_dir).joinpath(f"flutter")
 
-            base_url = options.base_url.strip("/").strip()
+            base_url = (
+                (options.base_url or get_pyproject("tool.flet.web.base_url") or "/")
+                .strip("/")
+                .strip()
+            )
             project_name = slugify(
                 options.project_name
                 or get_pyproject("project.name")
@@ -626,6 +627,14 @@ class Command(BaseCommand):
                     else "No additional Flutter dependencies!"
                 )
 
+            split_per_abi = (
+                options.split_per_abi
+                or get_pyproject("tool.flet.android.split_per_abi")
+                or False
+            )
+
+            team_id = options.team_id or get_pyproject("tool.flet.ios.team")
+
             info_plist = {}
             macos_entitlements = {
                 "com.apple.security.app-sandbox": False,
@@ -655,6 +664,16 @@ class Command(BaseCommand):
                         self.cross_platform_permissions[p]["android_features"]
                     )
 
+            info_plist = merge_dict(
+                info_plist,
+                (
+                    get_pyproject("tool.flet.macos.info")
+                    if package_platform == "Darwin"
+                    else get_pyproject("tool.flet.ios.info")
+                )
+                or {},
+            )
+
             # parse --info-plist
             for p in options.info_plist:
                 i = p.find("=")
@@ -667,6 +686,11 @@ class Command(BaseCommand):
                 else:
                     self.cleanup(1, f"Invalid Info.plist option: {p}")
 
+            macos_entitlements = merge_dict(
+                macos_entitlements,
+                get_pyproject("tool.flet.macos.entitlement") or {},
+            )
+
             # parse --macos-entitlements
             for p in options.macos_entitlements:
                 i = p.find("=")
@@ -674,6 +698,11 @@ class Command(BaseCommand):
                     macos_entitlements[p[:i]] = True if p[i + 1 :] == "True" else False
                 else:
                     self.cleanup(1, f"Invalid macOS entitlement option: {p}")
+
+            android_permissions = merge_dict(
+                android_permissions,
+                get_pyproject("tool.flet.android.permission") or {},
+            )
 
             # parse --android-permissions
             for p in options.android_permissions:
@@ -683,6 +712,11 @@ class Command(BaseCommand):
                 else:
                     self.cleanup(1, f"Invalid Android permission option: {p}")
 
+            android_features = merge_dict(
+                android_features,
+                get_pyproject("tool.flet.android.feature") or {},
+            )
+
             # parse --android-features
             for p in options.android_features:
                 i = p.find("=")
@@ -691,43 +725,75 @@ class Command(BaseCommand):
                 else:
                     self.cleanup(1, f"Invalid Android feature option: {p}")
 
-            deep_linking_url = (
-                urlparse(options.deep_linking_url) if options.deep_linking_url else None
+            deep_linking_scheme = (
+                get_pyproject("tool.flet.ios.deep_linking.scheme")
+                if package_platform == "iOS"
+                else (
+                    get_pyproject("tool.flet.android.deep_linking.scheme")
+                    if package_platform == "Android"
+                    else get_pyproject("tool.flet.deep_linking.scheme")
+                )
             )
+
+            deep_linking_host = (
+                get_pyproject("tool.flet.ios.deep_linking.host")
+                if package_platform == "iOS"
+                else (
+                    get_pyproject("tool.flet.android.deep_linking.host")
+                    if package_platform == "Android"
+                    else get_pyproject("tool.flet.deep_linking.host")
+                )
+            )
+
+            if options.deep_linking_url:
+                u = urlparse(options.deep_linking_url)
+                deep_linking_scheme = u.scheme
+                deep_linking_host = u.netloc
 
             template_data = {
                 "out_dir": self.flutter_dir.name,
                 "sep": os.sep,
                 "python_module_name": python_module_name,
-                "route_url_strategy": options.route_url_strategy,
-                "web_renderer": options.web_renderer,
-                "use_color_emoji": "true" if options.use_color_emoji else "false",
+                "route_url_strategy": options.route_url_strategy
+                or get_pyproject("tool.flet.web.route_url_strategy")
+                or "path",
+                "web_renderer": options.web_renderer
+                or get_pyproject("tool.flet.web.renderer")
+                or "canvaskit",
+                "use_color_emoji": (
+                    "true"
+                    if (
+                        options.use_color_emoji
+                        or get_pyproject("tool.flet.web.use_color_emoji")
+                    )
+                    else "false"
+                ),
                 "base_url": f"/{base_url}/" if base_url else "/",
-                "split_per_abi": options.split_per_abi,
+                "split_per_abi": split_per_abi,
                 "project_name": project_name,
                 "product_name": product_name,
-                "description": options.description,
-                "org_name": options.org_name,
-                "company_name": options.company_name,
-                "copyright": options.copyright,
-                "team_id": options.team_id,
+                "description": options.description
+                or get_pyproject("project.description")
+                or get_pyproject("tool.poetry.description"),
+                "org_name": options.org_name or get_pyproject("tool.flet.org"),
+                "company_name": options.company_name
+                or get_pyproject("tool.flet.company"),
+                "copyright": options.copyright or get_pyproject("tool.flet.copyright"),
+                "team_id": team_id,
                 "options": {
                     "info_plist": info_plist,
                     "macos_entitlements": macos_entitlements,
                     "android_permissions": android_permissions,
                     "android_features": android_features,
-                    "deep_linking_url": (
-                        {
-                            "scheme": deep_linking_url.scheme,
-                            "netloc": deep_linking_url.netloc,
-                        }
-                        if deep_linking_url
-                        else None
-                    ),
+                    "deep_linking": {
+                        "scheme": deep_linking_scheme,
+                        "host": deep_linking_host,
+                    },
                     "android_signing": options.android_signing_key_store is not None,
                 },
                 "flutter": {"dependencies": list(flutter_dependencies.keys())},
             }
+
             # Remove None values from the dictionary
             template_data = {k: v for k, v in template_data.items() if v is not None}
 
@@ -834,14 +900,18 @@ class Command(BaseCommand):
                     "flutter_launcher_icons/image_path_android",
                     [android_icon, default_icon],
                 )
-                if options.android_adaptive_icon_background:
+                adaptive_icon_background = (
+                    options.android_adaptive_icon_background
+                    or get_pyproject("tool.flet.android.adaptive_icon_background")
+                )
+                if adaptive_icon_background:
                     fallback_image(
                         "flutter_launcher_icons/adaptive_icon_foreground",
                         [android_icon, default_icon],
                     )
                     pubspec["flutter_launcher_icons"][
                         "adaptive_icon_background"
-                    ] = options.android_adaptive_icon_background
+                    ] = adaptive_icon_background
                 fallback_image(
                     "flutter_launcher_icons/web/image_path", [web_icon, default_icon]
                 )
@@ -945,12 +1015,14 @@ class Command(BaseCommand):
                 )
 
                 # splash colors
-                if options.splash_color:
+                if options.splash_color or get_pyproject("tool.flet.splash.color"):
                     pubspec["flutter_native_splash"]["color"] = options.splash_color
                     pubspec["flutter_native_splash"]["android_12"][
                         "color"
                     ] = options.splash_color
-                if options.splash_dark_color:
+                if options.splash_dark_color or get_pyproject(
+                    "tool.flet.splash.dark_color"
+                ):
                     pubspec["flutter_native_splash"][
                         "color_dark"
                     ] = options.splash_dark_color
@@ -959,9 +1031,33 @@ class Command(BaseCommand):
                     ] = options.splash_dark_color
 
             # enable/disable splashes
-            pubspec["flutter_native_splash"]["web"] = not options.no_web_splash
-            pubspec["flutter_native_splash"]["ios"] = not options.no_ios_splash
-            pubspec["flutter_native_splash"]["android"] = not options.no_android_splash
+            pubspec["flutter_native_splash"]["web"] = (
+                not options.no_web_splash
+                if options.no_web_splash is not None
+                else (
+                    get_pyproject("tool.flet.splash.web")
+                    if get_pyproject("tool.flet.splash.web") is not None
+                    else True
+                )
+            )
+            pubspec["flutter_native_splash"]["ios"] = (
+                not options.no_ios_splash
+                if options.no_ios_splash is not None
+                else (
+                    get_pyproject("tool.flet.splash.ios")
+                    if get_pyproject("tool.flet.splash.ios") is not None
+                    else True
+                )
+            )
+            pubspec["flutter_native_splash"]["android"] = (
+                not options.no_android_splash
+                if options.no_android_splash is not None
+                else (
+                    get_pyproject("tool.flet.splash.android")
+                    if get_pyproject("tool.flet.splash.android") is not None
+                    else True
+                )
+            )
 
             console.log(
                 f"Customized app icons and splash images {self.emojis['checkmark']}"
@@ -1011,7 +1107,6 @@ class Command(BaseCommand):
             self.status.update(
                 f"[bold blue]Packaging Python app {self.emojis['loading']}... ",
             )
-            package_platform = self.platforms[target_platform]["package_platform"]
 
             package_args = [
                 self.dart_exe,
@@ -1058,19 +1153,45 @@ class Command(BaseCommand):
             exclude_list = ["build"]
 
             if options.exclude:
-                exclude_list.extend(options.exclude)
+                exclude_list.extend(
+                    options.exclude or get_pyproject("tool.flet.files.exclude")
+                )
 
             if target_platform == "web":
                 exclude_list.append("assets")
             package_args.extend(["--exclude", ",".join(exclude_list)])
 
-            if options.compile_app:
+            if (
+                options.compile_app
+                if options.compile_app is not None
+                else (
+                    get_pyproject("tool.flet.compile.app")
+                    if get_pyproject("tool.flet.compile.app") is not None
+                    else False
+                )
+            ):
                 package_args.append("--compile-app")
 
-            if options.compile_packages:
+            if (
+                options.compile_packages
+                if options.compile_packages is not None
+                else (
+                    get_pyproject("tool.flet.compile.packages")
+                    if get_pyproject("tool.flet.compile.packages") is not None
+                    else False
+                )
+            ):
                 package_args.append("--compile-packages")
 
-            if options.cleanup_on_compile:
+            if (
+                options.cleanup_on_compile
+                if options.cleanup_on_compile is not None
+                else (
+                    get_pyproject("tool.flet.compile.cleanup")
+                    if get_pyproject("tool.flet.compile.cleanup") is not None
+                    else True
+                )
+            ):
                 package_args.append("--cleanup")
 
             if self.verbose > 1:
@@ -1118,37 +1239,51 @@ class Command(BaseCommand):
             if options.android_signing_key_store:
                 build_env["FLET_ANDROID_SIGNING_KEY_STORE"] = (
                     options.android_signing_key_store
+                    or get_pyproject("tool.flet.android.signing.key_store")
                 )
-            if (
+
+            key_store_password = (
                 options.android_signing_key_store_password
-                or options.android_signing_key_password
-            ):
+                or os.getenv("FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD")
+            )
+            key_password = options.android_signing_key_password or os.getenv(
+                "FLET_ANDROID_SIGNING_KEY_PASSWORD"
+            )
+            if key_store_password or key_password:
                 build_env["FLET_ANDROID_SIGNING_KEY_STORE_PASSWORD"] = (
-                    options.android_signing_key_store_password
-                    if options.android_signing_key_store_password
-                    else options.android_signing_key_password
+                    key_store_password if key_store_password else key_password
                 )
                 build_env["FLET_ANDROID_SIGNING_KEY_PASSWORD"] = (
-                    options.android_signing_key_password
-                    if options.android_signing_key_password
-                    else options.android_signing_key_store_password
+                    key_password if key_password else key_store_password
                 )
             if options.android_signing_key_alias:
                 build_env["FLET_ANDROID_SIGNING_KEY_ALIAS"] = (
                     options.android_signing_key_alias
+                    or get_pyproject("tool.flet.android.signing.key_alias")
                 )
 
-            if target_platform in "apk" and options.split_per_abi:
+            if target_platform in "apk" and split_per_abi:
                 build_args.append("--split-per-abi")
 
-            if target_platform in ["ipa"] and not options.team_id:
+            if target_platform in ["ipa"] and not team_id:
                 build_args.append("--no-codesign")
 
-            if options.build_number:
-                build_args.extend(["--build-number", str(options.build_number)])
+            build_number = options.build_number or get_pyproject(
+                "tool.flet.build_number"
+            )
+            if build_number:
+                build_args.extend(["--build-number", str(build_number)])
 
-            if options.build_version:
-                build_args.extend(["--build-name", options.build_version])
+            build_version = (
+                options.build_version
+                or get_pyproject("project.version")
+                or get_pyproject("tool.poetry.version")
+            )
+            if build_version:
+                build_args.extend(["--build-name", build_version])
+
+            for arg in get_pyproject("tool.flet.flutter.build_args") or []:
+                build_args.append(arg)
 
             if options.flutter_build_args:
                 for flutter_build_arg_arr in options.flutter_build_args:
