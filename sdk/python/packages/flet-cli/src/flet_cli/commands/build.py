@@ -16,7 +16,8 @@ import toml
 import yaml
 from flet.version import update_version
 from flet_cli.commands.base import BaseCommand
-from flet_core.utils import calculate_file_hash, copy_tree, is_windows, slugify
+from flet_cli.utils.merge import merge_dict
+from flet_core.utils import copy_tree, is_windows, slugify
 from flet_core.utils.platform_utils import get_bool_env_var
 from packaging import version
 from rich import print
@@ -409,7 +410,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--deep-linking-url",
             dest="deep_linking_url",
-            help="deep linking URL in the format <sheme>://<host> to configure for iOS and Android builds",
+            help="deep linking URL in the format <scheme>://<host> to configure for iOS and Android builds",
         )
         parser.add_argument(
             "--android-signing-key-store",
@@ -551,6 +552,21 @@ class Command(BaseCommand):
                     f"Path to Flet app does not exist or is not a directory: {python_app_path}",
                 )
 
+            pyproject_toml: Optional[dict[str, Any]] = {}
+            pyproject_toml_file = python_app_path.joinpath("pyproject.toml")
+            if pyproject_toml_file.exists():
+                with pyproject_toml_file.open("r") as f:
+                    pyproject_toml = toml.loads(f.read())
+
+            def get_pyproject(setting: str):
+                d = pyproject_toml
+                for k in setting.split("."):
+                    assert d
+                    d = d.get(k)
+                    if d is None:
+                        return None
+                return d
+
             python_module_name = Path(options.module_name).stem
             python_module_filename = f"{python_module_name}.py"
             if not os.path.exists(
@@ -575,29 +591,26 @@ class Command(BaseCommand):
             self.build_dir = python_app_path.joinpath("build")
             self.flutter_dir = Path(self.build_dir).joinpath(f"flutter")
 
-            pyproject_toml: Optional[dict[str, Any]] = None
-            pyproject_toml_file = python_app_path.joinpath("pyproject.toml")
-            if pyproject_toml_file.exists():
-                with pyproject_toml_file.open("r") as f:
-                    pyproject_toml = toml.loads(f.read())
-
             base_url = options.base_url.strip("/").strip()
             project_name = slugify(
-                options.project_name or python_app_path.name
+                options.project_name
+                or get_pyproject("project.name")
+                or get_pyproject("tool.poetry.name")
+                or python_app_path.name
             ).replace("-", "_")
-            product_name = options.product_name or project_name
-
-            src_pubspec = None
-            src_pubspec_path = python_app_path.joinpath("pubspec.yaml")
-            if src_pubspec_path.exists():
-                with open(src_pubspec_path, encoding="utf8") as f:
-                    src_pubspec = pubspec = yaml.safe_load(f)
-
-            flutter_dependencies = (
-                src_pubspec["dependencies"]
-                if src_pubspec and src_pubspec["dependencies"]
-                else {}
+            product_name = (
+                options.product_name
+                or get_pyproject("tool.flet.product")
+                or project_name
             )
+
+            flutter_dependencies = get_pyproject("tool.flet.flutter.dependencies") or {}
+
+            if isinstance(flutter_dependencies, list):
+                r = {}
+                for d in flutter_dependencies:
+                    r[d] = "any"
+                flutter_dependencies = r
 
             if options.flutter_packages:
                 for package in options.flutter_packages:
@@ -627,7 +640,9 @@ class Command(BaseCommand):
             }
 
             # merge values from "--permissions" arg:
-            for p in options.permissions:
+            for p in (
+                options.permissions or get_pyproject("tool.flet.permissions") or []
+            ):
                 if p in self.cross_platform_permissions:
                     info_plist.update(self.cross_platform_permissions[p]["info_plist"])
                     macos_entitlements.update(
@@ -716,8 +731,10 @@ class Command(BaseCommand):
             # Remove None values from the dictionary
             template_data = {k: v for k, v in template_data.items() if v is not None}
 
-            template_url = options.template
-            template_ref = options.template_ref
+            template_url = options.template or get_pyproject("tool.flet.template.url")
+            template_ref = options.template_ref or get_pyproject(
+                "tool.flet.template.ref"
+            )
             if not template_url:
                 template_url = DEFAULT_TEMPLATE_URL
                 if not template_ref:
@@ -726,6 +743,9 @@ class Command(BaseCommand):
                         if flet.version.version
                         else update_version()
                     )
+            template_dir = options.template_dir or get_pyproject(
+                "tool.flet.template.dir"
+            )
 
             # create Flutter project from a template
             self.flutter_dir.mkdir(parents=True, exist_ok=True)
@@ -736,7 +756,7 @@ class Command(BaseCommand):
                 cookiecutter(
                     template=template_url,
                     checkout=template_ref,
-                    directory=options.template_dir,
+                    directory=template_dir,
                     output_dir=str(self.flutter_dir.parent),
                     no_input=True,
                     overwrite_if_exists=True,
@@ -759,10 +779,9 @@ class Command(BaseCommand):
             for k, v in flutter_dependencies.items():
                 pubspec["dependencies"][k] = v
 
-            if src_pubspec and "dependency_overrides" in src_pubspec:
-                pubspec["dependency_overrides"] = {}
-                for k, v in src_pubspec["dependency_overrides"].items():
-                    pubspec["dependency_overrides"][k] = v
+            pubspec = merge_dict(
+                pubspec, get_pyproject("tool.flet.flutter.pubspec") or {}
+            )
 
             # make sure project name is not named as any of dependencies
             for dep in pubspec["dependencies"].keys():
