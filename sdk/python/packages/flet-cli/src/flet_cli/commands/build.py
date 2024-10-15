@@ -599,7 +599,7 @@ class Command(BaseCommand):
                 or get_pyproject("project.name")
                 or get_pyproject("tool.poetry.name")
                 or python_app_path.name
-            ).replace("-", "_")
+            )
             product_name = (
                 options.product_name
                 or get_pyproject("tool.flet.product")
