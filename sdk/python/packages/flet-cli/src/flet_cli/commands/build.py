@@ -594,16 +594,18 @@ class Command(BaseCommand):
                 .strip("/")
                 .strip()
             )
-            project_name = slugify(
+            project_name_orig = (
                 options.project_name
                 or get_pyproject("project.name")
                 or get_pyproject("tool.poetry.name")
                 or python_app_path.name
             )
+            project_name_slug = slugify(project_name_orig)
+            project_name = project_name_slug.replace("-", "_")
             product_name = (
                 options.product_name
                 or get_pyproject("tool.flet.product")
-                or project_name
+                or project_name_orig
             )
 
             flutter_dependencies = get_pyproject("tool.flet.flutter.dependencies") or {}
@@ -780,6 +782,7 @@ class Command(BaseCommand):
                 "base_url": f"/{base_url}/" if base_url else "/",
                 "split_per_abi": split_per_abi,
                 "project_name": project_name,
+                "project_name_slug": project_name_slug,
                 "product_name": product_name,
                 "description": (
                     options.description
