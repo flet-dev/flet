@@ -252,7 +252,7 @@ Open GitHub Desktop app, install Rosetta.
 
 * **Poetry**: https://python-poetry.org/docs/#installing-with-the-official-installer
 
-Set PATH environment variable:
+After installing poetry, set PATH:
 ```
 echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.zprofile
 ```
@@ -265,6 +265,16 @@ poetry --version
 
 * **Android Studio** for Android SDK required by Flutter: https://developer.android.com/studio
 * **XCode** for macOS and iOS SDKs: https://apps.apple.com/ca/app/xcode/id497799835?mt=12
-* **Flutter SDK**: Follow this guide to install Flutter SDK, Flutter plugin for VS Code, configure XCode and iOS simulators: https://docs.flutter.dev/get-started/install/macos/mobile-ios#install-the-flutter-sdk
 * **FVM** - Flutter Version Manager: https://fvm.app/documentation/getting-started/installation
+Install flutter with fvm:
+```
+fvm install 3.24.3
+fvm global 3.24.3
+```
+
+Set PATH:
+```
+echo 'export PATH=$HOME/fvm/default/bin:$PATH' >> ~/.zprofile
+```
+
 * **cocoapods**: https://guides.cocoapods.org/using/getting-started.html#installation
