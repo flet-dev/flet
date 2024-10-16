@@ -37,8 +37,7 @@ class _ListViewControlState extends State<ListViewControl> {
   @override
   void initState() {
     super.initState();
-    _controller =
-        isWindowsDesktop() ? AdjustableScrollController() : ScrollController();
+    _controller = ScrollController();
   }
 
   @override
