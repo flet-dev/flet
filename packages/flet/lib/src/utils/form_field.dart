@@ -57,6 +57,7 @@ InputDecoration buildInputDecoration(
     Control? prefixIcon,
     Control? suffix,
     Control? suffixIcon,
+    Control? icon,
     Control? counter,
     Widget? customSuffix,
     bool focused = false,
@@ -67,7 +68,7 @@ InputDecoration buildInputDecoration(
     control.attrString("border"),
     FormFieldInputBorder.outline,
   )!;
-  var icon = parseIcon(control.attrString("icon"));
+  var iconStr = parseIcon(control.attrString("icon"));
 
   var prefixIconStr = parseIcon(control.attrString("prefixIcon"));
   var prefixText = control.attrString("prefixText");
@@ -135,7 +136,11 @@ InputDecoration buildInputDecoration(
       enabledBorder: border,
       focusedBorder: focusedBorder,
       hoverColor: hoverColor,
-      icon: icon != null ? Icon(icon) : null,
+      //icon: icon != null ? Icon(icon) : null,
+      icon: icon != null
+          ? createControl(control, icon.id, control.isDisabled,
+              parentAdaptive: adaptive)
+          : iconStr !=null? Icon(iconStr): null,
       filled: control.attrBool("filled", false)!,
       fillColor: fillColor ?? (focused ? focusedBgcolor ?? bgcolor : bgcolor),
       hintText: control.attrString("hintText"),

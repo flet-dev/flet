@@ -129,6 +129,8 @@ class _TextFieldControlState extends State<TextFieldControl>
           widget.children.where((c) => c.name == "suffix" && c.isVisible);
       var suffixIconControls =
           widget.children.where((c) => c.name == "suffixIcon" && c.isVisible);
+      var iconControls =
+          widget.children.where((c) => c.name == "icon" && c.isVisible);
       var counterControls =
           widget.children.where((c) => c.name == "counter" && c.isVisible);
 
@@ -231,6 +233,7 @@ class _TextFieldControlState extends State<TextFieldControl>
               prefixIcon: prefixIconControls.isNotEmpty ? prefixIconControls.first : null,
               suffix: suffixControls.isNotEmpty ? suffixControls.first : null,
               suffixIcon: suffixIconControls.isNotEmpty ? suffixIconControls.first : null,
+              icon: iconControls.isNotEmpty ? iconControls.first : null,
               counter:
                   counterControls.isNotEmpty ? counterControls.first : null,
               customSuffix: revealPasswordIcon,
