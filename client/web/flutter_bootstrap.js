@@ -3,6 +3,9 @@
 
 var loading = document.querySelector('#loading');
 _flutter.loader.load({
+    config: {
+        renderer: webRenderer
+    },
     serviceWorkerSettings: {
         serviceWorkerVersion: {{flutter_service_worker_version}},
     },
