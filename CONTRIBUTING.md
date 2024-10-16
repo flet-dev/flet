@@ -203,12 +203,25 @@ You will be able to see the debugging outputs of the flet client in this termina
 ## New macOS environment for Flet developer
 
 * **Homebrew**: https://brew.sh/
+
+After installing homebrew, install xz libraries with it:
+```
+brew install xz
+```
+
 * **Pyenv**. Install with `brew`: https://github.com/pyenv/pyenv?tab=readme-ov-file#unixmacos
   * Install and switch to the latest Python 3.12:
-
 ```
 pyenv install 3.12.6
 pyenv global 3.12.6
+```
+
+Setup your shell environment: https://github.com/pyenv/pyenv#set-up-your-shell-environment-for-pyenv
+
+```
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zprofile
+echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zprofile
+echo 'eval "$(pyenv init -)"' >> ~/.zprofile
 ```
 
 Ensure Python version is 3.12.6 and location is `/Users/{user}/.pyenv/shims/python`:
@@ -233,8 +246,16 @@ which ruby
 ```
 
 * **VS Code**. Install "Apple silicon" release: https://code.visualstudio.com/download
+
 * **GitHub Desktop**: https://desktop.github.com/download/
+Open GitHub Desktop app, install Rosetta.
+
 * **Poetry**: https://python-poetry.org/docs/#installing-with-the-official-installer
+
+After installing poetry, set PATH:
+```
+echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.zprofile
+```
 
 Check Poetry version and make sure it's in PATH:
 
@@ -242,13 +263,18 @@ Check Poetry version and make sure it's in PATH:
 poetry --version
 ```
 
-* **Rosetta 2** (x86 simulator for Apple Silicon):
-
-```
-sudo softwareupdate --install-rosetta --agree-to-license
-```
-
 * **Android Studio** for Android SDK required by Flutter: https://developer.android.com/studio
-* **XCode**: https://apps.apple.com/ca/app/xcode/id497799835?mt=12
-* **Flutter SDK**: Follow this guide to install Flutter SDK, Flutter plugin for VS Code, configure XCode and iOS simulators: https://docs.flutter.dev/get-started/install/macos/mobile-ios#install-the-flutter-sdk
+* **XCode** for macOS and iOS SDKs: https://apps.apple.com/ca/app/xcode/id497799835?mt=12
 * **FVM** - Flutter Version Manager: https://fvm.app/documentation/getting-started/installation
+Install flutter with fvm:
+```
+fvm install 3.24.3
+fvm global 3.24.3
+```
+
+Set PATH:
+```
+echo 'export PATH=$HOME/fvm/default/bin:$PATH' >> ~/.zprofile
+```
+
+* **cocoapods**: https://guides.cocoapods.org/using/getting-started.html#installation
