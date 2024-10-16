@@ -3,15 +3,16 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core import ControlEvent
+from flet_core.badge import BadgeValue
 from flet_core.control import Control, OptionalNumber
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    Orientation,
-    ResponsiveNumber,
     OptionalControlEventCallable,
     OptionalEventCallable,
+    Orientation,
+    ResponsiveNumber,
 )
 from flet_core.utils import deprecated
 
@@ -106,6 +107,7 @@ class TimePicker(Control):
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: TooltipValue = None,
+        badge: BadgeValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -118,6 +120,7 @@ class TimePicker(Control):
             col=col,
             opacity=opacity,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
