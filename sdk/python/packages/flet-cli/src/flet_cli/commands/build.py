@@ -9,7 +9,6 @@ import subprocess
 import sys
 from pathlib import Path
 from typing import Any, Optional, Union
-from urllib.parse import urlparse
 
 import flet.version
 import toml
@@ -404,9 +403,14 @@ class Command(BaseCommand):
             help="the list of cross-platform permissions for iOS, Android and macOS apps",
         )
         parser.add_argument(
-            "--deep-linking-url",
-            dest="deep_linking_url",
-            help="deep linking URL in the format <scheme>://<host> to configure for iOS and Android builds",
+            "--deep-linking-scheme",
+            dest="deep_linking_scheme",
+            help='deep linking URL scheme to configure for iOS and Android builds, i.g. "https" or "myapp"',
+        )
+        parser.add_argument(
+            "--deep-linking-host",
+            dest="deep_linking_host",
+            help="deep linking URL host for iOS and Android builds",
         )
         parser.add_argument(
             "--android-signing-key-store",
@@ -752,10 +756,9 @@ class Command(BaseCommand):
                 )
             )
 
-            if options.deep_linking_url:
-                u = urlparse(options.deep_linking_url)
-                deep_linking_scheme = u.scheme
-                deep_linking_host = u.netloc
+            if options.deep_linking_scheme and options.deep_linking_host:
+                deep_linking_scheme = options.deep_linking_scheme
+                deep_linking_host = options.deep_linking_host
 
             template_data = {
                 "out_dir": self.flutter_dir.name,
