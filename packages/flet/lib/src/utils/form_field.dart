@@ -70,7 +70,7 @@ InputDecoration buildInputDecoration(
 
   var prefixIcon = parseIcon(control.attrString("prefixIcon"));
   var prefixText = control.attrString("prefixText");
-  //var suffixIcon = parseIcon(control.attrString("suffixIcon"));
+  var suffixIconStr = parseIcon(control.attrString("suffixIcon"));
   var suffixText = control.attrString("suffixText");
 
   var bgcolor = control.attrColor("bgcolor", context);
@@ -166,7 +166,7 @@ InputDecoration buildInputDecoration(
       suffixIcon: suffixIcon != null
           ? createControl(control, suffixIcon.id, control.isDisabled,
               parentAdaptive: adaptive)
-          : customSuffix,
+          : suffixIconStr !=null? Icon(suffixIconStr): customSuffix,
       suffixText: suffixText,
       suffixStyle: parseTextStyle(Theme.of(context), control, "suffixStyle"),
       );
