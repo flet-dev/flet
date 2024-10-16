@@ -55,6 +55,7 @@ InputDecoration buildInputDecoration(
     Control control,
     {Control? prefix,
     Control? suffix,
+    Control? suffixIcon,
     Control? counter,
     Widget? customSuffix,
     bool focused = false,
@@ -69,7 +70,7 @@ InputDecoration buildInputDecoration(
 
   var prefixIcon = parseIcon(control.attrString("prefixIcon"));
   var prefixText = control.attrString("prefixText");
-  var suffixIcon = parseIcon(control.attrString("suffixIcon"));
+  //var suffixIcon = parseIcon(control.attrString("suffixIcon"));
   var suffixText = control.attrString("suffixText");
 
   var bgcolor = control.attrColor("bgcolor", context);
@@ -161,9 +162,14 @@ InputDecoration buildInputDecoration(
           ? createControl(control, suffix.id, control.isDisabled,
               parentAdaptive: adaptive)
           : null,
-      suffixIcon: suffixIcon != null ? Icon(suffixIcon) : customSuffix,
+      // suffixIcon: suffixIcon != null ? Icon(suffixIcon) : customSuffix,
+      suffixIcon: suffixIcon != null
+          ? createControl(control, suffixIcon.id, control.isDisabled,
+              parentAdaptive: adaptive)
+          : customSuffix,
       suffixText: suffixText,
-      suffixStyle: parseTextStyle(Theme.of(context), control, "suffixStyle"));
+      suffixStyle: parseTextStyle(Theme.of(context), control, "suffixStyle"),
+      );
 }
 
 OverlayVisibilityMode parseVisibilityMode(String type) {

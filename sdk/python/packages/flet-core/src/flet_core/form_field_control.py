@@ -68,7 +68,8 @@ class FormFieldControl(ConstrainedControl):
         prefix_text: Optional[str] = None,
         prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
-        suffix_icon: Optional[str] = None,
+        # suffix_icon: Optional[str] = None,
+        suffix_icon: Optional[Control] = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
         rtl: Optional[bool] = None,
@@ -195,6 +196,9 @@ class FormFieldControl(ConstrainedControl):
         if isinstance(self.__suffix, Control):
             self.__suffix._set_attr_internal("n", "suffix")
             children.append(self.__suffix)
+        if isinstance(self.__suffix_icon, Control):
+            self.__suffix_icon._set_attr_internal("n", "suffixIcon")
+            children.append(self.__suffix_icon)
         if isinstance(self.__counter, Control):
             self.__counter._set_attr_internal("n", "counter")
             children.append(self.__counter)
@@ -500,15 +504,24 @@ class FormFieldControl(ConstrainedControl):
     @suffix.setter
     def suffix(self, value: Optional[Control]):
         self.__suffix = value
-
+    
     # suffix_icon
     @property
-    def suffix_icon(self) -> Optional[str]:
-        return self._get_attr("suffixIcon")
+    def suffix_icon(self) -> Optional[Control]:
+        return self.__suffix_icon
 
     @suffix_icon.setter
-    def suffix_icon(self, value: Optional[str]):
-        self._set_attr("suffixIcon", value)
+    def suffix_icon(self, value: Optional[Control]):
+        self.__suffix_icon = value
+
+    # # suffix_icon
+    # @property
+    # def suffix_icon(self) -> Optional[str]:
+    #     return self._get_attr("suffixIcon")
+
+    # @suffix_icon.setter
+    # def suffix_icon(self, value: Optional[str]):
+    #     self._set_attr("suffixIcon", value)
 
     # suffix_text
     @property
