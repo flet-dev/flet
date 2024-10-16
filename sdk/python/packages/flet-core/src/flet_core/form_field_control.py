@@ -66,7 +66,8 @@ class FormFieldControl(ConstrainedControl):
         error_text: Optional[str] = None,
         error_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
-        prefix_icon: Optional[str] = None,
+        # prefix_icon: Optional[str] = None,
+        prefix_icon: IconValue = None,
         prefix_text: Optional[str] = None,
         prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
@@ -191,6 +192,8 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr_json("suffixStyle", self.__suffix_style)
         if isinstance(self.__suffix_icon, str):
             self._set_attr("suffixIcon", self.__suffix_icon)
+        if isinstance(self.__prefix_icon, str):
+            self._set_attr("prefixIcon", self.__prefix_icon)
 
     def _get_children(self):
         children = []
@@ -203,6 +206,9 @@ class FormFieldControl(ConstrainedControl):
         if isinstance(self.__suffix_icon, Control):
             self.__suffix_icon._set_attr_internal("n", "suffixIcon")
             children.append(self.__suffix_icon)
+        if isinstance(self.__prefix_icon, Control):
+            self.__prefix_icon._set_attr_internal("n", "prefixIcon")
+            children.append(self.__prefix_icon)
         if isinstance(self.__counter, Control):
             self.__counter._set_attr_internal("n", "counter")
             children.append(self.__counter)
@@ -475,12 +481,21 @@ class FormFieldControl(ConstrainedControl):
 
     # prefix_icon
     @property
-    def prefix_icon(self) -> Optional[str]:
-        return self._get_attr("prefixIcon")
+    def prefix_icon(self) -> IconValue:
+        return self.__prefix_icon
 
     @prefix_icon.setter
-    def prefix_icon(self, value: Optional[str]):
-        self._set_attr("prefixIcon", value)
+    def prefix_icon(self, value: IconValue):
+        self.__prefix_icon = value
+
+    # # prefix_icon
+    # @property
+    # def prefix_icon(self) -> Optional[str]:
+    #     return self._get_attr("prefixIcon")
+
+    # @prefix_icon.setter
+    # def prefix_icon(self, value: Optional[str]):
+    #     self._set_attr("prefixIcon", value)
 
     # prefix_text
     @property
@@ -513,8 +528,6 @@ class FormFieldControl(ConstrainedControl):
     @property
     def suffix_icon(self) -> IconValue:
         return self.__suffix_icon
-
-
 
     @suffix_icon.setter
     def suffix_icon(self, value: IconValue):
