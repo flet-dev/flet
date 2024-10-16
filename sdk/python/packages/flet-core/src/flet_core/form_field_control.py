@@ -40,7 +40,8 @@ class FormFieldControl(ConstrainedControl):
         text_vertical_align: Union[VerticalAlignment, OptionalNumber] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
-        icon: Optional[str] = None,
+        # icon: Optional[str] = None,
+        icon: IconValue = None,
         border: Optional[InputBorder] = None,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
@@ -194,6 +195,8 @@ class FormFieldControl(ConstrainedControl):
             self._set_attr("suffixIcon", self.__suffix_icon)
         if isinstance(self.__prefix_icon, str):
             self._set_attr("prefixIcon", self.__prefix_icon)
+        if isinstance(self.__icon, str):
+            self._set_attr("icon", self.__icon)
 
     def _get_children(self):
         children = []
@@ -209,6 +212,9 @@ class FormFieldControl(ConstrainedControl):
         if isinstance(self.__prefix_icon, Control):
             self.__prefix_icon._set_attr_internal("n", "prefixIcon")
             children.append(self.__prefix_icon)
+        if isinstance(self.__icon, Control):
+            self.__icon._set_attr_internal("n", "icon")
+            children.append(self.__icon)
         if isinstance(self.__counter, Control):
             self.__counter._set_attr_internal("n", "counter")
             children.append(self.__counter)
@@ -250,14 +256,23 @@ class FormFieldControl(ConstrainedControl):
     def label_style(self, value: Optional[TextStyle]):
         self.__label_style = value
 
+    # # icon
+    # @property
+    # def icon(self) -> Optional[str]:
+    #     return self._get_attr("icon")
+
+    # @icon.setter
+    # def icon(self, value: Optional[str]):
+    #     self._set_attr("icon", value)
+
     # icon
     @property
-    def icon(self) -> Optional[str]:
-        return self._get_attr("icon")
+    def icon(self) -> IconValue:
+        return self.__icon
 
     @icon.setter
-    def icon(self, value: Optional[str]):
-        self._set_attr("icon", value)
+    def icon(self, value: IconValue):
+        self.__icon = value
 
     # border
     @property
