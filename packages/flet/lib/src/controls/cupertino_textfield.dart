@@ -285,9 +285,11 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
               ? SmartQuotesType.enabled
               : SmartQuotesType.disabled,
           suffixMode: parseVisibilityMode(
-              widget.control.attrString("suffixVisibilityMode", "")!),
+              widget.control.attrString("suffixVisibilityMode"),
+              OverlayVisibilityMode.always)!,
           prefixMode: parseVisibilityMode(
-              widget.control.attrString("prefixVisibilityMode", "")!),
+              widget.control.attrString("prefixVisibilityMode"),
+              OverlayVisibilityMode.always)!,
           textAlign: textAlign,
           minLines: minLines,
           maxLines: maxLines,

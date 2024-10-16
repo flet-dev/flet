@@ -1,9 +1,10 @@
-import 'dart:io' show Platform;
-import 'dart:io';
-
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+
+import 'webview_mobile_and_mac.dart';
+import 'webview_web.dart' if (dart.library.io) "webview_web_vain.dart";
+import 'webview_windows_and_linux.dart'
+    if (dart.library.html) "webview_windows_and_linux_vain.dart";
 
 class WebViewControl extends StatelessWidget {
   final Control? parent;
@@ -21,54 +22,20 @@ class WebViewControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("WebViewControl build: ${control.id}");
-
-    Widget? result;
-
-    String url = control.attrString("url", "")!;
-    if (url == "") {
-      return const ErrorControl("WebView.url cannot be empty.");
+    String url = control.attrString("url", "https://flet.dev")!;
+    Widget view =
+        const ErrorControl("Webview is not yet supported on this platform.");
+    if (isMobilePlatform() || isMacOSDesktop()) {
+      var bgcolor =
+          parseColor(Theme.of(context), control.attrString("bgcolor"));
+      view = WebviewMobileAndMac(
+          control: control, backend: backend, bgcolor: bgcolor);
+    } else if (isWebPlatform()) {
+      view = WebviewWeb(control: control, backend: backend);
+    } else if (isWindowsDesktop() || isLinuxDesktop()) {
+      view = WebviewDesktop(url: url);
     }
 
-    bool javascriptEnabled = control.attrBool("javascriptEnabled", false)!;
-    var bgcolor = parseColor(Theme.of(context), control.attrString("bgcolor"));
-    String preventLink = control.attrString("preventLink", "")!;
-
-    if (Platform.isIOS || Platform.isAndroid) {
-      var controller = WebViewController()
-        ..setJavaScriptMode(javascriptEnabled
-            ? JavaScriptMode.unrestricted
-            : JavaScriptMode.disabled)
-        ..setNavigationDelegate(
-          NavigationDelegate(
-            onProgress: (int progress) {},
-            onPageStarted: (String url) {
-              backend.triggerControlEvent(control.id, "page_started", url);
-            },
-            onPageFinished: (String url) {
-              backend.triggerControlEvent(control.id, "page_ended", url);
-            },
-            onWebResourceError: (WebResourceError error) {
-              backend.triggerControlEvent(
-                  control.id, "web_resource_error", error.toString());
-            },
-            onNavigationRequest: (NavigationRequest request) {
-              if (preventLink != "" && request.url.startsWith(preventLink)) {
-                return NavigationDecision.prevent;
-              }
-              return NavigationDecision.navigate;
-            },
-          ),
-        );
-      if (bgcolor != null) {
-        controller.setBackgroundColor(bgcolor);
-      }
-      controller.loadRequest(Uri.parse(url));
-      result = WebViewWidget(controller: controller);
-    } else {
-      result = const ErrorControl(
-          "WebView control is not supported on this platform yet.");
-    }
-
-    return constrainedControl(context, result, parent, control);
+    return constrainedControl(context, view, parent, control);
   }
 }
