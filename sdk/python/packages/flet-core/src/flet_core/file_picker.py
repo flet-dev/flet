@@ -20,6 +20,7 @@ class FilePickerState(Enum):
     PICK_FILES = "pickFiles"
     SAVE_FILE = "saveFile"
     GET_DIRECTORY_PATH = "getDirectoryPath"
+    UPLOADING_FILES = "uploadfiles"
 
 
 class FilePickerFileType(Enum):
@@ -114,6 +115,7 @@ class FilePicker(Control):
         self,
         on_result: Optional[Callable[[FilePickerResultEvent], None]] = None,
         on_upload: Optional[Callable[[FilePickerUploadEvent], None]] = None,
+        on_upload_finished: Optional[Callable[[ControlEvent], None]] = None,
         #
         # Control
         #
@@ -138,6 +140,11 @@ class FilePicker(Control):
         self.__on_upload = EventHandler(lambda e: FilePickerUploadEvent(e))
         self._add_event_handler("upload", self.__on_upload.get_handler())
 
+        self.__on_upload_finished = EventHandler(lambda e: e)
+        self._add_event_handler(
+            "upload_finished", self.__on_upload_finished.get_handler()
+        )
+
         self.__result: Optional[FilePickerResultEvent] = None
         self.__upload: List[FilePickerUploadFile] = []
         self.__allowed_extensions: Optional[List[str]] = None
@@ -145,6 +152,7 @@ class FilePicker(Control):
         self.__file_type = None
         self.on_result = on_result
         self.on_upload = on_upload
+        self.on_upload_finished = on_upload_finished
 
     def _get_control_name(self):
         return "filepicker"
@@ -248,6 +256,7 @@ class FilePicker(Control):
 
     def upload(self, files: List[FilePickerUploadFile]):
         self.__upload = files
+        self.state = FilePickerState.UPLOADING_FILES
         self.update()
 
     @deprecated(
@@ -345,3 +354,12 @@ class FilePicker(Control):
     @on_upload.setter
     def on_upload(self, handler: OptionalEventCallable[FilePickerUploadEvent]):
         self.__on_upload.handler = handler
+
+    # on_upload_finished
+    @property
+    def on_upload_finished(self):
+        return self.__on_upload_finished.handler
+
+    @on_upload_finished.setter
+    def on_upload_finished(self, handler: OptionalEventCallable[ControlEvent]):
+        self.__on_upload_finished.handler = handler
