@@ -136,7 +136,6 @@ InputDecoration buildInputDecoration(
       enabledBorder: border,
       focusedBorder: focusedBorder,
       hoverColor: hoverColor,
-      //icon: icon != null ? Icon(icon) : null,
       icon: icon != null
           ? createControl(control, icon.id, control.isDisabled,
               parentAdaptive: adaptive)
@@ -157,7 +156,6 @@ InputDecoration buildInputDecoration(
           ? control.attrString("errorText")
           : null,
       errorStyle: parseTextStyle(Theme.of(context), control, "errorStyle"),
-      //prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
       prefixIcon: prefixIcon != null
           ? createControl(control, prefixIcon.id, control.isDisabled,
               parentAdaptive: adaptive)
@@ -172,7 +170,6 @@ InputDecoration buildInputDecoration(
           ? createControl(control, suffix.id, control.isDisabled,
               parentAdaptive: adaptive)
           : null,
-      // suffixIcon: suffixIcon != null ? Icon(suffixIcon) : customSuffix,
       suffixIcon: suffixIcon != null
           ? createControl(control, suffixIcon.id, control.isDisabled,
               parentAdaptive: adaptive)

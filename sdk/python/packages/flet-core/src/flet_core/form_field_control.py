@@ -40,7 +40,6 @@ class FormFieldControl(ConstrainedControl):
         text_vertical_align: Union[VerticalAlignment, OptionalNumber] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
-        # icon: Optional[str] = None,
         icon: IconValue = None,
         border: Optional[InputBorder] = None,
         color: Optional[str] = None,
@@ -67,12 +66,10 @@ class FormFieldControl(ConstrainedControl):
         error_text: Optional[str] = None,
         error_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
-        # prefix_icon: Optional[str] = None,
         prefix_icon: IconValue = None,
         prefix_text: Optional[str] = None,
         prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
-        # suffix_icon: Optional[str] = None,
         suffix_icon: IconValue = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
@@ -255,15 +252,6 @@ class FormFieldControl(ConstrainedControl):
     @label_style.setter
     def label_style(self, value: Optional[TextStyle]):
         self.__label_style = value
-
-    # # icon
-    # @property
-    # def icon(self) -> Optional[str]:
-    #     return self._get_attr("icon")
-
-    # @icon.setter
-    # def icon(self, value: Optional[str]):
-    #     self._set_attr("icon", value)
 
     # icon
     @property
@@ -503,15 +491,6 @@ class FormFieldControl(ConstrainedControl):
     def prefix_icon(self, value: IconValue):
         self.__prefix_icon = value
 
-    # # prefix_icon
-    # @property
-    # def prefix_icon(self) -> Optional[str]:
-    #     return self._get_attr("prefixIcon")
-
-    # @prefix_icon.setter
-    # def prefix_icon(self, value: Optional[str]):
-    #     self._set_attr("prefixIcon", value)
-
     # prefix_text
     @property
     def prefix_text(self) -> Optional[str]:
@@ -547,15 +526,6 @@ class FormFieldControl(ConstrainedControl):
     @suffix_icon.setter
     def suffix_icon(self, value: IconValue):
         self.__suffix_icon = value
-        
-    # # suffix_icon
-    # @property
-    # def suffix_icon(self) -> Optional[str]:
-    #     return self._get_attr("suffixIcon")
-
-    # @suffix_icon.setter
-    # def suffix_icon(self, value: Optional[str]):
-    #     self._set_attr("suffixIcon", value)
 
     # suffix_text
     @property
