@@ -3,6 +3,7 @@ from typing import Any, Optional, Union
 
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
+from flet_core.icon import Icon
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
@@ -23,6 +24,7 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
+IconValue = Optional[Union[str, Control]]
 
 class InputBorder(Enum):
     NONE = "none"
@@ -69,7 +71,7 @@ class FormFieldControl(ConstrainedControl):
         prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
         # suffix_icon: Optional[str] = None,
-        suffix_icon: Optional[Control] = None,
+        suffix_icon: IconValue = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
         rtl: Optional[bool] = None,
@@ -187,6 +189,8 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr_json("errorStyle", self.__error_style)
         self._set_attr_json("prefixStyle", self.__prefix_style)
         self._set_attr_json("suffixStyle", self.__suffix_style)
+        if isinstance(self.__suffix_icon, str):
+            self._set_attr("suffixIcon", self.__suffix_icon)
 
     def _get_children(self):
         children = []
@@ -507,13 +511,15 @@ class FormFieldControl(ConstrainedControl):
     
     # suffix_icon
     @property
-    def suffix_icon(self) -> Optional[Control]:
+    def suffix_icon(self) -> IconValue:
         return self.__suffix_icon
 
-    @suffix_icon.setter
-    def suffix_icon(self, value: Optional[Control]):
-        self.__suffix_icon = value
 
+
+    @suffix_icon.setter
+    def suffix_icon(self, value: IconValue):
+        self.__suffix_icon = value
+        
     # # suffix_icon
     # @property
     # def suffix_icon(self) -> Optional[str]:
