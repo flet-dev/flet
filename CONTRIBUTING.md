@@ -219,9 +219,9 @@ pyenv global 3.12.6
 Setup your shell environment: https://github.com/pyenv/pyenv#set-up-your-shell-environment-for-pyenv
 
 ```
-echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
-echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
-echo 'eval "$(pyenv init -)"' >> ~/.zshrc
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zprofile
+echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zprofile
+echo 'eval "$(pyenv init -)"' >> ~/.zprofile
 ```
 
 Ensure Python version is 3.12.6 and location is `/Users/{user}/.pyenv/shims/python`:
