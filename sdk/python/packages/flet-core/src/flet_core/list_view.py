@@ -1,12 +1,12 @@
 from typing import Any, List, Optional, Union, Callable, Sequence
 
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.animation import AnimationValue
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.scrollable_control import ScrollableControl, OnScrollEvent
 from flet_core.types import (
-    AnimationValue,
     OffsetValue,
     PaddingValue,
     ResponsiveNumber,

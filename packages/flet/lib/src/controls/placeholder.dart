@@ -21,8 +21,6 @@ class PlaceholderControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("Placeholder build: ${control.id}");
-    bool disabled = control.isDisabled || parentDisabled;
-    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
     var contentCtrls = children.where((c) => c.isVisible);
 
     return baseControl(
@@ -34,8 +32,9 @@ class PlaceholderControl extends StatelessWidget {
                 control.attrColor("color", context, const Color(0xFF455A64))!,
             strokeWidth: control.attrDouble("strokeWidth", 2.0)!,
             child: contentCtrls.isNotEmpty
-                ? createControl(control, contentCtrls.first.id, disabled,
-                    parentAdaptive: adaptive)
+                ? createControl(control, contentCtrls.first.id,
+                    control.isDisabled || parentDisabled,
+                    parentAdaptive: control.isAdaptive ?? parentAdaptive)
                 : null),
         parent,
         control);

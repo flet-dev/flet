@@ -52,7 +52,7 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
   Widget build(BuildContext context) {
     debugPrint("ListTile build: ${control.id}");
     return withPagePlatform((context, platform) {
-      bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
+      bool? adaptive = control.isAdaptive ?? parentAdaptive;
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
@@ -73,21 +73,9 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
       var trailingCtrls =
           children.where((c) => c.name == "trailing" && c.isVisible);
 
-      var titleAlignment =
-          parseListTileTitleAlignment(control.attrString("titleAlignment"));
-      var style = parseListTileStyle(control.attrString("style"));
-
-      bool selected = control.attrBool("selected", false)!;
-      bool dense = control.attrBool("dense", false)!;
-      bool isThreeLine = control.attrBool("isThreeLine", false)!;
-      bool autofocus = control.attrBool("autofocus", false)!;
       bool onclick = control.attrBool("onclick", false)!;
       bool toggleInputs = control.attrBool("toggleInputs", false)!;
       bool onLongPressDefined = control.attrBool("onLongPress", false)!;
-      bool? enableFeedback = control.attrBool("enableFeedback");
-      double? horizontalSpacing = control.attrDouble("horizontalSpacing");
-      double? minLeadingWidth = control.attrDouble("minLeadingWidth");
-      double? minVerticalPadding = control.attrDouble("minVerticalPadding");
       String url = control.attrString("url", "")!;
       String? urlTarget = control.attrString("urlTarget");
       bool disabled = control.isDisabled || parentDisabled;
@@ -116,18 +104,18 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
           : null;
 
       Widget tile = ListTile(
-        autofocus: autofocus,
+        autofocus: control.attrBool("autofocus", false)!,
         contentPadding: parseEdgeInsets(control, "contentPadding"),
-        isThreeLine: isThreeLine,
-        selected: selected,
-        dense: dense,
+        isThreeLine: control.attrBool("isThreeLine", false)!,
+        selected: control.attrBool("selected", false)!,
+        dense: control.attrBool("dense", false)!,
         onTap: onPressed,
         onLongPress: onLongPress,
         enabled: !disabled,
-        horizontalTitleGap: horizontalSpacing,
-        enableFeedback: enableFeedback,
-        minLeadingWidth: minLeadingWidth,
-        minVerticalPadding: minVerticalPadding,
+        horizontalTitleGap: control.attrDouble("horizontalSpacing"),
+        enableFeedback: control.attrBool("enableFeedback"),
+        minLeadingWidth: control.attrDouble("minLeadingWidth"),
+        minVerticalPadding: control.attrDouble("minVerticalPadding"),
         minTileHeight: control.attrDouble("minHeight"),
         selectedTileColor: control.attrColor("selectedTileColor", context),
         selectedColor: control.attrColor("selectedColor", context),
@@ -146,8 +134,9 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
             Theme.of(context), control, "leadingAndTrailingTextStyle"),
         subtitleTextStyle:
             parseTextStyle(Theme.of(context), control, "subtitleTextStyle"),
-        titleAlignment: titleAlignment,
-        style: style,
+        titleAlignment:
+            parseListTileTitleAlignment(control.attrString("titleAlignment")),
+        style: parseListTileStyle(control.attrString("style")),
         onFocusChange: (bool hasFocus) {
           backend.triggerControlEvent(control.id, hasFocus ? "focus" : "blur");
         },

@@ -26,8 +26,17 @@ class NavigationDrawerDestination(Control):
         # Control
         #
         ref: Optional[Ref] = None,
+        data: Any = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
     ):
-        Control.__init__(self, ref=ref)
+        Control.__init__(
+            self,
+            ref=ref,
+            disabled=disabled,
+            data=data,
+            visible=visible,
+        )
         self.label = label
         self.bgcolor = bgcolor
         self.icon = icon

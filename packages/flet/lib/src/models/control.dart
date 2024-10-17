@@ -46,6 +46,10 @@ class Control extends Equatable {
     return attrBool("disabled", false)!;
   }
 
+  bool? get isAdaptive {
+    return attrBool("adaptive");
+  }
+
   bool get isVisible {
     return attrBool("visible", true)!;
   }

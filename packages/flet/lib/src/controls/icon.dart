@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/box.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -14,18 +15,19 @@ class IconControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Icon build: ${control.id}");
 
-    var name = control.attrString("name", "")!;
-    var size = control.attrDouble("size");
-    var semanticsLabel = control.attrString("semanticsLabel");
-    var color = control.attrColor("color", context);
-
     return constrainedControl(
         context,
         Icon(
-          parseIcon(name),
-          size: size,
-          color: color,
-          semanticLabel: semanticsLabel,
+          parseIcon(control.attrString("name", "")!),
+          size: control.attrDouble("size"),
+          color: control.attrColor("color", context),
+          semanticLabel: control.attrString("semanticsLabel"),
+          applyTextScaling: control.attrBool("applyTextScaling"),
+          fill: control.attrDouble("fill"),
+          grade: control.attrDouble("grade"),
+          weight: control.attrDouble("weight"),
+          opticalSize: control.attrDouble("opticalSize"),
+          shadows: parseBoxShadow(Theme.of(context), control, "shadows"),
         ),
         parent,
         control);

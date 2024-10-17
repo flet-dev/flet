@@ -62,9 +62,6 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
     var trailing =
         widget.children.where((c) => c.name == "trailing" && c.isVisible);
 
-    var clipBehavior =
-        parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
-
     var theme = Theme.of(context);
     var style = parseButtonStyle(Theme.of(context), widget.control, "style",
         defaultForegroundColor: theme.colorScheme.primary,
@@ -82,9 +79,12 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
     bool onClick = widget.control.attrBool("onClick", false)!;
     bool onHover = widget.control.attrBool("onHover", false)!;
 
+    var adaptive = widget.control.isAdaptive ?? widget.parentAdaptive;
+
     var menuItem = MenuItemButton(
       focusNode: _focusNode,
-      clipBehavior: clipBehavior,
+      clipBehavior:
+          parseClip(widget.control.attrString("clipBehavior"), Clip.none)!,
       style: style,
       closeOnActivate: widget.control.attrBool("closeOnClick", true)!,
       requestFocusOnHover: widget.control.attrBool("focusOnHover", true)!,
@@ -104,22 +104,16 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
             }
           : null,
       leadingIcon: leading.isNotEmpty
-          ? leading
-              .map((c) => createControl(widget.control, c.id, disabled,
-                  parentAdaptive: widget.parentAdaptive))
-              .first
+          ? createControl(widget.control, leading.first.id, disabled,
+              parentAdaptive: adaptive)
           : null,
       trailingIcon: trailing.isNotEmpty
-          ? trailing
-              .map((c) => createControl(widget.control, c.id, disabled,
-                  parentAdaptive: widget.parentAdaptive))
-              .first
+          ? createControl(widget.control, trailing.first.id, disabled,
+              parentAdaptive: adaptive)
           : null,
       child: content.isNotEmpty
-          ? content
-              .map((c) => createControl(widget.control, c.id, disabled,
-                  parentAdaptive: widget.parentAdaptive))
-              .first
+          ? createControl(widget.control, content.first.id, disabled,
+              parentAdaptive: adaptive)
           : null,
     );
 

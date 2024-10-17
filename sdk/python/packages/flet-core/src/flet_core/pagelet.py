@@ -1,6 +1,7 @@
 from typing import Any, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.animation import AnimationValue
 from flet_core.app_bar import AppBar
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.constrained_control import ConstrainedControl
@@ -13,7 +14,6 @@ from flet_core.navigation_drawer import NavigationDrawer
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     FloatingActionButtonLocation,
     OffsetValue,
     ResponsiveNumber,

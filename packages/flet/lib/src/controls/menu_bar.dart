@@ -33,24 +33,23 @@ class _MenuBarControlState extends State<MenuBarControl> {
     var ctrls = widget.children.where((c) => c.isVisible).toList();
     if (ctrls.isEmpty) {
       return const ErrorControl(
-          "MenuBar must have at minimum one visible control");
+          "MenuBar must have at minimum one visible child control");
     }
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    var clipBehavior =
-        parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
-
-    var style = parseMenuStyle(Theme.of(context), widget.control, "style");
-
-    MenuBar? menuBar = MenuBar(
-      style: style,
-      clipBehavior: clipBehavior,
-      children: ctrls
-          .map((c) => createControl(widget.control, c.id, disabled,
-              parentAdaptive: widget.parentAdaptive))
-          .toList(),
-    );
-
-    return constrainedControl(context, menuBar, widget.parent, widget.control);
+    return constrainedControl(
+        context,
+        MenuBar(
+          style: parseMenuStyle(Theme.of(context), widget.control, "style"),
+          clipBehavior:
+              parseClip(widget.control.attrString("clipBehavior"), Clip.none)!,
+          children: ctrls
+              .map((c) => createControl(widget.control, c.id,
+                  widget.control.isDisabled || widget.parentDisabled,
+                  parentAdaptive:
+                      widget.control.isAdaptive ?? widget.parentAdaptive))
+              .toList(),
+        ),
+        widget.parent,
+        widget.control);
   }
 }

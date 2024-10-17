@@ -1,21 +1,23 @@
 from enum import Enum
 from typing import Any, Optional, Union
 
+from flet_core.animation import AnimationValue
+from flet_core.box import BoxConstraints
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     BorderRadiusValue,
+    DurationValue,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     VerticalAlignment,
-    OptionalControlEventCallable,
 )
 
 try:
@@ -53,25 +55,39 @@ class FormFieldControl(ConstrainedControl):
         dense: Optional[bool] = None,
         filled: Optional[bool] = None,
         fill_color: Optional[str] = None,
+        focus_color: Optional[str] = None,
+        align_label_with_hint: Optional[bool] = None,
         hover_color: Optional[str] = None,
         hint_text: Optional[str] = None,
         hint_style: Optional[TextStyle] = None,
+        hint_fade_duration: DurationValue = None,
+        hint_max_lines: Optional[int] = None,
+        helper: Optional[Control] = None,
         helper_text: Optional[str] = None,
         helper_style: Optional[TextStyle] = None,
+        helper_max_lines: Optional[int] = None,
         counter: Optional[Control] = None,
         counter_text: Optional[str] = None,
         counter_style: Optional[TextStyle] = None,
+        error: Optional[Control] = None,
         error_text: Optional[str] = None,
         error_style: Optional[TextStyle] = None,
+        error_max_lines: Optional[int] = None,
         prefix: Optional[Control] = None,
-        prefix_icon: Optional[str] = None,
+        prefix_icon: Union[None, str, Control] = None,
+        prefix_icon_color: Optional[str] = None,
+        prefix_icon_size_constraints: Optional[BoxConstraints] = None,
         prefix_text: Optional[str] = None,
         prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
         suffix_icon: Optional[str] = None,
+        suffix_icon_color: Union[None, str, Control] = None,
+        suffix_icon_size_constraints: Optional[BoxConstraints] = None,
+        size_constraints: Optional[BoxConstraints] = None,
+        collapsed: Optional[bool] = None,
+        fit_parent_size: Optional[bool] = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
-        rtl: Optional[bool] = None,
         #
         # ConstrainedControl
         #
@@ -102,6 +118,7 @@ class FormFieldControl(ConstrainedControl):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        rtl: Optional[bool] = None,
     ):
         ConstrainedControl.__init__(
             self,
@@ -156,11 +173,13 @@ class FormFieldControl(ConstrainedControl):
         self.dense = dense
         self.hint_text = hint_text
         self.hint_style = hint_style
+        self.helper = helper
         self.helper_text = helper_text
         self.helper_style = helper_style
         self.counter = counter
         self.counter_text = counter_text
         self.counter_style = counter_style
+        self.error = error
         self.error_text = error_text
         self.error_style = error_style
         self.prefix = prefix
@@ -173,6 +192,19 @@ class FormFieldControl(ConstrainedControl):
         self.suffix_style = suffix_style
         self.hover_color = hover_color
         self.fill_color = fill_color
+        self.focus_color = focus_color
+        self.align_label_with_hint = align_label_with_hint
+        self.hint_fade_duration = hint_fade_duration
+        self.hint_max_lines = hint_max_lines
+        self.helper_max_lines = helper_max_lines
+        self.error_max_lines = error_max_lines
+        self.prefix_icon_color = prefix_icon_color
+        self.prefix_icon_size_constraints = prefix_icon_size_constraints
+        self.suffix_icon_color = suffix_icon_color
+        self.suffix_icon_size_constraints = suffix_icon_size_constraints
+        self.size_constraints = size_constraints
+        self.collapsed = collapsed
+        self.fit_parent_size = fit_parent_size
 
     def before_update(self):
         super().before_update()
@@ -186,18 +218,38 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr_json("errorStyle", self.__error_style)
         self._set_attr_json("prefixStyle", self.__prefix_style)
         self._set_attr_json("suffixStyle", self.__suffix_style)
+        self._set_attr_json("hintFadeDuration", self.__hint_fade_duration)
+        self._set_attr_json(
+            "prefixIconSizeConstraints", self.__prefix_icon_size_constraints
+        )
+        self._set_attr_json(
+            "suffixIconSizeConstraints", self.__suffix_icon_size_constraints
+        )
+        self._set_attr_json("sizeConstraints", self.__size_constraints)
 
     def _get_children(self):
         children = []
         if isinstance(self.__prefix, Control):
             self.__prefix._set_attr_internal("n", "prefix")
             children.append(self.__prefix)
+        if isinstance(self.__prefix_icon, Control):
+            self.__prefix_icon._set_attr_internal("n", "prefix_icon")
+            children.append(self.__prefix_icon)
         if isinstance(self.__suffix, Control):
             self.__suffix._set_attr_internal("n", "suffix")
             children.append(self.__suffix)
+        if isinstance(self.__suffix_icon, Control):
+            self.__suffix_icon._set_attr_internal("n", "suffix_icon")
+            children.append(self.__suffix_icon)
         if isinstance(self.__counter, Control):
             self.__counter._set_attr_internal("n", "counter")
             children.append(self.__counter)
+        if isinstance(self.__error, Control):
+            self.__error._set_attr_internal("n", "error")
+            children.append(self.__error)
+        if isinstance(self.__helper, Control):
+            self.__helper._set_attr_internal("n", "helper")
+            children.append(self.__helper)
         return children
 
     # text_size
@@ -263,6 +315,123 @@ class FormFieldControl(ConstrainedControl):
     @color.setter
     def color(self, value: Optional[str]):
         self._set_attr("color", value)
+
+    # focus_color
+    @property
+    def focus_color(self) -> Optional[str]:
+        return self._get_attr("focusColor")
+
+    @focus_color.setter
+    def focus_color(self, value: Optional[str]):
+        self._set_attr("focusColor", value)
+
+    # align_label_with_hint
+    @property
+    def align_label_with_hint(self) -> Optional[bool]:
+        return self._get_attr("alignLabelWithHint", data_type="bool")
+
+    @align_label_with_hint.setter
+    def align_label_with_hint(self, value: Optional[bool]):
+        self._set_attr("alignLabelWithHint", value)
+
+    # fit_parent_size
+    @property
+    def fit_parent_size(self) -> Optional[bool]:
+        return self._get_attr("fitParentSize", data_type="bool", def_value=False)
+
+    @fit_parent_size.setter
+    def fit_parent_size(self, value: Optional[bool]):
+        self._set_attr("fitParentSize", value)
+
+    # hint_fade_duration
+    @property
+    def hint_fade_duration(self) -> DurationValue:
+        return self.__hint_fade_duration
+
+    @hint_fade_duration.setter
+    def hint_fade_duration(self, value: DurationValue):
+        self.__hint_fade_duration = value
+
+    # hint_max_lines
+    @property
+    def hint_max_lines(self) -> Optional[int]:
+        return self._get_attr("hintMaxLines", data_type="int")
+
+    @hint_max_lines.setter
+    def hint_max_lines(self, value: Optional[int]):
+        self._set_attr("hintMaxLines", value)
+
+    # helper_max_lines
+    @property
+    def helper_max_lines(self) -> Optional[int]:
+        return self._get_attr("helperMaxLines", data_type="int")
+
+    @helper_max_lines.setter
+    def helper_max_lines(self, value: Optional[int]):
+        self._set_attr("helperMaxLines", value)
+
+    # error_max_lines
+    @property
+    def error_max_lines(self) -> Optional[int]:
+        return self._get_attr("errorMaxLines", data_type="int")
+
+    @error_max_lines.setter
+    def error_max_lines(self, value: Optional[int]):
+        self._set_attr("errorMaxLines", value)
+
+    # prefix_icon_color
+    @property
+    def prefix_icon_color(self) -> Optional[str]:
+        return self._get_attr("prefixIconColor")
+
+    @prefix_icon_color.setter
+    def prefix_icon_color(self, value: Optional[str]):
+        self._set_attr("prefixIconColor", value)
+
+    # prefix_icon_size_constraints
+    @property
+    def prefix_icon_size_constraints(self) -> Optional[BoxConstraints]:
+        return self.__prefix_icon_size_constraints
+
+    @prefix_icon_size_constraints.setter
+    def prefix_icon_size_constraints(self, value: Optional[BoxConstraints]):
+        self.__prefix_icon_size_constraints = value
+
+    # suffix_icon_color
+    @property
+    def suffix_icon_color(self) -> Optional[str]:
+        return self._get_attr("suffixIconColor")
+
+    @suffix_icon_color.setter
+    def suffix_icon_color(self, value: Optional[str]):
+        self._set_attr("suffixIconColor", value)
+
+    # suffix_icon_size_constraints
+    @property
+    def suffix_icon_size_constraints(self) -> Optional[BoxConstraints]:
+        return self.__suffix_icon_size_constraints
+
+    @suffix_icon_size_constraints.setter
+    def suffix_icon_size_constraints(self, value: Optional[BoxConstraints]):
+        self.__suffix_icon_size_constraints = value
+
+    # size_constraints
+    @property
+    def size_constraints(self) -> Optional[BoxConstraints]:
+        return self.__size_constraints
+
+    @size_constraints.setter
+    def size_constraints(self, value: Optional[BoxConstraints]):
+        self.__size_constraints = value
+
+    # collapsed
+    @property
+    def collapsed(self) -> Optional[bool]:
+        return self._get_attr("collapsed", data_type="bool")
+
+    @collapsed.setter
+    def collapsed(self, value: Optional[bool]):
+        self._set_attr("collapsed", value)
 
     # bgcolor
     @property
@@ -456,6 +625,24 @@ class FormFieldControl(ConstrainedControl):
     def prefix(self, value: Optional[Control]):
         self.__prefix = value
 
+    # error
+    @property
+    def error(self) -> Optional[Control]:
+        return self.__error
+
+    @error.setter
+    def error(self, value: Optional[Control]):
+        self.__error = value
+
+    # helper
+    @property
+    def helper(self) -> Optional[Control]:
+        return self.__helper
+
+    @helper.setter
+    def helper(self, value: Optional[Control]):
+        self.__helper = value
+
     # counter
     @property
     def counter(self) -> Optional[Control]:
@@ -467,12 +654,14 @@ class FormFieldControl(ConstrainedControl):
 
     # prefix_icon
     @property
-    def prefix_icon(self) -> Optional[str]:
-        return self._get_attr("prefixIcon")
+    def prefix_icon(self) -> Union[None, str, Control]:
+        return self.__prefix_icon
 
     @prefix_icon.setter
-    def prefix_icon(self, value: Optional[str]):
-        self._set_attr("prefixIcon", value)
+    def prefix_icon(self, value: Union[None, str, Control]):
+        self.__prefix_icon = value
+        if isinstance(value, (str, type(None))):
+            self._set_attr("prefixIcon", value)
 
     # prefix_text
     @property
@@ -503,12 +692,14 @@ class FormFieldControl(ConstrainedControl):
 
     # suffix_icon
     @property
-    def suffix_icon(self) -> Optional[str]:
-        return self._get_attr("suffixIcon")
+    def suffix_icon(self) -> Union[None, str, Control]:
+        return self.__suffix_icon
 
     @suffix_icon.setter
-    def suffix_icon(self, value: Optional[str]):
-        self._set_attr("suffixIcon", value)
+    def suffix_icon(self, value: Union[None, str, Control]):
+        self.__suffix_icon = value
+        if isinstance(value, (str, type(None))):
+            self._set_attr("suffixIcon", value)
 
     # suffix_text
     @property

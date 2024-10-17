@@ -1,6 +1,7 @@
 import time
 from typing import Any, Optional, Union, Sequence
 
+from flet_core.animation import AnimationValue
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -8,7 +9,6 @@ from flet_core.menu_bar import MenuStyle
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     ClipBehavior,
     OffsetValue,
     ResponsiveNumber,

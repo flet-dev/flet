@@ -15,15 +15,15 @@ import 'text.dart';
 import 'theme.dart';
 
 ButtonStyle? parseButtonStyle(ThemeData theme, Control control, String propName,
-    {required Color defaultForegroundColor,
-    required Color defaultBackgroundColor,
-    required Color defaultOverlayColor,
-    required Color defaultShadowColor,
-    required Color defaultSurfaceTintColor,
-    required double defaultElevation,
-    required EdgeInsets defaultPadding,
-    required BorderSide defaultBorderSide,
-    required OutlinedBorder defaultShape}) {
+    {Color? defaultForegroundColor,
+    Color? defaultBackgroundColor,
+    Color? defaultOverlayColor,
+    Color? defaultShadowColor,
+    Color? defaultSurfaceTintColor,
+    double? defaultElevation,
+    EdgeInsets? defaultPadding,
+    BorderSide? defaultBorderSide,
+    OutlinedBorder? defaultShape}) {
   var v = control.attrString(propName, null);
   if (v == null) {
     return null;
@@ -119,10 +119,10 @@ FloatingActionButtonLocation parseFloatingActionButtonLocation(
   };
 
   try {
-    OffsetDetails? fabLocationOffsetDetails = parseOffset(control, propName);
-    if (fabLocationOffsetDetails != null) {
+    var fabLocationOffset = parseOffset(control, propName);
+    if (fabLocationOffset != null) {
       return CustomFloatingActionButtonLocation(
-          dx: fabLocationOffsetDetails.x, dy: fabLocationOffsetDetails.y);
+          dx: fabLocationOffset.dx, dy: fabLocationOffset.dy);
     } else {
       return defValue;
     }

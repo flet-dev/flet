@@ -1,6 +1,7 @@
 import time
-from typing import Any, Dict, List, Optional, Union, Sequence
+from typing import Any, List, Optional, Sequence, Union
 
+from flet_core.animation import AnimationValue
 from flet_core.border import BorderSide
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
@@ -10,14 +11,13 @@ from flet_core.text_style import TextStyle
 from flet_core.textfield import KeyboardType, TextCapitalization
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
-    ControlState,
+    ControlStateValue,
     OffsetValue,
+    OptionalControlEventCallable,
     OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -38,8 +38,8 @@ class SearchBar(ConstrainedControl):
         bar_leading: Optional[Control] = None,
         bar_trailing: Optional[List[Control]] = None,
         bar_hint_text: Optional[str] = None,
-        bar_bgcolor: Union[None, str, Dict[ControlState, str]] = None,
-        bar_overlay_color: Union[None, str, Dict[ControlState, str]] = None,
+        bar_bgcolor: ControlStateValue[str] = None,
+        bar_overlay_color: ControlStateValue[str] = None,
         view_leading: Optional[Control] = None,
         view_trailing: Optional[List[Control]] = None,
         view_elevation: OptionalNumber = None,
@@ -147,15 +147,14 @@ class SearchBar(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        self._set_attr_json("barBgcolor", self.__bar_bgcolor)
-        self._set_attr_json("barOverlayColor", self.__bar_overlay_color)
+        self._set_attr_json("barBgcolor", self.__bar_bgcolor, wrap_attr_dict=True)
+        self._set_attr_json(
+            "barOverlayColor", self.__bar_overlay_color, wrap_attr_dict=True
+        )
         self._set_attr_json("viewShape", self.__view_shape)
-        if isinstance(self.__view_header_text_style, TextStyle):
-            self._set_attr_json("viewHeaderTextStyle", self.__view_header_text_style)
-        if isinstance(self.__view_hint_text_style, TextStyle):
-            self._set_attr_json("viewHintTextStyle", self.__view_hint_text_style)
-        if isinstance(self.__view_side, BorderSide):
-            self._set_attr_json("viewSide", self.__view_side)
+        self._set_attr_json("viewHeaderTextStyle", self.__view_header_text_style)
+        self._set_attr_json("viewHintTextStyle", self.__view_hint_text_style)
+        self._set_attr_json("viewSide", self.__view_side)
 
     def _get_children(self):
         children = []
@@ -236,20 +235,20 @@ class SearchBar(ConstrainedControl):
 
     # bar_bgcolor
     @property
-    def bar_bgcolor(self) -> Union[None, str, Dict[ControlState, str]]:
+    def bar_bgcolor(self) -> ControlStateValue[str]:
         return self.__bar_bgcolor
 
     @bar_bgcolor.setter
-    def bar_bgcolor(self, value: Union[None, str, Dict[ControlState, str]]):
+    def bar_bgcolor(self, value: ControlStateValue[str]):
         self.__bar_bgcolor = value
 
     # bar_overlay_color
     @property
-    def bar_overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
+    def bar_overlay_color(self) -> ControlStateValue[str]:
         return self.__bar_overlay_color
 
     @bar_overlay_color.setter
-    def bar_overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
+    def bar_overlay_color(self, value: ControlStateValue[str]):
         self.__bar_overlay_color = value
 
     # view_leading
