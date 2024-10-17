@@ -37,13 +37,26 @@ foreach($line in $lines) {
 import random
 from enum import Enum
 
+from flet_core.types import Number
+from flet_core.utils import deprecated
+
 
 class colors(Enum):
-    def with_opacity(self, opacity: float):
+    def with_opacity(self, opacity: Number) -> str:
+        assert 0 <= opacity <= 1, "opacity must be between 0 and 1"
         return f"{self.value},{opacity}"
 
     @staticmethod
     def random():
+        return random.choice(list(colors))
+
+    @staticmethod
+    @deprecated(
+        reason="Use colors.random() method instead.",
+        version="0.25.0",
+        delete_version="0.28.0",
+    )
+    def random_color():
         return random.choice(list(colors))
 
     PRIMARY = "primary"

@@ -8,10 +8,21 @@ sh ci/generate_material_icons_python.sh
 import random
 from enum import Enum
 
+from flet_core.utils import deprecated
+
 
 class icons(Enum):
     @staticmethod
     def random():
+        return random.choice(list(icons))
+
+    @staticmethod
+    @deprecated(
+        reason="Use icons.random() method instead.",
+        version="0.25.0",
+        delete_version="0.28.0",
+    )
+    def random_icon():
         return random.choice(list(icons))
 
     TEN_K = "ten_k"
