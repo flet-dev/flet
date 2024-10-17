@@ -7,7 +7,7 @@ Duration? parseDuration(Control control, String propName,
     [Duration? defaultValue]) {
   var v = control.attrString(propName, null);
   if (v == null) {
-    return null;
+    return defaultValue;
   }
 
   final j1 = json.decode(v);

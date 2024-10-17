@@ -6,14 +6,12 @@ import 'package:flutter_map/flutter_map.dart';
 class SimpleAttributionControl extends StatefulWidget {
   final Control? parent;
   final Control control;
-  final List<Control> children;
   final FletControlBackend backend;
 
   const SimpleAttributionControl(
       {super.key,
       this.parent,
       required this.control,
-      required this.children,
       required this.backend});
 
   @override

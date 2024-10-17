@@ -1,7 +1,7 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_animations/flutter_map_animations.dart';
 
 import 'utils/map.dart';
 
@@ -28,17 +28,19 @@ class MarkerLayerControl extends StatelessWidget with FletStoreMixin {
       var markers = markersView.controlViews
           .where((c) => c.control.type == "map_marker" && c.control.isVisible)
           .map((marker) {
-        return Marker(
+        return AnimatedMarker(
             point: parseLatLng(marker.control, "coordinates")!,
             rotate: marker.control.attrBool("rotate"),
             height: marker.control.attrDouble("height", 30)!,
             width: marker.control.attrDouble("width", 30)!,
             alignment: parseAlignment(marker.control, "alignment"),
-            child: createControl(
-                control, marker.control.childIds.first, parentDisabled));
+            builder: (BuildContext context, Animation<double> animation) {
+              return createControl(
+                  control, marker.control.childIds.first, parentDisabled);
+            });
       }).toList();
 
-      return MarkerLayer(
+      return AnimatedMarkerLayer(
         markers: markers,
         rotate: control.attrBool("rotate", false)!,
         alignment: parseAlignment(control, "alignment", Alignment.center)!,
