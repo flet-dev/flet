@@ -14,14 +14,15 @@ import flet.version
 import toml
 import yaml
 from flet.version import update_version
-from flet_cli.commands.base import BaseCommand
-from flet_cli.utils.merge import merge_dict
 from flet_core.utils import copy_tree, is_windows, slugify
 from flet_core.utils.platform_utils import get_bool_env_var
 from packaging import version
 from rich import print
 from rich.console import Console, Style
 from rich.table import Column, Table
+
+from flet_cli.commands.base import BaseCommand
+from flet_cli.utils.merge import merge_dict
 
 if is_windows():
     from ctypes import windll
@@ -1316,8 +1317,7 @@ class Command(BaseCommand):
 
             if options.flutter_build_args:
                 for flutter_build_arg_arr in options.flutter_build_args:
-                    for flutter_build_arg in flutter_build_arg_arr:
-                        build_args.append(flutter_build_arg)
+                    build_args.extend(flutter_build_arg_arr)
 
             if self.verbose > 1:
                 build_args.append("--verbose")

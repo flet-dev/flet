@@ -4,7 +4,8 @@ import logging
 import threading
 import time
 import uuid
-from concurrent.futures import ThreadPoolExecutor
+from asyncio import AbstractEventLoop
+from concurrent.futures import Future, ThreadPoolExecutor
 from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -81,7 +82,8 @@ from flet_core.types import (
     WindowEventType,
     Wrapper,
 )
-from flet_core.utils import classproperty, deprecated, is_pyodide
+from flet_core.utils import classproperty, deprecated
+from flet_core.utils.concurrency_utils import is_pyodide
 from flet_core.view import View
 
 logger = logging.getLogger(flet_core.__name__)
@@ -96,9 +98,9 @@ class context:
 
 
 try:
-    from flet.auth.authorization import Authorization
-    from flet.auth.oauth_provider import OAuthProvider
-except ImportError as e:
+    from flet_runtime.auth.authorization import Authorization
+    from flet_runtime.auth.oauth_provider import OAuthProvider
+except ImportError:
 
     class OAuthProvider: ...
 
@@ -1724,7 +1726,7 @@ class Page(AdaptiveControl):
 
     # loop
     @property
-    def loop(self) -> asyncio.AbstractEventLoop:
+    def loop(self) -> AbstractEventLoop:
         return self.__loop
 
     # executor
