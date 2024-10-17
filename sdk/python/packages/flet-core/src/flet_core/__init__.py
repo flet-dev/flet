@@ -9,7 +9,6 @@ from flet_core import (
     cupertino_colors,
     cupertino_icons,
     dropdown,
-    icons,
     margin,
     padding,
     painting,
@@ -201,6 +200,7 @@ from flet_core.grid_view import GridView
 from flet_core.haptic_feedback import HapticFeedback
 from flet_core.icon import Icon
 from flet_core.icon_button import IconButton
+from flet_core.icons import icons
 from flet_core.image import Image
 from flet_core.interactive_viewer import (
     InteractiveViewer,
