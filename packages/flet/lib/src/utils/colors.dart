@@ -239,16 +239,16 @@ extension ColorExtension on Color {
   }
 }
 
-WidgetStateProperty<Color?>? parseWidgetStateColor(
-    ThemeData theme, Control control, String propName) {
+WidgetStateProperty<Color?>? parseWidgetStateColor(ThemeData theme,
+    Control control, String propName,
+    [Color? defaultValue]) {
   var v = control.attrString(propName, null);
   if (v == null) {
     return null;
   }
 
-  final j1 = json.decode(v);
-  return getWidgetStateProperty<Color?>(
-      j1, (jv) => HexColor.fromString(theme, jv as String), null);
+  return getWidgetStateProperty<Color?>(jsonDecode(v),
+      (jv) => HexColor.fromString(theme, jv as String), defaultValue);
 }
 
 Color? parseColor(ThemeData? theme, String? colorString,

@@ -75,3 +75,11 @@ class BoxDecoration:
     gradient: Optional[Gradient] = None
     shape: Optional[BoxShape] = None
     blend_mode: Optional[BlendMode] = None
+
+
+@dataclass
+class BoxConstraints:
+    min_width: OptionalNumber = None
+    min_height: OptionalNumber = None
+    max_width: OptionalNumber = None
+    max_height: OptionalNumber = None
