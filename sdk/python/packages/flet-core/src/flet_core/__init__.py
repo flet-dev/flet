@@ -5,7 +5,6 @@ from flet_core import (
     border,
     border_radius,
     canvas,
-    colors,
     cupertino_colors,
     cupertino_icons,
     dropdown,
