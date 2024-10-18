@@ -152,16 +152,25 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
             : MouseRegion(
                 cursor: SystemMouseCursors.click,
                 child: Text(label, style: labelStyle));
+
         result = MergeSemantics(
-            child: GestureDetector(
-                onTap: !disabled
-                    ? () {
-                        _onChange(!_value);
-                      }
-                    : null,
-                child: labelPosition == LabelPosition.right
-                    ? Row(children: [s, labelWidget])
-                    : Row(children: [labelWidget, s])));
+          child: GestureDetector(
+            onTap: !disabled
+                ? () {
+                    _onChange(!_value);
+                  }
+                : null,
+            child: labelPosition == LabelPosition.right
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [result, labelWidget],
+                  )
+                : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [labelWidget, result],
+                  ),
+          ),
+        );
       }
 
       return constrainedControl(context, result, widget.parent, widget.control);
