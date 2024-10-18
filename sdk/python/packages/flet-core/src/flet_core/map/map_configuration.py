@@ -89,6 +89,7 @@ class MapConfiguration(Control):
         min_zoom: OptionalNumber = None,
         on_init: OptionalControlEventCallable = None,
         on_tap: OptionalEventCallable["MapTapEvent"] = None,
+        on_hover: OptionalEventCallable["MapHoverEvent"] = None,
         on_secondary_tap: OptionalEventCallable["MapTapEvent"] = None,
         on_long_press: OptionalEventCallable["MapTapEvent"] = None,
         on_event: OptionalEventCallable["MapEvent"] = None,
@@ -100,6 +101,9 @@ class MapConfiguration(Control):
         Control.__init__(self)
         self.__on_tap = EventHandler(lambda e: MapTapEvent(e))
         self._add_event_handler("tap", self.__on_tap.get_handler())
+
+        self.__on_hover = EventHandler(lambda e: MapHoverEvent(e))
+        self._add_event_handler("hover", self.__on_hover.get_handler())
 
         self.__on_secondary_tap = EventHandler(lambda e: MapTapEvent(e))
         self._add_event_handler("secondary_tap", self.__on_secondary_tap.get_handler())
@@ -135,6 +139,7 @@ class MapConfiguration(Control):
         self.max_zoom = max_zoom
         self.min_zoom = min_zoom
         self.on_tap = on_tap
+        self.on_hover = on_hover
         self.on_secondary_tap = on_secondary_tap
         self.on_init = on_init
         self.on_long_press = on_long_press
@@ -238,6 +243,16 @@ class MapConfiguration(Control):
         self.__on_tap.handler = handler
         self._set_attr("onTap", True if handler is not None else None)
 
+    # on_hover
+    @property
+    def on_hover(self) -> OptionalEventCallable["MapHoverEvent"]:
+        return self.__on_hover.handler
+
+    @on_hover.setter
+    def on_hover(self, handler: OptionalEventCallable["MapHoverEvent"]):
+        self.__on_hover.handler = handler
+        self._set_attr("onHover", True if handler is not None else None)
+
     # on_secondary_tap
     @property
     def on_secondary_tap(self) -> OptionalEventCallable["MapTapEvent"]:
@@ -329,6 +344,20 @@ class MapTapEvent(ControlEvent):
         self.local_y: Optional[float] = d.get("ly")
         self.global_x: float = d.get("gx")
         self.global_y: float = d.get("gy")
+        self.coordinates: MapLatitudeLongitude = MapLatitudeLongitude(
+            d.get("lat"), d.get("long")
+        )
+
+
+class MapHoverEvent(ControlEvent):
+    def __init__(self, e: ControlEvent) -> None:
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.local_x: Optional[float] = d.get("lx")
+        self.local_y: Optional[float] = d.get("ly")
+        self.global_x: float = d.get("gx")
+        self.global_y: float = d.get("gy")
+        self.device_type: MapPointerDeviceType = MapPointerDeviceType(d.get("kind"))
         self.coordinates: MapLatitudeLongitude = MapLatitudeLongitude(
             d.get("lat"), d.get("long")
         )
