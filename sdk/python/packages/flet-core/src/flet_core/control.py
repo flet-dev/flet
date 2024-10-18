@@ -19,6 +19,7 @@ from flet_core.protocol import Command
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
+    ControlState,
     OptionalControlEventCallable,
     OptionalNumber,
     ResponsiveNumber,
