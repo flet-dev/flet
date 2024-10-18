@@ -7,10 +7,10 @@ from flet_core.text_style import TextStyle
 from flet_core.types import (
     BorderRadiusValue,
     ControlState,
-    PaddingValue,
-    Number,
-    VisualDensity,
     MouseCursor,
+    Number,
+    PaddingValue,
+    VisualDensity,
 )
 
 
@@ -35,7 +35,8 @@ class RoundedRectangleBorder(OutlinedBorder):
 
 @dataclass
 class CircleBorder(OutlinedBorder):
-    type: str = field(default="circle")
+    def __post_init__(self):
+        self.type = "circle"
 
 
 @dataclass

@@ -36,6 +36,9 @@ class FilledTonalButton(ElevatedButton):
     def __init__(
         self,
         text: Optional[str] = None,
+        color: Optional[str] = None,
+        bgcolor: Optional[str] = None,
+        elevation: OptionalNumber = None,
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
         style: Optional[ButtonStyle] = None,
@@ -80,9 +83,9 @@ class FilledTonalButton(ElevatedButton):
             #
             # Specific
             #
-            color="onSecondaryContainer",
-            bgcolor="secondaryContainer",
-            elevation=0,
+            color=color,
+            bgcolor=bgcolor,
+            elevation=elevation,
             style=style,
             text=text,
             icon=icon,
@@ -96,3 +99,6 @@ class FilledTonalButton(ElevatedButton):
             on_hover=on_hover,
             adaptive=adaptive,
         )
+
+    def _get_control_name(self):
+        return "filledtonalbutton"
