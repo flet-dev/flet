@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import datetime
 from enum import Enum
 from typing import Any, Optional, Union
 
@@ -14,6 +14,7 @@ from flet_core.types import (
     OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
+from flet_core.utils.datetime import datetime_to_string
 
 try:
     from typing import Literal
@@ -87,10 +88,10 @@ class DatePicker(Control):
     def __init__(
         self,
         open: bool = False,
-        value: Optional[datetime] = None,
-        first_date: Optional[datetime] = None,
-        last_date: Optional[datetime] = None,
-        current_date: Optional[datetime] = None,
+        value: Optional[Union[datetime, str]] = None,
+        first_date: Optional[Union[datetime, str]] = None,
+        last_date: Optional[Union[datetime, str]] = None,
+        current_date: Optional[Union[datetime, str]] = None,
         keyboard_type: Optional[KeyboardType] = None,
         date_picker_mode: Optional[DatePickerMode] = None,
         date_picker_entry_mode: Optional[DatePickerEntryMode] = None,
@@ -202,9 +203,7 @@ class DatePicker(Control):
 
     @value.setter
     def value(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("value", value)
+        self._set_attr("value", datetime_to_string(value))
 
     # first_date
     @property
@@ -216,9 +215,7 @@ class DatePicker(Control):
 
     @first_date.setter
     def first_date(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("firstDate", value)
+        self._set_attr("firstDate", datetime_to_string(value))
 
     # last_date
     @property
@@ -230,9 +227,7 @@ class DatePicker(Control):
 
     @last_date.setter
     def last_date(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("lastDate", value)
+        self._set_attr("lastDate", datetime_to_string(value))
 
     # current_date
     @property
@@ -244,9 +239,7 @@ class DatePicker(Control):
 
     @current_date.setter
     def current_date(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("currentDate", value)
+        self._set_attr("currentDate", datetime_to_string(value))
 
     # field_hint_text
     @property
