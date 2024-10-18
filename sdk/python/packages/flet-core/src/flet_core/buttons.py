@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional
 
 from flet_core.alignment import Alignment
@@ -36,7 +36,8 @@ class RoundedRectangleBorder(OutlinedBorder):
 
 @dataclass
 class CircleBorder(OutlinedBorder):
-    type: str = field(default="circle")
+    def __post_init__(self):
+        self.type = "circle"
 
 
 @dataclass

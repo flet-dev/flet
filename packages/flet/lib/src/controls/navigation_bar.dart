@@ -6,6 +6,7 @@ import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/others.dart';
+import '../utils/time.dart';
 import 'create_control.dart';
 import 'cupertino_navigation_bar.dart';
 import 'flet_store_mixin.dart';
@@ -67,8 +68,6 @@ class _NavigationBarControlState extends State<NavigationBarControl>
       if (_selectedIndex != selectedIndex) {
         _selectedIndex = selectedIndex;
       }
-      var animationDuration = widget.control.attrInt("animationDuration");
-
       var navBar = withControls(
           widget.children
               .where((c) => c.isVisible && c.name == null)
@@ -77,9 +76,8 @@ class _NavigationBarControlState extends State<NavigationBarControl>
             labelBehavior: parseNavigationDestinationLabelBehavior(
                 widget.control.attrString("labelBehavior")),
             height: widget.control.attrDouble("height"),
-            animationDuration: animationDuration != null
-                ? Duration(milliseconds: animationDuration)
-                : null,
+            animationDuration:
+                parseDuration(widget.control, "animationDuration"),
             elevation: widget.control.attrDouble("elevation"),
             shadowColor: widget.control.attrColor("shadowColor", context),
             surfaceTintColor:
@@ -91,7 +89,7 @@ class _NavigationBarControlState extends State<NavigationBarControl>
                 parseOutlinedBorder(widget.control, "indicatorShape"),
             backgroundColor: widget.control.attrColor("bgColor", context),
             selectedIndex: _selectedIndex,
-            onDestinationSelected: _destinationChanged,
+            onDestinationSelected: disabled ? null : _destinationChanged,
             destinations: viewModel.controlViews.map((destView) {
               var label = destView.control.attrString("label", "")!;
               var icon = parseIcon(destView.control.attrString("icon"));

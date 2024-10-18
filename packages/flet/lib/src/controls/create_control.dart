@@ -327,6 +327,8 @@ Widget createWidget(
       return ProgressBarControl(
           key: key, parent: parent, control: controlView.control);
     case "elevatedbutton":
+    case "filledbutton":
+    case "filledtonalbutton":
       return ElevatedButtonControl(
           key: key,
           parent: parent,
