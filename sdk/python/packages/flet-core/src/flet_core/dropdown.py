@@ -18,7 +18,7 @@ from flet_core.types import (
     OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
-
+from flet_core.form_field_control import IconValue
 
 class Option(Control):
     def __init__(
@@ -181,7 +181,7 @@ class Dropdown(FormFieldControl):
         text_style: Optional[TextStyle] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
-        icon: Optional[str] = None,
+        icon: IconValue = None,
         border: Optional[InputBorder] = None,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
@@ -206,11 +206,11 @@ class Dropdown(FormFieldControl):
         error_text: Optional[str] = None,
         error_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
-        prefix_icon: Optional[str] = None,
+        prefix_icon: IconValue = None,
         prefix_text: Optional[str] = None,
         prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
-        suffix_icon: Optional[str] = None,
+        suffix_icon: IconValue = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
         #
