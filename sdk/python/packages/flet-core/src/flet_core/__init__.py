@@ -56,6 +56,7 @@ from flet_core.box import (
     ShadowBlurStyle,
     BoxDecoration,
     BoxShape,
+    BoxConstraints,
     DecorationImage,
     FilterQuality,
     ColorFilter,
