@@ -1,8 +1,9 @@
 import time
-from typing import Any, List, Optional, Sequence, Union
+from typing import Any, Dict, List, Optional, Sequence, Union
 
 from flet_core.animation import AnimationValue
 from flet_core.border import BorderSide
+from flet_core.box import BoxConstraints
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control
@@ -11,10 +12,13 @@ from flet_core.text_style import TextStyle
 from flet_core.textfield import KeyboardType, TextCapitalization
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
+    ControlState,
     ControlStateValue,
+    Number,
     OffsetValue,
     OptionalControlEventCallable,
     OptionalNumber,
+    PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -40,6 +44,18 @@ class SearchBar(ConstrainedControl):
         bar_hint_text: Optional[str] = None,
         bar_bgcolor: ControlStateValue[str] = None,
         bar_overlay_color: ControlStateValue[str] = None,
+        bar_shadow_color: Union[None, str, Dict[ControlState, str]] = None,
+        bar_surface_tint_color: Union[None, str, Dict[ControlState, str]] = None,
+        bar_elevation: Union[OptionalNumber, Dict[ControlState, Number]] = None,
+        bar_border_side: Union[None, BorderSide, Dict[ControlState, BorderSide]] = None,
+        bar_shape: Union[
+            None, OutlinedBorder, Dict[ControlState, OutlinedBorder]
+        ] = None,
+        bar_text_style: Union[None, TextStyle, Dict[ControlState, TextStyle]] = None,
+        bar_hint_text_style: Union[
+            None, TextStyle, Dict[ControlState, TextStyle]
+        ] = None,
+        bar_padding: Union[PaddingValue, Dict[ControlState, PaddingValue]] = None,
         view_leading: Optional[Control] = None,
         view_trailing: Optional[List[Control]] = None,
         view_elevation: OptionalNumber = None,
@@ -49,6 +65,8 @@ class SearchBar(ConstrainedControl):
         view_shape: Optional[OutlinedBorder] = None,
         view_header_text_style: Optional[TextStyle] = None,
         view_hint_text_style: Optional[TextStyle] = None,
+        view_size_constraints: Optional[BoxConstraints] = None,
+        view_header_height: OptionalNumber = None,
         divider_color: Optional[str] = None,
         capitalization: Optional[TextCapitalization] = None,
         full_screen: Optional[bool] = None,
@@ -56,6 +74,7 @@ class SearchBar(ConstrainedControl):
         view_surface_tint_color: Optional[str] = None,
         autofocus: Optional[bool] = None,
         on_tap: OptionalControlEventCallable = None,
+        on_tap_outside_bar: OptionalControlEventCallable = None,
         on_submit: OptionalControlEventCallable = None,
         on_change: OptionalControlEventCallable = None,
         on_focus: OptionalControlEventCallable = None,
@@ -138,9 +157,20 @@ class SearchBar(ConstrainedControl):
         self.on_tap = on_tap
         self.on_submit = on_submit
         self.on_change = on_change
+        self.on_tap_outside_bar = on_tap_outside_bar
         self.keyboard_type = keyboard_type
         self.view_surface_tint_color = view_surface_tint_color
         self.autofocus = autofocus
+        self.view_header_height = view_header_height
+        self.view_size_constraints = view_size_constraints
+        self.bar_surface_tint_color = bar_surface_tint_color
+        self.bar_elevation = bar_elevation
+        self.bar_border_side = bar_border_side
+        self.bar_shape = bar_shape
+        self.bar_text_style = bar_text_style
+        self.bar_hint_text_style = bar_hint_text_style
+        self.bar_padding = bar_padding
+        self.bar_shadow_color = bar_shadow_color
 
     def _get_control_name(self):
         return "searchbar"
@@ -151,10 +181,27 @@ class SearchBar(ConstrainedControl):
         self._set_attr_json(
             "barOverlayColor", self.__bar_overlay_color, wrap_attr_dict=True
         )
+        self._set_attr_json(
+            "barHintTextStyle", self.__bar_hint_text_style, wrap_attr_dict=True
+        )
+        self._set_attr_json(
+            "barSurfaceTintColor", self.__bar_surface_tint_color, wrap_attr_dict=True
+        )
+        self._set_attr_json("barElevation", self.__bar_elevation, wrap_attr_dict=True)
+        self._set_attr_json(
+            "barBorderSide", self.__bar_border_side, wrap_attr_dict=True
+        )
+        self._set_attr_json("barShape", self.__bar_shape, wrap_attr_dict=True)
+        self._set_attr_json("barTextStyle", self.__bar_text_style, wrap_attr_dict=True)
+        self._set_attr_json("barPadding", self.__bar_padding, wrap_attr_dict=True)
+        self._set_attr_json(
+            "barShadowColor", self.__bar_shadow_color, wrap_attr_dict=True
+        )
         self._set_attr_json("viewShape", self.__view_shape)
         self._set_attr_json("viewHeaderTextStyle", self.__view_header_text_style)
         self._set_attr_json("viewHintTextStyle", self.__view_hint_text_style)
         self._set_attr_json("viewSide", self.__view_side)
+        self._set_attr_json("viewSizeConstraints", self.__view_size_constraints)
 
     def _get_children(self):
         children = []
@@ -251,6 +298,92 @@ class SearchBar(ConstrainedControl):
     def bar_overlay_color(self, value: ControlStateValue[str]):
         self.__bar_overlay_color = value
 
+    # bar_shadow_color
+    @property
+    def bar_shadow_color(self) -> Union[None, str, Dict[ControlState, str]]:
+        return self.__bar_shadow_color
+
+    @bar_shadow_color.setter
+    def bar_shadow_color(self, value: Union[None, str, Dict[ControlState, str]]):
+        self.__bar_shadow_color = value
+
+    # bar_surface_tint_color
+    @property
+    def bar_surface_tint_color(self) -> Union[None, str, Dict[ControlState, str]]:
+        return self.__bar_surface_tint_color
+
+    @bar_surface_tint_color.setter
+    def bar_surface_tint_color(self, value: Union[None, str, Dict[ControlState, str]]):
+        self.__bar_surface_tint_color = value
+
+    # bar_elevation
+    @property
+    def bar_elevation(self) -> Union[OptionalNumber, Dict[ControlState, Number]]:
+        return self.__bar_elevation
+
+    @bar_elevation.setter
+    def bar_elevation(self, value: Union[OptionalNumber, Dict[ControlState, Number]]):
+        self.__bar_elevation = value
+
+    # bar_border_side
+    @property
+    def bar_border_side(
+        self,
+    ) -> Union[None, BorderSide, Dict[ControlState, BorderSide]]:
+        return self.__bar_border_side
+
+    @bar_border_side.setter
+    def bar_border_side(
+        self, value: Union[None, BorderSide, Dict[ControlState, BorderSide]]
+    ):
+        self.__bar_border_side = value
+
+    # bar_shape
+    @property
+    def bar_shape(
+        self,
+    ) -> Union[None, OutlinedBorder, Dict[ControlState, OutlinedBorder]]:
+        return self.__bar_shape
+
+    @bar_shape.setter
+    def bar_shape(
+        self, value: Union[None, OutlinedBorder, Dict[ControlState, OutlinedBorder]]
+    ):
+        self.__bar_shape = value
+
+    # bar_text_style
+    @property
+    def bar_text_style(self) -> Union[None, TextStyle, Dict[ControlState, TextStyle]]:
+        return self.__bar_text_style
+
+    @bar_text_style.setter
+    def bar_text_style(
+        self, value: Union[None, TextStyle, Dict[ControlState, TextStyle]]
+    ):
+        self.__bar_text_style = value
+
+    # bar_hint_text_style
+    @property
+    def bar_hint_text_style(
+        self,
+    ) -> Union[None, TextStyle, Dict[ControlState, TextStyle]]:
+        return self.__bar_hint_text_style
+
+    @bar_hint_text_style.setter
+    def bar_hint_text_style(
+        self, value: Union[None, TextStyle, Dict[ControlState, TextStyle]]
+    ):
+        self.__bar_hint_text_style = value
+
+    # bar_padding
+    @property
+    def bar_padding(self) -> Union[PaddingValue, Dict[ControlState, PaddingValue]]:
+        return self.__bar_padding
+
+    @bar_padding.setter
+    def bar_padding(self, value: Union[PaddingValue, Dict[ControlState, PaddingValue]]):
+        self.__bar_padding = value
+
     # view_leading
     @property
     def view_leading(self) -> Optional[Control]:
@@ -295,6 +428,15 @@ class SearchBar(ConstrainedControl):
     @view_elevation.setter
     def view_elevation(self, value: OptionalNumber):
         self._set_attr("viewElevation", value)
+
+    # view_header_height
+    @property
+    def view_header_height(self) -> OptionalNumber:
+        return self._get_attr("viewHeaderHeight")
+
+    @view_header_height.setter
+    def view_header_height(self, value: OptionalNumber):
+        self._set_attr("viewHeaderHeight", value)
 
     # view_bgcolor
     @property
@@ -349,6 +491,15 @@ class SearchBar(ConstrainedControl):
     @view_side.setter
     def view_side(self, value: Optional[BorderSide]):
         self.__view_side = value
+
+    # view_size_constraints
+    @property
+    def view_size_constraints(self) -> Optional[BoxConstraints]:
+        return self.__view_size_constraints
+
+    @view_size_constraints.setter
+    def view_size_constraints(self, value: Optional[BoxConstraints]):
+        self.__view_size_constraints = value
 
     # full_screen
     @property
@@ -452,6 +603,16 @@ class SearchBar(ConstrainedControl):
     def on_tap(self, handler: OptionalControlEventCallable):
         self._add_event_handler("tap", handler)
         self._set_attr("ontap", True if handler is not None else None)
+
+    # on_tap_outside_bar
+    @property
+    def on_tap_outside_bar(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("tapOutsideBar")
+
+    @on_tap_outside_bar.setter
+    def on_tap_outside_bar(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("tapOutsideBar", handler)
+        self._set_attr("onTapOutsideBar", True if handler is not None else None)
 
     # on_submit
     @property
