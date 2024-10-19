@@ -24,7 +24,7 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-IconValue = Optional[Union[str, Control]]
+IconValueOrControl = Union[str, Control]
 
 class InputBorder(Enum):
     NONE = "none"
@@ -40,7 +40,7 @@ class FormFieldControl(ConstrainedControl):
         text_vertical_align: Union[VerticalAlignment, OptionalNumber] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
-        icon: IconValue = None,
+        icon: Optional[IconValueOrControl] = None,
         border: Optional[InputBorder] = None,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
@@ -66,11 +66,11 @@ class FormFieldControl(ConstrainedControl):
         error_text: Optional[str] = None,
         error_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
-        prefix_icon: IconValue = None,
+        prefix_icon: Optional[IconValueOrControl] = None,
         prefix_text: Optional[str] = None,
         prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
-        suffix_icon: IconValue = None,
+        suffix_icon: Optional[IconValueOrControl] = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
         rtl: Optional[bool] = None,
@@ -255,11 +255,11 @@ class FormFieldControl(ConstrainedControl):
 
     # icon
     @property
-    def icon(self) -> IconValue:
+    def icon(self) -> Optional[IconValueOrControl]:
         return self.__icon
 
     @icon.setter
-    def icon(self, value: IconValue):
+    def icon(self, value: Optional[IconValueOrControl]):
         self.__icon = value
 
     # border
@@ -484,11 +484,11 @@ class FormFieldControl(ConstrainedControl):
 
     # prefix_icon
     @property
-    def prefix_icon(self) -> IconValue:
+    def prefix_icon(self) -> Optional[IconValueOrControl]:
         return self.__prefix_icon
 
     @prefix_icon.setter
-    def prefix_icon(self, value: IconValue):
+    def prefix_icon(self, value: Optional[IconValueOrControl]):
         self.__prefix_icon = value
 
     # prefix_text
@@ -520,11 +520,11 @@ class FormFieldControl(ConstrainedControl):
     
     # suffix_icon
     @property
-    def suffix_icon(self) -> IconValue:
+    def suffix_icon(self) -> Optional[IconValueOrControl]:
         return self.__suffix_icon
 
     @suffix_icon.setter
-    def suffix_icon(self, value: IconValue):
+    def suffix_icon(self, value: Optional[IconValueOrControl]):
         self.__suffix_icon = value
 
     # suffix_text
