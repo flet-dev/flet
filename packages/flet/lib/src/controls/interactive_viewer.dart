@@ -32,7 +32,7 @@ class InteractiveViewerControl extends StatelessWidget {
     debugPrint("InteractiveViewer build: ${control.id}");
 
     var contentCtrls = children.where((c) => c.isVisible);
-    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
+    bool? adaptive = control.isAdaptive ?? parentAdaptive;
     bool disabled = control.isDisabled || parentDisabled;
 
     var interactiveViewer = InteractiveViewer(

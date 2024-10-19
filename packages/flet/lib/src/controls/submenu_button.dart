@@ -67,7 +67,7 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
     var clipBehavior =
         parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
 
-    var offsetDetails = parseOffset(widget.control, "alignmentOffset");
+    var offset = parseOffset(widget.control, "alignmentOffset");
 
     var theme = Theme.of(context);
     var style = parseButtonStyle(Theme.of(context), widget.control, "style",
@@ -95,9 +95,7 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
       clipBehavior: clipBehavior,
       style: style,
       menuStyle: menuStyle,
-      alignmentOffset: offsetDetails != null
-          ? Offset(offsetDetails.x, offsetDetails.y)
-          : null,
+      alignmentOffset: offset,
       onClose: onClose && !disabled
           ? () {
               widget.backend.triggerControlEvent(widget.control.id, "close");

@@ -1,17 +1,18 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional, List, Union
+from typing import List, Optional, Union
 
 from flet_core.alignment import Alignment
 from flet_core.border import Border
 from flet_core.gradients import Gradient
 from flet_core.types import (
-    OffsetValue,
-    BorderRadiusValue,
     BlendMode,
+    BorderRadiusValue,
     ImageFit,
-    OptionalNumber,
     ImageRepeat,
+    Number,
+    OffsetValue,
+    OptionalNumber,
 )
 
 
@@ -79,7 +80,15 @@ class BoxDecoration:
 
 @dataclass
 class BoxConstraints:
-    min_width: OptionalNumber = None
-    min_height: OptionalNumber = None
-    max_width: OptionalNumber = None
-    max_height: OptionalNumber = None
+    min_width: Number = 0
+    min_height: Number = 0
+    max_width: Number = float("inf")
+    max_height: Number = float("inf")
+
+    def __post_init__(self):
+        assert (
+            self.min_width <= self.max_width
+        ), "min_width must be less than or equal to max_width"
+        assert (
+            self.min_height <= self.max_height
+        ), "min_height must be less than or equal to max_height"

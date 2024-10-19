@@ -1,7 +1,8 @@
 import json
 from dataclasses import dataclass, field
-from enum import Enum, IntFlag
+from enum import Enum, IntFlag, EnumMeta
 from typing import Optional, Union
+from warnings import warn
 
 from flet_core.control import OptionalNumber, Control
 from flet_core.event_handler import EventHandler
@@ -9,6 +10,7 @@ from flet_core.types import (
     ControlEvent,
     OptionalEventCallable,
     OptionalControlEventCallable,
+    PointerDeviceType,
 )
 
 
@@ -54,7 +56,26 @@ class MapMultiFingerGesture(IntFlag):
     ALL = (1 << 0) | (1 << 1) | (1 << 2)
 
 
-class MapPointerDeviceType(Enum):
+class MapPointerDeviceTypeDeprecated(EnumMeta):
+    def __getattribute__(self, item):
+        if item in [
+            "TOUCH",
+            "MOUSE",
+            "STYLUS",
+            "INVERTED_STYLUS",
+            "TRACKPAD",
+            "UNKNOWN",
+        ]:
+            warn(
+                "MapPointerDeviceType enum is deprecated since version 0.25.0 "
+                "and will be removed in version 0.28.0. Use PointerDeviceType enum instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+        return EnumMeta.__getattribute__(self, item)
+
+
+class MapPointerDeviceType(Enum, metaclass=MapPointerDeviceTypeDeprecated):
     TOUCH = "touch"
     MOUSE = "mouse"
     STYLUS = "stylus"
@@ -350,7 +371,7 @@ class MapPointerEvent(ControlEvent):
     def __init__(self, e: ControlEvent) -> None:
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.device_type: MapPointerDeviceType = MapPointerDeviceType(d.get("kind"))
+        self.device_type: PointerDeviceType = PointerDeviceType(d.get("kind"))
         self.global_y: float = d.get("gy")
         self.global_x: float = d.get("gx")
         self.coordinates: MapLatitudeLongitude = MapLatitudeLongitude(

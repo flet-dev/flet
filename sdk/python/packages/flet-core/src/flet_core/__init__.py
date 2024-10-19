@@ -306,13 +306,20 @@ from flet_core.submenu_button import SubmenuButton
 from flet_core.switch import Switch
 from flet_core.tabs import Tab, Tabs
 from flet_core.template_route import TemplateRoute
-from flet_core.text import Text, TextSelection, TextAffinity
+from flet_core.text import (
+    Text,
+    TextSelection,
+    TextAffinity,
+    TextSelectionChangeEvent,
+    TextSelectionChangeCause,
+)
 from flet_core.text_button import TextButton
 from flet_core.text_span import TextSpan
 from flet_core.text_style import (
     TextDecoration,
     TextDecorationStyle,
     TextStyle,
+    StrutStyle,
     TextOverflow,
     TextThemeStyle,
     TextBaseline,
@@ -409,6 +416,7 @@ from flet_core.types import (
     StrokeCap,
     StrokeJoin,
     Duration,
+    PointerDeviceType,
 )
 from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider

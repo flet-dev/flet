@@ -436,7 +436,7 @@ class _LineChartControlState extends State<LineChartControl> {
         parseGradient(theme, dataViewModel.control, "belowLineGradient");
     var dashPattern = dataViewModel.control.attrString("dashPattern");
     var shadow =
-        parseBoxShadow(Theme.of(context), dataViewModel.control, "shadow");
+        parseBoxShadow(Theme.of(context), dataViewModel.control, "shadow", [])!;
     Color barColor =
         dataViewModel.control.attrColor("color", context) ?? Colors.cyan;
     Gradient? barGradient =
