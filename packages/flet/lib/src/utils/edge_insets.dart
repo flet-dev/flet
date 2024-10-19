@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
+import 'material_state.dart';
 import 'numbers.dart';
 
 EdgeInsets? parseEdgeInsets(Control control, String propName,
@@ -53,4 +54,16 @@ EdgeInsetsDirectional? edgeInsetsDirectionalFromJson(dynamic json,
       parseDouble(json['t'], 0)!,
       parseDouble(json['r'], 0)!,
       parseDouble(json['b'], 0)!);
+}
+
+WidgetStateProperty<EdgeInsets?>? parseWidgetStateEdgeInsets(
+    Control control, String propName,
+    [EdgeInsets? defaultValue]) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+
+  return getWidgetStateProperty<EdgeInsets?>(
+      jsonDecode(v), (jv) => edgeInsetsFromJson(jv), defaultValue);
 }
