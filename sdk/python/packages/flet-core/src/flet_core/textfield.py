@@ -23,6 +23,7 @@ from flet_core.types import (
     OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
+from flet_core.form_field_control import IconValueOrControl
 
 try:
     from typing import Literal
@@ -140,7 +141,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         text_vertical_align: Union[VerticalAlignment, OptionalNumber] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
-        icon: Optional[str] = None,
+        icon: Optional[IconValueOrControl] = None,
         border: Optional[InputBorder] = None,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
@@ -166,11 +167,11 @@ class TextField(FormFieldControl, AdaptiveControl):
         error_text: Optional[str] = None,
         error_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
-        prefix_icon: Optional[str] = None,
+        prefix_icon: Optional[IconValueOrControl] = None,
         prefix_text: Optional[str] = None,
         prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
-        suffix_icon: Optional[str] = None,
+        suffix_icon: Optional[IconValueOrControl] = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
         #
