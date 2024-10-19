@@ -1,17 +1,17 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional, List, Union
+from typing import List, Optional, Union
 
 from flet_core.alignment import Alignment
 from flet_core.border import Border
 from flet_core.gradients import Gradient
 from flet_core.types import (
-    OffsetValue,
-    BorderRadiusValue,
     BlendMode,
+    BorderRadiusValue,
     ImageFit,
-    OptionalNumber,
     ImageRepeat,
+    OffsetValue,
+    OptionalNumber,
 )
 
 
@@ -75,3 +75,11 @@ class BoxDecoration:
     gradient: Optional[Gradient] = None
     shape: Optional[BoxShape] = None
     blend_mode: Optional[BlendMode] = None
+
+
+@dataclass
+class BoxConstraints:
+    min_width: OptionalNumber = None
+    min_height: OptionalNumber = None
+    max_width: OptionalNumber = None
+    max_height: OptionalNumber = None

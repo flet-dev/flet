@@ -10,14 +10,16 @@ python = "<3.13,>=3.8"
 
 [tool.poetry.group.dev.dependencies]
 flet-core = {path = "packages/flet-core", develop = true}
-flet-runtime = {path = "packages/flet-runtime", develop = true}
+flet-cli = {path = "packages/flet-cli", develop = true}
+flet-desktop = {path = "packages/flet-desktop", develop = true}
+flet-web = {path = "packages/flet-web", develop = true}
 flet = {path = "packages/flet", develop = true}
 pytest = "^7.2.0"
 black = "^22.12.0"
 tomlkit = "^0.11.6"
 cryptography = "^39.0.0"
-pyinstaller = "^5.8.0"
-pillow = "^10.4.0"
+pyinstaller = "^6.6.0"
+pillow = "^10.3.0"
 pre-commit = "^2.21.0"
 hypercorn = "^0.14.4"
 gunicorn = "^21.2.0"

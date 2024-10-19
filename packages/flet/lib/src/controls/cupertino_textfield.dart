@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/autofill.dart';
 import '../utils/borders.dart';
 import '../utils/box.dart';
 import '../utils/edge_insets.dart';
@@ -311,6 +312,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
           padding: parseEdgeInsets(
               widget.control, "padding", const EdgeInsets.all(7.0))!,
           scribbleEnabled: widget.control.attrBool("enableScribble", true)!,
+          autofillHints: parseAutofillHints(widget.control, "autofillHints"),
           scrollPadding: parseEdgeInsets(
               widget.control, "scrollPadding", const EdgeInsets.all(20.0))!,
           obscuringCharacter:

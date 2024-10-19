@@ -4,8 +4,7 @@ import logging
 import threading
 import time
 import uuid
-from asyncio import AbstractEventLoop
-from concurrent.futures import Future, ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -27,13 +26,6 @@ from typing import (
 )
 from urllib.parse import urlparse
 
-from flet_core.box import BoxDecoration
-
-try:
-    from typing import ParamSpec
-except ImportError:
-    from typing_extensions import ParamSpec
-
 import flet_core
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alert_dialog import AlertDialog
@@ -43,6 +35,7 @@ from flet_core.app_bar import AppBar
 from flet_core.banner import Banner
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.bottom_sheet import BottomSheet
+from flet_core.box import BoxDecoration
 from flet_core.client_storage import ClientStorage
 from flet_core.connection import Connection
 from flet_core.control import Control
@@ -82,9 +75,14 @@ from flet_core.types import (
     WindowEventType,
     Wrapper,
 )
-from flet_core.utils import classproperty, deprecated
-from flet_core.utils.concurrency_utils import is_pyodide
+from flet_core.utils import classproperty, deprecated, is_pyodide
 from flet_core.view import View
+
+try:
+    from typing import ParamSpec
+except ImportError:
+    from typing_extensions import ParamSpec
+
 
 logger = logging.getLogger(flet_core.__name__)
 
@@ -98,11 +96,12 @@ class context:
 
 
 try:
-    from flet_runtime.auth.authorization import Authorization
-    from flet_runtime.auth.oauth_provider import OAuthProvider
-except ImportError:
+    from flet.auth.authorization import Authorization
+    from flet.auth.oauth_provider import OAuthProvider
+except ImportError as e:
 
-    class OAuthProvider: ...
+    class OAuthProvider:
+        ...
 
     class Authorization:
         def __init__(
@@ -111,7 +110,8 @@ except ImportError:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ): ...
+        ):
+            ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -1726,7 +1726,7 @@ class Page(AdaptiveControl):
 
     # loop
     @property
-    def loop(self) -> AbstractEventLoop:
+    def loop(self) -> asyncio.AbstractEventLoop:
         return self.__loop
 
     # executor

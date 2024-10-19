@@ -19,10 +19,11 @@ from flet_core.protocol import Command
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
+    ControlState,
+    OptionalControlEventCallable,
     OptionalNumber,
     ResponsiveNumber,
     SupportsStr,
-    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -174,6 +175,14 @@ class Control:
             self.__attrs[name] = (value, dirty)
 
     def _set_attr_json(self, name: str, value: V) -> None:
+        ov = self._get_attr(name)
+        nv = self._convert_attr_json(value)
+        if ov != nv:
+            self._set_attr(name, nv)
+
+    def _set_control_state_attr_json(self, name: str, value: V) -> None:
+        if value is not None and not isinstance(value, dict):
+            value = {ControlState.DEFAULT: value}
         ov = self._get_attr(name)
         nv = self._convert_attr_json(value)
         if ov != nv:

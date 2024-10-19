@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import 'colors.dart';
+import 'material_state.dart';
 import 'numbers.dart';
 
 BorderRadius? parseBorderRadius(Control control, String propName,
@@ -171,4 +172,15 @@ class WidgetStateBorderSideFromJSON extends WidgetStateBorderSide {
 
     return _defaultValue;
   }
+}
+
+WidgetStateProperty<OutlinedBorder?>? parseWidgetStateOutlinedBorder(
+    Control control, String propName) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+
+  return getWidgetStateProperty<OutlinedBorder?>(
+      jsonDecode(v), (jv) => outlinedBorderFromJSON(jv), null);
 }
