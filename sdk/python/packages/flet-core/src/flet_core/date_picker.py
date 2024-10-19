@@ -9,9 +9,9 @@ from flet_core.ref import Ref
 from flet_core.textfield import KeyboardType
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    ResponsiveNumber,
-    OptionalEventCallable,
     OptionalControlEventCallable,
+    OptionalEventCallable,
+    ResponsiveNumber,
 )
 from flet_core.utils import deprecated
 from flet_core.utils.datetime import datetime_to_string
@@ -88,10 +88,10 @@ class DatePicker(Control):
     def __init__(
         self,
         open: bool = False,
-        value: Optional[Union[datetime, str]] = None,
-        first_date: Optional[Union[datetime, str]] = None,
-        last_date: Optional[Union[datetime, str]] = None,
-        current_date: Optional[Union[datetime, str]] = None,
+        value: Optional[datetime] = None,
+        first_date: Optional[datetime] = None,
+        last_date: Optional[datetime] = None,
+        current_date: Optional[datetime] = None,
         keyboard_type: Optional[KeyboardType] = None,
         date_picker_mode: Optional[DatePickerMode] = None,
         date_picker_entry_mode: Optional[DatePickerEntryMode] = None,
@@ -198,53 +198,47 @@ class DatePicker(Control):
     # value
     @property
     def value(self) -> Optional[datetime]:
-        value_string = self._get_attr("value", def_value=None)
-        return datetime.fromisoformat(value_string) if value_string else None
+        v = self._get_attr("value")
+        return datetime.fromisoformat(v) if v else None
 
     @value.setter
-    def value(self, value: Optional[Union[datetime, str]]):
+    def value(self, value: Optional[datetime]):
         self._set_attr("value", datetime_to_string(value))
 
     # first_date
     @property
     def first_date(self) -> Optional[datetime]:
-        value_string = self._get_attr("firstDate", def_value=None)
-        return (
-            datetime.fromisoformat(value_string) if value_string is not None else None
-        )
+        v = self._get_attr("firstDate")
+        return datetime.fromisoformat(v) if v is not None else None
 
     @first_date.setter
-    def first_date(self, value: Optional[Union[datetime, str]]):
+    def first_date(self, value: Optional[datetime]):
         self._set_attr("firstDate", datetime_to_string(value))
 
     # last_date
     @property
     def last_date(self) -> Optional[datetime]:
-        value_string = self._get_attr("lastDate", def_value=None)
-        return (
-            datetime.fromisoformat(value_string) if value_string is not None else None
-        )
+        v = self._get_attr("lastDate")
+        return datetime.fromisoformat(v) if v is not None else None
 
     @last_date.setter
-    def last_date(self, value: Optional[Union[datetime, str]]):
+    def last_date(self, value: Optional[datetime]):
         self._set_attr("lastDate", datetime_to_string(value))
 
     # current_date
     @property
     def current_date(self) -> Optional[datetime]:
-        value_string = self._get_attr("currentDate", def_value=None)
-        return (
-            datetime.fromisoformat(value_string) if value_string is not None else None
-        )
+        v = self._get_attr("currentDate")
+        return datetime.fromisoformat(v) if v is not None else None
 
     @current_date.setter
-    def current_date(self, value: Optional[Union[datetime, str]]):
+    def current_date(self, value: Optional[datetime]):
         self._set_attr("currentDate", datetime_to_string(value))
 
     # field_hint_text
     @property
     def field_hint_text(self) -> Optional[str]:
-        return self._get_attr("fieldHintText", def_value=None)
+        return self._get_attr("fieldHintText")
 
     @field_hint_text.setter
     def field_hint_text(self, value: Optional[str]):
@@ -253,7 +247,7 @@ class DatePicker(Control):
     # field_label_text
     @property
     def field_label_text(self) -> Optional[str]:
-        return self._get_attr("fieldLabelText", def_value=None)
+        return self._get_attr("fieldLabelText")
 
     @field_label_text.setter
     def field_label_text(self, value: Optional[str]):
@@ -262,7 +256,7 @@ class DatePicker(Control):
     # help_text
     @property
     def help_text(self) -> Optional[str]:
-        return self._get_attr("helpText", def_value=None)
+        return self._get_attr("helpText")
 
     @help_text.setter
     def help_text(self, value: Optional[str]):
@@ -271,7 +265,7 @@ class DatePicker(Control):
     # cancel_text
     @property
     def cancel_text(self) -> Optional[str]:
-        return self._get_attr("cancelText", def_value=None)
+        return self._get_attr("cancelText")
 
     @cancel_text.setter
     def cancel_text(self, value: Optional[str]):
@@ -280,7 +274,7 @@ class DatePicker(Control):
     # confirm_text
     @property
     def confirm_text(self) -> Optional[str]:
-        return self._get_attr("confirmText", def_value=None)
+        return self._get_attr("confirmText")
 
     @confirm_text.setter
     def confirm_text(self, value: Optional[str]):
@@ -289,7 +283,7 @@ class DatePicker(Control):
     # error_format_text
     @property
     def error_format_text(self) -> Optional[str]:
-        return self._get_attr("errorFormatText", def_value=None)
+        return self._get_attr("errorFormatText")
 
     @error_format_text.setter
     def error_format_text(self, value: Optional[str]):
@@ -298,7 +292,7 @@ class DatePicker(Control):
     # error_invalid_text
     @property
     def error_invalid_text(self) -> Optional[str]:
-        return self._get_attr("errorInvalidText", def_value=None)
+        return self._get_attr("errorInvalidText")
 
     @error_invalid_text.setter
     def error_invalid_text(self, value: Optional[str]):
