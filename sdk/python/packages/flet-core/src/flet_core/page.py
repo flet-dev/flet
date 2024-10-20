@@ -26,13 +26,6 @@ from typing import (
 )
 from urllib.parse import urlparse
 
-from flet_core.box import BoxDecoration
-
-try:
-    from typing import ParamSpec
-except ImportError:
-    from typing_extensions import ParamSpec
-
 import flet_core
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alert_dialog import AlertDialog
@@ -42,6 +35,7 @@ from flet_core.app_bar import AppBar
 from flet_core.banner import Banner
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.bottom_sheet import BottomSheet
+from flet_core.box import BoxDecoration
 from flet_core.client_storage import ClientStorage
 from flet_core.connection import Connection
 from flet_core.control import Control
@@ -83,6 +77,12 @@ from flet_core.types import (
 )
 from flet_core.utils import classproperty, deprecated, is_pyodide
 from flet_core.view import View
+
+try:
+    from typing import ParamSpec
+except ImportError:
+    from typing_extensions import ParamSpec
+
 
 logger = logging.getLogger(flet_core.__name__)
 

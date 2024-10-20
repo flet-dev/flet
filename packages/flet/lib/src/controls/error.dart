@@ -8,7 +8,7 @@ class ErrorControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("Error build");
+    debugPrint("ErrorControl build");
     List<Widget> lines = [
       Text(message, style: const TextStyle(color: Colors.white, fontSize: 12))
     ];

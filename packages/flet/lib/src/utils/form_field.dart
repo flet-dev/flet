@@ -50,9 +50,7 @@ TextInputType? parseTextInputType(String? value, [TextInputType? defValue]) {
   }
 }
 
-InputDecoration buildInputDecoration(
-    BuildContext context,
-    Control control,
+InputDecoration buildInputDecoration(BuildContext context, Control control,
     {Control? prefix,
     Control? prefixIcon,
     Control? suffix,
@@ -179,8 +177,9 @@ InputDecoration buildInputDecoration(
       );
 }
 
-OverlayVisibilityMode parseVisibilityMode(String type) {
-  switch (type.toLowerCase()) {
+OverlayVisibilityMode? parseVisibilityMode(String? value,
+    [OverlayVisibilityMode? defValue]) {
+  switch (value?.toLowerCase()) {
     case "never":
       return OverlayVisibilityMode.never;
     case "notediting":
@@ -190,5 +189,5 @@ OverlayVisibilityMode parseVisibilityMode(String type) {
     case "always":
       return OverlayVisibilityMode.always;
   }
-  return OverlayVisibilityMode.always;
+  return defValue;
 }
