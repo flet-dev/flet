@@ -9,11 +9,12 @@ from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
 )
+from flet_core.utils.datetime import datetime_to_string
 
 
 class CupertinoDatePickerMode(Enum):
@@ -137,7 +138,7 @@ class CupertinoDatePicker(ConstrainedControl):
         return datetime.fromisoformat(value_string) if value_string else None
 
     @value.setter
-    def value(self, value: Optional[Union[datetime, str]]):
+    def value(self, value: Optional[datetime]):
         if isinstance(value, (date, datetime)):
             value = value.isoformat()
         self._set_attr("value", value)
@@ -151,10 +152,8 @@ class CupertinoDatePicker(ConstrainedControl):
         )
 
     @first_date.setter
-    def first_date(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("firstDate", value)
+    def first_date(self, value: Optional[datetime]):
+        self._set_attr("firstDate", datetime_to_string(value))
 
     # last_date
     @property
@@ -165,10 +164,8 @@ class CupertinoDatePicker(ConstrainedControl):
         )
 
     @last_date.setter
-    def last_date(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("lastDate", value)
+    def last_date(self, value: Optional[datetime]):
+        self._set_attr("lastDate", datetime_to_string(value))
 
     # bgcolor
     @property
