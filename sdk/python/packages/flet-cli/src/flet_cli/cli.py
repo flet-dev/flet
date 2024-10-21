@@ -2,12 +2,13 @@ import argparse
 import sys
 
 import flet.version
+from flet.version import update_version
+
 import flet_cli.commands.build
 import flet_cli.commands.create
 import flet_cli.commands.pack
 import flet_cli.commands.publish
 import flet_cli.commands.run
-from flet.version import update_version
 
 
 # Source https://stackoverflow.com/a/26379693
