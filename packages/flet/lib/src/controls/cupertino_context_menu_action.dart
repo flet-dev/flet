@@ -44,15 +44,6 @@ class _CupertinoContextMenuActionControlState
     IconData? trailingIcon =
         parseIcon(widget.control.attrString("trailingIcon"));
 
-    Widget child = DefaultTextStyle(
-        style: CupertinoTheme.of(context).textTheme.textStyle.copyWith(
-            color:
-                CupertinoDynamicColor.resolve(CupertinoColors.label, context)),
-        child: contentCtrls.isNotEmpty
-            ? createControl(widget.control, contentCtrls.first.id, disabled,
-                parentAdaptive: adaptive)
-            : Text(text, overflow: TextOverflow.ellipsis));
-
     return CupertinoContextMenuAction(
       isDefaultAction: widget.control.attrBool("isDefaultAction", false)!,
       isDestructiveAction:
@@ -60,10 +51,14 @@ class _CupertinoContextMenuActionControlState
       onPressed: () {
         if (!disabled) {
           widget.backend.triggerControlEvent(widget.control.id, "click");
+          Navigator.of(context).pop();
         }
       },
       trailingIcon: trailingIcon,
-      child: child,
+      child: contentCtrls.isNotEmpty
+          ? createControl(widget.control, contentCtrls.first.id, disabled,
+              parentAdaptive: adaptive)
+          : Text(text, overflow: TextOverflow.ellipsis),
     );
   }
 }

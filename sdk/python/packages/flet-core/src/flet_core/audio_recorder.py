@@ -218,7 +218,7 @@ class AudioRecorder(Control):
         )
         return json.loads(devices)
 
-    async def get_input_devices_async(self, wait_timeout: Optional[float] = 5) -> bool:
+    async def get_input_devices_async(self, wait_timeout: Optional[float] = 5) -> dict:
         devices = await self.invoke_method_async(
             "get_input_devices",
             wait_for_result=True,
