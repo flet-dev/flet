@@ -7,10 +7,10 @@ from flet_core.alignment import Alignment
 from flet_core.blur import Blur
 from flet_core.border import Border
 from flet_core.box import (
+    BoxDecoration,
     BoxShadow,
     BoxShape,
     ColorFilter,
-    BoxDecoration,
     DecorationImage,
 )
 from flet_core.constrained_control import ConstrainedControl
@@ -26,18 +26,19 @@ from flet_core.types import (
     BlendMode,
     BorderRadiusValue,
     ClipBehavior,
+    ColorValue,
     ImageFit,
     ImageRepeat,
     MarginValue,
     OffsetValue,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     ThemeMode,
     UrlTarget,
-    OptionalEventCallable,
-    OptionalControlEventCallable,
 )
 
 
@@ -74,7 +75,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         padding: PaddingValue = None,
         margin: MarginValue = None,
         alignment: Optional[Alignment] = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: ColorValue = None,
         gradient: Optional[Gradient] = None,
         blend_mode: Optional[BlendMode] = None,
         border: Optional[Border] = None,
@@ -88,7 +89,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         clip_behavior: Optional[ClipBehavior] = None,
         ink: Optional[bool] = None,
         image: Optional[DecorationImage] = None,
-        ink_color: Optional[str] = None,
+        ink_color: ColorValue = None,
         animate: AnimationValue = None,
         blur: Union[
             None, float, int, Tuple[Union[float, int], Union[float, int]], Blur
@@ -215,12 +216,12 @@ class Container(ConstrainedControl, AdaptiveControl):
     def before_update(self):
         super().before_update()
         assert (
-                self.__blend_mode is None
-                or self.__gradient is not None
-                or self.bgcolor is not None
+            self.__blend_mode is None
+            or self.__gradient is not None
+            or self.bgcolor is not None
         ), "blend_mode applies to bgcolor or gradient, but no bgcolor or gradient was provided"
         assert (
-                self.__shape != BoxShape.CIRCLE or self.__border_radius is None
+            self.__shape != BoxShape.CIRCLE or self.__border_radius is None
         ), "border_radius is not supported with shape=BoxShape.CIRCLE"
         self._set_attr_json("borderRadius", self.__border_radius)
         self._set_attr_json("border", self.__border)
@@ -299,7 +300,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         return self._get_attr("bgColor")
 
     @bgcolor.setter
-    def bgcolor(self, value):
+    def bgcolor(self, value: ColorValue):
         self._set_attr("bgColor", value)
 
     # gradient
@@ -538,7 +539,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         return self._get_attr("inkColor")
 
     @ink_color.setter
-    def ink_color(self, value: Optional[str]):
+    def ink_color(self, value: ColorValue):
         self._set_attr("inkColor", value)
 
     # animate

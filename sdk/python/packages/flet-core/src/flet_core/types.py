@@ -1,12 +1,16 @@
 from dataclasses import dataclass
 from enum import Enum, EnumMeta
-from typing import Any, Callable, Dict, Optional, Protocol, Tuple, Type, TypeVar, Union
+from typing import Any, Callable, Dict, Optional, Protocol, Tuple, TypeVar, Union
 from warnings import warn
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
+from flet_core.colors import colors
 from flet_core.control_event import ControlEvent
+from flet_core.cupertino_colors import cupertino_colors
+from flet_core.cupertino_icons import cupertino_icons
 from flet_core.event import Event
+from flet_core.icons import icons
 from flet_core.margin import Margin
 from flet_core.padding import Padding
 from flet_core.transform import Offset, Rotate, Scale
@@ -407,8 +411,11 @@ class VisualDensity(Enum):
 # Events
 ControlEventType = TypeVar("ControlEventType", bound=ControlEvent)
 EventType = TypeVar("EventType", bound=Event)
-OptionalEventCallable = Optional[Type[Callable[[EventType], Any]]]
-OptionalControlEventCallable = Optional[Type[Callable[[ControlEventType], Any]]]
+OptionalEventCallable = Optional[Callable[[EventType], Any]]
+OptionalControlEventCallable = Optional[Callable[[ControlEvent], Any]]
+
+ColorValue = Union[str, colors, cupertino_colors]
+IconValue = Union[str, icons, cupertino_icons]
 
 
 # Wrapper

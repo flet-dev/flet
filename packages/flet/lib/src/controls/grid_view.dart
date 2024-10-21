@@ -2,10 +2,8 @@ import 'package:flutter/widgets.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
-import '../utils/desktop.dart';
 import '../utils/edge_insets.dart';
 import '../utils/others.dart';
-import '../widgets/adjustable_scroll_controller.dart';
 import 'create_control.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
@@ -37,8 +35,7 @@ class _GridViewControlState extends State<GridViewControl> {
   @override
   void initState() {
     super.initState();
-    _controller =
-        isWindowsDesktop() ? AdjustableScrollController() : ScrollController();
+    _controller = ScrollController();
   }
 
   @override

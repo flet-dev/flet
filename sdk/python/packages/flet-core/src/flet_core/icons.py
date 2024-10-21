@@ -11,7 +11,7 @@ from enum import Enum
 from flet_core.utils import deprecated
 
 
-class icons(Enum):
+class icons(str, Enum):
     @staticmethod
     def random():
         return random.choice(list(icons))

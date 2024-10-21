@@ -36,13 +36,13 @@ foreach($line in $lines) {
 """
 import random
 from enum import Enum
+from typing import Union
 
-from flet_core.types import Number
 from flet_core.utils import deprecated
 
 
-class colors(Enum):
-    def with_opacity(self, opacity: Number) -> str:
+class colors(str, Enum):
+    def with_opacity(self, opacity: Union[int, float]) -> str:
         assert 0 <= opacity <= 1, "opacity must be between 0 and 1"
         return f"{self.value},{opacity}"
 
