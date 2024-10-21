@@ -6,9 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../flet_app_services.dart';
 import '../flet_control_backend.dart';
-import '../flet_server.dart';
 import '../models/control.dart';
 import '../utils/desktop.dart';
 import '../utils/strings.dart';
@@ -78,12 +76,12 @@ class FilePickerControl extends StatefulWidget {
   State<FilePickerControl> createState() => _FilePickerControlState();
 }
 
+List<PlatformFile> files = [];
+
 class _FilePickerControlState extends State<FilePickerControl>
     with FletStoreMixin {
   String? _state;
-  String? _upload;
   String? _path;
-  List<PlatformFile>? _files;
 
   @override
   Widget build(BuildContext context) {
@@ -108,11 +106,8 @@ class _FilePickerControlState extends State<FilePickerControl>
       }
 
       debugPrint("FilePicker _state: $_state, state: $state");
-
-      resetDialogState() {
-        _state = null;
-        widget.backend.updateControlState(widget.control.id, {"state": ""});
-      }
+      debugPrint("FilePicker _path: $_path");
+      debugPrint("FilePicker _files: $files");
 
       sendEvent() {
         if (defaultTargetPlatform != TargetPlatform.windows || !isDesktop()) {
@@ -123,8 +118,8 @@ class _FilePickerControlState extends State<FilePickerControl>
             "result",
             json.encode(FilePickerResultEvent(
                 path: _path,
-                files: _files
-                    ?.map((f) => FilePickerFile(
+                files: files
+                    .map((f) => FilePickerFile(
                         name: f.name,
                         path: kIsWeb ? null : f.path,
                         size: f.size))
@@ -133,9 +128,8 @@ class _FilePickerControlState extends State<FilePickerControl>
 
       if (_state != state) {
         _path = null;
-        _files = null;
+        // _files = null;
         _state = state;
-
         if (isDesktop() && defaultTargetPlatform == TargetPlatform.windows) {
           resetDialogState();
         }
@@ -154,7 +148,10 @@ class _FilePickerControlState extends State<FilePickerControl>
                   withReadStream: true)
               .then((result) {
             debugPrint("pickFiles() completed");
-            _files = result?.files;
+
+              if (result != null) {
+                files = result.files;
+              }
             sendEvent();
           });
         }
@@ -188,40 +185,39 @@ class _FilePickerControlState extends State<FilePickerControl>
             _path = result;
             sendEvent();
           });
+        } else if (state?.toLowerCase() == "uploadfiles" &&
+            upload != null &&
+            files.isNotEmpty) {
+          uploadFiles(upload, files, pageArgs.pageUri!);
         }
       }
-
-      // upload files
-      if (_upload != upload && upload != null && _files != null) {
-        _upload = upload;
-        uploadFiles(
-            upload, FletAppServices.of(context).server, pageArgs.pageUri!);
-      }
-
       return widget.nextChild ?? const SizedBox.shrink();
     });
   }
 
-  Future uploadFiles(String filesJson, FletServer server, Uri pageUri) async {
+  Future uploadFiles(
+      String filesJson, List<PlatformFile> files, Uri pageUri) async {
     var uj = json.decode(filesJson);
     var uploadFiles = (uj as List).map((u) => FilePickerUploadFile(
         name: u["name"], uploadUrl: u["upload_url"], method: u["method"]));
+    List<String> uploadedFiles = [];
     for (var uf in uploadFiles) {
-      var file = _files!.firstWhereOrNull((f) => f.name == uf.name);
+      var file = files.firstWhereOrNull((f) => f.name == uf.name);
       if (file != null) {
         try {
           await uploadFile(
-              file, server, getFullUploadUrl(pageUri, uf.uploadUrl), uf.method);
-          _files!.remove(file);
+              file, getFullUploadUrl(pageUri, uf.uploadUrl), uf.method);
+          uploadedFiles.add(file.name);
         } catch (e) {
-          sendProgress(server, file.name, null, e.toString());
+          sendProgress(file.name, null, e.toString());
         }
       }
     }
+    sendUploadFinishEvent(uploadedFiles);
+    resetDialogState();
   }
 
-  Future uploadFile(PlatformFile file, FletServer server, String uploadUrl,
-      String method) async {
+  Future uploadFile(PlatformFile file, String uploadUrl, String method) async {
     final fileReadStream = file.readStream;
     if (fileReadStream == null) {
       throw Exception('Cannot read file from null stream');
@@ -234,7 +230,7 @@ class _FilePickerControlState extends State<FilePickerControl>
     streamedRequest.contentLength = file.size;
 
     // send 0%
-    sendProgress(server, file.name, 0, null);
+    sendProgress(file.name, 0, null);
 
     double lastSent = 0; // send every 10%
     double progress = 0;
@@ -247,7 +243,7 @@ class _FilePickerControlState extends State<FilePickerControl>
       if (progress >= lastSent) {
         lastSent += 0.1;
         if (progress != 1.0) {
-          sendProgress(server, file.name, progress, null);
+          sendProgress(file.name, progress, null);
         }
       }
     }, onDone: () {
@@ -257,21 +253,30 @@ class _FilePickerControlState extends State<FilePickerControl>
     var streamedResponse = await streamedRequest.send();
     var response = await http.Response.fromStream(streamedResponse);
     if (response.statusCode < 200 || response.statusCode > 204) {
-      sendProgress(server, file.name, null,
+      sendProgress(file.name, null,
           "Upload endpoint returned code ${response.statusCode}: ${response.body}");
     } else {
       // send 100%
-      sendProgress(server, file.name, progress, null);
+      sendProgress(file.name, progress, null);
     }
   }
 
-  void sendProgress(
-      FletServer server, String name, double? progress, String? error) {
+  resetDialogState() {
+    _state = null;
+    widget.backend.updateControlState(widget.control.id, {"state": ""});
+  }
+
+  void sendProgress(String name, double? progress, String? error) {
     widget.backend.triggerControlEvent(
         widget.control.id,
         "upload",
         json.encode(FilePickerUploadProgressEvent(
             name: name, progress: progress, error: error)));
+  }
+
+  void sendUploadFinishEvent(List<String> files) {
+    widget.backend.triggerControlEvent(
+        widget.control.id, "upload_finished", json.encode(files));
   }
 
   String getFullUploadUrl(Uri pageUri, String uploadUrl) {
