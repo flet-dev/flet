@@ -110,7 +110,7 @@ class TextControl extends StatelessWidget with FletStoreMixin {
 
       onSelectionChanged(
           TextSelection selection, SelectionChangedCause? cause) {
-        debugPrint("Markdown ${control.id} selection changed");
+        debugPrint("Text ${control.id} selection changed");
         backend.triggerControlEvent(
             control.id,
             "selection_change",
@@ -130,7 +130,7 @@ class TextControl extends StatelessWidget with FletStoreMixin {
       }
 
       onTap() {
-        debugPrint("Markdown ${control.id} selection changed");
+        debugPrint("Text ${control.id} selection changed");
         backend.triggerControlEvent(
           control.id,
           "selection_change",

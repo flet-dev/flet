@@ -73,4 +73,4 @@ def implicit(duration: int, curve: Optional[AnimationCurve] = None):
     return Animation(duration=duration, curve=curve)
 
 
-AnimationValue = Optional[Union[bool, int, Animation]]
+AnimationValue = Union[bool, int, Animation]
