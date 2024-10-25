@@ -36,11 +36,3 @@ hook-dirs = "flet_cli.__pyinstaller:get_hook_dirs"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.ruff]
-line-length = 100
-
-[tool.ruff.format]
-quote-style = "single"
-indent-style = "tab"
-docstring-code-format = true
