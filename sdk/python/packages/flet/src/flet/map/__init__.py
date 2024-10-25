@@ -1,1 +1,1 @@
-from flet_core.map import *
+from flet.core.map import *

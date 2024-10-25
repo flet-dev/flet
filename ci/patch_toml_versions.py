@@ -32,7 +32,6 @@ def patch_dep(dep_name):
             deps[dep_name] = ver
 
 
-patch_dep("flet-core")
 patch_dep("flet-cli")
 patch_dep("flet-desktop")
 patch_dep("flet-web")

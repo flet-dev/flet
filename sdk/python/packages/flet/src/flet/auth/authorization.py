@@ -6,14 +6,15 @@ import time
 from typing import List, Optional, Tuple
 
 import httpx
+from oauthlib.oauth2 import WebApplicationClient
+from oauthlib.oauth2.rfc6749.tokens import OAuth2Token
+
 from flet.auth.oauth_provider import OAuthProvider
 from flet.auth.oauth_token import OAuthToken
 from flet.auth.user import User
+from flet.core.locks import AsyncNopeLock, NopeLock
+from flet.utils import is_asyncio
 from flet.version import version
-from flet_core.locks import AsyncNopeLock, NopeLock
-from flet_core.utils import is_asyncio
-from oauthlib.oauth2 import WebApplicationClient
-from oauthlib.oauth2.rfc6749.tokens import OAuth2Token
 
 
 class Authorization:

@@ -1,1 +1,1 @@
-from flet_core.canvas import *
+from flet.core.canvas import *

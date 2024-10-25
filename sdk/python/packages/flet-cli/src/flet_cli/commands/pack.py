@@ -4,9 +4,8 @@ import shutil
 import sys
 from pathlib import Path
 
-from flet_core.utils import is_macos, is_windows
-
 import flet_cli.__pyinstaller.config as hook_config
+from flet.utils import is_macos, is_windows
 from flet_cli.commands.base import BaseCommand
 
 
@@ -173,7 +172,6 @@ class Command(BaseCommand):
 
         try:
             import PyInstaller.__main__
-
             from flet_cli.__pyinstaller.utils import copy_flet_bin
 
             pyi_args = [options.script, "--noconfirm"]

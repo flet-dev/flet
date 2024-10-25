@@ -10,9 +10,8 @@ from pathlib import Path
 from typing import List, Optional
 
 import flet
-from flet.utils import get_free_tcp_port
-from flet_core.local_connection import LocalConnection
-from flet_core.protocol import (
+from flet.core.local_connection import LocalConnection
+from flet.core.protocol import (
     ClientActions,
     ClientMessage,
     Command,
@@ -21,8 +20,8 @@ from flet_core.protocol import (
     PageCommandsBatchResponsePayload,
     RegisterWebClientRequestPayload,
 )
-from flet_core.pubsub import PubSubHub
-from flet_core.utils import is_windows, random_string
+from flet.core.pubsub import PubSubHub
+from flet.utils import get_free_tcp_port, is_windows, random_string
 
 logger = logging.getLogger(flet.__name__)
 

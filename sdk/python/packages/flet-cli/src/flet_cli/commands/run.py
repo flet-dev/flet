@@ -11,9 +11,14 @@ from pathlib import Path
 from urllib.parse import quote, urlparse, urlunparse
 
 import qrcode
-from flet.utils import get_free_tcp_port, get_local_ip, open_in_browser
+from flet.utils import (
+    get_free_tcp_port,
+    get_local_ip,
+    is_windows,
+    open_in_browser,
+    random_string,
+)
 from flet_cli.commands.base import BaseCommand
-from flet_core.utils import is_windows, random_string
 from flet_desktop import close_flet_view, open_flet_view
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer

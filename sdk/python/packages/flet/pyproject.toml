@@ -15,12 +15,12 @@ documentation = "https://flet.dev/docs"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-flet-core = { version = "0.1.0" }
 flet-cli = { version = "0.1.0", markers = "platform_system != 'embedded'" }
 flet-desktop = { version = "0.1.0", markers = "platform_system != 'desktop-light'" }
 flet-web = { version = "0.1.0", markers = "platform_system != 'embedded'" }
 oauthlib = { version = "^3.2.2", markers = "platform_system != 'Pyodide'" }
 httpx = { version = "*", markers = "platform_system != 'Pyodide'" }
+repath = "^0.9.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^2.6"
@@ -37,6 +37,10 @@ hook-dirs = "flet_cli.__pyinstaller:get_hook_dirs"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.isort]
-profile = "black"
-float_to_top = true
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "tab"
+docstring-code-format = true

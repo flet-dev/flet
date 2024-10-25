@@ -3,7 +3,7 @@ import tempfile
 import uuid
 from pathlib import Path
 
-from flet_core.utils import copy_tree
+from flet.utils import copy_tree
 from flet_desktop import get_package_bin_dir
 
 

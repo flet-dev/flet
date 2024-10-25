@@ -13,15 +13,14 @@ from typing import Any, Optional, Union
 import flet.version
 import toml
 import yaml
+from flet.utils import copy_tree, is_windows, slugify
+from flet.utils.platform_utils import get_bool_env_var
 from flet.version import update_version
-from flet_core.utils import copy_tree, is_windows, slugify
-from flet_core.utils.platform_utils import get_bool_env_var
+from flet_cli.commands.base import BaseCommand
+from flet_cli.utils.merge import merge_dict
 from packaging import version
 from rich.console import Console, Style
 from rich.table import Column, Table
-
-from flet_cli.commands.base import BaseCommand
-from flet_cli.utils.merge import merge_dict
 
 if is_windows():
     from ctypes import windll

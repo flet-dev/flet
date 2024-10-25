@@ -7,12 +7,11 @@ import traceback
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 
-import flet_web.fastapi as flet_fastapi
 from fastapi import WebSocket, WebSocketDisconnect
-from flet_core.event import Event
-from flet_core.local_connection import LocalConnection
-from flet_core.page import Page, PageDisconnectedException
-from flet_core.protocol import (
+from flet.core.event import Event
+from flet.core.local_connection import LocalConnection
+from flet.core.page import Page, PageDisconnectedException
+from flet.core.protocol import (
     ClientActions,
     ClientMessage,
     Command,
@@ -21,8 +20,10 @@ from flet_core.protocol import (
     PageCommandsBatchResponsePayload,
     RegisterWebClientRequestPayload,
 )
-from flet_core.pubsub import PubSubHub
-from flet_core.utils import random_string, sha1
+from flet.core.pubsub import PubSubHub
+from flet.utils import random_string, sha1
+
+import flet_web.fastapi as flet_fastapi
 from flet_web.fastapi.flet_app_manager import app_manager
 from flet_web.fastapi.oauth_state import OAuthState
 from flet_web.uploads import build_upload_url

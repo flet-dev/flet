@@ -7,9 +7,9 @@ import tarfile
 import tempfile
 from pathlib import Path
 
+from flet.core.types import WebRenderer
+from flet.utils import copy_tree, is_within_directory, random_string
 from flet_cli.commands.base import BaseCommand
-from flet_core.types import WebRenderer
-from flet_core.utils import copy_tree, is_within_directory, random_string
 from flet_web import get_package_web_dir, patch_index_html, patch_manifest_json
 
 
