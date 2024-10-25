@@ -25,6 +25,8 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
+IconValueOrControl = Union[str, Control]
+
 
 class InputBorder(Enum):
     NONE = "none"
@@ -40,7 +42,7 @@ class FormFieldControl(ConstrainedControl):
         text_vertical_align: Union[VerticalAlignment, OptionalNumber] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
-        icon: Optional[str] = None,
+        icon: Optional[IconValueOrControl] = None,
         border: Optional[InputBorder] = None,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
@@ -74,14 +76,12 @@ class FormFieldControl(ConstrainedControl):
         error_style: Optional[TextStyle] = None,
         error_max_lines: Optional[int] = None,
         prefix: Optional[Control] = None,
-        prefix_icon: Union[None, str, Control] = None,
-        prefix_icon_color: Optional[str] = None,
+        prefix_icon: Optional[IconValueOrControl] = None,
         prefix_icon_size_constraints: Optional[BoxConstraints] = None,
         prefix_text: Optional[str] = None,
         prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
-        suffix_icon: Optional[str] = None,
-        suffix_icon_color: Union[None, str, Control] = None,
+        suffix_icon: Optional[IconValueOrControl] = None,
         suffix_icon_size_constraints: Optional[BoxConstraints] = None,
         size_constraints: Optional[BoxConstraints] = None,
         collapsed: Optional[bool] = None,
@@ -198,9 +198,7 @@ class FormFieldControl(ConstrainedControl):
         self.hint_max_lines = hint_max_lines
         self.helper_max_lines = helper_max_lines
         self.error_max_lines = error_max_lines
-        self.prefix_icon_color = prefix_icon_color
         self.prefix_icon_size_constraints = prefix_icon_size_constraints
-        self.suffix_icon_color = suffix_icon_color
         self.suffix_icon_size_constraints = suffix_icon_size_constraints
         self.size_constraints = size_constraints
         self.collapsed = collapsed
@@ -226,21 +224,30 @@ class FormFieldControl(ConstrainedControl):
             "suffixIconSizeConstraints", self.__suffix_icon_size_constraints
         )
         self._set_attr_json("sizeConstraints", self.__size_constraints)
+        if isinstance(self.__suffix_icon, str):
+            self._set_attr("suffixIcon", self.__suffix_icon)
+        if isinstance(self.__prefix_icon, str):
+            self._set_attr("prefixIcon", self.__prefix_icon)
+        if isinstance(self.__icon, str):
+            self._set_attr("icon", self.__icon)
 
     def _get_children(self):
         children = []
         if isinstance(self.__prefix, Control):
             self.__prefix._set_attr_internal("n", "prefix")
             children.append(self.__prefix)
-        if isinstance(self.__prefix_icon, Control):
-            self.__prefix_icon._set_attr_internal("n", "prefix_icon")
-            children.append(self.__prefix_icon)
         if isinstance(self.__suffix, Control):
             self.__suffix._set_attr_internal("n", "suffix")
             children.append(self.__suffix)
         if isinstance(self.__suffix_icon, Control):
-            self.__suffix_icon._set_attr_internal("n", "suffix_icon")
+            self.__suffix_icon._set_attr_internal("n", "suffixIcon")
             children.append(self.__suffix_icon)
+        if isinstance(self.__prefix_icon, Control):
+            self.__prefix_icon._set_attr_internal("n", "prefixIcon")
+            children.append(self.__prefix_icon)
+        if isinstance(self.__icon, Control):
+            self.__icon._set_attr_internal("n", "icon")
+            children.append(self.__icon)
         if isinstance(self.__counter, Control):
             self.__counter._set_attr_internal("n", "counter")
             children.append(self.__counter)
@@ -290,12 +297,12 @@ class FormFieldControl(ConstrainedControl):
 
     # icon
     @property
-    def icon(self) -> Optional[str]:
-        return self._get_attr("icon")
+    def icon(self) -> Optional[IconValueOrControl]:
+        return self.__icon
 
     @icon.setter
-    def icon(self, value: Optional[str]):
-        self._set_attr("icon", value)
+    def icon(self, value: Optional[IconValueOrControl]):
+        self.__icon = value
 
     # border
     @property
@@ -379,15 +386,6 @@ class FormFieldControl(ConstrainedControl):
     def error_max_lines(self, value: Optional[int]):
         self._set_attr("errorMaxLines", value)
 
-    # prefix_icon_color
-    @property
-    def prefix_icon_color(self) -> Optional[str]:
-        return self._get_attr("prefixIconColor")
-
-    @prefix_icon_color.setter
-    def prefix_icon_color(self, value: Optional[str]):
-        self._set_attr("prefixIconColor", value)
-
     # prefix_icon_size_constraints
     @property
     def prefix_icon_size_constraints(self) -> Optional[BoxConstraints]:
@@ -396,15 +394,6 @@ class FormFieldControl(ConstrainedControl):
     @prefix_icon_size_constraints.setter
     def prefix_icon_size_constraints(self, value: Optional[BoxConstraints]):
         self.__prefix_icon_size_constraints = value
-
-    # suffix_icon_color
-    @property
-    def suffix_icon_color(self) -> Optional[str]:
-        return self._get_attr("suffixIconColor")
-
-    @suffix_icon_color.setter
-    def suffix_icon_color(self, value: Optional[str]):
-        self._set_attr("suffixIconColor", value)
 
     # suffix_icon_size_constraints
     @property
@@ -654,14 +643,12 @@ class FormFieldControl(ConstrainedControl):
 
     # prefix_icon
     @property
-    def prefix_icon(self) -> Union[None, str, Control]:
+    def prefix_icon(self) -> Optional[IconValueOrControl]:
         return self.__prefix_icon
 
     @prefix_icon.setter
-    def prefix_icon(self, value: Union[None, str, Control]):
+    def prefix_icon(self, value: Optional[IconValueOrControl]):
         self.__prefix_icon = value
-        if isinstance(value, (str, type(None))):
-            self._set_attr("prefixIcon", value)
 
     # prefix_text
     @property
@@ -692,14 +679,12 @@ class FormFieldControl(ConstrainedControl):
 
     # suffix_icon
     @property
-    def suffix_icon(self) -> Union[None, str, Control]:
+    def suffix_icon(self) -> Optional[IconValueOrControl]:
         return self.__suffix_icon
 
     @suffix_icon.setter
-    def suffix_icon(self, value: Union[None, str, Control]):
+    def suffix_icon(self, value: Optional[IconValueOrControl]):
         self.__suffix_icon = value
-        if isinstance(value, (str, type(None))):
-            self._set_attr("suffixIcon", value)
 
     # suffix_text
     @property

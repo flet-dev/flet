@@ -100,7 +100,8 @@ try:
     from flet.auth.oauth_provider import OAuthProvider
 except ImportError as e:
 
-    class OAuthProvider: ...
+    class OAuthProvider:
+        ...
 
     class Authorization:
         def __init__(
@@ -109,7 +110,8 @@ except ImportError as e:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ): ...
+        ):
+            ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -139,15 +141,19 @@ class PageDisconnectedException(Exception):
 class BrowserContextMenu:
     def __init__(self, page: "Page"):
         self.page = page
-        self.disabled = False
+        self.__disabled = False
 
     def enable(self, wait_timeout: Optional[float] = 10):
         self.page._invoke_method("enableBrowserContextMenu", wait_timeout=wait_timeout)
-        self.disabled = False
+        self.__disabled = False
 
     def disable(self, wait_timeout: Optional[float] = 10):
         self.page._invoke_method("disableBrowserContextMenu", wait_timeout=wait_timeout)
-        self.disabled = True
+        self.__disabled = True
+
+    @property
+    def disabled(self) -> bool:
+        return self.__disabled
 
 
 class Window:
@@ -1404,7 +1410,7 @@ class Page(AdaptiveControl):
 
     def open(self, control: Control) -> None:
         if not hasattr(control, "open"):
-            raise ValueError("control has no open attribute")
+            raise ValueError(f"{control.__class__.__qualname__} has no open attribute")
 
         control.open = True
 
@@ -1430,7 +1436,7 @@ class Page(AdaptiveControl):
             control.open = False
             control.update()
         else:
-            raise ValueError("control has no open attribute")
+            raise ValueError(f"{control.__class__.__qualname__} has no open attribute")
 
     #
     # SnackBar

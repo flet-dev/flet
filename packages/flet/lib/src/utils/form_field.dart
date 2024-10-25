@@ -60,6 +60,7 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
     Control? prefixIcon,
     Control? suffix,
     Control? suffixIcon,
+    Control? icon,
     Control? counter,
     Control? error,
     Control? helper,
@@ -72,7 +73,7 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
     control.attrString("border"),
     FormFieldInputBorder.outline,
   )!;
-  var icon = parseIcon(control.attrString("icon"));
+  var iconStr = parseIcon(control.attrString("icon"));
   var prefixIconData = parseIcon(control.attrString("prefixIcon"));
   var prefixIconWidget = prefixIcon != null
       ? createControl(control, prefixIcon.id, control.isDisabled,
@@ -147,7 +148,10 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       enabledBorder: border,
       focusedBorder: focusedBorder,
       hoverColor: hoverColor,
-      icon: icon != null ? Icon(icon) : null,
+      icon: icon != null
+          ? createControl(control, icon.id, control.isDisabled,
+              parentAdaptive: adaptive)
+          : iconStr !=null? Icon(iconStr): null,
       filled: control.attrBool("filled", false)!,
       fillColor: fillColor ?? (focused ? focusedBgcolor ?? bgcolor : bgcolor),
       hintText: control.attrString("hintText"),
@@ -170,8 +174,6 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
           : null,
       constraints: parseBoxConstraints(control, "sizeConstraints"),
       isCollapsed: control.attrBool("collapsed"),
-      prefixIconColor: control.attrColor("prefixIconColor", context),
-      suffixIconColor: control.attrColor("suffixIconColor", context),
       prefixIconConstraints:
           parseBoxConstraints(control, "prefixIconConstraints"),
       suffixIconConstraints:

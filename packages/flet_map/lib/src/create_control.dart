@@ -23,14 +23,12 @@ CreateControlFactory createControl = (CreateControlArgs args) {
       return RichAttributionControl(
         parent: args.parent,
         control: args.control,
-        children: args.children,
         backend: args.backend,
       );
     case "map_simple_attribution":
       return SimpleAttributionControl(
         parent: args.parent,
         control: args.control,
-        children: args.children,
         backend: args.backend,
       );
     case "map_tile_layer":
@@ -50,13 +48,11 @@ CreateControlFactory createControl = (CreateControlArgs args) {
       return CircleLayerControl(
         parent: args.parent,
         control: args.control,
-        children: args.children,
       );
     case "map_polygon_layer":
       return PolygonLayerControl(
         parent: args.parent,
         control: args.control,
-        children: args.children,
       );
     case "map_polyline_layer":
       return PolylineLayerControl(

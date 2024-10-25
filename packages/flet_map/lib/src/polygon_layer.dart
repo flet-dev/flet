@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -9,13 +10,9 @@ import 'utils/map.dart';
 class PolygonLayerControl extends StatelessWidget with FletStoreMixin {
   final Control? parent;
   final Control control;
-  final List<Control> children;
 
   const PolygonLayerControl(
-      {super.key,
-      required this.parent,
-      required this.control,
-      required this.children});
+      {super.key, required this.parent, required this.control});
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +49,7 @@ class PolygonLayerControl extends StatelessWidget with FletStoreMixin {
             points: coordinates != null
                 ? (jsonDecode(coordinates) as List)
                     .map((e) => latLngFromJson(e))
+                    .whereNotNull()
                     .toList()
                 : []);
       }).toList();

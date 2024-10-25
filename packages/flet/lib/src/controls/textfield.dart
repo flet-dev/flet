@@ -133,6 +133,8 @@ class _TextFieldControlState extends State<TextFieldControl>
           widget.children.where((c) => c.name == "suffix" && c.isVisible);
       var suffixIconControls =
           widget.children.where((c) => c.name == "suffix_icon" && c.isVisible);
+      var iconControls =
+          widget.children.where((c) => c.name == "icon" && c.isVisible);
       var counterControls =
           widget.children.where((c) => c.name == "counter" && c.isVisible);
       var errorCtrl =
@@ -216,9 +218,14 @@ class _TextFieldControlState extends State<TextFieldControl>
               : null,
           decoration: buildInputDecoration(context, widget.control,
               prefix: prefixControls.isNotEmpty ? prefixControls.first : null,
-              prefixIcon: prefixIconControls.isNotEmpty ? prefixIconControls.first : null,
+              prefixIcon: prefixIconControls.isNotEmpty
+                  ? prefixIconControls.first
+                  : null,
               suffix: suffixControls.isNotEmpty ? suffixControls.first : null,
-              suffixIcon: suffixIconControls.isNotEmpty ? suffixIconControls.first : null,
+              suffixIcon: suffixIconControls.isNotEmpty
+                  ? suffixIconControls.first
+                  : null,
+              icon: iconControls.isNotEmpty ? iconControls.first : null,
               counter:
                   counterControls.isNotEmpty ? counterControls.first : null,
               error: errorCtrl.isNotEmpty ? errorCtrl.first : null,

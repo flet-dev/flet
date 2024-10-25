@@ -155,6 +155,8 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
           .where((c) => c.control.name == "suffix_icon" && c.control.isVisible);
       var counterControls = itemsView.controlViews
           .where((c) => c.control.name == "counter" && c.control.isVisible);
+      var iconControls = itemsView.controlViews
+          .where((c) => c.control.name == "icon" && c.control.isVisible);
       var errorCtrl = itemsView.controlViews
           .where((c) => c.control.name == "error" && c.control.isVisible);
       var helperCtrl = itemsView.controlViews
@@ -208,6 +210,7 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
             counter: counterControls.isNotEmpty
                 ? counterControls.first.control
                 : null,
+            icon: iconControls.isNotEmpty ? iconControls.first.control : null,
             error: errorCtrl.isNotEmpty ? errorCtrl.first.control : null,
             helper: helperCtrl.isNotEmpty ? helperCtrl.first.control : null,
             customSuffix: null,

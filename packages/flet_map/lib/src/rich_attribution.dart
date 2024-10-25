@@ -7,14 +7,12 @@ import 'utils/attribution_alignment.dart';
 class RichAttributionControl extends StatefulWidget {
   final Control? parent;
   final Control control;
-  final List<Control> children;
   final FletControlBackend backend;
 
   const RichAttributionControl(
       {super.key,
       this.parent,
       required this.control,
-      required this.children,
       required this.backend});
 
   @override

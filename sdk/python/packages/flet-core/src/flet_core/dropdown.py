@@ -5,7 +5,11 @@ from flet_core.alignment import Alignment
 from flet_core.animation import AnimationValue
 from flet_core.box import BoxConstraints
 from flet_core.control import Control, OptionalNumber
-from flet_core.form_field_control import FormFieldControl, InputBorder
+from flet_core.form_field_control import (
+    FormFieldControl,
+    IconValueOrControl,
+    InputBorder,
+)
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
@@ -183,7 +187,7 @@ class Dropdown(FormFieldControl):
         text_style: Optional[TextStyle] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
-        icon: Optional[str] = None,
+        icon: Optional[IconValueOrControl] = None,
         border: Optional[InputBorder] = None,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
@@ -210,11 +214,11 @@ class Dropdown(FormFieldControl):
         error_text: Optional[str] = None,
         error_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
-        prefix_icon: Union[None, str, Control] = None,
+        prefix_icon: Optional[IconValueOrControl] = None,
         prefix_text: Optional[str] = None,
         prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
-        suffix_icon: Union[None, str, Control] = None,
+        suffix_icon: Optional[IconValueOrControl] = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
         focus_color: Optional[str] = None,
@@ -223,9 +227,7 @@ class Dropdown(FormFieldControl):
         hint_max_lines: Optional[int] = None,
         helper_max_lines: Optional[int] = None,
         error_max_lines: Optional[int] = None,
-        prefix_icon_color: Optional[str] = None,
         prefix_icon_size_constraints: Optional[BoxConstraints] = None,
-        suffix_icon_color: Optional[str] = None,
         suffix_icon_size_constraints: Optional[BoxConstraints] = None,
         size_constraints: Optional[BoxConstraints] = None,
         collapsed: Optional[bool] = None,
@@ -328,9 +330,7 @@ class Dropdown(FormFieldControl):
             hint_max_lines=hint_max_lines,
             helper_max_lines=helper_max_lines,
             error_max_lines=error_max_lines,
-            prefix_icon_color=prefix_icon_color,
             prefix_icon_size_constraints=prefix_icon_size_constraints,
-            suffix_icon_color=suffix_icon_color,
             suffix_icon_size_constraints=suffix_icon_size_constraints,
             size_constraints=size_constraints,
             collapsed=collapsed,
