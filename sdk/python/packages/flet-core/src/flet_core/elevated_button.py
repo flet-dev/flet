@@ -12,6 +12,8 @@ from flet_core.types import (
     ClipBehavior,
     ColorEnums,
     ColorValue,
+    IconEnums,
+    IconValue,
     OffsetValue,
     OptionalControlEventCallable,
     ResponsiveNumber,
@@ -48,7 +50,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         text: Optional[str] = None,
-        icon: Optional[str] = None,
+        icon: Optional[IconValue] = None,
         icon_color: Optional[ColorValue] = None,
         color: Optional[ColorValue] = None,
         bgcolor: Optional[ColorValue] = None,
@@ -235,12 +237,13 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     # icon
     @property
-    def icon(self) -> Optional[str]:
-        return self._get_attr("icon")
+    def icon(self) -> Optional[IconValue]:
+        return self.__icon
 
     @icon.setter
-    def icon(self, value: Optional[str]):
-        self._set_attr("icon", value)
+    def icon(self, value: Optional[IconValue]):
+        self.__icon = value
+        self._set_enum_attr("icon", value, IconEnums)
 
     # icon_color
     @property

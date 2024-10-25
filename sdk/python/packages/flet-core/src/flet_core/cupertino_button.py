@@ -11,6 +11,8 @@ from flet_core.types import (
     BorderRadiusValue,
     ColorEnums,
     ColorValue,
+    IconEnums,
+    IconValue,
     OffsetValue,
     OptionalControlEventCallable,
     PaddingValue,
@@ -33,7 +35,7 @@ class CupertinoButton(ConstrainedControl):
     def __init__(
         self,
         text: Optional[str] = None,
-        icon: Optional[str] = None,
+        icon: Optional[IconValue] = None,
         icon_color: Optional[ColorValue] = None,
         content: Optional[Control] = None,
         bgcolor: Optional[ColorValue] = None,
@@ -157,11 +159,12 @@ class CupertinoButton(ConstrainedControl):
     # icon
     @property
     def icon(self):
-        return self._get_attr("icon")
+        return self.__icon
 
     @icon.setter
     def icon(self, value):
-        self._set_attr("icon", value)
+        self.__icon = value
+        self._set_enum_attr("icon", value, IconEnums)
 
     # icon_color
     @property

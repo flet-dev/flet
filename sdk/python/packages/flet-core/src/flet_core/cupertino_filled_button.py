@@ -8,6 +8,7 @@ from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     BorderRadiusValue,
     ColorValue,
+    IconValue,
     PaddingValue,
     ResponsiveNumber,
     UrlTarget,
@@ -38,7 +39,7 @@ class CupertinoFilledButton(CupertinoButton):
     def __init__(
         self,
         text: Optional[str] = None,
-        icon: Optional[str] = None,
+        icon: Optional[IconValue] = None,
         icon_color: Optional[ColorValue] = None,
         content: Optional[Control] = None,
         disabled_color: Optional[ColorValue] = None,

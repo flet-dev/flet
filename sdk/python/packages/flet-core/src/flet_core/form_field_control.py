@@ -11,6 +11,8 @@ from flet_core.types import (
     BorderRadiusValue,
     ColorEnums,
     ColorValue,
+    IconEnums,
+    IconValue,
     OffsetValue,
     OptionalControlEventCallable,
     PaddingValue,
@@ -40,7 +42,7 @@ class FormFieldControl(ConstrainedControl):
         text_vertical_align: Union[VerticalAlignment, OptionalNumber] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
-        icon: Optional[str] = None,
+        icon: Optional[IconValue] = None,
         border: Optional[InputBorder] = None,
         color: Optional[ColorValue] = None,
         bgcolor: Optional[ColorValue] = None,
@@ -66,11 +68,11 @@ class FormFieldControl(ConstrainedControl):
         error_text: Optional[str] = None,
         error_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
-        prefix_icon: Optional[str] = None,
+        prefix_icon: Optional[IconValue] = None,
         prefix_text: Optional[str] = None,
         prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
-        suffix_icon: Optional[str] = None,
+        suffix_icon: Optional[IconValue] = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
         rtl: Optional[bool] = None,
@@ -240,12 +242,13 @@ class FormFieldControl(ConstrainedControl):
 
     # icon
     @property
-    def icon(self) -> Optional[str]:
-        return self._get_attr("icon")
+    def icon(self) -> Optional[IconValue]:
+        return self.__icon
 
     @icon.setter
-    def icon(self, value: Optional[str]):
-        self._set_attr("icon", value)
+    def icon(self, value: Optional[IconValue]):
+        self.__icon = value
+        self._set_enum_attr("icon", value, IconEnums)
 
     # border
     @property
@@ -475,12 +478,13 @@ class FormFieldControl(ConstrainedControl):
 
     # prefix_icon
     @property
-    def prefix_icon(self) -> Optional[str]:
-        return self._get_attr("prefixIcon")
+    def prefix_icon(self) -> Optional[IconValue]:
+        return self.__prefix_icon
 
     @prefix_icon.setter
-    def prefix_icon(self, value: Optional[str]):
-        self._set_attr("prefixIcon", value)
+    def prefix_icon(self, value: Optional[IconValue]):
+        self.__prefix_icon = value
+        self._set_enum_attr("prefixIcon", value, IconEnums)
 
     # prefix_text
     @property
@@ -511,12 +515,13 @@ class FormFieldControl(ConstrainedControl):
 
     # suffix_icon
     @property
-    def suffix_icon(self) -> Optional[str]:
-        return self._get_attr("suffixIcon")
+    def suffix_icon(self) -> Optional[IconValue]:
+        return self.__suffix_icon
 
     @suffix_icon.setter
-    def suffix_icon(self, value: Optional[str]):
-        self._set_attr("suffixIcon", value)
+    def suffix_icon(self, value: Optional[IconValue]):
+        self.__suffix_icon = value
+        self._set_enum_attr("suffixIcon", value, IconEnums)
 
     # suffix_text
     @property

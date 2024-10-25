@@ -10,6 +10,8 @@ from flet_core.types import (
     AnimationValue,
     ColorEnums,
     ColorValue,
+    IconEnums,
+    IconValue,
     OffsetValue,
     OptionalControlEventCallable,
     OptionalNumber,
@@ -29,9 +31,9 @@ class NavigationRailLabelType(Enum):
 class NavigationRailDestination(Control):
     def __init__(
         self,
-        icon: Optional[str] = None,
+        icon: Optional[IconValue] = None,
         icon_content: Optional[Control] = None,
-        selected_icon: Optional[str] = None,
+        selected_icon: Optional[IconValue] = None,
         selected_icon_content: Optional[Control] = None,
         label: Optional[str] = None,
         label_content: Optional[Control] = None,
@@ -82,12 +84,13 @@ class NavigationRailDestination(Control):
 
     # icon
     @property
-    def icon(self) -> Optional[str]:
-        return self._get_attr("icon")
+    def icon(self) -> Optional[IconValue]:
+        return self.__icon
 
     @icon.setter
-    def icon(self, value: Optional[str]):
-        self._set_attr("icon", value)
+    def icon(self, value: Optional[IconValue]):
+        self.__icon = value
+        self._set_enum_attr("icon", value, IconEnums)
 
     # icon_content
     @property
@@ -100,12 +103,13 @@ class NavigationRailDestination(Control):
 
     # selected_icon
     @property
-    def selected_icon(self) -> Optional[str]:
-        return self._get_attr("selectedIcon")
+    def selected_icon(self) -> Optional[IconValue]:
+        return self.__selected_icon
 
     @selected_icon.setter
-    def selected_icon(self, value: Optional[str]):
-        self._set_attr("selectedIcon", value)
+    def selected_icon(self, value: Optional[IconValue]):
+        self.__selected_icon = value
+        self._set_enum_attr("selectedIcon", value, IconEnums)
 
     # selected_icon_content
     @property

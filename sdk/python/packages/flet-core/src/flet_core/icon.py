@@ -8,6 +8,8 @@ from flet_core.types import (
     AnimationValue,
     ColorEnums,
     ColorValue,
+    IconEnums,
+    IconValue,
     OffsetValue,
     OptionalControlEventCallable,
     ResponsiveNumber,
@@ -49,7 +51,7 @@ class Icon(ConstrainedControl):
 
     def __init__(
         self,
-        name: Optional[str] = None,
+        name: Optional[IconValue] = None,
         color: Optional[ColorValue] = None,
         size: OptionalNumber = None,
         semantics_label: Optional[str] = None,
@@ -113,12 +115,13 @@ class Icon(ConstrainedControl):
 
     # name
     @property
-    def name(self) -> Optional[str]:
-        return self._get_attr("name")
+    def name(self) -> Optional[IconValue]:
+        return self.__name
 
     @name.setter
-    def name(self, value: Optional[str]):
-        self._set_attr("name", value)
+    def name(self, value: Optional[IconValue]):
+        self.__name = value
+        self._set_enum_attr("name", value, IconEnums)
 
     # color
     @property

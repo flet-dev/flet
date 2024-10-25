@@ -5,7 +5,7 @@ from typing import Dict, List, Optional, Union
 from flet_core.alignment import Alignment
 from flet_core.border import BorderSide
 from flet_core.border_radius import BorderRadius
-from flet_core.box import BoxShadow, BoxDecoration
+from flet_core.box import BoxDecoration, BoxShadow
 from flet_core.buttons import ButtonStyle, OutlinedBorder
 from flet_core.control import OptionalNumber
 from flet_core.navigation_bar import NavigationBarLabelBehavior
@@ -18,14 +18,14 @@ from flet_core.textfield import TextCapitalization
 from flet_core.types import (
     Brightness,
     ClipBehavior,
-    MarginValue,
     ControlState,
+    MainAxisAlignment,
+    MarginValue,
     MouseCursor,
     OffsetValue,
     PaddingValue,
     ThemeVisualDensity,
     VisualDensity,
-    MainAxisAlignment,
 )
 
 try:
@@ -580,7 +580,7 @@ class NavigationBarTheme:
 
 @dataclass
 class SegmentedButtonTheme:
-    # selected_icon: Optional[str] = None
+    # selected_icon: Optional[IconValue] = None
     style: Optional[ButtonStyle] = None
 
 

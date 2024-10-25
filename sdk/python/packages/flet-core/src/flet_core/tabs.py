@@ -13,6 +13,8 @@ from flet_core.types import (
     ColorEnums,
     ColorValue,
     ControlState,
+    IconEnums,
+    IconValue,
     MouseCursor,
     OffsetValue,
     OptionalControlEventCallable,
@@ -30,7 +32,7 @@ class Tab(AdaptiveControl):
         text: Optional[str] = None,
         content: Optional[Control] = None,
         tab_content: Optional[Control] = None,
-        icon: Optional[str] = None,
+        icon: Optional[IconValue] = None,
         #
         # Control and AdaptiveControl
         #
@@ -72,12 +74,13 @@ class Tab(AdaptiveControl):
 
     # icon
     @property
-    def icon(self):
-        return self._get_attr("icon")
+    def icon(self) -> Optional[IconValue]:
+        return self.__icon
 
     @icon.setter
-    def icon(self, value: Optional[str]):
-        self._set_attr("icon", value)
+    def icon(self, value: Optional[IconValue]):
+        self.__icon = value
+        self._set_enum_attr("icon", value, IconEnums)
 
     # tab_content
     @property

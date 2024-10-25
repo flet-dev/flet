@@ -12,6 +12,8 @@ from flet_core.types import (
     ClipBehavior,
     ColorEnums,
     ColorValue,
+    IconEnums,
+    IconValue,
     MouseCursor,
     OffsetValue,
     OptionalControlEventCallable,
@@ -31,7 +33,7 @@ class PopupMenuItem(Control):
     def __init__(
         self,
         text: Optional[str] = None,
-        icon: Optional[str] = None,
+        icon: Optional[IconValue] = None,
         checked: Optional[bool] = None,
         content: Optional[Control] = None,
         height: OptionalNumber = None,
@@ -87,12 +89,13 @@ class PopupMenuItem(Control):
 
     # icon
     @property
-    def icon(self) -> Optional[str]:
-        return self._get_attr("icon")
+    def icon(self) -> Optional[IconValue]:
+        return self.__icon
 
     @icon.setter
-    def icon(self, value: Optional[str]):
-        self._set_attr("icon", value)
+    def icon(self, value: Optional[IconValue]):
+        self.__icon = value
+        self._set_enum_attr("icon", value, IconEnums)
 
     # text
     @property
@@ -186,7 +189,7 @@ class PopupMenuButton(ConstrainedControl):
         self,
         content: Optional[Control] = None,
         items: Optional[List[PopupMenuItem]] = None,
-        icon: Optional[str] = None,
+        icon: Optional[IconValue] = None,
         bgcolor: Optional[ColorValue] = None,
         icon_color: Optional[ColorValue] = None,
         shadow_color: Optional[ColorValue] = None,
@@ -328,12 +331,13 @@ class PopupMenuButton(ConstrainedControl):
 
     # icon
     @property
-    def icon(self) -> Optional[str]:
-        return self._get_attr("icon")
+    def icon(self) -> Optional[IconValue]:
+        return self.__icon
 
     @icon.setter
-    def icon(self, value: Optional[str]):
-        self._set_attr("icon", value)
+    def icon(self, value: Optional[IconValue]):
+        self.__icon = value
+        self._set_enum_attr("icon", value, IconEnums)
 
     # icon_color
     @property
