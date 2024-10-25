@@ -3,7 +3,11 @@ from typing import Any, List, Optional, Union
 
 from flet_core.alignment import Alignment
 from flet_core.control import Control, OptionalNumber
-from flet_core.form_field_control import FormFieldControl, InputBorder
+from flet_core.form_field_control import (
+    FormFieldControl,
+    IconValueOrControl,
+    InputBorder,
+)
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
@@ -12,7 +16,6 @@ from flet_core.types import (
     BorderRadiusValue,
     ColorEnums,
     ColorValue,
-    IconValue,
     OffsetValue,
     OptionalControlEventCallable,
     PaddingValue,
@@ -184,7 +187,7 @@ class Dropdown(FormFieldControl):
         text_style: Optional[TextStyle] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
-        icon: Optional[IconValue] = None,
+        icon: Optional[IconValueOrControl] = None,
         border: Optional[InputBorder] = None,
         color: Optional[ColorValue] = None,
         bgcolor: Optional[ColorValue] = None,
@@ -209,11 +212,11 @@ class Dropdown(FormFieldControl):
         error_text: Optional[str] = None,
         error_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
-        prefix_icon: Optional[IconValue] = None,
+        prefix_icon: Optional[IconValueOrControl] = None,
         prefix_text: Optional[str] = None,
         prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
-        suffix_icon: Optional[IconValue] = None,
+        suffix_icon: Optional[IconValueOrControl] = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
         #

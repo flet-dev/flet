@@ -6,7 +6,11 @@ from typing import Any, List, Optional, Union
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.autofill_group import AutofillHint
 from flet_core.control import Control, OptionalNumber
-from flet_core.form_field_control import FormFieldControl, InputBorder
+from flet_core.form_field_control import (
+    FormFieldControl,
+    IconValueOrControl,
+    InputBorder,
+)
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
@@ -143,7 +147,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         text_vertical_align: Union[VerticalAlignment, OptionalNumber] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
-        icon: Optional[IconValue] = None,
+        icon: Optional[IconValueOrControl] = None,
         border: Optional[InputBorder] = None,
         color: Optional[ColorValue] = None,
         bgcolor: Optional[ColorValue] = None,
@@ -169,11 +173,11 @@ class TextField(FormFieldControl, AdaptiveControl):
         error_text: Optional[str] = None,
         error_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
-        prefix_icon: Optional[IconValue] = None,
+        prefix_icon: Optional[IconValueOrControl] = None,
         prefix_text: Optional[str] = None,
         prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
-        suffix_icon: Optional[IconValue] = None,
+        suffix_icon: Optional[IconValueOrControl] = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
         #
