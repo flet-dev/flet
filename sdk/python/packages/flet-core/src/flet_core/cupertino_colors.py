@@ -192,13 +192,3 @@ class CupertinoColors(str, Enum):
     SEPARATOR = "separator"
     OPAQUE_SEPARATOR = "opaqueSeparator"
     LINK = "link"
-
-
-print(
-    isinstance("cupertinoWhite", cupertino_colors),
-)
-print(
-    CupertinoColors.random(
-        exclude=[CupertinoColors.PRIMARY, CupertinoColors.ON_PRIMARY]
-    )
-)
