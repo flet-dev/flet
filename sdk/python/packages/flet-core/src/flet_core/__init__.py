@@ -112,7 +112,7 @@ from flet_core.cupertino_date_picker import (
 )
 from flet_core.cupertino_dialog_action import CupertinoDialogAction
 from flet_core.cupertino_filled_button import CupertinoFilledButton
-from flet_core.cupertino_icons import cupertino_icons
+from flet_core.cupertino_icons import CupertinoIcons, cupertino_icons
 from flet_core.cupertino_list_tile import CupertinoListTile
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.cupertino_picker import CupertinoPicker
@@ -201,7 +201,7 @@ from flet_core.grid_view import GridView
 from flet_core.haptic_feedback import HapticFeedback
 from flet_core.icon import Icon
 from flet_core.icon_button import IconButton
-from flet_core.icons import icons
+from flet_core.icons import MaterialIcons, icons
 from flet_core.image import Image
 from flet_core.interactive_viewer import (
     InteractiveViewer,

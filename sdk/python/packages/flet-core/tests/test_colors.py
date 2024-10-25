@@ -5,25 +5,25 @@ def run_common_tests(color_class):
     color_list = list(color_class)
 
     def test_random_no_exclude_no_weights():
-        """Test random with no exclusion or weights."""
+        """Test random selection with no exclusion or weights."""
         result = color_class.random()
         assert result in color_list
 
     def test_random_with_exclude():
-        """Test random with exclusion list."""
+        """Test random selection with exclusion list."""
         exclude = [color_list[0], color_list[1]]
         result = color_class.random(exclude=exclude)
         assert result in color_list
         assert result not in exclude
 
     def test_random_with_exclude_all():
-        """Test random with exclusion of all elements."""
+        """Test random selection with exclusion of all elements."""
         exclude = color_list
         result = color_class.random(exclude=exclude)
         assert result is None
 
     def test_random_with_weights():
-        """Test random with weights."""
+        """Test random selection with weights."""
         weights = {color_list[0]: 10}
         results = [color_class.random(weights=weights) for _ in range(1000)]
         max_count = max(results.count(color) for color in color_class)
@@ -31,7 +31,7 @@ def run_common_tests(color_class):
         assert results.count(color_list[0]) == max_count
 
     def test_random_with_weights_and_exclude():
-        """Test random with weights and exclusion list."""
+        """Test random selection with weights and exclusion list."""
         exclude = [color_list[0]]
         weights = {color: 1 for color in color_class}
         results = [
