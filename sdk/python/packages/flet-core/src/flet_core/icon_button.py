@@ -10,16 +10,18 @@ from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
+    ColorEnums,
+    ColorValue,
     MouseCursor,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    UrlTarget,
     ThemeVisualDensity,
+    UrlTarget,
     VisualDensity,
-    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -66,20 +68,20 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         icon: Optional[str] = None,
-        icon_color: Optional[str] = None,
+        icon_color: Optional[ColorValue] = None,
         icon_size: OptionalNumber = None,
         selected: Optional[bool] = None,
         selected_icon: Optional[str] = None,
-        selected_icon_color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
-        highlight_color: Optional[str] = None,
+        selected_icon_color: Optional[ColorValue] = None,
+        bgcolor: Optional[ColorValue] = None,
+        highlight_color: Optional[ColorValue] = None,
         style: Optional[ButtonStyle] = None,
         content: Optional[Control] = None,
         autofocus: Optional[bool] = None,
-        disabled_color: Optional[str] = None,
-        hover_color: Optional[str] = None,
-        focus_color: Optional[str] = None,
-        splash_color: Optional[str] = None,
+        disabled_color: Optional[ColorValue] = None,
+        hover_color: Optional[ColorValue] = None,
+        focus_color: Optional[ColorValue] = None,
+        splash_color: Optional[ColorValue] = None,
         splash_radius: OptionalNumber = None,
         alignment: Optional[Alignment] = None,
         padding: PaddingValue = None,
@@ -251,75 +253,83 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     # splash_color
     @property
-    def splash_color(self) -> Optional[str]:
-        return self._get_attr("splashColor")
+    def splash_color(self) -> Optional[ColorValue]:
+        return self.__splash_color
 
     @splash_color.setter
-    def splash_color(self, value: Optional[str]):
-        self._set_attr("splashColor", value)
+    def splash_color(self, value: Optional[ColorValue]):
+        self.__splash_color = value
+        self._set_enum_attr("splashColor", value, ColorEnums)
 
     # icon_color
     @property
-    def icon_color(self) -> Optional[str]:
-        return self._get_attr("iconColor")
+    def icon_color(self) -> Optional[ColorValue]:
+        return self.__icon_color
 
     @icon_color.setter
-    def icon_color(self, value: Optional[str]):
-        self._set_attr("iconColor", value)
+    def icon_color(self, value: Optional[ColorValue]):
+        self.__icon_color = value
+        self._set_enum_attr("iconColor", value, ColorEnums)
 
     # highlight_color
     @property
-    def highlight_color(self) -> Optional[str]:
-        return self._get_attr("highlightColor")
+    def highlight_color(self) -> Optional[ColorValue]:
+        return self.__highlight_color
 
     @highlight_color.setter
-    def highlight_color(self, value: Optional[str]):
-        self._set_attr("highlightColor", value)
+    def highlight_color(self, value: Optional[ColorValue]):
+        self.__highlight_color = value
+        self._set_enum_attr("highlightColor", value, ColorEnums)
 
     # selected_icon_color
     @property
-    def selected_icon_color(self) -> Optional[str]:
-        return self._get_attr("selectedIconColor")
+    def selected_icon_color(self) -> Optional[ColorValue]:
+        return self.__selected_icon_color
 
     @selected_icon_color.setter
-    def selected_icon_color(self, value: Optional[str]):
-        self._set_attr("selectedIconColor", value)
+    def selected_icon_color(self, value: Optional[ColorValue]):
+        self.__selected_icon_color = value
+        self._set_enum_attr("selectedIconColor", value, ColorEnums)
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # hover_color
     @property
-    def hover_color(self) -> Optional[str]:
-        return self._get_attr("hoverColor")
+    def hover_color(self) -> Optional[ColorValue]:
+        return self.__hover_color
 
     @hover_color.setter
-    def hover_color(self, value: Optional[str]):
-        self._set_attr("hoverColor", value)
+    def hover_color(self, value: Optional[ColorValue]):
+        self.__hover_color = value
+        self._set_enum_attr("hoverColor", value, ColorEnums)
 
     # focus_color
     @property
-    def focus_color(self) -> Optional[str]:
-        return self._get_attr("focusColor")
+    def focus_color(self) -> Optional[ColorValue]:
+        return self.__focus_color
 
     @focus_color.setter
-    def focus_color(self, value: Optional[str]):
-        self._set_attr("focusColor", value)
+    def focus_color(self, value: Optional[ColorValue]):
+        self.__focus_color = value
+        self._set_enum_attr("focusColor", value, ColorEnums)
 
     # disabled_color
     @property
-    def disabled_color(self) -> Optional[str]:
-        return self._get_attr("disabledColor")
+    def disabled_color(self) -> Optional[ColorValue]:
+        return self.__disabled_color
 
     @disabled_color.setter
-    def disabled_color(self, value: Optional[str]):
-        self._set_attr("disabledColor", value)
+    def disabled_color(self, value: Optional[ColorValue]):
+        self.__disabled_color = value
+        self._set_enum_attr("disabledColor", value, ColorEnums)
 
     # padding
     @property
@@ -394,7 +404,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @visual_density.setter
     def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, ThemeVisualDensity, VisualDensity)
+        self._set_enum_attr("visualDensity", value, (ThemeVisualDensity, VisualDensity))
 
     # on_click
     @property

@@ -9,12 +9,14 @@ from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
+    ColorEnums,
+    ColorValue,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     UrlTarget,
-    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -46,7 +48,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         self,
         text: Optional[str] = None,
         icon: Optional[str] = None,
-        icon_color: Optional[str] = None,
+        icon_color: Optional[ColorValue] = None,
         content: Optional[Control] = None,
         style: Optional[ButtonStyle] = None,
         autofocus: Optional[bool] = None,
@@ -184,12 +186,13 @@ class TextButton(ConstrainedControl, AdaptiveControl):
 
     # icon_color
     @property
-    def icon_color(self) -> Optional[str]:
-        return self._get_attr("iconColor")
+    def icon_color(self) -> Optional[ColorValue]:
+        return self.__icon_color
 
     @icon_color.setter
-    def icon_color(self, value: Optional[str]):
-        self._set_attr("iconColor", value)
+    def icon_color(self, value: Optional[ColorValue]):
+        self.__icon_color = value
+        self._set_enum_attr("iconColor", value, ColorEnums)
 
     # style
     @property

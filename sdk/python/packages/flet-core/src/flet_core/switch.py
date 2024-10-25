@@ -8,14 +8,16 @@ from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
-    LabelPosition,
+    ColorEnums,
+    ColorValue,
     ControlState,
+    LabelPosition,
     MouseCursor,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
 )
 
 
@@ -60,16 +62,16 @@ class Switch(ConstrainedControl, AdaptiveControl):
         label_style: Optional[TextStyle] = None,
         value: Optional[bool] = None,
         autofocus: Optional[bool] = None,
-        active_color: Optional[str] = None,
-        active_track_color: Optional[str] = None,
-        focus_color: Optional[str] = None,
-        inactive_thumb_color: Optional[str] = None,
-        inactive_track_color: Optional[str] = None,
+        active_color: Optional[ColorValue] = None,
+        active_track_color: Optional[ColorValue] = None,
+        focus_color: Optional[ColorValue] = None,
+        inactive_thumb_color: Optional[ColorValue] = None,
+        inactive_track_color: Optional[ColorValue] = None,
         thumb_color: Union[None, str, Dict[ControlState, str]] = None,
         thumb_icon: Union[None, str, Dict[ControlState, str]] = None,
         track_color: Union[None, str, Dict[ControlState, str]] = None,
         adaptive: Optional[bool] = None,
-        hover_color: Optional[str] = None,
+        hover_color: Optional[ColorValue] = None,
         splash_radius: OptionalNumber = None,
         overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         track_outline_color: Union[None, str, Dict[ControlState, str]] = None,
@@ -196,12 +198,13 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     # hover_color
     @property
-    def hover_color(self) -> Optional[str]:
-        return self._get_attr("hoverColor")
+    def hover_color(self) -> Optional[ColorValue]:
+        return self.__hover_color
 
     @hover_color.setter
-    def hover_color(self, value: Optional[str]):
-        self._set_attr("hoverColor", value)
+    def hover_color(self, value: Optional[ColorValue]):
+        self.__hover_color = value
+        self._set_enum_attr("hoverColor", value, ColorEnums)
 
     # track_outline_color
     @property
@@ -271,48 +274,53 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     # active_color
     @property
-    def active_color(self) -> Optional[str]:
-        return self._get_attr("activeColor")
+    def active_color(self) -> Optional[ColorValue]:
+        return self.__active_color
 
     @active_color.setter
-    def active_color(self, value: Optional[str]):
-        self._set_attr("activeColor", value)
+    def active_color(self, value: Optional[ColorValue]):
+        self.__active_color = value
+        self._set_enum_attr("activeColor", value, ColorEnums)
 
     # active_track_color
     @property
-    def active_track_color(self) -> Optional[str]:
-        return self._get_attr("activeTrackColor")
+    def active_track_color(self) -> Optional[ColorValue]:
+        return self.__active_track_color
 
     @active_track_color.setter
-    def active_track_color(self, value: Optional[str]):
-        self._set_attr("activeTrackColor", value)
+    def active_track_color(self, value: Optional[ColorValue]):
+        self.__active_track_color = value
+        self._set_enum_attr("activeTrackColor", value, ColorEnums)
 
     # focus_color
     @property
-    def focus_color(self) -> Optional[str]:
-        return self._get_attr("focusColor")
+    def focus_color(self) -> Optional[ColorValue]:
+        return self.__focus_color
 
     @focus_color.setter
-    def focus_color(self, value: Optional[str]):
-        self._set_attr("focusColor", value)
+    def focus_color(self, value: Optional[ColorValue]):
+        self.__focus_color = value
+        self._set_enum_attr("focusColor", value, ColorEnums)
 
     # inactive_thumb_color
     @property
-    def inactive_thumb_color(self) -> Optional[str]:
-        return self._get_attr("inactiveThumbColor")
+    def inactive_thumb_color(self) -> Optional[ColorValue]:
+        return self.__inactive_thumb_color
 
     @inactive_thumb_color.setter
-    def inactive_thumb_color(self, value: Optional[str]):
-        self._set_attr("inactiveThumbColor", value)
+    def inactive_thumb_color(self, value: Optional[ColorValue]):
+        self.__inactive_thumb_color = value
+        self._set_enum_attr("inactiveThumbColor", value, ColorEnums)
 
     # inactive_track_color
     @property
-    def inactive_track_color(self) -> Optional[str]:
-        return self._get_attr("inactiveTrackColor")
+    def inactive_track_color(self) -> Optional[ColorValue]:
+        return self.__inactive_track_color
 
     @inactive_track_color.setter
-    def inactive_track_color(self, value: Optional[str]):
-        self._set_attr("inactiveTrackColor", value)
+    def inactive_track_color(self, value: Optional[ColorValue]):
+        self.__inactive_track_color = value
+        self._set_enum_attr("inactiveTrackColor", value, ColorEnums)
 
     # thumb_color
     @property

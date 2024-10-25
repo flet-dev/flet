@@ -14,12 +14,14 @@ from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
+    ColorEnums,
+    ColorValue,
     FloatingActionButtonLocation,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -65,7 +67,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         floating_action_button_location: Union[
             FloatingActionButtonLocation, OffsetValue
         ] = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         #
         # ConstrainedControl
         #
@@ -256,12 +258,13 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # bottom_appbar
     @property

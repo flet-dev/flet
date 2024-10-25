@@ -6,11 +6,13 @@ from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
+    ColorEnums,
+    ColorValue,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
 )
 
 
@@ -33,8 +35,8 @@ class CupertinoSlider(ConstrainedControl):
         min: OptionalNumber = None,
         max: OptionalNumber = None,
         divisions: Optional[int] = None,
-        active_color: Optional[str] = None,
-        thumb_color: Optional[str] = None,
+        active_color: Optional[ColorValue] = None,
+        thumb_color: Optional[ColorValue] = None,
         on_change: OptionalControlEventCallable = None,
         on_change_start: OptionalControlEventCallable = None,
         on_change_end: OptionalControlEventCallable = None,
@@ -175,21 +177,23 @@ class CupertinoSlider(ConstrainedControl):
 
     # active_color
     @property
-    def active_color(self) -> Optional[str]:
-        return self._get_attr("activeColor")
+    def active_color(self) -> Optional[ColorValue]:
+        return self.__active_color
 
     @active_color.setter
-    def active_color(self, value: Optional[str]):
-        self._set_attr("activeColor", value)
+    def active_color(self, value: Optional[ColorValue]):
+        self.__active_color = value
+        self._set_enum_attr("activeColor", value, ColorEnums)
 
     # thumb_color
     @property
-    def thumb_color(self) -> Optional[str]:
-        return self._get_attr("thumbColor")
+    def thumb_color(self) -> Optional[ColorValue]:
+        return self.__thumb_color
 
     @thumb_color.setter
-    def thumb_color(self, value: Optional[str]):
-        self._set_attr("thumbColor", value)
+    def thumb_color(self, value: Optional[ColorValue]):
+        self.__thumb_color = value
+        self._set_enum_attr("thumbColor", value, ColorEnums)
 
     # on_change
     @property

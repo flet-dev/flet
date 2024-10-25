@@ -8,13 +8,15 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.types import (
     AnimationValue,
+    ColorEnums,
+    ColorValue,
     OffsetValue,
+    OptionalControlEventCallable,
     OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
 )
 
 
@@ -34,7 +36,7 @@ class NavigationRailDestination(Control):
         label: Optional[str] = None,
         label_content: Optional[Control] = None,
         padding: PaddingValue = None,
-        indicator_color: Optional[str] = None,
+        indicator_color: Optional[ColorValue] = None,
         indicator_shape: Optional[OutlinedBorder] = None,
         #
         # Control
@@ -134,12 +136,13 @@ class NavigationRailDestination(Control):
 
     # indicator_color
     @property
-    def indicator_color(self) -> Optional[str]:
-        return self._get_attr("indicatorColor")
+    def indicator_color(self) -> Optional[ColorValue]:
+        return self.__indicator_color
 
     @indicator_color.setter
-    def indicator_color(self, value: Optional[str]):
-        self._set_attr("indicatorColor", value)
+    def indicator_color(self, value: Optional[ColorValue]):
+        self.__indicator_color = value
+        self._set_enum_attr("indicatorColor", value, ColorEnums)
 
     # indicator_shape
     @property
@@ -223,8 +226,8 @@ class NavigationRail(ConstrainedControl):
         selected_index: Optional[int] = None,
         extended: Optional[bool] = None,
         label_type: Optional[NavigationRailLabelType] = None,
-        bgcolor: Optional[str] = None,
-        indicator_color: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
+        indicator_color: Optional[ColorValue] = None,
         indicator_shape: Optional[OutlinedBorder] = None,
         leading: Optional[Control] = None,
         trailing: Optional[Control] = None,
@@ -302,9 +305,7 @@ class NavigationRail(ConstrainedControl):
         self.bgcolor = bgcolor
         self.indicator_color = indicator_color
         self.indicator_shape = indicator_shape
-        self.__leading = None
         self.leading = leading
-        self.__trailing = trailing
         self.trailing = trailing
         self.min_width = min_width
         self.min_extended_width = min_extended_width
@@ -387,21 +388,23 @@ class NavigationRail(ConstrainedControl):
 
     # indicator_color
     @property
-    def indicator_color(self) -> Optional[str]:
-        return self._get_attr("indicatorColor")
+    def indicator_color(self) -> Optional[ColorValue]:
+        return self.__indicator_color
 
     @indicator_color.setter
-    def indicator_color(self, value: Optional[str]):
-        self._set_attr("indicatorColor", value)
+    def indicator_color(self, value: Optional[ColorValue]):
+        self.__indicator_color = value
+        self._set_enum_attr("indicatorColor", value, ColorEnums)
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # elevation
     @property

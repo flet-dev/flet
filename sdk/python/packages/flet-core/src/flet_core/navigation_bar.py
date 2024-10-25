@@ -10,13 +10,15 @@ from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
+    ColorEnums,
+    ColorValue,
+    ControlState,
     OffsetValue,
+    OptionalControlEventCallable,
     OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ControlState,
-    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -41,7 +43,7 @@ class NavigationBarDestination(Control):
         icon_content: Optional[Control] = None,
         selected_icon: Optional[str] = None,
         selected_icon_content: Optional[Control] = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         #
         # Control
         #
@@ -120,12 +122,13 @@ class NavigationBarDestination(Control):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
 
 @deprecated(
@@ -141,7 +144,7 @@ class NavigationDestination(NavigationBarDestination):
         icon_content: Optional[Control] = None,
         selected_icon: Optional[str] = None,
         selected_icon_content: Optional[Control] = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         #
         # Control
         #
@@ -203,13 +206,13 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         self,
         destinations: Optional[List[NavigationBarDestination]] = None,
         selected_index: Optional[int] = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         label_behavior: Optional[NavigationBarLabelBehavior] = None,
         elevation: OptionalNumber = None,
-        shadow_color: Optional[str] = None,
-        indicator_color: Optional[str] = None,
+        shadow_color: Optional[ColorValue] = None,
+        indicator_color: Optional[ColorValue] = None,
         indicator_shape: Optional[OutlinedBorder] = None,
-        surface_tint_color: Optional[str] = None,
+        surface_tint_color: Optional[ColorValue] = None,
         border: Optional[Border] = None,
         animation_duration: Optional[int] = None,
         overlay_color: Union[None, str, Dict[ControlState, str]] = None,
@@ -340,12 +343,13 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # elevation
     @property
@@ -358,21 +362,23 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     # shadow_color
     @property
-    def shadow_color(self) -> Optional[str]:
-        return self._get_attr("shadowColor")
+    def shadow_color(self) -> Optional[ColorValue]:
+        return self.__shadow_color
 
     @shadow_color.setter
-    def shadow_color(self, value: Optional[str]):
-        self._set_attr("shadowColor", value)
+    def shadow_color(self, value: Optional[ColorValue]):
+        self.__shadow_color = value
+        self._set_enum_attr("shadowColor", value, ColorEnums)
 
     # indicator_color
     @property
-    def indicator_color(self) -> Optional[str]:
-        return self._get_attr("indicatorColor")
+    def indicator_color(self) -> Optional[ColorValue]:
+        return self.__indicator_color
 
     @indicator_color.setter
-    def indicator_color(self, value: Optional[str]):
-        self._set_attr("indicatorColor", value)
+    def indicator_color(self, value: Optional[ColorValue]):
+        self.__indicator_color = value
+        self._set_enum_attr("indicatorColor", value, ColorEnums)
 
     # indicator_shape
     @property
@@ -385,12 +391,13 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     # surface_tint_color
     @property
-    def surface_tint_color(self) -> Optional[str]:
-        return self._get_attr("surfaceTintColor")
+    def surface_tint_color(self) -> Optional[ColorValue]:
+        return self.__surface_tint_color
 
     @surface_tint_color.setter
-    def surface_tint_color(self, value: Optional[str]):
-        self._set_attr("surfaceTintColor", value)
+    def surface_tint_color(self, value: Optional[ColorValue]):
+        self.__surface_tint_color = value
+        self._set_enum_attr("surfaceTintColor", value, ColorEnums)
 
     # border
     @property

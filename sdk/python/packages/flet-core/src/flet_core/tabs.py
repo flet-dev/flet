@@ -10,15 +10,17 @@ from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
     ClipBehavior,
+    ColorEnums,
+    ColorValue,
     ControlState,
     MouseCursor,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     TabAlignment,
-    OptionalControlEventCallable,
 )
 
 
@@ -149,17 +151,17 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         scrollable: Optional[bool] = None,
         tab_alignment: Optional[TabAlignment] = None,
         animation_duration: Optional[int] = None,
-        divider_color: Optional[str] = None,
-        indicator_color: Optional[str] = None,
+        divider_color: Optional[ColorValue] = None,
+        indicator_color: Optional[ColorValue] = None,
         indicator_border_radius: BorderRadiusValue = None,
         indicator_border_side: Optional[BorderSide] = None,
         indicator_padding: PaddingValue = None,
         indicator_tab_size: Optional[bool] = None,
         is_secondary: Optional[bool] = None,
-        label_color: Optional[str] = None,
+        label_color: Optional[ColorValue] = None,
         label_padding: PaddingValue = None,
         label_text_style: Optional[TextStyle] = None,
-        unselected_label_color: Optional[str] = None,
+        unselected_label_color: Optional[ColorValue] = None,
         unselected_label_text_style: Optional[TextStyle] = None,
         overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         divider_height: OptionalNumber = None,
@@ -394,21 +396,23 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # divider_color
     @property
-    def divider_color(self) -> Optional[str]:
-        return self._get_attr("dividerColor")
+    def divider_color(self) -> Optional[ColorValue]:
+        return self.__divider_color
 
     @divider_color.setter
-    def divider_color(self, value: Optional[str]):
-        self._set_attr("dividerColor", value)
+    def divider_color(self, value: Optional[ColorValue]):
+        self.__divider_color = value
+        self._set_enum_attr("dividerColor", value, ColorEnums)
 
     # indicator_color
     @property
-    def indicator_color(self) -> Optional[str]:
-        return self._get_attr("indicatorColor")
+    def indicator_color(self) -> Optional[ColorValue]:
+        return self.__indicator_color
 
     @indicator_color.setter
-    def indicator_color(self, value: Optional[str]):
-        self._set_attr("indicatorColor", value)
+    def indicator_color(self, value: Optional[ColorValue]):
+        self.__indicator_color = value
+        self._set_enum_attr("indicatorColor", value, ColorEnums)
 
     # indicator_border_radius
     @property
@@ -448,21 +452,23 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # label_color
     @property
-    def label_color(self) -> Optional[str]:
-        return self._get_attr("labelColor")
+    def label_color(self) -> Optional[ColorValue]:
+        return self.__label_color
 
     @label_color.setter
-    def label_color(self, value: Optional[str]):
-        self._set_attr("labelColor", value)
+    def label_color(self, value: Optional[ColorValue]):
+        self.__label_color = value
+        self._set_enum_attr("labelColor", value, ColorEnums)
 
     # unselected_label_color
     @property
-    def unselected_label_color(self) -> Optional[str]:
-        return self._get_attr("unselectedLabelColor")
+    def unselected_label_color(self) -> Optional[ColorValue]:
+        return self.__unselected_label_color
 
     @unselected_label_color.setter
-    def unselected_label_color(self, value: Optional[str]):
-        self._set_attr("unselectedLabelColor", value)
+    def unselected_label_color(self, value: Optional[ColorValue]):
+        self.__unselected_label_color = value
+        self._set_enum_attr("unselectedLabelColor", value, ColorEnums)
 
     # overlay_color
     @property

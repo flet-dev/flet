@@ -10,12 +10,14 @@ from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
+    ColorEnums,
+    ColorValue,
     MarginValue,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
 )
 
 
@@ -73,9 +75,9 @@ class Card(ConstrainedControl, AdaptiveControl):
         content: Optional[Control] = None,
         margin: MarginValue = None,
         elevation: OptionalNumber = None,
-        color: Optional[str] = None,
-        shadow_color: Optional[str] = None,
-        surface_tint_color: Optional[str] = None,
+        color: Optional[ColorValue] = None,
+        shadow_color: Optional[ColorValue] = None,
+        surface_tint_color: Optional[ColorValue] = None,
         shape: Optional[OutlinedBorder] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         is_semantic_container: Optional[bool] = None,
@@ -194,29 +196,32 @@ class Card(ConstrainedControl, AdaptiveControl):
     # color
     @property
     def color(self):
-        return self._get_attr("color")
+        return self.__color
 
     @color.setter
     def color(self, value):
-        self._set_attr("color", value)
+        self.__color = value
+        self._set_enum_attr("color", value, ColorEnums)
 
     # shadow_color
     @property
     def shadow_color(self):
-        return self._get_attr("shadowColor")
+        return self.__shadow_color
 
     @shadow_color.setter
     def shadow_color(self, value):
-        self._set_attr("shadowColor", value)
+        self.__shadow_color = value
+        self._set_enum_attr("shadowColor", value, ColorEnums)
 
     # surface_tint_color
     @property
     def surface_tint_color(self):
-        return self._get_attr("surfaceTintColor")
+        return self.__surface_tint_color
 
     @surface_tint_color.setter
     def surface_tint_color(self, value):
-        self._set_attr("surfaceTintColor", value)
+        self.__surface_tint_color = value
+        self._set_enum_attr("surfaceTintColor", value, ColorEnums)
 
     # shape
     @property

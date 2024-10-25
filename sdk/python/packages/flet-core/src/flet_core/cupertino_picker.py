@@ -6,11 +6,13 @@ from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
+    ColorEnums,
+    ColorValue,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
 )
 
 
@@ -28,7 +30,7 @@ class CupertinoPicker(ConstrainedControl):
         controls: Sequence[Control],
         item_extent: OptionalNumber = None,
         selected_index: Optional[int] = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         use_magnifier: Optional[bool] = None,
         looping: Optional[bool] = None,
         magnification: OptionalNumber = None,
@@ -129,12 +131,13 @@ class CupertinoPicker(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # use_magnifier
     @property

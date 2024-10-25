@@ -2,6 +2,7 @@ from typing import Any, Optional
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.types import ColorEnums, ColorValue
 
 
 class VerticalDivider(Control):
@@ -49,7 +50,7 @@ class VerticalDivider(Control):
         self,
         width: OptionalNumber = None,
         thickness: OptionalNumber = None,
-        color: Optional[str] = None,
+        color: Optional[ColorValue] = None,
         leading_indent: OptionalNumber = None,
         trailing_indent: OptionalNumber = None,
         #
@@ -100,12 +101,13 @@ class VerticalDivider(Control):
 
     # color
     @property
-    def color(self) -> Optional[str]:
-        return self._get_attr("color")
+    def color(self) -> Optional[ColorValue]:
+        return self.__color
 
     @color.setter
-    def color(self, value: Optional[str]):
-        self._set_attr("color", value)
+    def color(self, value: Optional[ColorValue]):
+        self.__color = value
+        self._set_enum_attr("color", value, ColorEnums)
 
     # leading_indent
     @property

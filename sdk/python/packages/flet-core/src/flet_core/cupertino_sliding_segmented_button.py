@@ -1,17 +1,19 @@
 from typing import Any, Optional, Sequence, Union
 
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber, Control
+from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
+    ColorEnums,
+    ColorValue,
     OffsetValue,
+    OptionalControlEventCallable,
+    PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    PaddingValue,
-    OptionalControlEventCallable,
 )
 
 
@@ -27,8 +29,8 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
         self,
         controls: Sequence[Control],
         selected_index: Optional[int] = None,
-        bgcolor: Optional[str] = None,
-        thumb_color: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
+        thumb_color: Optional[ColorValue] = None,
         padding: PaddingValue = None,
         on_change: OptionalControlEventCallable = None,
         #
@@ -135,21 +137,23 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # thumb_color
     @property
-    def thumb_color(self) -> Optional[str]:
-        return self._get_attr("thumbColor")
+    def thumb_color(self) -> Optional[ColorValue]:
+        return self.__thumb_color
 
     @thumb_color.setter
-    def thumb_color(self, value: Optional[str]):
-        self._set_attr("thumbColor", value)
+    def thumb_color(self, value: Optional[ColorValue]):
+        self.__thumb_color = value
+        self._set_enum_attr("thumbColor", value, ColorEnums)
 
     # padding
     @property

@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Optional, Union, Sequence
+from typing import Any, Optional, Sequence, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
@@ -11,15 +11,17 @@ from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
+    ColorEnums,
+    ColorValue,
     CrossAxisAlignment,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     ThemeVisualDensity,
     VisualDensity,
-    OptionalControlEventCallable,
 )
 
 
@@ -53,13 +55,13 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         clip_behavior: Optional[ClipBehavior] = None,
         initially_expanded: Optional[bool] = None,
         maintain_state: Optional[bool] = None,
-        text_color: Optional[str] = None,
-        icon_color: Optional[str] = None,
+        text_color: Optional[ColorValue] = None,
+        icon_color: Optional[ColorValue] = None,
         shape: Optional[OutlinedBorder] = None,
-        bgcolor: Optional[str] = None,
-        collapsed_bgcolor: Optional[str] = None,
-        collapsed_icon_color: Optional[str] = None,
-        collapsed_text_color: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
+        collapsed_bgcolor: Optional[ColorValue] = None,
+        collapsed_icon_color: Optional[ColorValue] = None,
+        collapsed_text_color: Optional[ColorValue] = None,
         collapsed_shape: Optional[OutlinedBorder] = None,
         dense: Optional[bool] = None,
         enable_feedback: Optional[bool] = None,
@@ -320,7 +322,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     @visual_density.setter
     def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, ThemeVisualDensity, VisualDensity)
+        self._set_enum_attr("visualDensity", value, (ThemeVisualDensity, VisualDensity))
 
     # maintain_state
     @property
@@ -351,57 +353,63 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # text_color
     @property
-    def text_color(self) -> Optional[str]:
-        return self._get_attr("textColor")
+    def text_color(self) -> Optional[ColorValue]:
+        return self.__text_color
 
     @text_color.setter
-    def text_color(self, value: Optional[str]):
-        self._set_attr("textColor", value)
+    def text_color(self, value: Optional[ColorValue]):
+        self.__text_color = value
+        self._set_enum_attr("textColor", value, ColorEnums)
 
     # icon_color
     @property
-    def icon_color(self) -> Optional[str]:
-        return self._get_attr("iconColor")
+    def icon_color(self) -> Optional[ColorValue]:
+        return self.__icon_color
 
     @icon_color.setter
-    def icon_color(self, value: Optional[str]):
-        self._set_attr("iconColor", value)
+    def icon_color(self, value: Optional[ColorValue]):
+        self.__icon_color = value
+        self._set_enum_attr("iconColor", value, ColorEnums)
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgColor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgColor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgColor", value, ColorEnums)
 
     # collapsed_bgcolor
     @property
     def collapsed_bgcolor(self) -> Optional[str]:
-        return self._get_attr("collapsedBgColor")
+        return self.__collapsed_bgcolor
 
     @collapsed_bgcolor.setter
     def collapsed_bgcolor(self, value: Optional[str]):
-        self._set_attr("collapsedBgColor", value)
+        self.__collapsed_bgcolor = value
+        self._set_enum_attr("collapsedBgColor", value, ColorEnums)
 
     # collapsed_icon_color
     @property
-    def collapsed_icon_color(self) -> Optional[str]:
-        return self._get_attr("collapsedIconColor")
+    def collapsed_icon_color(self) -> Optional[ColorValue]:
+        return self.__collapsed_icon_color
 
     @collapsed_icon_color.setter
-    def collapsed_icon_color(self, value: Optional[str]):
-        self._set_attr("collapsedIconColor", value)
+    def collapsed_icon_color(self, value: Optional[ColorValue]):
+        self.__collapsed_icon_color = value
+        self._set_enum_attr("collapsedIconColor", value, ColorEnums)
 
     # collapsed_text_color
     @property
-    def collapsed_text_color(self) -> Optional[str]:
-        return self._get_attr("collapsedTextColor")
+    def collapsed_text_color(self) -> Optional[ColorValue]:
+        return self.__collapsed_text_color
 
     @collapsed_text_color.setter
-    def collapsed_text_color(self, value: Optional[str]):
-        self._set_attr("collapsedTextColor", value)
+    def collapsed_text_color(self, value: Optional[ColorValue]):
+        self.__collapsed_text_color = value
+        self._set_enum_attr("collapsedTextColor", value, ColorEnums)
 
     # collapsed_shape
     @property

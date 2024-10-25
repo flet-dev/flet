@@ -3,7 +3,7 @@ from typing import Any, List, Optional, Union
 
 from flet_core.autofill_group import AutofillHint
 from flet_core.border import Border
-from flet_core.box import BoxShadow, DecorationImage, BoxShape
+from flet_core.box import BoxShadow, BoxShape, DecorationImage
 from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
@@ -14,13 +14,14 @@ from flet_core.types import (
     AnimationValue,
     BlendMode,
     BorderRadiusValue,
+    ColorValue,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     TextAlign,
-    OptionalControlEventCallable,
 )
 
 
@@ -77,12 +78,12 @@ class CupertinoTextField(TextField):
         enable_suggestions: Optional[bool] = None,
         smart_dashes_type: Optional[bool] = None,
         smart_quotes_type: Optional[bool] = None,
-        cursor_color: Optional[str] = None,
+        cursor_color: Optional[ColorValue] = None,
         cursor_width: OptionalNumber = None,
         cursor_height: OptionalNumber = None,
         cursor_radius: OptionalNumber = None,
         show_cursor: Optional[bool] = None,
-        selection_color: Optional[str] = None,
+        selection_color: Optional[ColorValue] = None,
         input_filter: Optional[InputFilter] = None,
         autofill_hints: Union[None, AutofillHint, List[AutofillHint]] = None,
         on_change=None,
@@ -95,13 +96,13 @@ class CupertinoTextField(TextField):
         text_size: OptionalNumber = None,
         text_style: Optional[TextStyle] = None,
         border: Optional[Border] = None,
-        color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
+        color: Optional[ColorValue] = None,
+        bgcolor: Optional[ColorValue] = None,
         border_radius: BorderRadiusValue = None,
-        focused_color: Optional[str] = None,
-        focused_bgcolor: Optional[str] = None,
+        focused_color: Optional[ColorValue] = None,
+        focused_bgcolor: Optional[ColorValue] = None,
         focused_border_width: OptionalNumber = None,
-        focused_border_color: Optional[str] = None,
+        focused_border_color: Optional[ColorValue] = None,
         content_padding: PaddingValue = None,
         dense: Optional[bool] = None,
         filled: Optional[bool] = None,

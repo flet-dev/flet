@@ -10,16 +10,18 @@ from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
-    LabelPosition,
+    ColorEnums,
+    ColorValue,
     ControlState,
+    LabelPosition,
     MouseCursor,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     ThemeVisualDensity,
     VisualDensity,
-    OptionalControlEventCallable,
 )
 
 
@@ -67,10 +69,10 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         autofocus: Optional[bool] = None,
         fill_color: Union[None, str, Dict[ControlState, str]] = None,
         overlay_color: Union[None, str, Dict[ControlState, str]] = None,
-        check_color: Optional[str] = None,
-        active_color: Optional[str] = None,
-        hover_color: Optional[str] = None,
-        focus_color: Optional[str] = None,
+        check_color: Optional[ColorValue] = None,
+        active_color: Optional[ColorValue] = None,
+        hover_color: Optional[ColorValue] = None,
+        focus_color: Optional[ColorValue] = None,
         semantics_label: Optional[str] = None,
         shape: Optional[OutlinedBorder] = None,
         splash_radius: OptionalNumber = None,
@@ -178,8 +180,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("overlayColor", self.__overlay_color)
         self._set_attr_json("shape", self.__shape)
         self._set_attr_json("borderSide", self.__border_side)
-        if isinstance(self.__label_style, TextStyle):
-            self._set_attr_json("labelStyle", self.__label_style)
+        self._set_attr_json("labelStyle", self.__label_style)
 
     # value
     @property
@@ -238,7 +239,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     @visual_density.setter
     def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, ThemeVisualDensity, VisualDensity)
+        self._set_enum_attr("visualDensity", value, (ThemeVisualDensity, VisualDensity))
 
     # autofocus
     @property
@@ -251,39 +252,43 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     # check_color
     @property
-    def check_color(self) -> Optional[str]:
-        return self._get_attr("checkColor")
+    def check_color(self) -> Optional[ColorValue]:
+        return self.__check_color
 
     @check_color.setter
-    def check_color(self, value: Optional[str]):
-        self._set_attr("checkColor", value)
+    def check_color(self, value: Optional[ColorValue]):
+        self.__check_color = value
+        self._set_enum_attr("checkColor", value, ColorEnums)
 
     # active_color
     @property
-    def active_color(self) -> Optional[str]:
-        return self._get_attr("activeColor")
+    def active_color(self) -> Optional[ColorValue]:
+        return self.__active_color
 
     @active_color.setter
-    def active_color(self, value: Optional[str]):
-        self._set_attr("activeColor", value)
+    def active_color(self, value: Optional[ColorValue]):
+        self.__active_color = value
+        self._set_enum_attr("activeColor", value, ColorEnums)
 
     # focus_color
     @property
-    def focus_color(self) -> Optional[str]:
-        return self._get_attr("focusColor")
+    def focus_color(self) -> Optional[ColorValue]:
+        return self.__focus_color
 
     @focus_color.setter
-    def focus_color(self, value: Optional[str]):
-        self._set_attr("focusColor", value)
+    def focus_color(self, value: Optional[ColorValue]):
+        self.__focus_color = value
+        self._set_enum_attr("focusColor", value, ColorEnums)
 
     # hover_color
     @property
-    def hover_color(self) -> Optional[str]:
-        return self._get_attr("hoverColor")
+    def hover_color(self) -> Optional[ColorValue]:
+        return self.__hover_color
 
     @hover_color.setter
-    def hover_color(self, value: Optional[str]):
-        self._set_attr("hoverColor", value)
+    def hover_color(self, value: Optional[ColorValue]):
+        self.__hover_color = value
+        self._set_enum_attr("hoverColor", value, ColorEnums)
 
     # fill_color
     @property

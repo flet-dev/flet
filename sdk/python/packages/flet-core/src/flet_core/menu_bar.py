@@ -8,6 +8,7 @@ from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     ClipBehavior,
+    ColorValue,
     ControlState,
     MouseCursor,
     OptionalNumber,
@@ -19,13 +20,15 @@ from flet_core.types import (
 @dataclass
 class MenuStyle:
     alignment: Optional[Alignment] = field(default=None)
-    bgcolor: Union[None, str, Dict[Union[str, ControlState], str]] = field(default=None)
-    shadow_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
-        default=None
-    )
-    surface_tint_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
-        default=None
-    )
+    bgcolor: Union[
+        None, ColorValue, Dict[Union[str, ControlState], ColorValue]
+    ] = field(default=None)
+    shadow_color: Union[
+        None, ColorValue, Dict[Union[str, ControlState], ColorValue]
+    ] = field(default=None)
+    surface_tint_color: Union[
+        None, ColorValue, Dict[Union[str, ControlState], ColorValue]
+    ] = field(default=None)
     elevation: Union[
         None, float, int, Dict[Union[str, ControlState], Union[float, int]]
     ] = field(default=None)

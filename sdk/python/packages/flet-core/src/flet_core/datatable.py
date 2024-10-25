@@ -14,15 +14,17 @@ from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
+    ClipBehavior,
+    ColorEnums,
+    ColorValue,
     ControlState,
+    MainAxisAlignment,
     OffsetValue,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ClipBehavior,
-    OptionalEventCallable,
-    OptionalControlEventCallable,
-    MainAxisAlignment,
 )
 
 
@@ -348,7 +350,7 @@ class DataTable(ConstrainedControl):
         data_row_min_height: OptionalNumber = None,
         data_row_max_height: OptionalNumber = None,
         data_text_style: Optional[TextStyle] = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         gradient: Optional[Gradient] = None,
         divider_thickness: OptionalNumber = None,
         heading_row_color: Union[None, str, Dict[ControlState, str]] = None,
@@ -617,12 +619,13 @@ class DataTable(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgColor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgColor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgColor", value, ColorEnums)
 
     # gradient
     @property

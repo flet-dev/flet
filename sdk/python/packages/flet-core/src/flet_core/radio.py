@@ -8,16 +8,18 @@ from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
-    LabelPosition,
+    ColorEnums,
+    ColorValue,
     ControlState,
+    LabelPosition,
     MouseCursor,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     ThemeVisualDensity,
     VisualDensity,
-    OptionalControlEventCallable,
 )
 
 try:
@@ -64,10 +66,10 @@ class Radio(ConstrainedControl, AdaptiveControl):
         value: Optional[str] = None,
         autofocus: Optional[bool] = None,
         fill_color: Union[None, str, Dict[ControlState, str]] = None,
-        active_color: Optional[str] = None,
+        active_color: Optional[ColorValue] = None,
         overlay_color: Union[None, str, Dict[ControlState, str]] = None,
-        hover_color: Optional[str] = None,
-        focus_color: Optional[str] = None,
+        hover_color: Optional[ColorValue] = None,
+        focus_color: Optional[ColorValue] = None,
         splash_radius: OptionalNumber = None,
         toggleable: Optional[bool] = None,
         visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
@@ -177,21 +179,23 @@ class Radio(ConstrainedControl, AdaptiveControl):
 
     # active_color
     @property
-    def active_color(self) -> Optional[str]:
-        return self._get_attr("activeColor")
+    def active_color(self) -> Optional[ColorValue]:
+        return self.__active_color
 
     @active_color.setter
-    def active_color(self, value: Optional[str]):
-        self._set_attr("activeColor", value)
+    def active_color(self, value: Optional[ColorValue]):
+        self.__active_color = value
+        self._set_enum_attr("activeColor", value, ColorEnums)
 
     # focus_color
     @property
-    def focus_color(self) -> Optional[str]:
-        return self._get_attr("focusColor")
+    def focus_color(self) -> Optional[ColorValue]:
+        return self.__focus_color
 
     @focus_color.setter
-    def focus_color(self, value: Optional[str]):
-        self._set_attr("focusColor", value)
+    def focus_color(self, value: Optional[ColorValue]):
+        self.__focus_color = value
+        self._set_enum_attr("focusColor", value, ColorEnums)
 
     # splash_radius
     @property
@@ -219,7 +223,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
     @visual_density.setter
     def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, ThemeVisualDensity, VisualDensity)
+        self._set_enum_attr("visualDensity", value, (ThemeVisualDensity, VisualDensity))
 
     # label
     @property

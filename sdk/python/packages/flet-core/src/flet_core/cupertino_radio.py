@@ -6,12 +6,14 @@ from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
+    ColorEnums,
+    ColorValue,
     LabelPosition,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
 )
 
 try:
@@ -34,13 +36,13 @@ class CupertinoRadio(ConstrainedControl):
         label: Optional[str] = None,
         value: Optional[str] = None,
         label_position: Optional[LabelPosition] = None,
-        fill_color: Optional[str] = None,
-        active_color: Optional[str] = None,
-        inactive_color: Optional[str] = None,
+        fill_color: Optional[ColorValue] = None,
+        active_color: Optional[ColorValue] = None,
+        inactive_color: Optional[ColorValue] = None,
         autofocus: Optional[bool] = None,
         use_checkmark_style: Optional[bool] = None,
         toggleable: Optional[bool] = None,
-        focus_color: Optional[str] = None,
+        focus_color: Optional[ColorValue] = None,
         on_focus: OptionalControlEventCallable = None,
         on_blur: OptionalControlEventCallable = None,
         #
@@ -150,21 +152,23 @@ class CupertinoRadio(ConstrainedControl):
 
     # fill_color
     @property
-    def fill_color(self) -> Optional[str]:
-        return self._get_attr("fillColor")
+    def fill_color(self) -> Optional[ColorValue]:
+        return self.__fill_color
 
     @fill_color.setter
-    def fill_color(self, value: Optional[str]):
-        self._set_attr("fillColor", value)
+    def fill_color(self, value: Optional[ColorValue]):
+        self.__fill_color = value
+        self._set_enum_attr("fillColor", value, ColorEnums)
 
     # focus_color
     @property
-    def focus_color(self) -> Optional[str]:
-        return self._get_attr("focusColor")
+    def focus_color(self) -> Optional[ColorValue]:
+        return self.__focus_color
 
     @focus_color.setter
-    def focus_color(self, value: Optional[str]):
-        self._set_attr("focusColor", value)
+    def focus_color(self, value: Optional[ColorValue]):
+        self.__focus_color = value
+        self._set_enum_attr("focusColor", value, ColorEnums)
 
     # toggleable
     @property
@@ -213,18 +217,20 @@ class CupertinoRadio(ConstrainedControl):
 
     # active_color
     @property
-    def active_color(self) -> Optional[str]:
-        return self._get_attr("activeColor")
+    def active_color(self) -> Optional[ColorValue]:
+        return self.__active_color
 
     @active_color.setter
-    def active_color(self, value: Optional[str]):
-        self._set_attr("activeColor", value)
+    def active_color(self, value: Optional[ColorValue]):
+        self.__active_color = value
+        self._set_enum_attr("activeColor", value, ColorEnums)
 
     # inactive_color
     @property
-    def inactive_color(self) -> Optional[str]:
-        return self._get_attr("inactiveColor")
+    def inactive_color(self) -> Optional[ColorValue]:
+        return self.__inactive_color
 
     @inactive_color.setter
-    def inactive_color(self, value: Optional[str]):
-        self._set_attr("inactiveColor", value)
+    def inactive_color(self, value: Optional[ColorValue]):
+        self.__inactive_color = value
+        self._set_enum_attr("inactiveColor", value, ColorEnums)

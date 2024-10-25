@@ -4,7 +4,7 @@ from flet_core.alignment import Alignment
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import OffsetValue, PaddingValue
+from flet_core.types import ColorEnums, ColorValue, OffsetValue, PaddingValue
 
 
 class Badge(Control):
@@ -55,12 +55,12 @@ class Badge(Control):
         text: Optional[str] = None,
         offset: OffsetValue = None,
         alignment: Optional[Alignment] = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         label_visible: Optional[bool] = None,
         large_size: OptionalNumber = None,
         padding: Optional[PaddingValue] = None,
         small_size: OptionalNumber = None,
-        text_color: Optional[str] = None,
+        text_color: Optional[ColorValue] = None,
         text_style: Optional[TextStyle] = None,
         #
         # Control
@@ -149,12 +149,13 @@ class Badge(Control):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgColor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgColor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgColor", value, ColorEnums)
 
     # label_visible
     @property
@@ -194,12 +195,13 @@ class Badge(Control):
 
     # text_color
     @property
-    def text_color(self) -> Optional[str]:
-        return self._get_attr("textColor")
+    def text_color(self) -> Optional[ColorValue]:
+        return self.__text_color
 
     @text_color.setter
-    def text_color(self, value: Optional[str]):
-        self._set_attr("textColor", value)
+    def text_color(self, value: Optional[ColorValue]):
+        self.__text_color = value
+        self._set_enum_attr("textColor", value, ColorEnums)
 
     # text_style
     @property

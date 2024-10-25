@@ -11,15 +11,17 @@ from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
+    ColorEnums,
+    ColorValue,
     ImageFit,
     OffsetValue,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     TextAlign,
-    OptionalEventCallable,
-    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -70,7 +72,7 @@ class Video(ConstrainedControl):
         playlist: Optional[List[VideoMedia]] = None,
         title: Optional[str] = None,
         fit: Optional[ImageFit] = None,
-        fill_color: Optional[str] = None,
+        fill_color: Optional[ColorValue] = None,
         wakelock: Optional[bool] = None,
         autoplay: Optional[bool] = None,
         show_controls: Optional[bool] = None,
@@ -407,12 +409,13 @@ class Video(ConstrainedControl):
 
     # fill_color
     @property
-    def fill_color(self) -> Optional[str]:
-        return self._get_attr("fillColor")
+    def fill_color(self) -> Optional[ColorValue]:
+        return self.__fill_color
 
     @fill_color.setter
-    def fill_color(self, value: Optional[str]):
-        self._set_attr("fillColor", value)
+    def fill_color(self, value: Optional[ColorValue]):
+        self.__fill_color = value
+        self._set_enum_attr("fillColor", value, ColorEnums)
 
     # wakelock
     @property

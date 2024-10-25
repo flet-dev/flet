@@ -7,17 +7,19 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_span import TextSpan
-from flet_core.text_style import TextStyle, TextThemeStyle, TextOverflow
+from flet_core.text_style import TextOverflow, TextStyle, TextThemeStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
+    ColorEnums,
+    ColorValue,
     FontWeight,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     TextAlign,
-    OptionalControlEventCallable,
 )
 
 try:
@@ -89,8 +91,8 @@ class Text(ConstrainedControl):
         overflow: Optional[TextOverflow] = None,
         selectable: Optional[bool] = None,
         no_wrap: Optional[bool] = None,
-        color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
+        color: Optional[ColorValue] = None,
+        bgcolor: Optional[ColorValue] = None,
         semantics_label: Optional[str] = None,
         #
         # ConstrainedControl
@@ -318,21 +320,23 @@ class Text(ConstrainedControl):
 
     # color
     @property
-    def color(self) -> Optional[str]:
-        return self._get_attr("color")
+    def color(self) -> Optional[ColorValue]:
+        return self.__color
 
     @color.setter
-    def color(self, value: Optional[str]):
-        self._set_attr("color", value)
+    def color(self, value: Optional[ColorValue]):
+        self.__color = value
+        self._set_enum_attr("color", value, ColorEnums)
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # semantics_label
     @property

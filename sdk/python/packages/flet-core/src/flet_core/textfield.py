@@ -1,7 +1,7 @@
 import dataclasses
 import time
 from enum import Enum
-from typing import Any, Optional, Union, List
+from typing import Any, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.autofill_group import AutofillHint
@@ -13,14 +13,16 @@ from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
+    ColorEnums,
+    ColorValue,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     TextAlign,
     VerticalAlignment,
-    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -121,11 +123,11 @@ class TextField(FormFieldControl, AdaptiveControl):
         smart_dashes_type: Optional[bool] = None,
         smart_quotes_type: Optional[bool] = None,
         show_cursor: Optional[bool] = None,
-        cursor_color: Optional[str] = None,
+        cursor_color: Optional[ColorValue] = None,
         cursor_width: OptionalNumber = None,
         cursor_height: OptionalNumber = None,
         cursor_radius: OptionalNumber = None,
-        selection_color: Optional[str] = None,
+        selection_color: Optional[ColorValue] = None,
         input_filter: Optional[InputFilter] = None,
         autofill_hints: Union[None, AutofillHint, List[AutofillHint]] = None,
         on_change: OptionalControlEventCallable = None,
@@ -142,20 +144,20 @@ class TextField(FormFieldControl, AdaptiveControl):
         label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
         border: Optional[InputBorder] = None,
-        color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
+        color: Optional[ColorValue] = None,
+        bgcolor: Optional[ColorValue] = None,
         border_radius: BorderRadiusValue = None,
         border_width: OptionalNumber = None,
-        border_color: Optional[str] = None,
-        focused_color: Optional[str] = None,
-        focused_bgcolor: Optional[str] = None,
+        border_color: Optional[ColorValue] = None,
+        focused_color: Optional[ColorValue] = None,
+        focused_bgcolor: Optional[ColorValue] = None,
         focused_border_width: OptionalNumber = None,
-        focused_border_color: Optional[str] = None,
+        focused_border_color: Optional[ColorValue] = None,
         content_padding: PaddingValue = None,
         dense: Optional[bool] = None,
         filled: Optional[bool] = None,
-        fill_color: Optional[str] = None,
-        hover_color: Optional[str] = None,
+        fill_color: Optional[ColorValue] = None,
+        hover_color: Optional[ColorValue] = None,
         hint_text: Optional[str] = None,
         hint_style: Optional[TextStyle] = None,
         helper_text: Optional[str] = None,
@@ -511,11 +513,12 @@ class TextField(FormFieldControl, AdaptiveControl):
     # cursor_color
     @property
     def cursor_color(self):
-        return self._get_attr("cursorColor")
+        return self.__cursor_color
 
     @cursor_color.setter
     def cursor_color(self, value):
-        self._set_attr("cursorColor", value)
+        self.__cursor_color = value
+        self._set_enum_attr("cursorColor", value, ColorEnums)
 
     # cursor_height
     @property
@@ -546,12 +549,13 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     # selection_color
     @property
-    def selection_color(self) -> Optional[str]:
-        return self._get_attr("selectionColor")
+    def selection_color(self) -> Optional[ColorValue]:
+        return self.__selection_color
 
     @selection_color.setter
-    def selection_color(self, value: Optional[str]):
-        self._set_attr("selectionColor", value)
+    def selection_color(self, value: Optional[ColorValue]):
+        self.__selection_color = value
+        self._set_enum_attr("selectionColor", value, ColorEnums)
 
     # input_filter
     @property

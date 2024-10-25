@@ -9,13 +9,15 @@ from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
+    ColorEnums,
+    ColorValue,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     UrlTarget,
-    OptionalControlEventCallable,
 )
 
 
@@ -32,12 +34,12 @@ class CupertinoButton(ConstrainedControl):
         self,
         text: Optional[str] = None,
         icon: Optional[str] = None,
-        icon_color: Optional[str] = None,
+        icon_color: Optional[ColorValue] = None,
         content: Optional[Control] = None,
-        bgcolor: Optional[str] = None,
-        color: Optional[str] = None,
-        disabled_color: Optional[str] = None,
-        disabled_bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
+        color: Optional[ColorValue] = None,
+        disabled_color: Optional[ColorValue] = None,
+        disabled_bgcolor: Optional[ColorValue] = None,
         opacity_on_click: OptionalNumber = None,
         min_size: OptionalNumber = None,
         padding: PaddingValue = None,
@@ -164,11 +166,12 @@ class CupertinoButton(ConstrainedControl):
     # icon_color
     @property
     def icon_color(self):
-        return self._get_attr("iconColor")
+        return self.__icon_color
 
     @icon_color.setter
     def icon_color(self, value):
-        self._set_attr("iconColor", value)
+        self.__icon_color = value
+        self._set_enum_attr("iconColor", value, ColorEnums)
 
     # alignment
     @property
@@ -181,18 +184,19 @@ class CupertinoButton(ConstrainedControl):
 
     # disabled_color
     @property
-    def disabled_color(self) -> Optional[str]:
+    def disabled_color(self) -> Optional[ColorValue]:
         warnings.warn(
             f"disabled_color is deprecated since version 0.24.0 "
             f"and will be removed in version 0.27.0. Use disabled_bgcolor instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
-        return self._get_attr("disabledColor")
+        return self.__disabled_color
 
     @disabled_color.setter
-    def disabled_color(self, value: Optional[str]):
-        self._set_attr("disabledColor", value)
+    def disabled_color(self, value: Optional[ColorValue]):
+        self.__disabled_color = value
+        self._set_enum_attr("disabledColor", value, ColorEnums)
         if value is not None:
             warnings.warn(
                 f"disabled_color is deprecated since version 0.24.0 "
@@ -204,11 +208,12 @@ class CupertinoButton(ConstrainedControl):
     # disabled_bgcolor
     @property
     def disabled_bgcolor(self) -> Optional[str]:
-        return self._get_attr("disabledBgcolor")
+        return self.__disabled_bgcolor
 
     @disabled_bgcolor.setter
     def disabled_bgcolor(self, value: Optional[str]):
-        self._set_attr("disabledBgcolor", value)
+        self.__disabled_bgcolor = value
+        self._set_enum_attr("disabledBgcolor", value, ColorEnums)
 
     # opacity_on_click
     @property
@@ -250,21 +255,23 @@ class CupertinoButton(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgColor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgColor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgColor", value, ColorEnums)
 
     # color
     @property
-    def color(self) -> Optional[str]:
-        return self._get_attr("color")
+    def color(self) -> Optional[ColorValue]:
+        return self.__color
 
     @color.setter
-    def color(self, value: Optional[str]):
-        self._set_attr("color", value)
+    def color(self, value: Optional[ColorValue]):
+        self.__color = value
+        self._set_enum_attr("color", value, ColorEnums)
 
     # url
     @property

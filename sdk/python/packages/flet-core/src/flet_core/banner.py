@@ -4,9 +4,11 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.types import (
-    PaddingValue,
+    ColorEnums,
+    ColorValue,
     MarginValue,
     OptionalControlEventCallable,
+    PaddingValue,
 )
 
 
@@ -63,10 +65,10 @@ class Banner(Control):
         leading_padding: Optional[PaddingValue] = None,
         content_padding: Optional[PaddingValue] = None,
         force_actions_below: Optional[bool] = None,
-        bgcolor: Optional[str] = None,
-        surface_tint_color: Optional[str] = None,
-        shadow_color: Optional[str] = None,
-        divider_color: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
+        surface_tint_color: Optional[ColorValue] = None,
+        shadow_color: Optional[ColorValue] = None,
+        divider_color: Optional[ColorValue] = None,
         elevation: OptionalNumber = None,
         margin: MarginValue = None,
         content_text_style: Optional[TextStyle] = None,
@@ -213,12 +215,13 @@ class Banner(Control):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgColor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgColor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgColor", value, ColorEnums)
 
     # content_text_style
     @property
@@ -231,30 +234,33 @@ class Banner(Control):
 
     # shadow_color
     @property
-    def shadow_color(self) -> Optional[str]:
-        return self._get_attr("shadowColor")
+    def shadow_color(self) -> Optional[ColorValue]:
+        return self.__shadow_color
 
     @shadow_color.setter
-    def shadow_color(self, value: Optional[str]):
-        self._set_attr("shadowColor", value)
+    def shadow_color(self, value: Optional[ColorValue]):
+        self.__shadow_color = value
+        self._set_enum_attr("shadowColor", value, ColorEnums)
 
     # surface_tint_color
     @property
-    def surface_tint_color(self) -> Optional[str]:
-        return self._get_attr("surfaceTintColor")
+    def surface_tint_color(self) -> Optional[ColorValue]:
+        return self.__surface_tint_color
 
     @surface_tint_color.setter
-    def surface_tint_color(self, value: Optional[str]):
-        self._set_attr("surfaceTintColor", value)
+    def surface_tint_color(self, value: Optional[ColorValue]):
+        self.__surface_tint_color = value
+        self._set_enum_attr("surfaceTintColor", value, ColorEnums)
 
     # divider_color
     @property
-    def divider_color(self) -> Optional[str]:
-        return self._get_attr("dividerColor")
+    def divider_color(self) -> Optional[ColorValue]:
+        return self.__divider_color
 
     @divider_color.setter
-    def divider_color(self, value: Optional[str]):
-        self._set_attr("dividerColor", value)
+    def divider_color(self, value: Optional[ColorValue]):
+        self.__divider_color = value
+        self._set_enum_attr("dividerColor", value, ColorEnums)
 
     # elevation
     @property

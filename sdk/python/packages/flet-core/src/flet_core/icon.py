@@ -6,11 +6,13 @@ from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
+    ColorEnums,
+    ColorValue,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
 )
 
 
@@ -48,7 +50,7 @@ class Icon(ConstrainedControl):
     def __init__(
         self,
         name: Optional[str] = None,
-        color: Optional[str] = None,
+        color: Optional[ColorValue] = None,
         size: OptionalNumber = None,
         semantics_label: Optional[str] = None,
         #
@@ -120,12 +122,13 @@ class Icon(ConstrainedControl):
 
     # color
     @property
-    def color(self) -> Optional[str]:
-        return self._get_attr("color")
+    def color(self) -> Optional[ColorValue]:
+        return self.__color
 
     @color.setter
-    def color(self, value: Optional[str]):
-        self._set_attr("color", value)
+    def color(self, value: Optional[ColorValue]):
+        self.__color = value
+        self._set_enum_attr("color", value, ColorEnums)
 
     # size
     @property

@@ -10,12 +10,14 @@ from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
+    ColorEnums,
+    ColorValue,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -166,8 +168,8 @@ class Dropdown(FormFieldControl):
         icon_size: OptionalNumber = None,
         enable_feedback: Optional[bool] = None,
         padding: PaddingValue = None,
-        icon_enabled_color: Optional[str] = None,
-        icon_disabled_color: Optional[str] = None,
+        icon_enabled_color: Optional[ColorValue] = None,
+        icon_disabled_color: Optional[ColorValue] = None,
         options_fill_horizontally: Optional[bool] = None,
         disabled_hint_content: Optional[Control] = None,
         on_change: OptionalControlEventCallable = None,
@@ -183,19 +185,19 @@ class Dropdown(FormFieldControl):
         label_style: Optional[TextStyle] = None,
         icon: Optional[str] = None,
         border: Optional[InputBorder] = None,
-        color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
+        color: Optional[ColorValue] = None,
+        bgcolor: Optional[ColorValue] = None,
         border_radius: BorderRadiusValue = None,
         border_width: OptionalNumber = None,
-        border_color: Optional[str] = None,
-        focused_color: Optional[str] = None,
-        focused_bgcolor: Optional[str] = None,
+        border_color: Optional[ColorValue] = None,
+        focused_color: Optional[ColorValue] = None,
+        focused_bgcolor: Optional[ColorValue] = None,
         focused_border_width: OptionalNumber = None,
-        focused_border_color: Optional[str] = None,
+        focused_border_color: Optional[ColorValue] = None,
         content_padding: PaddingValue = None,
         dense: Optional[bool] = None,
         filled: Optional[bool] = None,
-        fill_color: Optional[str] = None,
+        fill_color: Optional[ColorValue] = None,
         hint_text: Optional[str] = None,
         hint_style: Optional[TextStyle] = None,
         helper_text: Optional[str] = None,
@@ -416,21 +418,23 @@ class Dropdown(FormFieldControl):
 
     # icon_enabled_color
     @property
-    def icon_enabled_color(self) -> Optional[str]:
-        return self._get_attr("iconEnabledColor")
+    def icon_enabled_color(self) -> Optional[ColorValue]:
+        return self.__icon_enabled_color
 
     @icon_enabled_color.setter
-    def icon_enabled_color(self, value: Optional[str]):
-        self._set_attr("iconEnabledColor", value)
+    def icon_enabled_color(self, value: Optional[ColorValue]):
+        self.__icon_enabled_color = value
+        self._set_enum_attr("iconEnabledColor", value, ColorEnums)
 
     # icon_disabled_color
     @property
-    def icon_disabled_color(self) -> Optional[str]:
-        return self._get_attr("iconDisabledColor")
+    def icon_disabled_color(self) -> Optional[ColorValue]:
+        return self.__icon_disabled_color
 
     @icon_disabled_color.setter
-    def icon_disabled_color(self, value: Optional[str]):
-        self._set_attr("iconDisabledColor", value)
+    def icon_disabled_color(self, value: Optional[ColorValue]):
+        self.__icon_disabled_color = value
+        self._set_enum_attr("iconDisabledColor", value, ColorEnums)
 
     # item_height
     @property

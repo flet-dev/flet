@@ -6,7 +6,7 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
-from flet_core.types import BorderRadiusValue, TextAlign
+from flet_core.types import BorderRadiusValue, ColorEnums, ColorValue, TextAlign
 
 
 class BarChartRod(Control):
@@ -16,13 +16,13 @@ class BarChartRod(Control):
         from_y: OptionalNumber = None,
         to_y: OptionalNumber = None,
         width: OptionalNumber = None,
-        color: Optional[str] = None,
+        color: Optional[ColorValue] = None,
         gradient: Optional[Gradient] = None,
         border_radius: BorderRadiusValue = None,
         border_side: Optional[BorderSide] = None,
         bg_from_y: OptionalNumber = None,
         bg_to_y: OptionalNumber = None,
-        bg_color: Optional[str] = None,
+        bg_color: Optional[ColorValue] = None,
         bg_gradient: Optional[Gradient] = None,
         selected: Optional[bool] = None,
         show_tooltip: Optional[bool] = None,
@@ -115,12 +115,13 @@ class BarChartRod(Control):
 
     # color
     @property
-    def color(self) -> Optional[str]:
-        return self._get_attr("color")
+    def color(self) -> Optional[ColorValue]:
+        return self.__color
 
     @color.setter
-    def color(self, value: Optional[str]):
-        self._set_attr("color", value)
+    def color(self, value: Optional[ColorValue]):
+        self.__color = value
+        self._set_enum_attr("color", value, ColorEnums)
 
     # border_side
     @property
@@ -169,12 +170,13 @@ class BarChartRod(Control):
 
     # bg_color
     @property
-    def bg_color(self) -> Optional[str]:
-        return self._get_attr("bgColor")
+    def bg_color(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bg_color.setter
-    def bg_color(self, value: Optional[str]):
-        self._set_attr("bgColor", value)
+    def bg_color(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgColor", value, ColorEnums)
 
     # bg_gradient
     @property

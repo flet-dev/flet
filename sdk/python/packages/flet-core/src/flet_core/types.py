@@ -415,7 +415,9 @@ OptionalEventCallable = Optional[Callable[[EventType], Any]]
 OptionalControlEventCallable = Optional[Callable[[ControlEvent], Any]]
 
 ColorValue = Union[str, colors, cupertino_colors]
+ColorEnums = Union[colors, cupertino_colors]
 IconValue = Union[str, icons, cupertino_icons]
+IconEnums = Union[icons, cupertino_icons]
 
 
 # Wrapper

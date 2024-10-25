@@ -8,13 +8,15 @@ from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     ClipBehavior,
+    ColorEnums,
+    ColorValue,
     MouseCursor,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     UrlTarget,
-    OptionalControlEventCallable,
 )
 
 
@@ -71,13 +73,13 @@ class FloatingActionButton(ConstrainedControl):
         self,
         text: Optional[str] = None,
         icon: Optional[str] = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         content: Optional[Control] = None,
         shape: Optional[OutlinedBorder] = None,
         autofocus: Optional[bool] = None,
         mini: Optional[bool] = None,
-        foreground_color: Optional[str] = None,
-        focus_color: Optional[str] = None,
+        foreground_color: Optional[ColorValue] = None,
+        focus_color: Optional[ColorValue] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         elevation: OptionalNumber = None,
         disabled_elevation: OptionalNumber = None,
@@ -208,12 +210,13 @@ class FloatingActionButton(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # url
     @property
@@ -320,12 +323,13 @@ class FloatingActionButton(ConstrainedControl):
 
     # focus_color
     @property
-    def focus_color(self) -> Optional[str]:
-        return self._get_attr("focusColor")
+    def focus_color(self) -> Optional[ColorValue]:
+        return self.__focus_color
 
     @focus_color.setter
-    def focus_color(self, value: Optional[str]):
-        self._set_attr("focusColor", value)
+    def focus_color(self, value: Optional[ColorValue]):
+        self.__focus_color = value
+        self._set_enum_attr("focusColor", value, ColorEnums)
 
     # focus_elevation
     @property
@@ -339,12 +343,13 @@ class FloatingActionButton(ConstrainedControl):
 
     # foreground_color
     @property
-    def foreground_color(self) -> Optional[str]:
-        return self._get_attr("foregroundColor")
+    def foreground_color(self) -> Optional[ColorValue]:
+        return self.__foreground_color
 
     @foreground_color.setter
-    def foreground_color(self, value: Optional[str]):
-        self._set_attr("foregroundColor", value)
+    def foreground_color(self, value: Optional[ColorValue]):
+        self.__foreground_color = value
+        self._set_enum_attr("foregroundColor", value, ColorEnums)
 
     # highlight_elevation
     @property

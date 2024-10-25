@@ -6,6 +6,7 @@ from flet_core.border import BorderSide
 from flet_core.text_style import TextStyle
 from flet_core.types import (
     BorderRadiusValue,
+    ColorValue,
     ControlState,
     MouseCursor,
     Number,
@@ -57,11 +58,17 @@ class ContinuousRectangleBorder(OutlinedBorder):
 
 @dataclass
 class ButtonStyle:
-    color: Union[None, str, Dict[Union[str, ControlState], str]] = None
-    bgcolor: Union[None, str, Dict[Union[str, ControlState], str]] = None
-    overlay_color: Union[None, str, Dict[Union[str, ControlState], str]] = None
-    shadow_color: Union[None, str, Dict[Union[str, ControlState], str]] = None
-    surface_tint_color: Union[None, str, Dict[Union[str, ControlState], str]] = None
+    color: Union[None, ColorValue, Dict[Union[str, ControlState], ColorValue]] = None
+    bgcolor: Union[None, ColorValue, Dict[Union[str, ControlState], ColorValue]] = None
+    overlay_color: Union[
+        None, ColorValue, Dict[Union[str, ControlState], ColorValue]
+    ] = None
+    shadow_color: Union[
+        None, ColorValue, Dict[Union[str, ControlState], ColorValue]
+    ] = None
+    surface_tint_color: Union[
+        None, ColorValue, Dict[Union[str, ControlState], ColorValue]
+    ] = None
     elevation: Union[
         None, float, int, Dict[Union[str, ControlState], Union[float, int]]
     ] = None
@@ -75,7 +82,9 @@ class ButtonStyle:
     enable_feedback: Optional[bool] = None
     text_style: Union[None, TextStyle, Dict[Union[str, ControlState], TextStyle]] = None
     icon_size: Union[None, Number, Dict[Union[str, ControlState], Number]] = None
-    icon_color: Union[None, str, Dict[Union[str, ControlState], str]] = None
+    icon_color: Union[
+        None, ColorValue, Dict[Union[str, ControlState], ColorValue]
+    ] = None
     visual_density: Optional[VisualDensity] = None
     mouse_cursor: Union[
         None, MouseCursor, Dict[Union[str, ControlState], MouseCursor]

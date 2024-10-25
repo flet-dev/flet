@@ -6,12 +6,14 @@ from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
+    ColorEnums,
+    ColorValue,
     ControlState,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
 )
 
 
@@ -84,8 +86,8 @@ class RangeSlider(ConstrainedControl):
         max: OptionalNumber = None,
         divisions: Optional[int] = None,
         round: Optional[int] = None,
-        active_color: Optional[str] = None,
-        inactive_color: Optional[str] = None,
+        active_color: Optional[ColorValue] = None,
+        inactive_color: Optional[ColorValue] = None,
         overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         on_change: OptionalControlEventCallable = None,
         on_change_start: OptionalControlEventCallable = None,
@@ -244,21 +246,23 @@ class RangeSlider(ConstrainedControl):
 
     # active_color
     @property
-    def active_color(self) -> Optional[str]:
-        return self._get_attr("activeColor")
+    def active_color(self) -> Optional[ColorValue]:
+        return self.__active_color
 
     @active_color.setter
-    def active_color(self, value: Optional[str]):
-        self._set_attr("activeColor", value)
+    def active_color(self, value: Optional[ColorValue]):
+        self.__active_color = value
+        self._set_enum_attr("activeColor", value, ColorEnums)
 
     # inactive_color
     @property
-    def inactive_color(self) -> Optional[str]:
-        return self._get_attr("inactiveColor")
+    def inactive_color(self) -> Optional[ColorValue]:
+        return self.__inactive_color
 
     @inactive_color.setter
-    def inactive_color(self, value: Optional[str]):
-        self._set_attr("inactiveColor", value)
+    def inactive_color(self, value: Optional[ColorValue]):
+        self.__inactive_color = value
+        self._set_enum_attr("inactiveColor", value, ColorEnums)
 
     # overlay_color
     @property
