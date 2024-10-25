@@ -89,7 +89,7 @@ from flet_core.charts.pie_chart_section import PieChartSection
 from flet_core.checkbox import Checkbox
 from flet_core.chip import Chip
 from flet_core.circle_avatar import CircleAvatar
-from flet_core.colors import colors
+from flet_core.colors import MaterialColors, colors
 from flet_core.column import Column
 from flet_core.container import Container, ContainerTapEvent
 from flet_core.control import Control
@@ -102,7 +102,7 @@ from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_bottom_sheet import CupertinoBottomSheet
 from flet_core.cupertino_button import CupertinoButton
 from flet_core.cupertino_checkbox import CupertinoCheckbox
-from flet_core.cupertino_colors import cupertino_colors
+from flet_core.cupertino_colors import CupertinoColors, cupertino_colors
 from flet_core.cupertino_context_menu import CupertinoContextMenu
 from flet_core.cupertino_context_menu_action import CupertinoContextMenuAction
 from flet_core.cupertino_date_picker import (

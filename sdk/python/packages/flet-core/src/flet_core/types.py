@@ -5,9 +5,9 @@ from warnings import warn
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
-from flet_core.colors import colors
+from flet_core.colors import MaterialColors, colors
 from flet_core.control_event import ControlEvent
-from flet_core.cupertino_colors import cupertino_colors
+from flet_core.cupertino_colors import CupertinoColors, cupertino_colors
 from flet_core.cupertino_icons import cupertino_icons
 from flet_core.event import Event
 from flet_core.icons import icons
@@ -415,7 +415,7 @@ OptionalEventCallable = Optional[Callable[[EventType], Any]]
 OptionalControlEventCallable = Optional[Callable[[ControlEvent], Any]]
 
 ColorValue = Union[str, colors, cupertino_colors]
-ColorEnums = Union[colors, cupertino_colors]
+ColorEnums = Union[colors, cupertino_colors, CupertinoColors, MaterialColors]
 IconValue = Union[str, icons, cupertino_icons]
 IconEnums = Union[icons, cupertino_icons]
 
