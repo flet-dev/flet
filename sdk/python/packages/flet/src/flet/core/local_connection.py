@@ -4,7 +4,7 @@ import flet.core
 from flet.core.connection import Connection
 from flet.core.protocol import *
 
-logger = logging.getLogger(flet.core.__name__)
+logger = logging.getLogger(flet.__name__)
 
 
 class LocalConnection(Connection):

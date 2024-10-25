@@ -5,7 +5,7 @@ import flet.core
 from flet.core.pubsub.pubsub_hub import PubSubHub
 from flet.utils.deprecated import deprecated
 
-logger = logging.getLogger(flet.core.__name__)
+logger = logging.getLogger(flet.__name__)
 
 
 class PubSubClient:

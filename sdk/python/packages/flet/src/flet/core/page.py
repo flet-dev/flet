@@ -84,7 +84,7 @@ from flet.core.types import (
 from flet.core.view import View
 from flet.utils import classproperty, deprecated, is_pyodide
 
-logger = logging.getLogger(flet.core.__name__)
+logger = logging.getLogger(flet.__name__)
 
 _session_page = ContextVar("flet_session_page", default=None)
 
@@ -100,8 +100,7 @@ try:
     from flet.auth.oauth_provider import OAuthProvider
 except ImportError as e:
 
-    class OAuthProvider:
-        ...
+    class OAuthProvider: ...
 
     class Authorization:
         def __init__(
@@ -110,8 +109,7 @@ except ImportError as e:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ):
-            ...
+        ): ...
 
 
 AT = TypeVar("AT", bound=Authorization)

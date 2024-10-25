@@ -8,7 +8,7 @@ import flet.core
 from flet.core.locks import NopeLock
 from flet.utils import is_pyodide
 
-logger = logging.getLogger(flet.core.__name__)
+logger = logging.getLogger(flet.__name__)
 
 
 class PubSubHub:
