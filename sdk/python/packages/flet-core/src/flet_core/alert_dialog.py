@@ -100,6 +100,7 @@ class AlertDialog(AdaptiveControl):
         visible: Optional[bool] = None,
         data: Any = None,
         adaptive: Optional[bool] = None,
+        barrier_color: Optional[str] = None
     ):
         Control.__init__(
             self,
@@ -138,6 +139,7 @@ class AlertDialog(AdaptiveControl):
         self.alignment = alignment
         self.content_text_style = content_text_style
         self.title_text_style = title_text_style
+        self.barrier_color = barrier_color
 
     def _get_control_name(self):
         return "alertdialog"
@@ -202,6 +204,15 @@ class AlertDialog(AdaptiveControl):
     @shadow_color.setter
     def shadow_color(self, value: Optional[str]):
         self._set_attr("shadowColor", value)
+    # shadow_color
+
+    @property
+    def barrier_color(self) -> Optional[str]:
+        return self._get_attr("barrierColor")
+
+    @barrier_color.setter
+    def barrier_color(self, value: Optional[str]):
+        self._set_attr("barrierColor", value)
 
     # surface_tint_color
     @property
