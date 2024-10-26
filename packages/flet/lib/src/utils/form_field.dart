@@ -64,11 +64,11 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
     Control? counter,
     Control? error,
     Control? helper,
+    Control? label,
     Widget? customSuffix,
     bool focused = false,
     bool disabled = false,
     bool? adaptive}) {
-  String? label = control.attrString("label", "")!;
   FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
     control.attrString("border"),
     FormFieldInputBorder.outline,
@@ -142,7 +142,10 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       enabled: !disabled,
       contentPadding: parseEdgeInsets(control, "contentPadding"),
       isDense: control.attrBool("dense"),
-      label: label != "" ? Text(label) : null,
+      label: label != null
+          ? createControl(control, label.id, control.isDisabled,
+              parentAdaptive: adaptive)
+          : Text(control.attrString("label", "")!),
       labelStyle: parseTextStyle(Theme.of(context), control, "labelStyle"),
       border: border,
       enabledBorder: border,
@@ -151,7 +154,9 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       icon: icon != null
           ? createControl(control, icon.id, control.isDisabled,
               parentAdaptive: adaptive)
-          : iconStr !=null? Icon(iconStr): null,
+          : iconStr != null
+              ? Icon(iconStr)
+              : null,
       filled: control.attrBool("filled", false)!,
       fillColor: fillColor ?? (focused ? focusedBgcolor ?? bgcolor : bgcolor),
       hintText: control.attrString("hintText"),

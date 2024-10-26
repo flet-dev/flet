@@ -185,7 +185,7 @@ class Dropdown(FormFieldControl):
         #
         text_size: OptionalNumber = None,
         text_style: Optional[TextStyle] = None,
-        label: Optional[str] = None,
+        label: Optional[Union[str, Control]] = None,
         label_style: Optional[TextStyle] = None,
         icon: Optional[IconValueOrControl] = None,
         border: Optional[InputBorder] = None,

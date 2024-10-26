@@ -40,7 +40,7 @@ class FormFieldControl(ConstrainedControl):
         text_size: OptionalNumber = None,
         text_style: Optional[TextStyle] = None,
         text_vertical_align: Union[VerticalAlignment, OptionalNumber] = None,
-        label: Optional[str] = None,
+        label: Optional[Union[str, Control]] = None,
         label_style: Optional[TextStyle] = None,
         icon: Optional[IconValueOrControl] = None,
         border: Optional[InputBorder] = None,
@@ -230,33 +230,25 @@ class FormFieldControl(ConstrainedControl):
             self._set_attr("prefixIcon", self.__prefix_icon)
         if isinstance(self.__icon, str):
             self._set_attr("icon", self.__icon)
+        if isinstance(self.__label, str):
+            self._set_attr("label", self.__label)
 
     def _get_children(self):
         children = []
-        if isinstance(self.__prefix, Control):
-            self.__prefix._set_attr_internal("n", "prefix")
-            children.append(self.__prefix)
-        if isinstance(self.__suffix, Control):
-            self.__suffix._set_attr_internal("n", "suffix")
-            children.append(self.__suffix)
-        if isinstance(self.__suffix_icon, Control):
-            self.__suffix_icon._set_attr_internal("n", "suffixIcon")
-            children.append(self.__suffix_icon)
-        if isinstance(self.__prefix_icon, Control):
-            self.__prefix_icon._set_attr_internal("n", "prefixIcon")
-            children.append(self.__prefix_icon)
-        if isinstance(self.__icon, Control):
-            self.__icon._set_attr_internal("n", "icon")
-            children.append(self.__icon)
-        if isinstance(self.__counter, Control):
-            self.__counter._set_attr_internal("n", "counter")
-            children.append(self.__counter)
-        if isinstance(self.__error, Control):
-            self.__error._set_attr_internal("n", "error")
-            children.append(self.__error)
-        if isinstance(self.__helper, Control):
-            self.__helper._set_attr_internal("n", "helper")
-            children.append(self.__helper)
+        for control, name in [
+            (self.__prefix, "prefix"),
+            (self.__suffix, "suffix"),
+            (self.__suffix_icon, "suffix_icon"),
+            (self.__prefix_icon, "prefix_icon"),
+            (self.__icon, "icon"),
+            (self.__counter, "counter"),
+            (self.__error, "error"),
+            (self.__helper, "helper"),
+            (self.__label, "label"),
+        ]:
+            if isinstance(control, Control):
+                control._set_attr_internal("n", name)
+                children.append(control)
         return children
 
     # text_size
@@ -279,12 +271,12 @@ class FormFieldControl(ConstrainedControl):
 
     # label
     @property
-    def label(self) -> Optional[str]:
-        return self._get_attr("label")
+    def label(self) -> Optional[Union[str, Control]]:
+        return self.__label
 
     @label.setter
-    def label(self, value: Optional[str]):
-        self._set_attr("label", value)
+    def label(self, value: Optional[Union[str, Control]]):
+        self.__label = value
 
     # label_style
     @property

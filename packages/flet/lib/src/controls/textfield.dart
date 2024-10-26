@@ -141,6 +141,8 @@ class _TextFieldControlState extends State<TextFieldControl>
           widget.children.where((c) => c.name == "error" && c.isVisible);
       var helperCtrl =
           widget.children.where((c) => c.name == "helper" && c.isVisible);
+      var labelCtrl =
+          widget.children.where((c) => c.name == "label" && c.isVisible);
 
       bool shiftEnter = widget.control.attrBool("shiftEnter", false)!;
       bool multiline =
@@ -230,6 +232,7 @@ class _TextFieldControlState extends State<TextFieldControl>
                   counterControls.isNotEmpty ? counterControls.first : null,
               error: errorCtrl.isNotEmpty ? errorCtrl.first : null,
               helper: helperCtrl.isNotEmpty ? helperCtrl.first : null,
+              label: labelCtrl.isNotEmpty ? labelCtrl.first : null,
               customSuffix: revealPasswordIcon,
               focused: _focused,
               disabled: disabled,

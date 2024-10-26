@@ -161,6 +161,8 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
           .where((c) => c.control.name == "error" && c.control.isVisible);
       var helperCtrl = itemsView.controlViews
           .where((c) => c.control.name == "helper" && c.control.isVisible);
+      var labelCtrl = itemsView.controlViews
+          .where((c) => c.control.name == "label" && c.control.isVisible);
 
       var focusValue = widget.control.attrString("focus");
       if (focusValue != null && focusValue != _lastFocusValue) {
@@ -213,6 +215,7 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
             icon: iconControls.isNotEmpty ? iconControls.first.control : null,
             error: errorCtrl.isNotEmpty ? errorCtrl.first.control : null,
             helper: helperCtrl.isNotEmpty ? helperCtrl.first.control : null,
+            label: labelCtrl.isNotEmpty ? labelCtrl.first.control : null,
             customSuffix: null,
             focused: _focused,
             disabled: disabled,
