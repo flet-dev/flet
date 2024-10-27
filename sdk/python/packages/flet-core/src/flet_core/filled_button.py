@@ -4,6 +4,7 @@ from flet_core.buttons import ButtonStyle
 from flet_core.control import Control, OptionalNumber
 from flet_core.elevated_button import ElevatedButton
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import ResponsiveNumber, UrlTarget
 
 
@@ -36,6 +37,9 @@ class FilledButton(ElevatedButton):
         self,
         text: Optional[str] = None,
         adaptive: Optional[bool] = None,
+        color: Optional[str] = None,
+        bgcolor: Optional[str] = None,
+        elevation: OptionalNumber = None,
         icon: Optional[str] = None,
         icon_color: Optional[str] = None,
         style: Optional[ButtonStyle] = None,
@@ -57,7 +61,7 @@ class FilledButton(ElevatedButton):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        tooltip: Optional[str] = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -79,9 +83,9 @@ class FilledButton(ElevatedButton):
             #
             # Specific
             #
-            color="onPrimary",
-            bgcolor="primary",
-            elevation=0,
+            color=color,
+            bgcolor=bgcolor,
+            elevation=elevation,
             style=style,
             text=text,
             icon=icon,
@@ -95,3 +99,6 @@ class FilledButton(ElevatedButton):
             on_hover=on_hover,
             adaptive=adaptive,
         )
+
+    def _get_control_name(self):
+        return "filledbutton"

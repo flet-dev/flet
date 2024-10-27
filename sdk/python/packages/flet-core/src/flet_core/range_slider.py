@@ -3,6 +3,7 @@ from typing import Any, Dict, Optional, Union
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     ControlState,
@@ -10,7 +11,6 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 
@@ -87,9 +87,9 @@ class RangeSlider(ConstrainedControl):
         active_color: Optional[str] = None,
         inactive_color: Optional[str] = None,
         overlay_color: Union[None, str, Dict[ControlState, str]] = None,
-        on_change: OptionalEventCallable = None,
-        on_change_start: OptionalEventCallable = None,
-        on_change_end: OptionalEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
+        on_change_start: OptionalControlEventCallable = None,
+        on_change_end: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -115,8 +115,8 @@ class RangeSlider(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

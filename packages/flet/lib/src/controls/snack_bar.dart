@@ -67,11 +67,14 @@ class _SnackBarControlState extends State<SnackBarControl> {
     var width = widget.control.attrDouble("width");
     var margin = parseEdgeInsets(widget.control, "margin");
 
-    // required to avoid assertion errors
+    // if behavior is not floating, ignore margin and width
     if (behavior != SnackBarBehavior.floating) {
       margin = null;
       width = null;
     }
+
+    // if width is provided, margin is ignored (both can't be used together)
+    margin = (width != null && margin != null) ? null : margin;
 
     return SnackBar(
       behavior: behavior,

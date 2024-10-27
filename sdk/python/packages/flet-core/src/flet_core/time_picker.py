@@ -1,17 +1,18 @@
 from datetime import time
 from enum import Enum
-from typing import Any, Optional, Union, Callable
+from typing import Any, Optional, Union
 
 from flet_core.control import Control
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    Orientation,
-    ResponsiveNumber,
+    OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,
-    OptionalControlEventCallable
+    Orientation,
+    ResponsiveNumber,
 )
 from flet_core.utils import deprecated
 
@@ -92,10 +93,10 @@ class TimePicker(Control):
         confirm_text: Optional[str] = None,
         error_invalid_text: Optional[str] = None,
         orientation: Optional[Orientation] = None,
-        on_change: OptionalEventCallable = None,
-        on_dismiss: OptionalEventCallable = None,
-        on_entry_mode_change: Optional[
-            Callable[[TimePickerEntryModeChangeEvent], None]
+        on_change: OptionalControlEventCallable = None,
+        on_dismiss: OptionalControlEventCallable = None,
+        on_entry_mode_change: OptionalEventCallable[
+            TimePickerEntryModeChangeEvent
         ] = None,
         #
         # Control
@@ -105,7 +106,7 @@ class TimePicker(Control):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        tooltip: Optional[str] = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -285,11 +286,13 @@ class TimePicker(Control):
 
     # on_entry_mode_change
     @property
-    def on_entry_mode_change(self):
-        return self.__on_entry_mode_change
+    def on_entry_mode_change(
+        self,
+    ) -> OptionalEventCallable[TimePickerEntryModeChangeEvent]:
+        return self.__on_entry_mode_change.handler
 
     @on_entry_mode_change.setter
     def on_entry_mode_change(
-        self, handler: Optional[Callable[[TimePickerEntryModeChangeEvent], None]]
+        self, handler: OptionalEventCallable[TimePickerEntryModeChangeEvent]
     ):
-        self.__on_entry_mode_change.subscribe(handler)
+        self.__on_entry_mode_change.handler = handler

@@ -2,7 +2,7 @@ name: flet_geolocator
 description: Flet Geolocator control
 homepage: https://flet.dev
 repository: https://github.com/flet-dev/flet/packages/flet_geolocator
-version: 0.23.2
+version: 0.24.1
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
@@ -12,7 +12,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  geolocator: ^11.0.0
+  geolocator: ^13.0.1
+  collection: ^1.16.0
 
   flet:
     path: ../flet/

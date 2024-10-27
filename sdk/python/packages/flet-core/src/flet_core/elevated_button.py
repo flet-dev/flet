@@ -6,16 +6,16 @@ from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
+    ClipBehavior,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ClipBehavior,
     UrlTarget,
-    OptionalEventCallable,
-    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -57,11 +57,11 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         clip_behavior: Optional[ClipBehavior] = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
-        on_click: OptionalEventCallable = None,
-        on_long_press: OptionalEventCallable = None,
-        on_hover: OptionalEventCallable = None,
-        on_focus: OptionalEventCallable = None,
-        on_blur: OptionalEventCallable = None,
+        on_click: OptionalControlEventCallable = None,
+        on_long_press: OptionalControlEventCallable = None,
+        on_hover: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -87,8 +87,8 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -127,10 +127,6 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
-        self.__color = None
-        self.__bgcolor = None
-        self.__elevation = None
-
         self.text = text
         self.color = color
         self.bgcolor = bgcolor
@@ -157,27 +153,19 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         assert (
             self.text or self.icon or (self.__content and self.__content.visible)
         ), "at minimum, text, icon or a visible content must be provided"
-        if any([self.__color, self.__bgcolor, self.__elevation]):
-            self.__style = self.__style or ButtonStyle()
-        if self.__style:
-            self.__style.color = (
-                self.__style.color if self.__style.color is not None else self.color
-            )
-            self.__style.bgcolor = (
-                self.__style.bgcolor
-                if self.__style.bgcolor is not None
-                else self.bgcolor
-            )
-            self.__style.elevation = (
-                self.__style.elevation
-                if self.__style.elevation is not None
-                else self.elevation
-            )
-            self.__style.side = self._wrap_attr_dict(self.__style.side)
-            self.__style.shape = self._wrap_attr_dict(self.__style.shape)
-            self.__style.padding = self._wrap_attr_dict(self.__style.padding)
-            self.__style.text_style = self._wrap_attr_dict(self.__style.text_style)
-        self._set_attr_json("style", self.__style)
+        style = self.__style or ButtonStyle()
+        if self.__color is not None:
+            style.color = self.__color
+        if self.__bgcolor is not None:
+            style.bgcolor = self.__bgcolor
+        if self.__elevation is not None:
+            style.elevation = self.__elevation
+
+        style.side = self._wrap_attr_dict(style.side)
+        style.shape = self._wrap_attr_dict(style.shape)
+        style.padding = self._wrap_attr_dict(style.padding)
+        style.text_style = self._wrap_attr_dict(style.text_style)
+        self._set_attr_json("style", style)
 
     def _get_children(self):
         if self.__content is None:

@@ -123,14 +123,16 @@ class _TextFieldControlState extends State<TextFieldControl>
 
       var prefixControls =
           widget.children.where((c) => c.name == "prefix" && c.isVisible);
+      var prefixIconControls =
+          widget.children.where((c) => c.name == "prefixIcon" && c.isVisible);
       var suffixControls =
           widget.children.where((c) => c.name == "suffix" && c.isVisible);
+      var suffixIconControls =
+          widget.children.where((c) => c.name == "suffixIcon" && c.isVisible);
+      var iconControls =
+          widget.children.where((c) => c.name == "icon" && c.isVisible);
       var counterControls =
           widget.children.where((c) => c.name == "counter" && c.isVisible);
-      var helperControls =
-          widget.children.where((c) => c.name == "helper" && c.isVisible);
-      var errorControls =
-          widget.children.where((c) => c.name == "error" && c.isVisible);
 
       bool shiftEnter = widget.control.attrBool("shiftEnter", false)!;
       bool multiline =
@@ -228,11 +230,12 @@ class _TextFieldControlState extends State<TextFieldControl>
               : null,
           decoration: buildInputDecoration(context, widget.control,
               prefix: prefixControls.isNotEmpty ? prefixControls.first : null,
+              prefixIcon: prefixIconControls.isNotEmpty ? prefixIconControls.first : null,
               suffix: suffixControls.isNotEmpty ? suffixControls.first : null,
+              suffixIcon: suffixIconControls.isNotEmpty ? suffixIconControls.first : null,
+              icon: iconControls.isNotEmpty ? iconControls.first : null,
               counter:
                   counterControls.isNotEmpty ? counterControls.first : null,
-              helper: helperControls.isNotEmpty ? helperControls.first : null,
-              error: errorControls.isNotEmpty ? errorControls.first : null,
               customSuffix: revealPasswordIcon,
               focused: _focused,
               disabled: disabled,
@@ -365,4 +368,20 @@ class TextCapitalizationFormatter extends TextInputFormatter {
       .split(" ")
       .map((str) => inCaps(str))
       .join(" ");
+}
+
+class CustomNumberFormatter extends TextInputFormatter {
+  final String pattern;
+
+  CustomNumberFormatter(this.pattern);
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    final regExp = RegExp(pattern);
+    if (regExp.hasMatch(newValue.text)) {
+      return newValue;
+    }
+    // If newValue is invalid, keep the old value
+    return oldValue;
+  }
 }

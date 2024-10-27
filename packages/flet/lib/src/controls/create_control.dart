@@ -13,6 +13,7 @@ import '../models/control_view_model.dart';
 import '../models/page_media_view_model.dart';
 import '../utils/animations.dart';
 import '../utils/theme.dart';
+import '../utils/tooltip.dart';
 import '../utils/transforms.dart';
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
@@ -72,6 +73,7 @@ import 'haptic_feedback.dart';
 import 'icon.dart';
 import 'icon_button.dart';
 import 'image.dart';
+import 'interactive_viewer.dart';
 import 'linechart.dart';
 import 'list_tile.dart';
 import 'list_view.dart';
@@ -112,7 +114,6 @@ import 'text.dart';
 import 'text_button.dart';
 import 'textfield.dart';
 import 'time_picker.dart';
-import 'tooltip.dart';
 import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
 import 'window_drag_area.dart';
@@ -326,6 +327,8 @@ Widget createWidget(
       return ProgressBarControl(
           key: key, parent: parent, control: controlView.control);
     case "elevatedbutton":
+    case "filledbutton":
+    case "filledtonalbutton":
       return ElevatedButtonControl(
           key: key,
           parent: parent,
@@ -448,7 +451,7 @@ Widget createWidget(
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           backend: backend);
-      case "placeholder":
+    case "placeholder":
       return PlaceholderControl(
           key: key,
           parent: parent,
@@ -592,14 +595,6 @@ Widget createWidget(
           children: controlView.children,
           parentDisabled: parentDisabled,
           backend: backend);
-    case "tooltip":
-      return TooltipControl(
-          key: key,
-          parent: parent,
-          control: controlView.control,
-          children: controlView.children,
-          parentDisabled: parentDisabled,
-          parentAdaptive: parentAdaptive);
     case "transparentpointer":
       return TransparentPointerControl(
           key: key,
@@ -655,6 +650,15 @@ Widget createWidget(
           parentAdaptive: parentAdaptive);
     case "listtile":
       return ListTileControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
+    case "interactiveviewer":
+      return InteractiveViewerControl(
           key: key,
           parent: parent,
           control: controlView.control,
@@ -1017,7 +1021,12 @@ Widget baseControl(
     BuildContext context, Widget widget, Control? parent, Control control) {
   return _expandable(
       _directionality(
-          _tooltip(_opacity(context, widget, parent, control), parent, control),
+          _tooltip(
+            _opacity(context, widget, parent, control),
+            Theme.of(context),
+            parent,
+            control,
+          ),
           parent,
           control),
       parent,
@@ -1041,6 +1050,7 @@ Widget constrainedControl(
                                   _tooltip(
                                       _opacity(
                                           context, widget, parent, control),
+                                      Theme.of(context),
                                       parent,
                                       control),
                                   parent,
@@ -1088,18 +1098,10 @@ Widget _opacity(
   return widget;
 }
 
-Widget _tooltip(Widget widget, Control? parent, Control control) {
-  var tooltip = control.attrString("tooltip");
-  return tooltip != null &&
-          !["iconbutton", "floatingactionbutton", "popupmenubutton"]
-              .contains(control.type)
-      ? Tooltip(
-          message: tooltip,
-          padding: const EdgeInsets.all(4.0),
-          waitDuration: const Duration(milliseconds: 800),
-          child: widget,
-        )
-      : widget;
+Widget _tooltip(
+    Widget widget, ThemeData theme, Control? parent, Control control) {
+  var tooltip = parseTooltip(control, "tooltip", widget, theme);
+  return tooltip != null ? tooltip : widget;
 }
 
 Widget _aspectRatio(Widget widget, Control? parent, Control control) {

@@ -6,9 +6,7 @@ authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
 license = "Apache-2.0"
 readme = "README.md"
 
-packages = [
-    { include = "flet", from = "src" },
-]
+packages = [{ include = "flet", from = "src" }]
 
 [tool.poetry.urls]
 homepage = "https://flet.dev"
@@ -17,13 +15,12 @@ documentation = "https://flet.dev/docs"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-flet-runtime = "0.1.0"
-watchdog = "^4.0.0"
-packaging = "^23.1"
-qrcode = "^7.4.2"
-cookiecutter = "^2.6.0"
-fastapi = "^0"
-uvicorn = {extras = ["standard"], version = "^0"}
+flet-core = { version = "0.1.0" }
+flet-cli = { version = "0.1.0", markers = "platform_system != 'embedded'" }
+flet-desktop = { version = "0.1.0", markers = "platform_system != 'desktop-light'" }
+flet-web = { version = "0.1.0", markers = "platform_system != 'embedded'" }
+oauthlib = { version = "^3.2.2", markers = "platform_system != 'Pyodide'" }
+httpx = { version = "*", markers = "platform_system != 'Pyodide'" }
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^2.6"
@@ -31,10 +28,10 @@ pytest = "^7.2.0"
 cryptography = "^39.0.0"
 
 [tool.poetry.scripts]
-flet = "flet.cli.cli:main"
+flet = "flet_cli.cli:main"
 
 [tool.poetry.plugins."pyinstaller40"]
-hook-dirs = "flet.__pyinstaller:get_hook_dirs"
+hook-dirs = "flet_cli.__pyinstaller:get_hook_dirs"
 
 [build-system]
 requires = ["poetry-core"]

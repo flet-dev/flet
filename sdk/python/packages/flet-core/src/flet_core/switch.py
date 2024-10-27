@@ -5,6 +5,7 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     LabelPosition,
@@ -14,7 +15,6 @@ from flet_core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 
@@ -74,9 +74,9 @@ class Switch(ConstrainedControl, AdaptiveControl):
         overlay_color: Union[None, str, Dict[ControlState, str]] = None,
         track_outline_color: Union[None, str, Dict[ControlState, str]] = None,
         mouse_cursor: Optional[MouseCursor] = None,
-        on_change: OptionalEventCallable = None,
-        on_focus: OptionalEventCallable = None,
-        on_blur: OptionalEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -102,8 +102,8 @@ class Switch(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

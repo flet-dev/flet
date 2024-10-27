@@ -7,6 +7,7 @@ from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     MouseCursor,
@@ -16,7 +17,6 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     UrlTarget,
-    OptionalEventCallable,
     ThemeVisualDensity,
     VisualDensity,
     OptionalControlEventCallable,
@@ -88,9 +88,9 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         url_target: Optional[UrlTarget] = None,
         mouse_cursor: Optional[MouseCursor] = None,
         visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
-        on_click: OptionalEventCallable = None,
-        on_focus: OptionalEventCallable = None,
-        on_blur: OptionalEventCallable = None,
+        on_click: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -116,8 +116,8 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

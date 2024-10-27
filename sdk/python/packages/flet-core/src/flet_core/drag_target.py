@@ -6,6 +6,7 @@ from flet_core.control import Control
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
+from flet_core.types import OptionalControlEventCallable, OptionalEventCallable
 
 
 class DragTarget(Control):
@@ -106,10 +107,10 @@ class DragTarget(Control):
         self,
         content: Control,
         group: Optional[str] = None,
-        on_will_accept=None,
-        on_accept=None,
-        on_leave=None,
-        on_move=None,
+        on_will_accept: OptionalControlEventCallable = None,
+        on_accept: OptionalEventCallable["DragTargetEvent"] = None,
+        on_leave: OptionalControlEventCallable = None,
+        on_move: OptionalEventCallable["DragTargetEvent"] = None,
         #
         # Control
         #
@@ -170,39 +171,39 @@ class DragTarget(Control):
 
     # on_will_accept
     @property
-    def on_will_accept(self):
+    def on_will_accept(self) -> OptionalControlEventCallable:
         return self._get_event_handler("will_accept")
 
     @on_will_accept.setter
-    def on_will_accept(self, handler):
+    def on_will_accept(self, handler: OptionalControlEventCallable):
         self._add_event_handler("will_accept", handler)
 
     # on_accept
     @property
-    def on_accept(self):
-        return self.__on_accept
+    def on_accept(self) -> OptionalEventCallable["DragTargetEvent"]:
+        return self.__on_accept.handler
 
     @on_accept.setter
-    def on_accept(self, handler):
-        self.__on_accept.subscribe(handler)
+    def on_accept(self, handler: OptionalEventCallable["DragTargetEvent"]):
+        self.__on_accept.handler = handler
 
     # on_leave
     @property
-    def on_leave(self):
+    def on_leave(self) -> OptionalControlEventCallable:
         return self._get_event_handler("leave")
 
     @on_leave.setter
-    def on_leave(self, handler):
+    def on_leave(self, handler: OptionalControlEventCallable):
         self._add_event_handler("leave", handler)
 
     # on_move
     @property
-    def on_move(self):
-        return self.__on_move
+    def on_move(self) -> OptionalEventCallable["DragTargetEvent"]:
+        return self.__on_move.handler
 
     @on_move.setter
-    def on_move(self, handler):
-        self.__on_move.subscribe(handler)
+    def on_move(self, handler: OptionalEventCallable["DragTargetEvent"]):
+        self.__on_move.handler = handler
 
 
 class DragTargetAcceptEvent(ControlEvent):

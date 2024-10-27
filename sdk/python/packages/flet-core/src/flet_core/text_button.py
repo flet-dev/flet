@@ -6,6 +6,7 @@ from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -13,7 +14,6 @@ from flet_core.types import (
     RotateValue,
     ScaleValue,
     UrlTarget,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
@@ -52,11 +52,11 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         autofocus: Optional[bool] = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
-        on_click: OptionalEventCallable = None,
-        on_long_press: OptionalEventCallable = None,
-        on_hover: OptionalEventCallable = None,
-        on_focus: OptionalEventCallable = None,
-        on_blur: OptionalEventCallable = None,
+        on_click: OptionalControlEventCallable = None,
+        on_long_press: OptionalControlEventCallable = None,
+        on_hover: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -82,8 +82,8 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

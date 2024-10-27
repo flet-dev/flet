@@ -4,13 +4,14 @@ import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/box.dart';
 import '../models/control.dart';
 import '../models/control_tree_view_model.dart';
+import '../utils/box.dart';
 import '../utils/drawing.dart';
 import '../utils/numbers.dart';
 import 'colors.dart';
 import 'launch_url.dart';
+import 'material_state.dart';
 
 TextStyle? getTextStyle(BuildContext context, String styleName) {
   var textTheme = Theme.of(context).textTheme;
@@ -188,7 +189,11 @@ TextStyle? parseTextStyle(ThemeData theme, Control control, String propName) {
   return textStyleFromJson(theme, j);
 }
 
-TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
+TextStyle? textStyleFromJson(ThemeData theme, Map<String, dynamic>? json) {
+  if (json == null) {
+    return null;
+  }
+
   var fontWeight = json["weight"];
 
   List<FontVariation>? variations;
@@ -238,4 +243,14 @@ TextStyle textStyleFromJson(ThemeData theme, Map<String, dynamic> json) {
     wordSpacing: parseDouble(json['word_spacing']),
     textBaseline: parseTextBaseline(json['text_baseline']),
   );
+}
+
+WidgetStateProperty<TextStyle?>? parseWidgetStateTextStyle(
+    ThemeData theme, Control control, String propName) {
+  var v = control.attrString(propName);
+  if (v == null) {
+    return null;
+  }
+  return getWidgetStateProperty<TextStyle?>(
+      jsonDecode(v), (jv) => textStyleFromJson(theme, jv), null);
 }

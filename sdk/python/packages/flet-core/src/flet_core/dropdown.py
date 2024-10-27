@@ -2,22 +2,24 @@ import time
 from typing import Any, List, Optional, Union
 
 from flet_core.alignment import Alignment
-from flet_core.border import BorderSide
 from flet_core.control import Control, OptionalNumber
-from flet_core.form_field_control import FormFieldControl, InputBorder
+from flet_core.form_field_control import (
+    FormFieldControl,
+    IconValueOrControl,
+    InputBorder,
+)
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
-    OptionalControlEventCallable,
-    DurationValue,
 )
 from flet_core.utils import deprecated
 
@@ -30,7 +32,7 @@ class Option(Control):
         content: Optional[Control] = None,
         alignment: Optional[Alignment] = None,
         text_style: Optional[TextStyle] = None,
-        on_click: OptionalEventCallable = None,
+        on_click: OptionalControlEventCallable = None,
         #
         # Control
         #
@@ -170,10 +172,12 @@ class Dropdown(FormFieldControl):
         padding: PaddingValue = None,
         icon_enabled_color: Optional[str] = None,
         icon_disabled_color: Optional[str] = None,
-        on_change: OptionalEventCallable = None,
-        on_focus: OptionalEventCallable = None,
-        on_blur: OptionalEventCallable = None,
-        on_click: OptionalEventCallable = None,
+        options_fill_horizontally: Optional[bool] = None,
+        disabled_hint_content: Optional[Control] = None,
+        on_change: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
+        on_click: OptionalControlEventCallable = None,
         #
         # FormField specific
         #
@@ -181,7 +185,7 @@ class Dropdown(FormFieldControl):
         text_style: Optional[TextStyle] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
-        icon: Optional[str] = None,
+        icon: Optional[IconValueOrControl] = None,
         border: Optional[InputBorder] = None,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
@@ -198,34 +202,17 @@ class Dropdown(FormFieldControl):
         fill_color: Optional[str] = None,
         hint_text: Optional[str] = None,
         hint_style: Optional[TextStyle] = None,
-        helper: Optional[Control] = None,
         helper_text: Optional[str] = None,
         helper_style: Optional[TextStyle] = None,
         counter: Optional[Control] = None,
         counter_text: Optional[str] = None,
-        counter_style: Optional[TextStyle] = None,
-        error: Optional[Control] = None,
         error_text: Optional[str] = None,
-        error_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
-        prefix_icon: Optional[str] = None,
+        prefix_icon: Optional[IconValueOrControl] = None,
         prefix_text: Optional[str] = None,
-        prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
-        suffix_icon: Optional[str] = None,
+        suffix_icon: Optional[IconValueOrControl] = None,
         suffix_text: Optional[str] = None,
-        suffix_style: Optional[TextStyle] = None,
-        icon_color: Optional[str] = None,
-        prefix_icon_color: Optional[str] = None,
-        suffix_icon_color: Optional[str] = None,
-        focus_color: Optional[str] = None,
-        align_label_with_hint: Optional[bool] = None,
-        floating_label_text_style: Optional[TextStyle] = None,
-        active_indicator_border_side: Optional[BorderSide] = None,
-        hint_fade_duration: DurationValue = None,
-        error_max_lines: OptionalNumber = None,
-        helper_max_lines: OptionalNumber = None,
-        hint_max_lines: OptionalNumber = None,
         #
         # ConstrainedControl
         #
@@ -247,8 +234,8 @@ class Dropdown(FormFieldControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -276,34 +263,17 @@ class Dropdown(FormFieldControl):
             fill_color=fill_color,
             hint_text=hint_text,
             hint_style=hint_style,
-            helper=helper,
             helper_text=helper_text,
             helper_style=helper_style,
             counter=counter,
             counter_text=counter_text,
-            counter_text_style=counter_style,
-            error=error,
             error_text=error_text,
-            error_text_style=error_style,
             prefix=prefix,
             prefix_icon=prefix_icon,
             prefix_text=prefix_text,
-            prefix_text_style=prefix_style,
             suffix=suffix,
             suffix_icon=suffix_icon,
             suffix_text=suffix_text,
-            suffix_text_style=suffix_style,
-            icon_color=icon_color,
-            prefix_icon_color=prefix_icon_color,
-            suffix_icon_color=suffix_icon_color,
-            focus_color=focus_color,
-            align_label_with_hint=align_label_with_hint,
-            floating_label_text_style=floating_label_text_style,
-            active_indicator_border_side=active_indicator_border_side,
-            hint_fade_duration=hint_fade_duration,
-            error_max_lines=error_max_lines,
-            helper_max_lines=helper_max_lines,
-            hint_max_lines=hint_max_lines,
             ref=ref,
             key=key,
             width=width,
@@ -336,6 +306,7 @@ class Dropdown(FormFieldControl):
         self.alignment = alignment
         self.elevation = elevation
         self.hint_content = hint_content
+        self.disabled_hint_content = disabled_hint_content
         self.icon_content = icon_content
         self.padding = padding
         self.enable_feedback = enable_feedback
@@ -348,6 +319,7 @@ class Dropdown(FormFieldControl):
         self.icon_enabled_color = icon_enabled_color
         self.icon_disabled_color = icon_disabled_color
         self.on_click = on_click
+        self.options_fill_horizontally = options_fill_horizontally
 
     def _get_control_name(self):
         return "dropdown"
@@ -373,6 +345,9 @@ class Dropdown(FormFieldControl):
         if isinstance(self.__icon_content, Control):
             self.__icon_content._set_attr_internal("n", "icon")
             children.append(self.__icon_content)
+        if isinstance(self.__disabled_hint_content, Control):
+            self.__disabled_hint_content._set_attr_internal("n", "disabled_hint")
+            children.append(self.__disabled_hint_content)
         return children
 
     def focus(self):
@@ -413,6 +388,15 @@ class Dropdown(FormFieldControl):
     @hint_content.setter
     def hint_content(self, value: Optional[Control]):
         self.__hint_content = value
+
+    # disabled_hint_content
+    @property
+    def disabled_hint_content(self) -> Optional[Control]:
+        return self.__disabled_hint_content
+
+    @disabled_hint_content.setter
+    def disabled_hint_content(self, value: Optional[Control]):
+        self.__disabled_hint_content = value
 
     # value
     @property
@@ -488,6 +472,17 @@ class Dropdown(FormFieldControl):
     @autofocus.setter
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
+
+    # options_fill_horizontally
+    @property
+    def options_fill_horizontally(self) -> bool:
+        return self._get_attr(
+            "optionsFillHorizontally", data_type="bool", def_value=False
+        )
+
+    @options_fill_horizontally.setter
+    def options_fill_horizontally(self, value: Optional[bool]):
+        self._set_attr("optionsFillHorizontally", value)
 
     # enable_feedback
     @property

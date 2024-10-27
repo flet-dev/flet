@@ -50,7 +50,6 @@ class FloatingActionButtonControl extends StatelessWidget {
         parseClip(control.attrString("clipBehavior"), Clip.none)!;
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
-    var tooltip = control.attrString("tooltip");
     bool autofocus = control.attrBool("autofocus", false)!;
     bool mini = control.attrBool("mini", false)!;
     bool? enableFeedback = control.attrBool("enableFeedback");
@@ -91,7 +90,6 @@ class FloatingActionButtonControl extends StatelessWidget {
           enableFeedback: enableFeedback,
           clipBehavior: clipBehavior,
           focusColor: focusColor,
-          tooltip: tooltip,
           shape: shape,
           mini: mini,
           child: createControl(control, contentCtrls.first.id, disabled,
@@ -114,7 +112,6 @@ class FloatingActionButtonControl extends StatelessWidget {
           enableFeedback: enableFeedback,
           clipBehavior: clipBehavior,
           focusColor: focusColor,
-          tooltip: tooltip,
           shape: shape,
           mini: mini,
           child: Icon(icon));
@@ -136,7 +133,6 @@ class FloatingActionButtonControl extends StatelessWidget {
         enableFeedback: enableFeedback,
         clipBehavior: clipBehavior,
         focusColor: focusColor,
-        tooltip: tooltip,
         shape: shape,
         mini: mini,
         child: Text(text),
@@ -161,7 +157,6 @@ class FloatingActionButtonControl extends StatelessWidget {
         enableFeedback: enableFeedback,
         clipBehavior: clipBehavior,
         focusColor: focusColor,
-        tooltip: tooltip,
         shape: shape,
       );
     } else {

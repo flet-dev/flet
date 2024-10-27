@@ -18,6 +18,29 @@ import 'numbers.dart';
 import 'others.dart';
 import 'transforms.dart';
 
+BoxConstraints? parseBoxConstraints(Control control, String propName) {
+  var v = control.attrString(propName);
+  if (v == null) {
+    return null;
+  }
+
+  final j1 = json.decode(v);
+  return boxConstraintsFromJSON(j1);
+}
+
+BoxConstraints? boxConstraintsFromJSON(dynamic json,
+    [BoxConstraints? defValue]) {
+  if (json == null) {
+    return null;
+  }
+  return BoxConstraints(
+    minHeight: parseDouble(json["min_height"], 0.0)!,
+    minWidth: parseDouble(json["min_width"], 0.0)!,
+    maxHeight: parseDouble(json["max_height"], 0.0)!,
+    maxWidth: parseDouble(json["max_width"], 0.0)!,
+  );
+}
+
 List<BoxShadow> parseBoxShadow(
     ThemeData theme, Control control, String propName) {
   var v = control.attrString(propName);
@@ -69,15 +92,56 @@ BoxDecoration? boxDecorationFromJSON(
   if (json == null) {
     return null;
   }
+  var shape = parseBoxShape(json["shape"], BoxShape.rectangle)!;
+  var borderRadius = borderRadiusFromJSON(json["border_radius"]);
+  var color = parseColor(theme, json["color"]);
+  var gradient = gradientFromJSON(theme, json["gradient"]);
+  var blendMode = parseBlendMode(json["blend_mode"]);
+
   return BoxDecoration(
-    color: parseColor(theme, json["bgcolor"]),
+    color: color,
     border: borderFromJSON(theme, json["border"]),
-    shape: parseBoxShape(json["shape"], BoxShape.rectangle)!,
-    borderRadius: borderRadiusFromJSON(json["border_radius"]),
-    backgroundBlendMode: parseBlendMode(json["blend_mode"]),
-    boxShadow: boxShadowsFromJSON(theme, json["box_shadow"]),
-    gradient: gradientFromJSON(theme, json["gradient"]),
+    shape: shape,
+    borderRadius: shape == BoxShape.circle ? null : borderRadius,
+    backgroundBlendMode: color != null || gradient != null ? blendMode : null,
+    boxShadow: boxShadowsFromJSON(theme, json["shadow"]),
+    gradient: gradient,
     image: decorationImageFromJSON(theme, json["image"], pageArgs),
+  );
+}
+
+BoxDecoration? boxDecorationFromDetails({
+  Color? color,
+  Border? border,
+  BoxShape? shape,
+  BorderRadius? borderRadius,
+  BlendMode? blendMode,
+  List<BoxShadow>? boxShadow,
+  Gradient? gradient,
+  DecorationImage? image,
+}) {
+  bool hasCustomProperties = color != null ||
+      border != null ||
+      borderRadius != null ||
+      gradient != null ||
+      shape != null ||
+      boxShadow != null ||
+      image != null;
+
+  // If no custom properties are provided, return null
+  if (!hasCustomProperties) {
+    return null;
+  }
+
+  return BoxDecoration(
+    color: color,
+    border: border,
+    backgroundBlendMode: color != null || gradient != null ? blendMode : null,
+    borderRadius: shape == BoxShape.circle ? null : borderRadius,
+    gradient: gradient,
+    shape: shape ?? BoxShape.rectangle,
+    boxShadow: boxShadow,
+    image: image,
   );
 }
 
@@ -113,7 +177,7 @@ DecorationImage? decorationImageFromJSON(
     scale: parseDouble(json["scale"], 1.0)!,
     opacity: parseDouble(json["opacity"], 1.0)!,
     filterQuality:
-        parseFilterQuality(json["filter_quality"], FilterQuality.low)!,
+        parseFilterQuality(json["filter_quality"], FilterQuality.medium)!,
     invertColors: parseBool(json["invert_colors"], false)!,
     isAntiAlias: parseBool(json["anti_alias"], false)!,
   );
@@ -188,6 +252,7 @@ Widget buildImage({
             gaplessPlayback: gaplessPlayback ?? true,
             semanticLabel: semanticsLabel);
       }
+      return image;
     } catch (ex) {
       return ErrorControl("Error decoding base64: ${ex.toString()}");
     }
@@ -267,8 +332,7 @@ Widget buildImage({
         }
       }
     }
-
     return image;
   }
-  return const ErrorControl("Either src or src_base64 must be specified.");
+  return const ErrorControl("A valid src or src_base64 must be specified.");
 }

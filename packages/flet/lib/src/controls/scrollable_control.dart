@@ -7,11 +7,9 @@ import '../flet_app_services.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
-import '../utils/desktop.dart';
 import '../utils/numbers.dart';
 import '../utils/others.dart';
 import '../utils/time.dart';
-import '../widgets/adjustable_scroll_controller.dart';
 import 'flet_store_mixin.dart';
 
 class ScrollableControl extends StatefulWidget {
@@ -47,9 +45,7 @@ class _ScrollableControlState extends State<ScrollableControl>
     if (widget.scrollController != null) {
       _controller = widget.scrollController!;
     } else {
-      _controller = (isWindowsDesktop()
-          ? AdjustableScrollController()
-          : ScrollController());
+      _controller = ScrollController();
       _ownController = true;
     }
   }

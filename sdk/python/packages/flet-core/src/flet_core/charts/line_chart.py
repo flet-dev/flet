@@ -10,6 +10,7 @@ from flet_core.control import OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
@@ -18,6 +19,7 @@ from flet_core.types import (
     ScaleValue,
     OptionalEventCallable,
     PaddingValue,
+    OptionalControlEventCallable,
 )
 
 
@@ -79,8 +81,8 @@ class LineChart(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -453,12 +455,12 @@ class LineChart(ConstrainedControl):
 
     # on_chart_event
     @property
-    def on_chart_event(self):
-        return self.__on_chart_event
+    def on_chart_event(self) -> OptionalEventCallable["LineChartEvent"]:
+        return self.__on_chart_event.handler
 
     @on_chart_event.setter
     def on_chart_event(self, handler: OptionalEventCallable["LineChartEvent"]):
-        self.__on_chart_event.subscribe(handler)
+        self.__on_chart_event.handler = handler
         self._set_attr("onChartEvent", True if handler is not None else None)
 
 

@@ -1,12 +1,13 @@
 from datetime import date, datetime
 from enum import Enum
-from typing import Any, Optional, Union, Callable
+from typing import Any, Optional, Union
 
 from flet_core import ControlEvent
 from flet_core.control import Control, OptionalNumber
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.textfield import KeyboardType
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     ResponsiveNumber,
     OptionalEventCallable,
@@ -102,10 +103,10 @@ class DatePicker(Control):
         field_label_text: Optional[str] = None,
         switch_to_calendar_icon: Optional[str] = None,
         switch_to_input_icon: Optional[str] = None,
-        on_change: OptionalEventCallable = None,
-        on_dismiss: OptionalEventCallable = None,
-        on_entry_mode_change: Optional[
-            Callable[[DatePickerEntryModeChangeEvent], None]
+        on_change: OptionalControlEventCallable = None,
+        on_dismiss: OptionalControlEventCallable = None,
+        on_entry_mode_change: OptionalEventCallable[
+            "DatePickerEntryModeChangeEvent"
         ] = None,
         #
         # ConstrainedControl
@@ -115,7 +116,7 @@ class DatePicker(Control):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        tooltip: Optional[str] = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -378,11 +379,13 @@ class DatePicker(Control):
 
     # on_entry_mode_change
     @property
-    def on_entry_mode_change(self):
-        return self.__on_entry_mode_change
+    def on_entry_mode_change(
+        self,
+    ) -> OptionalEventCallable[DatePickerEntryModeChangeEvent]:
+        return self.__on_entry_mode_change.handler
 
     @on_entry_mode_change.setter
     def on_entry_mode_change(
-        self, handler: Optional[Callable[[DatePickerEntryModeChangeEvent], None]]
+        self, handler: OptionalEventCallable[DatePickerEntryModeChangeEvent]
     ):
-        self.__on_entry_mode_change.subscribe(handler)
+        self.__on_entry_mode_change.handler = handler

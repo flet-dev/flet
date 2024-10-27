@@ -1,9 +1,10 @@
-from typing import List, Optional, Union, Callable, Sequence
+from typing import List, Optional, Union, Sequence
 
-from flet_core import Control
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.app_bar import AppBar
 from flet_core.bottom_app_bar import BottomAppBar
+from flet_core.box import BoxDecoration
+from flet_core.control import Control
 from flet_core.control import OptionalNumber
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
@@ -18,6 +19,7 @@ from flet_core.types import (
     OffsetValue,
     PaddingValue,
     ScrollMode,
+    OptionalEventCallable,
 )
 
 
@@ -50,6 +52,8 @@ class View(ScrollableControl, AdaptiveControl):
         spacing: OptionalNumber = None,
         padding: PaddingValue = None,
         bgcolor: Optional[str] = None,
+        decoration: Optional[BoxDecoration] = None,
+        foreground_decoration: Optional[BoxDecoration] = None,
         #
         # ScrollableControl
         #
@@ -57,7 +61,7 @@ class View(ScrollableControl, AdaptiveControl):
         auto_scroll: Optional[bool] = None,
         fullscreen_dialog: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
-        on_scroll: Optional[Callable[[OnScrollEvent], None]] = None,
+        on_scroll: OptionalEventCallable[OnScrollEvent] = None,
         #
         # AdaptiveControl
         #
@@ -92,6 +96,8 @@ class View(ScrollableControl, AdaptiveControl):
         self.scroll = scroll
         self.auto_scroll = auto_scroll
         self.fullscreen_dialog = fullscreen_dialog
+        self.decoration = decoration
+        self.foreground_decoration = foreground_decoration
 
     def _get_control_name(self):
         return "view"
@@ -105,6 +111,8 @@ class View(ScrollableControl, AdaptiveControl):
             self._set_attr_json(
                 "floatingActionButtonLocation", self.__floating_action_button_location
             )
+        self._set_attr_json("decoration", self.__decoration)
+        self._set_attr_json("foregroundDecoration", self.__foreground_decoration)
 
     def _get_children(self):
         children = []
@@ -271,6 +279,24 @@ class View(ScrollableControl, AdaptiveControl):
     @fullscreen_dialog.setter
     def fullscreen_dialog(self, value: Optional[bool]):
         self._set_attr("fullscreenDialog", value)
+
+    # foreground_decoration
+    @property
+    def foreground_decoration(self) -> Optional[BoxDecoration]:
+        return self.__foreground_decoration
+
+    @foreground_decoration.setter
+    def foreground_decoration(self, value: Optional[BoxDecoration]):
+        self.__foreground_decoration = value
+
+    # decoration
+    @property
+    def decoration(self) -> Optional[BoxDecoration]:
+        return self.__decoration
+
+    @decoration.setter
+    def decoration(self, value: Optional[BoxDecoration]):
+        self.__decoration = value
 
     # Magic methods
     def __contains__(self, item: Control) -> bool:

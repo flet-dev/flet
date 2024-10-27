@@ -1,28 +1,29 @@
 from enum import Enum
 from typing import Any, Optional, Union
 
-from flet_core.border import BorderSide
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     VerticalAlignment,
-    OptionalEventCallable,
-    DurationValue,
 )
 
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
+
+IconValueOrControl = Union[str, Control]
 
 
 class InputBorder(Enum):
@@ -39,7 +40,7 @@ class FormFieldControl(ConstrainedControl):
         text_vertical_align: Union[VerticalAlignment, OptionalNumber] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
-        icon: Optional[str] = None,
+        icon: Optional[IconValueOrControl] = None,
         border: Optional[InputBorder] = None,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
@@ -57,34 +58,21 @@ class FormFieldControl(ConstrainedControl):
         hover_color: Optional[str] = None,
         hint_text: Optional[str] = None,
         hint_style: Optional[TextStyle] = None,
-        helper: Optional[Control] = None,
         helper_text: Optional[str] = None,
         helper_style: Optional[TextStyle] = None,
         counter: Optional[Control] = None,
         counter_text: Optional[str] = None,
-        counter_text_style: Optional[TextStyle] = None,
-        error: Optional[Control] = None,
+        counter_style: Optional[TextStyle] = None,
         error_text: Optional[str] = None,
-        error_text_style: Optional[TextStyle] = None,
+        error_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
-        prefix_icon: Optional[str] = None,
+        prefix_icon: Optional[IconValueOrControl] = None,
         prefix_text: Optional[str] = None,
-        prefix_text_style: Optional[TextStyle] = None,
+        prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
-        suffix_icon: Optional[str] = None,
+        suffix_icon: Optional[IconValueOrControl] = None,
         suffix_text: Optional[str] = None,
-        suffix_text_style: Optional[TextStyle] = None,
-        icon_color: Optional[str] = None,
-        prefix_icon_color: Optional[str] = None,
-        suffix_icon_color: Optional[str] = None,
-        focus_color: Optional[str] = None,
-        align_label_with_hint: Optional[bool] = None,
-        floating_label_text_style: Optional[TextStyle] = None,
-        active_indicator_border_side: Optional[BorderSide] = None,
-        hint_fade_duration: DurationValue = None,
-        error_max_lines: OptionalNumber = None,
-        helper_max_lines: OptionalNumber = None,
-        hint_max_lines: OptionalNumber = None,
+        suffix_style: Optional[TextStyle] = None,
         #
         # ConstrainedControl
         #
@@ -110,8 +98,8 @@ class FormFieldControl(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -174,32 +162,19 @@ class FormFieldControl(ConstrainedControl):
         self.helper_style = helper_style
         self.counter = counter
         self.counter_text = counter_text
-        self.counter_text_style = counter_text_style
+        self.counter_style = counter_style
         self.error_text = error_text
-        self.error_text_style = error_text_style
+        self.error_style = error_style
         self.prefix = prefix
         self.prefix_icon = prefix_icon
         self.prefix_text = prefix_text
-        self.prefix_text_style = prefix_text_style
+        self.prefix_style = prefix_style
         self.suffix = suffix
         self.suffix_icon = suffix_icon
         self.suffix_text = suffix_text
-        self.suffix_text_style = suffix_text_style
+        self.suffix_style = suffix_style
         self.hover_color = hover_color
         self.fill_color = fill_color
-        self.icon_color = icon_color
-        self.prefix_icon_color = prefix_icon_color
-        self.suffix_icon_color = suffix_icon_color
-        self.focus_color = focus_color
-        self.align_label_with_hint = align_label_with_hint
-        self.floating_label_text_style = floating_label_text_style
-        self.active_indicator_border_side = active_indicator_border_side
-        self.hint_fade_duration = hint_fade_duration
-        self.error_max_lines = error_max_lines
-        self.helper_max_lines = helper_max_lines
-        self.hint_max_lines = hint_max_lines
-        self.error = error
-        self.helper = helper
 
     def before_update(self):
         super().before_update()
@@ -209,15 +184,16 @@ class FormFieldControl(ConstrainedControl):
         self._set_attr_json("labelStyle", self.__label_style)
         self._set_attr_json("hintStyle", self.__hint_style)
         self._set_attr_json("helperStyle", self.__helper_style)
-        self._set_attr_json("counterTextStyle", self.__counter_text_style)
-        self._set_attr_json("errorTextStyle", self.__error_text_style)
-        self._set_attr_json("prefixTextStyle", self.__prefix_text_style)
-        self._set_attr_json("suffixTextStyle", self.__suffix_text_style)
-        self._set_attr_json("floatingLabelTextStyle", self.__floating_label_text_style)
-        self._set_attr_json(
-            "activeIndicatorBorderSide", self.__active_indicator_border_side
-        )
-        self._set_attr_json("hintFadeDuration", self.__hint_fade_duration)
+        self._set_attr_json("counterStyle", self.__counter_style)
+        self._set_attr_json("errorStyle", self.__error_style)
+        self._set_attr_json("prefixStyle", self.__prefix_style)
+        self._set_attr_json("suffixStyle", self.__suffix_style)
+        if isinstance(self.__suffix_icon, str):
+            self._set_attr("suffixIcon", self.__suffix_icon)
+        if isinstance(self.__prefix_icon, str):
+            self._set_attr("prefixIcon", self.__prefix_icon)
+        if isinstance(self.__icon, str):
+            self._set_attr("icon", self.__icon)
 
     def _get_children(self):
         children = []
@@ -227,15 +203,18 @@ class FormFieldControl(ConstrainedControl):
         if isinstance(self.__suffix, Control):
             self.__suffix._set_attr_internal("n", "suffix")
             children.append(self.__suffix)
+        if isinstance(self.__suffix_icon, Control):
+            self.__suffix_icon._set_attr_internal("n", "suffixIcon")
+            children.append(self.__suffix_icon)
+        if isinstance(self.__prefix_icon, Control):
+            self.__prefix_icon._set_attr_internal("n", "prefixIcon")
+            children.append(self.__prefix_icon)
+        if isinstance(self.__icon, Control):
+            self.__icon._set_attr_internal("n", "icon")
+            children.append(self.__icon)
         if isinstance(self.__counter, Control):
             self.__counter._set_attr_internal("n", "counter")
             children.append(self.__counter)
-        if isinstance(self.__error, Control):
-            self.__error._set_attr_internal("n", "error")
-            children.append(self.__error)
-        if isinstance(self.__helper, Control):
-            self.__helper._set_attr_internal("n", "helper")
-            children.append(self.__helper)
         return children
 
     # text_size
@@ -276,12 +255,12 @@ class FormFieldControl(ConstrainedControl):
 
     # icon
     @property
-    def icon(self) -> Optional[str]:
-        return self._get_attr("icon")
+    def icon(self) -> Optional[IconValueOrControl]:
+        return self.__icon
 
     @icon.setter
-    def icon(self, value: Optional[str]):
-        self._set_attr("icon", value)
+    def icon(self, value: Optional[IconValueOrControl]):
+        self.__icon = value
 
     # border
     @property
@@ -458,14 +437,14 @@ class FormFieldControl(ConstrainedControl):
     def counter_text(self, value: Optional[str]):
         self._set_attr("counterText", value)
 
-    # counter_text_style
+    # counter_style
     @property
-    def counter_text_style(self) -> Optional[TextStyle]:
-        return self.__counter_text_style
+    def counter_style(self) -> Optional[TextStyle]:
+        return self.__counter_style
 
-    @counter_text_style.setter
-    def counter_text_style(self, value: Optional[TextStyle]):
-        self.__counter_text_style = value
+    @counter_style.setter
+    def counter_style(self, value: Optional[TextStyle]):
+        self.__counter_style = value
 
     # error_text
     @property
@@ -476,14 +455,14 @@ class FormFieldControl(ConstrainedControl):
     def error_text(self, value: Optional[str]):
         self._set_attr("errorText", value)
 
-    # error_text_style
+    # error_style
     @property
-    def error_text_style(self) -> Optional[TextStyle]:
-        return self.__error_text_style
+    def error_style(self) -> Optional[TextStyle]:
+        return self.__error_style
 
-    @error_text_style.setter
-    def error_text_style(self, value: Optional[TextStyle]):
-        self.__error_text_style = value
+    @error_style.setter
+    def error_style(self, value: Optional[TextStyle]):
+        self.__error_style = value
 
     # prefix
     @property
@@ -493,24 +472,6 @@ class FormFieldControl(ConstrainedControl):
     @prefix.setter
     def prefix(self, value: Optional[Control]):
         self.__prefix = value
-
-    # error
-    @property
-    def error(self) -> Optional[Control]:
-        return self.__error
-
-    @error.setter
-    def error(self, value: Optional[Control]):
-        self.__error = value
-
-    # helper
-    @property
-    def helper(self) -> Optional[Control]:
-        return self.__helper
-
-    @helper.setter
-    def helper(self, value: Optional[Control]):
-        self.__helper = value
 
     # counter
     @property
@@ -523,12 +484,12 @@ class FormFieldControl(ConstrainedControl):
 
     # prefix_icon
     @property
-    def prefix_icon(self) -> Optional[str]:
-        return self._get_attr("prefixIcon")
+    def prefix_icon(self) -> Optional[IconValueOrControl]:
+        return self.__prefix_icon
 
     @prefix_icon.setter
-    def prefix_icon(self, value: Optional[str]):
-        self._set_attr("prefixIcon", value)
+    def prefix_icon(self, value: Optional[IconValueOrControl]):
+        self.__prefix_icon = value
 
     # prefix_text
     @property
@@ -539,14 +500,14 @@ class FormFieldControl(ConstrainedControl):
     def prefix_text(self, value: Optional[str]):
         self._set_attr("prefixText", value)
 
-    # prefix_text_style
+    # prefix_style
     @property
-    def prefix_text_style(self) -> Optional[TextStyle]:
-        return self.__prefix_text_style
+    def prefix_style(self) -> Optional[TextStyle]:
+        return self.__prefix_style
 
-    @prefix_text_style.setter
-    def prefix_text_style(self, value: Optional[TextStyle]):
-        self.__prefix_text_style = value
+    @prefix_style.setter
+    def prefix_style(self, value: Optional[TextStyle]):
+        self.__prefix_style = value
 
     # suffix
     @property
@@ -559,12 +520,12 @@ class FormFieldControl(ConstrainedControl):
 
     # suffix_icon
     @property
-    def suffix_icon(self) -> Optional[str]:
-        return self._get_attr("suffixIcon")
+    def suffix_icon(self) -> Optional[IconValueOrControl]:
+        return self.__suffix_icon
 
     @suffix_icon.setter
-    def suffix_icon(self, value: Optional[str]):
-        self._set_attr("suffixIcon", value)
+    def suffix_icon(self, value: Optional[IconValueOrControl]):
+        self.__suffix_icon = value
 
     # suffix_text
     @property
@@ -575,14 +536,14 @@ class FormFieldControl(ConstrainedControl):
     def suffix_text(self, value: Optional[str]):
         self._set_attr("suffixText", value)
 
-    # suffix_text_style
+    # suffix_style
     @property
-    def suffix_text_style(self) -> Optional[TextStyle]:
-        return self.__suffix_text_style
+    def suffix_style(self) -> Optional[TextStyle]:
+        return self.__suffix_style
 
-    @suffix_text_style.setter
-    def suffix_text_style(self, value: Optional[TextStyle]):
-        self.__suffix_text_style = value
+    @suffix_style.setter
+    def suffix_style(self, value: Optional[TextStyle]):
+        self.__suffix_style = value
 
     # fill_color
     @property
@@ -601,102 +562,3 @@ class FormFieldControl(ConstrainedControl):
     @hover_color.setter
     def hover_color(self, value: Optional[str]):
         self._set_attr("hoverColor", value)
-
-    # icon_color
-    @property
-    def icon_color(self) -> Optional[str]:
-        return self._get_attr("iconColor")
-
-    @icon_color.setter
-    def icon_color(self, value: Optional[str]):
-        self._set_attr("iconColor", value)
-
-    # prefix_icon_color
-    @property
-    def prefix_icon_color(self) -> Optional[str]:
-        return self._get_attr("prefixIconColor")
-
-    @prefix_icon_color.setter
-    def prefix_icon_color(self, value: Optional[str]):
-        self._set_attr("prefixIconColor", value)
-
-    # suffix_icon_color
-    @property
-    def suffix_icon_color(self) -> Optional[str]:
-        return self._get_attr("suffixIconColor")
-
-    @suffix_icon_color.setter
-    def suffix_icon_color(self, value: Optional[str]):
-        self._set_attr("suffixIconColor", value)
-
-    # focus_color
-    @property
-    def focus_color(self) -> Optional[str]:
-        return self._get_attr("focusColor")
-
-    @focus_color.setter
-    def focus_color(self, value: Optional[str]):
-        self._set_attr("focusColor", value)
-
-    # align_label_with_hint
-    @property
-    def align_label_with_hint(self) -> Optional[bool]:
-        return self._get_attr("alignLabelWithHint", data_type="bool", def_value=False)
-
-    @align_label_with_hint.setter
-    def align_label_with_hint(self, value: Optional[bool]):
-        self._set_attr("alignLabelWithHint", value)
-
-    # floating_label_text_style
-    @property
-    def floating_label_text_style(self) -> Optional[TextStyle]:
-        return self.__floating_label_text_style
-
-    @floating_label_text_style.setter
-    def floating_label_text_style(self, value: Optional[TextStyle]):
-        self.__floating_label_text_style = value
-
-    # active_indicator_border_side
-    @property
-    def active_indicator_border_side(self) -> Optional[BorderSide]:
-        return self.__active_indicator_border_side
-
-    @active_indicator_border_side.setter
-    def active_indicator_border_side(self, value: Optional[BorderSide]):
-        self.__active_indicator_border_side = value
-
-    # hint_fade_duration
-    @property
-    def hint_fade_duration(self) -> DurationValue:
-        return self.__hint_fade_duration
-
-    @hint_fade_duration.setter
-    def hint_fade_duration(self, value: DurationValue):
-        self.__hint_fade_duration = value
-
-    # error_max_lines
-    @property
-    def error_max_lines(self) -> Optional[int]:
-        return self._get_attr("errorMaxLines", data_type="int")
-
-    @error_max_lines.setter
-    def error_max_lines(self, value: Optional[int]):
-        self._set_attr("errorMaxLines", value)
-
-    # helper_max_lines
-    @property
-    def helper_max_lines(self) -> Optional[int]:
-        return self._get_attr("helperMaxLines", data_type="int")
-
-    @helper_max_lines.setter
-    def helper_max_lines(self, value: Optional[int]):
-        self._set_attr("helperMaxLines", value)
-
-    # hint_max_lines
-    @property
-    def hint_max_lines(self) -> Optional[int]:
-        return self._get_attr("hintMaxLines", data_type="int")
-
-    @hint_max_lines.setter
-    def hint_max_lines(self, value: Optional[int]):
-        self._set_attr("hintMaxLines", value)

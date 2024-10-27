@@ -1,5 +1,5 @@
 import json
-from typing import Any, Dict, Optional, Union, Callable
+from typing import Any, Dict, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.constrained_control import ConstrainedControl
@@ -8,15 +8,16 @@ from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.snack_bar import DismissDirection
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
+    DurationValue,
     OffsetValue,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
-    OptionalControlEventCallable,
-    DurationValue,
 )
 from flet_core.utils import deprecated
 
@@ -47,10 +48,8 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         cross_axis_end_offset: OptionalNumber = None,
         on_update: OptionalEventCallable["DismissibleUpdateEvent"] = None,
         on_dismiss: OptionalEventCallable["DismissibleDismissEvent"] = None,
-        on_confirm_dismiss: Optional[
-            Callable[["DismissibleDismissEvent"], None]
-        ] = None,
-        on_resize: OptionalEventCallable = None,
+        on_confirm_dismiss: OptionalEventCallable["DismissibleDismissEvent"] = None,
+        on_resize: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -75,8 +74,8 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -250,34 +249,34 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
 
     # on_dismiss
     @property
-    def on_dismiss(self):
-        return self._get_event_handler("dismiss")
+    def on_dismiss(self) -> OptionalEventCallable["DismissibleDismissEvent"]:
+        return self.__on_dismiss.handler
 
     @on_dismiss.setter
     def on_dismiss(self, handler: OptionalEventCallable["DismissibleDismissEvent"]):
-        self.__on_dismiss.subscribe(handler)
+        self.__on_dismiss.handler = handler
         self._set_attr("onDismiss", True if handler is not None else None)
 
     # on_confirm_dismiss
     @property
-    def on_confirm_dismiss(self):
-        return self._get_event_handler("confirm_dismiss")
+    def on_confirm_dismiss(self) -> OptionalEventCallable["DismissibleDismissEvent"]:
+        return self.__on_confirm_dismiss.handler
 
     @on_confirm_dismiss.setter
     def on_confirm_dismiss(
         self, handler: OptionalEventCallable["DismissibleDismissEvent"]
     ):
-        self.__on_confirm_dismiss.subscribe(handler)
+        self.__on_confirm_dismiss.handler = handler
         self._set_attr("onConfirmDismiss", True if handler is not None else None)
 
     # on_update
     @property
-    def on_update(self):
-        return self._get_event_handler("update")
+    def on_update(self) -> OptionalEventCallable["DismissibleUpdateEvent"]:
+        return self.__on_update.handler
 
     @on_update.setter
     def on_update(self, handler: OptionalEventCallable["DismissibleUpdateEvent"]):
-        self.__on_update.subscribe(handler)
+        self.__on_update.handler = handler
         self._set_attr("onUpdate", True if handler is not None else None)
 
     # on_resize

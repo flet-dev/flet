@@ -131,7 +131,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -377,32 +377,32 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     # on_tap_down
     @property
-    def on_tap_down(self):
-        return self.__on_tap_down
+    def on_tap_down(self) -> OptionalEventCallable["TapEvent"]:
+        return self.__on_tap_down.handler
 
     @on_tap_down.setter
     def on_tap_down(self, handler: OptionalEventCallable["TapEvent"]):
-        self.__on_tap_down.subscribe(handler)
+        self.__on_tap_down.handler = handler
         self._set_attr("onTapDown", True if handler is not None else None)
 
     # on_tap_up
     @property
-    def on_tap_up(self):
-        return self.__on_tap_up
+    def on_tap_up(self) -> OptionalEventCallable["TapEvent"]:
+        return self.__on_tap_up.handler
 
     @on_tap_up.setter
     def on_tap_up(self, handler: OptionalEventCallable["TapEvent"]):
-        self.__on_tap_up.subscribe(handler)
+        self.__on_tap_up.handler = handler
         self._set_attr("onTapUp", True if handler is not None else None)
 
     # on_multi_tap
     @property
-    def on_multi_tap(self):
-        return self.__on_multi_tap
+    def on_multi_tap(self) -> OptionalEventCallable["MultiTapEvent"]:
+        return self.__on_multi_tap.handler
 
     @on_multi_tap.setter
     def on_multi_tap(self, handler: OptionalEventCallable["MultiTapEvent"]):
-        self.__on_multi_tap.subscribe(handler)
+        self.__on_multi_tap.handler = handler
         self._set_attr("onMultiTap", True if handler is not None else None)
 
     # multi_tap_touches
@@ -436,70 +436,72 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     # on_tap_down
     @property
-    def on_secondary_tap_down(self):
-        return self.__on_secondary_tap_down
+    def on_secondary_tap_down(self) -> OptionalEventCallable["TapEvent"]:
+        return self.__on_secondary_tap_down.handler
 
     @on_secondary_tap_down.setter
     def on_secondary_tap_down(self, handler: OptionalEventCallable["TapEvent"]):
-        self.__on_secondary_tap_down.subscribe(handler)
+        self.__on_secondary_tap_down.handler = handler
         self._set_attr("onSecondaryTapDown", True if handler is not None else None)
 
     # on_secondary_tap_up
     @property
-    def on_secondary_tap_up(self):
-        return self.__on_secondary_tap_up
+    def on_secondary_tap_up(self) -> OptionalEventCallable["TapEvent"]:
+        return self.__on_secondary_tap_up.handler
 
     @on_secondary_tap_up.setter
     def on_secondary_tap_up(self, handler: OptionalEventCallable["TapEvent"]):
-        self.__on_secondary_tap_up.subscribe(handler)
+        self.__on_secondary_tap_up.handler = handler
         self._set_attr("onSecondaryTapUp", True if handler is not None else None)
 
     # on_long_press_start
     @property
-    def on_long_press_start(self):
-        return self.__on_long_press_start
+    def on_long_press_start(self) -> OptionalEventCallable["LongPressStartEvent"]:
+        return self.__on_long_press_start.handler
 
     @on_long_press_start.setter
     def on_long_press_start(
         self, handler: OptionalEventCallable["LongPressStartEvent"]
     ):
-        self.__on_long_press_start.subscribe(handler)
+        self.__on_long_press_start.handler = handler
         self._set_attr("onLongPressStart", True if handler is not None else None)
 
     # on_long_press_end
     @property
-    def on_long_press_end(self):
-        return self.__on_long_press_end
+    def on_long_press_end(self) -> OptionalEventCallable["LongPressEndEvent"]:
+        return self.__on_long_press_end.handler
 
     @on_long_press_end.setter
     def on_long_press_end(self, handler: OptionalEventCallable["LongPressEndEvent"]):
-        self.__on_long_press_end.subscribe(handler)
+        self.__on_long_press_end.handler = handler
         self._set_attr("onLongPressEnd", True if handler is not None else None)
 
     # on_secondary_long_press_start
     @property
-    def on_secondary_long_press_start(self):
-        return self.__on_secondary_long_press_start
+    def on_secondary_long_press_start(
+        self,
+    ) -> OptionalEventCallable["LongPressStartEvent"]:
+        return self.__on_secondary_long_press_start.handler
 
     @on_secondary_long_press_start.setter
     def on_secondary_long_press_start(
         self, handler: OptionalEventCallable["LongPressStartEvent"]
     ):
-        self.__on_secondary_long_press_start.subscribe(handler)
+        self.__on_secondary_long_press_start.handler = handler
         self._set_attr(
             "onSecondaryLongPressStart", True if handler is not None else None
         )
 
     # on_secondary_long_press_end
     @property
-    def on_secondary_long_press_end(self):
-        return self.__on_secondary_long_press_end
+    def on_secondary_long_press_end(self) -> OptionalEventCallable["LongPressEndEvent"]:
+        return self.__on_secondary_long_press_end.handler
 
     @on_secondary_long_press_end.setter
     def on_secondary_long_press_end(
         self, handler: OptionalEventCallable["LongPressEndEvent"]
     ):
-        self.__on_secondary_long_press_end.subscribe(handler)
+        self.__on_secondary_long_press_end.handler = handler
         self._set_attr("onSecondaryLongPressEnd", True if handler is not None else None)
 
     # on_double_tap
@@ -514,178 +516,178 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     # on_double_tap_down
     @property
-    def on_double_tap_down(self):
-        return self.__on_double_tap_down
+    def on_double_tap_down(self) -> OptionalEventCallable["TapEvent"]:
+        return self.__on_double_tap_down.handler
 
     @on_double_tap_down.setter
     def on_double_tap_down(self, handler: OptionalEventCallable["TapEvent"]):
-        self.__on_double_tap_down.subscribe(handler)
+        self.__on_double_tap_down.handler = handler
         self._set_attr("onDoubleTapDown", True if handler is not None else None)
 
     # on_horizontal_drag_start
     @property
-    def on_horizontal_drag_start(self):
-        return self.__on_horizontal_drag_start
+    def on_horizontal_drag_start(self) -> OptionalEventCallable["DragStartEvent"]:
+        return self.__on_horizontal_drag_start.handler
 
     @on_horizontal_drag_start.setter
     def on_horizontal_drag_start(
         self, handler: OptionalEventCallable["DragStartEvent"]
     ):
-        self.__on_horizontal_drag_start.subscribe(handler)
+        self.__on_horizontal_drag_start.handler = handler
         self._set_attr("onHorizontalDragStart", True if handler is not None else None)
 
     # on_horizontal_drag_update
     @property
-    def on_horizontal_drag_update(self):
-        return self.__on_horizontal_drag_update
+    def on_horizontal_drag_update(self) -> OptionalEventCallable["DragUpdateEvent"]:
+        return self.__on_horizontal_drag_update.handler
 
     @on_horizontal_drag_update.setter
     def on_horizontal_drag_update(
         self, handler: OptionalEventCallable["DragUpdateEvent"]
     ):
-        self.__on_horizontal_drag_update.subscribe(handler)
+        self.__on_horizontal_drag_update.handler = handler
         self._set_attr("onHorizontalDragUpdate", True if handler is not None else None)
 
     # on_horizontal_drag_end
     @property
-    def on_horizontal_drag_end(self):
-        return self.__on_horizontal_drag_end
+    def on_horizontal_drag_end(self) -> OptionalEventCallable["DragEndEvent"]:
+        return self.__on_horizontal_drag_end.handler
 
     @on_horizontal_drag_end.setter
     def on_horizontal_drag_end(self, handler: OptionalEventCallable["DragEndEvent"]):
-        self.__on_horizontal_drag_end.subscribe(handler)
+        self.__on_horizontal_drag_end.handler = handler
         self._set_attr("onHorizontalDragEnd", True if handler is not None else None)
 
     # on_vertical_drag_start
     @property
-    def on_vertical_drag_start(self):
-        return self.__on_vertical_drag_start
+    def on_vertical_drag_start(self) -> OptionalEventCallable["DragStartEvent"]:
+        return self.__on_vertical_drag_start.handler
 
     @on_vertical_drag_start.setter
     def on_vertical_drag_start(self, handler: OptionalEventCallable["DragStartEvent"]):
-        self.__on_vertical_drag_start.subscribe(handler)
+        self.__on_vertical_drag_start.handler = handler
         self._set_attr("onVerticalDragStart", True if handler is not None else None)
 
     # on_vertical_drag_update
     @property
-    def on_vertical_drag_update(self):
-        return self.__on_vertical_drag_update
+    def on_vertical_drag_update(self) -> OptionalEventCallable["DragUpdateEvent"]:
+        return self.__on_vertical_drag_update.handler
 
     @on_vertical_drag_update.setter
     def on_vertical_drag_update(
         self, handler: OptionalEventCallable["DragUpdateEvent"]
     ):
-        self.__on_vertical_drag_update.subscribe(handler)
+        self.__on_vertical_drag_update.handler = handler
         self._set_attr("onVerticalDragUpdate", True if handler is not None else None)
 
     # on_vertical_drag_end
     @property
-    def on_vertical_drag_end(self):
-        return self.__on_vertical_drag_end
+    def on_vertical_drag_end(self) -> OptionalEventCallable["DragEndEvent"]:
+        return self.__on_vertical_drag_end.handler
 
     @on_vertical_drag_end.setter
     def on_vertical_drag_end(self, handler: OptionalEventCallable["DragEndEvent"]):
-        self.__on_vertical_drag_end.subscribe(handler)
+        self.__on_vertical_drag_end.handler = handler
         self._set_attr("onVerticalDragEnd", True if handler is not None else None)
 
     # on_pan_start
     @property
-    def on_pan_start(self):
-        return self.__on_pan_start
+    def on_pan_start(self) -> OptionalEventCallable["DragStartEvent"]:
+        return self.__on_pan_start.handler
 
     @on_pan_start.setter
     def on_pan_start(self, handler: OptionalEventCallable["DragStartEvent"]):
-        self.__on_pan_start.subscribe(handler)
+        self.__on_pan_start.handler = handler
         self._set_attr("onPanStart", True if handler is not None else None)
 
     # on_pan_updatevertical_drag
     @property
-    def on_pan_update(self):
-        return self.__on_pan_update
+    def on_pan_update(self) -> OptionalEventCallable["DragUpdateEvent"]:
+        return self.__on_pan_update.handler
 
     @on_pan_update.setter
     def on_pan_update(self, handler: OptionalEventCallable["DragUpdateEvent"]):
-        self.__on_pan_update.subscribe(handler)
+        self.__on_pan_update.handler = handler
         self._set_attr("onPanUpdate", True if handler is not None else None)
 
     # on_pan_end
     @property
-    def on_pan_end(self):
-        return self.__on_pan_end
+    def on_pan_end(self) -> OptionalEventCallable["DragEndEvent"]:
+        return self.__on_pan_end.handler
 
     @on_pan_end.setter
     def on_pan_end(self, handler: OptionalEventCallable["DragEndEvent"]):
-        self.__on_pan_end.subscribe(handler)
+        self.__on_pan_end.handler = handler
         self._set_attr("onPanEnd", True if handler is not None else None)
 
     # on_scale_start
     @property
-    def on_scale_start(self):
-        return self.__on_scale_start
+    def on_scale_start(self) -> OptionalEventCallable["ScaleStartEvent"]:
+        return self.__on_scale_start.handler
 
     @on_scale_start.setter
     def on_scale_start(self, handler: OptionalEventCallable["ScaleStartEvent"]):
-        self.__on_scale_start.subscribe(handler)
+        self.__on_scale_start.handler = handler
         self._set_attr("onScaleStart", True if handler is not None else None)
 
     # on_scale_update
     @property
-    def on_scale_update(self):
-        return self.__on_scale_update
+    def on_scale_update(self) -> OptionalEventCallable["ScaleUpdateEvent"]:
+        return self.__on_scale_update.handler
 
     @on_scale_update.setter
     def on_scale_update(self, handler: OptionalEventCallable["ScaleUpdateEvent"]):
-        self.__on_scale_update.subscribe(handler)
+        self.__on_scale_update.handler = handler
         self._set_attr("onScaleUpdate", True if handler is not None else None)
 
     # on_scale_end
     @property
-    def on_scale_end(self):
-        return self.__on_scale_end
+    def on_scale_end(self) -> OptionalEventCallable["ScaleEndEvent"]:
+        return self.__on_scale_end.handler
 
     @on_scale_end.setter
     def on_scale_end(self, handler: OptionalEventCallable["ScaleEndEvent"]):
-        self.__on_scale_end.subscribe(handler)
+        self.__on_scale_end.handler = handler
         self._set_attr("onScaleEnd", True if handler is not None else None)
 
     # on_hover
     @property
-    def on_hover(self):
-        return self.__on_hover
+    def on_hover(self) -> OptionalEventCallable["HoverEvent"]:
+        return self.__on_hover.handler
 
     @on_hover.setter
     def on_hover(self, handler: OptionalEventCallable["HoverEvent"]):
-        self.__on_hover.subscribe(handler)
+        self.__on_hover.handler = handler
         self._set_attr("onHover", True if handler is not None else None)
 
     # on_enter
     @property
-    def on_enter(self):
-        return self.__on_enter
+    def on_enter(self) -> OptionalEventCallable["HoverEvent"]:
+        return self.__on_enter.handler
 
     @on_enter.setter
     def on_enter(self, handler: OptionalEventCallable["HoverEvent"]):
-        self.__on_enter.subscribe(handler)
+        self.__on_enter.handler = handler
         self._set_attr("onEnter", True if handler is not None else None)
 
     # on_exit
     @property
-    def on_exit(self):
-        return self.__on_exit
+    def on_exit(self) -> OptionalEventCallable["HoverEvent"]:
+        return self.__on_exit.handler
 
     @on_exit.setter
     def on_exit(self, handler: OptionalEventCallable["HoverEvent"]):
-        self.__on_exit.subscribe(handler)
+        self.__on_exit.handler = handler
         self._set_attr("onExit", True if handler is not None else None)
 
     # on_scroll
     @property
-    def on_scroll(self):
-        return self.__on_scroll
+    def on_scroll(self) -> OptionalEventCallable["ScrollEvent"]:
+        return self.__on_scroll.handler
 
     @on_scroll.setter
     def on_scroll(self, handler: OptionalEventCallable["ScrollEvent"]):
-        self.__on_scroll.subscribe(handler)
+        self.__on_scroll.handler = handler
         self._set_attr("onScroll", True if handler is not None else None)
 
 

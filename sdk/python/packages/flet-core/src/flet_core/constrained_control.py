@@ -2,13 +2,13 @@ from typing import Any, Optional, Union
 
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
     OptionalControlEventCallable,
 )
 
@@ -21,7 +21,7 @@ class ConstrainedControl(Control):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        tooltip: Optional[str] = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -46,7 +46,7 @@ class ConstrainedControl(Control):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
+        on_animation_end: OptionalControlEventCallable = None,
     ):
         Control.__init__(
             self,

@@ -6,7 +6,7 @@ from typing import Any, Awaitable, Callable, Dict, Iterable, Optional, Union
 
 import flet_core
 from flet_core.locks import NopeLock
-from flet_core.utils.concurrency_utils import is_pyodide
+from flet_core.utils import is_pyodide
 
 logger = logging.getLogger(flet_core.__name__)
 
@@ -108,7 +108,7 @@ class PubSubHub:
         with self.__lock:
             self.__unsubscribe(session_id)
             if session_id in self.__subscriber_topics:
-                for topic in self.__subscriber_topics[session_id].keys():
+                for topic in list(self.__subscriber_topics[session_id].keys()):
                     self.__unsubscribe_topic(session_id, topic)
 
     def __unsubscribe(self, session_id: str):

@@ -1,6 +1,5 @@
 from typing import Any, List, Optional, Union
 
-from flet_core.border import BorderSide
 from flet_core.buttons import ButtonStyle
 from flet_core.control import Control, OptionalNumber
 from flet_core.dropdown import Option
@@ -12,12 +11,11 @@ from flet_core.textfield import InputFilter, TextCapitalization
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
-    DurationValue,
 )
 
 
@@ -173,25 +171,11 @@ class DropdownMenu(FormFieldControl):
         hint_style: Optional[TextStyle] = None,
         helper_text: Optional[str] = None,
         helper_style: Optional[TextStyle] = None,
-        counter_style: Optional[TextStyle] = None,
         error_text: Optional[str] = None,
-        error_text_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
         prefix_icon: Optional[str] = None,
-        prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
         suffix_icon: Optional[str] = None,
-        suffix_style: Optional[TextStyle] = None,
-        icon_color: Optional[str] = None,
-        prefix_icon_color: Optional[str] = None,
-        suffix_icon_color: Optional[str] = None,
-        focus_color: Optional[str] = None,
-        align_label_with_hint: Optional[bool] = None,
-        floating_label_text_style: Optional[TextStyle] = None,
-        active_indicator_border_side: Optional[BorderSide] = None,
-        hint_fade_duration: DurationValue = None,
-        error_max_lines: OptionalNumber = None,
-        helper_max_lines: OptionalNumber = None,
         #
         # ConstrainedControl
         #
@@ -241,25 +225,11 @@ class DropdownMenu(FormFieldControl):
             hint_style=hint_style,
             helper_text=helper_text,
             helper_style=helper_style,
-            counter_text_style=counter_style,
             error_text=error_text,
-            error_text_style=error_text_style,
             prefix=prefix,
             prefix_icon=prefix_icon,
-            prefix_text_style=prefix_style,
             suffix=suffix,
             suffix_icon=suffix_icon,
-            suffix_text_style=suffix_style,
-            icon_color=icon_color,
-            prefix_icon_color=prefix_icon_color,
-            suffix_icon_color=suffix_icon_color,
-            focus_color=focus_color,
-            align_label_with_hint=align_label_with_hint,
-            floating_label_text_style=floating_label_text_style,
-            active_indicator_border_side=active_indicator_border_side,
-            hint_fade_duration=hint_fade_duration,
-            error_max_lines=error_max_lines,
-            helper_max_lines=helper_max_lines,
             ref=ref,
             key=key,
             width=width,

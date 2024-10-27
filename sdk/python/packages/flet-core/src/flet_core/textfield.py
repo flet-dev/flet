@@ -1,29 +1,30 @@
 import dataclasses
 import time
-from dataclasses import field
 from enum import Enum
-from typing import Any, Optional, Union, List
+from typing import Any, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.autofill_group import AutofillHint
-from flet_core.border import BorderSide
 from flet_core.control import Control, OptionalNumber
-from flet_core.form_field_control import FormFieldControl, InputBorder
+from flet_core.form_field_control import (
+    FormFieldControl,
+    IconValueOrControl,
+    InputBorder,
+)
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     TextAlign,
     VerticalAlignment,
-    OptionalEventCallable,
-    OptionalControlEventCallable,
-    DurationValue,
 )
 from flet_core.utils import deprecated
 
@@ -56,18 +57,22 @@ class TextCapitalization(Enum):
 @dataclasses.dataclass
 class InputFilter:
     regex_string: str
-    allow: bool = field(default=True)
-    replacement_string: str = field(default="")
+    allow: bool = True
+    replacement_string: str = ""
+    multiline: bool = False
+    case_sensitive: bool = True
+    unicode: bool = False
+    dot_all: bool = False
 
 
 class NumbersOnlyInputFilter(InputFilter):
     def __init__(self):
-        super().__init__(regex_string=r"[0-9]")
+        super().__init__(regex_string=r"^[0-9]*$", allow=True, replacement_string="")
 
 
 class TextOnlyInputFilter(InputFilter):
     def __init__(self):
-        super().__init__(regex_string=r"[a-zA-Z]")
+        super().__init__(regex_string=r"^[a-zA-Z]*$", allow=True, replacement_string="")
 
 
 class TextField(FormFieldControl, AdaptiveControl):
@@ -127,19 +132,19 @@ class TextField(FormFieldControl, AdaptiveControl):
         selection_color: Optional[str] = None,
         input_filter: Optional[InputFilter] = None,
         autofill_hints: Union[None, AutofillHint, List[AutofillHint]] = None,
-        on_change: OptionalEventCallable = None,
-        on_submit: OptionalEventCallable = None,
-        on_focus: OptionalEventCallable = None,
-        on_blur: OptionalEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
+        on_submit: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
-        # FormField specific
+        # FormField
         #
         text_size: OptionalNumber = None,
         text_style: Optional[TextStyle] = None,
         text_vertical_align: Union[VerticalAlignment, OptionalNumber] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
-        icon: Optional[str] = None,
+        icon: Optional[IconValueOrControl] = None,
         border: Optional[InputBorder] = None,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
@@ -157,34 +162,17 @@ class TextField(FormFieldControl, AdaptiveControl):
         hover_color: Optional[str] = None,
         hint_text: Optional[str] = None,
         hint_style: Optional[TextStyle] = None,
-        helper: Optional[Control] = None,
         helper_text: Optional[str] = None,
         helper_style: Optional[TextStyle] = None,
         counter: Optional[Control] = None,
         counter_text: Optional[str] = None,
-        counter_style: Optional[TextStyle] = None,
-        error: Optional[Control] = None,
         error_text: Optional[str] = None,
-        error_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
-        prefix_icon: Optional[str] = None,
+        prefix_icon: Optional[IconValueOrControl] = None,
         prefix_text: Optional[str] = None,
-        prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
-        suffix_icon: Optional[str] = None,
+        suffix_icon: Optional[IconValueOrControl] = None,
         suffix_text: Optional[str] = None,
-        suffix_style: Optional[TextStyle] = None,
-        icon_color: Optional[str] = None,
-        prefix_icon_color: Optional[str] = None,
-        suffix_icon_color: Optional[str] = None,
-        focus_color: Optional[str] = None,
-        align_label_with_hint: Optional[bool] = None,
-        floating_label_text_style: Optional[TextStyle] = None,
-        active_indicator_border_side: Optional[BorderSide] = None,
-        hint_fade_duration: DurationValue = None,
-        error_max_lines: OptionalNumber = None,
-        helper_max_lines: OptionalNumber = None,
-        hint_max_lines: OptionalNumber = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -206,8 +194,8 @@ class TextField(FormFieldControl, AdaptiveControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end: OptionalEventCallable = None,
-        tooltip: Optional[str] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -239,34 +227,17 @@ class TextField(FormFieldControl, AdaptiveControl):
             hover_color=hover_color,
             hint_text=hint_text,
             hint_style=hint_style,
-            helper=helper,
             helper_text=helper_text,
             helper_style=helper_style,
             counter=counter,
             counter_text=counter_text,
-            counter_text_style=counter_style,
-            error=error,
             error_text=error_text,
-            error_text_style=error_style,
             prefix=prefix,
             prefix_icon=prefix_icon,
             prefix_text=prefix_text,
-            prefix_text_style=prefix_style,
             suffix=suffix,
             suffix_icon=suffix_icon,
             suffix_text=suffix_text,
-            suffix_text_style=suffix_style,
-            icon_color=icon_color,
-            prefix_icon_color=prefix_icon_color,
-            suffix_icon_color=suffix_icon_color,
-            focus_color=focus_color,
-            align_label_with_hint=align_label_with_hint,
-            floating_label_text_style=floating_label_text_style,
-            active_indicator_border_side=active_indicator_border_side,
-            hint_fade_duration=hint_fade_duration,
-            error_max_lines=error_max_lines,
-            helper_max_lines=helper_max_lines,
-            hint_max_lines=hint_max_lines,
             ref=ref,
             key=key,
             width=width,

@@ -67,15 +67,18 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     String? urlTarget = control.attrString("urlTarget");
     bool onLongPress = control.attrBool("onLongPress", false)!;
     bool onHover = control.attrBool("onHover", false)!;
+    bool ignoreInteractions = control.attrBool("ignoreInteractions", false)!;
     bool disabled = control.isDisabled || parentDisabled;
     bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
 
+    // DEPRECATED START
     var imageSrc = control.attrString("imageSrc", "")!;
     var imageSrcBase64 = control.attrString("imageSrcBase64", "")!;
     var imageRepeat = parseImageRepeat(
         control.attrString("imageRepeat"), ImageRepeat.noRepeat)!;
     var imageFit = parseBoxFit(control.attrString("imageFit"));
     var imageOpacity = control.attrDouble("imageOpacity", 1)!;
+    // DEPRECATED END
 
     Widget? child = contentCtrls.isNotEmpty
         ? createControl(control, contentCtrls.first.id, disabled,
@@ -86,15 +89,15 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     var blur = parseBlur(control, "blur");
     var colorFilter =
         parseColorFilter(control, "colorFilter", Theme.of(context));
+    var width = control.attrDouble("width");
+    var height = control.attrDouble("height");
+    var padding = parseEdgeInsets(control, "padding");
+    var margin = parseEdgeInsets(control, "margin");
+    var alignment = parseAlignment(control, "alignment");
 
     return withPageArgs((context, pageArgs) {
       ImageProvider? image =
           getImageProvider(imageSrc, imageSrcBase64, pageArgs);
-
-      var gradient = parseGradient(Theme.of(context), control, "gradient");
-      var blendMode = parseBlendMode(control.attrString("blendMode"));
-      var shape =
-          parseBoxShape(control.attrString("shape"), BoxShape.rectangle)!;
 
       var borderRadius = parseBorderRadius(control, "borderRadius");
 
@@ -103,35 +106,39 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
 
       var decorationImage =
           parseDecorationImage(Theme.of(context), control, "image", pageArgs);
-
-      var boxDecoration = parseBoxDecoration(
-              Theme.of(context), control, "decoration", pageArgs) ??
-          BoxDecoration(
-              color: bgColor,
-              gradient: gradient,
-              image: decorationImage == null && image != null
-                  ? DecorationImage(
-                      image: image,
-                      repeat: imageRepeat,
-                      fit: imageFit,
-                      opacity: imageOpacity)
-                  : decorationImage,
-              backgroundBlendMode:
-                  bgColor != null || gradient != null ? blendMode : null,
-              border: parseBorder(Theme.of(context), control, "border",
-                  Theme.of(context).colorScheme.primary),
-              borderRadius: borderRadius,
-              shape: shape,
-              boxShadow: parseBoxShadow(Theme.of(context), control, "shadow"));
-
+      var boxDecoration = boxDecorationFromDetails(
+        shape: parseBoxShape(control.attrString("shape"), BoxShape.rectangle)!,
+        color: bgColor,
+        gradient: parseGradient(Theme.of(context), control, "gradient"),
+        borderRadius: borderRadius,
+        border: parseBorder(Theme.of(context), control, "border",
+            Theme.of(context).colorScheme.primary),
+        boxShadow: parseBoxShadow(Theme.of(context), control, "shadow"),
+        blendMode: parseBlendMode(control.attrString("blendMode")),
+        image: decorationImage == null && image != null
+            ? DecorationImage(
+                image: image,
+                repeat: imageRepeat,
+                fit: imageFit,
+                opacity: imageOpacity)
+            : decorationImage,
+      );
+      var boxForegroundDecoration = parseBoxDecoration(
+          Theme.of(context), control, "foregroundDecoration", pageArgs);
       Widget? result;
 
+      var onAnimationEnd = control.attrBool("onAnimationEnd", false)!
+          ? () {
+              backend.triggerControlEvent(
+                  control.id, "animation_end", "container");
+            }
+          : null;
       if ((onClick || url != "" || onLongPress || onHover || onTapDown) &&
           ink &&
           !disabled) {
         var ink = Material(
             color: Colors.transparent,
-            borderRadius: boxDecoration.borderRadius,
+            borderRadius: boxDecoration!.borderRadius,
             child: InkWell(
               // Dummy callback to enable widget
               // see https://github.com/flutter/flutter/issues/50116#issuecomment-582047374
@@ -176,8 +183,8 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
               borderRadius: borderRadius,
               splashColor: control.attrColor("inkColor", context),
               child: Container(
-                padding: parseEdgeInsets(control, "padding"),
-                alignment: parseAlignment(control, "alignment"),
+                padding: padding,
+                alignment: alignment,
                 clipBehavior: Clip.none,
                 child: child,
               ),
@@ -185,54 +192,47 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
 
         result = animation == null
             ? Container(
-                width: control.attrDouble("width"),
-                height: control.attrDouble("height"),
-                margin: parseEdgeInsets(control, "margin"),
+                width: width,
+                height: height,
+                margin: margin,
                 clipBehavior: clipBehavior,
                 decoration: boxDecoration,
+                foregroundDecoration: boxForegroundDecoration,
                 child: ink,
               )
             : AnimatedContainer(
                 duration: animation.duration,
                 curve: animation.curve,
-                width: control.attrDouble("width"),
-                height: control.attrDouble("height"),
-                margin: parseEdgeInsets(control, "margin"),
+                width: width,
+                height: height,
+                margin: margin,
                 clipBehavior: clipBehavior,
-                onEnd: control.attrBool("onAnimationEnd", false)!
-                    ? () {
-                        backend.triggerControlEvent(
-                            control.id, "animation_end", "container");
-                      }
-                    : null,
+                onEnd: onAnimationEnd,
                 child: ink);
       } else {
         result = animation == null
             ? Container(
-                width: control.attrDouble("width"),
-                height: control.attrDouble("height"),
-                padding: parseEdgeInsets(control, "padding"),
-                margin: parseEdgeInsets(control, "margin"),
-                alignment: parseAlignment(control, "alignment"),
+                width: width,
+                height: height,
+                margin: margin,
+                padding: padding,
+                alignment: alignment,
                 decoration: boxDecoration,
+                foregroundDecoration: boxForegroundDecoration,
                 clipBehavior: clipBehavior,
                 child: child)
             : AnimatedContainer(
                 duration: animation.duration,
                 curve: animation.curve,
-                width: control.attrDouble("width"),
-                height: control.attrDouble("height"),
-                padding: parseEdgeInsets(control, "padding"),
-                margin: parseEdgeInsets(control, "margin"),
-                alignment: parseAlignment(control, "alignment"),
+                width: width,
+                height: height,
+                margin: margin,
+                padding: padding,
+                alignment: alignment,
                 decoration: boxDecoration,
+                foregroundDecoration: boxForegroundDecoration,
                 clipBehavior: clipBehavior,
-                onEnd: control.attrBool("onAnimationEnd", false)!
-                    ? () {
-                        backend.triggerControlEvent(
-                            control.id, "animation_end", "container");
-                      }
-                    : null,
+                onEnd: onAnimationEnd,
                 child: child);
 
         if ((onClick || onLongPress || onHover || onTapDown || url != "") &&
@@ -301,6 +301,10 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
       }
       if (colorFilter != null) {
         result = ColorFiltered(colorFilter: colorFilter, child: result);
+      }
+
+      if (ignoreInteractions) {
+        result = IgnorePointer(child: result);
       }
 
       return constrainedControl(context, result, parent, control);

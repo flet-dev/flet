@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import 'colors.dart';
+import 'material_state.dart';
 import 'numbers.dart';
 
 BorderRadius? parseBorderRadius(Control control, String propName,
@@ -58,7 +59,10 @@ OutlinedBorder? parseOutlinedBorder(Control control, String propName) {
   return outlinedBorderFromJSON(j1);
 }
 
-BorderRadius borderRadiusFromJSON(dynamic json) {
+BorderRadius? borderRadiusFromJSON(dynamic json, [BorderRadius? defaultValue]) {
+  if (json == null) {
+    return defaultValue;
+  }
   if (json is int || json is double) {
     return BorderRadius.all(Radius.circular(parseDouble(json, 0)!));
   }
@@ -102,23 +106,17 @@ OutlinedBorder? outlinedBorderFromJSON(Map<String, dynamic> json) {
   String type = json["type"];
   if (type == "roundedRectangle") {
     return RoundedRectangleBorder(
-        borderRadius: json["radius"] != null
-            ? borderRadiusFromJSON(json["radius"])
-            : BorderRadius.zero);
+        borderRadius: borderRadiusFromJSON(json["radius"], BorderRadius.zero)!);
   } else if (type == "stadium") {
     return const StadiumBorder();
   } else if (type == "circle") {
     return const CircleBorder();
   } else if (type == "beveledRectangle") {
     return BeveledRectangleBorder(
-        borderRadius: json["radius"] != null
-            ? borderRadiusFromJSON(json["radius"])
-            : BorderRadius.zero);
+        borderRadius: borderRadiusFromJSON(json["radius"], BorderRadius.zero)!);
   } else if (type == "continuousRectangle") {
     return ContinuousRectangleBorder(
-        borderRadius: json["radius"] != null
-            ? borderRadiusFromJSON(json["radius"])
-            : BorderRadius.zero);
+        borderRadius: borderRadiusFromJSON(json["radius"], BorderRadius.zero)!);
   }
   return null;
 }
@@ -174,4 +172,15 @@ class WidgetStateBorderSideFromJSON extends WidgetStateBorderSide {
 
     return _defaultValue;
   }
+}
+
+WidgetStateProperty<OutlinedBorder?>? parseWidgetStateOutlinedBorder(
+    Control control, String propName) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+
+  return getWidgetStateProperty<OutlinedBorder?>(
+      jsonDecode(v), (jv) => outlinedBorderFromJSON(jv), null);
 }
