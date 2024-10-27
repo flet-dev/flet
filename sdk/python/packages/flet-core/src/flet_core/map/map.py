@@ -1,8 +1,9 @@
 import json
 from enum import Enum
-from typing import Any, Optional, Union, List, Tuple
+from typing import Any, List, Optional, Tuple, Union
 
 from flet_core import AnimationCurve
+from flet_core.animation import AnimationValue
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
 from flet_core.event_handler import EventHandler
@@ -12,16 +13,15 @@ from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.transform import Offset
 from flet_core.types import (
-    AnimationValue,
+    ControlEvent,
+    DurationValue,
+    Number,
     OffsetValue,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    Number,
-    DurationValue,
-    ControlEvent,
-    OptionalEventCallable,
-    OptionalControlEventCallable,
 )
 
 

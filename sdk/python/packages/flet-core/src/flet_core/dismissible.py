@@ -2,6 +2,7 @@ import json
 from typing import Any, Dict, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.animation import AnimationValue
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
@@ -10,7 +11,6 @@ from flet_core.ref import Ref
 from flet_core.snack_bar import DismissDirection
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     DurationValue,
     OffsetValue,
     OptionalControlEventCallable,

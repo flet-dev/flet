@@ -4,6 +4,7 @@ from enum import Enum
 from typing import Any, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.animation import AnimationValue
 from flet_core.autofill_group import AutofillHint
 from flet_core.control import Control, OptionalNumber
 from flet_core.form_field_control import (
@@ -15,7 +16,6 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     BorderRadiusValue,
     OffsetValue,
     OptionalControlEventCallable,

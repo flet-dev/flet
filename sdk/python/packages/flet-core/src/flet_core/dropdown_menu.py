@@ -1,5 +1,6 @@
 from typing import Any, List, Optional, Union
 
+from flet_core.animation import AnimationValue
 from flet_core.buttons import ButtonStyle
 from flet_core.control import Control, OptionalNumber
 from flet_core.dropdown import Option
@@ -9,7 +10,6 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.textfield import InputFilter, TextCapitalization
 from flet_core.types import (
-    AnimationValue,
     OffsetValue,
     OptionalEventCallable,
     PaddingValue,

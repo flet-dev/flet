@@ -1,17 +1,17 @@
 from typing import Any, List, Optional, Union
 
+from flet_core.animation import AnimationValue
 from flet_core.border import Border
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.navigation_bar import NavigationBarDestination
 from flet_core.ref import Ref
 from flet_core.types import (
-    AnimationValue,
     OffsetValue,
+    OptionalControlEventCallable,
     OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
 )
 
 

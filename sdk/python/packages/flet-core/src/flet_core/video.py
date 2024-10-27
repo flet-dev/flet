@@ -3,6 +3,7 @@ from enum import Enum
 from typing import Any, Dict, List, Optional, Union, cast
 
 from flet_core.alignment import Alignment
+from flet_core.animation import AnimationValue
 from flet_core.box import FilterQuality
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
@@ -10,16 +11,15 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     ImageFit,
     OffsetValue,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     TextAlign,
-    OptionalEventCallable,
-    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 

@@ -1,7 +1,8 @@
 import time
-from typing import Any, Dict, List, Optional, Union, Sequence
+from typing import Any, Dict, List, Optional, Sequence, Union
 
 from flet_core import BoxConstraints
+from flet_core.animation import AnimationValue
 from flet_core.border import BorderSide
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
@@ -11,16 +12,15 @@ from flet_core.text_style import TextStyle
 from flet_core.textfield import KeyboardType, TextCapitalization
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     ControlState,
+    Number,
     OffsetValue,
+    OptionalControlEventCallable,
     OptionalNumber,
+    PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
-    Number,
-    PaddingValue,
 )
 from flet_core.utils import deprecated
 

@@ -4,9 +4,7 @@ from typing import Optional, Union
 
 from flet_core.animation import AnimationCurve
 from flet_core.control import OptionalNumber
-from flet_core.types import (
-    DurationValue,
-)
+from flet_core.types import DurationValue
 
 
 @dataclass

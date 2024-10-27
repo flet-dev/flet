@@ -1,6 +1,7 @@
 import json
 from typing import Any, Dict, List, Optional, Union
 
+from flet_core.animation import AnimationValue
 from flet_core.border import Border, BorderSide
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -12,17 +13,16 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     BorderRadiusValue,
+    ClipBehavior,
     ControlState,
+    MainAxisAlignment,
     OffsetValue,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ClipBehavior,
-    OptionalEventCallable,
-    OptionalControlEventCallable,
-    MainAxisAlignment,
 )
 
 

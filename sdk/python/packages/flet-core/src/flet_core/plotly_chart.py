@@ -3,19 +3,19 @@ import xml.etree.ElementTree as ET
 from typing import Any, Optional, Union
 
 from flet_core import alignment
+from flet_core.animation import AnimationValue
 from flet_core.container import Container
 from flet_core.control import OptionalNumber
 from flet_core.image import Image
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
+    ImageFit,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ImageFit,
-    OptionalControlEventCallable,
 )
 
 try:

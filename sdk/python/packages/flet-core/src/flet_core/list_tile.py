@@ -2,6 +2,7 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.animation import AnimationValue
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -9,17 +10,16 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     MouseCursor,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    UrlTarget,
     ThemeVisualDensity,
+    UrlTarget,
     VisualDensity,
-    OptionalControlEventCallable,
 )
 
 

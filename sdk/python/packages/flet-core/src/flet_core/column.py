@@ -1,21 +1,21 @@
-from typing import Any, Optional, Sequence, Union, Callable
+from typing import Any, Callable, Optional, Sequence, Union
 
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.animation import AnimationValue
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control
 from flet_core.ref import Ref
-from flet_core.scrollable_control import ScrollableControl, OnScrollEvent
+from flet_core.scrollable_control import OnScrollEvent, ScrollableControl
 from flet_core.types import (
-    AnimationValue,
     CrossAxisAlignment,
     MainAxisAlignment,
     OffsetValue,
+    OptionalControlEventCallable,
     OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     ScrollMode,
-    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 

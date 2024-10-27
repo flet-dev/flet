@@ -1,8 +1,9 @@
 import json
-from typing import Any, Optional, Union, Callable
+from typing import Any, Callable, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
+from flet_core.animation import AnimationValue
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
@@ -10,16 +11,15 @@ from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     ClipBehavior,
     MarginValue,
+    Offset,
     OffsetValue,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
-    Offset,
-    OptionalEventCallable,
 )
 
 

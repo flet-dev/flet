@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Optional, Union, cast
 
+from flet_core.animation import AnimationValue
 from flet_core.box import BoxDecoration
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -14,7 +15,6 @@ from flet_core.text import TextSelection
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     MainAxisAlignment,
     OffsetValue,
     OptionalControlEventCallable,
