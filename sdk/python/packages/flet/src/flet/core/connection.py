@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from flet.core.protocol import Command
-from flet.core.pubsub import PubSubHub
+from flet.core.pubsub.pubsub_hub import PubSubHub
 
 
 class Connection:

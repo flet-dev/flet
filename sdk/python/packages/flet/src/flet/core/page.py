@@ -58,7 +58,7 @@ from flet.core.navigation_bar import NavigationBar
 from flet.core.navigation_drawer import NavigationDrawer, NavigationDrawerPosition
 from flet.core.padding import Padding
 from flet.core.protocol import Command
-from flet.core.pubsub import PubSubClient
+from flet.core.pubsub.pubsub_client import PubSubClient
 from flet.core.querystring import QueryString
 from flet.core.scrollable_control import OnScrollEvent
 from flet.core.session_storage import SessionStorage
