@@ -15,6 +15,7 @@ documentation = "https://flet.dev/docs"
 
 [tool.poetry.dependencies]
 python = "^3.8"
+flet = { version = "0.1.0" }
 watchdog = "^4.0.0"
 packaging = "*"
 qrcode = "^7.4.2"

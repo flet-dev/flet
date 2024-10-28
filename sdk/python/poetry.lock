@@ -459,13 +459,13 @@ test = ["pytest (>=6)"]
 
 [[package]]
 name = "fastapi"
-version = "0.115.3"
+version = "0.115.4"
 description = "FastAPI framework, high performance, easy to learn, fast to code, ready for production"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "fastapi-0.115.3-py3-none-any.whl", hash = "sha256:8035e8f9a2b0aa89cea03b6c77721178ed5358e1aea4cd8570d9466895c0638c"},
-    {file = "fastapi-0.115.3.tar.gz", hash = "sha256:c091c6a35599c036d676fa24bd4a6e19fa30058d93d950216cdc672881f6f7db"},
+    {file = "fastapi-0.115.4-py3-none-any.whl", hash = "sha256:0b504a063ffb3cf96a5e27dc1bc32c80ca743a2528574f9cdc77daa2d31b4742"},
+    {file = "fastapi-0.115.4.tar.gz", hash = "sha256:db653475586b091cb8b2fec2ac54a680ac6a158e07406e1abae31679e8826349"},
 ]
 
 [package.dependencies]
@@ -503,12 +503,15 @@ files = []
 develop = true
 
 [package.dependencies]
-flet-cli = {version = "0.1.0", markers = "platform_system != \"embedded\""}
-flet-desktop = {version = "0.1.0", markers = "platform_system != \"desktop-light\""}
-flet-web = {version = "0.1.0", markers = "platform_system != \"embedded\""}
 httpx = {version = "*", markers = "platform_system != \"Pyodide\""}
 oauthlib = {version = "^3.2.2", markers = "platform_system != \"Pyodide\""}
 repath = "^0.9.0"
+
+[package.extras]
+all = ["flet-cli (==0.1.0)", "flet-desktop (==0.1.0)", "flet-web (==0.1.0)"]
+cli = ["flet-cli (==0.1.0)"]
+desktop = ["flet-desktop (==0.1.0)"]
+web = ["flet-web (==0.1.0)"]
 
 [package.source]
 type = "directory"
@@ -525,6 +528,7 @@ develop = true
 
 [package.dependencies]
 cookiecutter = "^2.6.0"
+flet = "0.1.0"
 packaging = "*"
 qrcode = "^7.4.2"
 toml = "^0.10.2"
@@ -543,6 +547,9 @@ python-versions = "^3.8"
 files = []
 develop = true
 
+[package.dependencies]
+flet = "0.1.0"
+
 [package.source]
 type = "directory"
 url = "packages/flet-desktop"
@@ -558,6 +565,7 @@ develop = true
 
 [package.dependencies]
 fastapi = "*"
+flet = "0.1.0"
 uvicorn = {version = "*", extras = ["standard"]}
 
 [package.source]
@@ -1665,13 +1673,13 @@ files = [
 
 [[package]]
 name = "starlette"
-version = "0.41.0"
+version = "0.41.2"
 description = "The little ASGI library that shines."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "starlette-0.41.0-py3-none-any.whl", hash = "sha256:a0193a3c413ebc9c78bff1c3546a45bb8c8bcb4a84cae8747d650a65bd37210a"},
-    {file = "starlette-0.41.0.tar.gz", hash = "sha256:39cbd8768b107d68bfe1ff1672b38a2c38b49777de46d2a592841d58e3bf7c2a"},
+    {file = "starlette-0.41.2-py3-none-any.whl", hash = "sha256:fbc189474b4731cf30fcef52f18a8d070e3f3b46c6a04c97579e85e6ffca942d"},
+    {file = "starlette-0.41.2.tar.gz", hash = "sha256:9834fd799d1a87fd346deb76158668cfa0b0d56f85caefe8268e2d97c3468b62"},
 ]
 
 [package.dependencies]
