@@ -20,7 +20,7 @@ from flet.core.protocol import (
     PageCommandsBatchResponsePayload,
     RegisterWebClientRequestPayload,
 )
-from flet.core.pubsub import PubSubHub
+from flet.core.pubsub.pubsub_hub import PubSubHub
 from flet.utils import get_free_tcp_port, is_windows, random_string
 
 logger = logging.getLogger(flet.__name__)
