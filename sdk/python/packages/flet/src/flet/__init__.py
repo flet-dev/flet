@@ -281,7 +281,8 @@ from flet.core.popup_menu_button import (
 )
 from flet.core.progress_bar import ProgressBar
 from flet.core.progress_ring import ProgressRing
-from flet.core.pubsub import PubSubClient, PubSubHub
+from flet.core.pubsub.pubsub_client import PubSubClient
+from flet.core.pubsub.pubsub_hub import PubSubHub
 from flet.core.querystring import QueryString
 from flet.core.radio import Radio
 from flet.core.radio_group import RadioGroup

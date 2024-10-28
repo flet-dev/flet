@@ -1,6 +1,6 @@
 import random
 
-import flet.core as ft
+import flet as ft
 
 
 def test_moving_children():

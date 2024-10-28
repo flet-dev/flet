@@ -1,4 +1,4 @@
-import flet.core as ft
+import flet as ft
 from flet.core.protocol import Command
 
 
