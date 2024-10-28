@@ -14,6 +14,8 @@ def main():
                 "-m",
                 "pip",
                 "install",
+                "-q",
+                "--disable-pip-version-check",
                 f"flet-cli=={flet.version.version}",
             ]
         )

@@ -19,7 +19,6 @@ from flet.utils import (
     random_string,
 )
 from flet_cli.commands.base import BaseCommand
-from flet_desktop import close_flet_view, open_flet_view
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
@@ -130,6 +129,20 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
+        from flet_cli.utils.pip import install_flet_package
+
+        if options.web:
+            try:
+                import flet_web
+            except:
+                install_flet_package("flet-web")
+        else:
+            try:
+                import flet_desktop
+            except:
+                install_flet_package("flet-desktop")
+            from flet_desktop import close_flet_view
+
         if options.module:
             script_path = str(options.script).replace(".", "/")
             if os.path.isdir(script_path):
@@ -326,6 +339,8 @@ class Handler(FileSystemEventHandler):
                 print(line)
 
     def open_flet_view_and_wait(self):
+        from flet_desktop import open_flet_view
+
         self.fvp, self.pid_file = open_flet_view(
             self.page_url, self.assets_dir, self.hidden
         )

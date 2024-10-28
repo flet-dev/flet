@@ -131,6 +131,14 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
+
+        try:
+            import flet_desktop
+        except:
+            from flet_cli.utils.pip import install_flet_package
+
+            install_flet_package("flet-desktop")
+
         is_dir_not_empty = lambda dir: os.path.isdir(dir) and len(os.listdir(dir)) != 0
 
         # delete "build" directory
