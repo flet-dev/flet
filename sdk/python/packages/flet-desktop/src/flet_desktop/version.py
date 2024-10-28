@@ -1,5 +1,5 @@
 """Provide the current Flet version."""
 
-import flet.core.version
+import flet.version
 
-version = flet.core.version.version
+version = flet.version.version

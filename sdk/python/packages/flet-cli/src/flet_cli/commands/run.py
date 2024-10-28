@@ -141,7 +141,7 @@ class Command(BaseCommand):
                 import flet_desktop
             except:
                 install_flet_package("flet-desktop")
-            from flet_desktop import close_flet_view
+        from flet_desktop import close_flet_view
 
         if options.module:
             script_path = str(options.script).replace(".", "/")
