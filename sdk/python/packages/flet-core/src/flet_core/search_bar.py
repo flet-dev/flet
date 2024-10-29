@@ -1,7 +1,8 @@
 import time
-from typing import Any, Dict, List, Optional, Union, Sequence
+from typing import Any, Dict, List, Optional, Sequence, Union
 
 from flet_core import BoxConstraints
+from flet_core.badge import BadgeValue
 from flet_core.border import BorderSide
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
@@ -13,14 +14,14 @@ from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     ControlState,
+    Number,
     OffsetValue,
+    OptionalControlEventCallable,
     OptionalNumber,
+    PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
-    Number,
-    PaddingValue,
 )
 from flet_core.utils import deprecated
 
@@ -101,6 +102,7 @@ class SearchBar(ConstrainedControl):
         animate_offset: AnimationValue = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -127,6 +129,7 @@ class SearchBar(ConstrainedControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
