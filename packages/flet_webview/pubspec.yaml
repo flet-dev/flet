@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
 
   collection: ^1.16.0
-  webview_flutter: ^4.9.0
+  webview_flutter: ^4.10.0
   flutter_web_plugins:
     sdk: flutter
   webview_flutter_web: ^0.2.3+2
