@@ -382,23 +382,21 @@ class Control:
         )
 
     def copy_attrs(self, dest: Dict[str, Any]) -> None:
-        for attrName in sorted(self.__attrs):
-            attrName = attrName.lower()
-            dirty = self.__attrs[attrName][1]
+        for attr_name in sorted(self.__attrs):
+            attr_name_lower = attr_name.lower()
+            value, dirty = self.__attrs[attr_name_lower]
 
-            if dirty:
+            if dirty or value is None:
                 continue
-            val = self.__attrs[attrName][0]
-            sval = ""
-            if val is None:
-                continue
-            elif isinstance(val, bool):
-                sval = str(val).lower()
-            elif isinstance(val, dt.datetime) or isinstance(val, dt.date):
-                sval = val.isoformat()
+
+            if isinstance(value, bool):
+                sval = str(value).lower()
+            elif isinstance(value, (dt.datetime, dt.date)):
+                sval = value.isoformat()
             else:
-                sval = str(val)
-            dest[attrName] = sval
+                sval = str(value)
+
+            dest[attr_name_lower] = sval
 
     def build_update_commands(
         self, index, commands, added_controls, removed_controls, isolated: bool = False
