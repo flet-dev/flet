@@ -1,12 +1,11 @@
 from dataclasses import dataclass, field
-from enum import IntFlag
+from enum import Enum, EnumMeta, IntFlag
 from typing import Optional, Union
+from warnings import warn
 
 from flet_core.animation import AnimationCurve
 from flet_core.control import OptionalNumber
-from flet_core.types import (
-    DurationValue,
-)
+from flet_core.types import ColorValue, DurationValue
 
 
 @dataclass
@@ -51,6 +50,34 @@ class MapMultiFingerGesture(IntFlag):
     ALL = (1 << 0) | (1 << 1) | (1 << 2)
 
 
+class MapPointerDeviceTypeDeprecated(EnumMeta):
+    def __getattribute__(self, item):
+        if item in [
+            "TOUCH",
+            "MOUSE",
+            "STYLUS",
+            "INVERTED_STYLUS",
+            "TRACKPAD",
+            "UNKNOWN",
+        ]:
+            warn(
+                "MapPointerDeviceType enum is deprecated since version 0.25.0 "
+                "and will be removed in version 0.28.0. Use PointerDeviceType enum instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+        return EnumMeta.__getattribute__(self, item)
+
+
+class MapPointerDeviceType(Enum, metaclass=MapPointerDeviceTypeDeprecated):
+    TOUCH = "touch"
+    MOUSE = "mouse"
+    STYLUS = "stylus"
+    INVERTED_STYLUS = "invertedStylus"
+    TRACKPAD = "trackpad"
+    UNKNOWN = "unknown"
+
+
 @dataclass
 class MapInteractionConfiguration:
     enable_multi_finger_gesture_race: Optional[bool] = field(default=None)
@@ -70,7 +97,7 @@ class MapConfiguration:
     initial_rotation: OptionalNumber = None
     initial_zoom: OptionalNumber = None
     interaction_configuration: Optional[MapInteractionConfiguration] = None
-    bgcolor: Optional[str] = None
+    bgcolor: Optional[ColorValue] = None
     keep_alive: Optional[bool] = None
     max_zoom: OptionalNumber = None
     min_zoom: OptionalNumber = None

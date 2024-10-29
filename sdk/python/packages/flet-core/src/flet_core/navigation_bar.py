@@ -1,8 +1,8 @@
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
-from flet_core.badge import BadgeValue
+from flet_core.animation import AnimationValue
 from flet_core.border import Border
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
@@ -10,10 +10,9 @@ from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     ColorEnums,
     ColorValue,
-    ControlState,
+    ControlStateValue,
     IconEnums,
     IconValue,
     OffsetValue,
@@ -34,7 +33,7 @@ class NavigationBarLabelBehavior(Enum):
     ONLY_SHOW_SELECTED = "onlyShowSelected"
 
 
-class NavigationBarDestination(Control):
+class NavigationBarDestination(AdaptiveControl, Control):
     """Defines the appearance of the button items that are arrayed within the navigation bar.
 
     The value must be a list of two or more NavigationBarDestination instances."""
@@ -53,15 +52,23 @@ class NavigationBarDestination(Control):
         ref: Optional[Ref] = None,
         tooltip: TooltipValue = None,
         disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
         data: Any = None,
+        #
+        # AdaptiveControl
+        #
+        adaptive: Optional[bool] = None,
     ):
         Control.__init__(
             self,
             ref=ref,
             tooltip=tooltip,
             disabled=disabled,
+            visible=visible,
             data=data,
         )
+        AdaptiveControl.__init__(self, adaptive=adaptive)
+
         self.label = label
         self.icon = icon
         self.icon_content = icon_content
@@ -226,7 +233,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         surface_tint_color: Optional[ColorValue] = None,
         border: Optional[Border] = None,
         animation_duration: Optional[int] = None,
-        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
+        overlay_color: ControlStateValue[ColorValue] = None,
         on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
@@ -246,12 +253,12 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: Callable[..., None] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -310,7 +317,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         super().before_update()
         self._set_attr_json("indicatorShape", self.__indicator_shape)
         self._set_attr_json("border", self.__border)
-        self._set_attr_json("overlayColor", self.__overlay_color)
+        self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)
 
     def _get_children(self):
         return self.__destinations
@@ -345,11 +352,11 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
+    def overlay_color(self) -> ControlStateValue[str]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
+    def overlay_color(self, value: ControlStateValue[str]):
         self.__overlay_color = value
 
     # bgcolor

@@ -1,23 +1,25 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional, List, Union
+from typing import List, Optional, Union
 
 from flet_core.alignment import Alignment
 from flet_core.border import Border
 from flet_core.gradients import Gradient
 from flet_core.types import (
-    OffsetValue,
-    BorderRadiusValue,
     BlendMode,
+    BorderRadiusValue,
+    ColorValue,
     ImageFit,
-    OptionalNumber,
     ImageRepeat,
+    Number,
+    OffsetValue,
+    OptionalNumber,
 )
 
 
 @dataclass
 class ColorFilter:
-    color: Optional[str] = field(default=None)
+    color: Optional[ColorValue] = field(default=None)
     blend_mode: Optional[BlendMode] = field(default=None)
 
 
@@ -39,7 +41,7 @@ class ShadowBlurStyle(Enum):
 class BoxShadow:
     spread_radius: Optional[float] = field(default=None)
     blur_radius: Optional[float] = field(default=None)
-    color: Optional[str] = field(default=None)
+    color: Optional[ColorValue] = field(default=None)
     offset: OffsetValue = field(default=None)
     blur_style: ShadowBlurStyle = field(default=ShadowBlurStyle.NORMAL)
 
@@ -67,7 +69,7 @@ class DecorationImage:
 
 @dataclass
 class BoxDecoration:
-    bgcolor: Optional[str] = None
+    bgcolor: Optional[ColorValue] = None
     image: Optional[DecorationImage] = None
     border: Optional[Border] = None
     border_radius: BorderRadiusValue = None
@@ -79,7 +81,15 @@ class BoxDecoration:
 
 @dataclass
 class BoxConstraints:
-    min_width: OptionalNumber = None
-    min_height: OptionalNumber = None
-    max_width: OptionalNumber = None
-    max_height: OptionalNumber = None
+    min_width: Number = 0
+    min_height: Number = 0
+    max_width: Number = float("inf")
+    max_height: Number = float("inf")
+
+    def __post_init__(self):
+        assert (
+            self.min_width <= self.max_width
+        ), "min_width must be less than or equal to max_width"
+        assert (
+            self.min_height <= self.max_height
+        ), "min_height must be less than or equal to max_height"

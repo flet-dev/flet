@@ -1,7 +1,6 @@
 from enum import Enum
 from typing import Any, List, Optional, Sequence
 
-from flet_core.badge import BadgeValue
 from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control
 from flet_core.ref import Ref
@@ -31,9 +30,17 @@ class NavigationDrawerDestination(Control):
         # Control
         #
         ref: Optional[Ref] = None,
-        badge: Optional[BadgeValue] = None,
+        data: Any = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
     ):
-        Control.__init__(self, ref=ref, badge=badge)
+        Control.__init__(
+            self,
+            ref=ref,
+            disabled=disabled,
+            data=data,
+            visible=visible,
+        )
         self.label = label
         self.bgcolor = bgcolor
         self.icon = icon

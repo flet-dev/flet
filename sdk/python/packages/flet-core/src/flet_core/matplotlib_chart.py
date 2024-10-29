@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 from typing import Any, Optional, Union
 
 from flet_core import alignment
+from flet_core.animation import AnimationValue
 from flet_core.badge import BadgeValue
 from flet_core.container import Container
 from flet_core.control import OptionalNumber
@@ -11,7 +12,6 @@ from flet_core.image import Image
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     ImageFit,
     OffsetValue,
     OptionalControlEventCallable,
@@ -88,12 +88,12 @@ class MatplotlibChart(Container):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
         badge: Optional[BadgeValue] = None,

@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/mouse.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -65,7 +67,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
         widget.children.where((c) => c.name == "content" && c.isVisible);
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    void sendEvent(String eventName, dynamic eventData) {
+    void sendEvent(String eventName, [dynamic eventData = ""]) {
       var d = "";
       if (eventData is String) {
         d = eventData;
@@ -300,9 +302,29 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
             onScaleEnd)
         ? GestureDetector(
             behavior: HitTestBehavior.translucent,
+            excludeFromSemantics:
+                widget.control.attrBool("excludeFromSemantics", false)!,
+            trackpadScrollCausesScale:
+                widget.control.attrBool("trackpadScrollCausesScale", false)!,
+            supportedDevices: () {
+              var supportedDevicesString =
+                  widget.control.attrString("allowedDevices");
+              var supportedDevicesJson = supportedDevicesString != null
+                  ? jsonDecode(supportedDevicesString)
+                  : null;
+              if (supportedDevicesJson != null &&
+                  (supportedDevicesJson is Iterable &&
+                      supportedDevicesJson is! Map)) {
+                return supportedDevicesJson
+                    .map((d) => parsePointerDeviceKind(d))
+                    .whereNotNull()
+                    .toSet();
+              }
+              return null;
+            }(),
             onTap: onTap
                 ? () {
-                    sendEvent("tap", "");
+                    sendEvent("tap");
                   }
                 : null,
             onTapDown: onTapDown
@@ -329,7 +351,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                 : null,
             onSecondaryTap: onSecondaryTap
                 ? () {
-                    sendEvent("secondary_tap", "");
+                    sendEvent("secondary_tap");
                   }
                 : null,
             onSecondaryTapDown: onSecondaryTapDown
@@ -400,7 +422,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                 : null,
             onDoubleTap: onDoubleTap
                 ? () {
-                    sendEvent("double_tap", "");
+                    sendEvent("double_tap");
                   }
                 : null,
             onDoubleTapDown: onDoubleTapDown
@@ -521,7 +543,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                       if (correctNumberOfTouches) {
                         _debounce =
                             Timer(const Duration(milliseconds: 1000), () {
-                          sendEvent("multi_long_press", "");
+                          sendEvent("multi_long_press");
                         });
                       } else if (_debounce?.isActive ?? false) {
                         _debounce!.cancel();

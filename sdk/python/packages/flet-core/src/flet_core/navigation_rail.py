@@ -1,14 +1,13 @@
 from enum import Enum
 from typing import Any, Callable, List, Optional, Union
 
-from flet_core.badge import BadgeValue
+from flet_core.animation import AnimationValue
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.types import (
-    AnimationValue,
     ColorEnums,
     ColorValue,
     IconEnums,
@@ -46,14 +45,10 @@ class NavigationRailDestination(Control):
         #
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
         data: Any = None,
     ) -> None:
-        Control.__init__(
-            self,
-            ref=ref,
-            disabled=disabled,
-            data=data,
-        )
+        Control.__init__(self, ref=ref, disabled=disabled, visible=visible, data=data)
         self.label = label
         self.icon = icon
         self.icon_content = icon_content
@@ -265,12 +260,12 @@ class NavigationRail(ConstrainedControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: Callable[..., None] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

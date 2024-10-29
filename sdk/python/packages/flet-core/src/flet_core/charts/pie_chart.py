@@ -2,6 +2,7 @@ import json
 from enum import Enum
 from typing import Any, List, Optional, Union
 
+from flet_core.animation import AnimationValue
 from flet_core.badge import BadgeValue
 from flet_core.charts.pie_chart_section import PieChartSection
 from flet_core.constrained_control import ConstrainedControl
@@ -11,7 +12,6 @@ from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     ColorEnums,
     ColorValue,
     OffsetValue,
@@ -31,7 +31,7 @@ class PieChart(ConstrainedControl):
         center_space_radius: OptionalNumber = None,
         sections_space: OptionalNumber = None,
         start_degree_offset: OptionalNumber = None,
-        animate: AnimationValue = None,
+        animate: Optional[AnimationValue] = None,
         on_chart_event: OptionalEventCallable["PieChartEvent"] = None,
         #
         # ConstrainedControl
@@ -51,12 +51,12 @@ class PieChart(ConstrainedControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
         badge: Optional[BadgeValue] = None,

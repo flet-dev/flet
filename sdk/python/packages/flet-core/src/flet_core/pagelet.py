@@ -1,6 +1,7 @@
 from typing import Any, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.animation import AnimationValue
 from flet_core.app_bar import AppBar
 from flet_core.badge import BadgeValue
 from flet_core.bottom_app_bar import BottomAppBar
@@ -14,7 +15,6 @@ from flet_core.navigation_drawer import NavigationDrawer
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     ColorEnums,
     ColorValue,
     FloatingActionButtonLocation,
@@ -87,12 +87,12 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
         badge: Optional[BadgeValue] = None,

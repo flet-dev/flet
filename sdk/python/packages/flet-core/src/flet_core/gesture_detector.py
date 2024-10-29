@@ -1,21 +1,22 @@
 import json
-from typing import Any, Optional, Union
+from typing import Any, Optional, Set, Union
 
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.animation import AnimationValue
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.types import (
-    AnimationValue,
     MouseCursor,
     OffsetValue,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
+    PointerDeviceType,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
-    OptionalControlEventCallable,
 )
 
 
@@ -75,6 +76,9 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         mouse_cursor: Optional[MouseCursor] = None,
         drag_interval: Optional[int] = None,
         hover_interval: Optional[int] = None,
+        exclude_from_semantics: Optional[bool] = None,
+        trackpad_scroll_causes_scale: Optional[bool] = None,
+        allowed_devices: Optional[Set[PointerDeviceType]] = None,
         on_tap=None,
         on_tap_down=None,
         on_tap_up=None,
@@ -125,12 +129,12 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -317,9 +321,15 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
         self.on_enter = on_enter
         self.on_exit = on_exit
         self.on_scroll = on_scroll
+        self.exclude_from_semantics = exclude_from_semantics
+        self.trackpad_scroll_causes_scale = trackpad_scroll_causes_scale
+        self.allowed_devices = allowed_devices
 
     def _get_control_name(self):
         return "gesturedetector"
+
+    def before_update(self):
+        self._set_attr_json("allowedDevices", self.__allowed_devices)
 
     def _get_children(self):
         children = []
@@ -339,7 +349,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
     # mouse_cursor
     @property
-    def mouse_cursor(self):
+    def mouse_cursor(self) -> Optional[MouseCursor]:
         return self.__mouse_cursor
 
     @mouse_cursor.setter
@@ -350,7 +360,7 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     # drag_interval
     @property
     def drag_interval(self) -> Optional[int]:
-        return self._get_attr("dragInterval")
+        return self._get_attr("dragInterval", data_type="int")
 
     @drag_interval.setter
     def drag_interval(self, value: Optional[int]):
@@ -359,11 +369,40 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
     # hover_interval
     @property
     def hover_interval(self) -> Optional[int]:
-        return self._get_attr("hoverInterval")
+        return self._get_attr("hoverInterval", data_type="int")
 
     @hover_interval.setter
     def hover_interval(self, value: Optional[int]):
         self._set_attr("hoverInterval", value)
+
+    # exclude_from_semantics
+    @property
+    def exclude_from_semantics(self) -> Optional[bool]:
+        return self._get_attr("excludeFromSemantics", data_type="bool", def_value=False)
+
+    @exclude_from_semantics.setter
+    def exclude_from_semantics(self, value: Optional[bool]):
+        self._set_attr("excludeFromSemantics", value)
+
+    # trackpad_scroll_causes_scale
+    @property
+    def trackpad_scroll_causes_scale(self) -> Optional[bool]:
+        return self._get_attr(
+            "trackpadScrollCausesScale", data_type="bool", def_value=False
+        )
+
+    @trackpad_scroll_causes_scale.setter
+    def trackpad_scroll_causes_scale(self, value: Optional[bool]):
+        self._set_attr("trackpadScrollCausesScale", value)
+
+    # allowed_devices
+    @property
+    def allowed_devices(self) -> Optional[Set[PointerDeviceType]]:
+        return self.__allowed_devices
+
+    @allowed_devices.setter
+    def allowed_devices(self, value: Optional[Set[PointerDeviceType]]):
+        self.__allowed_devices = value
 
     # on_tap
     @property

@@ -1,9 +1,10 @@
 import time
 from typing import Any, Dict, List, Optional, Sequence, Union
 
-from flet_core import BoxConstraints
+from flet_core.animation import AnimationValue
 from flet_core.badge import BadgeValue
 from flet_core.border import BorderSide
+from flet_core.box import BoxConstraints
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control
@@ -12,10 +13,10 @@ from flet_core.text_style import TextStyle
 from flet_core.textfield import KeyboardType, TextCapitalization
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     ColorEnums,
     ColorValue,
     ControlState,
+    ControlStateValue,
     Number,
     OffsetValue,
     OptionalControlEventCallable,
@@ -44,20 +45,16 @@ class SearchBar(ConstrainedControl):
         bar_leading: Optional[Control] = None,
         bar_trailing: Optional[List[Control]] = None,
         bar_hint_text: Optional[str] = None,
-        bar_bgcolor: Union[None, str, Dict[ControlState, str]] = None,
-        bar_overlay_color: Union[None, str, Dict[ControlState, str]] = None,
-        bar_shadow_color: Union[None, str, Dict[ControlState, str]] = None,
-        bar_surface_tint_color: Union[None, str, Dict[ControlState, str]] = None,
-        bar_elevation: Union[OptionalNumber, Dict[ControlState, Number]] = None,
-        bar_border_side: Union[None, BorderSide, Dict[ControlState, BorderSide]] = None,
-        bar_shape: Union[
-            None, OutlinedBorder, Dict[ControlState, OutlinedBorder]
-        ] = None,
-        bar_text_style: Union[None, TextStyle, Dict[ControlState, TextStyle]] = None,
-        bar_hint_text_style: Union[
-            None, TextStyle, Dict[ControlState, TextStyle]
-        ] = None,
-        bar_padding: Union[PaddingValue, Dict[ControlState, PaddingValue]] = None,
+        bar_bgcolor: ControlStateValue[ColorValue] = None,
+        bar_overlay_color: ControlStateValue[ColorValue] = None,
+        bar_shadow_color: ControlStateValue[ColorValue] = None,
+        bar_surface_tint_color: ControlStateValue[ColorValue] = None,
+        bar_elevation: ControlStateValue[OptionalNumber] = None,
+        bar_border_side: ControlStateValue[BorderSide] = None,
+        bar_shape: ControlStateValue[OutlinedBorder] = None,
+        bar_text_style: ControlStateValue[TextStyle] = None,
+        bar_hint_text_style: ControlStateValue[TextStyle] = None,
+        bar_padding: ControlStateValue[PaddingValue] = None,
         view_leading: Optional[Control] = None,
         view_trailing: Optional[List[Control]] = None,
         view_elevation: OptionalNumber = None,
@@ -96,12 +93,12 @@ class SearchBar(ConstrainedControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
         badge: Optional[BadgeValue] = None,
@@ -181,20 +178,26 @@ class SearchBar(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        self._set_control_state_attr_json("barBgcolor", self.__bar_bgcolor)
-        self._set_control_state_attr_json("barOverlayColor", self.__bar_overlay_color)
-        self._set_control_state_attr_json(
-            "barHintTextStyle", self.__bar_hint_text_style
+        self._set_attr_json("barBgcolor", self.__bar_bgcolor, wrap_attr_dict=True)
+        self._set_attr_json(
+            "barOverlayColor", self.__bar_overlay_color, wrap_attr_dict=True
         )
-        self._set_control_state_attr_json(
-            "barSurfaceTintColor", self.__bar_surface_tint_color
+        self._set_attr_json(
+            "barHintTextStyle", self.__bar_hint_text_style, wrap_attr_dict=True
         )
-        self._set_control_state_attr_json("barElevation", self.__bar_elevation)
-        self._set_control_state_attr_json("barBorderSide", self.__bar_border_side)
-        self._set_control_state_attr_json("barShape", self.__bar_shape)
-        self._set_control_state_attr_json("barTextStyle", self.__bar_text_style)
-        self._set_control_state_attr_json("barPadding", self.__bar_padding)
-        self._set_control_state_attr_json("barShadowColor", self.__bar_shadow_color)
+        self._set_attr_json(
+            "barSurfaceTintColor", self.__bar_surface_tint_color, wrap_attr_dict=True
+        )
+        self._set_attr_json("barElevation", self.__bar_elevation, wrap_attr_dict=True)
+        self._set_attr_json(
+            "barBorderSide", self.__bar_border_side, wrap_attr_dict=True
+        )
+        self._set_attr_json("barShape", self.__bar_shape, wrap_attr_dict=True)
+        self._set_attr_json("barTextStyle", self.__bar_text_style, wrap_attr_dict=True)
+        self._set_attr_json("barPadding", self.__bar_padding, wrap_attr_dict=True)
+        self._set_attr_json(
+            "barShadowColor", self.__bar_shadow_color, wrap_attr_dict=True
+        )
         self._set_attr_json("viewShape", self.__view_shape)
         self._set_attr_json("viewHeaderTextStyle", self.__view_header_text_style)
         self._set_attr_json("viewHintTextStyle", self.__view_hint_text_style)
@@ -280,20 +283,20 @@ class SearchBar(ConstrainedControl):
 
     # bar_bgcolor
     @property
-    def bar_bgcolor(self) -> Union[None, str, Dict[ControlState, str]]:
+    def bar_bgcolor(self) -> ControlStateValue[str]:
         return self.__bar_bgcolor
 
     @bar_bgcolor.setter
-    def bar_bgcolor(self, value: Union[None, str, Dict[ControlState, str]]):
+    def bar_bgcolor(self, value: ControlStateValue[str]):
         self.__bar_bgcolor = value
 
     # bar_overlay_color
     @property
-    def bar_overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
+    def bar_overlay_color(self) -> ControlStateValue[str]:
         return self.__bar_overlay_color
 
     @bar_overlay_color.setter
-    def bar_overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
+    def bar_overlay_color(self, value: ControlStateValue[str]):
         self.__bar_overlay_color = value
 
     # bar_shadow_color

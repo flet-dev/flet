@@ -183,17 +183,11 @@ class Control:
         if orig_val is None or orig_val[0] != value:
             self.__attrs[name] = (value, dirty)
 
-    def _set_attr_json(self, name: str, value: V) -> None:
+    def _set_attr_json(self, name: str, value: V, wrap_attr_dict: bool = False) -> None:
         ov = self._get_attr(name)
-        nv = self._convert_attr_json(value)
-        if ov != nv:
-            self._set_attr(name, nv)
-
-    def _set_control_state_attr_json(self, name: str, value: V) -> None:
-        if value is not None and not isinstance(value, dict):
-            value = {ControlState.DEFAULT: value}
-        ov = self._get_attr(name)
-        nv = self._convert_attr_json(value)
+        nv = self._convert_attr_json(
+            self._wrap_attr_dict(value) if wrap_attr_dict else value
+        )
         if ov != nv:
             self._set_attr(name, nv)
 
@@ -207,7 +201,7 @@ class Control:
     def _wrap_attr_dict(self, value: Optional[Union[Dict, Any]]) -> Optional[Dict]:
         if value is None or isinstance(value, Dict):
             return value
-        return {"": value}
+        return {ControlState.DEFAULT: value}
 
     # event_handlers
     @property
