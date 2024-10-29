@@ -51,130 +51,132 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
   @override
   Widget build(BuildContext context) {
     debugPrint("ListTile build: ${control.id}");
-    return withPagePlatform((context, platform) {
-      bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
-      if (adaptive == true &&
-          (platform == TargetPlatform.iOS ||
-              platform == TargetPlatform.macOS)) {
-        return CupertinoListTileControl(
-            control: control,
-            parent: parent,
-            parentDisabled: parentDisabled,
-            parentAdaptive: adaptive,
-            children: children,
-            backend: backend);
-      }
+    return Material(
+      child: withPagePlatform((context, platform) {
+        bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
+        if (adaptive == true &&
+            (platform == TargetPlatform.iOS ||
+                platform == TargetPlatform.macOS)) {
+          return CupertinoListTileControl(
+              control: control,
+              parent: parent,
+              parentDisabled: parentDisabled,
+              parentAdaptive: adaptive,
+              children: children,
+              backend: backend);
+        }
 
-      var leadingCtrls =
-          children.where((c) => c.name == "leading" && c.isVisible);
-      var titleCtrls = children.where((c) => c.name == "title" && c.isVisible);
-      var subtitleCtrls =
-          children.where((c) => c.name == "subtitle" && c.isVisible);
-      var trailingCtrls =
-          children.where((c) => c.name == "trailing" && c.isVisible);
+        var leadingCtrls =
+            children.where((c) => c.name == "leading" && c.isVisible);
+        var titleCtrls = children.where((c) => c.name == "title" && c.isVisible);
+        var subtitleCtrls =
+            children.where((c) => c.name == "subtitle" && c.isVisible);
+        var trailingCtrls =
+            children.where((c) => c.name == "trailing" && c.isVisible);
 
-      var titleAlignment =
-          parseListTileTitleAlignment(control.attrString("titleAlignment"));
-      var style = parseListTileStyle(control.attrString("style"));
+        var titleAlignment =
+            parseListTileTitleAlignment(control.attrString("titleAlignment"));
+        var style = parseListTileStyle(control.attrString("style"));
 
-      bool selected = control.attrBool("selected", false)!;
-      bool dense = control.attrBool("dense", false)!;
-      bool isThreeLine = control.attrBool("isThreeLine", false)!;
-      bool autofocus = control.attrBool("autofocus", false)!;
-      bool onclick = control.attrBool("onclick", false)!;
-      bool toggleInputs = control.attrBool("toggleInputs", false)!;
-      bool onLongPressDefined = control.attrBool("onLongPress", false)!;
-      bool? enableFeedback = control.attrBool("enableFeedback");
-      double? horizontalSpacing = control.attrDouble("horizontalSpacing");
-      double? minLeadingWidth = control.attrDouble("minLeadingWidth");
-      double? minVerticalPadding = control.attrDouble("minVerticalPadding");
-      String url = control.attrString("url", "")!;
-      String? urlTarget = control.attrString("urlTarget");
-      bool disabled = control.isDisabled || parentDisabled;
+        bool selected = control.attrBool("selected", false)!;
+        bool dense = control.attrBool("dense", false)!;
+        bool isThreeLine = control.attrBool("isThreeLine", false)!;
+        bool autofocus = control.attrBool("autofocus", false)!;
+        bool onclick = control.attrBool("onclick", false)!;
+        bool toggleInputs = control.attrBool("toggleInputs", false)!;
+        bool onLongPressDefined = control.attrBool("onLongPress", false)!;
+        bool? enableFeedback = control.attrBool("enableFeedback");
+        double? horizontalSpacing = control.attrDouble("horizontalSpacing");
+        double? minLeadingWidth = control.attrDouble("minLeadingWidth");
+        double? minVerticalPadding = control.attrDouble("minVerticalPadding");
+        String url = control.attrString("url", "")!;
+        String? urlTarget = control.attrString("urlTarget");
+        bool disabled = control.isDisabled || parentDisabled;
 
-      Function()? onPressed =
-          (onclick || toggleInputs || url != "") && !disabled
-              ? () {
-                  debugPrint("ListTile ${control.id} clicked!");
-                  if (toggleInputs) {
-                    _clickNotifier.onClick();
+        Function()? onPressed =
+            (onclick || toggleInputs || url != "") && !disabled
+                ? () {
+                    debugPrint("ListTile ${control.id} clicked!");
+                    if (toggleInputs) {
+                      _clickNotifier.onClick();
+                    }
+                    if (url != "") {
+                      openWebBrowser(url, webWindowName: urlTarget);
+                    }
+                    if (onclick) {
+                      backend.triggerControlEvent(control.id, "click");
+                    }
                   }
-                  if (url != "") {
-                    openWebBrowser(url, webWindowName: urlTarget);
-                  }
-                  if (onclick) {
-                    backend.triggerControlEvent(control.id, "click");
-                  }
-                }
-              : null;
+                : null;
 
-      Function()? onLongPress = onLongPressDefined && !disabled
-          ? () {
-              debugPrint("Button ${control.id} clicked!");
-              backend.triggerControlEvent(control.id, "long_press");
-            }
-          : null;
+        Function()? onLongPress = onLongPressDefined && !disabled
+            ? () {
+                debugPrint("Button ${control.id} clicked!");
+                backend.triggerControlEvent(control.id, "long_press");
+              }
+            : null;
 
-      Widget tile = ListTile(
-        autofocus: autofocus,
-        contentPadding: parseEdgeInsets(control, "contentPadding"),
-        isThreeLine: isThreeLine,
-        selected: selected,
-        dense: dense,
-        onTap: onPressed,
-        onLongPress: onLongPress,
-        enabled: !disabled,
-        horizontalTitleGap: horizontalSpacing,
-        enableFeedback: enableFeedback,
-        minLeadingWidth: minLeadingWidth,
-        minVerticalPadding: minVerticalPadding,
-        minTileHeight: control.attrDouble("minHeight"),
-        selectedTileColor: control.attrColor("selectedTileColor", context),
-        selectedColor: control.attrColor("selectedColor", context),
-        focusColor: control.attrColor("focusColor", context),
-        tileColor: control.attrColor("bgcolor", context),
-        splashColor: control.attrColor("bgcolorActivated", context),
-        hoverColor: control.attrColor("hoverColor", context),
-        iconColor: control.attrColor("iconColor", context),
-        textColor: control.attrColor("textColor", context),
-        mouseCursor: parseMouseCursor(control.attrString("mouseCursor")),
-        visualDensity: parseVisualDensity(control.attrString("visualDensity")),
-        shape: parseOutlinedBorder(control, "shape"),
-        titleTextStyle:
-            parseTextStyle(Theme.of(context), control, "titleTextStyle"),
-        leadingAndTrailingTextStyle: parseTextStyle(
-            Theme.of(context), control, "leadingAndTrailingTextStyle"),
-        subtitleTextStyle:
-            parseTextStyle(Theme.of(context), control, "subtitleTextStyle"),
-        titleAlignment: titleAlignment,
-        style: style,
-        onFocusChange: (bool hasFocus) {
-          backend.triggerControlEvent(control.id, hasFocus ? "focus" : "blur");
-        },
-        leading: leadingCtrls.isNotEmpty
-            ? createControl(control, leadingCtrls.first.id, disabled,
-                parentAdaptive: adaptive)
-            : null,
-        title: titleCtrls.isNotEmpty
-            ? createControl(control, titleCtrls.first.id, disabled,
-                parentAdaptive: adaptive)
-            : null,
-        subtitle: subtitleCtrls.isNotEmpty
-            ? createControl(control, subtitleCtrls.first.id, disabled,
-                parentAdaptive: adaptive)
-            : null,
-        trailing: trailingCtrls.isNotEmpty
-            ? createControl(control, trailingCtrls.first.id, disabled,
-                parentAdaptive: adaptive)
-            : null,
-      );
+        Widget tile = ListTile(
+          autofocus: autofocus,
+          contentPadding: parseEdgeInsets(control, "contentPadding"),
+          isThreeLine: isThreeLine,
+          selected: selected,
+          dense: dense,
+          onTap: onPressed,
+          onLongPress: onLongPress,
+          enabled: !disabled,
+          horizontalTitleGap: horizontalSpacing,
+          enableFeedback: enableFeedback,
+          minLeadingWidth: minLeadingWidth,
+          minVerticalPadding: minVerticalPadding,
+          minTileHeight: control.attrDouble("minHeight"),
+          selectedTileColor: control.attrColor("selectedTileColor", context),
+          selectedColor: control.attrColor("selectedColor", context),
+          focusColor: control.attrColor("focusColor", context),
+          tileColor: control.attrColor("bgcolor", context),
+          splashColor: control.attrColor("bgcolorActivated", context),
+          hoverColor: control.attrColor("hoverColor", context),
+          iconColor: control.attrColor("iconColor", context),
+          textColor: control.attrColor("textColor", context),
+          mouseCursor: parseMouseCursor(control.attrString("mouseCursor")),
+          visualDensity: parseVisualDensity(control.attrString("visualDensity")),
+          shape: parseOutlinedBorder(control, "shape"),
+          titleTextStyle:
+              parseTextStyle(Theme.of(context), control, "titleTextStyle"),
+          leadingAndTrailingTextStyle: parseTextStyle(
+              Theme.of(context), control, "leadingAndTrailingTextStyle"),
+          subtitleTextStyle:
+              parseTextStyle(Theme.of(context), control, "subtitleTextStyle"),
+          titleAlignment: titleAlignment,
+          style: style,
+          onFocusChange: (bool hasFocus) {
+            backend.triggerControlEvent(control.id, hasFocus ? "focus" : "blur");
+          },
+          leading: leadingCtrls.isNotEmpty
+              ? createControl(control, leadingCtrls.first.id, disabled,
+                  parentAdaptive: adaptive)
+              : null,
+          title: titleCtrls.isNotEmpty
+              ? createControl(control, titleCtrls.first.id, disabled,
+                  parentAdaptive: adaptive)
+              : null,
+          subtitle: subtitleCtrls.isNotEmpty
+              ? createControl(control, subtitleCtrls.first.id, disabled,
+                  parentAdaptive: adaptive)
+              : null,
+          trailing: trailingCtrls.isNotEmpty
+              ? createControl(control, trailingCtrls.first.id, disabled,
+                  parentAdaptive: adaptive)
+              : null,
+        );
 
-      if (toggleInputs) {
-        tile = ListTileClicks(notifier: _clickNotifier, child: tile);
-      }
+        if (toggleInputs) {
+          tile = ListTileClicks(notifier: _clickNotifier, child: tile);
+        }
 
-      return constrainedControl(context, tile, parent, control);
-    });
+        return constrainedControl(context, tile, parent, control);
+    }));
+    
   }
 }
 
