@@ -1,11 +1,12 @@
+from __future__ import annotations
+
 import asyncio
 import json
 import logging
 import threading
 import time
 import uuid
-from asyncio import AbstractEventLoop
-from concurrent.futures import Future, ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -82,8 +83,7 @@ from flet_core.types import (
     WindowEventType,
     Wrapper,
 )
-from flet_core.utils import classproperty, deprecated
-from flet_core.utils.concurrency_utils import is_pyodide
+from flet_core.utils import classproperty, deprecated, is_pyodide
 from flet_core.view import View
 
 logger = logging.getLogger(flet_core.__name__)
@@ -98,11 +98,12 @@ class context:
 
 
 try:
-    from flet_runtime.auth.authorization import Authorization
-    from flet_runtime.auth.oauth_provider import OAuthProvider
-except ImportError:
+    from flet.auth.authorization import Authorization
+    from flet.auth.oauth_provider import OAuthProvider
+except ImportError as e:
 
-    class OAuthProvider: ...
+    class OAuthProvider:
+        ...
 
     class Authorization:
         def __init__(
@@ -111,7 +112,8 @@ except ImportError:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ): ...
+        ):
+            ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -141,15 +143,19 @@ class PageDisconnectedException(Exception):
 class BrowserContextMenu:
     def __init__(self, page: "Page"):
         self.page = page
-        self.disabled = False
+        self.__disabled = False
 
     def enable(self, wait_timeout: Optional[float] = 10):
         self.page._invoke_method("enableBrowserContextMenu", wait_timeout=wait_timeout)
-        self.disabled = False
+        self.__disabled = False
 
     def disable(self, wait_timeout: Optional[float] = 10):
         self.page._invoke_method("disableBrowserContextMenu", wait_timeout=wait_timeout)
-        self.disabled = True
+        self.__disabled = True
+
+    @property
+    def disabled(self) -> bool:
+        return self.__disabled
 
 
 class Window:
@@ -922,7 +928,7 @@ class Page(AdaptiveControl):
         handler: Callable[InputT, Awaitable[RetT]],
         *args: InputT.args,
         **kwargs: InputT.kwargs,
-    ) -> "Future[RetT]":
+    ) -> asyncio.Future[RetT]:
         _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
 
@@ -1406,7 +1412,7 @@ class Page(AdaptiveControl):
 
     def open(self, control: Control) -> None:
         if not hasattr(control, "open"):
-            raise ValueError("control has no open attribute")
+            raise ValueError(f"{control.__class__.__qualname__} has no open attribute")
 
         control.open = True
 
@@ -1432,7 +1438,7 @@ class Page(AdaptiveControl):
             control.open = False
             control.update()
         else:
-            raise ValueError("control has no open attribute")
+            raise ValueError(f"{control.__class__.__qualname__} has no open attribute")
 
     #
     # SnackBar
@@ -1726,7 +1732,7 @@ class Page(AdaptiveControl):
 
     # loop
     @property
-    def loop(self) -> AbstractEventLoop:
+    def loop(self) -> asyncio.AbstractEventLoop:
         return self.__loop
 
     # executor

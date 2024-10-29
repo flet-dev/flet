@@ -18,6 +18,8 @@ git clone https://github.com/flet-dev/flet
 (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
 ```
 
+Be sure to add `%USERPROFILE%\AppData\Roaming\Python\Scripts` to `PATH`.
+
 #### macOS
 
 ```
@@ -74,9 +76,12 @@ poetry run pytest
 
 The project uses [Black](https://github.com/psf/black) formatting style. All `.py` files in a PR must be black-formatted.
 
+Install `black` extension for Visualtudio Code: https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter
+
 IDE-specific Black integration guides:
 
 - [VSCode: Using Black to automatically format Python](https://dev.to/adamlombard/how-to-use-the-black-python-code-formatter-in-vscode-3lo0)
+- [Formatting Python in VS Code](https://code.visualstudio.com/docs/python/formatting)
 
 #### Type checking
 
@@ -91,7 +96,7 @@ Install `isort` extension for imports formatting: https://marketplace.visualstud
 ### pre-commit
 
 [pre-commit](https://pre-commit.com) is a dev dependency of Flet and is automatically installed by `poetry install`.
-To install the pre-commit hooks run: `pre-commit install`.
+To install the pre-commit hooks run: `poetry run pre-commit install`.
 Once installed, every time you commit, pre-commit will run the configured hooks against changed files.
 
 ## Possible installation error when working with a source package
@@ -115,8 +120,8 @@ export FLET_WEB_PATH="$HOME/{path-to-flet}/flet/client/build/web"
 ```
 
 - On Windows (open "System Properties" > "Environment Variables", then add a new environment variable):
-  - as "Variable name", enter `FLET_VIEW_PATH`, and as "Value", `%USERPROFILE%\{path-to-flet}\flet\client\build\windows\x64\runner\Release`
-  - as "Variable name", enter `FLET_WEB_PATH`, and as "Value", `%USERPROFILE%\{path-to-flet}\flet\client\build\web`
+  - as "Variable name", enter `FLET_VIEW_PATH`, and as "Value", `{path-to-flet}\flet\client\build\windows\x64\runner\Release`
+  - as "Variable name", enter `FLET_WEB_PATH`, and as "Value", `{path-to-flet}\flet\client\build\web`
 
 - On Linux (in `~/.bash_profile` or any other profile script):
 ```
@@ -137,7 +142,7 @@ If you added these through the terminal, close that terminal session and create 
 ### Building the Flutter client
 Open an instance of your IDE (preferably VS Code) at the `flet-dev/flet/client` directory.
 
-First, run `printenv | grep FLET` in the built-in terminal to make sure everything is set. You should see the above environment variables you set (`FLET_VIEW_PATH`, `FLET_WEB_PATH`) printed out.
+First, run `printenv | grep FLET` (or `gci env:* | findstr FLET` on Windows) in the built-in terminal to make sure everything is set. You should see the above environment variables you set (`FLET_VIEW_PATH`, `FLET_WEB_PATH`) printed out.
 
 -  To build the Flutter client for MacOS, run:
     ```
@@ -196,3 +201,82 @@ You will be able to see the debugging outputs of the flet client in this termina
 * Merge `Prepare Flet {version}` PR.
 * Create and push new `v{version}` tag (with `v` prefix).
 * Update release notes at `https://github.com/flet-dev/flet/releases/tag/v{version}`.
+
+## New macOS environment for Flet developer
+
+* **Homebrew**: https://brew.sh/
+
+After installing homebrew, install xz libraries with it:
+```
+brew install xz
+```
+
+* **Pyenv**. Install with `brew`: https://github.com/pyenv/pyenv?tab=readme-ov-file#unixmacos
+  * Install and switch to the latest Python 3.12:
+```
+pyenv install 3.12.6
+pyenv global 3.12.6
+```
+
+Setup your shell environment: https://github.com/pyenv/pyenv#set-up-your-shell-environment-for-pyenv
+
+```
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zprofile
+echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zprofile
+echo 'eval "$(pyenv init -)"' >> ~/.zprofile
+```
+
+Ensure Python version is 3.12.6 and location is `/Users/{user}/.pyenv/shims/python`:
+
+```
+python --version
+which python
+```
+
+* **Rbenv**. Install with `brew`: https://github.com/rbenv/rbenv?tab=readme-ov-file#homebrew
+  * Install and switch to the latest Ruby:
+```
+rbenv install 3.3.5
+rbenv global 3.3.5
+```
+
+Ensure Ruby version is 3.3.5 and location is `/Users/{user}/.rbenv/shims/ruby`:
+
+```
+ruby --version
+which ruby
+```
+
+* **VS Code**. Install "Apple silicon" release: https://code.visualstudio.com/download
+
+* **GitHub Desktop**: https://desktop.github.com/download/
+Open GitHub Desktop app, install Rosetta.
+
+* **Poetry**: https://python-poetry.org/docs/#installing-with-the-official-installer
+
+After installing poetry, set PATH:
+```
+echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.zprofile
+```
+
+Check Poetry version and make sure it's in PATH:
+
+```
+poetry --version
+```
+
+* **Android Studio** for Android SDK required by Flutter: https://developer.android.com/studio
+* **XCode** for macOS and iOS SDKs: https://apps.apple.com/ca/app/xcode/id497799835?mt=12
+* **FVM** - Flutter Version Manager: https://fvm.app/documentation/getting-started/installation
+Install flutter with fvm:
+```
+fvm install 3.24.3
+fvm global 3.24.3
+```
+
+Set PATH:
+```
+echo 'export PATH=$HOME/fvm/default/bin:$PATH' >> ~/.zprofile
+```
+
+* **cocoapods**: https://guides.cocoapods.org/using/getting-started.html#installation

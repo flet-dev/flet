@@ -54,7 +54,10 @@ InputDecoration buildInputDecoration(
     BuildContext context,
     Control control,
     {Control? prefix,
+    Control? prefixIcon,
     Control? suffix,
+    Control? suffixIcon,
+    Control? icon,
     Control? counter,
     Widget? customSuffix,
     bool focused = false,
@@ -65,11 +68,11 @@ InputDecoration buildInputDecoration(
     control.attrString("border"),
     FormFieldInputBorder.outline,
   )!;
-  var icon = parseIcon(control.attrString("icon"));
+  var iconStr = parseIcon(control.attrString("icon"));
 
-  var prefixIcon = parseIcon(control.attrString("prefixIcon"));
+  var prefixIconStr = parseIcon(control.attrString("prefixIcon"));
   var prefixText = control.attrString("prefixText");
-  var suffixIcon = parseIcon(control.attrString("suffixIcon"));
+  var suffixIconStr = parseIcon(control.attrString("suffixIcon"));
   var suffixText = control.attrString("suffixText");
 
   var bgcolor = control.attrColor("bgcolor", context);
@@ -133,7 +136,10 @@ InputDecoration buildInputDecoration(
       enabledBorder: border,
       focusedBorder: focusedBorder,
       hoverColor: hoverColor,
-      icon: icon != null ? Icon(icon) : null,
+      icon: icon != null
+          ? createControl(control, icon.id, control.isDisabled,
+              parentAdaptive: adaptive)
+          : iconStr !=null? Icon(iconStr): null,
       filled: control.attrBool("filled", false)!,
       fillColor: fillColor ?? (focused ? focusedBgcolor ?? bgcolor : bgcolor),
       hintText: control.attrString("hintText"),
@@ -150,7 +156,10 @@ InputDecoration buildInputDecoration(
           ? control.attrString("errorText")
           : null,
       errorStyle: parseTextStyle(Theme.of(context), control, "errorStyle"),
-      prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
+      prefixIcon: prefixIcon != null
+          ? createControl(control, prefixIcon.id, control.isDisabled,
+              parentAdaptive: adaptive)
+          : prefixIconStr !=null? Icon(prefixIconStr): null,
       prefixText: prefixText,
       prefixStyle: parseTextStyle(Theme.of(context), control, "prefixStyle"),
       prefix: prefix != null
@@ -161,9 +170,13 @@ InputDecoration buildInputDecoration(
           ? createControl(control, suffix.id, control.isDisabled,
               parentAdaptive: adaptive)
           : null,
-      suffixIcon: suffixIcon != null ? Icon(suffixIcon) : customSuffix,
+      suffixIcon: suffixIcon != null
+          ? createControl(control, suffixIcon.id, control.isDisabled,
+              parentAdaptive: adaptive)
+          : suffixIconStr !=null? Icon(suffixIconStr): customSuffix,
       suffixText: suffixText,
-      suffixStyle: parseTextStyle(Theme.of(context), control, "suffixStyle"));
+      suffixStyle: parseTextStyle(Theme.of(context), control, "suffixStyle"),
+      );
 }
 
 OverlayVisibilityMode parseVisibilityMode(String type) {

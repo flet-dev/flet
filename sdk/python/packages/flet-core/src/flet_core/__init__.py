@@ -52,6 +52,7 @@ from flet_core.border_radius import BorderRadius
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.bottom_sheet import BottomSheet
 from flet_core.box import (
+    BoxConstraints,
     BoxDecoration,
     BoxShadow,
     BoxShape,

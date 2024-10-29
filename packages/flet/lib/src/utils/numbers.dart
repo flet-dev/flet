@@ -1,3 +1,10 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+
+import '../models/control.dart';
+import 'material_state.dart';
+
 double? parseDouble(dynamic v, [double? defValue]) {
   if (v is double) {
     return v;
@@ -6,6 +13,17 @@ double? parseDouble(dynamic v, [double? defValue]) {
   } else {
     return double.tryParse(v.toString()) ?? defValue;
   }
+}
+
+WidgetStateProperty<double?>? parseWidgetStateDouble(
+    Control control, String propName,
+    [double? defaultValue]) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+  return getWidgetStateProperty<double?>(
+      jsonDecode(v), (jv) => parseDouble(jv), defaultValue);
 }
 
 int? parseInt(dynamic v, [int? defValue]) {
@@ -18,6 +36,16 @@ int? parseInt(dynamic v, [int? defValue]) {
   }
 }
 
+WidgetStateProperty<int?>? parseWidgetStateInt(Control control, String propName,
+    [int? defaultValue]) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+  return getWidgetStateProperty<int?>(
+      jsonDecode(v), (jv) => parseInt(jv), defaultValue);
+}
+
 bool? parseBool(dynamic v, [bool? defValue]) {
   if (v is bool) {
     return v;
@@ -26,4 +54,15 @@ bool? parseBool(dynamic v, [bool? defValue]) {
   } else {
     return "true" == v.toString().toLowerCase();
   }
+}
+
+WidgetStateProperty<bool?>? parseWidgetStateBool(
+    Control control, String propName,
+    [bool? defaultValue]) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+  return getWidgetStateProperty<bool?>(
+      jsonDecode(v), (jv) => parseBool(jv), defaultValue);
 }

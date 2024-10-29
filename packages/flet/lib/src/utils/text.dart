@@ -11,6 +11,7 @@ import '../utils/drawing.dart';
 import '../utils/numbers.dart';
 import 'colors.dart';
 import 'launch_url.dart';
+import 'material_state.dart';
 
 TextStyle? getTextStyle(BuildContext context, String styleName) {
   var textTheme = Theme.of(context).textTheme;
@@ -242,4 +243,14 @@ TextStyle? textStyleFromJson(ThemeData theme, Map<String, dynamic>? json) {
     wordSpacing: parseDouble(json['word_spacing']),
     textBaseline: parseTextBaseline(json['text_baseline']),
   );
+}
+
+WidgetStateProperty<TextStyle?>? parseWidgetStateTextStyle(
+    ThemeData theme, Control control, String propName) {
+  var v = control.attrString(propName);
+  if (v == null) {
+    return null;
+  }
+  return getWidgetStateProperty<TextStyle?>(
+      jsonDecode(v), (jv) => textStyleFromJson(theme, jv), null);
 }
