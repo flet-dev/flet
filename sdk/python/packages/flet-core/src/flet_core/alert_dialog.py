@@ -204,8 +204,8 @@ class AlertDialog(AdaptiveControl):
     @shadow_color.setter
     def shadow_color(self, value: Optional[str]):
         self._set_attr("shadowColor", value)
-    # shadow_color
 
+    # barrier_color
     @property
     def barrier_color(self) -> Optional[str]:
         return self._get_attr("barrierColor")
