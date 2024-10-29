@@ -5,12 +5,17 @@ from flet_core.animation import AnimationValue
 from flet_core.border import BorderSide
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
+from flet_core.form_field_control import IconValueOrControl
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.types import (
     BorderRadiusValue,
     ClipBehavior,
+    ColorEnums,
+    ColorValue,
     ControlStateValue,
+    IconEnums,
+    IconValue,
     MarginValue,
     MouseCursor,
     OffsetValue,
@@ -29,8 +34,7 @@ class Tab(AdaptiveControl):
         text: Optional[str] = None,
         content: Optional[Control] = None,
         tab_content: Optional[Control] = None,
-        icon: Optional[str] = None,
-        icon_content: Optional[Control] = None,
+        icon: Optional[IconValueOrControl] = None,
         height: OptionalNumber = None,
         icon_margin: MarginValue = None,
         #
@@ -49,7 +53,6 @@ class Tab(AdaptiveControl):
         self.tab_content = tab_content
         self.height = height
         self.icon_margin = icon_margin
-        self.icon_content = icon_content
 
     def _get_control_name(self):
         return "tab"
@@ -62,14 +65,16 @@ class Tab(AdaptiveControl):
         if self.__content:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
-        if self.__icon_content:
-            self.__icon_content._set_attr_internal("n", "icon_content")
-            children.append(self.__icon_content)
+        if isinstance(self.__icon, Control):
+            self.__icon._set_attr_internal("n", "icon")
+            children.append(self.__icon)
         return children
 
     def before_update(self):
         super().before_update()
         self._set_attr_json("iconMargin", self.__icon_margin)
+        if isinstance(self.__icon, IconValue):
+            self._set_enum_attr("icon", self.__icon, IconEnums)
 
     # text
     @property
@@ -91,12 +96,12 @@ class Tab(AdaptiveControl):
 
     # icon
     @property
-    def icon(self) -> Optional[str]:
-        return self._get_attr("icon")
+    def icon(self) -> Optional[IconValueOrControl]:
+        return self.__icon
 
     @icon.setter
-    def icon(self, value: Optional[str]):
-        self._set_attr("icon", value)
+    def icon(self, value: Optional[IconValueOrControl]):
+        self.__icon = value
 
     # tab_content
     @property
@@ -115,15 +120,6 @@ class Tab(AdaptiveControl):
     @content.setter
     def content(self, value: Optional[Control]):
         self.__content = value
-
-    # icon_content
-    @property
-    def icon_content(self) -> Optional[Control]:
-        return self.__icon_content
-
-    @icon_content.setter
-    def icon_content(self, value: Optional[Control]):
-        self.__icon_content = value
 
     # icon_margin
     @property
@@ -188,19 +184,19 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         scrollable: Optional[bool] = None,
         tab_alignment: Optional[TabAlignment] = None,
         animation_duration: Optional[int] = None,
-        divider_color: Optional[str] = None,
-        indicator_color: Optional[str] = None,
+        divider_color: Optional[ColorValue] = None,
+        indicator_color: Optional[ColorValue] = None,
         indicator_border_radius: BorderRadiusValue = None,
         indicator_border_side: Optional[BorderSide] = None,
         indicator_padding: PaddingValue = None,
         indicator_tab_size: Optional[bool] = None,
         is_secondary: Optional[bool] = None,
-        label_color: Optional[str] = None,
+        label_color: Optional[ColorValue] = None,
         label_padding: PaddingValue = None,
         label_text_style: Optional[TextStyle] = None,
-        unselected_label_color: Optional[str] = None,
+        unselected_label_color: Optional[ColorValue] = None,
         unselected_label_text_style: Optional[TextStyle] = None,
-        overlay_color: ControlStateValue[str] = None,
+        overlay_color: ControlStateValue[ColorValue] = None,
         divider_height: OptionalNumber = None,
         indicator_thickness: OptionalNumber = None,
         enable_feedback: Optional[str] = None,
@@ -433,21 +429,23 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # divider_color
     @property
-    def divider_color(self) -> Optional[str]:
-        return self._get_attr("dividerColor")
+    def divider_color(self) -> Optional[ColorValue]:
+        return self.__divider_color
 
     @divider_color.setter
-    def divider_color(self, value: Optional[str]):
-        self._set_attr("dividerColor", value)
+    def divider_color(self, value: Optional[ColorValue]):
+        self.__divider_color = value
+        self._set_enum_attr("dividerColor", value, ColorEnums)
 
     # indicator_color
     @property
-    def indicator_color(self) -> Optional[str]:
-        return self._get_attr("indicatorColor")
+    def indicator_color(self) -> Optional[ColorValue]:
+        return self.__indicator_color
 
     @indicator_color.setter
-    def indicator_color(self, value: Optional[str]):
-        self._set_attr("indicatorColor", value)
+    def indicator_color(self, value: Optional[ColorValue]):
+        self.__indicator_color = value
+        self._set_enum_attr("indicatorColor", value, ColorEnums)
 
     # indicator_border_radius
     @property
@@ -487,29 +485,31 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # label_color
     @property
-    def label_color(self) -> Optional[str]:
-        return self._get_attr("labelColor")
+    def label_color(self) -> Optional[ColorValue]:
+        return self.__label_color
 
     @label_color.setter
-    def label_color(self, value: Optional[str]):
-        self._set_attr("labelColor", value)
+    def label_color(self, value: Optional[ColorValue]):
+        self.__label_color = value
+        self._set_enum_attr("labelColor", value, ColorEnums)
 
     # unselected_label_color
     @property
-    def unselected_label_color(self) -> Optional[str]:
-        return self._get_attr("unselectedLabelColor")
+    def unselected_label_color(self) -> Optional[ColorValue]:
+        return self.__unselected_label_color
 
     @unselected_label_color.setter
-    def unselected_label_color(self, value: Optional[str]):
-        self._set_attr("unselectedLabelColor", value)
+    def unselected_label_color(self, value: Optional[ColorValue]):
+        self.__unselected_label_color = value
+        self._set_enum_attr("unselectedLabelColor", value, ColorEnums)
 
     # overlay_color
     @property
-    def overlay_color(self) -> ControlStateValue[str]:
+    def overlay_color(self) -> ControlStateValue[ColorValue]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: ControlStateValue[str]):
+    def overlay_color(self, value: ControlStateValue[ColorValue]):
         self.__overlay_color = value
 
     # label_padding

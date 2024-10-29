@@ -6,7 +6,14 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.cupertino_button import CupertinoButton
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
-from flet_core.types import BorderRadiusValue, PaddingValue, ResponsiveNumber, UrlTarget
+from flet_core.types import (
+    BorderRadiusValue,
+    ColorValue,
+    IconValue,
+    PaddingValue,
+    ResponsiveNumber,
+    UrlTarget,
+)
 
 
 class CupertinoFilledButton(CupertinoButton):
@@ -33,10 +40,10 @@ class CupertinoFilledButton(CupertinoButton):
     def __init__(
         self,
         text: Optional[str] = None,
-        icon: Optional[str] = None,
-        icon_color: Optional[str] = None,
+        icon: Optional[IconValue] = None,
+        icon_color: Optional[ColorValue] = None,
         content: Optional[Control] = None,
-        disabled_color: Optional[str] = None,
+        disabled_color: Optional[ColorValue] = None,
         opacity_on_click: OptionalNumber = None,
         min_size: OptionalNumber = None,
         padding: PaddingValue = None,

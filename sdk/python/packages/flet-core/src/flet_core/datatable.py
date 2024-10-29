@@ -16,6 +16,8 @@ from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     BorderRadiusValue,
     ClipBehavior,
+    ColorEnums,
+    ColorValue,
     ControlStateValue,
     MainAxisAlignment,
     OffsetValue,
@@ -246,7 +248,7 @@ class DataRow(Control):
     def __init__(
         self,
         cells: List[DataCell],
-        color: ControlStateValue[str] = None,
+        color: ControlStateValue[ColorValue] = None,
         selected: Optional[bool] = None,
         on_long_press: OptionalControlEventCallable = None,
         on_select_changed: OptionalControlEventCallable = None,
@@ -345,14 +347,14 @@ class DataTable(ConstrainedControl):
         vertical_lines: Optional[BorderSide] = None,
         checkbox_horizontal_margin: OptionalNumber = None,
         column_spacing: OptionalNumber = None,
-        data_row_color: ControlStateValue[str] = None,
+        data_row_color: ControlStateValue[ColorValue] = None,
         data_row_min_height: OptionalNumber = None,
         data_row_max_height: OptionalNumber = None,
         data_text_style: Optional[TextStyle] = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         gradient: Optional[Gradient] = None,
         divider_thickness: OptionalNumber = None,
-        heading_row_color: ControlStateValue[str] = None,
+        heading_row_color: ControlStateValue[ColorValue] = None,
         heading_row_height: OptionalNumber = None,
         heading_text_style: Optional[TextStyle] = None,
         horizontal_margin: OptionalNumber = None,
@@ -620,12 +622,13 @@ class DataTable(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgColor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgColor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgColor", value, ColorEnums)
 
     # gradient
     @property

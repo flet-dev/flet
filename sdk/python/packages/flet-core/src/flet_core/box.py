@@ -8,6 +8,7 @@ from flet_core.gradients import Gradient
 from flet_core.types import (
     BlendMode,
     BorderRadiusValue,
+    ColorValue,
     ImageFit,
     ImageRepeat,
     Number,
@@ -18,7 +19,7 @@ from flet_core.types import (
 
 @dataclass
 class ColorFilter:
-    color: Optional[str] = field(default=None)
+    color: Optional[ColorValue] = field(default=None)
     blend_mode: Optional[BlendMode] = field(default=None)
 
 
@@ -40,7 +41,7 @@ class ShadowBlurStyle(Enum):
 class BoxShadow:
     spread_radius: Optional[float] = field(default=None)
     blur_radius: Optional[float] = field(default=None)
-    color: Optional[str] = field(default=None)
+    color: Optional[ColorValue] = field(default=None)
     offset: OffsetValue = field(default=None)
     blur_style: ShadowBlurStyle = field(default=ShadowBlurStyle.NORMAL)
 
@@ -68,7 +69,7 @@ class DecorationImage:
 
 @dataclass
 class BoxDecoration:
-    bgcolor: Optional[str] = None
+    bgcolor: Optional[ColorValue] = None
     image: Optional[DecorationImage] = None
     border: Optional[Border] = None
     border_radius: BorderRadiusValue = None

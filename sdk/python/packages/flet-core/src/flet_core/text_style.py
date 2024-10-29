@@ -4,7 +4,7 @@ from typing import List, Optional, Union
 
 from flet_core.box import BoxShadow
 from flet_core.painting import Paint
-from flet_core.types import FontWeight, OptionalNumber
+from flet_core.types import ColorValue, FontWeight, OptionalNumber
 
 
 class TextOverflow(Enum):
@@ -59,12 +59,12 @@ class TextStyle:
     weight: Optional[FontWeight] = None
     italic: Optional[bool] = None
     decoration: Optional[TextDecoration] = None
-    decoration_color: Optional[str] = None
+    decoration_color: Optional[ColorValue] = None
     decoration_thickness: OptionalNumber = None
     decoration_style: Optional[TextDecorationStyle] = None
     font_family: Optional[str] = None
-    color: Optional[str] = None
-    bgcolor: Optional[str] = None
+    color: Optional[ColorValue] = None
+    bgcolor: Optional[ColorValue] = None
     shadow: Union[None, BoxShadow, List[BoxShadow]] = None
     foreground: Optional[Paint] = None
     letter_spacing: OptionalNumber = None

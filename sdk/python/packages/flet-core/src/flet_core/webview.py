@@ -7,6 +7,8 @@ from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
+    ColorEnums,
+    ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
     ResponsiveNumber,
@@ -80,7 +82,7 @@ class WebView(ConstrainedControl):
         url: str,
         javascript_enabled: bool = True,
         prevent_link: str = "none",
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         on_page_started: OptionalControlEventCallable = None,
         on_page_ended: OptionalControlEventCallable = None,
         on_web_resource_error: OptionalControlEventCallable = None,
@@ -161,12 +163,13 @@ class WebView(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # url
     @property

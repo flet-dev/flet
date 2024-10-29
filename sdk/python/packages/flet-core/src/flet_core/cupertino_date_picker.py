@@ -9,6 +9,8 @@ from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
+    ColorEnums,
+    ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
     ResponsiveNumber,
@@ -45,7 +47,7 @@ class CupertinoDatePicker(ConstrainedControl):
         value: Optional[datetime] = None,
         first_date: Optional[datetime] = None,
         last_date: Optional[datetime] = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         minute_interval: Optional[int] = None,
         minimum_year: Optional[int] = None,
         maximum_year: Optional[int] = None,
@@ -175,12 +177,13 @@ class CupertinoDatePicker(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # item_extent
     @property

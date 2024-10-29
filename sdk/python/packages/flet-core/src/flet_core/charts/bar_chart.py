@@ -15,6 +15,8 @@ from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
+    ColorEnums,
+    ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
@@ -38,8 +40,8 @@ class BarChart(ConstrainedControl):
         groups_space: OptionalNumber = None,
         animate: Optional[AnimationValue] = None,
         interactive: Optional[bool] = None,
-        bgcolor: Optional[str] = None,
-        tooltip_bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
+        tooltip_bgcolor: Optional[ColorValue] = None,
         border: Optional[Border] = None,
         horizontal_grid_lines: Optional[ChartGridLines] = None,
         vertical_grid_lines: Optional[ChartGridLines] = None,
@@ -213,12 +215,13 @@ class BarChart(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # interactive
     @property
@@ -232,11 +235,12 @@ class BarChart(ConstrainedControl):
     # tooltip_bgcolor
     @property
     def tooltip_bgcolor(self) -> Optional[str]:
-        return self._get_attr("tooltipBgcolor")
+        return self.__tooltip_bgcolor
 
     @tooltip_bgcolor.setter
     def tooltip_bgcolor(self, value: Optional[str]):
-        self._set_attr("tooltipBgcolor", value)
+        self.__tooltip_bgcolor = value
+        self._set_enum_attr("tooltipBgcolor", value, ColorEnums)
 
     # border
     @property

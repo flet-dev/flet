@@ -7,6 +7,8 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
+    ColorEnums,
+    ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
     ResponsiveNumber,
@@ -27,7 +29,7 @@ class Placeholder(ConstrainedControl):
     def __init__(
         self,
         content: Optional[Control] = None,
-        color: Optional[str] = None,
+        color: Optional[ColorValue] = None,
         fallback_height: OptionalNumber = None,
         fallback_width: OptionalNumber = None,
         stroke_width: OptionalNumber = None,
@@ -144,8 +146,9 @@ class Placeholder(ConstrainedControl):
         return self._get_attr("color", def_value="bluegrey700")
 
     @color.setter
-    def color(self, value: Optional[str]):
-        self._set_attr("color", value)
+    def color(self, value: Optional[ColorValue]):
+        self.__color = value
+        self._set_enum_attr("color", value, ColorEnums)
 
     # content
     @property

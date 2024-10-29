@@ -4,6 +4,7 @@ from flet_core.border import BorderSide
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
+from flet_core.types import ColorEnums, ColorValue
 
 
 class PieChartSection(Control):
@@ -11,7 +12,7 @@ class PieChartSection(Control):
         self,
         value: OptionalNumber = None,
         radius: OptionalNumber = None,
-        color: Optional[str] = None,
+        color: Optional[ColorValue] = None,
         border_side: Optional[BorderSide] = None,
         title: Optional[str] = None,
         title_style: Optional[TextStyle] = None,
@@ -89,12 +90,13 @@ class PieChartSection(Control):
 
     # color
     @property
-    def color(self) -> Optional[str]:
-        return self._get_attr("color")
+    def color(self) -> Optional[ColorValue]:
+        return self.__color
 
     @color.setter
-    def color(self, value: Optional[str]):
-        self._set_attr("color", value)
+    def color(self, value: Optional[ColorValue]):
+        self.__color = value
+        self._set_enum_attr("color", value, ColorEnums)
 
     # badge
     @property

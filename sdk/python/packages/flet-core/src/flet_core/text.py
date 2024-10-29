@@ -15,6 +15,8 @@ from flet_core.text_span import TextSpan
 from flet_core.text_style import TextOverflow, TextStyle, TextThemeStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
+    ColorEnums,
+    ColorValue,
     FontWeight,
     OffsetValue,
     OptionalControlEventCallable,
@@ -128,14 +130,14 @@ class Text(ConstrainedControl):
         overflow: Optional[TextOverflow] = None,
         selectable: Optional[bool] = None,
         no_wrap: Optional[bool] = None,
-        color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
+        color: Optional[ColorValue] = None,
+        bgcolor: Optional[ColorValue] = None,
         semantics_label: Optional[str] = None,
         show_selection_cursor: Optional[bool] = None,
         enable_interactive_selection: Optional[bool] = None,
         selection_cursor_width: OptionalNumber = None,
         selection_cursor_height: OptionalNumber = None,
-        selection_cursor_color: Optional[str] = None,
+        selection_cursor_color: Optional[ColorValue] = None,
         on_tap: OptionalControlEventCallable = None,
         on_selection_change: OptionalEventCallable[TextSelectionChangeEvent] = None,
         #
@@ -378,21 +380,23 @@ class Text(ConstrainedControl):
 
     # color
     @property
-    def color(self) -> Optional[str]:
-        return self._get_attr("color")
+    def color(self) -> Optional[ColorValue]:
+        return self.__color
 
     @color.setter
-    def color(self, value: Optional[str]):
-        self._set_attr("color", value)
+    def color(self, value: Optional[ColorValue]):
+        self.__color = value
+        self._set_enum_attr("color", value, ColorEnums)
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # semantics_label
     @property

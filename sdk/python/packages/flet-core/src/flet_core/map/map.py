@@ -2,7 +2,6 @@ import json
 from enum import Enum
 from typing import Any, List, Optional, Tuple, Union
 
-from flet_core import AnimationCurve
 from flet_core.animation import AnimationCurve, AnimationValue
 from flet_core.badge import BadgeValue
 from flet_core.constrained_control import ConstrainedControl

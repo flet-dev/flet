@@ -3,7 +3,7 @@ from typing import Optional, Union
 
 from flet_core.alignment import Alignment
 from flet_core.text_style import TextStyle
-from flet_core.types import OffsetValue, OptionalNumber, PaddingValue
+from flet_core.types import ColorValue, OffsetValue, OptionalNumber, PaddingValue
 
 
 @dataclass
@@ -14,12 +14,12 @@ class Badge:
     text: Optional[str] = None
     offset: OffsetValue = None
     alignment: Optional[Alignment] = None
-    bgcolor: Optional[str] = None
+    bgcolor: Optional[ColorValue] = None
     label_visible: Optional[bool] = None
     large_size: OptionalNumber = None
     padding: Optional[PaddingValue] = None
     small_size: OptionalNumber = None
-    text_color: Optional[str] = None
+    text_color: Optional[ColorValue] = None
     text_style: Optional[TextStyle] = None
 
 

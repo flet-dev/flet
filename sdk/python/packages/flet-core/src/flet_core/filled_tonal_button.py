@@ -6,7 +6,7 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.elevated_button import ElevatedButton
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
-from flet_core.types import ResponsiveNumber, UrlTarget
+from flet_core.types import ColorValue, IconValue, ResponsiveNumber, UrlTarget
 
 
 class FilledTonalButton(ElevatedButton):
@@ -37,11 +37,11 @@ class FilledTonalButton(ElevatedButton):
     def __init__(
         self,
         text: Optional[str] = None,
-        color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
+        color: Optional[ColorValue] = None,
+        bgcolor: Optional[ColorValue] = None,
         elevation: OptionalNumber = None,
-        icon: Optional[str] = None,
-        icon_color: Optional[str] = None,
+        icon: Optional[IconValue] = None,
+        icon_color: Optional[ColorValue] = None,
         style: Optional[ButtonStyle] = None,
         content: Optional[Control] = None,
         autofocus: Optional[bool] = None,

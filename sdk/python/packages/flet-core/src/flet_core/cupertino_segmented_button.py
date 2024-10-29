@@ -7,6 +7,8 @@ from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
+    ColorEnums,
+    ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
     PaddingValue,
@@ -29,11 +31,11 @@ class CupertinoSegmentedButton(ConstrainedControl):
         self,
         controls: Sequence[Control],
         selected_index: Optional[int] = None,
-        selected_color: Optional[str] = None,
-        unselected_color: Optional[str] = None,
-        border_color: Optional[str] = None,
+        selected_color: Optional[ColorValue] = None,
+        unselected_color: Optional[ColorValue] = None,
+        border_color: Optional[ColorValue] = None,
         padding: PaddingValue = None,
-        click_color: Optional[str] = None,
+        click_color: Optional[ColorValue] = None,
         on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
@@ -134,12 +136,13 @@ class CupertinoSegmentedButton(ConstrainedControl):
 
     # border_color
     @property
-    def border_color(self) -> Optional[str]:
-        return self._get_attr("borderColor")
+    def border_color(self) -> Optional[ColorValue]:
+        return self.__border_color
 
     @border_color.setter
-    def border_color(self, value: Optional[str]):
-        self._set_attr("borderColor", value)
+    def border_color(self, value: Optional[ColorValue]):
+        self.__border_color = value
+        self._set_enum_attr("borderColor", value, ColorEnums)
 
     # selected_index
     @property
@@ -154,30 +157,33 @@ class CupertinoSegmentedButton(ConstrainedControl):
 
     # selected_color
     @property
-    def selected_color(self) -> Optional[str]:
-        return self._get_attr("selectedColor")
+    def selected_color(self) -> Optional[ColorValue]:
+        return self.__selected_color
 
     @selected_color.setter
-    def selected_color(self, value: Optional[str]):
-        self._set_attr("selectedColor", value)
+    def selected_color(self, value: Optional[ColorValue]):
+        self.__selected_color = value
+        self._set_enum_attr("selectedColor", value, ColorEnums)
 
     # unselected_color
     @property
-    def unselected_color(self) -> Optional[str]:
-        return self._get_attr("unselectedColor")
+    def unselected_color(self) -> Optional[ColorValue]:
+        return self.__unselected_color
 
     @unselected_color.setter
-    def unselected_color(self, value: Optional[str]):
-        self._set_attr("unselectedColor", value)
+    def unselected_color(self, value: Optional[ColorValue]):
+        self.__unselected_color = value
+        self._set_enum_attr("unselectedColor", value, ColorEnums)
 
     # click_color
     @property
-    def click_color(self) -> Optional[str]:
-        return self._get_attr("clickColor")
+    def click_color(self) -> Optional[ColorValue]:
+        return self.__click_color
 
     @click_color.setter
-    def click_color(self, value: Optional[str]):
-        self._set_attr("clickColor", value)
+    def click_color(self, value: Optional[ColorValue]):
+        self.__click_color = value
+        self._set_enum_attr("clickColor", value, ColorEnums)
 
     # padding
     @property

@@ -27,6 +27,8 @@ from flet_core.types import (
     BlendMode,
     BorderRadiusValue,
     ClipBehavior,
+    ColorEnums,
+    ColorValue,
     ImageFit,
     ImageRepeat,
     MarginValue,
@@ -75,7 +77,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         padding: PaddingValue = None,
         margin: MarginValue = None,
         alignment: Optional[Alignment] = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         gradient: Optional[Gradient] = None,
         blend_mode: Optional[BlendMode] = None,
         border: Optional[Border] = None,
@@ -89,7 +91,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         clip_behavior: Optional[ClipBehavior] = None,
         ink: Optional[bool] = None,
         image: Optional[DecorationImage] = None,
-        ink_color: Optional[str] = None,
+        ink_color: Optional[ColorValue] = None,
         animate: Optional[AnimationValue] = None,
         blur: Union[
             None, float, int, Tuple[Union[float, int], Union[float, int]], Blur
@@ -299,11 +301,12 @@ class Container(ConstrainedControl, AdaptiveControl):
     # bgcolor
     @property
     def bgcolor(self):
-        return self._get_attr("bgColor")
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value):
-        self._set_attr("bgColor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgColor", value, ColorEnums)
 
     # gradient
     @property
@@ -537,12 +540,13 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # ink color
     @property
-    def ink_color(self) -> Optional[str]:
-        return self._get_attr("inkColor")
+    def ink_color(self) -> Optional[ColorValue]:
+        return self.__ink_color
 
     @ink_color.setter
-    def ink_color(self, value: Optional[str]):
-        self._set_attr("inkColor", value)
+    def ink_color(self, value: Optional[ColorValue]):
+        self.__ink_color = value
+        self._set_enum_attr("inkColor", value, ColorEnums)
 
     # animate
     @property

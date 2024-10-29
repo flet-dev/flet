@@ -9,6 +9,8 @@ from flet_core.control import OptionalNumber
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
+    ColorEnums,
+    ColorValue,
     ControlStateValue,
     MouseCursor,
     OffsetValue,
@@ -60,12 +62,12 @@ class Slider(ConstrainedControl, AdaptiveControl):
         divisions: Optional[int] = None,
         round: Optional[int] = None,
         autofocus: Optional[bool] = None,
-        active_color: Optional[str] = None,
-        inactive_color: Optional[str] = None,
-        thumb_color: Optional[str] = None,
+        active_color: Optional[ColorValue] = None,
+        inactive_color: Optional[ColorValue] = None,
+        thumb_color: Optional[ColorValue] = None,
         interaction: Optional[SliderInteraction] = None,
-        secondary_active_color: Optional[str] = None,
-        overlay_color: ControlStateValue[str] = None,
+        secondary_active_color: Optional[ColorValue] = None,
+        overlay_color: ControlStateValue[ColorValue] = None,
         secondary_track_value: OptionalNumber = None,
         mouse_cursor: Optional[MouseCursor] = None,
         on_change: OptionalControlEventCallable = None,
@@ -225,12 +227,13 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     # secondary_active_color
     @property
-    def secondary_active_color(self) -> Optional[str]:
-        return self._get_attr("secondaryActiveColor")
+    def secondary_active_color(self) -> Optional[ColorValue]:
+        return self.__secondary_active_color
 
     @secondary_active_color.setter
-    def secondary_active_color(self, value: Optional[str]):
-        self._set_attr("secondaryActiveColor", value)
+    def secondary_active_color(self, value: Optional[ColorValue]):
+        self.__secondary_active_color = value
+        self._set_enum_attr("secondaryActiveColor", value, ColorEnums)
 
     # mouse_cursor
     @property
@@ -288,30 +291,33 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     # active_color
     @property
-    def active_color(self) -> Optional[str]:
-        return self._get_attr("activeColor")
+    def active_color(self) -> Optional[ColorValue]:
+        return self.__active_color
 
     @active_color.setter
-    def active_color(self, value: Optional[str]):
-        self._set_attr("activeColor", value)
+    def active_color(self, value: Optional[ColorValue]):
+        self.__active_color = value
+        self._set_enum_attr("activeColor", value, ColorEnums)
 
     # inactive_color
     @property
-    def inactive_color(self) -> Optional[str]:
-        return self._get_attr("inactiveColor")
+    def inactive_color(self) -> Optional[ColorValue]:
+        return self.__inactive_color
 
     @inactive_color.setter
-    def inactive_color(self, value: Optional[str]):
-        self._set_attr("inactiveColor", value)
+    def inactive_color(self, value: Optional[ColorValue]):
+        self.__inactive_color = value
+        self._set_enum_attr("inactiveColor", value, ColorEnums)
 
     # thumb_color
     @property
-    def thumb_color(self) -> Optional[str]:
-        return self._get_attr("thumbColor")
+    def thumb_color(self) -> Optional[ColorValue]:
+        return self.__thumb_color
 
     @thumb_color.setter
-    def thumb_color(self, value: Optional[str]):
-        self._set_attr("thumbColor", value)
+    def thumb_color(self, value: Optional[ColorValue]):
+        self.__thumb_color = value
+        self._set_enum_attr("thumbColor", value, ColorEnums)
 
     # on_change
     @property

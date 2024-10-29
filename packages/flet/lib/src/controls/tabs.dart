@@ -201,12 +201,12 @@ class _TabsControlState extends State<TabsControl>
 
           var tabs = viewModel.controlViews.map((tabView) {
             var iconString = parseIcon(tabView.control.attrString("icon"));
-            var iconContentCtrls = tabView.children
-                .where((c) => c.name == "icon_content" && c.isVisible);
+            var iconCtrls = tabView.children
+                .where((c) => c.name == "icon" && c.isVisible);
 
-            var icon = iconContentCtrls.isNotEmpty
+            var icon = iconCtrls.isNotEmpty
                 ? createControl(
-                    widget.control, iconContentCtrls.first.id, disabled,
+                    widget.control, iconCtrls.first.id, disabled,
                     parentAdaptive: adaptive)
                 : iconString != null
                     ? Icon(iconString)

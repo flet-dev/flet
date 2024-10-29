@@ -5,7 +5,7 @@ from warnings import warn
 
 from flet_core.animation import AnimationCurve
 from flet_core.control import OptionalNumber
-from flet_core.types import DurationValue
+from flet_core.types import ColorValue, DurationValue
 
 
 @dataclass
@@ -97,7 +97,7 @@ class MapConfiguration:
     initial_rotation: OptionalNumber = None
     initial_zoom: OptionalNumber = None
     interaction_configuration: Optional[MapInteractionConfiguration] = None
-    bgcolor: Optional[str] = None
+    bgcolor: Optional[ColorValue] = None
     keep_alive: Optional[bool] = None
     max_zoom: OptionalNumber = None
     min_zoom: OptionalNumber = None

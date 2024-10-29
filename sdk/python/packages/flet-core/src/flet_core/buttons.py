@@ -6,6 +6,7 @@ from flet_core.border import BorderSide
 from flet_core.text_style import TextStyle
 from flet_core.types import (
     BorderRadiusValue,
+    ColorValue,
     ControlState,
     ControlStateValue,
     MouseCursor,
@@ -58,11 +59,11 @@ class ContinuousRectangleBorder(OutlinedBorder):
 
 @dataclass
 class ButtonStyle:
-    color: ControlStateValue[str] = None
-    bgcolor: ControlStateValue[str] = None
-    overlay_color: ControlStateValue[str] = None
-    shadow_color: ControlStateValue[str] = None
-    surface_tint_color: ControlStateValue[str] = None
+    color: ControlStateValue[ColorValue] = None
+    bgcolor: ControlStateValue[ColorValue] = None
+    overlay_color: ControlStateValue[ColorValue] = None
+    shadow_color: ControlStateValue[ColorValue] = None
+    surface_tint_color: ControlStateValue[ColorValue] = None
     elevation: ControlStateValue[OptionalNumber] = None
     animation_duration: Optional[int] = None
     padding: ControlStateValue[PaddingValue] = None
@@ -72,7 +73,7 @@ class ButtonStyle:
     enable_feedback: Optional[bool] = None
     text_style: ControlStateValue[TextStyle] = None
     icon_size: ControlStateValue[OptionalNumber] = None
-    icon_color: ControlStateValue[str] = None
+    icon_color: ControlStateValue[ColorValue] = None
     visual_density: Optional[VisualDensity] = None
     mouse_cursor: ControlStateValue[MouseCursor] = None
 

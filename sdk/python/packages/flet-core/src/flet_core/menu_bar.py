@@ -8,6 +8,7 @@ from flet_core.control import Control
 from flet_core.ref import Ref
 from flet_core.types import (
     ClipBehavior,
+    ColorValue,
     ControlState,
     ControlStateValue,
     MouseCursor,
@@ -20,9 +21,9 @@ from flet_core.types import (
 @dataclass
 class MenuStyle:
     alignment: Optional[Alignment] = None
-    bgcolor: ControlStateValue[str] = None
-    shadow_color: ControlStateValue[str] = None
-    surface_tint_color: ControlStateValue[str] = None
+    bgcolor: ControlStateValue[ColorValue] = None
+    shadow_color: ControlStateValue[ColorValue] = None
+    surface_tint_color: ControlStateValue[ColorValue] = None
     elevation: ControlStateValue[OptionalNumber] = None
     padding: ControlStateValue[PaddingValue] = None
     side: ControlStateValue[BorderSide] = None

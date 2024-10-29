@@ -1,18 +1,19 @@
 from dataclasses import dataclass
-from typing import Optional, List, Union
+from typing import List, Optional, Union
 
 from flet_core.border import Border
-from flet_core.box import BoxShape, DecorationImage, BoxShadow
+from flet_core.box import BoxShadow, BoxShape, DecorationImage
 from flet_core.gradients import Gradient
 from flet_core.text_style import TextStyle
 from flet_core.types import (
+    BlendMode,
     BorderRadiusValue,
+    ColorValue,
+    DurationValue,
     MarginValue,
+    OptionalNumber,
     PaddingValue,
     TextAlign,
-    DurationValue,
-    OptionalNumber,
-    BlendMode,
 )
 
 
@@ -32,7 +33,7 @@ class Tooltip:
     vertical_offset: OptionalNumber = None
     margin: MarginValue = None
     padding: PaddingValue = None
-    bgcolor: Optional[str] = None
+    bgcolor: Optional[ColorValue] = None
     image: Optional[DecorationImage] = None
     shadow: List[BoxShadow] = None
     blend_mode: Optional[BlendMode] = None

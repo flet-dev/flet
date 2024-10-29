@@ -4,8 +4,12 @@ from typing import Any, Callable, Dict, Optional, Protocol, Tuple, TypeVar, Unio
 from warnings import warn
 
 from flet_core.border_radius import BorderRadius
+from flet_core.colors import Colors, colors
 from flet_core.control_event import ControlEvent
+from flet_core.cupertino_colors import CupertinoColors, cupertino_colors
+from flet_core.cupertino_icons import CupertinoIcons, cupertino_icons
 from flet_core.event import Event
+from flet_core.icons import Icons, icons
 from flet_core.margin import Margin
 from flet_core.padding import Padding
 from flet_core.transform import Offset, Rotate, Scale
@@ -415,6 +419,14 @@ ControlEventType = TypeVar("ControlEventType", bound=ControlEvent)
 EventType = TypeVar("EventType", bound=Event)
 OptionalEventCallable = Optional[Callable[[EventType], Any]]
 OptionalControlEventCallable = Optional[Callable[[ControlEvent], Any]]
+
+# Colors
+ColorEnums = (colors, Colors, cupertino_colors, CupertinoColors)
+ColorValue = Union[str, colors, Colors, cupertino_colors, CupertinoColors]
+
+# Icons
+IconEnums = (icons, Icons, cupertino_icons, CupertinoIcons)
+IconValue = Union[str, icons, Icons, cupertino_icons, CupertinoIcons]
 
 # ControlState
 T = TypeVar("T")

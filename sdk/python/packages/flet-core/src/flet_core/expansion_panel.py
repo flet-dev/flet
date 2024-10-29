@@ -6,6 +6,8 @@ from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.types import (
+    ColorEnums,
+    ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
     PaddingValue,
@@ -28,7 +30,7 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
         self,
         header: Optional[Control] = None,
         content: Optional[Control] = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         expanded: Optional[bool] = None,
         can_tap_header: Optional[bool] = None,
         #
@@ -121,12 +123,13 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgColor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgColor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgColor", value, ColorEnums)
 
     # expanded
     @property
@@ -177,10 +180,10 @@ class ExpansionPanelList(ConstrainedControl):
     def __init__(
         self,
         controls: Optional[Sequence[ExpansionPanel]] = None,
-        divider_color: Optional[str] = None,
+        divider_color: Optional[ColorValue] = None,
         elevation: OptionalNumber = None,
         expanded_header_padding: PaddingValue = None,
-        expand_icon_color: Optional[str] = None,
+        expand_icon_color: Optional[ColorValue] = None,
         spacing: OptionalNumber = None,
         on_change: OptionalControlEventCallable = None,
         #
@@ -267,21 +270,23 @@ class ExpansionPanelList(ConstrainedControl):
 
     # divider_color
     @property
-    def divider_color(self) -> Optional[str]:
-        return self._get_attr("dividerColor")
+    def divider_color(self) -> Optional[ColorValue]:
+        return self.__divider_color
 
     @divider_color.setter
-    def divider_color(self, value: Optional[str]):
-        self._set_attr("dividerColor", value)
+    def divider_color(self, value: Optional[ColorValue]):
+        self.__divider_color = value
+        self._set_enum_attr("dividerColor", value, ColorEnums)
 
     # expanded_icon_color
     @property
-    def expanded_icon_color(self) -> Optional[str]:
-        return self._get_attr("expandedIconColor")
+    def expanded_icon_color(self) -> Optional[ColorValue]:
+        return self.__expanded_icon_color
 
     @expanded_icon_color.setter
-    def expanded_icon_color(self, value: Optional[str]):
-        self._set_attr("expandedIconColor", value)
+    def expanded_icon_color(self, value: Optional[ColorValue]):
+        self.__expanded_icon_color = value
+        self._set_enum_attr("expandedIconColor", value, ColorEnums)
 
     # expanded_header_padding
     @property
