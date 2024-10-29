@@ -1,17 +1,18 @@
 from typing import Any, Optional, Sequence, Union
 
+from flet_core.badge import BadgeValue
 from flet_core.constrained_control import ConstrainedControl
-from flet_core.control import OptionalNumber, Control
+from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalControlEventCallable,
+    PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    PaddingValue,
-    OptionalControlEventCallable,
 )
 
 
@@ -58,6 +59,7 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
         animate_offset: AnimationValue = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -88,6 +90,7 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,

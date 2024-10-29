@@ -45,3 +45,4 @@ export 'src/utils/text.dart';
 export 'src/utils/textfield.dart';
 export 'src/utils/theme.dart';
 export 'src/utils/time.dart';
+export 'src/utils/transforms.dart';

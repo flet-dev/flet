@@ -14,6 +14,7 @@ from typing import (
     Union,
 )
 
+from flet_core.badge import BadgeValue
 from flet_core.embed_json_encoder import EmbedJsonEncoder
 from flet_core.protocol import Command
 from flet_core.ref import Ref
@@ -48,6 +49,7 @@ class Control:
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -68,6 +70,7 @@ class Control:
         self.col = col
         self.opacity = opacity
         self.tooltip = tooltip
+        self.badge = badge
         self.visible = visible
         self.disabled = disabled
         self.__data: Any = None
@@ -89,6 +92,7 @@ class Control:
     def _before_build_command(self) -> None:
         self._set_attr_json("col", self.__col)
         self._set_attr_json("tooltip", self.tooltip)
+        self._set_attr_json("badge", self.badge)
 
     def did_mount(self):
         pass
@@ -188,7 +192,7 @@ class Control:
         if ov != nv:
             self._set_attr(name, nv)
 
-    def _convert_attr_json(self, value: V) -> str:
+    def _convert_attr_json(self, value: V) -> Optional[str]:
         return (
             json.dumps(value, cls=EmbedJsonEncoder, separators=(",", ":"))
             if value is not None

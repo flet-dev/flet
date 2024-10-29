@@ -2,8 +2,13 @@ import time
 from typing import Any, List, Optional, Union
 
 from flet_core.alignment import Alignment
+from flet_core.badge import BadgeValue
 from flet_core.control import Control, OptionalNumber
-from flet_core.form_field_control import FormFieldControl, InputBorder
+from flet_core.form_field_control import (
+    FormFieldControl,
+    IconValueOrControl,
+    InputBorder,
+)
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
@@ -11,11 +16,11 @@ from flet_core.types import (
     AnimationValue,
     BorderRadiusValue,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -181,7 +186,7 @@ class Dropdown(FormFieldControl):
         text_style: Optional[TextStyle] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
-        icon: Optional[str] = None,
+        icon: Optional[IconValueOrControl] = None,
         border: Optional[InputBorder] = None,
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
@@ -206,11 +211,11 @@ class Dropdown(FormFieldControl):
         error_text: Optional[str] = None,
         error_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
-        prefix_icon: Optional[str] = None,
+        prefix_icon: Optional[IconValueOrControl] = None,
         prefix_text: Optional[str] = None,
         prefix_style: Optional[TextStyle] = None,
         suffix: Optional[Control] = None,
-        suffix_icon: Optional[str] = None,
+        suffix_icon: Optional[IconValueOrControl] = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
         #
@@ -236,6 +241,7 @@ class Dropdown(FormFieldControl):
         animate_offset: AnimationValue = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -262,6 +268,7 @@ class Dropdown(FormFieldControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -444,14 +451,14 @@ class Dropdown(FormFieldControl):
         ), "item_height must be greater than or equal to 48.0"
         self._set_attr("itemHeight", value)
 
-    # menu_max_height
+    # max_menu_height
     @property
-    def menu_max_height(self) -> OptionalNumber:
-        return self._get_attr("menuMaxHeight", data_type="float")
+    def max_menu_height(self) -> OptionalNumber:
+        return self._get_attr("maxMenuHeight", data_type="float")
 
-    @menu_max_height.setter
-    def menu_max_height(self, value: OptionalNumber):
-        self._set_attr("menuMaxHeight", value)
+    @max_menu_height.setter
+    def max_menu_height(self, value: OptionalNumber):
+        self._set_attr("maxMenuHeight", value)
 
     # icon_size
     @property

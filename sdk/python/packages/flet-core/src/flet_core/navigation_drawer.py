@@ -1,14 +1,11 @@
 from enum import Enum
 from typing import Any, List, Optional, Sequence
 
+from flet_core.badge import BadgeValue
 from flet_core.buttons import OutlinedBorder
 from flet_core.control import Control
 from flet_core.ref import Ref
-from flet_core.types import (
-    OptionalNumber,
-    PaddingValue,
-    OptionalControlEventCallable,
-)
+from flet_core.types import OptionalControlEventCallable, OptionalNumber, PaddingValue
 
 
 class NavigationDrawerDestination(Control):
@@ -26,8 +23,9 @@ class NavigationDrawerDestination(Control):
         # Control
         #
         ref: Optional[Ref] = None,
+        badge: Optional[BadgeValue] = None,
     ):
-        Control.__init__(self, ref=ref)
+        Control.__init__(self, ref=ref, badge=badge)
         self.label = label
         self.bgcolor = bgcolor
         self.icon = icon

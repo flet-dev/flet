@@ -63,6 +63,7 @@ class PolylineLayerControl extends StatelessWidget with FletStoreMixin {
             points: coordinates != null
                 ? (jsonDecode(coordinates) as List)
                     .map((e) => latLngFromJson(e))
+                    .whereNotNull()
                     .toList()
                 : []);
       }).toList();

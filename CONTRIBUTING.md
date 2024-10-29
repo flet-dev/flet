@@ -76,6 +76,8 @@ poetry run pytest
 
 The project uses [Black](https://github.com/psf/black) formatting style. All `.py` files in a PR must be black-formatted.
 
+Install `black` extension for Visualtudio Code: https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter
+
 IDE-specific Black integration guides:
 
 - [VSCode: Using Black to automatically format Python](https://dev.to/adamlombard/how-to-use-the-black-python-code-formatter-in-vscode-3lo0)

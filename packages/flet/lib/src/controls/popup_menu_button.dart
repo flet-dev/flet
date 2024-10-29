@@ -143,7 +143,6 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
               }).toList(),
           child: child);
     });
-    debugPrint('SHOW: ${control.attrString("tooltip", "") != ""}');
     return constrainedControl(
         context,
         TooltipVisibility(

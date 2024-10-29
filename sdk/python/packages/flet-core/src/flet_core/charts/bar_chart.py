@@ -2,6 +2,7 @@ import json
 from enum import Enum
 from typing import Any, List, Optional, Union
 
+from flet_core.badge import BadgeValue
 from flet_core.border import Border, BorderSide
 from flet_core.charts.bar_chart_group import BarChartGroup
 from flet_core.charts.chart_axis import ChartAxis
@@ -15,12 +16,12 @@ from flet_core.tooltip import TooltipValue
 from flet_core.types import (
     AnimationValue,
     OffsetValue,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
+    PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    OptionalEventCallable,
-    PaddingValue,
-    OptionalControlEventCallable,
 )
 
 
@@ -86,6 +87,7 @@ class BarChart(ConstrainedControl):
         animate_offset: AnimationValue = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -115,6 +117,7 @@ class BarChart(ConstrainedControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
