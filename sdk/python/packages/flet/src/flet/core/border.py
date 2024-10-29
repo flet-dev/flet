@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional, Union
 
-from flet.core.types import OptionalNumber
+from flet.core.types import ColorValue, OptionalNumber
 
 
 class BorderSideStrokeAlign(Enum):
@@ -14,7 +14,7 @@ class BorderSideStrokeAlign(Enum):
 @dataclass
 class BorderSide:
     width: OptionalNumber
-    color: Optional[str] = field(default=None)
+    color: Optional[ColorValue] = field(default=None)
     stroke_align: Union[BorderSideStrokeAlign, OptionalNumber] = field(default=None)
 
 
@@ -26,7 +26,7 @@ class Border:
     left: Optional[BorderSide] = field(default=None)
 
 
-def all(width: Optional[float] = None, color: Optional[str] = None) -> Border:
+def all(width: Optional[float] = None, color: Optional[ColorValue] = None) -> Border:
     bs = BorderSide(width, color)
     return Border(left=bs, top=bs, right=bs, bottom=bs)
 

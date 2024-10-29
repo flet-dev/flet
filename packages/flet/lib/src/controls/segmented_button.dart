@@ -119,21 +119,20 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
                 .where((c) => c.name == "icon" && c.isVisible);
             var labelCtrls = segmentView.children
                 .where((c) => c.name == "label" && c.isVisible);
-            var enabled = !segmentView.control.attrBool("disabled", false)!;
-
+            var segmentDisabled = segmentView.control.isDisabled || disabled;
             return ButtonSegment(
                 value: segmentView.control.attrString("value")!,
-                enabled: enabled,
-                tooltip: enabled && !disabled
+                enabled: !segmentDisabled,
+                tooltip: !segmentDisabled
                     ? segmentView.control.attrString("tooltip")
                     : null,
                 icon: iconCtrls.isNotEmpty
-                    ? createControl(
-                        segmentView.control, iconCtrls.first.id, disabled)
+                    ? createControl(segmentView.control, iconCtrls.first.id,
+                        segmentDisabled)
                     : null,
                 label: labelCtrls.isNotEmpty
-                    ? createControl(
-                        segmentView.control, labelCtrls.first.id, disabled)
+                    ? createControl(segmentView.control, labelCtrls.first.id,
+                        segmentDisabled)
                     : null);
           }).toList());
     });

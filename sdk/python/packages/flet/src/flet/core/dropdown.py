@@ -2,6 +2,9 @@ import time
 from typing import Any, List, Optional, Union
 
 from flet.core.alignment import Alignment
+from flet.core.animation import AnimationValue
+from flet.core.badge import BadgeValue
+from flet.core.box import BoxConstraints
 from flet.core.control import Control, OptionalNumber
 from flet.core.form_field_control import (
     FormFieldControl,
@@ -12,8 +15,10 @@ from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    AnimationValue,
     BorderRadiusValue,
+    ColorEnums,
+    ColorValue,
+    DurationValue,
     OffsetValue,
     OptionalControlEventCallable,
     PaddingValue,
@@ -170,8 +175,8 @@ class Dropdown(FormFieldControl):
         icon_size: OptionalNumber = None,
         enable_feedback: Optional[bool] = None,
         padding: PaddingValue = None,
-        icon_enabled_color: Optional[str] = None,
-        icon_disabled_color: Optional[str] = None,
+        icon_enabled_color: Optional[ColorValue] = None,
+        icon_disabled_color: Optional[ColorValue] = None,
         options_fill_horizontally: Optional[bool] = None,
         disabled_hint_content: Optional[Control] = None,
         on_change: OptionalControlEventCallable = None,
@@ -183,30 +188,32 @@ class Dropdown(FormFieldControl):
         #
         text_size: OptionalNumber = None,
         text_style: Optional[TextStyle] = None,
-        label: Optional[str] = None,
+        label: Optional[Union[str, Control]] = None,
         label_style: Optional[TextStyle] = None,
         icon: Optional[IconValueOrControl] = None,
         border: Optional[InputBorder] = None,
-        color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
+        color: Optional[ColorValue] = None,
+        bgcolor: Optional[ColorValue] = None,
         border_radius: BorderRadiusValue = None,
         border_width: OptionalNumber = None,
-        border_color: Optional[str] = None,
-        focused_color: Optional[str] = None,
-        focused_bgcolor: Optional[str] = None,
+        border_color: Optional[ColorValue] = None,
+        focused_color: Optional[ColorValue] = None,
+        focused_bgcolor: Optional[ColorValue] = None,
         focused_border_width: OptionalNumber = None,
-        focused_border_color: Optional[str] = None,
+        focused_border_color: Optional[ColorValue] = None,
         content_padding: PaddingValue = None,
         dense: Optional[bool] = None,
         filled: Optional[bool] = None,
-        fill_color: Optional[str] = None,
+        fill_color: Optional[ColorValue] = None,
         hint_text: Optional[str] = None,
         hint_style: Optional[TextStyle] = None,
+        helper: Optional[Control] = None,
         helper_text: Optional[str] = None,
         helper_style: Optional[TextStyle] = None,
         counter: Optional[Control] = None,
         counter_text: Optional[str] = None,
         counter_style: Optional[TextStyle] = None,
+        error: Optional[Control] = None,
         error_text: Optional[str] = None,
         error_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
@@ -217,6 +224,16 @@ class Dropdown(FormFieldControl):
         suffix_icon: Optional[IconValueOrControl] = None,
         suffix_text: Optional[str] = None,
         suffix_style: Optional[TextStyle] = None,
+        focus_color: Optional[ColorValue] = None,
+        align_label_with_hint: Optional[bool] = None,
+        hint_fade_duration: DurationValue = None,
+        hint_max_lines: Optional[int] = None,
+        helper_max_lines: Optional[int] = None,
+        error_max_lines: Optional[int] = None,
+        prefix_icon_size_constraints: Optional[BoxConstraints] = None,
+        suffix_icon_size_constraints: Optional[BoxConstraints] = None,
+        size_constraints: Optional[BoxConstraints] = None,
+        collapsed: Optional[bool] = None,
         #
         # ConstrainedControl
         #
@@ -232,14 +249,15 @@ class Dropdown(FormFieldControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -266,6 +284,7 @@ class Dropdown(FormFieldControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -294,10 +313,12 @@ class Dropdown(FormFieldControl):
             hint_text=hint_text,
             hint_style=hint_style,
             helper_text=helper_text,
+            helper=helper,
             helper_style=helper_style,
             counter=counter,
             counter_text=counter_text,
             counter_style=counter_style,
+            error=error,
             error_text=error_text,
             error_style=error_style,
             prefix=prefix,
@@ -308,9 +329,18 @@ class Dropdown(FormFieldControl):
             suffix_icon=suffix_icon,
             suffix_text=suffix_text,
             suffix_style=suffix_style,
+            focus_color=focus_color,
+            align_label_with_hint=align_label_with_hint,
+            hint_fade_duration=hint_fade_duration,
+            hint_max_lines=hint_max_lines,
+            helper_max_lines=helper_max_lines,
+            error_max_lines=error_max_lines,
+            prefix_icon_size_constraints=prefix_icon_size_constraints,
+            suffix_icon_size_constraints=suffix_icon_size_constraints,
+            size_constraints=size_constraints,
+            collapsed=collapsed,
         )
 
-        self.__options = []
         self.value = value
         self.autofocus = autofocus
         self.options = options
@@ -420,21 +450,23 @@ class Dropdown(FormFieldControl):
 
     # icon_enabled_color
     @property
-    def icon_enabled_color(self) -> Optional[str]:
-        return self._get_attr("iconEnabledColor")
+    def icon_enabled_color(self) -> Optional[ColorValue]:
+        return self.__icon_enabled_color
 
     @icon_enabled_color.setter
-    def icon_enabled_color(self, value: Optional[str]):
-        self._set_attr("iconEnabledColor", value)
+    def icon_enabled_color(self, value: Optional[ColorValue]):
+        self.__icon_enabled_color = value
+        self._set_enum_attr("iconEnabledColor", value, ColorEnums)
 
     # icon_disabled_color
     @property
-    def icon_disabled_color(self) -> Optional[str]:
-        return self._get_attr("iconDisabledColor")
+    def icon_disabled_color(self) -> Optional[ColorValue]:
+        return self.__icon_disabled_color
 
     @icon_disabled_color.setter
-    def icon_disabled_color(self, value: Optional[str]):
-        self._set_attr("iconDisabledColor", value)
+    def icon_disabled_color(self, value: Optional[ColorValue]):
+        self.__icon_disabled_color = value
+        self._set_enum_attr("iconDisabledColor", value, ColorEnums)
 
     # item_height
     @property
@@ -448,14 +480,14 @@ class Dropdown(FormFieldControl):
         ), "item_height must be greater than or equal to 48.0"
         self._set_attr("itemHeight", value)
 
-    # menu_max_height
+    # max_menu_height
     @property
-    def menu_max_height(self) -> OptionalNumber:
-        return self._get_attr("menuMaxHeight", data_type="float")
+    def max_menu_height(self) -> OptionalNumber:
+        return self._get_attr("maxMenuHeight", data_type="float")
 
-    @menu_max_height.setter
-    def menu_max_height(self, value: OptionalNumber):
-        self._set_attr("menuMaxHeight", value)
+    @max_menu_height.setter
+    def max_menu_height(self, value: OptionalNumber):
+        self._set_attr("maxMenuHeight", value)
 
     # icon_size
     @property

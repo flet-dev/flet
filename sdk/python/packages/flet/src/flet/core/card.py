@@ -2,14 +2,17 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from flet.core.adaptive_control import AdaptiveControl
+from flet.core.animation import AnimationValue
+from flet.core.badge import BadgeValue
 from flet.core.buttons import OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    AnimationValue,
     ClipBehavior,
+    ColorEnums,
+    ColorValue,
     MarginValue,
     OffsetValue,
     OptionalControlEventCallable,
@@ -73,9 +76,9 @@ class Card(ConstrainedControl, AdaptiveControl):
         content: Optional[Control] = None,
         margin: MarginValue = None,
         elevation: OptionalNumber = None,
-        color: Optional[str] = None,
-        shadow_color: Optional[str] = None,
-        surface_tint_color: Optional[str] = None,
+        color: Optional[ColorValue] = None,
+        shadow_color: Optional[ColorValue] = None,
+        surface_tint_color: Optional[ColorValue] = None,
         shape: Optional[OutlinedBorder] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         is_semantic_container: Optional[bool] = None,
@@ -99,14 +102,15 @@ class Card(ConstrainedControl, AdaptiveControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -139,6 +143,7 @@ class Card(ConstrainedControl, AdaptiveControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -194,29 +199,32 @@ class Card(ConstrainedControl, AdaptiveControl):
     # color
     @property
     def color(self):
-        return self._get_attr("color")
+        return self.__color
 
     @color.setter
     def color(self, value):
-        self._set_attr("color", value)
+        self.__color = value
+        self._set_enum_attr("color", value, ColorEnums)
 
     # shadow_color
     @property
     def shadow_color(self):
-        return self._get_attr("shadowColor")
+        return self.__shadow_color
 
     @shadow_color.setter
     def shadow_color(self, value):
-        self._set_attr("shadowColor", value)
+        self.__shadow_color = value
+        self._set_enum_attr("shadowColor", value, ColorEnums)
 
     # surface_tint_color
     @property
     def surface_tint_color(self):
-        return self._get_attr("surfaceTintColor")
+        return self.__surface_tint_color
 
     @surface_tint_color.setter
     def surface_tint_color(self, value):
-        self._set_attr("surfaceTintColor", value)
+        self.__surface_tint_color = value
+        self._set_enum_attr("surfaceTintColor", value, ColorEnums)
 
     # shape
     @property

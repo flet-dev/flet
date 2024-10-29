@@ -6,6 +6,8 @@ from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.types import (
     ClipBehavior,
+    ColorEnums,
+    ColorValue,
     MarginValue,
     OptionalControlEventCallable,
     PaddingValue,
@@ -73,9 +75,9 @@ class SnackBar(Control):
         dismiss_direction: Optional[DismissDirection] = None,
         show_close_icon: Optional[bool] = False,
         action: Optional[str] = None,
-        action_color: Optional[str] = None,
-        close_icon_color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
+        action_color: Optional[ColorValue] = None,
+        close_icon_color: Optional[ColorValue] = None,
+        bgcolor: Optional[ColorValue] = None,
         duration: Optional[int] = None,
         margin: MarginValue = None,
         padding: PaddingValue = None,
@@ -173,30 +175,33 @@ class SnackBar(Control):
 
     # action_color
     @property
-    def action_color(self) -> Optional[str]:
-        return self._get_attr("actionColor")
+    def action_color(self) -> Optional[ColorValue]:
+        return self.__action_color
 
     @action_color.setter
-    def action_color(self, value: Optional[str]):
-        self._set_attr("actionColor", value)
+    def action_color(self, value: Optional[ColorValue]):
+        self.__action_color = value
+        self._set_enum_attr("actionColor", value, ColorEnums)
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgColor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgColor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgColor", value, ColorEnums)
 
     # close_icon_color
     @property
-    def close_icon_color(self) -> Optional[str]:
-        return self._get_attr("closeIconColor")
+    def close_icon_color(self) -> Optional[ColorValue]:
+        return self.__close_icon_color
 
     @close_icon_color.setter
-    def close_icon_color(self, value: Optional[str]):
-        self._set_attr("closeIconColor", value)
+    def close_icon_color(self, value: Optional[ColorValue]):
+        self.__close_icon_color = value
+        self._set_enum_attr("closeIconColor", value, ColorEnums)
 
     # duration
     @property

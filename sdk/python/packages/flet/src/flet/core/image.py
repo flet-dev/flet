@@ -1,22 +1,16 @@
 from typing import Any, Optional, Union
 
+from flet.core.animation import AnimationValue
+from flet.core.badge import BadgeValue
 from flet.core.box import FilterQuality
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
-from flet.core.types import (
-    AnimationValue,
-    BlendMode,
-    BorderRadiusValue,
-    ImageFit,
-    ImageRepeat,
-    OffsetValue,
-    OptionalControlEventCallable,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.core.types import (BlendMode, BorderRadiusValue, ColorEnums,
+                             ColorValue, ImageFit, ImageRepeat, OffsetValue,
+                             OptionalControlEventCallable, ResponsiveNumber,
+                             RotateValue, ScaleValue)
 
 try:
     from typing import Literal
@@ -60,7 +54,7 @@ class Image(ConstrainedControl):
         repeat: Optional[ImageRepeat] = None,
         fit: Optional[ImageFit] = None,
         border_radius: BorderRadiusValue = None,
-        color: Optional[str] = None,
+        color: Optional[ColorValue] = None,
         color_blend_mode: Optional[BlendMode] = None,
         gapless_playback: Optional[bool] = None,
         semantics_label: Optional[str] = None,
@@ -85,14 +79,15 @@ class Image(ConstrainedControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
-            on_animation_end: OptionalControlEventCallable = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -123,6 +118,7 @@ class Image(ConstrainedControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -215,12 +211,13 @@ class Image(ConstrainedControl):
 
     # color
     @property
-    def color(self) -> Optional[str]:
-        return self._get_attr("color")
+    def color(self) -> Optional[ColorValue]:
+        return self.__color
 
     @color.setter
-    def color(self, value: Optional[str]):
-        self._set_attr("color", value)
+    def color(self, value: Optional[ColorValue]):
+        self.__color = value
+        self._set_enum_attr("color", value, ColorEnums)
 
     # color_blend_mode
     @property

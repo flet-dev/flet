@@ -1,11 +1,11 @@
 from typing import Any, List, Optional
 
 from flet.core.control import Control, OptionalNumber
-from flet.core.map import MapLatitudeLongitude
+from flet.core.map.map_configuration import MapLatitudeLongitude
 from flet.core.map.map_layer import MapLayer
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
-from flet.core.types import StrokeCap, StrokeJoin
+from flet.core.types import ColorEnums, ColorValue, StrokeCap, StrokeJoin
 
 
 class PolygonMarker(Control):
@@ -22,8 +22,8 @@ class PolygonMarker(Control):
         coordinates: List[MapLatitudeLongitude],
         label: Optional[str] = None,
         label_text_style: Optional[TextStyle] = None,
-        border_color: Optional[str] = None,
-        color: Optional[str] = None,
+        border_color: Optional[ColorValue] = None,
+        color: Optional[ColorValue] = None,
         border_stroke_width: OptionalNumber = None,
         disable_holes_border: Optional[bool] = None,
         rotate_label: Optional[bool] = None,
@@ -121,21 +121,23 @@ class PolygonMarker(Control):
 
     # color
     @property
-    def color(self) -> Optional[str]:
-        return self._get_attr("color")
+    def color(self) -> Optional[ColorValue]:
+        return self.__color
 
     @color.setter
-    def color(self, value: Optional[str]):
-        self._set_attr("color", value)
+    def color(self, value: Optional[ColorValue]):
+        self.__color = value
+        self._set_enum_attr("color", value, ColorEnums)
 
     # border_color
     @property
-    def border_color(self) -> Optional[str]:
-        return self._get_attr("borderColor")
+    def border_color(self) -> Optional[ColorValue]:
+        return self.__border_color
 
     @border_color.setter
-    def border_color(self, value: Optional[str]):
-        self._set_attr("borderColor", value)
+    def border_color(self, value: Optional[ColorValue]):
+        self.__border_color = value
+        self._set_enum_attr("borderColor", value, ColorEnums)
 
     # border_stroke_width
     @property

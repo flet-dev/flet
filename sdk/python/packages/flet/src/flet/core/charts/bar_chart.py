@@ -2,6 +2,8 @@ import json
 from enum import Enum
 from typing import Any, List, Optional, Union
 
+from flet.core.animation import AnimationValue
+from flet.core.badge import BadgeValue
 from flet.core.border import Border, BorderSide
 from flet.core.charts.bar_chart_group import BarChartGroup
 from flet.core.charts.chart_axis import ChartAxis
@@ -13,7 +15,8 @@ from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    AnimationValue,
+    ColorEnums,
+    ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
@@ -26,8 +29,8 @@ from flet.core.types import (
 
 class TooltipDirection(Enum):
     AUTO = "auto"
-    UP = "below"
-    DOWN = "above"
+    TOP = "top"
+    BOTTOM = "bottom"
 
 
 class BarChart(ConstrainedControl):
@@ -35,10 +38,10 @@ class BarChart(ConstrainedControl):
         self,
         bar_groups: Optional[List[BarChartGroup]] = None,
         groups_space: OptionalNumber = None,
-        animate: AnimationValue = None,
+        animate: Optional[AnimationValue] = None,
         interactive: Optional[bool] = None,
-        bgcolor: Optional[str] = None,
-        tooltip_bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
+        tooltip_bgcolor: Optional[ColorValue] = None,
         border: Optional[Border] = None,
         horizontal_grid_lines: Optional[ChartGridLines] = None,
         vertical_grid_lines: Optional[ChartGridLines] = None,
@@ -78,14 +81,15 @@ class BarChart(ConstrainedControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -115,6 +119,7 @@ class BarChart(ConstrainedControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -210,12 +215,13 @@ class BarChart(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # interactive
     @property
@@ -229,11 +235,12 @@ class BarChart(ConstrainedControl):
     # tooltip_bgcolor
     @property
     def tooltip_bgcolor(self) -> Optional[str]:
-        return self._get_attr("tooltipBgcolor")
+        return self.__tooltip_bgcolor
 
     @tooltip_bgcolor.setter
     def tooltip_bgcolor(self, value: Optional[str]):
-        self._set_attr("tooltipBgcolor", value)
+        self.__tooltip_bgcolor = value
+        self._set_enum_attr("tooltipBgcolor", value, ColorEnums)
 
     # border
     @property

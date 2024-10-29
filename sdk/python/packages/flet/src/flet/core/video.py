@@ -3,6 +3,8 @@ from enum import Enum
 from typing import Any, Dict, List, Optional, Union, cast
 
 from flet.core.alignment import Alignment
+from flet.core.animation import AnimationValue
+from flet.core.badge import BadgeValue
 from flet.core.box import FilterQuality
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
@@ -10,7 +12,8 @@ from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    AnimationValue,
+    ColorEnums,
+    ColorValue,
     ImageFit,
     OffsetValue,
     OptionalControlEventCallable,
@@ -70,7 +73,7 @@ class Video(ConstrainedControl):
         playlist: Optional[List[VideoMedia]] = None,
         title: Optional[str] = None,
         fit: Optional[ImageFit] = None,
-        fill_color: Optional[str] = None,
+        fill_color: Optional[ColorValue] = None,
         wakelock: Optional[bool] = None,
         autoplay: Optional[bool] = None,
         show_controls: Optional[bool] = None,
@@ -110,14 +113,15 @@ class Video(ConstrainedControl):
         rotate: RotateValue = None,
         scale: ScaleValue = None,
         offset: OffsetValue = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -147,6 +151,7 @@ class Video(ConstrainedControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -407,12 +412,13 @@ class Video(ConstrainedControl):
 
     # fill_color
     @property
-    def fill_color(self) -> Optional[str]:
-        return self._get_attr("fillColor")
+    def fill_color(self) -> Optional[ColorValue]:
+        return self.__fill_color
 
     @fill_color.setter
-    def fill_color(self, value: Optional[str]):
-        self._set_attr("fillColor", value)
+    def fill_color(self, value: Optional[ColorValue]):
+        self.__fill_color = value
+        self._set_enum_attr("fillColor", value, ColorEnums)
 
     # wakelock
     @property

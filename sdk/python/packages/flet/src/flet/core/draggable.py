@@ -1,5 +1,6 @@
 from typing import Any, Optional
 
+from flet.core.alignment import Axis
 from flet.core.control import Control
 from flet.core.ref import Ref
 from flet.core.types import OptionalControlEventCallable
@@ -118,6 +119,9 @@ class Draggable(Control):
         group: Optional[str] = None,
         content_when_dragging: Optional[Control] = None,
         content_feedback: Optional[Control] = None,
+        axis: Optional[Axis] = None,
+        affinity: Optional[Axis] = None,
+        max_simultaneous_drags: Optional[int] = None,
         on_drag_start: OptionalControlEventCallable = None,
         on_drag_complete: OptionalControlEventCallable = None,
         #
@@ -143,6 +147,9 @@ class Draggable(Control):
         self.content_feedback = content_feedback
         self.on_drag_start = on_drag_start
         self.on_drag_complete = on_drag_complete
+        self.axis = axis
+        self.affinity = affinity
+        self.max_simultaneous_drags = max_simultaneous_drags
 
     def _get_control_name(self):
         return "draggable"
@@ -199,6 +206,35 @@ class Draggable(Control):
     @content_feedback.setter
     def content_feedback(self, value: Optional[Control]):
         self.__content_feedback = value
+
+    # max_simultaneous_drags
+    @property
+    def max_simultaneous_drags(self) -> Optional[int]:
+        return self._get_attr("maxSimultaneousDrags")
+
+    @max_simultaneous_drags.setter
+    def max_simultaneous_drags(self, value: Optional[int]):
+        self._set_attr("maxSimultaneousDrags", value)
+
+    # axis
+    @property
+    def axis(self) -> Optional[Axis]:
+        return self.__axis
+
+    @axis.setter
+    def axis(self, value: Optional[Axis]):
+        self.__axis = value
+        self._set_enum_attr("axis", value, Axis)
+
+    # affinity
+    @property
+    def affinity(self) -> Optional[Axis]:
+        return self.__affinity
+
+    @affinity.setter
+    def affinity(self, value: Optional[Axis]):
+        self.__affinity = value
+        self._set_enum_attr("affinity", value, Axis)
 
     # on_drag_start
     @property

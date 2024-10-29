@@ -2,12 +2,15 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from flet.core.alignment import Alignment
+from flet.core.animation import AnimationValue
+from flet.core.badge import BadgeValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    AnimationValue,
+    ColorEnums,
+    ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
     ResponsiveNumber,
@@ -40,7 +43,7 @@ class CupertinoTimerPicker(ConstrainedControl):
         second_interval: OptionalNumber = None,
         minute_interval: OptionalNumber = None,
         mode: Optional[CupertinoTimerPickerMode] = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         item_extent: OptionalNumber = None,
         on_change: OptionalControlEventCallable = None,
         #
@@ -62,14 +65,15 @@ class CupertinoTimerPicker(ConstrainedControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -100,6 +104,7 @@ class CupertinoTimerPicker(ConstrainedControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -141,12 +146,13 @@ class CupertinoTimerPicker(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # second_interval
     @property

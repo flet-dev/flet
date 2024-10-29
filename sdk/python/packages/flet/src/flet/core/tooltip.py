@@ -8,6 +8,7 @@ from flet.core.text_style import TextStyle
 from flet.core.types import (
     BlendMode,
     BorderRadiusValue,
+    ColorValue,
     DurationValue,
     MarginValue,
     OptionalNumber,
@@ -32,9 +33,9 @@ class Tooltip:
     vertical_offset: OptionalNumber = None
     margin: MarginValue = None
     padding: PaddingValue = None
-    bgcolor: Optional[str] = None
+    bgcolor: Optional[ColorValue] = None
     image: Optional[DecorationImage] = None
-    shadow: List[BoxShadow] = None
+    shadow: Optional[List[BoxShadow]] = None
     blend_mode: Optional[BlendMode] = None
     gradient: Optional[Gradient] = None
     border: Optional[Border] = None

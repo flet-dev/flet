@@ -14,6 +14,7 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
   final List<Control> children;
   final Control control;
   final bool parentDisabled;
+  final bool? parentAdaptive;
   final FletControlBackend backend;
 
   static const String svgTag = " xmlns=\"http://www.w3.org/2000/svg\"";
@@ -24,6 +25,7 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
       required this.children,
       required this.control,
       required this.parentDisabled,
+      required this.parentAdaptive,
       required this.backend});
 
   @override
@@ -61,7 +63,8 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
         disabled: disabled,
         pageArgs: pageArgs,
         errorCtrl: errorContentCtrls.isNotEmpty
-            ? createControl(control, errorContentCtrls.first.id, disabled)
+            ? createControl(control, errorContentCtrls.first.id, disabled,
+                parentAdaptive: control.isAdaptive ?? parentAdaptive)
             : null,
       );
       return constrainedControl(

@@ -1,5 +1,5 @@
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Sequence, Union
+from dataclasses import dataclass
+from typing import Any, List, Optional, Sequence, Union
 
 from flet.core.alignment import Alignment
 from flet.core.border import BorderSide
@@ -8,7 +8,9 @@ from flet.core.control import Control
 from flet.core.ref import Ref
 from flet.core.types import (
     ClipBehavior,
+    ColorValue,
     ControlState,
+    ControlStateValue,
     MouseCursor,
     OptionalNumber,
     PaddingValue,
@@ -18,29 +20,25 @@ from flet.core.types import (
 
 @dataclass
 class MenuStyle:
-    alignment: Optional[Alignment] = field(default=None)
-    bgcolor: Union[None, str, Dict[Union[str, ControlState], str]] = field(default=None)
-    shadow_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
-        default=None
-    )
-    surface_tint_color: Union[None, str, Dict[Union[str, ControlState], str]] = field(
-        default=None
-    )
-    elevation: Union[
-        None, float, int, Dict[Union[str, ControlState], Union[float, int]]
-    ] = field(default=None)
-    padding: Union[PaddingValue, Dict[Union[str, ControlState], PaddingValue]] = field(
-        default=None
-    )
-    side: Union[None, BorderSide, Dict[Union[str, ControlState], BorderSide]] = field(
-        default=None
-    )
-    shape: Union[
-        None, OutlinedBorder, Dict[Union[str, ControlState], OutlinedBorder]
-    ] = field(default=None)
-    mouse_cursor: Union[
-        None, MouseCursor, Dict[Union[str, ControlState], MouseCursor]
-    ] = field(default=None)
+    alignment: Optional[Alignment] = None
+    bgcolor: ControlStateValue[ColorValue] = None
+    shadow_color: ControlStateValue[ColorValue] = None
+    surface_tint_color: ControlStateValue[ColorValue] = None
+    elevation: ControlStateValue[OptionalNumber] = None
+    padding: ControlStateValue[PaddingValue] = None
+    side: ControlStateValue[BorderSide] = None
+    shape: ControlStateValue[OutlinedBorder] = None
+    mouse_cursor: ControlStateValue[MouseCursor] = None
+
+    def __post_init__(self):
+        if not isinstance(self.padding, dict):
+            self.padding = {ControlState.DEFAULT: self.padding}
+
+        if not isinstance(self.side, dict):
+            self.side = {ControlState.DEFAULT: self.side}
+
+        if not isinstance(self.shape, dict):
+            self.shape = {ControlState.DEFAULT: self.shape}
 
 
 class MenuBar(Control):

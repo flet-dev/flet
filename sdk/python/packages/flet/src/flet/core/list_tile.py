@@ -2,25 +2,18 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from flet.core.adaptive_control import AdaptiveControl
+from flet.core.animation import AnimationValue
+from flet.core.badge import BadgeValue
 from flet.core.buttons import OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
-from flet.core.types import (
-    AnimationValue,
-    MouseCursor,
-    OffsetValue,
-    OptionalControlEventCallable,
-    PaddingValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-    ThemeVisualDensity,
-    UrlTarget,
-    VisualDensity,
-)
+from flet.core.types import (ColorEnums, ColorValue, MouseCursor, OffsetValue,
+                             OptionalControlEventCallable, PaddingValue,
+                             ResponsiveNumber, RotateValue, ScaleValue,
+                             ThemeVisualDensity, UrlTarget, VisualDensity)
 
 
 class ListTileTitleAlignment(Enum):
@@ -80,9 +73,9 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         content_padding: PaddingValue = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         bgcolor_activated: Optional[str] = None,
-        hover_color: Optional[str] = None,
+        hover_color: Optional[ColorValue] = None,
         leading: Optional[Control] = None,
         title: Optional[Control] = None,
         subtitle: Optional[Control] = None,
@@ -92,8 +85,8 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         dense: Optional[bool] = None,
         autofocus: Optional[bool] = None,
         toggle_inputs: Optional[bool] = None,
-        selected_color: Optional[str] = None,
-        selected_tile_color: Optional[str] = None,
+        selected_color: Optional[ColorValue] = None,
+        selected_tile_color: Optional[ColorValue] = None,
         style: Optional[ListTileStyle] = None,
         enable_feedback: Optional[bool] = None,
         horizontal_spacing: OptionalNumber = None,
@@ -102,8 +95,8 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
         title_alignment: Optional[ListTileTitleAlignment] = None,
-        icon_color: Optional[str] = None,
-        text_color: Optional[str] = None,
+        icon_color: Optional[ColorValue] = None,
+        text_color: Optional[ColorValue] = None,
         shape: Optional[OutlinedBorder] = None,
         visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
         mouse_cursor: Optional[MouseCursor] = None,
@@ -132,14 +125,15 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -171,6 +165,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -257,30 +252,33 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # selected_color
     @property
-    def selected_color(self) -> Optional[str]:
-        return self._get_attr("selectedColor")
+    def selected_color(self) -> Optional[ColorValue]:
+        return self.__selected_color
 
     @selected_color.setter
-    def selected_color(self, value: Optional[str]):
-        self._set_attr("selectedColor", value)
+    def selected_color(self, value: Optional[ColorValue]):
+        self.__selected_color = value
+        self._set_enum_attr("selectedColor", value, ColorEnums)
 
     # selected_tile_color
     @property
-    def selected_tile_color(self) -> Optional[str]:
-        return self._get_attr("selectedTileColor")
+    def selected_tile_color(self) -> Optional[ColorValue]:
+        return self.__selected_tile_color
 
     @selected_tile_color.setter
-    def selected_tile_color(self, value: Optional[str]):
-        self._set_attr("selectedTileColor", value)
+    def selected_tile_color(self, value: Optional[ColorValue]):
+        self.__selected_tile_color = value
+        self._set_enum_attr("selectedTileColor", value, ColorEnums)
 
     # bgcolor_activated
     @property
@@ -320,12 +318,13 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # hover_color
     @property
-    def hover_color(self) -> Optional[str]:
-        return self._get_attr("hoverColor")
+    def hover_color(self) -> Optional[ColorValue]:
+        return self.__hover_color
 
     @hover_color.setter
-    def hover_color(self, value: Optional[str]):
-        self._set_attr("hoverColor", value)
+    def hover_color(self, value: Optional[ColorValue]):
+        self.__hover_color = value
+        self._set_enum_attr("hoverColor", value, ColorEnums)
 
     # leading
     @property
@@ -457,21 +456,23 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # icon_color
     @property
-    def icon_color(self) -> Optional[str]:
-        return self._get_attr("iconColor")
+    def icon_color(self) -> Optional[ColorValue]:
+        return self.__icon_color
 
     @icon_color.setter
-    def icon_color(self, value: Optional[str]):
-        self._set_attr("iconColor", value)
+    def icon_color(self, value: Optional[ColorValue]):
+        self.__icon_color = value
+        self._set_enum_attr("iconColor", value, ColorEnums)
 
     # text_color
     @property
-    def text_color(self) -> Optional[str]:
-        return self._get_attr("textColor")
+    def text_color(self) -> Optional[ColorValue]:
+        return self.__text_color
 
     @text_color.setter
-    def text_color(self, value: Optional[str]):
-        self._set_attr("textColor", value)
+    def text_color(self, value: Optional[ColorValue]):
+        self.__text_color = value
+        self._set_enum_attr("textColor", value, ColorEnums)
 
     # url_target
     @property
@@ -501,7 +502,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @visual_density.setter
     def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, ThemeVisualDensity, VisualDensity)
+        self._set_enum_attr("visualDensity", value, (ThemeVisualDensity, VisualDensity))
 
     # shape
     @property

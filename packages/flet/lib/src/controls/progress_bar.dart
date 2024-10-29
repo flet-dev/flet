@@ -15,22 +15,15 @@ class ProgressBarControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("ProgressBar build: ${control.id}");
 
-    var value = control.attrDouble("value");
-    var semanticsValue = control.attrDouble("semanticsValue");
-    var semanticsLabel = control.attrString("semanticsLabel");
-    var barHeight = control.attrDouble("barHeight", 4)!;
-    var color = control.attrColor("color", context);
-    var bgColor = control.attrColor("bgColor", context);
-
     return constrainedControl(
         context,
         LinearProgressIndicator(
-          value: value,
-          minHeight: barHeight,
-          color: color,
-          backgroundColor: bgColor,
-          semanticsLabel: semanticsLabel,
-          semanticsValue: semanticsValue.toString(),
+          value: control.attrDouble("value"),
+          minHeight: control.attrDouble("minHeight", 4)!,
+          color: control.attrColor("color", context),
+          backgroundColor: control.attrColor("bgColor", context),
+          semanticsLabel: control.attrString("semanticsLabel"),
+          semanticsValue: control.attrDouble("semanticsValue")?.toString(),
           borderRadius:
               parseBorderRadius(control, "borderRadius", BorderRadius.zero)!,
         ),

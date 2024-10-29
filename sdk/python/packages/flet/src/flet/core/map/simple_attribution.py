@@ -3,7 +3,7 @@ from typing import Any, Optional
 from flet.core.alignment import Alignment
 from flet.core.map.map_layer import MapLayer
 from flet.core.ref import Ref
-from flet.core.types import OptionalControlEventCallable
+from flet.core.types import ColorEnums, ColorValue, OptionalControlEventCallable
 
 
 class SimpleAttribution(MapLayer):
@@ -19,8 +19,8 @@ class SimpleAttribution(MapLayer):
         self,
         text: str,
         alignment: Optional[Alignment] = None,
-        bgcolor: Optional[str] = None,
-            on_click: OptionalControlEventCallable = None,
+        bgcolor: Optional[ColorValue] = None,
+        on_click: OptionalControlEventCallable = None,
         #
         # MapLayer
         #
@@ -59,12 +59,13 @@ class SimpleAttribution(MapLayer):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # text
     @property

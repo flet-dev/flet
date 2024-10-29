@@ -1,14 +1,17 @@
 from enum import Enum
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional, Union
 
 from flet.core.adaptive_control import AdaptiveControl
+from flet.core.animation import AnimationValue
+from flet.core.badge import BadgeValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    AnimationValue,
-    ControlState,
+    ColorEnums,
+    ColorValue,
+    ControlStateValue,
     MouseCursor,
     OffsetValue,
     OptionalControlEventCallable,
@@ -59,12 +62,12 @@ class Slider(ConstrainedControl, AdaptiveControl):
         divisions: Optional[int] = None,
         round: Optional[int] = None,
         autofocus: Optional[bool] = None,
-        active_color: Optional[str] = None,
-        inactive_color: Optional[str] = None,
-        thumb_color: Optional[str] = None,
+        active_color: Optional[ColorValue] = None,
+        inactive_color: Optional[ColorValue] = None,
+        thumb_color: Optional[ColorValue] = None,
         interaction: Optional[SliderInteraction] = None,
-        secondary_active_color: Optional[str] = None,
-        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
+        secondary_active_color: Optional[ColorValue] = None,
+        overlay_color: ControlStateValue[ColorValue] = None,
         secondary_track_value: OptionalNumber = None,
         mouse_cursor: Optional[MouseCursor] = None,
         on_change: OptionalControlEventCallable = None,
@@ -91,14 +94,15 @@ class Slider(ConstrainedControl, AdaptiveControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -130,6 +134,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -172,7 +177,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
         assert (
             self.max is None or self.value is None or (self.value <= self.max)
         ), "value must be less than or equal to max"
-        self._set_attr_json("overlayColor", self.__overlay_color)
+        self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)
 
     # value
     @property
@@ -222,12 +227,13 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     # secondary_active_color
     @property
-    def secondary_active_color(self) -> Optional[str]:
-        return self._get_attr("secondaryActiveColor")
+    def secondary_active_color(self) -> Optional[ColorValue]:
+        return self.__secondary_active_color
 
     @secondary_active_color.setter
-    def secondary_active_color(self, value: Optional[str]):
-        self._set_attr("secondaryActiveColor", value)
+    def secondary_active_color(self, value: Optional[ColorValue]):
+        self.__secondary_active_color = value
+        self._set_enum_attr("secondaryActiveColor", value, ColorEnums)
 
     # mouse_cursor
     @property
@@ -267,11 +273,11 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
+    def overlay_color(self) -> ControlStateValue[str]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
+    def overlay_color(self, value: ControlStateValue[str]):
         self.__overlay_color = value
 
     # autofocus
@@ -285,30 +291,33 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     # active_color
     @property
-    def active_color(self) -> Optional[str]:
-        return self._get_attr("activeColor")
+    def active_color(self) -> Optional[ColorValue]:
+        return self.__active_color
 
     @active_color.setter
-    def active_color(self, value: Optional[str]):
-        self._set_attr("activeColor", value)
+    def active_color(self, value: Optional[ColorValue]):
+        self.__active_color = value
+        self._set_enum_attr("activeColor", value, ColorEnums)
 
     # inactive_color
     @property
-    def inactive_color(self) -> Optional[str]:
-        return self._get_attr("inactiveColor")
+    def inactive_color(self) -> Optional[ColorValue]:
+        return self.__inactive_color
 
     @inactive_color.setter
-    def inactive_color(self, value: Optional[str]):
-        self._set_attr("inactiveColor", value)
+    def inactive_color(self, value: Optional[ColorValue]):
+        self.__inactive_color = value
+        self._set_enum_attr("inactiveColor", value, ColorEnums)
 
     # thumb_color
     @property
-    def thumb_color(self) -> Optional[str]:
-        return self._get_attr("thumbColor")
+    def thumb_color(self) -> Optional[ColorValue]:
+        return self.__thumb_color
 
     @thumb_color.setter
-    def thumb_color(self, value: Optional[str]):
-        self._set_attr("thumbColor", value)
+    def thumb_color(self, value: Optional[ColorValue]):
+        self.__thumb_color = value
+        self._set_enum_attr("thumbColor", value, ColorEnums)
 
     # on_change
     @property

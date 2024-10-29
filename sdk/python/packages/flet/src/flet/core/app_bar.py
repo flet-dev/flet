@@ -5,7 +5,7 @@ from flet.core.buttons import OutlinedBorder
 from flet.core.control import Control
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
-from flet.core.types import ClipBehavior, OptionalNumber
+from flet.core.types import ClipBehavior, ColorEnums, ColorValue, OptionalNumber
 
 
 class AppBar(AdaptiveControl):
@@ -60,12 +60,12 @@ class AppBar(AdaptiveControl):
         title: Optional[Control] = None,
         center_title: Optional[bool] = None,
         toolbar_height: OptionalNumber = None,
-        color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
+        color: Optional[ColorValue] = None,
+        bgcolor: Optional[ColorValue] = None,
         elevation: OptionalNumber = None,
         elevation_on_scroll: OptionalNumber = None,
-        shadow_color: Optional[str] = None,
-        surface_tint_color: Optional[str] = None,
+        shadow_color: Optional[ColorValue] = None,
+        surface_tint_color: Optional[ColorValue] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         force_material_transparency: Optional[bool] = None,
         is_secondary: Optional[bool] = None,
@@ -252,39 +252,43 @@ class AppBar(AdaptiveControl):
 
     # color
     @property
-    def color(self) -> Optional[str]:
-        return self._get_attr("color")
+    def color(self) -> Optional[ColorValue]:
+        return self.__color
 
     @color.setter
-    def color(self, value: Optional[str]):
-        self._set_attr("color", value)
+    def color(self, value: Optional[ColorValue]):
+        self.__color = value
+        self._set_enum_attr("color", value, ColorEnums)
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # shadow_color
     @property
-    def shadow_color(self) -> Optional[str]:
-        return self._get_attr("shadowColor")
+    def shadow_color(self) -> Optional[ColorValue]:
+        return self.__shadow_color
 
     @shadow_color.setter
-    def shadow_color(self, value: Optional[str]):
-        self._set_attr("shadowColor", value)
+    def shadow_color(self, value: Optional[ColorValue]):
+        self.__shadow_color = value
+        self._set_enum_attr("shadowColor", value, ColorEnums)
 
     # surface_tint_color
     @property
-    def surface_tint_color(self) -> Optional[str]:
-        return self._get_attr("surfaceTintColor")
+    def surface_tint_color(self) -> Optional[ColorValue]:
+        return self.__surface_tint_color
 
     @surface_tint_color.setter
-    def surface_tint_color(self, value: Optional[str]):
-        self._set_attr("surfaceTintColor", value)
+    def surface_tint_color(self, value: Optional[ColorValue]):
+        self.__surface_tint_color = value
+        self._set_enum_attr("surfaceTintColor", value, ColorEnums)
 
     # is_secondary
     @property

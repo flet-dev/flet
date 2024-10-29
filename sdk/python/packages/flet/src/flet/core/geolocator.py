@@ -8,6 +8,7 @@ from flet.core.control_event import ControlEvent
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.types import (
+    ColorValue,
     DurationValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
@@ -87,7 +88,7 @@ class GeolocatorAndroidSettings(GeolocatorSettings):
     foreground_notification_enable_wake_lock: Optional[bool] = False
     foreground_notification_enable_wifi_lock: Optional[bool] = False
     foreground_notification_set_ongoing: Optional[bool] = False
-    foreground_notification_color: Optional[str] = None
+    foreground_notification_color: Optional[ColorValue] = None
 
 
 class GeolocatorPositionChangeEvent(ControlEvent):

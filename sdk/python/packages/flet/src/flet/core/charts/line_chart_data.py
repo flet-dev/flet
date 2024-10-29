@@ -7,6 +7,7 @@ from flet.core.charts.line_chart_data_point import LineChartDataPoint
 from flet.core.control import Control, OptionalNumber
 from flet.core.gradients import Gradient
 from flet.core.ref import Ref
+from flet.core.types import ColorEnums, ColorValue
 
 
 class LineChartData(Control):
@@ -14,7 +15,7 @@ class LineChartData(Control):
         self,
         data_points: Optional[List[LineChartDataPoint]] = None,
         curved: Optional[bool] = None,
-        color: Optional[str] = None,
+        color: Optional[ColorValue] = None,
         gradient: Optional[Gradient] = None,
         stroke_width: OptionalNumber = None,
         stroke_cap_round: Optional[bool] = None,
@@ -22,11 +23,11 @@ class LineChartData(Control):
         prevent_curve_over_shooting_threshold: OptionalNumber = None,
         dash_pattern: Optional[List[int]] = None,
         shadow: Optional[BoxShadow] = None,
-        above_line_bgcolor: Optional[str] = None,
+        above_line_bgcolor: Optional[ColorValue] = None,
         above_line_gradient: Optional[Gradient] = None,
         above_line_cutoff_y: OptionalNumber = None,
         above_line: Optional[ChartPointLine] = None,
-        below_line_bgcolor: Optional[str] = None,
+        below_line_bgcolor: Optional[ColorValue] = None,
         below_line_gradient: Optional[Gradient] = None,
         below_line_cutoff_y: OptionalNumber = None,
         below_line: Optional[ChartPointLine] = None,
@@ -122,12 +123,13 @@ class LineChartData(Control):
 
     # color
     @property
-    def color(self) -> Optional[str]:
-        return self._get_attr("color")
+    def color(self) -> Optional[ColorValue]:
+        return self.__color
 
     @color.setter
-    def color(self, value: Optional[str]):
-        self._set_attr("color", value)
+    def color(self, value: Optional[ColorValue]):
+        self.__color = value
+        self._set_enum_attr("color", value, ColorEnums)
 
     # gradient
     @property
@@ -206,11 +208,12 @@ class LineChartData(Control):
     # above_line_bgcolor
     @property
     def above_line_bgcolor(self) -> Optional[str]:
-        return self._get_attr("aboveLineBgcolor")
+        return self.__above_line_bgcolor
 
     @above_line_bgcolor.setter
     def above_line_bgcolor(self, value: Optional[str]):
-        self._set_attr("aboveLineBgcolor", value)
+        self.__above_line_bgcolor = value
+        self._set_enum_attr("aboveLineBgcolor", value, ColorEnums)
 
     # above_line_gradient
     @property
@@ -242,11 +245,12 @@ class LineChartData(Control):
     # below_line_bgcolor
     @property
     def below_line_bgcolor(self) -> Optional[str]:
-        return self._get_attr("belowLineBgcolor")
+        return self.__below_line_bgcolor
 
     @below_line_bgcolor.setter
     def below_line_bgcolor(self, value: Optional[str]):
-        self._set_attr("belowLineBgcolor", value)
+        self.__below_line_bgcolor = value
+        self._set_enum_attr("belowLineBgcolor", value, ColorEnums)
 
     # below_line_gradient
     @property

@@ -1,11 +1,13 @@
 from typing import Any, Optional, Sequence, Union
 
 from flet.core.adaptive_control import AdaptiveControl
+from flet.core.animation import AnimationValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.types import (
-    AnimationValue,
+    ColorEnums,
+    ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
     PaddingValue,
@@ -28,7 +30,7 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
         self,
         header: Optional[Control] = None,
         content: Optional[Control] = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         expanded: Optional[bool] = None,
         can_tap_header: Optional[bool] = None,
         #
@@ -50,12 +52,12 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -121,12 +123,13 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgColor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgColor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgColor", value, ColorEnums)
 
     # expanded
     @property
@@ -177,10 +180,10 @@ class ExpansionPanelList(ConstrainedControl):
     def __init__(
         self,
         controls: Optional[Sequence[ExpansionPanel]] = None,
-        divider_color: Optional[str] = None,
+        divider_color: Optional[ColorValue] = None,
         elevation: OptionalNumber = None,
         expanded_header_padding: PaddingValue = None,
-        expand_icon_color: Optional[str] = None,
+        expand_icon_color: Optional[ColorValue] = None,
         spacing: OptionalNumber = None,
         on_change: OptionalControlEventCallable = None,
         #
@@ -202,12 +205,12 @@ class ExpansionPanelList(ConstrainedControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -267,21 +270,23 @@ class ExpansionPanelList(ConstrainedControl):
 
     # divider_color
     @property
-    def divider_color(self) -> Optional[str]:
-        return self._get_attr("dividerColor")
+    def divider_color(self) -> Optional[ColorValue]:
+        return self.__divider_color
 
     @divider_color.setter
-    def divider_color(self, value: Optional[str]):
-        self._set_attr("dividerColor", value)
+    def divider_color(self, value: Optional[ColorValue]):
+        self.__divider_color = value
+        self._set_enum_attr("dividerColor", value, ColorEnums)
 
     # expanded_icon_color
     @property
-    def expanded_icon_color(self) -> Optional[str]:
-        return self._get_attr("expandedIconColor")
+    def expanded_icon_color(self) -> Optional[ColorValue]:
+        return self.__expanded_icon_color
 
     @expanded_icon_color.setter
-    def expanded_icon_color(self, value: Optional[str]):
-        self._set_attr("expandedIconColor", value)
+    def expanded_icon_color(self, value: Optional[ColorValue]):
+        self.__expanded_icon_color = value
+        self._set_enum_attr("expandedIconColor", value, ColorEnums)
 
     # expanded_header_padding
     @property

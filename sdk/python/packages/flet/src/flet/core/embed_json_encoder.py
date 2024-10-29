@@ -4,6 +4,7 @@ from typing import Dict
 
 from flet.core.border import Border, BorderSide
 from flet.core.border_radius import BorderRadius
+from flet.core.box import BoxConstraints
 from flet.core.margin import Margin
 from flet.core.padding import Padding
 
@@ -11,34 +12,48 @@ from flet.core.padding import Padding
 class EmbedJsonEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, BorderSide):
-            return {
+            obj_as_dict = {
                 "w": obj.width,
                 "c": obj.color,
                 "sa": obj.stroke_align,
             }
         elif isinstance(obj, Border):
-            return {
+            obj_as_dict = {
                 "l": obj.left,
                 "t": obj.top,
                 "r": obj.right,
                 "b": obj.bottom,
             }
         elif isinstance(obj, BorderRadius):
-            return {
+            obj_as_dict = {
                 "bl": obj.bottom_left,
                 "br": obj.bottom_right,
                 "tl": obj.top_left,
                 "tr": obj.top_right,
             }
         elif isinstance(obj, (Margin, Padding)):
-            return {
+            obj_as_dict = {
                 "l": obj.left,
                 "t": obj.top,
                 "r": obj.right,
                 "b": obj.bottom,
             }
+        elif isinstance(obj, BoxConstraints):
+            obj_as_dict = {
+                "min_width": obj.min_width,
+                "max_width": obj.max_width,
+                "min_height": obj.min_height,
+                "max_height": obj.max_height,
+            }
         else:
-            return self._convert_enums(obj.__dict__)
+            obj_as_dict = self._convert_enums(obj.__dict__)
+
+        # Convert inf to string "inf" to avoid JSON serialization error
+        for key, value in obj_as_dict.items():
+            if value == float("inf"):
+                obj_as_dict[key] = "inf"
+
+        return obj_as_dict
 
     def encode(self, o):
         return super().encode(self._convert_enums(o))

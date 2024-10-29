@@ -4,7 +4,15 @@ from typing import Any, List, Optional, Sequence
 from flet.core.buttons import OutlinedBorder
 from flet.core.control import Control
 from flet.core.ref import Ref
-from flet.core.types import OptionalControlEventCallable, OptionalNumber, PaddingValue
+from flet.core.types import (
+    ColorEnums,
+    ColorValue,
+    IconEnums,
+    IconValue,
+    OptionalControlEventCallable,
+    OptionalNumber,
+    PaddingValue,
+)
 
 
 class NavigationDrawerDestination(Control):
@@ -13,17 +21,26 @@ class NavigationDrawerDestination(Control):
     def __init__(
         self,
         label: Optional[str] = None,
-        icon: Optional[str] = None,
+        icon: Optional[IconValue] = None,
         icon_content: Optional[Control] = None,
-        selected_icon: Optional[str] = None,
+        selected_icon: Optional[IconValue] = None,
         selected_icon_content: Optional[Control] = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         #
         # Control
         #
         ref: Optional[Ref] = None,
+        data: Any = None,
+        disabled: Optional[bool] = None,
+        visible: Optional[bool] = None,
     ):
-        Control.__init__(self, ref=ref)
+        Control.__init__(
+            self,
+            ref=ref,
+            disabled=disabled,
+            data=data,
+            visible=visible,
+        )
         self.label = label
         self.bgcolor = bgcolor
         self.icon = icon
@@ -48,21 +65,23 @@ class NavigationDrawerDestination(Control):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgColor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgColor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgColor", value, ColorEnums)
 
     # icon
     @property
-    def icon(self) -> Optional[str]:
-        return self._get_attr("icon")
+    def icon(self) -> Optional[IconValue]:
+        return self.__icon
 
     @icon.setter
-    def icon(self, value: Optional[str]):
-        self._set_attr("icon", value)
+    def icon(self, value: Optional[IconValue]):
+        self.__icon = value
+        self._set_enum_attr("icon", value, IconEnums)
 
     # icon_content
     @property
@@ -75,12 +94,13 @@ class NavigationDrawerDestination(Control):
 
     # selected_icon
     @property
-    def selected_icon(self) -> Optional[str]:
-        return self._get_attr("selectedIcon")
+    def selected_icon(self) -> Optional[IconValue]:
+        return self.__selected_icon
 
     @selected_icon.setter
-    def selected_icon(self, value: Optional[str]):
-        self._set_attr("selectedIcon", value)
+    def selected_icon(self, value: Optional[IconValue]):
+        self.__selected_icon = value
+        self._set_enum_attr("selectedIcon", value, IconEnums)
 
     # selected_icon_content
     @property
@@ -168,12 +188,12 @@ class NavigationDrawer(Control):
         controls: Optional[Sequence[Control]] = None,
         open: bool = False,
         selected_index: Optional[int] = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         elevation: OptionalNumber = None,
-        indicator_color: Optional[str] = None,
+        indicator_color: Optional[ColorValue] = None,
         indicator_shape: Optional[OutlinedBorder] = None,
-        shadow_color: Optional[str] = None,
-        surface_tint_color: Optional[str] = None,
+        shadow_color: Optional[ColorValue] = None,
+        surface_tint_color: Optional[ColorValue] = None,
         tile_padding: PaddingValue = None,
         position: Optional[NavigationDrawerPosition] = None,
         on_change: OptionalControlEventCallable = None,
@@ -250,12 +270,13 @@ class NavigationDrawer(Control):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # position
     @property
@@ -277,12 +298,13 @@ class NavigationDrawer(Control):
 
     # indicator_color
     @property
-    def indicator_color(self) -> Optional[str]:
-        return self._get_attr("indicatorColor")
+    def indicator_color(self) -> Optional[ColorValue]:
+        return self.__indicator_color
 
     @indicator_color.setter
-    def indicator_color(self, value: Optional[str]):
-        self._set_attr("indicatorColor", value)
+    def indicator_color(self, value: Optional[ColorValue]):
+        self.__indicator_color = value
+        self._set_enum_attr("indicatorColor", value, ColorEnums)
 
     # indicator_shape
     @property
@@ -295,21 +317,23 @@ class NavigationDrawer(Control):
 
     # shadow_color
     @property
-    def shadow_color(self) -> Optional[str]:
-        return self._get_attr("shadowColor")
+    def shadow_color(self) -> Optional[ColorValue]:
+        return self.__shadow_color
 
     @shadow_color.setter
-    def shadow_color(self, value: Optional[str]):
-        self._set_attr("shadowColor", value)
+    def shadow_color(self, value: Optional[ColorValue]):
+        self.__shadow_color = value
+        self._set_enum_attr("shadowColor", value, ColorEnums)
 
     # surface_tint_color
     @property
-    def surface_tint_color(self) -> Optional[str]:
-        return self._get_attr("surfaceTintColor")
+    def surface_tint_color(self) -> Optional[ColorValue]:
+        return self.__surface_tint_color
 
     @surface_tint_color.setter
-    def surface_tint_color(self, value: Optional[str]):
-        self._set_attr("surfaceTintColor", value)
+    def surface_tint_color(self, value: Optional[ColorValue]):
+        self.__surface_tint_color = value
+        self._set_enum_attr("surfaceTintColor", value, ColorEnums)
 
     # tile_padding
     @property

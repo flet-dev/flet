@@ -1,13 +1,13 @@
 from typing import Any, Optional
 
 from flet.core.canvas.shape import Shape
-from flet.core.types import BlendMode
+from flet.core.types import BlendMode, ColorEnums, ColorValue
 
 
 class Color(Shape):
     def __init__(
         self,
-        color: Optional[str] = None,
+        color: Optional[ColorValue] = None,
         blend_mode: Optional[BlendMode] = None,
         #
         # Control
@@ -30,12 +30,13 @@ class Color(Shape):
 
     # color
     @property
-    def color(self) -> Optional[str]:
-        return self._get_attr("color")
+    def color(self) -> Optional[ColorValue]:
+        return self.__color
 
     @color.setter
-    def color(self, value: Optional[str]):
-        self._set_attr("color", value)
+    def color(self, value: Optional[ColorValue]):
+        self.__color = value
+        self._set_enum_attr("color", value, ColorEnums)
 
     # blend_mode
     @property

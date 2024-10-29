@@ -1,14 +1,17 @@
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional, Union
 
 from flet.core.adaptive_control import AdaptiveControl
+from flet.core.animation import AnimationValue
+from flet.core.badge import BadgeValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    AnimationValue,
-    ControlState,
+    ColorEnums,
+    ColorValue,
+    ControlStateValue,
     LabelPosition,
     MouseCursor,
     OffsetValue,
@@ -60,19 +63,19 @@ class Switch(ConstrainedControl, AdaptiveControl):
         label_style: Optional[TextStyle] = None,
         value: Optional[bool] = None,
         autofocus: Optional[bool] = None,
-        active_color: Optional[str] = None,
-        active_track_color: Optional[str] = None,
-        focus_color: Optional[str] = None,
-        inactive_thumb_color: Optional[str] = None,
-        inactive_track_color: Optional[str] = None,
-        thumb_color: Union[None, str, Dict[ControlState, str]] = None,
-        thumb_icon: Union[None, str, Dict[ControlState, str]] = None,
-        track_color: Union[None, str, Dict[ControlState, str]] = None,
+        active_color: Optional[ColorValue] = None,
+        active_track_color: Optional[ColorValue] = None,
+        focus_color: Optional[ColorValue] = None,
+        inactive_thumb_color: Optional[ColorValue] = None,
+        inactive_track_color: Optional[ColorValue] = None,
+        thumb_color: ControlStateValue[ColorValue] = None,
+        thumb_icon: ControlStateValue[str] = None,
+        track_color: ControlStateValue[ColorValue] = None,
         adaptive: Optional[bool] = None,
-        hover_color: Optional[str] = None,
+        hover_color: Optional[ColorValue] = None,
         splash_radius: OptionalNumber = None,
-        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
-        track_outline_color: Union[None, str, Dict[ControlState, str]] = None,
+        overlay_color: ControlStateValue[ColorValue] = None,
+        track_outline_color: ControlStateValue[ColorValue] = None,
         mouse_cursor: Optional[MouseCursor] = None,
         on_change: OptionalControlEventCallable = None,
         on_focus: OptionalControlEventCallable = None,
@@ -96,14 +99,15 @@ class Switch(ConstrainedControl, AdaptiveControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -134,6 +138,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -168,13 +173,14 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        self._set_attr_json("thumbColor", self.__thumb_color)
-        self._set_attr_json("overlayColor", self.__overlay_color)
-        self._set_attr_json("trackOutlineColor", self.__track_outline_color)
-        self._set_attr_json("thumbIcon", self.__thumb_icon)
-        self._set_attr_json("trackColor", self.__track_color)
-        if isinstance(self.__label_style, TextStyle):
-            self._set_attr_json("labelStyle", self.__label_style)
+        self._set_attr_json("thumbColor", self.__thumb_color, wrap_attr_dict=True)
+        self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)
+        self._set_attr_json(
+            "trackOutlineColor", self.__track_outline_color, wrap_attr_dict=True
+        )
+        self._set_attr_json("thumbIcon", self.__thumb_icon, wrap_attr_dict=True)
+        self._set_attr_json("trackColor", self.__track_color, wrap_attr_dict=True)
+        self._set_attr_json("labelStyle", self.__label_style)
 
     # value
     @property
@@ -196,29 +202,30 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     # hover_color
     @property
-    def hover_color(self) -> Optional[str]:
-        return self._get_attr("hoverColor")
+    def hover_color(self) -> Optional[ColorValue]:
+        return self.__hover_color
 
     @hover_color.setter
-    def hover_color(self, value: Optional[str]):
-        self._set_attr("hoverColor", value)
+    def hover_color(self, value: Optional[ColorValue]):
+        self.__hover_color = value
+        self._set_enum_attr("hoverColor", value, ColorEnums)
 
     # track_outline_color
     @property
-    def track_outline_color(self) -> Union[None, str, Dict[ControlState, str]]:
+    def track_outline_color(self) -> ControlStateValue[str]:
         return self.__track_outline_color
 
     @track_outline_color.setter
-    def track_outline_color(self, value: Union[None, str, Dict[ControlState, str]]):
+    def track_outline_color(self, value: ControlStateValue[str]):
         self.__track_outline_color = value
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
+    def overlay_color(self) -> ControlStateValue[str]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
+    def overlay_color(self, value: ControlStateValue[str]):
         self.__overlay_color = value
 
     # splash_radius
@@ -271,74 +278,79 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     # active_color
     @property
-    def active_color(self) -> Optional[str]:
-        return self._get_attr("activeColor")
+    def active_color(self) -> Optional[ColorValue]:
+        return self.__active_color
 
     @active_color.setter
-    def active_color(self, value: Optional[str]):
-        self._set_attr("activeColor", value)
+    def active_color(self, value: Optional[ColorValue]):
+        self.__active_color = value
+        self._set_enum_attr("activeColor", value, ColorEnums)
 
     # active_track_color
     @property
-    def active_track_color(self) -> Optional[str]:
-        return self._get_attr("activeTrackColor")
+    def active_track_color(self) -> Optional[ColorValue]:
+        return self.__active_track_color
 
     @active_track_color.setter
-    def active_track_color(self, value: Optional[str]):
-        self._set_attr("activeTrackColor", value)
+    def active_track_color(self, value: Optional[ColorValue]):
+        self.__active_track_color = value
+        self._set_enum_attr("activeTrackColor", value, ColorEnums)
 
     # focus_color
     @property
-    def focus_color(self) -> Optional[str]:
-        return self._get_attr("focusColor")
+    def focus_color(self) -> Optional[ColorValue]:
+        return self.__focus_color
 
     @focus_color.setter
-    def focus_color(self, value: Optional[str]):
-        self._set_attr("focusColor", value)
+    def focus_color(self, value: Optional[ColorValue]):
+        self.__focus_color = value
+        self._set_enum_attr("focusColor", value, ColorEnums)
 
     # inactive_thumb_color
     @property
-    def inactive_thumb_color(self) -> Optional[str]:
-        return self._get_attr("inactiveThumbColor")
+    def inactive_thumb_color(self) -> Optional[ColorValue]:
+        return self.__inactive_thumb_color
 
     @inactive_thumb_color.setter
-    def inactive_thumb_color(self, value: Optional[str]):
-        self._set_attr("inactiveThumbColor", value)
+    def inactive_thumb_color(self, value: Optional[ColorValue]):
+        self.__inactive_thumb_color = value
+        self._set_enum_attr("inactiveThumbColor", value, ColorEnums)
 
     # inactive_track_color
     @property
-    def inactive_track_color(self) -> Optional[str]:
-        return self._get_attr("inactiveTrackColor")
+    def inactive_track_color(self) -> Optional[ColorValue]:
+        return self.__inactive_track_color
 
     @inactive_track_color.setter
-    def inactive_track_color(self, value: Optional[str]):
-        self._set_attr("inactiveTrackColor", value)
+    def inactive_track_color(self, value: Optional[ColorValue]):
+        self.__inactive_track_color = value
+        self._set_enum_attr("inactiveTrackColor", value, ColorEnums)
 
     # thumb_color
     @property
-    def thumb_color(self) -> Union[None, str, Dict[ControlState, str]]:
+    def thumb_color(self) -> ControlStateValue[str]:
         return self.__thumb_color
 
     @thumb_color.setter
-    def thumb_color(self, value: Union[None, str, Dict[ControlState, str]]):
+    def thumb_color(self, value: ControlStateValue[str]):
         self.__thumb_color = value
 
     # thumb_icon
     @property
-    def thumb_icon(self) -> Union[None, str, Dict[ControlState, str]]:
+    def thumb_icon(self) -> ControlStateValue[str]:
         return self.__thumb_icon
 
     @thumb_icon.setter
-    def thumb_icon(self, value: Union[None, str, Dict[ControlState, str]]):
+    def thumb_icon(self, value: ControlStateValue[str]):
         self.__thumb_icon = value
 
     # track_color
     @property
-    def track_color(self) -> Union[None, str, Dict[ControlState, str]]:
+    def track_color(self) -> ControlStateValue[str]:
         return self.__track_color
 
     @track_color.setter
-    def track_color(self, value: Union[None, str, Dict[ControlState, str]]):
+    def track_color(self, value: ControlStateValue[str]):
         self.__track_color = value
 
     # on_change

@@ -28,13 +28,6 @@ from typing import (
 )
 from urllib.parse import urlparse
 
-from flet.core.box import BoxDecoration
-
-try:
-    from typing import ParamSpec
-except ImportError:
-    from typing_extensions import ParamSpec
-
 import flet.core
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.alert_dialog import AlertDialog
@@ -44,6 +37,7 @@ from flet.core.app_bar import AppBar
 from flet.core.banner import Banner
 from flet.core.bottom_app_bar import BottomAppBar
 from flet.core.bottom_sheet import BottomSheet
+from flet.core.box import BoxDecoration
 from flet.core.client_storage import ClientStorage
 from flet.core.connection import Connection
 from flet.core.control import Control
@@ -69,6 +63,8 @@ from flet.core.theme import Theme
 from flet.core.types import (
     AppLifecycleState,
     Brightness,
+    ColorEnums,
+    ColorValue,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     MainAxisAlignment,
@@ -85,6 +81,12 @@ from flet.core.types import (
 )
 from flet.core.view import View
 from flet.utils import classproperty, deprecated, is_pyodide
+
+try:
+    from typing import ParamSpec
+except ImportError:
+    from typing_extensions import ParamSpec
+
 
 logger = logging.getLogger(flet.__name__)
 
@@ -160,6 +162,7 @@ class Window:
     def __init__(self, page: "Page"):
         self.page = page
         self.__alignment = None
+        self.__bgcolor = None
         self.__on_event = EventHandler(lambda e: WindowEvent(e))
         self.page._add_event_handler(
             "window_event",
@@ -168,12 +171,13 @@ class Window:
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self.page._get_attr("windowBgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self.page._set_attr("windowBgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self.page._set_enum_attr("windowBgcolor", value, ColorEnums)
 
     # width
     @property
@@ -1997,11 +2001,11 @@ class Page(AdaptiveControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
+    def bgcolor(self) -> Optional[ColorValue]:
         return self.__default_view.bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
+    def bgcolor(self, value: Optional[ColorValue]):
         self.__default_view.bgcolor = value
 
     # scroll
@@ -2186,7 +2190,7 @@ class Page(AdaptiveControl):
         delete_version="0.26.0",
         is_method=False,
     )
-    def window_bgcolor(self) -> Optional[str]:
+    def window_bgcolor(self) -> Optional[ColorValue]:
         return self.__window.bgcolor
 
     @window_bgcolor.setter
@@ -2196,7 +2200,7 @@ class Page(AdaptiveControl):
         delete_version="0.26.0",
         is_method=False,
     )
-    def window_bgcolor(self, value: Optional[str]):
+    def window_bgcolor(self, value: Optional[ColorValue]):
         self.__window.bgcolor = value
 
     # window_width

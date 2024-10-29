@@ -2,8 +2,9 @@ from datetime import time
 from enum import Enum
 from typing import Any, Optional, Union
 
+from flet.core import ControlEvent
+from flet.core.badge import BadgeValue
 from flet.core.control import Control, OptionalNumber
-from flet.core.control_event import ControlEvent
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
@@ -106,6 +107,7 @@ class TimePicker(Control):
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -118,6 +120,7 @@ class TimePicker(Control):
             col=col,
             opacity=opacity,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,

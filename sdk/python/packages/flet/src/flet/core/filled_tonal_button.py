@@ -1,11 +1,12 @@
 from typing import Any, Optional, Union
 
+from flet.core.badge import BadgeValue
 from flet.core.buttons import ButtonStyle
 from flet.core.control import Control, OptionalNumber
 from flet.core.elevated_button import ElevatedButton
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
-from flet.core.types import ResponsiveNumber, UrlTarget
+from flet.core.types import ColorValue, IconValue, ResponsiveNumber, UrlTarget
 
 
 class FilledTonalButton(ElevatedButton):
@@ -36,11 +37,11 @@ class FilledTonalButton(ElevatedButton):
     def __init__(
         self,
         text: Optional[str] = None,
-        color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
+        color: Optional[ColorValue] = None,
+        bgcolor: Optional[ColorValue] = None,
         elevation: OptionalNumber = None,
-        icon: Optional[str] = None,
-        icon_color: Optional[str] = None,
+        icon: Optional[IconValue] = None,
+        icon_color: Optional[ColorValue] = None,
         style: Optional[ButtonStyle] = None,
         content: Optional[Control] = None,
         autofocus: Optional[bool] = None,
@@ -61,6 +62,7 @@ class FilledTonalButton(ElevatedButton):
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -77,6 +79,7 @@ class FilledTonalButton(ElevatedButton):
             col=col,
             opacity=opacity,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,

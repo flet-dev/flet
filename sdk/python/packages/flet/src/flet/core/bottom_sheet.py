@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
-from flet.core.types import OptionalControlEventCallable
+from flet.core.types import ColorEnums, ColorValue, OptionalControlEventCallable
 
 
 class BottomSheet(Control):
@@ -48,7 +48,7 @@ class BottomSheet(Control):
         content: Control,
         open: bool = False,
         elevation: OptionalNumber = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         dismissible: Optional[bool] = None,
         enable_drag: Optional[bool] = None,
         show_drag_handle: Optional[bool] = None,
@@ -116,12 +116,13 @@ class BottomSheet(Control):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgColor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgColor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgColor", value, ColorEnums)
 
     # dismissible
     @property

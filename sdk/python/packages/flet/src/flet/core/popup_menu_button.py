@@ -2,14 +2,20 @@ import warnings
 from enum import Enum
 from typing import Any, List, Optional, Union
 
-from flet.core.buttons import OutlinedBorder
+from flet.core.animation import AnimationStyle, AnimationValue
+from flet.core.badge import BadgeValue
+from flet.core.box import BoxConstraints
+from flet.core.buttons import ButtonStyle, OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    AnimationValue,
     ClipBehavior,
+    ColorEnums,
+    ColorValue,
+    IconEnums,
+    IconValue,
     MouseCursor,
     OffsetValue,
     OptionalControlEventCallable,
@@ -29,7 +35,7 @@ class PopupMenuItem(Control):
     def __init__(
         self,
         text: Optional[str] = None,
-        icon: Optional[str] = None,
+        icon: Optional[IconValue] = None,
         checked: Optional[bool] = None,
         content: Optional[Control] = None,
         height: OptionalNumber = None,
@@ -41,9 +47,18 @@ class PopupMenuItem(Control):
         #
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
+        tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         data: Any = None,
     ):
-        Control.__init__(self, ref=ref, disabled=disabled, data=data)
+        Control.__init__(
+            self,
+            ref=ref,
+            disabled=disabled,
+            data=data,
+            tooltip=tooltip,
+            badge=badge,
+        )
 
         self.checked = checked
         self.icon = icon
@@ -85,12 +100,13 @@ class PopupMenuItem(Control):
 
     # icon
     @property
-    def icon(self) -> Optional[str]:
-        return self._get_attr("icon")
+    def icon(self) -> Optional[IconValue]:
+        return self.__icon
 
     @icon.setter
-    def icon(self, value: Optional[str]):
-        self._set_attr("icon", value)
+    def icon(self, value: Optional[IconValue]):
+        self.__icon = value
+        self._set_enum_attr("icon", value, IconEnums)
 
     # text
     @property
@@ -184,11 +200,11 @@ class PopupMenuButton(ConstrainedControl):
         self,
         content: Optional[Control] = None,
         items: Optional[List[PopupMenuItem]] = None,
-        icon: Optional[str] = None,
-        bgcolor: Optional[str] = None,
-        icon_color: Optional[str] = None,
-        shadow_color: Optional[str] = None,
-        surface_tint_color: Optional[str] = None,
+        icon: Optional[IconValue] = None,
+        bgcolor: Optional[ColorValue] = None,
+        icon_color: Optional[ColorValue] = None,
+        shadow_color: Optional[ColorValue] = None,
+        surface_tint_color: Optional[ColorValue] = None,
         icon_size: OptionalNumber = None,
         splash_radius: OptionalNumber = None,
         elevation: OptionalNumber = None,
@@ -197,9 +213,14 @@ class PopupMenuButton(ConstrainedControl):
         enable_feedback: Optional[bool] = None,
         shape: Optional[OutlinedBorder] = None,
         padding: PaddingValue = None,
+        menu_padding: PaddingValue = None,
+        style: Optional[ButtonStyle] = None,
+        popup_animation_style: Optional[AnimationStyle] = None,
+        size_constraints: Optional[BoxConstraints] = None,
         on_cancelled: OptionalControlEventCallable = None,
         on_open: OptionalControlEventCallable = None,
         on_cancel: OptionalControlEventCallable = None,
+        on_select: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -219,12 +240,12 @@ class PopupMenuButton(ConstrainedControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
         visible: Optional[bool] = None,
@@ -269,6 +290,7 @@ class PopupMenuButton(ConstrainedControl):
         self.on_open = on_open
         self.shape = shape
         self.padding = padding
+        self.menu_padding = menu_padding
         self.clip_behavior = clip_behavior
         self.bgcolor = bgcolor
         self.icon_color = icon_color
@@ -278,9 +300,12 @@ class PopupMenuButton(ConstrainedControl):
         self.icon_size = icon_size
         self.elevation = elevation
         self.enable_feedback = enable_feedback
-        self.__content: Optional[Control] = None
         self.content = content
         self.menu_position = menu_position
+        self.style = style
+        self.popup_animation_style = popup_animation_style
+        self.size_constraints = size_constraints
+        self.on_select = on_select
 
     def _get_control_name(self):
         return "popupmenubutton"
@@ -296,6 +321,10 @@ class PopupMenuButton(ConstrainedControl):
         super().before_update()
         self._set_attr_json("shape", self.__shape)
         self._set_attr_json("padding", self.__padding)
+        self._set_attr_json("menuPadding", self.__menu_padding)
+        self._set_attr_json("style", self.__style)
+        self._set_attr_json("popupAnimationStyle", self.__popup_animation_style)
+        self._set_attr_json("sizeConstraints", self.__size_constraints)
 
     # items
     @property
@@ -315,6 +344,24 @@ class PopupMenuButton(ConstrainedControl):
     def shape(self, value: Optional[OutlinedBorder]):
         self.__shape = value
 
+    # size_constraints
+    @property
+    def size_constraints(self) -> Optional[BoxConstraints]:
+        return self.__size_constraints
+
+    @size_constraints.setter
+    def size_constraints(self, value: Optional[BoxConstraints]):
+        self.__size_constraints = value
+
+    # menu_padding
+    @property
+    def menu_padding(self) -> PaddingValue:
+        return self.__menu_padding
+
+    @menu_padding.setter
+    def menu_padding(self, value: PaddingValue):
+        self.__menu_padding = value
+
     # padding
     @property
     def padding(self) -> PaddingValue:
@@ -326,48 +373,53 @@ class PopupMenuButton(ConstrainedControl):
 
     # icon
     @property
-    def icon(self) -> Optional[str]:
-        return self._get_attr("icon")
+    def icon(self) -> Optional[IconValue]:
+        return self.__icon
 
     @icon.setter
-    def icon(self, value: Optional[str]):
-        self._set_attr("icon", value)
+    def icon(self, value: Optional[IconValue]):
+        self.__icon = value
+        self._set_enum_attr("icon", value, IconEnums)
 
     # icon_color
     @property
-    def icon_color(self) -> Optional[str]:
-        return self._get_attr("iconColor")
+    def icon_color(self) -> Optional[ColorValue]:
+        return self.__icon_color
 
     @icon_color.setter
-    def icon_color(self, value: Optional[str]):
-        self._set_attr("iconColor", value)
+    def icon_color(self, value: Optional[ColorValue]):
+        self.__icon_color = value
+        self._set_enum_attr("iconColor", value, ColorEnums)
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # shadow_color
     @property
-    def shadow_color(self) -> Optional[str]:
-        return self._get_attr("shadowColor")
+    def shadow_color(self) -> Optional[ColorValue]:
+        return self.__shadow_color
 
     @shadow_color.setter
-    def shadow_color(self, value: Optional[str]):
-        self._set_attr("shadowColor", value)
+    def shadow_color(self, value: Optional[ColorValue]):
+        self.__shadow_color = value
+        self._set_enum_attr("shadowColor", value, ColorEnums)
 
     # surface_tint_color
     @property
-    def surface_tint_color(self) -> Optional[str]:
-        return self._get_attr("surfaceTintColor")
+    def surface_tint_color(self) -> Optional[ColorValue]:
+        return self.__surface_tint_color
 
     @surface_tint_color.setter
-    def surface_tint_color(self, value: Optional[str]):
-        self._set_attr("surfaceTintColor", value)
+    def surface_tint_color(self, value: Optional[ColorValue]):
+        self.__surface_tint_color = value
+        self._set_enum_attr("surfaceTintColor", value, ColorEnums)
 
     # icon_size
     @property
@@ -414,13 +466,31 @@ class PopupMenuButton(ConstrainedControl):
     def content(self, value: Optional[Control]):
         self.__content = value
 
+    # style
+    @property
+    def style(self) -> Optional[ButtonStyle]:
+        return self.__style
+
+    @style.setter
+    def style(self, value: Optional[ButtonStyle]):
+        self.__style = value
+
+    # popup_animation_style
+    @property
+    def popup_animation_style(self) -> Optional[AnimationStyle]:
+        return self.__popup_animation_style
+
+    @popup_animation_style.setter
+    def popup_animation_style(self, value: Optional[AnimationStyle]):
+        self.__popup_animation_style = value
+
     # menu_position
     @property
-    def menu_position(self) -> PopupMenuPosition:
+    def menu_position(self) -> Optional[PopupMenuPosition]:
         return self.__menu_position
 
     @menu_position.setter
-    def menu_position(self, value: PopupMenuPosition):
+    def menu_position(self, value: Optional[PopupMenuPosition]):
         self.__menu_position = value
         self._set_enum_attr("menuPosition", value, PopupMenuPosition)
 
@@ -473,3 +543,12 @@ class PopupMenuButton(ConstrainedControl):
     @on_open.setter
     def on_open(self, handler: OptionalControlEventCallable):
         self._add_event_handler("open", handler)
+
+    # on_select
+    @property
+    def on_select(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("select")
+
+    @on_select.setter
+    def on_select(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("select", handler)

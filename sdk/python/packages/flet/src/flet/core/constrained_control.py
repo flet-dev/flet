@@ -1,10 +1,11 @@
 from typing import Any, Optional, Union
 
+from flet.core.animation import AnimationValue
+from flet.core.badge import BadgeValue
 from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    AnimationValue,
     OffsetValue,
     OptionalControlEventCallable,
     ResponsiveNumber,
@@ -22,6 +23,7 @@ class ConstrainedControl(Control):
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -40,12 +42,12 @@ class ConstrainedControl(Control):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
     ):
         Control.__init__(
@@ -56,6 +58,7 @@ class ConstrainedControl(Control):
             col=col,
             opacity=opacity,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -197,56 +200,56 @@ class ConstrainedControl(Control):
 
     # animate_opacity
     @property
-    def animate_opacity(self) -> AnimationValue:
+    def animate_opacity(self) -> Optional[AnimationValue]:
         return self.__animate_opacity
 
     @animate_opacity.setter
-    def animate_opacity(self, value: AnimationValue):
+    def animate_opacity(self, value: Optional[AnimationValue]):
         self.__animate_opacity = value
 
     # animate_size
     @property
-    def animate_size(self) -> AnimationValue:
+    def animate_size(self) -> Optional[AnimationValue]:
         return self.__animate_size
 
     @animate_size.setter
-    def animate_size(self, value: AnimationValue):
+    def animate_size(self, value: Optional[AnimationValue]):
         self.__animate_size = value
 
     # animate_position
     @property
-    def animate_position(self) -> AnimationValue:
+    def animate_position(self) -> Optional[AnimationValue]:
         return self.__animate_position
 
     @animate_position.setter
-    def animate_position(self, value: AnimationValue):
+    def animate_position(self, value: Optional[AnimationValue]):
         self.__animate_position = value
 
     # animate_rotation
     @property
-    def animate_rotation(self) -> AnimationValue:
+    def animate_rotation(self) -> Optional[AnimationValue]:
         return self.__animate_rotation
 
     @animate_rotation.setter
-    def animate_rotation(self, value: AnimationValue):
+    def animate_rotation(self, value: Optional[AnimationValue]):
         self.__animate_rotation = value
 
     # animate_scale
     @property
-    def animate_scale(self) -> AnimationValue:
+    def animate_scale(self) -> Optional[AnimationValue]:
         return self.__animate_scale
 
     @animate_scale.setter
-    def animate_scale(self, value: AnimationValue):
+    def animate_scale(self, value: Optional[AnimationValue]):
         self.__animate_scale = value
 
     # animate_offset
     @property
-    def animate_offset(self) -> AnimationValue:
+    def animate_offset(self) -> Optional[AnimationValue]:
         return self.__animate_offset
 
     @animate_offset.setter
-    def animate_offset(self, value: AnimationValue):
+    def animate_offset(self, value: Optional[AnimationValue]):
         self.__animate_offset = value
 
     # on_animation_end

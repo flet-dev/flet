@@ -1,13 +1,18 @@
 from typing import Any, Optional, Union
 
+from flet.core.animation import AnimationValue
+from flet.core.badge import BadgeValue
 from flet.core.buttons import OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    AnimationValue,
     ClipBehavior,
+    ColorEnums,
+    ColorValue,
+    IconEnums,
+    IconValue,
     MouseCursor,
     OffsetValue,
     OptionalControlEventCallable,
@@ -70,14 +75,14 @@ class FloatingActionButton(ConstrainedControl):
     def __init__(
         self,
         text: Optional[str] = None,
-        icon: Optional[str] = None,
-        bgcolor: Optional[str] = None,
+        icon: Optional[IconValue] = None,
+        bgcolor: Optional[ColorValue] = None,
         content: Optional[Control] = None,
         shape: Optional[OutlinedBorder] = None,
         autofocus: Optional[bool] = None,
         mini: Optional[bool] = None,
-        foreground_color: Optional[str] = None,
-        focus_color: Optional[str] = None,
+        foreground_color: Optional[ColorValue] = None,
+        focus_color: Optional[ColorValue] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         elevation: OptionalNumber = None,
         disabled_elevation: OptionalNumber = None,
@@ -108,14 +113,15 @@ class FloatingActionButton(ConstrainedControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -146,6 +152,7 @@ class FloatingActionButton(ConstrainedControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -199,21 +206,23 @@ class FloatingActionButton(ConstrainedControl):
 
     # icon
     @property
-    def icon(self) -> Optional[str]:
-        return self._get_attr("icon")
+    def icon(self) -> Optional[IconValue]:
+        return self.__icon
 
     @icon.setter
-    def icon(self, value: Optional[str]):
-        self._set_attr("icon", value)
+    def icon(self, value: Optional[IconValue]):
+        self.__icon = value
+        self._set_enum_attr("icon", value, IconEnums)
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # url
     @property
@@ -320,12 +329,13 @@ class FloatingActionButton(ConstrainedControl):
 
     # focus_color
     @property
-    def focus_color(self) -> Optional[str]:
-        return self._get_attr("focusColor")
+    def focus_color(self) -> Optional[ColorValue]:
+        return self.__focus_color
 
     @focus_color.setter
-    def focus_color(self, value: Optional[str]):
-        self._set_attr("focusColor", value)
+    def focus_color(self, value: Optional[ColorValue]):
+        self.__focus_color = value
+        self._set_enum_attr("focusColor", value, ColorEnums)
 
     # focus_elevation
     @property
@@ -339,12 +349,13 @@ class FloatingActionButton(ConstrainedControl):
 
     # foreground_color
     @property
-    def foreground_color(self) -> Optional[str]:
-        return self._get_attr("foregroundColor")
+    def foreground_color(self) -> Optional[ColorValue]:
+        return self.__foreground_color
 
     @foreground_color.setter
-    def foreground_color(self, value: Optional[str]):
-        self._set_attr("foregroundColor", value)
+    def foreground_color(self, value: Optional[ColorValue]):
+        self.__foreground_color = value
+        self._set_enum_attr("foregroundColor", value, ColorEnums)
 
     # highlight_elevation
     @property

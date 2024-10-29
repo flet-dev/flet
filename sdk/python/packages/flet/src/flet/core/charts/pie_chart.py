@@ -2,6 +2,8 @@ import json
 from enum import Enum
 from typing import Any, List, Optional, Union
 
+from flet.core.animation import AnimationValue
+from flet.core.badge import BadgeValue
 from flet.core.charts.pie_chart_section import PieChartSection
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
@@ -10,7 +12,8 @@ from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    AnimationValue,
+    ColorEnums,
+    ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
@@ -24,11 +27,11 @@ class PieChart(ConstrainedControl):
     def __init__(
         self,
         sections: Optional[List[PieChartSection]] = None,
-        center_space_color: Optional[str] = None,
+        center_space_color: Optional[ColorValue] = None,
         center_space_radius: OptionalNumber = None,
         sections_space: OptionalNumber = None,
         start_degree_offset: OptionalNumber = None,
-        animate: AnimationValue = None,
+        animate: Optional[AnimationValue] = None,
         on_chart_event: OptionalEventCallable["PieChartEvent"] = None,
         #
         # ConstrainedControl
@@ -48,14 +51,15 @@ class PieChart(ConstrainedControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -85,6 +89,7 @@ class PieChart(ConstrainedControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -125,12 +130,13 @@ class PieChart(ConstrainedControl):
 
     # center_space_color
     @property
-    def center_space_color(self) -> Optional[str]:
-        return self._get_attr("centerSpaceColor")
+    def center_space_color(self) -> Optional[ColorValue]:
+        return self.__center_space_color
 
     @center_space_color.setter
-    def center_space_color(self, value: Optional[str]):
-        self._set_attr("centerSpaceColor", value)
+    def center_space_color(self, value: Optional[ColorValue]):
+        self.__center_space_color = value
+        self._set_enum_attr("centerSpaceColor", value, ColorEnums)
 
     # center_space_radius
     @property

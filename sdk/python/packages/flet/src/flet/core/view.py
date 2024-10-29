@@ -12,6 +12,8 @@ from flet.core.navigation_bar import NavigationBar
 from flet.core.navigation_drawer import NavigationDrawer
 from flet.core.scrollable_control import OnScrollEvent, ScrollableControl
 from flet.core.types import (
+    ColorEnums,
+    ColorValue,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     MainAxisAlignment,
@@ -50,7 +52,7 @@ class View(ScrollableControl, AdaptiveControl):
         horizontal_alignment: Optional[CrossAxisAlignment] = None,
         spacing: OptionalNumber = None,
         padding: PaddingValue = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         decoration: Optional[BoxDecoration] = None,
         foreground_decoration: Optional[BoxDecoration] = None,
         #
@@ -191,9 +193,11 @@ class View(ScrollableControl, AdaptiveControl):
         if isinstance(value, (FloatingActionButtonLocation, str)):
             self._set_attr(
                 "floatingActionButtonLocation",
-                value.value
-                if isinstance(value, FloatingActionButtonLocation)
-                else value,
+                (
+                    value.value
+                    if isinstance(value, FloatingActionButtonLocation)
+                    else value
+                ),
             )
 
     # navigation_bar
@@ -263,12 +267,13 @@ class View(ScrollableControl, AdaptiveControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # fullscreen_dialog
     @property

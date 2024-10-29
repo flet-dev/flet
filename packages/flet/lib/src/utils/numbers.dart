@@ -8,6 +8,8 @@ import 'material_state.dart';
 double? parseDouble(dynamic v, [double? defValue]) {
   if (v is double) {
     return v;
+  } else if (v is String && v.toLowerCase() == "inf") {
+    return double.infinity;
   } else if (v == null) {
     return defValue;
   } else {
