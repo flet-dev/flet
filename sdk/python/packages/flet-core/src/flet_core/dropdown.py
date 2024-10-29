@@ -3,6 +3,7 @@ from typing import Any, List, Optional, Union
 
 from flet_core.alignment import Alignment
 from flet_core.animation import AnimationValue
+from flet_core.badge import BadgeValue
 from flet_core.box import BoxConstraints
 from flet_core.control import Control, OptionalNumber
 from flet_core.form_field_control import (
@@ -254,6 +255,7 @@ class Dropdown(FormFieldControl):
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -280,6 +282,7 @@ class Dropdown(FormFieldControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -473,14 +476,14 @@ class Dropdown(FormFieldControl):
         ), "item_height must be greater than or equal to 48.0"
         self._set_attr("itemHeight", value)
 
-    # menu_max_height
+    # max_menu_height
     @property
-    def menu_max_height(self) -> OptionalNumber:
-        return self._get_attr("menuMaxHeight", data_type="float")
+    def max_menu_height(self) -> OptionalNumber:
+        return self._get_attr("maxMenuHeight", data_type="float")
 
-    @menu_max_height.setter
-    def menu_max_height(self, value: OptionalNumber):
-        self._set_attr("menuMaxHeight", value)
+    @max_menu_height.setter
+    def max_menu_height(self, value: OptionalNumber):
+        self._set_attr("maxMenuHeight", value)
 
     # icon_size
     @property

@@ -2,6 +2,7 @@ import json
 from typing import Any, List, Optional, Union
 
 from flet_core.animation import AnimationValue
+from flet_core.badge import BadgeValue
 from flet_core.border import Border, BorderSide
 from flet_core.charts.chart_axis import ChartAxis
 from flet_core.charts.chart_grid_lines import ChartGridLines
@@ -83,6 +84,7 @@ class LineChart(ConstrainedControl):
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -112,6 +114,7 @@ class LineChart(ConstrainedControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,

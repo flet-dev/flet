@@ -5,6 +5,7 @@ from typing import Any, List, Optional, Tuple, Union
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
 from flet_core.animation import AnimationValue
+from flet_core.badge import BadgeValue
 from flet_core.blur import Blur
 from flet_core.border import Border
 from flet_core.box import (
@@ -132,6 +133,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -164,6 +166,7 @@ class Container(ConstrainedControl, AdaptiveControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -543,11 +546,11 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # animate
     @property
-    def animate(self) -> AnimationValue:
+    def animate(self) -> Optional[AnimationValue]:
         return self.__animate
 
     @animate.setter
-    def animate(self, value: AnimationValue):
+    def animate(self, value: Optional[AnimationValue]):
         self.__animate = value
 
     # url

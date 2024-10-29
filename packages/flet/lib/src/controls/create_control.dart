@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/utils/badge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -19,7 +20,6 @@ import 'alert_dialog.dart';
 import 'animated_switcher.dart';
 import 'auto_complete.dart';
 import 'autofill_group.dart';
-import 'badge.dart';
 import 'banner.dart';
 import 'barchart.dart';
 import 'bottom_app_bar.dart';
@@ -262,14 +262,6 @@ Widget createWidget(
     case "divider":
       return DividerControl(
           key: key, parent: parent, control: controlView.control);
-    case "badge":
-      return BadgeControl(
-          key: key,
-          parent: parent,
-          control: controlView.control,
-          children: controlView.children,
-          parentDisabled: parentDisabled,
-          parentAdaptive: parentAdaptive);
     case "selectionarea":
       return SelectionAreaControl(
           key: key,
@@ -1027,21 +1019,24 @@ Widget baseControl(
 Widget constrainedControl(
     BuildContext context, Widget widget, Control? parent, Control control) {
   return _expandable(
-      _positionedControl(
-          context,
-          _aspectRatio(
-              _offsetControl(
-                  context,
-                  _scaledControl(
+      _badge(
+          _positionedControl(
+              context,
+              _aspectRatio(
+                  _offsetControl(
                       context,
-                      _rotatedControl(
+                      _scaledControl(
                           context,
-                          _sizedControl(
-                              _directionality(
-                                  _tooltip(
-                                      _opacity(
-                                          context, widget, parent, control),
-                                      Theme.of(context),
+                          _rotatedControl(
+                              context,
+                              _sizedControl(
+                                  _directionality(
+                                      _tooltip(
+                                          _opacity(
+                                              context, widget, parent, control),
+                                          Theme.of(context),
+                                          parent,
+                                          control),
                                       parent,
                                       control),
                                   parent,
@@ -1056,6 +1051,7 @@ Widget constrainedControl(
                   control),
               parent,
               control),
+          Theme.of(context),
           parent,
           control),
       parent,
@@ -1092,7 +1088,13 @@ Widget _opacity(
 Widget _tooltip(
     Widget widget, ThemeData theme, Control? parent, Control control) {
   var tooltip = parseTooltip(control, "tooltip", widget, theme);
-  return tooltip != null ? tooltip : widget;
+  return tooltip ?? widget;
+}
+
+Widget _badge(
+    Widget widget, ThemeData theme, Control? parent, Control control) {
+  var badge = parseBadge(control, "badge", widget, theme);
+  return badge ?? widget;
 }
 
 Widget _aspectRatio(Widget widget, Control? parent, Control control) {

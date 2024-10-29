@@ -3,6 +3,7 @@ from typing import Any, Callable, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.animation import AnimationValue
+from flet_core.badge import BadgeValue
 from flet_core.border import Border
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl

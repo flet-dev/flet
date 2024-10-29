@@ -3,6 +3,7 @@ from typing import Any, List, Optional, Union
 
 from flet_core.animation import AnimationValue
 from flet_core.autofill_group import AutofillHint
+from flet_core.badge import BadgeValue
 from flet_core.border import Border
 from flet_core.box import BoxShadow, DecorationImage
 from flet_core.control import Control, OptionalNumber
@@ -140,6 +141,7 @@ class CupertinoTextField(TextField):
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -148,6 +150,7 @@ class CupertinoTextField(TextField):
             self,
             ref=ref,
             key=key,
+            badge=badge,
             width=width,
             height=height,
             expand=expand,

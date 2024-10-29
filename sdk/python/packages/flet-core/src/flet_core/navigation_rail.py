@@ -2,6 +2,7 @@ from enum import Enum
 from typing import Any, Callable, List, Optional, Union
 
 from flet_core.animation import AnimationValue
+from flet_core.badge import BadgeValue
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control

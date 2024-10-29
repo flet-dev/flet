@@ -3,6 +3,7 @@ from enum import Enum
 from typing import Any, List, Optional, Union
 
 from flet_core.animation import AnimationStyle, AnimationValue
+from flet_core.badge import BadgeValue
 from flet_core.box import BoxConstraints
 from flet_core.buttons import ButtonStyle, OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
@@ -42,9 +43,18 @@ class PopupMenuItem(Control):
         #
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
+        tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         data: Any = None,
     ):
-        Control.__init__(self, ref=ref, disabled=disabled, data=data)
+        Control.__init__(
+            self,
+            ref=ref,
+            disabled=disabled,
+            data=data,
+            tooltip=tooltip,
+            badge=badge,
+        )
 
         self.checked = checked
         self.icon = icon
