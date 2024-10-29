@@ -43,7 +43,7 @@ class PopupMenuItem(Control):
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
         tooltip: TooltipValue = None,
-        badge: BadgeValue = None,
+        badge: Optional[BadgeValue] = None,
         data: Any = None,
     ):
         Control.__init__(

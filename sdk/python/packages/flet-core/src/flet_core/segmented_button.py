@@ -32,7 +32,7 @@ class Segment(Control):
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: TooltipValue = None,
-        badge: BadgeValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

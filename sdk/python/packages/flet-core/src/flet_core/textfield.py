@@ -7,7 +7,11 @@ from flet_core.adaptive_control import AdaptiveControl
 from flet_core.autofill_group import AutofillHint
 from flet_core.badge import BadgeValue
 from flet_core.control import Control, OptionalNumber
-from flet_core.form_field_control import FormFieldControl, InputBorder
+from flet_core.form_field_control import (
+    FormFieldControl,
+    IconValueOrControl,
+    InputBorder,
+)
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
@@ -24,7 +28,6 @@ from flet_core.types import (
     VerticalAlignment,
 )
 from flet_core.utils import deprecated
-from flet_core.form_field_control import IconValueOrControl
 
 try:
     from typing import Literal
@@ -198,7 +201,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         animate_offset: AnimationValue = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
-        badge: BadgeValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

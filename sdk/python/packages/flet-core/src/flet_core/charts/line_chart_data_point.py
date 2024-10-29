@@ -30,7 +30,7 @@ class LineChartDataPoint(Control):
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
-        badge: BadgeValue = None,
+        badge: Optional[BadgeValue] = None,
         data: Any = None,
     ):
 

@@ -27,6 +27,7 @@ except ImportError:
 
 IconValueOrControl = Union[str, Control]
 
+
 class InputBorder(Enum):
     NONE = "none"
     OUTLINE = "outline"
@@ -102,7 +103,7 @@ class FormFieldControl(ConstrainedControl):
         animate_offset: AnimationValue = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
-        badge: BadgeValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -520,7 +521,7 @@ class FormFieldControl(ConstrainedControl):
     @suffix.setter
     def suffix(self, value: Optional[Control]):
         self.__suffix = value
-    
+
     # suffix_icon
     @property
     def suffix_icon(self) -> Optional[IconValueOrControl]:

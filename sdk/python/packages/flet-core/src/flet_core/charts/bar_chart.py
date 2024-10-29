@@ -87,7 +87,7 @@ class BarChart(ConstrainedControl):
         animate_offset: AnimationValue = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
-        badge: BadgeValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

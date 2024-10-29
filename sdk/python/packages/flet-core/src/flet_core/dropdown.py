@@ -4,7 +4,11 @@ from typing import Any, List, Optional, Union
 from flet_core.alignment import Alignment
 from flet_core.badge import BadgeValue
 from flet_core.control import Control, OptionalNumber
-from flet_core.form_field_control import FormFieldControl, InputBorder
+from flet_core.form_field_control import (
+    FormFieldControl,
+    IconValueOrControl,
+    InputBorder,
+)
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
@@ -19,7 +23,7 @@ from flet_core.types import (
     ScaleValue,
 )
 from flet_core.utils import deprecated
-from flet_core.form_field_control import IconValueOrControl
+
 
 class Option(Control):
     def __init__(
@@ -237,7 +241,7 @@ class Dropdown(FormFieldControl):
         animate_offset: AnimationValue = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
-        badge: BadgeValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,

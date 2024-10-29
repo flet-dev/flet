@@ -23,7 +23,7 @@ class NavigationDrawerDestination(Control):
         # Control
         #
         ref: Optional[Ref] = None,
-        badge: BadgeValue = None,
+        badge: Optional[BadgeValue] = None,
     ):
         Control.__init__(self, ref=ref, badge=badge)
         self.label = label

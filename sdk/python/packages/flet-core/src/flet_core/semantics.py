@@ -32,7 +32,7 @@ class Semantics(Control):
         focus: Optional[bool] = None,
         slider: Optional[bool] = None,
         tooltip: Optional[str] = None,
-        badge: BadgeValue = None,
+        badge: Optional[BadgeValue] = None,
         toggled: Optional[bool] = None,
         max_value_length: OptionalNumber = None,
         checked: Optional[bool] = None,
