@@ -5,12 +5,12 @@ from warnings import warn
 
 from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
-from flet_core.colors import MaterialColors, colors
+from flet_core.colors import Colors, colors
 from flet_core.control_event import ControlEvent
 from flet_core.cupertino_colors import CupertinoColors, cupertino_colors
 from flet_core.cupertino_icons import CupertinoIcons, cupertino_icons
 from flet_core.event import Event
-from flet_core.icons import MaterialIcons, icons
+from flet_core.icons import Icons, icons
 from flet_core.margin import Margin
 from flet_core.padding import Padding
 from flet_core.transform import Offset, Rotate, Scale
@@ -414,10 +414,10 @@ EventType = TypeVar("EventType", bound=Event)
 OptionalEventCallable = Optional[Callable[[EventType], Any]]
 OptionalControlEventCallable = Optional[Callable[[ControlEvent], Any]]
 
-ColorEnums = (colors, MaterialColors, cupertino_colors, CupertinoColors)
-ColorValue = Union[str, colors, MaterialColors, cupertino_colors, CupertinoColors]
-IconEnums = (icons, MaterialIcons, cupertino_icons, CupertinoIcons)
-IconValue = Union[str, icons, MaterialIcons, cupertino_icons, CupertinoIcons]
+ColorEnums = (colors, Colors, cupertino_colors, CupertinoColors)
+ColorValue = Union[str, colors, Colors, cupertino_colors, CupertinoColors]
+IconEnums = (icons, Icons, cupertino_icons, CupertinoIcons)
+IconValue = Union[str, icons, Icons, cupertino_icons, CupertinoIcons]
 
 
 # Wrapper

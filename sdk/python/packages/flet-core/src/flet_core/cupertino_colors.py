@@ -14,15 +14,25 @@ for line in __import__("sys").stdin:
 ' >> "$output_file"
 """
 import random
-from enum import Enum
+from enum import Enum, EnumMeta
 from typing import Dict, List, Optional, Union
+from warnings import warn
 
 from flet_core.utils import deprecated
 
 
-# deprecated since version 0.25.0
-# use CupertinoColors instead
-class cupertino_colors(str, Enum):
+class CupertinoColorsDeprecated(EnumMeta):
+    def __getattribute__(self, item):
+        warn(
+            "cupertino_colors enum is deprecated since version 0.25.0 and will be removed in version 0.28.0. "
+            "Use CupertinoColors enum instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return EnumMeta.__getattribute__(self, item)
+
+
+class cupertino_colors(str, Enum, metaclass=CupertinoColorsDeprecated):
     def with_opacity(self, opacity: Union[int, float]) -> str:
         """
         Returns the color with the specified opacity.

@@ -35,13 +35,25 @@ foreach($line in $lines) {
 }
 """
 import random
-from enum import Enum
+from enum import Enum, EnumMeta
 from typing import Dict, List, Optional, Union
+from warnings import warn
 
 from flet_core.utils import deprecated
 
 
-class colors(str, Enum):
+class ColorsDeprecated(EnumMeta):
+    def __getattribute__(self, item):
+        warn(
+            "colors enum is deprecated since version 0.25.0 and will be removed in version 0.28.0. "
+            "Use Colors enum instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return EnumMeta.__getattribute__(self, item)
+
+
+class colors(str, Enum, metaclass=ColorsDeprecated):
     def with_opacity(self, opacity: Union[int, float]) -> str:
         assert 0 <= opacity <= 1, "opacity must be between 0 and 1"
         return f"{self.value},{opacity}"
@@ -401,7 +413,7 @@ class colors(str, Enum):
     GREY_900 = "grey900"
 
 
-class MaterialColors(str, Enum):
+class Colors(str, Enum):
     def with_opacity(self, opacity: Union[int, float]) -> str:
         """
         Returns the color with the specified opacity.
@@ -420,9 +432,9 @@ class MaterialColors(str, Enum):
 
     @staticmethod
     def random(
-        exclude: Optional[List["MaterialColors"]] = None,
-        weights: Optional[Dict["MaterialColors", int]] = None,
-    ) -> Optional["MaterialColors"]:
+        exclude: Optional[List["Colors"]] = None,
+        weights: Optional[Dict["Colors", int]] = None,
+    ) -> Optional["Colors"]:
         """
         Selects a random color, with optional exclusions and weights.
 
@@ -433,7 +445,7 @@ class MaterialColors(str, Enum):
         Returns:
             A randomly selected color, or None if all members are excluded.
         """
-        choices = list(MaterialColors)
+        choices = list(Colors)
         if exclude:
             choices = [member for member in choices if member not in exclude]
             if not choices:

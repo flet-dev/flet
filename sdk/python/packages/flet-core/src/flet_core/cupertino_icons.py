@@ -6,15 +6,25 @@ To generate/update these values run:
 sh ci/generate_cupertino_icons_python.sh
 """
 import random
-from enum import Enum
+from enum import Enum, EnumMeta
 from typing import Dict, List, Optional, Union
+from warnings import warn
 
 from flet_core.utils import deprecated
 
 
-# deprecated since version 0.25.0
-# use CupertinoIcons instead
-class cupertino_icons(str, Enum):
+class CupertinoIconsDeprecated(EnumMeta):
+    def __getattribute__(self, item):
+        warn(
+            "cupertino_icons enum is deprecated since version 0.25.0 and will be removed in version 0.28.0. "
+            "Use CupertinoIcons enum instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return EnumMeta.__getattribute__(self, item)
+
+
+class cupertino_icons(str, Enum, metaclass=CupertinoIconsDeprecated):
     @staticmethod
     def random():
         return random.choice(list(cupertino_icons))

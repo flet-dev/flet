@@ -6,15 +6,25 @@ To generate/update these values run:
 sh ci/generate_material_icons_python.sh
 """
 import random
-from enum import Enum
+from enum import Enum, EnumMeta
 from typing import Dict, List, Optional, Union
+from warnings import warn
 
 from flet_core.utils import deprecated
 
 
-# deprecated since version 0.25.0
-# use MaterialIcons instead
-class icons(str, Enum):
+class IconsDeprecated(EnumMeta):
+    def __getattribute__(self, item):
+        warn(
+            "icons enum is deprecated since version 0.25.0 and will be removed in version 0.28.0. "
+            "Use Icons enum instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return EnumMeta.__getattribute__(self, item)
+
+
+class icons(str, Enum, metaclass=IconsDeprecated):
     @staticmethod
     def random():
         return random.choice(list(icons))
@@ -8887,12 +8897,12 @@ class icons(str, Enum):
     ZOOM_OUT_MAP_OUTLINED = "zoom_out_map_outlined"
 
 
-class MaterialIcons(str, Enum):
+class Icons(str, Enum):
     @staticmethod
     def random(
-        exclude: Optional[List["MaterialIcons"]] = None,
-        weights: Optional[Dict["MaterialIcons", int]] = None,
-    ) -> Optional["MaterialIcons"]:
+        exclude: Optional[List["Icons"]] = None,
+        weights: Optional[Dict["Icons", int]] = None,
+    ) -> Optional["Icons"]:
         """
         Selects a random icon, with optional exclusions and weights.
 
@@ -8903,7 +8913,7 @@ class MaterialIcons(str, Enum):
         Returns:
             A randomly selected icon, or None if all members are excluded.
         """
-        choices = list(MaterialIcons)
+        choices = list(Icons)
         if exclude:
             choices = [member for member in choices if member not in exclude]
             if not choices:
