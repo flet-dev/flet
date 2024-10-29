@@ -34,13 +34,11 @@ class SelectionAreaControl extends StatelessWidget {
     }
     bool disabled = control.isDisabled || parentDisabled;
 
-    Widget child = createControl(control, contentCtrls.first.id, disabled,
-        parentAdaptive: parentAdaptive);
-
     return baseControl(
         context,
         SelectionArea(
-          child: child,
+          child: createControl(control, contentCtrls.first.id, disabled,
+              parentAdaptive: parentAdaptive),
           onSelectionChanged: (selection) {
             backend.triggerControlEvent(
                 control.id, "change", selection?.plainText ?? "");

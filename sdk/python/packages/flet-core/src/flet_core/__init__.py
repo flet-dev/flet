@@ -398,6 +398,7 @@ from flet_core.types import (
     Orientation,
     PaddingValue,
     PagePlatform,
+    PointerDeviceType,
     ScrollMode,
     StrokeCap,
     StrokeJoin,

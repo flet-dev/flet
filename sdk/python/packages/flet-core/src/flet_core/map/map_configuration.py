@@ -1,12 +1,11 @@
 from dataclasses import dataclass, field
-from enum import IntFlag
+from enum import Enum, EnumMeta, IntFlag
 from typing import Optional, Union
+from warnings import warn
 
 from flet_core.animation import AnimationCurve
 from flet_core.control import OptionalNumber
-from flet_core.types import (
-    DurationValue,
-)
+from flet_core.types import DurationValue
 
 
 @dataclass
@@ -49,6 +48,34 @@ class MapMultiFingerGesture(IntFlag):
     PINCH_ZOOM = 1 << 1
     ROTATE = 1 << 2
     ALL = (1 << 0) | (1 << 1) | (1 << 2)
+
+
+class MapPointerDeviceTypeDeprecated(EnumMeta):
+    def __getattribute__(self, item):
+        if item in [
+            "TOUCH",
+            "MOUSE",
+            "STYLUS",
+            "INVERTED_STYLUS",
+            "TRACKPAD",
+            "UNKNOWN",
+        ]:
+            warn(
+                "MapPointerDeviceType enum is deprecated since version 0.25.0 "
+                "and will be removed in version 0.28.0. Use PointerDeviceType enum instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+        return EnumMeta.__getattribute__(self, item)
+
+
+class MapPointerDeviceType(Enum, metaclass=MapPointerDeviceTypeDeprecated):
+    TOUCH = "touch"
+    MOUSE = "mouse"
+    STYLUS = "stylus"
+    INVERTED_STYLUS = "invertedStylus"
+    TRACKPAD = "trackpad"
+    UNKNOWN = "unknown"
 
 
 @dataclass

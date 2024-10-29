@@ -1,20 +1,22 @@
 from enum import Enum
 from typing import Any, List, Optional, Union
 
+from flet_core.animation import AnimationValue
 from flet_core.autofill_group import AutofillHint
 from flet_core.badge import BadgeValue
 from flet_core.border import Border
-from flet_core.box import BoxShadow, BoxShape, DecorationImage
+from flet_core.box import BoxShadow, DecorationImage
 from flet_core.control import Control, OptionalNumber
 from flet_core.gradients import Gradient
 from flet_core.ref import Ref
-from flet_core.text_style import TextStyle
+from flet_core.text_style import StrutStyle, TextStyle
 from flet_core.textfield import InputFilter, KeyboardType, TextCapitalization, TextField
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     BlendMode,
     BorderRadiusValue,
+    Brightness,
+    ClipBehavior,
     OffsetValue,
     OptionalControlEventCallable,
     PaddingValue,
@@ -51,13 +53,10 @@ class CupertinoTextField(TextField):
         shadow: Union[None, BoxShadow, List[BoxShadow]] = None,
         prefix_visibility_mode: Optional[VisibilityMode] = None,
         suffix_visibility_mode: Optional[VisibilityMode] = None,
+        clear_button_visibility_mode: Optional[VisibilityMode] = None,
         clear_button_semantics_label: Optional[str] = None,
         image: Optional[DecorationImage] = None,
-        enable_scribble: Optional[bool] = None,
         padding: PaddingValue = None,
-        scroll_padding: PaddingValue = None,
-        obscuring_character: Optional[str] = None,
-        on_click: OptionalControlEventCallable = None,
         #
         # TextField
         #
@@ -86,10 +85,20 @@ class CupertinoTextField(TextField):
         selection_color: Optional[str] = None,
         input_filter: Optional[InputFilter] = None,
         autofill_hints: Union[None, AutofillHint, List[AutofillHint]] = None,
-        on_change=None,
-        on_submit=None,
-        on_focus=None,
-        on_blur=None,
+        enable_scribble: Optional[bool] = None,
+        scroll_padding: PaddingValue = None,
+        obscuring_character: Optional[str] = None,
+        enable_interactive_selection: Optional[bool] = None,
+        enable_ime_personalized_learning: Optional[bool] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        keyboard_brightness: Optional[Brightness] = None,
+        strut_style: Optional[StrutStyle] = None,
+        animate_cursor_opacity: Optional[bool] = None,
+        on_click: OptionalControlEventCallable = None,
+        on_change: OptionalControlEventCallable = None,
+        on_submit: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
         # FormField
         #
@@ -108,6 +117,7 @@ class CupertinoTextField(TextField):
         filled: Optional[bool] = None,
         prefix: Optional[Control] = None,
         suffix: Optional[Control] = None,
+        fit_parent_size: Optional[bool] = None,
         #
         # ConstrainedControl
         #
@@ -123,12 +133,12 @@ class CupertinoTextField(TextField):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
         badge: Optional[BadgeValue] = None,
@@ -179,6 +189,7 @@ class CupertinoTextField(TextField):
             filled=filled,
             prefix=prefix,
             suffix=suffix,
+            fit_parent_size=fit_parent_size,
             #
             # TextField
             #
@@ -208,6 +219,16 @@ class CupertinoTextField(TextField):
             selection_color=selection_color,
             input_filter=input_filter,
             autofill_hints=autofill_hints,
+            enable_scribble=enable_scribble,
+            scroll_padding=scroll_padding,
+            obscuring_character=obscuring_character,
+            enable_interactive_selection=enable_interactive_selection,
+            enable_ime_personalized_learning=enable_ime_personalized_learning,
+            clip_behavior=clip_behavior,
+            keyboard_brightness=keyboard_brightness,
+            strut_style=strut_style,
+            animate_cursor_opacity=animate_cursor_opacity,
+            on_click=on_click,
             on_change=on_change,
             on_submit=on_submit,
             on_focus=on_focus,
@@ -224,11 +245,8 @@ class CupertinoTextField(TextField):
         self.clear_button_semantics_label = clear_button_semantics_label
         self.border = border
         self.image = image
-        self.enable_scribble = enable_scribble
         self.padding = padding
-        self.scroll_padding = scroll_padding
-        self.obscuring_character = obscuring_character
-        self.on_click = on_click
+        self.clear_button_visibility_mode = clear_button_visibility_mode
 
     def _get_control_name(self):
         return "cupertinotextfield"
@@ -241,7 +259,6 @@ class CupertinoTextField(TextField):
         self._set_attr_json("border", self.__border)
         self._set_attr_json("image", self.__image)
         self._set_attr_json("padding", self.__padding)
-        self._set_attr_json("scrollPadding", self.__scroll_padding)
 
     # placeholder_text
     @property
@@ -298,15 +315,6 @@ class CupertinoTextField(TextField):
     def image(self, value: Optional[DecorationImage]):
         self.__image = value
 
-    # shape
-    @property
-    def shape(self) -> Optional[BoxShape]:
-        return self.__shape
-
-    @shape.setter
-    def shape(self, value: Optional[BoxShape]):
-        self.__shape = value
-
     # suffix_visibility_mode
     @property
     def suffix_visibility_mode(self) -> Optional[VisibilityMode]:
@@ -316,6 +324,16 @@ class CupertinoTextField(TextField):
     def suffix_visibility_mode(self, value: Optional[VisibilityMode]):
         self.__suffix_visibility_mode = value
         self._set_enum_attr("suffixVisibilityMode", value, VisibilityMode)
+
+    # clear_button_visibility_mode
+    @property
+    def clear_button_visibility_mode(self) -> Optional[VisibilityMode]:
+        return self.__clear_button_visibility_mode
+
+    @clear_button_visibility_mode.setter
+    def clear_button_visibility_mode(self, value: Optional[VisibilityMode]):
+        self.__clear_button_visibility_mode = value
+        self._set_enum_attr("clearButtonVisibilityMode", value, VisibilityMode)
 
     # prefix_visibility_mode
     @property
@@ -336,24 +354,6 @@ class CupertinoTextField(TextField):
     def clear_button_semantics_label(self, value: Optional[str]):
         self._set_attr("clearButtonSemanticsLabel", value)
 
-    # obscuring_character
-    @property
-    def obscuring_character(self) -> Optional[str]:
-        return self._get_attr("obscuringCharacter")
-
-    @obscuring_character.setter
-    def obscuring_character(self, value: Optional[str]):
-        self._set_attr("obscuringCharacter", value)
-
-    # enable_scribble
-    @property
-    def enable_scribble(self) -> bool:
-        return self._get_attr("enableScribble", data_type="bool", def_value=True)
-
-    @enable_scribble.setter
-    def enable_scribble(self, value: Optional[bool]):
-        self._set_attr("enableScribble", value)
-
     # padding
     @property
     def padding(self) -> PaddingValue:
@@ -362,24 +362,6 @@ class CupertinoTextField(TextField):
     @padding.setter
     def padding(self, value: PaddingValue):
         self.__padding = value
-
-    # scroll_padding
-    @property
-    def scroll_padding(self) -> PaddingValue:
-        return self.__scroll_padding
-
-    @scroll_padding.setter
-    def scroll_padding(self, value: PaddingValue):
-        self.__scroll_padding = value
-
-    # on_click
-    @property
-    def on_click(self):
-        return self._get_event_handler("click")
-
-    @on_click.setter
-    def on_click(self, handler: OptionalControlEventCallable):
-        self._add_event_handler("click", handler)
 
     # border
     @property

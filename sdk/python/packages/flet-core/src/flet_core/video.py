@@ -3,6 +3,7 @@ from enum import Enum
 from typing import Any, Dict, List, Optional, Union, cast
 
 from flet_core.alignment import Alignment
+from flet_core.animation import AnimationValue
 from flet_core.badge import BadgeValue
 from flet_core.box import FilterQuality
 from flet_core.constrained_control import ConstrainedControl
@@ -11,7 +12,6 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     ImageFit,
     OffsetValue,
     OptionalControlEventCallable,
@@ -111,12 +111,12 @@ class Video(ConstrainedControl):
         rotate: RotateValue = None,
         scale: ScaleValue = None,
         offset: OffsetValue = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalEventCallable = None,
         tooltip: TooltipValue = None,
         badge: Optional[BadgeValue] = None,

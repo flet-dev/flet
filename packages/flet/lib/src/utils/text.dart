@@ -103,6 +103,8 @@ InlineSpan? parseInlineSpan(
     return TextSpan(
       text: spanViewModel.control.attrString("text"),
       style: parseTextStyle(theme, spanViewModel.control, "style"),
+      spellOut: spanViewModel.control.attrBool("spellOut"),
+      semanticsLabel: spanViewModel.control.attrString("semanticsLabel"),
       children: parseTextSpans(
           theme, spanViewModel, parentDisabled, sendControlEvent),
       mouseCursor: onClick && !disabled && sendControlEvent != null

@@ -1,20 +1,24 @@
+import json
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any, List, Optional, Union
 from warnings import warn
 
+from flet_core.animation import AnimationValue
 from flet_core.badge import BadgeValue
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import OptionalNumber
+from flet_core.control_event import ControlEvent
+from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.text_span import TextSpan
 from flet_core.text_style import TextOverflow, TextStyle, TextThemeStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     FontWeight,
     OffsetValue,
     OptionalControlEventCallable,
+    OptionalEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -44,6 +48,40 @@ class TextSelection:
     collapsed: Optional[bool] = None
     valid: Optional[bool] = None
     normalized: Optional[bool] = None
+
+
+class TextSelectionChangeCause(Enum):
+    UNKNOWN = "unknown"
+    TAP = "tap"
+    DOUBLE_TAP = "doubleTap"
+    LONG_PRESS = "longPress"
+    FORCE_PRESS = "forcePress"
+    KEYBOARD = "keyboard"
+    TOOLBAR = "toolbar"
+    DRAG = "drag"
+    SCRIBBLE = "scribble"
+
+
+class TextSelectionChangeEvent(ControlEvent):
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.text: str = d.get("text")
+        self.cause = TextSelectionChangeCause(d.get("cause"))
+        start = d.get("start")
+        end = d.get("end")
+        self.selection = TextSelection(
+            start=start,
+            end=end,
+            selection=self.text[start:end] if (start != -1 and end != -1) else "",
+            base_offset=d.get("base_offset"),
+            extent_offset=d.get("extent_offset"),
+            affinity=d.get("affinity"),
+            directional=d.get("directional"),
+            collapsed=d.get("collapsed"),
+            valid=d.get("valid"),
+            normalized=d.get("normalized"),
+        )
 
 
 class Text(ConstrainedControl):
@@ -93,6 +131,13 @@ class Text(ConstrainedControl):
         color: Optional[str] = None,
         bgcolor: Optional[str] = None,
         semantics_label: Optional[str] = None,
+        show_selection_cursor: Optional[bool] = None,
+        enable_interactive_selection: Optional[bool] = None,
+        selection_cursor_width: OptionalNumber = None,
+        selection_cursor_height: OptionalNumber = None,
+        selection_cursor_color: Optional[str] = None,
+        on_tap: OptionalControlEventCallable = None,
+        on_selection_change: OptionalEventCallable[TextSelectionChangeEvent] = None,
         #
         # ConstrainedControl
         #
@@ -112,12 +157,12 @@ class Text(ConstrainedControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
         badge: Optional[BadgeValue] = None,
@@ -159,6 +204,11 @@ class Text(ConstrainedControl):
             rtl=rtl,
         )
 
+        self.__on_selection_change = EventHandler(lambda e: TextSelectionChangeEvent(e))
+
+        self._add_event_handler(
+            "selection_change", self.__on_selection_change.get_handler()
+        )
         self.value = value
         self.spans = spans
         self.text_align = text_align
@@ -175,6 +225,13 @@ class Text(ConstrainedControl):
         self.color = color
         self.bgcolor = bgcolor
         self.semantics_label = semantics_label
+        self.on_tap = on_tap
+        self.on_selection_change = on_selection_change
+        self.show_selection_cursor = show_selection_cursor
+        self.enable_interactive_selection = enable_interactive_selection
+        self.selection_cursor_width = selection_cursor_width
+        self.selection_cursor_height = selection_cursor_height
+        self.selection_cursor_color = selection_cursor_color
 
     def _get_control_name(self):
         return "text"
@@ -345,3 +402,72 @@ class Text(ConstrainedControl):
     @semantics_label.setter
     def semantics_label(self, value: Optional[str]):
         self._set_attr("semanticsLabel", value)
+
+    # selection_cursor_color
+    @property
+    def selection_cursor_color(self) -> Optional[str]:
+        return self._get_attr("selectionCursorColor")
+
+    @selection_cursor_color.setter
+    def selection_cursor_color(self, value: Optional[str]):
+        self._set_attr("selectionCursorColor", value)
+
+    # selection_cursor_height
+    @property
+    def selection_cursor_height(self) -> OptionalNumber:
+        return self._get_attr("selectionCursorHeight", data_type="float")
+
+    @selection_cursor_height.setter
+    def selection_cursor_height(self, value: OptionalNumber):
+        self._set_attr("selectionCursorHeight", value)
+
+    # selection_cursor_width
+    @property
+    def selection_cursor_width(self) -> OptionalNumber:
+        return self._get_attr("selectionCursorWidth", data_type="float", def_value=2.0)
+
+    @selection_cursor_width.setter
+    def selection_cursor_width(self, value: OptionalNumber):
+        self._set_attr("selectionCursorWidth", value)
+
+    # show_selection_cursor
+    @property
+    def show_selection_cursor(self) -> Optional[bool]:
+        return self._get_attr("showSelectionCursor", data_type="bool", def_value=False)
+
+    @show_selection_cursor.setter
+    def show_selection_cursor(self, value: Optional[bool]):
+        self._set_attr("showSelectionCursor", value)
+
+    # enable_interactive_selection
+    @property
+    def enable_interactive_selection(self) -> Optional[bool]:
+        return self._get_attr(
+            "enableInteractiveSelection", data_type="bool", def_value=True
+        )
+
+    @enable_interactive_selection.setter
+    def enable_interactive_selection(self, value: Optional[bool]):
+        self._set_attr("enableInteractiveSelection", value)
+
+    # on_tap
+    @property
+    def on_tap(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("tap")
+
+    @on_tap.setter
+    def on_tap(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("tap", handler)
+
+    # on_selection_change
+    @property
+    def on_selection_change(
+        self,
+    ) -> OptionalEventCallable[TextSelectionChangeEvent]:
+        return self.__on_selection_change.handler
+
+    @on_selection_change.setter
+    def on_selection_change(
+        self, handler: OptionalEventCallable[TextSelectionChangeEvent]
+    ):
+        self.__on_selection_change.handler = handler

@@ -257,6 +257,7 @@ Widget createWidget(
           children: controlView.children,
           control: controlView.control,
           parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
           backend: backend);
     case "divider":
       return DividerControl(
@@ -1163,11 +1164,11 @@ Widget _scaledControl(
 
 Widget _offsetControl(
     BuildContext context, Widget widget, Control? parent, Control control) {
-  var offsetDetails = parseOffset(control, "offset");
+  var offset = parseOffset(control, "offset");
   var animation = parseAnimation(control, "animateOffset");
-  if (offsetDetails != null && animation != null) {
+  if (offset != null && animation != null) {
     return AnimatedSlide(
-        offset: Offset(offsetDetails.x, offsetDetails.y),
+        offset: offset,
         duration: animation.duration,
         curve: animation.curve,
         onEnd: control.attrBool("onAnimationEnd", false)!
@@ -1178,9 +1179,8 @@ Widget _offsetControl(
               }
             : null,
         child: widget);
-  } else if (offsetDetails != null) {
-    return FractionalTranslation(
-        translation: Offset(offsetDetails.x, offsetDetails.y), child: widget);
+  } else if (offset != null) {
+    return FractionalTranslation(translation: offset, child: widget);
   }
   return widget;
 }

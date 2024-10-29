@@ -1,24 +1,25 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.animation import AnimationValue
 from flet_core.border import BorderSide
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.types import (
-    AnimationValue,
     BorderRadiusValue,
     ClipBehavior,
-    ControlState,
+    ControlStateValue,
+    MarginValue,
     MouseCursor,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     TabAlignment,
-    OptionalControlEventCallable,
 )
 
 
@@ -29,6 +30,9 @@ class Tab(AdaptiveControl):
         content: Optional[Control] = None,
         tab_content: Optional[Control] = None,
         icon: Optional[str] = None,
+        icon_content: Optional[Control] = None,
+        height: OptionalNumber = None,
+        icon_margin: MarginValue = None,
         #
         # Control and AdaptiveControl
         #
@@ -41,10 +45,11 @@ class Tab(AdaptiveControl):
 
         self.text = text
         self.icon = icon
-        self.__content: Optional[Control] = None
         self.content = content
-        self.__tab_content: Optional[Control] = None
         self.tab_content = tab_content
+        self.height = height
+        self.icon_margin = icon_margin
+        self.icon_content = icon_content
 
     def _get_control_name(self):
         return "tab"
@@ -57,20 +62,36 @@ class Tab(AdaptiveControl):
         if self.__content:
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
+        if self.__icon_content:
+            self.__icon_content._set_attr_internal("n", "icon_content")
+            children.append(self.__icon_content)
         return children
+
+    def before_update(self):
+        super().before_update()
+        self._set_attr_json("iconMargin", self.__icon_margin)
 
     # text
     @property
-    def text(self):
+    def text(self) -> Optional[str]:
         return self._get_attr("text")
 
     @text.setter
     def text(self, value: Optional[str]):
         self._set_attr("text", value)
 
+    # height
+    @property
+    def height(self) -> Optional[float]:
+        return self._get_attr("height", data_type="float")
+
+    @height.setter
+    def height(self, value: OptionalNumber):
+        self._set_attr("height", value)
+
     # icon
     @property
-    def icon(self):
+    def icon(self) -> Optional[str]:
         return self._get_attr("icon")
 
     @icon.setter
@@ -79,7 +100,7 @@ class Tab(AdaptiveControl):
 
     # tab_content
     @property
-    def tab_content(self):
+    def tab_content(self) -> Optional[Control]:
         return self.__tab_content
 
     @tab_content.setter
@@ -88,12 +109,30 @@ class Tab(AdaptiveControl):
 
     # content
     @property
-    def content(self):
+    def content(self) -> Optional[Control]:
         return self.__content
 
     @content.setter
     def content(self, value: Optional[Control]):
         self.__content = value
+
+    # icon_content
+    @property
+    def icon_content(self) -> Optional[Control]:
+        return self.__icon_content
+
+    @icon_content.setter
+    def icon_content(self, value: Optional[Control]):
+        self.__icon_content = value
+
+    # icon_margin
+    @property
+    def icon_margin(self) -> MarginValue:
+        return self.__icon_margin
+
+    @icon_margin.setter
+    def icon_margin(self, value: MarginValue):
+        self.__icon_margin = value
 
 
 class Tabs(ConstrainedControl, AdaptiveControl):
@@ -161,7 +200,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         label_text_style: Optional[TextStyle] = None,
         unselected_label_color: Optional[str] = None,
         unselected_label_text_style: Optional[TextStyle] = None,
-        overlay_color: Union[None, str, Dict[ControlState, str]] = None,
+        overlay_color: ControlStateValue[str] = None,
         divider_height: OptionalNumber = None,
         indicator_thickness: OptionalNumber = None,
         enable_feedback: Optional[str] = None,
@@ -190,12 +229,12 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -267,7 +306,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        self._set_attr_json("overlayColor", self.__overlay_color)
+        self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)
         self._set_attr_json("indicatorBorderRadius", self.__indicator_border_radius)
         self._set_attr_json("indicatorBorderSide", self.__indicator_border_side)
         self._set_attr_json("indicatorPadding", self.__indicator_padding)
@@ -466,11 +505,11 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # overlay_color
     @property
-    def overlay_color(self) -> Union[None, str, Dict[ControlState, str]]:
+    def overlay_color(self) -> ControlStateValue[str]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: Union[None, str, Dict[ControlState, str]]):
+    def overlay_color(self, value: ControlStateValue[str]):
         self.__overlay_color = value
 
     # label_padding

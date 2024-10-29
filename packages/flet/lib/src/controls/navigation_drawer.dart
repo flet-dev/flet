@@ -67,6 +67,7 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
           var selectedIconContentCtrls = destView.children
               .where((c) => c.name == "selected_icon_content" && c.isVisible);
           return NavigationDrawerDestination(
+            enabled: !(disabled || destView.control.isDisabled),
             backgroundColor: destView.control.attrColor("bgColor", context),
             icon: iconContentCtrls.isNotEmpty
                 ? createControl(
@@ -104,6 +105,5 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
 
       return baseControl(context, drawer, widget.parent, widget.control);
     });
-
   }
 }

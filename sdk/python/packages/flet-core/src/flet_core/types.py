@@ -3,7 +3,6 @@ from enum import Enum, EnumMeta
 from typing import Any, Callable, Dict, Optional, Protocol, Tuple, TypeVar, Union
 from warnings import warn
 
-from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
 from flet_core.control_event import ControlEvent
 from flet_core.event import Event
@@ -66,8 +65,6 @@ RotateValue = Optional[Union[int, float, Rotate]]
 ScaleValue = Optional[Union[int, float, Scale]]
 
 OffsetValue = Optional[Union[Offset, Tuple[Union[float, int], Union[float, int]]]]
-
-AnimationValue = Optional[Union[bool, int, Animation]]
 
 
 @dataclass
@@ -360,6 +357,15 @@ class MouseCursor(Enum):
     ZOOM_OUT = "zoomOut"
 
 
+class PointerDeviceType(Enum):
+    TOUCH = "touch"
+    MOUSE = "mouse"
+    STYLUS = "stylus"
+    INVERTED_STYLUS = "invertedStylus"
+    TRACKPAD = "trackpad"
+    UNKNOWN = "unknown"
+
+
 class StrokeCap(Enum):
     ROUND = "round"
     SQUARE = "square"
@@ -410,6 +416,9 @@ EventType = TypeVar("EventType", bound=Event)
 OptionalEventCallable = Optional[Callable[[EventType], Any]]
 OptionalControlEventCallable = Optional[Callable[[ControlEvent], Any]]
 
+# ControlState
+T = TypeVar("T")
+ControlStateValue = Union[None, T, Dict[ControlState, T]]
 
 # Wrapper
 Wrapper = Callable[..., Any]
