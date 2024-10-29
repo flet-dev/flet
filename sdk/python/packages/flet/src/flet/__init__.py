@@ -5,7 +5,6 @@ from flet.core import (
     audio,
     border,
     border_radius,
-    canvas,
     colors,
     cupertino_colors,
     cupertino_icons,
@@ -94,6 +93,7 @@ from flet.core.charts.pie_chart_section import PieChartSection
 from flet.core.checkbox import Checkbox
 from flet.core.chip import Chip
 from flet.core.circle_avatar import CircleAvatar
+from flet.core.colors import Colors, colors
 from flet.core.column import Column
 from flet.core.container import Container, ContainerTapEvent
 from flet.core.control import Control
@@ -106,6 +106,7 @@ from flet.core.cupertino_app_bar import CupertinoAppBar
 from flet.core.cupertino_bottom_sheet import CupertinoBottomSheet
 from flet.core.cupertino_button import CupertinoButton
 from flet.core.cupertino_checkbox import CupertinoCheckbox
+from flet.core.cupertino_colors import CupertinoColors, cupertino_colors
 from flet.core.cupertino_context_menu import CupertinoContextMenu
 from flet.core.cupertino_context_menu_action import CupertinoContextMenuAction
 from flet.core.cupertino_date_picker import (
@@ -115,6 +116,7 @@ from flet.core.cupertino_date_picker import (
 )
 from flet.core.cupertino_dialog_action import CupertinoDialogAction
 from flet.core.cupertino_filled_button import CupertinoFilledButton
+from flet.core.cupertino_icons import CupertinoIcons, cupertino_icons
 from flet.core.cupertino_list_tile import CupertinoListTile
 from flet.core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.core.cupertino_picker import CupertinoPicker
@@ -203,6 +205,7 @@ from flet.core.grid_view import GridView
 from flet.core.haptic_feedback import HapticFeedback
 from flet.core.icon import Icon
 from flet.core.icon_button import IconButton
+from flet.core.icons import Icons, icons
 from flet.core.image import Image
 from flet.core.interactive_viewer import (
     InteractiveViewer,

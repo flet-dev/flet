@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Optional
 
-from flet_core.types import ColorValue
+from flet.core.types import ColorValue
 
 
 @dataclass

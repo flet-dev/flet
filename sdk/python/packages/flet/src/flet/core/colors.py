@@ -34,12 +34,13 @@ foreach($line in $lines) {
     }
 }
 """
+
 import random
 from enum import Enum, EnumMeta
 from typing import Dict, List, Optional, Union
 from warnings import warn
 
-from flet_core.utils import deprecated
+from flet.utils import deprecated
 
 
 class ColorsDeprecated(EnumMeta):

@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional, Union
 
-from flet_core.types import DurationValue
+from flet.core.types import DurationValue
 
 try:
     from typing import Literal

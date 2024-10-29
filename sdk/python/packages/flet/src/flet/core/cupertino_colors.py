@@ -13,12 +13,13 @@ for line in __import__("sys").stdin:
         print("{} = \"{}\"".format(match2.group(1).upper(), match2.group(1)))
 ' >> "$output_file"
 """
+
 import random
 from enum import Enum, EnumMeta
 from typing import Dict, List, Optional, Union
 from warnings import warn
 
-from flet_core.utils import deprecated
+from flet.utils import deprecated
 
 
 class CupertinoColorsDeprecated(EnumMeta):
