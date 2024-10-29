@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import asyncio
 import json
 import logging
@@ -930,7 +932,7 @@ class Page(AdaptiveControl):
         handler: Callable[InputT, Awaitable[RetT]],
         *args: InputT.args,
         **kwargs: InputT.kwargs,
-    ) -> "Future[RetT]":
+    ) -> asyncio.Future[RetT]:
         _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
 

@@ -2,6 +2,7 @@ from enum import Enum
 from typing import Any, Callable, Dict, List, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.badge import BadgeValue
 from flet_core.border import Border
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
@@ -54,7 +55,13 @@ class NavigationBarDestination(Control):
         disabled: Optional[bool] = None,
         data: Any = None,
     ):
-        Control.__init__(self, ref=ref, tooltip=tooltip, disabled=disabled, data=data)
+        Control.__init__(
+            self,
+            ref=ref,
+            tooltip=tooltip,
+            disabled=disabled,
+            data=data,
+        )
         self.label = label
         self.icon = icon
         self.icon_content = icon_content

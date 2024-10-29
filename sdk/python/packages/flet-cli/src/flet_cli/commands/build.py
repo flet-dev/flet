@@ -28,7 +28,7 @@ if is_windows():
 
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.25.0/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
-MINIMAL_FLUTTER_VERSION = "3.19.0"
+MINIMAL_FLUTTER_VERSION = "3.24.0"
 
 error_style = Style(color="red1")
 console = Console(log_path=False, style=Style(color="green", bold=True))

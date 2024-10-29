@@ -1,5 +1,6 @@
 from typing import Any, Optional
 
+from flet_core.badge import BadgeValue
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
@@ -60,6 +61,7 @@ class Divider(Control):
         ref: Optional[Ref] = None,
         opacity: OptionalNumber = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):
@@ -69,6 +71,7 @@ class Divider(Control):
             ref=ref,
             opacity=opacity,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             data=data,
         )

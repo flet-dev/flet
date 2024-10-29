@@ -2,6 +2,7 @@ import time
 from typing import Any, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.badge import BadgeValue
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -93,6 +94,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         animate_offset: AnimationValue = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -124,6 +126,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
