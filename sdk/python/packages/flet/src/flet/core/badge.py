@@ -2,10 +2,8 @@ from dataclasses import dataclass
 from typing import Optional, Union
 
 from flet.core.alignment import Alignment
-from flet.core.control import Control, OptionalNumber
-from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
-from flet.core.types import ColorValue, OffsetValue, PaddingValue
+from flet.core.types import ColorValue, OffsetValue, OptionalNumber, PaddingValue
 
 
 @dataclass

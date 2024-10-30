@@ -3,7 +3,7 @@ from flet.core.protocol import Command
 
 
 def test_instance_no_attrs_set():
-    r = ft.ShaderMask(shader=ft.LinearGradient(colors=[ft.colors.BLUE]))
+    r = ft.ShaderMask(shader=ft.LinearGradient(colors=[ft.Colors.BLUE]))
     assert isinstance(r, ft.Control)
     assert r._build_add_commands() == [
         Command(
@@ -20,7 +20,7 @@ def test_instance_no_attrs_set():
 
 def test_blend_mode_enum():
     r = ft.ShaderMask(
-        shader=ft.LinearGradient(colors=[ft.colors.BLUE]),
+        shader=ft.LinearGradient(colors=[ft.Colors.BLUE]),
         blend_mode=ft.BlendMode.LIGHTEN,
     )
     assert isinstance(r.blend_mode, ft.BlendMode)
@@ -31,7 +31,7 @@ def test_blend_mode_enum():
 
 def test_blend_mode_str():
     r = ft.ShaderMask(
-        shader=ft.LinearGradient(colors=[ft.colors.BLUE]), blend_mode="darken"
+        shader=ft.LinearGradient(colors=[ft.Colors.BLUE]), blend_mode="darken"
     )
     assert isinstance(r.blend_mode, str)
     assert isinstance(r._get_attr("blendMode"), str)
