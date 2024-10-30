@@ -15,28 +15,27 @@ documentation = "https://flet.dev/docs"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-flet-core = { version = "0.1.0" }
-flet-cli = { version = "0.1.0", markers = "platform_system != 'embedded'" }
-flet-desktop = { version = "0.1.0", markers = "platform_system != 'desktop-light'" }
-flet-web = { version = "0.1.0", markers = "platform_system != 'embedded'" }
+flet-cli = { version = "0.1.0", optional = true }
+flet-desktop = { version = "0.1.0", optional = true, markers = "platform_system == 'Darwin' or platform_system == 'Windows'" }
+flet-web = { version = "0.1.0", optional = true }
 oauthlib = { version = "^3.2.2", markers = "platform_system != 'Pyodide'" }
 httpx = { version = "*", markers = "platform_system != 'Pyodide'" }
+repath = "^0.9.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^2.6"
 pytest = "^7.2.0"
 cryptography = "^39.0.0"
 
-[tool.poetry.scripts]
-flet = "flet_cli.cli:main"
+[tool.poetry.extras]
+all = ["flet-cli", "flet-desktop", "flet-web"]
+cli = ["flet-cli"]
+web = ["flet-web"]
+desktop = ["flet-desktop"]
 
-[tool.poetry.plugins."pyinstaller40"]
-hook-dirs = "flet_cli.__pyinstaller:get_hook_dirs"
+[tool.poetry.scripts]
+flet = "flet.cli:main"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.isort]
-profile = "black"
-float_to_top = true

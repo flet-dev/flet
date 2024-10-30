@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -27,6 +28,7 @@ class DraggableControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("DragTarget build: ${control.id}");
+    var adaptive = control.isAdaptive ?? parentAdaptive;
 
     var group = control.attrString("group", "");
     var contentCtrls =
@@ -39,18 +41,13 @@ class DraggableControl extends StatelessWidget {
 
     Widget? child = contentCtrls.isNotEmpty
         ? createControl(control, contentCtrls.first.id, disabled,
-            parentAdaptive: parentAdaptive)
-        : null;
-
-    Widget? childWhenDragging = contentWhenDraggingCtrls.isNotEmpty
-        ? createControl(control, contentWhenDraggingCtrls.first.id, disabled,
-            parentAdaptive: parentAdaptive)
+            parentAdaptive: adaptive)
         : null;
 
     Widget? childFeedback = contentFeedbackCtrls.isNotEmpty
         ? createControl(control, contentFeedbackCtrls.first.id, disabled,
-            parentAdaptive: parentAdaptive)
-        : null;
+            parentAdaptive: adaptive)
+        : Opacity(opacity: 0.5, child: child);
 
     if (child == null) {
       return const ErrorControl(
@@ -61,10 +58,16 @@ class DraggableControl extends StatelessWidget {
 
     return Draggable<String>(
       data: data,
-      childWhenDragging: childWhenDragging,
+      axis: parseAxis(control.attrString("axis")),
+      affinity: parseAxis(control.attrString("affinity")),
+      maxSimultaneousDrags: control.attrInt("maxSimultaneousDrags"),
+      childWhenDragging: contentWhenDraggingCtrls.isNotEmpty
+          ? createControl(control, contentWhenDraggingCtrls.first.id, disabled,
+              parentAdaptive: adaptive)
+          : null,
       feedback: MouseRegion(
         cursor: SystemMouseCursors.grabbing,
-        child: childFeedback ?? Opacity(opacity: 0.5, child: child),
+        child: childFeedback,
       ),
       onDragStarted: () {
         debugPrint("Draggable.onDragStarted ${control.id}");

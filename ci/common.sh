@@ -7,10 +7,9 @@ pip install --upgrade setuptools wheel twine poetry tomlkit virtualenv
 
 function patch_python_package_versions() {
     PYPI_VER="${APPVEYOR_BUILD_VERSION/+/.dev}"
-    sed -i -e "s/version = \"\"/version = \"$PYPI_VER\"/g" $flet_sdk_root/packages/flet-core/src/flet_core/version.py
+    sed -i -e "s/version = \"\"/version = \"$PYPI_VER\"/g" $flet_sdk_root/packages/flet/src/flet/version.py
     python3 $root/ci/patch_toml_versions.py $flet_sdk_root/packages/flet/pyproject.toml $PYPI_VER
     python3 $root/ci/patch_toml_versions.py $flet_sdk_root/packages/flet-cli/pyproject.toml $PYPI_VER
-    python3 $root/ci/patch_toml_versions.py $flet_sdk_root/packages/flet-core/pyproject.toml $PYPI_VER
     python3 $root/ci/patch_toml_versions.py $flet_sdk_root/packages/flet-desktop/pyproject.toml $PYPI_VER
     python3 $root/ci/patch_toml_versions.py $flet_sdk_root/packages/flet-web/pyproject.toml $PYPI_VER
 }

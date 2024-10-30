@@ -3,11 +3,10 @@ import os
 from pathlib import Path
 
 import flet.version
-from flet_core.utils import slugify
+from flet.utils import slugify
+from flet_cli.commands.base import BaseCommand
 from packaging import version
 from rich import print
-
-from flet_cli.commands.base import BaseCommand
 
 
 class Command(BaseCommand):

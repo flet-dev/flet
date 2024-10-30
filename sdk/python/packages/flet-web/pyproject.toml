@@ -17,6 +17,7 @@ documentation = "https://flet.dev/docs"
 
 [tool.poetry.dependencies]
 python = "^3.8"
+flet = { version = "0.1.0" }
 fastapi = "*"
 uvicorn = { extras = ["standard"], version = "*" }
 

@@ -62,7 +62,6 @@ class _SliderControlState extends State<RangeSliderControl> {
     double min = widget.control.attrDouble("min", 0)!;
     double max = widget.control.attrDouble("max", 1)!;
 
-    int? divisions = widget.control.attrInt("divisions");
     int round = widget.control.attrInt("round", 0)!;
 
     debugPrint("SliderControl build: ${widget.control.id}");
@@ -74,7 +73,7 @@ class _SliderControlState extends State<RangeSliderControl> {
             (label).replaceAll("{value}", endValue.toStringAsFixed(round))),
         min: min,
         max: max,
-        divisions: divisions,
+        divisions: widget.control.attrInt("divisions"),
         activeColor: widget.control.attrColor("activeColor", context),
         inactiveColor: widget.control.attrColor("inactiveColor", context),
         overlayColor: parseWidgetStateColor(

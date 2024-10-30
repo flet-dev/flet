@@ -11,13 +11,16 @@ from pathlib import Path
 from urllib.parse import quote, urlparse, urlunparse
 
 import qrcode
-from flet.utils import get_free_tcp_port, get_local_ip, open_in_browser
-from flet_core.utils import is_windows, random_string
-from flet_desktop import close_flet_view, open_flet_view
+from flet.utils import (
+    get_free_tcp_port,
+    get_local_ip,
+    is_windows,
+    open_in_browser,
+    random_string,
+)
+from flet_cli.commands.base import BaseCommand
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
-
-from flet_cli.commands.base import BaseCommand
 
 
 class Command(BaseCommand):
@@ -126,6 +129,20 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
+        from flet_cli.utils.pip import install_flet_package
+
+        if options.web:
+            try:
+                import flet_web
+            except:
+                install_flet_package("flet-web")
+        else:
+            try:
+                import flet_desktop
+            except:
+                install_flet_package("flet-desktop")
+        from flet_desktop import close_flet_view
+
         if options.module:
             script_path = str(options.script).replace(".", "/")
             if os.path.isdir(script_path):
@@ -322,6 +339,8 @@ class Handler(FileSystemEventHandler):
                 print(line)
 
     def open_flet_view_and_wait(self):
+        from flet_desktop import open_flet_view
+
         self.fvp, self.pid_file = open_flet_view(
             self.page_url, self.assets_dir, self.hidden
         )

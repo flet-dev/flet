@@ -3,11 +3,9 @@ import json
 import logging
 from typing import List
 
-import flet
 import flet_js
-import js
-from flet_core.local_connection import LocalConnection
-from flet_core.protocol import (
+from flet.core.local_connection import LocalConnection
+from flet.core.protocol import (
     ClientActions,
     ClientMessage,
     Command,
@@ -16,6 +14,8 @@ from flet_core.protocol import (
     PageCommandsBatchResponsePayload,
     RegisterWebClientRequestPayload,
 )
+
+import flet
 
 logger = logging.getLogger(flet.__name__)
 
