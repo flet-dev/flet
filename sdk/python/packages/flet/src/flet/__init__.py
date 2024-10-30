@@ -153,6 +153,11 @@ from flet.core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet.core.draggable import Draggable
 from flet.core.dropdown import Dropdown
 from flet.core.elevated_button import ElevatedButton
+from flet.core.exceptions import (
+    FletException,
+    FletUnimplementedPlatformEception,
+    FletUnsupportedPlatformException,
+)
 from flet.core.expansion_panel import ExpansionPanel, ExpansionPanelList
 from flet.core.expansion_tile import ExpansionTile, TileAffinity
 from flet.core.file_picker import (
