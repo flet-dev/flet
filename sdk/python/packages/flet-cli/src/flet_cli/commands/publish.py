@@ -91,7 +91,10 @@ class Command(BaseCommand):
 
     def handle(self, options: argparse.Namespace) -> None:
         try:
-            import flet_web
+            import flet.version
+            import flet_web.version
+
+            assert flet_web.version.version == flet.version
         except:
             from flet_cli.utils.pip import install_flet_package
 

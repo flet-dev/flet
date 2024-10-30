@@ -6,7 +6,9 @@ import flet.version
 
 def main():
     try:
-        import flet_cli.cli
+        import flet_cli.version
+
+        assert flet_cli.version.version == flet.version.version
     except:
         subprocess.call(
             [
@@ -19,7 +21,7 @@ def main():
                 f"flet-cli=={flet.version.version}",
             ]
         )
-        import flet_cli.cli
+    import flet_cli.cli
 
     flet_cli.cli.main()
 

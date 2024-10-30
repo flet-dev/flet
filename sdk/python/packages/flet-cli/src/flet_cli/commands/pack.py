@@ -133,7 +133,10 @@ class Command(BaseCommand):
     def handle(self, options: argparse.Namespace) -> None:
 
         try:
-            import flet_desktop
+            import flet.version
+            import flet_desktop.version
+
+            assert flet_desktop.version == flet.version.version
         except:
             from flet_cli.utils.pip import install_flet_package
 
