@@ -93,7 +93,9 @@ class Command(BaseCommand):
             )
             exit(1)
 
-        console.print("The app has been created.\n", style=Style(color="spring_green3"))
+        console.print(
+            "The app has been created.\n", style=Style(color="green", bold=True)
+        )
 
         if self.verbose > 0:
             console.print(f"[cyan]Files created at[/cyan] {out_dir}:\n")

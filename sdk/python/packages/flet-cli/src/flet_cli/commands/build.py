@@ -18,8 +18,10 @@ from flet.version import update_version
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.merge import merge_dict
 from packaging import version
-from rich.console import Console, Style
+from rich.console import Console
+from rich.style import Style
 from rich.table import Column, Table
+from rich.theme import Theme
 
 if is_windows():
     from ctypes import windll
@@ -29,7 +31,7 @@ DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 MINIMAL_FLUTTER_VERSION = "3.24.0"
 
 error_style = Style(color="red1")
-console = Console(log_path=False, style=Style(color="green", bold=True))
+console = Console(log_path=False, theme=Theme({"log.message": "green bold"}))
 
 RESULT_FILE = "result"
 
@@ -911,15 +913,15 @@ class Command(BaseCommand):
                 adaptive_icon_background = (
                     options.android_adaptive_icon_background
                     or get_pyproject("tool.flet.android.adaptive_icon_background")
+                    or "#ffffff"
                 )
-                if adaptive_icon_background:
-                    fallback_image(
-                        "flutter_launcher_icons/adaptive_icon_foreground",
-                        [android_icon, default_icon],
-                    )
-                    pubspec["flutter_launcher_icons"][
-                        "adaptive_icon_background"
-                    ] = adaptive_icon_background
+                fallback_image(
+                    "flutter_launcher_icons/adaptive_icon_foreground",
+                    [android_icon, default_icon],
+                )
+                pubspec["flutter_launcher_icons"][
+                    "adaptive_icon_background"
+                ] = adaptive_icon_background
                 fallback_image(
                     "flutter_launcher_icons/web/image_path", [web_icon, default_icon]
                 )
@@ -1479,7 +1481,7 @@ class Command(BaseCommand):
             # windows has been reported to raise encoding errors when running `flutter doctor`
             # so skip running `flutter doctor` if no_rich_output is True and platform is Windows
             if not (self.no_rich_output and self.current_platform == "Windows"):
-                self.run_flutter_doctor(style=error_style)
+                self.run_flutter_doctor()
 
         sys.exit(exit_code)
 
