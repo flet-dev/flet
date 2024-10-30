@@ -24,12 +24,13 @@ from flet.utils import deprecated
 
 class CupertinoColorsDeprecated(EnumMeta):
     def __getattribute__(self, item):
-        warn(
-            "cupertino_colors enum is deprecated since version 0.25.0 and will be removed in version 0.28.0. "
-            "Use CupertinoColors enum instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
+        if not item.startswith("_"):
+            warn(
+                "cupertino_colors enum is deprecated since version 0.25.0 and will be removed in version 0.28.0. "
+                "Use CupertinoColors enum instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
         return EnumMeta.__getattribute__(self, item)
 
 
