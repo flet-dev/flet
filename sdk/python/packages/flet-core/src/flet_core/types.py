@@ -1,12 +1,15 @@
 from dataclasses import dataclass
 from enum import Enum, EnumMeta
-from typing import Any, Callable, Dict, Optional, Protocol, Tuple, Type, TypeVar, Union
+from typing import Any, Callable, Dict, Optional, Protocol, Tuple, TypeVar, Union
 from warnings import warn
 
-from flet_core.animation import Animation
 from flet_core.border_radius import BorderRadius
+from flet_core.colors import Colors, colors
 from flet_core.control_event import ControlEvent
+from flet_core.cupertino_colors import CupertinoColors, cupertino_colors
+from flet_core.cupertino_icons import CupertinoIcons, cupertino_icons
 from flet_core.event import Event
+from flet_core.icons import Icons, icons
 from flet_core.margin import Margin
 from flet_core.padding import Padding
 from flet_core.transform import Offset, Rotate, Scale
@@ -66,8 +69,6 @@ RotateValue = Optional[Union[int, float, Rotate]]
 ScaleValue = Optional[Union[int, float, Scale]]
 
 OffsetValue = Optional[Union[Offset, Tuple[Union[float, int], Union[float, int]]]]
-
-AnimationValue = Optional[Union[bool, int, Animation]]
 
 
 @dataclass
@@ -360,6 +361,15 @@ class MouseCursor(Enum):
     ZOOM_OUT = "zoomOut"
 
 
+class PointerDeviceType(Enum):
+    TOUCH = "touch"
+    MOUSE = "mouse"
+    STYLUS = "stylus"
+    INVERTED_STYLUS = "invertedStylus"
+    TRACKPAD = "trackpad"
+    UNKNOWN = "unknown"
+
+
 class StrokeCap(Enum):
     ROUND = "round"
     SQUARE = "square"
@@ -407,9 +417,20 @@ class VisualDensity(Enum):
 # Events
 ControlEventType = TypeVar("ControlEventType", bound=ControlEvent)
 EventType = TypeVar("EventType", bound=Event)
-OptionalEventCallable = Optional[Type[Callable[[EventType], Any]]]
-OptionalControlEventCallable = Optional[Type[Callable[[ControlEventType], Any]]]
+OptionalEventCallable = Optional[Callable[[EventType], Any]]
+OptionalControlEventCallable = Optional[Callable[[ControlEvent], Any]]
 
+# Colors
+ColorEnums = (colors, Colors, cupertino_colors, CupertinoColors)
+ColorValue = Union[str, colors, Colors, cupertino_colors, CupertinoColors]
+
+# Icons
+IconEnums = (icons, Icons, cupertino_icons, CupertinoIcons)
+IconValue = Union[str, icons, Icons, cupertino_icons, CupertinoIcons]
+
+# ControlState
+T = TypeVar("T")
+ControlStateValue = Union[None, T, Dict[ControlState, T]]
 
 # Wrapper
 Wrapper = Callable[..., Any]

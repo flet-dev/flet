@@ -38,7 +38,7 @@ def test_datarow_color_literal_material_state_as_string():
             indent=0,
             name=None,
             values=["datarow"],
-            attrs={"color": '"yellow"'},
+            attrs={"color": '{"":"yellow"}'},
             commands=[],
         ),
         Command(indent=2, name=None, values=["datacell"], attrs={}, commands=[]),

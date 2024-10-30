@@ -1,11 +1,19 @@
 from typing import Any, Optional, Union
 
 from flet_core.alignment import Alignment
+from flet_core.badge import BadgeValue
 from flet_core.control import Control, OptionalNumber
 from flet_core.cupertino_button import CupertinoButton
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
-from flet_core.types import BorderRadiusValue, PaddingValue, ResponsiveNumber, UrlTarget
+from flet_core.types import (
+    BorderRadiusValue,
+    ColorValue,
+    IconValue,
+    PaddingValue,
+    ResponsiveNumber,
+    UrlTarget,
+)
 
 
 class CupertinoFilledButton(CupertinoButton):
@@ -32,10 +40,10 @@ class CupertinoFilledButton(CupertinoButton):
     def __init__(
         self,
         text: Optional[str] = None,
-        icon: Optional[str] = None,
-        icon_color: Optional[str] = None,
+        icon: Optional[IconValue] = None,
+        icon_color: Optional[ColorValue] = None,
         content: Optional[Control] = None,
-        disabled_color: Optional[str] = None,
+        disabled_color: Optional[ColorValue] = None,
         opacity_on_click: OptionalNumber = None,
         min_size: OptionalNumber = None,
         padding: PaddingValue = None,
@@ -56,6 +64,7 @@ class CupertinoFilledButton(CupertinoButton):
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -71,6 +80,7 @@ class CupertinoFilledButton(CupertinoButton):
             col=col,
             opacity=opacity,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,

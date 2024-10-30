@@ -4,13 +4,15 @@ from typing import Any, List, Optional, Tuple, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alignment import Alignment
+from flet_core.animation import AnimationValue
+from flet_core.badge import BadgeValue
 from flet_core.blur import Blur
 from flet_core.border import Border
 from flet_core.box import (
+    BoxDecoration,
     BoxShadow,
     BoxShape,
     ColorFilter,
-    BoxDecoration,
     DecorationImage,
 )
 from flet_core.constrained_control import ConstrainedControl
@@ -22,22 +24,23 @@ from flet_core.ref import Ref
 from flet_core.theme import Theme
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     BlendMode,
     BorderRadiusValue,
     ClipBehavior,
+    ColorEnums,
+    ColorValue,
     ImageFit,
     ImageRepeat,
     MarginValue,
     OffsetValue,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     ThemeMode,
     UrlTarget,
-    OptionalEventCallable,
-    OptionalControlEventCallable,
 )
 
 
@@ -74,7 +77,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         padding: PaddingValue = None,
         margin: MarginValue = None,
         alignment: Optional[Alignment] = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         gradient: Optional[Gradient] = None,
         blend_mode: Optional[BlendMode] = None,
         border: Optional[Border] = None,
@@ -88,8 +91,8 @@ class Container(ConstrainedControl, AdaptiveControl):
         clip_behavior: Optional[ClipBehavior] = None,
         ink: Optional[bool] = None,
         image: Optional[DecorationImage] = None,
-        ink_color: Optional[str] = None,
-        animate: AnimationValue = None,
+        ink_color: Optional[ColorValue] = None,
+        animate: Optional[AnimationValue] = None,
         blur: Union[
             None, float, int, Tuple[Union[float, int], Union[float, int]], Blur
         ] = None,
@@ -124,14 +127,15 @@ class Container(ConstrainedControl, AdaptiveControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -164,6 +168,7 @@ class Container(ConstrainedControl, AdaptiveControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -215,12 +220,12 @@ class Container(ConstrainedControl, AdaptiveControl):
     def before_update(self):
         super().before_update()
         assert (
-                self.__blend_mode is None
-                or self.__gradient is not None
-                or self.bgcolor is not None
+            self.__blend_mode is None
+            or self.__gradient is not None
+            or self.bgcolor is not None
         ), "blend_mode applies to bgcolor or gradient, but no bgcolor or gradient was provided"
         assert (
-                self.__shape != BoxShape.CIRCLE or self.__border_radius is None
+            self.__shape != BoxShape.CIRCLE or self.__border_radius is None
         ), "border_radius is not supported with shape=BoxShape.CIRCLE"
         self._set_attr_json("borderRadius", self.__border_radius)
         self._set_attr_json("border", self.__border)
@@ -296,11 +301,12 @@ class Container(ConstrainedControl, AdaptiveControl):
     # bgcolor
     @property
     def bgcolor(self):
-        return self._get_attr("bgColor")
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value):
-        self._set_attr("bgColor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgColor", value, ColorEnums)
 
     # gradient
     @property
@@ -534,20 +540,21 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # ink color
     @property
-    def ink_color(self) -> Optional[str]:
-        return self._get_attr("inkColor")
+    def ink_color(self) -> Optional[ColorValue]:
+        return self.__ink_color
 
     @ink_color.setter
-    def ink_color(self, value: Optional[str]):
-        self._set_attr("inkColor", value)
+    def ink_color(self, value: Optional[ColorValue]):
+        self.__ink_color = value
+        self._set_enum_attr("inkColor", value, ColorEnums)
 
     # animate
     @property
-    def animate(self) -> AnimationValue:
+    def animate(self) -> Optional[AnimationValue]:
         return self.__animate
 
     @animate.setter
-    def animate(self, value: AnimationValue):
+    def animate(self, value: Optional[AnimationValue]):
         self.__animate = value
 
     # url

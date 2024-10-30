@@ -3,7 +3,7 @@ from typing import Any, Optional
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.control import Control
 from flet_core.ref import Ref
-from flet_core.types import OptionalControlEventCallable
+from flet_core.types import IconEnums, IconValue, OptionalControlEventCallable
 
 
 class CupertinoContextMenuAction(AdaptiveControl):
@@ -21,7 +21,7 @@ class CupertinoContextMenuAction(AdaptiveControl):
         content: Optional[Control] = None,
         is_default_action: Optional[bool] = None,
         is_destructive_action: Optional[bool] = None,
-        trailing_icon: Optional[str] = None,
+        trailing_icon: Optional[IconValue] = None,
         on_click: OptionalControlEventCallable = None,
         #
         # Control
@@ -75,12 +75,13 @@ class CupertinoContextMenuAction(AdaptiveControl):
 
     # trailing_icon
     @property
-    def trailing_icon(self) -> Optional[str]:
-        return self._get_attr("trailingIcon")
+    def trailing_icon(self) -> Optional[IconValue]:
+        return self.__trailing_icon
 
     @trailing_icon.setter
-    def trailing_icon(self, value: Optional[str]):
-        self._set_attr("trailingIcon", value)
+    def trailing_icon(self, value: Optional[IconValue]):
+        self.__trailing_icon = value
+        self._set_enum_attr("trailingIcon", value, IconEnums)
 
     # text
     @property

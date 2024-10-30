@@ -18,20 +18,45 @@ import 'numbers.dart';
 import 'others.dart';
 import 'transforms.dart';
 
-List<BoxShadow> parseBoxShadow(
-    ThemeData theme, Control control, String propName) {
+BoxConstraints? parseBoxConstraints(Control control, String propName) {
   var v = control.attrString(propName);
   if (v == null) {
-    return [];
+    return null;
+  }
+
+  final j1 = json.decode(v);
+  return boxConstraintsFromJSON(j1);
+}
+
+BoxConstraints? boxConstraintsFromJSON(dynamic json,
+    [BoxConstraints? defValue]) {
+  if (json == null) {
+    return null;
+  }
+  return BoxConstraints(
+    minHeight: parseDouble(json["min_height"], 0.0)!,
+    minWidth: parseDouble(json["min_width"], 0.0)!,
+    maxHeight: parseDouble(json["max_height"], double.infinity)!,
+    maxWidth: parseDouble(json["max_width"], double.infinity)!,
+  );
+}
+
+List<BoxShadow>? parseBoxShadow(
+    ThemeData theme, Control control, String propName,
+    [List<BoxShadow>? defValue]) {
+  var v = control.attrString(propName);
+  if (v == null) {
+    return defValue;
   }
 
   final j1 = json.decode(v);
   return boxShadowsFromJSON(theme, j1);
 }
 
-List<BoxShadow> boxShadowsFromJSON(ThemeData theme, dynamic json) {
+List<BoxShadow>? boxShadowsFromJSON(ThemeData theme, dynamic json,
+    [List<BoxShadow>? defValue]) {
   if (json == null) {
-    return [];
+    return defValue;
   }
   if (json is List) {
     return json.map((e) => boxShadowFromJSON(theme, e)).toList();
@@ -41,7 +66,8 @@ List<BoxShadow> boxShadowsFromJSON(ThemeData theme, dynamic json) {
 }
 
 BoxShadow boxShadowFromJSON(ThemeData theme, dynamic json) {
-  var offset = json["offset"] != null ? offsetFromJSON(json["offset"]) : null;
+  var offset =
+      json["offset"] != null ? offsetDetailsFromJSON(json["offset"]) : null;
   return BoxShadow(
       color: parseColor(theme, json["color"], const Color(0xFF000000))!,
       offset: offset != null ? Offset(offset.x, offset.y) : Offset.zero,

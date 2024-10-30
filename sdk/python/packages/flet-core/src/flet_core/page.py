@@ -1,11 +1,12 @@
+from __future__ import annotations
+
 import asyncio
 import json
 import logging
 import threading
 import time
 import uuid
-from asyncio import AbstractEventLoop
-from concurrent.futures import Future, ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -27,13 +28,6 @@ from typing import (
 )
 from urllib.parse import urlparse
 
-from flet_core.box import BoxDecoration
-
-try:
-    from typing import ParamSpec
-except ImportError:
-    from typing_extensions import ParamSpec
-
 import flet_core
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.alert_dialog import AlertDialog
@@ -43,6 +37,7 @@ from flet_core.app_bar import AppBar
 from flet_core.banner import Banner
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.bottom_sheet import BottomSheet
+from flet_core.box import BoxDecoration
 from flet_core.client_storage import ClientStorage
 from flet_core.connection import Connection
 from flet_core.control import Control
@@ -68,6 +63,8 @@ from flet_core.theme import Theme
 from flet_core.types import (
     AppLifecycleState,
     Brightness,
+    ColorEnums,
+    ColorValue,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     MainAxisAlignment,
@@ -82,9 +79,14 @@ from flet_core.types import (
     WindowEventType,
     Wrapper,
 )
-from flet_core.utils import classproperty, deprecated
-from flet_core.utils.concurrency_utils import is_pyodide
+from flet_core.utils import classproperty, deprecated, is_pyodide
 from flet_core.view import View
+
+try:
+    from typing import ParamSpec
+except ImportError:
+    from typing_extensions import ParamSpec
+
 
 logger = logging.getLogger(flet_core.__name__)
 
@@ -98,11 +100,12 @@ class context:
 
 
 try:
-    from flet_runtime.auth.authorization import Authorization
-    from flet_runtime.auth.oauth_provider import OAuthProvider
-except ImportError:
+    from flet.auth.authorization import Authorization
+    from flet.auth.oauth_provider import OAuthProvider
+except ImportError as e:
 
-    class OAuthProvider: ...
+    class OAuthProvider:
+        ...
 
     class Authorization:
         def __init__(
@@ -111,7 +114,8 @@ except ImportError:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ): ...
+        ):
+            ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -141,21 +145,26 @@ class PageDisconnectedException(Exception):
 class BrowserContextMenu:
     def __init__(self, page: "Page"):
         self.page = page
-        self.disabled = False
+        self.__disabled = False
 
     def enable(self, wait_timeout: Optional[float] = 10):
         self.page._invoke_method("enableBrowserContextMenu", wait_timeout=wait_timeout)
-        self.disabled = False
+        self.__disabled = False
 
     def disable(self, wait_timeout: Optional[float] = 10):
         self.page._invoke_method("disableBrowserContextMenu", wait_timeout=wait_timeout)
-        self.disabled = True
+        self.__disabled = True
+
+    @property
+    def disabled(self) -> bool:
+        return self.__disabled
 
 
 class Window:
     def __init__(self, page: "Page"):
         self.page = page
         self.__alignment = None
+        self.__bgcolor = None
         self.__on_event = EventHandler(lambda e: WindowEvent(e))
         self.page._add_event_handler(
             "window_event",
@@ -164,12 +173,13 @@ class Window:
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self.page._get_attr("windowBgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self.page._set_attr("windowBgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self.page._set_enum_attr("windowBgcolor", value, ColorEnums)
 
     # width
     @property
@@ -922,7 +932,7 @@ class Page(AdaptiveControl):
         handler: Callable[InputT, Awaitable[RetT]],
         *args: InputT.args,
         **kwargs: InputT.kwargs,
-    ) -> "Future[RetT]":
+    ) -> asyncio.Future[RetT]:
         _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
 
@@ -1406,7 +1416,7 @@ class Page(AdaptiveControl):
 
     def open(self, control: Control) -> None:
         if not hasattr(control, "open"):
-            raise ValueError("control has no open attribute")
+            raise ValueError(f"{control.__class__.__qualname__} has no open attribute")
 
         control.open = True
 
@@ -1432,7 +1442,7 @@ class Page(AdaptiveControl):
             control.open = False
             control.update()
         else:
-            raise ValueError("control has no open attribute")
+            raise ValueError(f"{control.__class__.__qualname__} has no open attribute")
 
     #
     # SnackBar
@@ -1726,7 +1736,7 @@ class Page(AdaptiveControl):
 
     # loop
     @property
-    def loop(self) -> AbstractEventLoop:
+    def loop(self) -> asyncio.AbstractEventLoop:
         return self.__loop
 
     # executor
@@ -1993,11 +2003,11 @@ class Page(AdaptiveControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
+    def bgcolor(self) -> Optional[ColorValue]:
         return self.__default_view.bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
+    def bgcolor(self, value: Optional[ColorValue]):
         self.__default_view.bgcolor = value
 
     # scroll
@@ -2182,7 +2192,7 @@ class Page(AdaptiveControl):
         delete_version="0.26.0",
         is_method=False,
     )
-    def window_bgcolor(self) -> Optional[str]:
+    def window_bgcolor(self) -> Optional[ColorValue]:
         return self.__window.bgcolor
 
     @window_bgcolor.setter
@@ -2192,7 +2202,7 @@ class Page(AdaptiveControl):
         delete_version="0.26.0",
         is_method=False,
     )
-    def window_bgcolor(self, value: Optional[str]):
+    def window_bgcolor(self, value: Optional[ColorValue]):
         self.__window.bgcolor = value
 
     # window_width

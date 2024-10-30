@@ -3,15 +3,18 @@ from enum import Enum
 from typing import Any, Optional, Union
 
 from flet_core import ControlEvent
+from flet_core.badge import BadgeValue
 from flet_core.control import Control, OptionalNumber
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
 from flet_core.textfield import KeyboardType
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    ResponsiveNumber,
-    OptionalEventCallable,
+    IconEnums,
+    IconValue,
     OptionalControlEventCallable,
+    OptionalEventCallable,
+    ResponsiveNumber,
 )
 from flet_core.utils import deprecated
 
@@ -101,8 +104,8 @@ class DatePicker(Control):
         error_invalid_text: Optional[str] = None,
         field_hint_text: Optional[str] = None,
         field_label_text: Optional[str] = None,
-        switch_to_calendar_icon: Optional[str] = None,
-        switch_to_input_icon: Optional[str] = None,
+        switch_to_calendar_icon: Optional[IconValue] = None,
+        switch_to_input_icon: Optional[IconValue] = None,
         on_change: OptionalControlEventCallable = None,
         on_dismiss: OptionalControlEventCallable = None,
         on_entry_mode_change: OptionalEventCallable[
@@ -117,6 +120,7 @@ class DatePicker(Control):
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -129,6 +133,7 @@ class DatePicker(Control):
             col=col,
             opacity=opacity,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -343,21 +348,23 @@ class DatePicker(Control):
 
     # switch_to_calendar_icon
     @property
-    def switch_to_calendar_icon(self) -> Optional[str]:
-        return self._get_attr("switchToCalendarEntryModeIcon")
+    def switch_to_calendar_icon(self) -> Optional[IconValue]:
+        return self.__switch_to_calendar_icon
 
     @switch_to_calendar_icon.setter
-    def switch_to_calendar_icon(self, value: Optional[str]):
-        self._set_attr("switchToCalendarEntryModeIcon", value)
+    def switch_to_calendar_icon(self, value: Optional[IconValue]):
+        self.__switch_to_calendar_icon = value
+        self._set_enum_attr("switchToCalendarEntryModeIcon", value, IconEnums)
 
     # switch_to_input_icon
     @property
-    def switch_to_input_icon(self) -> Optional[str]:
-        return self._get_attr("switchToInputEntryModeIcon")
+    def switch_to_input_icon(self) -> Optional[IconValue]:
+        return self.__switch_to_input_icon
 
     @switch_to_input_icon.setter
-    def switch_to_input_icon(self, value: Optional[str]):
-        self._set_attr("switchToInputEntryModeIcon", value)
+    def switch_to_input_icon(self, value: Optional[IconValue]):
+        self.__switch_to_input_icon = value
+        self._set_enum_attr("switchToInputEntryModeIcon", value, IconEnums)
 
     # on_change
     @property

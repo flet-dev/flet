@@ -2,20 +2,25 @@ import time
 from typing import Any, Optional, Union
 
 from flet_core.adaptive_control import AdaptiveControl
+from flet_core.animation import AnimationValue
+from flet_core.badge import BadgeValue
 from flet_core.buttons import ButtonStyle
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
+    ClipBehavior,
+    ColorEnums,
+    ColorValue,
+    IconEnums,
+    IconValue,
     OffsetValue,
+    OptionalControlEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ClipBehavior,
     UrlTarget,
-    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -46,10 +51,10 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         text: Optional[str] = None,
-        icon: Optional[str] = None,
-        icon_color: Optional[str] = None,
-        color: Optional[str] = None,
-        bgcolor: Optional[str] = None,
+        icon: Optional[IconValue] = None,
+        icon_color: Optional[ColorValue] = None,
+        color: Optional[ColorValue] = None,
+        bgcolor: Optional[ColorValue] = None,
         content: Optional[Control] = None,
         elevation: OptionalNumber = None,
         style: Optional[ButtonStyle] = None,
@@ -81,14 +86,15 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -120,16 +126,13 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
         )
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
-
-        self.__color = None
-        self.__bgcolor = None
-        self.__elevation = None
 
         self.text = text
         self.color = color
@@ -157,27 +160,19 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         assert (
             self.text or self.icon or (self.__content and self.__content.visible)
         ), "at minimum, text, icon or a visible content must be provided"
-        if any([self.__color, self.__bgcolor, self.__elevation]):
-            self.__style = self.__style or ButtonStyle()
-        if self.__style:
-            self.__style.color = (
-                self.__style.color if self.__style.color is not None else self.color
-            )
-            self.__style.bgcolor = (
-                self.__style.bgcolor
-                if self.__style.bgcolor is not None
-                else self.bgcolor
-            )
-            self.__style.elevation = (
-                self.__style.elevation
-                if self.__style.elevation is not None
-                else self.elevation
-            )
-            self.__style.side = self._wrap_attr_dict(self.__style.side)
-            self.__style.shape = self._wrap_attr_dict(self.__style.shape)
-            self.__style.padding = self._wrap_attr_dict(self.__style.padding)
-            self.__style.text_style = self._wrap_attr_dict(self.__style.text_style)
-        self._set_attr_json("style", self.__style)
+        style = self.__style or ButtonStyle()
+        if self.__color is not None:
+            style.color = self.__color
+        if self.__bgcolor is not None:
+            style.bgcolor = self.__bgcolor
+        if self.__elevation is not None:
+            style.elevation = self.__elevation
+
+        style.side = self._wrap_attr_dict(style.side)
+        style.shape = self._wrap_attr_dict(style.shape)
+        style.padding = self._wrap_attr_dict(style.padding)
+        style.text_style = self._wrap_attr_dict(style.text_style)
+        self._set_attr_json("style", style)
 
     def _get_children(self):
         if self.__content is None:
@@ -208,22 +203,22 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     # color
     @property
-    def color(self) -> Optional[str]:
+    def color(self) -> Optional[ColorValue]:
         return self.__color
 
     @color.setter
-    def color(self, value: Optional[str]):
+    def color(self, value: Optional[ColorValue]):
         self.__color = value
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
+    def bgcolor(self) -> Optional[ColorValue]:
         return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
+    def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_attr("bgColor", value)
+        self._set_enum_attr("bgColor", value, ColorEnums)
 
     # elevation
     @property
@@ -245,21 +240,23 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     # icon
     @property
-    def icon(self) -> Optional[str]:
-        return self._get_attr("icon")
+    def icon(self) -> Optional[IconValue]:
+        return self.__icon
 
     @icon.setter
-    def icon(self, value: Optional[str]):
-        self._set_attr("icon", value)
+    def icon(self, value: Optional[IconValue]):
+        self.__icon = value
+        self._set_enum_attr("icon", value, IconEnums)
 
     # icon_color
     @property
-    def icon_color(self) -> Optional[str]:
-        return self._get_attr("iconColor")
+    def icon_color(self) -> Optional[ColorValue]:
+        return self.__icon_color
 
     @icon_color.setter
-    def icon_color(self, value: Optional[str]):
-        self._set_attr("iconColor", value)
+    def icon_color(self, value: Optional[ColorValue]):
+        self.__icon_color = value
+        self._set_enum_attr("iconColor", value, ColorEnums)
 
     # url
     @property

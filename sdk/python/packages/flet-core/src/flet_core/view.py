@@ -1,25 +1,26 @@
-from typing import List, Optional, Union, Sequence
+from typing import List, Optional, Sequence, Union
 
 from flet_core.adaptive_control import AdaptiveControl
 from flet_core.app_bar import AppBar
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.box import BoxDecoration
-from flet_core.control import Control
-from flet_core.control import OptionalNumber
+from flet_core.control import Control, OptionalNumber
 from flet_core.cupertino_app_bar import CupertinoAppBar
 from flet_core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet_core.floating_action_button import FloatingActionButton
 from flet_core.navigation_bar import NavigationBar
 from flet_core.navigation_drawer import NavigationDrawer
-from flet_core.scrollable_control import ScrollableControl, OnScrollEvent
+from flet_core.scrollable_control import OnScrollEvent, ScrollableControl
 from flet_core.types import (
+    ColorEnums,
+    ColorValue,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     MainAxisAlignment,
     OffsetValue,
+    OptionalEventCallable,
     PaddingValue,
     ScrollMode,
-    OptionalEventCallable,
 )
 
 
@@ -51,7 +52,7 @@ class View(ScrollableControl, AdaptiveControl):
         horizontal_alignment: Optional[CrossAxisAlignment] = None,
         spacing: OptionalNumber = None,
         padding: PaddingValue = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         decoration: Optional[BoxDecoration] = None,
         foreground_decoration: Optional[BoxDecoration] = None,
         #
@@ -264,12 +265,13 @@ class View(ScrollableControl, AdaptiveControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # fullscreen_dialog
     @property

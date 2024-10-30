@@ -1,20 +1,20 @@
-import json
 import warnings
 from dataclasses import dataclass
-from enum import Enum
+from enum import Enum, EnumMeta
 from typing import Any, Optional, Union, cast
+from warnings import warn
 
+from flet_core.animation import AnimationValue
+from flet_core.badge import BadgeValue
 from flet_core.box import BoxDecoration
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
-from flet_core.control_event import ControlEvent
 from flet_core.event_handler import EventHandler
 from flet_core.ref import Ref
-from flet_core.text import TextSelection
+from flet_core.text import TextSelectionChangeEvent
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     MainAxisAlignment,
     OffsetValue,
     OptionalControlEventCallable,
@@ -39,7 +39,31 @@ class MarkdownExtensionSet(Enum):
     GITHUB_FLAVORED = "gitHubFlavored"
 
 
-class MarkdownSelectionChangeCause(Enum):
+class MarkdownSelectionChangeCauseDeprecated(EnumMeta):
+    def __getattribute__(self, item):
+        if item in [
+            "UNKNOWN",
+            "TAP",
+            "DOUBLE_TAP",
+            "LONG_PRESS",
+            "FORCE_PRESS",
+            "KEYBOARD",
+            "TOOLBAR",
+            "DRAG",
+            "SCRIBBLE",
+        ]:
+            warn(
+                "MarkdownSelectionChangeCause enum is deprecated since version 0.25.0 "
+                "and will be removed in version 0.28.0. Use TextSelectionChangeCause enum instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+        return EnumMeta.__getattribute__(self, item)
+
+
+class MarkdownSelectionChangeCause(
+    Enum, metaclass=MarkdownSelectionChangeCauseDeprecated
+):
     UNKNOWN = "unknown"
     TAP = "tap"
     DOUBLE_TAP = "doubleTap"
@@ -51,26 +75,9 @@ class MarkdownSelectionChangeCause(Enum):
     SCRIBBLE = "scribble"
 
 
-class MarkdownSelectionChangeEvent(ControlEvent):
-    def __init__(self, e: ControlEvent):
-        super().__init__(e.target, e.name, e.data, e.control, e.page)
-        d = json.loads(e.data)
-        self.text: str = d.get("text")
-        self.cause = MarkdownSelectionChangeCause(d.get("cause"))
-        start = d.get("start")
-        end = d.get("end")
-        self.selection = TextSelection(
-            start=start,
-            end=end,
-            selection=self.text[start:end] if start != -1 and end != -1 else "",
-            base_offset=d.get("base_offset"),
-            extent_offset=d.get("extent_offset"),
-            affinity=d.get("affinity"),
-            directional=d.get("directional"),
-            collapsed=d.get("collapsed"),
-            valid=d.get("valid"),
-            normalized=d.get("normalized"),
-        )
+# deprecated in v0.25.0 and will be removed in v0.28.0
+class MarkdownSelectionChangeEvent(TextSelectionChangeEvent):
+    pass
 
 
 @dataclass
@@ -243,7 +250,9 @@ class Markdown(ConstrainedControl):
         code_style_sheet: Optional[MarkdownStyleSheet] = None,
         md_style_sheet: Optional[MarkdownStyleSheet] = None,
         on_tap_text: OptionalControlEventCallable = None,
-        on_selection_change: OptionalControlEventCallable = None,
+        on_selection_change: OptionalEventCallable[
+            Union[TextSelectionChangeEvent, MarkdownSelectionChangeEvent]
+        ] = None,
         on_tap_link: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
@@ -264,14 +273,15 @@ class Markdown(ConstrainedControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -302,14 +312,13 @@ class Markdown(ConstrainedControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
         )
 
-        self.__on_selection_change = EventHandler(
-            lambda e: MarkdownSelectionChangeEvent(e)
-        )
+        self.__on_selection_change = EventHandler(lambda e: TextSelectionChangeEvent(e))
 
         self._add_event_handler(
             "selection_change", self.__on_selection_change.get_handler()
@@ -504,11 +513,16 @@ class Markdown(ConstrainedControl):
     @property
     def on_selection_change(
         self,
-    ) -> OptionalEventCallable[MarkdownSelectionChangeEvent]:
+    ) -> OptionalEventCallable[
+        Union[TextSelectionChangeEvent, MarkdownSelectionChangeEvent]
+    ]:
         return self.__on_selection_change.handler
 
     @on_selection_change.setter
     def on_selection_change(
-        self, handler: OptionalEventCallable[MarkdownSelectionChangeEvent]
+        self,
+        handler: OptionalEventCallable[
+            Union[TextSelectionChangeEvent, MarkdownSelectionChangeEvent]
+        ],
     ):
         self.__on_selection_change.handler = handler

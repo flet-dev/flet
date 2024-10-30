@@ -1,8 +1,10 @@
 from typing import Any, Optional
 
+from flet_core.badge import BadgeValue
 from flet_core.control import Control, OptionalNumber
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
+from flet_core.types import ColorEnums, ColorValue
 
 
 class Divider(Control):
@@ -50,7 +52,7 @@ class Divider(Control):
         self,
         height: OptionalNumber = None,
         thickness: OptionalNumber = None,
-        color: Optional[str] = None,
+        color: Optional[ColorValue] = None,
         leading_indent: OptionalNumber = None,
         trailing_indent: OptionalNumber = None,
         #
@@ -59,6 +61,7 @@ class Divider(Control):
         ref: Optional[Ref] = None,
         opacity: OptionalNumber = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         data: Any = None,
     ):
@@ -68,6 +71,7 @@ class Divider(Control):
             ref=ref,
             opacity=opacity,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             data=data,
         )
@@ -103,12 +107,13 @@ class Divider(Control):
 
     # color
     @property
-    def color(self) -> Optional[str]:
-        return self._get_attr("color")
+    def color(self) -> Optional[ColorValue]:
+        return self.__color
 
     @color.setter
-    def color(self, value: Optional[str]):
-        self._set_attr("color", value)
+    def color(self, value: Optional[ColorValue]):
+        self.__color = value
+        self._set_enum_attr("color", value, ColorEnums)
 
     # leading_indent
     @property

@@ -1,11 +1,12 @@
 from typing import Any, Optional, Union
 
+from flet_core.badge import BadgeValue
 from flet_core.buttons import ButtonStyle
 from flet_core.control import Control, OptionalNumber
 from flet_core.elevated_button import ElevatedButton
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
-from flet_core.types import ResponsiveNumber, UrlTarget
+from flet_core.types import ColorValue, IconValue, ResponsiveNumber, UrlTarget
 
 
 class FilledTonalButton(ElevatedButton):
@@ -36,8 +37,11 @@ class FilledTonalButton(ElevatedButton):
     def __init__(
         self,
         text: Optional[str] = None,
-        icon: Optional[str] = None,
-        icon_color: Optional[str] = None,
+        color: Optional[ColorValue] = None,
+        bgcolor: Optional[ColorValue] = None,
+        elevation: OptionalNumber = None,
+        icon: Optional[IconValue] = None,
+        icon_color: Optional[ColorValue] = None,
         style: Optional[ButtonStyle] = None,
         content: Optional[Control] = None,
         autofocus: Optional[bool] = None,
@@ -58,6 +62,7 @@ class FilledTonalButton(ElevatedButton):
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -74,15 +79,16 @@ class FilledTonalButton(ElevatedButton):
             col=col,
             opacity=opacity,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
             #
             # Specific
             #
-            color="onSecondaryContainer",
-            bgcolor="secondaryContainer",
-            elevation=0,
+            color=color,
+            bgcolor=bgcolor,
+            elevation=elevation,
             style=style,
             text=text,
             icon=icon,
@@ -96,3 +102,6 @@ class FilledTonalButton(ElevatedButton):
             on_hover=on_hover,
             adaptive=adaptive,
         )
+
+    def _get_control_name(self):
+        return "filledtonalbutton"

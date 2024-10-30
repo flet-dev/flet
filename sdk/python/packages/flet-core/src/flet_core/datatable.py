@@ -1,6 +1,8 @@
 import json
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, List, Optional, Union
 
+from flet_core.animation import AnimationValue
+from flet_core.badge import BadgeValue
 from flet_core.border import Border, BorderSide
 from flet_core.constrained_control import ConstrainedControl
 from flet_core.control import Control, OptionalNumber
@@ -12,17 +14,18 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
     BorderRadiusValue,
-    ControlState,
+    ClipBehavior,
+    ColorEnums,
+    ColorValue,
+    ControlStateValue,
+    MainAxisAlignment,
     OffsetValue,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ClipBehavior,
-    OptionalEventCallable,
-    OptionalControlEventCallable,
-    MainAxisAlignment,
 )
 
 
@@ -245,7 +248,7 @@ class DataRow(Control):
     def __init__(
         self,
         cells: List[DataCell],
-        color: Union[None, str, Dict[ControlState, str]] = None,
+        color: ControlStateValue[ColorValue] = None,
         selected: Optional[bool] = None,
         on_long_press: OptionalControlEventCallable = None,
         on_select_changed: OptionalControlEventCallable = None,
@@ -273,7 +276,7 @@ class DataRow(Control):
         assert any(
             cell.visible for cell in self.__cells
         ), "cells must contain at minimum one visible DataCell"
-        self._set_attr_json("color", self.__color)
+        self._set_attr_json("color", self.__color, wrap_attr_dict=True)
 
     def _get_children(self):
         return self.__cells
@@ -292,11 +295,11 @@ class DataRow(Control):
 
     # color
     @property
-    def color(self) -> Union[None, str, Dict[ControlState, str]]:
+    def color(self) -> ControlStateValue[str]:
         return self.__color
 
     @color.setter
-    def color(self, value: Union[None, str, Dict[ControlState, str]]):
+    def color(self, value: ControlStateValue[str]):
         self.__color = value
 
     # selected
@@ -344,14 +347,14 @@ class DataTable(ConstrainedControl):
         vertical_lines: Optional[BorderSide] = None,
         checkbox_horizontal_margin: OptionalNumber = None,
         column_spacing: OptionalNumber = None,
-        data_row_color: Union[None, str, Dict[ControlState, str]] = None,
+        data_row_color: ControlStateValue[ColorValue] = None,
         data_row_min_height: OptionalNumber = None,
         data_row_max_height: OptionalNumber = None,
         data_text_style: Optional[TextStyle] = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         gradient: Optional[Gradient] = None,
         divider_thickness: OptionalNumber = None,
-        heading_row_color: Union[None, str, Dict[ControlState, str]] = None,
+        heading_row_color: ControlStateValue[ColorValue] = None,
         heading_row_height: OptionalNumber = None,
         heading_text_style: Optional[TextStyle] = None,
         horizontal_margin: OptionalNumber = None,
@@ -376,14 +379,15 @@ class DataTable(ConstrainedControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -414,6 +418,7 @@ class DataTable(ConstrainedControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -581,11 +586,11 @@ class DataTable(ConstrainedControl):
 
     # data_row_color
     @property
-    def data_row_color(self) -> Union[None, str, Dict[ControlState, str]]:
+    def data_row_color(self) -> ControlStateValue[str]:
         return self.__data_row_color
 
     @data_row_color.setter
-    def data_row_color(self, value: Union[None, str, Dict[ControlState, str]]):
+    def data_row_color(self, value: ControlStateValue[str]):
         self.__data_row_color = value
 
     # data_row_min_height
@@ -617,12 +622,13 @@ class DataTable(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgColor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgColor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgColor", value, ColorEnums)
 
     # gradient
     @property
@@ -635,11 +641,11 @@ class DataTable(ConstrainedControl):
 
     # heading_row_color
     @property
-    def heading_row_color(self) -> Union[None, str, Dict[ControlState, str]]:
+    def heading_row_color(self) -> ControlStateValue[str]:
         return self.__heading_row_color
 
     @heading_row_color.setter
-    def heading_row_color(self, value: Union[None, str, Dict[ControlState, str]]):
+    def heading_row_color(self, value: ControlStateValue[str]):
         self.__heading_row_color = value
 
     # heading_row_height

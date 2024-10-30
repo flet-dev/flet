@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "flet-cli"
+version = "0.1.0"
+description = "Flet CLI"
+authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
+license = "Apache-2.0"
+readme = "README.md"
+
+packages = [{ include = "flet_cli", from = "src" }]
+
+[tool.poetry.urls]
+homepage = "https://flet.dev"
+repository = "https://github.com/flet-dev/flet"
+documentation = "https://flet.dev/docs"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+watchdog = "^4.0.0"
+packaging = "*"
+qrcode = "^7.4.2"
+toml = "^0.10.2"
+cookiecutter = "^2.6.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+float_to_top = true

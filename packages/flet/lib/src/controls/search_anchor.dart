@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/box.dart';
 import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/form_field.dart';
+import '../utils/numbers.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
 
@@ -52,7 +55,7 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
     });
     widget.backend.triggerControlEvent(
         widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
-    }
+  }
 
   @override
   void dispose() {
@@ -102,14 +105,6 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
     var viewTrailingCtrls =
         widget.children.where((c) => c.name == "viewTrailing" && c.isVisible);
 
-    var viewBgcolor = widget.control.attrColor("viewBgcolor", context);
-    var dividerColor = widget.control.attrColor("dividerColor", context);
-
-    TextStyle? viewHeaderTextStyle = parseTextStyle(
-        Theme.of(context), widget.control, "viewHeaderTextStyle");
-    TextStyle? viewHintTextStyle =
-        parseTextStyle(Theme.of(context), widget.control, "viewHintTextStyle");
-
     var textCapitalization = parseTextCapitalization(
         widget.control.attrString("textCapitalization"));
     TextInputType keyboardType = parseTextInputType(
@@ -155,15 +150,20 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
 
     Widget anchor = SearchAnchor(
         searchController: _controller,
-        headerHintStyle: viewHintTextStyle,
-        headerTextStyle: viewHeaderTextStyle,
+        headerHintStyle: parseTextStyle(
+            Theme.of(context), widget.control, "viewHintTextStyle"),
+        headerTextStyle: parseTextStyle(
+            Theme.of(context), widget.control, "viewHeaderTextStyle"),
         viewSide:
             parseBorderSide(Theme.of(context), widget.control, "viewSide"),
         isFullScreen: widget.control.attrBool("fullScreen", false),
-        viewBackgroundColor: viewBgcolor,
-        dividerColor: dividerColor,
+        viewBackgroundColor: widget.control.attrColor("viewBgcolor", context),
+        dividerColor: widget.control.attrColor("dividerColor", context),
         viewHintText: widget.control.attrString("viewHintText"),
         viewElevation: widget.control.attrDouble("viewElevation"),
+        headerHeight: widget.control.attrDouble("viewHeaderHeight"),
+        viewConstraints:
+            parseBoxConstraints(widget.control, "viewSizeConstraints"),
         viewShape: parseOutlinedBorder(widget.control, "viewShape"),
         viewTrailing: viewTrailingCtrls.isNotEmpty
             ? viewTrailingCtrls.map((ctrl) {
@@ -203,6 +203,19 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
             autoFocus: widget.control.attrBool("autoFocus", false)!,
             focusNode: _focusNode,
             hintText: widget.control.attrString("barHintText"),
+            elevation: parseWidgetStateDouble(widget.control, "barElevation"),
+            shape: parseWidgetStateOutlinedBorder(widget.control, "barShape"),
+            padding: parseWidgetStateEdgeInsets(widget.control, "barPadding"),
+            textStyle: parseWidgetStateTextStyle(
+                Theme.of(context), widget.control, "barTextStyle"),
+            hintStyle: parseWidgetStateTextStyle(
+                Theme.of(context), widget.control, "barHintTextStyle"),
+            shadowColor: parseWidgetStateColor(
+                Theme.of(context), widget.control, "barShadowColor"),
+            surfaceTintColor: parseWidgetStateColor(
+                Theme.of(context), widget.control, "barSurfaceTintColor"),
+            side: parseWidgetStateBorderSide(
+                Theme.of(context), widget.control, "barBorderSide"),
             backgroundColor: parseWidgetStateColor(
                 Theme.of(context), widget.control, "barBgcolor"),
             overlayColor: parseWidgetStateColor(
@@ -218,11 +231,18 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
                         parentAdaptive: widget.parentAdaptive);
                   })
                 : null,
-            onTap: () {
-              if (onTap) {
-                widget.backend.triggerControlEvent(widget.control.id, "tap");
-              }
-            },
+            onTap: onTap
+                ? () {
+                    widget.backend
+                        .triggerControlEvent(widget.control.id, "tap");
+                  }
+                : null,
+            onTapOutside: widget.control.attrBool("onTapOutsideBar", false)!
+                ? (PointerDownEvent? event) {
+                    widget.backend.triggerControlEvent(
+                        widget.control.id, "tapOutsideBar");
+                  }
+                : null,
             onSubmitted: onSubmit
                 ? (String value) {
                     debugPrint("SearchBar.onSubmit: $value");

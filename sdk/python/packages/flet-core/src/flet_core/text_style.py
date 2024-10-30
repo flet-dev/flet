@@ -1,10 +1,10 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum, IntFlag
 from typing import List, Optional, Union
 
 from flet_core.box import BoxShadow
 from flet_core.painting import Paint
-from flet_core.types import FontWeight, OptionalNumber
+from flet_core.types import ColorValue, FontWeight, OptionalNumber
 
 
 class TextOverflow(Enum):
@@ -54,20 +54,31 @@ class TextDecorationStyle(Enum):
 
 @dataclass
 class TextStyle:
-    size: OptionalNumber = field(default=None)
-    height: OptionalNumber = field(default=None)
-    weight: Optional[FontWeight] = field(default=None)
-    italic: Optional[bool] = field(default=None)
-    decoration: Optional[TextDecoration] = field(default=None)
-    decoration_color: Optional[str] = field(default=None)
-    decoration_thickness: OptionalNumber = field(default=None)
-    decoration_style: Optional[TextDecorationStyle] = field(default=None)
-    font_family: Optional[str] = field(default=None)
-    color: Optional[str] = field(default=None)
-    bgcolor: Optional[str] = field(default=None)
-    shadow: Union[None, BoxShadow, List[BoxShadow]] = field(default=None)
-    foreground: Optional[Paint] = field(default=None)
-    letter_spacing: OptionalNumber = field(default=None)
-    word_spacing: OptionalNumber = field(default=None)
-    overflow: Optional[TextOverflow] = field(default=None)
-    baseline: Optional[TextBaseline] = field(default=None)
+    size: OptionalNumber = None
+    height: OptionalNumber = None
+    weight: Optional[FontWeight] = None
+    italic: Optional[bool] = None
+    decoration: Optional[TextDecoration] = None
+    decoration_color: Optional[ColorValue] = None
+    decoration_thickness: OptionalNumber = None
+    decoration_style: Optional[TextDecorationStyle] = None
+    font_family: Optional[str] = None
+    color: Optional[ColorValue] = None
+    bgcolor: Optional[ColorValue] = None
+    shadow: Union[None, BoxShadow, List[BoxShadow]] = None
+    foreground: Optional[Paint] = None
+    letter_spacing: OptionalNumber = None
+    word_spacing: OptionalNumber = None
+    overflow: Optional[TextOverflow] = None
+    baseline: Optional[TextBaseline] = None
+
+
+@dataclass
+class StrutStyle:
+    size: OptionalNumber = None
+    height: OptionalNumber = None
+    weight: Optional[FontWeight] = None
+    italic: Optional[bool] = None
+    font_family: Optional[str] = None
+    leading: OptionalNumber = None
+    force_strut_height: Optional[bool] = None

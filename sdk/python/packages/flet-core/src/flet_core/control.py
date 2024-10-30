@@ -9,20 +9,23 @@ from typing import (
     Dict,
     List,
     Optional,
+    Tuple,
     Type,
     TypeVar,
     Union,
 )
 
+from flet_core.badge import BadgeValue
 from flet_core.embed_json_encoder import EmbedJsonEncoder
 from flet_core.protocol import Command
 from flet_core.ref import Ref
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
+    ControlState,
+    OptionalControlEventCallable,
     OptionalNumber,
     ResponsiveNumber,
     SupportsStr,
-    OptionalControlEventCallable,
 )
 from flet_core.utils import deprecated
 
@@ -47,6 +50,7 @@ class Control:
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -67,6 +71,7 @@ class Control:
         self.col = col
         self.opacity = opacity
         self.tooltip = tooltip
+        self.badge = badge
         self.visible = visible
         self.disabled = disabled
         self.__data: Any = None
@@ -88,6 +93,7 @@ class Control:
     def _before_build_command(self) -> None:
         self._set_attr_json("col", self.__col)
         self._set_attr_json("tooltip", self.tooltip)
+        self._set_attr_json("badge", self.badge)
 
     def did_mount(self):
         pass
@@ -143,7 +149,11 @@ class Control:
         self._set_attr_internal(name, value, dirty)
 
     def _set_enum_attr(
-        self, name: str, value: V, *enum_type: Type[Enum], dirty: bool = True
+        self,
+        name: str,
+        value: V,
+        enum_type: Union[Type[Enum], Tuple[Type[Enum], ...]],
+        dirty: bool = True,
     ) -> None:
         self._set_attr_internal(
             name, value.value if isinstance(value, enum_type) else value, dirty
@@ -173,13 +183,15 @@ class Control:
         if orig_val is None or orig_val[0] != value:
             self.__attrs[name] = (value, dirty)
 
-    def _set_attr_json(self, name: str, value: V) -> None:
+    def _set_attr_json(self, name: str, value: V, wrap_attr_dict: bool = False) -> None:
         ov = self._get_attr(name)
-        nv = self._convert_attr_json(value)
+        nv = self._convert_attr_json(
+            self._wrap_attr_dict(value) if wrap_attr_dict else value
+        )
         if ov != nv:
             self._set_attr(name, nv)
 
-    def _convert_attr_json(self, value: V) -> str:
+    def _convert_attr_json(self, value: V) -> Optional[str]:
         return (
             json.dumps(value, cls=EmbedJsonEncoder, separators=(",", ":"))
             if value is not None
@@ -189,7 +201,7 @@ class Control:
     def _wrap_attr_dict(self, value: Optional[Union[Dict, Any]]) -> Optional[Dict]:
         if value is None or isinstance(value, Dict):
             return value
-        return {"": value}
+        return {ControlState.DEFAULT: value}
 
     # event_handlers
     @property
@@ -337,6 +349,9 @@ class Control:
         assert (
             self.__page
         ), f"{self.__class__.__qualname__} Control must be added to the page first"
+        if arguments:
+            # remove items with None values and convert other values to string
+            arguments = {k: str(v) for k, v in arguments.items() if v is not None}
         return self.__page._invoke_method(
             control_id=self.uid,
             method_name=method_name,
@@ -355,6 +370,9 @@ class Control:
         assert (
             self.__page
         ), f"{self.__class__.__qualname__} Control must be added to the page first"
+        if arguments:
+            # remove items with None values and convert other values to string
+            arguments = {k: str(v) for k, v in arguments.items() if v is not None}
         return self.__page._invoke_method_async(
             control_id=self.uid,
             method_name=method_name,
@@ -364,23 +382,21 @@ class Control:
         )
 
     def copy_attrs(self, dest: Dict[str, Any]) -> None:
-        for attrName in sorted(self.__attrs):
-            attrName = attrName.lower()
-            dirty = self.__attrs[attrName][1]
+        for attr_name in sorted(self.__attrs):
+            attr_name_lower = attr_name.lower()
+            value, dirty = self.__attrs[attr_name_lower]
 
-            if dirty:
+            if dirty or value is None:
                 continue
-            val = self.__attrs[attrName][0]
-            sval = ""
-            if val is None:
-                continue
-            elif isinstance(val, bool):
-                sval = str(val).lower()
-            elif isinstance(val, dt.datetime) or isinstance(val, dt.date):
-                sval = val.isoformat()
+
+            if isinstance(value, bool):
+                sval = str(value).lower()
+            elif isinstance(value, (dt.datetime, dt.date)):
+                sval = value.isoformat()
             else:
-                sval = str(val)
-            dest[attrName] = sval
+                sval = str(value)
+
+            dest[attr_name_lower] = sval
 
     def build_update_commands(
         self, index, commands, added_controls, removed_controls, isolated: bool = False

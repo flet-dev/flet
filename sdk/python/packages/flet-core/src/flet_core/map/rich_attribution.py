@@ -1,11 +1,12 @@
 from enum import Enum
-from typing import Any, Optional, List
+from typing import Any, List, Optional
 
 from flet_core.border_radius import BorderRadius
 from flet_core.control import OptionalNumber
 from flet_core.map.map_layer import MapLayer
 from flet_core.map.text_source_attribution import TextSourceAttribution
 from flet_core.ref import Ref
+from flet_core.types import ColorEnums, ColorValue
 
 
 class AttributionAlignment(Enum):
@@ -27,7 +28,7 @@ class RichAttribution(MapLayer):
         self,
         attributions: List[TextSourceAttribution],
         alignment: Optional[AttributionAlignment] = None,
-        popup_bgcolor: Optional[str] = None,
+        popup_bgcolor: Optional[ColorValue] = None,
         popup_border_radius: Optional[BorderRadius] = None,
         popup_initial_display_duration: Optional[int] = None,
         permanent_height: OptionalNumber = None,
@@ -123,11 +124,12 @@ class RichAttribution(MapLayer):
     # popup_bgcolor
     @property
     def popup_bgcolor(self) -> Optional[str]:
-        return self._get_attr("popupBgcolor")
+        return self.__popup_bgcolor
 
     @popup_bgcolor.setter
     def popup_bgcolor(self, value: Optional[str]):
-        self._set_attr("popupBgcolor", value)
+        self.__popup_bgcolor = value
+        self._set_enum_attr("popupBgcolor", value, ColorEnums)
 
     # attributions
     @property

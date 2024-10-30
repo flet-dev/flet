@@ -1,5 +1,7 @@
-from typing import Any, Optional, Union, Dict
+from typing import Any, Optional, Union
 
+from flet_core.animation import AnimationValue
+from flet_core.badge import BadgeValue
 from flet_core.border import BorderSide
 from flet_core.buttons import OutlinedBorder
 from flet_core.constrained_control import ConstrainedControl
@@ -8,17 +10,18 @@ from flet_core.ref import Ref
 from flet_core.text_style import TextStyle
 from flet_core.tooltip import TooltipValue
 from flet_core.types import (
-    AnimationValue,
+    ClipBehavior,
+    ColorEnums,
+    ColorValue,
+    ControlStateValue,
     OffsetValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ClipBehavior,
-    ControlState,
     ThemeVisualDensity,
     VisualDensity,
-    OptionalControlEventCallable,
 )
 
 
@@ -73,24 +76,24 @@ class Chip(ConstrainedControl):
         label: Control,
         leading: Optional[Control] = None,
         selected: Optional[bool] = False,
-        selected_color: Optional[str] = None,
+        selected_color: Optional[ColorValue] = None,
         elevation: OptionalNumber = None,
-        bgcolor: Optional[str] = None,
+        bgcolor: Optional[ColorValue] = None,
         show_checkmark: Optional[bool] = None,
-        check_color: Optional[str] = None,
-        shadow_color: Optional[str] = None,
+        check_color: Optional[ColorValue] = None,
+        shadow_color: Optional[ColorValue] = None,
         shape: Optional[OutlinedBorder] = None,
         padding: PaddingValue = None,
         delete_icon: Optional[Control] = None,
         delete_icon_tooltip: Optional[str] = None,
-        delete_icon_color: Optional[str] = None,
-        disabled_color: Optional[str] = None,
+        delete_icon_color: Optional[ColorValue] = None,
+        disabled_color: Optional[ColorValue] = None,
         label_padding: PaddingValue = None,
         label_style: Optional[TextStyle] = None,
-        selected_shadow_color: Optional[str] = None,
+        selected_shadow_color: Optional[ColorValue] = None,
         autofocus: Optional[bool] = None,
-        surface_tint_color: Optional[str] = None,
-        color: Union[None, str, Dict[Union[ControlState, str], str]] = None,
+        surface_tint_color: Optional[ColorValue] = None,
+        color: ControlStateValue[ColorValue] = None,
         click_elevation: OptionalNumber = None,
         clip_behavior: Optional[ClipBehavior] = None,
         visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
@@ -118,14 +121,15 @@ class Chip(ConstrainedControl):
         scale: ScaleValue = None,
         offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: AnimationValue = None,
-        animate_size: AnimationValue = None,
-        animate_position: AnimationValue = None,
-        animate_rotation: AnimationValue = None,
-        animate_scale: AnimationValue = None,
-        animate_offset: AnimationValue = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
+        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -160,6 +164,7 @@ class Chip(ConstrainedControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
+            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -205,7 +210,7 @@ class Chip(ConstrainedControl):
         self._set_attr_json("labelStyle", self.__label_style)
         self._set_attr_json("padding", self.__padding)
         self._set_attr_json("shape", self.__shape)
-        self._set_attr_json("color", self.__color)
+        self._set_attr_json("color", self.__color, wrap_attr_dict=True)
 
     def _get_children(self):
         self.__label._set_attr_internal("n", "label")
@@ -301,29 +306,31 @@ class Chip(ConstrainedControl):
 
     # delete_icon_color
     @property
-    def delete_icon_color(self) -> Optional[str]:
-        return self._get_attr("deleteIconColor")
+    def delete_icon_color(self) -> Optional[ColorValue]:
+        return self.__delete_icon_color
 
     @delete_icon_color.setter
-    def delete_icon_color(self, value: Optional[str]):
-        self._set_attr("deleteIconColor", value)
+    def delete_icon_color(self, value: Optional[ColorValue]):
+        self.__delete_icon_color = value
+        self._set_enum_attr("deleteIconColor", value, ColorEnums)
 
     # disabled_color
     @property
-    def disabled_color(self) -> Optional[str]:
-        return self._get_attr("disabledColor")
+    def disabled_color(self) -> Optional[ColorValue]:
+        return self.__disabled_color
 
     @disabled_color.setter
-    def disabled_color(self, value: Optional[str]):
-        self._set_attr("disabledColor", value)
+    def disabled_color(self, value: Optional[ColorValue]):
+        self.__disabled_color = value
+        self._set_enum_attr("disabledColor", value, ColorEnums)
 
     # color
     @property
-    def color(self) -> Union[None, str, Dict[ControlState, str]]:
+    def color(self) -> ControlStateValue[str]:
         return self.__color
 
     @color.setter
-    def color(self, value: Union[None, str, Dict[ControlState, str]]):
+    def color(self, value: ControlStateValue[str]):
         self.__color = value
 
     # autofocus
@@ -337,57 +344,63 @@ class Chip(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[str]:
-        return self._get_attr("bgcolor")
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[str]):
-        self._set_attr("bgcolor", value)
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # check_color
     @property
-    def check_color(self) -> Optional[str]:
-        return self._get_attr("checkColor")
+    def check_color(self) -> Optional[ColorValue]:
+        return self.__check_color
 
     @check_color.setter
-    def check_color(self, value: Optional[str]):
-        self._set_attr("checkColor", value)
+    def check_color(self, value: Optional[ColorValue]):
+        self.__check_color = value
+        self._set_enum_attr("checkColor", value, ColorEnums)
 
     # selected_color
     @property
-    def selected_color(self) -> Optional[str]:
-        return self._get_attr("selectedColor")
+    def selected_color(self) -> Optional[ColorValue]:
+        return self.__selected_color
 
     @selected_color.setter
-    def selected_color(self, value: Optional[str]):
-        self._set_attr("selectedColor", value)
+    def selected_color(self, value: Optional[ColorValue]):
+        self.__selected_color = value
+        self._set_enum_attr("selectedColor", value, ColorEnums)
 
     # selected_shadow_color
     @property
-    def selected_shadow_color(self) -> Optional[str]:
-        return self._get_attr("selectedShadowColor")
+    def selected_shadow_color(self) -> Optional[ColorValue]:
+        return self.__selected_shadow_color
 
     @selected_shadow_color.setter
-    def selected_shadow_color(self, value: Optional[str]):
-        self._set_attr("selectedShadowColor", value)
+    def selected_shadow_color(self, value: Optional[ColorValue]):
+        self.__selected_shadow_color = value
+        self._set_enum_attr("selectedShadowColor", value, ColorEnums)
 
     # surface_tint_color
     @property
-    def surface_tint_color(self) -> Optional[str]:
-        return self._get_attr("surfaceTintColor")
+    def surface_tint_color(self) -> Optional[ColorValue]:
+        return self.__surface_tint_color
 
     @surface_tint_color.setter
-    def surface_tint_color(self, value: Optional[str]):
-        self._set_attr("surfaceTintColor", value)
+    def surface_tint_color(self, value: Optional[ColorValue]):
+        self.__surface_tint_color = value
+        self._set_enum_attr("surfaceTintColor", value, ColorEnums)
 
     # shadow_color
     @property
-    def shadow_color(self) -> Optional[str]:
-        return self._get_attr("shadowColor")
+    def shadow_color(self) -> Optional[ColorValue]:
+        return self.__shadow_color
 
     @shadow_color.setter
-    def shadow_color(self, value: Optional[str]):
-        self._set_attr("shadowColor", value)
+    def shadow_color(self, value: Optional[ColorValue]):
+        self.__shadow_color = value
+        self._set_enum_attr("shadowColor", value, ColorEnums)
 
     # elevation
     @property
@@ -424,7 +437,7 @@ class Chip(ConstrainedControl):
     @visual_density.setter
     def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, ThemeVisualDensity, VisualDensity)
+        self._set_enum_attr("visualDensity", value, (ThemeVisualDensity, VisualDensity))
 
     # clip_behavior
     @property
