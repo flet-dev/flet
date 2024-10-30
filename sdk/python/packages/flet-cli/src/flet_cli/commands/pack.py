@@ -136,7 +136,10 @@ class Command(BaseCommand):
             import flet.version
             import flet_desktop.version
 
-            assert flet_desktop.version == flet.version.version
+            assert (
+                not flet_desktop.version.version
+                or flet_desktop.version == flet.version.version
+            )
         except:
             from flet_cli.utils.pip import install_flet_package
 

@@ -1,11 +1,11 @@
 import subprocess
 import sys
 
-import flet_cli.version
+import flet.version
 
 
 def install_flet_package(name: str):
-    subprocess.call(
+    retcode = subprocess.call(
         [
             sys.executable,
             "-m",
@@ -13,6 +13,11 @@ def install_flet_package(name: str):
             "install",
             "-q",
             "--disable-pip-version-check",
-            f"{name}=={flet_cli.version.version}",
+            f"{name}=={flet.version.version}",
         ]
     )
+    if retcode != 0:
+        print(
+            f'Unable to upgrade "{name}" package to version {flet.version.version}. Please use "pip install \'flet[all]\' --upgrade" command to upgrade Flet.'
+        )
+        exit(1)

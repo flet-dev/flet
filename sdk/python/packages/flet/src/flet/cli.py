@@ -8,7 +8,10 @@ def main():
     try:
         import flet_cli.version
 
-        assert flet_cli.version.version == flet.version.version
+        assert (
+            not flet_cli.version.version
+            or flet_cli.version.version == flet.version.version
+        )
     except:
         subprocess.call(
             [

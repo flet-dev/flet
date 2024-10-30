@@ -136,7 +136,10 @@ class Command(BaseCommand):
                 import flet.version
                 import flet_web.version
 
-                assert flet_web.version.version == flet.version
+                assert (
+                    not flet_web.version.version
+                    or flet_web.version.version == flet.version
+                )
             except:
                 install_flet_package("flet-web")
         else:
@@ -144,7 +147,10 @@ class Command(BaseCommand):
                 import flet.version
                 import flet_desktop.version
 
-                assert flet_desktop.version.version == flet.version
+                assert (
+                    not flet_desktop.version.version
+                    or flet_desktop.version.version == flet.version
+                )
             except:
                 install_flet_package("flet-desktop")
         from flet_desktop import close_flet_view

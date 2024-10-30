@@ -94,7 +94,9 @@ class Command(BaseCommand):
             import flet.version
             import flet_web.version
 
-            assert flet_web.version.version == flet.version
+            assert (
+                not flet_web.version.version or flet_web.version.version == flet.version
+            )
         except:
             from flet_cli.utils.pip import install_flet_package
 
