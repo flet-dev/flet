@@ -79,6 +79,7 @@ class LayoutBuilder(ConstrainedControl, AdaptiveControl):
         alignment: Optional[Alignment] = None,
         fit: Optional[StackFit] = None,
         expand: Union[None, bool, int] = None,
+        on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -93,8 +94,6 @@ class LayoutBuilder(ConstrainedControl, AdaptiveControl):
             self,
             ref=ref,
             key=key,
-            width=None,
-            height=None,
             expand=expand,
             visible=visible,
             disabled=disabled,
@@ -106,7 +105,28 @@ class LayoutBuilder(ConstrainedControl, AdaptiveControl):
         self.content = content
         self.clip_behavior = clip_behavior
         self.alignment = alignment
+        self.__on_change_callback = on_change
+        self.on_change = self.__on_change
         self.fit = fit
+
+        self.__width_layout = None
+        self.__height_layout = None
+    
+    def __on_change(self,e):
+        data = e.data
+        data = data.split(" ")
+        width = data[0]
+        height = data[1]
+        if height!=self.__height_layout or width!=self.__width_layout:
+            self.__width_layout = width
+            self.__height_layout = height
+            print(width,height)
+            
+            
+
+
+
+
 
     def _get_control_name(self):
         return "layoutbuilder"
@@ -121,17 +141,7 @@ class LayoutBuilder(ConstrainedControl, AdaptiveControl):
     def before_update(self):
         super().before_update()
         self._set_attr_json("alignment", self.__alignment)
-
-    # # controls
-    # @property
-    # def controls(self):
-    #     return self.__controls
-
-    # @controls.setter
-    # def controls(self, value: Optional[Sequence[Control]]):
-    #     self.__controls = list(value) if value is not None else []
-
-
+  
     # content
     @property
     def content(self) -> Optional[Control]:
@@ -159,22 +169,15 @@ class LayoutBuilder(ConstrainedControl, AdaptiveControl):
     @alignment.setter
     def alignment(self, value: Optional[Alignment]):
         self.__alignment = value
-
-    # # fit
-    # @property
-    # def fit(self) -> Optional[StackFit]:
-    #     return self.__fit
-
-    # @fit.setter
-    # def fit(self, value: Optional[StackFit]):
-    #     self.__fit = value
-    #     self._set_enum_attr("fit", value, StackFit)
     
-    # @property
-    # def layout_size(self) -> Optional[str]:
-    #     width = self._get_attr("widthLayout")
-    #     height = self._get_attr("heightLayout")
-    #     print(width,height)
+    # on_change
+    @property
+    def on_change(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("change")
+
+    @on_change.setter
+    def on_change(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("change", handler)
 
     def __convert_to_float(self,value):
         v = None
@@ -184,9 +187,14 @@ class LayoutBuilder(ConstrainedControl, AdaptiveControl):
             pass
         return v
 
+    def get_width(self) -> Union[float,None]:
+        return self.__convert_to_float(self._get_attr("widthLayout"))
+
+    def get_height(self) -> Union[float,None]:
+        return self.__convert_to_float(self._get_attr("heightLayout"))
 
     def get_size(self) -> Union[float,None]:
-        width = self.__convert_to_float(self._get_attr("widthLayout"))
-        height = self.__convert_to_float(self._get_attr("heightLayout"))
+        width = self.get_width()
+        height = self.get_height()
         return width,height
     

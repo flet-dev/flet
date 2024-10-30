@@ -38,12 +38,15 @@ class LayoutBuilderControl extends StatefulWidget {
 
 class _LayoutBuilderControlState extends State<LayoutBuilderControl>
     with FletStoreMixin {
-
+  bool _hasChanged = false;
 
   void updateAttributes(double width,double height) {
     widget.backend.updateControlState(widget.control.id, {"widthLayout": width.toString()});
     widget.backend.updateControlState(widget.control.id, {"heightLayout": height.toString()});
   }
+  void onChange(double width,double height){
+    widget.backend.triggerControlEvent(widget.control.id, "change", "$height $width");
+    }
 
 
   @override
@@ -51,6 +54,7 @@ class _LayoutBuilderControlState extends State<LayoutBuilderControl>
     debugPrint("Stack with layout builder build: ${widget.control.id}");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     bool? adaptive = widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+    
 
     
     var contentCtrls =
@@ -72,6 +76,12 @@ class _LayoutBuilderControlState extends State<LayoutBuilderControl>
           double containerHeight = constraints.maxHeight;
 
           updateAttributes(containerWidth, containerHeight);
+
+          if (_hasChanged){                           //avoid first trigger after adding widget
+            onChange(containerWidth, containerHeight); 
+          } else {
+            _hasChanged = true;
+          }
 
           debugPrint("LayoutBuilder dimensions: Width: $containerWidth, Height: $containerHeight");
          
