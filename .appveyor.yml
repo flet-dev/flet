@@ -199,7 +199,7 @@ for:
       - ps: |
           $ErrorActionPreference = "Stop"
           $env:PYPI_VER = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
-          $vp = "$env:flet_sdk_root/packages/flet/src/flet/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
+          $vp = "$env:flet_sdk_root/packages/flet-desktop/src/flet_desktop/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
       - python ci/patch_toml_versions.py %flet_sdk_root%/packages/flet-desktop/pyproject.toml %PYPI_VER%
 
       - cd client
