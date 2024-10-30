@@ -23,9 +23,9 @@ from flet_core.animation import Animation, AnimationCurve
 from flet_core.app_bar import AppBar
 from flet_core.audio import (
     Audio,
-    AudioState,
     AudioDurationChangeEvent,
     AudioPositionChangeEvent,
+    AudioState,
     AudioStateChangeEvent,
 )
 from flet_core.audio_recorder import (
@@ -36,8 +36,8 @@ from flet_core.audio_recorder import (
 )
 from flet_core.auto_complete import (
     AutoComplete,
-    AutoCompleteSuggestion,
     AutoCompleteSelectEvent,
+    AutoCompleteSuggestion,
 )
 from flet_core.autofill_group import (
     AutofillGroup,
@@ -52,15 +52,16 @@ from flet_core.border_radius import BorderRadius
 from flet_core.bottom_app_bar import BottomAppBar
 from flet_core.bottom_sheet import BottomSheet
 from flet_core.box import (
-    BoxShadow,
-    ShadowBlurStyle,
-    BoxDecoration,
-    BoxShape,
     BoxConstraints,
+    BoxDecoration,
+    BoxShadow,
+    BoxShape,
+    ColorFilter,
     DecorationImage,
     FilterQuality,
-    ColorFilter,
+    ShadowBlurStyle,
 )
+from flet_core.button import Button
 from flet_core.buttons import (
     BeveledRectangleBorder,
     ButtonStyle,
@@ -137,8 +138,8 @@ from flet_core.datatable import (
 from flet_core.date_picker import (
     DatePicker,
     DatePickerEntryMode,
-    DatePickerMode,
     DatePickerEntryModeChangeEvent,
+    DatePickerMode,
 )
 from flet_core.dismissible import (
     Dismissible,
@@ -167,12 +168,12 @@ from flet_core.floating_action_button import FloatingActionButton
 from flet_core.form_field_control import InputBorder
 from flet_core.geolocator import (
     Geolocator,
-    GeolocatorPositionAccuracy,
-    GeolocatorPermissionStatus,
-    GeolocatorPosition,
     GeolocatorActivityType,
     GeolocatorAndroidSettings,
     GeolocatorAppleSettings,
+    GeolocatorPermissionStatus,
+    GeolocatorPosition,
+    GeolocatorPositionAccuracy,
     GeolocatorPositionChangeEvent,
     GeolocatorSettings,
     GeolocatorWebSettings,
@@ -205,9 +206,9 @@ from flet_core.icon_button import IconButton
 from flet_core.image import Image
 from flet_core.interactive_viewer import (
     InteractiveViewer,
+    InteractiveViewerInteractionEndEvent,
     InteractiveViewerInteractionStartEvent,
     InteractiveViewerInteractionUpdateEvent,
-    InteractiveViewerInteractionEndEvent,
 )
 from flet_core.list_tile import ListTile, ListTileStyle, ListTileTitleAlignment
 from flet_core.list_view import ListView
@@ -215,19 +216,19 @@ from flet_core.lottie import Lottie
 from flet_core.margin import Margin
 from flet_core.markdown import (
     Markdown,
-    MarkdownExtensionSet,
-    MarkdownSelectionChangeEvent,
-    MarkdownSelectionChangeCause,
-    MarkdownStyleSheet,
     MarkdownCodeTheme,
+    MarkdownExtensionSet,
+    MarkdownSelectionChangeCause,
+    MarkdownSelectionChangeEvent,
+    MarkdownStyleSheet,
 )
 from flet_core.menu_bar import MenuBar, MenuStyle
 from flet_core.menu_item_button import MenuItemButton
 from flet_core.navigation_bar import (
     NavigationBar,
     NavigationBarDestination,
-    NavigationDestination,
     NavigationBarLabelBehavior,
+    NavigationDestination,
 )
 from flet_core.navigation_drawer import (
     NavigationDrawer,
@@ -243,6 +244,7 @@ from flet_core.outlined_button import OutlinedButton
 from flet_core.padding import Padding
 from flet_core.page import (
     AppLifecycleStateChangeEvent,
+    BrowserContextMenu,
     KeyboardEvent,
     Locale,
     LocaleConfiguration,
@@ -252,12 +254,11 @@ from flet_core.page import (
     PageMediaData,
     RouteChangeEvent,
     ViewPopEvent,
-    context,
-    WindowEvent,
-    WindowResizeEvent,
     Window,
+    WindowEvent,
     WindowEventType,
-    BrowserContextMenu,
+    WindowResizeEvent,
+    context,
 )
 from flet_core.pagelet import Pagelet
 from flet_core.painting import (
@@ -270,8 +271,8 @@ from flet_core.painting import (
 )
 from flet_core.permission_handler import (
     PermissionHandler,
-    PermissionType,
     PermissionStatus,
+    PermissionType,
 )
 from flet_core.placeholder import Placeholder
 from flet_core.popup_menu_button import (
@@ -306,16 +307,16 @@ from flet_core.submenu_button import SubmenuButton
 from flet_core.switch import Switch
 from flet_core.tabs import Tab, Tabs
 from flet_core.template_route import TemplateRoute
-from flet_core.text import Text, TextSelection, TextAffinity
+from flet_core.text import Text, TextAffinity, TextSelection
 from flet_core.text_button import TextButton
 from flet_core.text_span import TextSpan
 from flet_core.text_style import (
+    TextBaseline,
     TextDecoration,
     TextDecorationStyle,
-    TextStyle,
     TextOverflow,
+    TextStyle,
     TextThemeStyle,
-    TextBaseline,
 )
 from flet_core.textfield import (
     InputFilter,
@@ -330,12 +331,14 @@ from flet_core.theme import (
     BadgeTheme,
     BannerTheme,
     BottomAppBarTheme,
-    BottomSheetTheme,
     BottomNavigationBarTheme,
+    BottomSheetTheme,
+    ButtonTheme,
     CardTheme,
     CheckboxTheme,
     ChipTheme,
     ColorScheme,
+    DataTableTheme,
     DatePickerTheme,
     DialogTheme,
     DividerTheme,
@@ -364,8 +367,6 @@ from flet_core.theme import (
     Theme,
     TimePickerTheme,
     TooltipTheme,
-    DataTableTheme,
-    ButtonTheme,
 )
 from flet_core.time_picker import (
     TimePicker,
@@ -380,35 +381,35 @@ from flet_core.types import (
     BlendMode,
     Brightness,
     ClipBehavior,
-    OptionalEventCallable,
+    ControlState,
     CrossAxisAlignment,
+    Duration,
     FloatingActionButtonLocation,
     FontWeight,
     ImageFit,
     ImageRepeat,
     LabelPosition,
     MainAxisAlignment,
-    ControlState,
     MaterialState,
     MouseCursor,
     NotchShape,
     Number,
+    OptionalEventCallable,
     OptionalNumber,
     Orientation,
     PaddingValue,
     PagePlatform,
     ScrollMode,
+    StrokeCap,
+    StrokeJoin,
     SupportsStr,
     TabAlignment,
     TextAlign,
     ThemeMode,
     ThemeVisualDensity,
-    VisualDensity,
     UrlTarget,
     VerticalAlignment,
-    StrokeCap,
-    StrokeJoin,
-    Duration,
+    VisualDensity,
 )
 from flet_core.user_control import UserControl
 from flet_core.vertical_divider import VerticalDivider
