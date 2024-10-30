@@ -7,12 +7,13 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from typing import Optional
 
+from flet.core.connection import Connection
+from flet.core.locks import NopeLock
+from flet.core.page import Page
+from flet.core.pubsub.pubsub_hub import PubSubHub
+from flet.utils import is_pyodide
+
 import flet_web.fastapi as flet_fastapi
-from flet_core.connection import Connection
-from flet_core.locks import NopeLock
-from flet_core.page import Page
-from flet_core.pubsub.pubsub_hub import PubSubHub
-from flet_core.utils import is_pyodide
 from flet_web.fastapi.oauth_state import OAuthState
 
 logger = logging.getLogger(flet_fastapi.__name__)

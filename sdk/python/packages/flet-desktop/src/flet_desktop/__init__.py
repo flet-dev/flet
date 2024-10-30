@@ -9,9 +9,7 @@ import urllib.request
 import zipfile
 from pathlib import Path
 
-import flet_desktop
-import flet_desktop.version
-from flet_core.utils import (
+from flet.utils import (
     get_arch,
     is_linux,
     is_macos,
@@ -19,6 +17,9 @@ from flet_core.utils import (
     random_string,
     safe_tar_extractall,
 )
+
+import flet_desktop
+import flet_desktop.version
 
 logger = logging.getLogger(flet_desktop.__name__)
 

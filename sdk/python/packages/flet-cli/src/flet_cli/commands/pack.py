@@ -4,9 +4,8 @@ import shutil
 import sys
 from pathlib import Path
 
-from flet_core.utils import is_macos, is_windows
-
 import flet_cli.__pyinstaller.config as hook_config
+from flet.utils import is_macos, is_windows
 from flet_cli.commands.base import BaseCommand
 
 
@@ -132,6 +131,14 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
+
+        try:
+            import flet_desktop
+        except:
+            from flet_cli.utils.pip import install_flet_package
+
+            install_flet_package("flet-desktop")
+
         is_dir_not_empty = lambda dir: os.path.isdir(dir) and len(os.listdir(dir)) != 0
 
         # delete "build" directory
@@ -173,7 +180,6 @@ class Command(BaseCommand):
 
         try:
             import PyInstaller.__main__
-
             from flet_cli.__pyinstaller.utils import copy_flet_bin
 
             pyi_args = [options.script, "--noconfirm"]

@@ -3,8 +3,8 @@ import os
 from pathlib import Path
 
 import flet.version
+from flet.utils import slugify
 from flet_cli.commands.base import BaseCommand
-from flet_core.utils import slugify
 from packaging import version
 from rich import print
 
