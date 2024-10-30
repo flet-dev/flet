@@ -116,6 +116,7 @@ import 'time_picker.dart';
 import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
 import 'window_drag_area.dart';
+import 'layout_builder.dart';
 
 Widget createControl(Control? parent, String id, bool parentDisabled,
     {Widget? nextChild, bool? parentAdaptive}) {
@@ -988,6 +989,15 @@ Widget createWidget(
           backend: backend);
     case "canvas":
       return CanvasControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
+    case "layoutbuilder":
+      return LayoutBuilderControl(
           key: key,
           parent: parent,
           control: controlView.control,

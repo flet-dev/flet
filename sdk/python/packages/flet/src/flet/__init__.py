@@ -306,6 +306,7 @@ from flet.core.shake_detector import ShakeDetector
 from flet.core.slider import Slider, SliderInteraction
 from flet.core.snack_bar import DismissDirection, SnackBar, SnackBarBehavior
 from flet.core.stack import Stack, StackFit
+from flet.core.layout_builder import LayoutBuilder
 from flet.core.submenu_button import SubmenuButton
 from flet.core.switch import Switch
 from flet.core.tabs import Tab, Tabs
