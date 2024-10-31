@@ -60,7 +60,7 @@ Tooltip? tooltipFromJSON(dynamic j, Widget widget, ThemeData theme) {
     blendMode: parseBlendMode(j["blend_mode"]),
     boxShadow: boxShadowsFromJSON(theme, j["box_shadow"]),
     image: decorationImageFromJSON(
-        theme, j["image"], null), // TODO: pass correct pageArgs
+        theme, j["image"], null), // TODO: replace null with PageArgsModel
   );
   return Tooltip(
     message: j["message"],
