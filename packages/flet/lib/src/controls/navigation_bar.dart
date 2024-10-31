@@ -95,8 +95,8 @@ class _NavigationBarControlState extends State<NavigationBarControl>
               var iconCtrls = destView.children
                   .where((c) => c.name == "icon" && c.isVisible);
               var iconStr = parseIcon(destView.control.attrString("icon"));
-              var iconContentCtrls = destView.children
-                  .where((c) => c.name == "icon_content" && c.isVisible);
+              iconCtrls = iconCtrls.isEmpty? destView.children
+                  .where((c) => c.name == "icon_content" && c.isVisible) : iconCtrls;
               var selectedIcon =
                   parseIcon(destView.control.attrString("selectedIcon"));
               var selectedIconContentCtrls = destView.children.where(
@@ -106,11 +106,14 @@ class _NavigationBarControlState extends State<NavigationBarControl>
               return NavigationDestination(
                   enabled: !destinationDisabled,
                   tooltip: destView.control.attrString("tooltip"),
-                  icon: iconContentCtrls.isNotEmpty
-                      ? createControl(destView.control,
-                          iconContentCtrls.first.id, destinationDisabled,
-                          parentAdaptive: destinationAdaptive)
-                      : Icon(iconStr),
+                  // icon: iconContentCtrls.isNotEmpty
+                  //     ? createControl(destView.control,
+                  //         iconContentCtrls.first.id, destinationDisabled,
+                  //         parentAdaptive: destinationAdaptive)
+                  //     : Icon(iconStr),
+                  icon: iconCtrls.isNotEmpty? createControl(destView.control,
+                           iconCtrls.first.id, destinationDisabled,
+                           parentAdaptive: destinationAdaptive): Icon(iconStr),
                   selectedIcon: selectedIconContentCtrls.isNotEmpty
                       ? createControl(
                           destView.control,
