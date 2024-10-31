@@ -97,10 +97,14 @@ class _NavigationBarControlState extends State<NavigationBarControl>
               var iconStr = parseIcon(destView.control.attrString("icon"));
               iconCtrls = iconCtrls.isEmpty? destView.children
                   .where((c) => c.name == "icon_content" && c.isVisible) : iconCtrls;
-              var selectedIcon =
+              var selectedIconCtrls = destView.children
+                  .where((c) => c.name == "selected_icon" && c.isVisible);
+              var selectedIconStr =
                   parseIcon(destView.control.attrString("selectedIcon"));
-              var selectedIconContentCtrls = destView.children.where(
-                  (c) => c.name == "selected_icon_content" && c.isVisible);
+              selectedIconCtrls = selectedIconCtrls.isEmpty? destView.children
+                  .where((c) => c.name == "selected_icon_content" && c.isVisible): selectedIconCtrls;
+              // var selectedIconContentCtrls = destView.children.where(
+              //     (c) => c.name == "selected_icon_content" && c.isVisible);
               var destinationDisabled = disabled || destView.control.isDisabled;
               var destinationAdaptive = destView.control.isAdaptive ?? adaptive;
               return NavigationDestination(
@@ -114,14 +118,14 @@ class _NavigationBarControlState extends State<NavigationBarControl>
                   icon: iconCtrls.isNotEmpty? createControl(destView.control,
                            iconCtrls.first.id, destinationDisabled,
                            parentAdaptive: destinationAdaptive): Icon(iconStr),
-                  selectedIcon: selectedIconContentCtrls.isNotEmpty
+                  selectedIcon: selectedIconCtrls.isNotEmpty
                       ? createControl(
                           destView.control,
-                          selectedIconContentCtrls.first.id,
+                          selectedIconCtrls.first.id,
                           destinationDisabled,
                           parentAdaptive: destinationAdaptive)
-                      : selectedIcon != null
-                          ? Icon(selectedIcon)
+                      : selectedIconStr != null
+                          ? Icon(selectedIconStr)
                           : null,
                   label: label);
             }).toList());

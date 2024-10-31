@@ -9,12 +9,11 @@ from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
-from flet.core.types import (
+from flet.core.types import (  # IconValue,
     ColorEnums,
     ColorValue,
     ControlStateValue,
     IconEnums,
-    IconValue,
     IconValueOrControl,
     OffsetValue,
     OptionalControlEventCallable,
@@ -88,6 +87,9 @@ class NavigationBarDestination(AdaptiveControl, Control):
         if self.__icon_content:
             self.__icon_content._set_attr_internal("n", "icon_content")
             children.append(self.__icon_content)
+        if isinstance(self.__selected_icon, Control):
+            self.__selected_icon._set_attr_internal("n", "selected_icon")
+            children.append(self.__selected_icon)
         if self.__selected_icon_content:
             self.__selected_icon_content._set_attr_internal(
                 "n", "selected_icon_content"
@@ -97,11 +99,11 @@ class NavigationBarDestination(AdaptiveControl, Control):
 
     # icon
     @property
-    def icon(self) -> Optional[IconValue]:
+    def icon(self) -> Optional[IconValueOrControl]:
         return self.__icon
 
     @icon.setter
-    def icon(self, value: Optional[IconValue]):
+    def icon(self, value: Optional[IconValueOrControl]):
         self.__icon = value
         self._set_enum_attr("icon", value, IconEnums)
 
@@ -116,11 +118,11 @@ class NavigationBarDestination(AdaptiveControl, Control):
 
     # selected_icon
     @property
-    def selected_icon(self) -> Optional[IconValue]:
+    def selected_icon(self) -> Optional[IconValueOrControl]:
         return self.__selected_icon
 
     @selected_icon.setter
-    def selected_icon(self, value: Optional[IconValue]):
+    def selected_icon(self, value: Optional[IconValueOrControl]):
         self.__selected_icon = value
         self._set_enum_attr("selectedIcon", value, IconEnums)
 
@@ -162,9 +164,9 @@ class NavigationDestination(NavigationBarDestination):
     def __init__(
         self,
         label: Optional[str] = None,
-        icon: Optional[IconValue] = None,
+        icon: Optional[IconValueOrControl] = None,
         icon_content: Optional[Control] = None,
-        selected_icon: Optional[IconValue] = None,
+        selected_icon: Optional[IconValueOrControl] = None,
         selected_icon_content: Optional[Control] = None,
         bgcolor: Optional[ColorValue] = None,
         #
