@@ -6,7 +6,7 @@ import logging
 import threading
 import time
 import uuid
-from concurrent.futures import ThreadPoolExecutor, Future, CancelledError
+from concurrent.futures import CancelledError, Future, ThreadPoolExecutor
 from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
