@@ -67,8 +67,6 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
           // the line below needs to be deleted after icon_content is deprecated
           iconCtrls = iconCtrls.isEmpty? destView.children
                   .where((c) => c.name == "icon_content" && c.isVisible) : iconCtrls;
-          var iconContentCtrls = destView.children
-              .where((c) => c.name == "icon_content" && c.isVisible);
           
           var selectedIconStr =
               parseIcon(destView.control.attrString("selectedIcon"));
@@ -81,7 +79,7 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
           return NavigationDrawerDestination(
             enabled: !(disabled || destView.control.isDisabled),
             backgroundColor: destView.control.attrColor("bgColor", context),
-            icon: iconContentCtrls.isNotEmpty
+            icon: iconCtrls.isNotEmpty
                 ? createControl(
                     destView.control, iconCtrls.first.id, disabled,
                     parentAdaptive: widget.parentAdaptive)
