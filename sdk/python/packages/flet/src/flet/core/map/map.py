@@ -460,7 +460,7 @@ class MapPositionChangeEvent(ControlEvent):
         d = json.loads(e.data)
         self.min_zoom: Optional[float] = d.get("min_zoom")
         self.max_zoom: Optional[float] = d.get("max_zoom")
-        self.rot: float = d.get("rot")
+        self.rotation: float = d.get("rot")
         self.coordinates: MapLatitudeLongitude = MapLatitudeLongitude(
             d.get("lat"), d.get("long")
         )
