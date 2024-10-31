@@ -1,3 +1,4 @@
+import warnings
 from enum import Enum
 from typing import Any, Callable, List, Optional, Union
 
@@ -9,7 +10,7 @@ from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
-from flet.core.types import (  # IconValue,
+from flet.core.types import (
     ColorEnums,
     ColorValue,
     ControlStateValue,
@@ -110,11 +111,24 @@ class NavigationBarDestination(AdaptiveControl, Control):
     # icon_content
     @property
     def icon_content(self) -> Optional[Control]:
+        warnings.warn(
+            f"icon_content is deprecated since version 0.25.0 "
+            f"and will be removed in version 0.28.0. Use icon instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
         return self.__icon_content
 
     @icon_content.setter
     def icon_content(self, value: Optional[Control]):
         self.__icon_content = value
+        if value is not None:
+            warnings.warn(
+                f"icon_content is deprecated since version 0.25.0 "
+                f"and will be removed in version 0.28.0. Use icon instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
 
     # selected_icon
     @property
@@ -129,11 +143,24 @@ class NavigationBarDestination(AdaptiveControl, Control):
     # selected_icon_content
     @property
     def selected_icon_content(self) -> Optional[Control]:
+        warnings.warn(
+            f"selected_icon_content is deprecated since version 0.25.0 "
+            f"and will be removed in version 0.28.0. Use selected_icon instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
         return self.__selected_icon_content
 
     @selected_icon_content.setter
     def selected_icon_content(self, value: Optional[Control]):
         self.__selected_icon_content = value
+        if value is not None:
+            warnings.warn(
+                f"selected_icon_content is deprecated since version 0.25.0 "
+                f"and will be removed in version 0.28.0. Use selected_icon instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
 
     # label
     @property
