@@ -1,12 +1,4 @@
-from typing import Any, Optional, Union
-
-from flet.core.badge import BadgeValue
-from flet.core.buttons import ButtonStyle
-from flet.core.control import Control, OptionalNumber
 from flet.core.elevated_button import ElevatedButton
-from flet.core.ref import Ref
-from flet.core.tooltip import TooltipValue
-from flet.core.types import ColorValue, IconValue, ResponsiveNumber, UrlTarget
 
 
 class Button(ElevatedButton):
@@ -31,6 +23,3 @@ class Button(ElevatedButton):
 
     Online docs: https://flet.dev/docs/controls/elevatedbutton
     """
-
-    def _get_control_name(self):
-        return "elevatedbutton"
