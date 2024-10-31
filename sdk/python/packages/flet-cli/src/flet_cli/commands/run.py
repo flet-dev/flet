@@ -143,30 +143,30 @@ class Command(BaseCommand):
         from flet_desktop import close_flet_view
 
         if options.module:
-            script_path = str(options.script).replace(".", "/")
-            if os.path.isdir(script_path):
-                script_path += "/__main__.py"
+            script_path = Path(options.script.replace(".", "/"))
+            if script_path.is_dir():
+                script_path = script_path.joinpath("__main__.py")
             else:
-                script_path += ".py"
+                script_path = script_path.with_suffix(".py")
         else:
-            script_path = str(options.script)
-            if not os.path.isabs(script_path):
-                script_path = str(Path(os.getcwd()).joinpath(script_path).resolve())
-            if os.path.isdir(script_path):
-                script_path = os.path.join(script_path, "main.py")
+            script_path = Path(options.script)
+            if not script_path.is_absolute():
+                script_path = Path(os.getcwd()).joinpath(script_path).resolve()
+            if script_path.is_dir():
+                script_path = script_path.joinpath("main.py")
 
-        project_dir = script_dir = os.path.dirname(script_path)
+        script_dir = script_path.parent
+        project_dir = Path(script_dir)
 
-        get_pyproject = load_pyproject_toml(Path(project_dir))
+        get_pyproject = load_pyproject_toml(project_dir)
 
         if get_pyproject("tool.flet.app.path"):
-            script_dir = os.path.join(script_dir, get_pyproject("tool.flet.app.path"))
-            script_path = os.path.join(
-                script_dir,
+            script_dir = script_dir.joinpath(get_pyproject("tool.flet.app.path"))
+            script_path = script_dir.joinpath(
                 os.path.basename(script_path),
             )
 
-        if not Path(script_path).exists():
+        if not script_path.exists():
             print(f"File or directory not found: {script_path}")
             sys.exit(1)
 
@@ -182,31 +182,31 @@ class Command(BaseCommand):
 
         assets_dir = options.assets_dir
         if assets_dir and not Path(assets_dir).is_absolute():
-            assets_dir = str(Path(project_dir).joinpath(assets_dir).resolve())
+            assets_dir = str(script_dir.joinpath(assets_dir).resolve())
 
         ignore_dirs = (
             [
-                str(Path(script_dir).joinpath(directory).resolve())
+                str(script_dir.joinpath(directory).resolve())
                 for directory in options.ignore_dirs.split(",")
             ]
             if options.ignore_dirs
             else []
         )
 
-        flet_app_data_dir = os.path.join(project_dir, "data")
-        Path(flet_app_data_dir).mkdir(parents=True, exist_ok=True)
+        flet_app_data_dir = project_dir.joinpath("data")
+        flet_app_data_dir.mkdir(parents=True, exist_ok=True)
 
-        flet_app_temp_dir = os.path.join(project_dir, "temp")
-        if os.path.exists(flet_app_temp_dir):
-            shutil.rmtree(flet_app_temp_dir, ignore_errors=True)
-        Path(flet_app_temp_dir).mkdir(parents=True, exist_ok=True)
+        flet_app_temp_dir = project_dir.joinpath("temp")
+        if flet_app_temp_dir.exists():
+            shutil.rmtree(str(flet_app_temp_dir), ignore_errors=True)
+        flet_app_temp_dir.mkdir(parents=True, exist_ok=True)
 
         my_event_handler = Handler(
             args=[sys.executable, "-u"]
             + ["-m"] * options.module
             + [options.script if options.module else script_path],
             watch_directory=options.directory or options.recursive,
-            script_path=script_path,
+            script_path=str(script_path),
             port=port,
             host=options.host,
             page_name=options.app_name,
@@ -217,8 +217,8 @@ class Command(BaseCommand):
             hidden=options.hidden,
             assets_dir=assets_dir,
             ignore_dirs=ignore_dirs,
-            flet_app_data_dir=flet_app_data_dir,
-            flet_app_temp_dir=flet_app_temp_dir,
+            flet_app_data_dir=str(flet_app_data_dir),
+            flet_app_temp_dir=str(flet_app_temp_dir),
         )
 
         my_observer = Observer()
