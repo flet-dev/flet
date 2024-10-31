@@ -15,7 +15,7 @@ from flet.core.types import (
     ColorValue,
     DurationValue,
     IconEnums,
-    IconValue,
+    IconValueOrControl,
     OffsetValue,
     OptionalControlEventCallable,
     PaddingValue,
@@ -29,8 +29,6 @@ try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
-
-IconValueOrControl = Union[IconValue, Control]
 
 
 class InputBorder(Enum):

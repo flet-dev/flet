@@ -6,11 +6,7 @@ from flet.core.animation import AnimationValue
 from flet.core.badge import BadgeValue
 from flet.core.box import BoxConstraints
 from flet.core.control import Control, OptionalNumber
-from flet.core.form_field_control import (
-    FormFieldControl,
-    IconValueOrControl,
-    InputBorder,
-)
+from flet.core.form_field_control import FormFieldControl, InputBorder
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
@@ -19,6 +15,7 @@ from flet.core.types import (
     ColorEnums,
     ColorValue,
     DurationValue,
+    IconValueOrControl,
     OffsetValue,
     OptionalControlEventCallable,
     PaddingValue,
