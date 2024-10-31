@@ -91,6 +91,7 @@ class _CupertinoAlertDialogControlState
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             barrierDismissible: !modal,
+            barrierColor: widget.control.attrColor("barrierColor", context),
             useRootNavigator: false,
             context: context,
             builder: (context) => dialog).then((value) {
