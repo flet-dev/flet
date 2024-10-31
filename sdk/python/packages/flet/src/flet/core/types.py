@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum, EnumMeta
-from typing import Any, Callable, Dict, Optional, Protocol, Tuple, TypeVar, Union
+from typing import Any, Callable, Dict, List, Optional, Protocol, Tuple, TypeVar, Union
 from warnings import warn
 
 from flet.core.border_radius import BorderRadius
@@ -414,6 +414,19 @@ class VisualDensity(Enum):
     ADAPTIVE_PLATFORM_DENSITY = "adaptivePlatformDensity"
 
 
+@dataclass
+class Locale:
+    language_code: Optional[str] = None
+    country_code: Optional[str] = None
+    script_code: Optional[str] = None
+
+
+@dataclass
+class LocaleConfiguration:
+    supported_locales: Optional[List[Locale]] = None
+    current_locale: Optional[Locale] = None
+
+
 # Events
 ControlEventType = TypeVar("ControlEventType", bound=ControlEvent)
 EventType = TypeVar("EventType", bound=Event)
@@ -438,4 +451,5 @@ Wrapper = Callable[..., Any]
 
 # Protocols
 class SupportsStr(Protocol):
-    def __str__(self) -> str: ...
+    def __str__(self) -> str:
+        ...
