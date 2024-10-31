@@ -551,7 +551,7 @@ class Command(BaseCommand):
 
             get_pyproject = load_pyproject_toml(python_app_path)
 
-            package_app_path = str(python_app_path)
+            package_app_path = Path(python_app_path)
             if get_pyproject("tool.flet.app.path"):
                 package_app_path = python_app_path.joinpath(
                     get_pyproject("tool.flet.app.path")
@@ -561,9 +561,7 @@ class Command(BaseCommand):
                 options.module_name or get_pyproject("tool.flet.app.module") or "main"
             ).stem
             python_module_filename = f"{python_module_name}.py"
-            if not os.path.exists(
-                os.path.join(package_app_path, python_module_filename)
-            ):
+            if not package_app_path.joinpath(python_module_filename).exists():
                 self.cleanup(
                     1,
                     f"{python_module_filename} not found in the root of Flet app directory. "
@@ -870,7 +868,7 @@ class Command(BaseCommand):
             self.status.update(
                 f"[bold blue]Customizing app icons and splash images {self.emojis['loading']}... ",
             )
-            assets_path = python_app_path.joinpath("assets")
+            assets_path = package_app_path.joinpath("assets")
             if assets_path.exists():
                 images_dir = "images"
                 images_path = self.flutter_dir.joinpath(images_dir)
@@ -1123,7 +1121,7 @@ class Command(BaseCommand):
                 "run",
                 "serious_python:main",
                 "package",
-                package_app_path,
+                str(package_app_path),
                 "--platform",
                 package_platform,
             ]
