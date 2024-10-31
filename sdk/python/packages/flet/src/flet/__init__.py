@@ -61,6 +61,7 @@ from flet.core.box import (
     FilterQuality,
     ShadowBlurStyle,
 )
+from flet.core.button import Button
 from flet.core.buttons import (
     BeveledRectangleBorder,
     ButtonStyle,
