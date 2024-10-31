@@ -39,8 +39,8 @@ class Command(BaseCommand):
         parser.add_argument(
             "--template",
             dest="template",
-            choices=["minimal", "counter"],
-            default="minimal",
+            choices=["default"],
+            default="default",
             help="template to use for new Flet project",
             required=False,
         )
