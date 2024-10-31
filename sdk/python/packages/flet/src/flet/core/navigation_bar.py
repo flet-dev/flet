@@ -15,6 +15,7 @@ from flet.core.types import (
     ControlStateValue,
     IconEnums,
     IconValue,
+    IconValueOrControl,
     OffsetValue,
     OptionalControlEventCallable,
     OptionalNumber,
@@ -41,9 +42,9 @@ class NavigationBarDestination(AdaptiveControl, Control):
     def __init__(
         self,
         label: Optional[str] = None,
-        icon: Optional[IconValue] = None,
+        icon: Optional[IconValueOrControl] = None,
         icon_content: Optional[Control] = None,
-        selected_icon: Optional[IconValue] = None,
+        selected_icon: Optional[IconValueOrControl] = None,
         selected_icon_content: Optional[Control] = None,
         bgcolor: Optional[ColorValue] = None,
         #
@@ -81,6 +82,9 @@ class NavigationBarDestination(AdaptiveControl, Control):
 
     def _get_children(self):
         children = []
+        if isinstance(self.__icon, Control):
+            self.__icon._set_attr_internal("n", "icon")
+            children.append(self.__icon)
         if self.__icon_content:
             self.__icon_content._set_attr_internal("n", "icon_content")
             children.append(self.__icon_content)
