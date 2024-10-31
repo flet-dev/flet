@@ -10,13 +10,17 @@ from pathlib import Path
 from typing import Any, Optional, Union
 
 import flet.version
-import toml
 import yaml
 from flet.utils import copy_tree, is_windows, slugify
 from flet.utils.platform_utils import get_bool_env_var
 from flet.version import update_version
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.merge import merge_dict
+from flet_cli.utils.project_dependencies import (
+    get_poetry_dependencies,
+    get_project_dependencies,
+)
+from flet_cli.utils.pyproject_toml import load_pyproject_toml
 from packaging import version
 from rich.console import Console
 from rich.style import Style
@@ -30,7 +34,7 @@ PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.25.0/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 MINIMAL_FLUTTER_VERSION = "3.24.0"
 
-error_style = Style(color="red1")
+error_style = Style(color="red", bold=True)
 console = Console(log_path=False, theme=Theme({"log.message": "green bold"}))
 
 RESULT_FILE = "result"
@@ -545,26 +549,20 @@ class Command(BaseCommand):
                     f"Path to Flet app does not exist or is not a directory: {python_app_path}",
                 )
 
-            pyproject_toml: Optional[dict[str, Any]] = {}
-            pyproject_toml_file = python_app_path.joinpath("pyproject.toml")
-            if pyproject_toml_file.exists():
-                with pyproject_toml_file.open("r") as f:
-                    pyproject_toml = toml.loads(f.read())
+            get_pyproject = load_pyproject_toml(python_app_path)
 
-            def get_pyproject(setting: str):
-                d = pyproject_toml
-                for k in setting.split("."):
-                    d = d.get(k)
-                    if d is None:
-                        return None
-                return d
+            package_app_path = str(python_app_path)
+            if get_pyproject("tool.flet.app.path"):
+                package_app_path = python_app_path.joinpath(
+                    get_pyproject("tool.flet.app.path")
+                )
 
             python_module_name = Path(
                 options.module_name or get_pyproject("tool.flet.app.module") or "main"
             ).stem
             python_module_filename = f"{python_module_name}.py"
             if not os.path.exists(
-                os.path.join(python_app_path, python_module_filename)
+                os.path.join(package_app_path, python_module_filename)
             ):
                 self.cleanup(
                     1,
@@ -1120,12 +1118,6 @@ class Command(BaseCommand):
                 f"[bold blue]Packaging Python app {self.emojis['loading']}... ",
             )
 
-            package_app_path = str(python_app_path)
-            if get_pyproject("tool.flet.app.path"):
-                package_app_path = python_app_path.joinpath(
-                    get_pyproject("tool.flet.app.path")
-                )
-
             package_args = [
                 self.dart_exe,
                 "run",
@@ -1144,23 +1136,20 @@ class Command(BaseCommand):
 
             # requirements
             requirements_txt = python_app_path.joinpath("requirements.txt")
-            if requirements_txt.exists():
-                package_args.extend(["--requirements", f"-r,{requirements_txt}"])
-            elif pyproject_toml is not None:
-                from flet_cli.utils.convert_toml_to_requirements import (
-                    convert_toml_to_requirements,
-                )
 
+            toml_dependencies = get_poetry_dependencies(
+                get_pyproject("tool.poetry.dependencies")
+            ) or get_project_dependencies(get_pyproject("project.dependencies"))
+
+            if toml_dependencies:
                 package_args.extend(
                     [
                         "--requirements",
-                        ",".join(
-                            convert_toml_to_requirements(
-                                pyproject_toml, optional_lists=None
-                            )
-                        ),
+                        ",".join(toml_dependencies),
                     ]
                 )
+            elif requirements_txt.exists():
+                package_args.extend(["--requirements", f"-r,{requirements_txt}"])
 
             # site-packages variable
             if package_platform in ["Android", "iOS"]:
