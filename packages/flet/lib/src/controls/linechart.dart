@@ -356,7 +356,9 @@ class _LineChartControlState extends State<LineChartControl> {
                       return touchedSpots.map((spot) {
                         var dp = viewModel.dataSeries[spot.barIndex]
                             .dataPoints[spot.spotIndex];
-                        var tooltip = dp.tooltip ?? dp.y.toString();
+                        var tooltip = dp.tooltip != null
+                            ? jsonDecode(dp.tooltip!)
+                            : dp.y.toString();
                         var tooltipStyle = parseTextStyle(
                             Theme.of(context), dp.control, "tooltipStyle");
                         tooltipStyle ??= const TextStyle();
@@ -434,7 +436,7 @@ class _LineChartControlState extends State<LineChartControl> {
         parseGradient(theme, dataViewModel.control, "belowLineGradient");
     var dashPattern = dataViewModel.control.attrString("dashPattern");
     var shadow =
-        parseBoxShadow(Theme.of(context), dataViewModel.control, "shadow");
+        parseBoxShadow(Theme.of(context), dataViewModel.control, "shadow", [])!;
     Color barColor =
         dataViewModel.control.attrColor("color", context) ?? Colors.cyan;
     Gradient? barGradient =

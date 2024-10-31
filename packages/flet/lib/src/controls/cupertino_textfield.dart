@@ -4,12 +4,15 @@ import 'package:flutter/services.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/autofill.dart';
 import '../utils/borders.dart';
 import '../utils/box.dart';
 import '../utils/edge_insets.dart';
 import '../utils/form_field.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
+import '../utils/others.dart';
+import '../utils/overlay_style.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
 import 'create_control.dart';
@@ -158,11 +161,6 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
       inputFormatters.add(TextCapitalizationFormatter(textCapitalization));
     }
 
-    TextInputType keyboardType = multiline
-        ? TextInputType.multiline
-        : parseTextInputType(
-            widget.control.attrString("keyboardType"), TextInputType.text)!;
-
     TextAlign textAlign = parseTextAlign(
         widget.control.attrString("textAlign"), TextAlign.start)!;
 
@@ -170,10 +168,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
 
     bool rtl = widget.control.attrBool("rtl", false)!;
     bool autocorrect = widget.control.attrBool("autocorrect", true)!;
-    bool enableSuggestions =
-        widget.control.attrBool("enableSuggestions", true)!;
-    bool smartDashesType = widget.control.attrBool("smartDashesType", true)!;
-    bool smartQuotesType = widget.control.attrBool("smartQuotesType", true)!;
+    ;
 
     FocusNode focusNode = shiftEnter ? _shiftEnterfocusNode : _focusNode;
 
@@ -227,29 +222,25 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
             }),
       );
     }
-
+    var fitParentSize = widget.control.attrBool("fitParentSize", false)!;
     BoxDecoration? defaultDecoration = const CupertinoTextField().decoration;
     var gradient = parseGradient(Theme.of(context), widget.control, "gradient");
     var blendMode = parseBlendMode(widget.control.attrString("blendMode"));
 
     var bgColor = widget.control.attrColor("bgColor", context);
-    // for adaptive TextField use label for placeholder
-    var placeholder = widget.control.attrString("placeholderText") ??
-        widget.control.attrString("label");
-    // for adaptive TextField use labelStyle for placeholderStyle
-    var placeholderStyle =
-        parseTextStyle(Theme.of(context), widget.control, "placeholderStyle") ??
-            parseTextStyle(Theme.of(context), widget.control, "labelStyle");
+
     return withPageArgs((context, pageArgs) {
-      var decorationImage = parseDecorationImage(
-          Theme.of(context), widget.control, "image", pageArgs);
       Widget textField = CupertinoTextField(
           style: textStyle,
           textAlignVertical: textVerticalAlign != null
               ? TextAlignVertical(y: textVerticalAlign)
               : null,
-          placeholder: placeholder,
-          placeholderStyle: placeholderStyle,
+          placeholder: widget.control.attrString("placeholderText") ??
+              widget.control.attrString("label"),
+          // use label for adaptive TextField
+          placeholderStyle: parseTextStyle(Theme.of(context), widget.control, "placeholderStyle") ??
+              parseTextStyle(Theme.of(context), widget.control, "labelStyle"),
+          // labelStyle for adaptive TextField
           autofocus: autofocus,
           enabled: !disabled,
           onSubmitted: !multiline
@@ -261,7 +252,8 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
           decoration: defaultDecoration?.copyWith(
               color: bgColor,
               gradient: gradient,
-              image: decorationImage,
+              image: parseDecorationImage(
+                  Theme.of(context), widget.control, "image", pageArgs),
               backgroundBlendMode:
                   bgColor != null || gradient != null ? blendMode : null,
               border: border,
@@ -273,46 +265,54 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
           cursorWidth: widget.control.attrDouble("cursorWidth", 2.0)!,
           cursorRadius: parseRadius(
               widget.control, "cursorRadius", const Radius.circular(2.0))!,
-          keyboardType: keyboardType,
+          keyboardType: multiline
+              ? TextInputType.multiline
+              : parseTextInputType(widget.control.attrString("keyboardType"),
+                  TextInputType.text)!,
           clearButtonSemanticLabel:
               widget.control.attrString("clearButtonSemanticsLabel"),
           autocorrect: autocorrect,
-          enableSuggestions: enableSuggestions,
-          smartDashesType: smartDashesType
+          enableSuggestions:
+              widget.control.attrBool("enableSuggestions", true)!,
+          smartDashesType: widget.control.attrBool("smartDashesType", true)!
               ? SmartDashesType.enabled
               : SmartDashesType.disabled,
-          smartQuotesType: smartQuotesType
+          smartQuotesType: widget.control.attrBool("smartQuotesType", true)!
               ? SmartQuotesType.enabled
               : SmartQuotesType.disabled,
           suffixMode: parseVisibilityMode(
-              widget.control.attrString("suffixVisibilityMode", "")!),
+              widget.control.attrString("suffixVisibilityMode"),
+              OverlayVisibilityMode.always)!,
           prefixMode: parseVisibilityMode(
-              widget.control.attrString("prefixVisibilityMode", "")!),
+              widget.control.attrString("prefixVisibilityMode"),
+              OverlayVisibilityMode.always)!,
           textAlign: textAlign,
-          minLines: minLines,
-          maxLines: maxLines,
+          minLines: fitParentSize ? null : minLines,
+          maxLines: fitParentSize ? null : maxLines,
           maxLength: maxLength,
           prefix: prefixControls.isNotEmpty
               ? createControl(widget.control, prefixControls.first.id, disabled,
                   parentAdaptive: widget.parentAdaptive)
               : null,
-          suffix: revealPasswordIcon ??
-              (suffixControls.isNotEmpty
-                  ? createControl(
-                      widget.control, suffixControls.first.id, disabled,
-                      parentAdaptive: widget.parentAdaptive)
-                  : null),
+          suffix: revealPasswordIcon ?? (suffixControls.isNotEmpty ? createControl(widget.control, suffixControls.first.id, disabled, parentAdaptive: widget.parentAdaptive) : null),
           readOnly: readOnly,
           textDirection: rtl ? TextDirection.rtl : null,
           inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
           obscureText: password && !_revealPassword,
-          padding: parseEdgeInsets(
-              widget.control, "padding", const EdgeInsets.all(7.0))!,
+          padding: parseEdgeInsets(widget.control, "padding", const EdgeInsets.all(7.0))!,
           scribbleEnabled: widget.control.attrBool("enableScribble", true)!,
-          scrollPadding: parseEdgeInsets(
-              widget.control, "scrollPadding", const EdgeInsets.all(20.0))!,
-          obscuringCharacter:
-              widget.control.attrString("obscuringCharacter", '•')!,
+          scrollPadding: parseEdgeInsets(widget.control, "scrollPadding", const EdgeInsets.all(20.0))!,
+          obscuringCharacter: widget.control.attrString("obscuringCharacter", '•')!,
+          cursorOpacityAnimates: widget.control.attrBool("animateCursorOpacity", Theme.of(context).platform == TargetPlatform.iOS)!,
+          expands: fitParentSize,
+          enableIMEPersonalizedLearning: widget.control.attrBool("enableIMEPersonalizedLearning", true)!,
+          clipBehavior: parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!,
+          cursorColor: cursorColor,
+          autofillHints: parseAutofillHints(widget.control, "autofillHints"),
+          keyboardAppearance: parseBrightness(widget.control.attrString("keyboardBrightness")),
+          enableInteractiveSelection: widget.control.attrBool("enableInteractiveSelection"),
+          clearButtonMode: parseVisibilityMode(widget.control.attrString("clearButtonVisibilityMode"), OverlayVisibilityMode.never)!,
+          strutStyle: parseStrutStyle(widget.control, "strutStyle"),
           onTap: () {
             widget.backend.triggerControlEvent(widget.control.id, "click");
           },

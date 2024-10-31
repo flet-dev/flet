@@ -15,26 +15,17 @@ class ProgressRingControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("ProgressRing build: ${control.id}");
 
-    var value = control.attrDouble("value");
-    var semanticsValue = control.attrDouble("semanticsValue");
-    var strokeAlign = control.attrDouble("strokeAlign", 0)!;
-    var semanticsLabel = control.attrString("semanticsLabel");
-    var strokeCap = parseStrokeCap(control.attrString("strokeCap"));
-    var strokeWidth = control.attrDouble("strokeWidth", 4)!;
-    var color = control.attrColor("color", context);
-    var bgColor = control.attrColor("bgColor", context);
-
     return constrainedControl(
         context,
         CircularProgressIndicator(
-          value: value,
-          strokeWidth: strokeWidth,
-          color: color,
-          backgroundColor: bgColor,
-          semanticsLabel: semanticsLabel,
-          strokeCap: strokeCap,
-          semanticsValue: semanticsValue.toString(),
-          strokeAlign: strokeAlign,
+          value: control.attrDouble("value"),
+          strokeWidth: control.attrDouble("strokeWidth", 4)!,
+          color: control.attrColor("color", context),
+          backgroundColor: control.attrColor("bgColor", context),
+          semanticsLabel: control.attrString("semanticsLabel"),
+          strokeCap: parseStrokeCap(control.attrString("strokeCap")),
+          semanticsValue: control.attrDouble("semanticsValue")?.toString(),
+          strokeAlign: control.attrDouble("strokeAlign", 0)!,
         ),
         parent,
         control);

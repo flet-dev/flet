@@ -5,10 +5,10 @@ import subprocess as sp
 from pathlib import Path
 
 import flet
-import flet_core.version
-from flet_runtime.utils import is_mobile, is_windows, which
+from flet.utils import is_mobile, is_windows, which
 
-version = flet_core.version.version
+# will be replaced by CI
+version = ""
 
 
 def update_version():
