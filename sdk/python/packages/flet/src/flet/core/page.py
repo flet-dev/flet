@@ -6,7 +6,7 @@ import logging
 import threading
 import time
 import uuid
-from concurrent.futures import ThreadPoolExecutor, Future
+from concurrent.futures import ThreadPoolExecutor, Future, CancelledError
 from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -937,10 +937,12 @@ class Page(AdaptiveControl):
         future = asyncio.run_coroutine_threadsafe(handler(*args, **kwargs), self.__loop)
 
         def _on_completion(f):
-            exception = f.exception()
-
-            if exception:
-                raise exception
+            try:
+                exception = f.exception()
+                if exception:
+                    raise exception
+            except CancelledError:
+                pass
 
         future.add_done_callback(_on_completion)
 
