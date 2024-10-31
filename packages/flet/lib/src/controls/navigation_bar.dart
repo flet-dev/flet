@@ -92,7 +92,9 @@ class _NavigationBarControlState extends State<NavigationBarControl>
             onDestinationSelected: disabled ? null : _destinationChanged,
             destinations: viewModel.controlViews.map((destView) {
               var label = destView.control.attrString("label", "")!;
-              var icon = parseIcon(destView.control.attrString("icon"));
+              var iconCtrls = destView.children
+                  .where((c) => c.name == "icon" && c.isVisible);
+              var iconStr = parseIcon(destView.control.attrString("icon"));
               var iconContentCtrls = destView.children
                   .where((c) => c.name == "icon_content" && c.isVisible);
               var selectedIcon =
@@ -108,7 +110,7 @@ class _NavigationBarControlState extends State<NavigationBarControl>
                       ? createControl(destView.control,
                           iconContentCtrls.first.id, destinationDisabled,
                           parentAdaptive: destinationAdaptive)
-                      : Icon(icon),
+                      : Icon(iconStr),
                   selectedIcon: selectedIconContentCtrls.isNotEmpty
                       ? createControl(
                           destView.control,
