@@ -95,26 +95,23 @@ class _NavigationBarControlState extends State<NavigationBarControl>
               var iconCtrls = destView.children
                   .where((c) => c.name == "icon" && c.isVisible);
               var iconStr = parseIcon(destView.control.attrString("icon"));
+              // if no control provided in "icon" property, replace iconCtrls with control provided in icon_content, if any 
+              // the line below needs to be deleted after icon_content is deprecated
               iconCtrls = iconCtrls.isEmpty? destView.children
                   .where((c) => c.name == "icon_content" && c.isVisible) : iconCtrls;
               var selectedIconCtrls = destView.children
                   .where((c) => c.name == "selected_icon" && c.isVisible);
               var selectedIconStr =
                   parseIcon(destView.control.attrString("selectedIcon"));
+              // if no control provided in "selected_icon" property, replace selectedIconCtrls with control provided in selected_icon_content, if any 
+              // the line below needs to be deleted after selected_icon_content is deprecated
               selectedIconCtrls = selectedIconCtrls.isEmpty? destView.children
                   .where((c) => c.name == "selected_icon_content" && c.isVisible): selectedIconCtrls;
-              // var selectedIconContentCtrls = destView.children.where(
-              //     (c) => c.name == "selected_icon_content" && c.isVisible);
               var destinationDisabled = disabled || destView.control.isDisabled;
               var destinationAdaptive = destView.control.isAdaptive ?? adaptive;
               return NavigationDestination(
                   enabled: !destinationDisabled,
                   tooltip: destView.control.attrString("tooltip"),
-                  // icon: iconContentCtrls.isNotEmpty
-                  //     ? createControl(destView.control,
-                  //         iconContentCtrls.first.id, destinationDisabled,
-                  //         parentAdaptive: destinationAdaptive)
-                  //     : Icon(iconStr),
                   icon: iconCtrls.isNotEmpty? createControl(destView.control,
                            iconCtrls.first.id, destinationDisabled,
                            parentAdaptive: destinationAdaptive): Icon(iconStr),
