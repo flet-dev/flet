@@ -1,12 +1,10 @@
-from __future__ import annotations
-
 import asyncio
 import json
 import logging
 import threading
 import time
 import uuid
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, Future
 from contextvars import ContextVar
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -930,7 +928,7 @@ class Page(AdaptiveControl):
         handler: Callable[InputT, Awaitable[RetT]],
         *args: InputT.args,
         **kwargs: InputT.kwargs,
-    ) -> asyncio.Future[RetT]:
+    ) -> Future[RetT]:
         _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
 
