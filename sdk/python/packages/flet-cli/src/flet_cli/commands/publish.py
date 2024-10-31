@@ -90,18 +90,9 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
-        try:
-            import flet.version
-            import flet_web.version
+        from flet.utils.pip import ensure_flet_web_package_installed
 
-            assert (
-                not flet_web.version.version or flet_web.version.version == flet.version
-            )
-        except:
-            from flet_cli.utils.pip import install_flet_package
-
-            install_flet_package("flet-web")
-
+        ensure_flet_web_package_installed()
         from flet_web import get_package_web_dir, patch_index_html, patch_manifest_json
 
         # constants

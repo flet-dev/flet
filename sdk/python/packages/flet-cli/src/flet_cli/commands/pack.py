@@ -131,19 +131,9 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
+        from flet.utils.pip import ensure_flet_desktop_package_installed
 
-        try:
-            import flet.version
-            import flet_desktop.version
-
-            assert (
-                not flet_desktop.version.version
-                or flet_desktop.version == flet.version.version
-            )
-        except:
-            from flet_cli.utils.pip import install_flet_package
-
-            install_flet_package("flet-desktop")
+        ensure_flet_desktop_package_installed()
 
         is_dir_not_empty = lambda dir: os.path.isdir(dir) and len(os.listdir(dir)) != 0
 
