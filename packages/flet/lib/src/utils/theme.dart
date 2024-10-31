@@ -137,7 +137,7 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
     dividerTheme: parseDividerTheme(theme, json?["divider_theme"]),
     snackBarTheme: parseSnackBarTheme(theme, json?["snackbar_theme"]),
     bannerTheme: parseBannerTheme(theme, json?["banner_theme"]),
-    datePickerTheme: parseDatePickerTheme(theme, json?["banner_theme"]),
+    datePickerTheme: parseDatePickerTheme(theme, json?["date_picker_theme"]),
     navigationRailTheme:
         parseNavigationRailTheme(theme, json?["navigation_rail_theme"]),
     appBarTheme: parseAppBarTheme(theme, json?["appbar_theme"]),
