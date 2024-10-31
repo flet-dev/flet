@@ -45,6 +45,14 @@ class Command(BaseCommand):
             required=False,
         )
         parser.add_argument(
+            "--package-manager",
+            dest="package_manager",
+            choices=["", "uv", "poetry"],
+            default="",
+            help="Python project package manager",
+            required=False,
+        )
+        parser.add_argument(
             "--template-ref",
             dest="template_ref",
             type=str,
@@ -58,6 +66,7 @@ class Command(BaseCommand):
 
         template_data = {
             "template_name": options.template,
+            "package_manager": options.package_manager,
             "flet_version": flet.version.version,
         }
 
