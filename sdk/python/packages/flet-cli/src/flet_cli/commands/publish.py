@@ -7,10 +7,9 @@ import tarfile
 import tempfile
 from pathlib import Path
 
+from flet.core.types import WebRenderer
+from flet.utils import copy_tree, is_within_directory, random_string
 from flet_cli.commands.base import BaseCommand
-from flet_core.types import WebRenderer
-from flet_core.utils import copy_tree, is_within_directory, random_string
-from flet_web import get_package_web_dir, patch_index_html, patch_manifest_json
 
 
 class Command(BaseCommand):
@@ -91,6 +90,15 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
+        try:
+            import flet_web
+        except:
+            from flet_cli.utils.pip import install_flet_package
+
+            install_flet_package("flet-web")
+
+        from flet_web import get_package_web_dir, patch_index_html, patch_manifest_json
+
         # constants
         dist_name = "dist"
         app_tar_gz_filename = "app.tar.gz"

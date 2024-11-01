@@ -9,11 +9,18 @@ from typing import Optional
 
 import flet
 import flet.version
-from flet.utils import get_current_script_dir, get_free_tcp_port, open_in_browser
-from flet_core.event import Event
-from flet_core.page import Page
-from flet_core.types import AppView, WebRenderer
-from flet_core.utils import get_bool_env_var, is_embedded, is_linux_server, is_pyodide
+from flet.core.event import Event
+from flet.core.page import Page
+from flet.core.types import AppView, WebRenderer
+from flet.utils import (
+    get_bool_env_var,
+    get_current_script_dir,
+    get_free_tcp_port,
+    is_embedded,
+    is_linux_server,
+    is_pyodide,
+    open_in_browser,
+)
 
 logger = logging.getLogger(flet.__name__)
 
@@ -299,6 +306,7 @@ async def __run_web_server(
 
 def __run_pyodide(target):
     import flet_js
+
     from flet.pyodide_connection import PyodideConnection
 
     async def on_event(e):

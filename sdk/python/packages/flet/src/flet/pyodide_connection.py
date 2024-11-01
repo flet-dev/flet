@@ -3,11 +3,12 @@ import json
 import logging
 from typing import List
 
-import flet
 import flet_js
 import js
-from flet_core.local_connection import LocalConnection
-from flet_core.protocol import (
+
+import flet
+from flet.core.local_connection import LocalConnection
+from flet.core.protocol import (
     ClientActions,
     ClientMessage,
     Command,

@@ -55,8 +55,6 @@ class _SnackBarControlState extends State<SnackBarControl> {
               widget.backend.triggerControlEvent(widget.control.id, "action");
             })
         : null;
-    var clipBehavior =
-        parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
 
     SnackBarBehavior? behavior =
         parseSnackBarBehavior(widget.control.attrString("behavior"));
@@ -77,7 +75,8 @@ class _SnackBarControlState extends State<SnackBarControl> {
 
     return SnackBar(
         behavior: behavior,
-        clipBehavior: clipBehavior,
+        clipBehavior: parseClip(
+            widget.control.attrString("clipBehavior"), Clip.hardEdge)!,
         actionOverflowThreshold:
             widget.control.attrDouble("actionOverflowThreshold"),
         shape: parseOutlinedBorder(widget.control, "shape"),
