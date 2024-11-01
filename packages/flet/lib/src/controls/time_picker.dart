@@ -90,6 +90,7 @@ class _TimePickerControlState extends State<TimePickerControl> {
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog<TimeOfDay>(
+            barrierColor: widget.control.attrColor("barrierColor", context),
             useRootNavigator: false,
             context: context,
             builder: (context) => createSelectTimeDialog()).then((result) {
