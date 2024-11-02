@@ -265,6 +265,11 @@ class Video(ConstrainedControl):
     def seek(self, position_milliseconds: int):
         self.invoke_method("seek", {"position": str(position_milliseconds)})
 
+    @deprecated(
+        reason="Use seek() method instead.",
+        version="0.25.0",
+        delete_version="0.28.0",
+    )
     async def seek_async(self, position_milliseconds: int):
         await self.invoke_method_async("seek", {"position": str(position_milliseconds)})
 
@@ -275,6 +280,11 @@ class Video(ConstrainedControl):
             media_index = len(self.__playlist) + media_index
         self.invoke_method("jump_to", {"media_index": str(media_index)})
 
+    @deprecated(
+        reason="Use jump_to() method instead.",
+        version="0.25.0",
+        delete_version="0.28.0",
+    )
     async def jump_to_async(self, media_index: int):
         assert self.__playlist[media_index], "media_index is out of range"
         if media_index < 0:
