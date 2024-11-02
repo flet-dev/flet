@@ -269,11 +269,17 @@ class Video(ConstrainedControl):
         await self.invoke_method_async("seek", {"position": str(position_milliseconds)})
 
     def jump_to(self, media_index: int):
-        assert self.__playlist[media_index], "index out of range"
+        assert self.__playlist[media_index], "media_index is out of range"
+        if media_index < 0:
+            # dart doesn't support negative indexes
+            media_index = len(self.__playlist) + media_index
         self.invoke_method("jump_to", {"media_index": str(media_index)})
 
     async def jump_to_async(self, media_index: int):
-        assert self.__playlist[media_index], "index out of range"
+        assert self.__playlist[media_index], "media_index is out of range"
+        if media_index < 0:
+            # dart doesn't support negative indexes
+            media_index = len(self.__playlist) + media_index
         await self.invoke_method_async("jump_to", {"media_index": str(media_index)})
 
     def playlist_add(self, media: VideoMedia):
