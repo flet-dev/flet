@@ -362,12 +362,11 @@ class Dropdown(FormFieldControl):
         self.on_change = on_change
         self.item_height = item_height
         self.max_menu_height = max_menu_height
-        self.select_icon_size = select_icon_size
-        self.icon_size = icon_size
-        self.select_icon_enabled_color = select_icon_enabled_color
-        self.icon_enabled_color = icon_enabled_color
-        self.select_icon_disabled_color = select_icon_disabled_color
-        self.icon_disabled_color = icon_disabled_color
+        self.select_icon_size = select_icon_size or icon_size
+        self.select_icon_enabled_color = select_icon_enabled_color or icon_enabled_color
+        self.select_icon_disabled_color = (
+            select_icon_disabled_color or icon_disabled_color
+        )
         self.on_click = on_click
         self.options_fill_horizontally = options_fill_horizontally
 
@@ -398,9 +397,6 @@ class Dropdown(FormFieldControl):
         if isinstance(self.__select_icon, Control):
             self.__select_icon._set_attr_internal("n", "selectIcon")
             children.append(self.__select_icon)
-        # if isinstance(self.__icon, Control):
-        #     self.__icon._set_attr_internal("n", "icon")
-        #     children.append(self.__icon)
         if isinstance(self.__disabled_hint_content, Control):
             self.__disabled_hint_content._set_attr_internal("n", "disabled_hint")
             children.append(self.__disabled_hint_content)
