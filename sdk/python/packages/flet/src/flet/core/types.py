@@ -1,10 +1,24 @@
 from dataclasses import dataclass
 from enum import Enum, EnumMeta
-from typing import Any, Callable, Dict, Optional, Protocol, Tuple, TypeVar, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
+    Optional,
+    Protocol,
+    Tuple,
+    TypeVar,
+    Union,
+)
 from warnings import warn
 
 from flet.core.border_radius import BorderRadius
 from flet.core.colors import Colors, colors
+
+if TYPE_CHECKING:
+    from flet.core.control import Control
+
 from flet.core.control_event import ControlEvent
 from flet.core.cupertino_colors import CupertinoColors, cupertino_colors
 from flet.core.cupertino_icons import CupertinoIcons, cupertino_icons
@@ -427,6 +441,7 @@ ColorValue = Union[str, colors, Colors, cupertino_colors, CupertinoColors]
 # Icons
 IconEnums = (icons, Icons, cupertino_icons, CupertinoIcons)
 IconValue = Union[str, icons, Icons, cupertino_icons, CupertinoIcons]
+IconValueOrControl = Union[IconValue, "Control"]
 
 # ControlState
 T = TypeVar("T")

@@ -10,16 +10,22 @@ from pathlib import Path
 from typing import Any, Optional, Union
 
 import flet.version
-import toml
 import yaml
 from flet.utils import copy_tree, is_windows, slugify
 from flet.utils.platform_utils import get_bool_env_var
 from flet.version import update_version
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.merge import merge_dict
+from flet_cli.utils.project_dependencies import (
+    get_poetry_dependencies,
+    get_project_dependencies,
+)
+from flet_cli.utils.pyproject_toml import load_pyproject_toml
 from packaging import version
-from rich.console import Console, Style
+from rich.console import Console
+from rich.style import Style
 from rich.table import Column, Table
+from rich.theme import Theme
 
 if is_windows():
     from ctypes import windll
@@ -28,8 +34,8 @@ PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.25.0/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 MINIMAL_FLUTTER_VERSION = "3.24.0"
 
-error_style = Style(color="red1")
-console = Console(log_path=False, style=Style(color="green", bold=True))
+error_style = Style(color="red", bold=True)
+console = Console(log_path=False, theme=Theme({"log.message": "green bold"}))
 
 RESULT_FILE = "result"
 
@@ -325,6 +331,18 @@ class Command(BaseCommand):
             help="URL routing strategy (web only)",
         )
         parser.add_argument(
+            "--pwa-background-color",
+            dest="pwa_background_color",
+            help="an initial background color for your web application",
+            required=False,
+        )
+        parser.add_argument(
+            "--pwa-theme-color",
+            dest="pwa_theme_color",
+            help="default color for your web application's user interface",
+            required=False,
+        )
+        parser.add_argument(
             "--split-per-abi",
             dest="split_per_abi",
             action="store_true",
@@ -543,27 +561,19 @@ class Command(BaseCommand):
                     f"Path to Flet app does not exist or is not a directory: {python_app_path}",
                 )
 
-            pyproject_toml: Optional[dict[str, Any]] = {}
-            pyproject_toml_file = python_app_path.joinpath("pyproject.toml")
-            if pyproject_toml_file.exists():
-                with pyproject_toml_file.open("r") as f:
-                    pyproject_toml = toml.loads(f.read())
+            get_pyproject = load_pyproject_toml(python_app_path)
 
-            def get_pyproject(setting: str):
-                d = pyproject_toml
-                for k in setting.split("."):
-                    d = d.get(k)
-                    if d is None:
-                        return None
-                return d
+            package_app_path = Path(python_app_path)
+            if get_pyproject("tool.flet.app.path"):
+                package_app_path = python_app_path.joinpath(
+                    get_pyproject("tool.flet.app.path")
+                )
 
             python_module_name = Path(
                 options.module_name or get_pyproject("tool.flet.app.module") or "main"
             ).stem
             python_module_filename = f"{python_module_name}.py"
-            if not os.path.exists(
-                os.path.join(python_app_path, python_module_filename)
-            ):
+            if not package_app_path.joinpath(python_module_filename).exists():
                 self.cleanup(
                     1,
                     f"{python_module_filename} not found in the root of Flet app directory. "
@@ -772,6 +782,10 @@ class Command(BaseCommand):
                     )
                     else "false"
                 ),
+                "pwa_background_color": options.pwa_background_color
+                or get_pyproject("tool.flet.web.pwa_background_color"),
+                "pwa_theme_color": options.pwa_theme_color
+                or get_pyproject("tool.flet.web.pwa_theme_color"),
                 "base_url": f"/{base_url}/" if base_url else "/",
                 "split_per_abi": split_per_abi,
                 "project_name": project_name,
@@ -870,7 +884,7 @@ class Command(BaseCommand):
             self.status.update(
                 f"[bold blue]Customizing app icons and splash images {self.emojis['loading']}... ",
             )
-            assets_path = python_app_path.joinpath("assets")
+            assets_path = package_app_path.joinpath("assets")
             if assets_path.exists():
                 images_dir = "images"
                 images_path = self.flutter_dir.joinpath(images_dir)
@@ -911,15 +925,15 @@ class Command(BaseCommand):
                 adaptive_icon_background = (
                     options.android_adaptive_icon_background
                     or get_pyproject("tool.flet.android.adaptive_icon_background")
+                    or "#ffffff"
                 )
-                if adaptive_icon_background:
-                    fallback_image(
-                        "flutter_launcher_icons/adaptive_icon_foreground",
-                        [android_icon, default_icon],
-                    )
-                    pubspec["flutter_launcher_icons"][
-                        "adaptive_icon_background"
-                    ] = adaptive_icon_background
+                fallback_image(
+                    "flutter_launcher_icons/adaptive_icon_foreground",
+                    [android_icon, default_icon],
+                )
+                pubspec["flutter_launcher_icons"][
+                    "adaptive_icon_background"
+                ] = adaptive_icon_background
                 fallback_image(
                     "flutter_launcher_icons/web/image_path", [web_icon, default_icon]
                 )
@@ -1118,18 +1132,12 @@ class Command(BaseCommand):
                 f"[bold blue]Packaging Python app {self.emojis['loading']}... ",
             )
 
-            package_app_path = str(python_app_path)
-            if get_pyproject("tool.flet.app.path"):
-                package_app_path = python_app_path.joinpath(
-                    get_pyproject("tool.flet.app.path")
-                )
-
             package_args = [
                 self.dart_exe,
                 "run",
                 "serious_python:main",
                 "package",
-                package_app_path,
+                str(package_app_path),
                 "--platform",
                 package_platform,
             ]
@@ -1142,23 +1150,20 @@ class Command(BaseCommand):
 
             # requirements
             requirements_txt = python_app_path.joinpath("requirements.txt")
-            if requirements_txt.exists():
-                package_args.extend(["--requirements", f"-r,{requirements_txt}"])
-            elif pyproject_toml is not None:
-                from flet_cli.utils.convert_toml_to_requirements import (
-                    convert_toml_to_requirements,
-                )
 
+            toml_dependencies = get_poetry_dependencies(
+                get_pyproject("tool.poetry.dependencies")
+            ) or get_project_dependencies(get_pyproject("project.dependencies"))
+
+            if toml_dependencies:
                 package_args.extend(
                     [
                         "--requirements",
-                        ",".join(
-                            convert_toml_to_requirements(
-                                pyproject_toml, optional_lists=None
-                            )
-                        ),
+                        ",".join(toml_dependencies),
                     ]
                 )
+            elif requirements_txt.exists():
+                package_args.extend(["--requirements", f"-r,{requirements_txt}"])
 
             # site-packages variable
             if package_platform in ["Android", "iOS"]:
@@ -1479,7 +1484,7 @@ class Command(BaseCommand):
             # windows has been reported to raise encoding errors when running `flutter doctor`
             # so skip running `flutter doctor` if no_rich_output is True and platform is Windows
             if not (self.no_rich_output and self.current_platform == "Windows"):
-                self.run_flutter_doctor(style=error_style)
+                self.run_flutter_doctor()
 
         sys.exit(exit_code)
 

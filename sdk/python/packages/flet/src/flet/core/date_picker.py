@@ -124,6 +124,7 @@ class DatePicker(Control):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
+        barrier_color: Optional[str] = None
     ):
         Control.__init__(
             self,
@@ -166,6 +167,7 @@ class DatePicker(Control):
         self.on_dismiss = on_dismiss
         self.open = open
         self.on_entry_mode_change = on_entry_mode_change
+        self.barrier_color = barrier_color
 
     def _get_control_name(self):
         return "datepicker"
@@ -396,3 +398,12 @@ class DatePicker(Control):
         self, handler: OptionalEventCallable[DatePickerEntryModeChangeEvent]
     ):
         self.__on_entry_mode_change.handler = handler
+    
+    #barrier_color
+    @property
+    def barrier_color(self) -> Optional[str]:
+        return self._get_attr("barrierColor")
+
+    @barrier_color.setter
+    def barrier_color(self, value: Optional[str]):
+        self._set_attr("barrierColor", value)
