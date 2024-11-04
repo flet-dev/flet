@@ -72,8 +72,8 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
 
       var textSize = widget.control.attrDouble("textSize");
       var alignment = parseAlignment(widget.control, "alignment");
-      var iconCtrl =
-          widget.children.where((c) => c.name == "icon" && c.isVisible);
+      var selectIconCtrl =
+          widget.children.where((c) => c.name == "selectIcon" && c.isVisible);
       var hintCtrl =
           widget.children.where((c) => c.name == "hint" && c.isVisible);
       var disabledHintCtrl = widget.children
@@ -82,10 +82,10 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
       var color = widget.control.attrColor("color", context);
       var focusedColor = widget.control.attrColor("focusedColor", context);
       var bgcolor = widget.control.attrColor("bgcolor", context);
-      var iconEnabledColor =
-          widget.control.attrColor("iconEnabledColor", context);
-      var iconDisabledColor =
-          widget.control.attrColor("iconDisabledColor", context);
+      var selectIconEnabledColor =
+          widget.control.attrColor("selectIconEnabledColor", context);
+      var selectIconDisabledColor =
+          widget.control.attrColor("selectIconDisabledColor", context);
 
       TextStyle? textStyle =
           parseTextStyle(Theme.of(context), widget.control, "textStyle");
@@ -183,14 +183,14 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         padding: parseEdgeInsets(widget.control, "padding"),
         itemHeight: widget.control.attrDouble("itemHeight"),
         menuMaxHeight: widget.control.attrDouble("maxMenuHeight"),
-        iconEnabledColor: iconEnabledColor,
-        iconDisabledColor: iconDisabledColor,
-        iconSize: widget.control.attrDouble("iconSize", 24.0)!,
+        iconEnabledColor: selectIconEnabledColor,
+        iconDisabledColor: selectIconDisabledColor,
+        iconSize: widget.control.attrDouble("selectIconSize", 24.0)!,
         borderRadius: borderRadius,
         alignment: alignment ?? AlignmentDirectional.centerStart,
         isExpanded: widget.control.attrBool("optionsFillHorizontally", false)!,
-        icon: iconCtrl.isNotEmpty
-            ? createControl(widget.control, iconCtrl.first.id, disabled)
+        icon: selectIconCtrl.isNotEmpty
+            ? createControl(widget.control, selectIconCtrl.first.id, disabled)
             : null,
         hint: hintCtrl.isNotEmpty
             ? createControl(widget.control, hintCtrl.first.id, disabled)
