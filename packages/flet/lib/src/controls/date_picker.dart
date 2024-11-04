@@ -96,6 +96,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog<DateTime>(
+            barrierColor: widget.control.attrColor("barrierColor", context),
             useRootNavigator: false,
             context: context,
             builder: (context) => createSelectDateDialog()).then((result) {
