@@ -1,3 +1,4 @@
+import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -72,6 +73,7 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
 
       var textSize = widget.control.attrDouble("textSize");
       var alignment = parseAlignment(widget.control, "alignment");
+      var selectIconStr = parseIcon(widget.control.attrString("selectIcon"));
       var selectIconCtrl =
           widget.children.where((c) => c.name == "selectIcon" && c.isVisible);
       var hintCtrl =
@@ -191,7 +193,7 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         isExpanded: widget.control.attrBool("optionsFillHorizontally", false)!,
         icon: selectIconCtrl.isNotEmpty
             ? createControl(widget.control, selectIconCtrl.first.id, disabled)
-            : null,
+            : selectIconStr != null? Icon(selectIconStr): null,
         hint: hintCtrl.isNotEmpty
             ? createControl(widget.control, hintCtrl.first.id, disabled)
             : null,

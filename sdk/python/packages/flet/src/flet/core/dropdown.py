@@ -16,6 +16,7 @@ from flet.core.types import (
     ColorEnums,
     ColorValue,
     DurationValue,
+    IconEnums,
     IconValueOrControl,
     OffsetValue,
     OptionalControlEventCallable,
@@ -392,11 +393,11 @@ class Dropdown(FormFieldControl):
             self.__hint_content._set_attr_internal("n", "hint")
             children.append(self.__hint_content)
         if isinstance(self.__icon_content, Control):
-            self.__icon_content._set_attr_internal("n", "selectIcon")
+            self.__icon_content._set_attr_internal("n", "icon")
             children.append(self.__icon_content)
-        # if isinstance(self.__select_icon, Control):
-        #     self.__select_icon._set_attr_internal("n", "selectIcon")
-        #     children.append(self.__select_icon)
+        if isinstance(self.__select_icon, Control):
+            self.__select_icon._set_attr_internal("n", "selectIcon")
+            children.append(self.__select_icon)
         # if isinstance(self.__icon, Control):
         #     self.__icon._set_attr_internal("n", "icon")
         #     children.append(self.__icon)
@@ -426,12 +427,22 @@ class Dropdown(FormFieldControl):
     def options(self, value):
         self.__options = value if value is not None else []
 
+    # select_icon
+    @property
+    def select_icon(self) -> Optional[IconValueOrControl]:
+        return self.__select_icon
+
+    @select_icon.setter
+    def select_icon(self, value: Optional[IconValueOrControl]):
+        self.__select_icon = value
+        self._set_enum_attr("selectIcon", value, IconEnums)
+
     # icon_content
     @property
     def icon_content(self) -> Optional[Control]:
         warnings.warn(
             f"icon_content is deprecated since version 0.25.0 "
-            f"and will be removed in version 0.26.0. Use select_icon instead.",
+            f"and will be removed in version 0.26.0. Use icon instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
@@ -443,7 +454,7 @@ class Dropdown(FormFieldControl):
         if value is not None:
             warnings.warn(
                 f"icon_content is deprecated since version 0.25.0 "
-                f"and will be removed in version 0.26.0. Use select_icon instead.",
+                f"and will be removed in version 0.26.0. Use icon instead.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
