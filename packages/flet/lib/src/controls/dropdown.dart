@@ -1,4 +1,4 @@
-import 'package:flet/flet.dart';
+import '../utils/icons.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';

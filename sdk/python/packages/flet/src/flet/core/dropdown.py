@@ -167,9 +167,7 @@ class Dropdown(FormFieldControl):
         alignment: Optional[Alignment] = None,
         autofocus: Optional[bool] = None,
         hint_content: Optional[Control] = None,
-        select_icon: Optional[
-            IconValueOrControl
-        ] = None,  # icon displayed instead of select error
+        select_icon: Optional[IconValueOrControl] = None,
         icon_content: Optional[Control] = None,  # to be deprecated
         elevation: OptionalNumber = None,
         item_height: OptionalNumber = None,
