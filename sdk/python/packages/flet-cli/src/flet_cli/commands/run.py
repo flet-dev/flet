@@ -1,6 +1,7 @@
 import argparse
 import os
 import platform
+import shutil
 import signal
 import subprocess
 import sys
@@ -19,6 +20,7 @@ from flet.utils import (
     random_string,
 )
 from flet_cli.commands.base import BaseCommand
+from flet_cli.utils.pyproject_toml import load_pyproject_toml
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
@@ -129,38 +131,44 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
-        from flet_cli.utils.pip import install_flet_package
+        from flet.utils.pip import (
+            ensure_flet_desktop_package_installed,
+            ensure_flet_web_package_installed,
+        )
 
         if options.web:
-            try:
-                import flet_web
-            except:
-                install_flet_package("flet-web")
+            ensure_flet_web_package_installed()
         else:
-            try:
-                import flet_desktop
-            except:
-                install_flet_package("flet-desktop")
+            ensure_flet_desktop_package_installed()
         from flet_desktop import close_flet_view
 
         if options.module:
-            script_path = str(options.script).replace(".", "/")
-            if os.path.isdir(script_path):
-                script_path += "/__main__.py"
+            script_path = Path(options.script.replace(".", "/"))
+            if script_path.is_dir():
+                script_path = script_path.joinpath("__main__.py")
             else:
-                script_path += ".py"
+                script_path = script_path.with_suffix(".py")
         else:
-            script_path = str(options.script)
-            if not os.path.isabs(script_path):
-                script_path = str(Path(os.getcwd()).joinpath(script_path).resolve())
-            if os.path.isdir(script_path):
-                script_path = os.path.join(script_path, "main.py")
+            script_path = Path(options.script)
+            if not script_path.is_absolute():
+                script_path = Path(os.getcwd()).joinpath(script_path).resolve()
+            if script_path.is_dir():
+                script_path = script_path.joinpath("main.py")
 
-        if not Path(script_path).exists():
+        script_dir = script_path.parent
+        project_dir = Path(script_dir)
+
+        get_pyproject = load_pyproject_toml(project_dir)
+
+        if get_pyproject("tool.flet.app.path"):
+            script_dir = script_dir.joinpath(get_pyproject("tool.flet.app.path"))
+            script_path = script_dir.joinpath(
+                os.path.basename(script_path),
+            )
+
+        if not script_path.exists():
             print(f"File or directory not found: {script_path}")
             sys.exit(1)
-
-        script_dir = os.path.dirname(script_path)
 
         port = options.port
         if port is None and (options.ios or options.android):
@@ -174,25 +182,31 @@ class Command(BaseCommand):
 
         assets_dir = options.assets_dir
         if assets_dir and not Path(assets_dir).is_absolute():
-            assets_dir = str(
-                Path(os.path.dirname(script_path)).joinpath(assets_dir).resolve()
-            )
+            assets_dir = str(script_dir.joinpath(assets_dir).resolve())
 
         ignore_dirs = (
             [
-                str(Path(os.path.dirname(script_path)).joinpath(directory).resolve())
+                str(script_dir.joinpath(directory).resolve())
                 for directory in options.ignore_dirs.split(",")
             ]
             if options.ignore_dirs
             else []
         )
 
+        flet_app_data_dir = project_dir.joinpath("data")
+        flet_app_data_dir.mkdir(parents=True, exist_ok=True)
+
+        flet_app_temp_dir = project_dir.joinpath("temp")
+        if flet_app_temp_dir.exists():
+            shutil.rmtree(str(flet_app_temp_dir), ignore_errors=True)
+        flet_app_temp_dir.mkdir(parents=True, exist_ok=True)
+
         my_event_handler = Handler(
             args=[sys.executable, "-u"]
             + ["-m"] * options.module
             + [options.script if options.module else script_path],
             watch_directory=options.directory or options.recursive,
-            script_path=script_path,
+            script_path=str(script_path),
             port=port,
             host=options.host,
             page_name=options.app_name,
@@ -203,6 +217,8 @@ class Command(BaseCommand):
             hidden=options.hidden,
             assets_dir=assets_dir,
             ignore_dirs=ignore_dirs,
+            flet_app_data_dir=str(flet_app_data_dir),
+            flet_app_temp_dir=str(flet_app_temp_dir),
         )
 
         my_observer = Observer()
@@ -237,6 +253,8 @@ class Handler(FileSystemEventHandler):
         hidden,
         assets_dir,
         ignore_dirs,
+        flet_app_data_dir,
+        flet_app_temp_dir,
     ) -> None:
         super().__init__()
         self.args = args
@@ -258,6 +276,8 @@ class Handler(FileSystemEventHandler):
         self.pid_file = None
         self.page_url_prefix = f"PAGE_URL_{time.time()}"
         self.page_url = None
+        self.flet_app_data_dir = flet_app_data_dir
+        self.flet_app_temp_dir = flet_app_temp_dir
         self.terminate = threading.Event()
         self.start_process()
 
@@ -280,6 +300,9 @@ class Handler(FileSystemEventHandler):
         if self.assets_dir is not None:
             p_env["FLET_ASSETS_DIR"] = self.assets_dir
         p_env["FLET_DISPLAY_URL_PREFIX"] = self.page_url_prefix
+
+        p_env["FLET_APP_DATA"] = self.flet_app_data_dir
+        p_env["FLET_APP_TEMP"] = self.flet_app_temp_dir
 
         p_env["PYTHONIOENCODING"] = "utf-8"
         p_env["PYTHONWARNINGS"] = "default::DeprecationWarning"
