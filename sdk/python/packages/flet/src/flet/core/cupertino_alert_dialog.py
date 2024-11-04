@@ -100,6 +100,7 @@ class CupertinoAlertDialog(Control):
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
         data: Any = None,
+        barrier_color: Optional[str] = None
     ):
         Control.__init__(
             self,
@@ -115,6 +116,7 @@ class CupertinoAlertDialog(Control):
         self.content = content
         self.actions = actions
         self.on_dismiss = on_dismiss
+        self.barrier_color = barrier_color
 
     def _get_control_name(self):
         return "cupertinoalertdialog"
@@ -167,6 +169,15 @@ class CupertinoAlertDialog(Control):
     @content.setter
     def content(self, value: Optional[Control]):
         self.__content = value
+    
+    #barrier_color
+    @property
+    def barrier_color(self) -> Optional[str]:
+        return self._get_attr("barrierColor")
+
+    @barrier_color.setter
+    def barrier_color(self, value: Optional[str]):
+        self._set_attr("barrierColor", value)
 
     # actions
     @property

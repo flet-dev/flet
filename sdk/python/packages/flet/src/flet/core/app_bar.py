@@ -180,7 +180,7 @@ class AppBar(AdaptiveControl):
     @toolbar_opacity.setter
     def toolbar_opacity(self, value: OptionalNumber):
         assert value is None or (
-            0 >= value >= 1
+            0 <= value <= 1
         ), "toolbar_opacity is out of range (0-1)"
         self._set_attr("toolbarOpacity", value)
 
