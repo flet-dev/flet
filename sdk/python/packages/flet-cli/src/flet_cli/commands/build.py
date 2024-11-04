@@ -331,6 +331,18 @@ class Command(BaseCommand):
             help="URL routing strategy (web only)",
         )
         parser.add_argument(
+            "--pwa-background-color",
+            dest="pwa_background_color",
+            help="an initial background color for your web application",
+            required=False,
+        )
+        parser.add_argument(
+            "--pwa-theme-color",
+            dest="pwa_theme_color",
+            help="default color for your web application's user interface",
+            required=False,
+        )
+        parser.add_argument(
             "--split-per-abi",
             dest="split_per_abi",
             action="store_true",
@@ -770,6 +782,10 @@ class Command(BaseCommand):
                     )
                     else "false"
                 ),
+                "pwa_background_color": options.pwa_background_color
+                or get_pyproject("tool.flet.web.pwa_background_color"),
+                "pwa_theme_color": options.pwa_theme_color
+                or get_pyproject("tool.flet.web.pwa_theme_color"),
                 "base_url": f"/{base_url}/" if base_url else "/",
                 "split_per_abi": split_per_abi,
                 "project_name": project_name,
