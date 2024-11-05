@@ -262,7 +262,7 @@ class ChipTheme:
     brightness: Optional[Brightness] = None
     show_checkmark: Optional[bool] = None
     avatar_constraints: Optional[BoxConstraints] = None
-    delete_icon_constraints: Optional[BoxConstraints] = None
+    delete_icon_size_constraints: Optional[BoxConstraints] = None
 
     def __post_init__(self):
         if not isinstance(self.color, dict):
@@ -874,9 +874,24 @@ class Theme:
     navigation_rail_theme: Optional[NavigationRailTheme] = None
     page_transitions: PageTransitionsTheme = field(default_factory=PageTransitionsTheme)
     popup_menu_theme: Optional[PopupMenuTheme] = None
+    splash_color: Optional[ColorValue] = None
+    highlight_color: Optional[ColorValue] = None
+    hover_color: Optional[ColorValue] = None
+    focus_color: Optional[ColorValue] = None
+    unselected_control_color: Optional[ColorValue] = None
+    disabled_color: Optional[ColorValue] = None
+    canvas_color: Optional[ColorValue] = None
+    scaffold_bgcolor: Optional[ColorValue] = None
+    card_color: Optional[ColorValue] = None
+    divider_color: Optional[ColorValue] = None
+    dialog_bgcolor: Optional[ColorValue] = None
+    indicator_color: Optional[ColorValue] = None
+    hint_color: Optional[ColorValue] = None
+    shadow_color: Optional[ColorValue] = None
+    secondary_header_color: Optional[ColorValue] = None
     primary_color: Optional[ColorValue] = None
-    primary_color_dark: Optional[str] = None
-    primary_color_light: Optional[str] = None
+    primary_color_dark: Optional[ColorValue] = None
+    primary_color_light: Optional[ColorValue] = None
     primary_text_theme: Optional[TextTheme] = None
     progress_indicator_theme: Optional[ProgressIndicatorTheme] = None
     radio_theme: Optional[RadioTheme] = None
