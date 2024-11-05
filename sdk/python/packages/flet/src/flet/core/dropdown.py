@@ -436,7 +436,7 @@ class Dropdown(FormFieldControl):
     def icon_content(self) -> Optional[Control]:
         warnings.warn(
             f"icon_content is deprecated since version 0.25.0 "
-            f"and will be removed in version 0.26.0. Use icon instead.",
+            f"and will be removed in version 0.28.0. Use icon instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
@@ -448,7 +448,7 @@ class Dropdown(FormFieldControl):
         if value is not None:
             warnings.warn(
                 f"icon_content is deprecated since version 0.25.0 "
-                f"and will be removed in version 0.26.0. Use icon instead.",
+                f"and will be removed in version 0.28.0. Use icon instead.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
@@ -485,7 +485,7 @@ class Dropdown(FormFieldControl):
     def icon_enabled_color(self) -> Optional[ColorValue]:
         warnings.warn(
             f"icon_enabled_color is deprecated since version 0.25.0 "
-            f"and will be removed in version 0.26.0. Use select_icon_enabled_color instead.",
+            f"and will be removed in version 0.28.0. Use select_icon_enabled_color instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
@@ -498,7 +498,7 @@ class Dropdown(FormFieldControl):
         if value is not None:
             warnings.warn(
                 f"icon_enabled_color is deprecated since version 0.25.0 "
-                f"and will be removed in version 0.26.0. Use select_icon_enabled_color instead.",
+                f"and will be removed in version 0.28.0. Use select_icon_enabled_color instead.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
@@ -518,7 +518,7 @@ class Dropdown(FormFieldControl):
     def icon_disabled_color(self) -> Optional[ColorValue]:
         warnings.warn(
             f"icon_disabled_color is deprecated since version 0.25.0 "
-            f"and will be removed in version 0.26.0. Use select_icon_disabled_color instead.",
+            f"and will be removed in version 0.28.0. Use select_icon_disabled_color instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
@@ -531,7 +531,7 @@ class Dropdown(FormFieldControl):
         if value is not None:
             warnings.warn(
                 f"icon_disabled_color is deprecated since version 0.25.0 "
-                f"and will be removed in version 0.26.0. Use select_icon_disabled_color instead.",
+                f"and will be removed in version 0.28.0. Use select_icon_disabled_color instead.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
@@ -572,7 +572,7 @@ class Dropdown(FormFieldControl):
     def icon_size(self) -> float:
         warnings.warn(
             f"icon_size is deprecated since version 0.25.0 "
-            f"and will be removed in version 0.26.0. Use select_icon_size instead.",
+            f"and will be removed in version 0.28.0. Use select_icon_size instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
@@ -584,7 +584,7 @@ class Dropdown(FormFieldControl):
         if value is not None:
             warnings.warn(
                 f"icon_size is deprecated since version 0.25.0 "
-                f"and will be removed in version 0.26.0. Use select_icon_size instead.",
+                f"and will be removed in version 0.28.0. Use select_icon_size instead.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
