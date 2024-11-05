@@ -105,6 +105,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         # AdaptiveControl
         #
         adaptive: Optional[bool] = None,
+        dividerless: Optional[bool] = None
     ):
         ConstrainedControl.__init__(
             self,
@@ -167,6 +168,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         self.visual_density = visual_density
         self.show_trailing_icon = show_trailing_icon
         self.min_tile_height = min_tile_height
+        self.dividerless=dividerless
 
     def _get_control_name(self):
         return "expansiontile"
@@ -345,6 +347,15 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     def initially_expanded(self, value: Optional[bool]):
         self._set_attr("initiallyExpanded", value)
 
+    # dividerless
+    @property
+    def dividerless(self) -> bool:
+        return self._get_attr("dividerless", data_type="bool", def_value=False)
+
+    @dividerless.setter
+    def dividerless(self, value: Optional[bool]):
+        self._set_attr("dividerless", value)
+        
     # shape
     @property
     def shape(self) -> Optional[OutlinedBorder]:

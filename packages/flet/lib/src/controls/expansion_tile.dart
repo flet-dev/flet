@@ -57,6 +57,7 @@ class ExpansionTileControl extends StatelessWidget {
     var collapsedBgColor = control.attrColor("collapsedBgColor", context);
     var collapsedIconColor = control.attrColor("collapsedIconColor", context);
     var collapsedTextColor = control.attrColor("collapsedTextColor", context);
+    var dividerless = control.attrBool("dividerless", false);
 
     var affinity = parseListTileControlAffinity(
         control.attrString("affinity"), ListTileControlAffinity.platform)!;
@@ -81,6 +82,7 @@ class ExpansionTileControl extends StatelessWidget {
           }
         : null;
 
+    Widget dividerlessTile;
     Widget tile = ExpansionTile(
       controlAffinity: affinity,
       childrenPadding: parseEdgeInsets(control, "controlsPadding"),
@@ -126,6 +128,18 @@ class ExpansionTileControl extends StatelessWidget {
           .toList(),
     );
 
-    return constrainedControl(context, tile, parent, control);
+    if (dividerless != null && dividerless) {
+      debugPrint("dividerless attribute found!");
+      dividerlessTile = Theme(
+        data: ThemeData().copyWith(dividerColor: Colors.transparent),
+        child:tile
+      );
+    }
+    else {
+      debugPrint("no dividerless attribute...");
+      dividerlessTile = tile;
+    }
+
+    return constrainedControl(context, dividerlessTile, parent, control);
   }
 }
