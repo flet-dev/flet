@@ -8,7 +8,7 @@ import time
 import uuid
 from concurrent.futures import CancelledError, Future, ThreadPoolExecutor
 from contextvars import ContextVar
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from functools import partial
 from typing import (
@@ -67,6 +67,7 @@ from flet.core.types import (
     ColorValue,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
+    LocaleConfiguration,
     MainAxisAlignment,
     OffsetValue,
     OptionalControlEventCallable,
@@ -104,7 +105,8 @@ try:
     from flet.auth.oauth_provider import OAuthProvider
 except ImportError as e:
 
-    class OAuthProvider: ...
+    class OAuthProvider:
+        ...
 
     class Authorization:
         def __init__(
@@ -113,26 +115,14 @@ except ImportError as e:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ): ...
+        ):
+            ...
 
 
 AT = TypeVar("AT", bound=Authorization)
 
 InputT = ParamSpec("InputT")
 RetT = TypeVar("RetT")
-
-
-@dataclass
-class Locale:
-    language_code: Optional[str] = field(default=None)
-    country_code: Optional[str] = field(default=None)
-    script_code: Optional[str] = field(default=None)
-
-
-@dataclass
-class LocaleConfiguration:
-    supported_locales: Optional[List[Locale]] = field(default=None)
-    current_locale: Optional[Locale] = field(default=None)
 
 
 class PageDisconnectedException(Exception):

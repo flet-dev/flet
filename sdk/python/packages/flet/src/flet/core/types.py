@@ -5,6 +5,7 @@ from typing import (
     Any,
     Callable,
     Dict,
+    List,
     Optional,
     Protocol,
     Tuple,
@@ -426,6 +427,19 @@ class VisualDensity(Enum):
     COMPACT = "compact"
     COMFORTABLE = "comfortable"
     ADAPTIVE_PLATFORM_DENSITY = "adaptivePlatformDensity"
+
+
+@dataclass
+class Locale:
+    language_code: Optional[str] = None
+    country_code: Optional[str] = None
+    script_code: Optional[str] = None
+
+
+@dataclass
+class LocaleConfiguration:
+    supported_locales: Optional[List[Locale]] = None
+    current_locale: Optional[Locale] = None
 
 
 # Events

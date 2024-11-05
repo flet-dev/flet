@@ -16,7 +16,7 @@ from flet.utils import deprecated
 
 class CupertinoIconsDeprecated(EnumMeta):
     def __getattribute__(self, item):
-        if not item.startswith("_"):
+        if not item.startswith("_") and item.isupper():
             warn(
                 "cupertino_icons enum is deprecated since version 0.25.0 and will be removed in version 0.28.0. "
                 "Use CupertinoIcons enum instead.",
