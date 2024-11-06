@@ -922,18 +922,10 @@ class Command(BaseCommand):
                     "flutter_launcher_icons/image_path_android",
                     [android_icon, default_icon],
                 )
-                adaptive_icon_background = (
-                    options.android_adaptive_icon_background
-                    or get_pyproject("tool.flet.android.adaptive_icon_background")
-                    or "#ffffff"
-                )
                 fallback_image(
                     "flutter_launcher_icons/adaptive_icon_foreground",
                     [android_icon, default_icon],
                 )
-                pubspec["flutter_launcher_icons"][
-                    "adaptive_icon_background"
-                ] = adaptive_icon_background
                 fallback_image(
                     "flutter_launcher_icons/web/image_path", [web_icon, default_icon]
                 )
@@ -1053,6 +1045,15 @@ class Command(BaseCommand):
                     pubspec["flutter_native_splash"]["android_12"][
                         "color_dark"
                     ] = splash_dark_color
+
+            adaptive_icon_background = (
+                options.android_adaptive_icon_background
+                or get_pyproject("tool.flet.android.adaptive_icon_background")
+            )
+            if adaptive_icon_background:
+                pubspec["flutter_launcher_icons"][
+                    "adaptive_icon_background"
+                ] = adaptive_icon_background
 
             # enable/disable splashes
             pubspec["flutter_native_splash"]["web"] = (
