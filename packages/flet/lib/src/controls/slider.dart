@@ -70,7 +70,7 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
   @override
   Widget build(BuildContext context) {
     debugPrint("SliderControl build: ${widget.control.id}");
-
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
     return withPagePlatform((context, platform) {
       bool? adaptive =
           widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
@@ -84,21 +84,10 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
       }
 
       String? label = widget.control.attrString("label");
-      bool autofocus = widget.control.attrBool("autofocus", false)!;
-      bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
       double min = widget.control.attrDouble("min", 0)!;
       double max = widget.control.attrDouble("max", 1)!;
-      int? divisions = widget.control.attrInt("divisions");
       int round = widget.control.attrInt("round", 0)!;
-
-      var interaction =
-          parseSliderInteraction(widget.control.attrString("interaction"));
-
-      var overlayColor = parseWidgetStateColor(
-          Theme.of(context), widget.control, "overlayColor");
-
-      debugPrint("SliderControl build: ${widget.control.id}");
 
       double value = widget.control.attrDouble("value", min)!;
       if (_value != value) {
@@ -113,17 +102,19 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
       }
 
       var slider = Slider(
-          autofocus: autofocus,
+          autofocus: widget.control.attrBool("autofocus", false)!,
           focusNode: _focusNode,
           value: _value,
           min: min,
           max: max,
-          divisions: divisions,
+          divisions: widget.control.attrInt("divisions"),
           label: label?.replaceAll("{value}", _value.toStringAsFixed(round)),
           activeColor: widget.control.attrColor("activeColor", context),
           inactiveColor: widget.control.attrColor("inactiveColor", context),
-          overlayColor: overlayColor,
-          allowedInteraction: interaction,
+          overlayColor: parseWidgetStateColor(
+              Theme.of(context), widget.control, "overlayColor"),
+          allowedInteraction:
+              parseSliderInteraction(widget.control.attrString("interaction")),
           thumbColor: widget.control.attrColor("thumbColor", context),
           onChanged: !disabled
               ? (double value) {

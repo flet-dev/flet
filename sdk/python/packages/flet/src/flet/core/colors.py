@@ -45,7 +45,7 @@ from flet.utils import deprecated
 
 class ColorsDeprecated(EnumMeta):
     def __getattribute__(self, item):
-        if not item.startswith("_"):
+        if not item.startswith("_") and item.isupper():
             warn(
                 "colors enum is deprecated since version 0.25.0 and will be removed in version 0.28.0. "
                 "Use Colors enum instead.",

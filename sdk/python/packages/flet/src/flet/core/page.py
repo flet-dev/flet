@@ -6,9 +6,9 @@ import logging
 import threading
 import time
 import uuid
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import CancelledError, Future, ThreadPoolExecutor
 from contextvars import ContextVar
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from functools import partial
 from typing import (
@@ -67,6 +67,7 @@ from flet.core.types import (
     ColorValue,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
+    LocaleConfiguration,
     MainAxisAlignment,
     OffsetValue,
     OptionalControlEventCallable,
@@ -126,19 +127,6 @@ AT = TypeVar("AT", bound=Authorization)
 
 InputT = ParamSpec("InputT")
 RetT = TypeVar("RetT")
-
-
-@dataclass
-class Locale:
-    language_code: Optional[str] = field(default=None)
-    country_code: Optional[str] = field(default=None)
-    script_code: Optional[str] = field(default=None)
-
-
-@dataclass
-class LocaleConfiguration:
-    supported_locales: Optional[List[Locale]] = field(default=None)
-    current_locale: Optional[Locale] = field(default=None)
 
 
 class PageDisconnectedException(Exception):
@@ -936,17 +924,19 @@ class Page(AdaptiveControl):
         handler: Callable[InputT, Awaitable[RetT]],
         *args: InputT.args,
         **kwargs: InputT.kwargs,
-    ) -> asyncio.Future[RetT]:
+    ) -> Future[RetT]:
         _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
 
         future = asyncio.run_coroutine_threadsafe(handler(*args, **kwargs), self.__loop)
 
         def _on_completion(f):
-            exception = f.exception()
-
-            if exception:
-                raise exception
+            try:
+                exception = f.exception()
+                if exception:
+                    raise exception
+            except CancelledError:
+                pass
 
         future.add_done_callback(_on_completion)
 

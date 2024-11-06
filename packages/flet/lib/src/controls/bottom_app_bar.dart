@@ -35,13 +35,7 @@ class _BottomAppBarControlState extends State<BottomAppBarControl>
     var contentCtrls =
         widget.children.where((c) => c.name == "content" && c.isVisible);
 
-    var s = widget.control.attrString("shape");
-    NotchedShape? shape;
-    if (s == "circular") {
-      shape = const CircularNotchedRectangle();
-    } else if (s == "auto") {
-      shape = const AutomaticNotchedShape(ContinuousRectangleBorder());
-    }
+    var shape = parseNotchedShape(widget.control.attrString("shape"));
 
     var elevation = widget.control.attrDouble("elevation", 0)!;
 

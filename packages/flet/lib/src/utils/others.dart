@@ -51,6 +51,18 @@ BoxShape? parseBoxShape(String? value, [BoxShape? defValue]) {
       defValue;
 }
 
+NotchedShape? parseNotchedShape(String? value, [NotchedShape? defValue]) {
+  if (value == null) {
+    return defValue;
+  } else if (value == "circular") {
+    return const CircularNotchedRectangle();
+  } else if (value == "auto") {
+    return const AutomaticNotchedShape(ContinuousRectangleBorder());
+  } else {
+    return defValue;
+  }
+}
+
 SliderInteraction? parseSliderInteraction(String? value,
     [SliderInteraction? defValue]) {
   if (value == null) {
