@@ -205,9 +205,10 @@ class SegmentedButton(ConstrainedControl):
         ), "allow_multiple_selection must be True for selected to have more than one item"
         if self.__style is None:
             self.__style = ButtonStyle()
-            self.__style.side = self._wrap_attr_dict(self.__style.side)
-            self.__style.shape = self._wrap_attr_dict(self.__style.shape)
-            self.__style.padding = self._wrap_attr_dict(self.__style.padding)
+
+        self.__style.side = self._wrap_attr_dict(self.__style.side)
+        self.__style.shape = self._wrap_attr_dict(self.__style.shape)
+        self.__style.padding = self._wrap_attr_dict(self.__style.padding)
         self._set_attr_json("style", self.__style)
 
     def _get_children(self):
