@@ -17,7 +17,6 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
-from flet.utils import datetime_to_string
 
 
 class CupertinoDatePickerMode(Enum):
@@ -143,10 +142,10 @@ class CupertinoDatePicker(ConstrainedControl):
         return datetime.fromisoformat(value_string) if value_string else None
 
     @value.setter
-    def value(self, value: Optional[datetime]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("value", value)
+    def value(self, value: Optional[Union[date, datetime]]):
+        if not isinstance(value, (date, datetime)):
+            raise ValueError("value must be of type date, datetime or None")
+        self._set_attr("value", value.isoformat())
 
     # first_date
     @property
@@ -157,8 +156,10 @@ class CupertinoDatePicker(ConstrainedControl):
         )
 
     @first_date.setter
-    def first_date(self, value: Optional[datetime]):
-        self._set_attr("firstDate", datetime_to_string(value))
+    def first_date(self, value: Optional[Union[date, datetime]]):
+        if not isinstance(value, (date, datetime)):
+            raise ValueError("first_date must be of type date, datetime or None")
+        self._set_attr("firstDate", value.isoformat())
 
     # last_date
     @property
@@ -169,8 +170,10 @@ class CupertinoDatePicker(ConstrainedControl):
         )
 
     @last_date.setter
-    def last_date(self, value: Optional[datetime]):
-        self._set_attr("lastDate", datetime_to_string(value))
+    def last_date(self, value: Optional[Union[date, datetime]]):
+        if not isinstance(value, (date, datetime)):
+            raise ValueError("last_date must be of type date, datetime or None")
+        self._set_attr("lastDate", value.isoformat())
 
     # bgcolor
     @property

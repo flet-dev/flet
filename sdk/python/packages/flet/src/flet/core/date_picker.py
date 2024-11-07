@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from enum import Enum
 from typing import Any, Optional, Union
 
@@ -18,7 +18,7 @@ from flet.core.types import (
     OptionalEventCallable,
     ResponsiveNumber,
 )
-from flet.utils import datetime_to_string, deprecated
+from flet.utils import deprecated
 
 try:
     from typing import Literal
@@ -210,8 +210,10 @@ class DatePicker(Control):
         return datetime.fromisoformat(v) if v else None
 
     @value.setter
-    def value(self, value: Optional[datetime]):
-        self._set_attr("value", datetime_to_string(value))
+    def value(self, value: Optional[Union[date, datetime]]):
+        if not isinstance(value, (date, datetime)):
+            raise ValueError("value must be of type date, datetime or None")
+        self._set_attr("value", value.isoformat())
 
     # first_date
     @property
@@ -220,8 +222,10 @@ class DatePicker(Control):
         return datetime.fromisoformat(v) if v is not None else None
 
     @first_date.setter
-    def first_date(self, value: Optional[datetime]):
-        self._set_attr("firstDate", datetime_to_string(value))
+    def first_date(self, value: Optional[Union[date, datetime]]):
+        if not isinstance(value, (date, datetime)):
+            raise ValueError("first_date must be of type date, datetime or None")
+        self._set_attr("firstDate", value.isoformat())
 
     # last_date
     @property
@@ -230,8 +234,10 @@ class DatePicker(Control):
         return datetime.fromisoformat(v) if v is not None else None
 
     @last_date.setter
-    def last_date(self, value: Optional[datetime]):
-        self._set_attr("lastDate", datetime_to_string(value))
+    def last_date(self, value: Optional[Union[date, datetime]]):
+        if not isinstance(value, (date, datetime)):
+            raise ValueError("last_date must be of type date, datetime or None")
+        self._set_attr("lastDate", value.isoformat())
 
     # current_date
     @property
@@ -240,8 +246,10 @@ class DatePicker(Control):
         return datetime.fromisoformat(v) if v is not None else None
 
     @current_date.setter
-    def current_date(self, value: Optional[datetime]):
-        self._set_attr("currentDate", datetime_to_string(value))
+    def current_date(self, value: Optional[Union[date, datetime]]):
+        if not isinstance(value, (date, datetime)):
+            raise ValueError("current_date must be of type date, datetime or None")
+        self._set_attr("currentDate", value.isoformat())
 
     # field_hint_text
     @property
