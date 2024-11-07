@@ -31,7 +31,7 @@ class Segment(Control):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[str] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -57,9 +57,6 @@ class Segment(Control):
 
     def _get_control_name(self):
         return "segment"
-
-    def before_update(self):
-        super().before_update()
 
     def _get_children(self):
         children = []
@@ -97,6 +94,15 @@ class Segment(Control):
     @value.setter
     def value(self, value: str):
         self._set_attr("value", value)
+
+    # tooltip
+    @property
+    def tooltip(self) -> Optional[str]:
+        return self._get_attr("tooltip")
+
+    @tooltip.setter
+    def tooltip(self, value: Optional[str]):
+        self._set_attr("tooltip", value)
 
 
 class SegmentedButton(ConstrainedControl):
