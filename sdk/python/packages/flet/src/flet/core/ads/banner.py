@@ -1,15 +1,10 @@
 from typing import Any, Optional, Union
 
-from flet_core.ads.base_ad import BaseAd
-from flet_core.control import OptionalNumber
-from flet_core.ref import Ref
-from flet_core.types import (
-    AnimationValue,
-    OffsetValue,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.core.ads.base_ad import BaseAd
+from flet.core.animation import AnimationValue
+from flet.core.control import OptionalNumber
+from flet.core.ref import Ref
+from flet.core.types import OffsetValue, ResponsiveNumber, RotateValue, ScaleValue
 
 
 class BannerAd(BaseAd):

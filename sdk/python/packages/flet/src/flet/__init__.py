@@ -1,5 +1,6 @@
 from flet.app import app, app_async
 from flet.core import (
+    ads,
     alignment,
     animation,
     audio,
