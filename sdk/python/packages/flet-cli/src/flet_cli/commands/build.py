@@ -225,6 +225,13 @@ class Command(BaseCommand):
             required=False,
         )
         parser.add_argument(
+            "--clear-cache",
+            dest="clear_cache",
+            action="store_true",
+            default=None,
+            help="clear build cache",
+        )
+        parser.add_argument(
             "--project",
             dest="project_name",
             help="project name for executable or bundle",
@@ -836,6 +843,10 @@ class Command(BaseCommand):
             )
 
             # create Flutter project from a template
+            if options.clear_cache and self.flutter_dir.exists():
+                if self.verbose > 1:
+                    console.log(f"Deleting {self.flutter_dir}")
+                shutil.rmtree(self.flutter_dir, ignore_errors=True)
             self.flutter_dir.mkdir(parents=True, exist_ok=True)
             self.status.update(
                 f"[bold blue]Creating Flutter bootstrap project from {template_url} with ref {template_ref} {self.emojis['loading']}... ",
