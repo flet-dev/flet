@@ -21,6 +21,10 @@ from flet.utils import (
     is_pyodide,
     open_in_browser,
 )
+from flet.utils.pip import (
+    ensure_flet_desktop_package_installed,
+    ensure_flet_web_package_installed,
+)
 
 logger = logging.getLogger(flet.__name__)
 
@@ -43,6 +47,7 @@ def app(
         return
 
     if export_asgi_app:
+        ensure_flet_web_package_installed()
         from flet_web.fastapi.serve_fastapi_web_app import get_fastapi_web_app
 
         return get_fastapi_web_app(
@@ -175,6 +180,7 @@ async def app_async(
             and not is_embedded()
             and url_prefix is None
         ):
+            ensure_flet_desktop_package_installed()
             from flet_desktop import close_flet_view, open_flet_view_async
 
             on_app_startup(conn.page_url)
@@ -274,6 +280,7 @@ async def __run_web_server(
     blocking,
     on_startup,
 ):
+    ensure_flet_web_package_installed()
     from flet_web.fastapi.serve_fastapi_web_app import serve_fastapi_web_app
 
     url_host = "127.0.0.1" if host in [None, "", "*"] else host
@@ -306,7 +313,6 @@ async def __run_web_server(
 
 def __run_pyodide(target):
     import flet_js
-
     from flet.pyodide_connection import PyodideConnection
 
     async def on_event(e):
