@@ -54,33 +54,43 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
       _selectedIndex = selectedIndex;
     }
 
-    var navDrawer = withControls(
+    return withControls(
         widget.children
             .where((c) => c.isVisible && c.name == null)
             .map((c) => c.id), (content, viewModel) {
       List<Widget> children = viewModel.controlViews.map((destView) {
         if (destView.control.type == "navigationdrawerdestination") {
-          var icon = parseIcon(destView.control.attrString("icon"));
-          var iconContentCtrls = destView.children
-              .where((c) => c.name == "icon_content" && c.isVisible);
-          var selectedIcon =
+          var iconStr = parseIcon(destView.control.attrString("icon"));
+          var iconCtrls = destView.children
+                  .where((c) => c.name == "icon" && c.isVisible);
+          // if no control provided in "icon" property, replace iconCtrls with control provided in icon_content, if any 
+          // the line below needs to be deleted after icon_content is deprecated
+          iconCtrls = iconCtrls.isEmpty? destView.children
+                  .where((c) => c.name == "icon_content" && c.isVisible) : iconCtrls;
+          
+          var selectedIconStr =
               parseIcon(destView.control.attrString("selectedIcon"));
-          var selectedIconContentCtrls = destView.children
-              .where((c) => c.name == "selected_icon_content" && c.isVisible);
+          var selectedIconCtrls = destView.children
+                  .where((c) => c.name == "selected_icon" && c.isVisible);
+          // if no control provided in "selected_icon" property, replace selectedIconCtrls with control provided in selected_icon_content, if any 
+          // the line below needs to be deleted after selected_icon_content is deprecated
+          selectedIconCtrls = selectedIconCtrls.isEmpty? destView.children
+                  .where((c) => c.name == "selected_icon_content" && c.isVisible): selectedIconCtrls;
           return NavigationDrawerDestination(
+            enabled: !(disabled || destView.control.isDisabled),
             backgroundColor: destView.control.attrColor("bgColor", context),
-            icon: iconContentCtrls.isNotEmpty
+            icon: iconCtrls.isNotEmpty
                 ? createControl(
-                    destView.control, iconContentCtrls.first.id, disabled,
+                    destView.control, iconCtrls.first.id, disabled,
                     parentAdaptive: widget.parentAdaptive)
-                : Icon(icon),
+                : Icon(iconStr),
             label: Text(destView.control.attrString("label", "")!),
-            selectedIcon: selectedIconContentCtrls.isNotEmpty
+            selectedIcon: selectedIconCtrls.isNotEmpty
                 ? createControl(destView.control,
-                    selectedIconContentCtrls.first.id, disabled,
+                    selectedIconCtrls.first.id, disabled,
                     parentAdaptive: widget.parentAdaptive)
-                : selectedIcon != null
-                    ? Icon(selectedIcon)
+                : selectedIconStr != null
+                    ? Icon(selectedIconStr)
                     : null,
           );
         } else {
@@ -88,7 +98,8 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
               parentAdaptive: widget.parentAdaptive);
         }
       }).toList();
-      return NavigationDrawer(
+
+      var drawer = NavigationDrawer(
         elevation: widget.control.attrDouble("elevation"),
         indicatorColor: widget.control.attrColor("indicatorColor", context),
         indicatorShape: parseOutlinedBorder(widget.control, "indicatorShape"),
@@ -101,8 +112,8 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
         onDestinationSelected: _destinationChanged,
         children: children,
       );
-    });
 
-    return navDrawer;
+      return baseControl(context, drawer, widget.parent, widget.control);
+    });
   }
 }

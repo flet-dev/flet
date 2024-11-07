@@ -2,7 +2,7 @@ name: flet_audio_recorder
 description: Flet AudioRecorder control
 homepage: https://flet.dev
 repository: https://github.com/flet-dev/flet/packages/flet_audio_recorder
-version: 0.23.2
+version: 0.24.1
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
 
   collection: ^1.16.0
-  record: ^5.0.4
+  record: ^5.1.2
 
   flet:
     path: ../flet/

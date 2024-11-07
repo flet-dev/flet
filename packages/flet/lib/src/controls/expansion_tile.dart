@@ -102,6 +102,9 @@ class ExpansionTileControl extends StatelessWidget {
       onExpansionChanged: onChange,
       visualDensity: parseVisualDensity(control.attrString("visualDensity")),
       enableFeedback: control.attrBool("enableFeedback"),
+      showTrailingIcon: control.attrBool("showTrailingIcon", true)!,
+      enabled: !disabled,
+      minTileHeight: control.attrDouble("minTileHeight"),
       dense: control.attrBool("dense"),
       leading: leadingCtrls.isNotEmpty
           ? createControl(control, leadingCtrls.first.id, disabled,

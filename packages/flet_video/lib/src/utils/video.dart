@@ -63,7 +63,7 @@ Map<String, dynamic> subtitleConfigurationFromJSON(
     ThemeData theme, dynamic json) {
   SubtitleViewConfiguration configuration = SubtitleViewConfiguration(
     style: json["text_style"] != null
-        ? textStyleFromJson(theme, json["text_style"])
+        ? textStyleFromJson(theme, json["text_style"])!
         : const TextStyle(
             height: 1.4,
             fontSize: 32.0,

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/utils/badge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -13,12 +14,12 @@ import '../models/control_view_model.dart';
 import '../models/page_media_view_model.dart';
 import '../utils/animations.dart';
 import '../utils/theme.dart';
+import '../utils/tooltip.dart';
 import '../utils/transforms.dart';
 import 'alert_dialog.dart';
 import 'animated_switcher.dart';
 import 'auto_complete.dart';
 import 'autofill_group.dart';
-import 'badge.dart';
 import 'banner.dart';
 import 'barchart.dart';
 import 'bottom_app_bar.dart';
@@ -71,6 +72,7 @@ import 'haptic_feedback.dart';
 import 'icon.dart';
 import 'icon_button.dart';
 import 'image.dart';
+import 'interactive_viewer.dart';
 import 'linechart.dart';
 import 'list_tile.dart';
 import 'list_view.dart';
@@ -84,6 +86,7 @@ import 'outlined_button.dart';
 import 'page.dart';
 import 'pagelet.dart';
 import 'piechart.dart';
+import 'placeholder.dart';
 import 'popup_menu_button.dart';
 import 'progress_bar.dart';
 import 'progress_ring.dart';
@@ -110,7 +113,6 @@ import 'text.dart';
 import 'text_button.dart';
 import 'textfield.dart';
 import 'time_picker.dart';
-import 'tooltip.dart';
 import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
 import 'window_drag_area.dart';
@@ -242,6 +244,8 @@ Widget createWidget(
           key: key,
           parent: parent,
           control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
           backend: backend);
     case "fletapp":
       return FletAppControl(
@@ -253,18 +257,11 @@ Widget createWidget(
           children: controlView.children,
           control: controlView.control,
           parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
           backend: backend);
     case "divider":
       return DividerControl(
           key: key, parent: parent, control: controlView.control);
-    case "badge":
-      return BadgeControl(
-          key: key,
-          parent: parent,
-          control: controlView.control,
-          children: controlView.children,
-          parentDisabled: parentDisabled,
-          parentAdaptive: parentAdaptive);
     case "selectionarea":
       return SelectionAreaControl(
           key: key,
@@ -322,6 +319,8 @@ Widget createWidget(
       return ProgressBarControl(
           key: key, parent: parent, control: controlView.control);
     case "elevatedbutton":
+    case "filledbutton":
+    case "filledtonalbutton":
       return ElevatedButtonControl(
           key: key,
           parent: parent,
@@ -444,6 +443,14 @@ Widget createWidget(
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           backend: backend);
+    case "placeholder":
+      return PlaceholderControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive);
     case "cupertinoslidingsegmentedbutton":
       return CupertinoSlidingSegmentedButtonControl(
           key: key,
@@ -580,14 +587,6 @@ Widget createWidget(
           children: controlView.children,
           parentDisabled: parentDisabled,
           backend: backend);
-    case "tooltip":
-      return TooltipControl(
-          key: key,
-          parent: parent,
-          control: controlView.control,
-          children: controlView.children,
-          parentDisabled: parentDisabled,
-          parentAdaptive: parentAdaptive);
     case "transparentpointer":
       return TransparentPointerControl(
           key: key,
@@ -643,6 +642,15 @@ Widget createWidget(
           parentAdaptive: parentAdaptive);
     case "listtile":
       return ListTileControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
+    case "interactiveviewer":
+      return InteractiveViewerControl(
           key: key,
           parent: parent,
           control: controlView.control,
@@ -996,7 +1004,12 @@ Widget baseControl(
     BuildContext context, Widget widget, Control? parent, Control control) {
   return _expandable(
       _directionality(
-          _tooltip(_opacity(context, widget, parent, control), parent, control),
+          _tooltip(
+            _opacity(context, widget, parent, control),
+            Theme.of(context),
+            parent,
+            control,
+          ),
           parent,
           control),
       parent,
@@ -1006,20 +1019,24 @@ Widget baseControl(
 Widget constrainedControl(
     BuildContext context, Widget widget, Control? parent, Control control) {
   return _expandable(
-      _positionedControl(
-          context,
-          _aspectRatio(
-              _offsetControl(
-                  context,
-                  _scaledControl(
+      _badge(
+          _positionedControl(
+              context,
+              _aspectRatio(
+                  _offsetControl(
                       context,
-                      _rotatedControl(
+                      _scaledControl(
                           context,
-                          _sizedControl(
-                              _directionality(
-                                  _tooltip(
-                                      _opacity(
-                                          context, widget, parent, control),
+                          _rotatedControl(
+                              context,
+                              _sizedControl(
+                                  _directionality(
+                                      _tooltip(
+                                          _opacity(
+                                              context, widget, parent, control),
+                                          Theme.of(context),
+                                          parent,
+                                          control),
                                       parent,
                                       control),
                                   parent,
@@ -1034,6 +1051,7 @@ Widget constrainedControl(
                   control),
               parent,
               control),
+          Theme.of(context),
           parent,
           control),
       parent,
@@ -1067,18 +1085,16 @@ Widget _opacity(
   return widget;
 }
 
-Widget _tooltip(Widget widget, Control? parent, Control control) {
-  var tooltip = control.attrString("tooltip");
-  return tooltip != null &&
-          !["iconbutton", "floatingactionbutton", "popupmenubutton"]
-              .contains(control.type)
-      ? Tooltip(
-          message: tooltip,
-          padding: const EdgeInsets.all(4.0),
-          waitDuration: const Duration(milliseconds: 800),
-          child: widget,
-        )
-      : widget;
+Widget _tooltip(
+    Widget widget, ThemeData theme, Control? parent, Control control) {
+  var tooltip = parseTooltip(control, "tooltip", widget, theme);
+  return tooltip ?? widget;
+}
+
+Widget _badge(
+    Widget widget, ThemeData theme, Control? parent, Control control) {
+  var badge = parseBadge(control, "badge", widget, theme);
+  return badge ?? widget;
 }
 
 Widget _aspectRatio(Widget widget, Control? parent, Control control) {
@@ -1148,11 +1164,11 @@ Widget _scaledControl(
 
 Widget _offsetControl(
     BuildContext context, Widget widget, Control? parent, Control control) {
-  var offsetDetails = parseOffset(control, "offset");
+  var offset = parseOffset(control, "offset");
   var animation = parseAnimation(control, "animateOffset");
-  if (offsetDetails != null && animation != null) {
+  if (offset != null && animation != null) {
     return AnimatedSlide(
-        offset: Offset(offsetDetails.x, offsetDetails.y),
+        offset: offset,
         duration: animation.duration,
         curve: animation.curve,
         onEnd: control.attrBool("onAnimationEnd", false)!
@@ -1163,9 +1179,8 @@ Widget _offsetControl(
               }
             : null,
         child: widget);
-  } else if (offsetDetails != null) {
-    return FractionalTranslation(
-        translation: Offset(offsetDetails.x, offsetDetails.y), child: widget);
+  } else if (offset != null) {
+    return FractionalTranslation(translation: offset, child: widget);
   }
   return widget;
 }

@@ -6,6 +6,7 @@ import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/others.dart';
+import '../utils/time.dart';
 import 'create_control.dart';
 import 'cupertino_navigation_bar.dart';
 import 'flet_store_mixin.dart';
@@ -49,8 +50,7 @@ class _NavigationBarControlState extends State<NavigationBarControl>
     debugPrint("NavigationBarControl build: ${widget.control.id}");
 
     return withPagePlatform((context, platform) {
-      bool? adaptive =
-          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+      bool? adaptive = widget.control.isAdaptive ?? widget.parentAdaptive;
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
@@ -68,22 +68,16 @@ class _NavigationBarControlState extends State<NavigationBarControl>
       if (_selectedIndex != selectedIndex) {
         _selectedIndex = selectedIndex;
       }
-      var animationDuration = widget.control.attrInt("animationDuration");
-
-      NavigationDestinationLabelBehavior? labelBehavior =
-          parseNavigationDestinationLabelBehavior(
-              widget.control.attrString("labelBehavior"));
-
       var navBar = withControls(
           widget.children
               .where((c) => c.isVisible && c.name == null)
               .map((c) => c.id), (content, viewModel) {
         return NavigationBar(
-            labelBehavior: labelBehavior,
+            labelBehavior: parseNavigationDestinationLabelBehavior(
+                widget.control.attrString("labelBehavior")),
             height: widget.control.attrDouble("height"),
-            animationDuration: animationDuration != null
-                ? Duration(milliseconds: animationDuration)
-                : null,
+            animationDuration:
+                parseDuration(widget.control, "animationDuration"),
             elevation: widget.control.attrDouble("elevation"),
             shadowColor: widget.control.attrColor("shadowColor", context),
             surfaceTintColor:
@@ -95,33 +89,40 @@ class _NavigationBarControlState extends State<NavigationBarControl>
                 parseOutlinedBorder(widget.control, "indicatorShape"),
             backgroundColor: widget.control.attrColor("bgColor", context),
             selectedIndex: _selectedIndex,
-            onDestinationSelected: _destinationChanged,
+            onDestinationSelected: disabled ? null : _destinationChanged,
             destinations: viewModel.controlViews.map((destView) {
               var label = destView.control.attrString("label", "")!;
-
-              var icon = parseIcon(destView.control.attrString("icon"));
-              var iconContentCtrls = destView.children
-                  .where((c) => c.name == "icon_content" && c.isVisible);
-
-              var selectedIcon =
+              var iconStr = parseIcon(destView.control.attrString("icon"));
+              var iconCtrls = destView.children
+                  .where((c) => c.name == "icon" && c.isVisible);
+              // if no control provided in "icon" property, replace iconCtrls with control provided in icon_content, if any 
+              // the line below needs to be deleted after icon_content is deprecated
+              iconCtrls = iconCtrls.isEmpty? destView.children
+                  .where((c) => c.name == "icon_content" && c.isVisible) : iconCtrls;
+              var selectedIconStr =
                   parseIcon(destView.control.attrString("selectedIcon"));
-              var selectedIconContentCtrls = destView.children.where(
-                  (c) => c.name == "selected_icon_content" && c.isVisible);
-
+              var selectedIconCtrls = destView.children
+                  .where((c) => c.name == "selected_icon" && c.isVisible);
+              // if no control provided in "selected_icon" property, replace selectedIconCtrls with control provided in selected_icon_content, if any 
+              // the line below needs to be deleted after selected_icon_content is deprecated
+              selectedIconCtrls = selectedIconCtrls.isEmpty? destView.children
+                  .where((c) => c.name == "selected_icon_content" && c.isVisible): selectedIconCtrls;
+              var destinationDisabled = disabled || destView.control.isDisabled;
+              var destinationAdaptive = destView.control.isAdaptive ?? adaptive;
               return NavigationDestination(
-                  enabled: !disabled || !destView.control.isDisabled,
-                  tooltip: destView.control.attrString("tooltip", "")!,
-                  icon: iconContentCtrls.isNotEmpty
+                  enabled: !destinationDisabled,
+                  tooltip: destView.control.attrString("tooltip"),
+                  icon: iconCtrls.isNotEmpty? createControl(destView.control,
+                           iconCtrls.first.id, destinationDisabled,
+                           parentAdaptive: destinationAdaptive): Icon(iconStr),
+                  selectedIcon: selectedIconCtrls.isNotEmpty
                       ? createControl(
-                          destView.control, iconContentCtrls.first.id, disabled,
-                          parentAdaptive: adaptive)
-                      : Icon(icon),
-                  selectedIcon: selectedIconContentCtrls.isNotEmpty
-                      ? createControl(destView.control,
-                          selectedIconContentCtrls.first.id, disabled,
-                          parentAdaptive: adaptive)
-                      : selectedIcon != null
-                          ? Icon(selectedIcon)
+                          destView.control,
+                          selectedIconCtrls.first.id,
+                          destinationDisabled,
+                          parentAdaptive: destinationAdaptive)
+                      : selectedIconStr != null
+                          ? Icon(selectedIconStr)
                           : null,
                   label: label);
             }).toList());

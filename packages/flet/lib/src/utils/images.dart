@@ -49,11 +49,13 @@ ImageFilter? parseBlur(Control control, String propName,
   return blurImageFilterFromJSON(j1);
 }
 
-ImageFilter blurImageFilterFromJSON(dynamic json) {
+ImageFilter? blurImageFilterFromJSON(dynamic json) {
   double sigmaX = 0.0;
   double sigmaY = 0.0;
   TileMode tileMode = TileMode.clamp;
-  if (json is int || json is double) {
+  if (json == null) {
+    return null;
+  } else if (json is int || json is double) {
     sigmaX = sigmaY = parseDouble(json, 0)!;
   } else if (json is List && json.length > 1) {
     sigmaX = parseDouble(json[0], 0)!;
@@ -80,6 +82,9 @@ ColorFilter? parseColorFilter(Control control, String propName, ThemeData theme,
 
 ColorFilter? colorFilterFromJSON(dynamic json, ThemeData theme,
     [ColorFilter? defValue]) {
+  if (json == null) {
+    return defValue;
+  }
   Color? color = parseColor(theme, json["color"]);
   BlendMode? blendMode = parseBlendMode(json["blend_mode"]);
   if (color == null || blendMode == null) {
@@ -95,4 +100,41 @@ FilterQuality? parseFilterQuality(String? quality, [FilterQuality? defValue]) {
   return FilterQuality.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == quality.toLowerCase()) ??
       defValue;
+}
+
+bool isBase64ImageString(String s) {
+  // Check for base64 prefix
+  final base64PrefixPattern = RegExp(r'^data:image\/[a-zA-Z]+;base64,');
+  if (base64PrefixPattern.hasMatch(s)) {
+    return true;
+  }
+
+  // Check if string contains only valid base64 characters and has a valid length (multiple of 4)
+  final base64CharPattern = RegExp(r'^[A-Za-z0-9+/=]+$');
+  if (base64CharPattern.hasMatch(s) && s.length % 4 == 0) {
+    try {
+      base64.decode(s);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  return false;
+}
+
+bool isUrlOrPath(String s) {
+  // Check for URL pattern
+  final urlPattern = RegExp(r'^(http:\/\/|https:\/\/|www\.)');
+  if (urlPattern.hasMatch(s)) {
+    return true;
+  }
+
+  // Check for common file path characters
+  final filePathPattern = RegExp(r'^[a-zA-Z0-9_\-/\\\.]+$');
+  if (filePathPattern.hasMatch(s)) {
+    return true;
+  }
+
+  return false;
 }

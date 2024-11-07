@@ -4,14 +4,19 @@ import 'package:flutter/services.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/autofill.dart';
 import '../utils/borders.dart';
+import '../utils/box.dart';
+import '../utils/edge_insets.dart';
 import '../utils/form_field.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
-import '../utils/shadows.dart';
+import '../utils/others.dart';
+import '../utils/overlay_style.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
 import 'create_control.dart';
+import 'flet_store_mixin.dart';
 import 'textfield.dart';
 
 class CupertinoTextFieldControl extends StatefulWidget {
@@ -36,7 +41,8 @@ class CupertinoTextFieldControl extends StatefulWidget {
       _CupertinoTextFieldControlState();
 }
 
-class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
+class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
+    with FletStoreMixin {
   String _value = "";
   bool _focused = false;
   bool _revealPassword = false;
@@ -155,11 +161,6 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
       inputFormatters.add(TextCapitalizationFormatter(textCapitalization));
     }
 
-    TextInputType keyboardType = multiline
-        ? TextInputType.multiline
-        : parseTextInputType(
-            widget.control.attrString("keyboardType"), TextInputType.text)!;
-
     TextAlign textAlign = parseTextAlign(
         widget.control.attrString("textAlign"), TextAlign.start)!;
 
@@ -167,10 +168,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
 
     bool rtl = widget.control.attrBool("rtl", false)!;
     bool autocorrect = widget.control.attrBool("autocorrect", true)!;
-    bool enableSuggestions =
-        widget.control.attrBool("enableSuggestions", true)!;
-    bool smartDashesType = widget.control.attrBool("smartDashesType", true)!;
-    bool smartQuotesType = widget.control.attrBool("smartQuotesType", true)!;
+    ;
 
     FocusNode focusNode = shiftEnter ? _shiftEnterfocusNode : _focusNode;
 
@@ -211,130 +209,152 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
 
     Widget? revealPasswordIcon;
     if (password && canRevealPassword) {
-      revealPasswordIcon = GestureDetector(
-          child: Icon(
-            _revealPassword ? CupertinoIcons.eye_slash : CupertinoIcons.eye,
-          ),
-          onTap: () {
-            setState(() {
-              _revealPassword = !_revealPassword;
-            });
-          });
+      revealPasswordIcon = Padding(
+        padding: const EdgeInsets.only(right: 15.0),
+        child: GestureDetector(
+            child: Icon(
+              _revealPassword ? CupertinoIcons.eye_slash : CupertinoIcons.eye,
+            ),
+            onTap: () {
+              setState(() {
+                _revealPassword = !_revealPassword;
+              });
+            }),
+      );
     }
-
+    var fitParentSize = widget.control.attrBool("fitParentSize", false)!;
     BoxDecoration? defaultDecoration = const CupertinoTextField().decoration;
     var gradient = parseGradient(Theme.of(context), widget.control, "gradient");
     var blendMode = parseBlendMode(widget.control.attrString("blendMode"));
 
     var bgColor = widget.control.attrColor("bgColor", context);
-    // for adaptive TextField use label for placeholder
-    var placeholder = widget.control.attrString("placeholderText") ??
-        widget.control.attrString("label");
-    // for adaptive TextField use labelStyle for placeholderStyle
-    var placeholderStyle =
-        parseTextStyle(Theme.of(context), widget.control, "placeholderStyle") ??
-            parseTextStyle(Theme.of(context), widget.control, "labelStyle");
 
-    Widget textField = CupertinoTextField(
-        style: textStyle,
-        textAlignVertical: textVerticalAlign != null
-            ? TextAlignVertical(y: textVerticalAlign)
-            : null,
-        placeholder: placeholder,
-        placeholderStyle: placeholderStyle,
-        autofocus: autofocus,
-        enabled: !disabled,
-        onSubmitted: !multiline
-            ? (_) {
-                widget.backend
-                    .triggerControlEvent(widget.control.id, "submit", "");
-              }
-            : null,
-        decoration: defaultDecoration?.copyWith(
-            color: bgColor,
-            gradient: gradient,
-            backgroundBlendMode:
-                bgColor != null || gradient != null ? blendMode : null,
-            border: border,
-            borderRadius: borderRadius,
-            boxShadow:
-                parseBoxShadow(Theme.of(context), widget.control, "shadow")),
-        cursorHeight: widget.control.attrDouble("cursorHeight"),
-        showCursor: widget.control.attrBool("showCursor"),
-        cursorWidth: widget.control.attrDouble("cursorWidth", 2.0)!,
-        cursorRadius: parseRadius(
-            widget.control, "cursorRadius", const Radius.circular(2.0))!,
-        keyboardType: keyboardType,
-        clearButtonSemanticLabel:
-            widget.control.attrString("clearButtonSemanticsLabel"),
-        autocorrect: autocorrect,
-        enableSuggestions: enableSuggestions,
-        smartDashesType: smartDashesType
-            ? SmartDashesType.enabled
-            : SmartDashesType.disabled,
-        smartQuotesType: smartQuotesType
-            ? SmartQuotesType.enabled
-            : SmartQuotesType.disabled,
-        suffixMode: parseVisibilityMode(
-            widget.control.attrString("suffixVisibilityMode", "")!),
-        prefixMode: parseVisibilityMode(
-            widget.control.attrString("prefixVisibilityMode", "")!),
-        textAlign: textAlign,
-        minLines: minLines,
-        maxLines: maxLines,
-        maxLength: maxLength,
-        prefix: prefixControls.isNotEmpty
-            ? createControl(widget.control, prefixControls.first.id, disabled,
-                parentAdaptive: widget.parentAdaptive)
-            : null,
-        suffix: revealPasswordIcon ??
-            (suffixControls.isNotEmpty
-                ? createControl(
-                    widget.control, suffixControls.first.id, disabled,
-                    parentAdaptive: widget.parentAdaptive)
-                : null),
-        readOnly: readOnly,
-        textDirection: rtl ? TextDirection.rtl : null,
-        inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
-        obscureText: password && !_revealPassword,
-        controller: _controller,
-        focusNode: focusNode,
-        onChanged: (String value) {
-          //debugPrint(value);
-          _value = value;
-          widget.backend
-              .updateControlState(widget.control.id, {"value": value});
-          if (onChange) {
+    return withPageArgs((context, pageArgs) {
+      Widget textField = CupertinoTextField(
+          style: textStyle,
+          textAlignVertical: textVerticalAlign != null
+              ? TextAlignVertical(y: textVerticalAlign)
+              : null,
+          placeholder: widget.control.attrString("placeholderText") ??
+              widget.control.attrString("label"),
+          // use label for adaptive TextField
+          placeholderStyle: parseTextStyle(Theme.of(context), widget.control, "placeholderStyle") ??
+              parseTextStyle(Theme.of(context), widget.control, "labelStyle"),
+          // labelStyle for adaptive TextField
+          autofocus: autofocus,
+          enabled: !disabled,
+          onSubmitted: !multiline
+              ? (String value) {
+                  widget.backend
+                      .triggerControlEvent(widget.control.id, "submit", value);
+                }
+              : null,
+          decoration: defaultDecoration?.copyWith(
+              color: bgColor,
+              gradient: gradient,
+              image: parseDecorationImage(
+                  Theme.of(context), widget.control, "image", pageArgs),
+              backgroundBlendMode:
+                  bgColor != null || gradient != null ? blendMode : null,
+              border: border,
+              borderRadius: borderRadius,
+              boxShadow:
+                  parseBoxShadow(Theme.of(context), widget.control, "shadow")),
+          cursorHeight: widget.control.attrDouble("cursorHeight"),
+          showCursor: widget.control.attrBool("showCursor"),
+          cursorWidth: widget.control.attrDouble("cursorWidth", 2.0)!,
+          cursorRadius: parseRadius(
+              widget.control, "cursorRadius", const Radius.circular(2.0))!,
+          keyboardType: multiline
+              ? TextInputType.multiline
+              : parseTextInputType(widget.control.attrString("keyboardType"),
+                  TextInputType.text)!,
+          clearButtonSemanticLabel:
+              widget.control.attrString("clearButtonSemanticsLabel"),
+          autocorrect: autocorrect,
+          enableSuggestions:
+              widget.control.attrBool("enableSuggestions", true)!,
+          smartDashesType: widget.control.attrBool("smartDashesType", true)!
+              ? SmartDashesType.enabled
+              : SmartDashesType.disabled,
+          smartQuotesType: widget.control.attrBool("smartQuotesType", true)!
+              ? SmartQuotesType.enabled
+              : SmartQuotesType.disabled,
+          suffixMode: parseVisibilityMode(
+              widget.control.attrString("suffixVisibilityMode"),
+              OverlayVisibilityMode.always)!,
+          prefixMode: parseVisibilityMode(
+              widget.control.attrString("prefixVisibilityMode"),
+              OverlayVisibilityMode.always)!,
+          textAlign: textAlign,
+          minLines: fitParentSize ? null : minLines,
+          maxLines: fitParentSize ? null : maxLines,
+          maxLength: maxLength,
+          prefix: prefixControls.isNotEmpty
+              ? createControl(widget.control, prefixControls.first.id, disabled,
+                  parentAdaptive: widget.parentAdaptive)
+              : null,
+          suffix: revealPasswordIcon ?? (suffixControls.isNotEmpty ? createControl(widget.control, suffixControls.first.id, disabled, parentAdaptive: widget.parentAdaptive) : null),
+          readOnly: readOnly,
+          textDirection: rtl ? TextDirection.rtl : null,
+          inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
+          obscureText: password && !_revealPassword,
+          padding: parseEdgeInsets(widget.control, "padding", const EdgeInsets.all(7.0))!,
+          scribbleEnabled: widget.control.attrBool("enableScribble", true)!,
+          scrollPadding: parseEdgeInsets(widget.control, "scrollPadding", const EdgeInsets.all(20.0))!,
+          obscuringCharacter: widget.control.attrString("obscuringCharacter", '•')!,
+          cursorOpacityAnimates: widget.control.attrBool("animateCursorOpacity", Theme.of(context).platform == TargetPlatform.iOS)!,
+          expands: fitParentSize,
+          enableIMEPersonalizedLearning: widget.control.attrBool("enableIMEPersonalizedLearning", true)!,
+          clipBehavior: parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!,
+          cursorColor: cursorColor,
+          autofillHints: parseAutofillHints(widget.control, "autofillHints"),
+          keyboardAppearance: parseBrightness(widget.control.attrString("keyboardBrightness")),
+          enableInteractiveSelection: widget.control.attrBool("enableInteractiveSelection"),
+          clearButtonMode: parseVisibilityMode(widget.control.attrString("clearButtonVisibilityMode"), OverlayVisibilityMode.never)!,
+          strutStyle: parseStrutStyle(widget.control, "strutStyle"),
+          onTap: () {
+            widget.backend.triggerControlEvent(widget.control.id, "click");
+          },
+          controller: _controller,
+          focusNode: focusNode,
+          onChanged: (String value) {
+            //debugPrint(value);
+            _value = value;
             widget.backend
-                .triggerControlEvent(widget.control.id, "change", value);
-          }
-        });
+                .updateControlState(widget.control.id, {"value": value});
+            if (onChange) {
+              widget.backend
+                  .triggerControlEvent(widget.control.id, "change", value);
+            }
+          });
 
-    if (cursorColor != null || selectionColor != null) {
-      textField = TextSelectionTheme(
-          data: TextSelectionTheme.of(context).copyWith(
-              cursorColor: cursorColor, selectionColor: selectionColor),
-          child: textField);
-    }
+      if (cursorColor != null || selectionColor != null) {
+        textField = TextSelectionTheme(
+            data: TextSelectionTheme.of(context).copyWith(
+                cursorColor: cursorColor, selectionColor: selectionColor),
+            child: textField);
+      }
 
-    if (widget.control.attrInt("expand", 0)! > 0) {
-      return constrainedControl(
-          context, textField, widget.parent, widget.control);
-    } else {
-      return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          if (constraints.maxWidth == double.infinity &&
-              widget.control.attrDouble("width") == null) {
-            textField = ConstrainedBox(
-              constraints: const BoxConstraints.tightFor(width: 300),
-              child: textField,
-            );
-          }
+      if (widget.control.attrInt("expand", 0)! > 0) {
+        return constrainedControl(
+            context, textField, widget.parent, widget.control);
+      } else {
+        return LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            if (constraints.maxWidth == double.infinity &&
+                widget.control.attrDouble("width") == null) {
+              textField = ConstrainedBox(
+                constraints: const BoxConstraints.tightFor(width: 300),
+                child: textField,
+              );
+            }
 
-          return constrainedControl(
-              context, textField, widget.parent, widget.control);
-        },
-      );
-    }
+            return constrainedControl(
+                context, textField, widget.parent, widget.control);
+          },
+        );
+      }
+    });
   }
 }

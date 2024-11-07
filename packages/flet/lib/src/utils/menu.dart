@@ -41,7 +41,7 @@ MenuStyle? parseMenuStyle(ThemeData theme, Control control, String propName,
       defaultShape);
 }
 
-MenuStyle? menuStyleFromJSON(ThemeData theme, Map<String, dynamic> json,
+MenuStyle? menuStyleFromJSON(ThemeData theme, Map<String, dynamic>? json,
     [Color? defaultBackgroundColor,
     Color? defaultShadowColor,
     Color? defaultSurfaceTintColor,
@@ -51,6 +51,9 @@ MenuStyle? menuStyleFromJSON(ThemeData theme, Map<String, dynamic> json,
     EdgeInsets? defaultPadding,
     BorderSide? defaultBorderSide,
     OutlinedBorder? defaultShape]) {
+  if (json == null) {
+    return null;
+  }
   return MenuStyle(
     alignment: alignmentFromJson(json["alignment"], defaultAlignment)!,
     backgroundColor: getWidgetStateProperty<Color?>(json["bgcolor"],
@@ -58,8 +61,7 @@ MenuStyle? menuStyleFromJSON(ThemeData theme, Map<String, dynamic> json,
     shadowColor: getWidgetStateProperty<Color?>(json["shadow_color"],
         (jv) => parseColor(theme, jv as String), defaultShadowColor),
     surfaceTintColor: getWidgetStateProperty<Color?>(json["surface_tint_color"],
-        (jv) => parseColor(theme, jv as String),
-        defaultSurfaceTintColor),
+        (jv) => parseColor(theme, jv as String), defaultSurfaceTintColor),
     elevation: getWidgetStateProperty<double?>(
         json["elevation"], (jv) => parseDouble(jv, 0)!, defaultElevation),
     padding: getWidgetStateProperty<EdgeInsetsGeometry?>(

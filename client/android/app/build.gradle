@@ -27,6 +27,12 @@ android {
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion "25.1.8937393"
 
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging true
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -42,11 +48,10 @@ android {
 
     defaultConfig {
         applicationId "com.appveyor.flet"
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 23
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        minSdkVersion 23
     }
 
     buildTypes {

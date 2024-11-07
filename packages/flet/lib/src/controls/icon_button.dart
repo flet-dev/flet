@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
+import '../utils/box.dart';
 import '../utils/buttons.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
@@ -94,7 +95,8 @@ class _IconButtonControlState extends State<IconButtonControl>
       double? splashRadius = widget.control.attrDouble("splashRadius");
       var padding = parseEdgeInsets(widget.control, "padding");
       var alignment = parseAlignment(widget.control, "alignment");
-      var tooltip = widget.control.attrString("tooltip");
+      var sizeConstraints =
+          parseBoxConstraints(widget.control, "sizeConstraints");
       var contentCtrls =
           widget.children.where((c) => c.name == "content" && c.isVisible);
       bool autofocus = widget.control.attrBool("autofocus", false)!;
@@ -155,9 +157,9 @@ class _IconButtonControlState extends State<IconButtonControl>
             iconSize: iconSize,
             mouseCursor: mouseCursor,
             visualDensity: visualDensity,
-            tooltip: tooltip,
             style: style,
             isSelected: selected,
+            constraints: sizeConstraints,
             selectedIcon: selectedIcon != null
                 ? Icon(selectedIcon, color: selectedIconColor)
                 : null,
@@ -180,8 +182,8 @@ class _IconButtonControlState extends State<IconButtonControl>
             mouseCursor: mouseCursor,
             visualDensity: visualDensity,
             style: style,
-            tooltip: tooltip,
             isSelected: selected,
+            constraints: sizeConstraints,
             selectedIcon: selectedIcon != null
                 ? Icon(selectedIcon, color: selectedIconColor)
                 : null,

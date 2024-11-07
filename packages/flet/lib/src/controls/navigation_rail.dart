@@ -37,7 +37,7 @@ class _NavigationRailControlState extends State<NavigationRailControl>
 
   void _destinationChanged(int index) {
     _selectedIndex = index;
-    debugPrint("Selected index: $_selectedIndex");
+    debugPrint("NavigationRail selectedIndex: $_selectedIndex");
     widget.backend.updateControlState(
         widget.control.id, {"selectedindex": _selectedIndex.toString()});
     widget.backend.triggerControlEvent(
@@ -81,7 +81,7 @@ class _NavigationRailControlState extends State<NavigationRailControl>
               "NavigationRail constraints.maxHeight: ${constraints.maxHeight}");
 
           if (constraints.maxHeight == double.infinity &&
-              widget.control.attrs["height"] == null) {
+              widget.control.attrDouble("height") == null) {
             return const ErrorControl("Error displaying NavigationRail",
                 description:
                     "Control's height is unbounded. Either set \"expand\" property, set a fixed \"height\" or nest NavigationRail inside another control with a fixed height.");
@@ -90,7 +90,7 @@ class _NavigationRailControlState extends State<NavigationRailControl>
           return NavigationRail(
               labelType: extended ? NavigationRailLabelType.none : labelType,
               extended: extended,
-              elevation: widget.control.attrDouble("elevation", 0),
+              elevation: widget.control.attrDouble("elevation"),
               selectedLabelTextStyle: parseTextStyle(
                   Theme.of(context), widget.control, "selectedLabelTextStyle"),
               unselectedLabelTextStyle: parseTextStyle(Theme.of(context),
@@ -120,14 +120,22 @@ class _NavigationRailControlState extends State<NavigationRailControl>
                 var labelContentCtrls = destView.children
                     .where((c) => c.name == "label_content" && c.isVisible);
 
-                var icon = parseIcon(destView.control.attrString("icon"));
-                var iconContentCtrls = destView.children
-                    .where((c) => c.name == "icon_content" && c.isVisible);
+                var iconStr = parseIcon(destView.control.attrString("icon"));
+                var iconCtrls = destView.children
+                  .where((c) => c.name == "icon" && c.isVisible);
+                // if no control provided in "icon" property, replace iconCtrls with control provided in icon_content, if any 
+                // the line below needs to be deleted after icon_content is deprecated
+                iconCtrls = iconCtrls.isEmpty? destView.children
+                  .where((c) => c.name == "icon_content" && c.isVisible) : iconCtrls;
 
-                var selectedIcon =
+                var selectedIconStr =
                     parseIcon(destView.control.attrString("selectedIcon"));
-                var selectedIconContentCtrls = destView.children
-                    .where((c) => c.name == "selected_icon_content");
+                var selectedIconCtrls = destView.children
+                  .where((c) => c.name == "selected_icon" && c.isVisible);
+                // if no control provided in "selected_icon" property, replace selectedIconCtrls with control provided in selected_icon_content, if any 
+                // the line below needs to be deleted after selected_icon_content is deprecated
+                selectedIconCtrls = selectedIconCtrls.isEmpty? destView.children
+                  .where((c) => c.name == "selected_icon_content" && c.isVisible): selectedIconCtrls;
 
                 return NavigationRailDestination(
                     disabled: disabled || destView.control.isDisabled,
@@ -136,17 +144,17 @@ class _NavigationRailControlState extends State<NavigationRailControl>
                         destView.control.attrColor("indicatorColor", context),
                     indicatorShape:
                         parseOutlinedBorder(destView.control, "indicatorShape"),
-                    icon: iconContentCtrls.isNotEmpty
+                    icon: iconCtrls.isNotEmpty
                         ? createControl(destView.control,
-                            iconContentCtrls.first.id, disabled,
+                            iconCtrls.first.id, disabled,
                             parentAdaptive: widget.parentAdaptive)
-                        : Icon(icon),
-                    selectedIcon: selectedIconContentCtrls.isNotEmpty
+                        : Icon(iconStr),
+                    selectedIcon: selectedIconCtrls.isNotEmpty
                         ? createControl(destView.control,
-                            selectedIconContentCtrls.first.id, disabled,
+                            selectedIconCtrls.first.id, disabled,
                             parentAdaptive: widget.parentAdaptive)
-                        : selectedIcon != null
-                            ? Icon(selectedIcon)
+                        : selectedIconStr != null
+                            ? Icon(selectedIconStr)
                             : null,
                     label: labelContentCtrls.isNotEmpty
                         ? createControl(destView.control,

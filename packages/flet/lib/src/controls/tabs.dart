@@ -15,6 +15,7 @@ import '../utils/icons.dart';
 import '../utils/material_state.dart';
 import '../utils/mouse.dart';
 import '../utils/others.dart';
+import '../utils/text.dart';
 import 'create_control.dart';
 
 class TabsControl extends StatefulWidget {
@@ -109,8 +110,8 @@ class _TabsControlState extends State<TabsControl>
           }
 
           // check if all tabs have no content
-          bool emptyTabs = !viewModel.controlViews
-              .any((t) => t.children.any((c) => c.name == "content"));
+          bool emptyTabs = !viewModel.controlViews.any(
+              (t) => t.children.any((c) => c.name == "content" && c.isVisible));
 
           var overlayColorStr = widget.control.attrString("overlayColor");
           dynamic overlayColor;
@@ -159,6 +160,19 @@ class _TabsControlState extends State<TabsControl>
               parseMouseCursor(widget.control.attrString("mouseCursor"));
           var clipBehavior = parseClip(
               widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
+          var padding = parseEdgeInsets(widget.control, "padding");
+          var labelPadding = parseEdgeInsets(widget.control, "labelPadding");
+          var labelStyle = parseTextStyle(
+              Theme.of(context), widget.control, "labelTextStyle");
+          var unselectedLabelStyle = parseTextStyle(
+              Theme.of(context), widget.control, "unselectedLabelTextStyle");
+          var splashBorderRadius =
+              parseBorderRadius(widget.control, "splashBorderRadius");
+
+          void onTap(int index) {
+            widget.backend.triggerControlEvent(
+                widget.control.id, "click", index.toString());
+          }
 
           var indicator = indicatorBorderRadius != null ||
                   indicatorBorderSide != null ||
@@ -186,32 +200,34 @@ class _TabsControlState extends State<TabsControl>
               : TabBarTheme.of(context).indicatorSize;
 
           var tabs = viewModel.controlViews.map((tabView) {
-            var text = tabView.control.attrString("text");
-            var icon = parseIcon(tabView.control.attrString("icon"));
+            var iconString = parseIcon(tabView.control.attrString("icon"));
+            var iconCtrls = tabView.children
+                .where((c) => c.name == "icon" && c.isVisible);
+
+            var icon = iconCtrls.isNotEmpty
+                ? createControl(
+                    widget.control, iconCtrls.first.id, disabled,
+                    parentAdaptive: adaptive)
+                : iconString != null
+                    ? Icon(iconString)
+                    : null;
             var tabContentCtrls = tabView.children
                 .where((c) => c.name == "tab_content" && c.isVisible);
 
-            Widget tabChild;
-            List<Widget> widgets = [];
             if (tabContentCtrls.isNotEmpty) {
-              tabChild = createControl(
-                  widget.control, tabContentCtrls.first.id, disabled,
-                  parentAdaptive: adaptive);
+              return Tab(
+                  child: createControl(
+                      widget.control, tabContentCtrls.first.id, disabled,
+                      parentAdaptive: adaptive));
             } else {
-              if (icon != null) {
-                widgets.add(Icon(icon));
-                if (text != null) {
-                  widgets.add(const SizedBox(width: 8));
-                }
-              }
-              if (text != null) {
-                widgets.add(Text(text));
-              }
-              tabChild = Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: widgets);
+              return Tab(
+                text: tabView.control
+                    .attrString("text", icon == null ? "" : null),
+                icon: icon,
+                height: tabView.control.attrDouble("height"),
+                iconMargin: parseEdgeInsets(tabView.control, "iconMargin"),
+              );
             }
-            return Tab(child: tabChild);
           }).toList();
 
           TabBar? tabBar;
@@ -232,7 +248,14 @@ class _TabsControlState extends State<TabsControl>
                 labelColor: labelColor,
                 unselectedLabelColor: unselectedLabelColor,
                 overlayColor: overlayColor,
-                tabs: tabs);
+                tabs: tabs,
+                padding: padding,
+                labelPadding: labelPadding,
+                labelStyle: labelStyle,
+                unselectedLabelStyle: unselectedLabelStyle,
+                splashBorderRadius: splashBorderRadius,
+                indicatorPadding: indicatorPadding ?? EdgeInsets.zero,
+                onTap: onTap);
           } else {
             tabBar = TabBar(
                 tabAlignment: tabAlignment,
@@ -249,7 +272,14 @@ class _TabsControlState extends State<TabsControl>
                 labelColor: labelColor,
                 unselectedLabelColor: unselectedLabelColor,
                 overlayColor: overlayColor,
-                tabs: tabs);
+                tabs: tabs,
+                padding: padding,
+                labelPadding: labelPadding,
+                labelStyle: labelStyle,
+                unselectedLabelStyle: unselectedLabelStyle,
+                splashBorderRadius: splashBorderRadius,
+                indicatorPadding: indicatorPadding ?? EdgeInsets.zero,
+                onTap: onTap);
           }
 
           debugPrint("tabs.length: ${tabBar.tabs.length}");

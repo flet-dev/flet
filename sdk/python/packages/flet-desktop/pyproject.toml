@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "flet-desktop"
+version = "0.1.0"
+description = "Flet Desktop client in Flutter"
+authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
+license = "Apache-2.0"
+readme = "README.md"
+
+packages = [
+    { include = "flet_desktop", from = "src" },
+]
+
+include = [
+    { path = "src/flet_desktop/app/**/*", format = ["sdist", "wheel"] },
+]
+
+[tool.poetry.urls]
+homepage = "https://flet.dev"
+repository = "https://github.com/flet-dev/flet"
+documentation = "https://flet.dev/docs"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+flet = { version = "0.1.0" }
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^2.6"
+pytest = "^7.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+float_to_top = true

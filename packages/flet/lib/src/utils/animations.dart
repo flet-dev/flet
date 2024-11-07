@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import 'numbers.dart';
+import 'time.dart';
 
 ImplicitAnimationDetails? parseAnimation(Control control, String propName,
     [ImplicitAnimationDetails? defaultValue]) {
@@ -129,4 +130,28 @@ Curve? parseCurve(String? value, [Curve? defValue]) {
     default:
       return defValue;
   }
+}
+
+AnimationStyle? parseAnimationStyle(Control control, String propName,
+    [AnimationStyle? defaultValue]) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return defaultValue;
+  }
+
+  final j1 = json.decode(v);
+  return animationStyleFromJSON(j1);
+}
+
+AnimationStyle animationStyleFromJSON(dynamic json,
+    [AnimationStyle? defaultValue]) {
+  if (json == null) {
+    return defaultValue!;
+  }
+
+  return AnimationStyle(
+      curve: parseCurve(json["curve"]),
+      reverseCurve: parseCurve(json["reverse_curve"]),
+      duration: durationFromJSON(json["duration"]),
+      reverseDuration: durationFromJSON(json["reverse_duration"]));
 }

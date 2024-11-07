@@ -34,6 +34,8 @@ class _CupertinoNavigationBarControlState
     extends State<CupertinoNavigationBarControl> with FletStoreMixin {
   int _selectedIndex = 0;
 
+  bool get disabled => widget.control.isDisabled || widget.parentDisabled;
+
   void _onTap(int index) {
     _selectedIndex = index;
     debugPrint("Selected index: $_selectedIndex");
@@ -47,52 +49,59 @@ class _CupertinoNavigationBarControlState
   Widget build(BuildContext context) {
     debugPrint("CupertinoNavigationBarControl build: ${widget.control.id}");
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
     var selectedIndex = widget.control.attrInt("selectedIndex", 0)!;
 
     if (_selectedIndex != selectedIndex) {
       _selectedIndex = selectedIndex;
     }
-
     var navBar = withControls(
         widget.children
             .where((c) => c.isVisible && c.name == null)
             .map((c) => c.id), (content, viewModel) {
       return CupertinoTabBar(
           backgroundColor: widget.control.attrColor("bgColor", context),
-          activeColor: widget.control.attrColor("activeColor", context),
+          activeColor: widget.control.attrColor("activeColor", context) ??
+              widget.control.attrColor("indicatorColor", context),
           inactiveColor: widget.control.attrColor("inactiveColor", context) ??
               CupertinoColors.inactiveGray,
           iconSize: widget.control.attrDouble("iconSize", 30.0)!,
           currentIndex: _selectedIndex,
           border: parseBorder(Theme.of(context), widget.control, "border"),
-          onTap: _onTap,
+          onTap: disabled ? null : _onTap,
           items: viewModel.controlViews.map((destView) {
             var label = destView.control.attrString("label", "")!;
+            var iconStr = parseIcon(destView.control.attrString("icon"));
+            var iconCtrls = destView.children
+                  .where((c) => c.name == "icon" && c.isVisible);
+                // if no control provided in "icon" property, replace iconCtrls with control provided in icon_content, if any 
+                // the line below needs to be deleted after icon_content is deprecated
+            iconCtrls = iconCtrls.isEmpty? destView.children
+                  .where((c) => c.name == "icon_content" && c.isVisible) : iconCtrls;
 
-            var icon = parseIcon(destView.control.attrString("icon"));
-            var iconContentCtrls = destView.children
-                .where((c) => c.name == "icon_content" && c.isVisible);
-
-            var selectedIcon =
+            var selectedIconStr =
                 parseIcon(destView.control.attrString("selectedIcon"));
-            var selectedIconContentCtrls = destView.children
-                .where((c) => c.name == "selected_icon_content" && c.isVisible);
+            var selectedIconCtrls = destView.children
+                  .where((c) => c.name == "selected_icon" && c.isVisible);
+                // if no control provided in "selected_icon" property, replace selectedIconCtrls with control provided in selected_icon_content, if any 
+                // the line below needs to be deleted after selected_icon_content is deprecated
+            selectedIconCtrls = selectedIconCtrls.isEmpty? destView.children
+                  .where((c) => c.name == "selected_icon_content" && c.isVisible): selectedIconCtrls;
 
+            var destinationDisabled = disabled || destView.control.isDisabled;
             return BottomNavigationBarItem(
                 tooltip: destView.control.attrString("tooltip", "")!,
                 backgroundColor: widget.control.attrColor("bgColor", context),
-                icon: iconContentCtrls.isNotEmpty
-                    ? createControl(
-                        destView.control, iconContentCtrls.first.id, disabled,
+                icon: iconCtrls.isNotEmpty
+                    ? createControl(destView.control, iconCtrls.first.id,
+                        destinationDisabled,
                         parentAdaptive: widget.parentAdaptive)
-                    : Icon(icon),
-                activeIcon: selectedIconContentCtrls.isNotEmpty
+                    : Icon(iconStr),
+                activeIcon: selectedIconCtrls.isNotEmpty
                     ? createControl(destView.control,
-                        selectedIconContentCtrls.first.id, disabled,
+                        selectedIconCtrls.first.id, destinationDisabled,
                         parentAdaptive: widget.parentAdaptive)
-                    : selectedIcon != null
-                        ? Icon(selectedIcon)
+                    : selectedIconStr != null
+                        ? Icon(selectedIconStr)
                         : null,
                 label: label);
           }).toList());
