@@ -483,6 +483,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.3"
+  google_mobile_ads:
+    dependency: transitive
+    description:
+      name: google_mobile_ads
+      sha256: "4775006383a27a5d86d46f8fb452bfcb17794fc0a46c732979e49a8eb1c8963f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.0"
   graphs:
     dependency: transitive
     description:
@@ -1361,10 +1369,10 @@ packages:
     dependency: transitive
     description:
       name: vm_service
-      sha256: "5c5f338a667b4c644744b661f309fb8080bb94b18a7e91ef1dbd343bed00ed6d"
+      sha256: f652077d0bdf60abe4c1f6377448e8655008eef28f128bc023f7b5e8dfeb48fc
       url: "https://pub.dev"
     source: hosted
-    version: "14.2.5"
+    version: "14.2.4"
   volume_controller:
     dependency: transitive
     description:
