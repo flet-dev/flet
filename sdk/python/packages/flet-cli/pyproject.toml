@@ -15,11 +15,15 @@ documentation = "https://flet.dev/docs"
 
 [tool.poetry.dependencies]
 python = "^3.8"
+flet = { version = "0.1.0" }
 watchdog = "^4.0.0"
 packaging = "*"
 qrcode = "^7.4.2"
 toml = "^0.10.2"
 cookiecutter = "^2.6.0"
+
+[tool.poetry.plugins."pyinstaller40"]
+hook-dirs = "flet_cli.__pyinstaller:get_hook_dirs"
 
 [build-system]
 requires = ["poetry-core"]

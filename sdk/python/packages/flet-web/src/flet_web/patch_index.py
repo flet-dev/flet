@@ -3,7 +3,7 @@ import re
 from pathlib import Path
 from typing import Optional
 
-from flet_core.types import WebRenderer
+from flet.core.types import WebRenderer
 
 
 def patch_index_html(
@@ -86,6 +86,8 @@ def patch_manifest_json(
     app_name: Optional[str] = None,
     app_short_name: Optional[str] = None,
     app_description: Optional[str] = None,
+    background_color: Optional[str] = None,
+    theme_color: Optional[str] = None,
 ):
     with open(manifest_path, "r") as f:
         manifest = json.loads(f.read())
@@ -99,6 +101,12 @@ def patch_manifest_json(
 
     if app_description:
         manifest["description"] = app_description
+
+    if background_color:
+        manifest["background_color"] = background_color
+
+    if theme_color:
+        manifest["theme_color"] = theme_color
 
     with open(manifest_path, "w") as f:
         f.write(json.dumps(manifest, indent=2))

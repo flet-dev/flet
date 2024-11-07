@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/utils/badge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -19,7 +20,6 @@ import 'alert_dialog.dart';
 import 'animated_switcher.dart';
 import 'auto_complete.dart';
 import 'autofill_group.dart';
-import 'badge.dart';
 import 'banner.dart';
 import 'barchart.dart';
 import 'bottom_app_bar.dart';
@@ -257,18 +257,11 @@ Widget createWidget(
           children: controlView.children,
           control: controlView.control,
           parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
           backend: backend);
     case "divider":
       return DividerControl(
           key: key, parent: parent, control: controlView.control);
-    case "badge":
-      return BadgeControl(
-          key: key,
-          parent: parent,
-          control: controlView.control,
-          children: controlView.children,
-          parentDisabled: parentDisabled,
-          parentAdaptive: parentAdaptive);
     case "selectionarea":
       return SelectionAreaControl(
           key: key,
@@ -1026,21 +1019,24 @@ Widget baseControl(
 Widget constrainedControl(
     BuildContext context, Widget widget, Control? parent, Control control) {
   return _expandable(
-      _positionedControl(
-          context,
-          _aspectRatio(
-              _offsetControl(
-                  context,
-                  _scaledControl(
+      _badge(
+          _positionedControl(
+              context,
+              _aspectRatio(
+                  _offsetControl(
                       context,
-                      _rotatedControl(
+                      _scaledControl(
                           context,
-                          _sizedControl(
-                              _directionality(
-                                  _tooltip(
-                                      _opacity(
-                                          context, widget, parent, control),
-                                      Theme.of(context),
+                          _rotatedControl(
+                              context,
+                              _sizedControl(
+                                  _directionality(
+                                      _tooltip(
+                                          _opacity(
+                                              context, widget, parent, control),
+                                          Theme.of(context),
+                                          parent,
+                                          control),
                                       parent,
                                       control),
                                   parent,
@@ -1055,6 +1051,7 @@ Widget constrainedControl(
                   control),
               parent,
               control),
+          Theme.of(context),
           parent,
           control),
       parent,
@@ -1091,7 +1088,13 @@ Widget _opacity(
 Widget _tooltip(
     Widget widget, ThemeData theme, Control? parent, Control control) {
   var tooltip = parseTooltip(control, "tooltip", widget, theme);
-  return tooltip != null ? tooltip : widget;
+  return tooltip ?? widget;
+}
+
+Widget _badge(
+    Widget widget, ThemeData theme, Control? parent, Control control) {
+  var badge = parseBadge(control, "badge", widget, theme);
+  return badge ?? widget;
 }
 
 Widget _aspectRatio(Widget widget, Control? parent, Control control) {
@@ -1161,11 +1164,11 @@ Widget _scaledControl(
 
 Widget _offsetControl(
     BuildContext context, Widget widget, Control? parent, Control control) {
-  var offsetDetails = parseOffset(control, "offset");
+  var offset = parseOffset(control, "offset");
   var animation = parseAnimation(control, "animateOffset");
-  if (offsetDetails != null && animation != null) {
+  if (offset != null && animation != null) {
     return AnimatedSlide(
-        offset: Offset(offsetDetails.x, offsetDetails.y),
+        offset: offset,
         duration: animation.duration,
         curve: animation.curve,
         onEnd: control.attrBool("onAnimationEnd", false)!
@@ -1176,9 +1179,8 @@ Widget _offsetControl(
               }
             : null,
         child: widget);
-  } else if (offsetDetails != null) {
-    return FractionalTranslation(
-        translation: Offset(offsetDetails.x, offsetDetails.y), child: widget);
+  } else if (offset != null) {
+    return FractionalTranslation(translation: offset, child: widget);
   }
   return widget;
 }

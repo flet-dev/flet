@@ -5,7 +5,7 @@ import subprocess
 import tarfile
 from pathlib import Path
 
-from flet_core.utils import safe_tar_extractall
+from flet.utils import safe_tar_extractall
 from PyInstaller.building.icon import normalize_icon_type
 
 

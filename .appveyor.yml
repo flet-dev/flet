@@ -95,10 +95,10 @@ environment:
       python_stack: python 3.12
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
-    - job_name: Test Python 3.12
+    - job_name: Test Python 3.13
       job_group: python_tests
-      python_stack: python 3.12
-      APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      python_stack: python 3.13
+      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
     - job_name: Build Python wheels
       job_group: python_build
@@ -199,9 +199,8 @@ for:
       - ps: |
           $ErrorActionPreference = "Stop"
           $env:PYPI_VER = $env:APPVEYOR_BUILD_VERSION.replace("+", ".dev")
-          $vp = "$env:flet_sdk_root/packages/flet-core/src/flet_core/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
+          $vp = "$env:flet_sdk_root/packages/flet-desktop/src/flet_desktop/version.py"; (Get-Content $vp).replace("version = `"`"", "version = `"$env:PYPI_VER`"") | Set-Content $vp
       - python ci/patch_toml_versions.py %flet_sdk_root%/packages/flet-desktop/pyproject.toml %PYPI_VER%
-      - python ci/patch_toml_versions.py %flet_sdk_root%/packages/flet-core/pyproject.toml %PYPI_VER%
 
       - cd client
       - set RELEASE_DIR=build\windows\x64\runner\Release
@@ -491,11 +490,6 @@ for:
       - cd $flet_sdk_root
       - poetry install
 
-      # build "flet-core" package
-      - pushd packages/flet-core
-      - poetry build
-      - popd
-
       # build "flet-cli" package
       - pushd packages/flet-cli
       - poetry build
@@ -510,11 +504,9 @@ for:
       # publish package
       - |
           publish_to_pypi \
-            packages/flet-core/dist/*.whl \
             packages/flet-cli/dist/*.whl \
             packages/flet/dist/*.whl
 
     artifacts:
-      - path: sdk/python/packages/flet-core/dist/*
       - path: sdk/python/packages/flet-cli/dist/*
       - path: sdk/python/packages/flet/dist/*

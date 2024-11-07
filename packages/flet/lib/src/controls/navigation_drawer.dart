@@ -60,26 +60,37 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
             .map((c) => c.id), (content, viewModel) {
       List<Widget> children = viewModel.controlViews.map((destView) {
         if (destView.control.type == "navigationdrawerdestination") {
-          var iconContentCtrls = destView.children
-              .where((c) => c.name == "icon_content" && c.isVisible);
-          var selectedIcon =
+          var iconStr = parseIcon(destView.control.attrString("icon"));
+          var iconCtrls = destView.children
+                  .where((c) => c.name == "icon" && c.isVisible);
+          // if no control provided in "icon" property, replace iconCtrls with control provided in icon_content, if any 
+          // the line below needs to be deleted after icon_content is deprecated
+          iconCtrls = iconCtrls.isEmpty? destView.children
+                  .where((c) => c.name == "icon_content" && c.isVisible) : iconCtrls;
+          
+          var selectedIconStr =
               parseIcon(destView.control.attrString("selectedIcon"));
-          var selectedIconContentCtrls = destView.children
-              .where((c) => c.name == "selected_icon_content" && c.isVisible);
+          var selectedIconCtrls = destView.children
+                  .where((c) => c.name == "selected_icon" && c.isVisible);
+          // if no control provided in "selected_icon" property, replace selectedIconCtrls with control provided in selected_icon_content, if any 
+          // the line below needs to be deleted after selected_icon_content is deprecated
+          selectedIconCtrls = selectedIconCtrls.isEmpty? destView.children
+                  .where((c) => c.name == "selected_icon_content" && c.isVisible): selectedIconCtrls;
           return NavigationDrawerDestination(
+            enabled: !(disabled || destView.control.isDisabled),
             backgroundColor: destView.control.attrColor("bgColor", context),
-            icon: iconContentCtrls.isNotEmpty
+            icon: iconCtrls.isNotEmpty
                 ? createControl(
-                    destView.control, iconContentCtrls.first.id, disabled,
+                    destView.control, iconCtrls.first.id, disabled,
                     parentAdaptive: widget.parentAdaptive)
-                : Icon(parseIcon(destView.control.attrString("icon"))),
+                : Icon(iconStr),
             label: Text(destView.control.attrString("label", "")!),
-            selectedIcon: selectedIconContentCtrls.isNotEmpty
+            selectedIcon: selectedIconCtrls.isNotEmpty
                 ? createControl(destView.control,
-                    selectedIconContentCtrls.first.id, disabled,
+                    selectedIconCtrls.first.id, disabled,
                     parentAdaptive: widget.parentAdaptive)
-                : selectedIcon != null
-                    ? Icon(selectedIcon)
+                : selectedIconStr != null
+                    ? Icon(selectedIconStr)
                     : null,
           );
         } else {
@@ -104,6 +115,5 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
 
       return baseControl(context, drawer, widget.parent, widget.control);
     });
-
   }
 }

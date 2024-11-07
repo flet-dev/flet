@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,9 +7,12 @@ import 'package:flutter/material.dart';
 import '../controls/create_control.dart';
 import '../models/control.dart';
 import 'borders.dart';
+import 'box.dart';
 import 'edge_insets.dart';
 import 'icons.dart';
+import 'numbers.dart';
 import 'text.dart';
+import 'time.dart';
 
 enum FormFieldInputBorder { outline, underline, none }
 
@@ -50,26 +55,36 @@ TextInputType? parseTextInputType(String? value, [TextInputType? defValue]) {
   }
 }
 
-InputDecoration buildInputDecoration(
-    BuildContext context,
-    Control control,
+InputDecoration buildInputDecoration(BuildContext context, Control control,
     {Control? prefix,
+    Control? prefixIcon,
     Control? suffix,
+    Control? suffixIcon,
+    Control? icon,
     Control? counter,
+    Control? error,
+    Control? helper,
+    Control? label,
     Widget? customSuffix,
     bool focused = false,
     bool disabled = false,
     bool? adaptive}) {
-  String? label = control.attrString("label", "")!;
   FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
     control.attrString("border"),
     FormFieldInputBorder.outline,
   )!;
-  var icon = parseIcon(control.attrString("icon"));
-
-  var prefixIcon = parseIcon(control.attrString("prefixIcon"));
+  var iconStr = parseIcon(control.attrString("icon"));
+  var prefixIconData = parseIcon(control.attrString("prefixIcon"));
+  var prefixIconWidget = prefixIcon != null
+      ? createControl(control, prefixIcon.id, control.isDisabled,
+          parentAdaptive: adaptive)
+      : (prefixIconData != null ? Icon(prefixIconData) : null);
+  var suffixIconData = parseIcon(control.attrString("suffixIcon"));
+  var suffixIconWidget = suffixIcon != null
+      ? createControl(control, suffixIcon.id, control.isDisabled,
+          parentAdaptive: adaptive)
+      : (suffixIconData != null ? Icon(suffixIconData) : null);
   var prefixText = control.attrString("prefixText");
-  var suffixIcon = parseIcon(control.attrString("suffixIcon"));
   var suffixText = control.attrString("suffixText");
 
   var bgcolor = control.attrColor("bgcolor", context);
@@ -127,13 +142,21 @@ InputDecoration buildInputDecoration(
       enabled: !disabled,
       contentPadding: parseEdgeInsets(control, "contentPadding"),
       isDense: control.attrBool("dense"),
-      label: label != "" ? Text(label) : null,
+      label: label != null
+          ? createControl(control, label.id, control.isDisabled,
+              parentAdaptive: adaptive)
+          : Text(control.attrString("label", "")!),
       labelStyle: parseTextStyle(Theme.of(context), control, "labelStyle"),
       border: border,
       enabledBorder: border,
       focusedBorder: focusedBorder,
       hoverColor: hoverColor,
-      icon: icon != null ? Icon(icon) : null,
+      icon: icon != null
+          ? createControl(control, icon.id, control.isDisabled,
+              parentAdaptive: adaptive)
+          : iconStr != null
+              ? Icon(iconStr)
+              : null,
       filled: control.attrBool("filled", false)!,
       fillColor: fillColor ?? (focused ? focusedBgcolor ?? bgcolor : bgcolor),
       hintText: control.attrString("hintText"),
@@ -146,12 +169,31 @@ InputDecoration buildInputDecoration(
           ? createControl(control, counter.id, control.isDisabled,
               parentAdaptive: adaptive)
           : null,
-      errorText: control.attrString("errorText") != ""
-          ? control.attrString("errorText")
+      error: error != null
+          ? createControl(control, error.id, control.isDisabled,
+              parentAdaptive: adaptive)
           : null,
+      helper: helper != null
+          ? createControl(control, helper.id, control.isDisabled,
+              parentAdaptive: adaptive)
+          : null,
+      constraints: parseBoxConstraints(control, "sizeConstraints"),
+      isCollapsed: control.attrBool("collapsed"),
+      prefixIconConstraints:
+          parseBoxConstraints(control, "prefixIconConstraints"),
+      suffixIconConstraints:
+          parseBoxConstraints(control, "suffixIconConstraints"),
+      focusColor: control.attrColor("focusColor", context),
+      errorMaxLines: control.attrInt("errorMaxLines"),
+      alignLabelWithHint: control.attrBool("alignLabelWithHint"),
+      errorText: control.attrString("errorText"),
       errorStyle: parseTextStyle(Theme.of(context), control, "errorStyle"),
-      prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
-      prefixText: prefixText,
+      prefixIcon: prefixIconWidget,
+      prefixText:
+          prefix == null ? prefixText : null, // ignored if prefix is set
+      hintFadeDuration: parseDuration(control, "hintFadeDuration"),
+      hintMaxLines: control.attrInt("hintMaxLines"),
+      helperMaxLines: control.attrInt("helperMaxLines"),
       prefixStyle: parseTextStyle(Theme.of(context), control, "prefixStyle"),
       prefix: prefix != null
           ? createControl(control, prefix.id, control.isDisabled,
@@ -161,13 +203,15 @@ InputDecoration buildInputDecoration(
           ? createControl(control, suffix.id, control.isDisabled,
               parentAdaptive: adaptive)
           : null,
-      suffixIcon: suffixIcon != null ? Icon(suffixIcon) : customSuffix,
-      suffixText: suffixText,
+      suffixIcon: suffixIconWidget ?? customSuffix,
+      suffixText:
+          suffix == null ? suffixText : null, // ignored if suffix is set
       suffixStyle: parseTextStyle(Theme.of(context), control, "suffixStyle"));
 }
 
-OverlayVisibilityMode parseVisibilityMode(String type) {
-  switch (type.toLowerCase()) {
+OverlayVisibilityMode? parseVisibilityMode(String? type,
+    [OverlayVisibilityMode? defValue]) {
+  switch (type?.toLowerCase()) {
     case "never":
       return OverlayVisibilityMode.never;
     case "notediting":
@@ -177,5 +221,31 @@ OverlayVisibilityMode parseVisibilityMode(String type) {
     case "always":
       return OverlayVisibilityMode.always;
   }
-  return OverlayVisibilityMode.always;
+  return defValue;
+}
+
+StrutStyle? parseStrutStyle(Control control, String propName) {
+  dynamic j;
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return null;
+  }
+  j = json.decode(v);
+  return strutStyleFromJson(j);
+}
+
+StrutStyle? strutStyleFromJson(Map<String, dynamic>? json) {
+  if (json == null) {
+    return null;
+  }
+
+  return StrutStyle(
+    fontSize: parseDouble(json["size"]),
+    fontWeight: getFontWeight(json["weight"]),
+    fontStyle: parseBool(json["italic"], false)! ? FontStyle.italic : null,
+    fontFamily: json["font_family"],
+    height: parseDouble(json["height"]),
+    leading: parseDouble(json["leading"]),
+    forceStrutHeight: parseBool(json["force_strut_height"]),
+  );
 }

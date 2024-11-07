@@ -6,10 +6,9 @@ authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
 license = "Apache-2.0"
 
 [tool.poetry.dependencies]
-python = "<3.13,>=3.8"
+python = "<3.14,>=3.8"
 
 [tool.poetry.group.dev.dependencies]
-flet-core = {path = "packages/flet-core", develop = true}
 flet-cli = {path = "packages/flet-cli", develop = true}
 flet-desktop = {path = "packages/flet-desktop", develop = true}
 flet-web = {path = "packages/flet-web", develop = true}

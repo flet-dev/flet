@@ -7,8 +7,8 @@ from typing import Optional, Tuple
 
 import flet_web.fastapi as flet_fastapi
 from fastapi.staticfiles import StaticFiles
-from flet_core.types import WebRenderer
-from flet_core.utils import Once, get_bool_env_var
+from flet.core.types import WebRenderer
+from flet.utils import Once, get_bool_env_var
 from flet_web import get_package_web_dir, patch_index_html, patch_manifest_json
 from flet_web.fastapi.flet_app_manager import app_manager
 from starlette.types import Receive, Scope, Send

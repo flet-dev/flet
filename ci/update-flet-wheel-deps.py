@@ -38,7 +38,7 @@ def update_metadata(metadata_file, version):
             if lines[i].startswith("Requires-Dist: flet-desktop "):
                 lines.insert(
                     i + 1,
-                    f"Requires-Dist: flet-desktop-light (=={version}) ; platform_system == 'Linux' and 'embedded' not in platform_version\n",
+                    f'Requires-Dist: flet-desktop-light (=={version}) ; platform_system == "Linux" and (extra == "all" or extra == "desktop")\n',
                 )
             lines[i] = re.sub(
                 r'platform_system != "desktop-light"',

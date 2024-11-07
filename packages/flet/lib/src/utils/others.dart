@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +49,18 @@ BoxShape? parseBoxShape(String? value, [BoxShape? defValue]) {
   return BoxShape.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
       defValue;
+}
+
+NotchedShape? parseNotchedShape(String? value, [NotchedShape? defValue]) {
+  if (value == null) {
+    return defValue;
+  } else if (value == "circular") {
+    return const CircularNotchedRectangle();
+  } else if (value == "auto") {
+    return const AutomaticNotchedShape(ContinuousRectangleBorder());
+  } else {
+    return defValue;
+  }
 }
 
 SliderInteraction? parseSliderInteraction(String? value,
@@ -234,6 +248,16 @@ Axis? parseAxis(String? value, [Axis? defValue]) {
     return defValue;
   }
   return Axis.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+PointerDeviceKind? parsePointerDeviceKind(String? value,
+    [PointerDeviceKind? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return PointerDeviceKind.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
       defValue;
 }
