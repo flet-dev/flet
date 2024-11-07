@@ -9,6 +9,8 @@ from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
+    ColorEnums,
+    ColorValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
     Orientation,
@@ -93,6 +95,7 @@ class TimePicker(Control):
         confirm_text: Optional[str] = None,
         error_invalid_text: Optional[str] = None,
         orientation: Optional[Orientation] = None,
+        barrier_color: Optional[ColorValue] = None,
         on_change: OptionalControlEventCallable = None,
         on_dismiss: OptionalControlEventCallable = None,
         on_entry_mode_change: OptionalEventCallable[
@@ -111,7 +114,6 @@ class TimePicker(Control):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        barrier_color: Optional[str] = None,
     ):
         Control.__init__(
             self,
@@ -301,9 +303,10 @@ class TimePicker(Control):
 
     # barrier_color
     @property
-    def barrier_color(self) -> Optional[str]:
-        return self._get_attr("barrierColor")
+    def barrier_color(self) -> Optional[ColorValue]:
+        return self.__barrier_color
 
     @barrier_color.setter
-    def barrier_color(self, value: Optional[str]):
-        self._set_attr("barrierColor", value)
+    def barrier_color(self, value: Optional[ColorValue]):
+        self.__barrier_color = value
+        self._set_enum_attr("barrierColor", value, ColorEnums)

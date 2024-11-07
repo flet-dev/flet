@@ -18,8 +18,7 @@ from flet.core.types import (
     OptionalEventCallable,
     ResponsiveNumber,
 )
-from flet.utils import deprecated
-from flet.utils.datetime import datetime_to_string
+from flet.utils import datetime_to_string, deprecated
 
 try:
     from typing import Literal
@@ -109,7 +108,7 @@ class DatePicker(Control):
         field_label_text: Optional[str] = None,
         switch_to_calendar_icon: Optional[IconValue] = None,
         switch_to_input_icon: Optional[IconValue] = None,
-        barrier_color: Optional[str] = None,
+        barrier_color: Optional[ColorValue] = None,
         on_change: OptionalControlEventCallable = None,
         on_dismiss: OptionalControlEventCallable = None,
         on_entry_mode_change: OptionalEventCallable[
@@ -391,7 +390,7 @@ class DatePicker(Control):
     # barrier_color
     @property
     def barrier_color(self) -> Optional[ColorValue]:
-        return self._get_attr("barrierColor")
+        return self.__barrier_color
 
     @barrier_color.setter
     def barrier_color(self, value: Optional[ColorValue]):

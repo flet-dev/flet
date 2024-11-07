@@ -93,6 +93,7 @@ class AlertDialog(AdaptiveControl):
         title_text_style: Optional[TextStyle] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         semantics_label: Optional[str] = None,
+        barrier_color: Optional[ColorValue] = None,
         on_dismiss: OptionalControlEventCallable = None,
         #
         # AdaptiveControl
@@ -102,7 +103,6 @@ class AlertDialog(AdaptiveControl):
         visible: Optional[bool] = None,
         data: Any = None,
         adaptive: Optional[bool] = None,
-        barrier_color: Optional[str] = None
     ):
         Control.__init__(
             self,
@@ -211,12 +211,13 @@ class AlertDialog(AdaptiveControl):
 
     # barrier_color
     @property
-    def barrier_color(self) -> Optional[str]:
-        return self._get_attr("barrierColor")
+    def barrier_color(self) -> Optional[ColorValue]:
+        return self.__barrier_color
 
     @barrier_color.setter
-    def barrier_color(self, value: Optional[str]):
-        self._set_attr("barrierColor", value)
+    def barrier_color(self, value: Optional[ColorValue]):
+        self.__barrier_color = value
+        self._set_enum_attr("barrierColor", value, ColorEnums)
 
     # surface_tint_color
     @property

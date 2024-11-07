@@ -17,7 +17,7 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
-from flet_core.utils.datetime import datetime_to_string
+from flet.utils import datetime_to_string
 
 
 class CupertinoDatePickerMode(Enum):
@@ -139,7 +139,7 @@ class CupertinoDatePicker(ConstrainedControl):
     # value
     @property
     def value(self) -> Optional[datetime]:
-        value_string = self._get_attr("value", def_value=None)
+        value_string = self._get_attr("value")
         return datetime.fromisoformat(value_string) if value_string else None
 
     @value.setter
@@ -151,7 +151,7 @@ class CupertinoDatePicker(ConstrainedControl):
     # first_date
     @property
     def first_date(self) -> Optional[datetime]:
-        value_string = self._get_attr("firstDate", def_value=None)
+        value_string = self._get_attr("firstDate")
         return (
             datetime.fromisoformat(value_string) if value_string is not None else None
         )
@@ -163,7 +163,7 @@ class CupertinoDatePicker(ConstrainedControl):
     # last_date
     @property
     def last_date(self) -> Optional[datetime]:
-        value_string = self._get_attr("lastDate", def_value=None)
+        value_string = self._get_attr("lastDate")
         return (
             datetime.fromisoformat(value_string) if value_string is not None else None
         )
