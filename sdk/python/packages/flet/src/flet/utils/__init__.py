@@ -1,6 +1,5 @@
 from flet.utils.browser import open_in_browser
 from flet.utils.classproperty import classproperty
-from flet.utils.datetime import datetime_to_string
 from flet.utils.deprecated import deprecated
 from flet.utils.files import (
     copy_tree,
