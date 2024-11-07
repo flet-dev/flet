@@ -420,6 +420,13 @@ class Command(BaseCommand):
             help='the list of "<permission_name>=True|False" permissions to add to AndroidManifest.xml',
         )
         parser.add_argument(
+            "--android-meta-data",
+            dest="android_meta_data",
+            nargs="+",
+            default=[],
+            help='the list of "<name>=<value>" app meta-data entries to add to AndroidManifest.xml',
+        )
+        parser.add_argument(
             "--permissions",
             dest="permissions",
             nargs="+",
@@ -665,6 +672,7 @@ class Command(BaseCommand):
                 "android.software.leanback": False,
                 "android.hardware.touchscreen": False,
             }
+            android_meta_data = {"io.flutter.embedding.android.EnableImpeller": "false"}
 
             # merge values from "--permissions" arg:
             for p in (
@@ -743,6 +751,19 @@ class Command(BaseCommand):
                 else:
                     self.cleanup(1, f"Invalid Android feature option: {p}")
 
+            android_meta_data = merge_dict(
+                android_meta_data,
+                get_pyproject("tool.flet.android.meta_data") or {},
+            )
+
+            # parse --android-meta-data
+            for p in options.android_meta_data:
+                i = p.find("=")
+                if i > -1:
+                    android_meta_data[p[:i]] = p[i + 1 :]
+                else:
+                    self.cleanup(1, f"Invalid Android meta-data option: {p}")
+
             deep_linking_scheme = (
                 get_pyproject("tool.flet.ios.deep_linking.scheme")
                 if package_platform == "iOS"
@@ -814,6 +835,7 @@ class Command(BaseCommand):
                     "macos_entitlements": macos_entitlements,
                     "android_permissions": android_permissions,
                     "android_features": android_features,
+                    "android_meta_data": android_meta_data,
                     "deep_linking": {
                         "scheme": deep_linking_scheme,
                         "host": deep_linking_host,
