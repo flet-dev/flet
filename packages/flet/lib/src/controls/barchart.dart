@@ -263,8 +263,9 @@ class _BarChartControlState extends State<BarChartControl> {
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
                     var dp = viewModel.barGroups[groupIndex].barRods[rodIndex];
 
-                    var tooltip = dp.control.attrString("tooltip") ??
-                        dp.control.attrDouble("toY", 0)!.toString();
+                    var tooltip = dp.control.attrString("tooltip") != null
+                        ? jsonDecode(dp.control.attrString("tooltip")!)
+                        : dp.control.attrDouble("toY", 0)!.toString();
                     var tooltipStyle = parseTextStyle(
                         Theme.of(context), dp.control, "tooltipStyle");
                     tooltipStyle ??= const TextStyle();
