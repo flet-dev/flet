@@ -90,6 +90,10 @@ except ImportError:
 
 
 logger = logging.getLogger(flet.__name__)
+try:
+    from typing import ParamSpec
+except ImportError:
+    from typing_extensions import ParamSpec
 
 _session_page = ContextVar("flet_session_page", default=None)
 
