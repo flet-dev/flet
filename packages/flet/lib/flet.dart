@@ -36,6 +36,7 @@ export 'src/utils/menu.dart';
 export 'src/utils/mouse.dart';
 export 'src/utils/numbers.dart';
 export 'src/utils/others.dart';
+export 'src/utils/platform.dart';
 export 'src/utils/platform_utils_non_web.dart'
     if (dart.library.js) "src/utils/platform_utils_web.dart";
 export 'src/utils/responsive.dart';

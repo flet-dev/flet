@@ -7,7 +7,6 @@ import traceback
 from pathlib import Path
 from typing import Optional
 
-import flet
 import flet.version
 from flet.core.event import Event
 from flet.core.page import Page
@@ -25,6 +24,8 @@ from flet.utils.pip import (
     ensure_flet_desktop_package_installed,
     ensure_flet_web_package_installed,
 )
+
+import flet
 
 logger = logging.getLogger(flet.__name__)
 

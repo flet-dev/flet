@@ -19,8 +19,8 @@ from flet.core.types import (
 
 @dataclass
 class ColorFilter:
-    color: Optional[ColorValue] = field(default=None)
-    blend_mode: Optional[BlendMode] = field(default=None)
+    color: Optional[ColorValue] = None
+    blend_mode: Optional[BlendMode] = None
 
 
 class FilterQuality(Enum):
@@ -39,10 +39,10 @@ class ShadowBlurStyle(Enum):
 
 @dataclass
 class BoxShadow:
-    spread_radius: Optional[float] = field(default=None)
-    blur_radius: Optional[float] = field(default=None)
-    color: Optional[ColorValue] = field(default=None)
-    offset: OffsetValue = field(default=None)
+    spread_radius: Optional[float] = None
+    blur_radius: Optional[float] = None
+    color: Optional[ColorValue] = None
+    offset: OffsetValue = None
     blur_style: ShadowBlurStyle = field(default=ShadowBlurStyle.NORMAL)
 
 

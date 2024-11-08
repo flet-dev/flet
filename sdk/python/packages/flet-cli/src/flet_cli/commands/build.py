@@ -225,6 +225,13 @@ class Command(BaseCommand):
             required=False,
         )
         parser.add_argument(
+            "--clear-cache",
+            dest="clear_cache",
+            action="store_true",
+            default=None,
+            help="clear build cache",
+        )
+        parser.add_argument(
             "--project",
             dest="project_name",
             help="project name for executable or bundle",
@@ -411,6 +418,13 @@ class Command(BaseCommand):
             nargs="+",
             default=[],
             help='the list of "<permission_name>=True|False" permissions to add to AndroidManifest.xml',
+        )
+        parser.add_argument(
+            "--android-meta-data",
+            dest="android_meta_data",
+            nargs="+",
+            default=[],
+            help='the list of "<name>=<value>" app meta-data entries to add to AndroidManifest.xml',
         )
         parser.add_argument(
             "--permissions",
@@ -658,6 +672,7 @@ class Command(BaseCommand):
                 "android.software.leanback": False,
                 "android.hardware.touchscreen": False,
             }
+            android_meta_data = {"io.flutter.embedding.android.EnableImpeller": "false"}
 
             # merge values from "--permissions" arg:
             for p in (
@@ -736,6 +751,19 @@ class Command(BaseCommand):
                 else:
                     self.cleanup(1, f"Invalid Android feature option: {p}")
 
+            android_meta_data = merge_dict(
+                android_meta_data,
+                get_pyproject("tool.flet.android.meta_data") or {},
+            )
+
+            # parse --android-meta-data
+            for p in options.android_meta_data:
+                i = p.find("=")
+                if i > -1:
+                    android_meta_data[p[:i]] = p[i + 1 :]
+                else:
+                    self.cleanup(1, f"Invalid Android meta-data option: {p}")
+
             deep_linking_scheme = (
                 get_pyproject("tool.flet.ios.deep_linking.scheme")
                 if package_platform == "iOS"
@@ -807,6 +835,7 @@ class Command(BaseCommand):
                     "macos_entitlements": macos_entitlements,
                     "android_permissions": android_permissions,
                     "android_features": android_features,
+                    "android_meta_data": android_meta_data,
                     "deep_linking": {
                         "scheme": deep_linking_scheme,
                         "host": deep_linking_host,
@@ -836,6 +865,10 @@ class Command(BaseCommand):
             )
 
             # create Flutter project from a template
+            if options.clear_cache and self.flutter_dir.exists():
+                if self.verbose > 1:
+                    console.log(f"Deleting {self.flutter_dir}")
+                shutil.rmtree(self.flutter_dir, ignore_errors=True)
             self.flutter_dir.mkdir(parents=True, exist_ok=True)
             self.status.update(
                 f"[bold blue]Creating Flutter bootstrap project from {template_url} with ref {template_ref} {self.emojis['loading']}... ",
@@ -922,18 +955,10 @@ class Command(BaseCommand):
                     "flutter_launcher_icons/image_path_android",
                     [android_icon, default_icon],
                 )
-                adaptive_icon_background = (
-                    options.android_adaptive_icon_background
-                    or get_pyproject("tool.flet.android.adaptive_icon_background")
-                    or "#ffffff"
-                )
                 fallback_image(
                     "flutter_launcher_icons/adaptive_icon_foreground",
                     [android_icon, default_icon],
                 )
-                pubspec["flutter_launcher_icons"][
-                    "adaptive_icon_background"
-                ] = adaptive_icon_background
                 fallback_image(
                     "flutter_launcher_icons/web/image_path", [web_icon, default_icon]
                 )
@@ -1053,6 +1078,15 @@ class Command(BaseCommand):
                     pubspec["flutter_native_splash"]["android_12"][
                         "color_dark"
                     ] = splash_dark_color
+
+            adaptive_icon_background = (
+                options.android_adaptive_icon_background
+                or get_pyproject("tool.flet.android.adaptive_icon_background")
+            )
+            if adaptive_icon_background:
+                pubspec["flutter_launcher_icons"][
+                    "adaptive_icon_background"
+                ] = adaptive_icon_background
 
             # enable/disable splashes
             pubspec["flutter_native_splash"]["web"] = (

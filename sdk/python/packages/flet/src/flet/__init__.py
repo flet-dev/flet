@@ -154,6 +154,11 @@ from flet.core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet.core.draggable import Draggable
 from flet.core.dropdown import Dropdown
 from flet.core.elevated_button import ElevatedButton
+from flet.core.exceptions import (
+    FletException,
+    FletUnimplementedPlatformEception,
+    FletUnsupportedPlatformException,
+)
 from flet.core.expansion_panel import ExpansionPanel, ExpansionPanelList
 from flet.core.expansion_tile import ExpansionTile, TileAffinity
 from flet.core.file_picker import (
@@ -431,5 +436,12 @@ from flet.core.video import (
     VideoSubtitleConfiguration,
 )
 from flet.core.view import View
-from flet.core.webview import WebView
+from flet.core.webview import (
+    WebView,
+    WebviewConsoleMessageEvent,
+    WebviewJavaScriptEvent,
+    WebviewLogLevelSeverity,
+    WebviewRequestMethod,
+    WebviewScrollEvent,
+)
 from flet.core.window_drag_area import WindowDragArea

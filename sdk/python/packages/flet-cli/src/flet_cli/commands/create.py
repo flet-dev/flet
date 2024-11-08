@@ -22,6 +22,8 @@ class Command(BaseCommand):
         parser.add_argument(
             "output_directory",
             type=str,
+            default=".",
+            nargs="?",
             help="project output directory",
         )
         parser.add_argument(
@@ -47,8 +49,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--package-manager",
             dest="package_manager",
-            choices=["", "uv", "poetry"],
-            default="",
+            choices=["uv", "poetry"],
             help="Python project package manager",
             required=False,
         )
