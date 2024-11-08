@@ -1,6 +1,6 @@
-import flet as ft
-import pytest
 from flet.core.protocol import Command
+
+import flet as ft
 
 
 def test_image_add():

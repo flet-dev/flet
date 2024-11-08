@@ -102,7 +102,11 @@ class Control extends Equatable {
     if (value == null) {
       return defValue;
     }
-    return DateTime.parse(value);
+    try {
+      return DateTime.parse(value);
+    } catch (e) {
+      return null;
+    }
   }
 
   TimeOfDay? attrTime(String name, [TimeOfDay? defValue]) {

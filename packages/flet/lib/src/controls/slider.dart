@@ -4,9 +4,9 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
-import '../utils/desktop.dart';
 import '../utils/mouse.dart';
 import '../utils/others.dart';
+import '../utils/platform.dart';
 import 'create_control.dart';
 import 'cupertino_slider.dart';
 import 'flet_store_mixin.dart';
@@ -32,7 +32,7 @@ class SliderControl extends StatefulWidget {
 
 class _SliderControlState extends State<SliderControl> with FletStoreMixin {
   double _value = 0;
-  final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
+  final _debouncer = Debouncer(milliseconds: isDesktopPlatform() ? 10 : 100);
   late final FocusNode _focusNode;
 
   @override

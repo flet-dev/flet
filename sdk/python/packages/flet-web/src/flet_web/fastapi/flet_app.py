@@ -21,7 +21,6 @@ from flet.core.protocol import (
     PageCommandsBatchResponsePayload,
     RegisterWebClientRequestPayload,
 )
-from flet.core.pubsub.pubsub_hub import PubSubHub
 from flet.utils import random_string, sha1
 from flet_web.fastapi.flet_app_manager import app_manager
 from flet_web.fastapi.oauth_state import OAuthState

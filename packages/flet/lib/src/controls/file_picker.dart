@@ -10,7 +10,7 @@ import '../flet_app_services.dart';
 import '../flet_control_backend.dart';
 import '../flet_server.dart';
 import '../models/control.dart';
-import '../utils/desktop.dart';
+import '../utils/platform.dart';
 import '../utils/strings.dart';
 import 'flet_store_mixin.dart';
 
@@ -115,7 +115,8 @@ class _FilePickerControlState extends State<FilePickerControl>
       }
 
       sendEvent() {
-        if (defaultTargetPlatform != TargetPlatform.windows || !isDesktop()) {
+        if (defaultTargetPlatform != TargetPlatform.windows ||
+            !isDesktopPlatform()) {
           resetDialogState();
         }
         widget.backend.triggerControlEvent(
@@ -136,7 +137,8 @@ class _FilePickerControlState extends State<FilePickerControl>
         _files = null;
         _state = state;
 
-        if (isDesktop() && defaultTargetPlatform == TargetPlatform.windows) {
+        if (isDesktopPlatform() &&
+            defaultTargetPlatform == TargetPlatform.windows) {
           resetDialogState();
         }
 
