@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -71,25 +73,32 @@ class _CupertinoNavigationBarControlState
           items: viewModel.controlViews.map((destView) {
             var label = destView.control.attrString("label", "")!;
             var iconStr = parseIcon(destView.control.attrString("icon"));
-            var iconCtrls = destView.children
-                  .where((c) => c.name == "icon" && c.isVisible);
-                // if no control provided in "icon" property, replace iconCtrls with control provided in icon_content, if any 
-                // the line below needs to be deleted after icon_content is deprecated
-            iconCtrls = iconCtrls.isEmpty? destView.children
-                  .where((c) => c.name == "icon_content" && c.isVisible) : iconCtrls;
+            var iconCtrls =
+                destView.children.where((c) => c.name == "icon" && c.isVisible);
+            // if no control provided in "icon" property, replace iconCtrls with control provided in icon_content, if any
+            // the line below needs to be deleted after icon_content is deprecated
+            iconCtrls = iconCtrls.isEmpty
+                ? destView.children
+                    .where((c) => c.name == "icon_content" && c.isVisible)
+                : iconCtrls;
 
             var selectedIconStr =
                 parseIcon(destView.control.attrString("selectedIcon"));
             var selectedIconCtrls = destView.children
-                  .where((c) => c.name == "selected_icon" && c.isVisible);
-                // if no control provided in "selected_icon" property, replace selectedIconCtrls with control provided in selected_icon_content, if any 
-                // the line below needs to be deleted after selected_icon_content is deprecated
-            selectedIconCtrls = selectedIconCtrls.isEmpty? destView.children
-                  .where((c) => c.name == "selected_icon_content" && c.isVisible): selectedIconCtrls;
+                .where((c) => c.name == "selected_icon" && c.isVisible);
+            // if no control provided in "selected_icon" property, replace selectedIconCtrls with control provided in selected_icon_content, if any
+            // the line below needs to be deleted after selected_icon_content is deprecated
+            selectedIconCtrls = selectedIconCtrls.isEmpty
+                ? destView.children.where(
+                    (c) => c.name == "selected_icon_content" && c.isVisible)
+                : selectedIconCtrls;
 
             var destinationDisabled = disabled || destView.control.isDisabled;
+            var destinationTooltip = destView.control.attrString("tooltip");
             return BottomNavigationBarItem(
-                tooltip: destView.control.attrString("tooltip", "")!,
+                tooltip: !destinationDisabled && destinationTooltip != null
+                    ? jsonDecode(destinationTooltip)
+                    : null,
                 backgroundColor: widget.control.attrColor("bgColor", context),
                 icon: iconCtrls.isNotEmpty
                     ? createControl(destView.control, iconCtrls.first.id,

@@ -9,6 +9,8 @@ from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
+    ColorEnums,
+    ColorValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
     Orientation,
@@ -93,6 +95,7 @@ class TimePicker(Control):
         confirm_text: Optional[str] = None,
         error_invalid_text: Optional[str] = None,
         orientation: Optional[Orientation] = None,
+        barrier_color: Optional[ColorValue] = None,
         on_change: OptionalControlEventCallable = None,
         on_dismiss: OptionalControlEventCallable = None,
         on_entry_mode_change: OptionalEventCallable[
@@ -111,7 +114,6 @@ class TimePicker(Control):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        barrier_color: Optional[str] = None
     ):
         Control.__init__(
             self,
@@ -147,7 +149,7 @@ class TimePicker(Control):
         self.on_dismiss = on_dismiss
         self.open = open
         self.on_entry_mode_change = on_entry_mode_change
-        self.barrier_color=barrier_color
+        self.barrier_color = barrier_color
 
     def _get_control_name(self):
         return "timepicker"
@@ -181,11 +183,9 @@ class TimePicker(Control):
     # value
     @property
     def value(self) -> Optional[time]:
-        value_string = self._get_attr(
-            "value", def_value=None
-        )  # value_string in comes in format 'HH:MM'
+        value_string = self._get_attr("value", def_value=None)
         if value_string:
-            splitted = value_string.split(":")
+            splitted = value_string.split(":")  # value_string comes in format 'HH:MM'
             return time(hour=int(splitted[0]), minute=int(splitted[1]))
         else:
             return None
@@ -300,12 +300,13 @@ class TimePicker(Control):
         self, handler: OptionalEventCallable[TimePickerEntryModeChangeEvent]
     ):
         self.__on_entry_mode_change.handler = handler
-    
-    #barrier_color
+
+    # barrier_color
     @property
-    def barrier_color(self) -> Optional[str]:
-        return self._get_attr("barrierColor")
+    def barrier_color(self) -> Optional[ColorValue]:
+        return self.__barrier_color
 
     @barrier_color.setter
-    def barrier_color(self, value: Optional[str]):
-        self._set_attr("barrierColor", value)
+    def barrier_color(self, value: Optional[ColorValue]):
+        self.__barrier_color = value
+        self._set_enum_attr("barrierColor", value, ColorEnums)

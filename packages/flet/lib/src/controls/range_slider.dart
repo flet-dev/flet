@@ -4,7 +4,7 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
-import '../utils/desktop.dart';
+import '../utils/platform.dart';
 import 'create_control.dart';
 
 class RangeSliderControl extends StatefulWidget {
@@ -25,7 +25,7 @@ class RangeSliderControl extends StatefulWidget {
 }
 
 class _SliderControlState extends State<RangeSliderControl> {
-  final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
+  final _debouncer = Debouncer(milliseconds: isDesktopPlatform() ? 10 : 100);
 
   @override
   void initState() {

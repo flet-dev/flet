@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -95,31 +97,38 @@ class _NavigationBarControlState extends State<NavigationBarControl>
               var iconStr = parseIcon(destView.control.attrString("icon"));
               var iconCtrls = destView.children
                   .where((c) => c.name == "icon" && c.isVisible);
-              // if no control provided in "icon" property, replace iconCtrls with control provided in icon_content, if any 
+              // if no control provided in "icon" property, replace iconCtrls with control provided in icon_content, if any
               // the line below needs to be deleted after icon_content is deprecated
-              iconCtrls = iconCtrls.isEmpty? destView.children
-                  .where((c) => c.name == "icon_content" && c.isVisible) : iconCtrls;
+              iconCtrls = iconCtrls.isEmpty
+                  ? destView.children
+                      .where((c) => c.name == "icon_content" && c.isVisible)
+                  : iconCtrls;
               var selectedIconStr =
                   parseIcon(destView.control.attrString("selectedIcon"));
               var selectedIconCtrls = destView.children
                   .where((c) => c.name == "selected_icon" && c.isVisible);
-              // if no control provided in "selected_icon" property, replace selectedIconCtrls with control provided in selected_icon_content, if any 
+              // if no control provided in "selected_icon" property, replace selectedIconCtrls with control provided in selected_icon_content, if any
               // the line below needs to be deleted after selected_icon_content is deprecated
-              selectedIconCtrls = selectedIconCtrls.isEmpty? destView.children
-                  .where((c) => c.name == "selected_icon_content" && c.isVisible): selectedIconCtrls;
+              selectedIconCtrls = selectedIconCtrls.isEmpty
+                  ? destView.children.where(
+                      (c) => c.name == "selected_icon_content" && c.isVisible)
+                  : selectedIconCtrls;
               var destinationDisabled = disabled || destView.control.isDisabled;
               var destinationAdaptive = destView.control.isAdaptive ?? adaptive;
+              var destinationTooltip = destView.control.attrString("tooltip");
               return NavigationDestination(
                   enabled: !destinationDisabled,
-                  tooltip: destView.control.attrString("tooltip"),
-                  icon: iconCtrls.isNotEmpty? createControl(destView.control,
-                           iconCtrls.first.id, destinationDisabled,
-                           parentAdaptive: destinationAdaptive): Icon(iconStr),
-                  selectedIcon: selectedIconCtrls.isNotEmpty
-                      ? createControl(
-                          destView.control,
-                          selectedIconCtrls.first.id,
+                  tooltip: !destinationDisabled && destinationTooltip != null
+                      ? jsonDecode(destinationTooltip)
+                      : null,
+                  icon: iconCtrls.isNotEmpty
+                      ? createControl(destView.control, iconCtrls.first.id,
                           destinationDisabled,
+                          parentAdaptive: destinationAdaptive)
+                      : Icon(iconStr),
+                  selectedIcon: selectedIconCtrls.isNotEmpty
+                      ? createControl(destView.control,
+                          selectedIconCtrls.first.id, destinationDisabled,
                           parentAdaptive: destinationAdaptive)
                       : selectedIconStr != null
                           ? Icon(selectedIconStr)

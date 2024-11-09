@@ -10,6 +10,8 @@ from flet.core.ref import Ref
 from flet.core.textfield import KeyboardType
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
+    ColorEnums,
+    ColorValue,
     IconEnums,
     IconValue,
     OptionalControlEventCallable,
@@ -106,6 +108,7 @@ class DatePicker(Control):
         field_label_text: Optional[str] = None,
         switch_to_calendar_icon: Optional[IconValue] = None,
         switch_to_input_icon: Optional[IconValue] = None,
+        barrier_color: Optional[ColorValue] = None,
         on_change: OptionalControlEventCallable = None,
         on_dismiss: OptionalControlEventCallable = None,
         on_entry_mode_change: OptionalEventCallable[
@@ -124,7 +127,6 @@ class DatePicker(Control):
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
-        barrier_color: Optional[str] = None
     ):
         Control.__init__(
             self,
@@ -204,61 +206,55 @@ class DatePicker(Control):
     # value
     @property
     def value(self) -> Optional[datetime]:
-        value_string = self._get_attr("value", def_value=None)
-        return datetime.fromisoformat(value_string) if value_string else None
+        v = self._get_attr("value")
+        return datetime.fromisoformat(v) if v else None
 
     @value.setter
-    def value(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("value", value)
+    def value(self, value: Optional[Union[date, datetime]]):
+        if not isinstance(value, (date, datetime)):
+            raise ValueError("value must be of type date, datetime or None")
+        self._set_attr("value", value.isoformat())
 
     # first_date
     @property
     def first_date(self) -> Optional[datetime]:
-        value_string = self._get_attr("firstDate", def_value=None)
-        return (
-            datetime.fromisoformat(value_string) if value_string is not None else None
-        )
+        v = self._get_attr("firstDate")
+        return datetime.fromisoformat(v) if v is not None else None
 
     @first_date.setter
-    def first_date(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("firstDate", value)
+    def first_date(self, value: Optional[Union[date, datetime]]):
+        if not isinstance(value, (date, datetime)):
+            raise ValueError("first_date must be of type date, datetime or None")
+        self._set_attr("firstDate", value.isoformat())
 
     # last_date
     @property
     def last_date(self) -> Optional[datetime]:
-        value_string = self._get_attr("lastDate", def_value=None)
-        return (
-            datetime.fromisoformat(value_string) if value_string is not None else None
-        )
+        v = self._get_attr("lastDate")
+        return datetime.fromisoformat(v) if v is not None else None
 
     @last_date.setter
-    def last_date(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("lastDate", value)
+    def last_date(self, value: Optional[Union[date, datetime]]):
+        if not isinstance(value, (date, datetime)):
+            raise ValueError("last_date must be of type date, datetime or None")
+        self._set_attr("lastDate", value.isoformat())
 
     # current_date
     @property
     def current_date(self) -> Optional[datetime]:
-        value_string = self._get_attr("currentDate", def_value=None)
-        return (
-            datetime.fromisoformat(value_string) if value_string is not None else None
-        )
+        v = self._get_attr("currentDate")
+        return datetime.fromisoformat(v) if v is not None else None
 
     @current_date.setter
-    def current_date(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("currentDate", value)
+    def current_date(self, value: Optional[Union[date, datetime]]):
+        if not isinstance(value, (date, datetime)):
+            raise ValueError("current_date must be of type date, datetime or None")
+        self._set_attr("currentDate", value.isoformat())
 
     # field_hint_text
     @property
     def field_hint_text(self) -> Optional[str]:
-        return self._get_attr("fieldHintText", def_value=None)
+        return self._get_attr("fieldHintText")
 
     @field_hint_text.setter
     def field_hint_text(self, value: Optional[str]):
@@ -267,7 +263,7 @@ class DatePicker(Control):
     # field_label_text
     @property
     def field_label_text(self) -> Optional[str]:
-        return self._get_attr("fieldLabelText", def_value=None)
+        return self._get_attr("fieldLabelText")
 
     @field_label_text.setter
     def field_label_text(self, value: Optional[str]):
@@ -276,7 +272,7 @@ class DatePicker(Control):
     # help_text
     @property
     def help_text(self) -> Optional[str]:
-        return self._get_attr("helpText", def_value=None)
+        return self._get_attr("helpText")
 
     @help_text.setter
     def help_text(self, value: Optional[str]):
@@ -285,7 +281,7 @@ class DatePicker(Control):
     # cancel_text
     @property
     def cancel_text(self) -> Optional[str]:
-        return self._get_attr("cancelText", def_value=None)
+        return self._get_attr("cancelText")
 
     @cancel_text.setter
     def cancel_text(self, value: Optional[str]):
@@ -294,7 +290,7 @@ class DatePicker(Control):
     # confirm_text
     @property
     def confirm_text(self) -> Optional[str]:
-        return self._get_attr("confirmText", def_value=None)
+        return self._get_attr("confirmText")
 
     @confirm_text.setter
     def confirm_text(self, value: Optional[str]):
@@ -303,7 +299,7 @@ class DatePicker(Control):
     # error_format_text
     @property
     def error_format_text(self) -> Optional[str]:
-        return self._get_attr("errorFormatText", def_value=None)
+        return self._get_attr("errorFormatText")
 
     @error_format_text.setter
     def error_format_text(self, value: Optional[str]):
@@ -312,7 +308,7 @@ class DatePicker(Control):
     # error_invalid_text
     @property
     def error_invalid_text(self) -> Optional[str]:
-        return self._get_attr("errorInvalidText", def_value=None)
+        return self._get_attr("errorInvalidText")
 
     @error_invalid_text.setter
     def error_invalid_text(self, value: Optional[str]):
@@ -398,12 +394,13 @@ class DatePicker(Control):
         self, handler: OptionalEventCallable[DatePickerEntryModeChangeEvent]
     ):
         self.__on_entry_mode_change.handler = handler
-    
-    #barrier_color
+
+    # barrier_color
     @property
-    def barrier_color(self) -> Optional[str]:
-        return self._get_attr("barrierColor")
+    def barrier_color(self) -> Optional[ColorValue]:
+        return self.__barrier_color
 
     @barrier_color.setter
-    def barrier_color(self, value: Optional[str]):
-        self._set_attr("barrierColor", value)
+    def barrier_color(self, value: Optional[ColorValue]):
+        self.__barrier_color = value
+        self._set_enum_attr("barrierColor", value, ColorEnums)

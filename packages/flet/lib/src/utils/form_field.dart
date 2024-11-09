@@ -209,9 +209,9 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       suffixStyle: parseTextStyle(Theme.of(context), control, "suffixStyle"));
 }
 
-OverlayVisibilityMode? parseVisibilityMode(String? type,
+OverlayVisibilityMode? parseVisibilityMode(String? value,
     [OverlayVisibilityMode? defValue]) {
-  switch (type?.toLowerCase()) {
+  switch (value?.toLowerCase()) {
     case "never":
       return OverlayVisibilityMode.never;
     case "notediting":

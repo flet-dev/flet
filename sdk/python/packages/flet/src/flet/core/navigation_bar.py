@@ -51,7 +51,7 @@ class NavigationBarDestination(AdaptiveControl, Control):
         # Control
         #
         ref: Optional[Ref] = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[str] = None,
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
         data: Any = None,
@@ -180,6 +180,15 @@ class NavigationBarDestination(AdaptiveControl, Control):
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
         self._set_enum_attr("bgcolor", value, ColorEnums)
+
+    # tooltip
+    @property
+    def tooltip(self) -> Optional[str]:
+        return self._get_attr("tooltip")
+
+    @tooltip.setter
+    def tooltip(self, value: Optional[str]):
+        self._set_attr("tooltip", value)
 
 
 @deprecated(

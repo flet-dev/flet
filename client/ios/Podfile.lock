@@ -86,6 +86,7 @@ PODS:
     - Flutter
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
+    - FlutterMacOS
 
 DEPENDENCIES:
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
@@ -109,7 +110,7 @@ DEPENDENCIES:
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - volume_controller (from `.symlinks/plugins/volume_controller/ios`)
   - wakelock_plus (from `.symlinks/plugins/wakelock_plus/ios`)
-  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
 
 SPEC REPOS:
   trunk:
@@ -164,7 +165,7 @@ EXTERNAL SOURCES:
   wakelock_plus:
     :path: ".symlinks/plugins/wakelock_plus/ios"
   webview_flutter_wkwebview:
-    :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
@@ -176,25 +177,25 @@ SPEC CHECKSUMS:
   Google-Mobile-Ads-SDK: 5a6d005a6cb5b5e8f4c7b69ca05cdea79c181139
   google_mobile_ads: 9379c80fdfa9988fb0e105a407890ff8deb3cf86
   GoogleUserMessagingPlatform: f131fa7978d2ba88d7426702b057c2cc318e6595
-  integration_test: ce0a3ffa1de96d1a89ca0ac26fca7ea18a749ef4
+  integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
   media_kit_libs_ios_video: a5fe24bc7875ccd6378a0978c13185e1344651c1
   media_kit_native_event_loop: e6b2ab20cf0746eb1c33be961fcf79667304fa2a
   media_kit_video: 5da63f157170e5bf303bf85453b7ef6971218a2e
-  package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
-  path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
+  package_info_plus: 58f0028419748fad15bf008b270aaa8e54380b1c
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
-  record_darwin: 1f6619f2abac4d1ca91d3eeab038c980d76f1517
+  record_darwin: df0a677188e5fed18472550298e675f19ddaffbe
   rive_common: c537b4eed761e903a9403d93c347b69bd7a4762f
   screen_brightness_ios: 715ca807df953bf676d339f11464e438143ee625
   SDWebImage: 72f86271a6f3139cc7e4a89220946489d4b9a866
   sensors_plus: 42b9de1b8237675fa8d8121e4bb93be0f79fa61d
-  shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
+  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   SwiftyGif: 6c3eafd0ce693cad58bb63d2b2fb9bacb8552780
   torch_light: 682062fa12102172fa38b6b14c106d93b060f83e
-  url_launcher_ios: bbd758c6e7f9fd7b5b1d4cde34d2b95fcce5e812
+  url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
   volume_controller: 531ddf792994285c9b17f9d8a7e4dcdd29b3eae9
-  wakelock_plus: 8b09852c8876491e4b6d179e17dfe2a0b5f60d47
-  webview_flutter_wkwebview: be0f0d33777f1bfd0c9fdcb594786704dbf65f36
+  wakelock_plus: 78ec7c5b202cab7761af8e2b2b3d0671be6c4ae1
+  webview_flutter_wkwebview: 0982481e3d9c78fd5c6f62a002fcd24fc791f1e4
 
 PODFILE CHECKSUM: c4c93c5f6502fe2754f48404d3594bf779584011
 

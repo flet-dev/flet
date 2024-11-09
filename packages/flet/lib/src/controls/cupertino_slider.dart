@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/debouncer.dart';
-import '../utils/desktop.dart';
+import '../utils/platform.dart';
 import 'create_control.dart';
 
 class CupertinoSliderControl extends StatefulWidget {
@@ -25,7 +25,7 @@ class CupertinoSliderControl extends StatefulWidget {
 
 class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
   double _value = 0;
-  final _debouncer = Debouncer(milliseconds: isDesktop() ? 10 : 100);
+  final _debouncer = Debouncer(milliseconds: isDesktopPlatform() ? 10 : 100);
 
   @override
   void dispose() {
