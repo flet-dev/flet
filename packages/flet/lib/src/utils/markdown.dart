@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_highlight/theme_map.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
@@ -29,19 +30,42 @@ md.ExtensionSet? parseMarkdownExtensionSet(String? value,
   }
 }
 
+Map<String, TextStyle> parseMarkdownCodeTheme(
+  Control control,
+  String propName,
+  ThemeData theme,
+) {
+  final v = control.attrString(propName);
+  if (v == null) {
+    return {};
+  }
+  dynamic j = json.decode(v);
+  if (j is String) {
+    return themeMap[j.toLowerCase()] ?? {};
+  } else if (j is Map<String, dynamic>) {
+    final resultMap =
+        j.map((key, value) => MapEntry(key, textStyleFromJson(theme, value)));
+    resultMap.removeWhere(
+        (key, value) => value == null); // remove entries with null values
+    return resultMap.map((key, value) => MapEntry(
+        key == 'class_name' ? 'class' : key.replaceAll('_', '-'), // conversions to match expected key style
+        value!));
+  }
+  return {};
+}
+
 MarkdownStyleSheet? parseMarkdownStyleSheet(Control control, String propName,
     ThemeData theme, PageArgsModel? pageArgs) {
-  dynamic j;
-  var v = control.attrString(propName, null);
+  var v = control.attrString(propName);
   if (v == null) {
     return null;
   }
-  j = json.decode(v);
+  dynamic j = json.decode(v);
   return markdownStyleSheetFromJson(theme, j, pageArgs);
 }
 
-MarkdownStyleSheet markdownStyleSheetFromJson(ThemeData theme,
-    Map<String, dynamic> j, PageArgsModel? pageArgs) {
+MarkdownStyleSheet markdownStyleSheetFromJson(
+    ThemeData theme, Map<String, dynamic> j, PageArgsModel? pageArgs) {
   TextStyle? parseTextStyle(String propName) {
     return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
   }
@@ -119,13 +143,13 @@ MarkdownStyleSheet markdownStyleSheetFromJson(ThemeData theme,
     horizontalRuleDecoration: boxDecorationFromJSON(
             theme, j["horizontal_rule_decoration"], pageArgs) ??
         BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  width: 5.0,
-                  color: theme.dividerColor,
-                ),
-              ),
+          border: Border(
+            top: BorderSide(
+              width: 5.0,
+              color: theme.dividerColor,
             ),
+          ),
+        ),
     blockquoteAlign:
         parseWrapAlignment(j["blockquote_alignment"], WrapAlignment.start)!,
     codeblockAlign:

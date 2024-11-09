@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_highlight/theme_map.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
@@ -63,6 +62,8 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
                       .copyWith(fontFamily: "monospace"));
       var mdStyleSheet = parseMarkdownStyleSheet(
           control, "mdStyleSheet", Theme.of(context), pageArgs);
+      var codeTheme =
+          parseMarkdownCodeTheme(control, "codeTheme", Theme.of(context));
       Widget markdown = MarkdownBody(
           data: value,
           selectable: selectable,
@@ -71,8 +72,7 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
               : getBaseUri(pageArgs.pageUri!).toString(),
           extensionSet: extensionSet,
           builders: {
-            'code': CodeElementBuilder(
-                codeTheme.toLowerCase(), codeStyleSheet, selectable),
+            'code': CodeElementBuilder(codeTheme, codeStyleSheet, selectable),
           },
           styleSheet: mdStyleSheet,
           imageBuilder: (Uri uri, String? title, String? alt) {
@@ -142,7 +142,7 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
 }
 
 class CodeElementBuilder extends MarkdownElementBuilder {
-  final String codeTheme;
+  final Map<String, TextStyle> codeTheme;
   final MarkdownStyleSheet mdStyleSheet;
   final bool selectable;
 
@@ -175,7 +175,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
 
           // Specify highlight theme
           // All available themes are listed in `themes` folder
-          theme: themeMap[codeTheme] ?? {},
+          theme: codeTheme,
 
           // Specify padding
           padding: mdStyleSheet.codeblockPadding,
