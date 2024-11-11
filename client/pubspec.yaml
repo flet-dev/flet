@@ -60,6 +60,7 @@ dependencies:
 
   url_strategy: ^0.2.0
   cupertino_icons: ^1.0.6
+  webview_flutter_android: ^4.0.0
   
   integration_test:
     sdk: flutter
