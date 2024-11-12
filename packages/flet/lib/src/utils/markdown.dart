@@ -43,13 +43,22 @@ Map<String, TextStyle> parseMarkdownCodeTheme(
   if (j is String) {
     return themeMap[j.toLowerCase()] ?? {};
   } else if (j is Map<String, dynamic>) {
+    String transformKey(String key) {
+      switch (key) {
+        case 'class_name':
+          return 'class';
+        case 'built_in':
+          return key;
+        default:
+          return key.replaceAll('_', '-');
+      }
+    }
+
     final resultMap =
         j.map((key, value) => MapEntry(key, textStyleFromJson(theme, value)));
     resultMap.removeWhere(
         (key, value) => value == null); // remove entries with null values
-    return resultMap.map((key, value) => MapEntry(
-        key == 'class_name' ? 'class' : key.replaceAll('_', '-'), // conversions to match expected key style
-        value!));
+    return resultMap.map((key, value) => MapEntry(transformKey(key), value!));
   }
   return {};
 }
