@@ -226,6 +226,7 @@ from flet.core.margin import Margin
 from flet.core.markdown import (
     Markdown,
     MarkdownCodeTheme,
+    MarkdownCustomCodeTheme,
     MarkdownExtensionSet,
     MarkdownSelectionChangeCause,
     MarkdownSelectionChangeEvent,
