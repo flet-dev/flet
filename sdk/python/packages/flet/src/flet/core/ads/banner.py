@@ -18,7 +18,7 @@ class BannerAd(BaseAd):
 
     def __init__(
         self,
-        unit_id: Optional[str] = None,
+        unit_id: str,
         on_load=None,
         on_error=None,
         on_open=None,
