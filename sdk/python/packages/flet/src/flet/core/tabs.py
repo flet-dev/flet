@@ -315,6 +315,9 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     def _get_children(self):
         return self.__tabs
 
+    def __contains__(self, item):
+        return item in self.__tabs
+
     # tabs
     @property
     def tabs(self) -> List[Tab]:

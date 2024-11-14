@@ -317,6 +317,9 @@ class PopupMenuButton(ConstrainedControl):
             children.append(self.__content)
         return children + self.__items
 
+    def __contains__(self, item):
+        return item in self.__items
+
     def before_update(self):
         super().before_update()
         self._set_attr_json("shape", self.__shape)
