@@ -37,8 +37,11 @@ foreach($line in $lines) {
 
 import random
 from enum import Enum, EnumMeta
-from typing import Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Union
 from warnings import warn
+
+if TYPE_CHECKING:
+    from flet.core.types import ColorValue
 
 from flet.utils import deprecated
 
@@ -56,9 +59,16 @@ class ColorsDeprecated(EnumMeta):
 
 
 class colors(str, Enum, metaclass=ColorsDeprecated):
-    def with_opacity(self, opacity: Union[int, float]) -> str:
+    @staticmethod
+    @deprecated(
+        reason="Use Colors.with_opacity() method instead.",
+        version="0.25.0",
+        delete_version="0.28.0",
+    )
+    def with_opacity(opacity: Union[int, float], color: "ColorValue") -> str:
         assert 0 <= opacity <= 1, "opacity must be between 0 and 1"
-        return f"{self.value},{opacity}"
+        color_str = color.value if isinstance(color, Enum) else color
+        return f"{color_str},{opacity}"
 
     @staticmethod
     def random():
@@ -416,21 +426,11 @@ class colors(str, Enum, metaclass=ColorsDeprecated):
 
 
 class Colors(str, Enum):
-    def with_opacity(self, opacity: Union[int, float]) -> str:
-        """
-        Returns the color with the specified opacity.
-
-        Args:
-            opacity: The opacity value, which must be between 0 and 1.
-
-        Returns:
-            A string representing the color value with the specified opacity appended.
-
-        Raises:
-            AssertionError: If the opacity is not between 0 and 1 (inclusive).
-        """
+    @staticmethod
+    def with_opacity(opacity: Union[int, float], color: "ColorValue") -> str:
         assert 0 <= opacity <= 1, "opacity must be between 0 and 1"
-        return f"{self.value},{opacity}"
+        color_str = color.value if isinstance(color, Enum) else color
+        return f"{color_str},{opacity}"
 
     @staticmethod
     def random(
