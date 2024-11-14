@@ -488,11 +488,13 @@ class Markdown(ConstrainedControl):
 
     # code_theme
     @property
-    def code_theme(self) -> Optional[MarkdownCodeTheme]:
+    def code_theme(self) -> Optional[Union[MarkdownCodeTheme, MarkdownCustomCodeTheme]]:
         return self.__code_theme
 
     @code_theme.setter
-    def code_theme(self, value: Optional[MarkdownCodeTheme]):
+    def code_theme(
+        self, value: Optional[Union[MarkdownCodeTheme, MarkdownCustomCodeTheme]]
+    ):
         self.__code_theme = value
 
     # code_style
