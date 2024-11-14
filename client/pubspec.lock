@@ -248,6 +248,13 @@ packages:
       relative: true
     source: path
     version: "0.24.1"
+  flet_ads:
+    dependency: "direct main"
+    description:
+      path: "../packages/flet_ads"
+      relative: true
+    source: path
+    version: "0.24.1"
   flet_audio:
     dependency: "direct main"
     description:
@@ -287,13 +294,6 @@ packages:
     dependency: "direct main"
     description:
       path: "../packages/flet_map"
-      relative: true
-    source: path
-    version: "0.24.1"
-  flet_mobile_ads:
-    dependency: "direct main"
-    description:
-      path: "../packages/flet_mobile_ads"
       relative: true
     source: path
     version: "0.24.1"
@@ -1462,7 +1462,7 @@ packages:
     source: hosted
     version: "4.10.0"
   webview_flutter_android:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: webview_flutter_android
       sha256: "74693a212d990b32e0b7055d27db973a18abf31c53942063948cdfaaef9787ba"

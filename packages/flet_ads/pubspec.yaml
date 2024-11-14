@@ -1,7 +1,7 @@
-name: flet_mobile_ads
-description: Flet Mobile Ads control
+name: flet_ads
+description: Flet Ads control
 homepage: https://flet.dev
-repository: https://github.com/flet-dev/flet/packages/flet_mobile_ads
+repository: https://github.com/flet-dev/flet/packages/flet_ads
 version: 0.24.1
 
 environment:

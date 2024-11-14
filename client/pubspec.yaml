@@ -43,8 +43,8 @@ dependencies:
     path: ../packages/flet_lottie
   flet_map:
     path: ../packages/flet_map
-  flet_mobile_ads:
-    path: ../packages/flet_mobile_ads
+  flet_ads:
+    path: ../packages/flet_ads
   flet_rive:
     path: ../packages/flet_rive
   flet_audio_recorder:

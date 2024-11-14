@@ -13,7 +13,7 @@ import 'package:flet_map/flet_map.dart' as flet_map;
 import 'package:flet_permission_handler/flet_permission_handler.dart'
     as flet_permission_handler;
 import 'package:flet_rive/flet_rive.dart' as flet_rive;
-import 'package:flet_mobile_ads/flet_mobile_ads.dart' as flet_mobile_ads;
+import 'package:flet_ads/flet_ads.dart' as flet_ads;
 // --FAT_CLIENT_START--
 import 'package:flet_video/flet_video.dart' as flet_video;
 // --FAT_CLIENT_END--
@@ -43,7 +43,7 @@ void main([List<String>? args]) async {
   flet_permission_handler.ensureInitialized();
   flet_lottie.ensureInitialized();
   flet_map.ensureInitialized();
-  flet_mobile_ads.ensureInitialized();
+  flet_ads.ensureInitialized();
   flet_rive.ensureInitialized();
   flet_webview.ensureInitialized();
   flet_flashlight.ensureInitialized();
@@ -113,7 +113,7 @@ void main([List<String>? args]) async {
       flet_permission_handler.createControl,
       flet_lottie.createControl,
       flet_map.createControl,
-      flet_mobile_ads.createControl,
+      flet_ads.createControl,
       flet_rive.createControl,
       flet_webview.createControl,
       flet_flashlight.createControl,
