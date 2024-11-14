@@ -400,7 +400,12 @@ class Markdown(ConstrainedControl):
         self._set_attr_json("codeStyle", self.__code_style)
         self._set_attr_json("codeStyleSheet", self.__code_style_sheet)
         self._set_attr_json("mdStyleSheet", self.__md_style_sheet)
-        self._set_attr_json("codeTheme", self.__code_theme)
+        self._set_attr_json(
+            "codeTheme",
+            self.__code_theme.value
+            if isinstance(self.__code_theme, MarkdownCodeTheme)
+            else self.__code_theme,
+        )
 
     def _get_children(self):
         if self.__img_error_content is not None:
