@@ -208,6 +208,8 @@ class _TextFieldControlState extends State<TextFieldControl>
       }
       var fitParentSize = widget.control.attrBool("fitParentSize", false)!;
 
+      var maxLength = widget.control.attrInt("maxLength");
+
       Widget textField = TextFormField(
           style: textStyle,
           autofocus: autofocus,
@@ -234,6 +236,8 @@ class _TextFieldControlState extends State<TextFieldControl>
               helper: helperCtrl.isNotEmpty ? helperCtrl.first : null,
               label: labelCtrl.isNotEmpty ? labelCtrl.first : null,
               customSuffix: revealPasswordIcon,
+              valueLength: _value.length,
+              maxLength: maxLength,
               focused: _focused,
               disabled: disabled,
               adaptive: adaptive),
@@ -261,7 +265,7 @@ class _TextFieldControlState extends State<TextFieldControl>
               widget.control.attrString("textAlign"), TextAlign.start)!,
           minLines: fitParentSize ? null : minLines,
           maxLines: fitParentSize ? null : maxLines,
-          maxLength: widget.control.attrInt("maxLength"),
+          maxLength: maxLength,
           readOnly: widget.control.attrBool("readOnly", false)!,
           inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
           obscureText: password && !_revealPassword,
