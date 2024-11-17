@@ -12,6 +12,7 @@ from flet.core.tooltip import TooltipValue
 from flet.core.types import (
     ColorEnums,
     ColorValue,
+    DateTimeValue,
     IconEnums,
     IconValue,
     OptionalControlEventCallable,
@@ -92,10 +93,10 @@ class DatePicker(Control):
     def __init__(
         self,
         open: bool = False,
-        value: Optional[datetime] = None,
-        first_date: Optional[datetime] = None,
-        last_date: Optional[datetime] = None,
-        current_date: Optional[datetime] = None,
+        value: Optional[DateTimeValue] = None,
+        first_date: DateTimeValue = datetime(year=2050, month=1, day=1),
+        last_date: DateTimeValue = datetime(year=1900, month=1, day=1),
+        current_date: DateTimeValue = datetime.now(),
         keyboard_type: Optional[KeyboardType] = None,
         date_picker_mode: Optional[DatePickerMode] = None,
         date_picker_entry_mode: Optional[DatePickerEntryMode] = None,
@@ -115,7 +116,7 @@ class DatePicker(Control):
             "DatePickerEntryModeChangeEvent"
         ] = None,
         #
-        # ConstrainedControl
+        # Control
         #
         ref: Optional[Ref] = None,
         expand: Optional[Union[bool, int]] = None,
@@ -123,7 +124,6 @@ class DatePicker(Control):
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: TooltipValue = None,
-        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -136,7 +136,6 @@ class DatePicker(Control):
             col=col,
             opacity=opacity,
             tooltip=tooltip,
-            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -176,6 +175,21 @@ class DatePicker(Control):
 
     def before_update(self):
         super().before_update()
+        assert (
+            self.__first_date is None
+            or self.__last_date is None
+            or self.__first_date <= self.__last_date
+        ), "last_date must be on or after first_date"
+        assert (
+            self.__first_date is None
+            or self.__current_date is None
+            or self.__first_date <= self.__current_date
+        ), "current_date must be on or after first_date"
+        assert (
+            self.__last_date is None
+            or self.__current_date is None
+            or self.__last_date >= self.__current_date
+        ), "last_date must be on or after current_date"
 
     @deprecated(
         reason="Use Page.open() method instead.",
@@ -205,50 +219,42 @@ class DatePicker(Control):
 
     # value
     @property
-    def value(self) -> Optional[datetime]:
+    def value(self) -> Optional[DateTimeValue]:
         v = self._get_attr("value")
         return datetime.fromisoformat(v) if v else None
 
     @value.setter
-    def value(self, value: Optional[Union[date, datetime]]):
-        if not isinstance(value, (date, datetime)):
-            raise ValueError("value must be of type date, datetime or None")
-        self._set_attr("value", value.isoformat())
+    def value(self, value: Optional[DateTimeValue]):
+        self.__value = value
+        self._set_attr("value", value if value is None else value.isoformat())
 
-    # first_date
     @property
-    def first_date(self) -> Optional[datetime]:
-        v = self._get_attr("firstDate")
-        return datetime.fromisoformat(v) if v is not None else None
+    def first_date(self) -> DateTimeValue:
+        return self.__first_date
 
     @first_date.setter
-    def first_date(self, value: Optional[Union[date, datetime]]):
-        if not isinstance(value, (date, datetime)):
-            raise ValueError("first_date must be of type date, datetime or None")
+    def first_date(self, value: DateTimeValue):
+        self.__first_date = value
         self._set_attr("firstDate", value.isoformat())
 
     # last_date
     @property
-    def last_date(self) -> Optional[datetime]:
-        v = self._get_attr("lastDate")
-        return datetime.fromisoformat(v) if v is not None else None
+    def last_date(self) -> DateTimeValue:
+        return self.__last_date
 
     @last_date.setter
-    def last_date(self, value: Optional[Union[date, datetime]]):
-        if not isinstance(value, (date, datetime)):
-            raise ValueError("last_date must be of type date, datetime or None")
+    def last_date(self, value: DateTimeValue):
+        self.__last_date = value
         self._set_attr("lastDate", value.isoformat())
 
     # current_date
     @property
-    def current_date(self) -> Optional[datetime]:
-        v = self._get_attr("currentDate")
-        return datetime.fromisoformat(v) if v is not None else None
+    def current_date(self) -> DateTimeValue:
+        return self.__current_date
 
     @current_date.setter
-    def current_date(self, value: Optional[Union[date, datetime]]):
-        if not isinstance(value, (date, datetime)):
-            raise ValueError("current_date must be of type date, datetime or None")
+    def current_date(self, value: DateTimeValue):
+        self.__current_date = value
         self._set_attr("currentDate", value.isoformat())
 
     # field_hint_text
