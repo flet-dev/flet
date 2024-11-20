@@ -362,6 +362,7 @@ class Dropdown(FormFieldControl):
         self.max_menu_height = max_menu_height
         self.select_icon_size = select_icon_size or icon_size
         self.select_icon_enabled_color = select_icon_enabled_color or icon_enabled_color
+        self.icon_disabled_color = icon_disabled_color
         self.select_icon_disabled_color = (
             select_icon_disabled_color or icon_disabled_color
         )
