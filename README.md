@@ -2,7 +2,7 @@
 
 <img src="media/logo/flet-logo.svg" width="50%"/>
 
-[![Build status](https://ci.appveyor.com/api/projects/status/xwablctxslvey576/branch/main?svg=true)](https://ci.appveyor.com/project/flet-dev/flet/branch/main) [![Gurubase](https://img.shields.io/badge/Gurubase-Ask%20Flet%20Guru-006BFF)](https://gurubase.io/g/flet)
+[![Build status](https://ci.appveyor.com/api/projects/status/xwablctxslvey576/branch/main?svg=true)](https://ci.appveyor.com/project/flet-dev/flet/branch/main)
 
 Flet is a framework that enables you to easily build real-time web, mobile, and desktop apps in your favorite language and securely share them with your team. No frontend experience is required.
 
@@ -99,6 +99,8 @@ run again and now you instantly get a web app:
 
 * [Creating Flet apps in Python](https://flet.dev/docs/guides/python/getting-started)
 * [Controls reference](https://flet.dev/docs/controls)
+
+You can also [Ask Flet Guru](https://gurubase.io/g/flet), it is a Flet-focused AI to answer your questions.
 
 ## Sample apps in Python
 
