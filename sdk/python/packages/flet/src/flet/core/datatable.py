@@ -271,6 +271,9 @@ class DataRow(Control):
     def _get_control_name(self):
         return "datarow"
 
+    def __contains__(self, item):
+        return item in self.__cells
+
     def before_update(self):
         super().before_update()
         assert any(
@@ -452,6 +455,9 @@ class DataTable(ConstrainedControl):
 
     def _get_control_name(self):
         return "datatable"
+
+    def __contains__(self, item):
+        return item in self.__columns or item in self.__rows
 
     def before_update(self):
         super().before_update()

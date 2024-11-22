@@ -108,6 +108,9 @@ class MenuBar(Control):
     def _get_children(self):
         return self.__controls
 
+    def __contains__(self, item):
+        return item in self.__controls
+
     # controls
     @property
     def controls(self) -> List[Control]:

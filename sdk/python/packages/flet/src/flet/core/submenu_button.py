@@ -153,6 +153,9 @@ class SubmenuButton(ConstrainedControl):
             children.append(self.__content)
         return children
 
+    def __contains__(self, item):
+        return item in self.__controls
+
     def focus(self):
         self._set_attr_json("focus", str(time.time()))
         self.update()

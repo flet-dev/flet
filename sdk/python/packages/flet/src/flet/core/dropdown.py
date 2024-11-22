@@ -400,6 +400,9 @@ class Dropdown(FormFieldControl):
             children.append(self.__disabled_hint_content)
         return children
 
+    def __contains__(self, item):
+        return item in self.__options
+
     def focus(self):
         self._set_attr_json("focus", str(time.time()))
         self.update()

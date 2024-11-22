@@ -176,6 +176,9 @@ class SearchBar(ConstrainedControl):
     def _get_control_name(self):
         return "searchbar"
 
+    def __contains__(self, item):
+        return item in self.__controls
+
     def before_update(self):
         super().before_update()
         self._set_attr_json("barBgcolor", self.__bar_bgcolor, wrap_attr_dict=True)

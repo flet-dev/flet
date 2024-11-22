@@ -224,6 +224,9 @@ class SegmentedButton(ConstrainedControl):
             children.append(self.__selected_icon)
         return children
 
+    def __contains__(self, item):
+        return item in self.__segments
+
     # style
     @property
     def style(self) -> Optional[ButtonStyle]:
