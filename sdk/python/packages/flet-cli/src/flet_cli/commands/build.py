@@ -7,7 +7,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Optional, Union
+from typing import Optional, Union, cast
 
 import flet.version
 import yaml
@@ -38,8 +38,6 @@ MINIMAL_FLUTTER_VERSION = "3.24.0"
 error_style = Style(color="red", bold=True)
 console = Console(log_path=False, theme=Theme({"log.message": "green bold"}))
 
-RESULT_FILE = "result"
-
 
 class Command(BaseCommand):
     """
@@ -49,28 +47,6 @@ class Command(BaseCommand):
     def __init__(self, parser: argparse.ArgumentParser) -> None:
         super().__init__(parser)
 
-        self.pubspec_path = None
-        self.rel_out_dir = None
-        self.assets_path = None
-        self.package_platform = None
-        self.target_platform = None
-        self.flutter_dependencies = None
-        self.package_app_path = None
-        self.options = None
-        self.pubspec = None
-        self.template_data = None
-        self.python_module_filename = None
-        self.out_dir = None
-        self.python_module_name = None
-        self.get_pyproject = None
-        self.python_app_path = None
-        self.no_rich_output = None
-        self.emojis = {}
-        self.dart_exe = None
-        self.verbose = False
-        self.build_dir = None
-        self.flutter_dir: Optional[Path] = None
-        self.flutter_exe = None
         self.no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
         self.current_platform = platform.system()
         self.platforms = {
@@ -602,12 +578,12 @@ class Command(BaseCommand):
         self.package_app_path = Path(self.python_app_path)
         if self.get_pyproject("tool.flet.app.path"):
             self.package_app_path = self.python_app_path.joinpath(
-                self.get_pyproject("tool.flet.app.path")
+                cast(str, self.get_pyproject("tool.flet.app.path"))
             )
 
         self.python_module_name = Path(
             self.options.module_name
-            or self.get_pyproject("tool.flet.app.module")
+            or cast(str, self.get_pyproject("tool.flet.app.module"))
             or "main"
         ).stem
         self.python_module_filename = f"{self.python_module_name}.py"
@@ -624,7 +600,7 @@ class Command(BaseCommand):
         base_url = (
             (
                 self.options.base_url
-                or self.get_pyproject("tool.flet.web.base_url")
+                or cast(str, self.get_pyproject("tool.flet.web.base_url"))
                 or "/"
             )
             .strip("/")
@@ -636,7 +612,7 @@ class Command(BaseCommand):
             or self.get_pyproject("tool.poetry.name")
             or self.python_app_path.name
         )
-        project_name_slug = slugify(project_name_orig)
+        project_name_slug = slugify(cast(str, project_name_orig))
         project_name = project_name_slug.replace("-", "_")
         product_name = (
             self.options.product_name
@@ -1421,7 +1397,7 @@ class Command(BaseCommand):
                 continue
 
             if self.out_dir.exists():
-                shutil.rmtree(str(self.out_dir), ignore_errors=False, onerror=None)
+                shutil.rmtree(str(self.out_dir))
             self.out_dir.mkdir(parents=True, exist_ok=True)
 
             def ignore_build_output(path, files):
@@ -1443,7 +1419,7 @@ class Command(BaseCommand):
     def handle(self, options: argparse.Namespace) -> None:
         self.options = options
         with console.status(
-            f"[bold blue]Initializing {self.target_platform} build... ",
+            f"[bold blue]Initializing {self.options.target_platform} build... ",
             spinner="bouncingBall",
         ) as self.status:
             self.initialize_build()
@@ -1526,10 +1502,6 @@ class Command(BaseCommand):
     def cleanup(
         self, exit_code: int, message: Optional[str] = None, check_flutter_version=False
     ):
-        if self.build_dir and os.path.exists(self.build_dir):
-            with open(str(self.build_dir.joinpath(RESULT_FILE)), "w") as f:
-                f.write(str(exit_code))
-
         if exit_code == 0:
             msg = message or f"Success! {self.emojis['success']}"
             console.log(msg)
