@@ -1,10 +1,12 @@
 from enum import Enum
+import json
 from typing import Any, List, Optional, Sequence, Union
 
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.alignment import Alignment
 from flet.core.animation import AnimationValue
 from flet.core.constrained_control import ConstrainedControl
+from flet.core.control_event import ControlEvent
 from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.types import (
@@ -22,56 +24,17 @@ class StackFit(Enum):
     EXPAND = "expand"
     PASS_THROUGH = "passThrough"
 
+class LayoutDimensions(ControlEvent):
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.width: float = d.get("width")
+        self.height: float = d.get("height")
+        self.x_pos: float = d.get("x_position")
+        self.y_pos: float = d.get("y_position")
+        
 
 class LayoutBuilder(ConstrainedControl, AdaptiveControl):
-    """
-    A control that positions its children on top of each other.
-
-    This control is useful if you want to overlap several children in a simple way, for example having some text and an image, overlaid with a gradient and a button attached to the bottom.
-
-    Stack is also useful if you want to implement implicit animations (https://flet.dev/docs/guides/python/animations/) that require knowing absolute position of a target value.
-
-    Example:
-
-    ```
-    import flet as ft
-
-    def main(page: ft.Page):
-        st = ft.Stack(
-            controls=[
-                ft.Image(
-                    src=f"https://picsum.photos/300/300",
-                    width=300,
-                    height=300,
-                    fit=ft.ImageFit.CONTAIN,
-                ),
-                ft.Row(
-                    controls=[
-                        ft.Text(
-                            "Image title",
-                            color="white",
-                            size=40,
-                            weight="bold",
-                            opacity=0.5,
-                        )
-                    ],
-                    alignment=ft.MainAxisAlignment.CENTER,
-                ),
-            ],
-            width=300,
-            height=300,
-        )
-
-        page.add(st)
-
-    ft.app(target=main)
-    ```
-
-    -----
-
-    Online docs: https://flet.dev/docs/controls/stack
-    """
-
     def __init__(
         self,
         content: Optional[Control] = None,
@@ -89,6 +52,7 @@ class LayoutBuilder(ConstrainedControl, AdaptiveControl):
         disabled: Optional[bool] = None,
         data: Any = None,
         adaptive: Optional[bool] = None,
+        update_size_on_init: Optional[bool] = True
     ):
         ConstrainedControl.__init__(
             self,
@@ -105,28 +69,26 @@ class LayoutBuilder(ConstrainedControl, AdaptiveControl):
         self.content = content
         self.clip_behavior = clip_behavior
         self.alignment = alignment
-        self.__on_change_callback = on_change
-        self.on_change = self.__on_change
         self.fit = fit
 
-        self.__width_layout = None
-        self.__height_layout = None
+        self.__on_change_callback = on_change
+
+        self.width_layout: float = None
+        self.height_layout: float = None
+
+        self.__update_size_on_init = update_size_on_init
+
+        self.on_change = self.__on_change
+        
     
     def __on_change(self,e):
-        data = e.data
-        data = data.split(" ")
-        width = data[0]
-        height = data[1]
-        if height!=self.__height_layout or width!=self.__width_layout:
-            self.__width_layout = width
-            self.__height_layout = height
-            print(width,height)
-            
-            
-
-
-
-
+        e = LayoutDimensions(e)
+        self.width = e.width
+        self.height = e.height
+        self.x = e.x_pos
+        self.y = e.y_pos
+        if self.__on_change_callback:
+            self.__on_change_callback(e)
 
     def _get_control_name(self):
         return "layoutbuilder"
@@ -140,6 +102,8 @@ class LayoutBuilder(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
+        if self.__update_size_on_init==True:
+            self._set_attr_json("update_on_build", self.__update_size_on_init)
         self._set_attr_json("alignment", self.__alignment)
   
     # content
@@ -173,28 +137,9 @@ class LayoutBuilder(ConstrainedControl, AdaptiveControl):
     # on_change
     @property
     def on_change(self) -> OptionalControlEventCallable:
-        return self._get_event_handler("change")
+        return self._get_event_handler("layout_change")
 
     @on_change.setter
     def on_change(self, handler: OptionalControlEventCallable):
-        self._add_event_handler("change", handler)
-
-    def __convert_to_float(self,value):
-        v = None
-        try:
-            v = float(value)
-        except:
-            pass
-        return v
-
-    def get_width(self) -> Union[float,None]:
-        return self.__convert_to_float(self._get_attr("widthLayout"))
-
-    def get_height(self) -> Union[float,None]:
-        return self.__convert_to_float(self._get_attr("heightLayout"))
-
-    def get_size(self) -> Union[float,None]:
-        width = self.get_width()
-        height = self.get_height()
-        return width,height
+        self._add_event_handler("layout_change", handler)
     
