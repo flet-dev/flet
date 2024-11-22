@@ -31,18 +31,7 @@ class _TimePickerControlState extends State<TimePickerControl> {
     bool lastOpen = widget.control.state["open"] ?? false;
 
     var open = widget.control.attrBool("open", false)!;
-    TimeOfDay value = widget.control.attrTime("value") ?? TimeOfDay.now();
-    String? helpText = widget.control.attrString("helpText");
-    String? cancelText = widget.control.attrString("cancelText");
-    String? confirmText = widget.control.attrString("confirmText");
-    String? hourLabelText = widget.control.attrString("hourLabelText");
-    String? minuteLabelText = widget.control.attrString("minuteLabelText");
-    String? errorInvalidText = widget.control.attrString("errorInvalidText");
-    TimePickerEntryMode timePickerEntryMode = parseTimePickerEntryMode(
-        widget.control.attrString("timePickerEntryMode"),
-        TimePickerEntryMode.dial)!;
-    Orientation? orientation =
-        parseOrientation(widget.control.attrString("orientation"));
+    TimeOfDay value = widget.control.attrTime("value", TimeOfDay.now())!;
 
     void onClosed(TimeOfDay? timeValue) {
       String stringValue;
@@ -68,14 +57,16 @@ class _TimePickerControlState extends State<TimePickerControl> {
     Widget createSelectTimeDialog() {
       Widget dialog = TimePickerDialog(
         initialTime: value,
-        helpText: helpText,
-        cancelText: cancelText,
-        confirmText: confirmText,
-        hourLabelText: hourLabelText,
-        minuteLabelText: minuteLabelText,
-        errorInvalidText: errorInvalidText,
-        initialEntryMode: timePickerEntryMode,
-        orientation: orientation,
+        helpText: widget.control.attrString("helpText"),
+        cancelText: widget.control.attrString("cancelText"),
+        confirmText: widget.control.attrString("confirmText"),
+        hourLabelText: widget.control.attrString("hourLabelText"),
+        minuteLabelText: widget.control.attrString("minuteLabelText"),
+        errorInvalidText: widget.control.attrString("errorInvalidText"),
+        initialEntryMode: parseTimePickerEntryMode(
+            widget.control.attrString("timePickerEntryMode"),
+            TimePickerEntryMode.dial)!,
+        orientation: parseOrientation(widget.control.attrString("orientation")),
         onEntryModeChanged: (TimePickerEntryMode mode) {
           widget.backend.triggerControlEvent(
               widget.control.id, "entryModeChange", mode.name);

@@ -130,6 +130,7 @@ class Icon(ConstrainedControl):
         return "icon"
 
     def before_update(self):
+        super().before_update()
         self._set_attr_json("shadows", self.__shadows)
 
     # name

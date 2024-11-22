@@ -1,4 +1,4 @@
-from datetime import time
+from datetime import datetime, time
 from enum import Enum
 from typing import Any, Optional, Union
 
@@ -85,7 +85,7 @@ class TimePicker(Control):
 
     def __init__(
         self,
-        value: Optional[time] = None,
+        value: Optional[time] = datetime.now().time(),
         open: bool = False,
         time_picker_entry_mode: Optional[TimePickerEntryMode] = None,
         hour_label_text: Optional[str] = None,
@@ -110,7 +110,6 @@ class TimePicker(Control):
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: TooltipValue = None,
-        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -123,7 +122,6 @@ class TimePicker(Control):
             col=col,
             opacity=opacity,
             tooltip=tooltip,
-            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -182,19 +180,13 @@ class TimePicker(Control):
 
     # value
     @property
-    def value(self) -> Optional[time]:
-        value_string = self._get_attr("value", def_value=None)
-        if value_string:
-            splitted = value_string.split(":")  # value_string comes in format 'HH:MM'
-            return time(hour=int(splitted[0]), minute=int(splitted[1]))
-        else:
-            return None
+    def value(self) -> time:
+        v = self._get_attr("value")  # format HH:MM
+        return time(*map(int, v.split(":")))
 
     @value.setter
-    def value(self, value: Optional[Union[time, str]]):
-        if isinstance(value, time):
-            value = value.strftime("%H:%M")
-        self._set_attr("value", value)
+    def value(self, value: time):
+        self._set_attr("value", value.strftime("%H:%M"))
 
     # hour_label_text
     @property

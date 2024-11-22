@@ -177,10 +177,11 @@ class Control:
         name = name.lower()
         orig_val = self.__attrs.get(name)
 
-        if orig_val is None and value is None:
-            return
         if value is None:
+            if orig_val is None:
+                return
             value = ""
+
         if orig_val is None or orig_val[0] != value:
             self.__attrs[name] = (value, dirty)
 

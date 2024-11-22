@@ -157,6 +157,9 @@ class Stack(ConstrainedControl, AdaptiveControl):
         super().before_update()
         self._set_attr_json("alignment", self.__alignment)
 
+    def __contains__(self, item):
+        return item in self.__controls
+
     # controls
     @property
     def controls(self):
