@@ -105,7 +105,7 @@ class Control extends Equatable {
     try {
       return DateTime.parse(value);
     } catch (e) {
-      return null;
+      return defValue;
     }
   }
 

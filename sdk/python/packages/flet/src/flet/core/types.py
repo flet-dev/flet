@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import date, datetime
 from enum import Enum, EnumMeta
 from typing import (
     TYPE_CHECKING,
@@ -461,10 +462,14 @@ IconValueOrControl = Union[IconValue, "Control"]
 T = TypeVar("T")
 ControlStateValue = Union[None, T, Dict[ControlState, T]]
 
+# DateTime
+DateTimeValue = Union[datetime, date]
+
 # Wrapper
 Wrapper = Callable[..., Any]
 
 
 # Protocols
 class SupportsStr(Protocol):
-    def __str__(self) -> str: ...
+    def __str__(self) -> str:
+        ...
