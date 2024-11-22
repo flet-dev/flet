@@ -14,6 +14,12 @@ import yaml
 from flet.utils import copy_tree, is_windows, slugify
 from flet.utils.platform_utils import get_bool_env_var
 from flet.version import update_version
+from packaging import version
+from rich.console import Console
+from rich.style import Style
+from rich.table import Column, Table
+from rich.theme import Theme
+
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.merge import merge_dict
 from flet_cli.utils.project_dependencies import (
@@ -21,11 +27,6 @@ from flet_cli.utils.project_dependencies import (
     get_project_dependencies,
 )
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
-from packaging import version
-from rich.console import Console
-from rich.style import Style
-from rich.table import Column, Table
-from rich.theme import Theme
 
 if is_windows():
     from ctypes import windll
@@ -55,6 +56,8 @@ class Command(BaseCommand):
         self.build_dir = None
         self.flutter_dir: Optional[Path] = None
         self.flutter_exe = None
+        self.skip_flutter_doctor = get_bool_env_var("FLET_CLI_SKIP_FLUTTER_DOCTOR")
+        self.no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
         self.current_platform = platform.system()
         self.platforms = {
             "windows": {
@@ -511,58 +514,65 @@ class Command(BaseCommand):
             default=False,
             help="disables rich output and uses plain text instead",
         )
+        parser.add_argument(
+            "--skip-flutter-doctor",
+            action="store_true",
+            default=False,
+            help="whether to skip running Flutter doctor in failed builds",
+        )
 
     def handle(self, options: argparse.Namespace) -> None:
-        self.verbose = options.verbose
-
-        # get `flutter` and `dart` executables from PATH
-        self.flutter_exe = self.find_flutter_batch("flutter")
-        self.dart_exe = self.find_flutter_batch("dart")
-
-        if self.verbose > 1:
-            console.log("Flutter executable:", self.flutter_exe)
-            console.log("Dart executable:", self.dart_exe)
-
-        self.no_rich_output = options.no_rich_output or get_bool_env_var(
-            "FLET_CLI_NO_RICH_OUTPUT"
-        )
-        self.emojis = {
-            "checkmark": "[green]OK[/]" if self.no_rich_output else "✅",
-            "loading": "" if self.no_rich_output else "⏳",
-            "success": "" if self.no_rich_output else "🥳",
-            "directory": "" if self.no_rich_output else "📁",
-        }
         target_platform = options.target_platform.lower()
-        # platform check
-        if (
-            self.current_platform
-            not in self.platforms[target_platform]["can_be_run_on"]
-            or options.show_platform_matrix
-        ):
-            can_build_message = (
-                "can't"
-                if self.current_platform
-                not in self.platforms[target_platform]["can_be_run_on"]
-                else "can"
-            )
-            # replace "Darwin" with "macOS" for user-friendliness
-            self.current_platform = (
-                "macOS" if self.current_platform == "Darwin" else self.current_platform
-            )
-            # highlight the current platform in the build matrix table
-            self.platform_matrix_table.rows[
-                list(self.platforms.keys()).index(target_platform)
-            ].style = "bold red1"
-            console.log(self.platform_matrix_table)
-
-            message = f"You {can_build_message} build [cyan]{target_platform}[/] on [magenta]{self.current_platform}[/]."
-            self.cleanup(1, message)
-
         with console.status(
             f"[bold blue]Initializing {target_platform} build... ",
             spinner="bouncingBall",
         ) as self.status:
-            from cookiecutter.main import cookiecutter
+            # get `flutter` and `dart` executables from PATH
+            self.flutter_exe = self.find_flutter_batch("flutter")
+            self.dart_exe = self.find_flutter_batch("dart")
+
+            self.verbose = options.verbose
+            if self.verbose > 1:
+                console.log("Flutter executable:", self.flutter_exe)
+                console.log("Dart executable:", self.dart_exe)
+
+            self.no_rich_output = self.no_rich_output or options.no_rich_output
+            self.skip_flutter_doctor = (
+                self.skip_flutter_doctor or options.skip_flutter_doctor
+            )
+            self.emojis = {
+                "checkmark": "[green]OK[/]" if self.no_rich_output else "✅",
+                "loading": "" if self.no_rich_output else "⏳",
+                "success": "" if self.no_rich_output else "🥳",
+                "directory": "" if self.no_rich_output else "📁",
+            }
+
+            # platform check
+            if (
+                self.current_platform
+                not in self.platforms[target_platform]["can_be_run_on"]
+                or options.show_platform_matrix
+            ):
+                can_build_message = (
+                    "can't"
+                    if self.current_platform
+                    not in self.platforms[target_platform]["can_be_run_on"]
+                    else "can"
+                )
+                # replace "Darwin" with "macOS" for user-friendliness
+                self.current_platform = (
+                    "macOS"
+                    if self.current_platform == "Darwin"
+                    else self.current_platform
+                )
+                # highlight the current platform in the build matrix table
+                self.platform_matrix_table.rows[
+                    list(self.platforms.keys()).index(target_platform)
+                ].style = "bold red1"
+                console.log(self.platform_matrix_table)
+
+                message = f"You {can_build_message} build [cyan]{target_platform}[/] on [magenta]{self.current_platform}[/]."
+                self.cleanup(1, message)
 
             package_platform = self.platforms[target_platform]["package_platform"]
 
@@ -874,6 +884,8 @@ class Command(BaseCommand):
                 f"[bold blue]Creating Flutter bootstrap project from {template_url} with ref {template_ref} {self.emojis['loading']}... ",
             )
             try:
+                from cookiecutter.main import cookiecutter
+
                 cookiecutter(
                     template=template_url,
                     checkout=template_ref,
@@ -1516,8 +1528,11 @@ class Command(BaseCommand):
                             console.log(flutter_msg, style=error_style)
 
             # windows has been reported to raise encoding errors when running `flutter doctor`
-            # so skip running `flutter doctor` if no_rich_output is True and platform is Windows
-            if not (self.no_rich_output and self.current_platform == "Windows"):
+            # so skip running it if no_rich_output is True
+            if not (
+                (self.no_rich_output and self.current_platform == "Windows")
+                or self.skip_flutter_doctor
+            ):
                 self.run_flutter_doctor()
 
         sys.exit(exit_code)
