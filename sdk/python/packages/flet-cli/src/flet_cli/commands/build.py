@@ -505,6 +505,37 @@ class Command(BaseCommand):
             help="disables rich output and uses plain text instead",
         )
 
+    def handle(self, options: argparse.Namespace) -> None:
+        self.options = options
+        with console.status(
+            f"[bold blue]Initializing {self.options.target_platform} build... ",
+            spinner="bouncingBall",
+        ) as self.status:
+            self.initialize_build()
+            self.validate_target_platform()
+            self.validate_entry_point()
+            self.setup_template_data()
+            self.create_flutter_project()
+            self.load_pubspec()
+            self.customize_icons_and_splash_images()
+            self.generate_icons_and_splash_screens()
+            self.package_python_app()
+            self.flutter_build()
+            self.copy_build_output()
+
+            self.cleanup(
+                0,
+                message=(
+                    f"Successfully built your [cyan]{self.platforms[self.target_platform]['status_text']}[/cyan]! {self.emojis['success']} "
+                    f"Find it in [cyan]{self.rel_out_dir}[/cyan] directory. {self.emojis['directory']}"
+                    + (
+                        f"\nRun [cyan]python -m http.server --directory {self.rel_out_dir}[/cyan] command to start dev web server with your app. "
+                        if self.target_platform == "web"
+                        else ""
+                    )
+                ),
+            )
+
     def initialize_build(self):
         self.python_app_path = Path(self.options.python_app_path).resolve()
         if not (
@@ -1415,37 +1446,6 @@ class Command(BaseCommand):
         console.log(
             f"Copied build to [cyan]{self.rel_out_dir}[/cyan] directory {self.emojis['checkmark']}"
         )
-
-    def handle(self, options: argparse.Namespace) -> None:
-        self.options = options
-        with console.status(
-            f"[bold blue]Initializing {self.options.target_platform} build... ",
-            spinner="bouncingBall",
-        ) as self.status:
-            self.initialize_build()
-            self.validate_target_platform()
-            self.validate_entry_point()
-            self.setup_template_data()
-            self.create_flutter_project()
-            self.load_pubspec()
-            self.customize_icons_and_splash_images()
-            self.generate_icons_and_splash_screens()
-            self.package_python_app()
-            self.flutter_build()
-            self.copy_build_output()
-
-            self.cleanup(
-                0,
-                message=(
-                    f"Successfully built your [cyan]{self.platforms[self.target_platform]['status_text']}[/cyan]! {self.emojis['success']} "
-                    f"Find it in [cyan]{self.rel_out_dir}[/cyan] directory. {self.emojis['directory']}"
-                    + (
-                        f"\nRun [cyan]python -m http.server --directory {self.rel_out_dir}[/cyan] command to start dev web server with your app. "
-                        if self.target_platform == "web"
-                        else ""
-                    )
-                ),
-            )
 
     def copy_icon_image(self, src_path: Path, dest_path: Path, image_name: str):
         images = glob.glob(str(src_path.joinpath(f"{image_name}.*")))
