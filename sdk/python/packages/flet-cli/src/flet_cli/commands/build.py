@@ -47,6 +47,7 @@ class Command(BaseCommand):
     def __init__(self, parser: argparse.ArgumentParser) -> None:
         super().__init__(parser)
 
+        self.skip_flutter_doctor = get_bool_env_var("FLET_CLI_SKIP_FLUTTER_DOCTOR")
         self.no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
         self.current_platform = platform.system()
         self.platforms = {
@@ -503,6 +504,12 @@ class Command(BaseCommand):
             action="store_true",
             default=False,
             help="disables rich output and uses plain text instead",
+        )
+        parser.add_argument(
+            "--skip-flutter-doctor",
+            action="store_true",
+            default=False,
+            help="whether to skip running Flutter doctor in failed builds",
         )
 
     def handle(self, options: argparse.Namespace) -> None:
@@ -1535,7 +1542,10 @@ class Command(BaseCommand):
 
             # windows has been reported to raise encoding errors when running `flutter doctor`
             # so skip running `flutter doctor` if no_rich_output is True and platform is Windows
-            if not (self.no_rich_output and self.current_platform == "Windows"):
+            if not (
+                (self.no_rich_output and self.current_platform == "Windows")
+                or self.skip_flutter_doctor
+            ):
                 self.run_flutter_doctor()
 
         sys.exit(exit_code)
