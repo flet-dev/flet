@@ -562,6 +562,9 @@ class Command(BaseCommand):
             console.log("Dart executable:", self.dart_exe)
 
         self.no_rich_output = self.no_rich_output or self.options.no_rich_output
+        self.skip_flutter_doctor = (
+            self.skip_flutter_doctor or self.options.skip_flutter_doctor
+        )
         self.emojis = {
             "checkmark": "[green]OK[/]" if self.no_rich_output else "✅",
             "loading": "" if self.no_rich_output else "⏳",
