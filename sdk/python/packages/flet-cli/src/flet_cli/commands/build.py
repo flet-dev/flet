@@ -47,6 +47,28 @@ class Command(BaseCommand):
     def __init__(self, parser: argparse.ArgumentParser) -> None:
         super().__init__(parser)
 
+        self.pubspec_path = None
+        self.rel_out_dir = None
+        self.assets_path = None
+        self.package_platform = None
+        self.target_platform = None
+        self.flutter_dependencies = None
+        self.package_app_path = None
+        self.options = None
+        self.pubspec = None
+        self.template_data = None
+        self.python_module_filename = None
+        self.out_dir = None
+        self.python_module_name = None
+        self.get_pyproject = None
+        self.python_app_path = None
+        self.no_rich_output = None
+        self.emojis = {}
+        self.dart_exe = None
+        self.verbose = False
+        self.build_dir = None
+        self.flutter_dir: Optional[Path] = None
+        self.flutter_exe = None
         self.skip_flutter_doctor = get_bool_env_var("FLET_CLI_SKIP_FLUTTER_DOCTOR")
         self.no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
         self.current_platform = platform.system()
@@ -543,6 +565,7 @@ class Command(BaseCommand):
             )
 
     def initialize_build(self):
+        assert self.options
         self.python_app_path = Path(self.options.python_app_path).resolve()
         if not (
             os.path.exists(self.python_app_path) or os.path.isdir(self.python_app_path)
@@ -591,6 +614,7 @@ class Command(BaseCommand):
     def validate_target_platform(
         self,
     ):
+        assert self.options
         if (
             self.current_platform
             not in self.platforms[self.options.target_platform]["can_be_run_on"]
@@ -616,6 +640,10 @@ class Command(BaseCommand):
             self.cleanup(1, message)
 
     def validate_entry_point(self):
+        assert self.options
+        assert self.python_app_path
+        assert self.get_pyproject
+
         self.package_app_path = Path(self.python_app_path)
         if self.get_pyproject("tool.flet.app.path"):
             self.package_app_path = self.python_app_path.joinpath(
@@ -638,6 +666,10 @@ class Command(BaseCommand):
     def setup_template_data(
         self,
     ):
+        assert self.options
+        assert self.python_app_path
+        assert self.get_pyproject
+
         base_url = (
             (
                 self.options.base_url
@@ -806,6 +838,7 @@ class Command(BaseCommand):
             deep_linking_scheme = self.options.deep_linking_scheme
             deep_linking_host = self.options.deep_linking_host
 
+        assert self.flutter_dir
         self.template_data = {
             "out_dir": self.flutter_dir.name,
             "sep": os.sep,
@@ -867,6 +900,9 @@ class Command(BaseCommand):
         }
 
     def get_flutter_dependencies(self) -> dict:
+        assert self.options
+        assert self.get_pyproject
+
         flutter_dependencies = (
             self.get_pyproject("tool.flet.flutter.dependencies") or {}
         )
@@ -881,6 +917,11 @@ class Command(BaseCommand):
         return flutter_dependencies
 
     def create_flutter_project(self):
+        assert self.options
+        assert self.get_pyproject
+        assert self.flutter_dir
+        assert self.template_data
+
         template_url = (
             self.options.template
             or self.get_pyproject("tool.flet.template.url")
@@ -933,6 +974,11 @@ class Command(BaseCommand):
         )
 
     def load_pubspec(self):
+        assert self.pubspec_path
+        assert self.template_data
+        assert self.get_pyproject
+        assert isinstance(self.flutter_dependencies, dict)
+
         with open(self.pubspec_path, encoding="utf8") as f:
             self.pubspec = yaml.safe_load(f)
 
@@ -954,6 +1000,13 @@ class Command(BaseCommand):
                 )
 
     def customize_icons_and_splash_images(self):
+        assert self.package_app_path
+        assert self.flutter_dir
+        assert self.options
+        assert self.get_pyproject
+        assert self.pubspec
+        assert self.pubspec_path
+
         self.status.update(
             f"[bold blue]Customizing app icons and splash images {self.emojis['loading']}... "
         )
@@ -964,6 +1017,7 @@ class Command(BaseCommand):
             images_path.mkdir(exist_ok=True)
 
             def fallback_image(yaml_path: str, images: list):
+                assert self.pubspec
                 d = self.pubspec
                 pp = yaml_path.split("/")
                 for p in pp[:-1]:
@@ -1166,6 +1220,8 @@ class Command(BaseCommand):
         )
 
     def generate_icons_and_splash_screens(self):
+        assert self.options
+
         self.status.update(
             f"[bold blue]Generating app icons {self.emojis['loading']}... "
         )
@@ -1202,6 +1258,12 @@ class Command(BaseCommand):
             console.log(f"Generated splash screens {self.emojis['checkmark']}")
 
     def package_python_app(self):
+        assert self.options
+        assert self.get_pyproject
+        assert self.python_app_path
+        assert self.build_dir
+        assert self.flutter_dir
+
         self.status.update(
             f"[bold blue]Packaging Python app {self.emojis['loading']}... "
         )
@@ -1317,6 +1379,11 @@ class Command(BaseCommand):
         console.log(f"Packaged Python app {self.emojis['checkmark']}")
 
     def flutter_build(self):
+        assert self.options
+        assert self.build_dir
+        assert self.get_pyproject
+        assert self.template_data
+
         self.status.update(
             f"[bold blue]Building [cyan]{self.platforms[self.options.target_platform]['status_text']}[/cyan] {self.emojis['loading']}... "
         )
@@ -1418,6 +1485,12 @@ class Command(BaseCommand):
         )
 
     def copy_build_output(self):
+        assert self.template_data
+        assert self.options
+        assert self.flutter_dir
+        assert self.out_dir
+        assert self.assets_path
+
         self.status.update(
             f"[bold blue]Copying build to [cyan]{self.rel_out_dir}[/cyan] directory {self.emojis['loading']}... ",
         )
