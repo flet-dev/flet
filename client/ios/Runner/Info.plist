@@ -49,6 +49,8 @@
 		<false />
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>The app needs access to photo library, so that photos can be selected.</string>
+		<key>GADApplicationIdentifier</key>
+        <string>ca-app-pub-3940256099942544~1458002511</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true />
 		<key>NSAppTransportSecurity</key>
