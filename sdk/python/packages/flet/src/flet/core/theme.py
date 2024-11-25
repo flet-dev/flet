@@ -736,24 +736,6 @@ class SearchViewTheme:
 
 
 @dataclass
-class BottomNavigationBarTheme:
-    bgcolor: Optional[ColorValue] = None
-    selected_item_color: Optional[ColorValue] = None
-    unselected_item_color: Optional[ColorValue] = None
-    elevation: OptionalNumber = None
-    enable_feedback: Optional[bool] = None
-    show_selected_labels: Optional[bool] = None
-    show_unselected_labels: Optional[bool] = None
-    selected_label_text_style: Optional[TextStyle] = None
-    unselected_label_text_style: Optional[TextStyle] = None
-    mouse_cursor: ControlStateValue[MouseCursor] = None
-
-    def __post_init__(self):
-        if not isinstance(self.mouse_cursor, dict):
-            self.mouse_cursor = {ControlState.DEFAULT: self.mouse_cursor}
-
-
-@dataclass
 class NavigationDrawerTheme:
     bgcolor: Optional[ColorValue] = None
     shadow_color: Optional[ColorValue] = None
@@ -845,15 +827,14 @@ class ButtonTheme:
 
 @dataclass
 class Theme:
-    color_scheme_seed: Optional[str] = None
-    primary_swatch: Optional[str] = None
+    color_scheme_seed: Optional[ColorValue] = None
+    primary_swatch: Optional[ColorValue] = None
     font_family: Optional[str] = None
     use_material3: Optional[bool] = None
     appbar_theme: Optional[AppBarTheme] = None
     badge_theme: Optional[BadgeTheme] = None
     banner_theme: Optional[BannerTheme] = None
     bottom_appbar_theme: Optional[BottomAppBarTheme] = None
-    bottom_navigation_bar_theme: Optional[BottomNavigationBarTheme] = None
     bottom_sheet_theme: Optional[BottomSheetTheme] = None
     button_theme: Optional[ButtonTheme] = None
     card_theme: Optional[CardTheme] = None

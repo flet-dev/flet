@@ -340,7 +340,6 @@ from flet.core.theme import (
     BadgeTheme,
     BannerTheme,
     BottomAppBarTheme,
-    BottomNavigationBarTheme,
     BottomSheetTheme,
     ButtonTheme,
     CardTheme,
