@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -317,6 +318,10 @@ class _TextFieldControlState extends State<TextFieldControl>
                 cursorColor: cursorColor, selectionColor: selectionColor),
             child: textField);
       }
+
+      // linux workaround for https://github.com/flet-dev/flet/issues/3934
+      textField =
+          isLinuxDesktop() ? ExcludeSemantics(child: textField) : textField;
 
       if (widget.control.attrInt("expand", 0)! > 0) {
         return constrainedControl(
