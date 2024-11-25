@@ -2,7 +2,7 @@ name: flet_ads
 description: Flet Ads control
 homepage: https://flet.dev
 repository: https://github.com/flet-dev/flet/packages/flet_ads
-version: 0.24.1
+version: 0.25.0
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
