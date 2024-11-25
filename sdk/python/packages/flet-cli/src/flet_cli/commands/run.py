@@ -193,10 +193,10 @@ class Command(BaseCommand):
             else []
         )
 
-        flet_app_data_dir = project_dir.joinpath("data")
+        flet_app_data_dir = project_dir / "storage" / "data"
         flet_app_data_dir.mkdir(parents=True, exist_ok=True)
 
-        flet_app_temp_dir = project_dir.joinpath("temp")
+        flet_app_temp_dir = project_dir / "storage" / "temp"
         if flet_app_temp_dir.exists():
             shutil.rmtree(str(flet_app_temp_dir), ignore_errors=True)
         flet_app_temp_dir.mkdir(parents=True, exist_ok=True)
