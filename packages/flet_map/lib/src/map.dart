@@ -62,8 +62,8 @@ class _MapControlState extends State<MapControl>
 
     Curve? defaultAnimationCurve;
     Duration? defaultAnimationDuration;
-    var configuration = parseConfiguration(widget.control, "configuration",
-        widget.backend, Theme.of(context), const MapOptions())!;
+    var configuration = parseConfiguration(
+        widget.control, widget.backend, context, const MapOptions())!;
 
     Widget map = FlutterMap(
       mapController: _animatedMapController.mapController,
