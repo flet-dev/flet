@@ -50,6 +50,7 @@
 * Fixed button's `bgcolor`, `color` and `elevation` ([#4126](https://github.com/flet-dev/flet/pull/4126)).
 * Fixed scrolling issues on Windows ([#4145](https://github.com/flet-dev/flet/pull/4145)).
 * Skip running flutter doctor on windows if `no_rich_output` is `True` ([#4108](https://github.com/flet-dev/flet/pull/4108)).
+* Fixed `TextField` freezes on Linux Mint #4422](https://github.com/flet-dev/flet/pull/4422)).
 
 ## 0.24.1
 
