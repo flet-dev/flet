@@ -175,21 +175,6 @@ class DatePicker(Control):
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.__first_date is None
-            or self.__last_date is None
-            or self.__first_date <= self.__last_date
-        ), "last_date must be on or after first_date"
-        assert (
-            self.__first_date is None
-            or self.__current_date is None
-            or self.__first_date <= self.__current_date
-        ), "current_date must be on or after first_date"
-        assert (
-            self.__last_date is None
-            or self.__current_date is None
-            or self.__last_date >= self.__current_date
-        ), "last_date must be on or after current_date"
 
     @deprecated(
         reason="Use Page.open() method instead.",
