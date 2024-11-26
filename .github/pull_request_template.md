@@ -2,9 +2,7 @@
 
 <!-- Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. -->
 
-
-<!-- If it fixes an open issue, please link to the issue here. -->
-Fixes #(issue)
+<!-- If this PR fixes an open issue, please link to the issue here. Ex: Fixes #4562 -->
 
 ## Test Code
 
@@ -21,20 +19,20 @@ Fixes #(issue)
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
 - [ ] This change requires a documentation update
 
-## Checklist:
+## Checklist
 
 - [ ] I signed the CLA.
 - [ ] My code follows the style guidelines of this project
 - [ ] I have performed a self-review of my own code
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] My changes generate no new warnings
-<!-- - [ ] I have added tests that prove my fix is effective or that my feature works as expected -->
-
 - [ ] New and existing tests pass locally with my changes
 - [ ] I have made corresponding changes to the [documentation](https://github.com/flet-dev/website) (if applicable)
 
-## Screenshots (if applicable):
+## Screenshots 
+
+<!-- Add screenshots here if applicable. -->
 
 ## Additional details
 
-<!-- Add any other context to be known about this PR. -->
+<!-- Any additional details to be known about this PR. -->

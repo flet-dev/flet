@@ -88,8 +88,8 @@ class BoxConstraints:
 
     def __post_init__(self):
         assert (
-            self.min_width <= self.max_width
-        ), "min_width must be less than or equal to max_width"
+            0 <= self.min_width <= self.max_width <= float("inf")
+        ), "min_width and max_width must be between 0 and infinity and min_width must be less than or equal to max_width"
         assert (
-            self.min_height <= self.max_height
-        ), "min_height must be less than or equal to max_height"
+            0 <= self.min_height <= self.max_height <= float("inf")
+        ), "min_height and max_height must be between 0 and infinity and min_height must be less than or equal to max_height"
