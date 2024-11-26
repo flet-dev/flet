@@ -487,7 +487,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
 
         // windowFullScreen
         if (windowFullScreen != null && windowFullScreen != _windowFullScreen) {
-          if (isDesktop()) {
+          if (isDesktopPlatform()) {
             await setWindowFullScreen(windowFullScreen);
           } else {
             FullScreenWindow.setFullScreen(windowFullScreen);
