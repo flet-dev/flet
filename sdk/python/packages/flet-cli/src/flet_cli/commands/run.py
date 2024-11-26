@@ -301,8 +301,8 @@ class Handler(FileSystemEventHandler):
             p_env["FLET_ASSETS_DIR"] = self.assets_dir
         p_env["FLET_DISPLAY_URL_PREFIX"] = self.page_url_prefix
 
-        p_env["FLET_APP_DATA"] = self.flet_app_data_dir
-        p_env["FLET_APP_TEMP"] = self.flet_app_temp_dir
+        p_env["FLET_APP_STORAGE_DATA"] = self.flet_app_data_dir
+        p_env["FLET_APP_STORAGE_TEMP"] = self.flet_app_temp_dir
 
         p_env["PYTHONIOENCODING"] = "utf-8"
         p_env["PYTHONWARNINGS"] = "default::DeprecationWarning"
