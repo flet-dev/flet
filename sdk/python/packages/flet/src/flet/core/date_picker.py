@@ -173,9 +173,6 @@ class DatePicker(Control):
     def _get_control_name(self):
         return "datepicker"
 
-    def before_update(self):
-        super().before_update()
-
     @deprecated(
         reason="Use Page.open() method instead.",
         version="0.23.0",
