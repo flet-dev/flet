@@ -55,6 +55,8 @@ dependencies:
     path: ../packages/flet_webview
   flet_flashlight:
     path: ../packages/flet_flashlight
+  flet_dropzone:
+    path: ../packages/flet_dropzone
 
   url_strategy: ^0.2.0
   cupertino_icons: ^1.0.6

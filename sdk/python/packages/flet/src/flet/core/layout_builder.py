@@ -4,7 +4,8 @@ from typing import Any, List, Optional, Sequence, Union
 
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.alignment import Alignment
-from flet.core.animation import AnimationValue
+from flet.core.event_handler import EventHandler
+
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control_event import ControlEvent
 from flet.core.control import Control, OptionalNumber
@@ -30,8 +31,8 @@ class LayoutDimensions(ControlEvent):
         d = json.loads(e.data)
         self.width: float = d.get("width")
         self.height: float = d.get("height")
-        self.x_pos: float = d.get("x_position")
-        self.y_pos: float = d.get("y_position")
+        self.x: float = d.get("xPos")
+        self.y: float = d.get("yPos")
         
 
 class LayoutBuilder(ConstrainedControl, AdaptiveControl):
@@ -70,14 +71,8 @@ class LayoutBuilder(ConstrainedControl, AdaptiveControl):
         self.clip_behavior = clip_behavior
         self.alignment = alignment
         self.fit = fit
-
         self.__on_change_callback = on_change
-
-        self.width_layout: float = None
-        self.height_layout: float = None
-
         self.__update_size_on_init = update_size_on_init
-
         self.on_change = self.__on_change
         
     
@@ -85,8 +80,6 @@ class LayoutBuilder(ConstrainedControl, AdaptiveControl):
         e = LayoutDimensions(e)
         self.width = e.width
         self.height = e.height
-        self.x = e.x_pos
-        self.y = e.y_pos
         if self.__on_change_callback:
             self.__on_change_callback(e)
 
@@ -104,6 +97,7 @@ class LayoutBuilder(ConstrainedControl, AdaptiveControl):
         super().before_update()
         if self.__update_size_on_init==True:
             self._set_attr_json("update_on_build", self.__update_size_on_init)
+            print(f"update_on_build set: {self.__update_size_on_init}")
         self._set_attr_json("alignment", self.__alignment)
   
     # content
@@ -143,3 +137,15 @@ class LayoutBuilder(ConstrainedControl, AdaptiveControl):
     def on_change(self, handler: OptionalControlEventCallable):
         self._add_event_handler("layout_change", handler)
     
+    @property
+    def layout_size(self):
+        width = self._get_attr("layoutWidth")
+        height = self._get_attr("layoutHeight")
+        return (float(width),float(height))
+    
+    
+    @property
+    def layout_pos(self):
+        x_pos = self._get_attr("xPos")
+        y_pos = self._get_attr("yPos")
+        return (float(x_pos),float(y_pos))

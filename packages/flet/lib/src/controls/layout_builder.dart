@@ -27,7 +27,6 @@ class LayoutBuilderControl extends StatefulWidget {
   @override
   State<LayoutBuilderControl> createState() => _LayoutBuilderControlState();
 }
-
 class _LayoutBuilderControlState extends State<LayoutBuilderControl>
     with FletStoreMixin {
   final GlobalKey _widgetKey = GlobalKey();
@@ -41,10 +40,16 @@ class _LayoutBuilderControlState extends State<LayoutBuilderControl>
   void initState() {
     super.initState();
     _updateOnBuild = widget.control.attrBool("update_on_build") ?? false;
-    debugPrint("UPDATEEEEE ON BUUUUIIILLDD: $_updateOnBuild");
   }
 
   void onChange(double width, double height) {
+    
+    widget.backend.updateControlState(widget.control.id, {"layoutWidth": width.toString()});
+    widget.backend.updateControlState(widget.control.id, {"layoutheight": height.toString()});
+
+    widget.backend.updateControlState(widget.control.id, {"xPos": width.toString()});
+    widget.backend.updateControlState(widget.control.id, {"yPos": height.toString()});
+    
     widget.backend.triggerControlEvent(
       widget.control.id,
       "layout_change",
@@ -92,11 +97,9 @@ class _LayoutBuilderControlState extends State<LayoutBuilderControl>
                 Size(constraints.maxWidth, constraints.maxHeight);
             if (_hasInitialized == false && _updateOnBuild == true) {
               onChange(constraints.maxWidth, constraints.maxHeight);
-              debugPrint("ON CHANGE FIRST UPDATE!!!!!!!!!");
             }
             if (_hasInitialized == true && _lastSize != currentSize) {
               onChange(constraints.maxWidth, constraints.maxHeight);
-              debugPrint("ON CHANGE SECONDDDDDDDDDD UPDATE!!!!!!!!!");
             }
             _hasInitialized = true;
 

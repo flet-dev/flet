@@ -134,6 +134,10 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
   ThemeMode? _themeMode;
   Map<String, dynamic>? _localeConfiguration;
   String? _windowTitle;
+
+
+  String? _windowBgblur;
+
   Color? _windowBgcolor;
   double? _windowWidth;
   double? _windowHeight;
@@ -300,6 +304,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
 
     // window params
     var windowTitle = widget.control.attrString("title", "")!;
+    var windowBgblur = widget.control.attrString("windowBgblur", "disabled")!;
     var windowBgcolor = widget.control.attrColor("windowBgcolor", context);
     var windowWidth = widget.control.attrDouble("windowWidth");
     var windowHeight = widget.control.attrDouble("windowHeight");
@@ -350,6 +355,13 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
         if (_windowBgcolor != windowBgcolor && windowBgcolor != null) {
           setWindowBackgroundColor(windowBgcolor);
           _windowBgcolor = windowBgcolor;
+        }
+        
+        //WindowBgblur
+        if (_windowBgblur != windowBgblur) {
+            setWindowBackgroundBlur(
+              windowBgblur);
+            _windowBgblur = windowBgblur;
         }
 
         // window size

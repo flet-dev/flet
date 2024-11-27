@@ -178,6 +178,15 @@ class Window:
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
         self.page._set_enum_attr("windowBgcolor", value, ColorEnums)
+    
+    # bgblur
+    @property
+    def bgblur(self) -> Optional[str]:
+        return self.page._get_attr("windowBgblur"),
+
+    @bgblur.setter
+    def bgblur(self, value: Optional[str]):
+        self.page._set_attr("windowBgblur", value)
 
     # width
     @property

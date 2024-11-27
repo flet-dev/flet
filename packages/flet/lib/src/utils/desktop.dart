@@ -2,8 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:window_to_front/window_to_front.dart';
-
 import '../models/window_media_data.dart';
+import 'background_blur.dart';
+
 
 Future setWindowTitle(String title) async {
   if (isDesktop()) {
@@ -16,6 +17,13 @@ Future setWindowBackgroundColor(Color bgcolor) async {
   if (isDesktop()) {
     debugPrint("setWindowBackgroundColor($bgcolor)");
     await windowManager.setBackgroundColor(bgcolor);
+  }
+}
+
+Future setWindowBackgroundBlur(String bgblur) async {
+  if (isDesktop()) {
+    debugPrint("setWindowBackgroundBlur($bgblur)");
+    await setWindowEffect(bgblur);
   }
 }
 
