@@ -142,7 +142,7 @@ class DatePicker(Control):
         )
 
         self.__on_entry_mode_change = EventHandler(
-            lambda e: DatePickerEntryModeChangeEvent(e.data)
+            lambda e: DatePickerEntryModeChangeEvent(e)
         )
         self._add_event_handler(
             "entryModeChange", self.__on_entry_mode_change.get_handler()
