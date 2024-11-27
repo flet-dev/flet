@@ -128,7 +128,7 @@ class TimePicker(Control):
         )
 
         self.__on_entry_mode_change = EventHandler(
-            lambda e: TimePickerEntryModeChangeEvent(e.data)
+            lambda e: TimePickerEntryModeChangeEvent(e)
         )
         self._add_event_handler(
             "entryModeChange", self.__on_entry_mode_change.get_handler()
