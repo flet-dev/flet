@@ -1,5 +1,6 @@
 from flet.app import app, app_async
 from flet.core import (
+    ads,
     alignment,
     animation,
     audio,
@@ -62,6 +63,7 @@ from flet.core.box import (
     FilterQuality,
     ShadowBlurStyle,
 )
+from flet.core.button import Button
 from flet.core.buttons import (
     BeveledRectangleBorder,
     ButtonStyle,
@@ -154,6 +156,11 @@ from flet.core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet.core.draggable import Draggable
 from flet.core.dropdown import Dropdown
 from flet.core.elevated_button import ElevatedButton
+from flet.core.exceptions import (
+    FletException,
+    FletUnimplementedPlatformEception,
+    FletUnsupportedPlatformException,
+)
 from flet.core.expansion_panel import ExpansionPanel, ExpansionPanelList
 from flet.core.expansion_tile import ExpansionTile, TileAffinity
 from flet.core.file_picker import (
@@ -221,6 +228,7 @@ from flet.core.margin import Margin
 from flet.core.markdown import (
     Markdown,
     MarkdownCodeTheme,
+    MarkdownCustomCodeTheme,
     MarkdownExtensionSet,
     MarkdownSelectionChangeCause,
     MarkdownSelectionChangeEvent,
@@ -250,8 +258,6 @@ from flet.core.page import (
     AppLifecycleStateChangeEvent,
     BrowserContextMenu,
     KeyboardEvent,
-    Locale,
-    LocaleConfiguration,
     LoginEvent,
     Page,
     PageDisconnectedException,
@@ -337,7 +343,6 @@ from flet.core.theme import (
     BadgeTheme,
     BannerTheme,
     BottomAppBarTheme,
-    BottomNavigationBarTheme,
     BottomSheetTheme,
     ButtonTheme,
     CardTheme,
@@ -400,6 +405,8 @@ from flet.core.types import (
     ImageFit,
     ImageRepeat,
     LabelPosition,
+    Locale,
+    LocaleConfiguration,
     MainAxisAlignment,
     MaterialState,
     MouseCursor,
@@ -433,5 +440,12 @@ from flet.core.video import (
     VideoSubtitleConfiguration,
 )
 from flet.core.view import View
-from flet.core.webview import WebView
+from flet.core.webview import (
+    WebView,
+    WebviewConsoleMessageEvent,
+    WebviewJavaScriptEvent,
+    WebviewLogLevelSeverity,
+    WebviewRequestMethod,
+    WebviewScrollEvent,
+)
 from flet.core.window_drag_area import WindowDragArea

@@ -138,23 +138,9 @@ EvictErrorTileStrategy? parseEvictErrorTileStrategy(String? strategy,
       defValue;
 }
 
-MapOptions? parseConfiguration(Control control, String propName,
-    FletControlBackend backend, ThemeData? theme,
+MapOptions? parseConfiguration(
+    Control control, FletControlBackend backend, BuildContext context,
     [MapOptions? defValue]) {
-  var v = control.attrString(propName);
-  if (v == null) {
-    return defValue;
-  }
-  final j1 = json.decode(v);
-  return configurationFromJSON(j1, control, backend, theme, defValue);
-}
-
-MapOptions? configurationFromJSON(
-    dynamic j, Control control, FletControlBackend backend, ThemeData? theme,
-    [MapOptions? defValue]) {
-  if (j == null) {
-    return defValue;
-  }
   void triggerEvent(String name, dynamic eventData) {
     var d = "";
     if (eventData is String) {
@@ -168,15 +154,16 @@ MapOptions? configurationFromJSON(
 
   return MapOptions(
     initialCenter:
-        latLngFromJson(j["initial_center"], const LatLng(50.5, 30.51))!,
-    interactionOptions: interactionOptionsFromJSON(
-        j["interaction_configuration"], const InteractionOptions())!,
-    backgroundColor: parseColor(theme, j['bgcolor'], const Color(0x00000000))!,
-    initialRotation: parseDouble(j['initial_rotation'], 0.0)!,
-    initialZoom: parseDouble(j['initial_zoom'], 13.0)!,
-    keepAlive: parseBool(j['keep_alive'], false)!,
-    maxZoom: parseDouble(j['max_zoom']),
-    minZoom: parseDouble(j['min_zoom']),
+        parseLatLng(control, "initialCenter", const LatLng(50.5, 30.51))!,
+    interactionOptions: parseInteractionOptions(
+        control, "interactionConfiguration", const InteractionOptions())!,
+    backgroundColor:
+        control.attrColor("bgColor", context, const Color(0x00000000))!,
+    initialRotation: control.attrDouble("initialRotation", 0.0)!,
+    initialZoom: control.attrDouble("initialZoom", 13.0)!,
+    keepAlive: control.attrBool("keepAlive", false)!,
+    maxZoom: control.attrDouble("maxZoom"),
+    minZoom: control.attrDouble("minZoom"),
     onPointerHover: control.attrBool("onHover", false)!
         ? (PointerHoverEvent e, LatLng latlng) {
             triggerEvent("hover", {

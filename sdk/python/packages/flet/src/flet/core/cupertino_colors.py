@@ -16,15 +16,18 @@ for line in __import__("sys").stdin:
 
 import random
 from enum import Enum, EnumMeta
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union, TYPE_CHECKING
 from warnings import warn
 
 from flet.utils import deprecated
 
+if TYPE_CHECKING:
+    from flet.core.types import ColorValue
+
 
 class CupertinoColorsDeprecated(EnumMeta):
     def __getattribute__(self, item):
-        if not item.startswith("_"):
+        if not item.startswith("_") and item.isupper():
             warn(
                 "cupertino_colors enum is deprecated since version 0.25.0 and will be removed in version 0.28.0. "
                 "Use CupertinoColors enum instead.",
@@ -35,12 +38,14 @@ class CupertinoColorsDeprecated(EnumMeta):
 
 
 class cupertino_colors(str, Enum, metaclass=CupertinoColorsDeprecated):
-    def with_opacity(self, opacity: Union[int, float]) -> str:
+    @staticmethod
+    def with_opacity(opacity: Union[int, float], color: "ColorValue") -> str:
         """
         Returns the color with the specified opacity.
 
         Args:
-            opacity: The color's opacity, which must be between 0 and 1 (inclusive).
+            opacity: The opacity value, which must be between 0 and 1.
+            color: The color value.
 
         Returns:
             A string representing the color value with the specified opacity appended.
@@ -49,7 +54,8 @@ class cupertino_colors(str, Enum, metaclass=CupertinoColorsDeprecated):
             AssertionError: If the opacity is not between 0 and 1 (inclusive).
         """
         assert 0 <= opacity <= 1, "opacity must be between 0 and 1"
-        return f"{self.value},{opacity}"
+        color_str = color.value if isinstance(color, Enum) else color
+        return f"{color_str},{opacity}"
 
     @staticmethod
     def random():
@@ -115,12 +121,14 @@ class cupertino_colors(str, Enum, metaclass=CupertinoColorsDeprecated):
 
 
 class CupertinoColors(str, Enum):
-    def with_opacity(self, opacity: Union[int, float]) -> str:
+    @staticmethod
+    def with_opacity(opacity: Union[int, float], color: "ColorValue") -> str:
         """
         Returns the color with the specified opacity.
 
         Args:
             opacity: The opacity value, which must be between 0 and 1.
+            color: The color value.
 
         Returns:
             A string representing the color value with the specified opacity appended.
@@ -129,7 +137,8 @@ class CupertinoColors(str, Enum):
             AssertionError: If the opacity is not between 0 and 1 (inclusive).
         """
         assert 0 <= opacity <= 1, "opacity must be between 0 and 1"
-        return f"{self.value},{opacity}"
+        color_str = color.value if isinstance(color, Enum) else color
+        return f"{color_str},{opacity}"
 
     @staticmethod
     def random(

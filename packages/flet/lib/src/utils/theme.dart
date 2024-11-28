@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:flet/src/utils/locale.dart';
 import 'package:flet/src/utils/others.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,8 @@ import 'mouse.dart';
 import 'numbers.dart';
 import 'overlay_style.dart';
 import 'text.dart';
+import 'time.dart';
+import 'tooltip.dart';
 
 class SystemUiOverlayStyleTheme
     extends ThemeExtension<SystemUiOverlayStyleTheme> {
@@ -108,22 +111,22 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
     highlightColor: parseColor(theme, json?["highlight_color"]),
     hoverColor: parseColor(theme, json?["hover_color"]),
     focusColor: parseColor(theme, json?["focus_color"]),
-    unselectedWidgetColor: parseColor(theme, json?["unselected_widget_color"]),
+    unselectedWidgetColor: parseColor(theme, json?["unselected_control_color"]),
     disabledColor: parseColor(theme, json?["disabled_color"]),
     canvasColor: parseColor(theme, json?["canvas_color"]),
-    scaffoldBackgroundColor: parseColor(theme, json?["scaffold_bg_color"]),
+    scaffoldBackgroundColor: parseColor(theme, json?["scaffold_bgcolor"]),
     cardColor: parseColor(theme, json?["card_color"]),
     dividerColor: parseColor(theme, json?["divider_color"]),
-    dialogBackgroundColor: parseColor(theme, json?["dialog_bg_color"]),
+    dialogBackgroundColor: parseColor(theme, json?["dialog_bgcolor"]),
     indicatorColor: parseColor(theme, json?["indicator_color"]),
     hintColor: parseColor(theme, json?["hint_color"]),
     shadowColor: parseColor(theme, json?["shadow_color"]),
     secondaryHeaderColor: parseColor(theme, json?["secondary_header_color"]),
-    dialogTheme: parseDialogTheme(theme, json?["dialog_theme"]),
-    bottomSheetTheme: parseBottomSheetTheme(theme, json?["bottom_sheet_theme"]),
     primaryColor: parseColor(theme, json?["primary_color"]),
     primaryColorLight: parseColor(theme, json?["primary_color_light"]),
     primaryColorDark: parseColor(theme, json?["primary_color_dark"]),
+    dialogTheme: parseDialogTheme(theme, json?["dialog_theme"]),
+    bottomSheetTheme: parseBottomSheetTheme(theme, json?["bottom_sheet_theme"]),
     cardTheme: parseCardTheme(theme, json?["card_theme"]),
     chipTheme: parseChipTheme(theme, json?["chip_theme"]),
     floatingActionButtonTheme: parseFloatingActionButtonTheme(
@@ -137,7 +140,7 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
     dividerTheme: parseDividerTheme(theme, json?["divider_theme"]),
     snackBarTheme: parseSnackBarTheme(theme, json?["snackbar_theme"]),
     bannerTheme: parseBannerTheme(theme, json?["banner_theme"]),
-    datePickerTheme: parseDatePickerTheme(theme, json?["banner_theme"]),
+    datePickerTheme: parseDatePickerTheme(theme, json?["date_picker_theme"]),
     navigationRailTheme:
         parseNavigationRailTheme(theme, json?["navigation_rail_theme"]),
     appBarTheme: parseAppBarTheme(theme, json?["appbar_theme"]),
@@ -153,8 +156,6 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
     popupMenuTheme: parsePopupMenuTheme(theme, json?["popup_menu_theme"]),
     searchBarTheme: parseSearchBarTheme(theme, json?["search_bar_theme"]),
     searchViewTheme: parseSearchViewTheme(theme, json?["search_view_theme"]),
-    bottomNavigationBarTheme: parseBottomNavigationBarTheme(
-        theme, json?["bottom_navigation_bar_theme"]),
     navigationDrawerTheme:
         parseNavigationDrawerTheme(theme, json?["navigation_drawer_theme"]),
     navigationBarTheme: parseNavigationBarTheme(
@@ -214,6 +215,24 @@ ColorScheme? parseColorScheme(ThemeData theme, Map<String, dynamic>? j) {
     onInverseSurface: parseColor(null, j["on_inverse_surface"]),
     inversePrimary: parseColor(null, j["inverse_primary"]),
     surfaceTint: parseColor(null, j["surface_tint"]),
+    onPrimaryFixed: parseColor(null, j["on_primary_fixed"]),
+    onSecondaryFixed: parseColor(null, j["on_secondary_fixed"]),
+    onTertiaryFixed: parseColor(null, j["on_tertiary_fixed"]),
+    onPrimaryFixedVariant: parseColor(null, j["on_primary_fixed_variant"]),
+    onSecondaryFixedVariant: parseColor(null, j["on_secondary_fixed_variant"]),
+    onTertiaryFixedVariant: parseColor(null, j["on_tertiary_fixed_variant"]),
+    primaryFixed: parseColor(null, j["primary_fixed"]),
+    secondaryFixed: parseColor(null, j["secondary_fixed"]),
+    tertiaryFixed: parseColor(null, j["tertiary_fixed"]),
+    primaryFixedDim: parseColor(null, j["primary_fixed_dim"]),
+    secondaryFixedDim: parseColor(null, j["secondary_fixed_dim"]),
+    surfaceBright: parseColor(null, j["surface_bright"]),
+    surfaceContainer: parseColor(null, j["surface_container"]),
+    surfaceContainerHigh: parseColor(null, j["surface_container_high"]),
+    surfaceContainerLow: parseColor(null, j["surface_container_low"]),
+    surfaceContainerLowest: parseColor(null, j["surface_container_lowest"]),
+    surfaceDim: parseColor(null, j["surface_dim"]),
+    tertiaryFixedDim: parseColor(null, j["tertiary_fixed_dim"]),
   );
 }
 
@@ -427,6 +446,9 @@ DialogTheme? parseDialogTheme(ThemeData theme, Map<String, dynamic>? j) {
     contentTextStyle: parseTextStyle("content_text_style"),
     alignment: alignmentFromJson(j["alignment"]),
     actionsPadding: edgeInsetsFromJson(j["actions_padding"]),
+    clipBehavior: parseClip(j["clip_behavior"]),
+    barrierColor: parseColor(theme, j["barrier_color"]),
+    insetPadding: edgeInsetsFromJson(j["inset_padding"]),
   );
 }
 
@@ -447,6 +469,8 @@ BottomSheetThemeData? parseBottomSheetTheme(
     modalBackgroundColor: parseColor(theme, j["modal_bgcolor"]),
     modalElevation: parseDouble(j["modal_elevation"]),
     clipBehavior: parseClip(j["clip_behavior"]),
+    constraints: boxConstraintsFromJSON(j["size_constraints"]),
+    modalBarrierColor: parseColor(theme, j["modal_barrier_color"]),
   );
 }
 
@@ -500,6 +524,9 @@ ChipThemeData? parseChipTheme(ThemeData theme, Map<String, dynamic>? j) {
     selectedShadowColor: parseColor(theme, j["selected_shadow_color"]),
     showCheckmark: parseBool(j["show_checkmark"]),
     pressElevation: parseDouble(j["click_elevation"]),
+    avatarBoxConstraints: boxConstraintsFromJSON(j["avatar_constraints"]),
+    deleteIconBoxConstraints:
+        boxConstraintsFromJSON(j["delete_icon_size_constraints"]),
   );
 }
 
@@ -531,6 +558,9 @@ FloatingActionButtonThemeData? parseFloatingActionButtonTheme(
     mouseCursor: getWidgetStateProperty<MouseCursor?>(
         j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
     iconSize: parseDouble(j["icon_size"]),
+    extendedSizeConstraints:
+        boxConstraintsFromJSON(j["extended_size_constraints"]),
+    sizeConstraints: boxConstraintsFromJSON(j["size_constraints"]),
   );
 }
 
@@ -601,7 +631,7 @@ BottomAppBarTheme? parseBottomAppBarTheme(
     elevation: parseDouble(j["elevation"]),
     height: parseDouble(j["height"]),
     padding: edgeInsetsFromJson(j["padding"]),
-    //shape:
+    shape: parseNotchedShape(j["shape"]),
   );
 }
 
@@ -823,6 +853,9 @@ DatePickerThemeData? parseDatePickerTheme(
     yearOverlayColor: getWidgetStateProperty<Color?>(
         j["year_overlay_color"], (jv) => parseColor(theme, jv as String)),
     weekdayStyle: parseTextStyle("weekday_text_style"),
+    dayShape: getWidgetStateProperty<OutlinedBorder?>(
+        j["day_shape"], (jv) => outlinedBorderFromJSON(jv)),
+    locale: localeFromJSON(j["locale"]),
   );
 }
 
@@ -866,6 +899,12 @@ TimePickerThemeData? parseTimePickerTheme(
         : null,
     cancelButtonStyle: buttonStyleFromJSON(theme, j["cancel_button_style"]),
     confirmButtonStyle: buttonStyleFromJSON(theme, j["confirm_button_style"]),
+    timeSelectorSeparatorColor: getWidgetStateProperty<Color?>(
+        j["time_selector_separator_color"],
+        (jv) => parseColor(theme, jv as String)),
+    timeSelectorSeparatorTextStyle: getWidgetStateProperty<TextStyle?>(
+        j["time_selector_separator_text_style"],
+        (jv) => textStyleFromJson(theme, jv)),
   );
 }
 
@@ -880,9 +919,7 @@ DropdownMenuThemeData? parseDropdownMenuTheme(
   }
 
   return theme.dropdownMenuTheme.copyWith(
-    menuStyle: j["menu_style"] != null
-        ? menuStyleFromJSON(theme, j["menu_style"])
-        : null,
+    menuStyle: menuStyleFromJSON(theme, j["menu_style"]),
     textStyle: parseTextStyle("text_style"),
   );
 }
@@ -912,12 +949,13 @@ ListTileThemeData? parseListTileTheme(
     minVerticalPadding: parseDouble(j["min_vertical_padding"]),
     enableFeedback: parseBool(j["enable_feedback"]),
     dense: parseBool(j["dense"]),
-    // style:
     horizontalTitleGap: parseDouble(j["horizontal_spacing"]),
-    // titleAlignment: j["title_alignment"] != null ? alignmentFromJson(j["title_alignment"]) : null,
     minLeadingWidth: parseDouble(j["min_leading_width"]),
     leadingAndTrailingTextStyle:
         parseTextStyle("leading_and_trailing_text_style"),
+    mouseCursor: getWidgetStateProperty<MouseCursor?>(
+        j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
+    minTileHeight: parseDouble(j["min_tile_height"]),
   );
 }
 
@@ -935,6 +973,16 @@ TooltipThemeData? parseTooltipTheme(ThemeData theme, Map<String, dynamic>? j) {
     height: parseDouble(j["height"]),
     excludeFromSemantics: parseBool(j["exclude_from_semantics"]),
     textStyle: parseTextStyle("text_style"),
+    preferBelow: parseBool(j["prefer_below"]),
+    verticalOffset: parseDouble(j["vertical_offset"]),
+    padding: edgeInsetsFromJson(j["padding"]),
+    waitDuration: durationFromJSON(j["wait_duration"]),
+    exitDuration: durationFromJSON(j["exit_duration"]),
+    showDuration: durationFromJSON(j["show_duration"]),
+    margin: edgeInsetsFromJson(j["margin"]),
+    triggerMode: parseTooltipTriggerMode(j["trigger_mode"]),
+    // TODO: replace null with PageArgsModel
+    decoration: boxDecorationFromJSON(theme, j["decoration"], null),
   );
 }
 
@@ -950,6 +998,11 @@ ExpansionTileThemeData? parseExpansionTileTheme(
     textColor: parseColor(theme, j["text_color"]),
     collapsedBackgroundColor: parseColor(theme, j["collapsed_bgcolor"]),
     collapsedIconColor: parseColor(theme, j["collapsed_icon_color"]),
+    clipBehavior: parseClip(j["clip_behavior"]),
+    collapsedTextColor: parseColor(theme, j["collapsed_text_color"]),
+    tilePadding: edgeInsetsFromJson(j["tile_padding"]),
+    expandedAlignment: alignmentFromJson(j["expanded_alignment"]),
+    childrenPadding: edgeInsetsFromJson(j["controls_padding"]),
   );
 }
 
@@ -970,6 +1023,29 @@ SliderThemeData? parseSliderTheme(ThemeData theme, Map<String, dynamic>? j) {
     valueIndicatorColor: parseColor(theme, j["value_indicator_color"]),
     disabledThumbColor: parseColor(theme, j["disabled_thumb_color"]),
     valueIndicatorTextStyle: parseTextStyle("value_indicator_text_style"),
+    mouseCursor: getWidgetStateProperty<MouseCursor?>(
+        j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
+    activeTickMarkColor: parseColor(theme, j["active_tick_mark_color"]),
+    disabledActiveTickMarkColor:
+        parseColor(theme, j["disabled_active_tick_mark_color"]),
+    disabledActiveTrackColor:
+        parseColor(theme, j["disabled_active_track_color"]),
+    disabledInactiveTickMarkColor:
+        parseColor(theme, j["disabled_inactive_tick_mark_color"]),
+    disabledInactiveTrackColor:
+        parseColor(theme, j["disabled_inactive_track_color"]),
+    disabledSecondaryActiveTrackColor:
+        parseColor(theme, j["disabled_secondary_active_track_color"]),
+    inactiveTickMarkColor: parseColor(theme, j["inactive_tick_mark_color"]),
+    overlappingShapeStrokeColor:
+        parseColor(theme, j["overlapping_shape_stroke_color"]),
+    minThumbSeparation: parseDouble(j["min_thumb_separation"]),
+    secondaryActiveTrackColor:
+        parseColor(theme, j["secondary_active_track_color"]),
+    trackHeight: parseDouble(j["track_height"]),
+    valueIndicatorStrokeColor:
+        parseColor(theme, j["value_indicator_stroke_color"]),
+    allowedInteraction: parseSliderInteraction(j["interaction"]),
   );
 }
 
@@ -1016,6 +1092,7 @@ PopupMenuThemeData? parsePopupMenuTheme(
     mouseCursor: getWidgetStateProperty<MouseCursor?>(
         j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
+    menuPadding: edgeInsetsFromJson(j["menu_padding"]),
   );
 }
 
@@ -1048,6 +1125,9 @@ SearchBarThemeData? parseSearchBarTheme(
         : null,
     padding: getWidgetStateProperty<EdgeInsetsGeometry?>(
         j["padding"], (jv) => edgeInsetsFromJson(jv)),
+    constraints: boxConstraintsFromJSON(j["size_constraints"]),
+    side: getWidgetStateProperty<BorderSide?>(
+        j["border_side"], (jv) => borderSideFromJSON(theme, jv)),
   );
 }
 
@@ -1069,32 +1149,9 @@ SearchViewThemeData? parseSearchViewTheme(
     headerHintStyle: parseTextStyle("header_hint_text_style"),
     headerTextStyle: parseTextStyle("header_text_style"),
     shape: j["shape"] != null ? outlinedBorderFromJSON(j["shape"]) : null,
-    side: j["border_side"] != null
-        ? borderSideFromJSON(theme, j["border_side"])
-        : null,
-  );
-}
-
-BottomNavigationBarThemeData? parseBottomNavigationBarTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
-
-  return theme.bottomNavigationBarTheme.copyWith(
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    selectedItemColor: parseColor(theme, j["selected_item_color"]),
-    unselectedItemColor: parseColor(theme, j["unselected_item_color"]),
-    elevation: parseDouble(j["elevation"]),
-    enableFeedback: parseBool(j["enable_feedback"]),
-    showSelectedLabels: parseBool(j["show_selected_labels"]),
-    showUnselectedLabels: parseBool(j["show_unselected_labels"]),
-    selectedLabelStyle: parseTextStyle("selected_label_text_style"),
-    unselectedLabelStyle: parseTextStyle("unselected_label_text_style"),
+    side: borderSideFromJSON(theme, j["border_side"]),
+    constraints: boxConstraintsFromJSON(j["size_constraints"]),
+    headerHeight: parseDouble(j["header_height"]),
   );
 }
 
@@ -1152,9 +1209,10 @@ SegmentedButtonThemeData? parseSegmentedButtonTheme(
   if (j == null) {
     return null;
   }
+  var selected_icon = parseIcon(j["selected_icon"]);
 
   return theme.segmentedButtonTheme.copyWith(
-    // selectedIcon: ,
+    selectedIcon: selected_icon != null ? Icon(selected_icon) : null,
     style: buttonStyleFromJSON(theme, j["style"]),
   );
 }
@@ -1191,6 +1249,8 @@ PageTransitionsBuilder parseTransitionsBuilder(
       return const ZoomPageTransitionsBuilder();
     case "none":
       return const NoPageTransitionsBuilder();
+    case "predictive":
+      return const PredictiveBackPageTransitionsBuilder();
     default:
       return defaultBuilder;
   }

@@ -32,38 +32,24 @@ class _CupertinoDatePickerControlState
   Widget build(BuildContext context) {
     debugPrint("CupertinoDatePicker build: ${widget.control.id}");
 
-    bool showDayOfWeek = widget.control.attrBool("showDayOfWeek", false)!;
-    Color? bgcolor = widget.control.attrColor("bgcolor", context);
-    DateTime? value = widget.control.attrDateTime("value");
-    DateTime? firstDate = widget.control.attrDateTime("firstDate");
-    DateTime? lastDate = widget.control.attrDateTime("lastDate");
-    int minimumYear = widget.control.attrInt("minimumYear", 1)!;
-    int? maximumYear = widget.control.attrInt("maximumYear");
-    double itemExtent = widget.control.attrDouble("itemExtent", _kItemExtent)!;
-    int minuteInterval = widget.control.attrInt("minuteInterval", 1)!;
-    bool use24hFormat = widget.control.attrBool("use24hFormat", false)!;
-
-    DatePickerDateOrder? dateOrder =
-        parseDatePickerDateOrder(widget.control.attrString("dateOrder"));
-    CupertinoDatePickerMode datePickerMode = parseCupertinoDatePickerMode(
-        widget.control.attrString("datePickerMode"),
-        CupertinoDatePickerMode.dateAndTime)!;
-
     Widget dialog;
     try {
       dialog = CupertinoDatePicker(
-        initialDateTime: value,
-        showDayOfWeek: showDayOfWeek,
-        minimumDate: firstDate,
-        maximumDate: lastDate,
-        backgroundColor: bgcolor,
-        minimumYear: minimumYear,
-        maximumYear: maximumYear,
-        itemExtent: itemExtent,
-        minuteInterval: minuteInterval,
-        use24hFormat: use24hFormat,
-        dateOrder: dateOrder,
-        mode: datePickerMode,
+        initialDateTime:  widget.control.attrDateTime("value"),
+        showDayOfWeek: widget.control.attrBool("showDayOfWeek", false)!,
+        minimumDate: widget.control.attrDateTime("firstDate"),
+        maximumDate: widget.control.attrDateTime("lastDate"),
+        backgroundColor: widget.control.attrColor("bgcolor", context),
+        minimumYear: widget.control.attrInt("minimumYear", 1)!,
+        maximumYear: widget.control.attrInt("maximumYear"),
+        itemExtent: widget.control.attrDouble("itemExtent", _kItemExtent)!,
+        minuteInterval: widget.control.attrInt("minuteInterval", 1)!,
+        use24hFormat: widget.control.attrBool("use24hFormat", false)!,
+        dateOrder:
+            parseDatePickerDateOrder(widget.control.attrString("dateOrder")),
+        mode: parseCupertinoDatePickerMode(
+            widget.control.attrString("datePickerMode"),
+            CupertinoDatePickerMode.dateAndTime)!,
         onDateTimeChanged: (DateTime value) {
           String stringValue = value.toIso8601String();
           widget.backend

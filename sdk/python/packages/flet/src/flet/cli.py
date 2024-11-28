@@ -2,24 +2,12 @@ import subprocess
 import sys
 
 import flet.version
+from flet.utils.pip import ensure_flet_cli_package_installed
 
 
 def main():
-    try:
-        import flet_cli.cli
-    except:
-        subprocess.call(
-            [
-                sys.executable,
-                "-m",
-                "pip",
-                "install",
-                "-q",
-                "--disable-pip-version-check",
-                f"flet-cli=={flet.version.version}",
-            ]
-        )
-        import flet_cli.cli
+    ensure_flet_cli_package_installed()
+    import flet_cli.cli
 
     flet_cli.cli.main()
 

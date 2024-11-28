@@ -1,18 +1,21 @@
 import json
-from enum import Enum
+from dataclasses import dataclass
+from enum import Enum, EnumMeta, IntFlag
 from typing import Any, List, Optional, Tuple, Union
+from warnings import warn
 
 from flet.core.animation import AnimationCurve, AnimationValue
 from flet.core.badge import BadgeValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
 from flet.core.event_handler import EventHandler
-from flet.core.map.map_configuration import MapConfiguration, MapLatitudeLongitude
 from flet.core.map.map_layer import MapLayer
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.transform import Offset
 from flet.core.types import (
+    ColorEnums,
+    ColorValue,
     ControlEvent,
     DurationValue,
     Number,
@@ -23,6 +26,89 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
+
+
+@dataclass
+class MapLatitudeLongitude:
+    latitude: Union[float, int]
+    longitude: Union[float, int]
+
+
+@dataclass
+class MapLatitudeLongitudeBounds:
+    corner_1: MapLatitudeLongitude
+    corner_2: MapLatitudeLongitude
+
+
+class MapInteractiveFlag(IntFlag):
+    NONE = 0
+    DRAG = 1 << 0
+    FLING_ANIMATION = 1 << 1
+    PINCH_MOVE = 1 << 2
+    PINCH_ZOOM = 1 << 3
+    DOUBLE_TAP_ZOOM = 1 << 4
+    DOUBLE_TAP_DRAG_ZOOM = 1 << 5
+    SCROLL_WHEEL_ZOOM = 1 << 6
+    ROTATE = 1 << 7
+    ALL = (
+        (1 << 0)
+        | (1 << 1)
+        | (1 << 2)
+        | (1 << 3)
+        | (1 << 4)
+        | (1 << 5)
+        | (1 << 6)
+        | (1 << 7)
+    )
+
+
+class MapMultiFingerGesture(IntFlag):
+    NONE = 0
+    PINCH_MOVE = 1 << 0
+    PINCH_ZOOM = 1 << 1
+    ROTATE = 1 << 2
+    ALL = (1 << 0) | (1 << 1) | (1 << 2)
+
+
+class MapPointerDeviceTypeDeprecated(EnumMeta):
+    def __getattribute__(self, item):
+        if item in [
+            "TOUCH",
+            "MOUSE",
+            "STYLUS",
+            "INVERTED_STYLUS",
+            "TRACKPAD",
+            "UNKNOWN",
+        ]:
+            warn(
+                "MapPointerDeviceType enum is deprecated since version 0.25.0 "
+                "and will be removed in version 0.28.0. Use PointerDeviceType enum instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+        return EnumMeta.__getattribute__(self, item)
+
+
+class MapPointerDeviceType(Enum, metaclass=MapPointerDeviceTypeDeprecated):
+    TOUCH = "touch"
+    MOUSE = "mouse"
+    STYLUS = "stylus"
+    INVERTED_STYLUS = "invertedStylus"
+    TRACKPAD = "trackpad"
+    UNKNOWN = "unknown"
+
+
+@dataclass
+class MapInteractionConfiguration:
+    enable_multi_finger_gesture_race: Optional[bool] = None
+    pinch_move_threshold: OptionalNumber = None
+    scroll_wheel_velocity: OptionalNumber = None
+    pinch_zoom_threshold: OptionalNumber = None
+    rotation_threshold: OptionalNumber = None
+    flags: Optional[MapInteractiveFlag] = None
+    rotation_win_gestures: Optional[MapMultiFingerGesture] = None
+    pinch_move_win_gestures: Optional[MapMultiFingerGesture] = None
+    pinch_zoom_win_gestures: Optional[MapMultiFingerGesture] = None
 
 
 class Map(ConstrainedControl):
@@ -37,7 +123,16 @@ class Map(ConstrainedControl):
     def __init__(
         self,
         layers: List[MapLayer],
-        configuration: MapConfiguration = MapConfiguration(),
+        initial_center: Optional[MapLatitudeLongitude] = None,
+        initial_rotation: OptionalNumber = None,
+        initial_zoom: OptionalNumber = None,
+        interaction_configuration: Optional[MapInteractionConfiguration] = None,
+        bgcolor: Optional[ColorValue] = None,
+        keep_alive: Optional[bool] = None,
+        max_zoom: OptionalNumber = None,
+        min_zoom: OptionalNumber = None,
+        animation_curve: Optional[AnimationCurve] = None,
+        animation_duration: DurationValue = None,
         on_init: OptionalControlEventCallable = None,
         on_tap: OptionalEventCallable["MapTapEvent"] = None,
         on_hover: OptionalEventCallable["MapHoverEvent"] = None,
@@ -142,8 +237,17 @@ class Map(ConstrainedControl):
         self.__on_pointer_up = EventHandler(lambda e: MapPointerEvent(e))
         self._add_event_handler("pointer_up", self.__on_pointer_up.get_handler())
 
-        self.configuration = configuration
         self.layers = layers
+        self.initial_center = initial_center
+        self.initial_rotation = initial_rotation
+        self.initial_zoom = initial_zoom
+        self.interaction_configuration = interaction_configuration
+        self.bgcolor = bgcolor
+        self.keep_alive = keep_alive
+        self.max_zoom = max_zoom
+        self.min_zoom = min_zoom
+        self.animation_curve = animation_curve
+        self.animation_duration = animation_duration
         self.on_tap = on_tap
         self.on_hover = on_hover
         self.on_secondary_tap = on_secondary_tap
@@ -154,6 +258,13 @@ class Map(ConstrainedControl):
         self.on_pointer_down = on_pointer_down
         self.on_pointer_cancel = on_pointer_cancel
         self.on_pointer_up = on_pointer_up
+
+    def before_update(self):
+        self._set_attr_json("initialCenter", self.__initial_center)
+        self._set_attr_json("animationDuration", self.__animation_duration)
+        self._set_attr_json(
+            "interactionConfiguration", self.__interaction_configuration
+        )
 
     def rotate_from(
         self,
@@ -268,20 +379,8 @@ class Map(ConstrainedControl):
     def _get_control_name(self):
         return "map"
 
-    def before_update(self):
-        self._set_attr_json("configuration", self.__configuration)
-
     def _get_children(self):
         return self.__layers
-
-    # configuration
-    @property
-    def configuration(self) -> MapConfiguration:
-        return self.__configuration
-
-    @configuration.setter
-    def configuration(self, value: MapConfiguration):
-        self.__configuration = value
 
     # layers
     @property
@@ -291,6 +390,98 @@ class Map(ConstrainedControl):
     @layers.setter
     def layers(self, value: List[MapLayer]):
         self.__layers = value
+
+    # initial_center
+    @property
+    def initial_center(self) -> Optional[MapLatitudeLongitude]:
+        return self.__initial_center
+
+    @initial_center.setter
+    def initial_center(self, value: Optional[MapLatitudeLongitude]):
+        self.__initial_center = value
+
+    # initial_rotation
+    @property
+    def initial_rotation(self) -> OptionalNumber:
+        return self._get_attr("initialRotation", data_type="float")
+
+    @initial_rotation.setter
+    def initial_rotation(self, value: OptionalNumber):
+        self._set_attr("initialRotation", value)
+
+    # initial_zoom
+    @property
+    def initial_zoom(self) -> OptionalNumber:
+        return self._get_attr("initialZoom", data_type="float")
+
+    @initial_zoom.setter
+    def initial_zoom(self, value: OptionalNumber):
+        self._set_attr("initialZoom", value)
+
+    # interaction_configuration
+    @property
+    def interaction_configuration(self) -> Optional[MapInteractionConfiguration]:
+        return self.__interaction_configuration
+
+    @interaction_configuration.setter
+    def interaction_configuration(self, value: Optional[MapInteractionConfiguration]):
+        self.__interaction_configuration = value
+
+    # bgcolor
+    @property
+    def bgcolor(self) -> Optional[ColorValue]:
+        return self.__bgcolor
+
+    @bgcolor.setter
+    def bgcolor(self, value: Optional[ColorValue]):
+        self.__bgcolor = value
+        self._set_enum_attr("bgcolor", value, ColorEnums)
+
+    # keep_alive
+    @property
+    def keep_alive(self) -> Optional[bool]:
+        return self._get_attr("keepAlive", data_type="bool")
+
+    @keep_alive.setter
+    def keep_alive(self, value: Optional[bool]):
+        self._set_attr("keepAlive", value)
+
+    # max_zoom
+    @property
+    def max_zoom(self) -> OptionalNumber:
+        return self._get_attr("maxZoom", data_type="float")
+
+    @max_zoom.setter
+    def max_zoom(self, value: OptionalNumber):
+        self._set_attr("maxZoom", value)
+
+    # min_zoom
+    @property
+    def min_zoom(self) -> OptionalNumber:
+        return self._get_attr("minZoom", data_type="float")
+
+    @min_zoom.setter
+    def min_zoom(self, value: OptionalNumber):
+        self._set_attr("minZoom", value)
+
+    # animation_curve
+    @property
+    def animation_curve(self) -> Optional[AnimationCurve]:
+        return self.__animation_curve
+
+    @animation_curve.setter
+    def animation_curve(self, value: Optional[AnimationCurve]):
+        self.__animation_curve = value
+        self._set_enum_attr("animationCurve", value, AnimationCurve)
+
+    # animation_duration
+    @property
+    def animation_duration(self) -> Optional[DurationValue]:
+        return self.__animation_duration
+
+    @animation_duration.setter
+    def animation_duration(self, value: Optional[DurationValue]):
+        self.__animation_duration = value
 
     # on_tap
     @property
@@ -440,18 +631,6 @@ class MapTapEvent(ControlEvent):
         )
 
 
-class MapPositionChangeEvent(ControlEvent):
-    def __init__(self, e: ControlEvent) -> None:
-        super().__init__(e.target, e.name, e.data, e.control, e.page)
-        d = json.loads(e.data)
-        self.min_zoom: Optional[float] = d.get("min_zoom")
-        self.max_zoom: Optional[float] = d.get("max_zoom")
-        self.rot: float = d.get("rot")
-        self.coordinates: MapLatitudeLongitude = MapLatitudeLongitude(
-            d.get("lat"), d.get("long")
-        )
-
-
 class MapHoverEvent(ControlEvent):
     def __init__(self, e: ControlEvent) -> None:
         super().__init__(e.target, e.name, e.data, e.control, e.page)
@@ -461,6 +640,18 @@ class MapHoverEvent(ControlEvent):
         self.global_x: float = d.get("gx")
         self.global_y: float = d.get("gy")
         self.device_type: MapPointerDeviceType = MapPointerDeviceType(d.get("kind"))
+        self.coordinates: MapLatitudeLongitude = MapLatitudeLongitude(
+            d.get("lat"), d.get("long")
+        )
+
+
+class MapPositionChangeEvent(ControlEvent):
+    def __init__(self, e: ControlEvent) -> None:
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.min_zoom: Optional[float] = d.get("min_zoom")
+        self.max_zoom: Optional[float] = d.get("max_zoom")
+        self.rotation: float = d.get("rot")
         self.coordinates: MapLatitudeLongitude = MapLatitudeLongitude(
             d.get("lat"), d.get("long")
         )

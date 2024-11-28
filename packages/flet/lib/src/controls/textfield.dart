@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -208,6 +209,8 @@ class _TextFieldControlState extends State<TextFieldControl>
       }
       var fitParentSize = widget.control.attrBool("fitParentSize", false)!;
 
+      var maxLength = widget.control.attrInt("maxLength");
+
       Widget textField = TextFormField(
           style: textStyle,
           autofocus: autofocus,
@@ -234,6 +237,8 @@ class _TextFieldControlState extends State<TextFieldControl>
               helper: helperCtrl.isNotEmpty ? helperCtrl.first : null,
               label: labelCtrl.isNotEmpty ? labelCtrl.first : null,
               customSuffix: revealPasswordIcon,
+              valueLength: _value.length,
+              maxLength: maxLength,
               focused: _focused,
               disabled: disabled,
               adaptive: adaptive),
@@ -261,7 +266,7 @@ class _TextFieldControlState extends State<TextFieldControl>
               widget.control.attrString("textAlign"), TextAlign.start)!,
           minLines: fitParentSize ? null : minLines,
           maxLines: fitParentSize ? null : maxLines,
-          maxLength: widget.control.attrInt("maxLength"),
+          maxLength: maxLength,
           readOnly: widget.control.attrBool("readOnly", false)!,
           inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
           obscureText: password && !_revealPassword,
@@ -313,6 +318,10 @@ class _TextFieldControlState extends State<TextFieldControl>
                 cursorColor: cursorColor, selectionColor: selectionColor),
             child: textField);
       }
+
+      // linux workaround for https://github.com/flet-dev/flet/issues/3934
+      textField =
+          isLinuxDesktop() ? ExcludeSemantics(child: textField) : textField;
 
       if (widget.control.attrInt("expand", 0)! > 0) {
         return constrainedControl(

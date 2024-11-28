@@ -8,7 +8,7 @@ sh ci/generate_material_icons_python.sh
 
 import random
 from enum import Enum, EnumMeta
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional
 from warnings import warn
 
 from flet.utils import deprecated
@@ -16,7 +16,7 @@ from flet.utils import deprecated
 
 class IconsDeprecated(EnumMeta):
     def __getattribute__(self, item):
-        if not item.startswith("_"):
+        if not item.startswith("_") and item.isupper():
             warn(
                 "icons enum is deprecated since version 0.25.0 and will be removed in version 0.28.0. "
                 "Use Icons enum instead.",

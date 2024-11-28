@@ -66,6 +66,8 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
     Control? helper,
     Control? label,
     Widget? customSuffix,
+    int? valueLength,
+    int? maxLength,
     bool focused = false,
     bool disabled = false,
     bool? adaptive}) {
@@ -97,6 +99,13 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
   var focusedBorderColor = control.attrColor("focusedBorderColor", context);
   var borderWidth = control.attrDouble("borderWidth");
   var focusedBorderWidth = control.attrDouble("focusedBorderWidth");
+
+  var counterText = control
+      .attrString("counterText", "")
+      ?.replaceAll("{value_length}", valueLength.toString())
+      .replaceAll("{max_length}", maxLength?.toString() ?? "None")
+      .replaceAll("{symbols_left}",
+          "${maxLength == null ? 'None' : (maxLength - (valueLength ?? 0))}");
 
   InputBorder? border;
   if (inputBorder == FormFieldInputBorder.underline) {
@@ -163,7 +172,7 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       hintStyle: parseTextStyle(Theme.of(context), control, "hintStyle"),
       helperText: control.attrString("helperText"),
       helperStyle: parseTextStyle(Theme.of(context), control, "helperStyle"),
-      counterText: control.attrString("counterText"),
+      counterText: counterText,
       counterStyle: parseTextStyle(Theme.of(context), control, "counterStyle"),
       counter: counter != null
           ? createControl(control, counter.id, control.isDisabled,
@@ -209,9 +218,9 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       suffixStyle: parseTextStyle(Theme.of(context), control, "suffixStyle"));
 }
 
-OverlayVisibilityMode? parseVisibilityMode(String? type,
+OverlayVisibilityMode? parseVisibilityMode(String? value,
     [OverlayVisibilityMode? defValue]) {
-  switch (type?.toLowerCase()) {
+  switch (value?.toLowerCase()) {
     case "never":
       return OverlayVisibilityMode.never;
     case "notediting":

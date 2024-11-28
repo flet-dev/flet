@@ -13,6 +13,7 @@ import 'package:flet_map/flet_map.dart' as flet_map;
 import 'package:flet_permission_handler/flet_permission_handler.dart'
     as flet_permission_handler;
 import 'package:flet_rive/flet_rive.dart' as flet_rive;
+import 'package:flet_ads/flet_ads.dart' as flet_ads;
 import 'package:flet_dropzone/flet_dropzone.dart' as flet_dropzone;
 // --FAT_CLIENT_START--
 import 'package:flet_video/flet_video.dart' as flet_video;
@@ -21,6 +22,8 @@ import 'package:flet_webview/flet_webview.dart' as flet_webview;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_strategy/url_strategy.dart';
+
+
 
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
@@ -43,6 +46,7 @@ void main([List<String>? args]) async {
   flet_permission_handler.ensureInitialized();
   flet_lottie.ensureInitialized();
   flet_map.ensureInitialized();
+  flet_ads.ensureInitialized();
   flet_rive.ensureInitialized();
   flet_webview.ensureInitialized();
   flet_flashlight.ensureInitialized();
@@ -113,6 +117,7 @@ void main([List<String>? args]) async {
       flet_permission_handler.createControl,
       flet_lottie.createControl,
       flet_map.createControl,
+      flet_ads.createControl,
       flet_rive.createControl,
       flet_webview.createControl,
       flet_flashlight.createControl,

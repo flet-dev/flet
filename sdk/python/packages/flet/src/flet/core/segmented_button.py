@@ -31,7 +31,7 @@ class Segment(Control):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[str] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -57,9 +57,6 @@ class Segment(Control):
 
     def _get_control_name(self):
         return "segment"
-
-    def before_update(self):
-        super().before_update()
 
     def _get_children(self):
         children = []
@@ -97,6 +94,15 @@ class Segment(Control):
     @value.setter
     def value(self, value: str):
         self._set_attr("value", value)
+
+    # tooltip
+    @property
+    def tooltip(self) -> Optional[str]:
+        return self._get_attr("tooltip")
+
+    @tooltip.setter
+    def tooltip(self, value: Optional[str]):
+        self._set_attr("tooltip", value)
 
 
 class SegmentedButton(ConstrainedControl):
@@ -203,12 +209,11 @@ class SegmentedButton(ConstrainedControl):
         assert (
             len(self.selected) < 2 or self.allow_multiple_selection
         ), "allow_multiple_selection must be True for selected to have more than one item"
-        if self.__style is None:
-            self.__style = ButtonStyle()
-            self.__style.side = self._wrap_attr_dict(self.__style.side)
-            self.__style.shape = self._wrap_attr_dict(self.__style.shape)
-            self.__style.padding = self._wrap_attr_dict(self.__style.padding)
-        self._set_attr_json("style", self.__style)
+        style = self.__style or ButtonStyle()
+        style.side = self._wrap_attr_dict(style.side)
+        style.shape = self._wrap_attr_dict(style.shape)
+        style.padding = self._wrap_attr_dict(style.padding)
+        self._set_attr_json("style", style)
 
     def _get_children(self):
         for segment in self.segments:
@@ -218,6 +223,9 @@ class SegmentedButton(ConstrainedControl):
             self.__selected_icon._set_attr_internal("n", "selectedIcon")
             children.append(self.__selected_icon)
         return children
+
+    def __contains__(self, item):
+        return item in self.__segments
 
     # style
     @property

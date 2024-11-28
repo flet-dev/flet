@@ -1,4 +1,4 @@
-from datetime import time
+from datetime import datetime, time
 from enum import Enum
 from typing import Any, Optional, Union
 
@@ -9,6 +9,8 @@ from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
+    ColorEnums,
+    ColorValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
     Orientation,
@@ -83,7 +85,7 @@ class TimePicker(Control):
 
     def __init__(
         self,
-        value: Optional[time] = None,
+        value: Optional[time] = datetime.now().time(),
         open: bool = False,
         time_picker_entry_mode: Optional[TimePickerEntryMode] = None,
         hour_label_text: Optional[str] = None,
@@ -93,6 +95,7 @@ class TimePicker(Control):
         confirm_text: Optional[str] = None,
         error_invalid_text: Optional[str] = None,
         orientation: Optional[Orientation] = None,
+        barrier_color: Optional[ColorValue] = None,
         on_change: OptionalControlEventCallable = None,
         on_dismiss: OptionalControlEventCallable = None,
         on_entry_mode_change: OptionalEventCallable[
@@ -107,7 +110,6 @@ class TimePicker(Control):
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: TooltipValue = None,
-        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -120,14 +122,13 @@ class TimePicker(Control):
             col=col,
             opacity=opacity,
             tooltip=tooltip,
-            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
         )
 
         self.__on_entry_mode_change = EventHandler(
-            lambda e: TimePickerEntryModeChangeEvent(e.data)
+            lambda e: TimePickerEntryModeChangeEvent(e)
         )
         self._add_event_handler(
             "entryModeChange", self.__on_entry_mode_change.get_handler()
@@ -146,6 +147,7 @@ class TimePicker(Control):
         self.on_dismiss = on_dismiss
         self.open = open
         self.on_entry_mode_change = on_entry_mode_change
+        self.barrier_color = barrier_color
 
     def _get_control_name(self):
         return "timepicker"
@@ -178,21 +180,13 @@ class TimePicker(Control):
 
     # value
     @property
-    def value(self) -> Optional[time]:
-        value_string = self._get_attr(
-            "value", def_value=None
-        )  # value_string in comes in format 'HH:MM'
-        if value_string:
-            splitted = value_string.split(":")
-            return time(hour=int(splitted[0]), minute=int(splitted[1]))
-        else:
-            return None
+    def value(self) -> time:
+        v = self._get_attr("value")  # format HH:MM
+        return time(*map(int, v.split(":")))
 
     @value.setter
-    def value(self, value: Optional[Union[time, str]]):
-        if isinstance(value, time):
-            value = value.strftime("%H:%M")
-        self._set_attr("value", value)
+    def value(self, value: time):
+        self._set_attr("value", value.strftime("%H:%M"))
 
     # hour_label_text
     @property
@@ -298,3 +292,13 @@ class TimePicker(Control):
         self, handler: OptionalEventCallable[TimePickerEntryModeChangeEvent]
     ):
         self.__on_entry_mode_change.handler = handler
+
+    # barrier_color
+    @property
+    def barrier_color(self) -> Optional[ColorValue]:
+        return self.__barrier_color
+
+    @barrier_color.setter
+    def barrier_color(self, value: Optional[ColorValue]):
+        self.__barrier_color = value
+        self._set_enum_attr("barrierColor", value, ColorEnums)

@@ -10,6 +10,9 @@ from flet.core.ref import Ref
 from flet.core.textfield import KeyboardType
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
+    ColorEnums,
+    ColorValue,
+    DateTimeValue,
     IconEnums,
     IconValue,
     OptionalControlEventCallable,
@@ -90,10 +93,10 @@ class DatePicker(Control):
     def __init__(
         self,
         open: bool = False,
-        value: Optional[datetime] = None,
-        first_date: Optional[datetime] = None,
-        last_date: Optional[datetime] = None,
-        current_date: Optional[datetime] = None,
+        value: Optional[DateTimeValue] = None,
+        first_date: DateTimeValue = datetime(year=2050, month=1, day=1),
+        last_date: DateTimeValue = datetime(year=1900, month=1, day=1),
+        current_date: DateTimeValue = datetime.now(),
         keyboard_type: Optional[KeyboardType] = None,
         date_picker_mode: Optional[DatePickerMode] = None,
         date_picker_entry_mode: Optional[DatePickerEntryMode] = None,
@@ -106,13 +109,14 @@ class DatePicker(Control):
         field_label_text: Optional[str] = None,
         switch_to_calendar_icon: Optional[IconValue] = None,
         switch_to_input_icon: Optional[IconValue] = None,
+        barrier_color: Optional[ColorValue] = None,
         on_change: OptionalControlEventCallable = None,
         on_dismiss: OptionalControlEventCallable = None,
         on_entry_mode_change: OptionalEventCallable[
             "DatePickerEntryModeChangeEvent"
         ] = None,
         #
-        # ConstrainedControl
+        # Control
         #
         ref: Optional[Ref] = None,
         expand: Optional[Union[bool, int]] = None,
@@ -120,7 +124,6 @@ class DatePicker(Control):
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
         tooltip: TooltipValue = None,
-        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -133,14 +136,13 @@ class DatePicker(Control):
             col=col,
             opacity=opacity,
             tooltip=tooltip,
-            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
         )
 
         self.__on_entry_mode_change = EventHandler(
-            lambda e: DatePickerEntryModeChangeEvent(e.data)
+            lambda e: DatePickerEntryModeChangeEvent(e)
         )
         self._add_event_handler(
             "entryModeChange", self.__on_entry_mode_change.get_handler()
@@ -166,12 +168,10 @@ class DatePicker(Control):
         self.on_dismiss = on_dismiss
         self.open = open
         self.on_entry_mode_change = on_entry_mode_change
+        self.barrier_color = barrier_color
 
     def _get_control_name(self):
         return "datepicker"
-
-    def before_update(self):
-        super().before_update()
 
     @deprecated(
         reason="Use Page.open() method instead.",
@@ -201,62 +201,48 @@ class DatePicker(Control):
 
     # value
     @property
-    def value(self) -> Optional[datetime]:
-        value_string = self._get_attr("value", def_value=None)
-        return datetime.fromisoformat(value_string) if value_string else None
+    def value(self) -> Optional[DateTimeValue]:
+        v = self._get_attr("value")
+        return datetime.fromisoformat(v) if v else None
 
     @value.setter
-    def value(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("value", value)
+    def value(self, value: Optional[DateTimeValue]):
+        self.__value = value
+        self._set_attr("value", value if value is None else value.isoformat())
 
-    # first_date
     @property
-    def first_date(self) -> Optional[datetime]:
-        value_string = self._get_attr("firstDate", def_value=None)
-        return (
-            datetime.fromisoformat(value_string) if value_string is not None else None
-        )
+    def first_date(self) -> DateTimeValue:
+        return self.__first_date
 
     @first_date.setter
-    def first_date(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("firstDate", value)
+    def first_date(self, value: DateTimeValue):
+        self.__first_date = value
+        self._set_attr("firstDate", value.isoformat())
 
     # last_date
     @property
-    def last_date(self) -> Optional[datetime]:
-        value_string = self._get_attr("lastDate", def_value=None)
-        return (
-            datetime.fromisoformat(value_string) if value_string is not None else None
-        )
+    def last_date(self) -> DateTimeValue:
+        return self.__last_date
 
     @last_date.setter
-    def last_date(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("lastDate", value)
+    def last_date(self, value: DateTimeValue):
+        self.__last_date = value
+        self._set_attr("lastDate", value.isoformat())
 
     # current_date
     @property
-    def current_date(self) -> Optional[datetime]:
-        value_string = self._get_attr("currentDate", def_value=None)
-        return (
-            datetime.fromisoformat(value_string) if value_string is not None else None
-        )
+    def current_date(self) -> DateTimeValue:
+        return self.__current_date
 
     @current_date.setter
-    def current_date(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("currentDate", value)
+    def current_date(self, value: DateTimeValue):
+        self.__current_date = value
+        self._set_attr("currentDate", value.isoformat())
 
     # field_hint_text
     @property
     def field_hint_text(self) -> Optional[str]:
-        return self._get_attr("fieldHintText", def_value=None)
+        return self._get_attr("fieldHintText")
 
     @field_hint_text.setter
     def field_hint_text(self, value: Optional[str]):
@@ -265,7 +251,7 @@ class DatePicker(Control):
     # field_label_text
     @property
     def field_label_text(self) -> Optional[str]:
-        return self._get_attr("fieldLabelText", def_value=None)
+        return self._get_attr("fieldLabelText")
 
     @field_label_text.setter
     def field_label_text(self, value: Optional[str]):
@@ -274,7 +260,7 @@ class DatePicker(Control):
     # help_text
     @property
     def help_text(self) -> Optional[str]:
-        return self._get_attr("helpText", def_value=None)
+        return self._get_attr("helpText")
 
     @help_text.setter
     def help_text(self, value: Optional[str]):
@@ -283,7 +269,7 @@ class DatePicker(Control):
     # cancel_text
     @property
     def cancel_text(self) -> Optional[str]:
-        return self._get_attr("cancelText", def_value=None)
+        return self._get_attr("cancelText")
 
     @cancel_text.setter
     def cancel_text(self, value: Optional[str]):
@@ -292,7 +278,7 @@ class DatePicker(Control):
     # confirm_text
     @property
     def confirm_text(self) -> Optional[str]:
-        return self._get_attr("confirmText", def_value=None)
+        return self._get_attr("confirmText")
 
     @confirm_text.setter
     def confirm_text(self, value: Optional[str]):
@@ -301,7 +287,7 @@ class DatePicker(Control):
     # error_format_text
     @property
     def error_format_text(self) -> Optional[str]:
-        return self._get_attr("errorFormatText", def_value=None)
+        return self._get_attr("errorFormatText")
 
     @error_format_text.setter
     def error_format_text(self, value: Optional[str]):
@@ -310,7 +296,7 @@ class DatePicker(Control):
     # error_invalid_text
     @property
     def error_invalid_text(self) -> Optional[str]:
-        return self._get_attr("errorInvalidText", def_value=None)
+        return self._get_attr("errorInvalidText")
 
     @error_invalid_text.setter
     def error_invalid_text(self, value: Optional[str]):
@@ -396,3 +382,13 @@ class DatePicker(Control):
         self, handler: OptionalEventCallable[DatePickerEntryModeChangeEvent]
     ):
         self.__on_entry_mode_change.handler = handler
+
+    # barrier_color
+    @property
+    def barrier_color(self) -> Optional[ColorValue]:
+        return self.__barrier_color
+
+    @barrier_color.setter
+    def barrier_color(self, value: Optional[ColorValue]):
+        self.__barrier_color = value
+        self._set_enum_attr("barrierColor", value, ColorEnums)

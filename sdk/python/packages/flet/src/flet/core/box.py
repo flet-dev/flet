@@ -19,8 +19,8 @@ from flet.core.types import (
 
 @dataclass
 class ColorFilter:
-    color: Optional[ColorValue] = field(default=None)
-    blend_mode: Optional[BlendMode] = field(default=None)
+    color: Optional[ColorValue] = None
+    blend_mode: Optional[BlendMode] = None
 
 
 class FilterQuality(Enum):
@@ -39,10 +39,10 @@ class ShadowBlurStyle(Enum):
 
 @dataclass
 class BoxShadow:
-    spread_radius: Optional[float] = field(default=None)
-    blur_radius: Optional[float] = field(default=None)
-    color: Optional[ColorValue] = field(default=None)
-    offset: OffsetValue = field(default=None)
+    spread_radius: Optional[float] = None
+    blur_radius: Optional[float] = None
+    color: Optional[ColorValue] = None
+    offset: OffsetValue = None
     blur_style: ShadowBlurStyle = field(default=ShadowBlurStyle.NORMAL)
 
 
@@ -88,8 +88,8 @@ class BoxConstraints:
 
     def __post_init__(self):
         assert (
-            self.min_width <= self.max_width
-        ), "min_width must be less than or equal to max_width"
+            0 <= self.min_width <= self.max_width <= float("inf")
+        ), "min_width and max_width must be between 0 and infinity and min_width must be less than or equal to max_width"
         assert (
-            self.min_height <= self.max_height
-        ), "min_height must be less than or equal to max_height"
+            0 <= self.min_height <= self.max_height <= float("inf")
+        ), "min_height and max_height must be between 0 and infinity and min_height must be less than or equal to max_height"

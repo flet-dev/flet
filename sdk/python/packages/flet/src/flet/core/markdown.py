@@ -225,6 +225,57 @@ class MarkdownCodeTheme(Enum):
     ZENBURN = "zenburn"
 
 
+@dataclass
+class MarkdownCustomCodeTheme:
+    addition: Optional[TextStyle] = None
+    attr: Optional[TextStyle] = None
+    attribute: Optional[TextStyle] = None
+    built_in: Optional[TextStyle] = None
+    builtin_name: Optional[TextStyle] = None
+    bullet: Optional[TextStyle] = None
+    class_name: Optional[TextStyle] = None
+    code: Optional[TextStyle] = None
+    comment: Optional[TextStyle] = None
+    deletion: Optional[TextStyle] = None
+    doctag: Optional[TextStyle] = None
+    emphasis: Optional[TextStyle] = None
+    formula: Optional[TextStyle] = None
+    function: Optional[TextStyle] = None
+    keyword: Optional[TextStyle] = None
+    link: Optional[TextStyle] = None
+    link_label: Optional[TextStyle] = None
+    literal: Optional[TextStyle] = None
+    meta: Optional[TextStyle] = None
+    meta_keyword: Optional[TextStyle] = None
+    meta_string: Optional[TextStyle] = None
+    name: Optional[TextStyle] = None
+    number: Optional[TextStyle] = None
+    operator: Optional[TextStyle] = None
+    params: Optional[TextStyle] = None
+    pattern_match: Optional[TextStyle] = None
+    quote: Optional[TextStyle] = None
+    regexp: Optional[TextStyle] = None
+    root: Optional[TextStyle] = None
+    section: Optional[TextStyle] = None
+    selector_attr: Optional[TextStyle] = None
+    selector_class: Optional[TextStyle] = None
+    selector_id: Optional[TextStyle] = None
+    selector_pseudo: Optional[TextStyle] = None
+    selector_tag: Optional[TextStyle] = None
+    string: Optional[TextStyle] = None
+    strong: Optional[TextStyle] = None
+    stronge: Optional[TextStyle] = None
+    subst: Optional[TextStyle] = None
+    subtr: Optional[TextStyle] = None
+    symbol: Optional[TextStyle] = None
+    tag: Optional[TextStyle] = None
+    template_tag: Optional[TextStyle] = None
+    template_variable: Optional[TextStyle] = None
+    title: Optional[TextStyle] = None
+    type: Optional[TextStyle] = None
+    variable: Optional[TextStyle] = None
+
+
 class Markdown(ConstrainedControl):
     """
     Control for rendering text in markdown format.
@@ -239,7 +290,7 @@ class Markdown(ConstrainedControl):
         value: Optional[str] = None,
         selectable: Optional[bool] = None,
         extension_set: Optional[MarkdownExtensionSet] = None,
-        code_theme: Optional[MarkdownCodeTheme] = None,
+        code_theme: Optional[Union[MarkdownCodeTheme, MarkdownCustomCodeTheme]] = None,
         code_style: Optional[TextStyle] = None,
         auto_follow_links: Optional[bool] = None,
         shrink_wrap: Optional[bool] = None,
@@ -349,6 +400,12 @@ class Markdown(ConstrainedControl):
         self._set_attr_json("codeStyle", self.__code_style)
         self._set_attr_json("codeStyleSheet", self.__code_style_sheet)
         self._set_attr_json("mdStyleSheet", self.__md_style_sheet)
+        self._set_attr_json(
+            "codeTheme",
+            self.__code_theme.value
+            if isinstance(self.__code_theme, MarkdownCodeTheme)
+            else self.__code_theme,
+        )
 
     def _get_children(self):
         if self.__img_error_content is not None:
@@ -431,13 +488,14 @@ class Markdown(ConstrainedControl):
 
     # code_theme
     @property
-    def code_theme(self) -> Optional[MarkdownCodeTheme]:
+    def code_theme(self) -> Optional[Union[MarkdownCodeTheme, MarkdownCustomCodeTheme]]:
         return self.__code_theme
 
     @code_theme.setter
-    def code_theme(self, value: Optional[MarkdownCodeTheme]):
+    def code_theme(
+        self, value: Optional[Union[MarkdownCodeTheme, MarkdownCustomCodeTheme]]
+    ):
         self.__code_theme = value
-        self._set_enum_attr("codeTheme", value, MarkdownCodeTheme)
 
     # code_style
     @property

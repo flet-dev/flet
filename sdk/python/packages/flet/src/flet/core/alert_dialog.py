@@ -93,6 +93,7 @@ class AlertDialog(AdaptiveControl):
         title_text_style: Optional[TextStyle] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         semantics_label: Optional[str] = None,
+        barrier_color: Optional[ColorValue] = None,
         on_dismiss: OptionalControlEventCallable = None,
         #
         # AdaptiveControl
@@ -140,6 +141,7 @@ class AlertDialog(AdaptiveControl):
         self.alignment = alignment
         self.content_text_style = content_text_style
         self.title_text_style = title_text_style
+        self.barrier_color = barrier_color
 
     def _get_control_name(self):
         return "alertdialog"
@@ -206,6 +208,16 @@ class AlertDialog(AdaptiveControl):
     def shadow_color(self, value: Optional[ColorValue]):
         self.__shadow_color = value
         self._set_enum_attr("shadowColor", value, ColorEnums)
+
+    # barrier_color
+    @property
+    def barrier_color(self) -> Optional[ColorValue]:
+        return self.__barrier_color
+
+    @barrier_color.setter
+    def barrier_color(self, value: Optional[ColorValue]):
+        self.__barrier_color = value
+        self._set_enum_attr("barrierColor", value, ColorEnums)
 
     # surface_tint_color
     @property

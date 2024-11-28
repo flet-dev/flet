@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/platform.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
@@ -7,14 +8,14 @@ import 'background_blur.dart';
 
 
 Future setWindowTitle(String title) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowTitle($title)");
     await windowManager.setTitle(title);
   }
 }
 
 Future setWindowBackgroundColor(Color bgcolor) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowBackgroundColor($bgcolor)");
     await windowManager.setBackgroundColor(bgcolor);
   }
@@ -28,7 +29,7 @@ Future setWindowBackgroundBlur(String bgblur) async {
 }
 
 Future setWindowSize(double? width, double? height) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowSize($width, $height)");
     var currentSize = await windowManager.getSize();
     await windowManager.setSize(
@@ -38,21 +39,21 @@ Future setWindowSize(double? width, double? height) async {
 }
 
 Future setWindowMinSize(double? minWidth, double? minHeight) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowMinSize($minWidth, $minHeight)");
     await windowManager.setMinimumSize(Size(minWidth ?? 0, minHeight ?? 0));
   }
 }
 
 Future setWindowMaxSize(double? maxWidth, double? maxHeight) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowMaxSize($maxWidth, $maxHeight)");
     await windowManager.setMaximumSize(Size(maxWidth ?? -1, maxHeight ?? -1));
   }
 }
 
 Future setWindowPosition(double? top, double? left) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowPosition($top, $left)");
     var currentPos = await windowManager.getPosition();
     await windowManager.setPosition(
@@ -62,63 +63,64 @@ Future setWindowPosition(double? top, double? left) async {
 }
 
 Future setWindowOpacity(double opacity) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowOpacity($opacity)");
     await windowManager.setOpacity(opacity);
   }
 }
 
 Future setWindowMinimizability(bool minimizable) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowMinimizability($minimizable)");
     await windowManager.setMinimizable(minimizable);
   }
 }
 
 Future setWindowMaximizability(bool maximizable) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowMaximizability($maximizable)");
     await windowManager.setMaximizable(maximizable);
   }
 }
 
 Future setWindowResizability(bool resizable) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowResizability($resizable)");
     await windowManager.setResizable(resizable);
   }
 }
 
 Future setWindowMovability(bool movable) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowMovability($movable)");
     await windowManager.setMovable(movable);
   }
 }
 
 Future setWindowFullScreen(bool fullScreen) async {
-  if (isDesktop() && await windowManager.isFullScreen() != fullScreen) {
+  if (isDesktopPlatform() && await windowManager.isFullScreen() != fullScreen) {
     debugPrint("setWindowFullScreen($fullScreen)");
     await windowManager.setFullScreen(fullScreen);
   }
 }
 
 Future setWindowAlwaysOnTop(bool alwaysOnTop) async {
-  if (isDesktop() && await windowManager.isAlwaysOnTop() != alwaysOnTop) {
+  if (isDesktopPlatform() &&
+      await windowManager.isAlwaysOnTop() != alwaysOnTop) {
     debugPrint("setWindowAlwaysOnTop($alwaysOnTop)");
     await windowManager.setAlwaysOnTop(alwaysOnTop);
   }
 }
 
 Future setWindowAlwaysOnBottom(bool alwaysOnBottom) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowAlwaysOnBottom($alwaysOnBottom)");
     await windowManager.setAlwaysOnBottom(alwaysOnBottom);
   }
 }
 
 Future setWindowPreventClose(bool preventClose) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowPreventClose($preventClose)");
     await windowManager.setPreventClose(preventClose);
   }
@@ -126,7 +128,7 @@ Future setWindowPreventClose(bool preventClose) async {
 
 Future setWindowTitleBarVisibility(
     bool titleBarHidden, bool titleBarButtonsHidden) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowTitleBarVisibility()");
     await windowManager.setTitleBarStyle(
         titleBarHidden ? TitleBarStyle.hidden : TitleBarStyle.normal,
@@ -135,28 +137,28 @@ Future setWindowTitleBarVisibility(
 }
 
 Future setWindowSkipTaskBar(bool skipTaskBar) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowSkipTaskBar($skipTaskBar)");
     await windowManager.setSkipTaskbar(skipTaskBar);
   }
 }
 
 Future setWindowFrameless() async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowFrameless()");
     await windowManager.setAsFrameless();
   }
 }
 
 Future setWindowProgressBar(double progress) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowProgressBar($progress)");
     await windowManager.setProgressBar(progress);
   }
 }
 
 Future setWindowShadow(bool hasShadow) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowHasShadow($hasShadow)");
     debugPrint("${windowManager.hasShadow()}");
     await windowManager.setHasShadow(hasShadow);
@@ -164,7 +166,7 @@ Future setWindowShadow(bool hasShadow) async {
 }
 
 Future setWindowBadgeLabel(String label) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowBadgeLabel($label)");
     await windowManager.setBadgeLabel(label);
   }
@@ -178,56 +180,56 @@ Future setWindowIcon(String iconPath) async {
 }
 
 Future setWindowAlignment(Alignment alignment, [bool animate = true]) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowAlignment($alignment, animate: $animate)");
     await windowManager.setAlignment(alignment, animate: animate);
   }
 }
 
 Future minimizeWindow() async {
-  if (isDesktop() && !await windowManager.isMinimized()) {
+  if (isDesktopPlatform() && !await windowManager.isMinimized()) {
     debugPrint("minimizeWindow()");
     await windowManager.minimize();
   }
 }
 
 Future restoreWindow() async {
-  if (isDesktop() && await windowManager.isMinimized()) {
+  if (isDesktopPlatform() && await windowManager.isMinimized()) {
     debugPrint("restoreWindow()");
     await windowManager.restore();
   }
 }
 
 Future maximizeWindow() async {
-  if (isDesktop() && !await windowManager.isMaximized()) {
+  if (isDesktopPlatform() && !await windowManager.isMaximized()) {
     debugPrint("maximizeWindow()");
     await windowManager.maximize();
   }
 }
 
 Future unmaximizeWindow() async {
-  if (isDesktop() && await windowManager.isMaximized()) {
+  if (isDesktopPlatform() && await windowManager.isMaximized()) {
     debugPrint("unmaximizeWindow()");
     await windowManager.unmaximize();
   }
 }
 
 Future showWindow() async {
-  if (isDesktop() && !await windowManager.isVisible()) {
+  if (isDesktopPlatform() && !await windowManager.isVisible()) {
     debugPrint("showWindow()");
     await windowManager.show();
   }
 }
 
 Future hideWindow() async {
-  if (isDesktop() && await windowManager.isVisible()) {
+  if (isDesktopPlatform() && await windowManager.isVisible()) {
     debugPrint("hideWindow()");
     await windowManager.hide();
   }
 }
 
 Future focusWindow() async {
-  if (isDesktop() &&
+  if (isDesktopPlatform() &&
       !await windowManager.isFocused() &&
       !await windowManager.isMinimized()) {
     debugPrint("focusWindow()");
@@ -236,13 +238,13 @@ Future focusWindow() async {
 }
 
 Future windowToFront() async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     await WindowToFront.activate();
   }
 }
 
 Future blurWindow() async {
-  if (isDesktop() &&
+  if (isDesktopPlatform() &&
       (defaultTargetPlatform == TargetPlatform.windows ||
           defaultTargetPlatform == TargetPlatform.macOS) &&
       await windowManager.isFocused()) {
@@ -252,35 +254,35 @@ Future blurWindow() async {
 }
 
 Future destroyWindow() async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("destroyWindow()");
     await windowManager.destroy();
   }
 }
 
 Future waitUntilReadyToShow() async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("waitUntilReadyToShow()");
     await windowManager.waitUntilReadyToShow();
   }
 }
 
 Future centerWindow() async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("centerWindow()");
     await windowManager.center();
   }
 }
 
 Future closeWindow() async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("closeWindow()");
     await windowManager.close();
   }
 }
 
 Future isFocused() async {
-  if (isDesktop() &&
+  if (isDesktopPlatform() &&
       (defaultTargetPlatform == TargetPlatform.windows ||
           defaultTargetPlatform == TargetPlatform.macOS)) {
     return await windowManager.isFocused();
@@ -291,7 +293,7 @@ Future isFocused() async {
 
 Future<WindowMediaData> getWindowMediaData() async {
   var m = WindowMediaData();
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     m.isMaximized = await windowManager.isMaximized();
     m.isMinimized = await windowManager.isMinimized();
     m.isFocused = await isFocused();
@@ -307,21 +309,4 @@ Future<WindowMediaData> getWindowMediaData() async {
   } else {
     return Future.value(m);
   }
-}
-
-bool isDesktop() {
-  return !kIsWeb &&
-      (defaultTargetPlatform == TargetPlatform.windows ||
-          defaultTargetPlatform == TargetPlatform.macOS ||
-          defaultTargetPlatform == TargetPlatform.linux);
-}
-
-bool isMobile() {
-  return !kIsWeb &&
-      (defaultTargetPlatform == TargetPlatform.iOS ||
-          defaultTargetPlatform == TargetPlatform.android);
-}
-
-bool isWindowsDesktop() {
-  return !kIsWeb && (defaultTargetPlatform == TargetPlatform.windows);
 }

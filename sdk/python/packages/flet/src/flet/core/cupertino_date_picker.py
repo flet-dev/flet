@@ -11,6 +11,7 @@ from flet.core.tooltip import TooltipValue
 from flet.core.types import (
     ColorEnums,
     ColorValue,
+    DateTimeValue,
     OffsetValue,
     OptionalControlEventCallable,
     ResponsiveNumber,
@@ -44,9 +45,9 @@ class CupertinoDatePicker(ConstrainedControl):
 
     def __init__(
         self,
-        value: Optional[datetime] = None,
-        first_date: Optional[datetime] = None,
-        last_date: Optional[datetime] = None,
+        value: DateTimeValue = datetime.now(),
+        first_date: Optional[DateTimeValue] = None,
+        last_date: Optional[DateTimeValue] = None,
         bgcolor: Optional[ColorValue] = None,
         minute_interval: Optional[int] = None,
         minimum_year: Optional[int] = None,
@@ -83,7 +84,6 @@ class CupertinoDatePicker(ConstrainedControl):
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
         tooltip: TooltipValue = None,
-        badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -114,7 +114,6 @@ class CupertinoDatePicker(ConstrainedControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
-            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
@@ -137,43 +136,34 @@ class CupertinoDatePicker(ConstrainedControl):
 
     # value
     @property
-    def value(self) -> Optional[datetime]:
-        value_string = self._get_attr("value", def_value=None)
-        return datetime.fromisoformat(value_string) if value_string else None
+    def value(self) -> datetime:
+        v = self._get_attr("value")
+        return datetime.fromisoformat(v) if v else None
 
     @value.setter
-    def value(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("value", value)
+    def value(self, value: DateTimeValue):
+        self._set_attr("value", value.isoformat())
 
     # first_date
     @property
     def first_date(self) -> Optional[datetime]:
-        value_string = self._get_attr("firstDate", def_value=None)
-        return (
-            datetime.fromisoformat(value_string) if value_string is not None else None
-        )
+        v = self._get_attr("firstDate")
+        return datetime.fromisoformat(v) if v is not None else None
 
     @first_date.setter
-    def first_date(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("firstDate", value)
+    def first_date(self, value: Optional[DateTimeValue]):
+        self.__first_date = value
+        self._set_attr("firstDate", value if value is None else value.isoformat())
 
     # last_date
     @property
     def last_date(self) -> Optional[datetime]:
-        value_string = self._get_attr("lastDate", def_value=None)
-        return (
-            datetime.fromisoformat(value_string) if value_string is not None else None
-        )
+        v = self._get_attr("lastDate")
+        return datetime.fromisoformat(v) if v is not None else None
 
     @last_date.setter
-    def last_date(self, value: Optional[Union[datetime, str]]):
-        if isinstance(value, (date, datetime)):
-            value = value.isoformat()
-        self._set_attr("lastDate", value)
+    def last_date(self, value: Optional[DateTimeValue]):
+        self._set_attr("lastDate", value if value is None else value.isoformat())
 
     # bgcolor
     @property
@@ -192,8 +182,7 @@ class CupertinoDatePicker(ConstrainedControl):
 
     @item_extent.setter
     def item_extent(self, value: OptionalNumber):
-        if value is not None and value < 0:
-            raise ValueError("item_extent must be greater than 0")
+        assert value is None or value > 0, "item_extent must be greater than 0"
         self._set_attr("itemExtent", value)
 
     # min_year
@@ -221,8 +210,9 @@ class CupertinoDatePicker(ConstrainedControl):
 
     @minute_interval.setter
     def minute_interval(self, value: Optional[int]):
-        if value is not None and (value < 0 or 60 % value != 0):
-            raise ValueError("minute_interval must be a positive integer factor of 60")
+        assert value is None or (
+            value > 0 and 60 % value == 0
+        ), "minute_interval must be a positive integer factor of 60"
         self._set_attr("minuteInterval", value)
 
     # use_24h_format

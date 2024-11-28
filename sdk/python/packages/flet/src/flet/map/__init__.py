@@ -4,18 +4,15 @@ from flet.core.map.map import (
     MapEvent,
     MapEventSource,
     MapHoverEvent,
-    MapPointerDeviceType,
-    MapPointerEvent,
-    MapPositionChangeEvent,
-    MapTapEvent,
-)
-from flet.core.map.map_configuration import (
-    MapConfiguration,
     MapInteractionConfiguration,
     MapInteractiveFlag,
     MapLatitudeLongitude,
     MapLatitudeLongitudeBounds,
     MapMultiFingerGesture,
+    MapPointerDeviceType,
+    MapPointerEvent,
+    MapPositionChangeEvent,
+    MapTapEvent,
 )
 from flet.core.map.marker_layer import Marker, MarkerLayer
 from flet.core.map.polygon_layer import PolygonLayer, PolygonMarker

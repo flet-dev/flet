@@ -15,7 +15,7 @@ from typing import (
     Union,
 )
 
-from flet.core.badge import BadgeValue
+from flet.core.badge import Badge, BadgeValue
 from flet.core.embed_json_encoder import EmbedJsonEncoder
 from flet.core.protocol import Command
 from flet.core.ref import Ref
@@ -93,7 +93,8 @@ class Control:
     def _before_build_command(self) -> None:
         self._set_attr_json("col", self.__col)
         self._set_attr_json("tooltip", self.tooltip)
-        self._set_attr_json("badge", self.badge)
+        if isinstance(self.badge, (Badge, str)):
+            self._set_attr_json("badge", self.badge)
 
     def did_mount(self):
         pass
@@ -176,10 +177,11 @@ class Control:
         name = name.lower()
         orig_val = self.__attrs.get(name)
 
-        if orig_val is None and value is None:
-            return
         if value is None:
+            if orig_val is None:
+                return
             value = ""
+
         if orig_val is None or orig_val[0] != value:
             self.__attrs[name] = (value, dirty)
 
