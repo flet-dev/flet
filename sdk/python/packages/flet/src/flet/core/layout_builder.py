@@ -97,7 +97,6 @@ class LayoutBuilder(ConstrainedControl, AdaptiveControl):
         super().before_update()
         if self.__update_size_on_init==True:
             self._set_attr_json("update_on_build", self.__update_size_on_init)
-            print(f"update_on_build set: {self.__update_size_on_init}")
         self._set_attr_json("alignment", self.__alignment)
   
     # content
