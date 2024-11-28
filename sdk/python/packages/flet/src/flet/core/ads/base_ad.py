@@ -6,6 +6,7 @@ from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
 from flet.core.types import (
     OffsetValue,
+    OptionalControlEventCallable,
     PagePlatform,
     ResponsiveNumber,
     RotateValue,
@@ -17,13 +18,13 @@ class BaseAd(ConstrainedControl):
     def __init__(
         self,
         unit_id: str,
-        on_load=None,
-        on_error=None,
-        on_open=None,
-        on_close=None,
-        on_impression=None,
-        on_click=None,
-        on_will_dismiss=None,
+        on_load: OptionalControlEventCallable = None,
+        on_error: OptionalControlEventCallable = None,
+        on_open: OptionalControlEventCallable = None,
+        on_close: OptionalControlEventCallable = None,
+        on_impression: OptionalControlEventCallable = None,
+        on_click: OptionalControlEventCallable = None,
+        on_will_dismiss: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -49,7 +50,7 @@ class BaseAd(ConstrainedControl):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
