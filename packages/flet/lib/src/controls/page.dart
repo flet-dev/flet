@@ -1068,14 +1068,13 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
             }
 
             Widget scaffold = PopScope(
-                canPop: false,
-                onPopInvokedWithResult: (didPop, result) async {
-                  await _allowBackPress();
-                },
-                child: Scaffold(
+              canPop: false,
+              onPopInvokedWithResult: (didPop, result) async {
+                await _allowBackPress();
+              },
+              child: Scaffold(
                 key: bar == null || bar is AppBarControl ? scaffoldKey : null,
-                backgroundColor: control.attrColor("bgcolor", context) ??
-                    CupertinoTheme.of(context).scaffoldBackgroundColor,
+                backgroundColor: control.attrColor("bgcolor", context) ?? CupertinoTheme.of(context).scaffoldBackgroundColor,
                 appBar: bar is AppBarControl ? bar : null,
                 drawer: drawerView != null
                     ? NavigationDrawerControl(
@@ -1115,7 +1114,8 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                         parentAdaptive: adaptive)
                     : null,
                 floatingActionButtonLocation: fabLocation,
-            ));
+              )
+            );
 
             var systemOverlayStyle =
                 materialTheme.extension<SystemUiOverlayStyleTheme>();
