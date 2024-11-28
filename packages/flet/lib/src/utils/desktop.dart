@@ -22,7 +22,7 @@ Future setWindowBackgroundColor(Color bgcolor) async {
 }
 
 Future setWindowBackgroundBlur(String bgblur) async {
-  if (isDesktop()) {
+  if (isDesktopPlatform()) {
     debugPrint("setWindowBackgroundBlur($bgblur)");
     await setWindowEffect(bgblur);
   }
