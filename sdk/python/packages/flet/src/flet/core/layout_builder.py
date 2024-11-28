@@ -31,8 +31,8 @@ class LayoutDimensions(ControlEvent):
         d = json.loads(e.data)
         self.width: float = d.get("width")
         self.height: float = d.get("height")
-        self.x: float = d.get("xPos")
-        self.y: float = d.get("yPos")
+        self.x: float = d.get("x_position")
+        self.y: float = d.get("y_position")
         
 
 class LayoutBuilder(ConstrainedControl, AdaptiveControl):
@@ -145,6 +145,6 @@ class LayoutBuilder(ConstrainedControl, AdaptiveControl):
     
     @property
     def layout_pos(self):
-        x_pos = self._get_attr("xPos")
-        y_pos = self._get_attr("yPos")
+        x_pos = self._get_attr("x_position")
+        y_pos = self._get_attr("y_position")
         return (float(x_pos),float(y_pos))

@@ -47,8 +47,8 @@ class _LayoutBuilderControlState extends State<LayoutBuilderControl>
     widget.backend.updateControlState(widget.control.id, {"layoutWidth": width.toString()});
     widget.backend.updateControlState(widget.control.id, {"layoutheight": height.toString()});
 
-    widget.backend.updateControlState(widget.control.id, {"xPos": width.toString()});
-    widget.backend.updateControlState(widget.control.id, {"yPos": height.toString()});
+    widget.backend.updateControlState(widget.control.id, {"x_position": xPosition.toString()});
+    widget.backend.updateControlState(widget.control.id, {"y_position": yPosition.toString()});
     
     widget.backend.triggerControlEvent(
       widget.control.id,
