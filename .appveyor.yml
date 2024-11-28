@@ -151,12 +151,12 @@ for:
             dart pub publish --force
             cd $APPVEYOR_BUILD_FOLDER
 
-            sleep 600
+            #sleep 600
 
             for dir in packages/flet_*; do
               cd "$dir"
               echo "Publishing $dir package"
-              dart pub publish --force || exit 1
+              dart pub publish --force
               cd "$APPVEYOR_BUILD_FOLDER"
             done
 
