@@ -1060,7 +1060,6 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
             Future<bool> _allowBackPress() async {
               DateTime now = DateTime.now();
               if (currentBackPressTime == null || now.difference(currentBackPressTime !) > Duration(seconds : 2)) {
-                print("******************* Now: ${currentBackPressTime} New: ${Duration(seconds: 30)}");
                 currentBackPressTime = now;
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Press again to exit")));
                 return false;
