@@ -14,12 +14,6 @@ import yaml
 from flet.utils import copy_tree, is_windows, slugify
 from flet.utils.platform_utils import get_bool_env_var
 from flet.version import update_version
-from packaging import version
-from rich.console import Console
-from rich.style import Style
-from rich.table import Column, Table
-from rich.theme import Theme
-
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.merge import merge_dict
 from flet_cli.utils.project_dependencies import (
@@ -27,6 +21,11 @@ from flet_cli.utils.project_dependencies import (
     get_project_dependencies,
 )
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
+from packaging import version
+from rich.console import Console
+from rich.style import Style
+from rich.table import Column, Table
+from rich.theme import Theme
 
 if is_windows():
     from ctypes import windll
@@ -51,6 +50,7 @@ class Command(BaseCommand):
         self.rel_out_dir = None
         self.assets_path = None
         self.package_platform = None
+        self.config_platform = None
         self.target_platform = None
         self.flutter_dependencies = None
         self.package_app_path = None
@@ -75,6 +75,7 @@ class Command(BaseCommand):
         self.platforms = {
             "windows": {
                 "package_platform": "Windows",
+                "config_platform": "windows",
                 "flutter_build_command": "windows",
                 "status_text": "Windows app",
                 "outputs": ["build/windows/x64/runner/Release/*"],
@@ -83,6 +84,7 @@ class Command(BaseCommand):
             },
             "macos": {
                 "package_platform": "Darwin",
+                "config_platform": "macos",
                 "flutter_build_command": "macos",
                 "status_text": "macOS bundle",
                 "outputs": ["build/macos/Build/Products/Release/{product_name}.app"],
@@ -91,6 +93,7 @@ class Command(BaseCommand):
             },
             "linux": {
                 "package_platform": "Linux",
+                "config_platform": "linux",
                 "flutter_build_command": "linux",
                 "status_text": "app for Linux",
                 "outputs": ["build/linux/{arch}/release/bundle/*"],
@@ -99,6 +102,7 @@ class Command(BaseCommand):
             },
             "web": {
                 "package_platform": "Pyodide",
+                "config_platform": "web",
                 "flutter_build_command": "web",
                 "status_text": "web app",
                 "outputs": ["build/web/*"],
@@ -107,6 +111,7 @@ class Command(BaseCommand):
             },
             "apk": {
                 "package_platform": "Android",
+                "config_platform": "android",
                 "flutter_build_command": "apk",
                 "status_text": ".apk for Android",
                 "outputs": ["build/app/outputs/flutter-apk/*"],
@@ -115,6 +120,7 @@ class Command(BaseCommand):
             },
             "aab": {
                 "package_platform": "Android",
+                "config_platform": "android",
                 "flutter_build_command": "appbundle",
                 "status_text": ".aab bundle for Android",
                 "outputs": ["build/app/outputs/bundle/release/*"],
@@ -123,6 +129,7 @@ class Command(BaseCommand):
             },
             "ipa": {
                 "package_platform": "iOS",
+                "config_platform": "ios",
                 "flutter_build_command": "ipa",
                 "status_text": ".ipa bundle for iOS",
                 "outputs": ["build/ios/archive/*", "build/ios/ipa/*"],
@@ -596,6 +603,9 @@ class Command(BaseCommand):
         }
         self.package_platform = self.platforms[self.options.target_platform][
             "package_platform"
+        ]
+        self.config_platform = self.platforms[self.options.target_platform][
+            "config_platform"
         ]
         self.rel_out_dir = self.options.output_dir or os.path.join(
             "build", self.platforms[self.options.target_platform]["dist"]
@@ -1277,8 +1287,10 @@ class Command(BaseCommand):
             self.package_platform,
         ]
 
-        target_arch = self.options.target_arch or self.get_pyproject(
-            "tool.flet.build_arch"
+        target_arch = (
+            self.options.target_arch
+            or self.get_pyproject(f"tool.flet.{self.config_platform}.build_arch")
+            or self.get_pyproject("tool.flet.build_arch")
         )
         if target_arch:
             package_args.extend(["--arch", self.options.target_arch])

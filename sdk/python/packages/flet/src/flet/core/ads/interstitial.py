@@ -4,12 +4,18 @@ from flet.core.ads.base_ad import BaseAd
 from flet.core.animation import AnimationValue
 from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
-from flet.core.types import OffsetValue, ResponsiveNumber, RotateValue, ScaleValue
+from flet.core.types import (
+    OffsetValue,
+    OptionalControlEventCallable,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
+)
 
 
 class InterstitialAd(BaseAd):
     """
-    TBA
+    Displays a full screen interstitial ad.
 
     -----
 
@@ -19,12 +25,12 @@ class InterstitialAd(BaseAd):
     def __init__(
         self,
         unit_id: str,
-        on_load=None,
-        on_error=None,
-        on_open=None,
-        on_close=None,
-        on_impression=None,
-        on_click=None,
+        on_load: OptionalControlEventCallable = None,
+        on_error: OptionalControlEventCallable = None,
+        on_open: OptionalControlEventCallable = None,
+        on_close: OptionalControlEventCallable = None,
+        on_impression: OptionalControlEventCallable = None,
+        on_click: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -50,7 +56,7 @@ class InterstitialAd(BaseAd):
         animate_rotation: AnimationValue = None,
         animate_scale: AnimationValue = None,
         animate_offset: AnimationValue = None,
-        on_animation_end=None,
+        on_animation_end: OptionalControlEventCallable = None,
         tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

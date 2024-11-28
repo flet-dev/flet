@@ -1,11 +1,63 @@
 # Flet changelog
 
-# 0.24.1
+## 0.25.0
+
+### New controls
+
+* Mobile Ads (`Banner` and `Interstitial`) ([details and example](https://github.com/flet-dev/flet/pull/3288)).
+* `Button` control ([#4265](https://github.com/flet-dev/flet/pull/4265)) - which is just an alias for `ElevatedButton` control.
+
+### Breaking changes
+
+* Refactor `Badge` Control to a Dataclass; added new `badge` property to all controls ([#4077](https://github.com/flet-dev/flet/pull/4077)).
+
+### Other changes
+
+* Added `{value_length}`, `{max_length}`, and `{symbols_left}` placeholders to `TextField.counter_text` ([#4403](https://github.com/flet-dev/flet/pull/4403)).
+* Added `--skip-flutter-doctor` to build cli command ([#4388](https://github.com/flet-dev/flet/pull/4388)).
+* `WebView` enhancements ([#4018](https://github.com/flet-dev/flet/pull/4018)).
+* `Map` control enhancements ([#3994](https://github.com/flet-dev/flet/pull/3994)).
+* Exposed more `Theme` props ([#4278](https://github.com/flet-dev/flet/pull/4278), [#4278](https://github.com/flet-dev/flet/pull/4278)).
+* Exposed more properties in multiple Controls ([#4105](https://github.com/flet-dev/flet/pull/4105))
+* Added `__contains__` methods in container-alike Controls ([#4374](https://github.com/flet-dev/flet/pull/4374)).
+* Added a custom `Markdown` code theme ([#4343](https://github.com/flet-dev/flet/pull/4343)).
+* Added `barrier_color` prop to dialogs ([#4236](https://github.com/flet-dev/flet/pull/4236)).
+* Merged `icon` and `icon_content` props into `icon: str | Control` ([#4305](https://github.com/flet-dev/flet/pull/4305)).
+* Migrated `colors` and `icons` variables to Enums ([#4180](https://github.com/flet-dev/flet/pull/4180)).
+* TextField: `suffix_icon`, `prefix_icon` and `icon` can be `Control` or `str` ([#4173](https://github.com/flet-dev/flet/pull/4173)).
+* Added `--pyinstaller-build-args` to `flet pack` CLI command ([#4187](https://github.com/flet-dev/flet/pull/4187)).
+* Made SearchBar's view height adjustable; added new properties ([#4039](https://github.com/flet-dev/flet/pull/4039)).
+* Bumped Rive version and fixed Linux app build template for `rive_common`.
+
+### Bug fixes
+
+* Fixed `Icon` rotation ([#4384](https://github.com/flet-dev/flet/pull/4384)).
+* Fixed regression in `Markdown.code_theme` when using `MarkdownCodeTheme` enum ([#4373](https://github.com/flet-dev/flet/pull/4373)).
+* Fixed `Segment` and `NavigationBarDestination` accept only string tooltips ([#4326](https://github.com/flet-dev/flet/pull/4326)).
+* Display informative message when `date` has wrong format ([#4019](https://github.com/flet-dev/flet/pull/4019)).
+* Fixed `MapConfiguration.interaction_configuration` is not honoured ([#3976](https://github.com/flet-dev/flet/pull/3976)).
+* Fixed `Video.jump_to()` fails with negative indexes ([#4294](https://github.com/flet-dev/flet/pull/4294)).
+* Fixed condition in `AppBar.tooltip_opacity` ([#4280](https://github.com/flet-dev/flet/pull/4280)).
+* Fixed wrong type (asyncio.Future -> concurrent.futures.Future) and handle `CancelledError` ([#4268](https://github.com/flet-dev/flet/pull/4268)).
+* Fixed clicking on `CupertinoContextMenuAction` doesn't close context menu ([#3948](https://github.com/flet-dev/flet/pull/3948)).
+* Fixed dropdown `max_menu_height` ([#3974](https://github.com/flet-dev/flet/pull/3974)).
+* Fixed prevent button style from being modified in `before_update()` ([#4181](https://github.com/flet-dev/flet/pull/4181)).
+* Fixed disabling filled buttons is not visually respected ([#4090](https://github.com/flet-dev/flet/pull/4090)).
+* when `label` is set, use `MainAxisSize.min` for the `Row` ([#3998](https://github.com/flet-dev/flet/pull/3998)).
+* Fixed `NavigationBarDestination.disabled` has no visual effect ([#4073](https://github.com/flet-dev/flet/pull/4073)).
+* Fixed autofill in `CupertinoTextField` ([#4103](https://github.com/flet-dev/flet/pull/4103)).
+* Linechart: `jsonDecode` tooltip before displaying ([#4069](https://github.com/flet-dev/flet/pull/4069)).
+* Fixed button's `bgcolor`, `color` and `elevation` ([#4126](https://github.com/flet-dev/flet/pull/4126)).
+* Fixed scrolling issues on Windows ([#4145](https://github.com/flet-dev/flet/pull/4145)).
+* Skip running flutter doctor on windows if `no_rich_output` is `True` ([#4108](https://github.com/flet-dev/flet/pull/4108)).
+* Fixed `TextField` freezes on Linux Mint #4422](https://github.com/flet-dev/flet/pull/4422)).
+
+## 0.24.1
 
 * FIXED: `Tooltip` displays wrong message when used with `IconButton`, `FloatingActionButton` and `PopupMenuButton` ([#3922](https://github.com/flet-dev/flet/issues/3922))
 * FIXED: `Image.src.base64` ([#3919](https://github.com/flet-dev/flet/issues/3919))
 
-# 0.24.0
+## 0.24.0
 
 * NEW: `Placeholder` Control ([#3646](https://github.com/flet-dev/flet/issues/3646))
 * NEW: `InteractiveViewer` Control ([#3645](https://github.com/flet-dev/flet/issues/3645))
@@ -44,7 +96,7 @@
 * CHORE: Bump Flutter packages ([#3719](https://github.com/flet-dev/flet/issues/3719))
 * CHORE: Cleanup ([#3640](https://github.com/flet-dev/flet/issues/3640))
 
-# 0.23.2
+## 0.23.2
 
 * CHANGED: Enhance Typing of Event Handlers ([#3523](https://github.com/flet-dev/flet/issues/3523))
 * CHANGED: Delete Page.window.on_resize | deprecate Page.on_resize in favor of Page.on_resized ([#3516](https://github.com/flet-dev/flet/issues/3516))
@@ -56,7 +108,7 @@
 * FIXED: `Page.open()` breaking after multiple calls.
 * FIXED: Typo in on_resized setter decorator
 
-# 0.23.1
+## 0.23.1
 
 * FIX: Fix parseFloatingActionButtonLocation() to work on desktop ([#3496](https://github.com/flet-dev/flet/issues/3496))
 * FIX: Flet 0.23 crashes on Ubuntu 22.04 ([#3495](https://github.com/flet-dev/flet/issues/3495))
@@ -65,7 +117,7 @@
 * FIX: replace `len(list(filter(...)))` by `any(...)`.
 * FIX: Make window and browser_context_menu private, and expose respective getters.
 
-# 0.23.0
+## 0.23.0
 
 * NEW: `PermissionHandler` control ([#3276](https://github.com/flet-dev/flet/issues/3276))
 * NEW: `Map` control ([#3093](https://github.com/flet-dev/flet/issues/3093))
@@ -94,7 +146,7 @@
 * FIX: `Container.on_tap_down` not called when `on_click` is not provided ([#3442](https://github.com/flet-dev/flet/issues/3442))
 * FIX: SnackBar bug #3311 ([#3313](https://github.com/flet-dev/flet/issues/3313))
 
-# 0.22.1
+## 0.22.1
 
 * `AutoComplete` control ([#3003](https://github.com/flet-dev/flet/issues/3003))
 * Added `--exclude` option to `flet build` command ([#3125](https://github.com/flet-dev/flet/issues/3125))
@@ -112,7 +164,7 @@
 * Fixed ([#3035](https://github.com/flet-dev/flet/issues/3035)) switch Flutter RichText to Text.rich ([#3066](https://github.com/flet-dev/flet/issues/3066))
 * Fixed: Markdown code block is not selectable ([#1753](https://github.com/flet-dev/flet/issues/1753))
 
-# 0.22.0
+## 0.22.0
 
 * Controls enhancement (see [#2882](https://github.com/flet-dev/flet/issues/2882) for details).
 * `Theme` Enhancement ([#2955](https://github.com/flet-dev/flet/issues/2955)).
@@ -126,7 +178,7 @@
 * Web: patch html title with app_name ([#2909](https://github.com/flet-dev/flet/issues/2909)).
 * `Container`: fix triggered both `on_click` and `on_long_press` events ([#2914](https://github.com/flet-dev/flet/issues/2914)).
 
-# 0.21.2
+## 0.21.2
 
 * Add `--android-adaptive-icon-background` to `flet build` command.
 * Fix for mobile Safari: Store session ID in SessionStorage instead of window.name.
@@ -136,13 +188,13 @@
 * Add client IP and user agent to a session ID.
 * Generate crypto-strong strings across the framework.
 
-# 0.21.1
+## 0.21.1
 
 * Python dependencies bumped and losen.
 * Fixed: "No supported WebSocket library detected." when running web app with Flet 0.21.0 ([#2818](https://github.com/flet-dev/flet/issues/2818)).
 * Fix `EventHandler`: do not call it when converter returned `None`.
 
-# 0.21.0
+## 0.21.0
 
 * FastAPI instead of built-in Fletd server. Mixed async/sync apps. ([#2700](https://github.com/flet-dev/flet/issues/2700)).
 * `CupertinoActivityIndicator` Control ([#2762](https://github.com/flet-dev/flet/issues/2762)).
@@ -160,20 +212,20 @@
 * Additional properties ([#2736](https://github.com/flet-dev/flet/issues/2736)).
 * Reorder `__init__` ([#2724](https://github.com/flet-dev/flet/issues/2724)).
 
-# 0.20.2
+## 0.20.2
 * Move `system_overlay_style` from `AppBar` to `Theme` ([#2667](https://github.com/flet-dev/flet/issues/2667)).
 * `flet build` command checks minimal Flutter SDK version.
 * Buttons turn to `CupertinoDialogAction` controls inside adaptive dialogs.
 * `FletApp` control takes control create factories from a parent app.
 
-# 0.20.1
+## 0.20.1
 
 * Migrated to Flutter 3.19
 * Fixed scrolling behavior changes in scrollable controls.
 * Remove `Page.design` and replace with `Page.adaptive` ([#2650](https://github.com/flet-dev/flet/issues/2650)).
 * Rename `Control.on_update` to `Control.before_update` ([#2642](https://github.com/flet-dev/flet/issues/2642)).
 
-# 0.20.0
+## 0.20.0
 
 * `AppBar.system_overlay_style` property ([#2615](https://github.com/flet-dev/flet/issues/2615)).
 * New `CupertinoButton` props: `filled`, `style.bgcolor`, `style.padding`, `text`, `icon`, `icon_color`.
@@ -205,7 +257,7 @@
 * `CupertinoTextfield` control ([#2417](https://github.com/flet-dev/flet/issues/2417)).
 * `FloatingActionButtonLocation` offset ([#2411](https://github.com/flet-dev/flet/issues/2411)).
 
-# 0.19.0
+## 0.19.0
 
 * `flet build` to apply Python SSL fix when packaging for iOS and Android ([#2349](https://github.com/flet-dev/flet/issues/2349)).
 * Upgrade Android Gradle in flet `build app` template ([#2350](https://github.com/flet-dev/flet/issues/2350)).
@@ -226,7 +278,7 @@
 * Fixed: PubSub is not shared between pages in the same FastAPI app ([#2368](https://github.com/flet-dev/flet/issues/2368)).
 * Fixed: check for `DISPLAY` instead of `XDG_CURRENT_DESKTOP` to check if linux machine is GUIless or not ([#2373](https://github.com/flet-dev/flet/issues/2373)).
 
-# 0.18.0
+## 0.18.0
 
 * `flet build` command to package Flet app for any platform ([docs](https://flet.dev/docs/guides/python/packaging-app-for-distribution)).
 * Added TextStyle for the Text control ([#2270](https://github.com/flet-dev/flet/issues/2270)).
@@ -237,12 +289,12 @@
 * `MenuBar`, `SubMenuButton` and `MenuItemButton` controls ([#2252](https://github.com/flet-dev/flet/issues/2252)).
 * convert 'key' to a super parameter ([#2258](https://github.com/flet-dev/flet/issues/2258)).
 
-# 0.17.0
+## 0.17.0
 
 * `SearchBar` control ([#2212](https://github.com/flet-dev/flet/issues/2212)).
 * `CupertinoNavigationBar` control ([#2241](https://github.com/flet-dev/flet/issues/2241)).
 
-# 0.16.0
+## 0.16.0
 
 * `CupertinoSlider` control and `Slider.adaptive` ([#2224](https://github.com/flet-dev/flet/issues/2224)).
 * `CupertinoRadio` control and `Radio.adaptive` ([#2225](https://github.com/flet-dev/flet/issues/2225)).
@@ -254,7 +306,7 @@
 * Dark window title for Windows ([#2204](https://github.com/flet-dev/flet/issues/2204)).
 * Fix `ValueError` on web page resize ([#1564](https://github.com/flet-dev/flet/issues/1564)).
 
-# 0.15.0
+## 0.15.0
 
 * `ExpansionPanel` and `ExpansionPanelList` controls ([docs](https://flet.dev/docs/controls/expansionpanel)).
 * `CupertinoCheckBox` control, adaptive `CheckBox` ([docs](https://flet.dev/docs/controls/cupertinocheckbox)).
@@ -266,7 +318,7 @@
 * Added `Dropdown.Option.visible` property.
 * Fix AlertDialog broken content when testing in Flet app ([#2192](https://github.com/flet-dev/flet/issues/2192)).
 
-# 0.14.0
+## 0.14.0
 
 * `SelectionArea` control ([docs](https://flet.dev/docs/controls/selectionarea)).
 * `SegmentedButton` control ([docs](https://flet.dev/docs/controls/segmentedbutton)).
@@ -276,7 +328,7 @@
 * `--uac-admin` flag added to `flet pack` command ([#2149](https://github.com/flet-dev/flet/issues/2149)).
 * Bump Flutter dependencies.
 
-# 0.13.0
+## 0.13.0
 
 * `Dismissible` Control ([#2124](https://github.com/flet-dev/flet/issues/2124)).
 * `TimePicker` control ([#2129](https://github.com/flet-dev/flet/issues/2129)).
@@ -284,13 +336,13 @@
 * Added `thumb_icon` to `Switch` ([#2116](https://github.com/flet-dev/flet/issues/2116)).
 * Feature: `TextField` Input validation ([#2101](https://github.com/flet-dev/flet/issues/2101)).
 
-# 0.12.2
+## 0.12.2
 
 * Flutter 3.16.0
 * Added ´__repr__´ to `Control` class ([#2091](https://github.com/flet-dev/flet/issues/2091)).
 * Added ´skip_route_change_event´ to ´page.go_async´ ([#2092](https://github.com/flet-dev/flet/issues/2092)).
 
-# 0.12.1
+## 0.12.1
 
 * Ability to expand `ButtomSheet` to the top of the screen with `BottomSheet.is_scroll_controlled` property ([#2087](https://github.com/flet-dev/flet/issues/2087)).
 * `BottomSheet.maintain_bottom_view_insets_padding` to avoid obstructing controls with on-screen keyboard ([#2010](https://github.com/flet-dev/flet/issues/2010)).
@@ -302,7 +354,7 @@
 * Fixed: routing regression.
 * Fixed: Multiple dialogs (AlertDialog) will create a ghost dialog ([#1670](https://github.com/flet-dev/flet/issues/1670)).
 
-# 0.12.0
+## 0.12.0
 
 * `NavigationDrawer` control ([docs](https://flet.dev/docs/controls/navigationdrawer)).
 * `Badge` control ([docs](https://flet.dev/docs/controls/badge)).
@@ -320,7 +372,7 @@
 * Fixed: `Chip.selected` property type changed to bool ([#2048](https://github.com/flet-dev/flet/issues/2048)).
 * Fixed: Unreliable detection of SVG images ([#2053](https://github.com/flet-dev/flet/issues/2053)).
 
-# 0.11.0
+## 0.11.0
 
 * `DatePicker` control ([docs](https://flet.dev/docs/controls/datepicker)).
 * `Chip` control ([docs](https://flet.dev/docs/controls/chip)).
@@ -329,7 +381,7 @@
 * Added `AlertDialog.inset_padding` property ([#1899](https://github.com/flet-dev/flet/issues/1899).
 * Embedded mode to work with [`serious_python`](https://pub.dev/packages/serious_python).
 
-# 0.10.3
+## 0.10.3
 
 * Add proxy_path parameter to flet_fastapi.app() ([#1882](https://github.com/flet-dev/flet/issues/1882)).
 * Fix `flet create` crashes with an empty project name.

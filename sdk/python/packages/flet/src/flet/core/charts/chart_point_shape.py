@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Optional
 
-from flet.core.types import ColorValue
+from flet.core.types import ColorValue, OptionalNumber
 
 
 @dataclass
@@ -11,25 +11,31 @@ class ChartPointShape:
 
 @dataclass
 class ChartCirclePoint(ChartPointShape):
-    type: str = field(default="circle")
     color: Optional[ColorValue] = None
-    radius: Optional[float] = None
+    radius: OptionalNumber = None
     stroke_color: Optional[ColorValue] = None
-    stroke_width: Optional[float] = None
+    stroke_width: OptionalNumber = None
+
+    def __post_init__(self):
+        self.type = "circle"
 
 
 @dataclass
 class ChartSquarePoint(ChartPointShape):
-    type: str = field(default="square")
     color: Optional[ColorValue] = None
-    size: Optional[float] = None
+    size: OptionalNumber = None
     stroke_color: Optional[ColorValue] = None
-    stroke_width: Optional[float] = None
+    stroke_width: OptionalNumber = None
+
+    def __post_init__(self):
+        self.type = "square"
 
 
 @dataclass
 class ChartCrossPoint(ChartPointShape):
-    type: str = field(default="cross")
     color: Optional[ColorValue] = None
-    size: Optional[float] = None
-    width: Optional[float] = None
+    size: OptionalNumber = None
+    width: OptionalNumber = None
+
+    def __post_init__(self):
+        self.type = "cross"

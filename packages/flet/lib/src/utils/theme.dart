@@ -156,8 +156,6 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
     popupMenuTheme: parsePopupMenuTheme(theme, json?["popup_menu_theme"]),
     searchBarTheme: parseSearchBarTheme(theme, json?["search_bar_theme"]),
     searchViewTheme: parseSearchViewTheme(theme, json?["search_view_theme"]),
-    bottomNavigationBarTheme: parseBottomNavigationBarTheme(
-        theme, json?["bottom_navigation_bar_theme"]),
     navigationDrawerTheme:
         parseNavigationDrawerTheme(theme, json?["navigation_drawer_theme"]),
     navigationBarTheme: parseNavigationBarTheme(
@@ -1154,31 +1152,6 @@ SearchViewThemeData? parseSearchViewTheme(
     side: borderSideFromJSON(theme, j["border_side"]),
     constraints: boxConstraintsFromJSON(j["size_constraints"]),
     headerHeight: parseDouble(j["header_height"]),
-  );
-}
-
-BottomNavigationBarThemeData? parseBottomNavigationBarTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
-  if (j == null) {
-    return null;
-  }
-
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
-
-  return theme.bottomNavigationBarTheme.copyWith(
-    backgroundColor: parseColor(theme, j["bgcolor"]),
-    selectedItemColor: parseColor(theme, j["selected_item_color"]),
-    unselectedItemColor: parseColor(theme, j["unselected_item_color"]),
-    elevation: parseDouble(j["elevation"]),
-    enableFeedback: parseBool(j["enable_feedback"]),
-    showSelectedLabels: parseBool(j["show_selected_labels"]),
-    showUnselectedLabels: parseBool(j["show_unselected_labels"]),
-    selectedLabelStyle: parseTextStyle("selected_label_text_style"),
-    unselectedLabelStyle: parseTextStyle("unselected_label_text_style"),
-    mouseCursor: getWidgetStateProperty<MouseCursor?>(
-        j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
   );
 }
 
