@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Any, Dict, List, Optional
 
 from flet.core.control import OptionalNumber
-from flet.core.map.map_configuration import MapLatitudeLongitudeBounds
+from flet.core.map.map import MapLatitudeLongitudeBounds
 from flet.core.map.map_layer import MapLayer
 from flet.core.ref import Ref
 from flet.core.types import OptionalControlEventCallable

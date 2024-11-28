@@ -2,7 +2,7 @@ from typing import Any, List, Optional
 
 from flet.core.alignment import Alignment
 from flet.core.control import Control, OptionalNumber
-from flet.core.map.map_configuration import MapLatitudeLongitude
+from flet.core.map.map import MapLatitudeLongitude
 from flet.core.map.map_layer import MapLayer
 from flet.core.ref import Ref
 
