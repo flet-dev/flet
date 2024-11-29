@@ -650,7 +650,7 @@ class Page(AdaptiveControl):
 
         _session_page.set(self)
 
-    def get_control(self, id: int) -> Control:
+    def get_control(self, id: str) -> Control:
         return self._index.get(id)
 
     def before_update(self) -> None:
