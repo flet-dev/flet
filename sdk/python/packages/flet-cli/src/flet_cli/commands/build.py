@@ -1271,6 +1271,7 @@ class Command(BaseCommand):
         assert self.options
         assert self.get_pyproject
         assert self.python_app_path
+        assert self.package_app_path
         assert self.build_dir
         assert self.flutter_dir
 
@@ -1282,7 +1283,7 @@ class Command(BaseCommand):
             "run",
             "serious_python:main",
             "package",
-            str(self.python_app_path),
+            str(self.package_app_path),
             "--platform",
             self.package_platform,
         ]
