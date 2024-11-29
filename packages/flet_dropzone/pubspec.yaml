@@ -2,7 +2,7 @@ name: flet_dropzone
 description: Flet Drop Zone control
 homepage: https://flet.dev
 repository: https://github.com/flet-dev/flet/packages/flet_dropzone
-version: 0.26.0
+version: 0.24.1
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
