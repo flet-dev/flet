@@ -247,84 +247,84 @@ packages:
       path: "../packages/flet"
       relative: true
     source: path
-    version: "0.24.1"
+    version: "0.25.0"
   flet_ads:
     dependency: "direct main"
     description:
       path: "../packages/flet_ads"
       relative: true
     source: path
-    version: "0.24.1"
+    version: "0.25.0"
   flet_audio:
     dependency: "direct main"
     description:
       path: "../packages/flet_audio"
       relative: true
     source: path
-    version: "0.24.1"
+    version: "0.25.0"
   flet_audio_recorder:
     dependency: "direct main"
     description:
       path: "../packages/flet_audio_recorder"
       relative: true
     source: path
-    version: "0.24.1"
+    version: "0.25.0"
   flet_flashlight:
     dependency: "direct main"
     description:
       path: "../packages/flet_flashlight"
       relative: true
     source: path
-    version: "0.24.1"
+    version: "0.25.0"
   flet_geolocator:
     dependency: "direct main"
     description:
       path: "../packages/flet_geolocator"
       relative: true
     source: path
-    version: "0.24.1"
+    version: "0.25.0"
   flet_lottie:
     dependency: "direct main"
     description:
       path: "../packages/flet_lottie"
       relative: true
     source: path
-    version: "0.24.1"
+    version: "0.25.0"
   flet_map:
     dependency: "direct main"
     description:
       path: "../packages/flet_map"
       relative: true
     source: path
-    version: "0.24.1"
+    version: "0.25.0"
   flet_permission_handler:
     dependency: "direct main"
     description:
       path: "../packages/flet_permission_handler"
       relative: true
     source: path
-    version: "0.24.1"
+    version: "0.25.0"
   flet_rive:
     dependency: "direct main"
     description:
       path: "../packages/flet_rive"
       relative: true
     source: path
-    version: "0.24.1"
+    version: "0.25.0"
   flet_video:
     dependency: "direct main"
     description:
       path: "../packages/flet_video"
       relative: true
     source: path
-    version: "0.24.1"
+    version: "0.25.0"
   flet_webview:
     dependency: "direct main"
     description:
       path: "../packages/flet_webview"
       relative: true
     source: path
-    version: "0.24.1"
+    version: "0.25.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -376,10 +376,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_map_animations
-      sha256: a2135cd3cf36c07d821efeabb0be31aca380449528af80913c77b158e142eae9
+      sha256: "08233f89919049a3601e785d32e9d1d9e1faac6578190150f1d7495fc1050d36"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.1"
+    version: "0.8.0"
   flutter_map_cancellable_tile_provider:
     dependency: transitive
     description:
