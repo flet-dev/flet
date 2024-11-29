@@ -37,12 +37,6 @@ class _MapControlState extends State<MapControl>
     super.dispose();
   }
 
-  Duration? durationFromString(String? duration, [Duration? defaultValue]) {
-    return duration != null
-        ? durationFromJSON(json.decode(duration), defaultValue)
-        : defaultValue;
-  }
-
   @override
   Widget build(BuildContext context) {
     debugPrint("Map build: ${widget.control.id} (${widget.control.hashCode})");
