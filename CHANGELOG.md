@@ -1,5 +1,17 @@
 # Flet changelog
 
+## 0.25.1
+
+### Changes
+
+* Added InteractiveViewer programmatic transformations ([#4451](https://github.com/flet-dev/flet/pull/4451)).
+
+### Bug fixes
+
+* Fixed `flet build` creates bundle but running it gives `ImportError: No module named main` error ([#4444](https://github.com/flet-dev/flet/pull/4444)).
+* Fixed hook-flet with wrong import module ([#4447](https://github.com/flet-dev/flet/pull/4447)).
+* Fixed "flutter/runtime/dart_vm_initializer.cc" error on Linux ([#4443](https://github.com/flet-dev/flet/pull/4443)).
+
 ## 0.25.0
 
 ### New controls
