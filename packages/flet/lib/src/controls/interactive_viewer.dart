@@ -6,11 +6,13 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/edge_insets.dart';
+import '../utils/numbers.dart';
 import '../utils/others.dart';
+import '../utils/time.dart';
 import 'create_control.dart';
 import 'error.dart';
 
-class InteractiveViewerControl extends StatelessWidget {
+class InteractiveViewerControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
@@ -28,34 +30,109 @@ class InteractiveViewerControl extends StatelessWidget {
       required this.backend});
 
   @override
-  Widget build(BuildContext context) {
-    debugPrint("InteractiveViewer build: ${control.id}");
+  State<InteractiveViewerControl> createState() =>
+      _InteractiveViewerControlState();
+}
 
-    var contentCtrls = children.where((c) => c.isVisible);
-    bool? adaptive = control.isAdaptive ?? parentAdaptive;
-    bool disabled = control.isDisabled || parentDisabled;
+class _InteractiveViewerControlState extends State<InteractiveViewerControl>
+    with SingleTickerProviderStateMixin {
+  final TransformationController _transformationController =
+      TransformationController();
+  late AnimationController _animationController;
+  Animation<Matrix4>? _animation;
+  Matrix4? _savedMatrix;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController =
+        AnimationController(vsync: this, duration: Duration.zero);
+
+    widget.backend.subscribeMethods(widget.control.id,
+        (methodName, args) async {
+      switch (methodName) {
+        case "zoom":
+          var factor = parseDouble(args["factor"]);
+          if (factor != null) {
+            _transformationController.value =
+                _transformationController.value.scaled(factor, factor);
+          }
+          break;
+        case "pan":
+          var dx = parseDouble(args["dx"]);
+          var dy = parseDouble(args["dy"]);
+          if (dx != null && dy != null) {
+            _transformationController.value =
+                _transformationController.value.clone()..translate(dx, dy);
+          }
+          break;
+        case "reset":
+          var duration = durationFromString(args["duration"]);
+          if (duration == null) {
+            _transformationController.value = Matrix4.identity();
+          } else {
+            _animationController.duration = duration;
+            _animation = Matrix4Tween(
+              begin: _transformationController.value,
+              end: Matrix4.identity(),
+            ).animate(_animationController)
+              ..addListener(() {
+                _transformationController.value = _animation!.value;
+              });
+            _animationController.forward(from: 0);
+          }
+          break;
+        case "save_state":
+          _savedMatrix = _transformationController.value.clone();
+          break;
+        case "restore_state":
+          if (_savedMatrix != null) {
+            _transformationController.value = _savedMatrix!;
+          }
+          break;
+      }
+      return null;
+    });
+  }
+
+  @override
+  void dispose() {
+    _transformationController.dispose();
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    debugPrint("InteractiveViewer build: ${widget.control.id}");
+
+    var contentCtrls = widget.children.where((c) => c.isVisible);
+    bool? adaptive = widget.control.isAdaptive ?? widget.parentAdaptive;
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     var interactiveViewer = InteractiveViewer(
-      panEnabled: control.attrBool("panEnabled", true)!,
-      scaleEnabled: control.attrBool("scaleEnabled", true)!,
+      transformationController: _transformationController,
+      panEnabled: widget.control.attrBool("panEnabled", true)!,
+      scaleEnabled: widget.control.attrBool("scaleEnabled", true)!,
       trackpadScrollCausesScale:
-          control.attrBool("trackpadScrollCausesScale", false)!,
-      constrained: control.attrBool("constrained", true)!,
-      maxScale: control.attrDouble("maxScale", 2.5)!,
-      minScale: control.attrDouble("minScale", 0.8)!,
-      interactionEndFrictionCoefficient:
-          control.attrDouble("interactionEndFrictionCoefficient", 0.0000135)!,
-      scaleFactor: control.attrDouble("scaleFactor", 200)!,
+          widget.control.attrBool("trackpadScrollCausesScale", false)!,
+      constrained: widget.control.attrBool("constrained", true)!,
+      maxScale: widget.control.attrDouble("maxScale", 2.5)!,
+      minScale: widget.control.attrDouble("minScale", 0.8)!,
+      interactionEndFrictionCoefficient: widget.control
+          .attrDouble("interactionEndFrictionCoefficient", 0.0000135)!,
+      scaleFactor: widget.control.attrDouble("scaleFactor", 200)!,
       clipBehavior:
-          parseClip(control.attrString("clipBehavior"), Clip.hardEdge)!,
-      alignment: parseAlignment(control, "alignment"),
+          parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!,
+      alignment: parseAlignment(widget.control, "alignment"),
       boundaryMargin:
-          parseEdgeInsets(control, "boundaryMargin", EdgeInsets.zero)!,
+          parseEdgeInsets(widget.control, "boundaryMargin", EdgeInsets.zero)!,
       onInteractionStart: !disabled
           ? (ScaleStartDetails details) {
-              debugPrint("InteractiveViewer ${control.id} onInteractionStart");
-              backend.triggerControlEvent(
-                  control.id,
+              debugPrint(
+                  "InteractiveViewer ${widget.control.id} onInteractionStart");
+              widget.backend.triggerControlEvent(
+                  widget.control.id,
                   "interaction_start",
                   jsonEncode({
                     "pc": details.pointerCount,
@@ -68,9 +145,10 @@ class InteractiveViewerControl extends StatelessWidget {
           : null,
       onInteractionEnd: !disabled
           ? (ScaleEndDetails details) {
-              debugPrint("InteractiveViewer ${control.id} onInteractionEnd");
-              backend.triggerControlEvent(
-                  control.id,
+              debugPrint(
+                  "InteractiveViewer ${widget.control.id} onInteractionEnd");
+              widget.backend.triggerControlEvent(
+                  widget.control.id,
                   "interaction_end",
                   jsonEncode({
                     "pc": details.pointerCount,
@@ -80,9 +158,10 @@ class InteractiveViewerControl extends StatelessWidget {
           : null,
       onInteractionUpdate: !disabled
           ? (ScaleUpdateDetails details) {
-              debugPrint("InteractiveViewer ${control.id} onInteractionUpdate");
-              backend.triggerControlEvent(
-                  control.id,
+              debugPrint(
+                  "InteractiveViewer ${widget.control.id} onInteractionUpdate");
+              widget.backend.triggerControlEvent(
+                  widget.control.id,
                   "interaction_update",
                   jsonEncode({
                     "pc": details.pointerCount,
@@ -98,11 +177,13 @@ class InteractiveViewerControl extends StatelessWidget {
             }
           : null,
       child: contentCtrls.isNotEmpty
-          ? createControl(control, contentCtrls.first.id, disabled,
+          ? createControl(widget.control, contentCtrls.first.id, disabled,
               parentAdaptive: adaptive)
           : const ErrorControl(
               "InteractiveViewer.content must be provided and visible"),
     );
-    return constrainedControl(context, interactiveViewer, parent, control);
+
+    return constrainedControl(
+        context, interactiveViewer, widget.parent, widget.control);
   }
 }

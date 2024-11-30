@@ -23,5 +23,7 @@ CreateControlFactory createControl = (CreateControlArgs args) {
 };
 
 void ensureInitialized() {
-  MobileAds.instance.initialize();
+  if (isMobilePlatform()) {
+    MobileAds.instance.initialize();
+  }
 }
