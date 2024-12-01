@@ -476,6 +476,17 @@ class Window:
     def icon(self, value: Optional[str]):
         self.page._set_attr("windowIcon", value)
 
+    # ignore_mouse_events
+    @property
+    def ignore_mouse_events(self) -> bool:
+        return self.page._get_attr(
+            "windowIgnoreMouseEvents", data_type="bool", def_value=False
+        )
+
+    @ignore_mouse_events.setter
+    def ignore_mouse_events(self, value: Optional[bool]):
+        self.page._set_attr("windowIgnoreMouseEvents", value)
+
     # Methods
     def destroy(self):
         self.page._set_attr("windowDestroy", True)
