@@ -199,79 +199,23 @@ class Video(ConstrainedControl):
     def play(self):
         self.invoke_method("play")
 
-    @deprecated(
-        reason="Use play() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def play_async(self):
-        self.play()
-
     def pause(self):
         self.invoke_method("pause")
-
-    @deprecated(
-        reason="Use pause() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def pause_async(self):
-        self.pause()
 
     def play_or_pause(self):
         self.invoke_method("play_or_pause")
 
-    @deprecated(
-        reason="Use play_or_pause() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def play_or_pause_async(self):
-        self.play_or_pause()
-
     def stop(self):
         self.invoke_method("stop")
-
-    @deprecated(
-        reason="Use stop() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def stop_async(self):
-        self.stop()
 
     def next(self):
         self.invoke_method("next")
 
-    @deprecated(
-        reason="Use next() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def next_async(self):
-        self.next()
-
     def previous(self):
         self.invoke_method("previous")
 
-    @deprecated(
-        reason="Use previous() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def previous_async(self):
-        self.previous()
-
     def seek(self, position_milliseconds: int):
         self.invoke_method("seek", {"position": str(position_milliseconds)})
-
-    @deprecated(
-        reason="Use seek() method instead.",
-        version="0.25.0",
-        delete_version="0.28.0",
-    )
-    async def seek_async(self, position_milliseconds: int):
-        await self.invoke_method_async("seek", {"position": str(position_milliseconds)})
 
     def jump_to(self, media_index: int):
         assert self.__playlist[media_index], "media_index is out of range"
@@ -279,18 +223,6 @@ class Video(ConstrainedControl):
             # dart doesn't support negative indexes
             media_index = len(self.__playlist) + media_index
         self.invoke_method("jump_to", {"media_index": str(media_index)})
-
-    @deprecated(
-        reason="Use jump_to() method instead.",
-        version="0.25.0",
-        delete_version="0.28.0",
-    )
-    async def jump_to_async(self, media_index: int):
-        assert self.__playlist[media_index], "media_index is out of range"
-        if media_index < 0:
-            # dart doesn't support negative indexes
-            media_index = len(self.__playlist) + media_index
-        await self.invoke_method_async("jump_to", {"media_index": str(media_index)})
 
     def playlist_add(self, media: VideoMedia):
         assert media.resource, "media has no resource"
@@ -304,26 +236,10 @@ class Video(ConstrainedControl):
         )
         self.__playlist.append(media)
 
-    @deprecated(
-        reason="Use playlist_add() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def playlist_add_async(self, media: VideoMedia):
-        self.playlist_add(media)
-
     def playlist_remove(self, media_index: int):
         assert self.__playlist[media_index], "index out of range"
         self.invoke_method("playlist_remove", {"media_index": str(media_index)})
         self.__playlist.pop(media_index)
-
-    @deprecated(
-        reason="Use playlist_remove() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def playlist_remove_async(self, media_index: int):
-        self.playlist_remove(media_index)
 
     def is_playing(self, wait_timeout: Optional[float] = 5) -> bool:
         playing = self.invoke_method(
