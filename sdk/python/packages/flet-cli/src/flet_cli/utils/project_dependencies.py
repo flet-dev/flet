@@ -18,8 +18,9 @@ def get_poetry_dependencies(
         suffix = ""
         if isinstance(version_value, dict):
             version = version_value["version"]
-            if version_value["markers"]:
-                suffix = f";{version_value['markers']}"
+            markers = version_value.get("markers")
+            if markers is not None:
+                suffix = f";{markers}"
         else:
             version = version_value
 
