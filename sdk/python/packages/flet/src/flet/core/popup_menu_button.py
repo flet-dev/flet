@@ -516,28 +516,6 @@ class PopupMenuButton(ConstrainedControl):
     def on_cancel(self, handler: OptionalControlEventCallable):
         self._add_event_handler("cancel", handler)
 
-    # on_cancelled
-    @property
-    def on_cancelled(self) -> OptionalControlEventCallable:
-        warnings.warn(
-            f"on_cancelled is deprecated/renamed since version 0.22.0 "
-            f"and will be removed in version 0.26.0. Use on_cancel instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self._get_event_handler("cancelled")
-
-    @on_cancelled.setter
-    def on_cancelled(self, handler: OptionalControlEventCallable):
-        self._add_event_handler("cancelled", handler)
-        if handler is not None:
-            warnings.warn(
-                f"on_cancelled is deprecated/renamed since version 0.22.0 "
-                f"and will be removed in version 0.26.0. Use on_cancel instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-
     # on_open
     @property
     def on_open(self) -> OptionalControlEventCallable:

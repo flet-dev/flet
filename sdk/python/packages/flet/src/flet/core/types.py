@@ -127,40 +127,6 @@ OptionalNumber = Optional[Number]
 OptionalString = Optional[str]
 
 
-class MaterialStateDeprecated(EnumMeta):
-    def __getattribute__(self, item):
-        if item in [
-            "HOVERED",
-            "FOCUSED",
-            "PRESSED",
-            "DRAGGED",
-            "SELECTED",
-            "SCROLLED_UNDER",
-            "DISABLED",
-            "ERROR",
-            "DEFAULT",
-        ]:
-            warn(
-                "MaterialState enum is deprecated and will be removed in version 0.26.0. "
-                "Use ControlState enum instead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-        return EnumMeta.__getattribute__(self, item)
-
-
-class MaterialState(Enum, metaclass=MaterialStateDeprecated):
-    HOVERED = "hovered"
-    FOCUSED = "focused"
-    PRESSED = "pressed"
-    DRAGGED = "dragged"
-    SELECTED = "selected"
-    SCROLLED_UNDER = "scrolledUnder"
-    DISABLED = "disabled"
-    ERROR = "error"
-    DEFAULT = ""
-
-
 class ControlState(Enum):
     HOVERED = "hovered"
     FOCUSED = "focused"

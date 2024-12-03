@@ -171,28 +171,6 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
     def content(self, value: Control):
         self.__content = value
 
-    # minimum
-    @property
-    def minimum(self) -> PaddingValue:
-        warnings.warn(
-            f"minimum is deprecated since version 0.23.0 "
-            f"and will be removed in version 0.26.0. Use minimum_padding instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.__minimum
-
-    @minimum.setter
-    def minimum(self, value: PaddingValue):
-        self.__minimum = value
-        if value is not None:
-            warnings.warn(
-                f"minimum is deprecated since version 0.23.0 "
-                f"and will be removed in version 0.26.0. Use minimum_padding instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-
     # minimum_padding
     @property
     def minimum_padding(self) -> PaddingValue:
