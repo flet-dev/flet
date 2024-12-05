@@ -14,6 +14,7 @@ import 'package:flet_permission_handler/flet_permission_handler.dart'
     as flet_permission_handler;
 import 'package:flet_rive/flet_rive.dart' as flet_rive;
 import 'package:flet_ads/flet_ads.dart' as flet_ads;
+import 'package:flet_dropzone/flet_dropzone.dart' as flet_dropzone;
 // --FAT_CLIENT_START--
 import 'package:flet_video/flet_video.dart' as flet_video;
 // --FAT_CLIENT_END--
@@ -21,6 +22,8 @@ import 'package:flet_webview/flet_webview.dart' as flet_webview;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_strategy/url_strategy.dart';
+
+
 
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
@@ -47,6 +50,7 @@ void main([List<String>? args]) async {
   flet_rive.ensureInitialized();
   flet_webview.ensureInitialized();
   flet_flashlight.ensureInitialized();
+  flet_dropzone.ensureInitialized();
 
   var pageUrl = Uri.base.toString();
   var assetsDir = "";
@@ -117,6 +121,7 @@ void main([List<String>? args]) async {
       flet_rive.createControl,
       flet_webview.createControl,
       flet_flashlight.createControl,
+      flet_dropzone.createControl,
     ],
   ));
 }
