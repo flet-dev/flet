@@ -443,3 +443,4 @@ from flet.core.webview import (
     WebviewScrollEvent,
 )
 from flet.core.window_drag_area import WindowDragArea
+from flet.core.timer import Timer
