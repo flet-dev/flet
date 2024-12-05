@@ -25,3 +25,16 @@ def test_cupertino_colors_random_with_weights_and_exclude():
     ]
     assert ft.CupertinoColors.SYSTEM_RED not in results
     assert ft.CupertinoColors.SEPARATOR in results
+
+
+def test_web_colors_random_with_weights_and_exclude():
+    """Test random web color selection with weights and exclusion list."""
+    results = [
+        ft.WColors.random(
+            exclude=[ft.WColors.RED],
+            weights={ft.WColors.BLUE: 150},
+        )
+        for _ in range(1000)
+    ]
+    assert ft.WColors.RED not in results
+    assert ft.WColors.BLUE in results
