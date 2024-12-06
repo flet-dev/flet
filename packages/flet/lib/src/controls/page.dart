@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'package:fullscreen_window/fullscreen_window.dart';
 
 import '../actions.dart';
 import '../flet_app_context.dart';
@@ -489,7 +490,11 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
 
         // windowFullScreen
         if (windowFullScreen != null && windowFullScreen != _windowFullScreen) {
-          await setWindowFullScreen(windowFullScreen);
+          if (isDesktopPlatform()) {
+            await setWindowFullScreen(windowFullScreen);
+          } else {
+            FullScreenWindow.setFullScreen(windowFullScreen);
+          }
           _windowFullScreen = windowFullScreen;
         }
 
