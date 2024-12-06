@@ -217,7 +217,6 @@ class PopupMenuButton(ConstrainedControl):
         style: Optional[ButtonStyle] = None,
         popup_animation_style: Optional[AnimationStyle] = None,
         size_constraints: Optional[BoxConstraints] = None,
-        on_cancelled: OptionalControlEventCallable = None,
         on_open: OptionalControlEventCallable = None,
         on_cancel: OptionalControlEventCallable = None,
         on_select: OptionalControlEventCallable = None,

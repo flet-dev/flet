@@ -78,8 +78,6 @@ class CircleAvatar(ConstrainedControl):
     def __init__(
         self,
         content: Optional[Control] = None,
-        foreground_image_url: Optional[str] = None,
-        background_image_url: Optional[str] = None,
         foreground_image_src: Optional[str] = None,
         background_image_src: Optional[str] = None,
         color: Optional[ColorValue] = None,
@@ -152,8 +150,6 @@ class CircleAvatar(ConstrainedControl):
             data=data,
         )
 
-        self.foreground_image_url = foreground_image_url
-        self.background_image_url = background_image_url
         self.foreground_image_src = foreground_image_src
         self.background_image_src = background_image_src
         self.radius = radius
