@@ -113,6 +113,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, options: argparse.Namespace) -> None:
+        import flet.version
         from flet.utils.pip import ensure_flet_web_package_installed
 
         ensure_flet_web_package_installed()
@@ -196,6 +197,9 @@ class Command(BaseCommand):
                     )
                 )
                 print(f"{reqs_filename} dependencies: {deps}")
+
+        if len(deps) == 0:
+            deps = [f"flet=={flet.version.version}"]
 
         temp_reqs_txt = Path(tempfile.gettempdir()).joinpath(random_string(10))
         with open(temp_reqs_txt, "w") as f:
