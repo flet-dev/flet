@@ -1,6 +1,6 @@
 import random
 from enum import Enum
-from typing import TYPE_CHECKING, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Union, Tuple
 
 
 if TYPE_CHECKING:
@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 class WColors(str, Enum):
     @staticmethod
-    def hex_to_rgb(hex_color: str) -> tuple[int]:
+    def hex_to_rgb(hex_color: str) -> Tuple[int]:
         hex_color = hex_color.lstrip('#')
         return tuple(int(hex_color[i:i + 2], 16) for i in (0, 2, 4))
 
