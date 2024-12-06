@@ -17,6 +17,7 @@ from warnings import warn
 
 from flet.core.border_radius import BorderRadius
 from flet.core.colors import Colors, colors
+from flet.core.wcolors import WColors
 
 if TYPE_CHECKING:
     from flet.core.control import Control
@@ -416,8 +417,8 @@ OptionalEventCallable = Optional[Callable[[EventType], Any]]
 OptionalControlEventCallable = Optional[Callable[[ControlEvent], Any]]
 
 # Colors
-ColorEnums = (colors, Colors, cupertino_colors, CupertinoColors)
-ColorValue = Union[str, colors, Colors, cupertino_colors, CupertinoColors]
+ColorEnums = (colors, Colors, cupertino_colors, CupertinoColors, WColors)
+ColorValue = Union[str, colors, Colors, cupertino_colors, CupertinoColors, WColors]
 
 # Icons
 IconEnums = (icons, Icons, cupertino_icons, CupertinoIcons)
