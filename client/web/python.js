@@ -15,7 +15,7 @@ pythonWorker.onmessage = (event) => {
 documentUrl = document.URL;
 
 // initialize worker
-pythonWorker.postMessage({ documentUrl, micropipIncludePre, pythonModuleName });
+pythonWorker.postMessage({ documentUrl, pythonModuleName });
 
 async function jsConnect(receiveCallback) {
     _onReceivedCallback = receiveCallback;

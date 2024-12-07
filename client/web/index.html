@@ -2,98 +2,38 @@
 <html>
 
 <head>
-  <base href="$FLUTTER_BASE_HREF">
-
+  <base href="/">
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="Flet application.">
+  <meta name="description" content="">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Flet">
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon-192.png">
+  <meta name="apple-mobile-web-app-title" content="Flet application.">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png" />
 
   <!-- Flet specific -->
-  <meta name="flet-route-url-strategy" content="%FLET_ROUTE_URL_STRATEGY%">
-  <meta name="flet-web-pyodide" content="%FLET_WEB_PYODIDE%">
-  <meta name="flet-websocket-endpoint-path" content="/ws">
+  <meta name="flet-route-url-strategy" content="path">
+  <meta name="flet-web-pyodide" content="true">
 
   <title>Flet</title>
   <link rel="manifest" href="manifest.json">
 
   <script>
-    var webRenderer = "auto";
-    var useColorEmoji = false;
+    var webRenderer = "canvaskit";
+    var useColorEmoji = "false" == "true";
+    var pythonModuleName = "main";
   </script>
 
-  <!-- webRenderer -->
-  <!-- useColorEmoji -->
-
-  <!-- pyodideCode -->
+  <script src="python.js"></script>
 </head>
 
 <body>
-  <div id="loading">
-    <style>
-      body {
-        inset: 0;
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-        position: fixed;
-      }
-
-      #loading {
-        align-items: center;
-        display: flex;
-        height: 100%;
-        justify-content: center;
-        width: 100%;
-      }
-
-      #loading img {
-        animation: 1s ease-in-out 0s infinite alternate breathe;
-        opacity: .66;
-        transition: opacity .4s;
-      }
-
-      #loading.main_done img {
-        opacity: 1;
-      }
-
-      #loading.init_done img {
-        animation: .33s ease-in-out 0s 1 forwards zooooom;
-        opacity: .05;
-      }
-
-      @keyframes breathe {
-        from {
-          transform: scale(0.4);
-          opacity: 1.0;
-        }
-
-        to {
-          transform: scale(0.35);
-          opacity: .7;
-        }
-      }
-
-      @keyframes zooooom {
-        from {
-          transform: scale(0.4)
-        }
-
-        to {
-          transform: scale(10)
-        }
-      }
-    </style>
-    <img src="icons/loading-animation.png" alt="Loading..." />
-  </div>
   <script src="flutter_bootstrap.js" async></script>
 </body>
+
 </html>
