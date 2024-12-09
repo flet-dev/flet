@@ -210,6 +210,7 @@ class Chip(ConstrainedControl):
         self._set_attr_json("labelStyle", self.__label_style)
         self._set_attr_json("padding", self.__padding)
         self._set_attr_json("shape", self.__shape)
+        self._set_attr_json("borderSide", self.__border_side)
         self._set_attr_json("color", self.__color, wrap_attr_dict=True)
 
     def _get_children(self):
