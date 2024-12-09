@@ -154,7 +154,9 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       label: label != null
           ? createControl(control, label.id, control.isDisabled,
               parentAdaptive: adaptive)
-          : Text(control.attrString("label", "")!),
+          : control.attrString("label") != null
+              ? Text(control.attrString("label")!)
+              : null,
       labelStyle: parseTextStyle(Theme.of(context), control, "labelStyle"),
       border: border,
       enabledBorder: border,

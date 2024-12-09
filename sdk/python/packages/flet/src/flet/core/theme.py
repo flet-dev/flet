@@ -888,6 +888,4 @@ class Theme:
     text_theme: Optional[TextTheme] = None
     time_picker_theme: Optional[TimePickerTheme] = None
     tooltip_theme: Optional[TooltipTheme] = None
-    visual_density: Union[VisualDensity, ThemeVisualDensity] = field(
-        default=VisualDensity.STANDARD
-    )
+    visual_density: Union[VisualDensity, ThemeVisualDensity] = None
