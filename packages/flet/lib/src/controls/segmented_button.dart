@@ -49,7 +49,6 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
         defaultSurfaceTintColor: theme.colorScheme.surfaceTint,
         defaultElevation: 1,
         defaultPadding: const EdgeInsets.symmetric(horizontal: 8),
-        defaultBorderSide: BorderSide.none,
         defaultShape: theme.useMaterial3
             ? const StadiumBorder()
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
