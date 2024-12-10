@@ -151,7 +151,7 @@ from flet.core.dismissible import (
     DismissibleUpdateEvent,
 )
 from flet.core.divider import Divider
-from flet.core.drag_target import DragTarget, DragTargetEvent
+from flet.core.drag_target import DragTarget, DragTargetAcceptEvent
 from flet.core.draggable import Draggable
 from flet.core.dropdown import Dropdown
 from flet.core.elevated_button import ElevatedButton
@@ -239,6 +239,7 @@ from flet.core.navigation_bar import (
     NavigationBar,
     NavigationBarDestination,
     NavigationBarLabelBehavior,
+    NavigationDestination,
 )
 from flet.core.navigation_drawer import (
     NavigationDrawer,
@@ -404,6 +405,7 @@ from flet.core.types import (
     Locale,
     LocaleConfiguration,
     MainAxisAlignment,
+    MaterialState,
     MouseCursor,
     NotchShape,
     Number,
@@ -425,6 +427,7 @@ from flet.core.types import (
     VisualDensity,
     WebRenderer,
 )
+from flet.core.user_control import UserControl
 from flet.core.vertical_divider import VerticalDivider
 from flet.core.video import (
     PlaylistMode,

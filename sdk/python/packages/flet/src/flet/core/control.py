@@ -335,6 +335,12 @@ class Control:
         ), f"{self.__class__.__qualname__} Control must be added to the page"
         self.__page._clean(self)
 
+    @deprecated(
+        reason="Use clean() method instead.", version="0.21.0", delete_version="0.26.0"
+    )
+    async def clean_async(self):
+        self.clean()
+
     def invoke_method(
         self,
         method_name: str,

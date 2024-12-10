@@ -240,6 +240,14 @@ class SearchBar(ConstrainedControl):
         self._set_attr_json("method", m)
         self.update()
 
+    @deprecated(
+        reason="Use open_view() method instead.",
+        version="0.21.0",
+        delete_version="0.26.0",
+    )
+    async def open_view_async(self):
+        self.open_view()
+
     def close_view(self, text: str = ""):
         m = {
             "n": "closeView",
@@ -249,6 +257,14 @@ class SearchBar(ConstrainedControl):
         self.value = text
         self._set_attr_json("method", m)
         self.update()
+
+    @deprecated(
+        reason="Use close_view() method instead.",
+        version="0.21.0",
+        delete_version="0.26.0",
+    )
+    async def close_view_async(self, text: str = ""):
+        self.close_view(text=text)
 
     # bar_leading
     @property

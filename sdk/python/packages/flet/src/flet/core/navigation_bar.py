@@ -191,6 +191,43 @@ class NavigationBarDestination(AdaptiveControl, Control):
         self._set_attr("tooltip", value)
 
 
+@deprecated(
+    reason="Use NavigationBarDestination class instead.",
+    version="0.23.0",
+    delete_version="0.26.0",
+)
+class NavigationDestination(NavigationBarDestination):
+    def __init__(
+        self,
+        label: Optional[str] = None,
+        icon: Optional[IconValueOrControl] = None,
+        icon_content: Optional[Control] = None,
+        selected_icon: Optional[IconValueOrControl] = None,
+        selected_icon_content: Optional[Control] = None,
+        bgcolor: Optional[ColorValue] = None,
+        #
+        # Control
+        #
+        ref: Optional[Ref] = None,
+        tooltip: TooltipValue = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+    ) -> None:
+        NavigationBarDestination.__init__(
+            self,
+            label,
+            icon,
+            icon_content,
+            selected_icon,
+            selected_icon_content,
+            bgcolor,
+            ref,
+            tooltip,
+            disabled,
+            data,
+        )
+
+
 class NavigationBar(ConstrainedControl, AdaptiveControl):
     """
     Material 3 Navigation Bar component.

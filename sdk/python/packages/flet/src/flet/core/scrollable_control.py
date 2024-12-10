@@ -51,6 +51,21 @@ class ScrollableControl(Control):
         self._set_attr_json("method", m)
         self.update()
 
+    @deprecated(
+        reason="Use scroll_to() method instead.",
+        version="0.21.0",
+        delete_version="0.26.0",
+    )
+    async def scroll_to_async(
+        self,
+        offset: Optional[float] = None,
+        delta: Optional[float] = None,
+        key: Optional[str] = None,
+        duration: Optional[int] = None,
+        curve: Optional[AnimationCurve] = None,
+    ):
+        self.scroll_to(offset, delta, key, duration, curve)
+
     # scroll
     @property
     def scroll(self) -> Optional[ScrollMode]:

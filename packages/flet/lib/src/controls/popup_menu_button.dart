@@ -76,6 +76,7 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
           },
           onCanceled: () {
             backend.triggerControlEvent(control.id, "cancel");
+            backend.triggerControlEvent(control.id, "cancelled"); // DEPRECATED
           },
           onOpened: () {
             backend.triggerControlEvent(control.id, "open");

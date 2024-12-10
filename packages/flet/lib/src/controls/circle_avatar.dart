@@ -27,8 +27,11 @@ class CircleAvatarControl extends StatelessWidget with FletStoreMixin {
     bool disabled = control.isDisabled || parentDisabled;
 
     return withPageArgs((context, pageArgs) {
-      var foregroundImageSrc = control.attrString("foregroundImageSrc");
-      var backgroundImageSrc = control.attrString("backgroundImageSrc");
+      // DEPRECATED: foregroundImageUrl and backgroundImageUrl
+      var foregroundImageSrc = control.attrString("foregroundImageSrc") ??
+          control.attrString("foregroundImageUrl");
+      var backgroundImageSrc = control.attrString("backgroundImageSrc") ??
+          control.attrString("backgroundImageUrl");
       var contentCtrls =
           children.where((c) => c.name == "content" && c.isVisible);
 

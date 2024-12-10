@@ -54,11 +54,43 @@ class HapticFeedback(Control):
     def heavy_impact(self):
         self.invoke_method("heavy_impact")
 
+    @deprecated(
+        reason="Use heavy_impact() method instead.",
+        version="0.21.0",
+        delete_version="0.26.0",
+    )
+    async def heavy_impact_async(self):
+        self.heavy_impact()
+
     def light_impact(self):
         self.invoke_method("light_impact")
+
+    @deprecated(
+        reason="Use light_impact() method instead.",
+        version="0.21.0",
+        delete_version="0.26.0",
+    )
+    async def light_impact_async(self):
+        self.light_impact()
 
     def medium_impact(self):
         self.invoke_method("medium_impact")
 
+    @deprecated(
+        reason="Use medium_impact() method instead.",
+        version="0.21.0",
+        delete_version="0.26.0",
+    )
+    async def medium_impact_async(self):
+        self.medium_impact()
+
     def vibrate(self):
         self.invoke_method("vibrate")
+
+    @deprecated(
+        reason="Use vibrate() method instead.",
+        version="0.21.0",
+        delete_version="0.26.0",
+    )
+    async def vibrate_async(self):
+        self.vibrate()

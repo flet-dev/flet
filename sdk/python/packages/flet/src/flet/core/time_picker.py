@@ -152,6 +152,23 @@ class TimePicker(Control):
     def _get_control_name(self):
         return "timepicker"
 
+    @deprecated(
+        reason="Use Page.open() method instead.",
+        version="0.23.0",
+        delete_version="0.26.0",
+    )
+    def pick_time(self):
+        self.open = True
+        self.update()
+
+    @deprecated(
+        reason="Use Page.open() method instead.",
+        version="0.21.0",
+        delete_version="0.26.0",
+    )
+    async def pick_time_async(self):
+        self.pick_time()
+
     # open
     @property
     def open(self) -> bool:

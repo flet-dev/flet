@@ -78,6 +78,8 @@ class CircleAvatar(ConstrainedControl):
     def __init__(
         self,
         content: Optional[Control] = None,
+        foreground_image_url: Optional[str] = None,
+        background_image_url: Optional[str] = None,
         foreground_image_src: Optional[str] = None,
         background_image_src: Optional[str] = None,
         color: Optional[ColorValue] = None,
@@ -150,6 +152,8 @@ class CircleAvatar(ConstrainedControl):
             data=data,
         )
 
+        self.foreground_image_url = foreground_image_url
+        self.background_image_url = background_image_url
         self.foreground_image_src = foreground_image_src
         self.background_image_src = background_image_src
         self.radius = radius
@@ -168,6 +172,50 @@ class CircleAvatar(ConstrainedControl):
             self.__content._set_attr_internal("n", "content")
             return [self.__content]
         return []
+
+    # foreground_image_url
+    @property
+    def foreground_image_url(self) -> Optional[str]:
+        warnings.warn(
+            f"foreground_image_url is deprecated since version 0.22.0 "
+            f"and will be removed in version 0.26.0. Use foreground_image_src instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
+        return self._get_attr("foregroundImageUrl")
+
+    @foreground_image_url.setter
+    def foreground_image_url(self, value: Optional[str]):
+        self._set_attr("foregroundImageUrl", value)
+        if value is not None:
+            warnings.warn(
+                f"foreground_image_url is deprecated since version 0.22.0 "
+                f"and will be removed in version 0.26.0. Use foreground_image_src instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
+
+    # background_image_url
+    @property
+    def background_image_url(self) -> Optional[str]:
+        warnings.warn(
+            f"background_image_url is deprecated since version 0.22.0 "
+            f"and will be removed in version 0.26.0. Use background_image_src instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
+        return self._get_attr("backgroundImageUrl")
+
+    @background_image_url.setter
+    def background_image_url(self, value: Optional[str]):
+        self._set_attr("backgroundImageUrl", value)
+        if value is not None:
+            warnings.warn(
+                f"background_image_url is deprecated since version 0.22.0 "
+                f"and will be removed in version 0.26.0. Use background_image_src instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
 
     # foreground_image_src
     @property
