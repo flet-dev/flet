@@ -1,3 +1,9 @@
+# 0.25.2
+
+## Bug fixes
+
+* Fix `flet publish` creates broken website if no `requirements.txt` or `pyproject.toml` found ([#4493](https://github.com/flet-dev/flet/pull/4493)).
+
 # 0.25.1
 
 ## Changes
