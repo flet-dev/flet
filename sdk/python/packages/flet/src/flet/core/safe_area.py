@@ -27,7 +27,6 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
         right: Optional[bool] = None,
         bottom: Optional[bool] = None,
         maintain_bottom_view_padding: Optional[bool] = None,
-        minimum: PaddingValue = None,
         minimum_padding: PaddingValue = None,
         #
         # ConstrainedControl
@@ -99,7 +98,6 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
         self.right = right
         self.bottom = bottom
         self.maintain_bottom_view_padding = maintain_bottom_view_padding
-        self.minimum = minimum
         self.minimum_padding = minimum_padding
 
     def _get_control_name(self):
@@ -108,7 +106,6 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
     def before_update(self):
         super().before_update()
         assert self.__content.visible, "content must be visible"
-        self._set_attr_json("minimum", self.__minimum)
         self._set_attr_json("minimumPadding", self.__minimum_padding)
 
     def _get_children(self):
@@ -170,28 +167,6 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
     @content.setter
     def content(self, value: Control):
         self.__content = value
-
-    # minimum
-    @property
-    def minimum(self) -> PaddingValue:
-        warnings.warn(
-            f"minimum is deprecated since version 0.23.0 "
-            f"and will be removed in version 0.26.0. Use minimum_padding instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.__minimum
-
-    @minimum.setter
-    def minimum(self, value: PaddingValue):
-        self.__minimum = value
-        if value is not None:
-            warnings.warn(
-                f"minimum is deprecated since version 0.23.0 "
-                f"and will be removed in version 0.26.0. Use minimum_padding instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
 
     # minimum_padding
     @property

@@ -173,23 +173,6 @@ class DatePicker(Control):
     def _get_control_name(self):
         return "datepicker"
 
-    @deprecated(
-        reason="Use Page.open() method instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-    )
-    def pick_date(self):
-        self.open = True
-        self.update()
-
-    @deprecated(
-        reason="Use Page.open() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def pick_date_async(self):
-        self.pick_date()
-
     # open
     @property
     def open(self) -> bool:

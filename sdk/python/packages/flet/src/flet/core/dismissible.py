@@ -164,14 +164,6 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     def confirm_dismiss(self, dismiss: bool):
         self.invoke_method("confirm_dismiss", {"dismiss": str(dismiss).lower()})
 
-    @deprecated(
-        reason="Use confirm_dismiss() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def confirm_dismiss_async(self, dismiss: bool):
-        self.confirm_dismiss(dismiss)
-
     # content
     @property
     def content(self) -> Control:
