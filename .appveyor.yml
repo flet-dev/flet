@@ -259,7 +259,6 @@ for:
       provider: GitHub
       auth_token: $(GITHUB_TOKEN)
       release: $(APPVEYOR_REPO_TAG_NAME)
-      artifact: flet_windows
       on:
         APPVEYOR_REPO_TAG: true
 
