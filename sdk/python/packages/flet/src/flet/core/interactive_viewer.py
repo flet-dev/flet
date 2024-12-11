@@ -11,10 +11,19 @@ from flet.core.control_event import ControlEvent
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
-from flet.core.types import (ClipBehavior, MarginValue, Offset, OffsetValue,
-                             OptionalControlEventCallable,
-                             OptionalEventCallable, ResponsiveNumber,
-                             RotateValue, ScaleValue)
+from flet.core.types import (
+    ClipBehavior,
+    DurationValue,
+    MarginValue,
+    Number,
+    Offset,
+    OffsetValue,
+    OptionalControlEventCallable,
+    OptionalEventCallable,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
+)
 
 
 class InteractiveViewerInteractionStartEvent(ControlEvent):
@@ -192,6 +201,23 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
 
     def _get_children(self):
         return [self.__content]
+
+    def reset(self, animation_duration: Optional[DurationValue] = None):
+        self.invoke_method(
+            "reset", arguments={"duration": self._convert_attr_json(animation_duration)}
+        )
+
+    def save_state(self):
+        self.invoke_method("save_state")
+
+    def restore_state(self):
+        self.invoke_method("restore_state")
+
+    def zoom(self, factor: Number):
+        self.invoke_method("zoom", arguments={"factor": str(factor)})
+
+    def pan(self, dx: Number, dy: Number):
+        self.invoke_method("pan", arguments={"dx": str(dx), "dy": str(dy)})
 
     # min_scale
     @property

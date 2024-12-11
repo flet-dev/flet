@@ -29,3 +29,9 @@ Duration? durationFromJSON(dynamic json, [Duration? defaultValue]) {
       milliseconds: parseInt(json["milliseconds"], 0)!,
       microseconds: parseInt(json["microseconds"], 0)!);
 }
+
+Duration? durationFromString(String? duration, [Duration? defaultValue]) {
+  return duration != null
+      ? durationFromJSON(json.decode(duration), defaultValue)
+      : defaultValue;
+}

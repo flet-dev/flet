@@ -192,26 +192,10 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self.drawer.open = True
         self.update()
 
-    @deprecated(
-        reason="Use show_drawer() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def show_drawer_async(self, drawer: NavigationDrawer):
-        self.show_drawer(drawer)
-
     def close_drawer(self):
         if self.drawer is not None:
             self.drawer.open = False
             self.update()
-
-    @deprecated(
-        reason="Use close_end_drawer() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def close_drawer_async(self):
-        self.close_end_drawer()
 
     # End_drawer
     #
@@ -220,26 +204,10 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         self.end_drawer.open = True
         self.update()
 
-    @deprecated(
-        reason="Use show_end_drawer() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def show_end_drawer_async(self, end_drawer: NavigationDrawer):
-        self.show_end_drawer(end_drawer)
-
     def close_end_drawer(self):
         if self.end_drawer is not None:
             self.end_drawer.open = False
             self.update()
-
-    @deprecated(
-        reason="Use close_end_drawer() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def close_end_drawer_async(self):
-        self.close_end_drawer()
 
     # appbar
     @property

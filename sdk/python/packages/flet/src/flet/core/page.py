@@ -476,6 +476,17 @@ class Window:
     def icon(self, value: Optional[str]):
         self.page._set_attr("windowIcon", value)
 
+    # ignore_mouse_events
+    @property
+    def ignore_mouse_events(self) -> bool:
+        return self.page._get_attr(
+            "windowIgnoreMouseEvents", data_type="bool", def_value=False
+        )
+
+    @ignore_mouse_events.setter
+    def ignore_mouse_events(self, value: Optional[bool]):
+        self.page._set_attr("windowIgnoreMouseEvents", value)
+
     # Methods
     def destroy(self):
         self.page._set_attr("windowDestroy", True)
@@ -650,7 +661,7 @@ class Page(AdaptiveControl):
 
         _session_page.set(self)
 
-    def get_control(self, id: int) -> Control:
+    def get_control(self, id: str) -> Control:
         return self._index.get(id)
 
     def before_update(self) -> None:
@@ -723,27 +734,11 @@ class Page(AdaptiveControl):
                 r = self.__update(*controls)
         self.__handle_mount_unmount(*r)
 
-    @deprecated(
-        reason="Use Page.update() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def update_async(self, *controls):
-        self.update(*controls)
-
     def add(self, *controls: Control) -> None:
         with self.__lock:
             self._controls.extend(controls)
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
-
-    @deprecated(
-        reason="Use Page.add() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def add_async(self, *controls):
-        self.add(*controls)
 
     def insert(self, at: int, *controls: Control) -> None:
         with self.__lock:
@@ -754,14 +749,6 @@ class Page(AdaptiveControl):
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
-    @deprecated(
-        reason="Use Page.insert() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def insert_async(self, at, *controls):
-        self.insert(at, *controls)
-
     def remove(self, *controls: Control) -> None:
         with self.__lock:
             for control in controls:
@@ -769,39 +756,15 @@ class Page(AdaptiveControl):
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
-    @deprecated(
-        reason="Use Page.remove() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def remove_async(self, *controls):
-        self.remove(*controls)
-
     def remove_at(self, index: int) -> None:
         with self.__lock:
             self._controls.pop(index)
             r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
-    @deprecated(
-        reason="Use Page.remove_at() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def remove_at_async(self, index):
-        self.remove_at(index)
-
     def clean(self) -> None:
         self._clean(self)
         self._controls.clear()
-
-    @deprecated(
-        reason="Use Page.clean() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def clean_async(self):
-        self.clean()
 
     def _clean(self, control: Control) -> None:
         with self.__lock:
@@ -885,14 +848,6 @@ class Page(AdaptiveControl):
     def error(self, message: str = "") -> None:
         with self.__lock:
             self._send_command("error", [message])
-
-    @deprecated(
-        reason="Use Page.error() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def error_async(self, message=""):
-        self.error(message)
 
     async def on_event_async(self, e: Event) -> None:
         logger.debug(f"page.on_event_async: {e.target} {e.name} {e.data}")
@@ -985,14 +940,6 @@ class Page(AdaptiveControl):
         self.update()
         self.query()  # Update query url (required when using go)
 
-    @deprecated(
-        reason="Use Page.go() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def go_async(self, route, skip_route_change_event=False, **kwargs):
-        self.go(route, skip_route_change_event, **kwargs)
-
     def get_upload_url(self, file_name: str, expires: int) -> str:
         r = self._send_command(
             "getUploadUrl", attrs={"file": file_name, "expires": str(expires)}
@@ -1000,14 +947,6 @@ class Page(AdaptiveControl):
         if r.error:
             raise Exception(r.error)
         return r.result
-
-    @deprecated(
-        reason="Use Page.get_upload_url() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def get_upload_url_async(self, file_name: str, expires: int):
-        return self.get_upload_url(file_name, expires)
 
     def login(
         self,
@@ -1165,14 +1104,6 @@ class Page(AdaptiveControl):
             ),
         )
 
-    @deprecated(
-        reason="Use Page.logout() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def logout_async(self):
-        self.logout()
-
     def _send_command(
         self,
         name: str,
@@ -1191,14 +1122,6 @@ class Page(AdaptiveControl):
 
     def set_clipboard(self, value: str, wait_timeout: Optional[float] = 10) -> None:
         self._invoke_method("setClipboard", {"data": value}, wait_timeout=wait_timeout)
-
-    @deprecated(
-        reason="Use Page.set_clipboard() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def set_clipboard_async(self, value: str, wait_timeout: Optional[float] = 10):
-        self.set_clipboard(value, wait_timeout=wait_timeout)
 
     def get_clipboard(self, wait_timeout: Optional[float] = 10) -> Optional[str]:
         return self._invoke_method(
@@ -1231,23 +1154,6 @@ class Page(AdaptiveControl):
             args["window_height"] = str(window_height)
         self._invoke_method("launchUrl", args)
 
-    @deprecated(
-        reason="Use Page.launch_url() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def launch_url_async(
-        self,
-        url: str,
-        web_window_name: Optional[str] = None,
-        web_popup_window: bool = False,
-        window_width: Optional[int] = None,
-        window_height: Optional[int] = None,
-    ):
-        self.launch_url(
-            url, web_window_name, web_popup_window, window_width, window_height
-        )
-
     def can_launch_url(self, url: str) -> bool:
         args = {"url": url}
         return self._invoke_method("canLaunchUrl", args, wait_for_result=True) == "true"
@@ -1262,30 +1168,6 @@ class Page(AdaptiveControl):
     def close_in_app_web_view(self) -> None:
         self._invoke_method("closeInAppWebView")
 
-    @deprecated(
-        reason="Use Page.close_in_app_web_view() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def close_in_app_web_view_async(self):
-        self.close_in_app_web_view()
-
-    @deprecated(
-        reason="Use Page.window.to_front() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    def window_to_front(self) -> None:
-        self.__window.to_front()
-
-    @deprecated(
-        reason="Use Page.window.to_front() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def window_to_front_async(self):
-        self.__window.to_front()
-
     def scroll_to(
         self,
         offset: Optional[float] = None,
@@ -1297,21 +1179,6 @@ class Page(AdaptiveControl):
         self.__default_view.scroll_to(
             offset=offset, delta=delta, key=key, duration=duration, curve=curve
         )
-
-    @deprecated(
-        reason="Use Page.scroll_to() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def scroll_to_async(
-        self,
-        offset: Optional[float] = None,
-        delta: Optional[float] = None,
-        key: Optional[str] = None,
-        duration: Optional[int] = None,
-        curve: Optional[AnimationCurve] = None,
-    ):
-        self.scroll_to(offset, delta, key, duration, curve)
 
     def _invoke_method(
         self,
@@ -1437,271 +1304,6 @@ class Page(AdaptiveControl):
             control.update()
         else:
             raise ValueError(f"{control.__class__.__qualname__} has no open attribute")
-
-    #
-    # SnackBar
-    #
-    @deprecated(
-        reason="Use Page.open() method instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-    )
-    def show_snack_bar(self, snack_bar: SnackBar):
-        self.__offstage.snack_bar = snack_bar
-        self.__offstage.snack_bar.open = True
-        self.__offstage.update()
-
-    @deprecated(
-        reason="Use Page.open() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def show_snack_bar_async(self, snack_bar: SnackBar):
-        self.show_snack_bar(snack_bar)
-
-    #
-    # Dialogs
-    #
-    @deprecated(
-        reason="Use Page.open() method instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-    )
-    def show_dialog(self, dialog: Union[AlertDialog, CupertinoAlertDialog]):
-        self.__offstage.dialog = dialog
-        self.__offstage.dialog.open = True
-        self.__offstage.update()
-
-    @deprecated(
-        reason="Use Page.open() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def show_dialog_async(self, dialog: Union[AlertDialog, CupertinoAlertDialog]):
-        self.show_dialog(dialog)
-
-    @deprecated(
-        reason="Use Page.close() method instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-    )
-    def close_dialog(self):
-        if self.__offstage.dialog is not None:
-            self.__offstage.dialog.open = False
-            self.__offstage.update()
-
-    @deprecated(
-        reason="Use Page.close() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def close_dialog_async(self):
-        self.close_dialog()
-
-    #
-    # Banner
-    #
-    @deprecated(
-        reason="Use Page.open() method instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-    )
-    def show_banner(self, banner: Banner):
-        self.__offstage.banner = banner
-        self.__offstage.banner.open = True
-        self.__offstage.update()
-
-    @deprecated(
-        reason="Use Page.open() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def show_banner_async(self, banner: Banner):
-        self.show_banner(banner)
-
-    @deprecated(
-        reason="Use Page.close() method instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-    )
-    def close_banner(self):
-        if self.__offstage.banner is not None:
-            self.__offstage.banner.open = False
-            self.__offstage.update()
-
-    @deprecated(
-        reason="Use Page.close() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def close_banner_async(self):
-        self.close_banner()
-
-    #
-    # BottomSheet
-    #
-    @deprecated(
-        reason="Use Page.open() method instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-    )
-    def show_bottom_sheet(
-        self,
-        bottom_sheet: Union[BottomSheet, CupertinoBottomSheet],
-    ):
-        self.__offstage.bottom_sheet = bottom_sheet
-        self.__offstage.bottom_sheet.open = True
-        self.__offstage.update()
-
-    @deprecated(
-        reason="Use Page.open() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def show_bottom_sheet_async(
-        self,
-        bottom_sheet: Union[BottomSheet, CupertinoBottomSheet],
-    ):
-        self.show_bottom_sheet(bottom_sheet)
-
-    @deprecated(
-        reason="Use Page.close() method instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-    )
-    def close_bottom_sheet(self):
-        if self.__offstage.bottom_sheet is not None:
-            self.__offstage.bottom_sheet.open = False
-            self.__offstage.update()
-
-    @deprecated(
-        reason="Use Page.close() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def close_bottom_sheet_async(self):
-        self.close_bottom_sheet()
-
-    #
-    # Drawer
-    #
-    @deprecated(
-        reason="Use Page.close() method instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-    )
-    def show_drawer(self, drawer: NavigationDrawer):
-        self.drawer = drawer
-        self.drawer.open = True
-        self.update()
-
-    @deprecated(
-        reason="Use Page.open() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def show_drawer_async(self, drawer: NavigationDrawer):
-        self.show_drawer(drawer)
-
-    @deprecated(
-        reason="Use Page.close() method instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-    )
-    def close_drawer(self):
-        if self.drawer is not None:
-            self.drawer.open = False
-            self.update()
-
-    @deprecated(
-        reason="Use Page.close() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def close_drawer_async(self):
-        self.close_drawer()
-
-    #
-    # End_drawer
-    #
-    @deprecated(
-        reason="Use Page.close() method instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-    )
-    def show_end_drawer(self, end_drawer: NavigationDrawer):
-        self.end_drawer = end_drawer
-        self.end_drawer.open = True
-        self.update()
-
-    @deprecated(
-        reason="Use Page.open() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def show_end_drawer_async(self, end_drawer: NavigationDrawer):
-        self.show_end_drawer(end_drawer)
-
-    def close_end_drawer(self):
-        if self.end_drawer is not None:
-            self.end_drawer.open = False
-            self.update()
-
-    @deprecated(
-        reason="Use Page.close() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def close_end_drawer_async(self):
-        self.close_end_drawer()
-
-    @deprecated(
-        reason="Use Page.window.destroy() method instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-    )
-    def window_destroy(self) -> None:
-        self.__window.destroy()
-
-    @deprecated(
-        reason="Use Page.window.destroy() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def window_destroy_async(self):
-        self.__window.destroy()
-
-    @deprecated(
-        reason="Use Page.window.center() method instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-    )
-    def window_center(self) -> None:
-        self.__window.center()
-
-    @deprecated(
-        reason="Use Page.window.center() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def window_center_async(self):
-        self.__window.center()
-
-    @deprecated(
-        reason="Use Page.window.close() method instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-    )
-    def window_close(self) -> None:
-        self.__window.close()
-
-    @deprecated(
-        reason="Use Page.window.close() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def window_close_async(self):
-        self.__window.close()
 
     # query
     @property
@@ -2032,81 +1634,6 @@ class Page(AdaptiveControl):
     def session(self) -> SessionStorage:
         return self.__session_storage
 
-    # splash
-    @property
-    def splash(self) -> Optional[Control]:
-        return self.__offstage.splash
-
-    @splash.setter
-    @deprecated(
-        reason="Use Page.overlay.append(splash) method instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def splash(self, value: Optional[Control]):
-        self.__offstage.splash = value
-
-    # banner
-    @property
-    def banner(self) -> Optional[Banner]:
-        return self.__offstage.banner
-
-    @banner.setter
-    @deprecated(
-        reason="Use Page.overlay.append(banner) instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def banner(self, value: Optional[Banner]):
-        self.__offstage.banner = value
-
-    # snack_bar
-    @property
-    def snack_bar(self) -> Optional[SnackBar]:
-        return self.__offstage.snack_bar
-
-    @snack_bar.setter
-    @deprecated(
-        reason="Use Page.overlay.append(snack_bar) instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def snack_bar(self, value: Optional[SnackBar]):
-        self.__offstage.snack_bar = value
-
-    # dialog
-    @property
-    def dialog(self) -> Optional[Control]:
-        return self.__offstage.dialog
-
-    @dialog.setter
-    @deprecated(
-        reason="Use Page.overlay.append(dialog) instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def dialog(self, value: Optional[Control]):
-        self.__offstage.dialog = value
-
-    # bottom_sheet
-    @property
-    def bottom_sheet(self) -> Optional[BottomSheet]:
-        return self.__offstage.bottom_sheet
-
-    @bottom_sheet.setter
-    @deprecated(
-        reason="Use Page.overlay.append(bottom_sheet) instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def bottom_sheet(self, value: Optional[BottomSheet]):
-        self.__offstage.bottom_sheet = value
-
     # theme_mode
     @property
     def theme_mode(self) -> Optional[ThemeMode]:
@@ -2178,573 +1705,6 @@ class Page(AdaptiveControl):
         h = self._get_attr("height")
         return float(h) if h else 0
 
-    # window_bgcolor
-    @property
-    @deprecated(
-        reason="Use Page.window.bgcolor instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_bgcolor(self) -> Optional[ColorValue]:
-        return self.__window.bgcolor
-
-    @window_bgcolor.setter
-    @deprecated(
-        reason="Use Page.window.bgcolor instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_bgcolor(self, value: Optional[ColorValue]):
-        self.__window.bgcolor = value
-
-    # window_width
-    @property
-    @deprecated(
-        reason="Use Page.window.width instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_width(self) -> OptionalNumber:
-        return self.__window.width
-
-    @window_width.setter
-    @deprecated(
-        reason="Use Page.window.width instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_width(self, value: OptionalNumber):
-        self.__window.width = value
-
-    # window_height
-    @property
-    @deprecated(
-        reason="Use Page.window.height instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_height(self) -> OptionalNumber:
-        return self.__window.height
-
-    @window_height.setter
-    @deprecated(
-        reason="Use Page.window.height instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_height(self, value: OptionalNumber):
-        self.__window.height = value
-
-    # window_top
-    @property
-    @deprecated(
-        reason="Use Page.window.top instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_top(self) -> OptionalNumber:
-        return self.__window.top
-
-    @window_top.setter
-    @deprecated(
-        reason="Use Page.window.top instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_top(self, value: OptionalNumber):
-        self.__window.top = value
-
-    # window_left
-    @property
-    @deprecated(
-        reason="Use Page.window.left instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_left(self) -> OptionalNumber:
-        return self.__window.left
-
-    @window_left.setter
-    @deprecated(
-        reason="Use Page.window.left instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_left(self, value: OptionalNumber):
-        self.__window.left = value
-
-    # window_max_width
-    @property
-    @deprecated(
-        reason="Use Page.window.max_width instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_max_width(self) -> OptionalNumber:
-        return self.__window.max_width
-
-    @window_max_width.setter
-    @deprecated(
-        reason="Use Page.window.max_width instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_max_width(self, value: OptionalNumber):
-        self.__window.max_width = value
-
-    # window_max_height
-    @property
-    @deprecated(
-        reason="Use Page.window.max_height instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_max_height(self) -> OptionalNumber:
-        return self.__window.max_height
-
-    @window_max_height.setter
-    @deprecated(
-        reason="Use Page.window.max_height instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_max_height(self, value: OptionalNumber):
-        self.__window.max_height = value
-
-    # window_min_width
-    @property
-    @deprecated(
-        reason="Use Page.window.min_width instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_min_width(self) -> OptionalNumber:
-        return self.__window.min_width
-
-    @window_min_width.setter
-    @deprecated(
-        reason="Use Page.window.min_width instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_min_width(self, value: OptionalNumber):
-        self.__window.min_width = value
-
-    # window_min_height
-    @property
-    @deprecated(
-        reason="Use Page.window.min_height instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_min_height(self) -> OptionalNumber:
-        return self.__window.min_height
-
-    @window_min_height.setter
-    @deprecated(
-        reason="Use Page.window.min_height instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_min_height(self, value: OptionalNumber):
-        self.__window.min_height = value
-
-    # window_opacity
-    @property
-    @deprecated(
-        reason="Use Page.window.opacity instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_opacity(self) -> OptionalNumber:
-        return self.__window.opacity
-
-    @window_opacity.setter
-    @deprecated(
-        reason="Use Page.window.opacity instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_opacity(self, value: OptionalNumber):
-        self.__window.opacity = value
-
-    # window_maximized
-    @property
-    @deprecated(
-        reason="Use Page.window.maximized instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_maximized(self) -> Optional[bool]:
-        return self.__window.maximized
-
-    @window_maximized.setter
-    @deprecated(
-        reason="Use Page.window.maximized instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_maximized(self, value: Optional[bool]):
-        self.__window.maximized = value
-
-    # window_minimized
-    @property
-    @deprecated(
-        reason="Use Page.window.minimized instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_minimized(self) -> Optional[bool]:
-        return self.__window.minimized
-
-    @window_minimized.setter
-    @deprecated(
-        reason="Use Page.window.minimized instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_minimized(self, value: Optional[bool]):
-        self.__window.minimized = value
-
-    # window_minimizable
-    @property
-    @deprecated(
-        reason="Use Page.window.minimizable instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_minimizable(self) -> Optional[bool]:
-        return self.__window.minimizable
-
-    @window_minimizable.setter
-    @deprecated(
-        reason="Use Page.window.minimizable instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_minimizable(self, value: Optional[bool]):
-        self.__window.minimizable = value
-
-    # window_maximizable
-    @property
-    @deprecated(
-        reason="Use Page.window.maximizable instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_maximizable(self) -> Optional[bool]:
-        return self.__window.maximizable
-
-    @window_maximizable.setter
-    @deprecated(
-        reason="Use Page.window.maximizable instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_maximizable(self, value: Optional[bool]):
-        self.__window.maximizable = value
-
-    # window_resizable
-    @property
-    @deprecated(
-        reason="Use Page.window.resizable instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_resizable(self) -> Optional[bool]:
-        return self.__window.resizable
-
-    @window_resizable.setter
-    @deprecated(
-        reason="Use Page.window.resizable instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_resizable(self, value: Optional[bool]):
-        self.__window.resizable = value
-
-    # window_movable
-    @property
-    @deprecated(
-        reason="Use Page.window.movable instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_movable(self) -> Optional[bool]:
-        return self.__window.movable
-
-    @window_movable.setter
-    @deprecated(
-        reason="Use Page.window.movable instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_movable(self, value: Optional[bool]):
-        self.__window.movable = value
-
-    # window_full_screen
-    @property
-    @deprecated(
-        reason="Use Page.window.full_screen instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_full_screen(self) -> Optional[bool]:
-        return self.__window.full_screen
-
-    @window_full_screen.setter
-    @deprecated(
-        reason="Use Page.window.full_screen instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_full_screen(self, value: Optional[bool]):
-        self.__window.full_screen = value
-
-    # window_always_on_top
-    @property
-    @deprecated(
-        reason="Use Page.window.always_on_top instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_always_on_top(self) -> Optional[bool]:
-        return self.__window.always_on_top
-
-    @window_always_on_top.setter
-    @deprecated(
-        reason="Use Page.window.always_on_top instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_always_on_top(self, value: Optional[bool]):
-        self.__window.always_on_top = value
-
-    # window_always_on_bottom
-    @property
-    @deprecated(
-        reason="Use Page.window.always_on_bottom instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_always_on_bottom(self) -> Optional[bool]:
-        return self.__window.always_on_bottom
-
-    @window_always_on_bottom.setter
-    @deprecated(
-        reason="Use Page.window.always_on_bottom instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_always_on_bottom(self, value: Optional[bool]):
-        self.window_always_on_bottom = value
-
-    # window_prevent_close
-    @property
-    @deprecated(
-        reason="Use Page.window.prevent_close instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_prevent_close(self) -> Optional[bool]:
-        return self.__window.prevent_close
-
-    @window_prevent_close.setter
-    @deprecated(
-        reason="Use Page.window.prevent_close instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_prevent_close(self, value: Optional[bool]):
-        self.__window.prevent_close = value
-
-    # window_title_bar_hidden
-    @property
-    @deprecated(
-        reason="Use Page.window.title_bar_hidden instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_title_bar_hidden(self) -> Optional[bool]:
-        return self.__window.title_bar_hidden
-
-    @window_title_bar_hidden.setter
-    @deprecated(
-        reason="Use Page.window.title_bar_hidden instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_title_bar_hidden(self, value: Optional[bool]):
-        self.__window.title_bar_hidden = value
-
-    # window_title_bar_buttons_hidden
-    @property
-    @deprecated(
-        reason="Use Page.window.title_bar_buttons_hidden instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_title_bar_buttons_hidden(self) -> Optional[bool]:
-        return self.__window.title_bar_buttons_hidden
-
-    @window_title_bar_buttons_hidden.setter
-    @deprecated(
-        reason="Use Page.window.title_bar_buttons_hidden instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_title_bar_buttons_hidden(self, value: Optional[bool]):
-        self.__window.title_bar_buttons_hidden = value
-
-    # window_skip_task_bar
-    @property
-    @deprecated(
-        reason="Use Page.window.skip_task_bar instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_skip_task_bar(self) -> Optional[bool]:
-        return self.__window.skip_task_bar
-
-    @window_skip_task_bar.setter
-    @deprecated(
-        reason="Use Page.window.skip_task_bar instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_skip_task_bar(self, value: Optional[bool]):
-        self.__window.skip_taskbar = value
-
-    # window_frameless
-    @property
-    @deprecated(
-        reason="Use Page.window.frameless instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_frameless(self) -> Optional[bool]:
-        return self.__window.frameless
-
-    @window_frameless.setter
-    @deprecated(
-        reason="Use Page.window.frameless instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_frameless(self, value: Optional[bool]):
-        self.__window.frameless = value
-
-    # window_progress_bar
-    @property
-    @deprecated(
-        reason="Use Page.window.progress_bar instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_progress_bar(self) -> OptionalNumber:
-        return self.__window.progress_bar
-
-    @window_progress_bar.setter
-    @deprecated(
-        reason="Use Page.window.progress_bar instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_progress_bar(self, value: OptionalNumber):
-        self.__window.progress_bar = value
-
-    # window_focused
-    @property
-    @deprecated(
-        reason="Use Page.window.focused instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_focused(self) -> Optional[bool]:
-        return self.__window.focused
-
-    @window_focused.setter
-    @deprecated(
-        reason="Use Page.window.focused instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_focused(self, value: Optional[bool]):
-        self.__window.focused = value
-
-    # window_visible
-    @property
-    @deprecated(
-        reason="Use Page.window.visible instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_visible(self) -> Optional[bool]:
-        return self.__window.visible
-
-    @window_visible.setter
-    @deprecated(
-        reason="Use Page.window.visible instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def window_visible(self, value: Optional[bool]):
-        self.__window.visible = value
-
     # on_scroll_interval
     @property
     def on_scroll_interval(self) -> OptionalNumber:
@@ -2762,27 +1722,6 @@ class Page(AdaptiveControl):
     @on_close.setter
     def on_close(self, handler: OptionalControlEventCallable):
         self.__on_close.handler = handler
-
-    # on_resize
-    @property
-    @deprecated(
-        reason="Use Page.on_resized instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def on_resize(self) -> OptionalEventCallable["WindowResizeEvent"]:
-        return self.__on_resized.handler
-
-    @on_resize.setter
-    @deprecated(
-        reason="Use on_resized instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def on_resize(self, handler: OptionalEventCallable["WindowResizeEvent"]):
-        self.__on_resized.handler = handler
 
     @property
     def on_resized(self) -> OptionalEventCallable["WindowResizeEvent"]:
@@ -2841,27 +1780,6 @@ class Page(AdaptiveControl):
     def on_keyboard_event(self, handler: OptionalEventCallable["KeyboardEvent"]):
         self.__on_keyboard_event.handler = handler
         self._set_attr("onKeyboardEvent", True if handler else None)
-
-    # on_window_event
-    @property
-    @deprecated(
-        reason="Use Page.on_window_event instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def on_window_event(self) -> OptionalEventCallable["WindowEvent"]:
-        return self.__window.on_event.handler
-
-    @on_window_event.setter
-    @deprecated(
-        "Use Page.window.on_event instead.",
-        version="0.23.0",
-        delete_version="0.26.0",
-        is_method=False,
-    )
-    def on_window_event(self, handler: OptionalEventCallable["WindowEvent"]):
-        self.__window.on_event.handler = handler
 
     # on_media_change
     @property
