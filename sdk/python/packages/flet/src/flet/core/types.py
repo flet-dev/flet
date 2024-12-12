@@ -136,7 +136,7 @@ class ControlState(Enum):
     SCROLLED_UNDER = "scrolledUnder"
     DISABLED = "disabled"
     ERROR = "error"
-    DEFAULT = ""
+    DEFAULT = "default"
 
 
 class MainAxisAlignment(Enum):
