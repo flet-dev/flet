@@ -68,7 +68,7 @@ class BarChartRod(Control):
         self.tooltip_style = tooltip_style
 
     def _get_control_name(self):
-        return "rod"
+        return "bar_chart_rod"
 
     def before_update(self):
         super().before_update()
