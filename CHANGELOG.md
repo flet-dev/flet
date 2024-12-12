@@ -7,6 +7,11 @@
 * Fix `flet publish` creates broken website if no `requirements.txt` or `pyproject.toml` found ([#4493](https://github.com/flet-dev/flet/pull/4493)).
 * Fix PyInstaller hook to avoid download Flet app bundle on first run ([#4549](https://github.com/flet-dev/flet/pull/4549)).
 * Support `git`, `path`, `url` Poetry-style dependencies in `pyproject.toml` ([#4554](https://github.com/flet-dev/flet/pull/4554)).
+* Fixed broken `Map.center_on()` and default animations ([#4519](https://github.com/flet-dev/flet/pull/4519)).
+* Fixed Tooltip corruption in `Segment` and `BarChartRod` on `update()` ([#4525](https://github.com/flet-dev/flet/pull/4525)).
+* Fixed Setting `CheckBox.border_side.stroke_align` to an Enum fails ([#4526](https://github.com/flet-dev/flet/pull/4526)).
+* Fixed `ControlState should` be resolved based on user-defined order ([#4556](https://github.com/flet-dev/flet/pull/4556)).
+* Fixed broken `Dismissible.dismiss_direction` ([#4557](https://github.com/flet-dev/flet/pull/4557)).
 
 ## 0.25.1
 
