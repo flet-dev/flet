@@ -91,10 +91,12 @@ class Control:
         pass
 
     def _before_build_command(self) -> None:
-        self._set_attr_json("col", self.__col)
-        self._set_attr_json("tooltip", self.tooltip)
+        if self._get_control_name() not in ["segment", "bar_chart_rod"]:
+            # see https://github.com/flet-dev/flet/pull/4525
+            self._set_attr_json("tooltip", self.tooltip)
         if isinstance(self.badge, (Badge, str)):
             self._set_attr_json("badge", self.badge)
+        self._set_attr_json("col", self.__col)
 
     def did_mount(self):
         pass
