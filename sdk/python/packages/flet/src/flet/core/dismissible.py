@@ -19,7 +19,6 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
-from flet.utils import deprecated
 
 
 class Dismissible(ConstrainedControl, AdaptiveControl):
