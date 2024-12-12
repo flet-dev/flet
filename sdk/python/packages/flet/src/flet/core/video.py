@@ -96,6 +96,7 @@ class Video(ConstrainedControl):
         on_error: OptionalControlEventCallable = None,
         on_completed: OptionalControlEventCallable = None,
         on_track_changed: OptionalControlEventCallable = None,
+        on_percent_changed: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -182,6 +183,7 @@ class Video(ConstrainedControl):
         self.on_error = on_error
         self.on_completed = on_completed
         self.on_track_changed = on_track_changed
+        self.on_percent_changed = on_percent_changed
 
     def _get_control_name(self):
         return "video"
@@ -550,3 +552,13 @@ class Video(ConstrainedControl):
     def on_track_changed(self, handler: OptionalControlEventCallable):
         self._set_attr("onTrackChanged", True if handler is not None else None)
         self._add_event_handler("track_changed", handler)
+
+    # on_pos_changed
+    @property
+    def on_percent_changed(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("percent_changed")
+
+    @on_percent_changed.setter
+    def on_percent_changed(self, handler: OptionalControlEventCallable):
+        self._set_attr("onPercentChanged", True if handler is not None else None)
+        self._add_event_handler("percent_changed", handler)
