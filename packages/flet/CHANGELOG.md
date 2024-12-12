@@ -3,6 +3,7 @@
 ## Bug fixes
 
 * Fix `flet publish` creates broken website if no `requirements.txt` or `pyproject.toml` found ([#4493](https://github.com/flet-dev/flet/pull/4493)).
+* Fix PyInstaller hook to avoid download Flet app bundle on first run ([#4549](https://github.com/flet-dev/flet/pull/4549)).
 
 # 0.25.1
 
