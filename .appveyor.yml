@@ -414,7 +414,7 @@ for:
 
     install:
       - . ci/common.sh
-      - flutter upgrade --force
+      - source ci/install_flutter.sh
 
     build_script:
       # Flutter Web client
