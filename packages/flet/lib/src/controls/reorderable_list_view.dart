@@ -127,7 +127,6 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
                 scrollDirection: scrollDirection,
                 shrinkWrap: shrinkWrap,
                 padding: padding,
-                buildDefaultDragHandles: false,
                 itemCount: ctrls.length,
                 itemExtent: itemExtent,
                 anchor: anchor,
