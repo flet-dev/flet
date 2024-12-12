@@ -56,7 +56,7 @@ class _DismissibleControlState extends State<DismissibleControl> {
         parseDismissThresholds(widget.control, "dismissThresholds");
 
     DismissDirection direction = parseDismissDirection(
-        widget.control.attrString("direction"), DismissDirection.horizontal)!;
+        widget.control.attrString("dismissDirection"), DismissDirection.horizontal)!;
 
     widget.backend.subscribeMethods(widget.control.id,
         (methodName, args) async {
