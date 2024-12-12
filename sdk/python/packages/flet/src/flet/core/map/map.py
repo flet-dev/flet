@@ -366,7 +366,7 @@ class Map(ConstrainedControl):
         animation_duration: DurationValue = None,
     ):
         self.invoke_method(
-            "animate_to",
+            "center_on",
             arguments={
                 "lat": str(point.latitude) if point else None,
                 "long": str(point.longitude) if point else None,
