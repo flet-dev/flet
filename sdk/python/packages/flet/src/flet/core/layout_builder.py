@@ -31,8 +31,6 @@ class LayoutDimensions(ControlEvent):
         d = json.loads(e.data)
         self.width: float = d.get("width")
         self.height: float = d.get("height")
-        self.x: float = d.get("x_position")
-        self.y: float = d.get("y_position")
         
 
 class LayoutBuilder(ConstrainedControl, AdaptiveControl):
@@ -73,15 +71,18 @@ class LayoutBuilder(ConstrainedControl, AdaptiveControl):
         self.fit = fit
         self.__on_change_callback = on_change
         self.__update_size_on_init = update_size_on_init
+        self.__old_width = None
+        self.__old_height = None
         self.on_change = self.__on_change
         
     
     def __on_change(self,e):
         e = LayoutDimensions(e)
-        self.width = e.width
-        self.height = e.height
-        if self.__on_change_callback:
-            self.__on_change_callback(e)
+        if e.width!=self.__old_width or e.height!=self.__old_height:
+            self.__old_height = e.height
+            self.__old_width = e.width
+            if self.__on_change_callback:
+                self.__on_change_callback(e)
 
     def _get_control_name(self):
         return "layoutbuilder"
@@ -142,9 +143,3 @@ class LayoutBuilder(ConstrainedControl, AdaptiveControl):
         height = self._get_attr("layoutHeight")
         return (float(width),float(height))
     
-    
-    @property
-    def layout_pos(self):
-        x_pos = self._get_attr("x_position")
-        y_pos = self._get_attr("y_position")
-        return (float(x_pos),float(y_pos))

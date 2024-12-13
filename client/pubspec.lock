@@ -283,7 +283,7 @@ packages:
       path: "../packages/flet_dropzone"
       relative: true
     source: path
-    version: "0.25.1"
+    version: "0.24.1"
   flet_flashlight:
     dependency: "direct main"
     description:
