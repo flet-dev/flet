@@ -1,4 +1,5 @@
 import dataclasses
+import json
 from enum import Enum
 from typing import Any, Dict, List, Optional, Union, cast
 
@@ -8,6 +9,8 @@ from flet.core.badge import BadgeValue
 from flet.core.box import FilterQuality
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
+from flet.core.control_event import ControlEvent
+from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
@@ -58,6 +61,14 @@ class VideoSubtitleConfiguration:
     padding: Optional[PaddingValue] = dataclasses.field(default=None)
     visible: Optional[bool] = dataclasses.field(default=None)
 
+class VideoPositionChangedEvent(ControlEvent):
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        d = json.loads(e.data)
+        self.position: int = d.get("position")
+        self.duration: int = d.get("duration")
+        self.percent: int = d.get("percent")
+
 
 class Video(ConstrainedControl):
     """
@@ -81,6 +92,7 @@ class Video(ConstrainedControl):
         playlist_mode: Optional[PlaylistMode] = None,
         shuffle_playlist: Optional[bool] = None,
         volume: OptionalNumber = None,
+        throttle: Optional[int] = None,
         playback_rate: OptionalNumber = None,
         alignment: Optional[Alignment] = None,
         filter_quality: Optional[FilterQuality] = None,
@@ -96,7 +108,7 @@ class Video(ConstrainedControl):
         on_error: OptionalControlEventCallable = None,
         on_completed: OptionalControlEventCallable = None,
         on_track_changed: OptionalControlEventCallable = None,
-        on_percent_changed: OptionalControlEventCallable = None,
+        on_position_changed: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -165,6 +177,7 @@ class Video(ConstrainedControl):
         self.pitch = pitch
         self.fill_color = fill_color
         self.volume = volume
+        self.throttle = throttle
         self.playback_rate = playback_rate
         self.alignment = alignment
         self.wakelock = wakelock
@@ -183,7 +196,13 @@ class Video(ConstrainedControl):
         self.on_error = on_error
         self.on_completed = on_completed
         self.on_track_changed = on_track_changed
-        self.on_percent_changed = on_percent_changed
+        self.__on_position_changed = EventHandler(
+            lambda e: VideoPositionChangedEvent(e)
+        )
+        self._add_event_handler(
+            "positionChanged", self.__on_position_changed.get_handler()
+        )
+        self.on_position_changed = on_position_changed
 
     def _get_control_name(self):
         return "video"
@@ -418,6 +437,15 @@ class Video(ConstrainedControl):
         assert value is None or 0 <= value <= 100, "volume must be between 0 and 100"
         self._set_attr("volume", value)
 
+    # throttle
+    @property
+    def throttle(self) -> Optional[int]:
+        return self._get_attr("throttle", data_type="int")
+
+    @throttle.setter
+    def throttle(self, value: Optional[int]):
+        self._set_attr("throttle", value)
+
     # playback_rate
     @property
     def playback_rate(self) -> OptionalNumber:
@@ -553,12 +581,12 @@ class Video(ConstrainedControl):
         self._set_attr("onTrackChanged", True if handler is not None else None)
         self._add_event_handler("track_changed", handler)
 
-    # on_pos_changed
+    # on_position_changed
     @property
-    def on_percent_changed(self) -> OptionalControlEventCallable:
-        return self._get_event_handler("percent_changed")
+    def on_position_changed(self,) -> OptionalEventCallable[VideoPositionChangedEvent]:
+        return self.__on_position_changed.handler
 
-    @on_percent_changed.setter
-    def on_percent_changed(self, handler: OptionalControlEventCallable):
-        self._set_attr("onPercentChanged", True if handler is not None else None)
-        self._add_event_handler("percent_changed", handler)
+    @on_position_changed.setter
+    def on_position_changed(self, handler: OptionalEventCallable[VideoPositionChangedEvent]):
+        self.__on_position_changed.handler = handler
+        self._set_attr("onPositionChanged", True if handler is not None else None)

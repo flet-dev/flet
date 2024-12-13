@@ -28,7 +28,7 @@ class VideoControl extends StatefulWidget {
 
 class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   int _lastProcessedIndex = -1;
-  int _lastPercent = -1;
+  Duration _lastEmittedPosition = Duration.zero;
   late final playerConfig = PlayerConfiguration(
     title: widget.control.attrString("title", "Flet Video")!,
     muted: widget.control.attrBool("muted", false)!,
@@ -98,12 +98,17 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       .triggerControlEvent(widget.control.id, "track_changed", message ?? "");
   }
 
-  void _onPercentChanged(String? message) {
-    // Let's not debug print this, cause to much traffic on console
-    // debugPrint("Video onPercentChanged: $message");
-    widget.backend
-        .triggerControlEvent(widget.control.id, "percent_changed", message ?? "");
+  void _onPositionChanged(Duration position, Duration duration, int percent) {
+    // commenting out, may be too verbose to display every 1 second
+    // debugPrint("New Position is ${position} and duration is ${duration} and percent is ${percent}");
+    final data = {
+      "position": position.inSeconds, // Send position in seconds
+      "duration": duration.inSeconds, // Send duration in seconds
+      "percent": percent,
+    };
+    widget.backend.triggerControlEvent(widget.control.id, "positionChanged", jsonEncode(data));
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +141,9 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       bool onError = widget.control.attrBool("onError", false)!;
       bool onCompleted = widget.control.attrBool("onCompleted", false)!;
       bool onTrackChanged = widget.control.attrBool("onTrackChanged", false)!;
-      bool onPercentChanged = widget.control.attrBool("onPercentChanged", false)!;
+      bool onPositionChanged = widget.control.attrBool("onPositionChanged", false)!;
+      int throttle = widget.control.attrInt("throttle", 1000)!;
+
 
       double? volume = widget.control.attrDouble("volume");
       double? pitch = widget.control.attrDouble("pitch");
@@ -311,18 +318,16 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
         }
       });
       // Send percentage position change between 0-100 to use with flet slider.
-      // This will make flet event loop less busy sending round int numbers
       // as well as throttling to 1 second to not overload flet socket
-      player.stream.position.throttleTime(const Duration(seconds: 1)).listen((position) {
-        if (onPercentChanged) {
+      player.stream.position.throttleTime(Duration(milliseconds: throttle)).listen((position) {
+        if (onPositionChanged && position.inSeconds != _lastEmittedPosition.inSeconds) {
           try {
-            final int percent = (position.inMilliseconds / player.state.duration.inMilliseconds * 100).toInt();
-            if (percent != _lastPercent) {
-              _lastPercent = percent;
-              _onPercentChanged(percent.toString());
-            }
+            final duration = player.state.duration;
+            final int percent = (position.inMilliseconds / duration.inMilliseconds * 100).toInt();
+            _lastEmittedPosition = position;
+            _onPositionChanged(position, duration, percent);
           } catch (e) {
-            debugPrint("Error calculating percentage: $e");
+            debugPrint("Error in OnPositionChanged: $e");
           }
         }
       });
