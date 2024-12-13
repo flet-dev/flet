@@ -286,7 +286,6 @@ class PopupMenuButton(ConstrainedControl):
         self.items = items
         self.icon = icon
         self.on_cancel = on_cancel
-        self.on_cancelled = on_cancelled
         self.on_open = on_open
         self.shape = shape
         self.padding = padding

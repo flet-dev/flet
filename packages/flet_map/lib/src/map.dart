@@ -54,8 +54,10 @@ class _MapControlState extends State<MapControl>
         .where((c) => c.isVisible && (acceptedChildrenTypes.contains(c.type)))
         .toList();
 
-    Curve? defaultAnimationCurve;
-    Duration? defaultAnimationDuration;
+    Curve? defaultAnimationCurve =
+        parseCurve(widget.control.attrString("animationCurve"));
+    Duration? defaultAnimationDuration =
+        parseDuration(widget.control, "animationDuration");
     var configuration = parseConfiguration(
         widget.control, widget.backend, context, const MapOptions())!;
 
@@ -76,7 +78,7 @@ class _MapControlState extends State<MapControl>
             if (degree != null) {
               _animatedMapController.animatedRotateFrom(
                 degree,
-                curve: parseCurve(args["curve"]) ?? defaultAnimationCurve,
+                curve: parseCurve(args["curve"], defaultAnimationCurve),
               );
             }
           case "reset_rotation":
