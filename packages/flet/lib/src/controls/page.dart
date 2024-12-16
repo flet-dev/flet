@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
@@ -275,6 +276,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
             a.name.toLowerCase() ==
             widget.control.attrString("platform", "")!.toLowerCase(),
         orElse: () => defaultTargetPlatform);
+
 
     _adaptive = widget.control.attrBool("adaptive");
 
@@ -834,6 +836,7 @@ class ViewControl extends StatefulWidget {
 
 class _ViewControlState extends State<ViewControl> with FletStoreMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  DateTime ? currentBackPressTime;
 
   @override
   Widget build(BuildContext context) {
@@ -1062,51 +1065,79 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                 : widget.parent.attrString("darkTheme") != null
                     ? parseTheme(widget.parent, "darkTheme", Brightness.dark)
                     : parseTheme(widget.parent, "theme", Brightness.dark);
+            var backExitMessage = widget.parent.attrString("back_exit_message", "Press again to exit");
+            var backExitEnabled = widget.parent.attrBool("back_exit_enabled", false)!;
 
-            Widget scaffold = Scaffold(
-              key: bar == null || bar is AppBarControl ? scaffoldKey : null,
-              backgroundColor: control.attrColor("bgcolor", context) ??
-                  CupertinoTheme.of(context).scaffoldBackgroundColor,
-              appBar: bar is AppBarControl ? bar : null,
-              drawer: drawerView != null
-                  ? NavigationDrawerControl(
-                      control: drawerView.control,
-                      children: drawerView.children,
-                      parentDisabled: control.isDisabled,
-                      parentAdaptive: adaptive,
-                      backend: widget.backend)
-                  : null,
-              onDrawerChanged: (opened) {
-                if (drawerView != null && !opened) {
-                  widget.parent.state["drawerOpened"] = false;
-                  dismissDrawer(drawerView.control.id);
-                }
-              },
-              endDrawer: endDrawerView != null
-                  ? NavigationDrawerControl(
-                      control: endDrawerView.control,
-                      children: endDrawerView.children,
-                      parentDisabled: control.isDisabled,
-                      parentAdaptive: adaptive,
-                      backend: widget.backend)
-                  : null,
-              onEndDrawerChanged: (opened) {
-                if (endDrawerView != null && !opened) {
-                  widget.parent.state["endDrawerOpened"] = false;
-                  dismissDrawer(endDrawerView.control.id);
-                }
-              },
-              body: body,
-              bottomNavigationBar: bnb != null
-                  ? createControl(control, bnb.id, control.isDisabled,
-                      parentAdaptive: adaptive)
-                  : null,
-              floatingActionButton: fab != null
-                  ? createControl(control, fab.id, control.isDisabled,
-                      parentAdaptive: adaptive)
-                  : null,
-              floatingActionButtonLocation: fabLocation,
-            );
+            // For PopScope - https://docs.flutter.dev/release/breaking-changes/android-predictive-back
+            // We need to wrap Scaffold as the child -- this helps GOOGLE TV exit flet app properly
+            Future<bool> _allowBackPress() async {
+              DateTime now = DateTime.now();
+              if (currentBackPressTime == null || now.difference(currentBackPressTime !) > Duration(seconds : 2)) {
+                currentBackPressTime = now;
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(backExitMessage!)));
+                return false;
+              }
+              // only exit(0) seems to work for Google TV Streamer
+              exit(0); // Back button hit twice exit program
+            }
+
+            // This helper function takes scaffold as arguement, and if backExitEnabled
+            // is True, wraps Scaffold with Popscope, if false leaves Scaffold untouched
+            Widget _buildScaffoldWithPopScope(Widget child) {
+              return backExitEnabled
+                  ?  PopScope(
+                canPop: false,
+                onPopInvokedWithResult: (didPop, result) async {
+                  await _allowBackPress();
+                },
+                child: child,
+              ) : child;
+            }
+
+            Widget scaffold = _buildScaffoldWithPopScope(Scaffold(
+                key: bar == null || bar is AppBarControl ? scaffoldKey : null,
+                backgroundColor: control.attrColor("bgcolor", context) ?? CupertinoTheme.of(context).scaffoldBackgroundColor,
+                appBar: bar is AppBarControl ? bar : null,
+                drawer: drawerView != null
+                    ? NavigationDrawerControl(
+                        control: drawerView.control,
+                        children: drawerView.children,
+                        parentDisabled: control.isDisabled,
+                        parentAdaptive: adaptive,
+                        backend: widget.backend)
+                    : null,
+                onDrawerChanged: (opened) {
+                  if (drawerView != null && !opened) {
+                    widget.parent.state["drawerOpened"] = false;
+                    dismissDrawer(drawerView.control.id);
+                  }
+                },
+                endDrawer: endDrawerView != null
+                    ? NavigationDrawerControl(
+                        control: endDrawerView.control,
+                        children: endDrawerView.children,
+                        parentDisabled: control.isDisabled,
+                        parentAdaptive: adaptive,
+                        backend: widget.backend)
+                    : null,
+                onEndDrawerChanged: (opened) {
+                  if (endDrawerView != null && !opened) {
+                    widget.parent.state["endDrawerOpened"] = false;
+                    dismissDrawer(endDrawerView.control.id);
+                  }
+                },
+                body: body,
+                bottomNavigationBar: bnb != null
+                    ? createControl(control, bnb.id, control.isDisabled,
+                        parentAdaptive: adaptive)
+                    : null,
+                floatingActionButton: fab != null
+                    ? createControl(control, fab.id, control.isDisabled,
+                        parentAdaptive: adaptive)
+                    : null,
+                floatingActionButtonLocation: fabLocation,
+            ));
+
 
             var systemOverlayStyle =
                 materialTheme.extension<SystemUiOverlayStyleTheme>();
