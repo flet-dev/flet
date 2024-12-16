@@ -67,6 +67,7 @@ class VideoPositionChangedEvent(ControlEvent):
         d = json.loads(e.data)
         self.position: int = d.get("position")
         self.duration: int = d.get("duration")
+        self.buffer: int = d.get("buffer")
         self.percent: int = d.get("percent")
 
 

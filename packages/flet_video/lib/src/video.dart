@@ -7,6 +7,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:rxdart/rxdart.dart';
+import 'dart:async';
 
 
 import 'utils/video.dart';
@@ -29,6 +30,8 @@ class VideoControl extends StatefulWidget {
 class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   int _lastProcessedIndex = -1;
   Duration _lastEmittedPosition = Duration.zero;
+  bool _trackChange = false;
+  
   late final playerConfig = PlayerConfiguration(
     title: widget.control.attrString("title", "Flet Video")!,
     muted: widget.control.attrBool("muted", false)!,
@@ -98,12 +101,13 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       .triggerControlEvent(widget.control.id, "track_changed", message ?? "");
   }
 
-  void _onPositionChanged(Duration position, Duration duration, int percent) {
+  void _onPositionChanged(Duration position, Duration duration, Duration buffer, int percent) {
     // commenting out, may be too verbose to display every 1 second
-    // debugPrint("New Position is ${position} and duration is ${duration} and percent is ${percent}");
+    // debugPrint("New Position is ${position} seconds, duration is ${duration} seconds, buffer is ${buffer} seconds, and percent done ${percent}%");
     final data = {
       "position": position.inSeconds, // Send position in seconds
       "duration": duration.inSeconds, // Send duration in seconds
+      "buffer": buffer.inSeconds, // Send buffer in seconds
       "percent": percent,
     };
     widget.backend.triggerControlEvent(widget.control.id, "positionChanged", jsonEncode(data));
@@ -262,11 +266,11 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
               break;
             case "next":
               debugPrint("Video.next($hashCode)");
-              await player.next();
+              await _audioHandler.skipToNext();             
               break;
             case "previous":
               debugPrint("Video.previous($hashCode)");
-              await player.previous();
+              await _audioHandler.skipToPrevious();
               break;
             case "jump_to":
               debugPrint("Video.jump($hashCode)");
@@ -317,17 +321,30 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
           _onCompleted(event.toString());
         }
       });
-      // Send percentage position change between 0-100 to use with flet slider.
-      // as well as throttling to 1 second to not overload flet socket
+      // Send position, duration, buffer and percent to Flet.
+      // Former 3 are in seconds, percent is percentage 0-100% of track completed
+      // Throttling defaults to 100ms(1 second) unless overridden, as well as no updates
+      // till seconds change to not overload flet socket. (buffer will return "None" on web)
       player.stream.position.throttleTime(Duration(milliseconds: throttle)).listen((position) {
-        if (onPositionChanged && position.inSeconds != _lastEmittedPosition.inSeconds) {
-          try {
-            final duration = player.state.duration;
-            final int percent = (position.inMilliseconds / duration.inMilliseconds * 100).toInt();
-            _lastEmittedPosition = position;
-            _onPositionChanged(position, duration, percent);
-          } catch (e) {
-            debugPrint("Error in OnPositionChanged: $e");
+        if (position.inSeconds != 0) {  // stop race conditions on duration
+          if(_trackChange) {  // ensure we send track changes to flet before new position updates
+            final int index = player.state.playlist.index;
+            if (onTrackChanged) {
+              _onTrackChanged(index.toString());
+            }
+            _audioHandler.customAction('update_notification', {'index': index});
+            _trackChange = false;
+          }
+          if (onPositionChanged && position.inSeconds != _lastEmittedPosition.inSeconds) {
+            try {
+              final Duration duration = player.state.duration;
+              final Duration buffer = player.state.buffer;
+              final int percent = (position.inMilliseconds / duration.inMilliseconds * 100).toInt();
+              _lastEmittedPosition = position;
+              _onPositionChanged(position, duration, buffer, percent);
+            } catch (e) {
+              debugPrint("Error in OnPositionChanged: $e");
+            }
           }
         }
       });
@@ -335,12 +352,11 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       player.stream.playlist.listen((event) {
         if (event.index != _lastProcessedIndex) { // prevent duplicates
           _lastProcessedIndex = event.index;
-          if (onTrackChanged) {
-            _onTrackChanged(event.index.toString());
-          }
-          // We want this outside of onTrackChanged as we need to update
-          // notification bar regardless if they subscribed to handler or not.
-          _audioHandler.customAction('update_notification', {'index': event.index});
+          // There is a race condition here, just because the track changed, does not mean duration
+          // has been updated yet, we will defeat it by letting player.stream.position
+          // check position.inSeconds != 0 before allowing update to notification, if track
+          // has been playing for 1 second we can be certain duration is then updated
+          _trackChange = true;
         }
       });
 
@@ -366,12 +382,11 @@ class MyAudioHandler extends BaseAudioHandler {
   );
 
   @override
-  Future<dynamic> customAction(String name,
-      [Map<String, dynamic>? extras]) async {
+  Future<dynamic> customAction(String name, [Map<String, dynamic>? extras]) async {
     if (name == 'update_notification') {
       final index = extras?['index'] as int?;
       if (index != null) {
-        updatePlaybackState(index);
+        await updatePlaybackState(index);
       }
     } else {
       debugPrint("Unknown custom action: $name");
@@ -445,13 +460,14 @@ class MyAudioHandler extends BaseAudioHandler {
     }
   }
 
-  void updatePlaybackState(int index) {
+  Future<void> updatePlaybackState(int index) async {
     final currentMedia = player.state.playlist.medias[index];
     final extras = currentMedia.extras;
     // Url Decode and extract filename
     // I am going to assume structure of https://blah.com/Artist - SongName.mp3
     // Let's attempt to split their filename into title/artist if they did not
     // include extras { title and artist } as full http url would be ugly
+
     final filename = Uri.decodeFull(player.state.playlist.medias[index].uri.split('/').last);
     final parts = filename.split('.');
     final filenameWithoutExtension = parts.sublist(0, parts.length - 1).join('.');
@@ -464,7 +480,7 @@ class MyAudioHandler extends BaseAudioHandler {
     final displayTitle = extras?['displayTitle'] as String?;
     final displaySubtitle = extras?['displaySubtitle'] as String?;
     final displayDescription = extras?['displayDescription'] as String?;
-
+    
     mediaItem.add(MediaItem(
       id: index.toString(),
       title: title,
@@ -477,7 +493,7 @@ class MyAudioHandler extends BaseAudioHandler {
       displayDescription: displayDescription != null ? displayDescription : null,
       duration: player.state.duration,
     ));
-    playbackState.add(_basePlaybackState.copyWith(playing: player.state.playing, updatePosition: Duration.zero));
-    debugPrint("Now playing: ${player.state.playlist.medias[index].uri} with index ${player.state.playlist.index}");
+    playbackState.add(_basePlaybackState.copyWith(playing: player.state.playing, updatePosition: player.state.position));
+    // debugPrint("Now playing: ${Uri.decodeFull(player.state.playlist.medias[index].uri)} with index ${player.state.playlist.index}");
   }
 }
