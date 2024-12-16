@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:flet/src/utils/browser_context_menu.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+
+
 
 import 'actions.dart';
 import 'flet_control_backend.dart';
@@ -88,7 +91,19 @@ AppState appReducer(AppState state, dynamic action) {
         debugPrint("Registering web client with route: ${action.route}");
         String pageName = getWebPageName(state.pageUri!);
 
-        getWindowMediaData().then((wmd) {
+        getWindowMediaData().then((wmd) async {
+          String platformValue = defaultTargetPlatform.name.toLowerCase();
+          if (platformValue == "android") {
+            try {
+              DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+              AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+              if (androidInfo.systemFeatures.contains('android.software.leanback')) {
+                platformValue = "android_tv";
+              }
+            } on Exception catch (e) {
+              debugPrint(e.toString());
+            }
+          }
           action.server.registerWebClient(
               pageName: pageName,
               pageRoute: action.route,
@@ -101,7 +116,7 @@ AppState appReducer(AppState state, dynamic action) {
               isPWA: isProgressiveWebApp().toString(),
               isWeb: kIsWeb.toString(),
               isDebug: kDebugMode.toString(),
-              platform: defaultTargetPlatform.name.toLowerCase(),
+              platform: platformValue,
               platformBrightness: state.displayBrightness.name.toString(),
               media: json.encode(state.media));
 
