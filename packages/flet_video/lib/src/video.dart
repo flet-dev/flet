@@ -322,16 +322,13 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       });
       // Send position, duration, buffer and percent to Flet.
       // Former 3 are in seconds, percent is percentage 0-100% of track completed
-      // Throttling defaults to 100ms(1 second) unless overridden, as well as no updates
-      // till seconds change to not overload flet socket. (buffer will return "None" on web)
+      // Throttling defaults to 1000ms(1 second) unless overridden, as well as no updates
+      // till seconds change to not overload flet socket.
       player.stream.position.throttleTime(Duration(milliseconds: throttle)).listen((position) {
-        if (position != Duration.zero) {  // stop race conditions on duration
-          if(_trackChange) {  // ensure we send track changes to flet before new position updates
-            final int index = player.state.playlist.index;
-            if (onTrackChanged) {
-              _onTrackChanged(index.toString());
-            }
-            _audioHandler.customAction('update_notification', {'index': index});
+        if (position != Duration.zero) {  // this ensures duration is updated as track changes
+          if(_trackChange) {
+            // Duration finally changed, update notification for 2nd time with correct duration
+            _audioHandler.customAction('update_notification', {'index': player.state.playlist.index});
             _trackChange = false;
           }
           if (onPositionChanged && position.inSeconds != _lastEmittedPosition.inSeconds) {
@@ -351,10 +348,15 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       player.stream.playlist.listen((event) {
         if (event.index != _lastProcessedIndex) { // prevent duplicates
           _lastProcessedIndex = event.index;
+          if (onTrackChanged) {
+            _onTrackChanged(event.index.toString());
+          }
+          _audioHandler.customAction('update_notification', {'index': event.index});
           // There is a race condition here, just because the track changed, does not mean duration
-          // has been updated yet, we will defeat it by letting player.stream.position
-          // check position != Duration.zero before allowing update to notification, if track
-          // has been playing for even a microsecond we can be certain duration is then updated
+          // has been updated yet, but we don't want to delay sending Flet track change either
+          // so it can update it's UI quickly. A stream on duration won't work because if 2 songs
+          // have same duration that won't trigger. Best way to handle this then is update notification
+          // one more time when duration does change, by letting position stream handle it.
           _trackChange = true;
         }
       });
@@ -467,7 +469,7 @@ class MyAudioHandler extends BaseAudioHandler {
     // Let's attempt to split their filename into title/artist if they did not
     // include extras { title and artist } as full http url would be ugly
 
-    final filename = Uri.decodeFull(player.state.playlist.medias[index].uri.split('/').last);
+    final filename = Uri.decodeFull(currentMedia.uri.split('/').last);
     final parts = filename.split('.');
     final filenameWithoutExtension = parts.sublist(0, parts.length - 1).join('.');
     final artistAndTitle = filenameWithoutExtension.split('-');
@@ -493,6 +495,5 @@ class MyAudioHandler extends BaseAudioHandler {
       duration: player.state.duration,
     ));
     playbackState.add(_basePlaybackState.copyWith(playing: player.state.playing, updatePosition: player.state.position));
-    // debugPrint("Now playing: ${Uri.decodeFull(player.state.playlist.medias[index].uri)} with index ${player.state.playlist.index}");
   }
 }
