@@ -28,3 +28,27 @@ class OAuthToken:
     def from_json(data: str):
         t = json.loads(data)
         return OAuthToken(**t)
+
+
+class WeChatOAuthToken(OAuthToken):
+    def __init__(
+        self,
+        access_token: str,
+        scope: Optional[List[str]] = None,
+        token_type: Optional[str] = None,
+        expires_in: Optional[int] = None,
+        expires_at: Optional[float] = None,
+        refresh_token: Optional[str] = None,
+        openid: Optional[str] = None,
+        unionid: Optional[str] = None,
+    ) -> None:
+        super().__init__(
+            access_token=access_token,
+            scope=scope,
+            token_type=token_type,
+            expires_in=expires_in,
+            expires_at=expires_at,
+            refresh_token=refresh_token,
+        )
+        self.openid = openid
+        self.unionid = unionid
