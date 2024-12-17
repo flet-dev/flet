@@ -42,8 +42,9 @@ class Flashlight(Control):
     def _get_control_name(self):
         return "flashlight"
 
-    def _toggle_state(self, sr: str, on: bool=True) -> bool:
-        self.turned_on = on if ("1" == sr) else self.turned_on
+    def _toggle_state(self, sr: str, state: bool=True) -> bool:
+        if ("1" == sr):
+            self.turned_on = state
         return self.turned_on
 
     def turn_on(self, wait_timeout: Optional[int] = 5) -> bool:
