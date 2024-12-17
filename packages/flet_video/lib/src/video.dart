@@ -5,6 +5,9 @@ import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:audio_service/audio_service.dart';
+import 'package:rxdart/rxdart.dart';
+
 
 import 'utils/video.dart';
 
@@ -24,6 +27,10 @@ class VideoControl extends StatefulWidget {
 }
 
 class _VideoControlState extends State<VideoControl> with FletStoreMixin {
+  int _lastProcessedIndex = -1;
+  Duration _lastEmittedPosition = Duration.zero;
+  bool _trackChange = false;
+  
   late final playerConfig = PlayerConfiguration(
     title: widget.control.attrString("title", "Flet Video")!,
     muted: widget.control.attrBool("muted", false)!,
@@ -38,16 +45,35 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   late final Player player = Player(
     configuration: playerConfig,
   );
+  late final AudioHandler _audioHandler;
+
   late final videoControllerConfiguration = parseControllerConfiguration(
       widget.control, "configuration", const VideoControllerConfiguration())!;
   late final controller =
       VideoController(player, configuration: videoControllerConfiguration);
 
+
   @override
   void initState() {
     super.initState();
+
+    AudioService.init(
+      builder: () => MyAudioHandler(player),
+      config: const AudioServiceConfig(
+        androidNotificationChannelId: 'com.appveyor.flet.channel.audio',
+        androidNotificationChannelName: 'Audio playback',
+        androidNotificationOngoing: true,
+      ),
+    ).then((handler) {
+      _audioHandler = handler;
+      // Now you can use _audioHandler for audio service operations
+    }).catchError((error) {
+      // Handle errors during initialization
+      debugPrint('Error initializing AudioService: $error');
+    });
     player.open(Playlist(parseVideoMedia(widget.control, "playlist")),
         play: widget.control.attrBool("autoPlay", false)!);
+
   }
 
   @override
@@ -73,6 +99,19 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
   widget.backend
       .triggerControlEvent(widget.control.id, "track_changed", message ?? "");
   }
+
+  void _onPositionChanged(Duration position, Duration duration, Duration buffer, int percent) {
+    // commenting out, may be too verbose to display every 1 second
+    // debugPrint("New Position is ${position} seconds, duration is ${duration} seconds, buffer is ${buffer} seconds, and percent done ${percent}%");
+    final data = {
+      "position": position.inSeconds, // Send position in seconds
+      "duration": duration.inSeconds, // Send duration in seconds
+      "buffer": buffer.inSeconds, // Send buffer in seconds
+      "percent": percent,
+    };
+    widget.backend.triggerControlEvent(widget.control.id, "positionChanged", jsonEncode(data));
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +144,9 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       bool onError = widget.control.attrBool("onError", false)!;
       bool onCompleted = widget.control.attrBool("onCompleted", false)!;
       bool onTrackChanged = widget.control.attrBool("onTrackChanged", false)!;
+      bool onPositionChanged = widget.control.attrBool("onPositionChanged", false)!;
+      int throttle = widget.control.attrInt("throttle", 1000)!;
+
 
       double? volume = widget.control.attrDouble("volume");
       double? pitch = widget.control.attrDouble("pitch");
@@ -200,34 +242,34 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
           switch (methodName) {
             case "play":
               debugPrint("Video.play($hashCode)");
-              await player.play();
+              await _audioHandler.play();
               break;
             case "pause":
               debugPrint("Video.pause($hashCode)");
-              await player.pause();
+              await _audioHandler.pause();
               break;
             case "play_or_pause":
               debugPrint("Video.playOrPause($hashCode)");
-              await player.playOrPause();
+              await _audioHandler.play();
               break;
             case "stop":
               debugPrint("Video.stop($hashCode)");
-              await player.stop();
+              await _audioHandler.stop();
               player.open(Playlist(parseVideoMedia(widget.control, "playlist")),
                   play: false);
               break;
             case "seek":
               debugPrint("Video.jump($hashCode)");
-              await player.seek(Duration(
+              await _audioHandler.seek(Duration(
                   milliseconds: int.tryParse(args["position"] ?? "") ?? 0));
               break;
             case "next":
               debugPrint("Video.next($hashCode)");
-              await player.next();
+              await _audioHandler.skipToNext();             
               break;
             case "previous":
               debugPrint("Video.previous($hashCode)");
-              await player.previous();
+              await _audioHandler.skipToPrevious();
               break;
             case "jump_to":
               debugPrint("Video.jump($hashCode)");
@@ -278,14 +320,180 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
           _onCompleted(event.toString());
         }
       });
+      // Send position, duration, buffer and percent to Flet.
+      // Former 3 are in seconds, percent is percentage 0-100% of track completed
+      // Throttling defaults to 1000ms(1 second) unless overridden, as well as no updates
+      // till seconds change to not overload flet socket.
+      player.stream.position.throttleTime(Duration(milliseconds: throttle)).listen((position) {
+        if (position != Duration.zero) {  // this ensures duration is updated as track changes
+          if(_trackChange) {
+            // Duration finally changed, update notification for 2nd time with correct duration
+            _audioHandler.customAction('update_notification', {'index': player.state.playlist.index});
+            _trackChange = false;
+          }
+          if (onPositionChanged && position.inSeconds != _lastEmittedPosition.inSeconds) {
+            try {
+              final Duration duration = player.state.duration;
+              final Duration buffer = player.state.buffer;
+              final int percent = (position.inMilliseconds / duration.inMilliseconds * 100).toInt();
+              _lastEmittedPosition = position;
+              _onPositionChanged(position, duration, buffer, percent);
+            } catch (e) {
+              debugPrint("Error in OnPositionChanged: $e");
+            }
+          }
+        }
+      });
 
       player.stream.playlist.listen((event) {
-        if (onTrackChanged) {
-          _onTrackChanged(event.index.toString());
+        if (event.index != _lastProcessedIndex) { // prevent duplicates
+          _lastProcessedIndex = event.index;
+          if (onTrackChanged) {
+            _onTrackChanged(event.index.toString());
+          }
+          _audioHandler.customAction('update_notification', {'index': event.index});
+          // There is a race condition here, just because the track changed, does not mean duration
+          // has been updated yet, but we don't want to delay sending Flet track change either
+          // so it can update it's UI quickly. A stream on duration won't work because if 2 songs
+          // have same duration that won't trigger. Best way to handle this then is update notification
+          // one more time when duration does change, by letting position stream handle it.
+          _trackChange = true;
         }
       });
 
       return constrainedControl(context, video, widget.parent, widget.control);
     });
+  }
+}
+
+class MyAudioHandler extends BaseAudioHandler {
+  final Player player;
+  MyAudioHandler(this.player);
+  final PlaybackState _basePlaybackState = PlaybackState(
+    controls: [
+      MediaControl.skipToPrevious,
+      MediaControl.play,
+      MediaControl.pause,
+      MediaControl.skipToNext,
+    ],
+    systemActions: const {
+      MediaAction.seek,
+    },
+    processingState: AudioProcessingState.ready,
+  );
+
+  @override
+  Future<dynamic> customAction(String name, [Map<String, dynamic>? extras]) async {
+    if (name == 'update_notification') {
+      final index = extras?['index'] as int?;
+      if (index != null) {
+        await updatePlaybackState(index);
+      }
+    } else {
+      debugPrint("Unknown custom action: $name");
+    }
+  }
+
+  @override
+  Future<void> play() async {
+    try {
+      await player.playOrPause();
+      // we need to trigger updatePlaybackState if first time hitting play
+      // or seek on notification bar will not work correctly
+      if (player.state.position.inMilliseconds == 0) {
+        updatePlaybackState(player.state.playlist.index);
+      } else {
+        playbackState.add(_basePlaybackState.copyWith(playing: player.state.playing, updatePosition: player.state.position));
+      }
+    } catch (e) {
+      debugPrint("Playback error: ${e}");
+    }
+  }
+
+  @override
+  Future<void> pause() async {
+    try {
+      await player.playOrPause();
+      playbackState.add(_basePlaybackState.copyWith(playing: player.state.playing, updatePosition: player.state.position));
+    } catch (e) {
+      debugPrint("Playback error: ${e}");
+    }
+  }
+
+  @override
+  Future<void> stop() async {
+    try {
+      await player.stop();
+      playbackState.add(_basePlaybackState.copyWith(playing: player.state.playing, updatePosition: player.state.position));
+    } catch (e) {
+      debugPrint("Playback error: ${e}");
+    }
+  }
+  // Because these 2 functions are changing songs, no need to call
+  // playbackState as track change will trigger player.stream.playlist.listen
+  // to call updatePlaybackState() to do it for us, still required for
+  // bluetooth etc devices to work correctly
+  @override
+  Future<void> skipToNext() async {
+    try {
+      await player.next();
+    } catch (e) {
+      debugPrint("Playback error: ${e}");
+    }
+  }
+
+  @override
+  Future<void> skipToPrevious() async {
+    try {
+      await player.previous();
+    } catch (e) {
+      debugPrint("Playback error: ${e}");
+    }
+  }
+
+  @override
+  Future<void> seek(Duration position) async {
+    try {
+      await player.seek(position);
+      playbackState.add(_basePlaybackState.copyWith(playing: player.state.playing, updatePosition: position));
+    } catch (e) {
+      debugPrint("Playback error: ${e}");
+    }
+  }
+
+  Future<void> updatePlaybackState(int index) async {
+    final currentMedia = player.state.playlist.medias[index];
+    final extras = currentMedia.extras;
+    // Url Decode and extract filename
+    // I am going to assume structure of https://blah.com/Artist - SongName.mp3
+    // Let's attempt to split their filename into title/artist if they did not
+    // include extras { title and artist } as full http url would be ugly
+
+    final filename = Uri.decodeFull(currentMedia.uri.split('/').last);
+    final parts = filename.split('.');
+    final filenameWithoutExtension = parts.sublist(0, parts.length - 1).join('.');
+    final artistAndTitle = filenameWithoutExtension.split('-');
+    final title = extras?['title'] ?? artistAndTitle.last.trim();
+    final artist = extras?['artist'] ?? artistAndTitle.sublist(0, artistAndTitle.length - 1).join('-').trim();
+    final artUri = extras?['artUri'] as String?;
+    final album = extras?['album'] as String?;
+    final genre = extras?['genre'] as String?;
+    final displayTitle = extras?['displayTitle'] as String?;
+    final displaySubtitle = extras?['displaySubtitle'] as String?;
+    final displayDescription = extras?['displayDescription'] as String?;
+    
+    mediaItem.add(MediaItem(
+      id: index.toString(),
+      title: title,
+      artist: artist,
+      artUri: artUri != null ? Uri.parse(artUri) : null,
+      album: album != null ? album : null,
+      genre: genre != null ? genre : null,
+      displayTitle: displayTitle != null ? displayTitle : null,
+      displaySubtitle: displaySubtitle != null ? displaySubtitle : null,
+      displayDescription: displayDescription != null ? displayDescription : null,
+      duration: player.state.duration,
+    ));
+    playbackState.add(_basePlaybackState.copyWith(playing: player.state.playing, updatePosition: player.state.position));
   }
 }
