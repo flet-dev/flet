@@ -325,7 +325,7 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
       // Throttling defaults to 100ms(1 second) unless overridden, as well as no updates
       // till seconds change to not overload flet socket. (buffer will return "None" on web)
       player.stream.position.throttleTime(Duration(milliseconds: throttle)).listen((position) {
-        if (position.inSeconds != 0) {  // stop race conditions on duration
+        if (position != Duration.zero) {  // stop race conditions on duration
           if(_trackChange) {  // ensure we send track changes to flet before new position updates
             final int index = player.state.playlist.index;
             if (onTrackChanged) {
@@ -353,8 +353,8 @@ class _VideoControlState extends State<VideoControl> with FletStoreMixin {
           _lastProcessedIndex = event.index;
           // There is a race condition here, just because the track changed, does not mean duration
           // has been updated yet, we will defeat it by letting player.stream.position
-          // check position.inSeconds != 0 before allowing update to notification, if track
-          // has been playing for 1 second we can be certain duration is then updated
+          // check position != Duration.zero before allowing update to notification, if track
+          // has been playing for even a microsecond we can be certain duration is then updated
           _trackChange = true;
         }
       });
