@@ -64,11 +64,6 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
     var trailing =
         widget.children.where((c) => c.name == "trailing" && c.isVisible);
 
-    var clipBehavior =
-        parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
-
-    var offset = parseOffset(widget.control, "alignmentOffset");
-
     var theme = Theme.of(context);
     var style = parseButtonStyle(Theme.of(context), widget.control, "style",
         defaultForegroundColor: theme.colorScheme.primary,
@@ -83,19 +78,17 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
             ? const StadiumBorder()
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
-    var menuStyle =
-        parseMenuStyle(Theme.of(context), widget.control, "menuStyle");
-
     bool onOpen = widget.control.attrBool("onOpen", false)!;
     bool onClose = widget.control.attrBool("onClose", false)!;
     bool onHover = widget.control.attrBool("onHover", false)!;
 
     var subMenu = SubmenuButton(
       focusNode: _focusNode,
-      clipBehavior: clipBehavior,
+      clipBehavior:
+          parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!,
       style: style,
-      menuStyle: menuStyle,
-      alignmentOffset: offset,
+      menuStyle: parseMenuStyle(Theme.of(context), widget.control, "menuStyle"),
+      alignmentOffset: parseOffset(widget.control, "alignmentOffset"),
       onClose: onClose && !disabled
           ? () {
               widget.backend.triggerControlEvent(widget.control.id, "close");
@@ -113,25 +106,16 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
             }
           : null,
       leadingIcon: leading.isNotEmpty
-          ? leading
-              .map((c) => createControl(widget.control, c.id, disabled))
-              .toList()
-              .first
+          ? createControl(widget.control, leading.first.id, disabled)
           : null,
       trailingIcon: trailing.isNotEmpty
-          ? trailing
-              .map((c) => createControl(widget.control, c.id, disabled))
-              .toList()
-              .first
+          ? createControl(widget.control, trailing.first.id, disabled)
           : null,
       menuChildren: ctrls.map((c) {
         return createControl(widget.control, c.id, disabled);
       }).toList(),
       child: content.isNotEmpty
-          ? content
-              .map((c) => createControl(widget.control, c.id, disabled))
-              .toList()
-              .first
+          ? createControl(widget.control, content.first.id, disabled)
           : null,
     );
 

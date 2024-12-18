@@ -80,26 +80,23 @@ class _CupertinoPickerControlState extends State<CupertinoPickerControl> {
               parentAdaptive: widget.parentAdaptive));
     }).toList();
 
-    double itemExtent = widget.control.attrDouble("itemExtent", _kItemExtent)!;
-    double diameterRatio =
-        widget.control.attrDouble("diameterRatio", _kDefaultDiameterRatio)!;
-    double magnification = widget.control.attrDouble("magnification", 1.0)!;
-    double squeeze = widget.control.attrDouble("squeeze", _kSqueeze)!;
-    double offAxisFraction = widget.control.attrDouble("offAxisFraction", 0.0)!;
-    bool useMagnifier = widget.control.attrBool("useMagnifier", false)!;
-    bool looping = widget.control.attrBool("looping", false)!;
-    Color? backgroundColor = widget.control.attrColor("bgColor", context);
 
     Widget picker = CupertinoPicker(
       scrollController: scrollController,
-      backgroundColor: backgroundColor,
-      diameterRatio: diameterRatio,
-      magnification: magnification,
-      squeeze: squeeze,
-      offAxisFraction: offAxisFraction,
-      itemExtent: itemExtent,
-      useMagnifier: useMagnifier,
-      looping: looping,
+      backgroundColor: widget.control.attrColor("bgColor", context),
+      diameterRatio:
+          widget.control.attrDouble("diameterRatio", _kDefaultDiameterRatio)!,
+      magnification: widget.control.attrDouble("magnification", 1.0)!,
+      squeeze: widget.control.attrDouble("squeeze", _kSqueeze)!,
+      offAxisFraction: widget.control.attrDouble("offAxisFraction", 0.0)!,
+      itemExtent: widget.control.attrDouble("itemExtent", _kItemExtent)!,
+      useMagnifier: widget.control.attrBool("useMagnifier", false)!,
+      looping: widget.control.attrBool("looping", false)!,
+      selectionOverlay: selectionOverlayCtrl.isNotEmpty
+          ? createControl(
+              widget.control, selectionOverlayCtrl.first.id, disabled,
+              parentAdaptive: widget.parentAdaptive)
+          : null,
       onSelectedItemChanged: (int index) {
         _index = index;
         widget.backend.updateControlState(

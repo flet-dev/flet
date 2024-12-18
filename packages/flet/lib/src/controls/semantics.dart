@@ -27,11 +27,10 @@ class SemanticsControl extends StatelessWidget {
 
     var contentCtrls =
         children.where((c) => c.name == "content" && c.isVisible);
-    var label = control.attrString("label");
     bool disabled = control.isDisabled || parentDisabled;
 
     Semantics semantics = Semantics(
-        label: label,
+        label: control.attrString("label"),
         enabled: !disabled,
         expanded: control.attrBool("expanded"),
         hidden: control.attrBool("hidden"),

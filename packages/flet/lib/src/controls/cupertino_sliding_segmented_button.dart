@@ -39,19 +39,7 @@ class _CupertinoSlidingSegmentedButtonControlState
     bool? adaptive =
         widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
 
-    var thumbColor = widget.control.attrColor(
-        "thumbColor",
-        context,
-        const CupertinoDynamicColor.withBrightness(
-          color: Color(0xFFFFFFFF),
-          darkColor: Color(0xFF636366),
-        ))!;
-    var bgColor = widget.control.attrColor("bgColor", context) ??
-        CupertinoColors.tertiarySystemFill;
     List<Control> ctrls = widget.children.where((c) => c.isVisible).toList();
-    int? selectedIndex = widget.control.attrInt("selectedIndex");
-    var padding = parseEdgeInsets(widget.control, "padding",
-        const EdgeInsets.symmetric(vertical: 2, horizontal: 3))!;
 
     if (ctrls.length < 2) {
       return const ErrorControl(
@@ -62,24 +50,30 @@ class _CupertinoSlidingSegmentedButtonControlState
         createControl(widget.control, c.id, disabled,
             parentAdaptive: adaptive)));
 
-    return constrainedControl(
-        context,
-        CupertinoSlidingSegmentedControl(
-          children: children,
-          groupValue: selectedIndex,
-          onValueChanged: (int? index) {
-            if (!disabled) {
-              widget.backend.updateControlState(widget.control.id,
-                  {"selectedIndex": index != null ? index.toString() : ""});
-              widget.backend.triggerControlEvent(widget.control.id, "change",
-                  index != null ? index.toString() : "");
-            }
-          },
-          thumbColor: thumbColor,
-          backgroundColor: bgColor,
-          padding: padding,
-        ),
-        widget.parent,
-        widget.control);
+    var button = CupertinoSlidingSegmentedControl(
+      children: children,
+      groupValue: widget.control.attrInt("selectedIndex"),
+      onValueChanged: (int? index) {
+        if (!disabled) {
+          widget.backend.updateControlState(widget.control.id,
+              {"selectedIndex": index != null ? index.toString() : ""});
+          widget.backend.triggerControlEvent(widget.control.id, "change",
+              index != null ? index.toString() : "");
+        }
+      },
+      thumbColor: widget.control.attrColor(
+          "thumbColor",
+          context,
+          const CupertinoDynamicColor.withBrightness(
+            color: Color(0xFFFFFFFF),
+            darkColor: Color(0xFF636366),
+          ))!,
+      backgroundColor: widget.control
+          .attrColor("bgColor", context, CupertinoColors.tertiarySystemFill)!,
+      padding: parseEdgeInsets(widget.control, "padding",
+          const EdgeInsets.symmetric(vertical: 2, horizontal: 3))!,
+    );
+
+    return constrainedControl(context, button, widget.parent, widget.control);
   }
 }

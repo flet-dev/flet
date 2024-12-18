@@ -35,11 +35,6 @@ class _CupertinoBottomSheetControlState
   Widget _createDialog() {
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    var height = widget.control.attrDouble("height", 220.0)!;
-    var bgcolor = widget.control.attrColor("bgcolor", context) ??
-        CupertinoColors.systemBackground.resolveFrom(context);
-    var padding = parseEdgeInsets(widget.control, "padding");
-
     var contentCtrls =
         widget.children.where((c) => c.name == "content" && c.isVisible);
 
@@ -52,15 +47,15 @@ class _CupertinoBottomSheetControlState
         ["cupertinopicker", "cupertinotimerpicker", "cupertinodatepicker"]
             .contains(contentCtrls.first.type)) {
       content = Container(
-        height: height,
-        padding: padding,
-        // The Bottom margin is provided to align the popup above the system navigation bar.
-        margin: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        // background color for the popup.
-        color: bgcolor,
-        // Use a SafeArea widget to avoid system overlaps.
+        height: widget.control.attrDouble("height", 220.0)!,
+        padding: parseEdgeInsets(widget.control, "padding"),
+        // bottom margin is provided to align the popup above the system navigation bar
+        margin:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        // popup background color
+        color: widget.control.attrColor("bgcolor", context,
+            CupertinoColors.systemBackground.resolveFrom(context))!,
+        // Use SafeArea to avoid system overlaps
         child: SafeArea(
           top: false,
           child: content,

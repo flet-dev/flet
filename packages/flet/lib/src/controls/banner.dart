@@ -85,9 +85,6 @@ class _BannerControlState extends State<BannerControl> {
 
     var open = widget.control.attrBool("open", false)!;
 
-    debugPrint("Current open state: $_open");
-    debugPrint("New open state: $open");
-
     if (open && (open != _open)) {
       var banner = _createBanner();
       if (banner is ErrorControl) {
