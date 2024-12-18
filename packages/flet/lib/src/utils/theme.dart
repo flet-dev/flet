@@ -346,7 +346,7 @@ ScrollbarThemeData? parseScrollBarTheme(
   );
 }
 
-TabBarTheme? parseTabBarTheme(ThemeData theme, Map<String, dynamic>? j) {
+TabBarThemeData? parseTabBarTheme(ThemeData theme, Map<String, dynamic>? j) {
   if (j == null) {
     return null;
   }
@@ -427,7 +427,7 @@ PageTransitionsTheme? parsePageTransitions(Map<String, dynamic>? json,
   });
 }
 
-DialogTheme? parseDialogTheme(ThemeData theme, Map<String, dynamic>? j) {
+DialogThemeData? parseDialogTheme(ThemeData theme, Map<String, dynamic>? j) {
   if (j == null) {
     return null;
   }
@@ -474,7 +474,7 @@ BottomSheetThemeData? parseBottomSheetTheme(
   );
 }
 
-CardTheme? parseCardTheme(ThemeData theme, Map<String, dynamic>? j) {
+CardThemeData? parseCardTheme(ThemeData theme, Map<String, dynamic>? j) {
   if (j == null) {
     return null;
   }

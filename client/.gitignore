@@ -46,3 +46,6 @@ app.*.map.json
 
 # Ruby
 vendor/
+
+# FVM Version Cache
+.fvm/
