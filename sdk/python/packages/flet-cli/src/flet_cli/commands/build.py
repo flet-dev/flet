@@ -32,7 +32,8 @@ if is_windows():
 
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.25.0/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
-MINIMAL_FLUTTER_VERSION = "3.27.0"
+
+MINIMAL_FLUTTER_VERSION = version.Version("3.27.0")
 
 error_style = Style(color="red", bold=True)
 console = Console(log_path=False, theme=Theme({"log.message": "green bold"}))
@@ -547,6 +548,7 @@ class Command(BaseCommand):
             spinner="bouncingBall",
         ) as self.status:
             self.initialize_build()
+            self.validate_flutter_version()
             self.validate_target_platform()
             self.validate_entry_point()
             self.setup_template_data()
@@ -621,9 +623,35 @@ class Command(BaseCommand):
         self.pubspec_path = str(self.flutter_dir.joinpath("pubspec.yaml"))
         self.get_pyproject = load_pyproject_toml(self.python_app_path)
 
-    def validate_target_platform(
-        self,
-    ):
+    def validate_flutter_version(self):
+        version_results = self.run(
+            [self.flutter_exe, "--version"],
+            cwd=os.getcwd(),
+            capture_output=True,
+        )
+        if version_results.returncode == 0 and version_results.stdout:
+            match = re.search(r"Flutter (\d+\.\d+\.\d+)", version_results.stdout)
+            if match:
+                flutter_version = version.parse(match.group(1))
+                min_major = MINIMAL_FLUTTER_VERSION.major
+                min_minor = MINIMAL_FLUTTER_VERSION.minor
+
+                # validate installed Flutter version
+                if not (
+                    flutter_version.major == min_major
+                    and flutter_version.minor == min_minor
+                ):
+                    flutter_msg = (
+                        f"You are using an unsupported Flutter SDK version: {flutter_version}\n"
+                        + f"Flet build requires Flutter {min_major}.{min_minor}.x, where x "
+                        + f"is any patch version (ex: {min_major}.{min_minor}.0, {min_major}.{min_minor}.1, etc)."
+                    )
+                    self.skip_flutter_doctor = True
+                    self.cleanup(1, flutter_msg)
+        else:
+            console.log(1, "Failed to validate Flutter version.")
+
+    def validate_target_platform(self):
         assert self.options
         if (
             self.current_platform
@@ -673,9 +701,7 @@ class Command(BaseCommand):
                 f"Use --module-name option to specify an entry point for your Flet app.",
             )
 
-    def setup_template_data(
-        self,
-    ):
+    def setup_template_data(self):
         assert self.options
         assert self.python_app_path
         assert self.get_pyproject
@@ -1246,7 +1272,7 @@ class Command(BaseCommand):
                 console.log(icons_result.stdout)
             if icons_result.stderr:
                 console.log(icons_result.stderr, style=error_style)
-            self.cleanup(icons_result.returncode, check_flutter_version=True)
+            self.cleanup(icons_result.returncode)
         console.log(f"Generated app icons {self.emojis['checkmark']}")
 
         # splash screens
@@ -1264,7 +1290,7 @@ class Command(BaseCommand):
                     console.log(splash_result.stdout)
                 if splash_result.stderr:
                     console.log(splash_result.stderr, style=error_style)
-                self.cleanup(splash_result.returncode, check_flutter_version=True)
+                self.cleanup(splash_result.returncode)
             console.log(f"Generated splash screens {self.emojis['checkmark']}")
 
     def package_python_app(self):
@@ -1492,7 +1518,7 @@ class Command(BaseCommand):
                 console.log(build_result.stdout)
             if build_result.stderr:
                 console.log(build_result.stderr, style=error_style)
-            self.cleanup(build_result.returncode, check_flutter_version=True)
+            self.cleanup(build_result.returncode)
         console.log(
             f"Built [cyan]{self.platforms[self.options.target_platform]['status_text']}[/cyan] {self.emojis['checkmark']}",
         )
@@ -1601,9 +1627,7 @@ class Command(BaseCommand):
 
         return r
 
-    def cleanup(
-        self, exit_code: int, message: Optional[str] = None, check_flutter_version=False
-    ):
+    def cleanup(self, exit_code: int, message: Optional[str] = None):
         if exit_code == 0:
             msg = message or f"Success! {self.emojis['success']}"
             console.log(msg)
@@ -1614,26 +1638,6 @@ class Command(BaseCommand):
                 else "Error building Flet app - see the log of failed command above."
             )
             console.log(msg, style=error_style)
-
-            if check_flutter_version:
-                version_results = self.run(
-                    [self.flutter_exe, "--version"],
-                    cwd=os.getcwd(),
-                    capture_output=True,
-                )
-                if version_results.returncode == 0 and version_results.stdout:
-                    match = re.search(
-                        r"Flutter (\d+\.\d+\.\d+)", version_results.stdout
-                    )
-                    if match:
-                        flutter_version = version.parse(match.group(1))
-                        if flutter_version < version.parse(MINIMAL_FLUTTER_VERSION):
-                            flutter_msg = (
-                                "Incorrect version of Flutter SDK installed. "
-                                + f"Flet build requires Flutter {MINIMAL_FLUTTER_VERSION} or above. "
-                                + f"You have {flutter_version}."
-                            )
-                            console.log(flutter_msg, style=error_style)
 
             # windows has been reported to raise encoding errors when running `flutter doctor`
             # so skip running `flutter doctor` if no_rich_output is True and platform is Windows
