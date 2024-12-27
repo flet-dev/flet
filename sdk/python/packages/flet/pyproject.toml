@@ -33,9 +33,6 @@ cli = ["flet-cli"]
 web = ["flet-web"]
 desktop = ["flet-desktop"]
 
-[tool.poetry.scripts]
-flet = "flet.cli:main"
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

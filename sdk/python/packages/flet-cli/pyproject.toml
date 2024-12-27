@@ -32,3 +32,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.isort]
 profile = "black"
 float_to_top = true
+
+[tool.poetry.scripts]
+flet = "flet_cli.cli:main"
+
