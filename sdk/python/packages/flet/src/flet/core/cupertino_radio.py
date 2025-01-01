@@ -10,6 +10,7 @@ from flet.core.types import (
     ColorEnums,
     ColorValue,
     LabelPosition,
+    MouseCursor,
     OffsetValue,
     OptionalControlEventCallable,
     ResponsiveNumber,
@@ -44,6 +45,7 @@ class CupertinoRadio(ConstrainedControl):
         use_checkmark_style: Optional[bool] = None,
         toggleable: Optional[bool] = None,
         focus_color: Optional[ColorValue] = None,
+        mouse_cursor: Optional[MouseCursor] = None,
         on_focus: OptionalControlEventCallable = None,
         on_blur: OptionalControlEventCallable = None,
         #
@@ -121,6 +123,7 @@ class CupertinoRadio(ConstrainedControl):
         self.on_blur = on_blur
         self.focus_color = focus_color
         self.toggleable = toggleable
+        self.mouse_cursor = mouse_cursor
 
     def _get_control_name(self):
         return "cupertinoradio"
@@ -162,6 +165,16 @@ class CupertinoRadio(ConstrainedControl):
     def fill_color(self, value: Optional[ColorValue]):
         self.__fill_color = value
         self._set_enum_attr("fillColor", value, ColorEnums)
+
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self.__mouse_cursor
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # focus_color
     @property
