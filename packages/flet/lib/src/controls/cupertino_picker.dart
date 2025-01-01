@@ -80,6 +80,8 @@ class _CupertinoPickerControlState extends State<CupertinoPickerControl> {
               parentAdaptive: widget.parentAdaptive));
     }).toList();
 
+    var selectionOverlayCtrl = widget.children
+        .where((c) => c.isVisible && c.name == "selection_overlay");
 
     Widget picker = CupertinoPicker(
       scrollController: scrollController,
@@ -96,7 +98,12 @@ class _CupertinoPickerControlState extends State<CupertinoPickerControl> {
           ? createControl(
               widget.control, selectionOverlayCtrl.first.id, disabled,
               parentAdaptive: widget.parentAdaptive)
-          : null,
+          : CupertinoPickerDefaultSelectionOverlay(
+              background: widget.control.attrColor(
+                  "defaultSelectionOverlayBgcolor",
+                  context,
+                  CupertinoColors.tertiarySystemFill)!,
+            ),
       onSelectedItemChanged: (int index) {
         _index = index;
         widget.backend.updateControlState(
