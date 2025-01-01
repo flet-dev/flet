@@ -70,6 +70,8 @@ class _BannerControlState extends State<BannerControl> {
       shadowColor: widget.control.attrColor("shadowColor", context),
       dividerColor: widget.control.attrColor("dividerColor", context),
       elevation: widget.control.attrDouble("elevation"),
+      minActionBarHeight:
+          widget.control.attrDouble("minActionBarHeight", 52.0)!,
       margin: parseEdgeInsets(widget.control, "margin"),
       onVisible: () {
         widget.backend.triggerControlEvent(widget.control.id, "visible");
