@@ -37,35 +37,35 @@ At the moment you can write Flet apps in Python and other languages will be adde
 Here is a sample "Counter" app:
 
 ```python title="counter.py"
-import flet
-from flet import IconButton, Page, Row, TextField, icons
+import flet as ft
+from flet import IconButton, Page, Row, TextField, Icons
 
 def main(page: Page):
     page.title = "Flet counter example"
-    page.vertical_alignment = "center"
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
 
-    txt_number = TextField(value="0", text_align="right", width=100)
+    txt_number = TextField(value="0", text_align=ft.TextAlign.CENTER, width=100)
 
     def minus_click(e):
-        txt_number.value = str(int(txt_number.value) - 1)
+        txt_number.value = str(int(txt_number.value) - 1) if txt_number.value else "0"
         page.update()
 
     def plus_click(e):
-        txt_number.value = str(int(txt_number.value) + 1)
+        txt_number.value = str(int(txt_number.value) + 1) if txt_number.value else "0"
         page.update()
 
     page.add(
         Row(
             [
-                IconButton(icons.REMOVE, on_click=minus_click),
+                IconButton(Icons.REMOVE, on_click=minus_click),
                 txt_number,
-                IconButton(icons.ADD, on_click=plus_click),
+                IconButton(Icons.ADD, on_click=plus_click),
             ],
-            alignment="center",
+            alignment=ft.MainAxisAlignment.CENTER,
         )
     )
 
-flet.app(target=main)
+ft.app(target=main)
 ```
 
 To run the app install `flet` module:
