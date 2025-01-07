@@ -21,6 +21,7 @@ packaging = "*"
 qrcode = "^7.4.2"
 toml = "^0.10.2"
 cookiecutter = "^2.6.0"
+tqdm = "^4.66.5"
 
 [tool.poetry.plugins."pyinstaller40"]
 hook-dirs = "flet_cli.__pyinstaller:get_hook_dirs"

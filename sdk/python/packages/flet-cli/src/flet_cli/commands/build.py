@@ -1339,6 +1339,12 @@ class Command(BaseCommand):
         ) or get_project_dependencies(self.get_pyproject("project.dependencies"))
 
         if toml_dependencies:
+            platform_dependencies = get_project_dependencies(
+                self.get_pyproject(f"tool.flet.{self.config_platform}.dependencies")
+            )
+            if platform_dependencies:
+                toml_dependencies.extend(platform_dependencies)
+
             package_args.extend(
                 [
                     "--requirements",
@@ -1346,6 +1352,9 @@ class Command(BaseCommand):
                 ]
             )
         elif requirements_txt.exists():
+            if self.verbose > 1:
+                with open(requirements_txt, "r") as f:
+                    console.log(f"Contents of requirements.txt: {f.read()}")
             package_args.extend(["--requirements", f"-r,{requirements_txt}"])
 
         # site-packages variable
