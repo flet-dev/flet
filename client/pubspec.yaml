@@ -48,7 +48,11 @@ dependencies:
   flet_map:
     path: ../packages/flet_map
   flet_ads:
-    path: ../packages/flet_ads
+    git:
+      url: https://github.com/flet-dev/flet-ads.git
+      ref: main
+      path: src/flutter/flet_ads
+
   flet_rive:
     path: ../packages/flet_rive
   flet_audio_recorder:

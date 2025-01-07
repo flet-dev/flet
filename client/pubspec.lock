@@ -251,10 +251,12 @@ packages:
   flet_ads:
     dependency: "direct main"
     description:
-      path: "../packages/flet_ads"
-      relative: true
-    source: path
-    version: "0.25.2"
+      path: "src/flutter/flet_ads"
+      ref: main
+      resolved-ref: "862027f34686f33d281293deeae36553afce8d0b"
+      url: "https://github.com/flet-dev/flet-ads.git"
+    source: git
+    version: "0.1.0"
   flet_audio:
     dependency: "direct main"
     description:
