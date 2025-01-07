@@ -186,7 +186,7 @@ for:
 
     install:
       - python --version
-      - pip3 install --upgrade setuptools wheel twine poetry tomlkit virtualenv
+      - pip3 install --upgrade setuptools wheel twine poetry==1.8.5 tomlkit virtualenv
       - dart pub global activate fvm
       - set PATH=%LOCALAPPDATA%\Pub\Cache\bin;%USERPROFILE%\fvm\default\bin;%PATH%
       - fvm install %FLUTTER_VERSION%
