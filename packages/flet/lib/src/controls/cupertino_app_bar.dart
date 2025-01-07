@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
+import '../utils/overlay_style.dart';
 import 'create_control.dart';
 
 class CupertinoAppBarControl extends StatelessWidget
@@ -52,6 +53,11 @@ class CupertinoAppBarControl extends StatelessWidget
       previousPageTitle: control.attrString("previousPageTitle"),
       padding: parseEdgeInsetsDirectional(control, "padding"),
       backgroundColor: control.attrColor("bgcolor", context),
+      automaticBackgroundVisibility:
+          control.attrBool("automaticBackgroundVisibility", true)!,
+      enableBackgroundFilterBlur:
+          control.attrBool("backgroundFilterBlur", true)!,
+      brightness: parseBrightness(control.attrString("brightness")),
       middle: middleCtrls.isNotEmpty
           ? createControl(control, middleCtrls.first.id, control.isDisabled,
               parentAdaptive: parentAdaptive)
