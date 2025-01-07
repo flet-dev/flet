@@ -463,7 +463,7 @@ for:
       - cd sdk/python
       - python -m ensurepip --upgrade
       - pip3 install --upgrade setuptools pip virtualenv
-      - pip3 install poetry
+      - pip3 install poetry==1.8.5
       - poetry install
 
     build: off
