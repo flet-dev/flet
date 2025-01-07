@@ -31,13 +31,14 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flet:
-    path: ../packages/flet
 # --FAT_CLIENT_START--
   flet_audio:
     path: ../packages/flet_audio
   flet_video:
-    path: ../packages/flet_video
+    git:
+      url: https://github.com/flet-dev/flet-video.git
+      ref: main
+      path: src/flutter/flet_video
 # --FAT_CLIENT_END--
   flet_lottie:
     path: ../packages/flet_lottie
@@ -65,6 +66,8 @@ dependencies:
     sdk: flutter
 
 dependency_overrides:
+  flet:
+    path: ../packages/flet
   webview_flutter_android: ^4.0.0
 
 dev_dependencies:
