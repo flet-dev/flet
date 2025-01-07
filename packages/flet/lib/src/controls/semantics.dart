@@ -58,6 +58,10 @@ class SemanticsControl extends StatelessWidget {
         tooltip: control.attrString("tooltip"),
         toggled: control.attrBool("toggled"),
         maxValueLength: control.attrInt("maxValueLength"),
+        currentValueLength: control.attrInt("currentValueLength"),
+        headingLevel: control.attrInt("headingLevel"),
+        excludeSemantics: control.attrBool("excludeSemantics", false)!,
+        mixed: control.attrBool("mixed"),
         onTap: control.attrBool("onclick", false)!
             ? () {
                 backend.triggerControlEvent(control.id, "click");
@@ -146,6 +150,11 @@ class SemanticsControl extends StatelessWidget {
                         control.id, "did_lose_accessibility_focus");
                   }
                 : null,
+        onSetText: control.attrBool("onSetText", false)!
+            ? (String text) {
+                backend.triggerControlEvent(control.id, "set_text", text);
+              }
+            : null,
         child: contentCtrls.isNotEmpty
             ? createControl(control, contentCtrls.first.id, disabled,
                 parentAdaptive: parentAdaptive)
