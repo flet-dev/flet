@@ -54,6 +54,7 @@ class SearchBar(ConstrainedControl):
         bar_text_style: ControlStateValue[TextStyle] = None,
         bar_hint_text_style: ControlStateValue[TextStyle] = None,
         bar_padding: ControlStateValue[PaddingValue] = None,
+        bar_scroll_padding: PaddingValue = None,
         view_leading: Optional[Control] = None,
         view_trailing: Optional[List[Control]] = None,
         view_elevation: OptionalNumber = None,
@@ -170,6 +171,7 @@ class SearchBar(ConstrainedControl):
         self.bar_text_style = bar_text_style
         self.bar_hint_text_style = bar_hint_text_style
         self.bar_padding = bar_padding
+        self.bar_scroll_padding = bar_scroll_padding
         self.bar_shadow_color = bar_shadow_color
 
     def _get_control_name(self):
@@ -205,6 +207,7 @@ class SearchBar(ConstrainedControl):
         self._set_attr_json("viewHintTextStyle", self.__view_hint_text_style)
         self._set_attr_json("viewSide", self.__view_side)
         self._set_attr_json("viewSizeConstraints", self.__view_size_constraints)
+        self._set_attr_json("barScrollPadding", self.__bar_scroll_padding)
 
     def _get_children(self):
         children = []
@@ -490,6 +493,15 @@ class SearchBar(ConstrainedControl):
     @view_size_constraints.setter
     def view_size_constraints(self, value: Optional[BoxConstraints]):
         self.__view_size_constraints = value
+
+    # bar_scroll_padding
+    @property
+    def bar_scroll_padding(self) -> PaddingValue:
+        return self.__bar_scroll_padding
+
+    @bar_scroll_padding.setter
+    def bar_scroll_padding(self, value: PaddingValue):
+        self.__bar_scroll_padding = value
 
     # full_screen
     @property
