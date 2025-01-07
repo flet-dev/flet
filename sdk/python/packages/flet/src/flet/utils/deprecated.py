@@ -16,7 +16,7 @@ def deprecated(reason: str, version: str, delete_version: str, is_method=True):
         @functools.wraps(func)
         def new_func(*args, **kwargs):
             warnings.warn(
-                f"{func.__name__}{'()' if is_method else ''} is deprecated in version {version} "
+                f"{func.__name__}{'()' if is_method else ''} is deprecated since version {version} "
                 f"and will be removed in version {delete_version}. {reason}",
                 category=DeprecationWarning,
                 stacklevel=2,
@@ -44,3 +44,12 @@ def deprecated_class(reason: str, version: str, delete_version: str):
         return cls
 
     return decorator
+
+
+def deprecated_property(name: str, reason: str, version: str, delete_version: str):
+    warnings.warn(
+        f"{name} property is deprecated since version {version} "
+        f"and will be removed in version {delete_version}. {reason}",
+        category=DeprecationWarning,
+        stacklevel=2,
+    )
