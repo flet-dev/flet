@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/animations.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -44,8 +45,16 @@ class _CupertinoAlertDialogControlState
       return const ErrorControl(
           "CupertinoAlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions");
     }
+    var insetAnimation = parseAnimation(
+        widget.control,
+        "insetAnimation",
+        ImplicitAnimationDetails(
+            duration: const Duration(milliseconds: 100),
+            curve: Curves.decelerate))!;
 
     return CupertinoAlertDialog(
+      insetAnimationCurve: insetAnimation.curve,
+      insetAnimationDuration: insetAnimation.duration,
       title: titleCtrls.isNotEmpty
           ? createControl(widget.control, titleCtrls.first.id, disabled,
               parentAdaptive: widget.parentAdaptive)
