@@ -1,8 +1,7 @@
-from datetime import date, datetime
+from datetime import datetime
 from enum import Enum
 from typing import Any, Optional, Union
 
-from flet.core.badge import BadgeValue
 from flet.core.control import Control, OptionalNumber
 from flet.core.control_event import ControlEvent
 from flet.core.event_handler import EventHandler
@@ -94,8 +93,8 @@ class DatePicker(Control):
         self,
         open: bool = False,
         value: Optional[DateTimeValue] = None,
-        first_date: DateTimeValue = datetime(year=2050, month=1, day=1),
-        last_date: DateTimeValue = datetime(year=1900, month=1, day=1),
+        first_date: DateTimeValue = datetime(year=1900, month=1, day=1),
+        last_date: DateTimeValue = datetime(year=2050, month=1, day=1),
         current_date: DateTimeValue = datetime.now(),
         keyboard_type: Optional[KeyboardType] = None,
         date_picker_mode: Optional[DatePickerMode] = None,
