@@ -609,15 +609,6 @@ class MapEventSource(Enum):
     CURSOR_KEYBOARD_ROTATION = "cursorKeyboardRotation"
 
 
-class MapPointerDeviceType(Enum):
-    TOUCH = "touch"
-    MOUSE = "mouse"
-    STYLUS = "stylus"
-    INVERTED_STYLUS = "invertedStylus"
-    TRACKPAD = "trackpad"
-    UNKNOWN = "unknown"
-
-
 class MapTapEvent(ControlEvent):
     def __init__(self, e: ControlEvent) -> None:
         super().__init__(e.target, e.name, e.data, e.control, e.page)

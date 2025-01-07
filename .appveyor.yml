@@ -259,7 +259,6 @@ for:
       provider: GitHub
       auth_token: $(GITHUB_TOKEN)
       release: $(APPVEYOR_REPO_TAG_NAME)
-      artifact: flet_windows
       on:
         APPVEYOR_REPO_TAG: true
 
@@ -510,3 +509,10 @@ for:
     artifacts:
       - path: sdk/python/packages/flet-cli/dist/*
       - path: sdk/python/packages/flet/dist/*
+
+    deploy:
+      provider: GitHub
+      auth_token: $(GITHUB_TOKEN)
+      release: $(APPVEYOR_REPO_TAG_NAME)
+      on:
+        APPVEYOR_REPO_TAG: true
