@@ -77,7 +77,7 @@ class _SliderControlState extends State<RangeSliderControl> {
         divisions: widget.control.attrInt("divisions"),
         activeColor: widget.control.attrColor("activeColor", context),
         inactiveColor: widget.control.attrColor("inactiveColor", context),
-        mouseCursor: parseWidgetStateMouseColor(widget.control, "mouseCursor"),
+        mouseCursor: parseWidgetStateMouseCursor(widget.control, "mouseCursor"),
         overlayColor: parseWidgetStateColor(
             Theme.of(context), widget.control, "overlayColor"),
         onChanged: !disabled

@@ -85,7 +85,7 @@ MouseCursor? parseMouseCursor(String? cursor,
   }
 }
 
-WidgetStateProperty<MouseCursor?>? parseWidgetStateMouseColor(
+WidgetStateProperty<MouseCursor?>? parseWidgetStateMouseCursor(
     Control control, String propName,
     [MouseCursor? defaultValue]) {
   var v = control.attrString(propName);
