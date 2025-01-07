@@ -10,7 +10,7 @@ skip_commits:
 
 environment:
   python_stack: python 3.12
-  FLUTTER_VERSION: 3.24.4
+  FLUTTER_VERSION: 3.27.0
   GITHUB_TOKEN:
     secure: 9SKIwc3VSfYJ5IChvNR74hQprJ0DRmcV9pPX+8KyE6IXIdfMsX6ikeUmMhJGRu3ztkZaF45jmU7Xn/6tauXQXhDBxK1N8kFHFSAnq6LjUXyhS0TZKX/H+jDozBeVbCXp
   TWINE_USERNAME: __token__
@@ -414,7 +414,7 @@ for:
 
     install:
       - . ci/common.sh
-      - flutter upgrade --force
+      - source ci/install_flutter.sh
 
     build_script:
       # Flutter Web client

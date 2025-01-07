@@ -1,5 +1,6 @@
-import flet as ft
 from flet.core.protocol import Command
+
+import flet as ft
 
 
 def test_datatable_instance_no_attrs_set():
@@ -38,7 +39,7 @@ def test_datarow_color_literal_material_state_as_string():
             indent=0,
             name=None,
             values=["datarow"],
-            attrs={"color": '{"":"yellow"}'},
+            attrs={"color": '{"default":"yellow"}'},
             commands=[],
         ),
         Command(indent=2, name=None, values=["datacell"], attrs={}, commands=[]),
@@ -51,7 +52,11 @@ def test_datarow_color_literal_material_state_as_string():
 def test_datarow_color_multiple_material_states_as_strings():
     r = ft.DataRow(
         cells=[ft.DataCell(content=ft.Text("Cell"))],
-        color={"selected": "red", "hovered": "blue", "": "yellow"},
+        color={
+            ft.ControlState.SELECTED: "red",
+            ft.ControlState.HOVERED: "blue",
+            ft.ControlState.DEFAULT: "yellow",
+        },
     )
     assert isinstance(r, ft.Control)
     assert r._build_add_commands() == [
@@ -59,7 +64,7 @@ def test_datarow_color_multiple_material_states_as_strings():
             indent=0,
             name=None,
             values=["datarow"],
-            attrs={"color": '{"selected":"red","hovered":"blue","":"yellow"}'},
+            attrs={"color": '{"selected":"red","hovered":"blue","default":"yellow"}'},
             commands=[],
         ),
         Command(indent=2, name=None, values=["datacell"], attrs={}, commands=[]),
@@ -84,7 +89,7 @@ def test_datarow_color_multiple_material_states():
             indent=0,
             name=None,
             values=["datarow"],
-            attrs={"color": '{"selected":"red","hovered":"blue","":"yellow"}'},
+            attrs={"color": '{"selected":"red","hovered":"blue","default":"yellow"}'},
             commands=[],
         ),
         Command(indent=2, name=None, values=["datacell"], attrs={}, commands=[]),

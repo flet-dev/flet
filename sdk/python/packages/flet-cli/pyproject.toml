@@ -9,9 +9,9 @@ readme = "README.md"
 packages = [{ include = "flet_cli", from = "src" }]
 
 [tool.poetry.urls]
-homepage = "https://flet.dev"
-repository = "https://github.com/flet-dev/flet"
-documentation = "https://flet.dev/docs"
+Homepage = "https://flet.dev"
+Repository = "https://github.com/flet-dev/flet"
+Documentation = "https://flet.dev/docs"
 
 [tool.poetry.dependencies]
 python = "^3.8"
