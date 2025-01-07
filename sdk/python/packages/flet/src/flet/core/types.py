@@ -1,7 +1,18 @@
 from dataclasses import dataclass
 from datetime import date, datetime
 from enum import Enum, EnumMeta
-from typing import Any, Callable, Dict, List, Optional, Protocol, Tuple, TypeVar, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
+    List,
+    Optional,
+    Protocol,
+    Tuple,
+    TypeVar,
+    Union,
+)
 from warnings import warn
 
 from flet.core.border_radius import BorderRadius
@@ -399,6 +410,13 @@ ControlEventType = TypeVar("ControlEventType", bound=ControlEvent)
 EventType = TypeVar("EventType", bound=Event)
 OptionalEventCallable = Optional[Callable[[EventType], Any]]
 OptionalControlEventCallable = Optional[Callable[[ControlEvent], Any]]
+
+
+class OnFocusEvent(ControlEvent):
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        self.primary: bool = bool(e.data)
+
 
 # Colors
 ColorEnums = (colors, Colors, cupertino_colors, CupertinoColors)

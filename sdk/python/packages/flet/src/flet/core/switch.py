@@ -5,6 +5,7 @@ from flet.core.animation import AnimationValue
 from flet.core.badge import BadgeValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
+from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
@@ -15,7 +16,9 @@ from flet.core.types import (
     LabelPosition,
     MouseCursor,
     OffsetValue,
+    OnFocusEvent,
     OptionalControlEventCallable,
+    OptionalEventCallable,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -76,9 +79,10 @@ class Switch(ConstrainedControl, AdaptiveControl):
         splash_radius: OptionalNumber = None,
         overlay_color: ControlStateValue[ColorValue] = None,
         track_outline_color: ControlStateValue[ColorValue] = None,
+        track_outline_width: ControlStateValue[OptionalNumber] = None,
         mouse_cursor: Optional[MouseCursor] = None,
         on_change: OptionalControlEventCallable = None,
-        on_focus: OptionalControlEventCallable = None,
+        on_focus: OptionalEventCallable[OnFocusEvent] = None,
         on_blur: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
@@ -146,6 +150,9 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
         AdaptiveControl.__init__(self, adaptive=adaptive)
 
+        self.__on_focus = EventHandler(lambda e: OnFocusEvent(e))
+        self._add_event_handler("focus", self.__on_focus.get_handler())
+
         self.value = value
         self.label = label
         self.label_style = label_style
@@ -166,6 +173,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self.splash_radius = splash_radius
         self.overlay_color = overlay_color
         self.track_outline_color = track_outline_color
+        self.track_outline_width = track_outline_width
         self.mouse_cursor = mouse_cursor
 
     def _get_control_name(self):
@@ -177,6 +185,9 @@ class Switch(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)
         self._set_attr_json(
             "trackOutlineColor", self.__track_outline_color, wrap_attr_dict=True
+        )
+        self._set_attr_json(
+            "trackOutlineWidth", self.__track_outline_width, wrap_attr_dict=True
         )
         self._set_attr_json("thumbIcon", self.__thumb_icon, wrap_attr_dict=True)
         self._set_attr_json("trackColor", self.__track_color, wrap_attr_dict=True)
@@ -212,12 +223,21 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     # track_outline_color
     @property
-    def track_outline_color(self) -> ControlStateValue[str]:
+    def track_outline_color(self) -> ControlStateValue[ColorValue]:
         return self.__track_outline_color
 
     @track_outline_color.setter
-    def track_outline_color(self, value: ControlStateValue[str]):
+    def track_outline_color(self, value: ControlStateValue[ColorValue]):
         self.__track_outline_color = value
+
+    # track_outline_width
+    @property
+    def track_outline_width(self) -> ControlStateValue[OptionalNumber]:
+        return self.__track_outline_width
+
+    @track_outline_width.setter
+    def track_outline_width(self, value: ControlStateValue[OptionalNumber]):
+        self.__track_outline_width = value
 
     # overlay_color
     @property
@@ -364,12 +384,12 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     # on_focus
     @property
-    def on_focus(self) -> OptionalControlEventCallable:
-        return self._get_event_handler("focus")
+    def on_focus(self) -> OptionalEventCallable[OnFocusEvent]:
+        return self.__on_focus.handler
 
     @on_focus.setter
-    def on_focus(self, handler: OptionalControlEventCallable):
-        self._add_event_handler("focus", handler)
+    def on_focus(self, handler: OptionalEventCallable[OnFocusEvent]):
+        self.__on_focus.handler = handler
 
     # on_blur
     @property
