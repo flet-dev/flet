@@ -3,7 +3,7 @@ export flet_sdk_root=$root/sdk/python
 echo "flet_sdk_root: $flet_sdk_root"
 
 python --version
-pip install --upgrade setuptools wheel twine poetry==1.8.5 tomlkit virtualenv
+pip install --upgrade setuptools wheel twine poetry tomlkit virtualenv
 
 function patch_python_package_versions() {
     PYPI_VER="${APPVEYOR_BUILD_VERSION/+/.dev}"
