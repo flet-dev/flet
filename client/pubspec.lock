@@ -242,7 +242,7 @@ packages:
     source: hosted
     version: "0.69.0"
   flet:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
       path: "../packages/flet"
       relative: true
@@ -258,10 +258,12 @@ packages:
   flet_audio:
     dependency: "direct main"
     description:
-      path: "../packages/flet_audio"
-      relative: true
-    source: path
-    version: "0.25.2"
+      path: "src/flutter/flet_audio"
+      ref: main
+      resolved-ref: a51f9879fed4109ca132a95d90ab2e315ba1e8e5
+      url: "https://github.com/flet-dev/flet-audio.git"
+    source: git
+    version: "0.1.0"
   flet_audio_recorder:
     dependency: "direct main"
     description:
@@ -314,10 +316,12 @@ packages:
   flet_video:
     dependency: "direct main"
     description:
-      path: "../packages/flet_video"
-      relative: true
-    source: path
-    version: "0.25.2"
+      path: "src/flutter/flet_video"
+      ref: main
+      resolved-ref: "183614fbf128196beab90caac2d66eb201ee5471"
+      url: "https://github.com/flet-dev/flet-video.git"
+    source: git
+    version: "0.1.0"
   flet_webview:
     dependency: "direct main"
     description:
@@ -988,18 +992,18 @@ packages:
     dependency: transitive
     description:
       name: rive
-      sha256: b44b62feb908610ca6c85e05f4573a66118a23867425926cf06152d171236141
+      sha256: "2551a44fa766a7ed3f52aa2b94feda6d18d00edc25dee5f66e72e9b365bb6d6c"
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.17"
+    version: "0.13.20"
   rive_common:
     dependency: transitive
     description:
       name: rive_common
-      sha256: a3e5786f8d85c89977062b9ceeb3b72a7c28f81e32fb68497744042ce20bee2f
+      sha256: "2ba42f80d37a4efd0696fb715787c4785f8a13361e8aea9227c50f1e78cf763a"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.12"
+    version: "0.4.15"
   safe_local_storage:
     dependency: transitive
     description:

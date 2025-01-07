@@ -41,6 +41,12 @@ class AudioDurationChangeEvent(ControlEvent):
         self.duration: int = int(e.data)
 
 
+@deprecated(
+    reason="Audio control has been moved to a separate Python package: https://pypi.org/project/flet-audio. "
+    + "Read more about this change in Flet blog: https://flet.dev/blog/flet-v-0-26-release-announcement",
+    version="0.26.0",
+    delete_version="0.29.0",
+)
 class Audio(Control):
     """
     A control to simultaneously play multiple audio files. Works on macOS, Linux, Windows, iOS, Android and web. Based on audioplayers Flutter widget (https://pub.dev/packages/audioplayers).

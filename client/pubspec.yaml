@@ -33,7 +33,10 @@ dependencies:
 
 # --FAT_CLIENT_START--
   flet_audio:
-    path: ../packages/flet_audio
+    git:
+      url: https://github.com/flet-dev/flet-audio.git
+      ref: main
+      path: src/flutter/flet_audio
   flet_video:
     git:
       url: https://github.com/flet-dev/flet-video.git
