@@ -159,14 +159,12 @@ class _ChipControlState extends State<ChipControl> {
           ),
           onPressed: onClick && !disabled
               ? () {
-                  debugPrint("Chip ${widget.control.id} clicked!");
                   widget.backend
                       .triggerControlEvent(widget.control.id, "click");
                 }
               : null,
           onDeleted: onDelete && !disabled
               ? () {
-                  debugPrint("Chip ${widget.control.id} deleted!");
                   widget.backend
                       .triggerControlEvent(widget.control.id, "delete");
                 }
