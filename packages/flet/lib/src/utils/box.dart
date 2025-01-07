@@ -188,15 +188,18 @@ DecorationImage? decorationImageFromJSON(
 
 ImageProvider? getImageProvider(
     String? src, String? srcBase64, PageArgsModel? pageArgs) {
+  src = src?.trim();
+  srcBase64 = srcBase64?.trim();
+
   if (srcBase64 != null && srcBase64 != "") {
     try {
       Uint8List bytes = base64Decode(srcBase64);
       return MemoryImage(bytes);
     } catch (ex) {
-      debugPrint("Error decoding base64: ${ex.toString()}");
-      return null;
+      debugPrint("getImageProvider failed decoding srcBase64");
     }
-  } else if (src != null && src != "") {
+  }
+  if (src != null && src != "") {
     if (pageArgs == null) {
       return null;
     }
@@ -205,9 +208,8 @@ ImageProvider? getImageProvider(
     return assetSrc.isFile
         ? getFileImageProvider(assetSrc.path)
         : NetworkImage(assetSrc.path);
-  } else {
-    return null;
   }
+  return null;
 }
 
 Widget buildImage({

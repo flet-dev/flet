@@ -13,6 +13,7 @@ from flet.core.types import (
     ColorEnums,
     ColorValue,
     ControlStateValue,
+    IconValue,
     LabelPosition,
     MouseCursor,
     OffsetValue,
@@ -72,7 +73,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
         inactive_thumb_color: Optional[ColorValue] = None,
         inactive_track_color: Optional[ColorValue] = None,
         thumb_color: ControlStateValue[ColorValue] = None,
-        thumb_icon: ControlStateValue[str] = None,
+        thumb_icon: ControlStateValue[IconValue] = None,
         track_color: ControlStateValue[ColorValue] = None,
         adaptive: Optional[bool] = None,
         hover_color: Optional[ColorValue] = None,
@@ -357,11 +358,11 @@ class Switch(ConstrainedControl, AdaptiveControl):
 
     # thumb_icon
     @property
-    def thumb_icon(self) -> ControlStateValue[str]:
+    def thumb_icon(self) -> ControlStateValue[IconValue]:
         return self.__thumb_icon
 
     @thumb_icon.setter
-    def thumb_icon(self, value: ControlStateValue[str]):
+    def thumb_icon(self, value: ControlStateValue[IconValue]):
         self.__thumb_icon = value
 
     # track_color
