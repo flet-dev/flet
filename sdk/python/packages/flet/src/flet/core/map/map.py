@@ -26,6 +26,7 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet.utils import deprecated
 
 
 @dataclass
@@ -111,6 +112,12 @@ class MapInteractionConfiguration:
     pinch_zoom_win_gestures: Optional[MapMultiFingerGesture] = None
 
 
+@deprecated(
+    reason="Map control has been moved to a separate Python package: https://pypi.org/project/flet-map. "
+    + "Read more about this change in Flet blog: https://flet.dev/blog/flet-v-0-26-release-announcement",
+    version="0.26.0",
+    delete_version="0.29.0",
+)
 class Map(ConstrainedControl):
     """
     Map Control.

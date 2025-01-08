@@ -44,9 +44,15 @@ dependencies:
       path: src/flutter/flet_video
 # --FAT_CLIENT_END--
   flet_lottie:
-    path: ../packages/flet_lottie
+    git:
+      url: https://github.com/flet-dev/flet-lottie.git
+      ref: main
+      path: src/flutter/flet_lottie
   flet_map:
-    path: ../packages/flet_map
+    git:
+      url: https://github.com/flet-dev/flet-map.git
+      ref: main
+      path: src/flutter/flet_map
   flet_ads:
     git:
       url: https://github.com/flet-dev/flet-ads.git
@@ -64,12 +70,20 @@ dependencies:
 
   flet_permission_handler:
     path: ../packages/flet_permission_handler
+  
   flet_geolocator:
-    path: ../packages/flet_geolocator
+    git:
+      url: https://github.com/flet-dev/flet-geolocator.git
+      ref: main
+      path: src/flutter/flet_geolocator
+  
   flet_webview:
     path: ../packages/flet_webview
   flet_flashlight:
-    path: ../packages/flet_flashlight
+    git:
+      url: https://github.com/flet-dev/flet-flashlight.git
+      ref: main
+      path: src/flutter/flet_flashlight
 
   url_strategy: ^0.2.0
   cupertino_icons: ^1.0.6
