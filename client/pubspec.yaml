@@ -44,7 +44,10 @@ dependencies:
       path: src/flutter/flet_video
 # --FAT_CLIENT_END--
   flet_lottie:
-    path: ../packages/flet_lottie
+    git:
+      url: https://github.com/flet-dev/flet-lottie.git
+      ref: main
+      path: src/flutter/flet_lottie
   flet_map:
     path: ../packages/flet_map
   flet_ads:
