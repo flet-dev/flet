@@ -55,8 +55,13 @@ dependencies:
 
   flet_rive:
     path: ../packages/flet_rive
+
   flet_audio_recorder:
-    path: ../packages/flet_audio_recorder
+    git:
+      url: https://github.com/flet-dev/flet-audio-recorder.git
+      ref: main
+      path: src/flutter/flet_audio_recorder
+
   flet_permission_handler:
     path: ../packages/flet_permission_handler
   flet_geolocator:
