@@ -34,6 +34,12 @@ class AudioEncoder(Enum):
     PCM16BITS = "pcm16bits"
 
 
+@deprecated(
+    reason="AudioRecorder control has been moved to a separate Python package: https://pypi.org/project/flet-audio-recorder. "
+    + "Read more about this change in Flet blog: https://flet.dev/blog/flet-v-0-26-release-announcement",
+    version="0.26.0",
+    delete_version="0.29.0",
+)
 class AudioRecorder(Control):
     """
     A control that allows you to record audio from your device.
