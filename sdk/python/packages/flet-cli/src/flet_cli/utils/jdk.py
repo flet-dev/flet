@@ -5,6 +5,7 @@ import subprocess
 import tarfile
 import urllib.request
 import zipfile
+import tempfile
 from pathlib import Path
 
 from tqdm import tqdm
@@ -83,7 +84,7 @@ def download_with_progress(url, destination):
 
 def extract_with_progress(archive, destination):
     """Extract archive with progress and preserve file attributes."""
-    temp_extract_dir = os.path.join("/tmp", f"jdk-{JDK_DIR_NAME}")
+    temp_extract_dir = os.path.join(tempfile.gettempdir(), f"jdk-{JDK_DIR_NAME}")
 
     if archive.endswith(".tar.gz"):
         with tarfile.open(archive, "r:gz") as tar:
@@ -148,7 +149,7 @@ def install_jdk():
         return str(install_dir)
 
     # Step 5: Download and extract JDK
-    archive_path = os.path.join("/tmp", f"jdk-{JDK_DIR_NAME}.{ext}")
+    archive_path = os.path.join(tempfile.gettempdir(), f"jdk-{JDK_DIR_NAME}.{ext}")
     print(f"Downloading JDK from {url}...")
     download_with_progress(url, archive_path)
 

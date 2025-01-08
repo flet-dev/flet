@@ -20,15 +20,18 @@ def accept_sdkmanager_licenses():
     """
     try:
         # Define the command for sdkmanager --licenses
-        command = ["sdkmanager", "--licenses"]
+        command = ["C:\\Android\\sdk\\cmdline-tools\\latest\\bin\\sdkmanager.bat", "--licenses"]
 
         # Run the command, sending 'y' (yes) to approve all licenses
         process = subprocess.Popen(
             command,
             stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
+            #stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
+            env={
+                "JAVA_HOME": "C:\\Users\\feodo\\java\\17.0.13+11"
+            }
         )
         # Simulate accepting licenses by sending 'y' repeatedly
         stdout, stderr = process.communicate(input="y\n" * 100)
@@ -76,3 +79,7 @@ def run(self, args, cwd, env: Optional[dict] = None, capture_output=True):
         windll.kernel32.SetConsoleOutputCP(previousCp)
 
     return r
+
+# Example usage
+if __name__ == "__main__":
+    jdk_path = accept_sdkmanager_licenses()

@@ -173,8 +173,12 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
 
 def __download_flet_client(file_name):
     ver = flet_desktop.version.version
+    if not ver:
+        import flet.version
+        from flet.version import update_version
+        ver = flet.version.version or update_version()
     temp_arch = Path(tempfile.gettempdir()).joinpath(file_name)
-    logger.info(f"Downloading Flet v{ver} to {temp_arch}")
     flet_url = f"https://github.com/flet-dev/flet/releases/download/v{ver}/{file_name}"
+    logger.info(f"Downloading Flet v{ver} from {flet_url} to {temp_arch}")
     urllib.request.urlretrieve(flet_url, temp_arch)
     return str(temp_arch)
