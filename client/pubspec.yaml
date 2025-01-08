@@ -69,7 +69,10 @@ dependencies:
   flet_webview:
     path: ../packages/flet_webview
   flet_flashlight:
-    path: ../packages/flet_flashlight
+    git:
+      url: https://github.com/flet-dev/flet-flashlight.git
+      ref: main
+      path: src/flutter/flet_flashlight
 
   url_strategy: ^0.2.0
   cupertino_icons: ^1.0.6
