@@ -56,7 +56,6 @@ class Command(BaseCommand):
         self.flutter_dependencies = None
         self.package_app_path = None
         self.options = None
-        self.pubspec = None
         self.template_data = None
         self.python_module_filename = None
         self.out_dir = None
@@ -69,6 +68,7 @@ class Command(BaseCommand):
         self.verbose = False
         self.build_dir = None
         self.flutter_dir: Optional[Path] = None
+        self.flutter_packages_dir = None
         self.flutter_exe = None
         self.skip_flutter_doctor = get_bool_env_var("FLET_CLI_SKIP_FLUTTER_DOCTOR")
         self.no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
@@ -553,10 +553,11 @@ class Command(BaseCommand):
             self.validate_entry_point()
             self.setup_template_data()
             self.create_flutter_project()
-            self.load_pubspec()
+            self.update_flutter_dependencies()
             self.customize_icons_and_splash_images()
             self.generate_icons_and_splash_screens()
             self.package_python_app()
+            self.register_flutter_extensions()
             self.flutter_build()
             self.copy_build_output()
 
@@ -614,7 +615,8 @@ class Command(BaseCommand):
         )
 
         self.build_dir = self.python_app_path.joinpath("build")
-        self.flutter_dir = Path(self.build_dir).joinpath("flutter")
+        self.flutter_dir = self.build_dir.joinpath("flutter")
+        self.flutter_packages_dir = self.build_dir.joinpath("flutter-packages")
         self.out_dir = (
             Path(self.options.output_dir).resolve()
             if self.options.output_dir
@@ -1009,25 +1011,25 @@ class Command(BaseCommand):
             f"Created Flutter bootstrap project from {template_url} with ref {template_ref} {self.emojis['checkmark']}"
         )
 
-    def load_pubspec(self):
+    def update_flutter_dependencies(self):
         assert self.pubspec_path
         assert self.template_data
         assert self.get_pyproject
         assert isinstance(self.flutter_dependencies, dict)
 
         with open(self.pubspec_path, encoding="utf8") as f:
-            self.pubspec = yaml.safe_load(f)
+            pubspec = yaml.safe_load(f)
 
         # merge dependencies to a dest pubspec.yaml
         for k, v in self.flutter_dependencies.items():
-            self.pubspec["dependencies"][k] = v
+            pubspec["dependencies"][k] = v
 
-        self.pubspec = merge_dict(
-            self.pubspec, self.get_pyproject("tool.flet.flutter.pubspec") or {}
+        pubspec = merge_dict(
+            pubspec, self.get_pyproject("tool.flet.flutter.pubspec") or {}
         )
 
         # make sure project_name is not named as any of the dependencies
-        for dep in self.pubspec["dependencies"].keys():
+        for dep in pubspec["dependencies"].keys():
             if dep == self.template_data["project_name"]:
                 self.cleanup(
                     1,
@@ -1035,17 +1037,24 @@ class Command(BaseCommand):
                     f"Use --project option to specify a different project name.",
                 )
 
+        # save pubspec.yaml
+        with open(self.pubspec_path, "w", encoding="utf8") as f:
+            yaml.dump(pubspec, f)
+
     def customize_icons_and_splash_images(self):
         assert self.package_app_path
         assert self.flutter_dir
         assert self.options
         assert self.get_pyproject
-        assert self.pubspec
         assert self.pubspec_path
 
         self.status.update(
             f"[bold blue]Customizing app icons and splash images {self.emojis['loading']}... "
         )
+
+        with open(self.pubspec_path, encoding="utf8") as f:
+            pubspec = yaml.safe_load(f)
+
         self.assets_path = self.package_app_path.joinpath("assets")
         if self.assets_path.exists():
             images_dir = "images"
@@ -1053,8 +1062,7 @@ class Command(BaseCommand):
             images_path.mkdir(exist_ok=True)
 
             def fallback_image(yaml_path: str, images: list):
-                assert self.pubspec
-                d = self.pubspec
+                d = pubspec
                 pp = yaml_path.split("/")
                 for p in pp[:-1]:
                     d = d[p]
@@ -1196,16 +1204,14 @@ class Command(BaseCommand):
                 "tool.flet.splash.color"
             )
             if splash_color:
-                self.pubspec["flutter_native_splash"]["color"] = splash_color
-                self.pubspec["flutter_native_splash"]["android_12"][
-                    "color"
-                ] = splash_color
+                pubspec["flutter_native_splash"]["color"] = splash_color
+                pubspec["flutter_native_splash"]["android_12"]["color"] = splash_color
             splash_dark_color = self.options.splash_dark_color or self.get_pyproject(
                 "tool.flet.splash.dark_color"
             )
             if splash_dark_color:
-                self.pubspec["flutter_native_splash"]["color_dark"] = splash_dark_color
-                self.pubspec["flutter_native_splash"]["android_12"][
+                pubspec["flutter_native_splash"]["color_dark"] = splash_dark_color
+                pubspec["flutter_native_splash"]["android_12"][
                     "color_dark"
                 ] = splash_dark_color
 
@@ -1214,12 +1220,12 @@ class Command(BaseCommand):
             or self.get_pyproject("tool.flet.android.adaptive_icon_background")
         )
         if adaptive_icon_background:
-            self.pubspec["flutter_launcher_icons"][
+            pubspec["flutter_launcher_icons"][
                 "adaptive_icon_background"
             ] = adaptive_icon_background
 
         # enable/disable splashes
-        self.pubspec["flutter_native_splash"]["web"] = (
+        pubspec["flutter_native_splash"]["web"] = (
             not self.options.no_web_splash
             if self.options.no_web_splash is not None
             else (
@@ -1228,7 +1234,7 @@ class Command(BaseCommand):
                 else True
             )
         )
-        self.pubspec["flutter_native_splash"]["ios"] = (
+        pubspec["flutter_native_splash"]["ios"] = (
             not self.options.no_ios_splash
             if self.options.no_ios_splash is not None
             else (
@@ -1237,7 +1243,7 @@ class Command(BaseCommand):
                 else True
             )
         )
-        self.pubspec["flutter_native_splash"]["android"] = (
+        pubspec["flutter_native_splash"]["android"] = (
             not self.options.no_android_splash
             if self.options.no_android_splash is not None
             else (
@@ -1249,7 +1255,7 @@ class Command(BaseCommand):
 
         # save pubspec.yaml
         with open(self.pubspec_path, "w", encoding="utf8") as f:
-            yaml.dump(self.pubspec, f)
+            yaml.dump(pubspec, f)
 
         console.log(
             f"Customized app icons and splash images {self.emojis['checkmark']}"
@@ -1300,6 +1306,7 @@ class Command(BaseCommand):
         assert self.package_app_path
         assert self.build_dir
         assert self.flutter_dir
+        assert self.flutter_packages_dir
 
         self.status.update(
             f"[bold blue]Packaging Python app {self.emojis['loading']}... "
@@ -1332,6 +1339,12 @@ class Command(BaseCommand):
         ) or get_project_dependencies(self.get_pyproject("project.dependencies"))
 
         if toml_dependencies:
+            platform_dependencies = get_project_dependencies(
+                self.get_pyproject(f"tool.flet.{self.config_platform}.dependencies")
+            )
+            if platform_dependencies:
+                toml_dependencies.extend(platform_dependencies)
+
             package_args.extend(
                 [
                     "--requirements",
@@ -1339,6 +1352,9 @@ class Command(BaseCommand):
                 ]
             )
         elif requirements_txt.exists():
+            if self.verbose > 1:
+                with open(requirements_txt, "r") as f:
+                    console.log(f"Contents of requirements.txt: {f.read()}")
             package_args.extend(["--requirements", f"-r,{requirements_txt}"])
 
         # site-packages variable
@@ -1346,6 +1362,12 @@ class Command(BaseCommand):
             package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
                 self.build_dir / "site-packages"
             )
+
+        # flutter-packages variable
+        if self.flutter_packages_dir.exists():
+            shutil.rmtree(self.flutter_packages_dir)
+
+        package_env["SERIOUS_PYTHON_FLUTTER_PACKAGES"] = str(self.flutter_packages_dir)
 
         # exclude
         exclude_list = ["build"]
@@ -1416,6 +1438,29 @@ class Command(BaseCommand):
             self.cleanup(1, "Flet app package app/app.zip was not created.")
 
         console.log(f"Packaged Python app {self.emojis['checkmark']}")
+
+    def register_flutter_extensions(self):
+        assert self.flutter_packages_dir
+        assert self.pubspec_path
+
+        self.status.update(
+            f"[bold blue]Registering Flutter user extensions {self.emojis['loading']}... "
+        )
+
+        with open(self.pubspec_path, encoding="utf8") as f:
+            pubspec = yaml.safe_load(f)
+
+        for fp in os.listdir(self.flutter_packages_dir):
+            if (self.flutter_packages_dir / fp / "pubspec.yaml").exists():
+                pubspec["dependencies"][fp] = {
+                    "path": str(self.flutter_packages_dir / fp)
+                }
+
+        # save pubspec.yaml
+        with open(self.pubspec_path, "w", encoding="utf8") as f:
+            yaml.dump(pubspec, f)
+
+        console.log(f"Registered Flutter user extensions {self.emojis['checkmark']}")
 
     def flutter_build(self):
         assert self.options
