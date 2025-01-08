@@ -305,10 +305,12 @@ packages:
   flet_map:
     dependency: "direct main"
     description:
-      path: "../packages/flet_map"
-      relative: true
-    source: path
-    version: "0.25.2"
+      path: "src/flutter/flet_map"
+      ref: main
+      resolved-ref: "4d308ec24112e2d3a14fd8cd02f91cd03a2ea6bd"
+      url: "https://github.com/flet-dev/flet-map.git"
+    source: git
+    version: "0.1.0"
   flet_permission_handler:
     dependency: "direct main"
     description:
