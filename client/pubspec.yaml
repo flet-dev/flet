@@ -64,8 +64,13 @@ dependencies:
 
   flet_permission_handler:
     path: ../packages/flet_permission_handler
+  
   flet_geolocator:
-    path: ../packages/flet_geolocator
+    git:
+      url: https://github.com/flet-dev/flet-geolocator.git
+      ref: main
+      path: src/flutter/flet_geolocator
+  
   flet_webview:
     path: ../packages/flet_webview
   flet_flashlight:

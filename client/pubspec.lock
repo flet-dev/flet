@@ -287,9 +287,11 @@ packages:
   flet_geolocator:
     dependency: "direct main"
     description:
-      path: "../packages/flet_geolocator"
-      relative: true
-    source: path
+      path: "src/flutter/flet_geolocator"
+      ref: main
+      resolved-ref: "24140df3167e393124557698150ec40f3a8bc759"
+      url: "https://github.com/flet-dev/flet-geolocator.git"
+    source: git
     version: "0.25.2"
   flet_lottie:
     dependency: "direct main"
