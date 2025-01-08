@@ -69,7 +69,10 @@ dependencies:
       path: src/flutter/flet_audio_recorder
 
   flet_permission_handler:
-    path: ../packages/flet_permission_handler
+    git:
+      url: https://github.com/flet-dev/flet-permission-handler.git
+      ref: main
+      path: src/flutter/flet_permission_handler
   
   flet_geolocator:
     git:

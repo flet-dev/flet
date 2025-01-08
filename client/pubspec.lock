@@ -314,10 +314,12 @@ packages:
   flet_permission_handler:
     dependency: "direct main"
     description:
-      path: "../packages/flet_permission_handler"
-      relative: true
-    source: path
-    version: "0.25.2"
+      path: "src/flutter/flet_permission_handler"
+      ref: main
+      resolved-ref: "74cee59f40792b1f6181098f3e4a822601fc03b6"
+      url: "https://github.com/flet-dev/flet-permission-handler.git"
+    source: git
+    version: "0.1.0"
   flet_rive:
     dependency: "direct main"
     description:
