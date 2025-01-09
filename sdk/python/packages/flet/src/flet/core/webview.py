@@ -23,6 +23,7 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet.utils import deprecated
 
 
 class WebviewRequestMethod(Enum):
@@ -64,6 +65,12 @@ class WebviewJavaScriptEvent(ControlEvent):
         self.url: str = d.get("url")
 
 
+@deprecated(
+    reason="WebView control has been moved to a separate Python package: https://pypi.org/project/flet-webview. "
+    + "Read more about this change in Flet blog: https://flet.dev/blog/flet-v-0-26-release-announcement",
+    version="0.26.0",
+    delete_version="0.29.0",
+)
 class WebView(ConstrainedControl):
     """
     Easily load webpages while allowing user interaction.

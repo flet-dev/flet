@@ -323,10 +323,12 @@ packages:
   flet_rive:
     dependency: "direct main"
     description:
-      path: "../packages/flet_rive"
-      relative: true
-    source: path
-    version: "0.25.2"
+      path: "src/flutter/flet_rive"
+      ref: main
+      resolved-ref: "7f8cfc2fa76b3b9116af0695e458de255f1afc75"
+      url: "https://github.com/flet-dev/flet-rive.git"
+    source: git
+    version: "0.1.0"
   flet_video:
     dependency: "direct main"
     description:
@@ -339,10 +341,12 @@ packages:
   flet_webview:
     dependency: "direct main"
     description:
-      path: "../packages/flet_webview"
-      relative: true
-    source: path
-    version: "0.25.2"
+      path: "src/flutter/flet_webview"
+      ref: main
+      resolved-ref: "91d9045c41c458a2ee4ec14d6841b5cda3724ba3"
+      url: "https://github.com/flet-dev/flet-webview.git"
+    source: git
+    version: "0.1.0"
   flutter:
     dependency: "direct main"
     description: flutter

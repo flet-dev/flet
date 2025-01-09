@@ -60,7 +60,10 @@ dependencies:
       path: src/flutter/flet_ads
 
   flet_rive:
-    path: ../packages/flet_rive
+    git:
+      url: https://github.com/flet-dev/flet-rive.git
+      ref: main
+      path: src/flutter/flet_rive
 
   flet_audio_recorder:
     git:
@@ -81,7 +84,10 @@ dependencies:
       path: src/flutter/flet_geolocator
   
   flet_webview:
-    path: ../packages/flet_webview
+    git:
+      url: https://github.com/flet-dev/flet-webview.git
+      ref: main
+      path: src/flutter/flet_webview
   flet_flashlight:
     git:
       url: https://github.com/flet-dev/flet-flashlight.git
