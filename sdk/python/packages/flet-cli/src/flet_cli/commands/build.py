@@ -1443,6 +1443,9 @@ class Command(BaseCommand):
         assert self.flutter_packages_dir
         assert self.pubspec_path
 
+        if not self.flutter_packages_dir.exists():
+            return
+
         self.status.update(
             f"[bold blue]Registering Flutter user extensions {self.emojis['loading']}... "
         )
