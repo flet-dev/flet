@@ -80,7 +80,7 @@ from flet.core.types import (
     Wrapper,
 )
 from flet.core.view import View
-from flet.utils import classproperty, is_pyodide
+from flet.utils import classproperty, deprecated, is_pyodide
 
 try:
     from typing import ParamSpec

@@ -1,6 +1,5 @@
 import json
 from dataclasses import dataclass
-from enum import Enum
 from typing import Any, List, Optional, Union
 from warnings import warn
 
@@ -9,6 +8,7 @@ from flet.core.badge import BadgeValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
 from flet.core.control_event import ControlEvent
+from flet.core.enumerations import ExtendedEnum
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.text_span import TextSpan
@@ -32,7 +32,7 @@ except ImportError:
     from typing_extensions import Literal
 
 
-class TextAffinity(Enum):
+class TextAffinity(ExtendedEnum):
     UPSTREAM = "upstream"
     DOWNSTREAM = "downstream"
 
@@ -51,7 +51,7 @@ class TextSelection:
     normalized: Optional[bool] = None
 
 
-class TextSelectionChangeCause(Enum):
+class TextSelectionChangeCause(ExtendedEnum):
     UNKNOWN = "unknown"
     TAP = "tap"
     DOUBLE_TAP = "doubleTap"

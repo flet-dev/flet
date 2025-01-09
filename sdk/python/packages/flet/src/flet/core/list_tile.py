@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Any, Optional, Union
 
 from flet.core.adaptive_control import AdaptiveControl
@@ -7,6 +6,7 @@ from flet.core.badge import BadgeValue
 from flet.core.buttons import OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
@@ -25,7 +25,7 @@ from flet.core.types import (
 )
 
 
-class ListTileTitleAlignment(Enum):
+class ListTileTitleAlignment(ExtendedEnum):
     TOP = "top"
     CENTER = "center"
     BOTTOM = "bottom"
@@ -33,7 +33,7 @@ class ListTileTitleAlignment(Enum):
     TITLE_HEIGHT = "titleHeight"
 
 
-class ListTileStyle(Enum):
+class ListTileStyle(ExtendedEnum):
     LIST = "list"
     DRAWER = "drawer"
 

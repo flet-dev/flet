@@ -1,6 +1,6 @@
 import json
 from dataclasses import dataclass
-from enum import Enum, EnumMeta, IntFlag
+from enum import EnumMeta, IntFlag
 from typing import Any, List, Optional, Tuple, Union
 from warnings import warn
 
@@ -8,6 +8,7 @@ from flet.core.animation import AnimationCurve, AnimationValue
 from flet.core.badge import BadgeValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.event_handler import EventHandler
 from flet.core.map.map_layer import MapLayer
 from flet.core.ref import Ref
@@ -88,7 +89,7 @@ class MapPointerDeviceTypeDeprecated(EnumMeta):
         return EnumMeta.__getattribute__(self, item)
 
 
-class MapPointerDeviceType(Enum, metaclass=MapPointerDeviceTypeDeprecated):
+class MapPointerDeviceType(ExtendedEnum, metaclass=MapPointerDeviceTypeDeprecated):
     TOUCH = "touch"
     MOUSE = "mouse"
     STYLUS = "stylus"
@@ -585,7 +586,7 @@ class Map(ConstrainedControl):
         self._set_attr("onPointerUp", True if handler is not None else None)
 
 
-class MapEventSource(Enum):
+class MapEventSource(ExtendedEnum):
     MAP_CONTROLLER = "mapController"
     TAP = "tap"
     SECONDARY_TAP = "secondaryTap"

@@ -9,6 +9,7 @@ from flet.core.badge import BadgeValue
 from flet.core.box import BoxDecoration
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.text import TextSelectionChangeEvent
@@ -32,7 +33,7 @@ except ImportError:
     from typing_extensions import Literal
 
 
-class MarkdownExtensionSet(Enum):
+class MarkdownExtensionSet(ExtendedEnum):
     NONE = "none"
     COMMON_MARK = "commonMark"
     GITHUB_WEB = "gitHubWeb"
@@ -132,7 +133,7 @@ class MarkdownStyleSheet:
     unordered_list_alignment: Optional[MainAxisAlignment] = None
 
 
-class MarkdownCodeTheme(Enum):
+class MarkdownCodeTheme(ExtendedEnum):
     A11Y_DARK = "a11y-dark"
     A11Y_LIGHT = "a11y-light"
     AGATE = "agate"

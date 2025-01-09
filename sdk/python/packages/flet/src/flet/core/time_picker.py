@@ -1,9 +1,9 @@
 from datetime import datetime, time
-from enum import Enum
 from typing import Any, Optional, Union
 
 from flet.core.control import Control, OptionalNumber
 from flet.core.control_event import ControlEvent
+from flet.core.enumerations import ExtendedEnum
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
@@ -14,9 +14,10 @@ from flet.core.types import (
     Orientation,
     ResponsiveNumber,
 )
+from flet.utils import deprecated
 
 
-class TimePickerEntryMode(Enum):
+class TimePickerEntryMode(ExtendedEnum):
     DIAL = "dial"
     INPUT = "input"
     DIAL_ONLY = "dialOnly"

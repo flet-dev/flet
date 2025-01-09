@@ -17,6 +17,8 @@ from flet.core.types import (
     SupportsStr,
 )
 
+from ..utils import deprecated
+
 if TYPE_CHECKING:
     from .page import Page
 

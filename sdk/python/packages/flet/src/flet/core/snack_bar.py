@@ -1,8 +1,8 @@
-from enum import Enum
 from typing import Any, Optional
 
 from flet.core.buttons import OutlinedBorder
 from flet.core.control import Control, OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.ref import Ref
 from flet.core.types import (
     ClipBehavior,
@@ -13,12 +13,12 @@ from flet.core.types import (
 )
 
 
-class SnackBarBehavior(Enum):
+class SnackBarBehavior(ExtendedEnum):
     FIXED = "fixed"
     FLOATING = "floating"
 
 
-class DismissDirection(Enum):
+class DismissDirection(ExtendedEnum):
     NONE = "none"
     VERTICAL = "vertical"
     HORIZONTAL = "horizontal"

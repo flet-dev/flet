@@ -1,9 +1,9 @@
 import warnings
-from enum import Enum
 from typing import Any, List, Optional, Sequence
 
 from flet.core.buttons import OutlinedBorder
 from flet.core.control import Control
+from flet.core.enumerations import ExtendedEnum
 from flet.core.ref import Ref
 from flet.core.types import (
     ColorValue,
@@ -152,7 +152,7 @@ class NavigationDrawerDestination(Control):
         self._set_attr("label", value)
 
 
-class NavigationDrawerPosition(Enum):
+class NavigationDrawerPosition(ExtendedEnum):
     START = "start"
     END = "end"
 

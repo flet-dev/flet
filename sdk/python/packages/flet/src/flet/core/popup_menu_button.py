@@ -1,4 +1,4 @@
-from enum import Enum
+import warnings
 from typing import Any, List, Optional, Union
 
 from flet.core.animation import AnimationStyle, AnimationValue
@@ -7,6 +7,7 @@ from flet.core.box import BoxConstraints
 from flet.core.buttons import ButtonStyle, OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
@@ -23,7 +24,7 @@ from flet.core.types import (
 )
 
 
-class PopupMenuPosition(Enum):
+class PopupMenuPosition(ExtendedEnum):
     OVER = "over"
     UNDER = "under"
 

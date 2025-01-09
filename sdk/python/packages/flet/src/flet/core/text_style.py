@@ -1,25 +1,26 @@
 from dataclasses import dataclass
-from enum import Enum, IntFlag
+from enum import IntFlag
 from typing import List, Optional, Union
 
 from flet.core.box import BoxShadow
+from flet.core.enumerations import ExtendedEnum
 from flet.core.painting import Paint
 from flet.core.types import ColorValue, FontWeight, OptionalNumber
 
 
-class TextOverflow(Enum):
+class TextOverflow(ExtendedEnum):
     CLIP = "clip"
     ELLIPSIS = "ellipsis"
     FADE = "fade"
     VISIBLE = "visible"
 
 
-class TextBaseline(Enum):
+class TextBaseline(ExtendedEnum):
     ALPHABETIC = "alphabetic"
     IDEOGRAPHIC = "ideographic"
 
 
-class TextThemeStyle(Enum):
+class TextThemeStyle(ExtendedEnum):
     DISPLAY_LARGE = "displayLarge"
     DISPLAY_MEDIUM = "displayMedium"
     DISPLAY_SMALL = "displaySmall"
@@ -44,7 +45,7 @@ class TextDecoration(IntFlag):
     LINE_THROUGH = 4
 
 
-class TextDecorationStyle(Enum):
+class TextDecorationStyle(ExtendedEnum):
     SOLID = "solid"
     DOUBLE = "double"
     DOTTED = "dotted"

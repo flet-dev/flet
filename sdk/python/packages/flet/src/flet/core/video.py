@@ -1,5 +1,4 @@
 import dataclasses
-from enum import Enum
 from typing import Any, Dict, List, Optional, Union, cast
 
 from flet.core.alignment import Alignment
@@ -8,6 +7,7 @@ from flet.core.badge import BadgeValue
 from flet.core.box import FilterQuality
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
@@ -23,9 +23,10 @@ from flet.core.types import (
     ScaleValue,
     TextAlign,
 )
+from flet.utils import deprecated
 
 
-class PlaylistMode(Enum):
+class PlaylistMode(ExtendedEnum):
     NONE = "none"
     SINGLE = "single"
     LOOP = "loop"

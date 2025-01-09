@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import date, datetime
-from enum import Enum, EnumMeta
+from enum import EnumMeta
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -150,7 +150,7 @@ class MaterialStateDeprecated(EnumMeta):
         return EnumMeta.__getattribute__(self, item)
 
 
-class MaterialState(Enum, metaclass=MaterialStateDeprecated):
+class MaterialState(ExtendedEnum, metaclass=MaterialStateDeprecated):
     HOVERED = "hovered"
     FOCUSED = "focused"
     PRESSED = "pressed"
@@ -416,7 +416,7 @@ class ThemeVisualDensityDeprecated(EnumMeta):
         return EnumMeta.__getattribute__(self, item)
 
 
-class ThemeVisualDensity(Enum, metaclass=ThemeVisualDensityDeprecated):
+class ThemeVisualDensity(ExtendedEnum, metaclass=ThemeVisualDensityDeprecated):
     STANDARD = "standard"
     COMPACT = "compact"
     COMFORTABLE = "comfortable"

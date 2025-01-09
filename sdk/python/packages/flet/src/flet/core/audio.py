@@ -1,21 +1,21 @@
-from enum import Enum
 from typing import Any, Optional
 
 from flet.core.control import Control, OptionalNumber
 from flet.core.control_event import ControlEvent
+from flet.core.enumerations import ExtendedEnum
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.types import OptionalControlEventCallable, OptionalEventCallable
 from flet.utils import deprecated
 
 
-class ReleaseMode(Enum):
+class ReleaseMode(ExtendedEnum):
     RELEASE = "release"
     LOOP = "loop"
     STOP = "stop"
 
 
-class AudioState(Enum):
+class AudioState(ExtendedEnum):
     STOPPED = "stopped"
     PLAYING = "playing"
     PAUSED = "paused"

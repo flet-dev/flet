@@ -1,11 +1,11 @@
 import warnings
-from enum import Enum
 from typing import Any, Callable, List, Optional, Union
 
 from flet.core.animation import AnimationValue
 from flet.core.buttons import OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control
+from flet.core.enumerations import ExtendedEnum
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.types import (
@@ -21,7 +21,7 @@ from flet.core.types import (
 )
 
 
-class NavigationRailLabelType(Enum):
+class NavigationRailLabelType(ExtendedEnum):
     NONE = "none"
     ALL = "all"
     SELECTED = "selected"

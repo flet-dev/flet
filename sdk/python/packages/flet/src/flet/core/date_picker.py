@@ -1,9 +1,9 @@
 from datetime import datetime
-from enum import Enum
 from typing import Any, Optional, Union
 
 from flet.core.control import Control, OptionalNumber
 from flet.core.control_event import ControlEvent
+from flet.core.enumerations import ExtendedEnum
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.textfield import KeyboardType
@@ -16,6 +16,7 @@ from flet.core.types import (
     OptionalEventCallable,
     ResponsiveNumber,
 )
+from flet.utils import deprecated
 
 try:
     from typing import Literal
@@ -23,12 +24,12 @@ except ImportError:
     from typing_extensions import Literal
 
 
-class DatePickerMode(Enum):
+class DatePickerMode(ExtendedEnum):
     DAY = "day"
     YEAR = "year"
 
 
-class DatePickerEntryMode(Enum):
+class DatePickerEntryMode(ExtendedEnum):
     CALENDAR = "calendar"
     INPUT = "input"
     CALENDAR_ONLY = "calendarOnly"

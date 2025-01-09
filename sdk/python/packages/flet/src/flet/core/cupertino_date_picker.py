@@ -1,10 +1,10 @@
 from datetime import datetime
-from enum import Enum
 from typing import Any, Optional, Union
 
 from flet.core.animation import AnimationValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
@@ -18,14 +18,14 @@ from flet.core.types import (
 )
 
 
-class CupertinoDatePickerMode(Enum):
+class CupertinoDatePickerMode(ExtendedEnum):
     TIME = "time"
     DATE = "date"
     DATE_AND_TIME = "dateAndTime"
     MONTH_YEAR = "monthYear"
 
 
-class CupertinoDatePickerDateOrder(Enum):
+class CupertinoDatePickerDateOrder(ExtendedEnum):
     DAY_MONTH_YEAR = "dmy"
     MONTH_YEAR_DAY = "myd"
     YEAR_MONTH_DAY = "ymd"

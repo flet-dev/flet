@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-from enum import Enum
 from typing import List, Optional, Union
 
 from flet.core.alignment import Alignment
@@ -8,6 +7,7 @@ from flet.core.border_radius import BorderRadius
 from flet.core.box import BoxConstraints, BoxDecoration, BoxShadow
 from flet.core.buttons import ButtonStyle, OutlinedBorder
 from flet.core.control import OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.menu_bar import MenuStyle
 from flet.core.navigation_bar import NavigationBarLabelBehavior
 from flet.core.navigation_rail import NavigationRailLabelType
@@ -42,7 +42,7 @@ except ImportError:
     from typing_extensions import Literal
 
 
-class PageTransitionTheme(Enum):
+class PageTransitionTheme(ExtendedEnum):
     NONE = "none"
     FADE_UPWARDS = "fadeUpwards"
     OPEN_UPWARDS = "openUpwards"

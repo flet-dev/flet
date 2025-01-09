@@ -1,10 +1,10 @@
 import json
 from dataclasses import dataclass, field
-from enum import Enum
 from typing import Any, Callable, List, Optional
 
 from flet.core.control import Control
 from flet.core.control_event import ControlEvent
+from flet.core.enumerations import ExtendedEnum
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.types import OptionalEventCallable
@@ -16,13 +16,13 @@ except ImportError:
     from typing_extensions import Literal
 
 
-class FilePickerState(Enum):
+class FilePickerState(ExtendedEnum):
     PICK_FILES = "pickFiles"
     SAVE_FILE = "saveFile"
     GET_DIRECTORY_PATH = "getDirectoryPath"
 
 
-class FilePickerFileType(Enum):
+class FilePickerFileType(ExtendedEnum):
     ANY = "any"
     MEDIA = "media"
     IMAGE = "image"

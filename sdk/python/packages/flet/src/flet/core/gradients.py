@@ -1,14 +1,14 @@
 import dataclasses
 import math
 from dataclasses import field
-from enum import Enum
 from typing import List, Optional, Union
 
 from flet.core import alignment
 from flet.core.alignment import Alignment
+from flet.core.enumerations import ExtendedEnum
 
 
-class GradientTileMode(Enum):
+class GradientTileMode(ExtendedEnum):
     CLAMP = "clamp"
     DECAL = "decal"
     MIRROR = "mirror"

@@ -1,11 +1,11 @@
-from enum import Enum
 from typing import Any, Optional
 
 from flet.core.control import Control
+from flet.core.enumerations import ExtendedEnum
 from flet.core.ref import Ref
 
 
-class AutofillHint(Enum):
+class AutofillHint(ExtendedEnum):
     ADDRESS_CITY = "addressCity"
     ADDRESS_CITY_AND_STATE = "addressCityAndState"
     ADDRESS_STATE = "addressState"
@@ -74,7 +74,7 @@ class AutofillHint(Enum):
     USERNAME = "username"
 
 
-class AutofillGroupDisposeAction(Enum):
+class AutofillGroupDisposeAction(ExtendedEnum):
     COMMIT = "commit"
     CANCEL = "cancel"
 

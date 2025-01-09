@@ -1,6 +1,5 @@
 import json
 import warnings
-from enum import Enum
 from typing import Any, Optional, Union
 
 from flet.core.animation import AnimationValue
@@ -8,6 +7,7 @@ from flet.core.badge import BadgeValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
 from flet.core.control_event import ControlEvent
+from flet.core.enumerations import ExtendedEnum
 from flet.core.event_handler import EventHandler
 from flet.core.exceptions import FletUnsupportedPlatformException
 from flet.core.ref import Ref
@@ -24,12 +24,12 @@ from flet.core.types import (
 )
 
 
-class WebviewRequestMethod(Enum):
+class WebviewRequestMethod(ExtendedEnum):
     GET = "get"
     POST = "post"
 
 
-class WebviewLogLevelSeverity(Enum):
+class WebviewLogLevelSeverity(ExtendedEnum):
     ERROR = "error"
     WARNING = "warning"
     DEBUG = "debug"

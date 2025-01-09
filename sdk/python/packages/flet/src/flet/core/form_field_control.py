@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Any, Optional, Union
 
 from flet.core.animation import AnimationValue
@@ -6,6 +5,7 @@ from flet.core.badge import BadgeValue
 from flet.core.box import BoxConstraints
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
@@ -29,7 +29,7 @@ except ImportError:
     from typing_extensions import Literal
 
 
-class InputBorder(Enum):
+class InputBorder(ExtendedEnum):
     NONE = "none"
     OUTLINE = "outline"
     UNDERLINE = "underline"

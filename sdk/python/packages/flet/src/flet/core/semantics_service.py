@@ -1,11 +1,11 @@
-from enum import Enum
 from typing import Any, Optional
 
 from flet.core.control import Control
+from flet.core.enumerations import ExtendedEnum
 from flet.core.ref import Ref
 
 
-class Assertiveness(Enum):
+class Assertiveness(ExtendedEnum):
     POLITE = "polite"
     ASSERTIVE = "assertive"
 
