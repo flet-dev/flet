@@ -30,7 +30,7 @@ from rich.theme import Theme
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.25.0/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
-MINIMAL_FLUTTER_VERSION = version.Version("3.27.0")
+MINIMAL_FLUTTER_VERSION = version.Version("3.24.4")
 
 error_style = Style(color="red", bold=True)
 console = Console(log_path=False, theme=Theme({"log.message": "green bold"}))
@@ -46,6 +46,7 @@ class Command(BaseCommand):
     def __init__(self, parser: argparse.ArgumentParser) -> None:
         super().__init__(parser)
 
+        self.env = {}
         self.pubspec_path = None
         self.rel_out_dir = None
         self.assets_path = None
@@ -547,16 +548,15 @@ class Command(BaseCommand):
             spinner="bouncingBall",
         ) as self.status:
             self.initialize_build()
-            self.validate_flutter_version()
             self.validate_target_platform()
             self.validate_entry_point()
+            self.package_python_app()
+            self.register_flutter_extensions()
             self.setup_template_data()
             self.create_flutter_project()
             self.update_flutter_dependencies()
             self.customize_icons_and_splash_images()
             self.generate_icons_and_splash_screens()
-            self.package_python_app()
-            self.register_flutter_extensions()
             self.flutter_build()
             self.copy_build_output()
 
@@ -584,11 +584,25 @@ class Command(BaseCommand):
                 f"Path to Flet app does not exist or is not a directory: {self.python_app_path}",
             )
 
+        self.verbose = self.options.verbose
+        self.emojis = {
+            "checkmark": "[green]OK[/]" if self.no_rich_output else "✅",
+            "loading": "" if self.no_rich_output else "⏳",
+            "success": "" if self.no_rich_output else "🥳",
+            "directory": "" if self.no_rich_output else "📁",
+        }
+
         # get `flutter` and `dart` executables from PATH
         self.flutter_exe = self.find_flutter_batch("flutter")
         self.dart_exe = self.find_flutter_batch("dart")
 
-        self.verbose = self.options.verbose
+        if (
+            not self.flutter_exe
+            or not self.dart_exe
+            or not self.flutter_version_valid()
+        ):
+            self.install_flutter()
+
         if self.verbose > 1:
             console.log("Flutter executable:", self.flutter_exe, style=verbose2_style)
             console.log("Dart executable:", self.dart_exe, style=verbose2_style)
@@ -597,12 +611,6 @@ class Command(BaseCommand):
         self.skip_flutter_doctor = (
             self.skip_flutter_doctor or self.options.skip_flutter_doctor
         )
-        self.emojis = {
-            "checkmark": "[green]OK[/]" if self.no_rich_output else "✅",
-            "loading": "" if self.no_rich_output else "⏳",
-            "success": "" if self.no_rich_output else "🥳",
-            "directory": "" if self.no_rich_output else "📁",
-        }
         self.package_platform = self.platforms[self.options.target_platform][
             "package_platform"
         ]
@@ -624,7 +632,7 @@ class Command(BaseCommand):
         self.pubspec_path = str(self.flutter_dir.joinpath("pubspec.yaml"))
         self.get_pyproject = load_pyproject_toml(self.python_app_path)
 
-    def validate_flutter_version(self):
+    def flutter_version_valid(self):
         version_results = self.run(
             [self.flutter_exe, "--version"],
             cwd=os.getcwd(),
@@ -634,23 +642,33 @@ class Command(BaseCommand):
             match = re.search(r"Flutter (\d+\.\d+\.\d+)", version_results.stdout)
             if match:
                 flutter_version = version.parse(match.group(1))
-                min_major = MINIMAL_FLUTTER_VERSION.major
-                min_minor = MINIMAL_FLUTTER_VERSION.minor
 
                 # validate installed Flutter version
-                if not (
-                    flutter_version.major == min_major
-                    and flutter_version.minor == min_minor
-                ):
-                    flutter_msg = (
-                        f"You are using an unsupported Flutter SDK version: {flutter_version}\n"
-                        + f"Flet build requires Flutter {min_major}.{min_minor}.x, where x "
-                        + f"is any patch version (ex: {min_major}.{min_minor}.0, {min_major}.{min_minor}.1, etc)."
-                    )
-                    self.skip_flutter_doctor = True
-                    self.cleanup(1, flutter_msg)
+                return (
+                    flutter_version.major == MINIMAL_FLUTTER_VERSION.major
+                    and flutter_version.minor == MINIMAL_FLUTTER_VERSION.minor
+                )
         else:
             console.log(1, "Failed to validate Flutter version.")
+        return False
+
+    def install_flutter(self):
+        self.status.update(
+            f"[bold blue]Installing Flutter {MINIMAL_FLUTTER_VERSION} {self.emojis['loading']}... "
+        )
+        from flet_cli.utils.flutter import install_flutter
+
+        def log(message):
+            if self.verbose > 0:
+                console.log(
+                    message,
+                    style=verbose1_style,
+                )
+
+        flutter_dir = install_flutter(str(MINIMAL_FLUTTER_VERSION), log)
+        console.log(
+            f"Installed Flutter {MINIMAL_FLUTTER_VERSION} to {flutter_dir} {self.emojis['checkmark']}"
+        )
 
     def validate_target_platform(self):
         assert self.options
@@ -1643,11 +1661,7 @@ class Command(BaseCommand):
     def find_flutter_batch(self, exe_filename: str):
         batch_path = shutil.which(exe_filename)
         if not batch_path:
-            self.cleanup(
-                1,
-                f"`{exe_filename}` command is not available in PATH. Install Flutter SDK.",
-            )
-            return
+            return None
         if is_windows() and batch_path.endswith(".file"):
             return batch_path.replace(".file", ".bat")
         return batch_path
