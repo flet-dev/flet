@@ -34,6 +34,8 @@ MINIMAL_FLUTTER_VERSION = version.Version("3.27.0")
 
 error_style = Style(color="red", bold=True)
 console = Console(log_path=False, theme=Theme({"log.message": "green bold"}))
+verbose1_style = Style(color="bright_black", bold=False)
+verbose2_style = Style(color="gray0", bold=False)
 
 
 class Command(BaseCommand):
@@ -588,8 +590,8 @@ class Command(BaseCommand):
 
         self.verbose = self.options.verbose
         if self.verbose > 1:
-            console.log("Flutter executable:", self.flutter_exe)
-            console.log("Dart executable:", self.dart_exe)
+            console.log("Flutter executable:", self.flutter_exe, style=verbose2_style)
+            console.log("Dart executable:", self.dart_exe, style=verbose2_style)
 
         self.no_rich_output = self.no_rich_output or self.options.no_rich_output
         self.skip_flutter_doctor = (
@@ -730,9 +732,12 @@ class Command(BaseCommand):
         self.flutter_dependencies = self.get_flutter_dependencies()
         if self.verbose > 0:
             console.log(
-                f"Additional Flutter dependencies: {self.flutter_dependencies}"
-                if self.flutter_dependencies
-                else "No additional Flutter dependencies!"
+                (
+                    f"Additional Flutter dependencies: {self.flutter_dependencies}"
+                    if self.flutter_dependencies
+                    else "No additional Flutter dependencies!"
+                ),
+                style=verbose1_style,
             )
 
         split_per_abi = (
@@ -978,7 +983,7 @@ class Command(BaseCommand):
         # if options.clear_cache is set, delete any existing Flutter bootstrap project directory
         if self.options.clear_cache and self.flutter_dir.exists():
             if self.verbose > 1:
-                console.log(f"Deleting {self.flutter_dir}")
+                console.log(f"Deleting {self.flutter_dir}", style=verbose2_style)
             shutil.rmtree(self.flutter_dir, ignore_errors=True)
 
         # create a new Flutter bootstrap project directory, if non-existent
@@ -1351,7 +1356,10 @@ class Command(BaseCommand):
         elif requirements_txt.exists():
             if self.verbose > 1:
                 with open(requirements_txt, "r") as f:
-                    console.log(f"Contents of requirements.txt: {f.read()}")
+                    console.log(
+                        f"Contents of requirements.txt: {f.read()}",
+                        style=verbose2_style,
+                    )
             package_args.extend(["--requirements", f"-r,{requirements_txt}"])
 
         # site-packages variable
@@ -1593,7 +1601,10 @@ class Command(BaseCommand):
             )
 
             if self.verbose > 0:
-                console.log("Copying build output from: " + build_output_dir)
+                console.log(
+                    "Copying build output from: " + build_output_dir,
+                    style=verbose1_style,
+                )
 
             build_output_glob = os.path.basename(build_output_dir)
             build_output_dir = os.path.dirname(build_output_dir)
@@ -1624,7 +1635,7 @@ class Command(BaseCommand):
         images = glob.glob(str(src_path.joinpath(f"{image_name}.*")))
         if len(images) > 0:
             if self.verbose > 0:
-                console.log(f"Copying {images[0]} to {dest_path}")
+                console.log(f"Copying {images[0]} to {dest_path}", style=verbose1_style)
             shutil.copy(images[0], dest_path)
             return Path(images[0]).name
         return None
@@ -1644,7 +1655,7 @@ class Command(BaseCommand):
     def run(self, args, cwd, env: Optional[dict] = None, capture_output=True):
 
         if self.verbose > 0:
-            console.log(f"Run subprocess: {args}")
+            console.log(f"Run subprocess: {args}", style=verbose1_style)
 
         return processes.run(args, cwd, env, capture_output)
 

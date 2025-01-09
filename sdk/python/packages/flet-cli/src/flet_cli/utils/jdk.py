@@ -6,6 +6,7 @@ import tempfile
 from pathlib import Path
 
 from flet_cli.utils.distros import download_with_progress, extract_with_progress
+from rich.console import Console
 
 # Constants
 JDK_MAJOR_VER = 17
@@ -63,14 +64,14 @@ def platform_info():
     return platform_name, arch_name, ext
 
 
-def install_jdk():
+def install_jdk(log):
     java_home = get_java_home()
 
     # Step 1: Check if JAVA_HOME is set and valid
     if java_home and check_jdk_version(java_home):
         return java_home
     elif java_home:
-        print("JAVA_HOME points to a JRE. Proceeding to install JDK.")
+        log("JAVA_HOME points to a JRE. Proceeding to install JDK.")
 
     # Step 2: On macOS, try /usr/libexec/java_home
     if platform.system() == "Darwin":
@@ -78,9 +79,9 @@ def install_jdk():
             java_home = subprocess.check_output(
                 ["/usr/libexec/java_home"], text=True
             ).strip()
-            print("JAVA HOME for macOS:", java_home)
+            log(f"JAVA HOME for macOS: {java_home}")
             if check_jdk_version(java_home):
-                print(f"Using JDK from /usr/libexec/java_home: {java_home}")
+                log(f"Using JDK from /usr/libexec/java_home: {java_home}")
                 return java_home
         except subprocess.CalledProcessError:
             pass  # No valid JDK found, proceed with installation
@@ -101,10 +102,10 @@ def install_jdk():
 
         # Step 5: Download and extract JDK
         archive_path = os.path.join(tempfile.gettempdir(), f"jdk-{JDK_DIR_NAME}.{ext}")
-        print(f"Downloading JDK from {url}...")
+        log(f"Downloading JDK from {url}...")
         download_with_progress(url, archive_path)
 
-        print(f"Extracting JDK to {install_dir}...")
+        log(f"Extracting JDK to {install_dir}...")
         install_dir.mkdir(exist_ok=True, parents=True)
         extract_with_progress(archive_path, str(install_dir))
 
@@ -118,7 +119,7 @@ def install_jdk():
         # Step 6: Clean up archive
         os.remove(archive_path)
 
-    print(f"JDK installed at {install_dir}")
+    log(f"JDK installed at {install_dir}")
 
     if platform.system() == "Darwin":
         install_dir = install_dir / "Contents" / "Home"
@@ -128,5 +129,6 @@ def install_jdk():
 
 # Example usage
 if __name__ == "__main__":
-    jdk_path = install_jdk()
+    console = Console()
+    jdk_path = install_jdk(lambda m: console.log(m))
     print(f"JDK path: {jdk_path}")
