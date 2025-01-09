@@ -84,7 +84,10 @@ dependencies:
       path: src/flutter/flet_geolocator
   
   flet_webview:
-    path: ../packages/flet_webview
+    git:
+      url: https://github.com/flet-dev/flet-webview.git
+      ref: main
+      path: src/flutter/flet_webview
   flet_flashlight:
     git:
       url: https://github.com/flet-dev/flet-flashlight.git
