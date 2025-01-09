@@ -7,7 +7,6 @@ from flet.core.control import Control, OptionalNumber
 from flet.core.control_event import ControlEvent
 from flet.core.event_handler import EventHandler
 from flet.core.types import OptionalEventCallable, ScrollMode
-from flet.utils import deprecated
 
 
 class ScrollableControl(Control):

@@ -22,7 +22,6 @@ from flet.core.types import (
     ScaleValue,
     UrlTarget,
 )
-from flet.utils import deprecated
 
 
 class OutlinedButton(ConstrainedControl, AdaptiveControl):

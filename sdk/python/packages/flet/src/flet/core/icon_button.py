@@ -27,7 +27,6 @@ from flet.core.types import (
     UrlTarget,
     VisualDensity,
 )
-from flet.utils import deprecated
 
 
 class IconButton(ConstrainedControl, AdaptiveControl):

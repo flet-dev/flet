@@ -31,7 +31,6 @@ from flet.core.types import (
     TextAlign,
     VerticalAlignment,
 )
-from flet.utils import deprecated
 
 try:
     from typing import Literal

@@ -8,7 +8,6 @@ from flet.core.control_event import ControlEvent
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.types import OptionalEventCallable
-from flet.utils import deprecated
 
 try:
     from typing import Literal

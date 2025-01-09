@@ -14,7 +14,6 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
-from flet.utils import deprecated
 
 
 class ResponsiveRow(ConstrainedControl, AdaptiveControl):

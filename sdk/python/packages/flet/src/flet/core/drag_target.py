@@ -1,6 +1,5 @@
 import json
 from typing import Any, Optional
-from warnings import warn
 
 from flet.core.control import Control
 from flet.core.control_event import ControlEvent
