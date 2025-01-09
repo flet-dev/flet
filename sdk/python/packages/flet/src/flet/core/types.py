@@ -1,26 +1,11 @@
 from dataclasses import dataclass
 from datetime import date, datetime
 from enum import Enum, EnumMeta
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    Dict,
-    List,
-    Optional,
-    Protocol,
-    Tuple,
-    TypeVar,
-    Union,
-)
+from typing import Any, Callable, Dict, List, Optional, Protocol, Tuple, TypeVar, Union
 from warnings import warn
 
 from flet.core.border_radius import BorderRadius
 from flet.core.colors import Colors, colors
-
-if TYPE_CHECKING:
-    from flet.core.control import Control
-
 from flet.core.control_event import ControlEvent
 from flet.core.cupertino_colors import CupertinoColors, cupertino_colors
 from flet.core.cupertino_icons import CupertinoIcons, cupertino_icons

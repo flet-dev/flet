@@ -2,7 +2,6 @@ from datetime import datetime, time
 from enum import Enum
 from typing import Any, Optional, Union
 
-from flet.core.badge import BadgeValue
 from flet.core.control import Control, OptionalNumber
 from flet.core.control_event import ControlEvent
 from flet.core.event_handler import EventHandler
@@ -16,7 +15,6 @@ from flet.core.types import (
     Orientation,
     ResponsiveNumber,
 )
-from flet.utils import deprecated
 
 
 class TimePickerEntryMode(Enum):

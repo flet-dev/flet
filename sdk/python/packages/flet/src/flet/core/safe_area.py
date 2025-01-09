@@ -1,4 +1,3 @@
-import warnings
 from typing import Any, Optional, Union
 
 from flet.core.adaptive_control import AdaptiveControl

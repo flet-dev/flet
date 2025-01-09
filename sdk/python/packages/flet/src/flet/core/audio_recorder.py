@@ -7,7 +7,6 @@ from flet.core.control_event import ControlEvent
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.types import OptionalEventCallable
-from flet.utils import deprecated
 
 
 class AudioRecorderState(Enum):
@@ -88,6 +87,20 @@ class AudioRecorder(Control):
             self.page.web or output_path
         ), "output_path must be provided when not on web"
         started = self.invoke_method(
+            "start_recording",
+            {"outputPath": output_path},
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return started == "true"
+
+    async def start_recording_async(
+        self, output_path: str = None, wait_timeout: Optional[float] = 10
+    ) -> bool:
+        assert (
+            self.page.web or output_path
+        ), "output_path must be provided when not on web"
+        started = await self.invoke_method_async(
             "start_recording",
             {"outputPath": output_path},
             wait_for_result=True,

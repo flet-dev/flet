@@ -9,6 +9,8 @@ import urllib.request
 import zipfile
 from pathlib import Path
 
+import flet_desktop
+import flet_desktop.version
 from flet.utils import (
     get_arch,
     is_linux,
@@ -17,9 +19,6 @@ from flet.utils import (
     random_string,
     safe_tar_extractall,
 )
-
-import flet_desktop
-import flet_desktop.version
 
 logger = logging.getLogger(flet_desktop.__name__)
 
@@ -74,6 +73,7 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
 
         # check if flet_view.exe exists in "bin" directory (user mode)
         flet_path = os.path.join(get_package_bin_dir(), "flet", flet_exe)
+        logger.info(f"Looking for Flet executable at: {flet_path}")
         if os.path.exists(flet_path):
             logger.info(f"Flet View found in: {flet_path}")
         else:
@@ -109,6 +109,7 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
                 # check if flet.tar.gz exists
                 gz_filename = "flet-macos.tar.gz"
                 tar_file = os.path.join(get_package_bin_dir(), gz_filename)
+                logger.info(f"Looking for Flet.app archive at: {tar_file}")
                 if not os.path.exists(tar_file):
                     tar_file = __download_flet_client(gz_filename)
 
@@ -145,6 +146,7 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
                 # check if flet.tar.gz exists
                 gz_filename = f"flet-linux-{get_arch()}.tar.gz"
                 tar_file = os.path.join(get_package_bin_dir(), gz_filename)
+                logger.info(f"Looking for Flet bundle archive at: {tar_file}")
                 if not os.path.exists(tar_file):
                     tar_file = __download_flet_client(gz_filename)
 

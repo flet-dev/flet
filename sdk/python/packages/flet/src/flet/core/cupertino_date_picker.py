@@ -1,9 +1,8 @@
-from datetime import date, datetime
+from datetime import datetime
 from enum import Enum
 from typing import Any, Optional, Union
 
 from flet.core.animation import AnimationValue
-from flet.core.badge import BadgeValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
 from flet.core.ref import Ref

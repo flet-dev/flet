@@ -9,7 +9,6 @@ from flet.core.buttons import OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control
 from flet.core.ref import Ref
-from flet.core.tooltip import TooltipValue
 from flet.core.types import (
     ColorEnums,
     ColorValue,
@@ -23,7 +22,6 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
-from flet.utils import deprecated
 
 
 class NavigationBarLabelBehavior(Enum):
