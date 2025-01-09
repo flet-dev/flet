@@ -60,7 +60,10 @@ dependencies:
       path: src/flutter/flet_ads
 
   flet_rive:
-    path: ../packages/flet_rive
+    git:
+      url: https://github.com/flet-dev/flet-rive.git
+      ref: main
+      path: src/flutter/flet_rive
 
   flet_audio_recorder:
     git:
