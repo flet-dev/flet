@@ -95,6 +95,20 @@ class AudioRecorder(Control):
         )
         return started == "true"
 
+    async def start_recording_async(
+            self, output_path: str = None, wait_timeout: Optional[float] = 10
+    ) -> bool:
+        assert (
+                self.page.web or output_path
+        ), "output_path must be provided when not on web"
+        started = await self.invoke_method_async(
+            "start_recording",
+            {"outputPath": output_path},
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return started == "true"
+
     def is_recording(self, wait_timeout: Optional[float] = 5) -> bool:
         recording = self.invoke_method(
             "is_recording",
