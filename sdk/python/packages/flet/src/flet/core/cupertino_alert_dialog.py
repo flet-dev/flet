@@ -100,7 +100,7 @@ class CupertinoAlertDialog(Control):
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
         data: Any = None,
-        barrier_color: Optional[str] = None
+        barrier_color: Optional[str] = None,
     ):
         Control.__init__(
             self,
@@ -169,8 +169,8 @@ class CupertinoAlertDialog(Control):
     @content.setter
     def content(self, value: Optional[Control]):
         self.__content = value
-    
-    #barrier_color
+
+    # barrier_color
     @property
     def barrier_color(self) -> Optional[str]:
         return self._get_attr("barrierColor")

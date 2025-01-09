@@ -2,7 +2,6 @@ from typing import Any, Optional
 
 from flet.core.control import Control
 from flet.core.ref import Ref
-from flet.utils import deprecated
 
 
 class HapticFeedback(Control):

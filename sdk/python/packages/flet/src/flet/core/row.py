@@ -18,7 +18,6 @@ from flet.core.types import (
     ScaleValue,
     ScrollMode,
 )
-from flet.utils import deprecated
 
 
 class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
