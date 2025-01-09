@@ -24,6 +24,7 @@ from flet.core.types import (
     ScaleValue,
     TextAlign,
 )
+from flet.utils import deprecated
 
 
 class PlaylistMode(Enum):
