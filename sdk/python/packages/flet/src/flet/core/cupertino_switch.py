@@ -7,7 +7,6 @@ from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     LabelPosition,
     OffsetValue,
@@ -170,7 +169,7 @@ class CupertinoSwitch(ConstrainedControl):
     @label_position.setter
     def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
-        self._set_enum_attr("labelPosition", value, LabelPosition)
+        self._set_attr("labelPosition", value)
 
     # autofocus
     @property
@@ -189,7 +188,7 @@ class CupertinoSwitch(ConstrainedControl):
     @active_color.setter
     def active_color(self, value: Optional[ColorValue]):
         self.__active_color = value
-        self._set_enum_attr("activeColor", value, ColorEnums)
+        self._set_attr("activeColor", value)
 
     # focus_color
     @property
@@ -199,7 +198,7 @@ class CupertinoSwitch(ConstrainedControl):
     @focus_color.setter
     def focus_color(self, value: Optional[ColorValue]):
         self.__focus_color = value
-        self._set_enum_attr("focusColor", value, ColorEnums)
+        self._set_attr("focusColor", value)
 
     # thumb_color
     @property
@@ -227,7 +226,7 @@ class CupertinoSwitch(ConstrainedControl):
     @on_label_color.setter
     def on_label_color(self, value: Optional[ColorValue]):
         self.__on_label_color = value
-        self._set_enum_attr("onLabelColor", value, ColorEnums)
+        self._set_attr("onLabelColor", value)
 
     # off_label_color
     @property
@@ -237,7 +236,7 @@ class CupertinoSwitch(ConstrainedControl):
     @off_label_color.setter
     def off_label_color(self, value: Optional[ColorValue]):
         self.__off_label_color = value
-        self._set_enum_attr("offLabelColor", value, ColorEnums)
+        self._set_attr("offLabelColor", value)
 
     # on_change
     @property

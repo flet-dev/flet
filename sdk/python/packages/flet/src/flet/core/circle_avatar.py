@@ -1,4 +1,3 @@
-import warnings
 from typing import Any, Optional, Union
 
 from flet.core.animation import AnimationValue
@@ -8,7 +7,6 @@ from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
@@ -273,7 +271,7 @@ class CircleAvatar(ConstrainedControl):
     @color.setter
     def color(self, value: Optional[ColorValue]):
         self.__color = value
-        self._set_enum_attr("color", value, ColorEnums)
+        self._set_attr("color", value)
 
     # bgcolor
     @property
@@ -283,7 +281,7 @@ class CircleAvatar(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # content
     @property

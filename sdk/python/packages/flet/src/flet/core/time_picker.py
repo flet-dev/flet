@@ -2,21 +2,18 @@ from datetime import datetime, time
 from enum import Enum
 from typing import Any, Optional, Union
 
-from flet.core.badge import BadgeValue
 from flet.core.control import Control, OptionalNumber
 from flet.core.control_event import ControlEvent
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
     Orientation,
     ResponsiveNumber,
 )
-from flet.utils import deprecated
 
 
 class TimePickerEntryMode(Enum):
@@ -250,7 +247,7 @@ class TimePicker(Control):
     @time_picker_entry_mode.setter
     def time_picker_entry_mode(self, value: Optional[TimePickerEntryMode]):
         self.__time_picker_entry_mode = value
-        self._set_enum_attr("timePickerEntryMode", value, TimePickerEntryMode)
+        self._set_attr("timePickerEntryMode", value)
 
     # orientation
     @property
@@ -260,7 +257,7 @@ class TimePicker(Control):
     @orientation.setter
     def orientation(self, value: Optional[Orientation]):
         self.__orientation = value
-        self._set_enum_attr("orientation", value, Orientation)
+        self._set_attr("orientation", value)
 
     # on_change
     @property
@@ -301,4 +298,4 @@ class TimePicker(Control):
     @barrier_color.setter
     def barrier_color(self, value: Optional[ColorValue]):
         self.__barrier_color = value
-        self._set_enum_attr("barrierColor", value, ColorEnums)
+        self._set_attr("barrierColor", value)

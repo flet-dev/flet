@@ -169,7 +169,7 @@ class Lottie(ConstrainedControl):
     @filter_quality.setter
     def filter_quality(self, value: Optional[FilterQuality]):
         self.__filter_quality = value
-        self._set_enum_attr("filterQuality", value, FilterQuality)
+        self._set_attr("filterQuality", value)
 
     # fit
     @property
@@ -179,7 +179,7 @@ class Lottie(ConstrainedControl):
     @fit.setter
     def fit(self, value: Optional[ImageFit]):
         self.__fit = value
-        self._set_enum_attr("fit", value, ImageFit)
+        self._set_attr("fit", value)
 
     # background_loading
     @property

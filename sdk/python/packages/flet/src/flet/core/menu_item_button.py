@@ -204,7 +204,7 @@ class MenuItemButton(ConstrainedControl):
     @overflow_axis.setter
     def overflow_axis(self, value: Optional[Axis]):
         self.__overflow_axis = value
-        self._set_enum_attr("overflowAxis", value, Axis)
+        self._set_attr("overflowAxis", value)
 
     # leading
     @property
@@ -250,7 +250,7 @@ class MenuItemButton(ConstrainedControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+        self._set_attr("clipBehavior", value)
 
     # on_click
     @property

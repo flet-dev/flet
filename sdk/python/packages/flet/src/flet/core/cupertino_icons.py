@@ -8,7 +8,7 @@ sh ci/generate_cupertino_icons_python.sh
 
 import random
 from enum import Enum, EnumMeta
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 from warnings import warn
 
 from flet.utils import deprecated
@@ -2764,3 +2764,6 @@ class CupertinoIcons(str, Enum):
     ZOOM_IN = "cupertino_zoom_in"
     ZOOM_OUT = "cupertino_zoom_out"
     ZZZ = "cupertino_zzz"
+
+
+CupertinoIconEnums = Union[cupertino_icons, CupertinoIcons]

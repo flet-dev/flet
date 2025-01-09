@@ -9,7 +9,6 @@ from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     ControlStateValue,
     LabelPosition,
@@ -208,7 +207,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     @hover_color.setter
     def hover_color(self, value: Optional[ColorValue]):
         self.__hover_color = value
-        self._set_enum_attr("hoverColor", value, ColorEnums)
+        self._set_attr("hoverColor", value)
 
     # track_outline_color
     @property
@@ -255,7 +254,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     @label_position.setter
     def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
-        self._set_enum_attr("labelPosition", value, LabelPosition)
+        self._set_attr("labelPosition", value)
 
     # mouse_cursor
     @property
@@ -265,7 +264,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_enum_attr("mouseCursor", value, MouseCursor)
+        self._set_attr("mouseCursor", value)
 
     # autofocus
     @property
@@ -284,7 +283,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     @active_color.setter
     def active_color(self, value: Optional[ColorValue]):
         self.__active_color = value
-        self._set_enum_attr("activeColor", value, ColorEnums)
+        self._set_attr("activeColor", value)
 
     # active_track_color
     @property
@@ -294,7 +293,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     @active_track_color.setter
     def active_track_color(self, value: Optional[ColorValue]):
         self.__active_track_color = value
-        self._set_enum_attr("activeTrackColor", value, ColorEnums)
+        self._set_attr("activeTrackColor", value)
 
     # focus_color
     @property
@@ -304,7 +303,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     @focus_color.setter
     def focus_color(self, value: Optional[ColorValue]):
         self.__focus_color = value
-        self._set_enum_attr("focusColor", value, ColorEnums)
+        self._set_attr("focusColor", value)
 
     # inactive_thumb_color
     @property
@@ -314,7 +313,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     @inactive_thumb_color.setter
     def inactive_thumb_color(self, value: Optional[ColorValue]):
         self.__inactive_thumb_color = value
-        self._set_enum_attr("inactiveThumbColor", value, ColorEnums)
+        self._set_attr("inactiveThumbColor", value)
 
     # inactive_track_color
     @property
@@ -324,7 +323,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     @inactive_track_color.setter
     def inactive_track_color(self, value: Optional[ColorValue]):
         self.__inactive_track_color = value
-        self._set_enum_attr("inactiveTrackColor", value, ColorEnums)
+        self._set_attr("inactiveTrackColor", value)
 
     # thumb_color
     @property

@@ -7,7 +7,6 @@ from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
@@ -142,7 +141,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
     @border_color.setter
     def border_color(self, value: Optional[ColorValue]):
         self.__border_color = value
-        self._set_enum_attr("borderColor", value, ColorEnums)
+        self._set_attr("borderColor", value)
 
     # selected_index
     @property
@@ -163,7 +162,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
     @selected_color.setter
     def selected_color(self, value: Optional[ColorValue]):
         self.__selected_color = value
-        self._set_enum_attr("selectedColor", value, ColorEnums)
+        self._set_attr("selectedColor", value)
 
     # unselected_color
     @property
@@ -173,7 +172,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
     @unselected_color.setter
     def unselected_color(self, value: Optional[ColorValue]):
         self.__unselected_color = value
-        self._set_enum_attr("unselectedColor", value, ColorEnums)
+        self._set_attr("unselectedColor", value)
 
     # click_color
     @property
@@ -183,7 +182,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
     @click_color.setter
     def click_color(self, value: Optional[ColorValue]):
         self.__click_color = value
-        self._set_enum_attr("clickColor", value, ColorEnums)
+        self._set_attr("clickColor", value)
 
     # padding
     @property

@@ -7,7 +7,6 @@ from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     ControlStateValue,
     OffsetValue,
@@ -255,7 +254,7 @@ class RangeSlider(ConstrainedControl):
     @active_color.setter
     def active_color(self, value: Optional[ColorValue]):
         self.__active_color = value
-        self._set_enum_attr("activeColor", value, ColorEnums)
+        self._set_attr("activeColor", value)
 
     # inactive_color
     @property
@@ -265,7 +264,7 @@ class RangeSlider(ConstrainedControl):
     @inactive_color.setter
     def inactive_color(self, value: Optional[ColorValue]):
         self.__inactive_color = value
-        self._set_enum_attr("inactiveColor", value, ColorEnums)
+        self._set_attr("inactiveColor", value)
 
     # overlay_color
     @property

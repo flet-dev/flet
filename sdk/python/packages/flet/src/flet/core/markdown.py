@@ -466,7 +466,7 @@ class Markdown(ConstrainedControl):
     @extension_set.setter
     def extension_set(self, value: Optional[MarkdownExtensionSet]):
         self.__extension_set = value
-        self._set_enum_attr("extensionSet", value, MarkdownExtensionSet)
+        self._set_attr("extensionSet", value)
 
     # code_style_sheet
     @property

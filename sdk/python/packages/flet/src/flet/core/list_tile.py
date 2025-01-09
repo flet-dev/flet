@@ -10,10 +10,19 @@ from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
-from flet.core.types import (ColorEnums, ColorValue, MouseCursor, OffsetValue,
-                             OptionalControlEventCallable, PaddingValue,
-                             ResponsiveNumber, RotateValue, ScaleValue,
-                             ThemeVisualDensity, UrlTarget, VisualDensity)
+from flet.core.types import (
+    ColorValue,
+    MouseCursor,
+    OffsetValue,
+    OptionalControlEventCallable,
+    PaddingValue,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
+    ThemeVisualDensity,
+    UrlTarget,
+    VisualDensity,
+)
 
 
 class ListTileTitleAlignment(Enum):
@@ -258,7 +267,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # selected_color
     @property
@@ -268,7 +277,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @selected_color.setter
     def selected_color(self, value: Optional[ColorValue]):
         self.__selected_color = value
-        self._set_enum_attr("selectedColor", value, ColorEnums)
+        self._set_attr("selectedColor", value)
 
     # selected_tile_color
     @property
@@ -278,7 +287,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @selected_tile_color.setter
     def selected_tile_color(self, value: Optional[ColorValue]):
         self.__selected_tile_color = value
-        self._set_enum_attr("selectedTileColor", value, ColorEnums)
+        self._set_attr("selectedTileColor", value)
 
     # bgcolor_activated
     @property
@@ -324,7 +333,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @hover_color.setter
     def hover_color(self, value: Optional[ColorValue]):
         self.__hover_color = value
-        self._set_enum_attr("hoverColor", value, ColorEnums)
+        self._set_attr("hoverColor", value)
 
     # leading
     @property
@@ -397,7 +406,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @style.setter
     def style(self, value: Optional[ListTileStyle]):
         self.__style = value
-        self._set_enum_attr("style", value, ListTileStyle)
+        self._set_attr("style", value)
 
     # title_alignment
     @property
@@ -407,7 +416,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @title_alignment.setter
     def title_alignment(self, value: Optional[ListTileTitleAlignment]):
         self.__title_alignment = value
-        self._set_enum_attr("titleAlignment", value, ListTileTitleAlignment)
+        self._set_attr("titleAlignment", value)
 
     # selected
     @property
@@ -462,7 +471,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @icon_color.setter
     def icon_color(self, value: Optional[ColorValue]):
         self.__icon_color = value
-        self._set_enum_attr("iconColor", value, ColorEnums)
+        self._set_attr("iconColor", value)
 
     # text_color
     @property
@@ -472,7 +481,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @text_color.setter
     def text_color(self, value: Optional[ColorValue]):
         self.__text_color = value
-        self._set_enum_attr("textColor", value, ColorEnums)
+        self._set_attr("textColor", value)
 
     # url_target
     @property
@@ -482,7 +491,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @url_target.setter
     def url_target(self, value: Optional[UrlTarget]):
         self.__url_target = value
-        self._set_enum_attr("urlTarget", value, UrlTarget)
+        self._set_attr("urlTarget", value)
 
     # mouse_cursor
     @property
@@ -492,7 +501,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_enum_attr("mouseCursor", value, MouseCursor)
+        self._set_attr("mouseCursor", value)
 
     # visual_density
     @property
@@ -502,7 +511,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     @visual_density.setter
     def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, (ThemeVisualDensity, VisualDensity))
+        self._set_attr("visualDensity", value)
 
     # shape
     @property

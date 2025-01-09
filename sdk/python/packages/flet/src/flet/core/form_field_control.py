@@ -11,10 +11,8 @@ from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
     BorderRadiusValue,
-    ColorEnums,
     ColorValue,
     DurationValue,
-    IconEnums,
     IconValueOrControl,
     OffsetValue,
     OptionalControlEventCallable,
@@ -300,7 +298,7 @@ class FormFieldControl(ConstrainedControl):
     @icon.setter
     def icon(self, value: Optional[IconValueOrControl]):
         self.__icon = value
-        self._set_enum_attr("icon", value, IconEnums)
+        self._set_attr("icon", value)
 
     # border
     @property
@@ -310,7 +308,7 @@ class FormFieldControl(ConstrainedControl):
     @border.setter
     def border(self, value: Optional[InputBorder]):
         self.__border = value
-        self._set_enum_attr("border", value, InputBorder)
+        self._set_attr("border", value)
 
     # color
     @property
@@ -320,7 +318,7 @@ class FormFieldControl(ConstrainedControl):
     @color.setter
     def color(self, value: Optional[ColorValue]):
         self.__color = value
-        self._set_enum_attr("color", value, ColorEnums)
+        self._set_attr("color", value)
 
     # focus_color
     @property
@@ -429,7 +427,7 @@ class FormFieldControl(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # border_radius
     @property
@@ -457,7 +455,7 @@ class FormFieldControl(ConstrainedControl):
     @border_color.setter
     def border_color(self, value: Optional[ColorValue]):
         self.__border_color = value
-        self._set_enum_attr("borderColor", value, ColorEnums)
+        self._set_attr("borderColor", value)
 
     # text_vertical_align
     @property
@@ -479,7 +477,7 @@ class FormFieldControl(ConstrainedControl):
     @focused_color.setter
     def focused_color(self, value: Optional[ColorValue]):
         self.__focused_color = value
-        self._set_enum_attr("focusedColor", value, ColorEnums)
+        self._set_attr("focusedColor", value)
 
     # focused_bgcolor
     @property
@@ -489,7 +487,7 @@ class FormFieldControl(ConstrainedControl):
     @focused_bgcolor.setter
     def focused_bgcolor(self, value: Optional[str]):
         self.__focused_bgcolor = value
-        self._set_enum_attr("focusedBgcolor", value, ColorEnums)
+        self._set_attr("focusedBgcolor", value)
 
     # focused_border_width
     @property
@@ -508,7 +506,7 @@ class FormFieldControl(ConstrainedControl):
     @focused_border_color.setter
     def focused_border_color(self, value: Optional[ColorValue]):
         self.__focused_border_color = value
-        self._set_enum_attr("focusedBorderColor", value, ColorEnums)
+        self._set_attr("focusedBorderColor", value)
 
     # content_padding
     @property
@@ -653,7 +651,7 @@ class FormFieldControl(ConstrainedControl):
     @prefix_icon.setter
     def prefix_icon(self, value: Optional[IconValueOrControl]):
         self.__prefix_icon = value
-        self._set_enum_attr("prefixIcon", value, IconEnums)
+        self._set_attr("prefixIcon", value)
 
     # prefix_text
     @property
@@ -690,7 +688,7 @@ class FormFieldControl(ConstrainedControl):
     @suffix_icon.setter
     def suffix_icon(self, value: Optional[IconValueOrControl]):
         self.__suffix_icon = value
-        self._set_enum_attr("suffixIcon", value, IconEnums)
+        self._set_attr("suffixIcon", value)
 
     # suffix_text
     @property
@@ -718,7 +716,7 @@ class FormFieldControl(ConstrainedControl):
     @fill_color.setter
     def fill_color(self, value: Optional[ColorValue]):
         self.__fill_color = value
-        self._set_enum_attr("fillColor", value, ColorEnums)
+        self._set_attr("fillColor", value)
 
     # hover_color
     @property
@@ -728,4 +726,4 @@ class FormFieldControl(ConstrainedControl):
     @hover_color.setter
     def hover_color(self, value: Optional[ColorValue]):
         self.__hover_color = value
-        self._set_enum_attr("hoverColor", value, ColorEnums)
+        self._set_attr("hoverColor", value)

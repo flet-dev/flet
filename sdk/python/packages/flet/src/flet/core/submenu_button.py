@@ -230,7 +230,7 @@ class SubmenuButton(ConstrainedControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+        self._set_attr("clipBehavior", value)
 
     # alignment_offset
     @property

@@ -1,7 +1,7 @@
 from typing import Any, Optional
 
 from flet.core.canvas.shape import Shape
-from flet.core.types import BlendMode, ColorEnums, ColorValue
+from flet.core.types import BlendMode, ColorValue
 
 
 class Color(Shape):
@@ -36,7 +36,7 @@ class Color(Shape):
     @color.setter
     def color(self, value: Optional[ColorValue]):
         self.__color = value
-        self._set_enum_attr("color", value, ColorEnums)
+        self._set_attr("color", value)
 
     # blend_mode
     @property

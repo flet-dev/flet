@@ -14,7 +14,6 @@ from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.transform import Offset
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     ControlEvent,
     DurationValue,
@@ -435,7 +434,7 @@ class Map(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # keep_alive
     @property
@@ -472,7 +471,7 @@ class Map(ConstrainedControl):
     @animation_curve.setter
     def animation_curve(self, value: Optional[AnimationCurve]):
         self.__animation_curve = value
-        self._set_enum_attr("animationCurve", value, AnimationCurve)
+        self._set_attr("animationCurve", value)
 
     # animation_duration
     @property

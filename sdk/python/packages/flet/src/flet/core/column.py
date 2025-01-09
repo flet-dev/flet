@@ -204,7 +204,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @horizontal_alignment.setter
     def horizontal_alignment(self, value: CrossAxisAlignment):
         self.__horizontal_alignment = value
-        self._set_enum_attr("horizontalAlignment", value, CrossAxisAlignment)
+        self._set_attr("horizontalAlignment", value)
 
     # spacing
     @property

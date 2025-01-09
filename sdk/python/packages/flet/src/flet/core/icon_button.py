@@ -12,9 +12,7 @@ from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
-    IconEnums,
     IconValue,
     MouseCursor,
     OffsetValue,
@@ -27,7 +25,6 @@ from flet.core.types import (
     UrlTarget,
     VisualDensity,
 )
-from flet.utils import deprecated
 
 
 class IconButton(ConstrainedControl, AdaptiveControl):
@@ -232,7 +229,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @icon.setter
     def icon(self, value: Optional[IconValue]):
         self.__icon = value
-        self._set_enum_attr("icon", value, IconEnums)
+        self._set_attr("icon", value)
 
     # selected_icon
     @property
@@ -242,7 +239,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @selected_icon.setter
     def selected_icon(self, value: Optional[IconValue]):
         self.__selected_icon = value
-        self._set_enum_attr("selectedIcon", value, IconEnums)
+        self._set_attr("selectedIcon", value)
 
     # icon_size
     @property
@@ -270,7 +267,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @splash_color.setter
     def splash_color(self, value: Optional[ColorValue]):
         self.__splash_color = value
-        self._set_enum_attr("splashColor", value, ColorEnums)
+        self._set_attr("splashColor", value)
 
     # icon_color
     @property
@@ -280,7 +277,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @icon_color.setter
     def icon_color(self, value: Optional[ColorValue]):
         self.__icon_color = value
-        self._set_enum_attr("iconColor", value, ColorEnums)
+        self._set_attr("iconColor", value)
 
     # highlight_color
     @property
@@ -290,7 +287,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @highlight_color.setter
     def highlight_color(self, value: Optional[ColorValue]):
         self.__highlight_color = value
-        self._set_enum_attr("highlightColor", value, ColorEnums)
+        self._set_attr("highlightColor", value)
 
     # selected_icon_color
     @property
@@ -300,7 +297,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @selected_icon_color.setter
     def selected_icon_color(self, value: Optional[ColorValue]):
         self.__selected_icon_color = value
-        self._set_enum_attr("selectedIconColor", value, ColorEnums)
+        self._set_attr("selectedIconColor", value)
 
     # bgcolor
     @property
@@ -310,7 +307,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # hover_color
     @property
@@ -320,7 +317,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @hover_color.setter
     def hover_color(self, value: Optional[ColorValue]):
         self.__hover_color = value
-        self._set_enum_attr("hoverColor", value, ColorEnums)
+        self._set_attr("hoverColor", value)
 
     # focus_color
     @property
@@ -330,7 +327,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @focus_color.setter
     def focus_color(self, value: Optional[ColorValue]):
         self.__focus_color = value
-        self._set_enum_attr("focusColor", value, ColorEnums)
+        self._set_attr("focusColor", value)
 
     # disabled_color
     @property
@@ -340,7 +337,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @disabled_color.setter
     def disabled_color(self, value: Optional[ColorValue]):
         self.__disabled_color = value
-        self._set_enum_attr("disabledColor", value, ColorEnums)
+        self._set_attr("disabledColor", value)
 
     # padding
     @property
@@ -404,7 +401,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @url_target.setter
     def url_target(self, value: Optional[UrlTarget]):
         self.__url_target = value
-        self._set_enum_attr("urlTarget", value, UrlTarget)
+        self._set_attr("urlTarget", value)
 
     # mouse_cursor
     @property
@@ -414,7 +411,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_enum_attr("mouseCursor", value, MouseCursor)
+        self._set_attr("mouseCursor", value)
 
     # visual_density
     @property
@@ -424,7 +421,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @visual_density.setter
     def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, (ThemeVisualDensity, VisualDensity))
+        self._set_attr("visualDensity", value)
 
     # on_click
     @property

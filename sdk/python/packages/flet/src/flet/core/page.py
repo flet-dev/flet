@@ -63,7 +63,6 @@ from flet.core.theme import Theme
 from flet.core.types import (
     AppLifecycleState,
     Brightness,
-    ColorEnums,
     ColorValue,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
@@ -81,7 +80,7 @@ from flet.core.types import (
     Wrapper,
 )
 from flet.core.view import View
-from flet.utils import classproperty, deprecated, is_pyodide
+from flet.utils import classproperty, is_pyodide
 
 try:
     from typing import ParamSpec
@@ -171,7 +170,7 @@ class Window:
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self.page._set_enum_attr("windowBgcolor", value, ColorEnums)
+        self.page._set_attr("windowBgcolor", value)
 
     # width
     @property

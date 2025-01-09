@@ -264,9 +264,7 @@ class TileLayer(MapLayer):
         self, value: Optional[MapTileLayerEvictErrorTileStrategy]
     ):
         self.__evict_error_tile_strategy = value
-        self._set_enum_attr(
-            "evictErrorTileStrategy", value, MapTileLayerEvictErrorTileStrategy
-        )
+        self._set_attr("evictErrorTileStrategy", value)
 
     # on_image_error
     @property

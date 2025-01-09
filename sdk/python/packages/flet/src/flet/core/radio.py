@@ -9,7 +9,6 @@ from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     ControlStateValue,
     LabelPosition,
@@ -187,7 +186,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
     @active_color.setter
     def active_color(self, value: Optional[ColorValue]):
         self.__active_color = value
-        self._set_enum_attr("activeColor", value, ColorEnums)
+        self._set_attr("activeColor", value)
 
     # focus_color
     @property
@@ -197,7 +196,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
     @focus_color.setter
     def focus_color(self, value: Optional[ColorValue]):
         self.__focus_color = value
-        self._set_enum_attr("focusColor", value, ColorEnums)
+        self._set_attr("focusColor", value)
 
     # splash_radius
     @property
@@ -225,7 +224,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
     @visual_density.setter
     def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, (ThemeVisualDensity, VisualDensity))
+        self._set_attr("visualDensity", value)
 
     # label
     @property
@@ -244,7 +243,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
     @label_position.setter
     def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
-        self._set_enum_attr("labelPosition", value, LabelPosition)
+        self._set_attr("labelPosition", value)
 
     # mouse_cursor
     @property
@@ -254,7 +253,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_enum_attr("mouseCursor", value, MouseCursor)
+        self._set_attr("mouseCursor", value)
 
     # label_style
     @property

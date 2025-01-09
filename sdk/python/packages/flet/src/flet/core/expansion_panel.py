@@ -6,7 +6,6 @@ from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
@@ -129,7 +128,7 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgColor", value, ColorEnums)
+        self._set_attr("bgColor", value)
 
     # expanded
     @property
@@ -276,7 +275,7 @@ class ExpansionPanelList(ConstrainedControl):
     @divider_color.setter
     def divider_color(self, value: Optional[ColorValue]):
         self.__divider_color = value
-        self._set_enum_attr("dividerColor", value, ColorEnums)
+        self._set_attr("dividerColor", value)
 
     # expanded_icon_color
     @property
@@ -286,7 +285,7 @@ class ExpansionPanelList(ConstrainedControl):
     @expanded_icon_color.setter
     def expanded_icon_color(self, value: Optional[ColorValue]):
         self.__expanded_icon_color = value
-        self._set_enum_attr("expandedIconColor", value, ColorEnums)
+        self._set_attr("expandedIconColor", value)
 
     # expanded_header_padding
     @property

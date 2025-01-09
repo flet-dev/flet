@@ -16,7 +16,7 @@ for line in __import__("sys").stdin:
 
 import random
 from enum import Enum, EnumMeta
-from typing import Dict, List, Optional, Union, TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict, List, Optional, Union
 from warnings import warn
 
 from flet.utils import deprecated
@@ -213,3 +213,6 @@ class CupertinoColors(str, Enum):
     SEPARATOR = "separator"
     OPAQUE_SEPARATOR = "opaqueSeparator"
     LINK = "link"
+
+
+CupertinoColorsEnums = Union[cupertino_colors, CupertinoColors]

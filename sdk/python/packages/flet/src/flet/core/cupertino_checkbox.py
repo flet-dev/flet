@@ -7,7 +7,6 @@ from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     LabelPosition,
     OffsetValue,
@@ -172,7 +171,7 @@ class CupertinoCheckbox(ConstrainedControl):
     @label_position.setter
     def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
-        self._set_enum_attr("labelPosition", value, LabelPosition)
+        self._set_attr("labelPosition", value)
 
     # autofocus
     @property
@@ -191,7 +190,7 @@ class CupertinoCheckbox(ConstrainedControl):
     @check_color.setter
     def check_color(self, value: Optional[ColorValue]):
         self.__check_color = value
-        self._set_enum_attr("checkColor", value, ColorEnums)
+        self._set_attr("checkColor", value)
 
     # active_color
     @property
@@ -201,7 +200,7 @@ class CupertinoCheckbox(ConstrainedControl):
     @active_color.setter
     def active_color(self, value: Optional[ColorValue]):
         self.__active_color = value
-        self._set_enum_attr("activeColor", value, ColorEnums)
+        self._set_attr("activeColor", value)
 
     # inactive_color
     @property
@@ -211,7 +210,7 @@ class CupertinoCheckbox(ConstrainedControl):
     @inactive_color.setter
     def inactive_color(self, value: Optional[ColorValue]):
         self.__inactive_color = value
-        self._set_enum_attr("inactiveColor", value, ColorEnums)
+        self._set_attr("inactiveColor", value)
 
     # focus_color
     @property
@@ -221,7 +220,7 @@ class CupertinoCheckbox(ConstrainedControl):
     @focus_color.setter
     def focus_color(self, value: Optional[ColorValue]):
         self.__focus_color = value
-        self._set_enum_attr("focusColor", value, ColorEnums)
+        self._set_attr("focusColor", value)
 
     # on_change
     @property

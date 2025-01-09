@@ -7,7 +7,6 @@ from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
@@ -186,7 +185,7 @@ class CupertinoSlider(ConstrainedControl):
     @active_color.setter
     def active_color(self, value: Optional[ColorValue]):
         self.__active_color = value
-        self._set_enum_attr("activeColor", value, ColorEnums)
+        self._set_attr("activeColor", value)
 
     # thumb_color
     @property
@@ -196,7 +195,7 @@ class CupertinoSlider(ConstrainedControl):
     @thumb_color.setter
     def thumb_color(self, value: Optional[ColorValue]):
         self.__thumb_color = value
-        self._set_enum_attr("thumbColor", value, ColorEnums)
+        self._set_attr("thumbColor", value)
 
     # on_change
     @property

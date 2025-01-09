@@ -7,10 +7,18 @@ from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
-from flet.core.types import (BlendMode, BorderRadiusValue, ColorEnums,
-                             ColorValue, ImageFit, ImageRepeat, OffsetValue,
-                             OptionalControlEventCallable, ResponsiveNumber,
-                             RotateValue, ScaleValue)
+from flet.core.types import (
+    BlendMode,
+    BorderRadiusValue,
+    ColorValue,
+    ImageFit,
+    ImageRepeat,
+    OffsetValue,
+    OptionalControlEventCallable,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
+)
 
 try:
     from typing import Literal
@@ -198,7 +206,7 @@ class Image(ConstrainedControl):
     @repeat.setter
     def repeat(self, value: Optional[ImageRepeat]):
         self.__repeat = value
-        self._set_enum_attr("repeat", value, ImageRepeat)
+        self._set_attr("repeat", value)
 
     # border_radius
     @property
@@ -217,7 +225,7 @@ class Image(ConstrainedControl):
     @color.setter
     def color(self, value: Optional[ColorValue]):
         self.__color = value
-        self._set_enum_attr("color", value, ColorEnums)
+        self._set_attr("color", value)
 
     # color_blend_mode
     @property
@@ -227,7 +235,7 @@ class Image(ConstrainedControl):
     @color_blend_mode.setter
     def color_blend_mode(self, value: Optional[BlendMode]):
         self.__blend_mode = value
-        self._set_enum_attr("colorBlendMode", value, BlendMode)
+        self._set_attr("colorBlendMode", value)
 
     # gapless_playback
     @property

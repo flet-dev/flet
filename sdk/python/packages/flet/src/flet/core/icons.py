@@ -8,7 +8,7 @@ sh ci/generate_material_icons_python.sh
 
 import random
 from enum import Enum, EnumMeta
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 from warnings import warn
 
 from flet.utils import deprecated
@@ -17782,3 +17782,6 @@ class Icons(str, Enum):
     ZOOM_OUT_MAP_SHARP = "zoom_out_map_sharp"
     ZOOM_OUT_MAP_ROUNDED = "zoom_out_map_rounded"
     ZOOM_OUT_MAP_OUTLINED = "zoom_out_map_outlined"
+
+
+MaterialIconEnums = Union[icons, Icons]

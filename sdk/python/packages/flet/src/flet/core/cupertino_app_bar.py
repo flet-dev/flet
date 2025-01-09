@@ -3,7 +3,7 @@ from typing import Any, Optional
 from flet.core.border import Border
 from flet.core.control import Control
 from flet.core.ref import Ref
-from flet.core.types import ColorEnums, ColorValue, PaddingValue
+from flet.core.types import ColorValue, PaddingValue
 
 
 class CupertinoAppBar(Control):
@@ -191,4 +191,4 @@ class CupertinoAppBar(Control):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)

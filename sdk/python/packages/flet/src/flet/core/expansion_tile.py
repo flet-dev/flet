@@ -12,7 +12,6 @@ from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
     ClipBehavior,
-    ColorEnums,
     ColorValue,
     CrossAxisAlignment,
     OffsetValue,
@@ -241,7 +240,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     @expanded_cross_axis_alignment.setter
     def expanded_cross_axis_alignment(self, value: Optional[CrossAxisAlignment]):
         self.__expanded_cross_axis_alignment = value
-        self._set_enum_attr("crossAxisAlignment", value, CrossAxisAlignment)
+        self._set_attr("crossAxisAlignment", value)
 
     # affinity
     @property
@@ -251,7 +250,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     @affinity.setter
     def affinity(self, value: Optional[TileAffinity]):
         self.__affinity = value
-        self._set_enum_attr("affinity", value, TileAffinity)
+        self._set_attr("affinity", value)
 
     # leading
     @property
@@ -315,7 +314,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+        self._set_attr("clipBehavior", value)
 
     # visual_density
     @property
@@ -325,7 +324,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     @visual_density.setter
     def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, (ThemeVisualDensity, VisualDensity))
+        self._set_attr("visualDensity", value)
 
     # maintain_state
     @property
@@ -362,7 +361,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     @text_color.setter
     def text_color(self, value: Optional[ColorValue]):
         self.__text_color = value
-        self._set_enum_attr("textColor", value, ColorEnums)
+        self._set_attr("textColor", value)
 
     # icon_color
     @property
@@ -372,7 +371,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     @icon_color.setter
     def icon_color(self, value: Optional[ColorValue]):
         self.__icon_color = value
-        self._set_enum_attr("iconColor", value, ColorEnums)
+        self._set_attr("iconColor", value)
 
     # bgcolor
     @property
@@ -382,7 +381,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgColor", value, ColorEnums)
+        self._set_attr("bgColor", value)
 
     # collapsed_bgcolor
     @property
@@ -392,7 +391,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     @collapsed_bgcolor.setter
     def collapsed_bgcolor(self, value: Optional[str]):
         self.__collapsed_bgcolor = value
-        self._set_enum_attr("collapsedBgColor", value, ColorEnums)
+        self._set_attr("collapsedBgColor", value)
 
     # collapsed_icon_color
     @property
@@ -402,7 +401,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     @collapsed_icon_color.setter
     def collapsed_icon_color(self, value: Optional[ColorValue]):
         self.__collapsed_icon_color = value
-        self._set_enum_attr("collapsedIconColor", value, ColorEnums)
+        self._set_attr("collapsedIconColor", value)
 
     # collapsed_text_color
     @property
@@ -412,7 +411,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     @collapsed_text_color.setter
     def collapsed_text_color(self, value: Optional[ColorValue]):
         self.__collapsed_text_color = value
-        self._set_enum_attr("collapsedTextColor", value, ColorEnums)
+        self._set_attr("collapsedTextColor", value)
 
     # collapsed_shape
     @property

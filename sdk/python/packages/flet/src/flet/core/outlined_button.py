@@ -11,9 +11,7 @@ from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
     ClipBehavior,
-    ColorEnums,
     ColorValue,
-    IconEnums,
     IconValue,
     OffsetValue,
     OptionalControlEventCallable,
@@ -22,7 +20,6 @@ from flet.core.types import (
     ScaleValue,
     UrlTarget,
 )
-from flet.utils import deprecated
 
 
 class OutlinedButton(ConstrainedControl, AdaptiveControl):
@@ -194,7 +191,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     @icon.setter
     def icon(self, value: Optional[IconValue]):
         self.__icon = value
-        self._set_enum_attr("icon", value, IconEnums)
+        self._set_attr("icon", value)
 
     # icon_color
     @property
@@ -204,7 +201,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     @icon_color.setter
     def icon_color(self, value: Optional[ColorValue]):
         self.__icon_color = value
-        self._set_enum_attr("iconColor", value, ColorEnums)
+        self._set_attr("iconColor", value)
 
     # style
     @property
@@ -232,7 +229,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     @url_target.setter
     def url_target(self, value: Optional[UrlTarget]):
         self.__url_target = value
-        self._set_enum_attr("urlTarget", value, UrlTarget)
+        self._set_attr("urlTarget", value)
 
     # on_click
     @property
@@ -279,7 +276,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+        self._set_attr("clipBehavior", value)
 
     # on_hover
     @property

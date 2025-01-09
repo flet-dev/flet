@@ -13,7 +13,6 @@ from flet.core.text_style import TextStyle
 from flet.core.textfield import KeyboardType, TextCapitalization
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     ControlState,
     ControlStateValue,
@@ -26,7 +25,6 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
-from flet.utils import deprecated
 
 
 class SearchBar(ConstrainedControl):
@@ -405,7 +403,7 @@ class SearchBar(ConstrainedControl):
     @view_surface_tint_color.setter
     def view_surface_tint_color(self, value: Optional[ColorValue]):
         self.__view_surface_tint_color = value
-        self._set_enum_attr("viewSurfaceTintColor", value, ColorEnums)
+        self._set_attr("viewSurfaceTintColor", value)
 
     # autofocus
     @property
@@ -451,7 +449,7 @@ class SearchBar(ConstrainedControl):
     @view_bgcolor.setter
     def view_bgcolor(self, value: Optional[str]):
         self.__view_bgcolor = value
-        self._set_enum_attr("viewBgcolor", value, ColorEnums)
+        self._set_attr("viewBgcolor", value)
 
     # divider_color
     @property
@@ -461,7 +459,7 @@ class SearchBar(ConstrainedControl):
     @divider_color.setter
     def divider_color(self, value: Optional[ColorValue]):
         self.__divider_color = value
-        self._set_enum_attr("dividerColor", value, ColorEnums)
+        self._set_attr("dividerColor", value)
 
     # bar_hint_text
     @property
@@ -525,7 +523,7 @@ class SearchBar(ConstrainedControl):
     @capitalization.setter
     def capitalization(self, value: TextCapitalization):
         self.__capitalization = value
-        self._set_enum_attr("capitalization", value, TextCapitalization)
+        self._set_attr("capitalization", value)
 
     # keyboard_type
     @property
@@ -535,7 +533,7 @@ class SearchBar(ConstrainedControl):
     @keyboard_type.setter
     def keyboard_type(self, value: KeyboardType):
         self.__keyboard_type = value
-        self._set_enum_attr("keyboardType", value, KeyboardType)
+        self._set_attr("keyboardType", value)
 
     # view_header_text_style
     @property

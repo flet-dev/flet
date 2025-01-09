@@ -234,7 +234,7 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     @dismiss_direction.setter
     def dismiss_direction(self, value: Optional[DismissDirection]):
         self.__dismiss_direction = value
-        self._set_enum_attr("dismissDirection", value, DismissDirection)
+        self._set_attr("dismissDirection", value)
 
     # dismissThresholds
     @property

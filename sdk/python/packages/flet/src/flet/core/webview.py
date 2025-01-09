@@ -13,7 +13,6 @@ from flet.core.exceptions import FletUnsupportedPlatformException
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
@@ -354,7 +353,7 @@ class WebView(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # url
     @property

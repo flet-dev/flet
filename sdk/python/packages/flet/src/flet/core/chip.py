@@ -11,7 +11,6 @@ from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
     ClipBehavior,
-    ColorEnums,
     ColorValue,
     ControlStateValue,
     OffsetValue,
@@ -313,7 +312,7 @@ class Chip(ConstrainedControl):
     @delete_icon_color.setter
     def delete_icon_color(self, value: Optional[ColorValue]):
         self.__delete_icon_color = value
-        self._set_enum_attr("deleteIconColor", value, ColorEnums)
+        self._set_attr("deleteIconColor", value)
 
     # disabled_color
     @property
@@ -323,7 +322,7 @@ class Chip(ConstrainedControl):
     @disabled_color.setter
     def disabled_color(self, value: Optional[ColorValue]):
         self.__disabled_color = value
-        self._set_enum_attr("disabledColor", value, ColorEnums)
+        self._set_attr("disabledColor", value)
 
     # color
     @property
@@ -351,7 +350,7 @@ class Chip(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # check_color
     @property
@@ -361,7 +360,7 @@ class Chip(ConstrainedControl):
     @check_color.setter
     def check_color(self, value: Optional[ColorValue]):
         self.__check_color = value
-        self._set_enum_attr("checkColor", value, ColorEnums)
+        self._set_attr("checkColor", value)
 
     # selected_color
     @property
@@ -371,7 +370,7 @@ class Chip(ConstrainedControl):
     @selected_color.setter
     def selected_color(self, value: Optional[ColorValue]):
         self.__selected_color = value
-        self._set_enum_attr("selectedColor", value, ColorEnums)
+        self._set_attr("selectedColor", value)
 
     # selected_shadow_color
     @property
@@ -381,7 +380,7 @@ class Chip(ConstrainedControl):
     @selected_shadow_color.setter
     def selected_shadow_color(self, value: Optional[ColorValue]):
         self.__selected_shadow_color = value
-        self._set_enum_attr("selectedShadowColor", value, ColorEnums)
+        self._set_attr("selectedShadowColor", value)
 
     # surface_tint_color
     @property
@@ -391,7 +390,7 @@ class Chip(ConstrainedControl):
     @surface_tint_color.setter
     def surface_tint_color(self, value: Optional[ColorValue]):
         self.__surface_tint_color = value
-        self._set_enum_attr("surfaceTintColor", value, ColorEnums)
+        self._set_attr("surfaceTintColor", value)
 
     # shadow_color
     @property
@@ -401,7 +400,7 @@ class Chip(ConstrainedControl):
     @shadow_color.setter
     def shadow_color(self, value: Optional[ColorValue]):
         self.__shadow_color = value
-        self._set_enum_attr("shadowColor", value, ColorEnums)
+        self._set_attr("shadowColor", value)
 
     # elevation
     @property
@@ -438,7 +437,7 @@ class Chip(ConstrainedControl):
     @visual_density.setter
     def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, (ThemeVisualDensity, VisualDensity))
+        self._set_attr("visualDensity", value)
 
     # clip_behavior
     @property
@@ -448,7 +447,7 @@ class Chip(ConstrainedControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+        self._set_attr("clipBehavior", value)
 
     # border_side
     @property

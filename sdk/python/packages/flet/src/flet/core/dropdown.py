@@ -13,10 +13,8 @@ from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
     BorderRadiusValue,
-    ColorEnums,
     ColorValue,
     DurationValue,
-    IconEnums,
     IconValueOrControl,
     OffsetValue,
     OptionalControlEventCallable,
@@ -25,7 +23,6 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
-from flet.utils import deprecated
 
 
 class Option(Control):
@@ -433,7 +430,7 @@ class Dropdown(FormFieldControl):
     @select_icon.setter
     def select_icon(self, value: Optional[IconValueOrControl]):
         self.__select_icon = value
-        self._set_enum_attr("selectIcon", value, IconEnums)
+        self._set_attr("selectIcon", value)
 
     # icon_content
     @property
@@ -498,7 +495,7 @@ class Dropdown(FormFieldControl):
     @icon_enabled_color.setter
     def icon_enabled_color(self, value: Optional[ColorValue]):
         self.__icon_enabled_color = value
-        self._set_enum_attr("selectIconEnabledColor", value, ColorEnums)
+        self._set_attr("selectIconEnabledColor", value)
         if value is not None:
             warnings.warn(
                 f"icon_enabled_color is deprecated since version 0.25.0 "
@@ -515,7 +512,7 @@ class Dropdown(FormFieldControl):
     @select_icon_enabled_color.setter
     def select_icon_enabled_color(self, value: Optional[ColorValue]):
         self.__select_icon_enabled_color = value
-        self._set_enum_attr("selectIconEnabledColor", value, ColorEnums)
+        self._set_attr("selectIconEnabledColor", value)
 
     # icon_disabled_color
     @property
@@ -531,7 +528,7 @@ class Dropdown(FormFieldControl):
     @icon_disabled_color.setter
     def icon_disabled_color(self, value: Optional[ColorValue]):
         self.__icon_disabled_color = value
-        self._set_enum_attr("selectIconDisabledColor", value, ColorEnums)
+        self._set_attr("selectIconDisabledColor", value)
         if value is not None:
             warnings.warn(
                 f"icon_disabled_color is deprecated since version 0.25.0 "
@@ -548,7 +545,7 @@ class Dropdown(FormFieldControl):
     @select_icon_disabled_color.setter
     def select_icon_disabled_color(self, value: Optional[ColorValue]):
         self.__select_icon_disabled_color = value
-        self._set_enum_attr("selectIconDisabledColor", value, ColorEnums)
+        self._set_attr("selectIconDisabledColor", value)
 
     # item_height
     @property

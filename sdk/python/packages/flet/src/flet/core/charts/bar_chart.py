@@ -15,7 +15,6 @@ from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
@@ -221,7 +220,7 @@ class BarChart(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # interactive
     @property
@@ -240,7 +239,7 @@ class BarChart(ConstrainedControl):
     @tooltip_bgcolor.setter
     def tooltip_bgcolor(self, value: Optional[str]):
         self.__tooltip_bgcolor = value
-        self._set_enum_attr("tooltipBgcolor", value, ColorEnums)
+        self._set_attr("tooltipBgcolor", value)
 
     # border
     @property
@@ -412,7 +411,7 @@ class BarChart(ConstrainedControl):
     @tooltip_direction.setter
     def tooltip_direction(self, value: Optional[TooltipDirection]):
         self.__tooltip_direction = value
-        self._set_enum_attr("tooltipDirection", value, TooltipDirection)
+        self._set_attr("tooltipDirection", value)
 
     # on_chart_event
     @property

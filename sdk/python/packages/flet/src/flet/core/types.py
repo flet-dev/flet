@@ -16,16 +16,17 @@ from typing import (
 from warnings import warn
 
 from flet.core.border_radius import BorderRadius
-from flet.core.colors import Colors, colors
+from flet.core.colors import MaterialColorsEnums
+from flet.core.enumerations import ExtendedEnum
 
 if TYPE_CHECKING:
-    from flet.core.control import Control
+    pass
 
 from flet.core.control_event import ControlEvent
-from flet.core.cupertino_colors import CupertinoColors, cupertino_colors
-from flet.core.cupertino_icons import CupertinoIcons, cupertino_icons
+from flet.core.cupertino_colors import CupertinoColorsEnums
+from flet.core.cupertino_icons import CupertinoIconEnums
 from flet.core.event import Event
-from flet.core.icons import Icons, icons
+from flet.core.icons import MaterialIconEnums
 from flet.core.margin import Margin
 from flet.core.padding import Padding
 from flet.core.transform import Offset, Rotate, Scale
@@ -36,14 +37,14 @@ FLET_APP_WEB = "flet_app_web"
 FLET_APP_HIDDEN = "flet_app_hidden"
 
 
-class AppView(Enum):
+class AppView(ExtendedEnum):
     WEB_BROWSER = "web_browser"
     FLET_APP = "flet_app"
     FLET_APP_WEB = "flet_app_web"
     FLET_APP_HIDDEN = "flet_app_hidden"
 
 
-class WindowEventType(Enum):
+class WindowEventType(ExtendedEnum):
     CLOSE = "close"
     FOCUS = "focus"
     BLUR = "blur"
@@ -61,13 +62,13 @@ class WindowEventType(Enum):
     ENTER_FULL_SCREEN = "enter-full-screen"
 
 
-class WebRenderer(Enum):
+class WebRenderer(ExtendedEnum):
     AUTO = "auto"
     HTML = "html"
     CANVAS_KIT = "canvaskit"
 
 
-class UrlTarget(Enum):
+class UrlTarget(ExtendedEnum):
     BLANK = "blank"
     SELF = "_self"
     PARENT = "_parent"
@@ -100,7 +101,7 @@ class Duration:
 DurationValue = Union[int, Duration, None]
 
 
-class FontWeight(Enum):
+class FontWeight(ExtendedEnum):
     NORMAL = "normal"
     BOLD = "bold"
     W_100 = "w100"
@@ -114,7 +115,7 @@ class FontWeight(Enum):
     W_900 = "w900"
 
 
-class NotchShape(Enum):
+class NotchShape(ExtendedEnum):
     AUTO = "auto"
     CIRCULAR = "circular"
 
@@ -161,7 +162,7 @@ class MaterialState(Enum, metaclass=MaterialStateDeprecated):
     DEFAULT = ""
 
 
-class ControlState(Enum):
+class ControlState(ExtendedEnum):
     HOVERED = "hovered"
     FOCUSED = "focused"
     PRESSED = "pressed"
@@ -173,7 +174,7 @@ class ControlState(Enum):
     DEFAULT = "default"
 
 
-class MainAxisAlignment(Enum):
+class MainAxisAlignment(ExtendedEnum):
     START = "start"
     END = "end"
     CENTER = "center"
@@ -182,7 +183,7 @@ class MainAxisAlignment(Enum):
     SPACE_EVENLY = "spaceEvenly"
 
 
-class CrossAxisAlignment(Enum):
+class CrossAxisAlignment(ExtendedEnum):
     START = "start"
     END = "end"
     CENTER = "center"
@@ -190,26 +191,26 @@ class CrossAxisAlignment(Enum):
     BASELINE = "baseline"
 
 
-class VerticalAlignment(Enum):
+class VerticalAlignment(ExtendedEnum):
     NONE = None
     START = -1.0
     END = 1.0
     CENTER = 0.0
 
 
-class TabAlignment(Enum):
+class TabAlignment(ExtendedEnum):
     START = "start"
     START_OFFSET = "startOffset"
     FILL = "fill"
     CENTER = "center"
 
 
-class LabelPosition(Enum):
+class LabelPosition(ExtendedEnum):
     RIGHT = "right"
     LEFT = "left"
 
 
-class BlendMode(Enum):
+class BlendMode(ExtendedEnum):
     CLEAR = "clear"
     COLOR = "color"
     COLOR_BURN = "colorBurn"
@@ -242,7 +243,7 @@ class BlendMode(Enum):
     XOR = "xor"
 
 
-class TextAlign(Enum):
+class TextAlign(ExtendedEnum):
     LEFT = "left"
     RIGHT = "right"
     CENTER = "center"
@@ -251,21 +252,21 @@ class TextAlign(Enum):
     END = "end"
 
 
-class ScrollMode(Enum):
+class ScrollMode(ExtendedEnum):
     AUTO = "auto"
     ADAPTIVE = "adaptive"
     ALWAYS = "always"
     HIDDEN = "hidden"
 
 
-class ClipBehavior(Enum):
+class ClipBehavior(ExtendedEnum):
     NONE = "none"
     ANTI_ALIAS = "antiAlias"
     ANTI_ALIAS_WITH_SAVE_LAYER = "antiAliasWithSaveLayer"
     HARD_EDGE = "hardEdge"
 
 
-class ImageFit(Enum):
+class ImageFit(ExtendedEnum):
     NONE = "none"
     CONTAIN = "contain"
     COVER = "cover"
@@ -275,14 +276,14 @@ class ImageFit(Enum):
     SCALE_DOWN = "scaleDown"
 
 
-class ImageRepeat(Enum):
+class ImageRepeat(ExtendedEnum):
     NO_REPEAT = "noRepeat"
     REPEAT = "repeat"
     REPEAT_X = "repeatX"
     REPEAT_Y = "repeatY"
 
 
-class PagePlatform(Enum):
+class PagePlatform(ExtendedEnum):
     IOS = "ios"
     ANDROID = "android"
     MACOS = "macos"
@@ -290,23 +291,23 @@ class PagePlatform(Enum):
     LINUX = "linux"
 
 
-class ThemeMode(Enum):
+class ThemeMode(ExtendedEnum):
     SYSTEM = "system"
     LIGHT = "light"
     DARK = "dark"
 
 
-class Brightness(Enum):
+class Brightness(ExtendedEnum):
     LIGHT = "light"
     DARK = "dark"
 
 
-class Orientation(Enum):
+class Orientation(ExtendedEnum):
     PORTRAIT = "portrait"
     LANDSCAPE = "landscape"
 
 
-class FloatingActionButtonLocation(Enum):
+class FloatingActionButtonLocation(ExtendedEnum):
     CENTER_DOCKED = "centerDocked"
     CENTER_FLOAT = "centerFloat"
     CENTER_TOP = "centerTop"
@@ -328,7 +329,7 @@ class FloatingActionButtonLocation(Enum):
     START_TOP = "startTop"
 
 
-class AppLifecycleState(Enum):
+class AppLifecycleState(ExtendedEnum):
     SHOW = "show"
     RESUME = "resume"
     HIDE = "hide"
@@ -338,7 +339,7 @@ class AppLifecycleState(Enum):
     RESTART = "restart"
 
 
-class MouseCursor(Enum):
+class MouseCursor(ExtendedEnum):
     ALIAS = "alias"
     ALL_SCROLL = "allScroll"
     BASIC = "basic"
@@ -377,7 +378,7 @@ class MouseCursor(Enum):
     ZOOM_OUT = "zoomOut"
 
 
-class PointerDeviceType(Enum):
+class PointerDeviceType(ExtendedEnum):
     TOUCH = "touch"
     MOUSE = "mouse"
     STYLUS = "stylus"
@@ -386,13 +387,13 @@ class PointerDeviceType(Enum):
     UNKNOWN = "unknown"
 
 
-class StrokeCap(Enum):
+class StrokeCap(ExtendedEnum):
     ROUND = "round"
     SQUARE = "square"
     BUTT = "butt"
 
 
-class StrokeJoin(Enum):
+class StrokeJoin(ExtendedEnum):
     MITER = "miter"
     ROUND = "round"
     BEVEL = "bevel"
@@ -423,7 +424,7 @@ class ThemeVisualDensity(Enum, metaclass=ThemeVisualDensityDeprecated):
     ADAPTIVE_PLATFORM_DENSITY = "adaptivePlatformDensity"
 
 
-class VisualDensity(Enum):
+class VisualDensity(ExtendedEnum):
     STANDARD = "standard"
     COMPACT = "compact"
     COMFORTABLE = "comfortable"
@@ -450,12 +451,10 @@ OptionalEventCallable = Optional[Callable[[EventType], Any]]
 OptionalControlEventCallable = Optional[Callable[[ControlEvent], Any]]
 
 # Colors
-ColorEnums = (colors, Colors, cupertino_colors, CupertinoColors)
-ColorValue = Union[str, colors, Colors, cupertino_colors, CupertinoColors]
+ColorValue = Union[str, MaterialColorsEnums, CupertinoColorsEnums]
 
 # Icons
-IconEnums = (icons, Icons, cupertino_icons, CupertinoIcons)
-IconValue = Union[str, icons, Icons, cupertino_icons, CupertinoIcons]
+IconValue = Union[str, MaterialIconEnums, CupertinoIconEnums]
 IconValueOrControl = Union[IconValue, "Control"]
 
 # ControlState

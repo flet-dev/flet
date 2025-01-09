@@ -266,7 +266,7 @@ class FilePicker(Control):
     @state.setter
     def state(self, value: Optional[FilePickerState]):
         self.__state = value
-        self._set_enum_attr("state", value, FilePickerState)
+        self._set_attr("state", value)
 
     # result
     @property
@@ -308,7 +308,7 @@ class FilePicker(Control):
     @file_type.setter
     def file_type(self, value: FilePickerFileType):
         self.__file_type = value
-        self._set_enum_attr("fileType", value, FilePickerFileType)
+        self._set_attr("fileType", value)
 
     # allowed_extensions
     @property

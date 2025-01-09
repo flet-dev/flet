@@ -40,6 +40,8 @@ from enum import Enum, EnumMeta
 from typing import TYPE_CHECKING, Dict, List, Optional, Union
 from warnings import warn
 
+from flet.core.enumerations import ExtendedEnum
+
 if TYPE_CHECKING:
     from flet.core.types import ColorValue
 
@@ -58,7 +60,7 @@ class ColorsDeprecated(EnumMeta):
         return EnumMeta.__getattribute__(self, item)
 
 
-class colors(str, Enum, metaclass=ColorsDeprecated):
+class colors(ExtendedEnum, metaclass=ColorsDeprecated):
     @staticmethod
     @deprecated(
         reason="Use Colors.with_opacity() method instead.",
@@ -425,7 +427,7 @@ class colors(str, Enum, metaclass=ColorsDeprecated):
     GREY_900 = "grey900"
 
 
-class Colors(str, Enum):
+class Colors(ExtendedEnum):
     @staticmethod
     def with_opacity(opacity: Union[int, float], color: "ColorValue") -> str:
         assert 0 <= opacity <= 1, "opacity must be between 0 and 1"
@@ -792,3 +794,6 @@ class Colors(str, Enum):
     GREY_700 = "grey700"
     GREY_800 = "grey800"
     GREY_900 = "grey900"
+
+
+MaterialColorsEnums = Union[colors, Colors]

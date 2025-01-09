@@ -5,7 +5,7 @@ from flet.core.buttons import OutlinedBorder
 from flet.core.control import Control
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
-from flet.core.types import ClipBehavior, ColorEnums, ColorValue, OptionalNumber
+from flet.core.types import ClipBehavior, ColorValue, OptionalNumber
 
 
 class AppBar(AdaptiveControl):
@@ -258,7 +258,7 @@ class AppBar(AdaptiveControl):
     @color.setter
     def color(self, value: Optional[ColorValue]):
         self.__color = value
-        self._set_enum_attr("color", value, ColorEnums)
+        self._set_attr("color", value)
 
     # bgcolor
     @property
@@ -268,7 +268,7 @@ class AppBar(AdaptiveControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # shadow_color
     @property
@@ -278,7 +278,7 @@ class AppBar(AdaptiveControl):
     @shadow_color.setter
     def shadow_color(self, value: Optional[ColorValue]):
         self.__shadow_color = value
-        self._set_enum_attr("shadowColor", value, ColorEnums)
+        self._set_attr("shadowColor", value)
 
     # surface_tint_color
     @property
@@ -288,7 +288,7 @@ class AppBar(AdaptiveControl):
     @surface_tint_color.setter
     def surface_tint_color(self, value: Optional[ColorValue]):
         self.__surface_tint_color = value
-        self._set_enum_attr("surfaceTintColor", value, ColorEnums)
+        self._set_attr("surfaceTintColor", value)
 
     # is_secondary
     @property
@@ -348,7 +348,7 @@ class AppBar(AdaptiveControl):
 
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
-        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+        self._set_attr("clipBehavior", value)
 
     # actions
     @property

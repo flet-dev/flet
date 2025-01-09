@@ -27,7 +27,6 @@ from flet.core.types import (
     BlendMode,
     BorderRadiusValue,
     ClipBehavior,
-    ColorEnums,
     ColorValue,
     ImageFit,
     ImageRepeat,
@@ -300,13 +299,13 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # bgcolor
     @property
-    def bgcolor(self):
+    def bgcolor(self) -> Optional[ColorValue]:
         return self.__bgcolor
 
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgColor", value, ColorEnums)
+        self._set_attr("bgColor", value)
 
     # gradient
     @property
@@ -325,7 +324,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @blend_mode.setter
     def blend_mode(self, value: Optional[BlendMode]):
         self.__blend_mode = value
-        self._set_enum_attr("blendMode", value, BlendMode)
+        self._set_attr("blendMode", value)
 
     # blur
     @property
@@ -446,7 +445,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @image_fit.setter
     def image_fit(self, value: Optional[ImageFit]):
         self.__image_fit = value
-        self._set_enum_attr("imageFit", value, ImageFit)
+        self._set_attr("imageFit", value)
         if value is not None:
             warnings.warn(
                 f"image_fit is deprecated since version 0.24.0 "
@@ -469,7 +468,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @image_repeat.setter
     def image_repeat(self, value: Optional[ImageRepeat]):
         self.__image_repeat = value
-        self._set_enum_attr("imageRepeat", value, ImageRepeat)
+        self._set_attr("imageRepeat", value)
         if value is not None:
             warnings.warn(
                 f"image_repeat is deprecated since version 0.24.0 "
@@ -517,7 +516,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @shape.setter
     def shape(self, value: Optional[BoxShape]):
         self.__shape = value
-        self._set_enum_attr("shape", value, BoxShape)
+        self._set_attr("shape", value)
 
     # clip_behavior
     @property
@@ -527,7 +526,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+        self._set_attr("clipBehavior", value)
 
     # ink
     @property
@@ -546,7 +545,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @ink_color.setter
     def ink_color(self, value: Optional[ColorValue]):
         self.__ink_color = value
-        self._set_enum_attr("inkColor", value, ColorEnums)
+        self._set_attr("inkColor", value)
 
     # animate
     @property
@@ -574,7 +573,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @url_target.setter
     def url_target(self, value: Optional[UrlTarget]):
         self.__url_target = value
-        self._set_enum_attr("urlTarget", value, UrlTarget)
+        self._set_attr("urlTarget", value)
 
     # theme
     @property
@@ -593,7 +592,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @theme_mode.setter
     def theme_mode(self, value: Optional[ThemeMode]):
         self.__theme_mode = value
-        self._set_enum_attr("themeMode", value, ThemeMode)
+        self._set_attr("themeMode", value)
 
     # on_click
     @property

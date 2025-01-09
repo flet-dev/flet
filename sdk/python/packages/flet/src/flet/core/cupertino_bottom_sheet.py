@@ -2,12 +2,7 @@ from typing import Any, Optional
 
 from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
-from flet.core.types import (
-    ColorEnums,
-    ColorValue,
-    OptionalControlEventCallable,
-    PaddingValue,
-)
+from flet.core.types import ColorValue, OptionalControlEventCallable, PaddingValue
 
 
 class CupertinoBottomSheet(Control):
@@ -94,7 +89,7 @@ class CupertinoBottomSheet(Control):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgColor", value, ColorEnums)
+        self._set_attr("bgColor", value)
 
     # height
     @property

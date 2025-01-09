@@ -9,7 +9,6 @@ from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     ControlStateValue,
     MouseCursor,
@@ -205,7 +204,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     @interaction.setter
     def interaction(self, value: Optional[SliderInteraction]):
         self.__interaction = value
-        self._set_enum_attr("interaction", value, SliderInteraction)
+        self._set_attr("interaction", value)
 
     # min
     @property
@@ -233,7 +232,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     @secondary_active_color.setter
     def secondary_active_color(self, value: Optional[ColorValue]):
         self.__secondary_active_color = value
-        self._set_enum_attr("secondaryActiveColor", value, ColorEnums)
+        self._set_attr("secondaryActiveColor", value)
 
     # mouse_cursor
     @property
@@ -242,7 +241,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
 
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
-        self._set_enum_attr("mouseCursor", value, MouseCursor)
+        self._set_attr("mouseCursor", value)
 
     # max
     @property
@@ -297,7 +296,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     @active_color.setter
     def active_color(self, value: Optional[ColorValue]):
         self.__active_color = value
-        self._set_enum_attr("activeColor", value, ColorEnums)
+        self._set_attr("activeColor", value)
 
     # inactive_color
     @property
@@ -307,7 +306,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     @inactive_color.setter
     def inactive_color(self, value: Optional[ColorValue]):
         self.__inactive_color = value
-        self._set_enum_attr("inactiveColor", value, ColorEnums)
+        self._set_attr("inactiveColor", value)
 
     # thumb_color
     @property
@@ -317,7 +316,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     @thumb_color.setter
     def thumb_color(self, value: Optional[ColorValue]):
         self.__thumb_color = value
-        self._set_enum_attr("thumbColor", value, ColorEnums)
+        self._set_attr("thumbColor", value)
 
     # on_change
     @property

@@ -136,4 +136,4 @@ class AutofillGroup(Control):
     @dispose_action.setter
     def dispose_action(self, value: Optional[AutofillGroupDisposeAction]):
         self.__dispose_action = value
-        self._set_enum_attr("disposeAction", value, AutofillGroupDisposeAction)
+        self._set_attr("disposeAction", value)

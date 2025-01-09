@@ -6,9 +6,7 @@ from flet.core.buttons import OutlinedBorder
 from flet.core.control import Control
 from flet.core.ref import Ref
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
-    IconEnums,
     IconValueOrControl,
     OptionalControlEventCallable,
     OptionalNumber,
@@ -78,7 +76,7 @@ class NavigationDrawerDestination(Control):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgColor", value, ColorEnums)
+        self._set_attr("bgColor", value)
 
     # icon
     @property
@@ -88,7 +86,7 @@ class NavigationDrawerDestination(Control):
     @icon.setter
     def icon(self, value: Optional[IconValueOrControl]):
         self.__icon = value
-        self._set_enum_attr("icon", value, IconEnums)
+        self._set_attr("icon", value)
 
     # icon_content
     @property
@@ -120,7 +118,7 @@ class NavigationDrawerDestination(Control):
     @selected_icon.setter
     def selected_icon(self, value: Optional[IconValueOrControl]):
         self.__selected_icon = value
-        self._set_enum_attr("selectedIcon", value, IconEnums)
+        self._set_attr("selectedIcon", value)
 
     # selected_icon_content
     @property
@@ -309,7 +307,7 @@ class NavigationDrawer(Control):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # position
     @property
@@ -337,7 +335,7 @@ class NavigationDrawer(Control):
     @indicator_color.setter
     def indicator_color(self, value: Optional[ColorValue]):
         self.__indicator_color = value
-        self._set_enum_attr("indicatorColor", value, ColorEnums)
+        self._set_attr("indicatorColor", value)
 
     # indicator_shape
     @property
@@ -356,7 +354,7 @@ class NavigationDrawer(Control):
     @shadow_color.setter
     def shadow_color(self, value: Optional[ColorValue]):
         self.__shadow_color = value
-        self._set_enum_attr("shadowColor", value, ColorEnums)
+        self._set_attr("shadowColor", value)
 
     # surface_tint_color
     @property
@@ -366,7 +364,7 @@ class NavigationDrawer(Control):
     @surface_tint_color.setter
     def surface_tint_color(self, value: Optional[ColorValue]):
         self.__surface_tint_color = value
-        self._set_enum_attr("surfaceTintColor", value, ColorEnums)
+        self._set_attr("surfaceTintColor", value)
 
     # tile_padding
     @property

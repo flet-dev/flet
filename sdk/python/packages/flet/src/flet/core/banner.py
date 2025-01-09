@@ -4,7 +4,6 @@ from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     MarginValue,
     OptionalControlEventCallable,
@@ -221,7 +220,7 @@ class Banner(Control):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgColor", value, ColorEnums)
+        self._set_attr("bgColor", value)
 
     # content_text_style
     @property
@@ -240,7 +239,7 @@ class Banner(Control):
     @shadow_color.setter
     def shadow_color(self, value: Optional[ColorValue]):
         self.__shadow_color = value
-        self._set_enum_attr("shadowColor", value, ColorEnums)
+        self._set_attr("shadowColor", value)
 
     # surface_tint_color
     @property
@@ -250,7 +249,7 @@ class Banner(Control):
     @surface_tint_color.setter
     def surface_tint_color(self, value: Optional[ColorValue]):
         self.__surface_tint_color = value
-        self._set_enum_attr("surfaceTintColor", value, ColorEnums)
+        self._set_attr("surfaceTintColor", value)
 
     # divider_color
     @property
@@ -260,7 +259,7 @@ class Banner(Control):
     @divider_color.setter
     def divider_color(self, value: Optional[ColorValue]):
         self.__divider_color = value
-        self._set_enum_attr("dividerColor", value, ColorEnums)
+        self._set_attr("dividerColor", value)
 
     # elevation
     @property

@@ -12,7 +12,6 @@ from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
@@ -136,7 +135,7 @@ class PieChart(ConstrainedControl):
     @center_space_color.setter
     def center_space_color(self, value: Optional[ColorValue]):
         self.__center_space_color = value
-        self._set_enum_attr("centerSpaceColor", value, ColorEnums)
+        self._set_attr("centerSpaceColor", value)
 
     # center_space_radius
     @property
