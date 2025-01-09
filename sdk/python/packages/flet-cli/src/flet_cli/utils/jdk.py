@@ -2,13 +2,10 @@ import os
 import platform
 import shutil
 import subprocess
-import tarfile
-import urllib.request
-import zipfile
 import tempfile
 from pathlib import Path
 
-from tqdm import tqdm
+from flet_cli.utils.distros import download_with_progress, extract_with_progress
 
 # Constants
 JDK_MAJOR_VER = 17
@@ -18,12 +15,10 @@ JDK_DIR_NAME = f"{JDK_RELEASE}+{JDK_BUILD}"
 
 
 def get_java_home():
-    """Check for JAVA_HOME environment variable."""
     return os.getenv("JAVA_HOME")
 
 
 def check_jdk_version(jdk_path):
-    """Check if the JDK version is sufficient."""
     try:
         result = subprocess.run(
             [os.path.join(jdk_path, "bin", "javac"), "-version"],
@@ -68,49 +63,7 @@ def platform_info():
     return platform_name, arch_name, ext
 
 
-def download_with_progress(url, destination):
-    """Download file with progress displayed using tqdm."""
-    response = urllib.request.urlopen(url)
-    total_size = int(response.info().get("Content-Length", -1))
-    chunk_size = 1024
-
-    with open(destination, "wb") as f, tqdm(
-        total=total_size, unit="B", unit_scale=True, desc=url.split("/")[-1]
-    ) as pbar:
-        for chunk in iter(lambda: response.read(chunk_size), b""):
-            f.write(chunk)
-            pbar.update(len(chunk))
-
-
-def extract_with_progress(archive, destination):
-    """Extract archive with progress and preserve file attributes."""
-    temp_extract_dir = os.path.join(tempfile.gettempdir(), f"jdk-{JDK_DIR_NAME}")
-
-    if archive.endswith(".tar.gz"):
-        with tarfile.open(archive, "r:gz") as tar:
-            members = tar.getmembers()
-            with tqdm(total=len(members), unit="file") as pbar:
-                for member in members:
-                    tar.extract(member, path=temp_extract_dir)
-                    pbar.update(1)
-    elif archive.endswith(".zip"):
-        with zipfile.ZipFile(archive, "r") as zip_ref:
-            members = zip_ref.infolist()
-            with tqdm(total=len(members), unit="file") as pbar:
-                for member in members:
-                    zip_ref.extract(member, path=temp_extract_dir)
-                    pbar.update(1)
-
-    # Move contents of extracted `jdk-{JDK_DIR_NAME}` to the destination
-    extracted_root = os.path.join(temp_extract_dir, f"jdk-{JDK_DIR_NAME}")
-    for item in os.listdir(extracted_root):
-        shutil.move(os.path.join(extracted_root, item), destination)
-
-    shutil.rmtree(temp_extract_dir)  # Clean up temporary directory
-
-
 def install_jdk():
-    """Install JDK if not available or version is insufficient."""
     java_home = get_java_home()
 
     # Step 1: Check if JAVA_HOME is set and valid
@@ -144,21 +97,26 @@ def install_jdk():
     install_dir = Path.home() / "java" / JDK_DIR_NAME
 
     # Step 4: Check if JDK is already installed
-    if install_dir.exists():
-        print(f"JDK already installed at {install_dir}")
-        return str(install_dir)
+    if not install_dir.exists():
 
-    # Step 5: Download and extract JDK
-    archive_path = os.path.join(tempfile.gettempdir(), f"jdk-{JDK_DIR_NAME}.{ext}")
-    print(f"Downloading JDK from {url}...")
-    download_with_progress(url, archive_path)
+        # Step 5: Download and extract JDK
+        archive_path = os.path.join(tempfile.gettempdir(), f"jdk-{JDK_DIR_NAME}.{ext}")
+        print(f"Downloading JDK from {url}...")
+        download_with_progress(url, archive_path)
 
-    print(f"Extracting JDK to {install_dir}...")
-    install_dir.mkdir(exist_ok=True, parents=True)
-    extract_with_progress(archive_path, str(install_dir))
+        print(f"Extracting JDK to {install_dir}...")
+        install_dir.mkdir(exist_ok=True, parents=True)
+        extract_with_progress(archive_path, str(install_dir))
 
-    # Step 6: Clean up archive
-    os.remove(archive_path)
+        # Move contents of extracted `jdk-{JDK_DIR_NAME}` to the destination
+        extracted_root = os.path.join(install_dir, f"jdk-{JDK_DIR_NAME}")
+        for item in os.listdir(extracted_root):
+            shutil.move(os.path.join(extracted_root, item), str(install_dir))
+
+        shutil.rmtree(extracted_root)  # remove root
+
+        # Step 6: Clean up archive
+        os.remove(archive_path)
 
     print(f"JDK installed at {install_dir}")
 

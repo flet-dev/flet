@@ -4,12 +4,12 @@ import os
 import platform
 import re
 import shutil
-import subprocess
 import sys
 from pathlib import Path
 from typing import Optional, Union, cast
 
 import flet.version
+import flet_cli.utils.processes as processes
 import yaml
 from flet.utils import copy_tree, is_windows, slugify
 from flet.utils.platform_utils import get_bool_env_var
@@ -26,9 +26,6 @@ from rich.console import Console
 from rich.style import Style
 from rich.table import Column, Table
 from rich.theme import Theme
-
-if is_windows():
-    from ctypes import windll
 
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.25.0/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
@@ -1443,6 +1440,9 @@ class Command(BaseCommand):
         assert self.flutter_packages_dir
         assert self.pubspec_path
 
+        if not self.flutter_packages_dir.exists():
+            return
+
         self.status.update(
             f"[bold blue]Registering Flutter user extensions {self.emojis['loading']}... "
         )
@@ -1642,35 +1642,11 @@ class Command(BaseCommand):
         return batch_path
 
     def run(self, args, cwd, env: Optional[dict] = None, capture_output=True):
-        if is_windows():
-            # Source: https://stackoverflow.com/a/77374899/1435891
-            # Save the current console output code page and switch to 65001 (UTF-8)
-            previousCp = windll.kernel32.GetConsoleOutputCP()
-            windll.kernel32.SetConsoleOutputCP(65001)
 
         if self.verbose > 0:
             console.log(f"Run subprocess: {args}")
 
-        cmd_env = None
-        if env is not None:
-            cmd_env = os.environ.copy()
-            for k, v in env.items():
-                cmd_env[k] = v
-
-        r = subprocess.run(
-            args,
-            cwd=cwd,
-            capture_output=capture_output,
-            text=True,
-            encoding="utf8",
-            env=cmd_env,
-        )
-
-        if is_windows():
-            # Restore the previous output console code page.
-            windll.kernel32.SetConsoleOutputCP(previousCp)
-
-        return r
+        return processes.run(args, cwd, env, capture_output)
 
     def cleanup(self, exit_code: int, message: Optional[str] = None):
         if exit_code == 0:
