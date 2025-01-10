@@ -33,7 +33,7 @@ if is_windows():
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.25.0/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
-MINIMAL_FLUTTER_VERSION = version.Version("3.27.0")
+MINIMAL_FLUTTER_VERSION = version.Version("3.27.1")
 
 error_style = Style(color="red", bold=True)
 console = Console(log_path=False, theme=Theme({"log.message": "green bold"}))
@@ -53,7 +53,7 @@ class Command(BaseCommand):
         self.package_platform = None
         self.config_platform = None
         self.target_platform = None
-        self.flutter_dependencies = None
+        self.flutter_dependencies = {}
         self.package_app_path = None
         self.options = None
         self.template_data = None
@@ -553,11 +553,12 @@ class Command(BaseCommand):
             self.validate_entry_point()
             self.setup_template_data()
             self.create_flutter_project()
+            self.package_python_app()
+            self.register_flutter_extensions()
+            self.create_flutter_project(second_pass=True)
             self.update_flutter_dependencies()
             self.customize_icons_and_splash_images()
             self.generate_icons_and_splash_screens()
-            self.package_python_app()
-            self.register_flutter_extensions()
             self.flutter_build()
             self.copy_build_output()
 
@@ -734,7 +735,7 @@ class Command(BaseCommand):
         if self.verbose > 0:
             console.log(
                 f"Additional Flutter dependencies: {self.flutter_dependencies}"
-                if self.flutter_dependencies
+                if len(self.flutter_dependencies) > 0
                 else "No additional Flutter dependencies!"
             )
 
@@ -954,7 +955,7 @@ class Command(BaseCommand):
 
         return flutter_dependencies
 
-    def create_flutter_project(self):
+    def create_flutter_project(self, second_pass=False):
         assert self.options
         assert self.get_pyproject
         assert self.flutter_dir
@@ -979,16 +980,17 @@ class Command(BaseCommand):
         )
 
         # if options.clear_cache is set, delete any existing Flutter bootstrap project directory
-        if self.options.clear_cache and self.flutter_dir.exists():
+        if self.options.clear_cache and self.flutter_dir.exists() and not second_pass:
             if self.verbose > 1:
                 console.log(f"Deleting {self.flutter_dir}")
             shutil.rmtree(self.flutter_dir, ignore_errors=True)
 
         # create a new Flutter bootstrap project directory, if non-existent
-        self.flutter_dir.mkdir(parents=True, exist_ok=True)
-        self.status.update(
-            f"[bold blue]Creating Flutter bootstrap project from {template_url} with ref {template_ref} {self.emojis['loading']}... "
-        )
+        if not second_pass:
+            self.flutter_dir.mkdir(parents=True, exist_ok=True)
+            self.status.update(
+                f"[bold blue]Creating Flutter bootstrap project from {template_url} with ref {template_ref} {self.emojis['loading']}... "
+            )
 
         try:
             from cookiecutter.main import cookiecutter
@@ -1007,9 +1009,11 @@ class Command(BaseCommand):
         except Exception as e:
             shutil.rmtree(self.flutter_dir)
             self.cleanup(1, f"{e}")
-        console.log(
-            f"Created Flutter bootstrap project from {template_url} with ref {template_ref} {self.emojis['checkmark']}"
-        )
+
+        if not second_pass:
+            console.log(
+                f"Created Flutter bootstrap project from {template_url} with ref {template_ref} {self.emojis['checkmark']}"
+            )
 
     def update_flutter_dependencies(self):
         assert self.pubspec_path
@@ -1441,7 +1445,8 @@ class Command(BaseCommand):
 
     def register_flutter_extensions(self):
         assert self.flutter_packages_dir
-        assert self.pubspec_path
+        assert isinstance(self.flutter_dependencies, dict)
+        assert self.template_data
 
         if not self.flutter_packages_dir.exists():
             return
@@ -1450,18 +1455,16 @@ class Command(BaseCommand):
             f"[bold blue]Registering Flutter user extensions {self.emojis['loading']}... "
         )
 
-        with open(self.pubspec_path, encoding="utf8") as f:
-            pubspec = yaml.safe_load(f)
-
         for fp in os.listdir(self.flutter_packages_dir):
             if (self.flutter_packages_dir / fp / "pubspec.yaml").exists():
-                pubspec["dependencies"][fp] = {
-                    "path": str(self.flutter_packages_dir / fp)
-                }
+                ext_dir = str(self.flutter_packages_dir / fp)
+                if self.verbose > 0:
+                    console.log(f"Found Flutter extension at {ext_dir}")
+                self.flutter_dependencies[fp] = {"path": ext_dir}
 
-        # save pubspec.yaml
-        with open(self.pubspec_path, "w", encoding="utf8") as f:
-            yaml.dump(pubspec, f)
+        self.template_data["flutter"]["dependencies"] = list(
+            self.flutter_dependencies.keys()
+        )
 
         console.log(f"Registered Flutter user extensions {self.emojis['checkmark']}")
 
