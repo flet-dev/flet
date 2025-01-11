@@ -2,9 +2,11 @@ import os
 import platform
 import shutil
 from pathlib import Path
+from typing import Optional
 
 from flet_cli.utils.distros import download_with_progress, extract_with_progress
 from rich.console import Console
+from rich.progress import Progress
 
 
 def get_flutter_url(version):
@@ -26,7 +28,7 @@ def get_flutter_url(version):
         raise ValueError(f"Unsupported platform: {system}")
 
 
-def install_flutter(version, log):
+def install_flutter(version, log, progress: Optional[Progress] = None):
     home_dir = Path.home()
     install_dir = os.path.join(home_dir, "flutter", version)
 
@@ -36,13 +38,13 @@ def install_flutter(version, log):
         archive_path = os.path.join(home_dir, archive_name)
 
         log(f"Downloading Flutter {version} from {url}...")
-        download_with_progress(url, archive_path)
+        download_with_progress(url, archive_path, progress=progress)
 
         log(f"Extracting Flutter to {install_dir}...")
         temp_extract_dir = os.path.join(home_dir, "flutter", f"{version}_temp")
         os.makedirs(temp_extract_dir, exist_ok=True)
 
-        extract_with_progress(archive_path, temp_extract_dir)
+        extract_with_progress(archive_path, temp_extract_dir, progress=progress)
 
         # Move extracted 'flutter' directory contents to final destination
         flutter_root = os.path.join(temp_extract_dir, "flutter")

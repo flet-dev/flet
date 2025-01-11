@@ -22,7 +22,10 @@ from flet_cli.utils.project_dependencies import (
 )
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
 from packaging import version
-from rich.console import Console
+from rich.console import Console, Group
+from rich.live import Live
+from rich.panel import Panel
+from rich.progress import Progress
 from rich.style import Style
 from rich.table import Column, Table
 from rich.theme import Theme
@@ -543,15 +546,15 @@ class Command(BaseCommand):
 
     def handle(self, options: argparse.Namespace) -> None:
         self.options = options
-        with console.status(
-            f"[bold blue]Initializing {self.options.target_platform} build... ",
+        self.status = console.status(
+            f"[bold blue]Initializing {self.options.target_platform} build...",
             spinner="bouncingBall",
-        ) as self.status:
+        )
+        self.progress = Progress(transient=True)
+        with Live(Group(self.status, self.progress), console=console) as self.live:
             self.initialize_build()
             self.validate_target_platform()
             self.validate_entry_point()
-            self.package_python_app()
-            self.register_flutter_extensions()
             self.setup_template_data()
             self.create_flutter_project()
             self.package_python_app()
@@ -606,7 +609,7 @@ class Command(BaseCommand):
         ):
             self.install_flutter()
 
-        if self.verbose > 1:
+        if self.verbose > 0:
             console.log("Flutter executable:", self.flutter_exe, style=verbose2_style)
             console.log("Dart executable:", self.dart_exe, style=verbose2_style)
 
@@ -657,20 +660,21 @@ class Command(BaseCommand):
 
     def install_flutter(self):
         self.status.update(
-            f"[bold blue]Installing Flutter {MINIMAL_FLUTTER_VERSION} {self.emojis['loading']}... "
+            f"[bold blue]Installing Flutter {MINIMAL_FLUTTER_VERSION}..."
         )
         from flet_cli.utils.flutter import install_flutter
 
-        def log(message):
-            if self.verbose > 0:
-                console.log(
-                    message,
-                    style=verbose1_style,
-                )
-
-        flutter_dir = install_flutter(str(MINIMAL_FLUTTER_VERSION), log)
+        flutter_dir = install_flutter(
+            str(MINIMAL_FLUTTER_VERSION), self.log_stdout, progress=self.progress
+        )
+        ext = ".bat" if platform.system() == "Windows" else ""
+        self.flutter_exe = os.path.join(flutter_dir, "bin", f"flutter{ext}")
+        self.dart_exe = os.path.join(flutter_dir, "bin", f"dart{ext}")
+        self.env["PATH"] = os.pathsep.join(
+            [os.path.join(flutter_dir, "bin"), os.environ.get("PATH", "")]
+        )
         console.log(
-            f"Installed Flutter {MINIMAL_FLUTTER_VERSION} to {flutter_dir} {self.emojis['checkmark']}"
+            f"Installed Flutter {MINIMAL_FLUTTER_VERSION} {self.emojis['checkmark']}"
         )
 
     def validate_target_platform(self):
@@ -1011,7 +1015,7 @@ class Command(BaseCommand):
         if not second_pass:
             self.flutter_dir.mkdir(parents=True, exist_ok=True)
             self.status.update(
-                f"[bold blue]Creating Flutter bootstrap project from {template_url} with ref {template_ref} {self.emojis['loading']}... "
+                f'[bold blue]Creating Flutter bootstrap project from {template_url} with ref "{template_ref}"...'
             )
 
         try:
@@ -1034,7 +1038,7 @@ class Command(BaseCommand):
 
         if not second_pass:
             console.log(
-                f"Created Flutter bootstrap project from {template_url} with ref {template_ref} {self.emojis['checkmark']}"
+                f"Created Flutter bootstrap project from {template_url} with ref \"{template_ref}\" {self.emojis['checkmark']}"
             )
 
     def update_flutter_dependencies(self):
@@ -1074,9 +1078,7 @@ class Command(BaseCommand):
         assert self.get_pyproject
         assert self.pubspec_path
 
-        self.status.update(
-            f"[bold blue]Customizing app icons and splash images {self.emojis['loading']}... "
-        )
+        self.status.update(f"[bold blue]Customizing app icons and splash images...")
 
         with open(self.pubspec_path, encoding="utf8") as f:
             pubspec = yaml.safe_load(f)
@@ -1290,9 +1292,7 @@ class Command(BaseCommand):
     def generate_icons_and_splash_screens(self):
         assert self.options
 
-        self.status.update(
-            f"[bold blue]Generating app icons {self.emojis['loading']}... "
-        )
+        self.status.update(f"[bold blue]Generating app icons...")
         # icons
         icons_result = self.run(
             [self.dart_exe, "run", "flutter_launcher_icons"],
@@ -1301,7 +1301,7 @@ class Command(BaseCommand):
         )
         if icons_result.returncode != 0:
             if icons_result.stdout:
-                console.log(icons_result.stdout)
+                console.log(icons_result.stdout, style=verbose1_style)
             if icons_result.stderr:
                 console.log(icons_result.stderr, style=error_style)
             self.cleanup(icons_result.returncode)
@@ -1309,9 +1309,7 @@ class Command(BaseCommand):
 
         # splash screens
         if self.options.target_platform in ["web", "ipa", "apk", "aab"]:
-            self.status.update(
-                f"[bold blue]Generating splash screens {self.emojis['loading']}... "
-            )
+            self.status.update(f"[bold blue]Generating splash screens...")
             splash_result = self.run(
                 [self.dart_exe, "run", "flutter_native_splash:create"],
                 cwd=str(self.flutter_dir),
@@ -1319,7 +1317,7 @@ class Command(BaseCommand):
             )
             if splash_result.returncode != 0:
                 if splash_result.stdout:
-                    console.log(splash_result.stdout)
+                    console.log(splash_result.stdout, style=verbose1_style)
                 if splash_result.stderr:
                     console.log(splash_result.stderr, style=error_style)
                 self.cleanup(splash_result.returncode)
@@ -1334,9 +1332,7 @@ class Command(BaseCommand):
         assert self.flutter_dir
         assert self.flutter_packages_dir
 
-        self.status.update(
-            f"[bold blue]Packaging Python app {self.emojis['loading']}... "
-        )
+        self.status.update(f"[bold blue]Packaging Python app...")
         package_args = [
             self.dart_exe,
             "run",
@@ -1456,7 +1452,7 @@ class Command(BaseCommand):
 
         if package_result.returncode != 0:
             if package_result.stdout:
-                console.log(package_result.stdout)
+                console.log(package_result.stdout, style=verbose1_style)
             if package_result.stderr:
                 console.log(package_result.stderr, style=error_style)
             self.cleanup(package_result.returncode)
@@ -1479,9 +1475,7 @@ class Command(BaseCommand):
         if not self.flutter_packages_dir.exists():
             return
 
-        self.status.update(
-            f"[bold blue]Registering Flutter user extensions {self.emojis['loading']}... "
-        )
+        self.status.update(f"[bold blue]Registering Flutter user extensions...")
 
         for fp in os.listdir(self.flutter_packages_dir):
             if (self.flutter_packages_dir / fp / "pubspec.yaml").exists():
@@ -1503,7 +1497,7 @@ class Command(BaseCommand):
         assert self.template_data
 
         self.status.update(
-            f"[bold blue]Building [cyan]{self.platforms[self.options.target_platform]['status_text']}[/cyan] {self.emojis['loading']}... "
+            f"[bold blue]Building [cyan]{self.platforms[self.options.target_platform]['status_text']}[/cyan]..."
         )
         # flutter build
         build_args = [
@@ -1594,7 +1588,7 @@ class Command(BaseCommand):
 
         if build_result.returncode != 0:
             if build_result.stdout:
-                console.log(build_result.stdout)
+                console.log(build_result.stdout, style=verbose1_style)
             if build_result.stderr:
                 console.log(build_result.stderr, style=error_style)
             self.cleanup(build_result.returncode)
@@ -1610,7 +1604,7 @@ class Command(BaseCommand):
         assert self.assets_path
 
         self.status.update(
-            f"[bold blue]Copying build to [cyan]{self.rel_out_dir}[/cyan] directory {self.emojis['loading']}... ",
+            f"[bold blue]Copying build to [cyan]{self.rel_out_dir}[/cyan] directory...",
         )
         arch = platform.machine().lower()
         if arch in {"x86_64", "amd64"}:
@@ -1679,19 +1673,24 @@ class Command(BaseCommand):
         if self.verbose > 0:
             console.log(f"Run subprocess: {args}", style=verbose1_style)
 
-        return processes.run(args, cwd, env, capture_output)
+        return processes.run(
+            args,
+            cwd,
+            {**self.env, **env} if env else self.env,
+            capture_output,
+            log=self.log_stdout,
+        )
 
     def cleanup(self, exit_code: int, message: Optional[str] = None):
         if exit_code == 0:
             msg = message or f"Success! {self.emojis['success']}"
-            console.log(msg)
+            self.live.update(Panel(msg), refresh=True)
         else:
             msg = (
                 message
                 if message is not None
                 else "Error building Flet app - see the log of failed command above."
             )
-            console.log(msg, style=error_style)
 
             # windows has been reported to raise encoding errors when running `flutter doctor`
             # so skip running `flutter doctor` if no_rich_output is True and platform is Windows
@@ -1699,18 +1698,31 @@ class Command(BaseCommand):
                 (self.no_rich_output and self.current_platform == "Windows")
                 or self.skip_flutter_doctor
             ):
+                status = console.status(
+                    f"[bold blue]Running Flutter doctor...",
+                    spinner="bouncingBall",
+                )
+                self.live.update(
+                    Group(Panel(msg, style=error_style), status), refresh=True
+                )
                 self.run_flutter_doctor()
+                self.live.update(Panel(msg, style=error_style), refresh=True)
 
         sys.exit(exit_code)
 
-    def run_flutter_doctor(self, style: Optional[Union[Style, str]] = None):
-        self.status.update(
-            f"[bold blue]Running Flutter doctor {self.emojis['loading']}... "
-        )
+    def run_flutter_doctor(self):
         flutter_doctor = self.run(
             [self.flutter_exe, "doctor"],
             cwd=os.getcwd(),
             capture_output=True,
         )
         if flutter_doctor.returncode == 0 and flutter_doctor.stdout:
-            console.log(flutter_doctor.stdout, style=style)
+            console.log(flutter_doctor.stdout, style=verbose1_style)
+
+    def log_stdout(self, message):
+        if self.verbose > 0:
+            console.log(
+                message,
+                end="",
+                style=verbose2_style,
+            )

@@ -4,9 +4,11 @@ import shutil
 import subprocess
 import tempfile
 from pathlib import Path
+from typing import Optional
 
 from flet_cli.utils.distros import download_with_progress, extract_with_progress
 from rich.console import Console
+from rich.progress import Progress
 
 # Constants
 JDK_MAJOR_VER = 17
@@ -64,7 +66,7 @@ def platform_info():
     return platform_name, arch_name, ext
 
 
-def install_jdk(log):
+def install_jdk(log, progress: Optional[Progress] = None):
     java_home = get_java_home()
 
     # Step 1: Check if JAVA_HOME is set and valid
@@ -103,11 +105,11 @@ def install_jdk(log):
         # Step 5: Download and extract JDK
         archive_path = os.path.join(tempfile.gettempdir(), f"jdk-{JDK_DIR_NAME}.{ext}")
         log(f"Downloading JDK from {url}...")
-        download_with_progress(url, archive_path)
+        download_with_progress(url, archive_path, progress=progress)
 
         log(f"Extracting JDK to {install_dir}...")
         install_dir.mkdir(exist_ok=True, parents=True)
-        extract_with_progress(archive_path, str(install_dir))
+        extract_with_progress(archive_path, str(install_dir), progress=progress)
 
         # Move contents of extracted `jdk-{JDK_DIR_NAME}` to the destination
         extracted_root = os.path.join(install_dir, f"jdk-{JDK_DIR_NAME}")

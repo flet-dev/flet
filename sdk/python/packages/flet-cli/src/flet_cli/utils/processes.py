@@ -8,7 +8,7 @@ if is_windows():
     from ctypes import windll
 
 
-def run(args, cwd, env: Optional[dict] = None, capture_output=True):
+def run(args, cwd, env: Optional[dict] = None, capture_output=True, log=None):
     if is_windows():
         # Source: https://stackoverflow.com/a/77374899/1435891
         # Save the current console output code page and switch to 65001 (UTF-8)
@@ -21,17 +21,47 @@ def run(args, cwd, env: Optional[dict] = None, capture_output=True):
         for k, v in env.items():
             cmd_env[k] = v
 
-    r = subprocess.run(
-        args,
-        cwd=cwd,
-        capture_output=capture_output,
-        text=True,
-        encoding="utf8",
-        env=cmd_env,
-    )
+    if capture_output:
+        process = subprocess.run(
+            args,
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            encoding="utf8",
+            env=cmd_env,
+        )
+    else:
+        process = subprocess.Popen(
+            args,
+            cwd=cwd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            encoding="utf8",
+            env=cmd_env,
+        )
+
+        try:
+            while True:
+                stdout_line = process.stdout.readline()
+
+                # Print lines if available
+                if stdout_line and log:
+                    log(stdout_line.rstrip())
+
+                # Break when the process ends and buffers are empty
+                if not stdout_line and process.poll() is not None:
+                    break
+        except KeyboardInterrupt:
+            process.terminate()
+            raise
+
+        # Wait for the process to finish
+        process.stdout.close()
+        process.wait()
 
     if is_windows():
         # Restore the previous output console code page.
         windll.kernel32.SetConsoleOutputCP(previousCp)
 
-    return r
+    return process
