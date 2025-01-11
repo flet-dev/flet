@@ -10,6 +10,7 @@ from flet.core.control_event import ControlEvent
 from flet.core.cupertino_colors import CupertinoColors, cupertino_colors
 from flet.core.cupertino_icons import CupertinoIcons, cupertino_icons
 from flet.core.event import Event
+from flet.core.icon_data import IconData
 from flet.core.icons import Icons, icons
 from flet.core.margin import Margin
 from flet.core.padding import Padding
@@ -406,7 +407,7 @@ ColorValue = Union[str, colors, Colors, cupertino_colors, CupertinoColors]
 
 # Icons
 IconEnums = (icons, Icons, cupertino_icons, CupertinoIcons)
-IconValue = Union[str, icons, Icons, cupertino_icons, CupertinoIcons]
+IconValue = Union[str, icons, Icons, cupertino_icons, CupertinoIcons, IconData]
 IconValueOrControl = Union[IconValue, "Control"]
 
 # ControlState
