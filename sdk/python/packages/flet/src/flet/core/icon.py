@@ -138,7 +138,7 @@ class Icon(ConstrainedControl):
     def icon(self) -> Optional[IconValue]:
         return self.__icon
 
-    @name.setter
+    @icon.setter
     def icon(self, value: Optional[IconValue]):
         self.__icon = value
         self._set_attr_icon("icon", value)
