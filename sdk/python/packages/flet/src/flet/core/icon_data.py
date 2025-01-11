@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, List
 
 
 @dataclass
@@ -8,4 +8,4 @@ class IconData:
     font_family: Optional[str] = None
     font_package: Optional[str] = None
     match_text_direction: bool = False
-    font_family_fallback: Optional[list[str]] = None
+    font_family_fallback: Optional[List[str]] = None
