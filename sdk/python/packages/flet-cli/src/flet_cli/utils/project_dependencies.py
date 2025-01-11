@@ -14,28 +14,69 @@ def get_poetry_dependencies(
     if poetry_dependencies is None:
         return None
 
-    def format_dependency_version(dependency: str, version_value: Any):
+    def format_dependency_version(dependency_name: str, dependency_value: Any):
+        sep = "@"
+        value = ""
         suffix = ""
-        if isinstance(version_value, dict):
-            version = version_value["version"]
-            if version_value["markers"]:
-                suffix = f";{version_value['markers']}"
+
+        if isinstance(dependency_value, dict):
+            version = dependency_value.get("version")
+            if version:
+                sep = "=="
+                value = version
+            else:
+                git_url = dependency_value.get("git")
+                if git_url:
+                    value = (
+                        f"git+{git_url}" if not git_url.startswith("git@") else git_url
+                    )
+                    rev = (
+                        dependency_value.get("branch")
+                        or dependency_value.get("rev")
+                        or dependency_value.get("tag")
+                    )
+                    if rev:
+                        value = f"{value}@{rev}"
+                    subdirectory = dependency_value.get("subdirectory")
+                    if subdirectory:
+                        value = f"{value}#subdirectory={subdirectory}"
+                else:
+                    path = dependency_value.get("path")
+                    if path:
+                        value = path
+                        dependency_name = ""
+                        sep = ""
+                    else:
+                        url = dependency_value.get("url")
+                        if url:
+                            value = url
+                            dependency_name = ""
+                            sep = ""
+                        else:
+                            raise Exception(
+                                f"Unsupported dependency specification: {dependency_name} = {dependency_value}"
+                            )
+
+            # markers - common for all
+            markers = dependency_value.get("markers")
+            if markers is not None:
+                suffix = f";{markers}"
         else:
-            version = version_value
+            value = dependency_value
+            sep = "=="
 
-        sep = "=="
-        if version.startswith("^"):
+        if value.startswith("^"):
             sep = ">="
-            version = version[1:]
-        elif version.startswith("~"):
+            value = value[1:]
+        elif value.startswith("~"):
             sep = "~="
-            version = version[1:]
-            return f"{dependency}~={version[1:]}"
-        elif "<" in version or ">" in version:
+            value = value[1:]
+            return f"{dependency_name}~={value[1:]}"
+        elif "<" in value or ">" in value:
             sep = ""
-            version = version.replace(" ", "")
+            value = value.replace(" ", "")
 
-        return f"{dependency}{sep}{version}{suffix}"
+        return f"{dependency_name}{sep}{value}{suffix}"
 
     dependencies: set[str] = {
         format_dependency_version(dependency, version)

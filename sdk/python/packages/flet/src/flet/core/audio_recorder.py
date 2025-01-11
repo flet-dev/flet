@@ -7,7 +7,6 @@ from flet.core.control_event import ControlEvent
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.types import OptionalEventCallable
-from flet.utils import deprecated
 
 
 class AudioRecorderState(Enum):
@@ -95,13 +94,19 @@ class AudioRecorder(Control):
         )
         return started == "true"
 
-    @deprecated(
-        reason="Use start_recording() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def start_recording_async(self, output_path: str) -> bool:
-        return self.start_recording(output_path)
+    async def start_recording_async(
+        self, output_path: str = None, wait_timeout: Optional[float] = 10
+    ) -> bool:
+        assert (
+            self.page.web or output_path
+        ), "output_path must be provided when not on web"
+        started = await self.invoke_method_async(
+            "start_recording",
+            {"outputPath": output_path},
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return started == "true"
 
     def is_recording(self, wait_timeout: Optional[float] = 5) -> bool:
         recording = self.invoke_method(
@@ -145,24 +150,8 @@ class AudioRecorder(Control):
     def resume_recording(self):
         self.invoke_method("resume_recording")
 
-    @deprecated(
-        reason="Use resume_recording() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def resume_recording_async(self):
-        self.resume_recording()
-
     def pause_recording(self):
         self.invoke_method("pause_recording")
-
-    @deprecated(
-        reason="Use pause_recording() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def pause_recording_async(self):
-        self.pause_recording()
 
     def is_paused(self, wait_timeout: Optional[float] = 5) -> bool:
         paused = self.invoke_method(

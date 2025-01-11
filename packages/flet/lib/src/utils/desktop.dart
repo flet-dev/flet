@@ -291,6 +291,13 @@ Future isFocused() async {
   }
 }
 
+Future setIgnoreMouseEvents(bool ignore) async {
+  if (isDesktopPlatform()) {
+    debugPrint("setIgnoreMouseEvents($ignore)");
+    await windowManager.setIgnoreMouseEvents(ignore);
+  }
+}
+
 Future<WindowMediaData> getWindowMediaData() async {
   var m = WindowMediaData();
   if (isDesktopPlatform()) {

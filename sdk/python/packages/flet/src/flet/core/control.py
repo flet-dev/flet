@@ -27,7 +27,6 @@ from flet.core.types import (
     ResponsiveNumber,
     SupportsStr,
 )
-from flet.utils import deprecated
 
 if TYPE_CHECKING:
     from .page import Page
@@ -91,10 +90,12 @@ class Control:
         pass
 
     def _before_build_command(self) -> None:
-        self._set_attr_json("col", self.__col)
-        self._set_attr_json("tooltip", self.tooltip)
+        if self._get_control_name() not in ["segment", "bar_chart_rod"]:
+            # see https://github.com/flet-dev/flet/pull/4525
+            self._set_attr_json("tooltip", self.tooltip)
         if isinstance(self.badge, (Badge, str)):
             self._set_attr_json("badge", self.badge)
+        self._set_attr_json("col", self.__col)
 
     def did_mount(self):
         pass
@@ -334,12 +335,6 @@ class Control:
             self.__page
         ), f"{self.__class__.__qualname__} Control must be added to the page"
         self.__page._clean(self)
-
-    @deprecated(
-        reason="Use clean() method instead.", version="0.21.0", delete_version="0.26.0"
-    )
-    async def clean_async(self):
-        self.clean()
 
     def invoke_method(
         self,

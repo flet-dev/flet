@@ -17,7 +17,6 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
-from flet.utils import deprecated
 
 
 class SubmenuButton(ConstrainedControl):
@@ -159,14 +158,6 @@ class SubmenuButton(ConstrainedControl):
     def focus(self):
         self._set_attr_json("focus", str(time.time()))
         self.update()
-
-    @deprecated(
-        reason="Use focus() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def focus_async(self):
-        self.focus()
 
     # controls
     @property

@@ -171,6 +171,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
   bool? _windowTitleBarHidden;
   bool? _windowSkipTaskBar;
   double? _windowProgressBar;
+  bool? _windowIgnoreMouseEvents;
   final _navigatorKey = GlobalKey<NavigatorState>();
   late final RouteState _routeState;
   late final SimpleRouterDelegate _routerDelegate;
@@ -343,6 +344,8 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     var windowSkipTaskBar = widget.control.attrBool("windowSkipTaskBar");
     var windowFrameless = widget.control.attrBool("windowFrameless");
     var windowProgressBar = widget.control.attrDouble("windowProgressBar");
+    var windowIgnoreMouseEvents =
+        widget.control.attrBool("windowIgnoreMouseEvents");
 
     updateWindow(PageArgsModel? pageArgs) async {
       try {
@@ -591,6 +594,13 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
         // window waitUntilReadyToShow
         if (windowWaitUntilReadyToShow == true) {
           await waitUntilReadyToShow();
+        }
+
+        // windowIgnoreMouseEvents
+        if (windowIgnoreMouseEvents != null &&
+            windowIgnoreMouseEvents != _windowIgnoreMouseEvents) {
+          await setIgnoreMouseEvents(windowIgnoreMouseEvents);
+          _windowIgnoreMouseEvents = windowIgnoreMouseEvents;
         }
       } catch (e) {
         debugPrint("ERROR updating window: $e");

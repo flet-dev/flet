@@ -8,7 +8,6 @@ from flet.core.control_event import ControlEvent
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.types import OptionalEventCallable
-from flet.utils import deprecated
 
 try:
     from typing import Literal
@@ -170,27 +169,6 @@ class FilePicker(Control):
         self.allow_multiple = allow_multiple
         self.update()
 
-    @deprecated(
-        reason="Use pick_files() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def pick_files_async(
-        self,
-        dialog_title: Optional[str] = None,
-        initial_directory: Optional[str] = None,
-        file_type: FilePickerFileType = FilePickerFileType.ANY,
-        allowed_extensions: Optional[List[str]] = None,
-        allow_multiple: Optional[bool] = False,
-    ):
-        self.pick_files(
-            dialog_title,
-            initial_directory,
-            file_type,
-            allowed_extensions,
-            allow_multiple,
-        )
-
     def save_file(
         self,
         dialog_title: Optional[str] = None,
@@ -207,23 +185,6 @@ class FilePicker(Control):
         self.allowed_extensions = allowed_extensions
         self.update()
 
-    @deprecated(
-        reason="Use save_file() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def save_file_async(
-        self,
-        dialog_title: Optional[str] = None,
-        file_name: Optional[str] = None,
-        initial_directory: Optional[str] = None,
-        file_type: FilePickerFileType = FilePickerFileType.ANY,
-        allowed_extensions: Optional[List[str]] = None,
-    ):
-        self.save_file(
-            dialog_title, file_name, initial_directory, file_type, allowed_extensions
-        )
-
     def get_directory_path(
         self,
         dialog_title: Optional[str] = None,
@@ -234,29 +195,9 @@ class FilePicker(Control):
         self.initial_directory = initial_directory
         self.update()
 
-    @deprecated(
-        reason="Use get_directory_path() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def get_directory_path_async(
-        self,
-        dialog_title: Optional[str] = None,
-        initial_directory: Optional[str] = None,
-    ):
-        self.get_directory_path(dialog_title, initial_directory)
-
     def upload(self, files: List[FilePickerUploadFile]):
         self.__upload = files
         self.update()
-
-    @deprecated(
-        reason="Use upload() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def upload_async(self, files: List[FilePickerUploadFile]):
-        self.upload(files)
 
     # state
     @property

@@ -1,6 +1,5 @@
 import json
 from typing import Any, Optional
-from warnings import warn
 
 from flet.core.control import Control
 from flet.core.control_event import ControlEvent
@@ -204,21 +203,6 @@ class DragTarget(Control):
     @on_move.setter
     def on_move(self, handler: OptionalEventCallable["DragTargetEvent"]):
         self.__on_move.handler = handler
-
-
-class DragTargetAcceptEvent(ControlEvent):
-    def __init__(self, e: ControlEvent):
-        super().__init__(e.target, e.name, e.data, e.control, e.page)
-        d = json.loads(e.data)
-        warn(
-            f"{self.__class__.__name__} is deprecated since version 0.22.0 "
-            f"and will be removed in version 0.26.0. Use DragTargetEvent instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        self.src_id: float = d.get("src_id")
-        self.x: float = d.get("x")
-        self.y: float = d.get("y")
 
 
 class DragTargetEvent(ControlEvent):

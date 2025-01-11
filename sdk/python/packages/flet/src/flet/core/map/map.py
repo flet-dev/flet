@@ -366,7 +366,7 @@ class Map(ConstrainedControl):
         animation_duration: DurationValue = None,
     ):
         self.invoke_method(
-            "animate_to",
+            "center_on",
             arguments={
                 "lat": str(point.latitude) if point else None,
                 "long": str(point.longitude) if point else None,
@@ -607,15 +607,6 @@ class MapEventSource(Enum):
     SCROLL_WHEEL = "scrollWheel"
     NON_ROTATED_SIZE_CHANGE = "nonRotatedSizeChange"
     CURSOR_KEYBOARD_ROTATION = "cursorKeyboardRotation"
-
-
-class MapPointerDeviceType(Enum):
-    TOUCH = "touch"
-    MOUSE = "mouse"
-    STYLUS = "stylus"
-    INVERTED_STYLUS = "invertedStylus"
-    TRACKPAD = "trackpad"
-    UNKNOWN = "unknown"
 
 
 class MapTapEvent(ControlEvent):
