@@ -53,7 +53,7 @@ class Icon(ConstrainedControl):
 
     def __init__(
         self,
-        name: Optional[IconValue] = None,
+        icon: Optional[IconValue] = None,
         color: Optional[ColorValue] = None,
         size: OptionalNumber = None,
         semantics_label: Optional[str] = None,
@@ -135,13 +135,13 @@ class Icon(ConstrainedControl):
 
     # name
     @property
-    def name(self) -> Optional[IconValue]:
-        return self.__name
+    def icon(self) -> Optional[IconValue]:
+        return self.__icon
 
     @name.setter
-    def name(self, value: Optional[IconValue]):
-        self.__name = value
-        self._set_enum_attr("name", value, IconEnums)
+    def icon(self, value: Optional[IconValue]):
+        self.__icon = value
+        self._set_attr_icon("icon", value)
 
     # color
     @property
