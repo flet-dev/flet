@@ -230,11 +230,11 @@ class FormFieldControl(ConstrainedControl):
         )
         self._set_attr_json("sizeConstraints", self.__size_constraints)
         if isinstance(self.__suffix_icon, str):
-            self._set_attr("suffixIcon", self.__suffix_icon)
+            self._set_attr_icon("suffixIcon", self.__suffix_icon)
         if isinstance(self.__prefix_icon, str):
-            self._set_attr("prefixIcon", self.__prefix_icon)
+            self._set_attr_icon("prefixIcon", self.__prefix_icon)
         if isinstance(self.__icon, str):
-            self._set_attr("icon", self.__icon)
+            self._set_attr_icon("icon", self.__icon)
         if isinstance(self.__label, str):
             self._set_attr("label", self.__label)
 
@@ -300,7 +300,7 @@ class FormFieldControl(ConstrainedControl):
     @icon.setter
     def icon(self, value: Optional[IconValueOrControl]):
         self.__icon = value
-        self._set_enum_attr("icon", value, IconEnums)
+        self._set_attr_icon("icon", value)
 
     # border
     @property
@@ -653,7 +653,7 @@ class FormFieldControl(ConstrainedControl):
     @prefix_icon.setter
     def prefix_icon(self, value: Optional[IconValueOrControl]):
         self.__prefix_icon = value
-        self._set_enum_attr("prefixIcon", value, IconEnums)
+        self._set_attr_icon("prefixIcon", value)
 
     # prefix_text
     @property
@@ -690,7 +690,7 @@ class FormFieldControl(ConstrainedControl):
     @suffix_icon.setter
     def suffix_icon(self, value: Optional[IconValueOrControl]):
         self.__suffix_icon = value
-        self._set_enum_attr("suffixIcon", value, IconEnums)
+        self._set_attr_icon("suffixIcon", value)
 
     # suffix_text
     @property
