@@ -79,6 +79,7 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
         clip_behavior: Optional[ClipBehavior] = None,
         alignment: Optional[Alignment] = None,
         boundary_margin: MarginValue = None,
+            interaction_interval: Optional[int] = None,
         on_interaction_start: Optional[
             Callable[[InteractiveViewerInteractionStartEvent], None]
         ] = None,
@@ -189,6 +190,7 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
         self.on_interaction_start = on_interaction_start
         self.on_interaction_end = on_interaction_end
         self.on_interaction_update = on_interaction_update
+        self.interaction_interval = interaction_interval
 
     def _get_control_name(self):
         return "interactiveviewer"
@@ -227,6 +229,15 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     @min_scale.setter
     def min_scale(self, value: OptionalNumber):
         self._set_attr("minScale", value)
+
+    # interaction_interval
+    @property
+    def interaction_interval(self) -> int:
+        return self._get_attr("interactionInterval", data_type="int", def_value=0)
+
+    @interaction_interval.setter
+    def interaction_interval(self, value: Optional[int]):
+        self._set_attr("interactionInterval", value)
 
     # max_scale
     @property

@@ -41,6 +41,7 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
   late AnimationController _animationController;
   Animation<Matrix4>? _animation;
   Matrix4? _savedMatrix;
+  int _interactionTimestamp = DateTime.now().millisecondsSinceEpoch;
 
   @override
   void initState() {
@@ -160,20 +161,27 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
           ? (ScaleUpdateDetails details) {
               debugPrint(
                   "InteractiveViewer ${widget.control.id} onInteractionUpdate");
-              widget.backend.triggerControlEvent(
-                  widget.control.id,
-                  "interaction_update",
-                  jsonEncode({
-                    "pc": details.pointerCount,
-                    "fp_x": details.focalPoint.dx,
-                    "fp_y": details.focalPoint.dy,
-                    "lfp_x": details.localFocalPoint.dx,
-                    "lfp_y": details.localFocalPoint.dy,
-                    "s": details.scale,
-                    "hs": details.horizontalScale,
-                    "vs": details.verticalScale,
-                    "rot": details.rotation,
-                  }));
+              var interactionInterval =
+                  widget.control.attrInt("interactionInterval", 0)!;
+              var now = DateTime.now().millisecondsSinceEpoch;
+              if (now - _interactionTimestamp > interactionInterval) {
+                _interactionTimestamp = now;
+                widget.backend.triggerControlEvent(
+                    widget.control.id,
+                    "interaction_update",
+                    jsonEncode({
+                      "pc": details.pointerCount,
+                      "fp_x": details.focalPoint.dx,
+                      "fp_y": details.focalPoint.dy,
+                      "lfp_x": details.localFocalPoint.dx,
+                      "lfp_y": details.localFocalPoint.dy,
+                      "s": details.scale,
+                      "hs": details.horizontalScale,
+                      "vs": details.verticalScale,
+                      "rot": details.rotation,
+                    }));
+                ;
+              }
             }
           : null,
       child: contentCtrls.isNotEmpty
