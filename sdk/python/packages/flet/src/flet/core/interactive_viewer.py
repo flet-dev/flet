@@ -237,7 +237,7 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
 
     @interaction_update_interval.setter
     def interaction_update_interval(self, value: Optional[int]):
-        self._set_attr("interactionInterval", value)
+        self._set_attr("interactionUpdateInterval", value)
 
     # max_scale
     @property

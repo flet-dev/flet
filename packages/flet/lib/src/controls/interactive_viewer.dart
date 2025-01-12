@@ -159,13 +159,13 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
           : null,
       onInteractionUpdate: !disabled
           ? (ScaleUpdateDetails details) {
-              debugPrint(
-                  "InteractiveViewer ${widget.control.id} onInteractionUpdate");
               var interactionUpdateInterval =
                   widget.control.attrInt("interactionUpdateInterval", 0)!;
               var now = DateTime.now().millisecondsSinceEpoch;
               if (now - _interactionUpdateTimestamp >
                   interactionUpdateInterval) {
+                debugPrint(
+                    "InteractiveViewer ${widget.control.id} onInteractionUpdate");
                 _interactionUpdateTimestamp = now;
                 widget.backend.triggerControlEvent(
                     widget.control.id,
