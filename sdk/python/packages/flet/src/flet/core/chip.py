@@ -83,12 +83,12 @@ class Chip(ConstrainedControl):
         check_color: Optional[ColorValue] = None,
         shadow_color: Optional[ColorValue] = None,
         shape: Optional[OutlinedBorder] = None,
-        padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
         delete_icon: Optional[Control] = None,
         delete_icon_tooltip: Optional[str] = None,
         delete_icon_color: Optional[ColorValue] = None,
         disabled_color: Optional[ColorValue] = None,
-        label_padding: PaddingValue = None,
+        label_padding: Optional[PaddingValue] = None,
         label_style: Optional[TextStyle] = None,
         selected_shadow_color: Optional[ColorValue] = None,
         autofocus: Optional[bool] = None,
@@ -117,9 +117,9 @@ class Chip(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -128,7 +128,7 @@ class Chip(ConstrainedControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -226,11 +226,11 @@ class Chip(ConstrainedControl):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # selected
@@ -271,11 +271,11 @@ class Chip(ConstrainedControl):
 
     # label_padding
     @property
-    def label_padding(self) -> PaddingValue:
+    def label_padding(self) -> Optional[PaddingValue]:
         return self.__label_padding
 
     @label_padding.setter
-    def label_padding(self, value: PaddingValue):
+    def label_padding(self, value: Optional[PaddingValue]):
         self.__label_padding = value
 
     # label_style

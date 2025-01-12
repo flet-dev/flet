@@ -38,7 +38,7 @@ class NavigationRailDestination(Control):
         selected_icon_content: Optional[Control] = None,
         label: Optional[str] = None,
         label_content: Optional[Control] = None,
-        padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
         indicator_color: Optional[ColorValue] = None,
         indicator_shape: Optional[OutlinedBorder] = None,
         #
@@ -98,7 +98,8 @@ class NavigationRailDestination(Control):
     @icon.setter
     def icon(self, value: Optional[IconValueOrControl]):
         self.__icon = value
-        self._set_enum_attr("icon", value, IconEnums)
+        if not isinstance(value, Control):
+            self._set_enum_attr("icon", value, IconEnums)
 
     # icon_content
     @property
@@ -130,7 +131,8 @@ class NavigationRailDestination(Control):
     @selected_icon.setter
     def selected_icon(self, value: Optional[IconValueOrControl]):
         self.__selected_icon = value
-        self._set_enum_attr("selectedIcon", value, IconEnums)
+        if not isinstance(value, Control):
+            self._set_enum_attr("selectedIcon", value, IconEnums)
 
     # selected_icon_content
     @property
@@ -193,11 +195,11 @@ class NavigationRailDestination(Control):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
 
@@ -289,9 +291,9 @@ class NavigationRail(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,

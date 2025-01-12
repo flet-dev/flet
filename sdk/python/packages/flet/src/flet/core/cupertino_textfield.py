@@ -57,7 +57,7 @@ class CupertinoTextField(TextField):
         clear_button_visibility_mode: Optional[VisibilityMode] = None,
         clear_button_semantics_label: Optional[str] = None,
         image: Optional[DecorationImage] = None,
-        padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
         #
         # TextField
         #
@@ -87,7 +87,7 @@ class CupertinoTextField(TextField):
         input_filter: Optional[InputFilter] = None,
         autofill_hints: Union[None, AutofillHint, List[AutofillHint]] = None,
         enable_scribble: Optional[bool] = None,
-        scroll_padding: PaddingValue = None,
+        scroll_padding: Optional[PaddingValue] = None,
         obscuring_character: Optional[str] = None,
         enable_interactive_selection: Optional[bool] = None,
         enable_ime_personalized_learning: Optional[bool] = None,
@@ -108,12 +108,12 @@ class CupertinoTextField(TextField):
         border: Optional[Border] = None,
         color: Optional[ColorValue] = None,
         bgcolor: Optional[ColorValue] = None,
-        border_radius: BorderRadiusValue = None,
+        border_radius: Optional[BorderRadiusValue] = None,
         focused_color: Optional[ColorValue] = None,
         focused_bgcolor: Optional[ColorValue] = None,
         focused_border_width: OptionalNumber = None,
         focused_border_color: Optional[ColorValue] = None,
-        content_padding: PaddingValue = None,
+        content_padding: Optional[PaddingValue] = None,
         dense: Optional[bool] = None,
         filled: Optional[bool] = None,
         prefix: Optional[Control] = None,
@@ -130,9 +130,9 @@ class CupertinoTextField(TextField):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -141,7 +141,7 @@ class CupertinoTextField(TextField):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -357,11 +357,11 @@ class CupertinoTextField(TextField):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # border

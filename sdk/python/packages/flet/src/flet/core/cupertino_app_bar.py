@@ -43,7 +43,7 @@ class CupertinoAppBar(Control):
         automatically_imply_leading: Optional[bool] = None,
         automatically_imply_middle: Optional[bool] = None,
         border: Optional[Border] = None,
-        padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
         transition_between_routes: Optional[bool] = None,
         previous_page_title: Optional[str] = None,
         #
@@ -116,11 +116,11 @@ class CupertinoAppBar(Control):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # automatically_imply_leading

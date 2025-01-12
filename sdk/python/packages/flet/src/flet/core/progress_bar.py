@@ -60,7 +60,7 @@ class ProgressBar(ConstrainedControl):
         bar_height: OptionalNumber = None,
         color: Optional[ColorValue] = None,
         bgcolor: Optional[ColorValue] = None,
-        border_radius: BorderRadiusValue = None,
+        border_radius: Optional[BorderRadiusValue] = None,
         semantics_label: Optional[str] = None,
         semantics_value: OptionalNumber = None,
         #
@@ -78,9 +78,9 @@ class ProgressBar(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -89,7 +89,7 @@ class ProgressBar(ConstrainedControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -202,9 +202,9 @@ class ProgressBar(ConstrainedControl):
 
     # border_radius
     @property
-    def border_radius(self) -> BorderRadiusValue:
+    def border_radius(self) -> Optional[BorderRadiusValue]:
         return self.__border_radius
 
     @border_radius.setter
-    def border_radius(self, value: BorderRadiusValue):
+    def border_radius(self, value: Optional[BorderRadiusValue]):
         self.__border_radius = value

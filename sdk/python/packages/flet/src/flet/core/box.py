@@ -42,7 +42,7 @@ class BoxShadow:
     spread_radius: Optional[float] = None
     blur_radius: Optional[float] = None
     color: Optional[ColorValue] = None
-    offset: OffsetValue = None
+    offset: Optional[OffsetValue] = None
     blur_style: ShadowBlurStyle = field(default=ShadowBlurStyle.NORMAL)
 
 
@@ -72,7 +72,7 @@ class BoxDecoration:
     bgcolor: Optional[ColorValue] = None
     image: Optional[DecorationImage] = None
     border: Optional[Border] = None
-    border_radius: BorderRadiusValue = None
+    border_radius: Optional[BorderRadiusValue] = None
     shadow: Union[None, BoxShadow, List[BoxShadow]] = None
     gradient: Optional[Gradient] = None
     shape: Optional[BoxShape] = None

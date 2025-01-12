@@ -74,7 +74,7 @@ class Card(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         content: Optional[Control] = None,
-        margin: MarginValue = None,
+        margin: Optional[MarginValue] = None,
         elevation: OptionalNumber = None,
         color: Optional[ColorValue] = None,
         shadow_color: Optional[ColorValue] = None,
@@ -98,9 +98,9 @@ class Card(ConstrainedControl, AdaptiveControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -109,7 +109,7 @@ class Card(ConstrainedControl, AdaptiveControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -180,11 +180,11 @@ class Card(ConstrainedControl, AdaptiveControl):
 
     # margin
     @property
-    def margin(self) -> MarginValue:
+    def margin(self) -> Optional[MarginValue]:
         return self.__margin
 
     @margin.setter
-    def margin(self, value: MarginValue):
+    def margin(self, value: Optional[MarginValue]):
         self.__margin = value
 
     # elevation
