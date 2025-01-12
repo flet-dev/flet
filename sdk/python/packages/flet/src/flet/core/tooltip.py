@@ -52,4 +52,4 @@ class Tooltip:
     trigger_mode: Optional[TooltipTriggerMode] = None
 
 
-TooltipValue = Optional[Union[str, "Tooltip"]]
+TooltipValue = Union[str, "Tooltip"]
