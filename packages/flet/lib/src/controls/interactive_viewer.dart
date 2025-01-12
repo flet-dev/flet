@@ -41,7 +41,7 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
   late AnimationController _animationController;
   Animation<Matrix4>? _animation;
   Matrix4? _savedMatrix;
-  int _interactionTimestamp = DateTime.now().millisecondsSinceEpoch;
+  int _interactionUpdateTimestamp = DateTime.now().millisecondsSinceEpoch;
 
   @override
   void initState() {
@@ -161,11 +161,12 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
           ? (ScaleUpdateDetails details) {
               debugPrint(
                   "InteractiveViewer ${widget.control.id} onInteractionUpdate");
-              var interactionInterval =
-                  widget.control.attrInt("interactionInterval", 0)!;
+              var interactionUpdateInterval =
+                  widget.control.attrInt("interactionUpdateInterval", 0)!;
               var now = DateTime.now().millisecondsSinceEpoch;
-              if (now - _interactionTimestamp > interactionInterval) {
-                _interactionTimestamp = now;
+              if (now - _interactionUpdateTimestamp >
+                  interactionUpdateInterval) {
+                _interactionUpdateTimestamp = now;
                 widget.backend.triggerControlEvent(
                     widget.control.id,
                     "interaction_update",
