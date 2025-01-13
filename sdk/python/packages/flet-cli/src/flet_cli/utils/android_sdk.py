@@ -24,16 +24,20 @@ class AndroidSDK:
         self.progress = progress
 
     @staticmethod
-    def default_android_home_dir():
+    def studio_android_home_dir() -> Path:
         return (
             Path.home() / "AppData" / "Local" / "Android" / "Sdk"
             if platform.system() == "Windows"
             else (
                 Path.home() / "Library" / "Android" / "sdk"
                 if platform.system() == "Darwin"
-                else Path.home() / "Android" / "sdk"
+                else Path.home() / "Android" / "Sdk"
             )
         )
+
+    @staticmethod
+    def default_android_home_dir() -> Path:
+        return Path.home() / "Android" / "sdk"
 
     @staticmethod
     def android_home_dir() -> Path | None:
@@ -49,7 +53,7 @@ class AndroidSDK:
 
         # check for Android SDKs installed with Android Studio
         for hd in [
-            Path.home() / "Android" / "Sdk",
+            AndroidSDK.studio_android_home_dir(),
             AndroidSDK.default_android_home_dir(),
         ]:
             if hd.exists():
@@ -58,11 +62,7 @@ class AndroidSDK:
         return None
 
     def cmdline_tools_bin(self, home_dir: Path) -> Path | None:
-        for d in [
-            home_dir / "tools" / "bin",
-            home_dir / "cmdline-tools" / "latest" / "bin",
-            home_dir / "cmdline-tools" / "bin",
-        ]:
+        for d in [home_dir / "cmdline-tools" / "latest" / "bin"]:
             if d.exists():
                 return d
         return None
@@ -104,7 +104,7 @@ class AndroidSDK:
         home_dir = AndroidSDK.android_home_dir()
         install = True
         if not home_dir:
-            home_dir = self.default_android_home_dir()
+            home_dir = AndroidSDK.default_android_home_dir()
             self.log(f"Android SDK not found. Will be installed into {home_dir}")
         else:
             if self.cmdline_tools_bin(home_dir):

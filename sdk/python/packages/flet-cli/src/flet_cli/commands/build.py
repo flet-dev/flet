@@ -693,7 +693,11 @@ class Command(BaseCommand):
         from flet_cli.utils.android_sdk import AndroidSDK
 
         android_home = AndroidSDK.android_home_dir()
-        if android_home and (android_home / "tools" / "bin").exists():
+        if (
+            android_home
+            and android_home == AndroidSDK.studio_android_home_dir()
+            and (android_home / "tools" / "bin").exists()
+        ):
             if self.verbose > 0:
                 console.log(
                     f"Android SDK is installed at {android_home} and managed by Android Studio",
