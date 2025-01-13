@@ -5,13 +5,14 @@ import tempfile
 from pathlib import Path
 from typing import Optional
 
+from flet_cli.utils import processes
 from flet_cli.utils.distros import download_with_progress, extract_with_progress
 from rich.console import Console
 from rich.progress import Progress
 
 ANDROID_CMDLINE_TOOLS_VERSION = "11076708"
 ANDROID_API_VERSION = "35"
-BUILD_TOOLS_VERSION = "33.0.1"
+BUILD_TOOLS_VERSION = "34.0.0"
 
 
 class AndroidSDK:
@@ -27,7 +28,7 @@ class AndroidSDK:
             Path.home() / "AppData" / "Local" / "Android" / "Sdk"
             if platform.system() == "Windows"
             else (
-                Path.home() / "Library" / "Android" / "sdk"
+                Path.home() / "Library" / "Android1" / "sdk"
                 if platform.system() == "Darwin"
                 else Path.home() / "Android" / "sdk"
             )
@@ -54,7 +55,7 @@ class AndroidSDK:
 
         return None
 
-    def sdkmanager_dir(self, home_dir: Path) -> Path | None:
+    def cmdline_tools_bin(self, home_dir: Path) -> Path | None:
         for d in [
             home_dir / "tools" / "bin",
             home_dir / "cmdline-tools" / "latest" / "bin",
@@ -67,6 +68,11 @@ class AndroidSDK:
     def tool_exe(self, name: str, windows_ext: str):
         ext = windows_ext if platform.system() == "Windows" else ""
         return f"{name}{ext}"
+
+    def sdkmanager_exe(self, home_dir):
+        bin = self.cmdline_tools_bin(home_dir)
+        assert bin
+        return bin / self.tool_exe("sdkmanager", ".bat")
 
     def cmdline_tools_url(self):
         try:
@@ -93,24 +99,25 @@ class AndroidSDK:
         )
 
     def install(self):
-        self.log("Checking for existing Android SDK installation")
         home_dir = self.android_home_dir()
         install = True
         if not home_dir:
             home_dir = self.default_android_home_dir()
             self.log(f"Android SDK not found. Will be installed into {home_dir}")
         else:
-            if self.sdkmanager_dir(home_dir):
+            if self.cmdline_tools_bin(home_dir):
                 self.log(f"Android SDK installation found at {home_dir}")
                 install = False
             else:
                 self.log(
-                    f"Android SDK installation at {home_dir} does not contain sdkmanager executable. "
+                    f"Android SDK installation at {home_dir} does not contain cmdline tools. "
                     + "Android SDK will be re-installed."
                 )
 
         if install:
             self._install_cmdlinetools(home_dir)
+
+        self._install_api_and_build_tools(home_dir)
 
         return home_dir
 
@@ -132,40 +139,61 @@ class AndroidSDK:
 
         os.remove(archive_path)
 
-    def accept_sdkmanager_licenses(self):
-        """
-        Automatically accept all licenses for the Android SDK Manager.
-        """
-        try:
-            # Define the command for sdkmanager --licenses
-            command = [
-                "C:\\Android\\sdk\\cmdline-tools\\latest\\bin\\sdkmanager.bat",
+    def _install_api_and_build_tools(self, home_dir: Path):
+        self.log("Install required Android tools and APIs")
+        p = self.run(
+            [
+                self.sdkmanager_exe(home_dir),
+                "cmdline-tools;latest",
+                "platform-tools",
+                f"platforms;android-{ANDROID_API_VERSION}",
+                f"build-tools;{BUILD_TOOLS_VERSION}",
+            ],
+            input="y\n" * 10,
+            capture_output=False,
+        )
+        if p.returncode != 0:
+            self.log(p.stderr)
+            raise Exception("Error installing Android SDK tools")
+
+    def _accept_licenses(self, home_dir: Path):
+        self.log("Accepting Android SDK licenses")
+        p = self.run(
+            [
+                self.sdkmanager_exe(home_dir),
                 "--licenses",
-            ]
+            ],
+            input="y\n" * 20,
+            capture_output=False,
+        )
+        if p.returncode != 0:
+            self.log(p.stderr)
+            raise Exception("Error accepting Android SDK licenses")
 
-            # Run the command, sending 'y' (yes) to approve all licenses
-            process = subprocess.Popen(
-                command,
-                stdin=subprocess.PIPE,
-                # stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                env={"JAVA_HOME": "C:\\Users\\feodo\\java\\17.0.13+11"},
+    def get_installed_packages(self, home_dir: Path):
+        self.log("Checking installed Android APIs and build tools")
+        p = self.run(
+            [self.sdkmanager_exe(home_dir), "--list_installed"], capture_output=False
+        )
+        if p.returncode != 0:
+            self.log(p.stderr)
+            raise Exception(
+                "Error retrieving the list of installed Android SDK packages"
             )
-            # Simulate accepting licenses by sending 'y' repeatedly
-            stdout, stderr = process.communicate(input="y\n" * 100)
+        return p.stdout
 
-            # Check the process return code
-            if process.returncode == 0:
-                print("All licenses accepted successfully.")
-            else:
-                print(f"Failed to accept licenses. Error: {stderr}")
-        except FileNotFoundError:
-            print(
-                "sdkmanager not found. Ensure the Android SDK is installed and in your PATH."
-            )
-        except Exception as e:
-            print(f"An error occurred: {e}")
+    def run(self, args, cwd=None, input=None, capture_output=True):
+
+        self.log(f"Run subprocess: {args}")
+
+        return processes.run(
+            args,
+            cwd if cwd else os.getcwd(),
+            env={"JAVA_HOME": self.java_home},
+            input=input,
+            capture_output=capture_output,
+            log=self.log,
+        )
 
 
 # Example usage
