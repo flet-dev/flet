@@ -581,14 +581,6 @@ class Command(BaseCommand):
 
     def initialize_build(self):
         assert self.options
-        self.python_app_path = Path(self.options.python_app_path).resolve()
-        if not (
-            os.path.exists(self.python_app_path) or os.path.isdir(self.python_app_path)
-        ):
-            self.cleanup(
-                1,
-                f"Path to Flet app does not exist or is not a directory: {self.python_app_path}",
-            )
 
         self.verbose = self.options.verbose
         self.emojis = {
@@ -597,6 +589,26 @@ class Command(BaseCommand):
             "success": "" if self.no_rich_output else "🥳",
             "directory": "" if self.no_rich_output else "📁",
         }
+
+        self.python_app_path = Path(self.options.python_app_path).resolve()
+        self.no_rich_output = self.no_rich_output or self.options.no_rich_output
+        self.skip_flutter_doctor = (
+            self.skip_flutter_doctor or self.options.skip_flutter_doctor
+        )
+        self.package_platform = self.platforms[self.options.target_platform][
+            "package_platform"
+        ]
+        self.config_platform = self.platforms[self.options.target_platform][
+            "config_platform"
+        ]
+
+        if not (
+            os.path.exists(self.python_app_path) or os.path.isdir(self.python_app_path)
+        ):
+            self.cleanup(
+                1,
+                f"Path to Flet app does not exist or is not a directory: {self.python_app_path}",
+            )
 
         # get `flutter` and `dart` executables from PATH
         self.flutter_exe = self.find_flutter_batch("flutter")
@@ -613,16 +625,10 @@ class Command(BaseCommand):
             console.log("Flutter executable:", self.flutter_exe, style=verbose2_style)
             console.log("Dart executable:", self.dart_exe, style=verbose2_style)
 
-        self.no_rich_output = self.no_rich_output or self.options.no_rich_output
-        self.skip_flutter_doctor = (
-            self.skip_flutter_doctor or self.options.skip_flutter_doctor
-        )
-        self.package_platform = self.platforms[self.options.target_platform][
-            "package_platform"
-        ]
-        self.config_platform = self.platforms[self.options.target_platform][
-            "config_platform"
-        ]
+        if self.package_platform == "Android":
+            self.install_jdk()
+            self.install_android_sdk()
+
         self.rel_out_dir = self.options.output_dir or os.path.join(
             "build", self.platforms[self.options.target_platform]["dist"]
         )
@@ -674,8 +680,24 @@ class Command(BaseCommand):
             [os.path.join(flutter_dir, "bin"), os.environ.get("PATH", "")]
         )
         console.log(
-            f"Installed Flutter {MINIMAL_FLUTTER_VERSION} {self.emojis['checkmark']}"
+            f"Flutter {MINIMAL_FLUTTER_VERSION} installed {self.emojis['checkmark']}"
         )
+
+    def install_jdk(self):
+        self.status.update(f"[bold blue]Installing JDK...")
+        from flet_cli.utils.jdk import install_jdk
+
+        self.env["JAVA_HOME"] = install_jdk(self.log_stdout, progress=self.progress)
+        console.log(f"JDK installed {self.emojis['checkmark']}")
+
+    def install_android_sdk(self):
+        self.status.update(f"[bold blue]Installing Android SDK...")
+        from flet_cli.utils.android_sdk import AndroidSDK
+
+        self.env["ANDROID_HOME"] = AndroidSDK(
+            self.env["JAVA_HOME"], self.log_stdout, progress=self.progress
+        ).install()
+        console.log(f"Android SDK installed {self.emojis['checkmark']}")
 
     def validate_target_platform(self):
         assert self.options
