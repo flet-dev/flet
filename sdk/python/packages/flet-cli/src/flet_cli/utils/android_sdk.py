@@ -23,18 +23,20 @@ class AndroidSDK:
         self.log = log
         self.progress = progress
 
-    def default_android_home_dir(self):
+    @staticmethod
+    def default_android_home_dir():
         return (
             Path.home() / "AppData" / "Local" / "Android" / "Sdk"
             if platform.system() == "Windows"
             else (
-                Path.home() / "Library" / "Android1" / "sdk"
+                Path.home() / "Library" / "Android" / "sdk"
                 if platform.system() == "Darwin"
                 else Path.home() / "Android" / "sdk"
             )
         )
 
-    def android_home_dir(self) -> Path | None:
+    @staticmethod
+    def android_home_dir() -> Path | None:
         # check ANDROID_HOME environment variable
         home_dir = os.getenv("ANDROID_HOME")
         if home_dir and Path(home_dir).exists():
@@ -48,7 +50,7 @@ class AndroidSDK:
         # check for Android SDKs installed with Android Studio
         for hd in [
             Path.home() / "Android" / "Sdk",
-            self.default_android_home_dir(),
+            AndroidSDK.default_android_home_dir(),
         ]:
             if hd.exists():
                 return hd
@@ -99,7 +101,7 @@ class AndroidSDK:
         )
 
     def install(self):
-        home_dir = self.android_home_dir()
+        home_dir = AndroidSDK.android_home_dir()
         install = True
         if not home_dir:
             home_dir = self.default_android_home_dir()
@@ -116,8 +118,8 @@ class AndroidSDK:
 
         if install:
             self._install_cmdlinetools(home_dir)
-
-        self._install_api_and_build_tools(home_dir)
+            self._install_api_and_build_tools(home_dir)
+            self._accept_licenses(home_dir)
 
         return home_dir
 
@@ -144,11 +146,11 @@ class AndroidSDK:
         p = self.run(
             [
                 self.sdkmanager_exe(home_dir),
-                "cmdline-tools;latest",
                 "platform-tools",
                 f"platforms;android-{ANDROID_API_VERSION}",
                 f"build-tools;{BUILD_TOOLS_VERSION}",
             ],
+            env={"ANDROID_HOME": str(home_dir)},
             input="y\n" * 10,
             capture_output=False,
         )
@@ -163,6 +165,7 @@ class AndroidSDK:
                 self.sdkmanager_exe(home_dir),
                 "--licenses",
             ],
+            env={"ANDROID_HOME": str(home_dir)},
             input="y\n" * 20,
             capture_output=False,
         )
@@ -173,7 +176,9 @@ class AndroidSDK:
     def get_installed_packages(self, home_dir: Path):
         self.log("Checking installed Android APIs and build tools")
         p = self.run(
-            [self.sdkmanager_exe(home_dir), "--list_installed"], capture_output=False
+            [self.sdkmanager_exe(home_dir), "--list_installed"],
+            env={"ANDROID_HOME": str(home_dir)},
+            capture_output=False,
         )
         if p.returncode != 0:
             self.log(p.stderr)
@@ -182,23 +187,22 @@ class AndroidSDK:
             )
         return p.stdout
 
-    def run(self, args, cwd=None, input=None, capture_output=True):
+    def run(self, args, env=None, cwd=None, input=None, capture_output=True):
 
         self.log(f"Run subprocess: {args}")
+
+        cmd_env = {"JAVA_HOME": self.java_home}
+
+        if env:
+            cmd_env = {**cmd_env, **env}
+
+        self.log(f"Process environment: {cmd_env}")
 
         return processes.run(
             args,
             cwd if cwd else os.getcwd(),
-            env={"JAVA_HOME": self.java_home},
+            env=cmd_env,
             input=input,
             capture_output=capture_output,
             log=self.log,
         )
-
-
-# Example usage
-if __name__ == "__main__":
-    console = Console()
-    jdk_path = AndroidSDK(
-        os.environ["JAVA_HOME"], lambda m: console.log(m)
-    ).accept_sdkmanager_licenses()

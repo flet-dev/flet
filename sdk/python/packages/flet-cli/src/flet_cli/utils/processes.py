@@ -44,10 +44,11 @@ def run(
             env=cmd_env,
         )
 
-        if input:
-            input_iterator = (
-                iter(input) if isinstance(input, list) else iter(input.split("\n"))
-            )
+        input_iterator = (
+            iter(input)
+            if isinstance(input, list)
+            else iter(input.split("\n")) if isinstance(input, str) else iter([])
+        )
 
         try:
             while True:

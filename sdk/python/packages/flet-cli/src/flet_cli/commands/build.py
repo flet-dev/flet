@@ -626,7 +626,6 @@ class Command(BaseCommand):
             console.log("Dart executable:", self.dart_exe, style=verbose2_style)
 
         if self.package_platform == "Android":
-            self.install_jdk()
             self.install_android_sdk()
 
         self.rel_out_dir = self.options.output_dir or os.path.join(
@@ -691,9 +690,20 @@ class Command(BaseCommand):
         console.log(f"JDK installed {self.emojis['checkmark']}")
 
     def install_android_sdk(self):
-        self.status.update(f"[bold blue]Installing Android SDK...")
         from flet_cli.utils.android_sdk import AndroidSDK
 
+        android_home = AndroidSDK.android_home_dir()
+        if android_home and (android_home / "tools" / "bin").exists():
+            if self.verbose > 0:
+                console.log(
+                    f"Android SDK is installed at {android_home} and managed by Android Studio",
+                    style=verbose1_style,
+                )
+            return
+
+        self.install_jdk()
+
+        self.status.update(f"[bold blue]Installing Android SDK...")
         self.env["ANDROID_HOME"] = AndroidSDK(
             self.env["JAVA_HOME"], self.log_stdout, progress=self.progress
         ).install()
@@ -779,11 +789,7 @@ class Command(BaseCommand):
         self.flutter_dependencies = self.get_flutter_dependencies()
         if self.verbose > 0:
             console.log(
-                (
-                    f"Additional Flutter dependencies: {self.flutter_dependencies}"
-                    if len(self.flutter_dependencies) > 0
-                    else "No additional Flutter dependencies!"
-                ),
+                f"Custom Flutter dependencies: {self.flutter_dependencies}",
                 style=verbose1_style,
             )
 
