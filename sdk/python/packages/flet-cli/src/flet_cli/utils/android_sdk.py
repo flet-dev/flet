@@ -10,9 +10,15 @@ from flet_cli.utils.distros import download_with_progress, extract_with_progress
 from rich.console import Console
 from rich.progress import Progress
 
-ANDROID_CMDLINE_TOOLS_VERSION = "11076708"
-ANDROID_API_VERSION = "35"
-BUILD_TOOLS_VERSION = "34.0.0"
+ANDROID_CMDLINE_TOOLS_DOWNLOAD_VERSION = "11076708"
+ANDROID_CMDLINE_TOOLS_VERSION = "12.0"
+
+MINIMAL_PACKAGES = [
+    "cmdline-tools;latest",
+    "platform-tools",
+    "platforms;android-35",
+    "build-tools;34.0.0",
+]
 
 
 class AndroidSDK:
@@ -62,7 +68,10 @@ class AndroidSDK:
         return None
 
     def cmdline_tools_bin(self, home_dir: Path) -> Path | None:
-        for d in [home_dir / "cmdline-tools" / "latest" / "bin"]:
+        for d in [
+            home_dir / "cmdline-tools" / "latest" / "bin",
+            home_dir / "cmdline-tools" / ANDROID_CMDLINE_TOOLS_VERSION / "bin",
+        ]:
             if d.exists():
                 return d
         return None
@@ -97,7 +106,7 @@ class AndroidSDK:
 
         return (
             f"https://dl.google.com/android/repository/"
-            f"commandlinetools-{url_platform}-{ANDROID_CMDLINE_TOOLS_VERSION}_latest.zip"
+            f"commandlinetools-{url_platform}-{ANDROID_CMDLINE_TOOLS_DOWNLOAD_VERSION}_latest.zip"
         )
 
     def install(self):
@@ -118,7 +127,12 @@ class AndroidSDK:
 
         if install:
             self._install_cmdlinetools(home_dir)
-            self._install_api_and_build_tools(home_dir)
+
+        installed_packages = 0
+        for package in MINIMAL_PACKAGES:
+            installed_packages += self._install_package(home_dir, package)
+
+        if installed_packages > 0:
             self._accept_licenses(home_dir)
 
         return home_dir
@@ -135,21 +149,20 @@ class AndroidSDK:
         self.log(f"Extracting Android cmdline tools to {unpack_dir}...")
         extract_with_progress(archive_path, str(unpack_dir), progress=self.progress)
 
-        # rename "cmdline-tools/cmdline-tools" to "cmdline-tools/latest"
+        # rename "cmdline-tools/cmdline-tools" to "cmdline-tools/{version}"
         cmdlinetools_dir = unpack_dir / "cmdline-tools"
-        cmdlinetools_dir.rename(unpack_dir / "latest")
+        cmdlinetools_dir.rename(unpack_dir / ANDROID_CMDLINE_TOOLS_VERSION)
 
         os.remove(archive_path)
 
-    def _install_api_and_build_tools(self, home_dir: Path):
-        self.log("Install required Android tools and APIs")
+    def _install_package(self, home_dir: Path, package_name: str) -> int:
+        if home_dir.joinpath(*package_name.split(";")).exists():
+            self.log(f'Android SDK package "{package_name}" is already installed')
+            return 0
+
+        self.log(f'Installing Android SDK package "{package_name}"')
         p = self.run(
-            [
-                self.sdkmanager_exe(home_dir),
-                "platform-tools",
-                f"platforms;android-{ANDROID_API_VERSION}",
-                f"build-tools;{BUILD_TOOLS_VERSION}",
-            ],
+            [self.sdkmanager_exe(home_dir), package_name],
             env={"ANDROID_HOME": str(home_dir)},
             input="y\n" * 10,
             capture_output=False,
@@ -157,6 +170,7 @@ class AndroidSDK:
         if p.returncode != 0:
             self.log(p.stderr)
             raise Exception("Error installing Android SDK tools")
+        return 1
 
     def _accept_licenses(self, home_dir: Path):
         self.log("Accepting Android SDK licenses")

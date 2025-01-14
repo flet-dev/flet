@@ -626,6 +626,7 @@ class Command(BaseCommand):
             console.log("Dart executable:", self.dart_exe, style=verbose2_style)
 
         if self.package_platform == "Android":
+            self.install_jdk()
             self.install_android_sdk()
 
         self.rel_out_dir = self.options.output_dir or os.path.join(
@@ -683,29 +684,14 @@ class Command(BaseCommand):
         )
 
     def install_jdk(self):
-        self.status.update(f"[bold blue]Installing JDK...")
         from flet_cli.utils.jdk import install_jdk
 
+        self.status.update(f"[bold blue]Installing JDK...")
         self.env["JAVA_HOME"] = install_jdk(self.log_stdout, progress=self.progress)
         console.log(f"JDK installed {self.emojis['checkmark']}")
 
     def install_android_sdk(self):
         from flet_cli.utils.android_sdk import AndroidSDK
-
-        android_home = AndroidSDK.android_home_dir()
-        if (
-            android_home
-            and android_home == AndroidSDK.studio_android_home_dir()
-            and (android_home / "tools" / "bin").exists()
-        ):
-            if self.verbose > 0:
-                console.log(
-                    f"Android SDK is installed at {android_home} and managed by Android Studio",
-                    style=verbose1_style,
-                )
-            return
-
-        self.install_jdk()
 
         self.status.update(f"[bold blue]Installing Android SDK...")
         self.env["ANDROID_HOME"] = AndroidSDK(
