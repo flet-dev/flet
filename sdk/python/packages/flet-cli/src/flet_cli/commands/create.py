@@ -41,7 +41,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--template",
             dest="template",
-            choices=["default"],
+            choices=["default", "flutter-extension"],
             default="default",
             help="template to use for new Flet project",
             required=False,
