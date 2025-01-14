@@ -69,6 +69,7 @@ class Command(BaseCommand):
             "template_name": options.template,
             "package_manager": options.package_manager,
             "flet_version": flet.version.version,
+            "sep": os.sep,
         }
 
         template_ref = options.template_ref
