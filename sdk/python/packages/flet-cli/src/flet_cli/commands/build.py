@@ -33,7 +33,7 @@ from rich.theme import Theme
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.25.0/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
-MINIMAL_FLUTTER_VERSION = version.Version("3.27.1")
+MINIMAL_FLUTTER_VERSION = version.Version("3.27.2")
 
 error_style = Style(color="red", bold=True)
 console = Console(log_path=False, theme=Theme({"log.message": "green bold"}))
@@ -1694,8 +1694,8 @@ class Command(BaseCommand):
         return processes.run(
             args,
             cwd,
-            {**self.env, **env} if env else self.env,
-            capture_output,
+            env={**self.env, **env} if env else self.env,
+            capture_output=capture_output,
             log=self.log_stdout,
         )
 

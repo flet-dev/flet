@@ -31,6 +31,7 @@ def run(
             text=True,
             encoding="utf8",
             env=cmd_env,
+            errors="replace"
         )
     else:
         process = subprocess.Popen(
@@ -42,6 +43,7 @@ def run(
             text=True,
             encoding="utf8",
             env=cmd_env,
+            errors="replace"
         )
 
         input_iterator = (

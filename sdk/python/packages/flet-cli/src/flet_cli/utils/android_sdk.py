@@ -1,6 +1,5 @@
 import os
 import platform
-import subprocess
 import tempfile
 from pathlib import Path
 from typing import Optional
@@ -135,7 +134,7 @@ class AndroidSDK:
         if installed_packages > 0:
             self._accept_licenses(home_dir)
 
-        return home_dir
+        return str(home_dir)
 
     def _install_cmdlinetools(self, android_home: Path):
         archive_path = os.path.join(tempfile.gettempdir(), f"commandlinetools.zip")
