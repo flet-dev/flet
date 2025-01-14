@@ -646,7 +646,12 @@ class Command(BaseCommand):
 
     def flutter_version_valid(self):
         version_results = self.run(
-            [self.flutter_exe, "--version"],
+            [
+                self.flutter_exe,
+                "--version",
+                "--no-version-check",
+                "--suppress-analytics",
+            ],
             cwd=os.getcwd(),
             capture_output=True,
         )
@@ -1313,7 +1318,12 @@ class Command(BaseCommand):
         self.status.update(f"[bold blue]Generating app icons...")
         # icons
         icons_result = self.run(
-            [self.dart_exe, "run", "flutter_launcher_icons"],
+            [
+                self.dart_exe,
+                "run",
+                "--suppress-analytics",
+                "flutter_launcher_icons",
+            ],
             cwd=str(self.flutter_dir),
             capture_output=self.verbose < 1,
         )
@@ -1329,7 +1339,12 @@ class Command(BaseCommand):
         if self.options.target_platform in ["web", "ipa", "apk", "aab"]:
             self.status.update(f"[bold blue]Generating splash screens...")
             splash_result = self.run(
-                [self.dart_exe, "run", "flutter_native_splash:create"],
+                [
+                    self.dart_exe,
+                    "run",
+                    "--suppress-analytics",
+                    "flutter_native_splash:create",
+                ],
                 cwd=str(self.flutter_dir),
                 capture_output=self.verbose < 1,
             )
@@ -1354,6 +1369,7 @@ class Command(BaseCommand):
         package_args = [
             self.dart_exe,
             "run",
+            "--suppress-analytics",
             "serious_python:main",
             "package",
             str(self.package_app_path),
@@ -1522,6 +1538,8 @@ class Command(BaseCommand):
             self.flutter_exe,
             "build",
             self.platforms[self.options.target_platform]["flutter_build_command"],
+            "--no-version-check",
+            "--suppress-analytics",
         ]
 
         build_env = {}
@@ -1730,7 +1748,7 @@ class Command(BaseCommand):
 
     def run_flutter_doctor(self):
         flutter_doctor = self.run(
-            [self.flutter_exe, "doctor"],
+            [self.flutter_exe, "doctor", "--no-version-check", "--suppress-analytics"],
             cwd=os.getcwd(),
             capture_output=True,
         )
