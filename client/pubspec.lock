@@ -252,8 +252,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_ads"
-      ref: main
-      resolved-ref: "862027f34686f33d281293deeae36553afce8d0b"
+      ref: "0.1.0"
+      resolved-ref: "01e7065fcbebb1317b3f16951e6cf0c5fcff658b"
       url: "https://github.com/flet-dev/flet-ads.git"
     source: git
     version: "0.1.0"
@@ -261,8 +261,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_audio"
-      ref: main
-      resolved-ref: a51f9879fed4109ca132a95d90ab2e315ba1e8e5
+      ref: "0.1.0"
+      resolved-ref: a146bf580a211c6d1f5c45070d15532ea2e92af7
       url: "https://github.com/flet-dev/flet-audio.git"
     source: git
     version: "0.1.0"
@@ -270,8 +270,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_audio_recorder"
-      ref: main
-      resolved-ref: b0cc2a37ec96f236f1ac0069d0827be3dda4484c
+      ref: "0.1.0"
+      resolved-ref: eb186cd49fde3136f65d0d074bca5ca688260e53
       url: "https://github.com/flet-dev/flet-audio-recorder.git"
     source: git
     version: "0.1.0"
@@ -279,8 +279,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_flashlight"
-      ref: main
-      resolved-ref: ff8f7a2347044c7b21d8b2c071bf957199a31dfc
+      ref: "0.1.0"
+      resolved-ref: a12a12259eaac801ee99d465727ec4a9fe50121e
       url: "https://github.com/flet-dev/flet-flashlight.git"
     source: git
     version: "0.1.0"
@@ -288,8 +288,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_geolocator"
-      ref: main
-      resolved-ref: "24140df3167e393124557698150ec40f3a8bc759"
+      ref: "0.1.0"
+      resolved-ref: "7b17d7aab169a7488da90fd73b3acd8e568f4f03"
       url: "https://github.com/flet-dev/flet-geolocator.git"
     source: git
     version: "0.25.2"
@@ -297,8 +297,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_lottie"
-      ref: main
-      resolved-ref: d2398e40dff03b047348796d5cc72f7171b35f54
+      ref: "0.1.0"
+      resolved-ref: f28c767b5d43de650155a5a97e2d971fb833c9f8
       url: "https://github.com/flet-dev/flet-lottie.git"
     source: git
     version: "0.1.0"
@@ -306,8 +306,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_map"
-      ref: main
-      resolved-ref: "4d308ec24112e2d3a14fd8cd02f91cd03a2ea6bd"
+      ref: "0.1.0"
+      resolved-ref: dfa3cf6776b0dc5f238227d5f378cda7be190eaf
       url: "https://github.com/flet-dev/flet-map.git"
     source: git
     version: "0.1.0"
@@ -315,8 +315,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_permission_handler"
-      ref: main
-      resolved-ref: "74cee59f40792b1f6181098f3e4a822601fc03b6"
+      ref: "0.1.0"
+      resolved-ref: "4ead86b6c7e54b914215b6087fcb17b7e921d75c"
       url: "https://github.com/flet-dev/flet-permission-handler.git"
     source: git
     version: "0.1.0"
@@ -324,8 +324,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_rive"
-      ref: main
-      resolved-ref: "7f8cfc2fa76b3b9116af0695e458de255f1afc75"
+      ref: "0.1.0"
+      resolved-ref: "089f7ad923f747ad764aa2781eca9a36382bb912"
       url: "https://github.com/flet-dev/flet-rive.git"
     source: git
     version: "0.1.0"
@@ -333,8 +333,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_video"
-      ref: main
-      resolved-ref: "183614fbf128196beab90caac2d66eb201ee5471"
+      ref: "0.1.0"
+      resolved-ref: "76f3f76f04c7573e047204648378ee2f31db7a15"
       url: "https://github.com/flet-dev/flet-video.git"
     source: git
     version: "0.1.0"
@@ -342,8 +342,8 @@ packages:
     dependency: "direct main"
     description:
       path: "src/flutter/flet_webview"
-      ref: main
-      resolved-ref: "91d9045c41c458a2ee4ec14d6841b5cda3724ba3"
+      ref: "0.1.0"
+      resolved-ref: b1cfb3155469bc0a9a7578afcd58e7f32669b164
       url: "https://github.com/flet-dev/flet-webview.git"
     source: git
     version: "0.1.0"

@@ -35,63 +35,63 @@ dependencies:
   flet_audio:
     git:
       url: https://github.com/flet-dev/flet-audio.git
-      ref: main
+      ref: 0.1.0
       path: src/flutter/flet_audio
   flet_video:
     git:
       url: https://github.com/flet-dev/flet-video.git
-      ref: main
+      ref: 0.1.0
       path: src/flutter/flet_video
 # --FAT_CLIENT_END--
   flet_lottie:
     git:
       url: https://github.com/flet-dev/flet-lottie.git
-      ref: main
+      ref: 0.1.0
       path: src/flutter/flet_lottie
   flet_map:
     git:
       url: https://github.com/flet-dev/flet-map.git
-      ref: main
+      ref: 0.1.0
       path: src/flutter/flet_map
   flet_ads:
     git:
       url: https://github.com/flet-dev/flet-ads.git
-      ref: main
+      ref: 0.1.0
       path: src/flutter/flet_ads
 
   flet_rive:
     git:
       url: https://github.com/flet-dev/flet-rive.git
-      ref: main
+      ref: 0.1.0
       path: src/flutter/flet_rive
 
   flet_audio_recorder:
     git:
       url: https://github.com/flet-dev/flet-audio-recorder.git
-      ref: main
+      ref: 0.1.0
       path: src/flutter/flet_audio_recorder
 
   flet_permission_handler:
     git:
       url: https://github.com/flet-dev/flet-permission-handler.git
-      ref: main
+      ref: 0.1.0
       path: src/flutter/flet_permission_handler
   
   flet_geolocator:
     git:
       url: https://github.com/flet-dev/flet-geolocator.git
-      ref: main
+      ref: 0.1.0
       path: src/flutter/flet_geolocator
   
   flet_webview:
     git:
       url: https://github.com/flet-dev/flet-webview.git
-      ref: main
+      ref: 0.1.0
       path: src/flutter/flet_webview
   flet_flashlight:
     git:
       url: https://github.com/flet-dev/flet-flashlight.git
-      ref: main
+      ref: 0.1.0
       path: src/flutter/flet_flashlight
 
   url_strategy: ^0.2.0
