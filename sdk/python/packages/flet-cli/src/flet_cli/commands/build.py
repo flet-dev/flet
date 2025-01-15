@@ -37,8 +37,8 @@ MINIMAL_FLUTTER_VERSION = version.Version("3.27.2")
 
 error_style = Style(color="red", bold=True)
 console = Console(log_path=False, theme=Theme({"log.message": "green bold"}))
-verbose1_style = Style(color="bright_black", bold=False)
-verbose2_style = Style(color="gray0", bold=False)
+verbose1_style = Style(dim=True, bold=False)
+verbose2_style = Style(color="bright_black", bold=False)
 
 
 class Command(BaseCommand):
