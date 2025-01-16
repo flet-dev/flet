@@ -24,9 +24,6 @@ files = [
     {file = "annotated_types-0.7.0.tar.gz", hash = "sha256:aff07c09a53a08bc8cfccb9c85b05f1aa9a2a6f23728d790723543408344ce89"},
 ]
 
-[package.dependencies]
-typing-extensions = {version = ">=4.0.0", markers = "python_version < \"3.9\""}
-
 [[package]]
 name = "anyio"
 version = "4.5.2"
@@ -506,7 +503,7 @@ name = "flet"
 version = "0.1.0"
 description = "Flet for Python - easily build interactive multi-platform apps in Python"
 optional = false
-python-versions = "^3.8"
+python-versions = "^3.9"
 groups = ["dev"]
 files = []
 develop = true
@@ -531,7 +528,7 @@ name = "flet-cli"
 version = "0.1.0"
 description = "Flet CLI"
 optional = false
-python-versions = "^3.8"
+python-versions = "^3.9"
 groups = ["dev"]
 files = []
 develop = true
@@ -553,7 +550,7 @@ name = "flet-desktop"
 version = "0.1.0"
 description = "Flet Desktop client in Flutter"
 optional = false
-python-versions = "^3.8"
+python-versions = "^3.9"
 groups = ["dev"]
 files = []
 develop = true
@@ -570,7 +567,7 @@ name = "flet-web"
 version = "0.1.0"
 description = "Flet web client in Flutter."
 optional = false
-python-versions = "^3.8"
+python-versions = "^3.9"
 groups = ["dev"]
 files = []
 develop = true
@@ -2269,5 +2266,5 @@ type = ["pytest-mypy"]
 
 [metadata]
 lock-version = "2.1"
-python-versions = "<3.14,>=3.8"
-content-hash = "b444a72fa54dfdc54821e430ac86023b223a6d42f914e3c32fb727cd2eacbba8"
+python-versions = ">=3.9,<3.14"
+content-hash = "d324f022216176b70cf9cdc61b4a09df1186c0bde343e28c6954d6ba0d1add77"
