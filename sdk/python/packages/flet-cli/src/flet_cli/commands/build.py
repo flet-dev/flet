@@ -1388,25 +1388,23 @@ class Command(BaseCommand):
         package_env = {}
 
         # requirements
+        package_args.append("--requirements")
         requirements_txt = self.python_app_path.joinpath("requirements.txt")
 
-        toml_dependencies = get_poetry_dependencies(
-            self.get_pyproject("tool.poetry.dependencies")
-        ) or get_project_dependencies(self.get_pyproject("project.dependencies"))
+        toml_dependencies = (
+            get_poetry_dependencies(self.get_pyproject("tool.poetry.dependencies"))
+            or get_project_dependencies(self.get_pyproject("project.dependencies"))
+            or []
+        )
 
-        if toml_dependencies:
-            platform_dependencies = get_project_dependencies(
-                self.get_pyproject(f"tool.flet.{self.config_platform}.dependencies")
-            )
-            if platform_dependencies:
-                toml_dependencies.extend(platform_dependencies)
+        platform_dependencies = get_project_dependencies(
+            self.get_pyproject(f"tool.flet.{self.config_platform}.dependencies")
+        )
+        if platform_dependencies:
+            toml_dependencies.extend(platform_dependencies)
 
-            package_args.extend(
-                [
-                    "--requirements",
-                    ",".join(toml_dependencies),
-                ]
-            )
+        if len(toml_dependencies) > 0:
+            package_args.append(",".join(toml_dependencies))
         elif requirements_txt.exists():
             if self.verbose > 1:
                 with open(requirements_txt, "r") as f:
@@ -1414,7 +1412,12 @@ class Command(BaseCommand):
                         f"Contents of requirements.txt: {f.read()}",
                         style=verbose2_style,
                     )
-            package_args.extend(["--requirements", f"-r,{requirements_txt}"])
+            package_args.append(f"-r,{requirements_txt}")
+        else:
+            flet_version = (
+                flet.version.version if flet.version.version else update_version()
+            )
+            package_args.append(f"flet=={flet_version}")
 
         # site-packages variable
         if self.package_platform in ["Android", "iOS"]:
