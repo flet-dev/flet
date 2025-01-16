@@ -194,12 +194,12 @@ class Control:
         if ov != nv:
             self._set_attr(name, nv)
 
+    def _set_attr_icon(self, name: str, value) -> None:
+        self._set_attr_json(name, value.value if isinstance(value, Enum) else value)
+
     def _convert_attr_json(self, value: V) -> Optional[str]:
-        return (
-            json.dumps(value, cls=EmbedJsonEncoder, separators=(",", ":"))
-            if value is not None
-            else None
-        )
+        if value is not None:
+            return json.dumps(value, cls=EmbedJsonEncoder, separators=(",", ":"))
 
     def _wrap_attr_dict(self, value: Optional[Union[Dict, Any]]) -> Optional[Dict]:
         if value is None or isinstance(value, Dict):

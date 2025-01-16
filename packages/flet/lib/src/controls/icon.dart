@@ -18,7 +18,7 @@ class IconControl extends StatelessWidget {
     return constrainedControl(
         context,
         Icon(
-          parseIcon(control.attrString("name", "")!),
+          parseIcon(control.attrString("icon", "")!),
           size: control.attrDouble("size"),
           color: control.attrColor("color", context),
           semanticLabel: control.attrString("semanticsLabel"),

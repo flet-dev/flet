@@ -321,7 +321,7 @@ class DatePicker(Control):
     @switch_to_calendar_icon.setter
     def switch_to_calendar_icon(self, value: Optional[IconValue]):
         self.__switch_to_calendar_icon = value
-        self._set_enum_attr("switchToCalendarEntryModeIcon", value, IconEnums)
+        self._set_attr_icon("switchToCalendarEntryModeIcon", value)
 
     # switch_to_input_icon
     @property
@@ -331,7 +331,7 @@ class DatePicker(Control):
     @switch_to_input_icon.setter
     def switch_to_input_icon(self, value: Optional[IconValue]):
         self.__switch_to_input_icon = value
-        self._set_enum_attr("switchToInputEntryModeIcon", value, IconEnums)
+        self._set_attr_icon("switchToInputEntryModeIcon", value)
 
     # on_change
     @property

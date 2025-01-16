@@ -424,7 +424,7 @@ class Dropdown(FormFieldControl):
     @select_icon.setter
     def select_icon(self, value: Optional[IconValueOrControl]):
         self.__select_icon = value
-        self._set_enum_attr("selectIcon", value, IconEnums)
+        self._set_attr_icon("selectIcon", value)
 
     # icon_content
     @property

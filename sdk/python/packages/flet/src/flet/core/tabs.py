@@ -74,7 +74,7 @@ class Tab(AdaptiveControl):
         super().before_update()
         self._set_attr_json("iconMargin", self.__icon_margin)
         if isinstance(self.__icon, IconValue):
-            self._set_enum_attr("icon", self.__icon, IconEnums)
+            self._set_attr_icon("icon", self.__icon)
 
     # text
     @property

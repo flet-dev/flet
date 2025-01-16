@@ -88,7 +88,7 @@ class NavigationDrawerDestination(Control):
     @icon.setter
     def icon(self, value: Optional[IconValueOrControl]):
         self.__icon = value
-        self._set_enum_attr("icon", value, IconEnums)
+        self._set_attr_icon("icon", value)
 
     # icon_content
     @property
@@ -120,7 +120,7 @@ class NavigationDrawerDestination(Control):
     @selected_icon.setter
     def selected_icon(self, value: Optional[IconValueOrControl]):
         self.__selected_icon = value
-        self._set_enum_attr("selectedIcon", value, IconEnums)
+        self._set_attr_icon("selectedIcon", value)
 
     # selected_icon_content
     @property
