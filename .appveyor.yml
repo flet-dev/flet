@@ -461,7 +461,7 @@ for:
       - python --version
       - cd sdk/python
       - python -m ensurepip --upgrade
-      - pip3 install --upgrade setuptools pip virtualenv
+      - pip3 install --upgrade setuptools pip
       - pip3 install poetry
       - poetry install
 
