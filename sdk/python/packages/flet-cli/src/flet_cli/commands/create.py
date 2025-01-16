@@ -42,7 +42,7 @@ class Command(BaseCommand):
             "--template",
             dest="template",
             choices=["app", "extension"],
-            default="default",
+            default="app",
             help="template to use for new Flet project",
             required=False,
         )
