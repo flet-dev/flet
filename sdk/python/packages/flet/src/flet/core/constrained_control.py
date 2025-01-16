@@ -22,7 +22,7 @@ class ConstrainedControl(Control):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -38,9 +38,9 @@ class ConstrainedControl(Control):
         top: OptionalNumber = None,
         right: OptionalNumber = None,
         bottom: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -164,29 +164,29 @@ class ConstrainedControl(Control):
 
     # rotate
     @property
-    def rotate(self) -> RotateValue:
+    def rotate(self) -> Optional[RotateValue]:
         return self.__rotate
 
     @rotate.setter
-    def rotate(self, value: RotateValue):
+    def rotate(self, value: Optional[RotateValue]):
         self.__rotate = value
 
     # scale
     @property
-    def scale(self) -> ScaleValue:
+    def scale(self) -> Optional[ScaleValue]:
         return self.__scale
 
     @scale.setter
-    def scale(self, value: ScaleValue):
+    def scale(self, value: Optional[ScaleValue]):
         self.__scale = value
 
     # offset
     @property
-    def offset(self) -> OffsetValue:
+    def offset(self) -> Optional[OffsetValue]:
         return self.__offset
 
     @offset.setter
-    def offset(self, value: OffsetValue):
+    def offset(self, value: Optional[OffsetValue]):
         self.__offset = value
 
     # aspect_ratio

@@ -60,7 +60,7 @@ class Divider(Control):
         #
         ref: Optional[Ref] = None,
         opacity: OptionalNumber = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         data: Any = None,

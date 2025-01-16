@@ -74,14 +74,14 @@ class Container(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         content: Optional[Control] = None,
-        padding: PaddingValue = None,
-        margin: MarginValue = None,
+        padding: Optional[PaddingValue] = None,
+        margin: Optional[MarginValue] = None,
         alignment: Optional[Alignment] = None,
         bgcolor: Optional[ColorValue] = None,
         gradient: Optional[Gradient] = None,
         blend_mode: Optional[BlendMode] = None,
         border: Optional[Border] = None,
-        border_radius: BorderRadiusValue = None,
+        border_radius: Optional[BorderRadiusValue] = None,
         image_src: Optional[str] = None,
         image_src_base64: Optional[str] = None,
         image_repeat: Optional[ImageRepeat] = None,
@@ -123,9 +123,9 @@ class Container(ConstrainedControl, AdaptiveControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -134,7 +134,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -264,11 +264,11 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # image
@@ -291,11 +291,11 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # margin
     @property
-    def margin(self) -> MarginValue:
+    def margin(self) -> Optional[MarginValue]:
         return self.__margin
 
     @margin.setter
-    def margin(self, value: MarginValue):
+    def margin(self, value: Optional[MarginValue]):
         self.__margin = value
 
     # bgcolor
@@ -372,11 +372,11 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # border_radius
     @property
-    def border_radius(self) -> BorderRadiusValue:
+    def border_radius(self) -> Optional[BorderRadiusValue]:
         return self.__border_radius
 
     @border_radius.setter
-    def border_radius(self, value: BorderRadiusValue):
+    def border_radius(self, value: Optional[BorderRadiusValue]):
         self.__border_radius = value
 
     # image_src

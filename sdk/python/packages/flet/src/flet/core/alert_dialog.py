@@ -75,14 +75,14 @@ class AlertDialog(AdaptiveControl):
         elevation: OptionalNumber = None,
         icon: Optional[Control] = None,
         open: bool = False,
-        title_padding: PaddingValue = None,
-        content_padding: PaddingValue = None,
-        actions_padding: PaddingValue = None,
+        title_padding: Optional[PaddingValue] = None,
+        content_padding: Optional[PaddingValue] = None,
+        actions_padding: Optional[PaddingValue] = None,
         actions_alignment: Optional[MainAxisAlignment] = None,
         shape: Optional[OutlinedBorder] = None,
-        inset_padding: PaddingValue = None,
-        icon_padding: PaddingValue = None,
-        action_button_padding: PaddingValue = None,
+        inset_padding: Optional[PaddingValue] = None,
+        icon_padding: Optional[PaddingValue] = None,
+        action_button_padding: Optional[PaddingValue] = None,
         surface_tint_color: Optional[ColorValue] = None,
         shadow_color: Optional[ColorValue] = None,
         icon_color: Optional[ColorValue] = None,
@@ -322,11 +322,11 @@ class AlertDialog(AdaptiveControl):
 
     # title_padding
     @property
-    def title_padding(self) -> PaddingValue:
+    def title_padding(self) -> Optional[PaddingValue]:
         return self.__title_padding
 
     @title_padding.setter
-    def title_padding(self, value: PaddingValue):
+    def title_padding(self, value: Optional[PaddingValue]):
         self.__title_padding = value
 
     # content
@@ -340,11 +340,11 @@ class AlertDialog(AdaptiveControl):
 
     # content_padding
     @property
-    def content_padding(self) -> PaddingValue:
+    def content_padding(self) -> Optional[PaddingValue]:
         return self.__content_padding
 
     @content_padding.setter
-    def content_padding(self, value: PaddingValue):
+    def content_padding(self, value: Optional[PaddingValue]):
         self.__content_padding = value
 
     # actions
@@ -358,11 +358,11 @@ class AlertDialog(AdaptiveControl):
 
     # actions_padding
     @property
-    def actions_padding(self) -> PaddingValue:
+    def actions_padding(self) -> Optional[PaddingValue]:
         return self.__actions_padding
 
     @actions_padding.setter
-    def actions_padding(self, value: PaddingValue):
+    def actions_padding(self, value: Optional[PaddingValue]):
         self.__actions_padding = value
 
     # actions_alignment
@@ -389,29 +389,29 @@ class AlertDialog(AdaptiveControl):
 
     # inset_padding
     @property
-    def inset_padding(self) -> PaddingValue:
+    def inset_padding(self) -> Optional[PaddingValue]:
         return self.__inset_padding
 
     @inset_padding.setter
-    def inset_padding(self, value: PaddingValue):
+    def inset_padding(self, value: Optional[PaddingValue]):
         self.__inset_padding = value
 
     # icon_padding
     @property
-    def icon_padding(self) -> PaddingValue:
+    def icon_padding(self) -> Optional[PaddingValue]:
         return self.__icon_padding
 
     @icon_padding.setter
-    def icon_padding(self, value: PaddingValue):
+    def icon_padding(self, value: Optional[PaddingValue]):
         self.__icon_padding = value
 
     # action_button_padding
     @property
-    def action_button_padding(self) -> PaddingValue:
+    def action_button_padding(self) -> Optional[PaddingValue]:
         return self.__action_button_padding
 
     @action_button_padding.setter
-    def action_button_padding(self, value: PaddingValue):
+    def action_button_padding(self, value: Optional[PaddingValue]):
         self.__action_button_padding = value
 
     # semantics_label

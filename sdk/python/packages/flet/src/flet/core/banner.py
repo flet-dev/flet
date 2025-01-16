@@ -70,7 +70,7 @@ class Banner(Control):
         shadow_color: Optional[ColorValue] = None,
         divider_color: Optional[ColorValue] = None,
         elevation: OptionalNumber = None,
-        margin: MarginValue = None,
+        margin: Optional[MarginValue] = None,
         content_text_style: Optional[TextStyle] = None,
         on_visible: OptionalControlEventCallable = None,
         #
@@ -161,11 +161,11 @@ class Banner(Control):
 
     # leading_padding
     @property
-    def leading_padding(self) -> PaddingValue:
+    def leading_padding(self) -> Optional[PaddingValue]:
         return self.__leading_padding
 
     @leading_padding.setter
-    def leading_padding(self, value: PaddingValue):
+    def leading_padding(self, value: Optional[PaddingValue]):
         self.__leading_padding = value
 
     # content
@@ -179,20 +179,20 @@ class Banner(Control):
 
     # content_padding
     @property
-    def content_padding(self) -> PaddingValue:
+    def content_padding(self) -> Optional[PaddingValue]:
         return self.__content_padding
 
     @content_padding.setter
-    def content_padding(self, value: PaddingValue):
+    def content_padding(self, value: Optional[PaddingValue]):
         self.__content_padding = value
 
     # margin
     @property
-    def margin(self) -> MarginValue:
+    def margin(self) -> Optional[MarginValue]:
         return self.__margin
 
     @margin.setter
-    def margin(self, value: MarginValue):
+    def margin(self, value: Optional[MarginValue]):
         self.__margin = value
 
     # actions

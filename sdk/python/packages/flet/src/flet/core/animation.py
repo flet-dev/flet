@@ -63,8 +63,8 @@ class Animation:
 
 @dataclass
 class AnimationStyle:
-    duration: DurationValue = None
-    reverse_duration: DurationValue = None
+    duration: Optional[DurationValue] = None
+    reverse_duration: Optional[DurationValue] = None
     curve: Optional[AnimationCurve] = None
     reverse_curve: Optional[AnimationCurve] = None
 

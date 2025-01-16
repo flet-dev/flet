@@ -59,17 +59,17 @@ class UrlTarget(Enum):
     TOP = "_top"
 
 
-PaddingValue = Optional[Union[int, float, Padding]]
+PaddingValue = Union[int, float, Padding]
 
-MarginValue = Optional[Union[int, float, Margin]]
+MarginValue = Union[int, float, Margin]
 
-BorderRadiusValue = Optional[Union[int, float, BorderRadius]]
+BorderRadiusValue = Union[int, float, BorderRadius]
 
-RotateValue = Optional[Union[int, float, Rotate]]
+RotateValue = Union[int, float, Rotate]
 
-ScaleValue = Optional[Union[int, float, Scale]]
+ScaleValue = Union[int, float, Scale]
 
-OffsetValue = Optional[Union[Offset, Tuple[Union[float, int], Union[float, int]]]]
+OffsetValue = Union[Offset, Tuple[Union[float, int], Union[float, int]]]
 
 
 @dataclass
@@ -82,7 +82,7 @@ class Duration:
     days: int = 0
 
 
-DurationValue = Union[int, Duration, None]
+DurationValue = Union[int, Duration]
 
 
 class FontWeight(Enum):

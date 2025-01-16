@@ -51,7 +51,7 @@ class View(ScrollableControl, AdaptiveControl):
         vertical_alignment: Optional[MainAxisAlignment] = None,
         horizontal_alignment: Optional[CrossAxisAlignment] = None,
         spacing: OptionalNumber = None,
-        padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
         bgcolor: Optional[ColorValue] = None,
         decoration: Optional[BoxDecoration] = None,
         foreground_decoration: Optional[BoxDecoration] = None,
@@ -258,11 +258,11 @@ class View(ScrollableControl, AdaptiveControl):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # bgcolor

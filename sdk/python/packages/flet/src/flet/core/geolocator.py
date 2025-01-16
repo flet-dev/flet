@@ -63,12 +63,12 @@ class GeolocatorPosition:
 class GeolocatorSettings:
     accuracy: Optional[GeolocatorPositionAccuracy] = None
     distance_filter: Optional[int] = None
-    time_limit: DurationValue = None
+    time_limit: Optional[DurationValue] = None
 
 
 @dataclass
 class GeolocatorWebSettings(GeolocatorSettings):
-    maximum_age: DurationValue = None
+    maximum_age: Optional[DurationValue] = None
 
 
 @dataclass
@@ -82,7 +82,7 @@ class GeolocatorAppleSettings(GeolocatorSettings):
 @dataclass
 class GeolocatorAndroidSettings(GeolocatorSettings):
     force_location_manager: Optional[bool] = False
-    interval_duration: DurationValue = False
+    interval_duration: Optional[DurationValue] = False
     foreground_notification_text: Optional[str] = None
     foreground_notification_title: Optional[str] = None
     foreground_notification_channel_name: Optional[str] = "Background Location"
