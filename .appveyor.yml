@@ -186,7 +186,8 @@ for:
 
     install:
       - python --version
-      - pip3 install --upgrade setuptools wheel twine poetry tomlkit virtualenv==20.28.1
+      - pip3 install --upgrade setuptools wheel twine tomlkit
+      - ps: (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -
       - dart pub global activate fvm
       - set PATH=%LOCALAPPDATA%\Pub\Cache\bin;%USERPROFILE%\fvm\default\bin;%PATH%
       - fvm install %FLUTTER_VERSION%
@@ -461,8 +462,8 @@ for:
       - python --version
       - cd sdk/python
       - python -m ensurepip --upgrade
-      - pip3 install --upgrade setuptools pip virtualenv==20.28.1
-      - pip3 install poetry
+      - pip3 install --upgrade setuptools pip
+      - curl -sSL https://install.python-poetry.org | python -
       - poetry install
 
     build: off
