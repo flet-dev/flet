@@ -31,32 +31,68 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flet:
-    path: ../packages/flet
 # --FAT_CLIENT_START--
   flet_audio:
-    path: ../packages/flet_audio
+    git:
+      url: https://github.com/flet-dev/flet-audio.git
+      ref: 0.1.0
+      path: src/flutter/flet_audio
   flet_video:
-    path: ../packages/flet_video
+    git:
+      url: https://github.com/flet-dev/flet-video.git
+      ref: 0.1.0
+      path: src/flutter/flet_video
 # --FAT_CLIENT_END--
   flet_lottie:
-    path: ../packages/flet_lottie
+    git:
+      url: https://github.com/flet-dev/flet-lottie.git
+      ref: 0.1.0
+      path: src/flutter/flet_lottie
   flet_map:
-    path: ../packages/flet_map
+    git:
+      url: https://github.com/flet-dev/flet-map.git
+      ref: 0.1.0
+      path: src/flutter/flet_map
   flet_ads:
-    path: ../packages/flet_ads
+    git:
+      url: https://github.com/flet-dev/flet-ads.git
+      ref: 0.1.0
+      path: src/flutter/flet_ads
+
   flet_rive:
-    path: ../packages/flet_rive
+    git:
+      url: https://github.com/flet-dev/flet-rive.git
+      ref: 0.1.0
+      path: src/flutter/flet_rive
+
   flet_audio_recorder:
-    path: ../packages/flet_audio_recorder
+    git:
+      url: https://github.com/flet-dev/flet-audio-recorder.git
+      ref: 0.1.0
+      path: src/flutter/flet_audio_recorder
+
   flet_permission_handler:
-    path: ../packages/flet_permission_handler
+    git:
+      url: https://github.com/flet-dev/flet-permission-handler.git
+      ref: 0.1.0
+      path: src/flutter/flet_permission_handler
+  
   flet_geolocator:
-    path: ../packages/flet_geolocator
+    git:
+      url: https://github.com/flet-dev/flet-geolocator.git
+      ref: 0.1.0
+      path: src/flutter/flet_geolocator
+  
   flet_webview:
-    path: ../packages/flet_webview
+    git:
+      url: https://github.com/flet-dev/flet-webview.git
+      ref: 0.1.0
+      path: src/flutter/flet_webview
   flet_flashlight:
-    path: ../packages/flet_flashlight
+    git:
+      url: https://github.com/flet-dev/flet-flashlight.git
+      ref: 0.1.0
+      path: src/flutter/flet_flashlight
 
   url_strategy: ^0.2.0
   cupertino_icons: ^1.0.6
@@ -65,6 +101,8 @@ dependencies:
     sdk: flutter
 
 dependency_overrides:
+  flet:
+    path: ../packages/flet
   webview_flutter_android: ^4.0.0
 
 dev_dependencies:

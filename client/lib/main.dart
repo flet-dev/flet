@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flet/flet.dart';
+import 'package:flet_ads/flet_ads.dart' as flet_ads;
 // --FAT_CLIENT_START--
 import 'package:flet_audio/flet_audio.dart' as flet_audio;
 // --FAT_CLIENT_END--
@@ -13,7 +14,6 @@ import 'package:flet_map/flet_map.dart' as flet_map;
 import 'package:flet_permission_handler/flet_permission_handler.dart'
     as flet_permission_handler;
 import 'package:flet_rive/flet_rive.dart' as flet_rive;
-import 'package:flet_ads/flet_ads.dart' as flet_ads;
 // --FAT_CLIENT_START--
 import 'package:flet_video/flet_video.dart' as flet_video;
 // --FAT_CLIENT_END--

@@ -34,6 +34,12 @@ class AudioEncoder(Enum):
     PCM16BITS = "pcm16bits"
 
 
+@deprecated(
+    reason="AudioRecorder control has been moved to a separate Python package: https://pypi.org/project/flet-audio-recorder. "
+    + "Read more about this change in Flet blog: https://flet.dev/blog/flet-v-0-26-release-announcement",
+    version="0.26.0",
+    delete_version="0.29.0",
+)
 class AudioRecorder(Control):
     """
     A control that allows you to record audio from your device.
@@ -95,13 +101,19 @@ class AudioRecorder(Control):
         )
         return started == "true"
 
-    @deprecated(
-        reason="Use start_recording() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def start_recording_async(self, output_path: str) -> bool:
-        return self.start_recording(output_path)
+    async def start_recording_async(
+        self, output_path: str = None, wait_timeout: Optional[float] = 10
+    ) -> bool:
+        assert (
+            self.page.web or output_path
+        ), "output_path must be provided when not on web"
+        started = await self.invoke_method_async(
+            "start_recording",
+            {"outputPath": output_path},
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return started == "true"
 
     def is_recording(self, wait_timeout: Optional[float] = 5) -> bool:
         recording = self.invoke_method(
@@ -145,24 +157,8 @@ class AudioRecorder(Control):
     def resume_recording(self):
         self.invoke_method("resume_recording")
 
-    @deprecated(
-        reason="Use resume_recording() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def resume_recording_async(self):
-        self.resume_recording()
-
     def pause_recording(self):
         self.invoke_method("pause_recording")
-
-    @deprecated(
-        reason="Use pause_recording() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def pause_recording_async(self):
-        self.pause_recording()
 
     def is_paused(self, wait_timeout: Optional[float] = 5) -> bool:
         paused = self.invoke_method(

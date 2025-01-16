@@ -41,6 +41,12 @@ class AudioDurationChangeEvent(ControlEvent):
         self.duration: int = int(e.data)
 
 
+@deprecated(
+    reason="Audio control has been moved to a separate Python package: https://pypi.org/project/flet-audio. "
+    + "Read more about this change in Flet blog: https://flet.dev/blog/flet-v-0-26-release-announcement",
+    version="0.26.0",
+    delete_version="0.29.0",
+)
 class Audio(Control):
     """
     A control to simultaneously play multiple audio files. Works on macOS, Linux, Windows, iOS, Android and web. Based on audioplayers Flutter widget (https://pub.dev/packages/audioplayers).
@@ -127,57 +133,17 @@ class Audio(Control):
     def play(self):
         self.invoke_method("play")
 
-    @deprecated(
-        reason="Use play() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def play_async(self):
-        self.play()
-
     def pause(self):
         self.invoke_method("pause")
-
-    @deprecated(
-        reason="Use pause() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def pause_async(self):
-        self.pause()
 
     def resume(self):
         self.invoke_method("resume")
 
-    @deprecated(
-        reason="Use resume() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def resume_async(self):
-        self.resume()
-
     def release(self):
         self.invoke_method("release")
 
-    @deprecated(
-        reason="Use release() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def release_async(self):
-        self.release()
-
     def seek(self, position_milliseconds: int):
         self.invoke_method("seek", {"position": str(position_milliseconds)})
-
-    @deprecated(
-        reason="Use seek() method instead.",
-        version="0.21.0",
-        delete_version="0.26.0",
-    )
-    async def seek_async(self, position_milliseconds: int):
-        self.seek(position_milliseconds)
 
     def get_duration(self, wait_timeout: Optional[float] = 5) -> Optional[int]:
         sr = self.invoke_method(

@@ -27,7 +27,6 @@ from flet.core.types import (
     ResponsiveNumber,
     SupportsStr,
 )
-from flet.utils import deprecated
 
 if TYPE_CHECKING:
     from .page import Page
@@ -96,6 +95,9 @@ class Control:
             self._set_attr_json("tooltip", self.tooltip)
         if isinstance(self.badge, (Badge, str)):
             self._set_attr_json("badge", self.badge)
+        else:
+            self._set_attr("badge", None)
+
         self._set_attr_json("col", self.__col)
 
     def did_mount(self):
@@ -336,12 +338,6 @@ class Control:
             self.__page
         ), f"{self.__class__.__qualname__} Control must be added to the page"
         self.__page._clean(self)
-
-    @deprecated(
-        reason="Use clean() method instead.", version="0.21.0", delete_version="0.26.0"
-    )
-    async def clean_async(self):
-        self.clean()
 
     def invoke_method(
         self,
