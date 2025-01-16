@@ -95,6 +95,9 @@ class Control:
             self._set_attr_json("tooltip", self.tooltip)
         if isinstance(self.badge, (Badge, str)):
             self._set_attr_json("badge", self.badge)
+        else:
+            self._set_attr("badge", None)
+
         self._set_attr_json("col", self.__col)
 
     def did_mount(self):

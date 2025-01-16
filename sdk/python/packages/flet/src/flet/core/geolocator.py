@@ -14,6 +14,7 @@ from flet.core.types import (
     OptionalEventCallable,
     OptionalNumber,
 )
+from flet.utils import deprecated
 
 
 class GeolocatorPositionAccuracy(Enum):
@@ -99,6 +100,12 @@ class GeolocatorPositionChangeEvent(ControlEvent):
         self.longitude: float = d.get("long")
 
 
+@deprecated(
+    reason="Geolocator control has been moved to a separate Python package: https://pypi.org/project/flet-geolocator. "
+    + "Read more about this change in Flet blog: https://flet.dev/blog/flet-v-0-26-release-announcement",
+    version="0.26.0",
+    delete_version="0.29.0",
+)
 class Geolocator(Control):
     """
     A control that allows you to fetch GPS data from your device.
