@@ -5,6 +5,7 @@ echo "flet_sdk_root: $flet_sdk_root"
 python --version
 pip install --upgrade setuptools wheel twine tomlkit
 curl -sSL https://install.python-poetry.org | python3 -
+export PATH="$HOME/.local/bin:$PATH"
 
 function patch_python_package_versions() {
     PYPI_VER="${APPVEYOR_BUILD_VERSION/+/.dev}"
