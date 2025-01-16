@@ -242,7 +242,7 @@ packages:
     source: hosted
     version: "0.69.0"
   flet:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
       path: "../packages/flet"
       relative: true
@@ -251,80 +251,102 @@ packages:
   flet_ads:
     dependency: "direct main"
     description:
-      path: "../packages/flet_ads"
-      relative: true
-    source: path
-    version: "0.25.2"
+      path: "src/flutter/flet_ads"
+      ref: "0.1.0"
+      resolved-ref: "01e7065fcbebb1317b3f16951e6cf0c5fcff658b"
+      url: "https://github.com/flet-dev/flet-ads.git"
+    source: git
+    version: "0.1.0"
   flet_audio:
     dependency: "direct main"
     description:
-      path: "../packages/flet_audio"
-      relative: true
-    source: path
-    version: "0.25.2"
+      path: "src/flutter/flet_audio"
+      ref: "0.1.0"
+      resolved-ref: a146bf580a211c6d1f5c45070d15532ea2e92af7
+      url: "https://github.com/flet-dev/flet-audio.git"
+    source: git
+    version: "0.1.0"
   flet_audio_recorder:
     dependency: "direct main"
     description:
-      path: "../packages/flet_audio_recorder"
-      relative: true
-    source: path
-    version: "0.25.2"
+      path: "src/flutter/flet_audio_recorder"
+      ref: "0.1.0"
+      resolved-ref: eb186cd49fde3136f65d0d074bca5ca688260e53
+      url: "https://github.com/flet-dev/flet-audio-recorder.git"
+    source: git
+    version: "0.1.0"
   flet_flashlight:
     dependency: "direct main"
     description:
-      path: "../packages/flet_flashlight"
-      relative: true
-    source: path
-    version: "0.25.2"
+      path: "src/flutter/flet_flashlight"
+      ref: "0.1.0"
+      resolved-ref: a12a12259eaac801ee99d465727ec4a9fe50121e
+      url: "https://github.com/flet-dev/flet-flashlight.git"
+    source: git
+    version: "0.1.0"
   flet_geolocator:
     dependency: "direct main"
     description:
-      path: "../packages/flet_geolocator"
-      relative: true
-    source: path
+      path: "src/flutter/flet_geolocator"
+      ref: "0.1.0"
+      resolved-ref: "7b17d7aab169a7488da90fd73b3acd8e568f4f03"
+      url: "https://github.com/flet-dev/flet-geolocator.git"
+    source: git
     version: "0.25.2"
   flet_lottie:
     dependency: "direct main"
     description:
-      path: "../packages/flet_lottie"
-      relative: true
-    source: path
-    version: "0.25.2"
+      path: "src/flutter/flet_lottie"
+      ref: "0.1.0"
+      resolved-ref: f28c767b5d43de650155a5a97e2d971fb833c9f8
+      url: "https://github.com/flet-dev/flet-lottie.git"
+    source: git
+    version: "0.1.0"
   flet_map:
     dependency: "direct main"
     description:
-      path: "../packages/flet_map"
-      relative: true
-    source: path
-    version: "0.25.2"
+      path: "src/flutter/flet_map"
+      ref: "0.1.0"
+      resolved-ref: dfa3cf6776b0dc5f238227d5f378cda7be190eaf
+      url: "https://github.com/flet-dev/flet-map.git"
+    source: git
+    version: "0.1.0"
   flet_permission_handler:
     dependency: "direct main"
     description:
-      path: "../packages/flet_permission_handler"
-      relative: true
-    source: path
-    version: "0.25.2"
+      path: "src/flutter/flet_permission_handler"
+      ref: "0.1.0"
+      resolved-ref: "4ead86b6c7e54b914215b6087fcb17b7e921d75c"
+      url: "https://github.com/flet-dev/flet-permission-handler.git"
+    source: git
+    version: "0.1.0"
   flet_rive:
     dependency: "direct main"
     description:
-      path: "../packages/flet_rive"
-      relative: true
-    source: path
-    version: "0.25.2"
+      path: "src/flutter/flet_rive"
+      ref: "0.1.0"
+      resolved-ref: "089f7ad923f747ad764aa2781eca9a36382bb912"
+      url: "https://github.com/flet-dev/flet-rive.git"
+    source: git
+    version: "0.1.0"
   flet_video:
     dependency: "direct main"
     description:
-      path: "../packages/flet_video"
-      relative: true
-    source: path
-    version: "0.25.2"
+      path: "src/flutter/flet_video"
+      ref: "0.1.0"
+      resolved-ref: "76f3f76f04c7573e047204648378ee2f31db7a15"
+      url: "https://github.com/flet-dev/flet-video.git"
+    source: git
+    version: "0.1.0"
   flet_webview:
     dependency: "direct main"
     description:
-      path: "../packages/flet_webview"
-      relative: true
-    source: path
-    version: "0.25.2"
+      path: "src/flutter/flet_webview"
+      ref: "0.1.0"
+      resolved-ref: b1cfb3155469bc0a9a7578afcd58e7f32669b164
+      url: "https://github.com/flet-dev/flet-webview.git"
+    source: git
+    version: "0.1.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -988,18 +1010,18 @@ packages:
     dependency: transitive
     description:
       name: rive
-      sha256: b44b62feb908610ca6c85e05f4573a66118a23867425926cf06152d171236141
+      sha256: "2551a44fa766a7ed3f52aa2b94feda6d18d00edc25dee5f66e72e9b365bb6d6c"
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.17"
+    version: "0.13.20"
   rive_common:
     dependency: transitive
     description:
       name: rive_common
-      sha256: a3e5786f8d85c89977062b9ceeb3b72a7c28f81e32fb68497744042ce20bee2f
+      sha256: "2ba42f80d37a4efd0696fb715787c4785f8a13361e8aea9227c50f1e78cf763a"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.12"
+    version: "0.4.15"
   safe_local_storage:
     dependency: transitive
     description:
