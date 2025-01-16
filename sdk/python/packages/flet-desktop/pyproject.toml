@@ -20,7 +20,7 @@ Repository = "https://github.com/flet-dev/flet"
 Documentation = "https://flet.dev/docs"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 flet = { version = "0.1.0" }
 
 [tool.poetry.group.dev.dependencies]

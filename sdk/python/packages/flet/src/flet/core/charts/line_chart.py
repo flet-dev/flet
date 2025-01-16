@@ -51,7 +51,7 @@ class LineChart(ConstrainedControl):
         max_y: OptionalNumber = None,
         tooltip_rounded_radius: OptionalNumber = None,
         tooltip_margin: OptionalNumber = None,
-        tooltip_padding: PaddingValue = None,
+        tooltip_padding: Optional[PaddingValue] = None,
         tooltip_max_content_width: OptionalNumber = None,
         tooltip_rotate_angle: OptionalNumber = None,
         tooltip_tooltip_horizontal_offset: OptionalNumber = None,
@@ -74,9 +74,9 @@ class LineChart(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -85,7 +85,7 @@ class LineChart(ConstrainedControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -391,11 +391,11 @@ class LineChart(ConstrainedControl):
 
     # tooltip_padding
     @property
-    def tooltip_padding(self) -> PaddingValue:
+    def tooltip_padding(self) -> Optional[PaddingValue]:
         return self.__tooltip_padding
 
     @tooltip_padding.setter
-    def tooltip_padding(self, value: PaddingValue):
+    def tooltip_padding(self, value: Optional[PaddingValue]):
         self.__tooltip_padding = value
 
     # tooltip_max_content_width

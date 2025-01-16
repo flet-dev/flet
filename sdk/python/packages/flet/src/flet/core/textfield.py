@@ -144,7 +144,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         enable_scribble: Optional[bool] = None,
         animate_cursor_opacity: Optional[bool] = None,
         always_call_on_tap: Optional[bool] = None,
-        scroll_padding: PaddingValue = None,
+        scroll_padding: Optional[PaddingValue] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         keyboard_brightness: Optional[Brightness] = None,
         mouse_cursor: Optional[MouseCursor] = None,
@@ -167,14 +167,14 @@ class TextField(FormFieldControl, AdaptiveControl):
         border: Optional[InputBorder] = None,
         color: Optional[ColorValue] = None,
         bgcolor: Optional[ColorValue] = None,
-        border_radius: BorderRadiusValue = None,
+        border_radius: Optional[BorderRadiusValue] = None,
         border_width: OptionalNumber = None,
         border_color: Optional[ColorValue] = None,
         focused_color: Optional[ColorValue] = None,
         focused_bgcolor: Optional[ColorValue] = None,
         focused_border_width: OptionalNumber = None,
         focused_border_color: Optional[ColorValue] = None,
-        content_padding: PaddingValue = None,
+        content_padding: Optional[PaddingValue] = None,
         dense: Optional[bool] = None,
         filled: Optional[bool] = None,
         fill_color: Optional[ColorValue] = None,
@@ -200,7 +200,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         suffix_style: Optional[TextStyle] = None,
         focus_color: Optional[ColorValue] = None,
         align_label_with_hint: Optional[bool] = None,
-        hint_fade_duration: DurationValue = None,
+        hint_fade_duration: Optional[DurationValue] = None,
         hint_max_lines: Optional[int] = None,
         helper_max_lines: Optional[int] = None,
         error_max_lines: Optional[int] = None,
@@ -220,9 +220,9 @@ class TextField(FormFieldControl, AdaptiveControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -231,7 +231,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -537,11 +537,11 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     # scroll_padding
     @property
-    def scroll_padding(self) -> PaddingValue:
+    def scroll_padding(self) -> Optional[PaddingValue]:
         return self.__scroll_padding
 
     @scroll_padding.setter
-    def scroll_padding(self, value: PaddingValue):
+    def scroll_padding(self, value: Optional[PaddingValue]):
         self.__scroll_padding = value
 
     # keyboard_brightness

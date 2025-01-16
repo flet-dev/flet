@@ -83,7 +83,7 @@ class Path(Shape):
         y: float
         width: float
         height: float
-        border_radius: BorderRadiusValue = dataclasses.field(default=None)
+        border_radius: Optional[BorderRadiusValue] = None
         type: str = dataclasses.field(default="rect")
 
     @dataclasses.dataclass

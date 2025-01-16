@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
@@ -68,7 +69,7 @@ class _CupertinoBottomSheetControlState
       );
     }
 
-    return content;
+    return Material(child: content);
   }
 
   @override

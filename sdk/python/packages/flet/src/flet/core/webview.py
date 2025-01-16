@@ -23,6 +23,7 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet.utils import deprecated
 
 
 class WebviewRequestMethod(Enum):
@@ -64,6 +65,12 @@ class WebviewJavaScriptEvent(ControlEvent):
         self.url: str = d.get("url")
 
 
+@deprecated(
+    reason="WebView control has been moved to a separate Python package: https://pypi.org/project/flet-webview. "
+    + "Read more about this change in Flet blog: https://flet.dev/blog/flet-v-0-26-release-announcement",
+    version="0.26.0",
+    delete_version="0.29.0",
+)
 class WebView(ConstrainedControl):
     """
     Easily load webpages while allowing user interaction.
@@ -156,9 +163,9 @@ class WebView(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -167,7 +174,7 @@ class WebView(ConstrainedControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,

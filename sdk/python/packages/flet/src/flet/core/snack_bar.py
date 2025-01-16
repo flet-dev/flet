@@ -79,8 +79,8 @@ class SnackBar(Control):
         close_icon_color: Optional[ColorValue] = None,
         bgcolor: Optional[ColorValue] = None,
         duration: Optional[int] = None,
-        margin: MarginValue = None,
-        padding: PaddingValue = None,
+        margin: Optional[MarginValue] = None,
+        padding: Optional[PaddingValue] = None,
         width: OptionalNumber = None,
         elevation: OptionalNumber = None,
         shape: Optional[OutlinedBorder] = None,
@@ -248,20 +248,20 @@ class SnackBar(Control):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # margin
     @property
-    def margin(self) -> MarginValue:
+    def margin(self) -> Optional[MarginValue]:
         return self.__margin
 
     @margin.setter
-    def margin(self, value: MarginValue):
+    def margin(self, value: Optional[MarginValue]):
         self.__margin = value
 
     # width

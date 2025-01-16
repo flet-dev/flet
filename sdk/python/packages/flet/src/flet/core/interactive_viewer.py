@@ -78,7 +78,7 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
         scale_factor: OptionalNumber = None,
         clip_behavior: Optional[ClipBehavior] = None,
         alignment: Optional[Alignment] = None,
-        boundary_margin: MarginValue = None,
+        boundary_margin: Optional[MarginValue] = None,
         interaction_update_interval: Optional[int] = None,
         on_interaction_start: Optional[
             Callable[[InteractiveViewerInteractionStartEvent], None]
@@ -104,9 +104,9 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -115,7 +115,7 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -336,11 +336,11 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
 
     # boundary_margin
     @property
-    def boundary_margin(self) -> MarginValue:
+    def boundary_margin(self) -> Optional[MarginValue]:
         return self.__boundary_margin
 
     @boundary_margin.setter
-    def boundary_margin(self, value: MarginValue):
+    def boundary_margin(self, value: Optional[MarginValue]):
         self.__boundary_margin = value
 
     # on_interaction_start

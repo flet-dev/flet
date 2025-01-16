@@ -26,6 +26,7 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet.utils import deprecated
 
 
 @dataclass
@@ -111,6 +112,12 @@ class MapInteractionConfiguration:
     pinch_zoom_win_gestures: Optional[MapMultiFingerGesture] = None
 
 
+@deprecated(
+    reason="Map control has been moved to a separate Python package: https://pypi.org/project/flet-map. "
+    + "Read more about this change in Flet blog: https://flet.dev/blog/flet-v-0-26-release-announcement",
+    version="0.26.0",
+    delete_version="0.29.0",
+)
 class Map(ConstrainedControl):
     """
     Map Control.
@@ -132,7 +139,7 @@ class Map(ConstrainedControl):
         max_zoom: OptionalNumber = None,
         min_zoom: OptionalNumber = None,
         animation_curve: Optional[AnimationCurve] = None,
-        animation_duration: DurationValue = None,
+        animation_duration: Optional[DurationValue] = None,
         on_init: OptionalControlEventCallable = None,
         on_tap: OptionalEventCallable["MapTapEvent"] = None,
         on_hover: OptionalEventCallable["MapHoverEvent"] = None,
@@ -158,9 +165,9 @@ class Map(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -169,7 +176,7 @@ class Map(ConstrainedControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -282,7 +289,7 @@ class Map(ConstrainedControl):
     def reset_rotation(
         self,
         animation_curve: Optional[AnimationCurve] = None,
-        animation_duration: DurationValue = None,
+        animation_duration: Optional[DurationValue] = None,
     ):
         self.invoke_method(
             "reset_rotation",
@@ -295,7 +302,7 @@ class Map(ConstrainedControl):
     def zoom_in(
         self,
         animation_curve: Optional[AnimationCurve] = None,
-        animation_duration: DurationValue = None,
+        animation_duration: Optional[DurationValue] = None,
     ):
         self.invoke_method(
             "zoom_in",
@@ -308,7 +315,7 @@ class Map(ConstrainedControl):
     def zoom_out(
         self,
         animation_curve: Optional[AnimationCurve] = None,
-        animation_duration: DurationValue = None,
+        animation_duration: Optional[DurationValue] = None,
     ):
         self.invoke_method(
             "zoom_out",
@@ -322,7 +329,7 @@ class Map(ConstrainedControl):
         self,
         zoom: Number,
         animation_curve: Optional[AnimationCurve] = None,
-        animation_duration: DurationValue = None,
+        animation_duration: Optional[DurationValue] = None,
     ):
         self.invoke_method(
             "zoom_to",
@@ -339,7 +346,7 @@ class Map(ConstrainedControl):
         zoom: OptionalNumber = None,
         rotation: OptionalNumber = None,
         animation_curve: Optional[AnimationCurve] = None,
-        animation_duration: DurationValue = None,
+        animation_duration: Optional[DurationValue] = None,
         offset: Optional[Union[Offset, Tuple[Union[Number], Union[Number]]]] = None,
     ):
         if isinstance(offset, tuple):
@@ -363,7 +370,7 @@ class Map(ConstrainedControl):
         point: Optional[MapLatitudeLongitude],
         zoom: OptionalNumber,
         animation_curve: Optional[AnimationCurve] = None,
-        animation_duration: DurationValue = None,
+        animation_duration: Optional[DurationValue] = None,
     ):
         self.invoke_method(
             "center_on",

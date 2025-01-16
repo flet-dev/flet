@@ -36,7 +36,7 @@ class Tab(AdaptiveControl):
         tab_content: Optional[Control] = None,
         icon: Optional[IconValueOrControl] = None,
         height: OptionalNumber = None,
-        icon_margin: MarginValue = None,
+        icon_margin: Optional[MarginValue] = None,
         #
         # Control and AdaptiveControl
         #
@@ -123,11 +123,11 @@ class Tab(AdaptiveControl):
 
     # icon_margin
     @property
-    def icon_margin(self) -> MarginValue:
+    def icon_margin(self) -> Optional[MarginValue]:
         return self.__icon_margin
 
     @icon_margin.setter
-    def icon_margin(self, value: MarginValue):
+    def icon_margin(self, value: Optional[MarginValue]):
         self.__icon_margin = value
 
 
@@ -186,13 +186,13 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         animation_duration: Optional[int] = None,
         divider_color: Optional[ColorValue] = None,
         indicator_color: Optional[ColorValue] = None,
-        indicator_border_radius: BorderRadiusValue = None,
+        indicator_border_radius: Optional[BorderRadiusValue] = None,
         indicator_border_side: Optional[BorderSide] = None,
-        indicator_padding: PaddingValue = None,
+        indicator_padding: Optional[PaddingValue] = None,
         indicator_tab_size: Optional[bool] = None,
         is_secondary: Optional[bool] = None,
         label_color: Optional[ColorValue] = None,
-        label_padding: PaddingValue = None,
+        label_padding: Optional[PaddingValue] = None,
         label_text_style: Optional[TextStyle] = None,
         unselected_label_color: Optional[ColorValue] = None,
         unselected_label_text_style: Optional[TextStyle] = None,
@@ -201,8 +201,8 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         indicator_thickness: OptionalNumber = None,
         enable_feedback: Optional[str] = None,
         mouse_cursor: Optional[MouseCursor] = None,
-        padding: PaddingValue = None,
-        splash_border_radius: BorderRadiusValue = None,
+        padding: Optional[PaddingValue] = None,
+        splash_border_radius: Optional[BorderRadiusValue] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         on_click: OptionalControlEventCallable = None,
         on_change: OptionalControlEventCallable = None,
@@ -221,9 +221,9 @@ class Tabs(ConstrainedControl, AdaptiveControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -452,11 +452,11 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # indicator_border_radius
     @property
-    def indicator_border_radius(self) -> BorderRadiusValue:
+    def indicator_border_radius(self) -> Optional[BorderRadiusValue]:
         return self.__indicator_border_radius
 
     @indicator_border_radius.setter
-    def indicator_border_radius(self, value: BorderRadiusValue):
+    def indicator_border_radius(self, value: Optional[BorderRadiusValue]):
         self.__indicator_border_radius = value
 
     # indicator_border_side
@@ -470,11 +470,11 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # indicator_padding
     @property
-    def indicator_padding(self) -> PaddingValue:
+    def indicator_padding(self) -> Optional[PaddingValue]:
         return self.__indicator_padding
 
     @indicator_padding.setter
-    def indicator_padding(self, value: PaddingValue):
+    def indicator_padding(self, value: Optional[PaddingValue]):
         self.__indicator_padding = value
 
     # indicator_tab_size
@@ -517,11 +517,11 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # label_padding
     @property
-    def label_padding(self) -> PaddingValue:
+    def label_padding(self) -> Optional[PaddingValue]:
         return self.__label_padding
 
     @label_padding.setter
-    def label_padding(self, value: PaddingValue):
+    def label_padding(self, value: Optional[PaddingValue]):
         self.__label_padding = value
 
     # label_text_style
@@ -544,20 +544,20 @@ class Tabs(ConstrainedControl, AdaptiveControl):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # splash_border_radius
     @property
-    def splash_border_radius(self) -> BorderRadiusValue:
+    def splash_border_radius(self) -> Optional[BorderRadiusValue]:
         return self.__splash_border_radius
 
     @splash_border_radius.setter
-    def splash_border_radius(self, value: BorderRadiusValue):
+    def splash_border_radius(self, value: Optional[BorderRadiusValue]):
         self.__splash_border_radius = value
 
     # on_click
