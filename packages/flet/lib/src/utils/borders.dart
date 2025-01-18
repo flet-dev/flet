@@ -102,7 +102,11 @@ BorderSide? borderSideFromJSON(ThemeData? theme, dynamic json,
       : null;
 }
 
-OutlinedBorder? outlinedBorderFromJSON(Map<String, dynamic> json) {
+OutlinedBorder? outlinedBorderFromJSON(Map<String, dynamic>? json) {
+  if (json == null) {
+    return null;
+  }
+
   String type = json["type"];
   if (type == "roundedRectangle") {
     return RoundedRectangleBorder(
