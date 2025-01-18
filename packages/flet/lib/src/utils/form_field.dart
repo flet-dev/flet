@@ -109,14 +109,20 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
 
   InputBorder? border;
   if (inputBorder == FormFieldInputBorder.underline) {
-    border = const UnderlineInputBorder();
+    border = UnderlineInputBorder(
+        borderSide: BorderSide(
+            color: borderColor ?? Color(0xFF000000),
+            width: borderWidth ?? 1.0));
   } else if (inputBorder == FormFieldInputBorder.none) {
     border = InputBorder.none;
   } else if (inputBorder == FormFieldInputBorder.outline ||
       borderRadius != null ||
       borderColor != null ||
       borderWidth != null) {
-    border = const OutlineInputBorder();
+    border = OutlineInputBorder(
+        borderSide: BorderSide(
+            color: borderColor ?? Color(0xFF000000),
+            width: borderWidth ?? 1.0));
     if (borderRadius != null) {
       border =
           (border as OutlineInputBorder).copyWith(borderRadius: borderRadius);
