@@ -1,11 +1,13 @@
-[tool.poetry]
+[project]
 name = "flet-web"
 version = "0.1.0"
 description = "Flet web client in Flutter."
-authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
+authors = [{name = "Appveyor Systems Inc.", email ="hello@flet.dev"}]
 license = "Apache-2.0"
 readme = "README.md"
+requires-python = ">=3.9"
 
+[tool.poetry]
 packages = [{ include = "flet_web", from = "src" }]
 
 include = [{ path = "src/flet_web/web/**/*", format = ["sdist", "wheel"] }]
@@ -16,7 +18,6 @@ Repository = "https://github.com/flet-dev/flet"
 Documentation = "https://flet.dev/docs"
 
 [tool.poetry.dependencies]
-python = "^3.9"
 flet = { version = "0.1.0" }
 fastapi = "*"
 uvicorn = { extras = ["standard"], version = "*" }
