@@ -11,7 +11,7 @@ from typing import Optional, Union, cast
 import flet.version
 import flet_cli.utils.processes as processes
 import yaml
-from flet.utils import copy_tree, is_windows, slugify
+from flet.utils import cleanup_path, copy_tree, is_windows, slugify
 from flet.utils.platform_utils import get_bool_env_var
 from flet.version import update_version
 from flet_cli.commands.base import BaseCommand
@@ -681,9 +681,35 @@ class Command(BaseCommand):
         ext = ".bat" if platform.system() == "Windows" else ""
         self.flutter_exe = os.path.join(flutter_dir, "bin", f"flutter{ext}")
         self.dart_exe = os.path.join(flutter_dir, "bin", f"dart{ext}")
-        self.env["PATH"] = os.pathsep.join(
-            [os.path.join(flutter_dir, "bin"), os.environ.get("PATH", "")]
+        path_env = cleanup_path(
+            cleanup_path(os.environ.get("PATH", ""), "flutter"), "dart"
         )
+        self.env["PATH"] = os.pathsep.join([os.path.join(flutter_dir, "bin"), path_env])
+
+        # desktop mode
+        if self.config_platform in ["macos", "windows", "linux"]:
+            if self.verbose > 0:
+                console.log(
+                    f"Ensure Flutter has desktop support enabled",
+                    style=verbose1_style,
+                )
+            config_result = self.run(
+                [
+                    self.flutter_exe,
+                    "config",
+                    "--suppress-analytics",
+                    f"--enable-{self.config_platform}-desktop",
+                ],
+                cwd=os.getcwd(),
+                capture_output=self.verbose < 1,
+            )
+            if config_result.returncode != 0:
+                if config_result.stdout:
+                    console.log(config_result.stdout, style=verbose1_style)
+                if config_result.stderr:
+                    console.log(config_result.stderr, style=error_style)
+                self.cleanup(config_result.returncode)
+
         console.log(
             f"Flutter {MINIMAL_FLUTTER_VERSION} installed {self.emojis['checkmark']}"
         )
