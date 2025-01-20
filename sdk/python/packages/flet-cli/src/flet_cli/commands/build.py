@@ -718,7 +718,32 @@ class Command(BaseCommand):
         from flet_cli.utils.jdk import install_jdk
 
         self.status.update(f"[bold blue]Installing JDK...")
-        self.env["JAVA_HOME"] = install_jdk(self.log_stdout, progress=self.progress)
+        jdk_dir = install_jdk(self.log_stdout, progress=self.progress)
+        self.env["JAVA_HOME"] = jdk_dir
+
+        # config flutter's JDK dir
+        if self.verbose > 0:
+            console.log(
+                f"Configuring Flutter's path to JDK",
+                style=verbose1_style,
+            )
+        config_result = self.run(
+            [
+                self.flutter_exe,
+                "config",
+                "--suppress-analytics",
+                f"--jdk-dir={jdk_dir}",
+            ],
+            cwd=os.getcwd(),
+            capture_output=self.verbose < 1,
+        )
+        if config_result.returncode != 0:
+            if config_result.stdout:
+                console.log(config_result.stdout, style=verbose1_style)
+            if config_result.stderr:
+                console.log(config_result.stderr, style=error_style)
+            self.cleanup(config_result.returncode)
+
         console.log(f"JDK installed {self.emojis['checkmark']}")
 
     def install_android_sdk(self):
