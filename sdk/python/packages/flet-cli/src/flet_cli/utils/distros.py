@@ -27,23 +27,37 @@ def download_with_progress(url, dest_path, progress: Optional[Progress] = None):
 def extract_with_progress(
     archive_path, extract_to, progress: Optional[Progress] = None
 ):
-    """Extracts an archive with a progress bar and preserves file attributes."""
+    """Extracts an archive with a progress bar and preserves file attributes, including symbolic links."""
     if archive_path.endswith(".zip"):
         with zipfile.ZipFile(archive_path, "r") as archive:
             total_files = len(archive.namelist())
             if progress:
                 task = progress.add_task("Extracting...", total=total_files)
             for member in archive.namelist():
-                member = archive.getinfo(member)
-                archive.extract(member, extract_to)
+                member_info = archive.getinfo(member)
+                # Check if the member is a symbolic link
+                is_symlink = (member_info.external_attr >> 16) & 0o120000 == 0o120000
+                extracted_path = os.path.join(extract_to, member_info.filename)
+
+                if is_symlink:
+                    # Read the target of the symlink from the archive
+                    with archive.open(member_info) as target_file:
+                        target = target_file.read().decode("utf-8")
+                    # Create the symbolic link
+                    os.symlink(target, extracted_path)
+                else:
+                    # Extract regular files and directories
+                    archive.extract(member_info, extract_to)
+
+                    # Preserve permissions
+                    if member_info.external_attr > 0xFFFF:
+                        os.chmod(extracted_path, member_info.external_attr >> 16)
+
                 if progress:
                     progress.update(task, advance=1)
-                # preserve permissions
-                extracted_path = os.path.join(extract_to, member.filename)
-                if member.external_attr > 0xFFFF:
-                    os.chmod(extracted_path, member.external_attr >> 16)
             if progress:
                 progress.remove_task(task)
+
     elif archive_path.endswith(".tar.xz") or archive_path.endswith(".tar.gz"):
         with tarfile.open(archive_path, "r:*") as archive:
             members = archive.getmembers()
@@ -51,12 +65,23 @@ def extract_with_progress(
             if progress:
                 task = progress.add_task("Extracting...", total=total_files)
             for member in members:
-                archive.extract(member, extract_to)
+                extracted_path = os.path.join(extract_to, member.name)
+
+                if member.issym():
+                    # Create symbolic link manually
+                    os.symlink(member.linkname, extracted_path)
+                elif member.islnk():
+                    # Create hard link manually
+                    os.link(os.path.join(extract_to, member.linkname), extracted_path)
+                else:
+                    # Extract regular files and directories
+                    archive.extract(member, extract_to)
+
+                # Preserve permissions
+                if member.isfile() or member.isdir():
+                    os.chmod(extracted_path, member.mode)
+
                 if progress:
                     progress.update(task, advance=1)
-                # Preserve permissions (executable flags, etc.)
-                extracted_path = os.path.join(extract_to, member.name)
-                if member.isfile():
-                    os.chmod(extracted_path, member.mode)
             if progress:
                 progress.remove_task(task)
