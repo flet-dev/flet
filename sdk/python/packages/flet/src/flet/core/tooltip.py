@@ -27,7 +27,7 @@ class TooltipTriggerMode:
 class Tooltip:
     """Tooltips provide text labels which help explain the function of a button or other user interface action."""
 
-    message: Optional[str] = None
+    message: str
     enable_feedback: Optional[bool] = None
     height: OptionalNumber = None
     vertical_offset: OptionalNumber = None
