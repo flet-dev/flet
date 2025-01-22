@@ -247,6 +247,7 @@ class ImageRepeat(Enum):
 class PagePlatform(Enum):
     IOS = "ios"
     ANDROID = "android"
+    ANDROID_TV = "android_tv"
     MACOS = "macos"
     WINDOWS = "windows"
     LINUX = "linux"
