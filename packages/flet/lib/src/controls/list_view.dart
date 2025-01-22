@@ -52,22 +52,27 @@ class _ListViewControlState extends State<ListViewControl> {
     bool? adaptive =
         widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
 
-    final horizontal = widget.control.attrBool("horizontal", false)!;
-    final spacing = widget.control.attrDouble("spacing", 0)!;
-    final dividerThickness = widget.control.attrDouble("dividerThickness", 0)!;
-    final itemExtent = widget.control.attrDouble("itemExtent");
-    final cacheExtent = widget.control.attrDouble("cacheExtent");
-    final semanticChildCount = widget.control.attrInt("semanticChildCount");
-    final firstItemPrototype =
+    var horizontal = widget.control.attrBool("horizontal", false)!;
+    var spacing = widget.control.attrDouble("spacing", 0)!;
+    var dividerThickness = widget.control.attrDouble("dividerThickness", 0)!;
+    var itemExtent = widget.control.attrDouble("itemExtent");
+    var cacheExtent = widget.control.attrDouble("cacheExtent");
+    var semanticChildCount = widget.control.attrInt("semanticChildCount");
+    var firstItemPrototype =
         widget.control.attrBool("firstItemPrototype", false)!;
-    final padding = parseEdgeInsets(widget.control, "padding");
-    final reverse = widget.control.attrBool("reverse", false)!;
+    var padding = parseEdgeInsets(widget.control, "padding");
+    var reverse = widget.control.attrBool("reverse", false)!;
     var clipBehavior =
         parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
 
-    List<Control> visibleControls =
-        widget.children.where((c) => c.isVisible).toList();
+    List<Control> ctrls = widget.children.where((c) => c.isVisible).toList();
     var scrollDirection = horizontal ? Axis.horizontal : Axis.vertical;
+    var buildControlsOnDemand =
+        widget.control.attrBool("buildControlsOnDemand", true)!;
+    var prototypeItem = firstItemPrototype && widget.children.isNotEmpty
+        ? createControl(widget.control, ctrls[0].id, disabled,
+            parentAdaptive: adaptive)
+        : null;
 
     Widget listView = LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
@@ -77,9 +82,8 @@ class _ListViewControlState extends State<ListViewControl> {
         var shrinkWrap =
             (!horizontal && constraints.maxHeight == double.infinity) ||
                 (horizontal && constraints.maxWidth == double.infinity);
-
-        Widget child = spacing > 0
-            ? ListView.separated(
+        Widget child = !buildControlsOnDemand
+            ? ListView(
                 controller: _controller,
                 cacheExtent: cacheExtent,
                 reverse: reverse,
@@ -87,46 +91,59 @@ class _ListViewControlState extends State<ListViewControl> {
                 scrollDirection: scrollDirection,
                 shrinkWrap: shrinkWrap,
                 padding: padding,
-                itemCount: widget.children.length,
-                itemBuilder: (context, index) {
-                  return createControl(
-                      widget.control, visibleControls[index].id, disabled,
-                      parentAdaptive: adaptive);
-                },
-                separatorBuilder: (context, index) {
-                  return horizontal
-                      ? dividerThickness == 0
-                          ? SizedBox(width: spacing)
-                          : VerticalDivider(
-                              width: spacing, thickness: dividerThickness)
-                      : dividerThickness == 0
-                          ? SizedBox(height: spacing)
-                          : Divider(
-                              height: spacing, thickness: dividerThickness);
-                },
-              )
-            : ListView.builder(
-                controller: _controller,
-                clipBehavior: clipBehavior,
                 semanticChildCount: semanticChildCount,
-                reverse: reverse,
-                cacheExtent: cacheExtent,
-                scrollDirection: scrollDirection,
-                shrinkWrap: shrinkWrap,
-                padding: padding,
-                itemCount: widget.children.length,
                 itemExtent: itemExtent,
-                itemBuilder: (context, index) {
-                  return createControl(
-                      widget.control, visibleControls[index].id, disabled,
-                      parentAdaptive: adaptive);
-                },
-                prototypeItem: firstItemPrototype && widget.children.isNotEmpty
-                    ? createControl(
-                        widget.control, visibleControls[0].id, disabled,
-                        parentAdaptive: adaptive)
-                    : null,
-              );
+                children: ctrls
+                    .map((c) => createControl(widget.control, c.id, disabled,
+                        parentAdaptive: adaptive))
+                    .toList(),
+                prototypeItem: prototypeItem,
+              )
+            : spacing > 0
+                ? ListView.separated(
+                    controller: _controller,
+                    cacheExtent: cacheExtent,
+                    reverse: reverse,
+                    clipBehavior: clipBehavior,
+                    scrollDirection: scrollDirection,
+                    shrinkWrap: shrinkWrap,
+                    padding: padding,
+                    itemCount: widget.children.length,
+                    itemBuilder: (context, index) {
+                      return createControl(
+                          widget.control, ctrls[index].id, disabled,
+                          parentAdaptive: adaptive);
+                    },
+                    separatorBuilder: (context, index) {
+                      return horizontal
+                          ? dividerThickness == 0
+                              ? SizedBox(width: spacing)
+                              : VerticalDivider(
+                                  width: spacing, thickness: dividerThickness)
+                          : dividerThickness == 0
+                              ? SizedBox(height: spacing)
+                              : Divider(
+                                  height: spacing, thickness: dividerThickness);
+                    },
+                  )
+                : ListView.builder(
+                    controller: _controller,
+                    clipBehavior: clipBehavior,
+                    semanticChildCount: semanticChildCount,
+                    reverse: reverse,
+                    cacheExtent: cacheExtent,
+                    scrollDirection: scrollDirection,
+                    shrinkWrap: shrinkWrap,
+                    padding: padding,
+                    itemCount: widget.children.length,
+                    itemExtent: itemExtent,
+                    itemBuilder: (context, index) {
+                      return createControl(
+                          widget.control, ctrls[index].id, disabled,
+                          parentAdaptive: adaptive);
+                    },
+                    prototypeItem: prototypeItem,
+                  );
 
         child = ScrollableControl(
             control: widget.control,

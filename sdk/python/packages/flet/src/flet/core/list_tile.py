@@ -82,15 +82,15 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
-        content_padding: Optional[PaddingValue] = None,
+        title: Optional[Control] = None,
+        subtitle: Optional[Control] = None,
+        is_three_line: Optional[bool] = None,
+        leading: Optional[Control] = None,
+        trailing: Optional[Control] = None,
+        content_padding: PaddingValue = None,
         bgcolor: Optional[ColorValue] = None,
         bgcolor_activated: Optional[str] = None,
         hover_color: Optional[ColorValue] = None,
-        leading: Optional[Control] = None,
-        title: Optional[Control] = None,
-        subtitle: Optional[Control] = None,
-        trailing: Optional[Control] = None,
-        is_three_line: Optional[bool] = None,
         selected: Optional[bool] = None,
         dense: Optional[bool] = None,
         autofocus: Optional[bool] = None,
@@ -114,8 +114,8 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         subtitle_text_style: Optional[TextStyle] = None,
         leading_and_trailing_text_style: Optional[TextStyle] = None,
         min_height: OptionalNumber = None,
-        on_click=None,
-        on_long_press=None,
+        on_click: OptionalControlEventCallable = None,
+        on_long_press: OptionalControlEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
