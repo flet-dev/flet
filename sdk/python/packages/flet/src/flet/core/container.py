@@ -1,5 +1,4 @@
 import json
-import warnings
 from typing import Any, List, Optional, Tuple, Union
 
 from flet.core.adaptive_control import AdaptiveControl
@@ -42,6 +41,7 @@ from flet.core.types import (
     ThemeMode,
     UrlTarget,
 )
+from flet.utils.deprecated import deprecated_property
 
 
 class Container(ConstrainedControl, AdaptiveControl):
@@ -382,11 +382,11 @@ class Container(ConstrainedControl, AdaptiveControl):
     # image_src
     @property
     def image_src(self) -> Optional[str]:
-        warnings.warn(
-            f"image_src is deprecated since version 0.24.0 "
-            f"and will be removed in version 0.27.0. Use Container.image.src instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
+        deprecated_property(
+            name="image_src",
+            reason="Use Container.image.src instead.",
+            version="0.24.0",
+            delete_version="0.27.0",
         )
         return self._get_attr("imageSrc")
 
@@ -394,21 +394,21 @@ class Container(ConstrainedControl, AdaptiveControl):
     def image_src(self, value: Optional[str]):
         self._set_attr("imageSrc", value)
         if value is not None:
-            warnings.warn(
-                f"image_src is deprecated since version 0.24.0 "
-                f"and will be removed in version 0.27.0. Use Container.image.src instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
+            deprecated_property(
+                name="image_src",
+                reason="Use Container.image.src instead.",
+                version="0.24.0",
+                delete_version="0.27.0",
             )
 
     # image_src_base64
     @property
     def image_src_base64(self) -> Optional[str]:
-        warnings.warn(
-            f"image_src_base64 is deprecated since version 0.24.0 "
-            f"and will be removed in version 0.27.0. Use Container.image.src_base64 instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
+        deprecated_property(
+            name="image_src_base64",
+            reason="Use Container.image.src_base64 instead.",
+            version="0.24.0",
+            delete_version="0.27.0",
         )
         return self._get_attr("imageSrcBase64")
 
@@ -416,11 +416,11 @@ class Container(ConstrainedControl, AdaptiveControl):
     def image_src_base64(self, value: Optional[str]):
         self._set_attr("imageSrcBase64", value)
         if value is not None:
-            warnings.warn(
-                f"image_src_base64 is deprecated since version 0.24.0 "
-                f"and will be removed in version 0.27.0. Use Container.image.src_base64 instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
+            deprecated_property(
+                name="image_src_base64",
+                reason="Use Container.image.src_base64 instead.",
+                version="0.24.0",
+                delete_version="0.27.0",
             )
 
     # ignore_interactions
@@ -435,12 +435,13 @@ class Container(ConstrainedControl, AdaptiveControl):
     # image_fit
     @property
     def image_fit(self) -> Optional[ImageFit]:
-        warnings.warn(
-            f"image_fit is deprecated since version 0.24.0 "
-            f"and will be removed in version 0.27.0. Use Container.image.fit instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
+        deprecated_property(
+            name="image_fit",
+            reason="Use Container.image.fit instead.",
+            version="0.24.0",
+            delete_version="0.27.0",
         )
+
         return self.__image_fit
 
     @image_fit.setter
@@ -448,21 +449,21 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.__image_fit = value
         self._set_enum_attr("imageFit", value, ImageFit)
         if value is not None:
-            warnings.warn(
-                f"image_fit is deprecated since version 0.24.0 "
-                f"and will be removed in version 0.27.0. Use Container.image.fit instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
+            deprecated_property(
+                name="image_fit",
+                reason="Use Container.image.fit instead.",
+                version="0.24.0",
+                delete_version="0.27.0",
             )
 
     # image_repeat
     @property
     def image_repeat(self) -> Optional[ImageRepeat]:
-        warnings.warn(
-            f"image_repeat is deprecated since version 0.24.0 "
-            f"and will be removed in version 0.27.0. Use Container.image.repeat instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
+        deprecated_property(
+            "image_repeat",
+            "Use Container.image.repeat instead.",
+            "0.24.0",
+            "0.27.0",
         )
         return self.__image_repeat
 
@@ -471,21 +472,18 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.__image_repeat = value
         self._set_enum_attr("imageRepeat", value, ImageRepeat)
         if value is not None:
-            warnings.warn(
-                f"image_repeat is deprecated since version 0.24.0 "
-                f"and will be removed in version 0.27.0. Use Container.image.repeat instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
+            deprecated_property(
+                name="image_repeat",
+                reason="Use Container.image.repeat instead.",
+                version="0.24.0",
+                delete_version="0.27.0",
             )
 
     # image_opacity
     @property
     def image_opacity(self) -> float:
-        warnings.warn(
-            f"image_opacity is deprecated since version 0.24.0 "
-            f"and will be removed in version 0.27.0. Use Container.image.opacity instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
+        deprecated_property(
+            "image_opacity", "Use Container.image.opacity instead.", "0.24.0", "0.27.0"
         )
         return self._get_attr("imageOpacity", data_type="float", def_value=1.0)
 
@@ -493,11 +491,11 @@ class Container(ConstrainedControl, AdaptiveControl):
     def image_opacity(self, value: OptionalNumber):
         self._set_attr("imageOpacity", value)
         if value is not None:
-            warnings.warn(
-                f"image_opacity is deprecated since version 0.24.0 "
-                f"and will be removed in version 0.27.0. Use Container.image.opacity instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
+            deprecated_property(
+                name="image_opacity",
+                reason="Use Container.image.opacity instead.",
+                version="0.24.0",
+                delete_version="0.27.0",
             )
 
     # content

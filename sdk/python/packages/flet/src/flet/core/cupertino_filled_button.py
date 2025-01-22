@@ -10,6 +10,7 @@ from flet.core.types import (
     BorderRadiusValue,
     ColorValue,
     IconValue,
+    OptionalControlEventCallable,
     PaddingValue,
     ResponsiveNumber,
     UrlTarget,
@@ -51,7 +52,10 @@ class CupertinoFilledButton(CupertinoButton):
         border_radius: Optional[BorderRadiusValue] = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
-        on_click=None,
+        on_click: OptionalControlEventCallable = None,
+        on_long_press: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -102,4 +106,7 @@ class CupertinoFilledButton(CupertinoButton):
             opacity_on_click=opacity_on_click,
             padding=padding,
             alignment=alignment,
+            on_long_press=on_long_press,
+            on_focus=on_focus,
+            on_blur=on_blur,
         )

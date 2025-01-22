@@ -1,8 +1,9 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, Union
 
 from flet.core.types import DurationValue
+from flet.utils import deprecated
 
 try:
     from typing import Literal
@@ -57,8 +58,8 @@ class AnimationCurve(Enum):
 
 @dataclass
 class Animation:
-    duration: int = field(default=1)
-    curve: Optional[AnimationCurve] = field(default=None)
+    duration: DurationValue = None
+    curve: Optional[AnimationCurve] = None
 
 
 @dataclass
@@ -69,7 +70,10 @@ class AnimationStyle:
     reverse_curve: Optional[AnimationCurve] = None
 
 
-def implicit(duration: int, curve: Optional[AnimationCurve] = None):
+@deprecated(
+    reason="Use Animation class instead.", version="0.26.0", delete_version="0.29.0"
+)
+def implicit(duration: DurationValue, curve: Optional[AnimationCurve] = None):
     return Animation(duration=duration, curve=curve)
 
 

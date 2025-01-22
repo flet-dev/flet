@@ -69,6 +69,9 @@ class Image(ConstrainedControl):
         semantics_label: Optional[str] = None,
         exclude_from_semantics: Optional[bool] = None,
         filter_quality: Optional[FilterQuality] = None,
+        cache_width: Optional[int] = None,
+        cache_height: Optional[int] = None,
+        anti_alias: Optional[bool] = None,
         #
         # ConstrainedControl
         #
@@ -145,6 +148,9 @@ class Image(ConstrainedControl):
         self.semantics_label = semantics_label
         self.exclude_from_semantics = exclude_from_semantics
         self.filter_quality = filter_quality
+        self.cache_width = cache_width
+        self.cache_height = cache_height
+        self.anti_alias = anti_alias
 
     def _get_control_name(self):
         return "image"
@@ -208,6 +214,33 @@ class Image(ConstrainedControl):
     def repeat(self, value: Optional[ImageRepeat]):
         self.__repeat = value
         self._set_enum_attr("repeat", value, ImageRepeat)
+
+    # cache_width
+    @property
+    def cache_width(self) -> Optional[int]:
+        return self._get_attr("cacheWidth", data_type="int")
+
+    @cache_width.setter
+    def cache_width(self, value: Optional[int]):
+        self._set_attr("cacheWidth", value)
+
+    # cache_height
+    @property
+    def cache_height(self) -> Optional[int]:
+        return self._get_attr("cacheHeight", data_type="int")
+
+    @cache_height.setter
+    def cache_height(self, value: Optional[int]):
+        self._set_attr("cacheHeight", value)
+
+    # anti_alias
+    @property
+    def anti_alias(self) -> Optional[bool]:
+        return self._get_attr("antiAlias", data_type="bool", def_value=False)
+
+    @anti_alias.setter
+    def anti_alias(self, value: Optional[bool]):
+        self._set_attr("antiAlias", value)
 
     # border_radius
     @property

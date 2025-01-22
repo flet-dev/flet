@@ -10,6 +10,7 @@ from flet.core.types import (
     ColorEnums,
     ColorValue,
     ControlStateValue,
+    MouseCursor,
     OffsetValue,
     OptionalControlEventCallable,
     ResponsiveNumber,
@@ -90,6 +91,7 @@ class RangeSlider(ConstrainedControl):
         active_color: Optional[ColorValue] = None,
         inactive_color: Optional[ColorValue] = None,
         overlay_color: ControlStateValue[ColorValue] = None,
+        mouse_cursor: ControlStateValue[MouseCursor] = None,
         on_change: OptionalControlEventCallable = None,
         on_change_start: OptionalControlEventCallable = None,
         on_change_end: OptionalControlEventCallable = None,
@@ -167,6 +169,7 @@ class RangeSlider(ConstrainedControl):
         self.active_color = active_color
         self.inactive_color = inactive_color
         self.overlay_color = overlay_color
+        self.mouse_cursor = mouse_cursor
         self.on_change = on_change
         self.on_change_start = on_change_start
         self.on_change_end = on_change_end
@@ -177,6 +180,7 @@ class RangeSlider(ConstrainedControl):
     def before_update(self):
         super().before_update()
         self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)
+        self._set_attr_json("mouseCursor", self.__mouse_cursor, wrap_attr_dict=True)
 
     # start_value
     @property
@@ -269,12 +273,21 @@ class RangeSlider(ConstrainedControl):
 
     # overlay_color
     @property
-    def overlay_color(self) -> ControlStateValue[str]:
+    def overlay_color(self) -> ControlStateValue[ColorValue]:
         return self.__overlay_color
 
     @overlay_color.setter
-    def overlay_color(self, value: ControlStateValue[str]):
+    def overlay_color(self, value: ControlStateValue[ColorValue]):
         self.__overlay_color = value
+
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> ControlStateValue[MouseCursor]:
+        return self.__mouse_cursor
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: ControlStateValue[MouseCursor]):
+        self.__mouse_cursor = value
 
     # on_change
     @property

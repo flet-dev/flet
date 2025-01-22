@@ -206,6 +206,8 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 width: width,
                 height: height,
                 margin: margin,
+                decoration: boxDecoration,
+                foregroundDecoration: boxForegroundDecoration,
                 clipBehavior: clipBehavior,
                 onEnd: onAnimationEnd,
                 child: ink);

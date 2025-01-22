@@ -13,17 +13,14 @@ class VerticalDividerControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("VerticalDivider build: ${control.id}");
+    var divider = VerticalDivider(
+      width: control.attrDouble("width"),
+      thickness: control.attrDouble("thickness"),
+      color: control.attrColor("color", context),
+      indent: control.attrDouble("leadingIndent"),
+      endIndent: control.attrDouble("trailingIndent"),
+    );
 
-    return baseControl(
-        context,
-        VerticalDivider(
-          width: control.attrDouble("width"),
-          thickness: control.attrDouble("thickness"),
-          color: control.attrColor("color", context),
-          indent: control.attrDouble("leadingIndent"),
-          endIndent: control.attrDouble("trailingIndent"),
-        ),
-        parent,
-        control);
+    return baseControl(context, divider, parent, control);
   }
 }

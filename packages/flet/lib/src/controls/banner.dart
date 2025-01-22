@@ -70,6 +70,8 @@ class _BannerControlState extends State<BannerControl> {
       shadowColor: widget.control.attrColor("shadowColor", context),
       dividerColor: widget.control.attrColor("dividerColor", context),
       elevation: widget.control.attrDouble("elevation"),
+      minActionBarHeight:
+          widget.control.attrDouble("minActionBarHeight", 52.0)!,
       margin: parseEdgeInsets(widget.control, "margin"),
       onVisible: () {
         widget.backend.triggerControlEvent(widget.control.id, "visible");
@@ -84,9 +86,6 @@ class _BannerControlState extends State<BannerControl> {
     debugPrint("Banner build: ${widget.control.id}");
 
     var open = widget.control.attrBool("open", false)!;
-
-    debugPrint("Current open state: $_open");
-    debugPrint("New open state: $open");
 
     if (open && (open != _open)) {
       var banner = _createBanner();

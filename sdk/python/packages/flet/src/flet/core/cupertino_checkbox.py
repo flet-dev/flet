@@ -2,6 +2,8 @@ from typing import Any, Optional, Union
 
 from flet.core.animation import AnimationValue
 from flet.core.badge import BadgeValue
+from flet.core.border import BorderSide
+from flet.core.buttons import OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
@@ -9,7 +11,9 @@ from flet.core.tooltip import TooltipValue
 from flet.core.types import (
     ColorEnums,
     ColorValue,
+    ControlStateValue,
     LabelPosition,
+    MouseCursor,
     OffsetValue,
     OptionalControlEventCallable,
     ResponsiveNumber,
@@ -53,6 +57,11 @@ class CupertinoCheckbox(ConstrainedControl):
         active_color: Optional[ColorValue] = None,
         inactive_color: Optional[ColorValue] = None,
         focus_color: Optional[ColorValue] = None,
+        fill_color: ControlStateValue[ColorValue] = None,
+        shape: Optional[OutlinedBorder] = None,
+        mouse_cursor: Optional[MouseCursor] = None,
+        semantics_label: Optional[str] = None,
+        border_side: ControlStateValue[BorderSide] = None,
         on_change: OptionalControlEventCallable = None,
         on_focus: OptionalControlEventCallable = None,
         on_blur: OptionalControlEventCallable = None,
@@ -131,9 +140,20 @@ class CupertinoCheckbox(ConstrainedControl):
         self.on_change = on_change
         self.on_focus = on_focus
         self.on_blur = on_blur
+        self.shape = shape
+        self.mouse_cursor = mouse_cursor
+        self.semantics_label = semantics_label
+        self.border_side = border_side
+        self.fill_color = fill_color
 
     def _get_control_name(self):
         return "cupertinocheckbox"
+
+    def before_update(self):
+        super().before_update()
+        self._set_attr_json("shape", self.__shape)
+        self._set_attr_json("borderSide", self.__border_side, wrap_attr_dict=True)
+        self._set_attr_json("fillColor", self.__fill_color, wrap_attr_dict=True)
 
     # value
     @property
@@ -222,6 +242,52 @@ class CupertinoCheckbox(ConstrainedControl):
     def focus_color(self, value: Optional[ColorValue]):
         self.__focus_color = value
         self._set_enum_attr("focusColor", value, ColorEnums)
+
+    # fill_color
+    @property
+    def fill_color(self) -> ControlStateValue[ColorValue]:
+        return self.__fill_color
+
+    @fill_color.setter
+    def fill_color(self, value: ControlStateValue[ColorValue]):
+        self.__fill_color = value
+
+    # shape
+    @property
+    def shape(self) -> Optional[OutlinedBorder]:
+        return self.__shape
+
+    @shape.setter
+    def shape(self, value: Optional[OutlinedBorder]):
+        self.__shape = value
+
+    # border_side
+    @property
+    def border_side(self) -> ControlStateValue[BorderSide]:
+        return self.__border_side
+
+    @border_side.setter
+    def border_side(self, value: ControlStateValue[BorderSide]):
+        self.__border_side = value
+
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self.__mouse_cursor
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
+
+    # semantics_label
+    @property
+    def semantics_label(self) -> Optional[str]:
+        return self._get_attr("semanticsLabel")
+
+    @semantics_label.setter
+    def semantics_label(self, value: Optional[str]):
+        self._set_attr("semanticsLabel", value)
 
     # on_change
     @property

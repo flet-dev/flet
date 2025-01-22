@@ -3,7 +3,7 @@ from typing import Any, Optional
 from flet.core.border import Border
 from flet.core.control import Control
 from flet.core.ref import Ref
-from flet.core.types import ColorEnums, ColorValue, PaddingValue
+from flet.core.types import Brightness, ColorEnums, ColorValue, PaddingValue
 
 
 class CupertinoAppBar(Control):
@@ -46,6 +46,9 @@ class CupertinoAppBar(Control):
         padding: Optional[PaddingValue] = None,
         transition_between_routes: Optional[bool] = None,
         previous_page_title: Optional[str] = None,
+        brightness: Optional[Brightness] = None,
+        automatic_background_visibility: Optional[bool] = None,
+        enable_background_filter_blur: Optional[bool] = None,
         #
         # Control
         #
@@ -69,6 +72,9 @@ class CupertinoAppBar(Control):
         self.transition_between_routes = transition_between_routes
         self.previous_page_title = previous_page_title
         self.bgcolor = bgcolor
+        self.brightness = brightness
+        self.automatic_background_visibility = automatic_background_visibility
+        self.enable_background_filter_blur = enable_background_filter_blur
 
     def _get_control_name(self):
         return "cupertinoappbar"
@@ -192,3 +198,33 @@ class CupertinoAppBar(Control):
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
         self._set_enum_attr("bgcolor", value, ColorEnums)
+
+    # brightness
+    @property
+    def brightness(self) -> Optional[Brightness]:
+        return self.__brightness
+
+    @brightness.setter
+    def brightness(self, value: Optional[Brightness]):
+        self.__brightness = value
+        self._set_enum_attr("brightness", value, Brightness)
+
+    # automatic_background_visibility
+    @property
+    def automatic_background_visibility(self) -> Optional[bool]:
+        return self._get_attr(
+            "automaticBackgroundVisibility", data_type="bool", def_value=True
+        )
+
+    @automatic_background_visibility.setter
+    def automatic_background_visibility(self, value: Optional[bool]):
+        self._set_attr("automaticBackgroundVisibility", value)
+
+    # enable_background_filter_blur
+    @property
+    def enable_background_filter_blur(self) -> Optional[bool]:
+        return self._get_attr("backgroundFilterBlur", data_type="bool", def_value=True)
+
+    @enable_background_filter_blur.setter
+    def enable_background_filter_blur(self, value: Optional[bool]):
+        self._set_attr("backgroundFilterBlur", value)

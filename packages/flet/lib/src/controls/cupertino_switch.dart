@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/box.dart';
 import '../utils/colors.dart';
+import '../utils/icons.dart';
+import '../utils/numbers.dart';
 import '../utils/others.dart';
 import 'create_control.dart';
+import 'flet_store_mixin.dart';
 import 'list_tile.dart';
 
 class CupertinoSwitchControl extends StatefulWidget {
@@ -25,7 +29,8 @@ class CupertinoSwitchControl extends StatefulWidget {
   State<CupertinoSwitchControl> createState() => _CupertinoSwitchControlState();
 }
 
-class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
+class _CupertinoSwitchControlState extends State<CupertinoSwitchControl>
+    with FletStoreMixin {
   bool _value = false;
   late final FocusNode _focusNode;
 
@@ -59,14 +64,12 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoSwitchControl build: ${widget.control.id}");
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     String label = widget.control.attrString("label", "")!;
     LabelPosition labelPosition = parseLabelPosition(
         widget.control.attrString("labelPosition"), LabelPosition.right)!;
     bool autofocus = widget.control.attrBool("autofocus", false)!;
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-
-    debugPrint("CupertinoSwitch build: ${widget.control.id}");
 
     bool value = widget.control.attrBool("value", false)!;
     if (_value != value) {
@@ -78,45 +81,78 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
 
     var materialTrackColor =
         parseWidgetStateColor(Theme.of(context), widget.control, "trackColor");
+    var activeThumbImage = widget.control.attrString("activeThumbImage");
+    var inactiveThumbImage = widget.control.attrString("inactiveThumbImage");
 
-    var swtch = CupertinoSwitch(
-        autofocus: autofocus,
-        focusNode: _focusNode,
-        activeColor: widget.control.attrColor("activeColor", context),
-        thumbColor: materialThumbColor?.resolve({}),
-        trackColor: materialTrackColor?.resolve({}),
-        focusColor: widget.control.attrColor("focusColor", context),
-        value: _value,
-        offLabelColor: widget.control.attrColor("offLabelColor", context),
-        onLabelColor: widget.control.attrColor("onLabelColor", context),
-        onChanged: !disabled
-            ? (bool value) {
-                _onChange(value);
-              }
-            : null);
+    return withPageArgs((context, pageArgs) {
+      var swtch = CupertinoSwitch(
+          autofocus: autofocus,
+          focusNode: _focusNode,
+          activeTrackColor:
+              widget.control.attrColor("activeTrackColor", context) ??
+                  widget.control.attrColor("activeColor", context),
+          // deprecated in v0.26.0, remove in v0.29.0
+          thumbColor: materialThumbColor?.resolve({}),
+          trackColor: materialTrackColor?.resolve({}),
+          focusColor: widget.control.attrColor("focusColor", context),
+          inactiveTrackColor:
+              widget.control.attrColor("inactiveTrackColor", context),
+          inactiveThumbColor:
+              widget.control.attrColor("inactiveThumbColor", context),
+          trackOutlineColor: parseWidgetStateColor(
+              Theme.of(context), widget.control, "trackOutlineColor"),
+          trackOutlineWidth:
+              parseWidgetStateDouble(widget.control, "trackOutlineWidth"),
+          thumbIcon: parseWidgetStateIcon(
+              Theme.of(context), widget.control, "thumbIcon"),
+          inactiveThumbImage: getImageProvider(
+              inactiveThumbImage, inactiveThumbImage, pageArgs),
+          activeThumbImage:
+              getImageProvider(activeThumbImage, activeThumbImage, pageArgs),
+          onActiveThumbImageError: activeThumbImage == null
+              ? null
+              : (Object exception, StackTrace? stackTrace) {
+                  widget.backend.triggerControlEvent(
+                      widget.control.id, "image_error", exception.toString());
+                },
+          onInactiveThumbImageError: inactiveThumbImage == null
+              ? null
+              : (Object exception, StackTrace? stackTrace) {
+                  widget.backend.triggerControlEvent(
+                      widget.control.id, "image_error", exception.toString());
+                },
+          value: _value,
+          offLabelColor: widget.control.attrColor("offLabelColor", context),
+          onLabelColor: widget.control.attrColor("onLabelColor", context),
+          onChanged: !disabled
+              ? (bool value) {
+                  _onChange(value);
+                }
+              : null);
 
-    ListTileClicks.of(context)?.notifier.addListener(() {
-      _onChange(!_value);
+      ListTileClicks.of(context)?.notifier.addListener(() {
+        _onChange(!_value);
+      });
+
+      Widget result = swtch;
+      if (label != "") {
+        var labelWidget = disabled
+            ? Text(label,
+                style: TextStyle(color: Theme.of(context).disabledColor))
+            : MouseRegion(cursor: SystemMouseCursors.click, child: Text(label));
+        result = MergeSemantics(
+            child: GestureDetector(
+                onTap: !disabled
+                    ? () {
+                        _onChange(!_value);
+                      }
+                    : null,
+                child: labelPosition == LabelPosition.right
+                    ? Row(children: [swtch, labelWidget])
+                    : Row(children: [labelWidget, swtch])));
+      }
+
+      return constrainedControl(context, result, widget.parent, widget.control);
     });
-
-    Widget result = swtch;
-    if (label != "") {
-      var labelWidget = disabled
-          ? Text(label,
-              style: TextStyle(color: Theme.of(context).disabledColor))
-          : MouseRegion(cursor: SystemMouseCursors.click, child: Text(label));
-      result = MergeSemantics(
-          child: GestureDetector(
-              onTap: !disabled
-                  ? () {
-                      _onChange(!_value);
-                    }
-                  : null,
-              child: labelPosition == LabelPosition.right
-                  ? Row(children: [swtch, labelWidget])
-                  : Row(children: [labelWidget, swtch])));
-    }
-
-    return constrainedControl(context, result, widget.parent, widget.control);
   }
 }

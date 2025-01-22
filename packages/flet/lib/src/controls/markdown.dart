@@ -176,13 +176,8 @@ class CodeElementBuilder extends MarkdownElementBuilder {
           // Specify highlight theme
           // All available themes are listed in `themes` folder
           theme: codeTheme,
-
-          // Specify padding
           padding: mdStyleSheet.codeblockPadding,
-
           decoration: mdStyleSheet.codeblockDecoration,
-
-          // Specify text style
           textStyle: mdStyleSheet.code,
 
           selectable: selectable,

@@ -64,6 +64,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         tight: Optional[bool] = None,
         wrap: Optional[bool] = None,
         run_spacing: OptionalNumber = None,
+        run_alignment: Optional[MainAxisAlignment] = None,
         #
         # ConstrainedControl
         #
@@ -151,6 +152,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.tight = tight
         self.wrap = wrap
         self.run_spacing = run_spacing
+        self.run_alignment = run_alignment
 
     def _get_control_name(self):
         return "column"
@@ -177,30 +179,38 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     # alignment
     @property
-    def alignment(self) -> MainAxisAlignment:
+    def alignment(self) -> Optional[MainAxisAlignment]:
         return self.__alignment
 
     @alignment.setter
-    def alignment(self, value: MainAxisAlignment):
+    def alignment(self, value: Optional[MainAxisAlignment]):
         self.__alignment = value
-        self._set_attr(
-            "alignment", value.value if isinstance(value, MainAxisAlignment) else value
-        )
+        self._set_enum_attr("alignment", value, MainAxisAlignment)
+
+    # run_alignment
+    @property
+    def run_alignment(self) -> Optional[MainAxisAlignment]:
+        return self.__run_alignment
+
+    @run_alignment.setter
+    def run_alignment(self, value: Optional[MainAxisAlignment]):
+        self.__run_alignment = value
+        self._set_enum_attr("runAlignment", value, MainAxisAlignment)
 
     # horizontal_alignment
     @property
-    def horizontal_alignment(self) -> CrossAxisAlignment:
+    def horizontal_alignment(self) -> Optional[CrossAxisAlignment]:
         return self.__horizontal_alignment
 
     @horizontal_alignment.setter
-    def horizontal_alignment(self, value: CrossAxisAlignment):
+    def horizontal_alignment(self, value: Optional[CrossAxisAlignment]):
         self.__horizontal_alignment = value
         self._set_enum_attr("horizontalAlignment", value, CrossAxisAlignment)
 
     # spacing
     @property
     def spacing(self) -> OptionalNumber:
-        return self._get_attr("spacing")
+        return self._get_attr("spacing", data_type="float", def_value=10)
 
     @spacing.setter
     def spacing(self, value: OptionalNumber):
@@ -218,7 +228,7 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     # run_spacing
     @property
     def run_spacing(self) -> OptionalNumber:
-        return self._get_attr("runSpacing")
+        return self._get_attr("runSpacing", data_type="float")
 
     @run_spacing.setter
     def run_spacing(self, value: OptionalNumber):

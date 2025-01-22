@@ -198,6 +198,9 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     def before_update(self):
         super().before_update()
         assert self.__content.visible, "content must be visible"
+        assert (
+            self.max_scale >= self.min_scale
+        ), "max_scale must be greather than or equal to min_scale"
         self._set_attr_json("alignment", self.__alignment)
         self._set_attr_json("boundaryMargin", self.__boundary_margin)
 
@@ -228,6 +231,7 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
 
     @min_scale.setter
     def min_scale(self, value: OptionalNumber):
+        assert value is None or value > 0, "min_scale must be greater than 0"
         self._set_attr("minScale", value)
 
     # interaction_update_interval
@@ -246,6 +250,7 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
 
     @max_scale.setter
     def max_scale(self, value: OptionalNumber):
+        assert value is None or value > 0, "max_scale must be greater than 0"
         self._set_attr("maxScale", value)
 
     # interaction_end_friction_coefficient
@@ -257,6 +262,9 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
 
     @interaction_end_friction_coefficient.setter
     def interaction_end_friction_coefficient(self, value: OptionalNumber):
+        assert (
+            value is None or value > 0
+        ), "interaction_end_friction_coefficient must be greater than 0"
         self._set_attr("interactionEndFrictionCoefficient", value)
 
     # content

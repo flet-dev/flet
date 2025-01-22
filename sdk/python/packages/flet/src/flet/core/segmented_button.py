@@ -1,6 +1,7 @@
 import json
 from typing import Any, List, Optional, Set, Union
 
+from flet.core.alignment import Axis
 from flet.core.animation import AnimationValue
 from flet.core.badge import BadgeValue
 from flet.core.buttons import ButtonStyle
@@ -11,6 +12,7 @@ from flet.core.tooltip import TooltipValue
 from flet.core.types import (
     OffsetValue,
     OptionalControlEventCallable,
+    PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -123,6 +125,8 @@ class SegmentedButton(ConstrainedControl):
         selected: Optional[Set] = None,
         selected_icon: Optional[Control] = None,
         show_selected_icon: Optional[bool] = None,
+        direction: Optional[Axis] = None,
+        padding: PaddingValue = None,
         on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
@@ -193,6 +197,8 @@ class SegmentedButton(ConstrainedControl):
         self.selected_icon = selected_icon
         self.selected = selected
         self.style = style
+        self.direction = direction
+        self.padding = padding
         self.on_change = on_change
 
     def _get_control_name(self):
@@ -214,6 +220,7 @@ class SegmentedButton(ConstrainedControl):
         style.shape = self._wrap_attr_dict(style.shape)
         style.padding = self._wrap_attr_dict(style.padding)
         self._set_attr_json("style", style)
+        self._set_attr_json("padding", self.__padding)
 
     def _get_children(self):
         for segment in self.segments:
@@ -253,6 +260,15 @@ class SegmentedButton(ConstrainedControl):
     @segments.setter
     def segments(self, value: List[Segment]):
         self.__segments = value
+
+    # padding
+    @property
+    def padding(self) -> PaddingValue:
+        return self.__padding
+
+    @padding.setter
+    def padding(self, value: PaddingValue):
+        self.__padding = value
 
     # allow_empty_selection
     @property
@@ -299,6 +315,16 @@ class SegmentedButton(ConstrainedControl):
     @show_selected_icon.setter
     def show_selected_icon(self, value: Optional[bool]):
         self._set_attr("showSelectedIcon", value)
+
+    # direction
+    @property
+    def direction(self) -> Optional[Axis]:
+        return self.__direction
+
+    @direction.setter
+    def direction(self, value: Optional[Axis]):
+        self.__direction = value
+        self._set_enum_attr("direction", value, Axis)
 
     # selected_icon
     @property

@@ -188,15 +188,18 @@ DecorationImage? decorationImageFromJSON(
 
 ImageProvider? getImageProvider(
     String? src, String? srcBase64, PageArgsModel? pageArgs) {
+  src = src?.trim();
+  srcBase64 = srcBase64?.trim();
+
   if (srcBase64 != null && srcBase64 != "") {
     try {
       Uint8List bytes = base64Decode(srcBase64);
       return MemoryImage(bytes);
     } catch (ex) {
-      debugPrint("Error decoding base64: ${ex.toString()}");
-      return null;
+      debugPrint("getImageProvider failed decoding srcBase64");
     }
-  } else if (src != null && src != "") {
+  }
+  if (src != null && src != "") {
     if (pageArgs == null) {
       return null;
     }
@@ -205,9 +208,8 @@ ImageProvider? getImageProvider(
     return assetSrc.isFile
         ? getFileImageProvider(assetSrc.path)
         : NetworkImage(assetSrc.path);
-  } else {
-    return null;
   }
+  return null;
 }
 
 Widget buildImage({
@@ -224,6 +226,9 @@ Widget buildImage({
   Color? color,
   String? semanticsLabel,
   bool? gaplessPlayback,
+  int? cacheWidth,
+  int? cacheHeight,
+  bool antiAlias = false,
   bool excludeFromSemantics = false,
   FilterQuality filterQuality = FilterQuality.low,
   bool disabled = false,
@@ -251,6 +256,10 @@ Widget buildImage({
             repeat: repeat,
             fit: fit,
             color: color,
+            cacheHeight: cacheHeight,
+            cacheWidth: cacheWidth,
+            filterQuality: filterQuality,
+            isAntiAlias: antiAlias,
             colorBlendMode: colorBlendMode,
             gaplessPlayback: gaplessPlayback ?? true,
             semanticLabel: semanticsLabel);
@@ -293,6 +302,9 @@ Widget buildImage({
             excludeFromSemantics: excludeFromSemantics,
             fit: fit,
             color: color,
+            isAntiAlias: antiAlias,
+            cacheHeight: cacheHeight,
+            cacheWidth: cacheWidth,
             gaplessPlayback: gaplessPlayback ?? false,
             colorBlendMode: colorBlendMode,
             semanticLabel: semanticsLabel,
@@ -321,6 +333,9 @@ Widget buildImage({
               height: height,
               repeat: repeat,
               filterQuality: filterQuality,
+              cacheHeight: cacheHeight,
+              cacheWidth: cacheWidth,
+              isAntiAlias: antiAlias,
               excludeFromSemantics: excludeFromSemantics,
               fit: fit,
               color: color,

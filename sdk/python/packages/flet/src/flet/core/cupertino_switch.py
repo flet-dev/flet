@@ -9,6 +9,8 @@ from flet.core.tooltip import TooltipValue
 from flet.core.types import (
     ColorEnums,
     ColorValue,
+    ControlStateValue,
+    IconValue,
     LabelPosition,
     OffsetValue,
     OptionalControlEventCallable,
@@ -16,6 +18,7 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet.utils.deprecated import deprecated_property
 
 
 class CupertinoSwitch(ConstrainedControl):
@@ -56,9 +59,18 @@ class CupertinoSwitch(ConstrainedControl):
         autofocus: Optional[bool] = None,
         on_label_color: Optional[ColorValue] = None,
         off_label_color: Optional[ColorValue] = None,
-        on_change=None,
-        on_focus=None,
-        on_blur=None,
+        active_thumb_image: Optional[str] = None,
+        inactive_thumb_image: Optional[str] = None,
+        active_track_color: Optional[ColorValue] = None,
+        inactive_thumb_color: Optional[ColorValue] = None,
+        inactive_track_color: Optional[ColorValue] = None,
+        track_outline_color: ControlStateValue[ColorValue] = None,
+        track_outline_width: ControlStateValue[OptionalNumber] = None,
+        thumb_icon: ControlStateValue[IconValue] = None,
+        on_change: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
+        on_image_error: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -135,6 +147,15 @@ class CupertinoSwitch(ConstrainedControl):
         self.on_blur = on_blur
         self.on_label_color = on_label_color
         self.off_label_color = off_label_color
+        self.active_thumb_image = active_thumb_image
+        self.active_track_color = active_track_color
+        self.inactive_thumb_color = inactive_thumb_color
+        self.inactive_track_color = inactive_track_color
+        self.track_outline_color = track_outline_color
+        self.track_outline_width = track_outline_width
+        self.thumb_icon = thumb_icon
+        self.inactive_thumb_image = inactive_thumb_image
+        self.on_image_error = on_image_error
 
     def _get_control_name(self):
         return "cupertinoswitch"
@@ -143,6 +164,13 @@ class CupertinoSwitch(ConstrainedControl):
         super().before_update()
         self._set_attr_json("thumbColor", self.__thumb_color)
         self._set_attr_json("trackColor", self.__track_color)
+        self._set_attr_json(
+            "trackOutlineColor", self.__track_outline_color, wrap_attr_dict=True
+        )
+        self._set_attr_json(
+            "trackOutlineWidth", self.__track_outline_width, wrap_attr_dict=True
+        )
+        self._set_attr_json("thumbIcon", self.__thumb_icon, wrap_attr_dict=True)
 
     # value
     @property
@@ -161,6 +189,71 @@ class CupertinoSwitch(ConstrainedControl):
     @label.setter
     def label(self, value: Optional[str]):
         self._set_attr("label", value)
+
+    # active_thumb_image
+    @property
+    def active_thumb_image(self) -> Optional[str]:
+        return self._get_attr("activeThumbImage")
+
+    @active_thumb_image.setter
+    def active_thumb_image(self, value: Optional[str]):
+        self._set_attr("activeThumbImage", value)
+
+    # inactive_thumb_image
+    @property
+    def inactive_thumb_image(self) -> Optional[str]:
+        return self._get_attr("inactiveThumbImage")
+
+    @inactive_thumb_image.setter
+    def inactive_thumb_image(self, value: Optional[str]):
+        self._set_attr("inactiveThumbImage", value)
+
+    # active_track_color
+    @property
+    def active_track_color(self) -> Optional[ColorValue]:
+        return self.__active_track_color
+
+    @active_track_color.setter
+    def active_track_color(self, value: Optional[ColorValue]):
+        self.__active_track_color = value
+        self._set_enum_attr("activeTrackColor", value, ColorEnums)
+
+    # inactive_track_color
+    @property
+    def inactive_track_color(self) -> Optional[ColorValue]:
+        return self.__inactive_track_color
+
+    @inactive_track_color.setter
+    def inactive_track_color(self, value: Optional[ColorValue]):
+        self.__inactive_track_color = value
+        self._set_enum_attr("inactiveTrackColor", value, ColorEnums)
+
+    # track_outline_color
+    @property
+    def track_outline_color(self) -> ControlStateValue[ColorValue]:
+        return self.__track_outline_color
+
+    @track_outline_color.setter
+    def track_outline_color(self, value: ControlStateValue[ColorValue]):
+        self.__track_outline_color = value
+
+    # track_outline_width
+    @property
+    def track_outline_width(self) -> ControlStateValue[OptionalNumber]:
+        return self.__track_outline_width
+
+    @track_outline_width.setter
+    def track_outline_width(self, value: ControlStateValue[OptionalNumber]):
+        self.__track_outline_width = value
+
+    # thumb_icon
+    @property
+    def thumb_icon(self) -> ControlStateValue[IconValue]:
+        return self.__thumb_icon
+
+    @thumb_icon.setter
+    def thumb_icon(self, value: ControlStateValue[IconValue]):
+        self.__thumb_icon = value
 
     # label_position
     @property
@@ -184,12 +277,25 @@ class CupertinoSwitch(ConstrainedControl):
     # active_color
     @property
     def active_color(self) -> Optional[ColorValue]:
+        deprecated_property(
+            name="active_color",
+            reason="Use active_track_color instead.",
+            version="0.26.0",
+            delete_version="0.29.0",
+        )
         return self.__active_color
 
     @active_color.setter
     def active_color(self, value: Optional[ColorValue]):
         self.__active_color = value
         self._set_enum_attr("activeColor", value, ColorEnums)
+        if value is not None:
+            deprecated_property(
+                name="active_color",
+                reason="Use active_track_color instead.",
+                version="0.26.0",
+                delete_version="0.29.0",
+            )
 
     # focus_color
     @property
@@ -213,11 +319,24 @@ class CupertinoSwitch(ConstrainedControl):
     # track_color
     @property
     def track_color(self) -> Optional[ColorValue]:
+        deprecated_property(
+            name="track_color",
+            reason="Use inactive_track_color instead.",
+            version="0.26.0",
+            delete_version="0.29.0",
+        )
         return self.__track_color
 
     @track_color.setter
     def track_color(self, value: Optional[ColorValue]):
         self.__track_color = value
+        if value is not None:
+            deprecated_property(
+                name="track_color",
+                reason="Use inactive_track_color instead.",
+                version="0.26.0",
+                delete_version="0.29.0",
+            )
 
     # on_label_color
     @property
@@ -265,3 +384,12 @@ class CupertinoSwitch(ConstrainedControl):
     @on_blur.setter
     def on_blur(self, handler: OptionalControlEventCallable):
         self._add_event_handler("blur", handler)
+
+    # on_image_error
+    @property
+    def on_image_error(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("image_error")
+
+    @on_image_error.setter
+    def on_image_error(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("image_error", handler)

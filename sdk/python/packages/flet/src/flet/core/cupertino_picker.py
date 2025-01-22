@@ -38,6 +38,8 @@ class CupertinoPicker(ConstrainedControl):
         squeeze: OptionalNumber = None,
         diameter_ratio: OptionalNumber = None,
         off_axis_fraction: OptionalNumber = None,
+        selection_overlay: Optional[Control] = None,
+        default_selection_overlay_bgcolor: Optional[ColorValue] = None,
         on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
@@ -114,12 +116,18 @@ class CupertinoPicker(ConstrainedControl):
         self.controls = controls
         self.looping = looping
         self.selected_index = selected_index
+        self.selection_overlay = selection_overlay
+        self.default_selection_overlay_bgcolor = default_selection_overlay_bgcolor
 
     def _get_control_name(self):
         return "cupertinopicker"
 
     def _get_children(self):
-        return self.__controls
+        children = self.__controls
+        if self.__selection_overlay:
+            self.__selection_overlay._set_attr_internal("n", "selection_overlay")
+            children.append(self.__selection_overlay)
+        return children
 
     # squeeze
     @property
@@ -218,6 +226,25 @@ class CupertinoPicker(ConstrainedControl):
     @controls.setter
     def controls(self, value: Sequence[Control]):
         self.__controls = list(value)
+
+    # selection_overlay
+    @property
+    def selection_overlay(self) -> Optional[Control]:
+        return self.__selection_overlay
+
+    @selection_overlay.setter
+    def selection_overlay(self, value: Optional[Control]):
+        self.__selection_overlay = value
+
+    # default_selection_overlay_bgcolor
+    @property
+    def default_selection_overlay_bgcolor(self) -> Optional[ColorValue]:
+        return self.__default_selection_overlay_bgcolor
+
+    @default_selection_overlay_bgcolor.setter
+    def default_selection_overlay_bgcolor(self, value: Optional[ColorValue]):
+        self.__default_selection_overlay_bgcolor = value
+        self._set_enum_attr("defaultSelectionOverlayBgcolor", value, ColorEnums)
 
     # on_change
     @property
