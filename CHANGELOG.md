@@ -7,7 +7,6 @@
 * Migrated to Flutter 3.27.0 ([#4593](https://github.com/flet-dev/flet/pull/4593))
 * New control properties, Flutter 3.27 fixes ([#4703](https://github.com/flet-dev/flet/pull/4703))
 * Optional on-demand creation of `ListView.controls` ([#3931](https://github.com/flet-dev/flet/issues/3931))
-* Add `theme`, `padding`, `margin` and other common props to more container-alike controls ([#4337](https://github.com/flet-dev/flet/issues/4337))
 * Reset `InteractiveViewer` tranformations ([#4391](https://github.com/flet-dev/flet/issues/4391))
 * Passthrough of mouse events from main window to other applications ([#1438](https://github.com/flet-dev/flet/issues/1438))
 * Remove v0.26.0-related deprecations ([#4456](https://github.com/flet-dev/flet/issues/4456))
