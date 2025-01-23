@@ -33,7 +33,7 @@ def check_jdk_version(jdk_path):
             1
         ]  # Extract version from output
         major_version = int(version_line.split(".")[0])
-        return major_version >= JDK_MAJOR_VER
+        return major_version == JDK_MAJOR_VER
     except (IndexError, ValueError, FileNotFoundError) as e:
         return False
 
