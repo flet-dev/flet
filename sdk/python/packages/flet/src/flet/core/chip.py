@@ -99,11 +99,11 @@ class Chip(ConstrainedControl):
         clip_behavior: Optional[ClipBehavior] = None,
         visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
         border_side: Optional[BorderSide] = None,
-        avatar_size_constraints: Optional[BoxConstraints] = None,
+        leading_size_constraints: Optional[BoxConstraints] = None,
         delete_icon_size_constraints: Optional[BoxConstraints] = None,
         enable_animation_style: Optional[AnimationStyle] = None,
         select_animation_style: Optional[AnimationStyle] = None,
-        avatar_drawer_animation_style: Optional[AnimationStyle] = None,
+        leading_drawer_animation_style: Optional[AnimationStyle] = None,
         delete_drawer_animation_style: Optional[AnimationStyle] = None,
         on_click: OptionalControlEventCallable = None,
         on_delete: OptionalControlEventCallable = None,
@@ -204,11 +204,11 @@ class Chip(ConstrainedControl):
         self.clip_behavior = clip_behavior
         self.visual_density = visual_density
         self.border_side = border_side
-        self.avatar_size_constraints = avatar_size_constraints
+        self.leading_size_constraints = leading_size_constraints
         self.delete_icon_size_constraints = delete_icon_size_constraints
         self.enable_animation_style = enable_animation_style
         self.select_animation_style = select_animation_style
-        self.avatar_drawer_animation_style = avatar_drawer_animation_style
+        self.leading_drawer_animation_style = leading_drawer_animation_style
         self.delete_drawer_animation_style = delete_drawer_animation_style
 
     def _get_control_name(self):
@@ -222,14 +222,14 @@ class Chip(ConstrainedControl):
         self._set_attr_json("shape", self.__shape)
         self._set_attr_json("borderSide", self.__border_side)
         self._set_attr_json("color", self.__color, wrap_attr_dict=True)
-        self._set_attr_json("avatarSizeConstraints", self.__avatar_size_constraints)
+        self._set_attr_json("leadingSizeConstraints", self.__leading_size_constraints)
         self._set_attr_json(
             "deleteIconSizeConstraints", self.__delete_icon_size_constraints
         )
         self._set_attr_json("enableAnimationStyle", self.__enable_animation_style)
         self._set_attr_json("selectAnimationStyle", self.__select_animation_style)
         self._set_attr_json(
-            "avatarDrawerAnimationStyle", self.__avatar_drawer_animation_style
+            "leadingDrawerAnimationStyle", self.__leading_drawer_animation_style
         )
         self._set_attr_json(
             "deleteDrawerAnimationStyle", self.__delete_drawer_animation_style
@@ -264,14 +264,14 @@ class Chip(ConstrainedControl):
     def delete_icon_size_constraints(self, value: Optional[BoxConstraints]):
         self.__delete_icon_size_constraints = value
 
-    # avatar_size_constraints
+    # leading_size_constraints
     @property
-    def avatar_size_constraints(self) -> Optional[BoxConstraints]:
-        return self.__avatar_size_constraints
+    def leading_size_constraints(self) -> Optional[BoxConstraints]:
+        return self.__leading_size_constraints
 
-    @avatar_size_constraints.setter
-    def avatar_size_constraints(self, value: Optional[BoxConstraints]):
-        self.__avatar_size_constraints = value
+    @leading_size_constraints.setter
+    def leading_size_constraints(self, value: Optional[BoxConstraints]):
+        self.__leading_size_constraints = value
 
     # enable_animation_style
     @property
@@ -291,14 +291,14 @@ class Chip(ConstrainedControl):
     def select_animation_style(self, value: Optional[AnimationStyle]):
         self.__select_animation_style = value
 
-    # avatar_drawer_animation_style
+    # leading_drawer_animation_style
     @property
-    def avatar_drawer_animation_style(self) -> Optional[AnimationStyle]:
-        return self.__avatar_drawer_animation_style
+    def leading_drawer_animation_style(self) -> Optional[AnimationStyle]:
+        return self.__leading_drawer_animation_style
 
-    @avatar_drawer_animation_style.setter
-    def avatar_drawer_animation_style(self, value: Optional[AnimationStyle]):
-        self.__avatar_drawer_animation_style = value
+    @leading_drawer_animation_style.setter
+    def leading_drawer_animation_style(self, value: Optional[AnimationStyle]):
+        self.__leading_drawer_animation_style = value
 
     # delete_drawer_animation_style
     @property
