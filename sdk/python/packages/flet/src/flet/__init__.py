@@ -407,6 +407,7 @@ from flet.core.types import (
     MouseCursor,
     NotchShape,
     Number,
+    OnFocusEvent,
     OptionalEventCallable,
     OptionalNumber,
     Orientation,

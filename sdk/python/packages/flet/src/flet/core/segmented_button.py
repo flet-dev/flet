@@ -126,7 +126,7 @@ class SegmentedButton(ConstrainedControl):
         selected_icon: Optional[Control] = None,
         show_selected_icon: Optional[bool] = None,
         direction: Optional[Axis] = None,
-        padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
         on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
@@ -263,11 +263,11 @@ class SegmentedButton(ConstrainedControl):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # allow_empty_selection

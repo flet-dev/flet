@@ -54,7 +54,7 @@ class SearchBar(ConstrainedControl):
         bar_text_style: ControlStateValue[TextStyle] = None,
         bar_hint_text_style: ControlStateValue[TextStyle] = None,
         bar_padding: ControlStateValue[PaddingValue] = None,
-        bar_scroll_padding: PaddingValue = None,
+        bar_scroll_padding: Optional[PaddingValue] = None,
         view_leading: Optional[Control] = None,
         view_trailing: Optional[List[Control]] = None,
         view_elevation: OptionalNumber = None,
@@ -496,11 +496,11 @@ class SearchBar(ConstrainedControl):
 
     # bar_scroll_padding
     @property
-    def bar_scroll_padding(self) -> PaddingValue:
+    def bar_scroll_padding(self) -> Optional[PaddingValue]:
         return self.__bar_scroll_padding
 
     @bar_scroll_padding.setter
-    def bar_scroll_padding(self, value: PaddingValue):
+    def bar_scroll_padding(self, value: Optional[PaddingValue]):
         self.__bar_scroll_padding = value
 
     # full_screen

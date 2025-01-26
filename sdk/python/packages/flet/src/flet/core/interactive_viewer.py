@@ -237,7 +237,9 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     # interaction_update_interval
     @property
     def interaction_update_interval(self) -> int:
-        return self._get_attr("interactionUpdateInterval", data_type="int", def_value=0)
+        return self._get_attr(
+            "interactionUpdateInterval", data_type="int", def_value=200
+        )
 
     @interaction_update_interval.setter
     def interaction_update_interval(self, value: Optional[int]):
