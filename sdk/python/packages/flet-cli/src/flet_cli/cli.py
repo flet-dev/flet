@@ -23,7 +23,7 @@ def set_default_subparser(self, name, args=None, positional_args=0):
     subparser_found = False
     existing_default = False  # check if default parser previously defined
     for arg in sys.argv[1:]:
-        if arg in ["-h", "--help", "--version"]:  # global help if no subparser
+        if arg in ["-h", "--help", "-v", "--version"]:  # global help if no subparser
             break
     else:
         for x in self._subparsers._actions:
@@ -64,6 +64,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--version",
+        "-v",
         action="version",
         version=flet.version.version if flet.version.version else update_version(),
     )
