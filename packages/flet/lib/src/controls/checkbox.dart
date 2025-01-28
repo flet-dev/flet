@@ -13,7 +13,6 @@ import 'cupertino_checkbox.dart';
 import 'flet_store_mixin.dart';
 import 'list_tile.dart';
 
-
 class CheckboxControl extends StatefulWidget {
   final Control? parent;
   final Control control;
@@ -114,9 +113,6 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
         labelStyle = labelStyle.apply(color: Theme.of(context).disabledColor);
       }
 
-      WidgetStateBorderSide? side = parseWidgetStateBorderSide(
-          Theme.of(context), widget.control, "borderSide");
-
       var checkbox = Checkbox(
           autofocus: autofocus,
           focusNode: _focusNode,
@@ -124,7 +120,8 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
           isError: widget.control.attrBool("isError", false)!,
           semanticLabel: widget.control.attrString("semanticsLabel"),
           shape: parseOutlinedBorder(widget.control, "shape"),
-          side: side,
+          side: parseWidgetStateBorderSide(
+              Theme.of(context), widget.control, "borderSide"),
           splashRadius: widget.control.attrDouble("splashRadius"),
           activeColor: widget.control.attrColor("activeColor", context),
           focusColor: widget.control.attrColor("focusColor", context),

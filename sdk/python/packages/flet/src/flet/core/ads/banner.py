@@ -11,8 +11,15 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet.utils import deprecated
 
 
+@deprecated(
+    reason="BannerAd control has been moved to a separate Python package: https://pypi.org/project/flet-ads. "
+    + "Read more about this change in Flet blog: https://flet.dev/blog/flet-v-0-26-release-announcement",
+    version="0.26.0",
+    delete_version="0.29.0",
+)
 class BannerAd(BaseAd):
     """
     Displays a banner ad.
@@ -47,9 +54,9 @@ class BannerAd(BaseAd):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: AnimationValue = None,
         animate_size: AnimationValue = None,

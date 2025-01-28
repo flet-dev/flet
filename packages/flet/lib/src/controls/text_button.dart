@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'cupertino_button.dart';
 import 'cupertino_dialog_action.dart';
@@ -83,6 +84,7 @@ class _TextButtonControlState extends State<TextButtonControl>
       }
 
       String text = widget.control.attrString("text", "")!;
+      var clipBehavior = parseClip(widget.control.attrString("clipBehavior"));
       IconData? icon = parseIcon(widget.control.attrString("icon"));
       Color? iconColor = widget.control.attrColor("iconColor", context);
       var contentCtrls =
@@ -145,6 +147,7 @@ class _TextButtonControlState extends State<TextButtonControl>
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             style: style,
+            clipBehavior: clipBehavior,
             icon: Icon(
               icon,
               color: iconColor,
@@ -157,6 +160,7 @@ class _TextButtonControlState extends State<TextButtonControl>
             onPressed: onPressed,
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
+            clipBehavior: clipBehavior,
             style: style,
             child:
                 createControl(widget.control, contentCtrls.first.id, disabled));
@@ -168,6 +172,7 @@ class _TextButtonControlState extends State<TextButtonControl>
             onPressed: onPressed,
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
+            clipBehavior: clipBehavior,
             child: Text(text));
       }
 

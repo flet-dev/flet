@@ -1,4 +1,3 @@
-import warnings
 from enum import Enum
 from typing import Any, List, Optional, Union
 
@@ -39,7 +38,7 @@ class PopupMenuItem(Control):
         checked: Optional[bool] = None,
         content: Optional[Control] = None,
         height: OptionalNumber = None,
-        padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
         mouse_cursor: Optional[MouseCursor] = None,
         on_click: OptionalControlEventCallable = None,
         #
@@ -47,7 +46,7 @@ class PopupMenuItem(Control):
         #
         ref: Optional[Ref] = None,
         disabled: Optional[bool] = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         data: Any = None,
     ):
@@ -128,11 +127,11 @@ class PopupMenuItem(Control):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # content
@@ -212,8 +211,8 @@ class PopupMenuButton(ConstrainedControl):
         clip_behavior: Optional[ClipBehavior] = None,
         enable_feedback: Optional[bool] = None,
         shape: Optional[OutlinedBorder] = None,
-        padding: PaddingValue = None,
-        menu_padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
+        menu_padding: Optional[PaddingValue] = None,
         style: Optional[ButtonStyle] = None,
         popup_animation_style: Optional[AnimationStyle] = None,
         size_constraints: Optional[BoxConstraints] = None,
@@ -235,9 +234,9 @@ class PopupMenuButton(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -246,7 +245,7 @@ class PopupMenuButton(ConstrainedControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
@@ -356,20 +355,20 @@ class PopupMenuButton(ConstrainedControl):
 
     # menu_padding
     @property
-    def menu_padding(self) -> PaddingValue:
+    def menu_padding(self) -> Optional[PaddingValue]:
         return self.__menu_padding
 
     @menu_padding.setter
-    def menu_padding(self, value: PaddingValue):
+    def menu_padding(self, value: Optional[PaddingValue]):
         self.__menu_padding = value
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # icon

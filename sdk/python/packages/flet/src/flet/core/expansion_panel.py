@@ -48,9 +48,9 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -182,7 +182,7 @@ class ExpansionPanelList(ConstrainedControl):
         controls: Optional[Sequence[ExpansionPanel]] = None,
         divider_color: Optional[ColorValue] = None,
         elevation: OptionalNumber = None,
-        expanded_header_padding: PaddingValue = None,
+        expanded_header_padding: Optional[PaddingValue] = None,
         expand_icon_color: Optional[ColorValue] = None,
         spacing: OptionalNumber = None,
         on_change: OptionalControlEventCallable = None,
@@ -201,9 +201,9 @@ class ExpansionPanelList(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -290,11 +290,11 @@ class ExpansionPanelList(ConstrainedControl):
 
     # expanded_header_padding
     @property
-    def expanded_header_padding(self) -> PaddingValue:
+    def expanded_header_padding(self) -> Optional[PaddingValue]:
         return self.__expanded_header_padding
 
     @expanded_header_padding.setter
-    def expanded_header_padding(self, value: PaddingValue):
+    def expanded_header_padding(self, value: Optional[PaddingValue]):
         self.__expanded_header_padding = value
 
     # elevation

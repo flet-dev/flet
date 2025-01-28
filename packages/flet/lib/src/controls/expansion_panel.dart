@@ -33,6 +33,9 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl>
   @override
   Widget build(BuildContext context) {
     debugPrint("ExpansionPanelList build: ${widget.control.id}");
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool? adaptive =
+        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
 
     var panels = widget.children
         .where((c) => c.name == "expansionpanel" && c.isVisible)
@@ -44,29 +47,18 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl>
       widget.backend.triggerControlEvent(widget.control.id, "change", "$index");
     }
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    bool? adaptive =
-        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
-
-    var dividerColor = widget.control.attrColor("dividerColor", context);
-    var expandedIconColor =
-        widget.control.attrColor("expandedIconColor", context);
-
-    var expandedHeaderPadding =
-        parseEdgeInsets(widget.control, "expandedHeaderPadding");
-
-    debugPrint(
-        "ExpansionPanelListControlFletControlState build: ${widget.control.id}");
-
     var panelList =
         withControls(panels.map((p) => p.id), (content, panelViews) {
       return ExpansionPanelList(
           elevation: widget.control.attrDouble("elevation", 2)!,
           materialGapSize: widget.control.attrDouble("spacing", 16)!,
-          dividerColor: dividerColor,
-          expandIconColor: expandedIconColor,
-          expandedHeaderPadding:
-              expandedHeaderPadding ?? const EdgeInsets.symmetric(vertical: 16),
+          dividerColor: widget.control.attrColor("dividerColor", context),
+          expandIconColor:
+              widget.control.attrColor("expandedIconColor", context),
+          expandedHeaderPadding: parseEdgeInsets(
+              widget.control,
+              "expandedHeaderPadding",
+              const EdgeInsets.symmetric(vertical: 16))!,
           expansionCallback: !disabled
               ? (int index, bool isExpanded) {
                   onChange(index, isExpanded);
@@ -78,15 +70,11 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl>
             var bodyCtrls = panelView.children
                 .where((c) => c.name == "content" && c.isVisible);
 
-            var isExpanded = panelView.control.attrBool("expanded", false)!;
-            var canTapHeader =
-                panelView.control.attrBool("canTapHeader", false)!;
-            var bgColor = panelView.control.attrColor("bgColor", context);
-
             return ExpansionPanel(
-              backgroundColor: bgColor,
-              isExpanded: isExpanded,
-              canTapOnHeader: canTapHeader,
+              backgroundColor: panelView.control.attrColor("bgColor", context),
+              isExpanded: panelView.control.attrBool("expanded", false)!,
+              canTapOnHeader:
+                  panelView.control.attrBool("canTapHeader", false)!,
               headerBuilder: (BuildContext context, bool isExpanded) {
                 return headerCtrls.isNotEmpty
                     ? createControl(

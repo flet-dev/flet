@@ -1,20 +1,21 @@
-[tool.poetry]
+[project]
 name = "flet"
 version = "0.1.0"
 description = "Flet for Python - easily build interactive multi-platform apps in Python"
-authors = ["Appveyor Systems Inc. <hello@flet.dev>"]
+authors = [{name = "Appveyor Systems Inc.", email ="hello@flet.dev"}]
 license = "Apache-2.0"
 readme = "README.md"
+requires-python = ">=3.9"
 
+[tool.poetry]
 packages = [{ include = "flet", from = "src" }]
 
 [tool.poetry.urls]
-homepage = "https://flet.dev"
-repository = "https://github.com/flet-dev/flet"
-documentation = "https://flet.dev/docs"
+Homepage = "https://flet.dev"
+Repository = "https://github.com/flet-dev/flet"
+Documentation = "https://flet.dev/docs"
 
 [tool.poetry.dependencies]
-python = "^3.8"
 flet-cli = { version = "0.1.0", optional = true }
 flet-desktop = { version = "0.1.0", optional = true, markers = "platform_system == 'Darwin' or platform_system == 'Windows'" }
 flet-web = { version = "0.1.0", optional = true }

@@ -34,6 +34,12 @@ class AudioEncoder(Enum):
     PCM16BITS = "pcm16bits"
 
 
+@deprecated(
+    reason="AudioRecorder control has been moved to a separate Python package: https://pypi.org/project/flet-audio-recorder. "
+    + "Read more about this change in Flet blog: https://flet.dev/blog/flet-v-0-26-release-announcement",
+    version="0.26.0",
+    delete_version="0.29.0",
+)
 class AudioRecorder(Control):
     """
     A control that allows you to record audio from your device.
@@ -88,6 +94,20 @@ class AudioRecorder(Control):
             self.page.web or output_path
         ), "output_path must be provided when not on web"
         started = self.invoke_method(
+            "start_recording",
+            {"outputPath": output_path},
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return started == "true"
+
+    async def start_recording_async(
+        self, output_path: str = None, wait_timeout: Optional[float] = 10
+    ) -> bool:
+        assert (
+            self.page.web or output_path
+        ), "output_path must be provided when not on web"
+        started = await self.invoke_method_async(
             "start_recording",
             {"outputPath": output_path},
             wait_for_result=True,

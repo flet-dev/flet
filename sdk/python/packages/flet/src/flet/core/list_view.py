@@ -1,4 +1,4 @@
-from typing import Any, Callable, List, Optional, Sequence, Union
+from typing import Any, List, Optional, Sequence, Union
 
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.animation import AnimationValue
@@ -10,12 +10,12 @@ from flet.core.types import (
     ClipBehavior,
     OffsetValue,
     OptionalControlEventCallable,
+    OptionalEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
 )
-from flet.utils import deprecated
 
 
 class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
@@ -65,17 +65,18 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         item_extent: OptionalNumber = None,
         first_item_prototype: Optional[bool] = None,
         divider_thickness: OptionalNumber = None,
-        padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         semantic_child_count: Optional[int] = None,
         cache_extent: OptionalNumber = None,
+        build_controls_on_demand: Optional[bool] = None,
         #
         # ScrollableControl specific
         #
         auto_scroll: Optional[bool] = None,
         reverse: Optional[bool] = None,
         on_scroll_interval: OptionalNumber = None,
-        on_scroll: Optional[Callable[[OnScrollEvent], None]] = None,
+        on_scroll: OptionalEventCallable[OnScrollEvent] = None,
         #
         # ConstrainedControl
         #
@@ -91,9 +92,9 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -161,6 +162,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.clip_behavior = clip_behavior
         self.semantic_child_count = semantic_child_count
         self.cache_extent = cache_extent
+        self.build_controls_on_demand = build_controls_on_demand
 
     def _get_control_name(self):
         return "listview"
@@ -232,11 +234,11 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # controls
@@ -266,3 +268,12 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @semantic_child_count.setter
     def semantic_child_count(self, value: Optional[int]):
         self._set_attr("semanticChildCount", value)
+
+    # build_controls_on_demand
+    @property
+    def build_controls_on_demand(self) -> Optional[bool]:
+        return self._get_attr("buildControlsOnDemand", data_type="bool", def_value=True)
+
+    @build_controls_on_demand.setter
+    def build_controls_on_demand(self, value: Optional[bool]):
+        self._set_attr("buildControlsOnDemand", value)

@@ -220,6 +220,8 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
                 Theme.of(context), widget.control, "barBgcolor"),
             overlayColor: parseWidgetStateColor(
                 Theme.of(context), widget.control, "barOverlayColor"),
+            scrollPadding: parseEdgeInsets(widget.control, "barScrollPadding",
+                const EdgeInsets.all(20.0))!,
             leading: barLeadingCtrls.isNotEmpty
                 ? createControl(
                     widget.parent, barLeadingCtrls.first.id, disabled,

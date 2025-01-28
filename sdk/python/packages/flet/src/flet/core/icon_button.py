@@ -27,7 +27,6 @@ from flet.core.types import (
     UrlTarget,
     VisualDensity,
 )
-from flet.utils import deprecated
 
 
 class IconButton(ConstrainedControl, AdaptiveControl):
@@ -88,7 +87,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         splash_color: Optional[ColorValue] = None,
         splash_radius: OptionalNumber = None,
         alignment: Optional[Alignment] = None,
-        padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
         enable_feedback: Optional[bool] = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
@@ -113,9 +112,9 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -124,7 +123,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -336,11 +335,11 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # size_constraints

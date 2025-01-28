@@ -17,10 +17,6 @@ from warnings import warn
 
 from flet.core.border_radius import BorderRadius
 from flet.core.colors import Colors, colors
-
-if TYPE_CHECKING:
-    from flet.core.control import Control
-
 from flet.core.control_event import ControlEvent
 from flet.core.cupertino_colors import CupertinoColors, cupertino_colors
 from flet.core.cupertino_icons import CupertinoIcons, cupertino_icons
@@ -74,17 +70,17 @@ class UrlTarget(Enum):
     TOP = "_top"
 
 
-PaddingValue = Optional[Union[int, float, Padding]]
+PaddingValue = Union[int, float, Padding]
 
-MarginValue = Optional[Union[int, float, Margin]]
+MarginValue = Union[int, float, Margin]
 
-BorderRadiusValue = Optional[Union[int, float, BorderRadius]]
+BorderRadiusValue = Union[int, float, BorderRadius]
 
-RotateValue = Optional[Union[int, float, Rotate]]
+RotateValue = Union[int, float, Rotate]
 
-ScaleValue = Optional[Union[int, float, Scale]]
+ScaleValue = Union[int, float, Scale]
 
-OffsetValue = Optional[Union[Offset, Tuple[Union[float, int], Union[float, int]]]]
+OffsetValue = Union[Offset, Tuple[Union[float, int], Union[float, int]]]
 
 
 @dataclass
@@ -97,7 +93,7 @@ class Duration:
     days: int = 0
 
 
-DurationValue = Union[int, Duration, None]
+DurationValue = Union[int, Duration]
 
 
 class FontWeight(Enum):
@@ -251,6 +247,7 @@ class ImageRepeat(Enum):
 class PagePlatform(Enum):
     IOS = "ios"
     ANDROID = "android"
+    ANDROID_TV = "android_tv"
     MACOS = "macos"
     WINDOWS = "windows"
     LINUX = "linux"
@@ -414,6 +411,13 @@ ControlEventType = TypeVar("ControlEventType", bound=ControlEvent)
 EventType = TypeVar("EventType", bound=Event)
 OptionalEventCallable = Optional[Callable[[EventType], Any]]
 OptionalControlEventCallable = Optional[Callable[[ControlEvent], Any]]
+
+
+class OnFocusEvent(ControlEvent):
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        self.primary: bool = bool(e.data)
+
 
 # Colors
 ColorEnums = (colors, Colors, cupertino_colors, CupertinoColors)

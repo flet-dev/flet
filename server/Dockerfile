@@ -1,6 +1,0 @@
-FROM gcr.io/distroless/base
-ENV FLET_SERVER_PORT=8080
-ENV FLET_ALLOW_REMOTE_HOST_CLIENTS=true
-EXPOSE 8080
-COPY flet /
-ENTRYPOINT [ "/flet", "server" ]

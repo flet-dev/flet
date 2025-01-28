@@ -18,7 +18,6 @@ from flet.core.types import (
     ScaleValue,
     ScrollMode,
 )
-from flet.utils import deprecated
 
 
 class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
@@ -69,6 +68,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         tight: Optional[bool] = None,
         wrap: Optional[bool] = None,
         run_spacing: OptionalNumber = None,
+        run_alignment: Optional[MainAxisAlignment] = None,
         #
         # ScrollableControl specific
         #
@@ -91,9 +91,9 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -159,6 +159,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.tight = tight
         self.wrap = wrap
         self.run_spacing = run_spacing
+        self.run_alignment = run_alignment
 
     def _get_control_name(self):
         return "row"
@@ -183,7 +184,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     def tight(self, value: Optional[bool]):
         self._set_attr("tight", value)
 
-    # horizontal_alignment
+    # alignment
     @property
     def alignment(self) -> Optional[MainAxisAlignment]:
         return self.__alignment
@@ -192,6 +193,16 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     def alignment(self, value: Optional[MainAxisAlignment]):
         self.__alignment = value
         self._set_enum_attr("alignment", value, MainAxisAlignment)
+
+    # run_alignment
+    @property
+    def run_alignment(self) -> Optional[MainAxisAlignment]:
+        return self.__run_alignment
+
+    @run_alignment.setter
+    def run_alignment(self, value: Optional[MainAxisAlignment]):
+        self.__run_alignment = value
+        self._set_enum_attr("runAlignment", value, MainAxisAlignment)
 
     # vertical_alignment
     @property
@@ -206,7 +217,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     # spacing
     @property
     def spacing(self) -> OptionalNumber:
-        return self._get_attr("spacing")
+        return self._get_attr("spacing", data_type="float", def_value=10)
 
     @spacing.setter
     def spacing(self, value: OptionalNumber):

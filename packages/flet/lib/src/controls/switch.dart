@@ -5,6 +5,7 @@ import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/mouse.dart';
+import '../utils/numbers.dart';
 import '../utils/others.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
@@ -59,7 +60,9 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
 
   void _onFocusChange() {
     widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
+        widget.control.id,
+        _focusNode.hasFocus ? "focus" : "blur",
+        _focusNode.hasFocus ? _focusNode.hasPrimaryFocus.toString() : "");
   }
 
   @override
@@ -92,8 +95,6 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
         labelStyle = labelStyle.apply(color: Theme.of(context).disabledColor);
       }
 
-      debugPrint("Switch build: ${widget.control.id}");
-
       bool value = widget.control.attrBool("value", false)!;
       if (_value != value) {
         _value = value;
@@ -125,6 +126,8 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
               Theme.of(context), widget.control, "overlayColor"),
           trackOutlineColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "trackOutlineColor"),
+          trackOutlineWidth:
+              parseWidgetStateDouble(widget.control, "trackOutlineWidth"),
           onChanged: !disabled
               ? (bool value) {
                   _onChange(value);

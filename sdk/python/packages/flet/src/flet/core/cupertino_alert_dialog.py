@@ -1,5 +1,6 @@
 from typing import Any, List, Optional
 
+from flet.core.animation import Animation
 from flet.core.control import Control
 from flet.core.ref import Ref
 from flet.core.types import OptionalControlEventCallable
@@ -92,6 +93,7 @@ class CupertinoAlertDialog(Control):
         title: Optional[Control] = None,
         content: Optional[Control] = None,
         actions: Optional[List[Control]] = None,
+        inset_animation: Optional[Animation] = None,
         on_dismiss: OptionalControlEventCallable = None,
         #
         # Control
@@ -100,7 +102,7 @@ class CupertinoAlertDialog(Control):
         disabled: Optional[bool] = None,
         visible: Optional[bool] = None,
         data: Any = None,
-        barrier_color: Optional[str] = None
+        barrier_color: Optional[str] = None,
     ):
         Control.__init__(
             self,
@@ -117,9 +119,14 @@ class CupertinoAlertDialog(Control):
         self.actions = actions
         self.on_dismiss = on_dismiss
         self.barrier_color = barrier_color
+        self.inset_animation = inset_animation
 
     def _get_control_name(self):
         return "cupertinoalertdialog"
+
+    def before_update(self):
+        super().before_update()
+        self._set_attr_json("insetAnimation", self.__inset_animation)
 
     def _get_children(self):
         children = []
@@ -161,6 +168,15 @@ class CupertinoAlertDialog(Control):
     def title(self, value: Optional[Control]):
         self.__title = value
 
+    # inset_animation
+    @property
+    def inset_animation(self) -> Optional[Animation]:
+        return self.__inset_animation
+
+    @inset_animation.setter
+    def inset_animation(self, value: Optional[Animation]):
+        self.__inset_animation = value
+
     # content
     @property
     def content(self) -> Optional[Control]:
@@ -169,8 +185,8 @@ class CupertinoAlertDialog(Control):
     @content.setter
     def content(self, value: Optional[Control]):
         self.__content = value
-    
-    #barrier_color
+
+    # barrier_color
     @property
     def barrier_color(self) -> Optional[str]:
         return self._get_attr("barrierColor")

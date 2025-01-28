@@ -26,7 +26,6 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
-from flet.utils import deprecated
 
 
 class SearchBar(ConstrainedControl):
@@ -55,6 +54,7 @@ class SearchBar(ConstrainedControl):
         bar_text_style: ControlStateValue[TextStyle] = None,
         bar_hint_text_style: ControlStateValue[TextStyle] = None,
         bar_padding: ControlStateValue[PaddingValue] = None,
+        bar_scroll_padding: Optional[PaddingValue] = None,
         view_leading: Optional[Control] = None,
         view_trailing: Optional[List[Control]] = None,
         view_elevation: OptionalNumber = None,
@@ -89,9 +89,9 @@ class SearchBar(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -100,7 +100,7 @@ class SearchBar(ConstrainedControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -171,6 +171,7 @@ class SearchBar(ConstrainedControl):
         self.bar_text_style = bar_text_style
         self.bar_hint_text_style = bar_hint_text_style
         self.bar_padding = bar_padding
+        self.bar_scroll_padding = bar_scroll_padding
         self.bar_shadow_color = bar_shadow_color
 
     def _get_control_name(self):
@@ -206,6 +207,7 @@ class SearchBar(ConstrainedControl):
         self._set_attr_json("viewHintTextStyle", self.__view_hint_text_style)
         self._set_attr_json("viewSide", self.__view_side)
         self._set_attr_json("viewSizeConstraints", self.__view_size_constraints)
+        self._set_attr_json("barScrollPadding", self.__bar_scroll_padding)
 
     def _get_children(self):
         children = []
@@ -491,6 +493,15 @@ class SearchBar(ConstrainedControl):
     @view_size_constraints.setter
     def view_size_constraints(self, value: Optional[BoxConstraints]):
         self.__view_size_constraints = value
+
+    # bar_scroll_padding
+    @property
+    def bar_scroll_padding(self) -> Optional[PaddingValue]:
+        return self.__bar_scroll_padding
+
+    @bar_scroll_padding.setter
+    def bar_scroll_padding(self, value: Optional[PaddingValue]):
+        self.__bar_scroll_padding = value
 
     # full_screen
     @property

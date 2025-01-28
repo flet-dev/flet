@@ -10,10 +10,20 @@ from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
-from flet.core.types import (ColorEnums, ColorValue, MouseCursor, OffsetValue,
-                             OptionalControlEventCallable, PaddingValue,
-                             ResponsiveNumber, RotateValue, ScaleValue,
-                             ThemeVisualDensity, UrlTarget, VisualDensity)
+from flet.core.types import (
+    ColorEnums,
+    ColorValue,
+    MouseCursor,
+    OffsetValue,
+    OptionalControlEventCallable,
+    PaddingValue,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
+    ThemeVisualDensity,
+    UrlTarget,
+    VisualDensity,
+)
 
 
 class ListTileTitleAlignment(Enum):
@@ -72,15 +82,15 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
+        title: Optional[Control] = None,
+        subtitle: Optional[Control] = None,
+        is_three_line: Optional[bool] = None,
+        leading: Optional[Control] = None,
+        trailing: Optional[Control] = None,
         content_padding: PaddingValue = None,
         bgcolor: Optional[ColorValue] = None,
         bgcolor_activated: Optional[str] = None,
         hover_color: Optional[ColorValue] = None,
-        leading: Optional[Control] = None,
-        title: Optional[Control] = None,
-        subtitle: Optional[Control] = None,
-        trailing: Optional[Control] = None,
-        is_three_line: Optional[bool] = None,
         selected: Optional[bool] = None,
         dense: Optional[bool] = None,
         autofocus: Optional[bool] = None,
@@ -104,8 +114,8 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         subtitle_text_style: Optional[TextStyle] = None,
         leading_and_trailing_text_style: Optional[TextStyle] = None,
         min_height: OptionalNumber = None,
-        on_click=None,
-        on_long_press=None,
+        on_click: OptionalControlEventCallable = None,
+        on_long_press: OptionalControlEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -121,9 +131,9 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -132,7 +142,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -243,11 +253,11 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # content_padding
     @property
-    def content_padding(self) -> PaddingValue:
+    def content_padding(self) -> Optional[PaddingValue]:
         return self.__content_padding
 
     @content_padding.setter
-    def content_padding(self, value: PaddingValue):
+    def content_padding(self, value: Optional[PaddingValue]):
         self.__content_padding = value
 
     # bgcolor

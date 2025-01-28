@@ -12,7 +12,7 @@ class Badge:
     or a button's icon."""
 
     text: Optional[str] = None
-    offset: OffsetValue = None
+    offset: Optional[OffsetValue] = None
     alignment: Optional[Alignment] = None
     bgcolor: Optional[ColorValue] = None
     label_visible: Optional[bool] = None

@@ -1,3 +1,44 @@
+# 0.26.0
+
+* Flutter extensions: `flet_*` packages moved to separate repositories ([#4721](https://github.com/flet-dev/flet/pull/4721))
+* Automatic installation of Flutter, JDK and Android SDK ([#4721](https://github.com/flet-dev/flet/pull/4721))
+* Migrated to Flutter 3.27.0 ([#4593](https://github.com/flet-dev/flet/pull/4593))
+* New control properties, Flutter 3.27 fixes ([#4703](https://github.com/flet-dev/flet/pull/4703))
+* Optional on-demand creation of `ListView.controls` ([#3931](https://github.com/flet-dev/flet/issues/3931))
+* Reset `InteractiveViewer` tranformations ([#4391](https://github.com/flet-dev/flet/issues/4391))
+* Passthrough of mouse events from main window to other applications ([#1438](https://github.com/flet-dev/flet/issues/1438))
+* Remove v0.26.0-related deprecations ([#4456](https://github.com/flet-dev/flet/issues/4456))
+* Implemented `Window.ignore_mouse_events` ([#4465](https://github.com/flet-dev/flet/pull/4465))
+* Adding Google/Android TV platform support ([#4581](https://github.com/flet-dev/flet/pull/4581))
+* Remove `Optional[]` from predefined typing `*Value`s ([#4702](https://github.com/flet-dev/flet/pull/4702))
+* Throttle `InteractiveViewer` update events ([#4704](https://github.com/flet-dev/flet/pull/4704))
+* Fixed: Update project_dependencies.py ([#4459](https://github.com/flet-dev/flet/pull/4459))
+* Fixed: `SafeArea` object has no attribute `_SafeArea__minimum` ([#4500](https://github.com/flet-dev/flet/pull/4500))
+* Fixed: Tooltip corruption in `Segment` and `BarChartRod` on `update()` ([#4525](https://github.com/flet-dev/flet/pull/4525))
+* Fixed: Setting `CheckBox.border_side.stroke_align` to an Enum fails ([#4526](https://github.com/flet-dev/flet/pull/4526))
+* Fixed: `ControlState` should be resolved based on user-defined order ([#4556](https://github.com/flet-dev/flet/pull/4556))
+* Fixed: broken `Dismissible.dismiss_direction` ([#4557](https://github.com/flet-dev/flet/pull/4557))
+* Fixed: Fix Rive not updating ([#4582](https://github.com/flet-dev/flet/pull/4582))
+* Fixed: `DatePicker` regression with first and last dates ([#4661](https://github.com/flet-dev/flet/pull/4661))
+* `flet build` command: Copy `flutter-packages`, support for platform-specific dependencies ([#4667](https://github.com/flet-dev/flet/pull/4667))
+* Fixed: `CupertinoBottomSheet` applies a red color and yellow underline to `Text`  content ([#4673](https://github.com/flet-dev/flet/pull/4673))
+* Fixed: setting `ButtonTheme` displays a grey screen ([#4731](https://github.com/flet-dev/flet/pull/4731))
+* Fixed: `Textfield` input border color considers user-specified `border_color` property ([#4735](https://github.com/flet-dev/flet/pull/4735))
+* Fixed: make `Tooltip.message` a required parameter ([#4736](https://github.com/flet-dev/flet/pull/4736))
+
+# 0.25.2
+
+## Bug fixes
+
+* Fix `flet publish` creates broken website if no `requirements.txt` or `pyproject.toml` found ([#4493](https://github.com/flet-dev/flet/pull/4493)).
+* Fix PyInstaller hook to avoid download Flet app bundle on first run ([#4549](https://github.com/flet-dev/flet/pull/4549)).
+* Support `git`, `path`, `url` Poetry-style dependencies in `pyproject.toml` ([#4554](https://github.com/flet-dev/flet/pull/4554)).
+* Fixed broken `Map.center_on()` and default animations ([#4519](https://github.com/flet-dev/flet/pull/4519)).
+* Fixed Tooltip corruption in `Segment` and `BarChartRod` on `update()` ([#4525](https://github.com/flet-dev/flet/pull/4525)).
+* Fixed Setting `CheckBox.border_side.stroke_align` to an Enum fails ([#4526](https://github.com/flet-dev/flet/pull/4526)).
+* Fixed `ControlState should` be resolved based on user-defined order ([#4556](https://github.com/flet-dev/flet/pull/4556)).
+* Fixed broken `Dismissible.dismiss_direction` ([#4557](https://github.com/flet-dev/flet/pull/4557)).
+
 # 0.25.1
 
 ## Changes

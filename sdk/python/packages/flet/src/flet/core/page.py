@@ -81,7 +81,7 @@ from flet.core.types import (
     Wrapper,
 )
 from flet.core.view import View
-from flet.utils import classproperty, deprecated, is_pyodide
+from flet.utils import classproperty, is_pyodide
 
 try:
     from typing import ParamSpec
@@ -1592,11 +1592,11 @@ class Page(AdaptiveControl):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__default_view.padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__default_view.padding = value
 
     # bgcolor

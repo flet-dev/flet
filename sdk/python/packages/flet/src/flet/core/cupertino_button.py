@@ -45,12 +45,15 @@ class CupertinoButton(ConstrainedControl):
         disabled_bgcolor: Optional[ColorValue] = None,
         opacity_on_click: OptionalNumber = None,
         min_size: OptionalNumber = None,
-        padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
         alignment: Optional[Alignment] = None,
-        border_radius: BorderRadiusValue = None,
+        border_radius: Optional[BorderRadiusValue] = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
         on_click: OptionalControlEventCallable = None,
+        on_long_press: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -66,9 +69,9 @@ class CupertinoButton(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -77,7 +80,7 @@ class CupertinoButton(ConstrainedControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -131,6 +134,9 @@ class CupertinoButton(ConstrainedControl):
         self.url = url
         self.url_target = url_target
         self.on_click = on_click
+        self.on_long_press = on_long_press
+        self.on_focus = on_focus
+        self.on_blur = on_blur
 
     def _get_control_name(self):
         return "cupertinobutton"
@@ -234,11 +240,11 @@ class CupertinoButton(ConstrainedControl):
 
     # border_radius
     @property
-    def border_radius(self) -> BorderRadiusValue:
+    def border_radius(self) -> Optional[BorderRadiusValue]:
         return self.__border_radius
 
     @border_radius.setter
-    def border_radius(self, value: BorderRadiusValue):
+    def border_radius(self, value: Optional[BorderRadiusValue]):
         self.__border_radius = value
 
     # min_size
@@ -252,11 +258,11 @@ class CupertinoButton(ConstrainedControl):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # bgcolor
@@ -315,3 +321,30 @@ class CupertinoButton(ConstrainedControl):
     @content.setter
     def content(self, value: Optional[Control]):
         self.__content = value
+
+    # on_long_press
+    @property
+    def on_long_press(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("longPress")
+
+    @on_long_press.setter
+    def on_long_press(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("longPress", handler)
+
+    # on_focus
+    @property
+    def on_focus(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("focus")
+
+    @on_focus.setter
+    def on_focus(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("focus", handler)
+
+    # on_blur
+    @property
+    def on_blur(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("blur")
+
+    @on_blur.setter
+    def on_blur(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("blur", handler)

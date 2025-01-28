@@ -165,14 +165,14 @@ class TabsTheme:
     divider_color: Optional[ColorValue] = None
     indicator_border_radius: Optional[BorderRadius] = None
     indicator_border_side: Optional[BorderSide] = None
-    indicator_padding: PaddingValue = None
+    indicator_padding: Optional[PaddingValue] = None
     indicator_color: Optional[ColorValue] = None
     indicator_tab_size: Optional[bool] = None
     label_color: Optional[ColorValue] = None
     unselected_label_color: Optional[ColorValue] = None
     overlay_color: ControlStateValue[ColorValue] = None
     mouse_cursor: ControlStateValue[MouseCursor] = None
-    label_padding: PaddingValue = None
+    label_padding: Optional[PaddingValue] = None
     label_text_style: Optional[TextStyle] = None
     unselected_label_text_style: Optional[TextStyle] = None
 
@@ -209,7 +209,7 @@ class DialogTheme:
     actions_padding: Optional[PaddingValue] = None
     clip_behavior: Optional[ClipBehavior] = None
     barrier_color: Optional[ColorValue] = None
-    inset_padding: PaddingValue = None
+    inset_padding: Optional[PaddingValue] = None
 
 
 @dataclass
@@ -236,7 +236,7 @@ class CardTheme:
     elevation: OptionalNumber = None
     shape: Optional[OutlinedBorder] = None
     clip_behavior: Optional[ClipBehavior] = None
-    margin: MarginValue = None
+    margin: Optional[MarginValue] = None
 
 
 @dataclass
@@ -254,8 +254,8 @@ class ChipTheme:
     elevation: OptionalNumber = None
     click_elevation: OptionalNumber = None
     shape: Optional[OutlinedBorder] = None
-    padding: PaddingValue = None
-    label_padding: PaddingValue = None
+    padding: Optional[PaddingValue] = None
+    label_padding: Optional[PaddingValue] = None
     label_text_style: Optional[TextStyle] = None
     secondary_label_text_style: Optional[TextStyle] = None
     border_side: Optional[BorderSide] = None
@@ -283,7 +283,7 @@ class FloatingActionButtonTheme:
     disabled_elevation: OptionalNumber = None
     shape: Optional[OutlinedBorder] = None
     enable_feedback: Optional[bool] = None
-    extended_padding: PaddingValue = None
+    extended_padding: Optional[PaddingValue] = None
     extended_text_style: Optional[TextStyle] = None
     extended_icon_label_spacing: OptionalNumber = None
     extended_size_constraints: Optional[BoxConstraints] = None
@@ -329,7 +329,7 @@ class BottomAppBarTheme:
     surface_tint_color: Optional[ColorValue] = None
     elevation: OptionalNumber = None
     height: OptionalNumber = None
-    padding: PaddingValue = None
+    padding: Optional[PaddingValue] = None
     shape: Optional[NotchShape] = None
 
 
@@ -380,8 +380,8 @@ class BadgeTheme:
     small_size: OptionalNumber = None
     large_size: OptionalNumber = None
     alignment: Optional[Alignment] = None
-    padding: PaddingValue = None
-    offset: OffsetValue = None
+    padding: Optional[PaddingValue] = None
+    offset: Optional[OffsetValue] = None
     text_style: Optional[TextStyle] = None
 
 
@@ -438,7 +438,7 @@ class SnackBarTheme:
     dismiss_direction: Optional[DismissDirection] = None
     behavior: Optional[SnackBarBehavior] = None
     shape: Optional[OutlinedBorder] = None
-    inset_padding: PaddingValue = None
+    inset_padding: Optional[PaddingValue] = None
     action_overflow_threshold: OptionalNumber = None
 
 
@@ -448,8 +448,8 @@ class BannerTheme:
     surface_tint_color: Optional[ColorValue] = None
     shadow_color: Optional[ColorValue] = None
     divider_color: Optional[ColorValue] = None
-    padding: PaddingValue = None
-    leading_padding: PaddingValue = None
+    padding: Optional[PaddingValue] = None
+    leading_padding: Optional[PaddingValue] = None
     elevation: OptionalNumber = None
     content_text_style: Optional[TextStyle] = None
 
@@ -547,7 +547,7 @@ class TimePickerTheme:
     day_period_shape: Optional[OutlinedBorder] = None
     hour_minute_shape: Optional[OutlinedBorder] = None
     day_period_border_side: Optional[BorderSide] = None
-    padding: PaddingValue = None
+    padding: Optional[PaddingValue] = None
     time_selector_separator_color: ControlStateValue[ColorValue] = None
     time_selector_separator_text_style: ControlStateValue[TextStyle] = None
 
@@ -580,8 +580,8 @@ class ListTileTheme:
     dense: Optional[bool] = None
     shape: Optional[OutlinedBorder] = None
     visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None
-    content_padding: PaddingValue = None
-    min_vertical_padding: PaddingValue = None
+    content_padding: Optional[PaddingValue] = None
+    min_vertical_padding: Optional[PaddingValue] = None
     horizontal_spacing: OptionalNumber = None
     min_leading_width: OptionalNumber = None
     title_text_style: Optional[TextStyle] = None
@@ -603,11 +603,11 @@ class TooltipTheme:
     exclude_from_semantics: Optional[bool] = None
     prefer_below: Optional[bool] = None
     vertical_offset: OptionalNumber = None
-    padding: PaddingValue = None
-    wait_duration: DurationValue = None
-    exit_duration: DurationValue = None
-    show_duration: DurationValue = None
-    margin: MarginValue = None
+    padding: Optional[PaddingValue] = None
+    wait_duration: Optional[DurationValue] = None
+    exit_duration: Optional[DurationValue] = None
+    show_duration: Optional[DurationValue] = None
+    margin: Optional[MarginValue] = None
     trigger_mode: Optional[TooltipTriggerMode] = None
     decoration: Optional[BoxDecoration] = None
 
@@ -621,9 +621,9 @@ class ExpansionTileTheme:
     collapsed_icon_color: Optional[ColorValue] = None
     clip_behavior: Optional[ClipBehavior] = None
     collapsed_text_color: Optional[ColorValue] = None
-    tile_padding: PaddingValue = None
+    tile_padding: Optional[PaddingValue] = None
     expanded_alignment: Optional[Alignment] = None
-    controls_padding: PaddingValue = None
+    controls_padding: Optional[PaddingValue] = None
 
 
 @dataclass
@@ -678,7 +678,7 @@ class PopupMenuTheme:
     shape: Optional[OutlinedBorder] = None
     menu_position: Optional[PopupMenuPosition] = None
     mouse_cursor: ControlStateValue[MouseCursor] = None
-    menu_padding: PaddingValue = None
+    menu_padding: Optional[PaddingValue] = None
 
     def __post_init__(self):
         if not isinstance(self.mouse_cursor, dict):
@@ -822,7 +822,7 @@ class ButtonTheme:
     height: OptionalNumber = None
     min_width: OptionalNumber = None
     shape: Optional[OutlinedBorder] = None
-    padding: PaddingValue = None
+    padding: Optional[PaddingValue] = None
 
 
 @dataclass

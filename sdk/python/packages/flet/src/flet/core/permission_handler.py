@@ -3,6 +3,7 @@ from typing import Any, Optional
 
 from flet.core.control import Control
 from flet.core.ref import Ref
+from flet.utils import deprecated
 
 
 class PermissionStatus(Enum):
@@ -56,6 +57,12 @@ class PermissionType(Enum):
     VIDEOS = "videos"
 
 
+@deprecated(
+    reason="PermissionHandler control has been moved to a separate Python package: https://pypi.org/project/flet-permission-handler. "
+    + "Read more about this change in Flet blog: https://flet.dev/blog/flet-v-0-26-release-announcement",
+    version="0.26.0",
+    delete_version="0.29.0",
+)
 class PermissionHandler(Control):
     """
     A control that allows you check and request permission from your device.

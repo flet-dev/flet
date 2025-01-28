@@ -27,7 +27,6 @@ from flet.core.types import (
     ResponsiveNumber,
     SupportsStr,
 )
-from flet.utils import deprecated
 
 if TYPE_CHECKING:
     from .page import Page
@@ -49,7 +48,7 @@ class Control:
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -96,6 +95,9 @@ class Control:
             self._set_attr_json("tooltip", self.tooltip)
         if isinstance(self.badge, (Badge, str)):
             self._set_attr_json("badge", self.badge)
+        else:
+            self._set_attr("badge", None)
+
         self._set_attr_json("col", self.__col)
 
     def did_mount(self):

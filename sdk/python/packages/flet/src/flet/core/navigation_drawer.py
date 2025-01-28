@@ -88,7 +88,8 @@ class NavigationDrawerDestination(Control):
     @icon.setter
     def icon(self, value: Optional[IconValueOrControl]):
         self.__icon = value
-        self._set_enum_attr("icon", value, IconEnums)
+        if not isinstance(value, Control):
+            self._set_enum_attr("icon", value, IconEnums)
 
     # icon_content
     @property
@@ -120,7 +121,8 @@ class NavigationDrawerDestination(Control):
     @selected_icon.setter
     def selected_icon(self, value: Optional[IconValueOrControl]):
         self.__selected_icon = value
-        self._set_enum_attr("selectedIcon", value, IconEnums)
+        if not isinstance(value, Control):
+            self._set_enum_attr("selectedIcon", value, IconEnums)
 
     # selected_icon_content
     @property
@@ -227,7 +229,7 @@ class NavigationDrawer(Control):
         indicator_shape: Optional[OutlinedBorder] = None,
         shadow_color: Optional[ColorValue] = None,
         surface_tint_color: Optional[ColorValue] = None,
-        tile_padding: PaddingValue = None,
+        tile_padding: Optional[PaddingValue] = None,
         position: Optional[NavigationDrawerPosition] = None,
         on_change: OptionalControlEventCallable = None,
         on_dismiss: OptionalControlEventCallable = None,
@@ -370,11 +372,11 @@ class NavigationDrawer(Control):
 
     # tile_padding
     @property
-    def tile_padding(self) -> PaddingValue:
+    def tile_padding(self) -> Optional[PaddingValue]:
         return self.__tile_padding
 
     @tile_padding.setter
-    def tile_padding(self, value: PaddingValue):
+    def tile_padding(self, value: Optional[PaddingValue]):
         self.__tile_padding = value
 
     # on_change

@@ -10,6 +10,7 @@ from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
+    ClipBehavior,
     ColorEnums,
     ColorValue,
     IconEnums,
@@ -21,7 +22,6 @@ from flet.core.types import (
     ScaleValue,
     UrlTarget,
 )
-from flet.utils import deprecated
 
 
 class TextButton(ConstrainedControl, AdaptiveControl):
@@ -57,6 +57,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         autofocus: Optional[bool] = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
         on_click: OptionalControlEventCallable = None,
         on_long_press: OptionalControlEventCallable = None,
         on_hover: OptionalControlEventCallable = None,
@@ -77,9 +78,9 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -88,7 +89,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -136,6 +137,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
         self.autofocus = autofocus
         self.url = url
         self.url_target = url_target
+        self.clip_behavior = clip_behavior
         self.on_click = on_click
         self.on_long_press = on_long_press
         self.on_hover = on_hover
@@ -191,6 +193,16 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     def icon_color(self, value: Optional[ColorValue]):
         self.__icon_color = value
         self._set_enum_attr("iconColor", value, ColorEnums)
+
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self.__clip_behavior
+
+    @clip_behavior.setter
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self.__clip_behavior = value
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
 
     # style
     @property

@@ -50,6 +50,9 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
         srcBase64: srcBase64,
         width: control.attrDouble("width"),
         height: control.attrDouble("height"),
+        cacheWidth: control.attrInt("cacheWidth"),
+        cacheHeight: control.attrInt("cacheHeight"),
+        antiAlias: control.attrBool("antiAlias", false)!,
         repeat: parseImageRepeat(
             control.attrString("repeat"), ImageRepeat.noRepeat)!,
         fit: parseBoxFit(control.attrString("fit")),

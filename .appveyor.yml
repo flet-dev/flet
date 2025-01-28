@@ -10,7 +10,7 @@ skip_commits:
 
 environment:
   python_stack: python 3.12
-  FLUTTER_VERSION: 3.24.4
+  FLUTTER_VERSION: 3.27.3
   GITHUB_TOKEN:
     secure: 9SKIwc3VSfYJ5IChvNR74hQprJ0DRmcV9pPX+8KyE6IXIdfMsX6ikeUmMhJGRu3ztkZaF45jmU7Xn/6tauXQXhDBxK1N8kFHFSAnq6LjUXyhS0TZKX/H+jDozBeVbCXp
   TWINE_USERNAME: __token__
@@ -68,11 +68,6 @@ environment:
     - job_name: Build Flet for web
       job_group: build_flet
       job_depends_on: build_flet_package
-      APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
-
-    - job_name: Test Python 3.8
-      job_group: python_tests
-      python_stack: python 3.8
       APPVEYOR_BUILD_WORKER_IMAGE: ubuntu2004
 
     - job_name: Test Python 3.9
@@ -151,15 +146,6 @@ for:
             dart pub publish --force || exit 1
             cd $APPVEYOR_BUILD_FOLDER
 
-            sleep 600
-
-            for dir in packages/flet_*; do
-              cd "$dir"
-              echo "Publishing $dir package"
-              dart pub publish --force || exit 1
-              cd "$APPVEYOR_BUILD_FOLDER"
-            done
-
           else
 
             cd packages/flet
@@ -168,12 +154,6 @@ for:
             dart pub publish --dry-run
             cd $APPVEYOR_BUILD_FOLDER
 
-            for dir in packages/flet_*; do
-              cd "$dir"
-              echo "Dry-run publishing $dir package"
-              dart pub publish --dry-run
-              cd "$APPVEYOR_BUILD_FOLDER"
-            done
           fi
 
   # ======================================
@@ -186,7 +166,10 @@ for:
 
     install:
       - python --version
-      - pip3 install --upgrade setuptools wheel twine poetry tomlkit virtualenv
+      - pip3 install --upgrade setuptools wheel twine tomlkit
+      - ps: (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -
+      - ps: Add-SessionPath "$HOME\AppData\Roaming\Python\Scripts"
+      - poetry --version
       - dart pub global activate fvm
       - set PATH=%LOCALAPPDATA%\Pub\Cache\bin;%USERPROFILE%\fvm\default\bin;%PATH%
       - fvm install %FLUTTER_VERSION%
@@ -205,10 +188,6 @@ for:
       - cd client
       - set RELEASE_DIR=build\windows\x64\runner\Release
       - flutter build windows --build-name=%APPVEYOR_BUILD_VERSION%
-      # - mkdir %RELEASE_DIR%
-      # - mkdir %RELEASE_DIR%\data
-      # - echo "Test!" > %RELEASE_DIR%\flet.bat
-      # - echo "Another thest!" > %RELEASE_DIR%\data\something.txt
 
       - copy "%WINDIR%\system32\msvcp140.dll" %RELEASE_DIR%
       - copy "%WINDIR%\system32\vcruntime140.dll" %RELEASE_DIR%
@@ -259,7 +238,6 @@ for:
       provider: GitHub
       auth_token: $(GITHUB_TOKEN)
       release: $(APPVEYOR_REPO_TAG_NAME)
-      artifact: flet_windows
       on:
         APPVEYOR_REPO_TAG: true
 
@@ -462,8 +440,9 @@ for:
       - python --version
       - cd sdk/python
       - python -m ensurepip --upgrade
-      - pip3 install --upgrade setuptools pip virtualenv
-      - pip3 install poetry
+      - pip3 install --upgrade setuptools pip
+      - curl -sSL https://install.python-poetry.org | python -
+      - export PATH="$HOME/.local/bin:$PATH"
       - poetry install
 
     build: off
@@ -510,3 +489,10 @@ for:
     artifacts:
       - path: sdk/python/packages/flet-cli/dist/*
       - path: sdk/python/packages/flet/dist/*
+
+    deploy:
+      provider: GitHub
+      auth_token: $(GITHUB_TOKEN)
+      release: $(APPVEYOR_REPO_TAG_NAME)
+      on:
+        APPVEYOR_REPO_TAG: true

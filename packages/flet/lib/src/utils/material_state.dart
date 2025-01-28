@@ -24,11 +24,11 @@ class WidgetStateFromJSON<T> extends WidgetStateProperty<T?> {
 
     // preserve user-defined order
     _states = LinkedHashMap<String, T>.from(
-      jsonDictValue?.map((key, value) {
-            var normalizedKey = key.trim().toLowerCase();
-            // "" is now deprecated; use "default" instead
-            if (normalizedKey == "") normalizedKey = "default";
-            return MapEntry(normalizedKey, converterFromJson(value));
+      jsonDictValue?.map((k, v) {
+            var key = k.trim().toLowerCase();
+            // "" is deprecated and renamed to "default"
+            if (key == "") key = "default";
+            return MapEntry(key, converterFromJson(v));
           }) ??
           {},
     );

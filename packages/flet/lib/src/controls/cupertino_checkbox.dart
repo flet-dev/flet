@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/borders.dart';
 import '../utils/colors.dart';
+import '../utils/mouse.dart';
 import '../utils/others.dart';
 import 'create_control.dart';
 import 'list_tile.dart';
-
 
 class CupertinoCheckboxControl extends StatefulWidget {
   final Control? parent;
@@ -96,6 +97,13 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
         checkColor: widget.control.attrColor("checkColor", context),
         focusColor: widget.control.attrColor("focusColor", context),
         inactiveColor: widget.control.attrColor("inactiveColor", context),
+        shape: parseOutlinedBorder(widget.control, "shape"),
+        mouseCursor: parseMouseCursor(widget.control.attrString("mouseCursor")),
+        semanticLabel: widget.control.attrString("semanticsLabel"),
+        side: parseWidgetStateBorderSide(
+            Theme.of(context), widget.control, "borderSide"),
+        fillColor: parseWidgetStateColor(
+            Theme.of(context), widget.control, "fillColor"),
         tristate: _tristate,
         onChanged: !disabled
             ? (bool? value) {

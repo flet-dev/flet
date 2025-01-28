@@ -41,16 +41,9 @@ class Command(BaseCommand):
         parser.add_argument(
             "--template",
             dest="template",
-            choices=["default"],
-            default="default",
+            choices=["app", "extension"],
+            default="app",
             help="template to use for new Flet project",
-            required=False,
-        )
-        parser.add_argument(
-            "--package-manager",
-            dest="package_manager",
-            choices=["uv", "poetry"],
-            help="Python project package manager",
             required=False,
         )
         parser.add_argument(
@@ -67,8 +60,8 @@ class Command(BaseCommand):
 
         template_data = {
             "template_name": options.template,
-            "package_manager": options.package_manager,
             "flet_version": flet.version.version,
+            "sep": os.sep,
         }
 
         template_ref = options.template_ref

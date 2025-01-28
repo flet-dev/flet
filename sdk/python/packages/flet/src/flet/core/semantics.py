@@ -41,6 +41,10 @@ class Semantics(Control):
         decreased_value: Optional[str] = None,
         hint_text: Optional[str] = None,
         on_tap_hint_text: Optional[str] = None,
+        current_value_length: Optional[int] = None,
+        heading_level: Optional[int] = None,
+        exclude_semantics: Optional[bool] = None,
+        mixed: Optional[bool] = None,
         on_long_press_hint_text: Optional[str] = None,
         container: Optional[bool] = None,
         live_region: Optional[bool] = None,
@@ -65,6 +69,7 @@ class Semantics(Control):
         on_move_cursor_backward_by_character: OptionalControlEventCallable = None,
         on_did_gain_accessibility_focus: OptionalControlEventCallable = None,
         on_did_lose_accessibility_focus: OptionalControlEventCallable = None,
+        on_set_text: OptionalControlEventCallable = None,
         #
         # Control
         #
@@ -127,6 +132,11 @@ class Semantics(Control):
         self.on_move_cursor_backward_by_character = on_move_cursor_backward_by_character
         self.on_did_gain_accessibility_focus = on_did_gain_accessibility_focus
         self.on_did_lose_accessibility_focus = on_did_lose_accessibility_focus
+        self.current_value_length = current_value_length
+        self.heading_level = heading_level
+        self.exclude_semantics = exclude_semantics
+        self.mixed = mixed
+        self.on_set_text = on_set_text
 
     def _get_control_name(self):
         return "semantics"
@@ -158,8 +168,8 @@ class Semantics(Control):
 
     # expanded
     @property
-    def expanded(self) -> bool:
-        return self._get_attr("expanded", data_type="bool", def_value=False)
+    def expanded(self) -> Optional[bool]:
+        return self._get_attr("expanded", data_type="bool")
 
     @expanded.setter
     def expanded(self, value: Optional[bool]):
@@ -176,8 +186,8 @@ class Semantics(Control):
 
     # textfield
     @property
-    def textfield(self) -> bool:
-        return self._get_attr("textfield", data_type="bool", def_value=False)
+    def textfield(self) -> Optional[bool]:
+        return self._get_attr("textfield", data_type="bool")
 
     @textfield.setter
     def textfield(self, value: Optional[bool]):
@@ -185,8 +195,8 @@ class Semantics(Control):
 
     # link
     @property
-    def link(self) -> bool:
-        return self._get_attr("link", data_type="bool", def_value=False)
+    def link(self) -> Optional[bool]:
+        return self._get_attr("link", data_type="bool")
 
     @link.setter
     def link(self, value: Optional[bool]):
@@ -194,8 +204,8 @@ class Semantics(Control):
 
     # image
     @property
-    def image(self) -> bool:
-        return self._get_attr("image", data_type="bool", def_value=False)
+    def image(self) -> Optional[bool]:
+        return self._get_attr("image", data_type="bool")
 
     @image.setter
     def image(self, value: Optional[bool]):
@@ -203,8 +213,8 @@ class Semantics(Control):
 
     # header
     @property
-    def header(self) -> bool:
-        return self._get_attr("header", data_type="bool", def_value=False)
+    def header(self) -> Optional[bool]:
+        return self._get_attr("header", data_type="bool")
 
     @header.setter
     def header(self, value: Optional[bool]):
@@ -212,8 +222,8 @@ class Semantics(Control):
 
     # selected
     @property
-    def selected(self) -> bool:
-        return self._get_attr("selected", data_type="bool", def_value=False)
+    def selected(self) -> Optional[bool]:
+        return self._get_attr("selected", data_type="bool")
 
     @selected.setter
     def selected(self, value: Optional[bool]):
@@ -221,8 +231,8 @@ class Semantics(Control):
 
     # button
     @property
-    def button(self) -> bool:
-        return self._get_attr("button", data_type="bool", def_value=False)
+    def button(self) -> Optional[bool]:
+        return self._get_attr("button", data_type="bool")
 
     @button.setter
     def button(self, value: Optional[bool]):
@@ -230,8 +240,8 @@ class Semantics(Control):
 
     # obscured
     @property
-    def obscured(self) -> bool:
-        return self._get_attr("obscured", data_type="bool", def_value=False)
+    def obscured(self) -> Optional[bool]:
+        return self._get_attr("obscured", data_type="bool")
 
     @obscured.setter
     def obscured(self, value: Optional[bool]):
@@ -239,8 +249,8 @@ class Semantics(Control):
 
     # multiline
     @property
-    def multiline(self) -> bool:
-        return self._get_attr("multiline", data_type="bool", def_value=False)
+    def multiline(self) -> Optional[bool]:
+        return self._get_attr("multiline", data_type="bool")
 
     @multiline.setter
     def multiline(self, value: Optional[bool]):
@@ -248,8 +258,8 @@ class Semantics(Control):
 
     # focusable
     @property
-    def focusable(self) -> bool:
-        return self._get_attr("focusable", data_type="bool", def_value=False)
+    def focusable(self) -> Optional[bool]:
+        return self._get_attr("focusable", data_type="bool")
 
     @focusable.setter
     def focusable(self, value: Optional[bool]):
@@ -257,8 +267,8 @@ class Semantics(Control):
 
     # read_only
     @property
-    def read_only(self) -> bool:
-        return self._get_attr("readOnly", data_type="bool", def_value=False)
+    def read_only(self) -> Optional[bool]:
+        return self._get_attr("readOnly", data_type="bool")
 
     @read_only.setter
     def read_only(self, value: Optional[bool]):
@@ -266,17 +276,53 @@ class Semantics(Control):
 
     # focused
     @property
-    def focused(self) -> bool:
-        return self._get_attr("focus", data_type="bool", def_value=False)
+    def focused(self) -> Optional[bool]:
+        return self._get_attr("focused", data_type="bool")
 
     @focused.setter
     def focused(self, value: Optional[bool]):
         self._set_attr("focused", value)
 
+    # mixed
+    @property
+    def mixed(self) -> Optional[bool]:
+        return self._get_attr("mixed", data_type="bool")
+
+    @mixed.setter
+    def mixed(self, value: Optional[bool]):
+        self._set_attr("mixed", value)
+
+    # exclude_semantics
+    @property
+    def exclude_semantics(self) -> bool:
+        return self._get_attr("excludeSemantics", data_type="bool", def_value=False)
+
+    @exclude_semantics.setter
+    def exclude_semantics(self, value: Optional[bool]):
+        self._set_attr("excludeSemantics", value)
+
+    # heading_level
+    @property
+    def heading_level(self) -> Optional[int]:
+        return self._get_attr("headingLevel", data_type="int")
+
+    @heading_level.setter
+    def heading_level(self, value: Optional[int]):
+        self._set_attr("headingLevel", value)
+
+    # current_value_length
+    @property
+    def current_value_length(self) -> Optional[int]:
+        return self._get_attr("currentValueLength", data_type="int")
+
+    @current_value_length.setter
+    def current_value_length(self, value: Optional[int]):
+        self._set_attr("currentValueLength", value)
+
     # slider
     @property
-    def slider(self) -> bool:
-        return self._get_attr("slider", data_type="bool", def_value=False)
+    def slider(self) -> Optional[bool]:
+        return self._get_attr("slider", data_type="bool")
 
     @slider.setter
     def slider(self, value: Optional[bool]):
@@ -293,8 +339,8 @@ class Semantics(Control):
 
     # toggled
     @property
-    def toggled(self) -> bool:
-        return self._get_attr("toggled", data_type="bool", def_value=False)
+    def toggled(self) -> Optional[bool]:
+        return self._get_attr("toggled", data_type="bool")
 
     @toggled.setter
     def toggled(self, value: Optional[bool]):
@@ -311,8 +357,8 @@ class Semantics(Control):
 
     # checked
     @property
-    def checked(self) -> bool:
-        return self._get_attr("checked", data_type="bool", def_value=False)
+    def checked(self) -> Optional[bool]:
+        return self._get_attr("checked", data_type="bool")
 
     @checked.setter
     def checked(self, value: Optional[bool]):
@@ -374,8 +420,8 @@ class Semantics(Control):
 
     # container
     @property
-    def container(self) -> bool:
-        return self._get_attr("container", data_type="bool", def_value=False)
+    def container(self) -> Optional[bool]:
+        return self._get_attr("container", data_type="bool")
 
     @container.setter
     def container(self, value: Optional[bool]):
@@ -383,8 +429,8 @@ class Semantics(Control):
 
     # live_region
     @property
-    def live_region(self) -> bool:
-        return self._get_attr("liveRegion", data_type="bool", def_value=False)
+    def live_region(self) -> Optional[bool]:
+        return self._get_attr("liveRegion", data_type="bool")
 
     @live_region.setter
     def live_region(self, value: Optional[bool]):
@@ -579,3 +625,15 @@ class Semantics(Control):
         self._set_attr(
             "onDidLoseAccessibilityFocus", True if handler is not None else None
         )
+
+    # on_set_text
+    @property
+    def on_set_text(
+        self,
+    ) -> OptionalControlEventCallable:
+        return self._get_event_handler("set_text")
+
+    @on_set_text.setter
+    def on_set_text(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("set_text", handler)
+        self._set_attr("setText", True if handler is not None else None)

@@ -170,6 +170,16 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       alignment: alignment,
       minSize: minSize,
       child: content,
+      onLongPress: !disabled
+          ? () {
+              widget.backend
+                  .triggerControlEvent(widget.control.id, "longPress");
+            }
+          : null,
+      onFocusChange: (focused) {
+        widget.backend
+            .triggerControlEvent(widget.control.id, focused ? "focus" : "blur");
+      },
     );
 
     return constrainedControl(context, button, widget.parent, widget.control);

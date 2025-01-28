@@ -25,7 +25,6 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
-from flet.utils import deprecated
 
 
 class Option(Control):
@@ -175,7 +174,7 @@ class Dropdown(FormFieldControl):
         select_icon_size: OptionalNumber = None,
         icon_size: OptionalNumber = None,  # to be deprecated
         enable_feedback: Optional[bool] = None,
-        padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
         select_icon_enabled_color: Optional[ColorValue] = None,
         icon_enabled_color: Optional[ColorValue] = None,  # to be deprecated
         select_icon_disabled_color: Optional[ColorValue] = None,
@@ -197,14 +196,14 @@ class Dropdown(FormFieldControl):
         border: Optional[InputBorder] = None,
         color: Optional[ColorValue] = None,
         bgcolor: Optional[ColorValue] = None,
-        border_radius: BorderRadiusValue = None,
+        border_radius: Optional[BorderRadiusValue] = None,
         border_width: OptionalNumber = None,
         border_color: Optional[ColorValue] = None,
         focused_color: Optional[ColorValue] = None,
         focused_bgcolor: Optional[ColorValue] = None,
         focused_border_width: OptionalNumber = None,
         focused_border_color: Optional[ColorValue] = None,
-        content_padding: PaddingValue = None,
+        content_padding: Optional[PaddingValue] = None,
         dense: Optional[bool] = None,
         filled: Optional[bool] = None,
         fill_color: Optional[ColorValue] = None,
@@ -229,7 +228,7 @@ class Dropdown(FormFieldControl):
         suffix_style: Optional[TextStyle] = None,
         focus_color: Optional[ColorValue] = None,
         align_label_with_hint: Optional[bool] = None,
-        hint_fade_duration: DurationValue = None,
+        hint_fade_duration: Optional[DurationValue] = None,
         hint_max_lines: Optional[int] = None,
         helper_max_lines: Optional[int] = None,
         error_max_lines: Optional[int] = None,
@@ -248,9 +247,9 @@ class Dropdown(FormFieldControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -259,7 +258,7 @@ class Dropdown(FormFieldControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -425,7 +424,8 @@ class Dropdown(FormFieldControl):
     @select_icon.setter
     def select_icon(self, value: Optional[IconValueOrControl]):
         self.__select_icon = value
-        self._set_enum_attr("selectIcon", value, IconEnums)
+        if not isinstance(value, Control):
+            self._set_enum_attr("selectIcon", value, IconEnums)
 
     # icon_content
     @property
@@ -596,11 +596,11 @@ class Dropdown(FormFieldControl):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # autofocus
