@@ -9,18 +9,10 @@ from pathlib import Path
 from typing import Optional, Union, cast
 
 import flet.version
-import flet_cli.utils.processes as processes
 import yaml
 from flet.utils import cleanup_path, copy_tree, is_windows, slugify
 from flet.utils.platform_utils import get_bool_env_var
 from flet.version import update_version
-from flet_cli.commands.base import BaseCommand
-from flet_cli.utils.merge import merge_dict
-from flet_cli.utils.project_dependencies import (
-    get_poetry_dependencies,
-    get_project_dependencies,
-)
-from flet_cli.utils.pyproject_toml import load_pyproject_toml
 from packaging import version
 from rich.console import Console, Group
 from rich.live import Live
@@ -1815,4 +1807,5 @@ class Command(BaseCommand):
                 message,
                 end="",
                 style=verbose2_style,
+                markup=False,
             )
