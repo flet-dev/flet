@@ -22,6 +22,15 @@ from rich.style import Style
 from rich.table import Column, Table
 from rich.theme import Theme
 
+import flet_cli.utils.processes as processes
+from flet_cli.commands.base import BaseCommand
+from flet_cli.utils.merge import merge_dict
+from flet_cli.utils.project_dependencies import (
+    get_poetry_dependencies,
+    get_project_dependencies,
+)
+from flet_cli.utils.pyproject_toml import load_pyproject_toml
+
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.25.0/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
