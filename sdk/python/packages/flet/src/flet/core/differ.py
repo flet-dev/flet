@@ -6,10 +6,42 @@ from typing import Any, Dict, List, Optional, Union
 # - track updated fields in dataclasses
 # - create dataclasses index (using hashes) for partial tree updates
 
+"""
+[
+  {"op": "replace", "path": ["controls", 0, "controls", 0, "text"], "value": "Updated Button"},
+  {"op": "replace", "path": ["controls", 0, "controls", 1, "text"], "value": "Updated Span"},
+  {"op": "add", "path": ["controls", 2], "value": {"id": "sidebar", "cls": "sidebar", "controls": []}},
+  {"op": "add", "path": ["controls", 2, "controls", 0], "value": {"id": "btn3", "text": "New Button"}},
+  {"op": "add", "path": ["controls", 2, "controls", 1], "value": {"id": "span3", "text": "New Span"}}
+]
+"""
 
-def diff_and_patch(
-    old: Any, new: Any, path: Optional[list[Union[int, str]]] = None
-) -> tuple[list[Dict], Any]:
+a = {
+    "": {
+        "controls": {
+            0: {
+                "controls": {
+                    0: {
+                        "$replace": {
+                            "text": "Updated button",
+                            "cls": "new-button-class",
+                        }
+                    },
+                    "$add": {1: {"id": "sidebar", "cls": "sidebar", "controls": []}},
+                },
+            },
+            "$add": {
+                1: {"id": "btn3", "text": "New Button"},
+                2: {"id": "span3", "text": "New span"},
+            },
+            "$remove": [3, 4, 5],
+        },
+        "$replace": {"id": "div_2", "cls": "div-class"},
+    }
+}
+
+
+def diff_and_patch(old: Any, new: Any, path: Any = None) -> tuple[list[Dict], Any]:
     """Entry point to calculate differences and update."""
     if path is None:
         path = []
