@@ -4,7 +4,6 @@ from enum import Enum
 from typing import Any, Callable, Dict, List, Optional
 
 from flet.core.border_radius import BorderRadius
-from flet.core.differ import Differ
 from flet.core.text_span import TextSpan
 from flet.core.types import FontWeight, OptionalNumber, TextAlign
 
