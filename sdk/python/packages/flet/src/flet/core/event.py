@@ -1,8 +1,11 @@
+from typing import Optional
+
+
 class Event:
-    def __init__(self, target: str, name: str, data: str):
-        self.target: str = target
-        self.name: str = name
-        self.data: str = data
+    def __init__(self, target: str, name: str, data: Optional[str]):
+        self.target = target
+        self.name = name
+        self.data = data
 
     def __repr__(self):
         attrs = ", ".join(f"{k}={v!r}" for k, v in self.__dict__.items())
