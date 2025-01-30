@@ -133,7 +133,7 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
               openWebBrowser(href, webWindowName: autoFollowLinksTarget);
             }
             backend.triggerControlEvent(
-                control.id, "tap_link", href?.toString() ?? "");
+                control.id, "tap_link", href?.toString());
           });
 
       return constrainedControl(context, markdown, parent, control);
