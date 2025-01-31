@@ -566,6 +566,8 @@ class Page(AdaptiveControl):
 
         self.__lock = threading.Lock() if not is_pyodide() else NopeLock()
 
+        self.__auto_update = False
+
         self.__views = [View()]
         self.__default_view = self.__views[0]
         self._controls = self.__default_view.controls
@@ -1304,6 +1306,15 @@ class Page(AdaptiveControl):
             control.update()
         else:
             raise ValueError(f"{control.__class__.__qualname__} has no open attribute")
+
+    # auto-update
+    @property
+    def auto_update(self) -> PagePlatform:
+        return self.__auto_update
+
+    @auto_update.setter
+    def auto_update(self, value: bool) -> None:
+        self.__auto_update = value
 
     # query
     @property
