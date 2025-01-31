@@ -624,3 +624,13 @@ class Control:
             )
             + ")"
         )
+
+    # auto-update control
+    def __setattr__(self, name, value):
+        super().__setattr__(name, value)
+        try:
+            if self.__page is not None and self.__page.auto_update:
+                if "_Control__attrs" in self.__dict__ and name in self.__attrs:
+                    self.update()
+        except:
+            pass
