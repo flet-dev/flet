@@ -1,7 +1,7 @@
 # TODO
 # - when serializing dataclass in msgpack skip fields with 'None' values
-# - track updated fields in dataclasses
 # - create dataclasses index (using hashes) for partial tree updates
+# optimize deletions for lists and dicts, like "$d": {2, 4, 5} or "$d": {"key1", "key2", "key3"}
 
 """
 [
@@ -45,13 +45,6 @@ def is_dataclass_instance(obj):
     return dataclasses.is_dataclass(obj) and not isinstance(obj, type)
 
 
-@dataclasses.dataclass
-class Patch:
-    op: str
-    path: List[Any]
-    value: Any
-
-
 def generate_patch(
     old: Any, new: Any, path: Optional[List[Any]] = None
 ) -> Tuple[Dict, Any]:
@@ -67,8 +60,8 @@ def generate_patch(
             sub_patch, updated_value = generate_patch(
                 old_value, new_value, path + [field.name]
             )
-            if sub_patch:
-                patch[field.name] = sub_patch
+            if sub_patch or (old_value is not None and new_value is None):
+                patch[field.name] = sub_patch if sub_patch else None
             setattr(updated, field.name, updated_value)
         return patch, updated
 
@@ -80,8 +73,8 @@ def generate_patch(
                 sub_patch, updated[key] = generate_patch(
                     old[key], new[key], path + [key]
                 )
-                if sub_patch:
-                    patch[key] = sub_patch
+                if sub_patch or (old[key] is not None and new[key] is None):
+                    patch[key] = sub_patch if sub_patch else None
             elif key in new:
                 patch[key] = {"$a": new[key]}  # Addition
                 updated[key] = new[key]
@@ -97,8 +90,8 @@ def generate_patch(
 
         for i in range(min_len):
             sub_patch, updated[i] = generate_patch(old[i], new[i], path + [i])
-            if sub_patch:
-                patch[i] = sub_patch
+            if sub_patch or (old[i] is not None and new[i] is None):
+                patch[i] = sub_patch if sub_patch else None
 
         if len(new) > len(old):
             for i in range(len(old), len(new)):
@@ -111,7 +104,7 @@ def generate_patch(
 
         return patch, updated
 
-    elif old != new:
-        return new, new  # Implicit replace
+    elif type(old) != type(new) or old != new or (old is not None and new is None):
+        return new, new  # Explicitly track None changes
 
     return {}, old
