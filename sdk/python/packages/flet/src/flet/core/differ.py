@@ -1,7 +1,9 @@
 # TODO
 # - when serializing dataclass in msgpack skip fields with 'None' values
 # - create dataclasses index (using hashes) for partial tree updates
-# optimize deletions for lists and dicts, like "$d": {2, 4, 5} or "$d": {"key1", "key2", "key3"}
+# - optimize deletions for lists and dicts, like "$d": {2, 4, 5} or "$d": {"key1", "key2", "key3"}
+# - implement weakref index of dataclasses having event handlers
+# - controls should have weak ref to a parent control or page
 
 """
 [
@@ -70,16 +72,23 @@ def generate_patch(
         updated = old.copy()
         for key in old.keys() | new.keys():
             if key in old and key in new:
+                # ley exists in both dicts
                 sub_patch, updated[key] = generate_patch(
                     old[key], new[key], path + [key]
                 )
                 if sub_patch or (old[key] is not None and new[key] is None):
                     patch[key] = sub_patch if sub_patch else None
             elif key in new:
-                patch[key] = {"$a": new[key]}  # Addition
+                # new key
+                patch[key] = new[key]  # Addition
                 updated[key] = new[key]
             else:
-                patch[key] = {"$d": None}  # Deletion marker
+                # deleted key
+                deleted_keys = patch.get("$d")
+                if deleted_keys is None:
+                    deleted_keys = []
+                    patch["$d"] = deleted_keys
+                deleted_keys.append(key)
                 del updated[key]
         return patch, updated
 
@@ -98,8 +107,12 @@ def generate_patch(
                 patch[i] = {"$a": new[i]}
                 updated.append(new[i])
         elif len(old) > len(new):
+            deleted_keys = patch.get("$d")
+            if deleted_keys is None:
+                deleted_keys = []
+                patch["$d"] = deleted_keys
             for i in range(len(new), len(old)):
-                patch[i] = {"$d": None}
+                deleted_keys.append(i)
                 updated.pop()
 
         return patch, updated
