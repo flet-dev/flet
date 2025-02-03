@@ -5,8 +5,8 @@ import os
 import shutil
 import subprocess
 from rich.console import Console
-from rich.style import Style
 from rich.status import Status
+from rich.style import Style
 
 import flet.version
 from flet.utils import cleanup_path
@@ -25,42 +25,35 @@ class Command(BaseCommand):
         """Handle the 'doctor' command."""
         verbose = options.verbose
 
-        console.print("\n[bold cyan]=== Flet Environment Diagnostics ===[/bold cyan]\n")
+        # Step-by-step checks (No need to store results)
+        self.check_flet_version()
+        self.check_python_version()
+        self.check_os_info()
+        self.check_flutter()
 
-        # Step-by-step checks
-        flet_version = self.check_flet_version()
-        python_version = self.check_python_version()
-        os_info = self.check_os_info()
-        flutter_status = self.check_flutter()
-
-        console.print("\n[bold cyan]====================================[/bold cyan]\n")
-
-        # Only show extra details in verbose mode
+        # Extra details in verbose mode
         if verbose:
-            self.print_detailed_info()
+            self.check_permissions()
+            self.check_virtual_env()
 
-    def check_flet_version(self) -> str:
+    def check_flet_version(self) -> None:
         """Check and print Flet version."""
         with console.status("[bold white]Checking Flet version..."):
             flet_version = flet.version.version or "Unknown"
             console.print(f"[green]✔ Flet Version:[/green] {flet_version}")
-        return flet_version
 
-    def check_python_version(self) -> str:
+    def check_python_version(self) -> None:
         """Check and print Python version."""
         with console.status("[bold white]Checking Python version..."):
-            python_version = sys.version
-            console.print(f"[green]✔ Python Version:[/green] {python_version}")
-        return python_version
+            console.print(f"[green]✔ Python Version:[/green] {sys.version}")
 
-    def check_os_info(self) -> str:
+    def check_os_info(self) -> None:
         """Check and print OS information."""
         with console.status("[bold white]Checking OS information..."):
             os_info = f"{platform.system()} {platform.release()} ({platform.version()})"
             console.print(f"[green]✔ Operating System:[/green] {os_info}")
-        return os_info
 
-    def check_flutter(self) -> str:
+    def check_flutter(self) -> None:
         """Check if Flutter is installed and print status."""
         with console.status("[bold white]Checking Flutter status..."):
             if shutil.which("flutter"):
@@ -68,9 +61,8 @@ class Command(BaseCommand):
             else:
                 flutter_status = "[red]⚠ Flutter is not installed[/red]"
             console.print(f"[green]✔ Flutter Status:[/green] {flutter_status}")
-        return flutter_status
 
-    def check_permissions(self) -> str:
+    def check_permissions(self) -> None:
         """Check if the user has necessary permissions."""
         with console.status("[bold white]Checking user permissions..."):
             if os.name == "nt":
@@ -78,17 +70,25 @@ class Command(BaseCommand):
             else:
                 is_admin = os.geteuid() == 0
 
-            permission_status = "[green]✔ User has administrative privileges[/green]" if is_admin else "[yellow]⚠ Running without admin/root privileges[/yellow]"
-            console.print(permission_status)
-        return permission_status
+            console.print(
+                "[green]✔ User has administrative privileges[/green]"
+                if is_admin
+                else "[yellow]⚠ Running without admin/root privileges[/yellow]"
+            )
 
-    def check_virtual_env(self) -> str:
+    def check_virtual_env(self) -> None:
         """Check if a Python virtual environment is active."""
         with console.status("[bold white]Checking Python virtual environment..."):
             venv = os.getenv("VIRTUAL_ENV")
-            venv_status = f"[green]✔ Virtual Environment active:[/green] {venv}" if venv else "[yellow]⚠ No virtual environment detected[/yellow]"
-            console.print(venv_status)
-        return venv_status
+            conda_env = os.getenv("CONDA_PREFIX")
+
+            if venv:
+                console.print(f"[green]✔ Virtual Environment active:[/green] {venv}")
+            elif conda_env:
+                console.print(f"[green]✔ Conda Environment active:[/green] {conda_env}")
+            else:
+                console.print("[yellow]⚠ No virtual environment or Conda detected[/yellow]")
+
 
     def run_command(self, command: str) -> str:
         """Helper function to run a command and return its output."""
@@ -97,10 +97,3 @@ class Command(BaseCommand):
             return result.stdout.strip() if result.returncode == 0 else f"[red]⚠ Error running {command}[/red]"
         except Exception as e:
             return f"[red]⚠ {str(e)}[/red]"
-
-    def print_detailed_info(self) -> None:
-        """Print additional details in verbose mode."""
-        console.print("\n[cyan]=== Additional Debug Info ===[/cyan]\n")
-        self.check_permissions()
-        self.check_virtual_env()
-        console.print("[cyan]Detailed check completed.[/cyan]\n")
