@@ -629,8 +629,7 @@ class JsonPatch(object):
         cls,
         src,
         dst,
-        optimization=True,
-        dumps=None,
+        in_place=False,
         pointer_cls=JsonPointer,
     ):
         """Creates JsonPatch instance based on comparison of two document
@@ -659,8 +658,7 @@ class JsonPatch(object):
         >>> new == dst
         True
         """
-        json_dumper = dumps or cls.json_dumper
-        builder = DiffBuilder(src, dst, json_dumper, pointer_cls=pointer_cls)
+        builder = DiffBuilder(src, dst, in_place=in_place, pointer_cls=pointer_cls)
         builder._compare_values("", None, src, dst)
         ops = list(builder.execute())
         return cls(ops, pointer_cls=pointer_cls)
@@ -713,8 +711,8 @@ class JsonPatch(object):
 
 class DiffBuilder(object):
 
-    def __init__(self, src_doc, dst_doc, dumps=json.dumps, pointer_cls=JsonPointer):
-        self.dumps = dumps
+    def __init__(self, src_doc, dst_doc, in_place=False, pointer_cls=JsonPointer):
+        self.in_place = in_place
         self.pointer_cls = pointer_cls
         self.index_storage = [{}, {}]
         self.index_storage2 = [[], []]
@@ -722,6 +720,7 @@ class DiffBuilder(object):
         self.src_doc = src_doc
         self.dst_doc = dst_doc
         root[:] = [root, root, None]
+        self.dt_cls = []  # stack of dataclasses to save "previous" state
 
     def store_index(self, value, index, st):
         typed_key = (value, type(value))
@@ -883,7 +882,7 @@ class DiffBuilder(object):
         )
 
     def _compare_dicts(self, path, src, dst):
-        # print("\n_compare_dicts:", path, src, dst)
+        print("\n_compare_dicts:", path, src, dst)
 
         src_keys = set(src.keys())
         dst_keys = set(dst.keys())
@@ -900,7 +899,7 @@ class DiffBuilder(object):
             self._compare_values(path, key, src[key], dst[key])
 
     def _compare_lists(self, path, src, dst):
-        # print("\n_compare_lists:", path, src, dst)
+        print("\n_compare_lists:", path, src, dst)
 
         len_src, len_dst = len(src), len(dst)
         max_len = max(len_src, len_dst)
@@ -908,10 +907,8 @@ class DiffBuilder(object):
         for key in range(max_len):
             if key < min_len:
                 old, new = src[key], dst[key]
-                if old == new:
-                    continue
 
-                elif isinstance(old, dict) and isinstance(new, dict):
+                if isinstance(old, dict) and isinstance(new, dict):
                     self._compare_dicts(_path_join(path, key), old, new)
 
                 elif isinstance(old, list) and isinstance(new, list):
@@ -920,11 +917,14 @@ class DiffBuilder(object):
                 elif (
                     dataclasses.is_dataclass(old)
                     and dataclasses.is_dataclass(new)
-                    and type(old) == type(new)
+                    and (
+                        (self.in_place and old == new)
+                        or (not self.in_place and type(old) == type(new))
+                    )
                 ):
                     self._compare_dataclasses(_path_join(path, key), old, new)
 
-                else:
+                elif type(old) != type(new) or old != new:
                     self._item_removed(path, key, old)
                     self._item_added(path, key, new)
 
@@ -935,15 +935,15 @@ class DiffBuilder(object):
                 self._item_added(path, key, dst[key])
 
     def _compare_dataclasses(self, path, src, dst):
-        # print("\n_compare_dataclasses:", path, src, dst)
+        print("\n_compare_dataclasses:", path, src, dst)
+
         for field in dataclasses.fields(dst):
             old = getattr(src, field.name)
             new = getattr(dst, field.name)
             self._compare_values(path, field.name, old, new)
 
     def _compare_values(self, path, key, src, dst):
-
-        # print("\n_compare_values:", path, key, src, dst)
+        print("\n_compare_values:", path, key, src, dst)
 
         if isinstance(src, dict) and isinstance(dst, dict):
             self._compare_dicts(_path_join(path, key), src, dst)
@@ -954,7 +954,10 @@ class DiffBuilder(object):
         elif (
             dataclasses.is_dataclass(src)
             and dataclasses.is_dataclass(dst)
-            and type(src) == type(dst)
+            and (
+                (self.in_place and src == dst)
+                or (not self.in_place and type(src) == type(dst))
+            )
         ):
             self._compare_dataclasses(_path_join(path, key), src, dst)
 
