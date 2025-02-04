@@ -36,6 +36,7 @@ from __future__ import unicode_literals
 
 import collections
 import copy
+import dataclasses
 import functools
 import json
 import sys
@@ -55,15 +56,6 @@ from jsonpointer import JsonPointer, JsonPointerException
 
 _ST_ADD = 0
 _ST_REMOVE = 1
-
-
-try:
-    from collections.abc import MutableMapping, MutableSequence
-
-except ImportError:
-    from collections import MutableMapping, MutableSequence
-
-    str = unicode
 
 # Will be parsed by setup.py to determine package metadata
 __author__ = "Stefan Kögl <stefan@skoegl.net>"
@@ -280,7 +272,7 @@ class AddOperation(PatchOperation):
 
         subobj, part = self.pointer.to_last(obj)
 
-        if isinstance(subobj, MutableSequence):
+        if isinstance(subobj, list):
             if part == "-":
                 subobj.append(value)  # pylint: disable=E1103
 
@@ -290,7 +282,7 @@ class AddOperation(PatchOperation):
             else:
                 subobj.insert(part, value)  # pylint: disable=E1103
 
-        elif isinstance(subobj, MutableMapping):
+        elif isinstance(subobj, dict):
             if part is None:
                 obj = value  # we're replacing the root
             else:
@@ -343,11 +335,11 @@ class ReplaceOperation(PatchOperation):
                 "'path' with '-' can't be applied to 'replace' operation"
             )
 
-        if isinstance(subobj, MutableSequence):
+        if isinstance(subobj, list):
             if part >= len(subobj) or part < 0:
                 raise JsonPatchConflict("can't replace outside of list")
 
-        elif isinstance(subobj, MutableMapping):
+        elif isinstance(subobj, dict):
             if part not in subobj:
                 msg = "can't replace a non-existent object '{0}'".format(part)
                 raise JsonPatchConflict(msg)
@@ -393,7 +385,7 @@ class MoveOperation(PatchOperation):
         if self.pointer == from_ptr:
             return obj
 
-        if isinstance(subobj, MutableMapping) and self.pointer.contains(from_ptr):
+        if isinstance(subobj, dict) and self.pointer.contains(from_ptr):
             raise JsonPatchConflict("Cannot move values into their own children")
 
         obj = RemoveOperation(
@@ -676,7 +668,7 @@ class JsonPatch(object):
     def to_string(self, dumps=None):
         """Returns patch set as JSON string."""
         json_dumper = dumps or self.json_dumper
-        return json_dumper(self.patch)
+        return str(self.patch)
 
     @property
     def _ops(self):
@@ -891,6 +883,8 @@ class DiffBuilder(object):
         )
 
     def _compare_dicts(self, path, src, dst):
+        # print("\n_compare_dicts:", path, src, dst)
+
         src_keys = set(src.keys())
         dst_keys = set(dst.keys())
         added_keys = dst_keys - src_keys
@@ -906,6 +900,8 @@ class DiffBuilder(object):
             self._compare_values(path, key, src[key], dst[key])
 
     def _compare_lists(self, path, src, dst):
+        # print("\n_compare_lists:", path, src, dst)
+
         len_src, len_dst = len(src), len(dst)
         max_len = max(len_src, len_dst)
         min_len = min(len_src, len_dst)
@@ -915,15 +911,18 @@ class DiffBuilder(object):
                 if old == new:
                     continue
 
-                elif isinstance(old, MutableMapping) and isinstance(
-                    new, MutableMapping
-                ):
+                elif isinstance(old, dict) and isinstance(new, dict):
                     self._compare_dicts(_path_join(path, key), old, new)
 
-                elif isinstance(old, MutableSequence) and isinstance(
-                    new, MutableSequence
-                ):
+                elif isinstance(old, list) and isinstance(new, list):
                     self._compare_lists(_path_join(path, key), old, new)
+
+                elif (
+                    dataclasses.is_dataclass(old)
+                    and dataclasses.is_dataclass(new)
+                    and type(old) == type(new)
+                ):
+                    self._compare_dataclasses(_path_join(path, key), old, new)
 
                 else:
                     self._item_removed(path, key, old)
@@ -935,24 +934,31 @@ class DiffBuilder(object):
             else:
                 self._item_added(path, key, dst[key])
 
+    def _compare_dataclasses(self, path, src, dst):
+        # print("\n_compare_dataclasses:", path, src, dst)
+        for field in dataclasses.fields(dst):
+            old = getattr(src, field.name)
+            new = getattr(dst, field.name)
+            self._compare_values(path, field.name, old, new)
+
     def _compare_values(self, path, key, src, dst):
-        if isinstance(src, MutableMapping) and isinstance(dst, MutableMapping):
+
+        # print("\n_compare_values:", path, key, src, dst)
+
+        if isinstance(src, dict) and isinstance(dst, dict):
             self._compare_dicts(_path_join(path, key), src, dst)
 
-        elif isinstance(src, MutableSequence) and isinstance(dst, MutableSequence):
+        elif isinstance(src, list) and isinstance(dst, list):
             self._compare_lists(_path_join(path, key), src, dst)
 
-        # To ensure we catch changes to JSON, we can't rely on a simple
-        # src == dst, because it would not recognize the difference between
-        # 1 and True, among other things. Using json.dumps is the most
-        # fool-proof way to ensure we catch type changes that matter to JSON
-        # and ignore those that don't. The performance of this could be
-        # improved by doing more direct type checks, but we'd need to be
-        # careful to accept type changes that don't matter when JSONified.
-        elif self.dumps(src) == self.dumps(dst):
-            return
+        elif (
+            dataclasses.is_dataclass(src)
+            and dataclasses.is_dataclass(dst)
+            and type(src) == type(dst)
+        ):
+            self._compare_dataclasses(_path_join(path, key), src, dst)
 
-        else:
+        elif type(src) != type(dst) or src != dst:
             self._item_replaced(path, key, dst)
 
 
