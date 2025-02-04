@@ -52,7 +52,7 @@ except ImportError:
     # Python < 3.3
     MappingProxyType = dict
 
-from jsonpointer import JsonPointer, JsonPointerException
+from flet.core.diff_pointer import JsonPointer, JsonPointerException
 
 _ST_ADD = 0
 _ST_REMOVE = 1
@@ -882,7 +882,7 @@ class DiffBuilder(object):
         )
 
     def _compare_dicts(self, path, src, dst):
-        print("\n_compare_dicts:", path, src, dst)
+        # print("\n_compare_dicts:", path, src, dst)
 
         src_keys = set(src.keys())
         dst_keys = set(dst.keys())
@@ -899,7 +899,7 @@ class DiffBuilder(object):
             self._compare_values(path, key, src[key], dst[key])
 
     def _compare_lists(self, path, src, dst):
-        print("\n_compare_lists:", path, src, dst)
+        # print("\n_compare_lists:", path, src, dst)
 
         len_src, len_dst = len(src), len(dst)
         max_len = max(len_src, len_dst)
@@ -935,15 +935,29 @@ class DiffBuilder(object):
                 self._item_added(path, key, dst[key])
 
     def _compare_dataclasses(self, path, src, dst):
-        print("\n_compare_dataclasses:", path, src, dst)
+        # print("\n_compare_dataclasses:", path, src, dst)
+
+        # push dataclass on stack
+        self.dt_cls.append(dst)
 
         for field in dataclasses.fields(dst):
-            old = getattr(src, field.name)
+            old = (
+                getattr(src, field.name)
+                if not self.in_place
+                else getattr(src, f"_prev_{field.name}")
+            )
             new = getattr(dst, field.name)
             self._compare_values(path, field.name, old, new)
 
+            # update prev value
+            if isinstance(new, list):
+                new = new[:]
+            elif isinstance(new, dict):
+                new = new.copy()
+            setattr(dst, f"_prev_{field.name}", new)
+
     def _compare_values(self, path, key, src, dst):
-        print("\n_compare_values:", path, key, src, dst)
+        # print("\n_compare_values:", path, key, src, dst)
 
         if isinstance(src, dict) and isinstance(dst, dict):
             self._compare_dicts(_path_join(path, key), src, dst)
