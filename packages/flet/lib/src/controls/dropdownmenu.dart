@@ -277,8 +277,10 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                       // }).toList(),
                       dropdownMenuEntries: items,                   
                     );
-      return constrainedControl(
-          context, dropDown, widget.parent, widget.control);
+      Widget row = Row(children: [Icon(Icons.abc), dropDown], mainAxisSize: MainAxisSize.min);
+      // return constrainedControl(
+      //     context, dropDown, widget.parent, widget.control);
+      return constrainedControl(context, row, widget.parent, widget.control);
     });
   }
 }
