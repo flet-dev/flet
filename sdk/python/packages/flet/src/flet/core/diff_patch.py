@@ -232,13 +232,8 @@ class JsonPatch(object):
         return str(self.patch)
 
     @classmethod
-    def from_diff(
-        cls,
-        src,
-        dst,
-        in_place=False,
-    ):
-        builder = DiffBuilder(src, dst, in_place=in_place)
+    def from_diff(cls, src, dst, in_place=False, control_cls=None):
+        builder = DiffBuilder(src, dst, in_place=in_place, control_cls=control_cls)
         builder._compare_values([], None, src, dst)
         ops = list(builder.execute())
         return cls(ops)
@@ -280,8 +275,9 @@ class JsonPatch(object):
 
 class DiffBuilder(object):
 
-    def __init__(self, src_doc, dst_doc, in_place=False):
+    def __init__(self, src_doc, dst_doc, in_place=False, control_cls=None):
         self.in_place = in_place
+        self.control_cls = control_cls
         self.index_storage = [{}, {}]
         self.index_storage2 = [[], []]
         self.__root = root = []
