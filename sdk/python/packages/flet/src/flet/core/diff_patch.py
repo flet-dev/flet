@@ -34,8 +34,6 @@
 
 import dataclasses
 
-from flet.core.diff_pointer import JsonPointer
-
 _ST_ADD = 0
 _ST_REMOVE = 1
 
@@ -51,27 +49,13 @@ class InvalidJsonPatch(JsonPatchException):
 class PatchOperation(object):
     """A single operation inside a JSON Patch."""
 
-    def __init__(self, operation, pointer_cls=JsonPointer):
-        self.pointer_cls = pointer_cls
+    def __init__(self, operation):
 
         if not operation.__contains__("path"):
             raise InvalidJsonPatch("Operation must have a 'path' member")
 
-        if isinstance(operation["path"], self.pointer_cls):
-            self.location = operation["path"].path
-            self.pointer = operation["path"]
-        else:
-            self.location = operation["path"]
-            try:
-                self.pointer = self.pointer_cls(self.location)
-            except TypeError as ex:
-                raise InvalidJsonPatch("Invalid 'path'")
-
+        self.location = operation["path"]
         self.operation = operation
-
-    def apply(self, obj):
-        """Abstract method that applies a patch operation to the specified object."""
-        raise NotImplementedError("should implement the patch operation.")
 
     def __hash__(self):
         return hash(frozenset(self.operation.items()))
@@ -86,19 +70,15 @@ class PatchOperation(object):
 
     @property
     def path(self):
-        return "/".join(self.pointer.parts[:-1])
+        return self.location[:-1]
 
     @property
     def key(self):
-        try:
-            return int(self.pointer.parts[-1])
-        except ValueError:
-            return self.pointer.parts[-1]
+        return self.location[-1]
 
     @key.setter
     def key(self, value):
-        self.pointer.parts[-1] = str(value)
-        self.location = self.pointer.path
+        self.location[-1] = value
         self.operation["path"] = self.location
 
 
@@ -157,22 +137,15 @@ class MoveOperation(PatchOperation):
 
     @property
     def from_path(self):
-        from_ptr = self.pointer_cls(self.operation["from"])
-        return "/".join(from_ptr.parts[:-1])
+        return self.operation["from"][:-1]
 
     @property
     def from_key(self):
-        from_ptr = self.pointer_cls(self.operation["from"])
-        try:
-            return int(from_ptr.parts[-1])
-        except TypeError:
-            return from_ptr.parts[-1]
+        return self.operation["from"][-1]
 
     @from_key.setter
     def from_key(self, value):
-        from_ptr = self.pointer_cls(self.operation["from"])
-        from_ptr.parts[-1] = str(value)
-        self.operation["from"] = from_ptr.path
+        self.operation["from"][-1] = value
 
     def _on_undo_remove(self, path, key):
         if self.from_path == path:
@@ -219,9 +192,8 @@ class JsonPatch(object):
     True
     """
 
-    def __init__(self, patch, pointer_cls=JsonPointer):
+    def __init__(self, patch):
         self.patch = patch
-        self.pointer_cls = pointer_cls
 
     def __str__(self):
         return str(self.patch)
@@ -232,19 +204,17 @@ class JsonPatch(object):
         src,
         dst,
         in_place=False,
-        pointer_cls=JsonPointer,
     ):
-        builder = DiffBuilder(src, dst, in_place=in_place, pointer_cls=pointer_cls)
-        builder._compare_values("", None, src, dst)
+        builder = DiffBuilder(src, dst, in_place=in_place)
+        builder._compare_values([], None, src, dst)
         ops = list(builder.execute())
-        return cls(ops, pointer_cls=pointer_cls)
+        return cls(ops)
 
 
 class DiffBuilder(object):
 
-    def __init__(self, src_doc, dst_doc, in_place=False, pointer_cls=JsonPointer):
+    def __init__(self, src_doc, dst_doc, in_place=False):
         self.in_place = in_place
-        self.pointer_cls = pointer_cls
         self.index_storage = [{}, {}]
         self.index_storage2 = [[], []]
         self.__root = root = []
@@ -321,8 +291,7 @@ class DiffBuilder(object):
                             "op": "replace",
                             "path": op_second.location,
                             "value": op_second.operation["value"],
-                        },
-                        pointer_cls=self.pointer_cls,
+                        }
                     ).operation
                     curr = curr[1][1]
                     continue
@@ -345,8 +314,7 @@ class DiffBuilder(object):
                         "op": "move",
                         "from": op.location,
                         "path": _path_join(path, key),
-                    },
-                    pointer_cls=self.pointer_cls,
+                    }
                 )
                 self.insert(new_op)
         else:
@@ -355,8 +323,7 @@ class DiffBuilder(object):
                     "op": "add",
                     "path": _path_join(path, key),
                     "value": item,
-                },
-                pointer_cls=self.pointer_cls,
+                }
             )
             new_index = self.insert(new_op)
             self.store_index(item, new_index, _ST_ADD)
@@ -366,8 +333,7 @@ class DiffBuilder(object):
             {
                 "op": "remove",
                 "path": _path_join(path, key),
-            },
-            pointer_cls=self.pointer_cls,
+            }
         )
         index = self.take_index(item, _ST_ADD)
         new_index = self.insert(new_op)
@@ -389,8 +355,7 @@ class DiffBuilder(object):
                         "op": "move",
                         "from": new_op.location,
                         "path": op.location,
-                    },
-                    pointer_cls=self.pointer_cls,
+                    }
                 )
                 new_index[2] = new_op
 
@@ -407,8 +372,7 @@ class DiffBuilder(object):
                     "op": "replace",
                     "path": _path_join(path, key),
                     "value": item,
-                },
-                pointer_cls=self.pointer_cls,
+                }
             )
         )
 
@@ -513,5 +477,4 @@ class DiffBuilder(object):
 def _path_join(path, key):
     if key is None:
         return path
-
-    return path + "/" + str(key).replace("~", "~0").replace("/", "~1")
+    return path + [key]
