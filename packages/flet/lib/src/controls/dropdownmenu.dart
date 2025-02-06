@@ -36,9 +36,23 @@ class DropdownMenuControl extends StatefulWidget {
   State<DropdownMenuControl> createState() => _DropdownMenuControlState();
 }
 
+
+enum ColorLabel {
+  blue('Blue', Colors.blue),
+  pink('Pink', Colors.pink),
+  green('Green', Colors.green),
+  yellow('Orange', Colors.orange),
+  grey('Grey', Colors.grey);
+
+  const ColorLabel(this.label, this.color);
+  final String label;
+  final Color color;
+}
+
 class _DropdownMenuControlState extends State<DropdownMenuControl>
     with FletStoreMixin {
   String? _value;
+  ColorLabel? selectedColor;
   bool _focused = false;
   late final FocusNode _focusNode;
   String? _lastFocusValue;
@@ -174,60 +188,92 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
         inputFormatters.add(TextCapitalizationFormatter(textCapitalization));
       }
 
-      Widget dropDown = DropdownMenu<String>(
-        enabled: !disabled,
-        enableFilter: widget.control.attrBool("enableFilter", false)!,
-        enableSearch: widget.control.attrBool("enableSearch", true)!,
-        errorText: widget.control.attrString("errorText"),
-        helperText: widget.control.attrString("helperText"),
-        hintText: widget.control.attrString("hintText"),
-        initialSelection: _value,
-        requestFocusOnTap: widget.control.attrBool("requestFocusOnTap", true)!,
-        menuHeight: widget.control.attrDouble("menuHeight"),
-        width: widget.control.attrDouble("width"),
-        textStyle: textStyle,
-        inputFormatters: inputFormatters,
-        expandedInsets: parseEdgeInsets(widget.control, "expandedInsets"),
-        menuStyle: parseMenuStyle(Theme.of(context), widget.control, "style"),
-        focusNode: _focusNode,
-        label: labelCtrl.isNotEmpty
-            ? createControl(widget.control, labelCtrl.first.id, disabled)
-            : label != null
-                ? Text(label,
-                    style: parseTextStyle(
-                        Theme.of(context), widget.control, "labelStyle"))
-                : null,
-        trailingIcon: suffixCtrl.isNotEmpty
-            ? createControl(widget.control, suffixCtrl.first.id, disabled)
-            : suffixIcon != null
-                ? Icon(parseIcon(suffixIcon))
-                : null,
-        leadingIcon: prefixCtrl.isNotEmpty
-            ? createControl(widget.control, prefixCtrl.first.id, disabled)
-            : prefixIcon != null
-                ? Icon(parseIcon(prefixIcon))
-                : null,
-        selectedTrailingIcon: selectedSuffixCtrl.isNotEmpty
-            ? createControl(
-                widget.control, selectedSuffixCtrl.first.id, disabled)
-            : selectedSuffixIcon != null
-                ? Icon(parseIcon(selectedSuffixIcon))
-                : null,
-        // inputDecorationTheme:
-        //     buildInputDecorationTheme(context, widget.control, _focused),
-        onSelected: disabled
-            ? null
-            : (String? value) {
-                debugPrint("DropdownMenu selected value: $value");
-                _value = value!;
-                widget.backend
-                    .updateControlState(widget.control.id, {"value": value});
-                widget.backend
-                    .triggerControlEvent(widget.control.id, "change", value);
-              },
-        dropdownMenuEntries: items,
-      );
+      // Widget dropDown = DropdownMenu<String>(
+      //   enabled: !disabled,
+      //   enableFilter: widget.control.attrBool("enableFilter", false)!,
+      //   enableSearch: widget.control.attrBool("enableSearch", true)!,
+      //   errorText: widget.control.attrString("errorText"),
+      //   helperText: widget.control.attrString("helperText"),
+      //   hintText: widget.control.attrString("hintText"),
+      //   initialSelection: _value,
+      //   requestFocusOnTap: widget.control.attrBool("requestFocusOnTap", true)!,
+      //   menuHeight: widget.control.attrDouble("menuHeight"),
+      //   width: widget.control.attrDouble("width"),
+      //   textStyle: textStyle,
+      //   inputFormatters: inputFormatters,
+      //   expandedInsets: parseEdgeInsets(widget.control, "expandedInsets"),
+      //   menuStyle: parseMenuStyle(Theme.of(context), widget.control, "style"),
+      //   focusNode: _focusNode,
+      //   label: labelCtrl.isNotEmpty
+      //       ? createControl(widget.control, labelCtrl.first.id, disabled)
+      //       : label != null
+      //           ? Text(label,
+      //               style: parseTextStyle(
+      //                   Theme.of(context), widget.control, "labelStyle"))
+      //           : null,
+      //   trailingIcon: suffixCtrl.isNotEmpty
+      //       ? createControl(widget.control, suffixCtrl.first.id, disabled)
+      //       : suffixIcon != null
+      //           ? Icon(parseIcon(suffixIcon))
+      //           : null,
+      //   leadingIcon: prefixCtrl.isNotEmpty
+      //       ? createControl(widget.control, prefixCtrl.first.id, disabled)
+      //       : prefixIcon != null
+      //           ? Icon(parseIcon(prefixIcon))
+      //           : null,
+      //   selectedTrailingIcon: selectedSuffixCtrl.isNotEmpty
+      //       ? createControl(
+      //           widget.control, selectedSuffixCtrl.first.id, disabled)
+      //       : selectedSuffixIcon != null
+      //           ? Icon(parseIcon(selectedSuffixIcon))
+      //           : null,
+      //   // inputDecorationTheme:
+      //   //     buildInputDecorationTheme(context, widget.control, _focused),
+      //   onSelected: disabled
+      //       ? null
+      //       : (String? value) {
+      //           debugPrint("DropdownMenu selected value: $value");
+      //           _value = value!;
+      //           widget.backend
+      //               .updateControlState(widget.control.id, {"value": value});
+      //           widget.backend
+      //               .triggerControlEvent(widget.control.id, "change", value);
+      //         },
+      //   dropdownMenuEntries: items,
+      // );
+      final TextEditingController colorController = TextEditingController();
 
+      Widget dropDown = DropdownMenu<String>(
+                      enabled: !disabled,
+                      initialSelection: _value,
+                      controller: colorController,
+                      // requestFocusOnTap is enabled/disabled by platforms when it is null.
+                      // On mobile platforms, this is false by default. Setting this to true will
+                      // trigger focus request on the text field and virtual keyboard will appear
+                      // afterward. On desktop platforms however, this defaults to true.
+                      requestFocusOnTap: true,
+                      menuHeight: 100,
+                      //label: const Text('Color'),
+                      // onSelected: (ColorLabel? color) {
+                      //   setState(() {
+                      //     selectedColor = color;
+                      //   });
+                      // },
+                      // dropdownMenuEntries: ColorLabel.values
+                      //     .map<DropdownMenuEntry<ColorLabel>>(
+                      //         (ColorLabel color) {
+                      //   return DropdownMenuEntry<ColorLabel>(
+                      //     value: color,
+                      //     label: color.label,
+                      //     enabled: color.label != 'Grey',
+                      //     style: MenuItemButton.styleFrom(
+                      //       foregroundColor: color.color,
+                      //     ),
+                      //   );
+                      // }).toList(),
+                      //dropdownMenuEntries: const [DropdownMenuEntry(value: "Hello", label: "Hello")],
+                      dropdownMenuEntries: items,                   
+                    );
       return constrainedControl(
           context, dropDown, widget.parent, widget.control);
     });

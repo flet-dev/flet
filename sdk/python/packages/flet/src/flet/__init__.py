@@ -154,6 +154,7 @@ from flet.core.divider import Divider
 from flet.core.drag_target import DragTarget, DragTargetEvent
 from flet.core.draggable import Draggable
 from flet.core.dropdown import Dropdown
+from flet.core.dropdown_menu import DropdownMenu, DropdownMenuOption
 from flet.core.elevated_button import ElevatedButton
 from flet.core.exceptions import (
     FletException,
