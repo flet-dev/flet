@@ -1,14 +1,16 @@
 import copy
 import datetime
 from dataclasses import dataclass, field, fields, is_dataclass
+from enum import Enum
 from typing import Any, List, Optional
 
 import msgpack
-from flet.core.diff_patch import JsonPatch
+from flet.core.diff_patch import ObjectPatch
 
 # - create weakref control index (using hashes) for partial tree updates and event routing
 # - controls should have weak ref to a parent control or page
 # - override __setattr__ to effectively track changes
+# - added dataclasses should not pass "None" fields
 
 
 def encode_dataclasses(obj):
@@ -23,6 +25,8 @@ def encode_dataclasses(obj):
             setattr(obj, f"_prev_{field.name}", v)
             r[field.name] = v
         return r
+    elif isinstance(obj, Enum):
+        return obj.value
     return obj
 
 
@@ -30,16 +34,21 @@ def update_ui(new: Any, old: Any = None, show_details=True):
     if old is None:
         old = new
     start = datetime.datetime.now()
-    patch: JsonPatch = JsonPatch.from_diff(old, new, in_place=True)
 
-    # convert patch to hierarchy
+    # 1 -calculate diff
+    patch = ObjectPatch.from_diff(old, new, in_place=True)
+
+    # 2 - convert patch to hierarchy
     graph_patch = patch.to_graph()
     # print(graph_patch)
 
+    # 3 - build msgpack message
+    msg = msgpack.packb(graph_patch, default=encode_dataclasses)
+
     end = datetime.datetime.now()
+
     if show_details:
         print("\nPatch:", graph_patch)
-    msg = msgpack.packb(graph_patch, default=encode_dataclasses)
     if show_details:
         print("\nMessage:", msg)
     else:
@@ -71,10 +80,17 @@ class Page(Control):
     controls: List[Any] = field(default_factory=list)
 
 
+class Color(Enum):
+    RED = "red"
+    GREEN = "green"
+    BLUE = "blue"
+
+
 @dataclass
 class ButtonStyle:
     bold: bool = False
     italic: bool = False
+    color: Optional[Color] = None
 
 
 @dataclass
@@ -116,7 +132,7 @@ ui.controls[0].controls = [
     Button(
         text="Button 😬",
         styles={
-            "style_1": ButtonStyle(True, True),
+            "style_1": ButtonStyle(True, True, color=Color.RED),
             "style_2": ButtonStyle(False, True),
         },
     )
@@ -141,7 +157,7 @@ btn = ui.controls[0].controls[0]
 btn.text = "Supper button"
 btn.styles["style_1"].bold = False
 del btn.styles["style_2"]
-btn.styles["style_A"] = ButtonStyle(True, True)
+btn.styles["style_A"] = ButtonStyle(True, True, color=Color.GREEN)
 update_ui(ui)
 
 # exit()

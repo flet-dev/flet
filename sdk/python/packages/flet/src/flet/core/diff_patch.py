@@ -30,8 +30,6 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-""" Apply JSON-Patches (RFC 6902) """
-
 import dataclasses
 from collections.abc import Sequence
 from typing import Any
@@ -40,21 +38,21 @@ _ST_ADD = 0
 _ST_REMOVE = 1
 
 
-class JsonPatchException(Exception):
-    """Base Json Patch exception"""
+class ObjectPatchException(Exception):
+    """Base Object Patch exception"""
 
 
-class InvalidJsonPatch(JsonPatchException):
-    """Raised if an invalid JSON Patch is created"""
+class InvalidObjectPatch(ObjectPatchException):
+    """Raised if an invalid Object Patch is created"""
 
 
 class PatchOperation(object):
-    """A single operation inside a JSON Patch."""
+    """A single operation inside a Object Patch."""
 
     def __init__(self, operation):
 
         if not operation.__contains__("path"):
-            raise InvalidJsonPatch("Operation must have a 'path' member")
+            raise InvalidObjectPatch("Operation must have a 'path' member")
 
         self.location = operation["path"]
         self.operation = operation
@@ -91,7 +89,7 @@ class PatchOperation(object):
                 return doc[part]
 
             except IndexError:
-                raise JsonPatchException("index '%s' is out of bounds" % (part,))
+                raise ObjectPatchException("index '%s' is out of bounds" % (part,))
 
         # Else the object is a mapping or supports __getitem__(so assume custom indexing)
         try:
@@ -101,7 +99,7 @@ class PatchOperation(object):
                 return getattr(doc, str(part))
 
         except KeyError:
-            raise JsonPatchException("member '%s' not found in %s" % (part, doc))
+            raise ObjectPatchException("member '%s' not found in %s" % (part, doc))
 
     def to_last(self, doc):
         """Resolves ptr until the last step, returns (sub-doc, last-step)"""
@@ -207,23 +205,8 @@ class MoveOperation(PatchOperation):
         return key
 
 
-class JsonPatch(object):
-    """A JSON Patch is a list of Patch Operations.
-
-    >>> patch = JsonPatch([
-    ...     {'op': 'add', 'path': '/foo', 'value': 'bar'},
-    ...     {'op': 'add', 'path': '/baz', 'value': [1, 2, 3]},
-    ...     {'op': 'remove', 'path': '/baz/1'},
-    ...     {'op': 'test', 'path': '/baz', 'value': [1, 3]},
-    ...     {'op': 'replace', 'path': '/baz/0', 'value': 42},
-    ...     {'op': 'remove', 'path': '/baz/1'},
-    ... ])
-    >>> doc = {}
-    >>> result = patch.apply(doc)
-    >>> expected = {'foo': 'bar', 'baz': [42]}
-    >>> result == expected
-    True
-    """
+class ObjectPatch(object):
+    """An Object Patch is a list of Patch Operations."""
 
     def __init__(self, patch):
         self.patch = patch
@@ -266,7 +249,7 @@ class JsonPatch(object):
                     elif op["op"] == "move":
                         prev[parts[-1]] = {"$m": op["from"]}
                     else:
-                        raise JsonPatchException(f"Unknown operation: {op["op"]}")
+                        raise ObjectPatchException(f"Unknown operation: {op["op"]}")
                 else:
                     prev[parts[i]] = node
                 prev = node
