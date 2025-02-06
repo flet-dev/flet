@@ -8,11 +8,6 @@ from typing import Any, List, Optional
 import msgpack
 from flet.core.diff_patch import ObjectPatch
 
-# - create weakref control index (using hashes) for partial tree updates and event routing
-# - controls should have weak ref to a parent control or page
-# - override __setattr__ to effectively track changes
-# - added dataclasses should not pass "None" fields
-
 
 def encode_dataclasses(obj):
     if is_dataclass(obj):
@@ -24,7 +19,8 @@ def encode_dataclasses(obj):
             elif isinstance(v, dict):
                 v = v.copy()
             setattr(obj, f"_prev_{field.name}", v)
-            r[field.name] = v
+            if v is not None:
+                r[field.name] = v
         return r
     elif isinstance(obj, Enum):
         return obj.value
@@ -59,7 +55,7 @@ def update_ui(new: Any, old: Any = None, show_details=True):
     else:
         print("\nMessage length:", len(msg))
 
-    print("controls_index:", len(controls_index))
+    print("\ncontrols_index:", len(controls_index))
     print("\nTotal:", (end - start).total_seconds() * 1000)
 
 
@@ -84,6 +80,9 @@ class Control:
 class Page(Control):
     url: str
     controls: List[Any] = field(default_factory=list)
+    prop_1: Optional[str] = None
+    prop_2: Optional[str] = None
+    prop_3: Optional[int] = None
 
 
 class Color(Enum):
@@ -101,14 +100,12 @@ class ButtonStyle:
 
 @dataclass
 class Button(Control):
-    id: Optional[str] = None
     text: Optional[str] = None
     styles: Optional[dict[str, ButtonStyle]] = None
 
 
 @dataclass
 class Span(Control):
-    id: Optional[str] = None
     text: Optional[str] = None
     cls: Optional[str] = None
     controls: List[Any] = field(default_factory=list)
@@ -117,7 +114,6 @@ class Span(Control):
 
 @dataclass
 class Div(Control):
-    id: Optional[str] = None
     cls: Optional[str] = None
     some_value: Any = None
     controls: List[Any] = field(default_factory=list)
@@ -157,9 +153,9 @@ print("\nPrev:", ui._prev_url)
 ui.url = "http://bbb.com"
 ui.controls[0].some_value = "Some value"
 # del ui.controls[0]
-ui.controls.append(Span(id="span_1"))
-ui.controls.append(Span(id="span_2"))
-ui.controls.append(Span(id="span_3"))
+ui.controls.append(Span(cls="span_1"))
+ui.controls.append(Span(cls="span_2"))
+ui.controls.append(Span(cls="span_3"))
 
 btn = ui.controls[0].controls[0]
 btn.text = "Supper button"
@@ -182,7 +178,7 @@ update_ui(ui)
 # ==================
 for i in range(1, 1000):
     ui.controls.append(
-        Div(cls=f"div_{i}", controls=[Span(id=f"span_{i}", text=f"Span {i}")])
+        Div(cls=f"div_{i}", controls=[Span(cls=f"span_{i}", text=f"Span {i}")])
     )
 
 update_ui(ui, show_details=False)
