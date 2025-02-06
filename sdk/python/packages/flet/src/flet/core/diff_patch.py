@@ -33,6 +33,8 @@
 """ Apply JSON-Patches (RFC 6902) """
 
 import dataclasses
+from collections.abc import Sequence
+from typing import Any
 
 _ST_ADD = 0
 _ST_REMOVE = 1
@@ -80,6 +82,37 @@ class PatchOperation(object):
     def key(self, value):
         self.location[-1] = value
         self.operation["path"] = self.location
+
+    def walk(self, doc, part):
+        """Walks one step in doc and returns the referenced part"""
+
+        if isinstance(doc, Sequence):
+            try:
+                return doc[part]
+
+            except IndexError:
+                raise JsonPatchException("index '%s' is out of bounds" % (part,))
+
+        # Else the object is a mapping or supports __getitem__(so assume custom indexing)
+        try:
+            if hasattr(doc, "__getitem__"):
+                return doc[part]
+            else:
+                return getattr(doc, str(part))
+
+        except KeyError:
+            raise JsonPatchException("member '%s' not found in %s" % (part, doc))
+
+    def to_last(self, doc):
+        """Resolves ptr until the last step, returns (sub-doc, last-step)"""
+
+        if not self.location:
+            return doc
+
+        for part in self.location[:-1]:
+            doc = self.walk(doc, part)
+
+        return doc
 
 
 class RemoveOperation(PatchOperation):
@@ -210,6 +243,40 @@ class JsonPatch(object):
         ops = list(builder.execute())
         return cls(ops)
 
+    def to_graph(self) -> Any:
+        root = {}
+        for op in self.patch:
+            prev = root
+            node = root
+            parts = op["path"]
+            len_parts = len(parts)
+            if len_parts == 0 and op["op"] == "replace":
+                return {"": op["value"]}  # root object
+            for i in range(0, len_parts):
+                node = prev.get(parts[i], None)
+                if node is None:
+                    node = {}
+                if i == len_parts - 1:
+                    if op["op"] == "remove":
+                        indices = prev.get("$d", None)
+                        if indices is None:
+                            indices = []
+                            prev["$d"] = indices
+                        indices.append(parts[-1])
+                        break
+                    elif op["op"] == "replace":
+                        prev[parts[-1]] = op["value"]
+                    elif op["op"] == "add":
+                        prev[parts[-1]] = {"$a": op["value"]}
+                    elif op["op"] == "move":
+                        prev[parts[-1]] = {"$m": op["from"]}
+                    else:
+                        raise JsonPatchException(f"Unknown operation: {op["op"]}")
+                else:
+                    prev[parts[i]] = node
+                prev = node
+        return root
+
 
 class DiffBuilder(object):
 
@@ -221,7 +288,6 @@ class DiffBuilder(object):
         self.src_doc = src_doc
         self.dst_doc = dst_doc
         root[:] = [root, root, None]
-        self.dt_cls = []  # stack of dataclasses to save "previous" state
 
     def store_index(self, value, index, st):
         typed_key = (value, type(value))
@@ -343,7 +409,7 @@ class DiffBuilder(object):
             # the .key property to int and this path wrongly ends up being taken
             # for numeric string dict keys while the intention is to only handle lists.
             # So we do an explicit check on the item affected by the op instead.
-            added_item = op.pointer.to_last(self.dst_doc)[0]
+            added_item = op.to_last(self.dst_doc)
             if type(added_item) == list:
                 for v in self.iter_from(index):
                     op.key = v._on_undo_add(op.path, op.key)
@@ -431,9 +497,6 @@ class DiffBuilder(object):
 
     def _compare_dataclasses(self, path, src, dst):
         # print("\n_compare_dataclasses:", path, src, dst)
-
-        # push dataclass on stack
-        self.dt_cls.append(dst)
 
         for field in dataclasses.fields(dst):
             old = (
