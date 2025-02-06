@@ -253,6 +253,10 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                       // afterward. On desktop platforms however, this defaults to true.
                       requestFocusOnTap: true,
                       menuHeight: widget.control.attrDouble("maxMenuHeight"),
+                      // width: 200,
+                      leadingIcon: const Icon(Icons.abc_rounded),
+                      trailingIcon: const Icon(Icons.phone),
+                      inputDecorationTheme: const InputDecorationTheme(filled: true, fillColor: Colors.amber,),
                       //label: const Text('Color'),
                       // onSelected: (ColorLabel? color) {
                       //   setState(() {
@@ -271,7 +275,6 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                       //     ),
                       //   );
                       // }).toList(),
-                      //dropdownMenuEntries: const [DropdownMenuEntry(value: "Hello", label: "Hello")],
                       dropdownMenuEntries: items,                   
                     );
       return constrainedControl(
