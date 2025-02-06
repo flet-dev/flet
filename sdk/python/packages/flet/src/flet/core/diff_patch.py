@@ -31,8 +31,9 @@
 #
 
 import dataclasses
-from collections.abc import Sequence
-from typing import Any
+import weakref
+from collections.abc import MutableMapping
+from typing import Any, Optional
 
 _ST_ADD = 0
 _ST_REMOVE = 1
@@ -84,7 +85,7 @@ class PatchOperation(object):
     def walk(self, doc, part):
         """Walks one step in doc and returns the referenced part"""
 
-        if isinstance(doc, Sequence):
+        if isinstance(doc, list):
             try:
                 return doc[part]
 
@@ -215,8 +216,21 @@ class ObjectPatch(object):
         return str(self.patch)
 
     @classmethod
-    def from_diff(cls, src, dst, in_place=False, control_cls=None):
-        builder = DiffBuilder(src, dst, in_place=in_place, control_cls=control_cls)
+    def from_diff(
+        cls,
+        src,
+        dst,
+        in_place=False,
+        controls_index: Optional[MutableMapping] = None,
+        control_cls=None,
+    ):
+        builder = DiffBuilder(
+            src,
+            dst,
+            in_place=in_place,
+            controls_index=controls_index,
+            control_cls=control_cls,
+        )
         builder._compare_values([], None, src, dst)
         ops = list(builder.execute())
         return cls(ops)
@@ -258,8 +272,16 @@ class ObjectPatch(object):
 
 class DiffBuilder(object):
 
-    def __init__(self, src_doc, dst_doc, in_place=False, control_cls=None):
+    def __init__(
+        self,
+        src_doc,
+        dst_doc,
+        in_place=False,
+        controls_index: Optional[MutableMapping] = None,
+        control_cls=None,
+    ):
         self.in_place = in_place
+        self.controls_index = controls_index
         self.control_cls = control_cls
         self.index_storage = [{}, {}]
         self.index_storage2 = [[], []]
@@ -267,6 +289,7 @@ class DiffBuilder(object):
         self.src_doc = src_doc
         self.dst_doc = dst_doc
         root[:] = [root, root, None]
+        self.parent_control = None
 
     def store_index(self, value, index, st):
         typed_key = (value, type(value))
@@ -345,6 +368,7 @@ class DiffBuilder(object):
             curr = curr[1]
 
     def _item_added(self, path, key, item):
+        self._configure_control(item, self.parent_control)
         index = self.take_index(item, _ST_REMOVE)
         if index is not None:
             op = index[2]
@@ -411,6 +435,7 @@ class DiffBuilder(object):
             self.store_index(item, new_index, _ST_REMOVE)
 
     def _item_replaced(self, path, key, item):
+        self._configure_control(item, self.parent_control)
         self.insert(
             ReplaceOperation(
                 {
@@ -477,6 +502,8 @@ class DiffBuilder(object):
     def _compare_dataclasses(self, path, src, dst):
         # print("\n_compare_dataclasses:", path, src, dst)
 
+        self.parent_control = dst
+
         for field in dataclasses.fields(dst):
             old = (
                 getattr(src, field.name)
@@ -514,6 +541,28 @@ class DiffBuilder(object):
 
         elif type(src) != type(dst) or src != dst:
             self._item_replaced(path, key, dst)
+
+    def _configure_control(self, item, parent):
+        if self.control_cls and isinstance(item, self.control_cls):
+            # set parent
+            if parent:
+                setattr(item, "_parent", weakref.ref(parent))
+
+            # add control to the index
+            if self.controls_index is not None:
+                self.controls_index[item.id] = item
+
+            # recurse through fields
+            for field in dataclasses.fields(item):
+                self._configure_control(getattr(item, field.name), item)
+
+        elif isinstance(item, dict):
+            for v in item.values():
+                self._configure_control(v, parent)
+
+        elif isinstance(item, list):
+            for v in item:
+                self._configure_control(v, parent)
 
 
 def _path_join(path, key):

@@ -1,5 +1,6 @@
 import copy
 import datetime
+import weakref
 from dataclasses import dataclass, field, fields, is_dataclass
 from enum import Enum
 from typing import Any, List, Optional
@@ -30,13 +31,18 @@ def encode_dataclasses(obj):
     return obj
 
 
+controls_index = weakref.WeakValueDictionary()
+
+
 def update_ui(new: Any, old: Any = None, show_details=True):
     if old is None:
         old = new
     start = datetime.datetime.now()
 
     # 1 -calculate diff
-    patch = ObjectPatch.from_diff(old, new, in_place=True)
+    patch = ObjectPatch.from_diff(
+        old, new, in_place=True, controls_index=controls_index, control_cls=Control
+    )
 
     # 2 - convert patch to hierarchy
     graph_patch = patch.to_graph()
@@ -49,13 +55,12 @@ def update_ui(new: Any, old: Any = None, show_details=True):
 
     if show_details:
         print("\nPatch:", graph_patch)
-    if show_details:
         print("\nMessage:", msg)
     else:
         print("\nMessage length:", len(msg))
-    elapsed = end - start
 
-    print("\nTotal:", elapsed.total_seconds() * 1000)
+    print("controls_index:", len(controls_index))
+    print("\nTotal:", (end - start).total_seconds() * 1000)
 
 
 @dataclass
@@ -71,7 +76,8 @@ class Control:
 
     @property
     def parent(self) -> Optional["Control"]:
-        return None
+        parent_ref = getattr(self, "_parent", None)
+        return parent_ref() if parent_ref else None
 
 
 @dataclass
@@ -125,6 +131,8 @@ if __name__ != "__main__":
 ui = Page(url="http://aaa.com", controls=[Div(cls="div_1", some_value="Text")])
 
 update_ui(ui, {})
+print("ui PARENT:", ui.parent)
+print("ui.controls[0] PARENT:", ui.controls[0].parent)
 
 # update sub-tree
 ui.controls[0].some_value = "Another text"
