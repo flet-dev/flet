@@ -252,7 +252,7 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                       // trigger focus request on the text field and virtual keyboard will appear
                       // afterward. On desktop platforms however, this defaults to true.
                       requestFocusOnTap: true,
-                      menuHeight: 100,
+                      menuHeight: widget.control.attrDouble("maxMenuHeight"),
                       //label: const Text('Color'),
                       // onSelected: (ColorLabel? color) {
                       //   setState(() {

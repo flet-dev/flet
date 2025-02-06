@@ -135,7 +135,7 @@ class DropdownMenu(FormFieldControl):
         enable_filter: Optional[bool] = None,
         enable_search: Optional[bool] = None,
         request_focus_on_tap: Optional[bool] = None,
-        menu_height: OptionalNumber = None,
+        max_menu_height: OptionalNumber = None,
         expanded_insets: PaddingValue = None,
         menu_style: Optional[MenuStyle] = None,
         selected_suffix: Optional[Control] = None,
@@ -258,7 +258,7 @@ class DropdownMenu(FormFieldControl):
         self.enable_filter = enable_filter
         self.enable_search = enable_search
         self.request_focus_on_tap = request_focus_on_tap
-        self.menu_height = menu_height
+        self.max_menu_height = max_menu_height
         self.expanded_insets = expanded_insets
         self.menu_style = menu_style
         self.capitalization = capitalization
@@ -309,3 +309,12 @@ class DropdownMenu(FormFieldControl):
     @options.setter
     def options(self, value: Optional[List[DropdownMenuOption]]):
         self.__options = value if value is not None else []
+
+    # max_menu_height
+    @property
+    def max_menu_height(self) -> OptionalNumber:
+        return self._get_attr("maxMenuHeight", data_type="float")
+
+    @max_menu_height.setter
+    def max_menu_height(self, value: OptionalNumber):
+        self._set_attr("maxMenuHeight", value)
