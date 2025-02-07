@@ -96,7 +96,6 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
             widget.control.attrString("activeColor", "primary")!),
         checkColor: widget.control.attrColor("checkColor", context),
         focusColor: widget.control.attrColor("focusColor", context),
-        inactiveColor: widget.control.attrColor("inactiveColor", context),
         shape: parseOutlinedBorder(widget.control, "shape"),
         mouseCursor: parseMouseCursor(widget.control.attrString("mouseCursor")),
         semanticLabel: widget.control.attrString("semanticsLabel"),
