@@ -511,6 +511,11 @@ class DiffBuilder(object):
                 else getattr(src, f"_prev_{field.name}")
             )
             new = getattr(dst, field.name)
+
+            if field.name.startswith("on_"):
+                old = old is not None
+                new = new is not None
+
             self._compare_values(path, field.name, old, new)
 
             # update prev value

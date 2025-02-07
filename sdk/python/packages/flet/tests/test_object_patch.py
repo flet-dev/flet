@@ -6,7 +6,7 @@ from enum import Enum
 from typing import Any, List, Optional
 
 import msgpack
-from flet.core.diff_patch import ObjectPatch
+from flet.core.object_patch import ObjectPatch
 
 
 def encode_dataclasses(obj):
@@ -18,6 +18,8 @@ def encode_dataclasses(obj):
                 v = v[:]
             elif isinstance(v, dict):
                 v = v.copy()
+            elif field.name.startswith("on_"):
+                v = v is not None
             setattr(obj, f"_prev_{field.name}", v)
             if v is not None:
                 r[field.name] = v
@@ -102,6 +104,7 @@ class ButtonStyle:
 class Button(Control):
     text: Optional[str] = None
     styles: Optional[dict[str, ButtonStyle]] = None
+    on_click: Any = None
 
 
 @dataclass
