@@ -94,10 +94,12 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
           widget.children.where((c) => c.name == "suffix" && c.isVisible);
       var suffixIconCtrl =
           widget.children.where((c) => c.name == "suffix_icon" && c.isVisible);
+      var suffixIconStr = parseIcon(widget.control.attrString("suffixIcon"));
       var iconCtrl =
           widget.children.where((c) => c.name == "icon" && c.isVisible);
       var selectedSuffixCtrl = widget.children
           .where((c) => c.name == "selectedSuffix" && c.isVisible);
+      
       var prefixCtrl =
           widget.children.where((c) => c.name == "prefix" && c.isVisible);
       var prefixIconCtrl =
@@ -272,8 +274,9 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                       menuHeight: widget.control.attrDouble("maxMenuHeight"),
                       // width: 200,
                       leadingIcon: const Icon(Icons.abc_rounded),
-                      trailingIcon: suffixIconCtrl.isNotEmpty ? createControl(widget.control, suffixIconCtrl.first.id, disabled)
-             : const Icon(Icons.phone),
+                      trailingIcon: suffixIconCtrl.isNotEmpty ? 
+                        createControl(widget.control, suffixIconCtrl.first.id, disabled): 
+                        suffixIconStr != null? Icon(suffixIconStr): null,
                       inputDecorationTheme: const InputDecorationTheme(filled: true, fillColor: Colors.amber,),
                       //label: const Text('Color'),
                       // onSelected: (ColorLabel? color) {

@@ -175,7 +175,7 @@ class DropdownMenu(FormFieldControl):
         prefix: Optional[Control] = None,
         prefix_icon: Optional[str] = None,
         suffix: Optional[Control] = None,
-        suffix_icon: Optional[str] = None,
+        suffix_icon: Optional[IconValueOrControl] = None,
         #
         # ConstrainedControl
         #
