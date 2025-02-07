@@ -90,8 +90,8 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
       bool editable = widget.control.attrBool("editable", false)!;
       var textSize = widget.control.attrDouble("textSize");
       var label = widget.control.attrString("label");
-      var suffixCtrl =
-          widget.children.where((c) => c.name == "suffix" && c.isVisible);
+      // var suffixCtrl =
+      //     widget.children.where((c) => c.name == "suffix" && c.isVisible);
       var suffixIconCtrl =
           widget.children.where((c) => c.name == "suffix_icon" && c.isVisible);
       var suffixIconStr = parseIcon(widget.control.attrString("suffixIcon"));
@@ -100,13 +100,15 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
       var selectedSuffixCtrl = widget.children
           .where((c) => c.name == "selectedSuffix" && c.isVisible);
       
-      var prefixCtrl =
-          widget.children.where((c) => c.name == "prefix" && c.isVisible);
+      // var prefixCtrl =
+      //     widget.children.where((c) => c.name == "prefix" && c.isVisible);
       var prefixIconCtrl =
           widget.children.where((c) => c.name == "prefix_icon" && c.isVisible);
+      var prefixIconStr = parseIcon(widget.control.attrString("prefixIcon"));
       var labelCtrl =
           widget.children.where((c) => c.name == "label" && c.isVisible);
       var selectedSuffixIcon = widget.control.attrString("selectedSuffixIcon");
+      
       var prefixIcon = widget.control.attrString("prefixIcon");
       var suffixIcon = widget.control.attrString("suffixIcon");
       var color = widget.control.attrColor("color", context);
@@ -265,7 +267,7 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
       Widget dropDown = DropdownMenu<String>(
                       enabled: !disabled,
                       initialSelection: _value,
-                      controller: colorController,
+                      //controller: colorController,
                       requestFocusOnTap: editable,
                       // requestFocusOnTap is enabled/disabled by platforms when it is null.
                       // On mobile platforms, this is false by default. Setting this to true will
@@ -273,7 +275,9 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                       // afterward. On desktop platforms however, this defaults to true.
                       menuHeight: widget.control.attrDouble("maxMenuHeight"),
                       // width: 200,
-                      leadingIcon: const Icon(Icons.abc_rounded),
+                      leadingIcon: prefixIconCtrl.isNotEmpty ? 
+                        createControl(widget.control, prefixIconCtrl.first.id, disabled): 
+                        prefixIconStr != null? Icon(prefixIconStr): null,
                       trailingIcon: suffixIconCtrl.isNotEmpty ? 
                         createControl(widget.control, suffixIconCtrl.first.id, disabled): 
                         suffixIconStr != null? Icon(suffixIconStr): null,
