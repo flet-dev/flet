@@ -513,7 +513,6 @@ class DiffBuilder(object):
             new = getattr(dst, field.name)
 
             if field.name.startswith("on_"):
-                old = old is not None
                 new = new is not None
 
             self._compare_values(path, field.name, old, new)

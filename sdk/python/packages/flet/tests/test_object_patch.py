@@ -32,7 +32,7 @@ def encode_dataclasses(obj):
 controls_index = weakref.WeakValueDictionary()
 
 
-def update_ui(new: Any, old: Any = None, show_details=True):
+def update_page(new: Any, old: Any = None, show_details=True):
     if old is None:
         old = new
     start = datetime.datetime.now()
@@ -62,6 +62,13 @@ def update_ui(new: Any, old: Any = None, show_details=True):
 
 
 @dataclass
+class Event:
+    target: str
+    name: str
+    data: object
+
+
+@dataclass
 class Control:
     id: int = field(init=False)
 
@@ -76,6 +83,15 @@ class Control:
     def parent(self) -> Optional["Control"]:
         parent_ref = getattr(self, "_parent", None)
         return parent_ref() if parent_ref else None
+
+    @property
+    def page(self) -> Optional["Page"]:
+        parent = self
+        while parent:
+            if isinstance(parent, Page):
+                return parent
+            parent = parent.parent
+        return None
 
 
 @dataclass
@@ -125,17 +141,27 @@ class Div(Control):
 if __name__ != "__main__":
     exit()
 
+# test event assignment
+event_handler_type = Event
+
+ed = {"target": "ctrl_1", "name": "click", "data": None}
+
+e = event_handler_type(**ed)
+assert e.name == "click"
+
 # initial update
 # ==================
-ui = Page(url="http://aaa.com", controls=[Div(cls="div_1", some_value="Text")])
+page = Page(
+    url="http://aaa.com", controls=[Div(cls="div_1", some_value="Text")], prop_1="aaa"
+)
 
-update_ui(ui, {})
-print("ui PARENT:", ui.parent)
-print("ui.controls[0] PARENT:", ui.controls[0].parent)
+update_page(page, {})
+print("page PARENT:", page.parent)
+print("page.controls[0] PARENT:", page.controls[0].parent)
 
 # update sub-tree
-ui.controls[0].some_value = "Another text"
-ui.controls[0].controls = [
+page.controls[0].some_value = "Another text"
+page.controls[0].controls = [
     Button(
         text="Button 😬",
         styles={
@@ -144,57 +170,60 @@ ui.controls[0].controls = [
         },
     )
 ]
-update_ui(ui.controls[0])
+print("PAGE:", page.controls[0].controls[0].page)
+update_page(page.controls[0])
 
 # exit()
 
 # check _prev
-print("\nPrev:", ui._prev_url)
+print("\nPrev:", page._prev_url)
 
 # 2nd update
 # ==================
-ui.url = "http://bbb.com"
-ui.controls[0].some_value = "Some value"
-# del ui.controls[0]
-ui.controls.append(Span(cls="span_1"))
-ui.controls.append(Span(cls="span_2"))
-ui.controls.append(Span(cls="span_3"))
+page.url = "http://bbb.com"
+page.prop_1 = None
+page.controls[0].some_value = "Some value"
+# del page.controls[0]
+page.controls.append(Span(cls="span_1"))
+page.controls.append(Span(cls="span_2"))
+page.controls.append(Span(cls="span_3"))
 
-btn = ui.controls[0].controls[0]
+btn = page.controls[0].controls[0]
+print("PAGE:", btn.page)
 btn.text = "Supper button"
 btn.styles["style_1"].bold = False
 del btn.styles["style_2"]
 btn.styles["style_A"] = ButtonStyle(True, True, color=Color.GREEN)
-update_ui(ui)
+update_page(page)
 
 # exit()
 
 # 3rd update
 # ==================
-ctrl = ui.controls.pop()
-ui.controls[0].controls.append(ctrl)
-update_ui(ui)
+ctrl = page.controls.pop()
+page.controls[0].controls.append(ctrl)
+update_page(page)
 
 # exit()
 
 # 4th update
 # ==================
 for i in range(1, 1000):
-    ui.controls.append(
+    page.controls.append(
         Div(cls=f"div_{i}", controls=[Span(cls=f"span_{i}", text=f"Span {i}")])
     )
 
-update_ui(ui, show_details=False)
+update_page(page, show_details=False)
 
 # exit()
 
 # 5th update
 # ==================
-ui.controls[3].controls.insert(0, Button(text="Click me"))
-ui.controls[4].controls[0].text = "Hello world"
-ui.controls[20].controls.pop()
-ui.controls.pop()
+page.controls[3].controls.insert(0, Button(text="Click me"))
+page.controls[4].controls[0].text = "Hello world"
+page.controls[20].controls.pop()
+page.controls.pop()
 for i in range(100, 300):
-    ui.controls[i].controls[0].text = f"Hello world {i}"
+    page.controls[i].controls[0].text = f"Hello world {i}"
 
-update_ui(ui, show_details=False)
+update_page(page, show_details=False)
