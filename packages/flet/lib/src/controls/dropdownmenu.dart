@@ -87,16 +87,21 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
 
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
+      bool editable = widget.control.attrBool("editable", false)!;
       var textSize = widget.control.attrDouble("textSize");
       var label = widget.control.attrString("label");
       var suffixCtrl =
           widget.children.where((c) => c.name == "suffix" && c.isVisible);
+      var suffixIconCtrl =
+          widget.children.where((c) => c.name == "suffix_icon" && c.isVisible);
       var iconCtrl =
           widget.children.where((c) => c.name == "icon" && c.isVisible);
       var selectedSuffixCtrl = widget.children
           .where((c) => c.name == "selectedSuffix" && c.isVisible);
       var prefixCtrl =
           widget.children.where((c) => c.name == "prefix" && c.isVisible);
+      var prefixIconCtrl =
+          widget.children.where((c) => c.name == "prefix_icon" && c.isVisible);
       var labelCtrl =
           widget.children.where((c) => c.name == "label" && c.isVisible);
       var selectedSuffixIcon = widget.control.attrString("selectedSuffixIcon");
@@ -259,15 +264,15 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                       enabled: !disabled,
                       initialSelection: _value,
                       controller: colorController,
+                      requestFocusOnTap: editable,
                       // requestFocusOnTap is enabled/disabled by platforms when it is null.
                       // On mobile platforms, this is false by default. Setting this to true will
                       // trigger focus request on the text field and virtual keyboard will appear
                       // afterward. On desktop platforms however, this defaults to true.
-                      requestFocusOnTap: true,
                       menuHeight: widget.control.attrDouble("maxMenuHeight"),
                       // width: 200,
                       leadingIcon: const Icon(Icons.abc_rounded),
-                      trailingIcon: suffixCtrl.isNotEmpty ? createControl(widget.control, suffixCtrl.first.id, disabled)
+                      trailingIcon: suffixIconCtrl.isNotEmpty ? createControl(widget.control, suffixIconCtrl.first.id, disabled)
              : const Icon(Icons.phone),
                       inputDecorationTheme: const InputDecorationTheme(filled: true, fillColor: Colors.amber,),
                       //label: const Text('Color'),
