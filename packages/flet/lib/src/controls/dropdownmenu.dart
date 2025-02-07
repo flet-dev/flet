@@ -91,6 +91,8 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
       var label = widget.control.attrString("label");
       var suffixCtrl =
           widget.children.where((c) => c.name == "suffix" && c.isVisible);
+      var iconCtrl =
+          widget.children.where((c) => c.name == "icon" && c.isVisible);
       var selectedSuffixCtrl = widget.children
           .where((c) => c.name == "selectedSuffix" && c.isVisible);
       var prefixCtrl =
@@ -102,6 +104,7 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
       var suffixIcon = widget.control.attrString("suffixIcon");
       var color = widget.control.attrColor("color", context);
       var focusedColor = widget.control.attrColor("focusedColor", context);
+
 
       TextStyle? textStyle =
           parseTextStyle(Theme.of(context), widget.control, "textStyle");
@@ -131,6 +134,12 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
         var suffixIconCtrls = itemCtrlView.children
             .where((c) => c.name == "suffix" && c.isVisible);
 
+        
+        
+        
+
+        
+
         return DropdownMenuEntry<String>(
           enabled: !itemDisabled,
           value: itemCtrl.attrs["key"] ?? itemCtrl.attrs["text"] ?? itemCtrl.id,
@@ -156,6 +165,9 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
           style: style,
         );
       }).toList();
+
+      var icon = iconCtrl.isNotEmpty ? createControl(
+                  widget.parent, iconCtrl.first.id, false) : const Icon(Icons.add);
 
       String? value = widget.control.attrString("value");
       if (_value != value) {
@@ -255,7 +267,8 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                       menuHeight: widget.control.attrDouble("maxMenuHeight"),
                       // width: 200,
                       leadingIcon: const Icon(Icons.abc_rounded),
-                      trailingIcon: const Icon(Icons.phone),
+                      trailingIcon: suffixCtrl.isNotEmpty ? createControl(widget.control, suffixCtrl.first.id, disabled)
+             : const Icon(Icons.phone),
                       inputDecorationTheme: const InputDecorationTheme(filled: true, fillColor: Colors.amber,),
                       //label: const Text('Color'),
                       // onSelected: (ColorLabel? color) {
@@ -277,7 +290,9 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                       // }).toList(),
                       dropdownMenuEntries: items,                   
                     );
-      Widget row = Row(children: [Icon(Icons.abc), dropDown], mainAxisSize: MainAxisSize.min);
+
+
+      Widget row = Row(mainAxisSize: MainAxisSize.min, children: [icon, dropDown]);
       // return constrainedControl(
       //     context, dropDown, widget.parent, widget.control);
       return constrainedControl(context, row, widget.parent, widget.control);

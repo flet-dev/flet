@@ -10,6 +10,7 @@ from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.textfield import InputFilter, TextCapitalization
 from flet.core.types import (
+    IconValueOrControl,
     OffsetValue,
     OptionalEventCallable,
     PaddingValue,
@@ -152,6 +153,7 @@ class DropdownMenu(FormFieldControl):
         text_style: Optional[TextStyle] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
+        icon: Optional[IconValueOrControl] = None,
         border: Optional[InputBorder] = None,
         color: Optional[str] = None,
         focused_color: Optional[str] = None,
@@ -225,6 +227,7 @@ class DropdownMenu(FormFieldControl):
             helper_style=helper_style,
             error_text=error_text,
             prefix=prefix,
+            icon=icon,
             prefix_icon=prefix_icon,
             suffix=suffix,
             suffix_icon=suffix_icon,
@@ -290,7 +293,7 @@ class DropdownMenu(FormFieldControl):
     #         children.append(self.__label_content)
     #     return children
     def _get_children(self):
-        return self.__options
+        return FormFieldControl._get_children(self) + self.__options
 
     # value
     @property
