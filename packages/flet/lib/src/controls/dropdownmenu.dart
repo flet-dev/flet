@@ -283,6 +283,10 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                       // afterward. On desktop platforms however, this defaults to true.
                       menuHeight: widget.control.attrDouble("maxMenuHeight"),
                       // width: 200,
+                      label: labelCtrl.isNotEmpty
+                        ? createControl(widget.control, labelCtrl.first.id, disabled): 
+                        label != null? Text(label, style: parseTextStyle(
+                        Theme.of(context), widget.control, "labelStyle")): null,
                       leadingIcon: prefixIconCtrl.isNotEmpty ? 
                         createControl(widget.control, prefixIconCtrl.first.id, disabled): 
                         prefixIconStr != null? Icon(prefixIconStr): null,
@@ -296,7 +300,6 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                         selectedTrailingIconStr != null? Icon(selectedTrailingIconStr): null,
                       textStyle: textStyle,
                       //inputDecorationTheme: const InputDecorationTheme(filled: true, fillColor: Colors.amber,),
-                      //label: const Text('Color'),
                       // onSelected: (ColorLabel? color) {
                       //   setState(() {
                       //     selectedColor = color;

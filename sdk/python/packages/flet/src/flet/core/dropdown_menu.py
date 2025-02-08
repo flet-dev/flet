@@ -152,6 +152,7 @@ class DropdownMenu(FormFieldControl):
         on_change: OptionalEventCallable = None,
         on_focus: OptionalEventCallable = None,
         on_blur: OptionalEventCallable = None,
+        icon_content: Optional[Control] = None,  # to be deprecated
         select_icon_size: OptionalNumber = None,  # to be deprecated
         icon_size: OptionalNumber = None,  # to be deprecated
         select_icon_enabled_color: Optional[ColorValue] = None,  # to be deprecated
@@ -188,6 +189,8 @@ class DropdownMenu(FormFieldControl):
         prefix_icon: Optional[str] = None,
         suffix: Optional[Control] = None,
         suffix_icon: Optional[IconValueOrControl] = None,
+        suffix_text: Optional[str] = None,
+        suffix_style: Optional[TextStyle] = None,
         #
         # ConstrainedControl
         #
@@ -267,21 +270,28 @@ class DropdownMenu(FormFieldControl):
             data=data,
         )
 
-        if suffix is not None:
-            warnings.warn(
-                f"suffix is deprecated since version 0.26.0 "
-                f"and will be removed in version 0.29.0.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
+        deprecated_properties_list = [
+            "select_icon_size",
+            "select_icon_enabled_color",
+            "select_icon_disabled_color",
+            "suffix",
+            "suffix_icon",
+            "suffix_style",
+            "suffix_text",
+            "icon_content",
+            "icon_enabled_color",
+            "icon_disabled_color",
+            "icon_size",
+        ]
 
-        if select_icon_disabled_color is not None:
-            warnings.warn(
-                f"select_icon_disabled_color is deprecated since version 0.26.0 "
-                f"and will be removed in version 0.29.0.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
+        for item in deprecated_properties_list:
+            if eval(item) is not None:
+                warnings.warn(
+                    f"{item} is deprecated since version 0.26.0 "
+                    f"and will be removed in version 0.29.0.",
+                    category=DeprecationWarning,
+                    stacklevel=2,
+                )
 
         self.options = options
         self.selected_suffix = selected_suffix
