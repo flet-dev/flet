@@ -29,7 +29,7 @@ class Command(BaseCommand):
         self.check_flet_version()
         self.check_python_version()
         self.check_os_info()
-        self.check_flutter()
+        
 
         # Extra details in verbose mode
         if verbose:
@@ -53,14 +53,7 @@ class Command(BaseCommand):
             os_info = f"{platform.system()} {platform.release()} ({platform.version()})"
             console.print(f"[green]✔ Operating System:[/green] {os_info}")
 
-    def check_flutter(self) -> None:
-        """Check if Flutter is installed and print status."""
-        with console.status("[bold white]Checking Flutter status..."):
-            if shutil.which("flutter"):
-                flutter_status = self.run_command("flutter doctor")
-            else:
-                flutter_status = "[red]⚠ Flutter is not installed[/red]"
-            console.print(f"[green]✔ Flutter Status:[/green] {flutter_status}")
+    
 
     def check_permissions(self) -> None:
         """Check if the user has necessary permissions."""
