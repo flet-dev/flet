@@ -256,6 +256,14 @@ class DropdownMenu(FormFieldControl):
             data=data,
         )
 
+        if suffix is not None:
+            warnings.warn(
+                f"suffix is deprecated since version 0.26.0 "
+                f"and will be removed in version 0.29.0.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
+
         self.options = options
         self.selected_suffix = selected_suffix
         self.input_filter = input_filter
@@ -331,25 +339,3 @@ class DropdownMenu(FormFieldControl):
     @editable.setter
     def editable(self, value: Optional[bool]):
         self._set_attr("editable", value)
-
-    # suffix
-    @property
-    def suffix(self) -> Optional[Control]:
-        warnings.warn(
-            f"suffix is deprecated since version 0.26.0 "
-            f"and will be removed in version 0.29.0.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.__suffix
-
-    @suffix.setter
-    def suffix(self, value: Optional[Control]):
-        self.__suffix = value
-        if value is not None:
-            warnings.warn(
-                f"suffix is deprecated since version 0.26.0 "
-                f"and will be removed in version 0.29.0.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )

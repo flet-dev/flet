@@ -281,7 +281,8 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                       trailingIcon: suffixIconCtrl.isNotEmpty ? 
                         createControl(widget.control, suffixIconCtrl.first.id, disabled): 
                         suffixIconStr != null? Icon(suffixIconStr): null,
-                      inputDecorationTheme: const InputDecorationTheme(filled: true, fillColor: Colors.amber,),
+                      textStyle: textStyle,
+                      //inputDecorationTheme: const InputDecorationTheme(filled: true, fillColor: Colors.amber,),
                       //label: const Text('Color'),
                       // onSelected: (ColorLabel? color) {
                       //   setState(() {
