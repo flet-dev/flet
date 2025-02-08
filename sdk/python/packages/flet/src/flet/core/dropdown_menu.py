@@ -11,6 +11,7 @@ from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.textfield import InputFilter, TextCapitalization
 from flet.core.types import (
+    ColorValue,
     IconEnums,
     IconValueOrControl,
     OffsetValue,
@@ -151,6 +152,12 @@ class DropdownMenu(FormFieldControl):
         on_change: OptionalEventCallable = None,
         on_focus: OptionalEventCallable = None,
         on_blur: OptionalEventCallable = None,
+        select_icon_size: OptionalNumber = None,  # to be deprecated
+        icon_size: OptionalNumber = None,  # to be deprecated
+        select_icon_enabled_color: Optional[ColorValue] = None,  # to be deprecated
+        icon_enabled_color: Optional[ColorValue] = None,  # to be deprecated
+        select_icon_disabled_color: Optional[ColorValue] = None,  # to be deprecated
+        icon_disabled_color: Optional[ColorValue] = None,  # to be deprecated
         #
         # FormField specific
         #
@@ -263,6 +270,14 @@ class DropdownMenu(FormFieldControl):
         if suffix is not None:
             warnings.warn(
                 f"suffix is deprecated since version 0.26.0 "
+                f"and will be removed in version 0.29.0.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
+
+        if select_icon_disabled_color is not None:
+            warnings.warn(
+                f"select_icon_disabled_color is deprecated since version 0.26.0 "
                 f"and will be removed in version 0.29.0.",
                 category=DeprecationWarning,
                 stacklevel=2,
