@@ -310,9 +310,9 @@ class DropdownMenu(FormFieldControl):
     #     return children
     def _get_children(self):
         children = FormFieldControl._get_children(self) + self.__options
-        # if isinstance(self.__select_icon, Control):
-        #     self.__select_icon._set_attr_internal("n", "trailing_icon")
-        #     children.append(self.__select_icon)
+        if isinstance(self.__select_icon, Control):
+            self.__select_icon._set_attr_internal("n", "select_icon")
+            children.append(self.__select_icon)
         if isinstance(self.__trailing_icon, Control):
             self.__trailing_icon._set_attr_internal("n", "trailing_icon")
             children.append(self.__trailing_icon)
@@ -375,7 +375,7 @@ class DropdownMenu(FormFieldControl):
         self.__select_icon = value
 
         if not isinstance(value, Control):
-            self._set_enum_attr("trailingIcon", value, IconEnums)
+            self._set_enum_attr("selectIcon", value, IconEnums)
 
         if value is not None:
             warnings.warn(

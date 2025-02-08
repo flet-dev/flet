@@ -95,6 +95,10 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
       var trailingIconCtrl =
           widget.children.where((c) => c.name == "trailing_icon" && c.isVisible);
       var trailingIconStr = parseIcon(widget.control.attrString("trailingIcon"));
+
+      var selectIconCtrl =
+          widget.children.where((c) => c.name == "select_icon" && c.isVisible);
+      var selectIconStr = parseIcon(widget.control.attrString("selectIcon"));
       
       var selectedTrailingIconCtrl =
           widget.children.where((c) => c.name == "selected_trailing_icon" && c.isVisible);
@@ -284,7 +288,9 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                         prefixIconStr != null? Icon(prefixIconStr): null,
                       trailingIcon: trailingIconCtrl.isNotEmpty ? 
                         createControl(widget.control, trailingIconCtrl.first.id, disabled): 
-                        trailingIconStr != null? Icon(trailingIconStr): null,
+                        trailingIconStr != null? Icon(trailingIconStr): selectIconCtrl.isNotEmpty ? 
+                        createControl(widget.control, selectIconCtrl.first.id, disabled) : 
+                        selectIconStr != null? Icon(selectIconStr) : null,
                       selectedTrailingIcon: selectedTrailingIconCtrl.isNotEmpty ? 
                         createControl(widget.control, selectedTrailingIconCtrl.first.id, disabled): 
                         selectedTrailingIconStr != null? Icon(selectedTrailingIconStr): null,
