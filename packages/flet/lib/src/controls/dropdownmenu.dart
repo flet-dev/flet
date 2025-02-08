@@ -92,9 +92,13 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
       var label = widget.control.attrString("label");
       // var suffixCtrl =
       //     widget.children.where((c) => c.name == "suffix" && c.isVisible);
-      var suffixIconCtrl =
-          widget.children.where((c) => c.name == "suffix_icon" && c.isVisible);
-      var suffixIconStr = parseIcon(widget.control.attrString("suffixIcon"));
+      var trailingIconCtrl =
+          widget.children.where((c) => c.name == "trailing_icon" && c.isVisible);
+      var trailingIconStr = parseIcon(widget.control.attrString("trailingIcon"));
+      
+      var selectedTrailingIconCtrl =
+          widget.children.where((c) => c.name == "selected_trailing_icon" && c.isVisible);
+      var selectedTrailingIconStr = parseIcon(widget.control.attrString("selectedTrailingIcon"));
       var iconCtrl =
           widget.children.where((c) => c.name == "icon" && c.isVisible);
       var selectedSuffixCtrl = widget.children
@@ -278,9 +282,12 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                       leadingIcon: prefixIconCtrl.isNotEmpty ? 
                         createControl(widget.control, prefixIconCtrl.first.id, disabled): 
                         prefixIconStr != null? Icon(prefixIconStr): null,
-                      trailingIcon: suffixIconCtrl.isNotEmpty ? 
-                        createControl(widget.control, suffixIconCtrl.first.id, disabled): 
-                        suffixIconStr != null? Icon(suffixIconStr): null,
+                      trailingIcon: trailingIconCtrl.isNotEmpty ? 
+                        createControl(widget.control, trailingIconCtrl.first.id, disabled): 
+                        trailingIconStr != null? Icon(trailingIconStr): null,
+                      selectedTrailingIcon: selectedTrailingIconCtrl.isNotEmpty ? 
+                        createControl(widget.control, selectedTrailingIconCtrl.first.id, disabled): 
+                        selectedTrailingIconStr != null? Icon(selectedTrailingIconStr): null,
                       textStyle: textStyle,
                       //inputDecorationTheme: const InputDecorationTheme(filled: true, fillColor: Colors.amber,),
                       //label: const Text('Color'),

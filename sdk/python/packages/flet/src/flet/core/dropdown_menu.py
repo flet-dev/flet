@@ -11,6 +11,7 @@ from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.textfield import InputFilter, TextCapitalization
 from flet.core.types import (
+    IconEnums,
     IconValueOrControl,
     OffsetValue,
     OptionalEventCallable,
@@ -144,6 +145,9 @@ class DropdownMenu(FormFieldControl):
         input_filter: Optional[InputFilter] = None,
         capitalization: Optional[TextCapitalization] = None,
         selected_suffix_icon: Optional[str] = None,
+        trailing_icon: Optional[IconValueOrControl] = None,
+        select_icon: Optional[IconValueOrControl] = None,
+        selected_trailing_icon: Optional[IconValueOrControl] = None,
         on_change: OptionalEventCallable = None,
         on_focus: OptionalEventCallable = None,
         on_blur: OptionalEventCallable = None,
@@ -276,6 +280,9 @@ class DropdownMenu(FormFieldControl):
         self.capitalization = capitalization
         self.label_content = label_content
         self.selected_suffix_icon = selected_suffix_icon
+        self.trailing_icon = trailing_icon
+        self.selected_trailing_icon = selected_trailing_icon
+        self.select_icon = select_icon
         self.on_change = on_change
         self.on_focus = on_focus
         self.on_blur = on_blur
@@ -302,7 +309,19 @@ class DropdownMenu(FormFieldControl):
     #         children.append(self.__label_content)
     #     return children
     def _get_children(self):
-        return FormFieldControl._get_children(self) + self.__options
+        children = FormFieldControl._get_children(self) + self.__options
+        if isinstance(self.__select_icon, Control):
+            self.__select_icon._set_attr_internal("n", "trailing_icon")
+            children.append(self.__select_icon)
+        if isinstance(self.__trailing_icon, Control):
+            self.__trailing_icon._set_attr_internal("n", "trailing_icon")
+            children.append(self.__trailing_icon)
+        if isinstance(self.__selected_trailing_icon, Control):
+            self.__selected_trailing_icon._set_attr_internal(
+                "n", "selected_trailing_icon"
+            )
+            children.append(self.__selected_trailing_icon)
+        return children
 
     # value
     @property
@@ -339,3 +358,51 @@ class DropdownMenu(FormFieldControl):
     @editable.setter
     def editable(self, value: Optional[bool]):
         self._set_attr("editable", value)
+
+    # select_icon
+    @property
+    def select_icon(self) -> Optional[IconValueOrControl]:
+        warnings.warn(
+            f"select_icon is deprecated since version 0.26.0 "
+            f"and will be removed in version 0.29.0. Use trailing_icon instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.__select_icon
+
+    @select_icon.setter
+    def select_icon(self, value: Optional[IconValueOrControl]):
+        self.__select_icon = value
+
+        if not isinstance(value, Control):
+            self._set_enum_attr("trailingIcon", value, IconEnums)
+
+        if value is not None:
+            warnings.warn(
+                f"select_icon is deprecated since version 0.26.0 "
+                f"and will be removed in version 0.29.0. Use trailing_icon instead.",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
+
+    # trailing_icon
+    @property
+    def trailing_icon(self) -> Optional[IconValueOrControl]:
+        return self.__trailing_icon
+
+    @trailing_icon.setter
+    def trailing_icon(self, value: Optional[IconValueOrControl]):
+        self.__trailing_icon = value
+        if not isinstance(value, Control):
+            self._set_enum_attr("trailingIcon", value, IconEnums)
+
+    # selected_trailing_icon
+    @property
+    def selected_trailing_icon(self) -> Optional[IconValueOrControl]:
+        return self.__selected_trailing_icon
+
+    @selected_trailing_icon.setter
+    def selected_trailing_icon(self, value: Optional[IconValueOrControl]):
+        self.__selected_trailing_icon = value
+        if not isinstance(value, Control):
+            self._set_enum_attr("selectedTrailingIcon", value, IconEnums)
