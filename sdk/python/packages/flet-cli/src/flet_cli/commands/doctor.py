@@ -1,15 +1,16 @@
 import argparse
-import platform
-import sys
 import os
+import platform
 import shutil
 import subprocess
+import sys
+
+import flet.version
+from flet.utils import cleanup_path
 from rich.console import Console
 from rich.status import Status
 from rich.style import Style
 
-import flet.version
-from flet.utils import cleanup_path
 from flet_cli.commands.base import BaseCommand
 
 # Rich console setup for styled output
@@ -29,7 +30,6 @@ class Command(BaseCommand):
         self.check_flet_version()
         self.check_python_version()
         self.check_os_info()
-        
 
         # Extra details in verbose mode
         if verbose:
@@ -63,13 +63,18 @@ class Command(BaseCommand):
             elif conda_env:
                 console.print(f"[green]✔ Conda Environment active:[/green] {conda_env}")
             else:
-                console.print("[yellow]⚠ No virtual environment or Conda detected[/yellow]")
-
+                console.print(
+                    "[yellow]⚠ No virtual environment or Conda detected[/yellow]"
+                )
 
     def run_command(self, command: str) -> str:
         """Helper function to run a command and return its output."""
         try:
             result = subprocess.run(command, shell=True, capture_output=True, text=True)
-            return result.stdout.strip() if result.returncode == 0 else f"[red]⚠ Error running {command}[/red]"
+            return (
+                result.stdout.strip()
+                if result.returncode == 0
+                else f"[red]⚠ Error running {command}[/red]"
+            )
         except Exception as e:
             return f"[red]⚠ {str(e)}[/red]"
