@@ -33,7 +33,6 @@ class Command(BaseCommand):
 
         # Extra details in verbose mode
         if verbose:
-            self.check_permissions()
             self.check_virtual_env()
 
     def check_flet_version(self) -> None:
@@ -52,22 +51,6 @@ class Command(BaseCommand):
         with console.status("[bold white]Checking OS information..."):
             os_info = f"{platform.system()} {platform.release()} ({platform.version()})"
             console.print(f"[green]✔ Operating System:[/green] {os_info}")
-
-    
-
-    def check_permissions(self) -> None:
-        """Check if the user has necessary permissions."""
-        with console.status("[bold white]Checking user permissions..."):
-            if os.name == "nt":
-                is_admin = os.system("net session >nul 2>&1") == 0
-            else:
-                is_admin = os.geteuid() == 0
-
-            console.print(
-                "[green]✔ User has administrative privileges[/green]"
-                if is_admin
-                else "[yellow]⚠ Running without admin/root privileges[/yellow]"
-            )
 
     def check_virtual_env(self) -> None:
         """Check if a Python virtual environment is active."""
