@@ -3,7 +3,7 @@ import datetime
 import weakref
 from dataclasses import dataclass, field, fields, is_dataclass
 from enum import Enum
-from typing import Any, List, Optional
+from typing import Any, Callable, List, Optional, Type, TypeAlias
 
 import msgpack
 from flet.core.object_patch import ObjectPatch
@@ -18,8 +18,8 @@ def encode_dataclasses(obj):
                 v = v[:]
             elif isinstance(v, dict):
                 v = v.copy()
-            elif field.name.startswith("on_"):
-                v = v is not None
+            elif field.name.startswith("on_") and v is not None:
+                v = True
             setattr(obj, f"_prev_{field.name}", v)
             if v is not None:
                 r[field.name] = v
@@ -68,16 +68,25 @@ class Event:
     data: object
 
 
-@dataclass
+def event(type: Type[Event]):
+    return field(default=None, metadata={"type": type})
+
+
+EventHandler: TypeAlias = Callable[[Event], None]
+
+
+@dataclass(kw_only=True)
 class Control:
     id: int = field(init=False)
+    type: str = field(init=False)
 
     def __post_init__(self):
         self.__class__.__hash__ = Control.__hash__
         self.id = self.__hash__()
+        self.type = f"{self.__class__.__module__}.{self.__class__.__qualname__}"
 
     def __hash__(self) -> int:
-        return super().__hash__()
+        return object.__hash__(self)
 
     @property
     def parent(self) -> Optional["Control"]:
@@ -94,13 +103,22 @@ class Control:
         return None
 
 
-@dataclass
-class Page(Control):
+@dataclass(kw_only=True)
+class AdaptiveControl:
+    adaptive: Optional[bool] = None
+
+
+@dataclass()
+class Page(Control, AdaptiveControl):
     url: str
     controls: List[Any] = field(default_factory=list)
     prop_1: Optional[str] = None
     prop_2: Optional[str] = None
     prop_3: Optional[int] = None
+
+    def __post_init__(self):
+        Control.__post_init__(self)
+        print("PAGE POST INIT!")
 
 
 class Color(Enum):
@@ -120,7 +138,7 @@ class ButtonStyle:
 class Button(Control):
     text: Optional[str] = None
     styles: Optional[dict[str, ButtonStyle]] = None
-    on_click: Any = None
+    on_click: Optional[Callable[[Event], None]] = event(Event)
 
 
 @dataclass
@@ -152,7 +170,7 @@ assert e.name == "click"
 # initial update
 # ==================
 page = Page(
-    url="http://aaa.com", controls=[Div(cls="div_1", some_value="Text")], prop_1="aaa"
+    "http://aaa.com", controls=[Div(cls="div_1", some_value="Text")], prop_1="aaa"
 )
 
 update_page(page, {})
@@ -168,6 +186,7 @@ page.controls[0].controls = [
             "style_1": ButtonStyle(True, True, color=Color.RED),
             "style_2": ButtonStyle(False, True),
         },
+        on_click=lambda e: print(e),
     )
 ]
 print("PAGE:", page.controls[0].controls[0].page)
