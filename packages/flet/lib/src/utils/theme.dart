@@ -61,6 +61,15 @@ CupertinoThemeData fixCupertinoTheme(
               .copyWith(color: theme.colorScheme.onSurface)));
 }
 
+ThemeMode? parseThemeMode(String? value, [ThemeMode? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return ThemeMode.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
 ThemeData parseTheme(Control control, String propName, Brightness? brightness,
     {ThemeData? parentTheme}) {
   dynamic j;
@@ -76,7 +85,6 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
   ThemeData? theme = parentTheme;
 
   var primarySwatch = parseColor(null, json?["primary_swatch"]);
-
   var colorSchemeSeed = parseColor(null, json?["color_scheme_seed"]);
 
   if (colorSchemeSeed != null) {

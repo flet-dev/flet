@@ -81,8 +81,6 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
     debugPrint("SearchAnchor build: ${widget.control.id}");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    debugPrint(widget.control.attrs.toString());
-
     var value = widget.control.attrString("value", "");
     if (value != null && value != _controller.text) {
       WidgetsBinding.instance.addPostFrameCallback((_) {

@@ -172,22 +172,24 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
       widget ??= createWidget(controlKey, controlView, parent, parentDisabled,
           parentAdaptive, nextChild, FletAppServices.of(context).server);
 
-      // no theme defined? return widget!
-      var themeMode = ThemeMode.values.firstWhereOrNull((t) =>
-          t.name.toLowerCase() ==
-          controlView.control.attrString("themeMode", "")!.toLowerCase());
+      // no theme defined? return widget
+      var themeMode =
+          parseThemeMode(controlView.control.attrString("themeMode"));
       if (id == "page" ||
           (controlView.control.attrString("theme") == null &&
+              controlView.control.attrString("darkTheme") == null &&
               themeMode == null)) {
         return widget;
       }
 
       // wrap into theme widget
       ThemeData? parentTheme = (themeMode == null) ? Theme.of(context) : null;
-
       buildTheme(Brightness? brightness) {
         return Theme(
-            data: parseTheme(controlView.control, "theme", brightness,
+            data: parseTheme(
+                controlView.control,
+                brightness == Brightness.dark ? "darkTheme" : "theme",
+                brightness,
                 parentTheme: parentTheme),
             child: widget!);
       }
@@ -200,9 +202,11 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
               return buildTheme(media.displayBrightness);
             });
       } else {
-        return buildTheme((themeMode == ThemeMode.light)
+        return buildTheme(themeMode == ThemeMode.light
             ? Brightness.light
-            : ((themeMode == ThemeMode.dark) ? Brightness.dark : null));
+            : themeMode == ThemeMode.dark
+                ? Brightness.dark
+                : parentTheme?.brightness);
       }
     },
   );
