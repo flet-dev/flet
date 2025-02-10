@@ -438,6 +438,13 @@ class Command(BaseCommand):
             help="include extra Flutter Flet packages, such as flet_video, flet_audio, etc.",
         )
         parser.add_argument(
+            "--source-packages",
+            dest="source_packages",
+            nargs="+",
+            default=[],
+            help="the list of Python packages to install from source distributions",
+        )
+        parser.add_argument(
             "--info-plist",
             dest="info_plist",
             nargs="+",
@@ -1532,6 +1539,17 @@ class Command(BaseCommand):
         if self.options.target_platform == "web":
             exclude_list.append("assets")
         package_args.extend(["--exclude", ",".join(exclude_list)])
+
+        # source-packages
+        source_packages = (
+            self.options.source_packages
+            or self.get_pyproject("tool.flet.source_packages")
+            or self.get_pyproject(f"tool.flet.{self.config_platform}.source_packages")
+        )
+        if source_packages:
+            package_env["SERIOUS_PYTHON_ALLOW_SOURCE_DISTRIBUTIONS"] = ",".join(
+                source_packages
+            )
 
         if (
             self.options.compile_app
