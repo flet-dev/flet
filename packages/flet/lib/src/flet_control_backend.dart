@@ -3,7 +3,7 @@ abstract class FletControlBackend {
       {bool client = true, bool server = true});
 
   void triggerControlEvent(String controlId, String eventName,
-      [String eventData = ""]);
+      [String? eventData]);
 
   void subscribeMethods(String controlId,
       Future<String?> Function(String, Map<String, String>) methodHandler);

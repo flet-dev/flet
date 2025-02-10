@@ -57,8 +57,8 @@ class _CupertinoSlidingSegmentedButtonControlState
         if (!disabled) {
           widget.backend.updateControlState(widget.control.id,
               {"selectedIndex": index != null ? index.toString() : ""});
-          widget.backend.triggerControlEvent(widget.control.id, "change",
-              index != null ? index.toString() : "");
+          widget.backend.triggerControlEvent(
+              widget.control.id, "change", index?.toString());
         }
       },
       thumbColor: widget.control.attrColor(

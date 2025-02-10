@@ -190,7 +190,7 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         iconSize: widget.control.attrDouble("selectIconSize", 24.0)!,
         borderRadius: borderRadius,
         alignment: alignment ?? AlignmentDirectional.centerStart,
-        isExpanded: widget.control.attrBool("optionsFillHorizontally", false)!,
+        isExpanded: widget.control.attrBool("optionsFillHorizontally", true)!,
         icon: selectIconCtrl.isNotEmpty
             ? createControl(widget.control, selectIconCtrl.first.id, disabled)
             : selectIconStr != null? Icon(selectIconStr): null,
