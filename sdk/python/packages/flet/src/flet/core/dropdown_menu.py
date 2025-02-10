@@ -191,6 +191,8 @@ class DropdownMenu(FormFieldControl):
         helper_text: Optional[str] = None,
         helper_style: Optional[TextStyle] = None,
         prefix: Optional[Control] = None,
+        prefix_text: Optional[str] = None,
+        prefix_style: Optional[TextStyle] = None,
         prefix_icon: Optional[str] = None,
         suffix: Optional[Control] = None,
         suffix_icon: Optional[IconValueOrControl] = None,
@@ -248,11 +250,11 @@ class DropdownMenu(FormFieldControl):
             helper_style=helper_style,
             error_text=error_text,
             error_style=error_style,
-            prefix=prefix,
+            # prefix=prefix,
             icon=icon,
             prefix_icon=prefix_icon,
-            suffix=suffix,
-            suffix_icon=suffix_icon,
+            # suffix=suffix,
+            # suffix_icon=suffix_icon,
             ref=ref,
             key=key,
             width=width,
@@ -292,6 +294,9 @@ class DropdownMenu(FormFieldControl):
             "icon",
             "bgcolor",
             "hint_content",
+            "prefix_text",
+            "prefix_style",
+            "prefix",
         ]
 
         for item in deprecated_properties_list:
