@@ -186,7 +186,10 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
 
       buildTheme(Brightness? brightness) {
         return Theme(
-            data: parseTheme(controlView.control, "theme", brightness,
+            data: parseTheme(
+                controlView.control,
+                brightness == Brightness.dark ? "darkTheme" : "theme",
+                brightness,
                 parentTheme: parentTheme),
             child: widget!);
       }
