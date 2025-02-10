@@ -172,11 +172,12 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
       widget ??= createWidget(controlKey, controlView, parent, parentDisabled,
           parentAdaptive, nextChild, FletAppServices.of(context).server);
 
-      // no theme defined? return widget!
+      // no theme defined? return widget
       var themeMode =
           parseThemeMode(controlView.control.attrString("themeMode"));
       if (id == "page" ||
           (controlView.control.attrString("theme") == null &&
+              controlView.control.attrString("darkTheme") == null &&
               themeMode == null)) {
         return widget;
       }
