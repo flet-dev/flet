@@ -300,7 +300,8 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                         selectedTrailingIconStr != null? Icon(selectedTrailingIconStr): null,
                       textStyle: textStyle,
                       errorText: widget.control.attrString("errorText"),
-                      //inputDecorationTheme: const InputDecorationTheme(filled: true, fillColor: Colors.amber,),
+                      inputDecorationTheme: InputDecorationTheme(filled: true, fillColor: Colors.amber, errorStyle: parseTextStyle(
+                        Theme.of(context), widget.control, "errorStyle"),),
                       // onSelected: (ColorLabel? color) {
                       //   setState(() {
                       //     selectedColor = color;

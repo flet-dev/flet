@@ -242,6 +242,7 @@ class DropdownMenu(FormFieldControl):
             helper_text=helper_text,
             helper_style=helper_style,
             error_text=error_text,
+            error_style=error_style,
             prefix=prefix,
             icon=icon,
             prefix_icon=prefix_icon,
@@ -283,7 +284,6 @@ class DropdownMenu(FormFieldControl):
             "icon_enabled_color",
             "icon_disabled_color",
             "icon_size",
-            "error_style",
         ]
 
         for item in deprecated_properties_list:
