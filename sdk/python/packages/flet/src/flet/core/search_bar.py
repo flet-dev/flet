@@ -319,59 +319,51 @@ class SearchBar(ConstrainedControl):
     @property
     def bar_border_side(
         self,
-    ) -> Union[None, BorderSide, Dict[ControlState, BorderSide]]:
+    ) -> ControlStateValue[BorderSide]:
         return self.__bar_border_side
 
     @bar_border_side.setter
-    def bar_border_side(
-        self, value: Union[None, BorderSide, Dict[ControlState, BorderSide]]
-    ):
+    def bar_border_side(self, value: ControlStateValue[BorderSide]):
         self.__bar_border_side = value
 
     # bar_shape
     @property
     def bar_shape(
         self,
-    ) -> Union[None, OutlinedBorder, Dict[ControlState, OutlinedBorder]]:
+    ) -> ControlStateValue[OutlinedBorder]:
         return self.__bar_shape
 
     @bar_shape.setter
-    def bar_shape(
-        self, value: Union[None, OutlinedBorder, Dict[ControlState, OutlinedBorder]]
-    ):
+    def bar_shape(self, value: ControlStateValue[OutlinedBorder]):
         self.__bar_shape = value
 
     # bar_text_style
     @property
-    def bar_text_style(self) -> Union[None, TextStyle, Dict[ControlState, TextStyle]]:
+    def bar_text_style(self) -> ControlStateValue[TextStyle]:
         return self.__bar_text_style
 
     @bar_text_style.setter
-    def bar_text_style(
-        self, value: Union[None, TextStyle, Dict[ControlState, TextStyle]]
-    ):
+    def bar_text_style(self, value: ControlStateValue[TextStyle]):
         self.__bar_text_style = value
 
     # bar_hint_text_style
     @property
     def bar_hint_text_style(
         self,
-    ) -> Union[None, TextStyle, Dict[ControlState, TextStyle]]:
+    ) -> ControlStateValue[TextStyle]:
         return self.__bar_hint_text_style
 
     @bar_hint_text_style.setter
-    def bar_hint_text_style(
-        self, value: Union[None, TextStyle, Dict[ControlState, TextStyle]]
-    ):
+    def bar_hint_text_style(self, value: ControlStateValue[TextStyle]):
         self.__bar_hint_text_style = value
 
     # bar_padding
     @property
-    def bar_padding(self) -> Union[PaddingValue, Dict[ControlState, PaddingValue]]:
+    def bar_padding(self) -> ControlStateValue[PaddingValue]:
         return self.__bar_padding
 
     @bar_padding.setter
-    def bar_padding(self, value: Union[PaddingValue, Dict[ControlState, PaddingValue]]):
+    def bar_padding(self, value: ControlStateValue[PaddingValue]):
         self.__bar_padding = value
 
     # view_leading
