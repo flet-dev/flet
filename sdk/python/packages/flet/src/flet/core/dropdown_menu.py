@@ -162,6 +162,7 @@ class DropdownMenu(FormFieldControl):
         #
         # FormField specific
         #
+        bgcolor: Optional[ColorValue] = None,
         error_style: Optional[TextStyle] = None,  # to be deprecated
         error_text: Optional[str] = None,
         text_size: OptionalNumber = None,
@@ -285,6 +286,7 @@ class DropdownMenu(FormFieldControl):
             "icon_disabled_color",
             "icon_size",
             "icon",
+            "bgcolor",
         ]
 
         for item in deprecated_properties_list:

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../models/control_view_model.dart';
+import '../utils/borders.dart';
 import '../utils/buttons.dart';
 import '../utils/edge_insets.dart';
 import '../utils/form_field.dart';
@@ -14,6 +15,7 @@ import '../utils/textfield.dart';
 import 'create_control.dart';
 import 'flet_store_mixin.dart';
 import 'textfield.dart';
+
 
 class DropdownMenuControl extends StatefulWidget {
   final Control? parent;
@@ -121,6 +123,61 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
       var suffixIcon = widget.control.attrString("suffixIcon");
       var color = widget.control.attrColor("color", context);
       var focusedColor = widget.control.attrColor("focusedColor", context);
+
+      var fillColor = widget.control.attrColor("fillColor", context);
+      var borderColor = widget.control.attrColor("borderColor", context);
+
+      var borderRadius = parseBorderRadius(widget.control, "borderRadius");
+      var focusedBorderColor = widget.control.attrColor("focusedBorderColor", context);
+      var borderWidth = widget.control.attrDouble("borderWidth");
+      var focusedBorderWidth = widget.control.attrDouble("focusedBorderWidth");
+
+      FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
+    widget.control.attrString("border"),
+    FormFieldInputBorder.outline,
+  )!;
+
+      InputBorder? border;
+      border = const OutlineInputBorder(
+            borderSide: BorderSide(
+                //color: borderColor ?? Color(0xFF000000),
+                color: Colors.green,));
+      // if (inputBorder == FormFieldInputBorder.underline) {
+      //   border = UnderlineInputBorder(
+      //       borderSide: BorderSide(
+      //           color: borderColor ?? Color(0xFF000000),
+      //           width: borderWidth ?? 1.0));
+      // } else if (inputBorder == FormFieldInputBorder.none) {
+      //   border = InputBorder.none;
+      // } else if (inputBorder == FormFieldInputBorder.outline ||
+      //     borderRadius != null ||
+      //     borderColor != null ||
+      //     borderWidth != null) {
+      //   border = OutlineInputBorder(
+      //       borderSide: BorderSide(
+      //           color: borderColor ?? Color(0xFF000000),
+      //           width: borderWidth ?? 1.0));
+      //   if (borderRadius != null) {
+      //     border =
+      //         (border as OutlineInputBorder).copyWith(borderRadius: borderRadius);
+      //   }
+      //   if (borderColor != null || borderWidth != null) {
+      //     border = (border as OutlineInputBorder).copyWith(
+      //         borderSide: borderWidth == 0
+      //             ? BorderSide.none
+      //             : BorderSide(
+      //                 color: borderColor ??
+      //                     Theme.of(context).colorScheme.onSurface.withOpacity(0.38),
+      //                 width: borderWidth ?? 1.0));
+      //   }
+      // }
+
+      InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
+        filled: widget.control.attrBool("filled", false)!, 
+        fillColor: fillColor, 
+        errorStyle: parseTextStyle(
+                        Theme.of(context), widget.control, "errorStyle"),
+        border: border);
 
 
       TextStyle? textStyle =
@@ -300,8 +357,7 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                         selectedTrailingIconStr != null? Icon(selectedTrailingIconStr): null,
                       textStyle: textStyle,
                       errorText: widget.control.attrString("errorText"),
-                      inputDecorationTheme: InputDecorationTheme(filled: true, fillColor: Colors.amber, errorStyle: parseTextStyle(
-                        Theme.of(context), widget.control, "errorStyle"),),
+                      inputDecorationTheme: inputDecorationTheme,
                       // onSelected: (ColorLabel? color) {
                       //   setState(() {
                       //     selectedColor = color;
