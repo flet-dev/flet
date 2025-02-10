@@ -162,6 +162,8 @@ class DropdownMenu(FormFieldControl):
         #
         # FormField specific
         #
+        error_style: Optional[TextStyle] = None,  # to be deprecated
+        error_text: Optional[str] = None,
         text_size: OptionalNumber = None,
         text_style: Optional[TextStyle] = None,
         label: Optional[str] = None,
@@ -184,13 +186,12 @@ class DropdownMenu(FormFieldControl):
         hint_style: Optional[TextStyle] = None,
         helper_text: Optional[str] = None,
         helper_style: Optional[TextStyle] = None,
-        error_text: Optional[str] = None,
         prefix: Optional[Control] = None,
         prefix_icon: Optional[str] = None,
         suffix: Optional[Control] = None,
         suffix_icon: Optional[IconValueOrControl] = None,
-        suffix_text: Optional[str] = None,
-        suffix_style: Optional[TextStyle] = None,
+        suffix_text: Optional[str] = None,  # to be deprecated
+        suffix_style: Optional[TextStyle] = None,  # to be deprecated
         #
         # ConstrainedControl
         #
@@ -282,6 +283,7 @@ class DropdownMenu(FormFieldControl):
             "icon_enabled_color",
             "icon_disabled_color",
             "icon_size",
+            "error_style",
         ]
 
         for item in deprecated_properties_list:
@@ -420,7 +422,6 @@ class DropdownMenu(FormFieldControl):
         self.__trailing_icon = value
         if not isinstance(value, Control):
             self._set_enum_attr("trailingIcon", value, IconEnums)
-            print("Trailing icon")
 
     # selected_trailing_icon
     @property
@@ -432,4 +433,3 @@ class DropdownMenu(FormFieldControl):
         self.__selected_trailing_icon = value
         if not isinstance(value, Control):
             self._set_enum_attr("selectedTrailingIcon", value, IconEnums)
-            print("Selected Trailing icon")

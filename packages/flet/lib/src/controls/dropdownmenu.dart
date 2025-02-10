@@ -125,12 +125,12 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
 
       TextStyle? textStyle =
           parseTextStyle(Theme.of(context), widget.control, "textStyle");
-      if (textSize != null || color != null || focusedColor != null) {
-        textStyle = (textStyle ?? const TextStyle()).copyWith(
-            fontSize: textSize,
-            color: (_focused ? focusedColor ?? color : color) ??
-                Theme.of(context).colorScheme.onSurface);
-      }
+      // if (textSize != null || color != null || focusedColor != null) {
+      //   textStyle = (textStyle ?? const TextStyle()).copyWith(
+      //       fontSize: textSize,
+      //       color: (_focused ? focusedColor ?? color : color) ??
+      //           Theme.of(context).colorScheme.onSurface);
+      // }
 
       var items = itemsView.controlViews
           .where((c) =>
@@ -299,6 +299,7 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                         createControl(widget.control, selectedTrailingIconCtrl.first.id, disabled): 
                         selectedTrailingIconStr != null? Icon(selectedTrailingIconStr): null,
                       textStyle: textStyle,
+                      errorText: widget.control.attrString("errorText"),
                       //inputDecorationTheme: const InputDecorationTheme(filled: true, fillColor: Colors.amber,),
                       // onSelected: (ColorLabel? color) {
                       //   setState(() {
