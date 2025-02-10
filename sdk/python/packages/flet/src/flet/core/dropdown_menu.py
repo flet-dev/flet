@@ -153,6 +153,7 @@ class DropdownMenu(FormFieldControl):
         on_change: OptionalEventCallable = None,
         on_focus: OptionalEventCallable = None,
         on_blur: OptionalEventCallable = None,
+        hint_content: Optional[Control] = None,  # to be deprecated
         icon_content: Optional[Control] = None,  # to be deprecated
         select_icon_size: OptionalNumber = None,  # to be deprecated
         icon_size: OptionalNumber = None,  # to be deprecated
@@ -290,6 +291,7 @@ class DropdownMenu(FormFieldControl):
             "icon_size",
             "icon",
             "bgcolor",
+            "hint_content",
         ]
 
         for item in deprecated_properties_list:

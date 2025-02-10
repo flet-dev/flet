@@ -180,7 +180,7 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
         hintStyle: parseTextStyle(Theme.of(context), widget.control, "hintStyle"),
         errorStyle: parseTextStyle(
                         Theme.of(context), widget.control, "errorStyle"),
-                      
+        helperStyle: parseTextStyle(Theme.of(context), widget.control, "helperStyle"),        
         border: border,
         enabledBorder: border,
         focusedBorder: focusedBorder,
@@ -366,6 +366,8 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                       textStyle: textStyle,
                       errorText: widget.control.attrString("errorText"),
                       hintText: widget.control.attrString("hintText"),
+                      helperText: widget.control.attrString("helperText"),
+                      
     
                       inputDecorationTheme: inputDecorationTheme,
                       // onSelected: (ColorLabel? color) {
