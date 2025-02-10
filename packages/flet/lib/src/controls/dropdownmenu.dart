@@ -92,8 +92,6 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
       bool editable = widget.control.attrBool("editable", false)!;
       var textSize = widget.control.attrDouble("textSize");
       var label = widget.control.attrString("label");
-      // var suffixCtrl =
-      //     widget.children.where((c) => c.name == "suffix" && c.isVisible);
       var trailingIconCtrl =
           widget.children.where((c) => c.name == "trailing_icon" && c.isVisible);
       var trailingIconStr = parseIcon(widget.control.attrString("trailingIcon"));
@@ -107,20 +105,11 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
       var selectedTrailingIconStr = parseIcon(widget.control.attrString("selectedTrailingIcon"));
       var iconCtrl =
           widget.children.where((c) => c.name == "icon" && c.isVisible);
-      var selectedSuffixCtrl = widget.children
-          .where((c) => c.name == "selectedSuffix" && c.isVisible);
-      
-      // var prefixCtrl =
-      //     widget.children.where((c) => c.name == "prefix" && c.isVisible);
       var prefixIconCtrl =
           widget.children.where((c) => c.name == "prefix_icon" && c.isVisible);
       var prefixIconStr = parseIcon(widget.control.attrString("prefixIcon"));
       var labelCtrl =
           widget.children.where((c) => c.name == "label" && c.isVisible);
-      var selectedSuffixIcon = widget.control.attrString("selectedSuffixIcon");
-      
-      var prefixIcon = widget.control.attrString("prefixIcon");
-      var suffixIcon = widget.control.attrString("suffixIcon");
       var color = widget.control.attrColor("color", context);
       var focusedColor = widget.control.attrColor("focusedColor", context);
 
@@ -138,46 +127,65 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
   )!;
 
       InputBorder? border;
-      border = const OutlineInputBorder(
+
+      if (inputBorder == FormFieldInputBorder.underline) {
+        border = UnderlineInputBorder(
             borderSide: BorderSide(
-                //color: borderColor ?? Color(0xFF000000),
-                color: Colors.green,));
-      // if (inputBorder == FormFieldInputBorder.underline) {
-      //   border = UnderlineInputBorder(
-      //       borderSide: BorderSide(
-      //           color: borderColor ?? Color(0xFF000000),
-      //           width: borderWidth ?? 1.0));
-      // } else if (inputBorder == FormFieldInputBorder.none) {
-      //   border = InputBorder.none;
-      // } else if (inputBorder == FormFieldInputBorder.outline ||
-      //     borderRadius != null ||
-      //     borderColor != null ||
-      //     borderWidth != null) {
-      //   border = OutlineInputBorder(
-      //       borderSide: BorderSide(
-      //           color: borderColor ?? Color(0xFF000000),
-      //           width: borderWidth ?? 1.0));
-      //   if (borderRadius != null) {
-      //     border =
-      //         (border as OutlineInputBorder).copyWith(borderRadius: borderRadius);
-      //   }
-      //   if (borderColor != null || borderWidth != null) {
-      //     border = (border as OutlineInputBorder).copyWith(
-      //         borderSide: borderWidth == 0
-      //             ? BorderSide.none
-      //             : BorderSide(
-      //                 color: borderColor ??
-      //                     Theme.of(context).colorScheme.onSurface.withOpacity(0.38),
-      //                 width: borderWidth ?? 1.0));
-      //   }
-      // }
+                color: borderColor ?? Color(0xFF000000),
+                width: borderWidth ?? 1.0));
+      } else if (inputBorder == FormFieldInputBorder.none) {
+        border = InputBorder.none;
+      } else if (inputBorder == FormFieldInputBorder.outline ||
+          borderRadius != null ||
+          borderColor != null ||
+          borderWidth != null) {
+        border = OutlineInputBorder(
+            borderSide: BorderSide(
+                color: borderColor ?? Color(0xFF000000),
+                width: borderWidth ?? 1.0));
+        if (borderRadius != null) {
+          border =
+              (border as OutlineInputBorder).copyWith(borderRadius: borderRadius);
+        }
+        if (borderColor != null || borderWidth != null) {
+          border = (border as OutlineInputBorder).copyWith(
+              borderSide: borderWidth == 0
+                  ? BorderSide.none
+                  : BorderSide(
+                      color: borderColor ??
+                          Theme.of(context).colorScheme.onSurface.withOpacity(0.38),
+                      width: borderWidth ?? 1.0));
+        }
+      }
+
+
+      InputBorder? focusedBorder;
+      if (borderColor != null ||
+          borderWidth != null ||
+          focusedBorderColor != null ||
+          focusedBorderWidth != null) {
+        focusedBorder = border?.copyWith(
+            borderSide: borderWidth == 0
+                ? BorderSide.none
+                : BorderSide(
+                    color: focusedBorderColor ??
+                        borderColor ??
+                        Theme.of(context).colorScheme.primary,
+                    width: focusedBorderWidth ?? borderWidth ?? 2.0));
+      }
 
       InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
         filled: widget.control.attrBool("filled", false)!, 
         fillColor: fillColor, 
+        hintStyle: parseTextStyle(Theme.of(context), widget.control, "hintStyle"),
         errorStyle: parseTextStyle(
                         Theme.of(context), widget.control, "errorStyle"),
-        border: border);
+                      
+        border: border,
+        enabledBorder: border,
+        focusedBorder: focusedBorder,
+
+        );
 
 
       TextStyle? textStyle =
@@ -357,6 +365,8 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                         selectedTrailingIconStr != null? Icon(selectedTrailingIconStr): null,
                       textStyle: textStyle,
                       errorText: widget.control.attrString("errorText"),
+                      hintText: widget.control.attrString("hintText"),
+    
                       inputDecorationTheme: inputDecorationTheme,
                       // onSelected: (ColorLabel? color) {
                       //   setState(() {
@@ -379,9 +389,6 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                     );
 
 
-      // Widget row = Row(mainAxisSize: MainAxisSize.min, children: [icon, dropDown]);
-      // return constrainedControl(
-      //     context, dropDown, widget.parent, widget.control);
       return constrainedControl(context, dropDown, widget.parent, widget.control);
     });
   }

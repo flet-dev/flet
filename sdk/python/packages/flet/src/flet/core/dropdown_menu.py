@@ -11,6 +11,7 @@ from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.textfield import InputFilter, TextCapitalization
 from flet.core.types import (
+    BorderRadiusValue,
     ColorValue,
     IconEnums,
     IconValueOrControl,
@@ -176,6 +177,7 @@ class DropdownMenu(FormFieldControl):
         focused_bgcolor: Optional[str] = None,
         border_width: OptionalNumber = None,
         border_color: Optional[str] = None,
+        border_radius: Optional[BorderRadiusValue] = None,
         focused_border_width: OptionalNumber = None,
         focused_border_color: Optional[str] = None,
         content_padding: PaddingValue = None,
@@ -229,6 +231,7 @@ class DropdownMenu(FormFieldControl):
             color=color,
             border_width=border_width,
             border_color=border_color,
+            border_radius=border_radius,
             focused_color=focused_color,
             focused_bgcolor=focused_bgcolor,
             focused_border_width=focused_border_width,
