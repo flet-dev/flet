@@ -1853,4 +1853,5 @@ class Command(BaseCommand):
                 message,
                 end="",
                 style=verbose2_style,
+                markup=False,
             )

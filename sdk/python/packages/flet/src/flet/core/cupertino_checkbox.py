@@ -55,7 +55,6 @@ class CupertinoCheckbox(ConstrainedControl):
         autofocus: Optional[bool] = None,
         check_color: Optional[ColorValue] = None,
         active_color: Optional[ColorValue] = None,
-        inactive_color: Optional[ColorValue] = None,
         focus_color: Optional[ColorValue] = None,
         fill_color: ControlStateValue[ColorValue] = None,
         shape: Optional[OutlinedBorder] = None,
@@ -135,7 +134,6 @@ class CupertinoCheckbox(ConstrainedControl):
         self.autofocus = autofocus
         self.check_color = check_color
         self.active_color = active_color
-        self.inactive_color = inactive_color
         self.focus_color = focus_color
         self.on_change = on_change
         self.on_focus = on_focus
@@ -222,16 +220,6 @@ class CupertinoCheckbox(ConstrainedControl):
     def active_color(self, value: Optional[ColorValue]):
         self.__active_color = value
         self._set_enum_attr("activeColor", value, ColorEnums)
-
-    # inactive_color
-    @property
-    def inactive_color(self) -> Optional[ColorValue]:
-        return self.__inactive_color
-
-    @inactive_color.setter
-    def inactive_color(self, value: Optional[ColorValue]):
-        self.__inactive_color = value
-        self._set_enum_attr("inactiveColor", value, ColorEnums)
 
     # focus_color
     @property
