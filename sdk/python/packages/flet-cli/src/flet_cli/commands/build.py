@@ -282,6 +282,12 @@ class Command(BaseCommand):
             required=False,
         )
         parser.add_argument(
+            "--bundle-id",
+            dest="bundle_id",
+            help='bundle ID for the application, e.g. "com.mycompany.app-name" - used as an iOS, Android, macOS and Linux bundle ID',
+            required=False,
+        )
+        parser.add_argument(
             "--company",
             dest="company_name",
             help="company name to display in about app dialogs",
@@ -337,6 +343,20 @@ class Command(BaseCommand):
             dest="team_id",
             type=str,
             help="Team ID to sign iOS bundle (ipa only)",
+            required=False,
+        )
+        parser.add_argument(
+            "--ios-export-method",
+            dest="ios_export_method",
+            type=str,
+            help='Export method for iOS app. Default is "debugging"',
+            required=False,
+        )
+        parser.add_argument(
+            "--ios-provisioning-profile",
+            dest="ios_provisioning_profile",
+            type=str,
+            help="Provisioning profile name or UUID that used to sign and export iOS app",
             required=False,
         )
         parser.add_argument(
@@ -643,6 +663,13 @@ class Command(BaseCommand):
         )
         self.pubspec_path = str(self.flutter_dir.joinpath("pubspec.yaml"))
         self.get_pyproject = load_pyproject_toml(self.python_app_path)
+
+        if self.options.team_id:
+            self.skip_flutter_doctor = True
+            self.cleanup(
+                1,
+                f"--team option is deprecated. Use --ios-provisioning-profile instead.",
+            )
 
     def flutter_version_valid(self):
         version_results = self.run(
@@ -1016,13 +1043,24 @@ class Command(BaseCommand):
                 or self.get_pyproject("project.description")
                 or self.get_pyproject("tool.poetry.description")
             ),
-            "org_name": self.options.org_name or self.get_pyproject("tool.flet.org"),
+            "org_name": self.options.org_name
+            or self.get_pyproject(f"tool.flet.{self.config_platform}.org")
+            or self.get_pyproject("tool.flet.org"),
+            "bundle_id": self.options.bundle_id
+            or self.get_pyproject(f"tool.flet.{self.config_platform}.bundle_id")
+            or self.get_pyproject("tool.flet.bundle_id"),
             "company_name": (
                 self.options.company_name or self.get_pyproject("tool.flet.company")
             ),
             "copyright": self.options.copyright
             or self.get_pyproject("tool.flet.copyright"),
-            "team_id": self.options.team_id or self.get_pyproject("tool.flet.ios.team"),
+            "ios_export_method": self.options.ios_export_method
+            or self.get_pyproject("tool.flet.ios.export_method")
+            or "debugging",
+            "ios_provisioning_profile": self.options.ios_provisioning_profile
+            or self.get_pyproject("tool.flet.ios.provisioning_profile"),
+            "ios_export_options": self.get_pyproject("tool.flet.ios.export_options")
+            or {},
             "options": {
                 "info_plist": info_plist,
                 "macos_entitlements": macos_entitlements,
@@ -1639,11 +1677,11 @@ class Command(BaseCommand):
         ):
             build_args.append("--split-per-abi")
 
-        if (
-            self.options.target_platform in ["ipa"]
-            and not self.template_data["team_id"]
-        ):
-            build_args.append("--no-codesign")
+        if self.options.target_platform in ["ipa"]:
+            if self.template_data["ios_provisioning_profile"]:
+                build_args.extend(["--export-options-plist", "ios/exportOptions.plist"])
+            else:
+                build_args.append("--no-codesign")
 
         build_number = self.options.build_number or self.get_pyproject(
             "tool.flet.build_number"
@@ -1796,7 +1834,7 @@ class Command(BaseCommand):
                     Group(Panel(msg, style=error_style), status), refresh=True
                 )
                 self.run_flutter_doctor()
-                self.live.update(Panel(msg, style=error_style), refresh=True)
+            self.live.update(Panel(msg, style=error_style), refresh=True)
 
         sys.exit(exit_code)
 
