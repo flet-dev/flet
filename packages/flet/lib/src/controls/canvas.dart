@@ -35,7 +35,7 @@ class CanvasViewModel extends Equatable {
         control: control,
         child: store.state.controls[control.id]!.childIds
             .map((childId) => store.state.controls[childId])
-            .whereNotNull()
+            .nonNulls
             .where((c) => c.name == "content" && c.isVisible)
             .firstOrNull,
         shapes: children

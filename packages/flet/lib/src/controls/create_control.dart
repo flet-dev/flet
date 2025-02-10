@@ -107,6 +107,7 @@ import 'shake_detector.dart';
 import 'slider.dart';
 import 'snack_bar.dart';
 import 'stack.dart';
+import 'stepper.dart';
 import 'submenu_button.dart';
 import 'switch.dart';
 import 'tabs.dart';
@@ -381,6 +382,14 @@ Widget createWidget(
           parent: parent,
           control: controlView.control,
           children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
+    case "stepper":
+      return StepperControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           backend: backend);

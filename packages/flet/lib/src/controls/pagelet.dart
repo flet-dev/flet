@@ -80,7 +80,7 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
         appBarCtrls.firstOrNull?.id,
         drawerCtrls.firstOrNull?.id,
         endDrawerCtrls.firstOrNull?.id
-      ].whereNotNull().toList();
+      ].nonNulls.toList();
 
       return StoreConnector<AppState, ControlsViewModel>(
           distinct: true,
