@@ -284,6 +284,7 @@ class DropdownMenu(FormFieldControl):
             "icon_enabled_color",
             "icon_disabled_color",
             "icon_size",
+            "icon",
         ]
 
         for item in deprecated_properties_list:
