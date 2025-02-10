@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
@@ -36,9 +37,8 @@ class SelectionAreaControl extends StatelessWidget {
     var selectionArea = SelectionArea(
       child: createControl(control, contentCtrls.first.id, disabled,
           parentAdaptive: parentAdaptive),
-      onSelectionChanged: (selection) {
-        backend.triggerControlEvent(
-            control.id, "change", selection?.plainText ?? "");
+      onSelectionChanged: (SelectedContent? selection) {
+        backend.triggerControlEvent(control.id, "change", selection?.plainText);
       },
     );
 

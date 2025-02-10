@@ -1,4 +1,4 @@
-$milestone = 4
+$milestone = 7
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 #Invoke-RestMethod https://api.github.com/repos/appveyor/ci/milestones
@@ -17,6 +17,8 @@ foreach ($issue in $issues) {
         }
     }
 
+    $title = $issue.title.replace('fix: ', '')
+
     #"$($issue.html_url) $prefix$($issue.title)"
-    "* $prefix$($issue.title) ([#$($issue.number)]($($issue.html_url)))"
+    "* $prefix$($title) ([#$($issue.number)]($($issue.html_url)))"
 }

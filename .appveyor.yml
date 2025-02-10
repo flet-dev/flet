@@ -146,15 +146,6 @@ for:
             dart pub publish --force || exit 1
             cd $APPVEYOR_BUILD_FOLDER
 
-            sleep 600
-
-            for dir in packages/flet_*; do
-              cd "$dir"
-              echo "Publishing $dir package"
-              dart pub publish --force || exit 1
-              cd "$APPVEYOR_BUILD_FOLDER"
-            done
-
           else
 
             cd packages/flet
@@ -163,12 +154,6 @@ for:
             dart pub publish --dry-run
             cd $APPVEYOR_BUILD_FOLDER
 
-            for dir in packages/flet_*; do
-              cd "$dir"
-              echo "Dry-run publishing $dir package"
-              dart pub publish --dry-run
-              cd "$APPVEYOR_BUILD_FOLDER"
-            done
           fi
 
   # ======================================
@@ -203,10 +188,6 @@ for:
       - cd client
       - set RELEASE_DIR=build\windows\x64\runner\Release
       - flutter build windows --build-name=%APPVEYOR_BUILD_VERSION%
-      # - mkdir %RELEASE_DIR%
-      # - mkdir %RELEASE_DIR%\data
-      # - echo "Test!" > %RELEASE_DIR%\flet.bat
-      # - echo "Another thest!" > %RELEASE_DIR%\data\something.txt
 
       - copy "%WINDIR%\system32\msvcp140.dll" %RELEASE_DIR%
       - copy "%WINDIR%\system32\vcruntime140.dll" %RELEASE_DIR%

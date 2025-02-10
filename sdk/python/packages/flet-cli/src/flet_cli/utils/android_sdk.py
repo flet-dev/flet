@@ -6,7 +6,6 @@ from typing import Optional
 
 from flet_cli.utils import processes
 from flet_cli.utils.distros import download_with_progress, extract_with_progress
-from rich.console import Console
 from rich.progress import Progress
 
 ANDROID_CMDLINE_TOOLS_DOWNLOAD_VERSION = "11076708"
@@ -45,7 +44,7 @@ class AndroidSDK:
         return Path.home() / "Android" / "sdk"
 
     @staticmethod
-    def android_home_dir() -> Path | None:
+    def android_home_dir() -> Optional[Path]:
         # check ANDROID_HOME environment variable
         home_dir = os.getenv("ANDROID_HOME")
         if home_dir and Path(home_dir).exists():
@@ -66,7 +65,7 @@ class AndroidSDK:
 
         return None
 
-    def cmdline_tools_bin(self, home_dir: Path) -> Path | None:
+    def cmdline_tools_bin(self, home_dir: Path) -> Optional[Path]:
         for d in [
             home_dir / "cmdline-tools" / "latest" / "bin",
             home_dir / "cmdline-tools" / ANDROID_CMDLINE_TOOLS_VERSION / "bin",

@@ -160,7 +160,7 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
       onInteractionUpdate: !disabled
           ? (ScaleUpdateDetails details) {
               var interactionUpdateInterval =
-                  widget.control.attrInt("interactionUpdateInterval", 0)!;
+                  widget.control.attrInt("interactionUpdateInterval", 200)!;
               var now = DateTime.now().millisecondsSinceEpoch;
               if (now - _interactionUpdateTimestamp >
                   interactionUpdateInterval) {

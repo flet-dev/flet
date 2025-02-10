@@ -144,7 +144,7 @@ class _ChipControlState extends State<ChipControl> {
           visualDensity:
               parseVisualDensity(widget.control.attrString("visualDensity")),
           avatarBoxConstraints:
-              parseBoxConstraints(widget.control, "avatarSizeConstraints"),
+              parseBoxConstraints(widget.control, "leadingSizeConstraints"),
           deleteIconBoxConstraints:
               parseBoxConstraints(widget.control, "deleteIconSizeConstraints"),
           chipAnimationStyle: ChipAnimationStyle(
@@ -153,7 +153,7 @@ class _ChipControlState extends State<ChipControl> {
             selectAnimation:
                 parseAnimationStyle(widget.control, "selectAnimationStyle"),
             avatarDrawerAnimation: parseAnimationStyle(
-                widget.control, "avatarDrawerAnimationStyle"),
+                widget.control, "leadingDrawerAnimationStyle"),
             deleteDrawerAnimation: parseAnimationStyle(
                 widget.control, "deleteDrawerAnimationStyle"),
           ),
