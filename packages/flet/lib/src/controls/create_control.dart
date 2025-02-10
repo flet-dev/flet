@@ -183,7 +183,6 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
 
       // wrap into theme widget
       ThemeData? parentTheme = (themeMode == null) ? Theme.of(context) : null;
-
       buildTheme(Brightness? brightness) {
         return Theme(
             data: parseTheme(
@@ -202,9 +201,11 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
               return buildTheme(media.displayBrightness);
             });
       } else {
-        return buildTheme((themeMode == ThemeMode.light)
+        return buildTheme(themeMode == ThemeMode.light
             ? Brightness.light
-            : ((themeMode == ThemeMode.dark) ? Brightness.dark : null));
+            : themeMode == ThemeMode.dark
+                ? Brightness.dark
+                : parentTheme?.brightness);
       }
     },
   );
