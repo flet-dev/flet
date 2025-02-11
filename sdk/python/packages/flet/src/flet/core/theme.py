@@ -7,11 +7,11 @@ from flet.core.border import BorderSide
 from flet.core.border_radius import BorderRadius
 from flet.core.box import BoxConstraints, BoxDecoration, BoxShadow
 from flet.core.buttons import ButtonStyle, OutlinedBorder
-from flet.core.control import OptionalNumber
 from flet.core.menu_bar import MenuStyle
 from flet.core.navigation_bar import NavigationBarLabelBehavior
 from flet.core.navigation_rail import NavigationRailLabelType
 from flet.core.popup_menu_button import PopupMenuPosition
+from flet.core.size import Size
 from flet.core.slider import SliderInteraction
 from flet.core.snack_bar import DismissDirection, SnackBarBehavior
 from flet.core.text_style import TextStyle
@@ -31,6 +31,7 @@ from flet.core.types import (
     MouseCursor,
     NotchShape,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
     ThemeVisualDensity,
     VisualDensity,
@@ -210,6 +211,79 @@ class DialogTheme:
     clip_behavior: Optional[ClipBehavior] = None
     barrier_color: Optional[ColorValue] = None
     inset_padding: Optional[PaddingValue] = None
+
+
+@dataclass
+class ElevatedButtonTheme:
+    bgcolor: Optional[ColorValue] = None
+    foreground_color: Optional[ColorValue] = None
+    icon_color: Optional[ColorValue] = None
+    shadow_color: Optional[ColorValue] = None
+    disabled_bgcolor: Optional[ColorValue] = None
+    disabled_foreground_color: Optional[ColorValue] = None
+    disabled_icon_color: Optional[ColorValue] = None
+    overlay_color: Optional[ColorValue] = None
+    surface_tint_color: Optional[ColorValue] = None
+    elevation: OptionalNumber = None
+    padding: Optional[PaddingValue] = None
+    enable_feedback: Optional[bool] = None
+    disabled_mouse_cursor: Optional[MouseCursor] = None
+    enabled_mouse_cursor: Optional[MouseCursor] = None
+    shape: Optional[OutlinedBorder] = None
+    text_style: Optional[TextStyle] = None
+    visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None
+    border_side: Optional[BorderSide] = None
+    animation_duration: Optional[DurationValue] = None
+    alignment: Optional[Alignment] = None
+    icon_size: OptionalNumber = None
+    fixed_size: Optional[Size] = None
+    maximum_size: Optional[Size] = None
+    minimum_size: Optional[Size] = None
+
+
+@dataclass
+class OutlinedButtonTheme(ElevatedButtonTheme):
+    pass
+
+
+@dataclass
+class TextButtonTheme(ElevatedButtonTheme):
+    pass
+
+
+@dataclass
+class FilledButtonTheme(ElevatedButtonTheme):
+    pass
+
+
+@dataclass
+class IconButtonTheme:
+    # from ElevatedButtonTheme (excluding icon_color, disabled_icon_color, text_style)
+    bgcolor: Optional[ColorValue] = None
+    foreground_color: Optional[ColorValue] = None
+    shadow_color: Optional[ColorValue] = None
+    disabled_bgcolor: Optional[ColorValue] = None
+    disabled_foreground_color: Optional[ColorValue] = None
+    overlay_color: Optional[ColorValue] = None
+    surface_tint_color: Optional[ColorValue] = None
+    elevation: OptionalNumber = None
+    padding: Optional[PaddingValue] = None
+    enable_feedback: Optional[bool] = None
+    disabled_mouse_cursor: Optional[MouseCursor] = None
+    enabled_mouse_cursor: Optional[MouseCursor] = None
+    shape: Optional[OutlinedBorder] = None
+    visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None
+    border_side: Optional[BorderSide] = None
+    animation_duration: Optional[DurationValue] = None
+    alignment: Optional[Alignment] = None
+    icon_size: OptionalNumber = None
+    fixed_size: Optional[Size] = None
+    maximum_size: Optional[Size] = None
+    minimum_size: Optional[Size] = None
+    # Icon Button Theme
+    focus_color: Optional[ColorValue] = None
+    highlight_color: Optional[ColorValue] = None
+    hover_color: Optional[ColorValue] = None
 
 
 @dataclass
@@ -846,6 +920,11 @@ class Theme:
     dialog_theme: Optional[DialogTheme] = None
     divider_theme: Optional[DividerTheme] = None
     # dropdown_menu_theme: Optional[DropdownMenuTheme] = None
+    elevated_button_theme: Optional[ElevatedButtonTheme] = None
+    outlined_button_theme: Optional[OutlinedButtonTheme] = None
+    text_button_theme: Optional[TextButtonTheme] = None
+    filled_button_theme: Optional[FilledButtonTheme] = None
+    icon_button_theme: Optional[IconButtonTheme] = None
     expansion_tile_theme: Optional[ExpansionTileTheme] = None
     floating_action_button_theme: Optional[FloatingActionButtonTheme] = None
     icon_theme: Optional[IconTheme] = None

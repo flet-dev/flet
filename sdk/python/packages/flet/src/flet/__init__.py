@@ -350,13 +350,17 @@ from flet.core.theme import (
     DatePickerTheme,
     DialogTheme,
     DividerTheme,
+    ElevatedButtonTheme,
     ExpansionTileTheme,
+    FilledButtonTheme,
     FloatingActionButtonTheme,
+    IconButtonTheme,
     IconTheme,
     ListTileTheme,
     NavigationBarTheme,
     NavigationDrawerTheme,
     NavigationRailTheme,
+    OutlinedButtonTheme,
     PageTransitionsTheme,
     PageTransitionTheme,
     PopupMenuTheme,
@@ -371,6 +375,7 @@ from flet.core.theme import (
     SwitchTheme,
     SystemOverlayStyle,
     TabsTheme,
+    TextButtonTheme,
     TextTheme,
     Theme,
     TimePickerTheme,
@@ -426,6 +431,7 @@ from flet.core.types import (
     VerticalAlignment,
     VisualDensity,
     WebRenderer,
+    WindowEventType,
 )
 from flet.core.vertical_divider import VerticalDivider
 from flet.core.video import (
