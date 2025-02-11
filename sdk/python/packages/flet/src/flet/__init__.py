@@ -14,6 +14,7 @@ from flet.core import (
     margin,
     padding,
     painting,
+    size,
     transform,
 )
 from flet.core.adaptive_control import AdaptiveControl
@@ -264,7 +265,6 @@ from flet.core.page import (
     ViewPopEvent,
     Window,
     WindowEvent,
-    WindowEventType,
     WindowResizeEvent,
     context,
 )
@@ -308,6 +308,7 @@ from flet.core.semantics import Semantics
 from flet.core.semantics_service import Assertiveness, SemanticsService
 from flet.core.shader_mask import ShaderMask
 from flet.core.shake_detector import ShakeDetector
+from flet.core.size import Size
 from flet.core.slider import Slider, SliderInteraction
 from flet.core.snack_bar import DismissDirection, SnackBar, SnackBarBehavior
 from flet.core.stack import Stack, StackFit
