@@ -111,7 +111,7 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
       var labelCtrl =
           widget.children.where((c) => c.name == "label" && c.isVisible);
       var color = widget.control.attrColor("color", context);
-      var focusedColor = widget.control.attrColor("focusedColor", context);
+      //var focusedColor = widget.control.attrColor("focusedColor", context);
 
       var fillColor = widget.control.attrColor("fillColor", context);
       var borderColor = widget.control.attrColor("borderColor", context);
@@ -180,20 +180,22 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
         hintStyle: parseTextStyle(Theme.of(context), widget.control, "hintStyle"),
         errorStyle: parseTextStyle(
                         Theme.of(context), widget.control, "errorStyle"),
-        helperStyle: parseTextStyle(Theme.of(context), widget.control, "helperStyle"),        
+        helperStyle: parseTextStyle(Theme.of(context), widget.control, "helperStyle"),      
         border: border,
         enabledBorder: border,
         focusedBorder: focusedBorder,
+        isDense: widget.control.attrBool("dense")?? false,
+        contentPadding: parseEdgeInsets(widget.control, "contentPadding"),
 
         );
 
 
       TextStyle? textStyle =
           parseTextStyle(Theme.of(context), widget.control, "textStyle");
-      if (textSize != null || color != null || focusedColor != null) {
+      if (textSize != null || color != null) {
         textStyle = (textStyle ?? const TextStyle()).copyWith(
             fontSize: textSize,
-            color: (_focused ? focusedColor ?? color : color) ??
+            color: color ??
                 Theme.of(context).colorScheme.onSurface);
       }
 

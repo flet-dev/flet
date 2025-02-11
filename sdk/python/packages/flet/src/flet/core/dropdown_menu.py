@@ -235,7 +235,7 @@ class DropdownMenu(FormFieldControl):
             border_width=border_width,
             border_color=border_color,
             border_radius=border_radius,
-            focused_color=focused_color,
+            # focused_color=focused_color,
             focused_bgcolor=focused_bgcolor,
             focused_border_width=focused_border_width,
             focused_border_color=focused_border_color,
@@ -297,6 +297,7 @@ class DropdownMenu(FormFieldControl):
             "prefix_text",
             "prefix_style",
             "prefix",
+            "focused_color",
         ]
 
         for item in deprecated_properties_list:
