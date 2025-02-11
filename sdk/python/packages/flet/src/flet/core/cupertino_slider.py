@@ -122,6 +122,18 @@ class CupertinoSlider(ConstrainedControl):
     def _get_control_name(self):
         return "cupertinoslider"
 
+    def before_update(self):
+        super().before_update()
+        assert (
+            self.min is None or self.max is None or self.min <= self.max
+        ), "min must be less than or equal to max"
+        assert (
+            self.min is None or self.value is None or (self.value >= self.min)
+        ), "value must be greater than or equal to min"
+        assert (
+            self.max is None or self.value is None or (self.value <= self.max)
+        ), "value must be less than or equal to max"
+
     # value
     @property
     def value(self) -> float:
@@ -129,11 +141,6 @@ class CupertinoSlider(ConstrainedControl):
 
     @value.setter
     def value(self, value: OptionalNumber):
-        if value is not None:
-            if self.min is not None:
-                assert value >= self.min, "value must be greater than or equal to min"
-            if self.max is not None:
-                assert value <= self.max, "value must be less than or equal to max"
         self._set_attr("value", value)
 
     # min
@@ -143,9 +150,6 @@ class CupertinoSlider(ConstrainedControl):
 
     @min.setter
     def min(self, value: OptionalNumber):
-        if value is not None:
-            if self.max is not None:
-                assert value <= self.max, "min must be less than or equal to max"
         self._set_attr("min", value)
 
     # max
@@ -155,9 +159,6 @@ class CupertinoSlider(ConstrainedControl):
 
     @max.setter
     def max(self, value: OptionalNumber):
-        if value is not None:
-            if self.min is not None:
-                assert value >= self.min, "max must be greater than or equal to min"
         self._set_attr("max", value)
 
     # divisions
