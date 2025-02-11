@@ -174,7 +174,7 @@ class DropdownMenu(FormFieldControl):
         icon: Optional[IconValueOrControl] = None,
         border: Optional[InputBorder] = None,
         color: Optional[str] = None,
-        focused_color: Optional[str] = None,
+        focused_color: Optional[str] = None,  # to be deprecated
         focused_bgcolor: Optional[str] = None,
         border_width: OptionalNumber = None,
         border_color: Optional[str] = None,
@@ -198,6 +198,9 @@ class DropdownMenu(FormFieldControl):
         suffix_icon: Optional[IconValueOrControl] = None,
         suffix_text: Optional[str] = None,  # to be deprecated
         suffix_style: Optional[TextStyle] = None,  # to be deprecated
+        counter: Optional[Control] = None,  # to be deprecated
+        counter_text: Optional[str] = None,  # to be deprecated
+        counter_style: Optional[TextStyle] = None,  # to be deprecated
         #
         # ConstrainedControl
         #
