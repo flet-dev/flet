@@ -137,7 +137,7 @@ class CupertinoSlider(ConstrainedControl):
     # value
     @property
     def value(self) -> float:
-        return self._get_attr("value", data_type="float", def_value=0.0)
+        return self._get_attr("value", data_type="float", def_value=self.min or 0.0)
 
     @value.setter
     def value(self, value: OptionalNumber):
