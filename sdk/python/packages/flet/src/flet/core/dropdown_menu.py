@@ -171,7 +171,7 @@ class DropdownMenu(FormFieldControl):
         text_style: Optional[TextStyle] = None,
         label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
-        icon: Optional[IconValueOrControl] = None,
+        icon: Optional[IconValueOrControl] = None,  # to deprecated
         border: Optional[InputBorder] = None,
         color: Optional[str] = None,
         focused_color: Optional[str] = None,  # to be deprecated
@@ -190,11 +190,13 @@ class DropdownMenu(FormFieldControl):
         hint_style: Optional[TextStyle] = None,
         helper_text: Optional[str] = None,
         helper_style: Optional[TextStyle] = None,
+        elevation: OptionalNumber = None,  # to be deprecated
         prefix: Optional[Control] = None,
         prefix_text: Optional[str] = None,
         prefix_style: Optional[TextStyle] = None,
         prefix_icon: Optional[str] = None,
-        suffix: Optional[Control] = None,
+        disabled_hint_content: Optional[Control] = None,  # to be deprecated
+        suffix: Optional[Control] = None,  # to be deprecated
         suffix_icon: Optional[IconValueOrControl] = None,
         suffix_text: Optional[str] = None,  # to be deprecated
         suffix_style: Optional[TextStyle] = None,  # to be deprecated
@@ -238,7 +240,6 @@ class DropdownMenu(FormFieldControl):
             border_width=border_width,
             border_color=border_color,
             border_radius=border_radius,
-            # focused_color=focused_color,
             focused_bgcolor=focused_bgcolor,
             focused_border_width=focused_border_width,
             focused_border_color=focused_border_color,
@@ -253,11 +254,7 @@ class DropdownMenu(FormFieldControl):
             helper_style=helper_style,
             error_text=error_text,
             error_style=error_style,
-            # prefix=prefix,
-            icon=icon,
             prefix_icon=prefix_icon,
-            # suffix=suffix,
-            # suffix_icon=suffix_icon,
             ref=ref,
             key=key,
             width=width,
@@ -301,6 +298,8 @@ class DropdownMenu(FormFieldControl):
             "prefix_style",
             "prefix",
             "focused_color",
+            "disabled_hint_content",
+            "elevation",
         ]
 
         for item in deprecated_properties_list:
