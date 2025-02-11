@@ -36,6 +36,7 @@ from flet.core.types import (
     ThemeVisualDensity,
     VisualDensity,
 )
+from flet.utils.deprecated import deprecated_class, deprecated_property
 
 try:
     from typing import Literal
@@ -883,6 +884,11 @@ class DataTableTheme:
     heading_cell_cursor: ControlStateValue[MouseCursor] = None
 
 
+@deprecated_class(
+    "Use ElevatedButtonTheme, OutlinedButtonTheme, TextButtonTheme, FilledButtonTheme or IconButtonTheme instead.",
+    version="0.27.0",
+    delete_version="0.30.0",
+)
 @dataclass
 class ButtonTheme:
     button_color: Optional[ColorValue] = None
@@ -968,3 +974,12 @@ class Theme:
     time_picker_theme: Optional[TimePickerTheme] = None
     tooltip_theme: Optional[TooltipTheme] = None
     visual_density: Union[VisualDensity, ThemeVisualDensity] = None
+
+    def __post_init__(self):
+        if self.button_theme:
+            deprecated_property(
+                "button_theme",
+                "Use elevated_button_theme, outlined_button_theme, text_button_theme, filled_button_theme or icon_button_theme instead.",
+                version="0.27.0",
+                delete_version="0.30.0",
+            )
