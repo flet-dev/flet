@@ -13,6 +13,7 @@ from flet.core.textfield import InputFilter, TextCapitalization
 from flet.core.types import (
     BorderRadiusValue,
     ColorValue,
+    ControlStateValue,
     IconEnums,
     IconValueOrControl,
     OffsetValue,
@@ -21,6 +22,7 @@ from flet.core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    TextAlign,
 )
 
 
@@ -135,6 +137,7 @@ class DropdownMenu(FormFieldControl):
     def __init__(
         self,
         value: Optional[str] = None,
+        text_align: Optional[TextAlign] = None,
         options: Optional[List[DropdownMenuOption]] = None,
         label_content: Optional[str] = None,
         enable_filter: Optional[bool] = None,
@@ -292,7 +295,6 @@ class DropdownMenu(FormFieldControl):
             "icon_disabled_color",
             "icon_size",
             "icon",
-            "bgcolor",
             "hint_content",
             "prefix_text",
             "prefix_style",
@@ -300,6 +302,7 @@ class DropdownMenu(FormFieldControl):
             "focused_color",
             "disabled_hint_content",
             "elevation",
+            "alignment",
         ]
 
         for item in deprecated_properties_list:
@@ -330,12 +333,15 @@ class DropdownMenu(FormFieldControl):
         self.on_focus = on_focus
         self.on_blur = on_blur
         self.value = value
+        self.bgcolor = bgcolor
+        self.text_align = text_align
 
     def _get_control_name(self):
         return "dropdownmenu"
 
     def before_update(self):
         super().before_update()
+        self._set_attr_json("bgcolor", self.__bgcolor, wrap_attr_dict=True)
         ##self._set_attr_json("inputFilter", self.__input_filter)
         ##self._set_attr_json("expandInsets", self.__expanded_insets)
         # 3self._set_attr_json("menuStyle", self.__menu_style)
@@ -449,3 +455,22 @@ class DropdownMenu(FormFieldControl):
         self.__selected_trailing_icon = value
         if not isinstance(value, Control):
             self._set_enum_attr("selectedTrailingIcon", value, IconEnums)
+
+    # bgcolor
+    @property
+    def bgcolor(self) -> ControlStateValue[ColorValue]:
+        return self.__bgcolor
+
+    @bgcolor.setter
+    def bgcolor(self, value: ControlStateValue[ColorValue]):
+        self.__bgcolor = value
+
+    # text_align
+    @property
+    def text_align(self) -> Optional[TextAlign]:
+        return self.__text_align
+
+    @text_align.setter
+    def text_align(self, value: Optional[TextAlign]):
+        self.__text_align = value
+        self._set_enum_attr("textAlign", value, TextAlign)

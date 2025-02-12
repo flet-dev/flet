@@ -15,6 +15,7 @@ import '../utils/textfield.dart';
 import 'create_control.dart';
 import 'flet_store_mixin.dart';
 import 'textfield.dart';
+import '../utils/colors.dart';
 
 
 class DropdownMenuControl extends StatefulWidget {
@@ -111,6 +112,9 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
       var labelCtrl =
           widget.children.where((c) => c.name == "label" && c.isVisible);
       var color = widget.control.attrColor("color", context);
+
+      TextAlign textAlign =
+          parseTextAlign(widget.control.attrString("textAlign"), TextAlign.start)!;
       //var focusedColor = widget.control.attrColor("focusedColor", context);
 
       var fillColor = widget.control.attrColor("fillColor", context);
@@ -212,17 +216,10 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
 
         var contentCtrls = itemCtrlView.children
             .where((c) => c.name == "content" && c.isVisible);
-
         var prefixIconCtrls = itemCtrlView.children
             .where((c) => c.name == "prefix" && c.isVisible);
         var suffixIconCtrls = itemCtrlView.children
             .where((c) => c.name == "suffix" && c.isVisible);
-
-        
-        
-        
-
-        
 
         return DropdownMenuEntry<String>(
           enabled: !itemDisabled,
@@ -249,9 +246,6 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
           style: style,
         );
       }).toList();
-
-      var icon = iconCtrl.isNotEmpty ? createControl(
-                  widget.parent, iconCtrl.first.id, false) : const Icon(Icons.add);
 
       String? value = widget.control.attrString("value");
       if (_value != value) {
@@ -337,7 +331,8 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
       //         },
       //   dropdownMenuEntries: items,
       // );
-      final TextEditingController colorController = TextEditingController();
+
+      // final TextEditingController controller = TextEditingController();
 
       Widget dropDown = DropdownMenu<String>(
                       enabled: !disabled,
@@ -366,9 +361,13 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                         createControl(widget.control, selectedTrailingIconCtrl.first.id, disabled): 
                         selectedTrailingIconStr != null? Icon(selectedTrailingIconStr): null,
                       textStyle: textStyle,
+                      textAlign: textAlign,
+                      width: widget.control.attrDouble("width"),
                       errorText: widget.control.attrString("errorText"),
                       hintText: widget.control.attrString("hintText"),
                       helperText: widget.control.attrString("helperText"),
+                      menuStyle: MenuStyle(backgroundColor: parseWidgetStateColor(
+              Theme.of(context), widget.control, "bgcolor"),),
                       
     
                       inputDecorationTheme: inputDecorationTheme,
