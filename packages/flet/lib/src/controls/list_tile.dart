@@ -162,7 +162,7 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
         tile = ListTileClicks(notifier: _clickNotifier, child: tile);
       }
 
-      tile = Material(child: tile);
+      tile = Material(color: Colors.transparent, child: tile);
 
       return constrainedControl(context, tile, parent, control);
     });
