@@ -160,6 +160,7 @@ class DropdownMenu(FormFieldControl):
         on_change: OptionalEventCallable = None,
         on_focus: OptionalEventCallable = None,
         on_blur: OptionalEventCallable = None,
+        item_height: OptionalNumber = None,  # to be deprecated
         alignment: Optional[Alignment] = None,  # to be deprecated
         hint_content: Optional[Control] = None,  # to be deprecated
         icon_content: Optional[Control] = None,  # to be deprecated
@@ -306,6 +307,7 @@ class DropdownMenu(FormFieldControl):
             "disabled_hint_content",
             "alignment",
             "focused_bgcolor",
+            "item_height",
         ]
 
         for item in deprecated_properties_list:
