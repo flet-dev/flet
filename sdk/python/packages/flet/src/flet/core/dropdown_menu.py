@@ -1,6 +1,7 @@
 import warnings
-from typing import Any, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
+from flet.core.alignment import Alignment
 from flet.core.animation import AnimationValue
 from flet.core.buttons import ButtonStyle
 from flet.core.control import Control, OptionalNumber
@@ -13,9 +14,11 @@ from flet.core.textfield import InputFilter, TextCapitalization
 from flet.core.types import (
     BorderRadiusValue,
     ColorValue,
+    ControlState,
     ControlStateValue,
     IconEnums,
     IconValueOrControl,
+    Number,
     OffsetValue,
     OptionalEventCallable,
     PaddingValue,
@@ -138,6 +141,7 @@ class DropdownMenu(FormFieldControl):
         self,
         value: Optional[str] = None,
         text_align: Optional[TextAlign] = None,
+        elevation: ControlStateValue[OptionalNumber] = None,
         options: Optional[List[DropdownMenuOption]] = None,
         label_content: Optional[str] = None,
         enable_filter: Optional[bool] = None,
@@ -156,6 +160,7 @@ class DropdownMenu(FormFieldControl):
         on_change: OptionalEventCallable = None,
         on_focus: OptionalEventCallable = None,
         on_blur: OptionalEventCallable = None,
+        alignment: Optional[Alignment] = None,  # to be deprecated
         hint_content: Optional[Control] = None,  # to be deprecated
         icon_content: Optional[Control] = None,  # to be deprecated
         select_icon_size: OptionalNumber = None,  # to be deprecated
@@ -168,7 +173,7 @@ class DropdownMenu(FormFieldControl):
         # FormField specific
         #
         bgcolor: Optional[ColorValue] = None,
-        error_style: Optional[TextStyle] = None,  # to be deprecated
+        error_style: Optional[TextStyle] = None,
         error_text: Optional[str] = None,
         text_size: OptionalNumber = None,
         text_style: Optional[TextStyle] = None,
@@ -178,7 +183,7 @@ class DropdownMenu(FormFieldControl):
         border: Optional[InputBorder] = None,
         color: Optional[str] = None,
         focused_color: Optional[str] = None,  # to be deprecated
-        focused_bgcolor: Optional[str] = None,
+        focused_bgcolor: Optional[str] = None,  # to be deprecated
         border_width: OptionalNumber = None,
         border_color: Optional[str] = None,
         border_radius: Optional[BorderRadiusValue] = None,
@@ -193,14 +198,13 @@ class DropdownMenu(FormFieldControl):
         hint_style: Optional[TextStyle] = None,
         helper_text: Optional[str] = None,
         helper_style: Optional[TextStyle] = None,
-        elevation: OptionalNumber = None,  # to be deprecated
-        prefix: Optional[Control] = None,
-        prefix_text: Optional[str] = None,
-        prefix_style: Optional[TextStyle] = None,
+        prefix: Optional[Control] = None,  # to be deprecated
+        prefix_text: Optional[str] = None,  # to be deprecated
+        prefix_style: Optional[TextStyle] = None,  # to be deprecated
         prefix_icon: Optional[str] = None,
         disabled_hint_content: Optional[Control] = None,  # to be deprecated
         suffix: Optional[Control] = None,  # to be deprecated
-        suffix_icon: Optional[IconValueOrControl] = None,
+        suffix_icon: Optional[IconValueOrControl] = None,  # to be deprecated
         suffix_text: Optional[str] = None,  # to be deprecated
         suffix_style: Optional[TextStyle] = None,  # to be deprecated
         counter: Optional[Control] = None,  # to be deprecated
@@ -243,7 +247,6 @@ class DropdownMenu(FormFieldControl):
             border_width=border_width,
             border_color=border_color,
             border_radius=border_radius,
-            focused_bgcolor=focused_bgcolor,
             focused_border_width=focused_border_width,
             focused_border_color=focused_border_color,
             content_padding=content_padding,
@@ -301,8 +304,8 @@ class DropdownMenu(FormFieldControl):
             "prefix",
             "focused_color",
             "disabled_hint_content",
-            "elevation",
             "alignment",
+            "focused_bgcolor",
         ]
 
         for item in deprecated_properties_list:
@@ -334,6 +337,7 @@ class DropdownMenu(FormFieldControl):
         self.on_blur = on_blur
         self.value = value
         self.bgcolor = bgcolor
+        self.elevation = elevation
         self.text_align = text_align
 
     def _get_control_name(self):
@@ -342,6 +346,7 @@ class DropdownMenu(FormFieldControl):
     def before_update(self):
         super().before_update()
         self._set_attr_json("bgcolor", self.__bgcolor, wrap_attr_dict=True)
+        self._set_attr_json("elevation", self.__elevation, wrap_attr_dict=True)
         ##self._set_attr_json("inputFilter", self.__input_filter)
         ##self._set_attr_json("expandInsets", self.__expanded_insets)
         # 3self._set_attr_json("menuStyle", self.__menu_style)
@@ -474,3 +479,12 @@ class DropdownMenu(FormFieldControl):
     def text_align(self, value: Optional[TextAlign]):
         self.__text_align = value
         self._set_enum_attr("textAlign", value, TextAlign)
+
+    # elevation
+    @property
+    def elevation(self) -> Union[OptionalNumber, Dict[ControlState, Number]]:
+        return self.__elevation
+
+    @elevation.setter
+    def elevation(self, value: Union[OptionalNumber, Dict[ControlState, Number]]):
+        self.__elevation = value

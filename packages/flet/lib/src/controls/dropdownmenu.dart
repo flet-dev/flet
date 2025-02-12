@@ -16,6 +16,7 @@ import 'create_control.dart';
 import 'flet_store_mixin.dart';
 import 'textfield.dart';
 import '../utils/colors.dart';
+import '../utils/numbers.dart';
 
 
 class DropdownMenuControl extends StatefulWidget {
@@ -367,7 +368,7 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                       hintText: widget.control.attrString("hintText"),
                       helperText: widget.control.attrString("helperText"),
                       menuStyle: MenuStyle(backgroundColor: parseWidgetStateColor(
-              Theme.of(context), widget.control, "bgcolor"),),
+              Theme.of(context), widget.control, "bgcolor"), elevation: parseWidgetStateDouble(widget.control, "elevation"),),
                       
     
                       inputDecorationTheme: inputDecorationTheme,
