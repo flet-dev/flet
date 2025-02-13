@@ -39,6 +39,9 @@ class DropdownMenuOption(Option):
         leading_icon: Optional[IconValueOrControl] = None,
         trailing_icon: Optional[IconValueOrControl] = None,
         style: Optional[ButtonStyle] = None,
+        alignment: Optional[Alignment] = None,  # to be deprecated
+        text_style: Optional[TextStyle] = None,  # to be deprecated
+        on_click: OptionalControlEventCallable = None,  # to be deprecated
         #
         # Control
         #
@@ -60,6 +63,17 @@ class DropdownMenuOption(Option):
         self.leading_icon = leading_icon
         self.trailing_icon = trailing_icon
         self.style = style
+
+        deprecated_properties_list = ["text_style", "on_click", "alignment"]
+
+        for item in deprecated_properties_list:
+            if eval(item) is not None:
+                warnings.warn(
+                    f"{item} is deprecated since version 0.26.0 "
+                    f"and will be removed in version 0.29.0.",
+                    category=DeprecationWarning,
+                    stacklevel=2,
+                )
 
     def _get_control_name(self):
         return "dropdownmenuoption"
@@ -156,6 +170,8 @@ class DropdownMenu(FormFieldControl):
         input_filter: Optional[InputFilter] = None,
         capitalization: Optional[TextCapitalization] = None,
         # selected_suffix_icon: Optional[str] = None,
+        options_fill_horizontally: Optional[bool] = None,  # to be deprecated
+        padding: Optional[PaddingValue] = None,  # to be deprecated
         trailing_icon: Optional[IconValueOrControl] = None,
         leading_icon: Optional[IconValueOrControl] = None,
         select_icon: Optional[IconValueOrControl] = None,  # to be deprecated
@@ -315,6 +331,8 @@ class DropdownMenu(FormFieldControl):
             "item_height",
             "autofocus",
             "enable_feedback",
+            "options_fill_horizontally",
+            "padding",
         ]
 
         for item in deprecated_properties_list:
