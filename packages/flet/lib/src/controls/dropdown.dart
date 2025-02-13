@@ -187,7 +187,7 @@ class _DropdownControlState extends State<DropdownControl>
       var items = itemsView.controlViews
           .where((c) =>
               c.control.name == null &&
-              c.control.type == "dropdownmenuoption" &&
+              c.control.type == "dropdownoption" &&
               c.control.isVisible)
           .map<DropdownMenuEntry<String>>((ControlViewModel itemCtrlView) {
         var itemCtrl = itemCtrlView.control;

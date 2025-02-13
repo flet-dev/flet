@@ -1,5 +1,5 @@
 from flet.app import app, app_async
-from flet.core import (
+from flet.core import (  # dropdown_old,
     ads,
     alignment,
     animation,
@@ -10,7 +10,6 @@ from flet.core import (
     cupertino_colors,
     cupertino_icons,
     dropdown,
-    dropdown_old,
     icons,
     margin,
     padding,
@@ -155,7 +154,8 @@ from flet.core.divider import Divider
 from flet.core.drag_target import DragTarget, DragTargetEvent
 from flet.core.draggable import Draggable
 from flet.core.dropdown import Dropdown, DropdownOption
-from flet.core.dropdown_old import DropdownOld
+
+# from flet.core.dropdown_old import DropdownOld
 from flet.core.elevated_button import ElevatedButton
 from flet.core.exceptions import (
     FletException,

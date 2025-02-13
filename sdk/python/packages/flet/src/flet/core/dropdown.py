@@ -5,7 +5,6 @@ from flet.core.alignment import Alignment
 from flet.core.animation import AnimationValue
 from flet.core.buttons import ButtonStyle
 from flet.core.control import Control, OptionalNumber
-from flet.core.dropdown_old import Option
 from flet.core.form_field_control import FormFieldControl, InputBorder
 from flet.core.menu_bar import MenuStyle
 from flet.core.ref import Ref
@@ -70,7 +69,7 @@ class Option(Control):
                 )
 
     def _get_control_name(self):
-        return "dropdownmenuoption"
+        return "dropdownoption"
 
     def _get_children(self):
         children = super()._get_children()
