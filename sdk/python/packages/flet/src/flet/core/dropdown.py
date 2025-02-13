@@ -1,3 +1,4 @@
+import time
 import warnings
 from typing import Any, Dict, List, Optional, Union
 
@@ -403,6 +404,13 @@ class Dropdown(FormFieldControl):
             )
             children.append(self.__selected_trailing_icon)
         return children
+
+    def __contains__(self, item):
+        return item in self.__options
+
+    def focus(self):
+        self._set_attr_json("focus", str(time.time()))
+        self.update()
 
     # value
     @property
