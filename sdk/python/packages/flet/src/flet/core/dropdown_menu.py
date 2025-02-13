@@ -36,10 +36,8 @@ class DropdownMenuOption(Option):
         key: Optional[str] = None,
         text: Optional[str] = None,
         content: Optional[Control] = None,
-        prefix: Optional[Control] = None,
-        prefix_icon: Optional[str] = None,
-        suffix: Optional[Control] = None,
-        suffix_icon: Optional[str] = None,
+        leading_icon: Optional[IconValueOrControl] = None,
+        trailing_icon: Optional[IconValueOrControl] = None,
         style: Optional[ButtonStyle] = None,
         #
         # Control
@@ -59,10 +57,8 @@ class DropdownMenuOption(Option):
             text=text,
             content=content,
         )
-        self.prefix = prefix
-        self.suffix = suffix
-        self.prefix_icon = prefix_icon
-        self.suffix_icon = suffix_icon
+        self.leading_icon = leading_icon
+        self.trailing_icon = trailing_icon
         self.style = style
 
     def _get_control_name(self):
@@ -70,12 +66,12 @@ class DropdownMenuOption(Option):
 
     def _get_children(self):
         children = super()._get_children()
-        if self.__suffix is not None:
-            self.__suffix._set_attr_internal("n", "suffix")
-            children.append(self.__suffix)
-        if self.__prefix is not None:
-            self.__prefix._set_attr_internal("n", "prefix")
-            children.append(self.__prefix)
+        if isinstance(self.__leading_icon, Control):
+            self.__leading_icon._set_attr_internal("n", "leadingIcon")
+            children.append(self.__leading_icon)
+        if isinstance(self.__trailing_icon, Control):
+            self.__trailing_icon._set_attr_internal("n", "trailing_icon")
+            children.append(self.__trailing_icon)
         return children
 
     def before_update(self):
@@ -112,23 +108,27 @@ class DropdownMenuOption(Option):
     def style(self, value: Optional[ButtonStyle]):
         self.__style = value
 
-    # prefix_icon
+    # leading_icon
     @property
-    def prefix_icon(self) -> Optional[str]:
-        return self.__prefix_icon
+    def leading_icon(self) -> Optional[IconValueOrControl]:
+        return self.__leading_icon
 
-    @prefix_icon.setter
-    def prefix_icon(self, value: Optional[str]):
-        self.__prefix_icon = value
+    @leading_icon.setter
+    def leading_icon(self, value: Optional[IconValueOrControl]):
+        self.__leading_icon = value
+        if not isinstance(value, Control):
+            self._set_enum_attr("leadingIcon", value, IconEnums)
 
-    # suffix_icon
+    # trailing_icon
     @property
-    def suffix_icon(self) -> Optional[str]:
-        return self.__suffix_icon
+    def trailing_icon(self) -> Optional[IconValueOrControl]:
+        return self.__trailing_icon
 
-    @suffix_icon.setter
-    def suffix_icon(self, value: Optional[str]):
-        self.__suffix_icon = value
+    @trailing_icon.setter
+    def trailing_icon(self, value: Optional[IconValueOrControl]):
+        self.__trailing_icon = value
+        if not isinstance(value, Control):
+            self._set_enum_attr("trailingIcon", value, IconEnums)
 
 
 class DropdownMenu(FormFieldControl):
@@ -155,9 +155,10 @@ class DropdownMenu(FormFieldControl):
         selected_suffix: Optional[Control] = None,
         input_filter: Optional[InputFilter] = None,
         capitalization: Optional[TextCapitalization] = None,
-        selected_suffix_icon: Optional[str] = None,
+        # selected_suffix_icon: Optional[str] = None,
         trailing_icon: Optional[IconValueOrControl] = None,
-        select_icon: Optional[IconValueOrControl] = None,
+        leading_icon: Optional[IconValueOrControl] = None,
+        select_icon: Optional[IconValueOrControl] = None,  # to be deprecated
         selected_trailing_icon: Optional[IconValueOrControl] = None,
         on_change: OptionalEventCallable = None,
         on_focus: OptionalEventCallable = None,
@@ -205,7 +206,7 @@ class DropdownMenu(FormFieldControl):
         prefix: Optional[Control] = None,  # to be deprecated
         prefix_text: Optional[str] = None,  # to be deprecated
         prefix_style: Optional[TextStyle] = None,  # to be deprecated
-        prefix_icon: Optional[str] = None,
+        prefix_icon: Optional[str] = None,  # to be deprecated
         disabled_hint_content: Optional[Control] = None,  # to be deprecated
         suffix: Optional[Control] = None,  # to be deprecated
         suffix_icon: Optional[IconValueOrControl] = None,  # to be deprecated
@@ -306,6 +307,7 @@ class DropdownMenu(FormFieldControl):
             "prefix_text",
             "prefix_style",
             "prefix",
+            "prefix_icon",
             "focused_color",
             "disabled_hint_content",
             "alignment",
@@ -335,7 +337,8 @@ class DropdownMenu(FormFieldControl):
         self.menu_style = menu_style
         self.capitalization = capitalization
         self.label_content = label_content
-        self.selected_suffix_icon = selected_suffix_icon
+        # self.selected_suffix_icon = selected_suffix_icon
+        self.leading_icon = leading_icon
         self.trailing_icon = trailing_icon
         self.selected_trailing_icon = selected_trailing_icon
         self.select_icon = select_icon
@@ -371,6 +374,9 @@ class DropdownMenu(FormFieldControl):
     #     return children
     def _get_children(self):
         children = FormFieldControl._get_children(self) + self.__options
+        if isinstance(self.__leading_icon, Control):
+            self.__leading_icon._set_attr_internal("n", "leading_icon")
+            children.append(self.__leading_icon)
         if isinstance(self.__select_icon, Control):
             self.__select_icon._set_attr_internal("n", "select_icon")
             children.append(self.__select_icon)
@@ -445,6 +451,17 @@ class DropdownMenu(FormFieldControl):
                 category=DeprecationWarning,
                 stacklevel=2,
             )
+
+    # leading_icon
+    @property
+    def leading_icon(self) -> Optional[IconValueOrControl]:
+        return self.__leading_icon
+
+    @leading_icon.setter
+    def leading_icon(self, value: Optional[IconValueOrControl]):
+        self.__leading_icon = value
+        if not isinstance(value, Control):
+            self._set_enum_attr("leadingIcon", value, IconEnums)
 
     # trailing_icon
     @property

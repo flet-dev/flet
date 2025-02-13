@@ -9,7 +9,6 @@ import '../utils/buttons.dart';
 import '../utils/edge_insets.dart';
 import '../utils/form_field.dart';
 import '../utils/icons.dart';
-import '../utils/menu.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
 import 'create_control.dart';
@@ -43,7 +42,6 @@ class DropdownMenuControl extends StatefulWidget {
 class _DropdownMenuControlState extends State<DropdownMenuControl>
     with FletStoreMixin {
   String? _value;
-  bool _focused = false;
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 
@@ -55,9 +53,6 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
   }
 
   void _onFocusChange() {
-    setState(() {
-      _focused = _focusNode.hasFocus;
-    });
     widget.backend.triggerControlEvent(
         widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
   }
@@ -76,13 +71,16 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
       debugPrint("DropdownMenuFletControlState build: ${widget.control.id}");
 
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
-
       bool editable = widget.control.attrBool("editable", false)!;
       var textSize = widget.control.attrDouble("textSize");
       var label = widget.control.attrString("label");
       var trailingIconCtrl =
           widget.children.where((c) => c.name == "trailing_icon" && c.isVisible);
       var trailingIconStr = parseIcon(widget.control.attrString("trailingIcon"));
+      
+      var leadingIconCtrl =
+          widget.children.where((c) => c.name == "leading_icon" && c.isVisible);
+      var leadingIconStr = parseIcon(widget.control.attrString("leadingIcon"));
 
       var selectIconCtrl =
           widget.children.where((c) => c.name == "select_icon" && c.isVisible);
@@ -100,7 +98,6 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
 
       TextAlign textAlign =
           parseTextAlign(widget.control.attrString("textAlign"), TextAlign.start)!;
-      //var focusedColor = widget.control.attrColor("focusedColor", context);
 
       var fillColor = widget.control.attrColor("fillColor", context);
       var borderColor = widget.control.attrColor("borderColor", context);
@@ -178,7 +175,6 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
 
         );
 
-
       TextStyle? textStyle =
           parseTextStyle(Theme.of(context), widget.control, "textStyle");
       if (textSize != null || color != null) {
@@ -201,10 +197,10 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
 
         var contentCtrls = itemCtrlView.children
             .where((c) => c.name == "content" && c.isVisible);
-        var prefixIconCtrls = itemCtrlView.children
-            .where((c) => c.name == "prefix" && c.isVisible);
-        var suffixIconCtrls = itemCtrlView.children
-            .where((c) => c.name == "suffix" && c.isVisible);
+        var leadingIconCtrls = itemCtrlView.children
+            .where((c) => c.name == "leadingIcon" && c.isVisible);
+        var trailingIconCtrls = itemCtrlView.children
+            .where((c) => c.name == "trailingIcon" && c.isVisible);
 
         return DropdownMenuEntry<String>(
           enabled: !itemDisabled,
@@ -214,19 +210,19 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
               ? createControl(
                   itemCtrlView.control, contentCtrls.first.id, itemDisabled)
               : null,
-          leadingIcon: prefixIconCtrls.isNotEmpty
+          leadingIcon: leadingIconCtrls.isNotEmpty
               ? createControl(
-                  itemCtrlView.control, prefixIconCtrls.first.id, itemDisabled)
-              : itemCtrlView.control.attrString("prefixIcon") != null
+                  itemCtrlView.control, leadingIconCtrls.first.id, itemDisabled)
+              : itemCtrlView.control.attrString("leadingIcon") != null
                   ? Icon(
-                      parseIcon(itemCtrlView.control.attrString("prefixIcon")))
+                      parseIcon(itemCtrlView.control.attrString("leadingIcon")))
                   : null,
-          trailingIcon: suffixIconCtrls.isNotEmpty
+          trailingIcon: trailingIconCtrls.isNotEmpty
               ? createControl(
-                  itemCtrlView.control, suffixIconCtrls.first.id, itemDisabled)
-              : itemCtrlView.control.attrString("suffixIcon") != null
+                  itemCtrlView.control, trailingIconCtrls.first.id, itemDisabled)
+              : itemCtrlView.control.attrString("trailingIcon") != null
                   ? Icon(
-                      parseIcon(itemCtrlView.control.attrString("suffixIcon")))
+                      parseIcon(itemCtrlView.control.attrString("trailingIcon")))
                   : null,
           style: style,
         );
@@ -263,81 +259,22 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
         inputFormatters.add(TextCapitalizationFormatter(textCapitalization));
       }
 
-      // Widget dropDown = DropdownMenu<String>(
-      //   enabled: !disabled,
-      //   enableFilter: widget.control.attrBool("enableFilter", false)!,
-      //   enableSearch: widget.control.attrBool("enableSearch", true)!,
-      //   errorText: widget.control.attrString("errorText"),
-      //   helperText: widget.control.attrString("helperText"),
-      //   hintText: widget.control.attrString("hintText"),
-      //   initialSelection: _value,
-      //   requestFocusOnTap: widget.control.attrBool("requestFocusOnTap", true)!,
-      //   menuHeight: widget.control.attrDouble("menuHeight"),
-      //   width: widget.control.attrDouble("width"),
-      //   textStyle: textStyle,
-      //   inputFormatters: inputFormatters,
-      //   expandedInsets: parseEdgeInsets(widget.control, "expandedInsets"),
-      //   menuStyle: parseMenuStyle(Theme.of(context), widget.control, "style"),
-      //   focusNode: _focusNode,
-      //   label: labelCtrl.isNotEmpty
-      //       ? createControl(widget.control, labelCtrl.first.id, disabled)
-      //       : label != null
-      //           ? Text(label,
-      //               style: parseTextStyle(
-      //                   Theme.of(context), widget.control, "labelStyle"))
-      //           : null,
-      //   trailingIcon: suffixCtrl.isNotEmpty
-      //       ? createControl(widget.control, suffixCtrl.first.id, disabled)
-      //       : suffixIcon != null
-      //           ? Icon(parseIcon(suffixIcon))
-      //           : null,
-      //   leadingIcon: prefixCtrl.isNotEmpty
-      //       ? createControl(widget.control, prefixCtrl.first.id, disabled)
-      //       : prefixIcon != null
-      //           ? Icon(parseIcon(prefixIcon))
-      //           : null,
-      //   selectedTrailingIcon: selectedSuffixCtrl.isNotEmpty
-      //       ? createControl(
-      //           widget.control, selectedSuffixCtrl.first.id, disabled)
-      //       : selectedSuffixIcon != null
-      //           ? Icon(parseIcon(selectedSuffixIcon))
-      //           : null,
-      //   // inputDecorationTheme:
-      //   //     buildInputDecorationTheme(context, widget.control, _focused),
-      //   onSelected: disabled
-      //       ? null
-      //       : (String? value) {
-      //           debugPrint("DropdownMenu selected value: $value");
-      //           _value = value!;
-      //           widget.backend
-      //               .updateControlState(widget.control.id, {"value": value});
-      //           widget.backend
-      //               .triggerControlEvent(widget.control.id, "change", value);
-      //         },
-      //   dropdownMenuEntries: items,
-      // );
-
-      // final TextEditingController controller = TextEditingController();
-
       Widget dropDown = DropdownMenu<String>(
                       enabled: !disabled,
-                      //focusNode: _focusNode,
+                      focusNode: _focusNode,
                       initialSelection: _value,
                       //controller: controller,
                       requestFocusOnTap: editable,
                       enableFilter: widget.control.attrBool("enableFilter", false)!,
                       enableSearch: widget.control.attrBool("enableFilter", true)!,
-                      // requestFocusOnTap is enabled/disabled by platforms when it is null.
-                      // On mobile platforms, this is false by default. Setting this to true will
-                      // trigger focus request on the text field and virtual keyboard will appear
-                      // afterward. On desktop platforms however, this defaults to true.
                       menuHeight: widget.control.attrDouble("maxMenuHeight"),
-                      // width: 200,
                       label: labelCtrl.isNotEmpty
                         ? createControl(widget.control, labelCtrl.first.id, disabled): 
                         label != null? Text(label, style: parseTextStyle(
                         Theme.of(context), widget.control, "labelStyle")): null,
-                      leadingIcon: prefixIconCtrl.isNotEmpty ? 
+                      leadingIcon: leadingIconCtrl.isNotEmpty ? 
+                        createControl(widget.control, leadingIconCtrl.first.id, disabled): 
+                        leadingIconStr != null? Icon(leadingIconStr) : prefixIconCtrl.isNotEmpty ? 
                         createControl(widget.control, prefixIconCtrl.first.id, disabled): 
                         prefixIconStr != null? Icon(prefixIconStr): null,
                       trailingIcon: trailingIconCtrl.isNotEmpty ? 
@@ -354,6 +291,8 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                       errorText: widget.control.attrString("errorText"),
                       hintText: widget.control.attrString("hintText"),
                       helperText: widget.control.attrString("helperText"),
+                      //inputFormatters: inputFormatters,
+                      //expandedInsets: parseEdgeInsets(widget.control, "expandedInsets"),
                       menuStyle: MenuStyle(backgroundColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "bgcolor"), elevation: parseWidgetStateDouble(widget.control, "elevation"),),
                       
@@ -369,18 +308,6 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                               widget.backend
                                   .triggerControlEvent(widget.control.id, "change", value);
                             },
-                      // dropdownMenuEntries: ColorLabel.values
-                      //     .map<DropdownMenuEntry<ColorLabel>>(
-                      //         (ColorLabel color) {
-                      //   return DropdownMenuEntry<ColorLabel>(
-                      //     value: color,
-                      //     label: color.label,
-                      //     enabled: color.label != 'Grey',
-                      //     style: MenuItemButton.styleFrom(
-                      //       foregroundColor: color.color,
-                      //     ),
-                      //   );
-                      // }).toList(),
                       dropdownMenuEntries: items,                   
                     );
 
