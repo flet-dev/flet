@@ -30,7 +30,7 @@ from flet.core.types import (
 )
 
 
-class DropdownMenuOption(Option):
+class Option(Control):
     def __init__(
         self,
         key: Optional[str] = None,
@@ -50,16 +50,10 @@ class DropdownMenuOption(Option):
         visible: Optional[bool] = None,
         data: Any = None,
     ):
-        Option.__init__(
-            self,
-            ref=ref,
-            disabled=disabled,
-            visible=visible,
-            data=data,
-            key=key,
-            text=text,
-            content=content,
-        )
+        Control.__init__(self, ref=ref, disabled=disabled, visible=visible, data=data)
+        self.key = key
+        self.text = text
+        self.content = content
         self.leading_icon = leading_icon
         self.trailing_icon = trailing_icon
         self.style = style
@@ -86,6 +80,9 @@ class DropdownMenuOption(Option):
         if isinstance(self.__trailing_icon, Control):
             self.__trailing_icon._set_attr_internal("n", "trailing_icon")
             children.append(self.__trailing_icon)
+        if isinstance(self.__content, Control):
+            self.__content._set_attr_internal("n", "content")
+            children.append(self.__content)
         return children
 
     def before_update(self):
@@ -95,23 +92,32 @@ class DropdownMenuOption(Option):
         ), "key or text must be specified"
         self._set_attr_json("style", self.__style)
 
-    # prefix
+    # key
     @property
-    def prefix(self) -> Optional[Control]:
-        return self.prefix
+    def key(self) -> Optional[str]:
+        return self._get_attr("key")
 
-    @prefix.setter
-    def prefix(self, value: Optional[Control]):
-        self.__prefix = value
+    @key.setter
+    def key(self, value: Optional[str]):
+        self._set_attr("key", value)
 
-    # suffix
+    # text
     @property
-    def suffix(self) -> Optional[Control]:
-        return self.__suffix
+    def text(self) -> Optional[str]:
+        return self._get_attr("text")
 
-    @suffix.setter
-    def suffix(self, value: Optional[Control]):
-        self.__suffix = value
+    @text.setter
+    def text(self, value: Optional[str]):
+        self._set_attr("text", value)
+
+    # content
+    @property
+    def content(self) -> Optional[Control]:
+        return self.__content
+
+    @content.setter
+    def content(self, value: Optional[Control]):
+        self.__content = value
 
     # style
     @property
@@ -145,6 +151,10 @@ class DropdownMenuOption(Option):
             self._set_enum_attr("trailingIcon", value, IconEnums)
 
 
+class DropdownOption(Option):
+    "Alias for Option"
+
+
 class DropdownMenu(FormFieldControl):
     """
     A dropdown menu control that allows users to select a single option from a list of options.
@@ -158,7 +168,7 @@ class DropdownMenu(FormFieldControl):
         autofocus: Optional[bool] = None,  # to be deprecated
         text_align: Optional[TextAlign] = None,
         elevation: ControlStateValue[OptionalNumber] = None,
-        options: Optional[List[DropdownMenuOption]] = None,
+        options: Optional[List[Option]] = None,
         label_content: Optional[str] = None,
         enable_filter: Optional[bool] = None,
         enable_search: Optional[bool] = None,
@@ -419,11 +429,11 @@ class DropdownMenu(FormFieldControl):
 
     # options
     @property
-    def options(self) -> Optional[List[DropdownMenuOption]]:
+    def options(self) -> Optional[List[Option]]:
         return self.__options
 
     @options.setter
-    def options(self, value: Optional[List[DropdownMenuOption]]):
+    def options(self, value: Optional[List[Option]]):
         self.__options = value if value is not None else []
 
     # max_menu_height
