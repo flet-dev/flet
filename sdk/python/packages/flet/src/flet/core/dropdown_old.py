@@ -369,7 +369,7 @@ class DropdownOld(FormFieldControl):
         self.options_fill_horizontally = options_fill_horizontally
 
     def _get_control_name(self):
-        return "dropdown"
+        return "dropdownold"
 
     def before_update(self):
         super().before_update()

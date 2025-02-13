@@ -12,7 +12,7 @@ import '../utils/text.dart';
 import 'create_control.dart';
 import 'flet_store_mixin.dart';
 
-class DropdownControl extends StatefulWidget {
+class DropdownOldControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
@@ -20,7 +20,7 @@ class DropdownControl extends StatefulWidget {
   final bool? parentAdaptive;
   final FletControlBackend backend;
 
-  const DropdownControl(
+  const DropdownOldControl(
       {super.key,
       this.parent,
       required this.control,
@@ -30,10 +30,10 @@ class DropdownControl extends StatefulWidget {
       required this.backend});
 
   @override
-  State<DropdownControl> createState() => _DropdownControlState();
+  State<DropdownOldControl> createState() => _DropdownOldControlState();
 }
 
-class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
+class _DropdownOldControlState extends State<DropdownOldControl> with FletStoreMixin {
   String? _value;
   bool _focused = false;
   late final FocusNode _focusNode;

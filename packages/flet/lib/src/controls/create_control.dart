@@ -829,8 +829,8 @@ Widget createWidget(
           control: controlView.control,
           parentDisabled: parentDisabled,
           backend: backend);
-    case "dropdown":
-      return DropdownControl(
+    case "dropdownold":
+      return DropdownOldControl(
           key: key,
           parent: parent,
           control: controlView.control,
