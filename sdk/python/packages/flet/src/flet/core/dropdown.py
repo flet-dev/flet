@@ -379,7 +379,7 @@ class Dropdown(FormFieldControl):
         self.text_align = text_align
 
     def _get_control_name(self):
-        return "dropdownmenu"
+        return "dropdown"
 
     def before_update(self):
         super().before_update()
