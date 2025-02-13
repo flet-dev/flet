@@ -126,7 +126,7 @@ class Option(Control):
         self._add_event_handler("click", handler)
 
 
-class Dropdown(FormFieldControl):
+class DropdownOld(FormFieldControl):
     """
     A dropdown lets the user select from a number of items. The dropdown shows the currently selected item as well as an arrow that opens a menu for selecting another item.
 
