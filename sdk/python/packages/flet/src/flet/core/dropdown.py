@@ -155,7 +155,7 @@ class DropdownOption(Option):
     "Alias for Option"
 
 
-class DropdownMenu(FormFieldControl):
+class Dropdown(FormFieldControl):
     """
     A dropdown menu control that allows users to select a single option from a list of options.
     -----
