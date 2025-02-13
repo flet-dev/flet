@@ -18,7 +18,7 @@ import '../utils/colors.dart';
 import '../utils/numbers.dart';
 
 
-class DropdownMenuControl extends StatefulWidget {
+class DropdownControl extends StatefulWidget {
   final Control? parent;
   final Control control;
   final List<Control> children;
@@ -26,7 +26,7 @@ class DropdownMenuControl extends StatefulWidget {
   final bool? parentAdaptive;
   final FletControlBackend backend;
 
-  const DropdownMenuControl(
+  const DropdownControl(
       {super.key,
       this.parent,
       required this.control,
@@ -36,10 +36,10 @@ class DropdownMenuControl extends StatefulWidget {
       required this.backend});
 
   @override
-  State<DropdownMenuControl> createState() => _DropdownMenuControlState();
+  State<DropdownControl> createState() => _DropdownControlState();
 }
 
-class _DropdownMenuControlState extends State<DropdownMenuControl>
+class _DropdownControlState extends State<DropdownControl>
     with FletStoreMixin {
   String? _value;
   late final FocusNode _focusNode;
