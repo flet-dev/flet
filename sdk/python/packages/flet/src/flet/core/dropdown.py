@@ -156,9 +156,9 @@ class DropdownOption(Option):
 
 class Dropdown(FormFieldControl):
     """
-    A dropdown menu control that allows users to select a single option from a list of options.
+    A dropdown control that allows users to select a single option from a list of options.
     -----
-    Online docs: https://flet.dev/docs/controls/dropdownmenu
+    Online docs: https://flet.dev/docs/controls/dropdown
     """
 
     def __init__(
@@ -178,7 +178,6 @@ class Dropdown(FormFieldControl):
         selected_suffix: Optional[Control] = None,
         input_filter: Optional[InputFilter] = None,
         capitalization: Optional[TextCapitalization] = None,
-        # selected_suffix_icon: Optional[str] = None,
         options_fill_horizontally: Optional[bool] = None,  # to be deprecated
         padding: Optional[PaddingValue] = None,  # to be deprecated
         trailing_icon: Optional[IconValueOrControl] = None,
@@ -364,7 +363,6 @@ class Dropdown(FormFieldControl):
         self.menu_style = menu_style
         self.capitalization = capitalization
         self.label_content = label_content
-        # self.selected_suffix_icon = selected_suffix_icon
         self.leading_icon = leading_icon
         self.trailing_icon = trailing_icon
         self.selected_trailing_icon = selected_trailing_icon
@@ -386,19 +384,8 @@ class Dropdown(FormFieldControl):
         self._set_attr_json("elevation", self.__elevation, wrap_attr_dict=True)
         ##self._set_attr_json("inputFilter", self.__input_filter)
         ##self._set_attr_json("expandInsets", self.__expanded_insets)
-        # 3self._set_attr_json("menuStyle", self.__menu_style)
         self.expand_loose = self.expand  # to fix a display issue
 
-    # def _get_children(self):
-    #     children = FormFieldControl._get_children(self) + self.__options
-    #     if isinstance(self.__selected_suffix, Control):
-    #         self.__selected_suffix._set_attr_internal("n", "selectedSuffix")
-    #         children.append(self.__selected_suffix)
-
-    #     if isinstance(self.__label_content, Control):
-    #         self.__label_content._set_attr_internal("n", "label")
-    #         children.append(self.__label_content)
-    #     return children
     def _get_children(self):
         children = FormFieldControl._get_children(self) + self.__options
         if isinstance(self.__leading_icon, Control):
