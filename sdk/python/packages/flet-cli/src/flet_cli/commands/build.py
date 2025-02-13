@@ -339,24 +339,31 @@ class Command(BaseCommand):
             help="disable Android app splash screen",
         )
         parser.add_argument(
-            "--team",
-            dest="team_id",
+            "--ios-team-id",
+            dest="ios_team_id",
             type=str,
-            help="Team ID to sign iOS bundle (ipa only)",
+            help="team ID to sign iOS bundle (ipa only)",
             required=False,
         )
         parser.add_argument(
             "--ios-export-method",
             dest="ios_export_method",
             type=str,
-            help='Export method for iOS app. Default is "debugging"',
+            help='export method for iOS app. Default is "debugging"',
             required=False,
         )
         parser.add_argument(
             "--ios-provisioning-profile",
             dest="ios_provisioning_profile",
             type=str,
-            help="Provisioning profile name or UUID that used to sign and export iOS app",
+            help="provisioning profile name or UUID that used to sign and export iOS app",
+            required=False,
+        )
+        parser.add_argument(
+            "--ios-signing-certificate",
+            dest="ios_signing_certificate",
+            type=str,
+            help="provide a certificate name, SHA-1 hash, or automatic selector to use for signing iOS app bundle",
             required=False,
         )
         parser.add_argument(
@@ -417,11 +424,32 @@ class Command(BaseCommand):
             help="compile site packages' .py files to .pyc",
         )
         parser.add_argument(
-            "--cleanup-on-compile",
-            dest="cleanup_on_compile",
+            "--cleanup-app",
+            dest="cleanup_app",
             action="store_true",
             default=None,
-            help="remove unnecessary app and package files after compiling",
+            help="remove unnecessary app files upon packaging",
+        )
+        parser.add_argument(
+            "--cleanup-app-files",
+            dest="cleanup_app_files",
+            action="append",
+            nargs="*",
+            help="the list of globs to delete extra app files and directories",
+        )
+        parser.add_argument(
+            "--cleanup-packages",
+            dest="cleanup_packages",
+            action="store_true",
+            default=None,
+            help="remove unnecessary package files upon packaging",
+        )
+        parser.add_argument(
+            "--cleanup-packages-files",
+            dest="cleanup_packages_files",
+            action="append",
+            nargs="*",
+            help="the list of globs to delete extra package files and directories",
         )
         parser.add_argument(
             "--flutter-build-args",
@@ -670,13 +698,6 @@ class Command(BaseCommand):
         )
         self.pubspec_path = str(self.flutter_dir.joinpath("pubspec.yaml"))
         self.get_pyproject = load_pyproject_toml(self.python_app_path)
-
-        if self.options.team_id:
-            self.skip_flutter_doctor = True
-            self.cleanup(
-                1,
-                f"--team option is deprecated. Use --ios-provisioning-profile instead.",
-            )
 
     def flutter_version_valid(self):
         version_results = self.run(
@@ -1066,8 +1087,12 @@ class Command(BaseCommand):
             or "debugging",
             "ios_provisioning_profile": self.options.ios_provisioning_profile
             or self.get_pyproject("tool.flet.ios.provisioning_profile"),
+            "ios_signing_certificate": self.options.ios_signing_certificate
+            or self.get_pyproject("tool.flet.ios.signing_certificate"),
             "ios_export_options": self.get_pyproject("tool.flet.ios.export_options")
             or {},
+            "ios_team_id": self.options.ios_team_id
+            or self.get_pyproject("tool.flet.ios.team"),
             "options": {
                 "info_plist": info_plist,
                 "macos_entitlements": macos_entitlements,
@@ -1543,46 +1568,58 @@ class Command(BaseCommand):
         # source-packages
         source_packages = (
             self.options.source_packages
-            or self.get_pyproject("tool.flet.source_packages")
             or self.get_pyproject(f"tool.flet.{self.config_platform}.source_packages")
+            or self.get_pyproject("tool.flet.source_packages")
         )
         if source_packages:
             package_env["SERIOUS_PYTHON_ALLOW_SOURCE_DISTRIBUTIONS"] = ",".join(
                 source_packages
             )
 
-        if (
-            self.options.compile_app
-            if self.options.compile_app is not None
-            else (
-                self.get_pyproject("tool.flet.compile.app")
-                if self.get_pyproject("tool.flet.compile.app") is not None
-                else False
-            )
-        ):
+        if self.get_bool_setting(self.options.compile_app, "compile.app", False):
             package_args.append("--compile-app")
 
-        if (
-            self.options.compile_packages
-            if self.options.compile_packages is not None
-            else (
-                self.get_pyproject("tool.flet.compile.packages")
-                if self.get_pyproject("tool.flet.compile.packages") is not None
-                else False
-            )
+        if self.get_bool_setting(
+            self.options.compile_packages, "compile.packages", False
         ):
             package_args.append("--compile-packages")
 
-        if (
-            self.options.cleanup_on_compile
-            if self.options.cleanup_on_compile is not None
-            else (
-                self.get_pyproject("tool.flet.compile.cleanup")
-                if self.get_pyproject("tool.flet.compile.cleanup") is not None
-                else True
-            )
+        cleanup_app = self.get_bool_setting(
+            self.options.cleanup_app, "cleanup.app", False
+        )
+        cleanup_packages = self.get_bool_setting(
+            self.options.cleanup_packages, "cleanup.packages", True
+        )
+
+        # TODO: should be depreacted
+        if self.get_bool_setting(None, "compile.cleanup", False):
+            cleanup_app = cleanup_packages = True
+
+        if cleanup_app_files := (
+            self.options.cleanup_app_files
+            or self.get_pyproject(f"tool.flet.{self.config_platform}.cleanup.app_files")
+            or self.get_pyproject("tool.flet.cleanup.app_files")
         ):
-            package_args.append("--cleanup")
+            package_args.extend(["--cleanup-app-files", ",".join(cleanup_app_files)])
+            cleanup_app = True
+
+        if cleanup_packages_files := (
+            self.options.cleanup_packages_files
+            or self.get_pyproject(
+                f"tool.flet.{self.config_platform}.cleanup.packages_files"
+            )
+            or self.get_pyproject("tool.flet.cleanup.packages_files")
+        ):
+            package_args.extend(
+                ["--cleanup-packages-files", ",".join(cleanup_packages_files)]
+            )
+            cleanup_packages = True
+
+        if cleanup_app:
+            package_args.append("--cleanup-app")
+
+        if cleanup_packages:
+            package_args.append("--cleanup-packages")
 
         if self.verbose > 1:
             package_args.append("--verbose")
@@ -1607,6 +1644,25 @@ class Command(BaseCommand):
             self.cleanup(1, "Flet app package app/app.zip was not created.")
 
         console.log(f"Packaged Python app {self.emojis['checkmark']}")
+
+    def get_bool_setting(self, cli_option, pyproj_setting, default_value):
+        assert self.get_pyproject
+        return (
+            cli_option
+            if cli_option is not None
+            else (
+                self.get_pyproject(f"tool.flet.{self.config_platform}.{pyproj_setting}")
+                if self.get_pyproject(
+                    f"tool.flet.{self.config_platform}.{pyproj_setting}"
+                )
+                is not None
+                else (
+                    self.get_pyproject(f"tool.flet.{pyproj_setting}")
+                    if self.get_pyproject(f"tool.flet.{pyproj_setting}") is not None
+                    else default_value
+                )
+            )
+        )
 
     def register_flutter_extensions(self):
         assert self.flutter_packages_dir
@@ -1697,7 +1753,12 @@ class Command(BaseCommand):
 
         if self.options.target_platform in ["ipa"]:
             if self.template_data["ios_provisioning_profile"]:
-                build_args.extend(["--export-options-plist", "ios/exportOptions.plist"])
+                build_args.extend(
+                    [
+                        "--export-options-plist",
+                        "ios/exportOptions.plist",
+                    ]
+                )
             else:
                 build_args.append("--no-codesign")
 
@@ -1732,12 +1793,15 @@ class Command(BaseCommand):
             capture_output=self.verbose < 1,
         )
 
-        if build_result.returncode != 0:
+        if (
+            build_result.returncode != 0
+            or "Encountered error while creating the IPA" in str(build_result.stderr)
+        ):
             if build_result.stdout:
                 console.log(build_result.stdout, style=verbose1_style)
             if build_result.stderr:
                 console.log(build_result.stderr, style=error_style)
-            self.cleanup(build_result.returncode)
+            self.cleanup(build_result.returncode if build_result.returncode else 1)
         console.log(
             f"Built [cyan]{self.platforms[self.options.target_platform]['status_text']}[/cyan] {self.emojis['checkmark']}",
         )
