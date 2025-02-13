@@ -40,23 +40,9 @@ class DropdownMenuControl extends StatefulWidget {
   State<DropdownMenuControl> createState() => _DropdownMenuControlState();
 }
 
-
-enum ColorLabel {
-  blue('Blue', Colors.blue),
-  pink('Pink', Colors.pink),
-  green('Green', Colors.green),
-  yellow('Orange', Colors.orange),
-  grey('Grey', Colors.grey);
-
-  const ColorLabel(this.label, this.color);
-  final String label;
-  final Color color;
-}
-
 class _DropdownMenuControlState extends State<DropdownMenuControl>
     with FletStoreMixin {
   String? _value;
-  ColorLabel? selectedColor;
   bool _focused = false;
   late final FocusNode _focusNode;
   String? _lastFocusValue;
@@ -105,8 +91,6 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
       var selectedTrailingIconCtrl =
           widget.children.where((c) => c.name == "selected_trailing_icon" && c.isVisible);
       var selectedTrailingIconStr = parseIcon(widget.control.attrString("selectedTrailingIcon"));
-      var iconCtrl =
-          widget.children.where((c) => c.name == "icon" && c.isVisible);
       var prefixIconCtrl =
           widget.children.where((c) => c.name == "prefix_icon" && c.isVisible);
       var prefixIconStr = parseIcon(widget.control.attrString("prefixIcon"));
@@ -337,9 +321,12 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
 
       Widget dropDown = DropdownMenu<String>(
                       enabled: !disabled,
+                      //focusNode: _focusNode,
                       initialSelection: _value,
-                      //controller: colorController,
+                      //controller: controller,
                       requestFocusOnTap: editable,
+                      enableFilter: widget.control.attrBool("enableFilter", false)!,
+                      enableSearch: widget.control.attrBool("enableFilter", true)!,
                       // requestFocusOnTap is enabled/disabled by platforms when it is null.
                       // On mobile platforms, this is false by default. Setting this to true will
                       // trigger focus request on the text field and virtual keyboard will appear
@@ -372,11 +359,16 @@ class _DropdownMenuControlState extends State<DropdownMenuControl>
                       
     
                       inputDecorationTheme: inputDecorationTheme,
-                      // onSelected: (ColorLabel? color) {
-                      //   setState(() {
-                      //     selectedColor = color;
-                      //   });
-                      // },
+                      onSelected: disabled
+                          ? null
+                          : (String? value) {
+                              debugPrint("DropdownMenu selected value: $value");
+                              _value = value!;
+                              widget.backend
+                                  .updateControlState(widget.control.id, {"value": value});
+                              widget.backend
+                                  .triggerControlEvent(widget.control.id, "change", value);
+                            },
                       // dropdownMenuEntries: ColorLabel.values
                       //     .map<DropdownMenuEntry<ColorLabel>>(
                       //         (ColorLabel color) {

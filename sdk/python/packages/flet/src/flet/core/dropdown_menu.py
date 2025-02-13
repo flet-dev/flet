@@ -20,6 +20,7 @@ from flet.core.types import (
     IconValueOrControl,
     Number,
     OffsetValue,
+    OptionalControlEventCallable,
     OptionalEventCallable,
     PaddingValue,
     ResponsiveNumber,
@@ -140,6 +141,7 @@ class DropdownMenu(FormFieldControl):
     def __init__(
         self,
         value: Optional[str] = None,
+        autofocus: Optional[bool] = None,  # to be deprecated
         text_align: Optional[TextAlign] = None,
         elevation: ControlStateValue[OptionalNumber] = None,
         options: Optional[List[DropdownMenuOption]] = None,
@@ -160,6 +162,7 @@ class DropdownMenu(FormFieldControl):
         on_change: OptionalEventCallable = None,
         on_focus: OptionalEventCallable = None,
         on_blur: OptionalEventCallable = None,
+        enable_feedback: Optional[bool] = None,  # to be deprecated
         item_height: OptionalNumber = None,  # to be deprecated
         alignment: Optional[Alignment] = None,  # to be deprecated
         hint_content: Optional[Control] = None,  # to be deprecated
@@ -308,6 +311,8 @@ class DropdownMenu(FormFieldControl):
             "alignment",
             "focused_bgcolor",
             "item_height",
+            "autofocus",
+            "enable_feedback",
         ]
 
         for item in deprecated_properties_list:
@@ -490,3 +495,48 @@ class DropdownMenu(FormFieldControl):
     @elevation.setter
     def elevation(self, value: Union[OptionalNumber, Dict[ControlState, Number]]):
         self.__elevation = value
+
+    # enable_filter
+    @property
+    def enable_filter(self) -> bool:
+        return self._get_attr("enableFilter", data_type="bool", def_value=False)
+
+    @enable_filter.setter
+    def enable_filter(self, value: Optional[bool]):
+        self._set_attr("enableFilter", value)
+
+    # enable_search
+    @property
+    def enable_search(self) -> bool:
+        return self._get_attr("enableSearch", data_type="bool", def_value=True)
+
+    @enable_filter.setter
+    def enable_search(self, value: Optional[bool]):
+        self._set_attr("enableSearch", value)
+
+    # on_change
+    @property
+    def on_change(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("change")
+
+    @on_change.setter
+    def on_change(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("change", handler)
+
+    # on_focus
+    @property
+    def on_focus(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("focus")
+
+    @on_focus.setter
+    def on_focus(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("focus", handler)
+
+    # on_blur
+    @property
+    def on_blur(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("blur")
+
+    @on_blur.setter
+    def on_blur(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("blur", handler)
