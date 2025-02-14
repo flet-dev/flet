@@ -19,15 +19,16 @@ from flet.utils import (
     open_in_browser,
     random_string,
 )
-from flet_cli.commands.base import BaseCommand
-from flet_cli.utils.pyproject_toml import load_pyproject_toml
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
+
+from flet_cli.commands.base import BaseCommand
+from flet_cli.utils.pyproject_toml import load_pyproject_toml
 
 
 class Command(BaseCommand):
     """
-    Run Flet app.
+    Run a Flet app in hot-reload mode.
     """
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
