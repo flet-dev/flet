@@ -55,9 +55,7 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
     double max = widget.control.attrDouble("max", 1)!;
     int? divisions = widget.control.attrInt("divisions");
 
-    debugPrint("CupertinoSliderControl build: ${widget.control.id}");
-
-    double value = widget.control.attrDouble("value", 0)!;
+    double value = widget.control.attrDouble("value", min)!;
     if (_value != value) {
       // verify limits
       if (value < min) {
