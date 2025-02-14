@@ -19,7 +19,7 @@ console = Console(log_path=False)
 
 class Command(BaseCommand):
     """
-    Check the health of your Flet environment.
+    `flet doctor` command to provide information about the system and environment setup.
     """
 
     def handle(self, options: argparse.Namespace) -> None:
@@ -66,15 +66,3 @@ class Command(BaseCommand):
                 console.print(
                     "[yellow]⚠ No virtual environment or Conda detected[/yellow]"
                 )
-
-    def run_command(self, command: str) -> str:
-        """Helper function to run a command and return its output."""
-        try:
-            result = subprocess.run(command, shell=True, capture_output=True, text=True)
-            return (
-                result.stdout.strip()
-                if result.returncode == 0
-                else f"[red]⚠ Error running {command}[/red]"
-            )
-        except Exception as e:
-            return f"[red]⚠ {str(e)}[/red]"
