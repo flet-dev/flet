@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
 import '../flet_control_backend.dart';
@@ -6,17 +7,16 @@ import '../models/control.dart';
 import '../models/control_view_model.dart';
 import '../utils/borders.dart';
 import '../utils/buttons.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/form_field.dart';
 import '../utils/icons.dart';
+import '../utils/numbers.dart';
 import '../utils/text.dart';
 import '../utils/textfield.dart';
 import 'create_control.dart';
 import 'flet_store_mixin.dart';
 import 'textfield.dart';
-import '../utils/colors.dart';
-import '../utils/numbers.dart';
-
 
 class DropdownControl extends StatefulWidget {
   final Control? parent;
@@ -39,8 +39,7 @@ class DropdownControl extends StatefulWidget {
   State<DropdownControl> createState() => _DropdownControlState();
 }
 
-class _DropdownControlState extends State<DropdownControl>
-    with FletStoreMixin {
+class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
   String? _value;
   late final FocusNode _focusNode;
   String? _lastFocusValue;
@@ -72,12 +71,14 @@ class _DropdownControlState extends State<DropdownControl>
 
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
       bool editable = widget.control.attrBool("editable", false)!;
+      bool autofocus = widget.control.attrBool("autofocus", false)!;
       var textSize = widget.control.attrDouble("textSize");
       var label = widget.control.attrString("label");
-      var trailingIconCtrl =
-          widget.children.where((c) => c.name == "trailing_icon" && c.isVisible);
-      var trailingIconStr = parseIcon(widget.control.attrString("trailingIcon"));
-      
+      var trailingIconCtrl = widget.children
+          .where((c) => c.name == "trailing_icon" && c.isVisible);
+      var trailingIconStr =
+          parseIcon(widget.control.attrString("trailingIcon"));
+
       var leadingIconCtrl =
           widget.children.where((c) => c.name == "leading_icon" && c.isVisible);
       var leadingIconStr = parseIcon(widget.control.attrString("leadingIcon"));
@@ -85,10 +86,11 @@ class _DropdownControlState extends State<DropdownControl>
       var selectIconCtrl =
           widget.children.where((c) => c.name == "select_icon" && c.isVisible);
       var selectIconStr = parseIcon(widget.control.attrString("selectIcon"));
-      
-      var selectedTrailingIconCtrl =
-          widget.children.where((c) => c.name == "selected_trailing_icon" && c.isVisible);
-      var selectedTrailingIconStr = parseIcon(widget.control.attrString("selectedTrailingIcon"));
+
+      var selectedTrailingIconCtrl = widget.children
+          .where((c) => c.name == "selected_trailing_icon" && c.isVisible);
+      var selectedTrailingIconStr =
+          parseIcon(widget.control.attrString("selectedTrailingIcon"));
       var prefixIconCtrl =
           widget.children.where((c) => c.name == "prefix_icon" && c.isVisible);
       var prefixIconStr = parseIcon(widget.control.attrString("prefixIcon"));
@@ -96,28 +98,29 @@ class _DropdownControlState extends State<DropdownControl>
           widget.children.where((c) => c.name == "label" && c.isVisible);
       var color = widget.control.attrColor("color", context);
 
-      TextAlign textAlign =
-          parseTextAlign(widget.control.attrString("textAlign"), TextAlign.start)!;
+      TextAlign textAlign = parseTextAlign(
+          widget.control.attrString("textAlign"), TextAlign.start)!;
 
       var fillColor = widget.control.attrColor("fillColor", context);
       var borderColor = widget.control.attrColor("borderColor", context);
 
       var borderRadius = parseBorderRadius(widget.control, "borderRadius");
-      var focusedBorderColor = widget.control.attrColor("focusedBorderColor", context);
+      var focusedBorderColor =
+          widget.control.attrColor("focusedBorderColor", context);
       var borderWidth = widget.control.attrDouble("borderWidth");
       var focusedBorderWidth = widget.control.attrDouble("focusedBorderWidth");
 
       FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
-    widget.control.attrString("border"),
-    FormFieldInputBorder.outline,
-  )!;
+        widget.control.attrString("border"),
+        FormFieldInputBorder.outline,
+      )!;
 
       InputBorder? border;
 
       if (inputBorder == FormFieldInputBorder.underline) {
         border = UnderlineInputBorder(
             borderSide: BorderSide(
-                color: borderColor ?? Color(0xFF000000),
+                color: borderColor ?? const Color(0xFF000000),
                 width: borderWidth ?? 1.0));
       } else if (inputBorder == FormFieldInputBorder.none) {
         border = InputBorder.none;
@@ -127,11 +130,11 @@ class _DropdownControlState extends State<DropdownControl>
           borderWidth != null) {
         border = OutlineInputBorder(
             borderSide: BorderSide(
-                color: borderColor ?? Color(0xFF000000),
+                color: borderColor ?? const Color(0xFF000000),
                 width: borderWidth ?? 1.0));
         if (borderRadius != null) {
-          border =
-              (border as OutlineInputBorder).copyWith(borderRadius: borderRadius);
+          border = (border as OutlineInputBorder)
+              .copyWith(borderRadius: borderRadius);
         }
         if (borderColor != null || borderWidth != null) {
           border = (border as OutlineInputBorder).copyWith(
@@ -139,11 +142,13 @@ class _DropdownControlState extends State<DropdownControl>
                   ? BorderSide.none
                   : BorderSide(
                       color: borderColor ??
-                          Theme.of(context).colorScheme.onSurface.withOpacity(0.38),
+                          Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.38),
                       width: borderWidth ?? 1.0));
         }
       }
-
 
       InputBorder? focusedBorder;
       if (borderColor != null ||
@@ -161,27 +166,27 @@ class _DropdownControlState extends State<DropdownControl>
       }
 
       InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
-        filled: widget.control.attrBool("filled", false)!, 
-        fillColor: fillColor, 
-        hintStyle: parseTextStyle(Theme.of(context), widget.control, "hintStyle"),
-        errorStyle: parseTextStyle(
-                        Theme.of(context), widget.control, "errorStyle"),
-        helperStyle: parseTextStyle(Theme.of(context), widget.control, "helperStyle"),      
+        filled: widget.control.attrBool("filled", false)!,
+        fillColor: fillColor,
+        hintStyle:
+            parseTextStyle(Theme.of(context), widget.control, "hintStyle"),
+        errorStyle:
+            parseTextStyle(Theme.of(context), widget.control, "errorStyle"),
+        helperStyle:
+            parseTextStyle(Theme.of(context), widget.control, "helperStyle"),
         border: border,
         enabledBorder: border,
         focusedBorder: focusedBorder,
-        isDense: widget.control.attrBool("dense")?? false,
+        isDense: widget.control.attrBool("dense") ?? false,
         contentPadding: parseEdgeInsets(widget.control, "contentPadding"),
-
-        );
+      );
 
       TextStyle? textStyle =
           parseTextStyle(Theme.of(context), widget.control, "textStyle");
       if (textSize != null || color != null) {
         textStyle = (textStyle ?? const TextStyle()).copyWith(
             fontSize: textSize,
-            color: color ??
-                Theme.of(context).colorScheme.onSurface);
+            color: color ?? Theme.of(context).colorScheme.onSurface);
       }
 
       var items = itemsView.controlViews
@@ -218,11 +223,11 @@ class _DropdownControlState extends State<DropdownControl>
                       parseIcon(itemCtrlView.control.attrString("leadingIcon")))
                   : null,
           trailingIcon: trailingIconCtrls.isNotEmpty
-              ? createControl(
-                  itemCtrlView.control, trailingIconCtrls.first.id, itemDisabled)
+              ? createControl(itemCtrlView.control, trailingIconCtrls.first.id,
+                  itemDisabled)
               : itemCtrlView.control.attrString("trailingIcon") != null
-                  ? Icon(
-                      parseIcon(itemCtrlView.control.attrString("trailingIcon")))
+                  ? Icon(parseIcon(
+                      itemCtrlView.control.attrString("trailingIcon")))
                   : null,
           style: style,
         );
@@ -260,59 +265,86 @@ class _DropdownControlState extends State<DropdownControl>
       }
 
       Widget dropDown = DropdownMenu<String>(
-                      enabled: !disabled,
-                      focusNode: _focusNode,
-                      initialSelection: _value,
-                      //controller: controller,
-                      requestFocusOnTap: editable,
-                      enableFilter: widget.control.attrBool("enableFilter", false)!,
-                      enableSearch: widget.control.attrBool("enableFilter", true)!,
-                      menuHeight: widget.control.attrDouble("maxMenuHeight"),
-                      label: labelCtrl.isNotEmpty
-                        ? createControl(widget.control, labelCtrl.first.id, disabled): 
-                        label != null? Text(label, style: parseTextStyle(
-                        Theme.of(context), widget.control, "labelStyle")): null,
-                      leadingIcon: leadingIconCtrl.isNotEmpty ? 
-                        createControl(widget.control, leadingIconCtrl.first.id, disabled): 
-                        leadingIconStr != null? Icon(leadingIconStr) : prefixIconCtrl.isNotEmpty ? 
-                        createControl(widget.control, prefixIconCtrl.first.id, disabled): 
-                        prefixIconStr != null? Icon(prefixIconStr): null,
-                      trailingIcon: trailingIconCtrl.isNotEmpty ? 
-                        createControl(widget.control, trailingIconCtrl.first.id, disabled): 
-                        trailingIconStr != null? Icon(trailingIconStr): selectIconCtrl.isNotEmpty ? 
-                        createControl(widget.control, selectIconCtrl.first.id, disabled) : 
-                        selectIconStr != null? Icon(selectIconStr) : null,
-                      selectedTrailingIcon: selectedTrailingIconCtrl.isNotEmpty ? 
-                        createControl(widget.control, selectedTrailingIconCtrl.first.id, disabled): 
-                        selectedTrailingIconStr != null? Icon(selectedTrailingIconStr): null,
-                      textStyle: textStyle,
-                      textAlign: textAlign,
-                      width: widget.control.attrDouble("width"),
-                      errorText: widget.control.attrString("errorText"),
-                      hintText: widget.control.attrString("hintText"),
-                      helperText: widget.control.attrString("helperText"),
-                      //inputFormatters: inputFormatters,
-                      //expandedInsets: parseEdgeInsets(widget.control, "expandedInsets"),
-                      menuStyle: MenuStyle(backgroundColor: parseWidgetStateColor(
-              Theme.of(context), widget.control, "bgcolor"), elevation: parseWidgetStateDouble(widget.control, "elevation"),),
-                      
-    
-                      inputDecorationTheme: inputDecorationTheme,
-                      onSelected: disabled
-                          ? null
-                          : (String? value) {
-                              debugPrint("DropdownMenu selected value: $value");
-                              _value = value!;
-                              widget.backend
-                                  .updateControlState(widget.control.id, {"value": value});
-                              widget.backend
-                                  .triggerControlEvent(widget.control.id, "change", value);
-                            },
-                      dropdownMenuEntries: items,                   
-                    );
+        enabled: !disabled,
+        focusNode: _focusNode,
+        initialSelection: _value,
+        //controller: controller,
+        requestFocusOnTap: editable,
+        enableFilter: widget.control.attrBool("enableFilter", false)!,
+        enableSearch: widget.control.attrBool("enableFilter", true)!,
+        menuHeight: widget.control.attrDouble("maxMenuHeight"),
+        label: labelCtrl.isNotEmpty
+            ? createControl(widget.control, labelCtrl.first.id, disabled)
+            : label != null
+                ? Text(label,
+                    style: parseTextStyle(
+                        Theme.of(context), widget.control, "labelStyle"))
+                : null,
+        leadingIcon: leadingIconCtrl.isNotEmpty
+            ? createControl(widget.control, leadingIconCtrl.first.id, disabled)
+            : leadingIconStr != null
+                ? Icon(leadingIconStr)
+                : prefixIconCtrl.isNotEmpty
+                    ? createControl(
+                        widget.control, prefixIconCtrl.first.id, disabled)
+                    : prefixIconStr != null
+                        ? Icon(prefixIconStr)
+                        : null,
+        trailingIcon: trailingIconCtrl.isNotEmpty
+            ? createControl(widget.control, trailingIconCtrl.first.id, disabled)
+            : trailingIconStr != null
+                ? Icon(trailingIconStr)
+                : selectIconCtrl.isNotEmpty
+                    ? createControl(
+                        widget.control, selectIconCtrl.first.id, disabled)
+                    : selectIconStr != null
+                        ? Icon(selectIconStr)
+                        : null,
+        selectedTrailingIcon: selectedTrailingIconCtrl.isNotEmpty
+            ? createControl(
+                widget.control, selectedTrailingIconCtrl.first.id, disabled)
+            : selectedTrailingIconStr != null
+                ? Icon(selectedTrailingIconStr)
+                : null,
+        textStyle: textStyle,
+        textAlign: textAlign,
+        width: widget.control.attrDouble("width"),
+        errorText: widget.control.attrString("errorText"),
+        hintText: widget.control.attrString("hintText"),
+        helperText: widget.control.attrString("helperText"),
+        //inputFormatters: inputFormatters,
+        //expandedInsets: parseEdgeInsets(widget.control, "expandedInsets"),
+        menuStyle: MenuStyle(
+          backgroundColor: parseWidgetStateColor(
+              Theme.of(context), widget.control, "bgcolor"),
+          elevation: parseWidgetStateDouble(widget.control, "elevation"),
+        ),
 
+        inputDecorationTheme: inputDecorationTheme,
+        onSelected: disabled
+            ? null
+            : (String? value) {
+                debugPrint("DropdownMenu selected value: $value");
+                _value = value!;
+                widget.backend
+                    .updateControlState(widget.control.id, {"value": value});
+                widget.backend
+                    .triggerControlEvent(widget.control.id, "change", value);
+              },
+        dropdownMenuEntries: items,
+      );
 
-      return constrainedControl(context, dropDown, widget.parent, widget.control);
+      var didAutoFocus = false;
+
+      if (!didAutoFocus && autofocus) {
+        didAutoFocus = true;
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          FocusScope.of(context).autofocus(_focusNode);
+        });
+      }
+
+      return constrainedControl(
+          context, dropDown, widget.parent, widget.control);
     });
   }
 }

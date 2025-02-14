@@ -165,7 +165,7 @@ class Dropdown(FormFieldControl):
     def __init__(
         self,
         value: Optional[str] = None,
-        autofocus: Optional[bool] = None,  # to be deprecated
+        autofocus: Optional[bool] = None,
         text_align: Optional[TextAlign] = None,
         elevation: ControlStateValue[OptionalNumber] = None,
         options: Optional[List[Option]] = None,
@@ -338,7 +338,6 @@ class Dropdown(FormFieldControl):
             "alignment",
             "focused_bgcolor",
             "item_height",
-            "autofocus",
             "enable_feedback",
             "options_fill_horizontally",
             "padding",
@@ -375,6 +374,7 @@ class Dropdown(FormFieldControl):
         self.bgcolor = bgcolor
         self.elevation = elevation
         self.text_align = text_align
+        self.autofocus = autofocus
 
     def _get_control_name(self):
         return "dropdown"
@@ -552,6 +552,15 @@ class Dropdown(FormFieldControl):
     @enable_filter.setter
     def enable_search(self, value: Optional[bool]):
         self._set_attr("enableSearch", value)
+
+    # autofocus
+    @property
+    def autofocus(self) -> bool:
+        return self._get_attr("autofocus", data_type="bool", def_value=False)
+
+    @autofocus.setter
+    def autofocus(self, value: Optional[bool]):
+        self._set_attr("autofocus", value)
 
     # on_change
     @property
