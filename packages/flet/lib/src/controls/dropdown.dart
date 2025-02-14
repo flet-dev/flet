@@ -271,7 +271,7 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         //controller: controller,
         requestFocusOnTap: editable,
         enableFilter: widget.control.attrBool("enableFilter", false)!,
-        enableSearch: widget.control.attrBool("enableFilter", true)!,
+        enableSearch: widget.control.attrBool("enableSearch", true)!,
         menuHeight: widget.control.attrDouble("maxMenuHeight"),
         label: labelCtrl.isNotEmpty
             ? createControl(widget.control, labelCtrl.first.id, disabled)
