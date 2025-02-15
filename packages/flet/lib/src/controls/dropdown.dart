@@ -264,12 +264,14 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         inputFormatters.add(TextCapitalizationFormatter(textCapitalization));
       }
 
+      _focusNode.canRequestFocus = editable;
+
       Widget dropDown = DropdownMenu<String>(
         enabled: !disabled,
         focusNode: _focusNode,
         initialSelection: _value,
         //controller: controller,
-        requestFocusOnTap: editable,
+        //requestFocusOnTap: editable,
         enableFilter: widget.control.attrBool("enableFilter", false)!,
         enableSearch: widget.control.attrBool("enableSearch", true)!,
         menuHeight: widget.control.attrDouble("maxMenuHeight"),
