@@ -15,6 +15,7 @@ from flet.utils import cleanup_path, copy_tree, is_windows, slugify
 from flet.utils.platform_utils import get_bool_env_var
 from flet.version import update_version
 from flet_cli.commands.base import BaseCommand
+from flet_cli.utils.hash_stamp import HashStamp
 from flet_cli.utils.merge import merge_dict
 from flet_cli.utils.project_dependencies import (
     get_poetry_dependencies,
@@ -616,8 +617,8 @@ class Command(BaseCommand):
             self.register_flutter_extensions()
             self.create_flutter_project(second_pass=True)
             self.update_flutter_dependencies()
-            self.customize_icons_and_splash_images()
-            self.generate_icons_and_splash_screens()
+            if self.customize_icons_and_splash_images():
+                self.generate_icons_and_splash_screens()
             self.flutter_build()
             self.copy_build_output()
 
@@ -1130,12 +1131,19 @@ class Command(BaseCommand):
         assert self.get_pyproject
         assert self.flutter_dir
         assert self.template_data
+        assert self.build_dir
+
+        hash = HashStamp(
+            self.build_dir / ".hash" / f"template-{'2' if second_pass else '1'}"
+        )
 
         template_url = (
             self.options.template
             or self.get_pyproject("tool.flet.template.url")
             or DEFAULT_TEMPLATE_URL
         )
+        hash.update(template_url)
+
         template_ref = self.options.template_ref or self.get_pyproject(
             "tool.flet.template.ref"
         )
@@ -1145,9 +1153,13 @@ class Command(BaseCommand):
                 if flet.version.version
                 else update_version()
             )
+        hash.update(template_ref)
+
         template_dir = self.options.template_dir or self.get_pyproject(
             "tool.flet.template.dir"
         )
+        hash.update(template_dir)
+        hash.update(self.template_data)
 
         # if options.clear_cache is set, delete any existing Flutter bootstrap project directory
         if self.options.clear_cache and self.flutter_dir.exists() and not second_pass:
@@ -1162,23 +1174,24 @@ class Command(BaseCommand):
                 f'[bold blue]Creating Flutter bootstrap project from {template_url} with ref "{template_ref}"...'
             )
 
-        try:
-            from cookiecutter.main import cookiecutter
+        if hash.has_changed():
+            try:
+                from cookiecutter.main import cookiecutter
 
-            cookiecutter(
-                template=template_url,
-                checkout=template_ref,
-                directory=template_dir,
-                output_dir=str(self.flutter_dir.parent),
-                no_input=True,
-                overwrite_if_exists=True,
-                extra_context={
-                    k: v for k, v in self.template_data.items() if v is not None
-                },
-            )
-        except Exception as e:
-            shutil.rmtree(self.flutter_dir)
-            self.cleanup(1, f"{e}")
+                cookiecutter(
+                    template=template_url,
+                    checkout=template_ref,
+                    directory=template_dir,
+                    output_dir=str(self.flutter_dir.parent),
+                    no_input=True,
+                    overwrite_if_exists=True,
+                    extra_context={
+                        k: v for k, v in self.template_data.items() if v is not None
+                    },
+                )
+            except Exception as e:
+                shutil.rmtree(self.flutter_dir)
+                self.cleanup(1, f"{e}")
 
         if not second_pass:
             console.log(
@@ -1189,7 +1202,10 @@ class Command(BaseCommand):
         assert self.pubspec_path
         assert self.template_data
         assert self.get_pyproject
+        assert self.build_dir
         assert isinstance(self.flutter_dependencies, dict)
+
+        hash = HashStamp(self.build_dir / ".hash" / "flutter_deps")
 
         with open(self.pubspec_path, encoding="utf8") as f:
             pubspec = yaml.safe_load(f)
@@ -1197,6 +1213,8 @@ class Command(BaseCommand):
         # merge dependencies to a dest pubspec.yaml
         for k, v in self.flutter_dependencies.items():
             pubspec["dependencies"][k] = v
+            hash.update(k)
+            hash.update(v)
 
         pubspec = merge_dict(
             pubspec, self.get_pyproject("tool.flet.flutter.pubspec") or {}
@@ -1212,8 +1230,9 @@ class Command(BaseCommand):
                 )
 
         # save pubspec.yaml
-        with open(self.pubspec_path, "w", encoding="utf8") as f:
-            yaml.dump(pubspec, f)
+        if hash.has_changed():
+            with open(self.pubspec_path, "w", encoding="utf8") as f:
+                yaml.dump(pubspec, f)
 
     def customize_icons_and_splash_images(self):
         assert self.package_app_path
@@ -1221,8 +1240,11 @@ class Command(BaseCommand):
         assert self.options
         assert self.get_pyproject
         assert self.pubspec_path
+        assert self.build_dir
 
         self.status.update(f"[bold blue]Customizing app icons and splash images...")
+
+        hash = HashStamp(self.build_dir / ".hash" / "icons")
 
         with open(self.pubspec_path, encoding="utf8") as f:
             pubspec = yaml.safe_load(f)
@@ -1244,17 +1266,23 @@ class Command(BaseCommand):
                         return
 
             # copy icons
-            default_icon = self.copy_icon_image(self.assets_path, images_path, "icon")
-            ios_icon = self.copy_icon_image(self.assets_path, images_path, "icon_ios")
-            android_icon = self.copy_icon_image(
-                self.assets_path, images_path, "icon_android"
+            default_icon = self.copy_icon_image(
+                self.assets_path, images_path, "icon", hash
             )
-            web_icon = self.copy_icon_image(self.assets_path, images_path, "icon_web")
+            ios_icon = self.copy_icon_image(
+                self.assets_path, images_path, "icon_ios", hash
+            )
+            android_icon = self.copy_icon_image(
+                self.assets_path, images_path, "icon_android", hash
+            )
+            web_icon = self.copy_icon_image(
+                self.assets_path, images_path, "icon_web", hash
+            )
             windows_icon = self.copy_icon_image(
-                self.assets_path, images_path, "icon_windows"
+                self.assets_path, images_path, "icon_windows", hash
             )
             macos_icon = self.copy_icon_image(
-                self.assets_path, images_path, "icon_macos"
+                self.assets_path, images_path, "icon_macos", hash
             )
 
             fallback_image("flutter_launcher_icons/image_path", [default_icon])
@@ -1283,28 +1311,28 @@ class Command(BaseCommand):
 
             # copy splash images
             default_splash = self.copy_icon_image(
-                self.assets_path, images_path, "splash"
+                self.assets_path, images_path, "splash", hash
             )
             default_dark_splash = self.copy_icon_image(
-                self.assets_path, images_path, "splash_dark"
+                self.assets_path, images_path, "splash_dark", hash
             )
             ios_splash = self.copy_icon_image(
-                self.assets_path, images_path, "splash_ios"
+                self.assets_path, images_path, "splash_ios", hash
             )
             ios_dark_splash = self.copy_icon_image(
-                self.assets_path, images_path, "splash_dark_ios"
+                self.assets_path, images_path, "splash_dark_ios", hash
             )
             android_splash = self.copy_icon_image(
-                self.assets_path, images_path, "splash_android"
+                self.assets_path, images_path, "splash_android", hash
             )
             android_dark_splash = self.copy_icon_image(
-                self.assets_path, images_path, "splash_dark_android"
+                self.assets_path, images_path, "splash_dark_android", hash
             )
             web_splash = self.copy_icon_image(
-                self.assets_path, images_path, "splash_web"
+                self.assets_path, images_path, "splash_web", hash
             )
             web_dark_splash = self.copy_icon_image(
-                self.assets_path, images_path, "splash_dark_web"
+                self.assets_path, images_path, "splash_dark_web", hash
             )
             fallback_image(
                 "flutter_native_splash/image",
@@ -1425,13 +1453,21 @@ class Command(BaseCommand):
             )
         )
 
+        # check if pubspec changed
+        hash.update(pubspec)
+
+        icons_config_updated = hash.has_changed()
+
         # save pubspec.yaml
-        with open(self.pubspec_path, "w", encoding="utf8") as f:
-            yaml.dump(pubspec, f)
+        if icons_config_updated:
+            with open(self.pubspec_path, "w", encoding="utf8") as f:
+                yaml.dump(pubspec, f)
 
         console.log(
             f"Customized app icons and splash images {self.emojis['checkmark']}"
         )
+
+        return icons_config_updated
 
     def generate_icons_and_splash_screens(self):
         assert self.options
@@ -1486,6 +1522,8 @@ class Command(BaseCommand):
         assert self.flutter_dir
         assert self.flutter_packages_dir
 
+        hash = HashStamp(self.build_dir / ".hash" / "package")
+
         self.status.update(f"[bold blue]Packaging Python app...")
         package_args = [
             self.dart_exe,
@@ -1529,10 +1567,12 @@ class Command(BaseCommand):
         elif requirements_txt.exists():
             if self.verbose > 1:
                 with open(requirements_txt, "r") as f:
+                    reqs_txt_contents = f.read()
                     console.log(
-                        f"Contents of requirements.txt: {f.read()}",
+                        f"Contents of requirements.txt: {reqs_txt_contents}",
                         style=verbose2_style,
                     )
+                    hash.update(reqs_txt_contents)
             package_args.append(f"-r,{requirements_txt}")
         else:
             flet_version = (
@@ -1623,6 +1663,12 @@ class Command(BaseCommand):
 
         if self.verbose > 1:
             package_args.append("--verbose")
+
+        # check if site-packages installation could be skipped
+        for arg in package_args:
+            hash.update(arg)
+        if not hash.has_changed():
+            package_args.append("--skip-site-packages")
 
         package_result = self.run(
             package_args,
@@ -1861,12 +1907,16 @@ class Command(BaseCommand):
             f"Copied build to [cyan]{self.rel_out_dir}[/cyan] directory {self.emojis['checkmark']}"
         )
 
-    def copy_icon_image(self, src_path: Path, dest_path: Path, image_name: str):
+    def copy_icon_image(
+        self, src_path: Path, dest_path: Path, image_name: str, hash: HashStamp
+    ):
         images = glob.glob(str(src_path.joinpath(f"{image_name}.*")))
         if len(images) > 0:
             if self.verbose > 0:
                 console.log(f"Copying {images[0]} to {dest_path}", style=verbose1_style)
             shutil.copy(images[0], dest_path)
+            hash.update(images[0])
+            hash.update(Path(images[0]).stat().st_mtime)
             return Path(images[0]).name
         return None
 
