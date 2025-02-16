@@ -446,8 +446,8 @@ class Command(BaseCommand):
             help="remove unnecessary package files upon packaging",
         )
         parser.add_argument(
-            "--cleanup-packages-files",
-            dest="cleanup_packages_files",
+            "--cleanup-package-files",
+            dest="cleanup_package_files",
             action="append",
             nargs="*",
             help="the list of globs to delete extra package files and directories",
@@ -1643,15 +1643,15 @@ class Command(BaseCommand):
             package_args.extend(["--cleanup-app-files", ",".join(cleanup_app_files)])
             cleanup_app = True
 
-        if cleanup_packages_files := (
-            self.options.cleanup_packages_files
+        if cleanup_package_files := (
+            self.options.cleanup_package_files
             or self.get_pyproject(
-                f"tool.flet.{self.config_platform}.cleanup.packages_files"
+                f"tool.flet.{self.config_platform}.cleanup.package_files"
             )
-            or self.get_pyproject("tool.flet.cleanup.packages_files")
+            or self.get_pyproject("tool.flet.cleanup.package_files")
         ):
             package_args.extend(
-                ["--cleanup-packages-files", ",".join(cleanup_packages_files)]
+                ["--cleanup-package-files", ",".join(cleanup_package_files)]
             )
             cleanup_packages = True
 
