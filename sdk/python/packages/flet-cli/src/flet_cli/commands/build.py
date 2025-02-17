@@ -617,8 +617,7 @@ class Command(BaseCommand):
             self.register_flutter_extensions()
             self.create_flutter_project(second_pass=True)
             self.update_flutter_dependencies()
-            if self.customize_icons_and_splash_images():
-                self.generate_icons_and_splash_screens()
+            self.customize_icons_and_splash_images()
             self.flutter_build()
             self.copy_build_output()
 
@@ -1203,6 +1202,7 @@ class Command(BaseCommand):
             except Exception as e:
                 shutil.rmtree(self.flutter_dir)
                 self.cleanup(1, f"{e}")
+        hash.commit()
 
         if not second_pass:
             console.log(
@@ -1244,6 +1244,7 @@ class Command(BaseCommand):
         if hash.has_changed():
             with open(self.pubspec_path, "w", encoding="utf8") as f:
                 yaml.dump(pubspec, f)
+        hash.commit()
 
     def customize_icons_and_splash_images(self):
         assert self.package_app_path
@@ -1467,21 +1468,14 @@ class Command(BaseCommand):
         # check if pubspec changed
         hash.update(pubspec)
 
-        icons_config_updated = hash.has_changed()
-
         # save pubspec.yaml
-        if icons_config_updated:
+        if hash.has_changed():
             with open(self.pubspec_path, "w", encoding="utf8") as f:
                 yaml.dump(pubspec, f)
 
         console.log(
             f"Customized app icons and splash images {self.emojis['checkmark']}"
         )
-
-        return icons_config_updated
-
-    def generate_icons_and_splash_screens(self):
-        assert self.options
 
         self.status.update(f"[bold blue]Generating app icons...")
         # icons
@@ -1523,6 +1517,8 @@ class Command(BaseCommand):
                     console.log(splash_result.stderr, style=error_style)
                 self.cleanup(splash_result.returncode)
             console.log(f"Generated splash screens {self.emojis['checkmark']}")
+
+        hash.commit()
 
     def package_python_app(self):
         assert self.options
@@ -1693,6 +1689,8 @@ class Command(BaseCommand):
             if package_result.stderr:
                 console.log(package_result.stderr, style=error_style)
             self.cleanup(package_result.returncode)
+
+        hash.commit()
 
         # make sure app/app.zip exists
         app_zip_path = self.flutter_dir.joinpath("app", "app.zip")

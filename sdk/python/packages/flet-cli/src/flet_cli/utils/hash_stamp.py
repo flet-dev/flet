@@ -12,9 +12,11 @@ class HashStamp:
             self._hash.update(str(data).encode())
 
     def has_changed(self):
-        hash = self._hash.hexdigest()
         hash_file = Path(self._path)
         last_hash = hash_file.read_text() if hash_file.exists() else ""
+        return self._hash.hexdigest() != last_hash
+
+    def commit(self):
+        hash_file = Path(self._path)
         hash_file.parent.mkdir(parents=True, exist_ok=True)
-        hash_file.write_text(hash)
-        return hash != last_hash
+        hash_file.write_text(self._hash.hexdigest())
