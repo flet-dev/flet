@@ -233,9 +233,9 @@ class Command(BaseCommand):
         parser.add_argument(
             "--arch",
             dest="target_arch",
-            required=False,
-            choices=["arm64-v8a", "armeabi-v7a", "x86_64", "x86", "arm64"],
-            help="package for specific architecture only. Used with Android and macOS builds only.",
+            nargs="+",
+            default=[],
+            help="package for specific architectures only. Used with Android and macOS builds only.",
         )
         parser.add_argument(
             "--exclude",
@@ -1033,6 +1033,12 @@ class Command(BaseCommand):
             deep_linking_scheme = self.options.deep_linking_scheme
             deep_linking_host = self.options.deep_linking_host
 
+        target_arch = (
+            self.options.target_arch
+            or self.get_pyproject(f"tool.flet.{self.config_platform}.target_arch")
+            or self.get_pyproject("tool.flet.target_arch")
+        )
+
         assert self.flutter_dir
         self.template_data = {
             "out_dir": self.flutter_dir.name,
@@ -1095,6 +1101,11 @@ class Command(BaseCommand):
             "ios_team_id": self.options.ios_team_id
             or self.get_pyproject("tool.flet.ios.team"),
             "options": {
+                "target_arch": (
+                    target_arch
+                    if isinstance(target_arch, list)
+                    else [target_arch] if isinstance(target_arch, str) else []
+                ),
                 "info_plist": info_plist,
                 "macos_entitlements": macos_entitlements,
                 "android_permissions": android_permissions,
@@ -1536,17 +1547,16 @@ class Command(BaseCommand):
             self.package_platform,
         ]
 
-        target_arch = (
-            self.options.target_arch
-            or self.get_pyproject(f"tool.flet.{self.config_platform}.build_arch")
-            or self.get_pyproject("tool.flet.build_arch")
-        )
-        if target_arch:
-            package_args.extend(["--arch", self.options.target_arch])
+        if self.template_data["options"]["target_arch"]:
+            package_args.extend(
+                ["--arch"] + self.template_data["options"]["target_arch"]
+            )
 
         package_env = {}
 
         # requirements
+        pyproject_toml_file = self.python_app_path / "pyproject.toml"
+
         package_args.append("--requirements")
         requirements_txt = self.python_app_path.joinpath("requirements.txt")
 
