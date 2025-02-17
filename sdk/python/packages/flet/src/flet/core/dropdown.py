@@ -346,8 +346,8 @@ class Dropdown(FormFieldControl):
         for item in deprecated_properties_list:
             if eval(item) is not None:
                 warnings.warn(
-                    f"{item} is deprecated since version 0.26.0 "
-                    f"and will be removed in version 0.29.0.",
+                    f"{item} is deprecated since version 0.27.0 "
+                    f"and will be removed in version 0.30.0.",
                     category=DeprecationWarning,
                     stacklevel=2,
                 )
@@ -452,8 +452,8 @@ class Dropdown(FormFieldControl):
     @property
     def select_icon(self) -> Optional[IconValueOrControl]:
         warnings.warn(
-            f"select_icon is deprecated since version 0.26.0 "
-            f"and will be removed in version 0.29.0. Use trailing_icon instead.",
+            f"select_icon is deprecated since version 0.27.0 "
+            f"and will be removed in version 0.30.0. Use trailing_icon instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
@@ -468,8 +468,8 @@ class Dropdown(FormFieldControl):
 
         if value is not None:
             warnings.warn(
-                f"select_icon is deprecated since version 0.26.0 "
-                f"and will be removed in version 0.29.0. Use trailing_icon instead.",
+                f"select_icon is deprecated since version 0.27.0 "
+                f"and will be removed in version 0.30.0. Use trailing_icon instead.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )

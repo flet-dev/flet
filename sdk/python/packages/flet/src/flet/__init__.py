@@ -10,6 +10,7 @@ from flet.core import (  # dropdown_old,
     cupertino_colors,
     cupertino_icons,
     dropdown,
+    dropdownm2,
     icons,
     margin,
     padding,
@@ -154,6 +155,7 @@ from flet.core.divider import Divider
 from flet.core.drag_target import DragTarget, DragTargetEvent
 from flet.core.draggable import Draggable
 from flet.core.dropdown import Dropdown, DropdownOption
+from flet.core.dropdownm2 import DropdownM2
 
 # from flet.core.dropdown_old import DropdownOld
 from flet.core.elevated_button import ElevatedButton
