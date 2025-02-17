@@ -1153,7 +1153,7 @@ Widget _scaledControl(
   var animation = parseAnimation(control, "animateScale");
   if (animation != null) {
     return AnimatedScale(
-        scale: scaleDetails?.scale! ?? 1.0,
+        scale: scaleDetails?.scale ?? 1.0,
         alignment: scaleDetails?.alignment ?? Alignment.center,
         duration: animation.duration,
         curve: animation.curve,
