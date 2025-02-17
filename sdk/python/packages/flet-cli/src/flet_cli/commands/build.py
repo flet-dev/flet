@@ -1122,7 +1122,7 @@ class Command(BaseCommand):
         assert self.get_pyproject
         assert isinstance(self.flutter_dependencies, dict)
 
-        with open(self.pubspec_path, encoding="utf8") as f:
+        with open(self.pubspec_path, encoding="utf-8") as f:
             pubspec = yaml.safe_load(f)
 
         # merge dependencies to a dest pubspec.yaml
@@ -1143,7 +1143,7 @@ class Command(BaseCommand):
                 )
 
         # save pubspec.yaml
-        with open(self.pubspec_path, "w", encoding="utf8") as f:
+        with open(self.pubspec_path, "w", encoding="utf-8") as f:
             yaml.dump(pubspec, f)
 
     def customize_icons_and_splash_images(self):
@@ -1155,7 +1155,7 @@ class Command(BaseCommand):
 
         self.status.update(f"[bold blue]Customizing app icons and splash images...")
 
-        with open(self.pubspec_path, encoding="utf8") as f:
+        with open(self.pubspec_path, encoding="utf-8") as f:
             pubspec = yaml.safe_load(f)
 
         self.assets_path = self.package_app_path.joinpath("assets")
@@ -1357,7 +1357,7 @@ class Command(BaseCommand):
         )
 
         # save pubspec.yaml
-        with open(self.pubspec_path, "w", encoding="utf8") as f:
+        with open(self.pubspec_path, "w", encoding="utf-8") as f:
             yaml.dump(pubspec, f)
 
         console.log(
@@ -1459,7 +1459,7 @@ class Command(BaseCommand):
             package_args.append(",".join(toml_dependencies))
         elif requirements_txt.exists():
             if self.verbose > 1:
-                with open(requirements_txt, "r") as f:
+                with open(requirements_txt, "r", encoding="utf-8") as f:
                     console.log(
                         f"Contents of requirements.txt: {f.read()}",
                         style=verbose2_style,

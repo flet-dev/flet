@@ -83,9 +83,6 @@ class Control:
     def is_isolated(self) -> bool:
         return False
 
-    def build(self):
-        pass
-
     def before_update(self):
         pass
 
@@ -529,18 +526,7 @@ class Control:
     ) -> List[Command]:
         if index:
             self.page = index["page"]
-        content = self.build()
 
-        # fix for UserControl
-        if content is not None:
-            if isinstance(content, Control) and hasattr(self, "controls"):
-                self.controls = [content]
-            elif (
-                isinstance(content, List)
-                and hasattr(self, "controls")
-                and all(isinstance(control, Control) for control in content)
-            ):
-                self.controls = content
         # remove control from index
         if self.__uid and index is not None and self.__uid in index:
             del index[self.__uid]
