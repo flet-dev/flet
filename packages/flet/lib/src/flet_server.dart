@@ -179,7 +179,7 @@ class FletServer implements FletControlBackend {
 
   @override
   void triggerControlEvent(String controlId, String eventName,
-      [String eventData = ""]) {
+      [String? eventData]) {
     _sendPageEvent(
         eventTarget: controlId, eventName: eventName, eventData: eventData);
   }
@@ -198,7 +198,7 @@ class FletServer implements FletControlBackend {
   _sendPageEvent(
       {required String eventTarget,
       required String eventName,
-      required String eventData}) {
+      String? eventData}) {
     send(Message(
         action: MessageAction.pageEventFromWeb,
         payload: PageEventFromWebRequest(

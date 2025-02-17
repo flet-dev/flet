@@ -64,7 +64,7 @@ class BarChartGroupViewModel extends Equatable {
         control: control,
         barRods: store.state.controls[control.id]!.childIds
             .map((childId) => store.state.controls[childId])
-            .whereNotNull()
+            .nonNulls
             .where((c) => c.isVisible)
             .map((c) => BarChartRodViewModel.fromStore(store, c))
             .toList());
@@ -101,7 +101,7 @@ class BarChartRodViewModel extends Equatable {
         control: control,
         rodStackItems: store.state.controls[control.id]!.childIds
             .map((childId) => store.state.controls[childId])
-            .whereNotNull()
+            .nonNulls
             .where((c) => c.isVisible)
             .map((c) => BarChartRodStackItemViewModel.fromStore(store, c))
             .toList());

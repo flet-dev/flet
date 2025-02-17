@@ -93,11 +93,11 @@ class _ListViewControlState extends State<ListViewControl> {
                 padding: padding,
                 semanticChildCount: semanticChildCount,
                 itemExtent: itemExtent,
+                prototypeItem: prototypeItem,
                 children: ctrls
                     .map((c) => createControl(widget.control, c.id, disabled,
                         parentAdaptive: adaptive))
                     .toList(),
-                prototypeItem: prototypeItem,
               )
             : spacing > 0
                 ? ListView.separated(

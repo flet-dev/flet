@@ -927,7 +927,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
             cupertinoAppBar?.id,
             drawer?.id,
             endDrawer?.id
-          ].whereNotNull().toList();
+          ].nonNulls.toList();
 
           final textDirection = widget.parent.attrBool("rtl", false)!
               ? TextDirection.rtl

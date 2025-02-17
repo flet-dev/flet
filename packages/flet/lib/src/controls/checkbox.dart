@@ -46,7 +46,7 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
 
   void _onFocusChange() {
     widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override

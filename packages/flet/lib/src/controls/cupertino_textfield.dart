@@ -87,8 +87,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
     setState(() {
       _focused = _shiftEnterfocusNode.hasFocus;
     });
-    widget.backend.triggerControlEvent(widget.control.id,
-        _shiftEnterfocusNode.hasFocus ? "focus" : "blur", "");
+    widget.backend.triggerControlEvent(widget.control.id, _shiftEnterfocusNode.hasFocus ? "focus" : "blur");
   }
 
   void _onFocusChange() {
@@ -96,7 +95,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
       _focused = _focusNode.hasFocus;
     });
     widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
