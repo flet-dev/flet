@@ -1551,8 +1551,6 @@ class Command(BaseCommand):
         package_env = {}
 
         # requirements
-        pyproject_toml_file = self.python_app_path / "pyproject.toml"
-
         package_args.append("--requirements")
         requirements_txt = self.python_app_path.joinpath("requirements.txt")
 
