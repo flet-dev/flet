@@ -37,6 +37,7 @@ DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 MINIMAL_FLUTTER_VERSION = version.Version("3.27.4")
 
 error_style = Style(color="red", bold=True)
+warning_style = Style(color="yellow", bold=True)
 console = Console(log_path=False, theme=Theme({"log.message": "green bold"}))
 verbose1_style = Style(dim=True, bold=False)
 verbose2_style = Style(color="bright_black", bold=False)
@@ -1027,6 +1028,50 @@ class Command(BaseCommand):
             or self.get_pyproject("tool.flet.target_arch")
         )
 
+        ios_export_method = (
+            self.options.ios_export_method
+            or self.get_pyproject("tool.flet.ios.export_method")
+            or "debugging"
+        )
+
+        ios_export_method_opts = (
+            self.get_pyproject("tool.flet.ios.export_methods").get(ios_export_method)
+            if self.get_pyproject("tool.flet.ios.export_methods")
+            else {}
+        ) or {}
+
+        ios_provisioning_profile = (
+            self.options.ios_provisioning_profile
+            or self.get_pyproject("tool.flet.ios.provisioning_profile")
+            or ios_export_method_opts.get("provisioning_profile")
+        )
+
+        ios_signing_certificate = (
+            self.options.ios_signing_certificate
+            or self.get_pyproject("tool.flet.ios.signing_certificate")
+            or ios_export_method_opts.get("signing_certificate")
+        )
+
+        ios_export_options = (
+            self.get_pyproject("tool.flet.ios.export_options")
+            or ios_export_method_opts.get("export_options")
+            or {}
+        )
+
+        ios_team_id = (
+            self.options.ios_team_id
+            or self.get_pyproject("tool.flet.ios.team_id")
+            or ios_export_method_opts.get("team_id")
+        )
+
+        if not ios_provisioning_profile:
+            console.print(
+                Panel(
+                    "This build will generate an .xcarchive (Xcode Archive). To produce an .ipa (iOS App Package), please specify a Provisioning Profile.",
+                    style=warning_style,
+                )
+            )
+
         assert self.flutter_dir
         self.template_data = {
             "out_dir": self.flutter_dir.name,
@@ -1077,17 +1122,11 @@ class Command(BaseCommand):
             ),
             "copyright": self.options.copyright
             or self.get_pyproject("tool.flet.copyright"),
-            "ios_export_method": self.options.ios_export_method
-            or self.get_pyproject("tool.flet.ios.export_method")
-            or "debugging",
-            "ios_provisioning_profile": self.options.ios_provisioning_profile
-            or self.get_pyproject("tool.flet.ios.provisioning_profile"),
-            "ios_signing_certificate": self.options.ios_signing_certificate
-            or self.get_pyproject("tool.flet.ios.signing_certificate"),
-            "ios_export_options": self.get_pyproject("tool.flet.ios.export_options")
-            or {},
-            "ios_team_id": self.options.ios_team_id
-            or self.get_pyproject("tool.flet.ios.team"),
+            "ios_export_method": ios_export_method,
+            "ios_provisioning_profile": ios_provisioning_profile,
+            "ios_signing_certificate": ios_signing_certificate,
+            "ios_export_options": ios_export_options,
+            "ios_team_id": ios_team_id,
             "options": {
                 "target_arch": (
                     target_arch
