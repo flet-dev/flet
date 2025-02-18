@@ -460,13 +460,6 @@ class Command(BaseCommand):
             help="additional arguments for flutter build command",
         )
         parser.add_argument(
-            "--include-packages",
-            dest="flutter_packages",
-            nargs="+",
-            default=[],
-            help="include extra Flutter Flet packages, such as flet_video, flet_audio, etc.",
-        )
-        parser.add_argument(
             "--source-packages",
             dest="source_packages",
             nargs="+",
@@ -752,6 +745,7 @@ class Command(BaseCommand):
                 [
                     self.flutter_exe,
                     "config",
+                    "--no-version-check",
                     "--suppress-analytics",
                     f"--enable-{self.config_platform}-desktop",
                 ],
@@ -786,6 +780,7 @@ class Command(BaseCommand):
             [
                 self.flutter_exe,
                 "config",
+                "--no-version-check",
                 "--suppress-analytics",
                 f"--jdk-dir={jdk_dir}",
             ],
@@ -887,12 +882,6 @@ class Command(BaseCommand):
             or self.get_pyproject("tool.flet.product")
             or project_name_orig
         )
-        self.flutter_dependencies = self.get_flutter_dependencies()
-        if self.verbose > 0:
-            console.log(
-                f"Custom Flutter dependencies: {self.flutter_dependencies}",
-                style=verbose1_style,
-            )
 
         split_per_abi = (
             self.options.split_per_abi
@@ -1118,23 +1107,6 @@ class Command(BaseCommand):
             },
             "flutter": {"dependencies": list(self.flutter_dependencies.keys())},
         }
-
-    def get_flutter_dependencies(self) -> dict:
-        assert self.options
-        assert self.get_pyproject
-
-        flutter_dependencies = (
-            self.get_pyproject("tool.flet.flutter.dependencies") or {}
-        )
-        if isinstance(flutter_dependencies, list):
-            flutter_dependencies = {d: "any" for d in flutter_dependencies}
-
-        if self.options.flutter_packages:
-            for package in self.options.flutter_packages:
-                pspec = package.split(":")
-                flutter_dependencies[pspec[0]] = pspec[1] if len(pspec) > 1 else "any"
-
-        return flutter_dependencies
 
     def create_flutter_project(self, second_pass=False):
         assert self.options
@@ -1720,9 +1692,6 @@ class Command(BaseCommand):
         assert self.flutter_packages_dir
         assert isinstance(self.flutter_dependencies, dict)
         assert self.template_data
-
-        if not self.flutter_packages_dir.exists():
-            return
 
         if not self.flutter_packages_dir.exists():
             return
