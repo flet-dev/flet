@@ -1,5 +1,5 @@
 from flet.app import app, app_async
-from flet.core import (  # dropdown_old,
+from flet.core import (
     ads,
     alignment,
     animation,
@@ -156,8 +156,6 @@ from flet.core.drag_target import DragTarget, DragTargetEvent
 from flet.core.draggable import Draggable
 from flet.core.dropdown import Dropdown, DropdownOption
 from flet.core.dropdownm2 import DropdownM2
-
-# from flet.core.dropdown_old import DropdownOld
 from flet.core.elevated_button import ElevatedButton
 from flet.core.exceptions import (
     FletException,
