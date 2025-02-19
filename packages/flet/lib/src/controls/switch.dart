@@ -62,7 +62,7 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
     widget.backend.triggerControlEvent(
         widget.control.id,
         _focusNode.hasFocus ? "focus" : "blur",
-        _focusNode.hasFocus ? _focusNode.hasPrimaryFocus.toString() : "");
+        _focusNode.hasPrimaryFocus.toString());
   }
 
   @override

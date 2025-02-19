@@ -9,18 +9,10 @@ from pathlib import Path
 from typing import Optional, Union, cast
 
 import flet.version
-import flet_cli.utils.processes as processes
 import yaml
 from flet.utils import cleanup_path, copy_tree, is_windows, slugify
 from flet.utils.platform_utils import get_bool_env_var
 from flet.version import update_version
-from flet_cli.commands.base import BaseCommand
-from flet_cli.utils.merge import merge_dict
-from flet_cli.utils.project_dependencies import (
-    get_poetry_dependencies,
-    get_project_dependencies,
-)
-from flet_cli.utils.pyproject_toml import load_pyproject_toml
 from packaging import version
 from rich.console import Console, Group
 from rich.live import Live
@@ -29,6 +21,15 @@ from rich.progress import Progress
 from rich.style import Style
 from rich.table import Column, Table
 from rich.theme import Theme
+
+import flet_cli.utils.processes as processes
+from flet_cli.commands.base import BaseCommand
+from flet_cli.utils.merge import merge_dict
+from flet_cli.utils.project_dependencies import (
+    get_poetry_dependencies,
+    get_project_dependencies,
+)
+from flet_cli.utils.pyproject_toml import load_pyproject_toml
 
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.25.0/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
@@ -1121,7 +1122,7 @@ class Command(BaseCommand):
         assert self.get_pyproject
         assert isinstance(self.flutter_dependencies, dict)
 
-        with open(self.pubspec_path, encoding="utf8") as f:
+        with open(self.pubspec_path, encoding="utf-8") as f:
             pubspec = yaml.safe_load(f)
 
         # merge dependencies to a dest pubspec.yaml
@@ -1142,7 +1143,7 @@ class Command(BaseCommand):
                 )
 
         # save pubspec.yaml
-        with open(self.pubspec_path, "w", encoding="utf8") as f:
+        with open(self.pubspec_path, "w", encoding="utf-8") as f:
             yaml.dump(pubspec, f)
 
     def customize_icons_and_splash_images(self):
@@ -1154,7 +1155,7 @@ class Command(BaseCommand):
 
         self.status.update(f"[bold blue]Customizing app icons and splash images...")
 
-        with open(self.pubspec_path, encoding="utf8") as f:
+        with open(self.pubspec_path, encoding="utf-8") as f:
             pubspec = yaml.safe_load(f)
 
         self.assets_path = self.package_app_path.joinpath("assets")
@@ -1356,7 +1357,7 @@ class Command(BaseCommand):
         )
 
         # save pubspec.yaml
-        with open(self.pubspec_path, "w", encoding="utf8") as f:
+        with open(self.pubspec_path, "w", encoding="utf-8") as f:
             yaml.dump(pubspec, f)
 
         console.log(
@@ -1458,7 +1459,7 @@ class Command(BaseCommand):
             package_args.append(",".join(toml_dependencies))
         elif requirements_txt.exists():
             if self.verbose > 1:
-                with open(requirements_txt, "r") as f:
+                with open(requirements_txt, "r", encoding="utf-8") as f:
                     console.log(
                         f"Contents of requirements.txt: {f.read()}",
                         style=verbose2_style,
@@ -1815,4 +1816,5 @@ class Command(BaseCommand):
                 message,
                 end="",
                 style=verbose2_style,
+                markup=False,
             )

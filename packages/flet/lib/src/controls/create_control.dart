@@ -94,6 +94,7 @@ import 'progress_ring.dart';
 import 'radio.dart';
 import 'radio_group.dart';
 import 'range_slider.dart';
+import 'reorderable_list_view.dart';
 import 'responsive_row.dart';
 import 'row.dart';
 import 'safe_area.dart';
@@ -173,22 +174,24 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
       widget ??= createWidget(controlKey, controlView, parent, parentDisabled,
           parentAdaptive, nextChild, FletAppServices.of(context).server);
 
-      // no theme defined? return widget!
-      var themeMode = ThemeMode.values.firstWhereOrNull((t) =>
-          t.name.toLowerCase() ==
-          controlView.control.attrString("themeMode", "")!.toLowerCase());
+      // no theme defined? return widget
+      var themeMode =
+          parseThemeMode(controlView.control.attrString("themeMode"));
       if (id == "page" ||
           (controlView.control.attrString("theme") == null &&
+              controlView.control.attrString("darkTheme") == null &&
               themeMode == null)) {
         return widget;
       }
 
       // wrap into theme widget
       ThemeData? parentTheme = (themeMode == null) ? Theme.of(context) : null;
-
       buildTheme(Brightness? brightness) {
         return Theme(
-            data: parseTheme(controlView.control, "theme", brightness,
+            data: parseTheme(
+                controlView.control,
+                brightness == Brightness.dark ? "darkTheme" : "theme",
+                brightness,
                 parentTheme: parentTheme),
             child: widget!);
       }
@@ -201,9 +204,11 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
               return buildTheme(media.displayBrightness);
             });
       } else {
-        return buildTheme((themeMode == ThemeMode.light)
+        return buildTheme(themeMode == ThemeMode.light
             ? Brightness.light
-            : ((themeMode == ThemeMode.dark) ? Brightness.dark : null));
+            : themeMode == ThemeMode.dark
+                ? Brightness.dark
+                : parentTheme?.brightness);
       }
     },
   );
@@ -704,6 +709,15 @@ Widget createWidget(
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           backend: backend);
+    case "reorderablelistview":
+      return ReorderableListViewControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
     case "gridview":
       return GridViewControl(
           key: key,
@@ -1149,7 +1163,7 @@ Widget _scaledControl(
   var animation = parseAnimation(control, "animateScale");
   if (animation != null) {
     return AnimatedScale(
-        scale: scaleDetails?.scale! ?? 1.0,
+        scale: scaleDetails?.scale ?? 1.0,
         alignment: scaleDetails?.alignment ?? Alignment.center,
         duration: animation.duration,
         curve: animation.curve,

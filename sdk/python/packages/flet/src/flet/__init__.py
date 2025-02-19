@@ -15,6 +15,7 @@ from flet.core import (
     margin,
     padding,
     painting,
+    size,
     transform,
 )
 from flet.core.adaptive_control import AdaptiveControl
@@ -266,7 +267,6 @@ from flet.core.page import (
     ViewPopEvent,
     Window,
     WindowEvent,
-    WindowEventType,
     WindowResizeEvent,
     context,
 )
@@ -298,6 +298,7 @@ from flet.core.radio import Radio
 from flet.core.radio_group import RadioGroup
 from flet.core.range_slider import RangeSlider
 from flet.core.ref import Ref
+from flet.core.reorderable_list_view import OnReorderEvent, ReorderableListView
 from flet.core.responsive_row import ResponsiveRow
 from flet.core.rive import Rive
 from flet.core.row import Row
@@ -310,6 +311,7 @@ from flet.core.semantics import Semantics
 from flet.core.semantics_service import Assertiveness, SemanticsService
 from flet.core.shader_mask import ShaderMask
 from flet.core.shake_detector import ShakeDetector
+from flet.core.size import Size
 from flet.core.slider import Slider, SliderInteraction
 from flet.core.snack_bar import DismissDirection, SnackBar, SnackBarBehavior
 from flet.core.stack import Stack, StackFit
@@ -351,13 +353,17 @@ from flet.core.theme import (
     DatePickerTheme,
     DialogTheme,
     DividerTheme,
+    ElevatedButtonTheme,
     ExpansionTileTheme,
+    FilledButtonTheme,
     FloatingActionButtonTheme,
+    IconButtonTheme,
     IconTheme,
     ListTileTheme,
     NavigationBarTheme,
     NavigationDrawerTheme,
     NavigationRailTheme,
+    OutlinedButtonTheme,
     PageTransitionsTheme,
     PageTransitionTheme,
     PopupMenuTheme,
@@ -372,6 +378,7 @@ from flet.core.theme import (
     SwitchTheme,
     SystemOverlayStyle,
     TabsTheme,
+    TextButtonTheme,
     TextTheme,
     Theme,
     TimePickerTheme,
@@ -427,6 +434,7 @@ from flet.core.types import (
     VerticalAlignment,
     VisualDensity,
     WebRenderer,
+    WindowEventType,
 )
 from flet.core.vertical_divider import VerticalDivider
 from flet.core.video import (

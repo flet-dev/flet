@@ -62,7 +62,7 @@ class PieChartSectionViewModel extends Equatable {
       Store<AppState> store, Control control) {
     var children = store.state.controls[control.id]!.childIds
         .map((childId) => store.state.controls[childId])
-        .whereNotNull()
+        .nonNulls
         .where((c) => c.isVisible);
 
     return PieChartSectionViewModel(

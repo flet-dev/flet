@@ -100,6 +100,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
         theme: Optional[Theme] = None,
+        dark_theme: Optional[Theme] = None,
         theme_mode: Optional[ThemeMode] = None,
         color_filter: Optional[ColorFilter] = None,
         ignore_interactions: Optional[bool] = None,
@@ -204,6 +205,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.url = url
         self.url_target = url_target
         self.theme = theme
+        self.dark_theme = dark_theme
         self.theme_mode = theme_mode
         self.color_filter = color_filter
         self.ignore_interactions = ignore_interactions
@@ -237,6 +239,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("blur", self.__blur)
         self._set_attr_json("shadow", self.__shadow if self.__shadow else None)
         self._set_attr_json("theme", self.__theme)
+        self._set_attr_json("darkTheme", self.__dark_theme)
         self._set_attr_json("colorFilter", self.__color_filter)
         self._set_attr_json("image", self.__image)
         self._set_attr_json("foregroundDecoration", self.__foreground_decoration)
@@ -582,6 +585,15 @@ class Container(ConstrainedControl, AdaptiveControl):
     @theme.setter
     def theme(self, value: Optional[Theme]):
         self.__theme = value
+
+    # dark_theme
+    @property
+    def dark_theme(self) -> Optional[Theme]:
+        return self.__dark_theme
+
+    @dark_theme.setter
+    def dark_theme(self, value: Optional[Theme]):
+        self.__dark_theme = value
 
     # theme_mode
     @property

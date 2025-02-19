@@ -19,7 +19,7 @@ def patch_index_html(
     use_color_emoji: bool = False,
     route_url_strategy: str = "path",
 ):
-    with open(index_path, "r") as f:
+    with open(index_path, "r", encoding="utf-8") as f:
         index = f.read()
 
     if pyodide and pyodide_script_path:
@@ -77,7 +77,7 @@ def patch_index_html(
             index,
         )
 
-    with open(index_path, "w") as f:
+    with open(index_path, "w", encoding="utf-8") as f:
         f.write(index)
 
 
@@ -89,7 +89,7 @@ def patch_manifest_json(
     background_color: Optional[str] = None,
     theme_color: Optional[str] = None,
 ):
-    with open(manifest_path, "r") as f:
+    with open(manifest_path, "r", encoding="utf-8") as f:
         manifest = json.loads(f.read())
 
     if app_name:
@@ -108,5 +108,5 @@ def patch_manifest_json(
     if theme_color:
         manifest["theme_color"] = theme_color
 
-    with open(manifest_path, "w") as f:
+    with open(manifest_path, "w", encoding="utf-8") as f:
         f.write(json.dumps(manifest, indent=2))

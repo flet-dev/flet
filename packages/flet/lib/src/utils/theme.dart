@@ -61,6 +61,15 @@ CupertinoThemeData fixCupertinoTheme(
               .copyWith(color: theme.colorScheme.onSurface)));
 }
 
+ThemeMode? parseThemeMode(String? value, [ThemeMode? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return ThemeMode.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
 ThemeData parseTheme(Control control, String propName, Brightness? brightness,
     {ThemeData? parentTheme}) {
   dynamic j;
@@ -75,9 +84,8 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
     ThemeData? parentTheme) {
   ThemeData? theme = parentTheme;
 
-  var primarySwatch = parseColor(null, json?["primary_swatch"]);
-
-  var colorSchemeSeed = parseColor(null, json?["color_scheme_seed"]);
+  var primarySwatch = parseColor(theme, json?["primary_swatch"]);
+  var colorSchemeSeed = parseColor(theme, json?["color_scheme_seed"]);
 
   if (colorSchemeSeed != null) {
     primarySwatch = null;
@@ -164,6 +172,14 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
     ),
     dataTableTheme: parseDataTableTheme(theme, json?["data_table_theme"]),
     buttonTheme: parseButtonTheme(theme, json?["button_theme"]),
+    elevatedButtonTheme:
+        parseElevatedButtonTheme(theme, json?["elevated_button_theme"]),
+    outlinedButtonTheme:
+        parseOutlinedButtonTheme(theme, json?["outlined_button_theme"]),
+    textButtonTheme: parseTextButtonTheme(theme, json?["text_button_theme"]),
+    filledButtonTheme:
+        parseFilledButtonTheme(theme, json?["filled_button_theme"]),
+    iconButtonTheme: parseIconButtonTheme(theme, json?["icon_button_theme"]),
     segmentedButtonTheme: parseSegmentedButtonTheme(
       theme,
       json?["segmented_button_theme"],
@@ -187,52 +203,52 @@ ColorScheme? parseColorScheme(ThemeData theme, Map<String, dynamic>? j) {
     return null;
   }
   return theme.colorScheme.copyWith(
-    primary: parseColor(null, j["primary"]),
-    onPrimary: parseColor(null, j["on_primary"]),
-    primaryContainer: parseColor(null, j["primary_container"]),
-    onPrimaryContainer: parseColor(null, j["on_primary_container"]),
-    secondary: parseColor(null, j["secondary"]),
-    onSecondary: parseColor(null, j["on_secondary"]),
-    secondaryContainer: parseColor(null, j["secondary_container"]),
-    onSecondaryContainer: parseColor(null, j["on_secondary_container"]),
-    tertiary: parseColor(null, j["tertiary"]),
-    onTertiary: parseColor(null, j["on_tertiary"]),
-    tertiaryContainer: parseColor(null, j["tertiary_container"]),
-    onTertiaryContainer: parseColor(null, j["on_tertiary_container"]),
-    error: parseColor(null, j["error"]),
-    onError: parseColor(null, j["on_error"]),
-    errorContainer: parseColor(null, j["error_container"]),
-    onErrorContainer: parseColor(null, j["on_error_container"]),
-    surface: parseColor(null, j["surface"]),
-    onSurface: parseColor(null, j["on_surface"]),
-    surfaceContainerHighest: parseColor(null, j["surface_variant"]),
-    onSurfaceVariant: parseColor(null, j["on_surface_variant"]),
-    outline: parseColor(null, j["outline"]),
-    outlineVariant: parseColor(null, j["outline_variant"]),
-    shadow: parseColor(null, j["shadow"]),
-    scrim: parseColor(null, j["scrim"]),
-    inverseSurface: parseColor(null, j["inverse_surface"]),
-    onInverseSurface: parseColor(null, j["on_inverse_surface"]),
-    inversePrimary: parseColor(null, j["inverse_primary"]),
-    surfaceTint: parseColor(null, j["surface_tint"]),
-    onPrimaryFixed: parseColor(null, j["on_primary_fixed"]),
-    onSecondaryFixed: parseColor(null, j["on_secondary_fixed"]),
-    onTertiaryFixed: parseColor(null, j["on_tertiary_fixed"]),
-    onPrimaryFixedVariant: parseColor(null, j["on_primary_fixed_variant"]),
-    onSecondaryFixedVariant: parseColor(null, j["on_secondary_fixed_variant"]),
-    onTertiaryFixedVariant: parseColor(null, j["on_tertiary_fixed_variant"]),
-    primaryFixed: parseColor(null, j["primary_fixed"]),
-    secondaryFixed: parseColor(null, j["secondary_fixed"]),
-    tertiaryFixed: parseColor(null, j["tertiary_fixed"]),
-    primaryFixedDim: parseColor(null, j["primary_fixed_dim"]),
-    secondaryFixedDim: parseColor(null, j["secondary_fixed_dim"]),
-    surfaceBright: parseColor(null, j["surface_bright"]),
-    surfaceContainer: parseColor(null, j["surface_container"]),
-    surfaceContainerHigh: parseColor(null, j["surface_container_high"]),
-    surfaceContainerLow: parseColor(null, j["surface_container_low"]),
-    surfaceContainerLowest: parseColor(null, j["surface_container_lowest"]),
-    surfaceDim: parseColor(null, j["surface_dim"]),
-    tertiaryFixedDim: parseColor(null, j["tertiary_fixed_dim"]),
+    primary: parseColor(theme, j["primary"]),
+    onPrimary: parseColor(theme, j["on_primary"]),
+    primaryContainer: parseColor(theme, j["primary_container"]),
+    onPrimaryContainer: parseColor(theme, j["on_primary_container"]),
+    secondary: parseColor(theme, j["secondary"]),
+    onSecondary: parseColor(theme, j["on_secondary"]),
+    secondaryContainer: parseColor(theme, j["secondary_container"]),
+    onSecondaryContainer: parseColor(theme, j["on_secondary_container"]),
+    tertiary: parseColor(theme, j["tertiary"]),
+    onTertiary: parseColor(theme, j["on_tertiary"]),
+    tertiaryContainer: parseColor(theme, j["tertiary_container"]),
+    onTertiaryContainer: parseColor(theme, j["on_tertiary_container"]),
+    error: parseColor(theme, j["error"]),
+    onError: parseColor(theme, j["on_error"]),
+    errorContainer: parseColor(theme, j["error_container"]),
+    onErrorContainer: parseColor(theme, j["on_error_container"]),
+    surface: parseColor(theme, j["surface"]),
+    onSurface: parseColor(theme, j["on_surface"]),
+    surfaceContainerHighest: parseColor(theme, j["surface_variant"]),
+    onSurfaceVariant: parseColor(theme, j["on_surface_variant"]),
+    outline: parseColor(theme, j["outline"]),
+    outlineVariant: parseColor(theme, j["outline_variant"]),
+    shadow: parseColor(theme, j["shadow"]),
+    scrim: parseColor(theme, j["scrim"]),
+    inverseSurface: parseColor(theme, j["inverse_surface"]),
+    onInverseSurface: parseColor(theme, j["on_inverse_surface"]),
+    inversePrimary: parseColor(theme, j["inverse_primary"]),
+    surfaceTint: parseColor(theme, j["surface_tint"]),
+    onPrimaryFixed: parseColor(theme, j["on_primary_fixed"]),
+    onSecondaryFixed: parseColor(theme, j["on_secondary_fixed"]),
+    onTertiaryFixed: parseColor(theme, j["on_tertiary_fixed"]),
+    onPrimaryFixedVariant: parseColor(theme, j["on_primary_fixed_variant"]),
+    onSecondaryFixedVariant: parseColor(theme, j["on_secondary_fixed_variant"]),
+    onTertiaryFixedVariant: parseColor(theme, j["on_tertiary_fixed_variant"]),
+    primaryFixed: parseColor(theme, j["primary_fixed"]),
+    secondaryFixed: parseColor(theme, j["secondary_fixed"]),
+    tertiaryFixed: parseColor(theme, j["tertiary_fixed"]),
+    primaryFixedDim: parseColor(theme, j["primary_fixed_dim"]),
+    secondaryFixedDim: parseColor(theme, j["secondary_fixed_dim"]),
+    surfaceBright: parseColor(theme, j["surface_bright"]),
+    surfaceContainer: parseColor(theme, j["surface_container"]),
+    surfaceContainerHigh: parseColor(theme, j["surface_container_high"]),
+    surfaceContainerLow: parseColor(theme, j["surface_container_low"]),
+    surfaceContainerLowest: parseColor(theme, j["surface_container_lowest"]),
+    surfaceDim: parseColor(theme, j["surface_dim"]),
+    tertiaryFixedDim: parseColor(theme, j["tertiary_fixed_dim"]),
   );
 }
 
@@ -270,12 +286,12 @@ ButtonThemeData? parseButtonTheme(ThemeData theme, Map<String, dynamic>? j) {
   }
 
   return theme.buttonTheme.copyWith(
-    buttonColor: parseColor(null, j["button_color"]),
-    disabledColor: parseColor(null, j["disabled_color"]),
-    hoverColor: parseColor(null, j["hover_color"]),
-    focusColor: parseColor(null, j["focus_color"]),
-    highlightColor: parseColor(null, j["highlight_color"]),
-    splashColor: parseColor(null, j["splash_color"]),
+    buttonColor: parseColor(theme, j["button_color"]),
+    disabledColor: parseColor(theme, j["disabled_color"]),
+    hoverColor: parseColor(theme, j["hover_color"]),
+    focusColor: parseColor(theme, j["focus_color"]),
+    highlightColor: parseColor(theme, j["highlight_color"]),
+    splashColor: parseColor(theme, j["splash_color"]),
     colorScheme: parseColorScheme(theme, j["color_scheme"]),
     alignedDropdown: parseBool(j["aligned_dropdown"]),
     height: parseDouble(j["height"]),
@@ -283,6 +299,201 @@ ButtonThemeData? parseButtonTheme(ThemeData theme, Map<String, dynamic>? j) {
     shape: outlinedBorderFromJSON(j["shape"]),
     padding: edgeInsetsFromJson(j["padding"]),
   );
+}
+
+ElevatedButtonThemeData? parseElevatedButtonTheme(
+    ThemeData theme, Map<String, dynamic>? j) {
+  if (j == null) {
+    return null;
+  }
+
+  TextStyle? parseTextStyle(String propName) {
+    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
+  }
+
+  return ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+    iconColor: parseColor(theme, j["icon_color"]),
+    foregroundColor: parseColor(theme, j["foreground_color"]),
+    backgroundColor: parseColor(theme, j["bgcolor"]),
+    shadowColor: parseColor(theme, j["shadow_color"]),
+    disabledBackgroundColor: parseColor(theme, j["disabled_bgcolor"]),
+    disabledForegroundColor: parseColor(theme, j["disabled_foreground_color"]),
+    disabledIconColor: parseColor(theme, j["disabled_icon_color"]),
+    overlayColor: parseColor(theme, j["overlay_color"]),
+    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
+    elevation: parseDouble(j["elevation"]),
+    padding: edgeInsetsFromJson(j["padding"]),
+    enableFeedback: parseBool(j["enable_feedback"]),
+    disabledMouseCursor: parseMouseCursor(j["disabled_mouse_cursor"]),
+    enabledMouseCursor: parseMouseCursor(j["enabled_mouse_cursor"]),
+    shape: outlinedBorderFromJSON(j["shape"]),
+    textStyle: parseTextStyle("text_style"),
+    visualDensity: parseVisualDensity(j["visual_density"]),
+    side: borderSideFromJSON(theme, j["border_side"]),
+    animationDuration: durationFromJSON(j["animation_duration"]),
+    alignment: alignmentFromJson(j["alignment"]),
+    iconSize: parseDouble(j["icon_size"]),
+    fixedSize: sizeFromJson(j["fixed_size"]),
+    maximumSize: sizeFromJson(j["maximum_size"]),
+    minimumSize: sizeFromJson(j["minimum_size"]),
+  ));
+}
+
+OutlinedButtonThemeData? parseOutlinedButtonTheme(
+    ThemeData theme, Map<String, dynamic>? j) {
+  if (j == null) {
+    return null;
+  }
+
+  TextStyle? parseTextStyle(String propName) {
+    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
+  }
+
+  return OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+    iconColor: parseColor(theme, j["icon_color"]),
+    foregroundColor: parseColor(theme, j["foreground_color"]),
+    backgroundColor: parseColor(theme, j["bgcolor"]),
+    shadowColor: parseColor(theme, j["shadow_color"]),
+    disabledBackgroundColor: parseColor(theme, j["disabled_bgcolor"]),
+    disabledForegroundColor: parseColor(theme, j["disabled_foreground_color"]),
+    disabledIconColor: parseColor(theme, j["disabled_icon_color"]),
+    overlayColor: parseColor(theme, j["overlay_color"]),
+    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
+    elevation: parseDouble(j["elevation"]),
+    padding: edgeInsetsFromJson(j["padding"]),
+    enableFeedback: parseBool(j["enable_feedback"]),
+    disabledMouseCursor: parseMouseCursor(j["disabled_mouse_cursor"]),
+    enabledMouseCursor: parseMouseCursor(j["enabled_mouse_cursor"]),
+    shape: outlinedBorderFromJSON(j["shape"]),
+    textStyle: parseTextStyle("text_style"),
+    visualDensity: parseVisualDensity(j["visual_density"]),
+    side: borderSideFromJSON(theme, j["border_side"]),
+    animationDuration: durationFromJSON(j["animation_duration"]),
+    alignment: alignmentFromJson(j["alignment"]),
+    iconSize: parseDouble(j["icon_size"]),
+    fixedSize: sizeFromJson(j["fixed_size"]),
+    maximumSize: sizeFromJson(j["maximum_size"]),
+    minimumSize: sizeFromJson(j["minimum_size"]),
+  ));
+}
+
+TextButtonThemeData? parseTextButtonTheme(
+    ThemeData theme, Map<String, dynamic>? j) {
+  if (j == null) {
+    return null;
+  }
+
+  TextStyle? parseTextStyle(String propName) {
+    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
+  }
+
+  return TextButtonThemeData(
+      style: TextButton.styleFrom(
+    iconColor: parseColor(theme, j["icon_color"]),
+    foregroundColor: parseColor(theme, j["foreground_color"]),
+    backgroundColor: parseColor(theme, j["bgcolor"]),
+    shadowColor: parseColor(theme, j["shadow_color"]),
+    disabledBackgroundColor: parseColor(theme, j["disabled_bgcolor"]),
+    disabledForegroundColor: parseColor(theme, j["disabled_foreground_color"]),
+    disabledIconColor: parseColor(theme, j["disabled_icon_color"]),
+    overlayColor: parseColor(theme, j["overlay_color"]),
+    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
+    elevation: parseDouble(j["elevation"]),
+    padding: edgeInsetsFromJson(j["padding"]),
+    enableFeedback: parseBool(j["enable_feedback"]),
+    disabledMouseCursor: parseMouseCursor(j["disabled_mouse_cursor"]),
+    enabledMouseCursor: parseMouseCursor(j["enabled_mouse_cursor"]),
+    shape: outlinedBorderFromJSON(j["shape"]),
+    textStyle: parseTextStyle("text_style"),
+    visualDensity: parseVisualDensity(j["visual_density"]),
+    side: borderSideFromJSON(theme, j["border_side"]),
+    animationDuration: durationFromJSON(j["animation_duration"]),
+    alignment: alignmentFromJson(j["alignment"]),
+    iconSize: parseDouble(j["icon_size"]),
+    fixedSize: sizeFromJson(j["fixed_size"]),
+    maximumSize: sizeFromJson(j["maximum_size"]),
+    minimumSize: sizeFromJson(j["minimum_size"]),
+  ));
+}
+
+FilledButtonThemeData? parseFilledButtonTheme(
+    ThemeData theme, Map<String, dynamic>? j) {
+  if (j == null) {
+    return null;
+  }
+
+  TextStyle? parseTextStyle(String propName) {
+    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
+  }
+
+  return FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+    iconColor: parseColor(theme, j["icon_color"]),
+    foregroundColor: parseColor(theme, j["foreground_color"]),
+    backgroundColor: parseColor(theme, j["bgcolor"]),
+    shadowColor: parseColor(theme, j["shadow_color"]),
+    disabledBackgroundColor: parseColor(theme, j["disabled_bgcolor"]),
+    disabledForegroundColor: parseColor(theme, j["disabled_foreground_color"]),
+    disabledIconColor: parseColor(theme, j["disabled_icon_color"]),
+    overlayColor: parseColor(theme, j["overlay_color"]),
+    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
+    elevation: parseDouble(j["elevation"]),
+    padding: edgeInsetsFromJson(j["padding"]),
+    enableFeedback: parseBool(j["enable_feedback"]),
+    disabledMouseCursor: parseMouseCursor(j["disabled_mouse_cursor"]),
+    enabledMouseCursor: parseMouseCursor(j["enabled_mouse_cursor"]),
+    shape: outlinedBorderFromJSON(j["shape"]),
+    textStyle: parseTextStyle("text_style"),
+    visualDensity: parseVisualDensity(j["visual_density"]),
+    side: borderSideFromJSON(theme, j["border_side"]),
+    animationDuration: durationFromJSON(j["animation_duration"]),
+    alignment: alignmentFromJson(j["alignment"]),
+    iconSize: parseDouble(j["icon_size"]),
+    fixedSize: sizeFromJson(j["fixed_size"]),
+    maximumSize: sizeFromJson(j["maximum_size"]),
+    minimumSize: sizeFromJson(j["minimum_size"]),
+  ));
+}
+
+IconButtonThemeData? parseIconButtonTheme(
+    ThemeData theme, Map<String, dynamic>? j) {
+  if (j == null) {
+    return null;
+  }
+
+  TextStyle? parseTextStyle(String propName) {
+    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
+  }
+
+  return IconButtonThemeData(
+      style: IconButton.styleFrom(
+    foregroundColor: parseColor(theme, j["foreground_color"]),
+    backgroundColor: parseColor(theme, j["bgcolor"]),
+    shadowColor: parseColor(theme, j["shadow_color"]),
+    disabledBackgroundColor: parseColor(theme, j["disabled_bgcolor"]),
+    disabledForegroundColor: parseColor(theme, j["disabled_foreground_color"]),
+    overlayColor: parseColor(theme, j["overlay_color"]),
+    surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
+    focusColor: parseColor(theme, j["focus_color"]),
+    highlightColor: parseColor(theme, j["highlight_color"]),
+    hoverColor: parseColor(theme, j["hover_color"]),
+    elevation: parseDouble(j["elevation"]),
+    padding: edgeInsetsFromJson(j["padding"]),
+    enableFeedback: parseBool(j["enable_feedback"]),
+    disabledMouseCursor: parseMouseCursor(j["disabled_mouse_cursor"]),
+    enabledMouseCursor: parseMouseCursor(j["enabled_mouse_cursor"]),
+    shape: outlinedBorderFromJSON(j["shape"]),
+    visualDensity: parseVisualDensity(j["visual_density"]),
+    side: borderSideFromJSON(theme, j["border_side"]),
+    animationDuration: durationFromJSON(j["animation_duration"]),
+    alignment: alignmentFromJson(j["alignment"]),
+    iconSize: parseDouble(j["icon_size"]),
+    fixedSize: sizeFromJson(j["fixed_size"]),
+    maximumSize: sizeFromJson(j["maximum_size"]),
+    minimumSize: sizeFromJson(j["minimum_size"]),
+  ));
 }
 
 DataTableThemeData? parseDataTableTheme(
