@@ -125,6 +125,7 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
     scaffoldBackgroundColor: parseColor(theme, json?["scaffold_bgcolor"]),
     cardColor: parseColor(theme, json?["card_color"]),
     dividerColor: parseColor(theme, json?["divider_color"]),
+    // TODO: deprecated in v0.27.0, and to be removed in v0.30.0
     dialogBackgroundColor: parseColor(theme, json?["dialog_bgcolor"]),
     indicatorColor: parseColor(theme, json?["indicator_color"]),
     hintColor: parseColor(theme, json?["hint_color"]),

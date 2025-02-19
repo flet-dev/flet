@@ -983,3 +983,10 @@ class Theme:
                 version="0.27.0",
                 delete_version="0.30.0",
             )
+        if self.dialog_bgcolor:
+            deprecated_property(
+                "dialog_bgcolor",
+                "Use dialog_theme.bgcolor instead.",
+                version="0.27.0",
+                delete_version="0.30.0",
+            )
