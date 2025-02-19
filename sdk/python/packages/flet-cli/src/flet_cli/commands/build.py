@@ -34,7 +34,7 @@ from flet_cli.utils.pyproject_toml import load_pyproject_toml
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.25.0/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
-MINIMAL_FLUTTER_VERSION = version.Version("3.27.3")
+MINIMAL_FLUTTER_VERSION = version.Version("3.29.0")
 
 error_style = Style(color="red", bold=True)
 console = Console(log_path=False, theme=Theme({"log.message": "green bold"}))
