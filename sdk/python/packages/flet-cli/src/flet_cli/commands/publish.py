@@ -9,6 +9,7 @@ from pathlib import Path
 
 from flet.core.types import WebRenderer
 from flet.utils import copy_tree, is_within_directory, random_string
+
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.project_dependencies import (
     get_poetry_dependencies,
@@ -189,7 +190,7 @@ class Command(BaseCommand):
             deps = toml_dependencies
             print(f"pyproject.toml dependencies: {deps}")
         elif requirements_txt.exists():
-            with open(requirements_txt, "r") as f:
+            with open(requirements_txt, "r", encoding="utf-8") as f:
                 deps = list(
                     filter(
                         lambda dep: not dep.startswith("#"),
@@ -202,7 +203,7 @@ class Command(BaseCommand):
             deps = [f"flet=={flet.version.version}"]
 
         temp_reqs_txt = Path(tempfile.gettempdir()).joinpath(random_string(10))
-        with open(temp_reqs_txt, "w") as f:
+        with open(temp_reqs_txt, "w", encoding="utf-8") as f:
             f.writelines(dep + "\n" for dep in deps)
 
         # pack all files in script's directory to dist/app.tar.gz

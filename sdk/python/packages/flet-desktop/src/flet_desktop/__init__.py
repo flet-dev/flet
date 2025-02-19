@@ -48,7 +48,7 @@ async def open_flet_view_async(page_url, assets_dir, hidden):
 def close_flet_view(pid_file):
     if pid_file is not None and os.path.exists(pid_file):
         try:
-            with open(pid_file) as f:
+            with open(pid_file, encoding="utf-8") as f:
                 fvp_pid = int(f.read())
             logger.debug(f"Flet View process {fvp_pid}")
             os.kill(fvp_pid, signal.SIGKILL)

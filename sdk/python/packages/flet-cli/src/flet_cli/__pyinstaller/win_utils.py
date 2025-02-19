@@ -81,7 +81,7 @@ def update_flet_view_version_info(
             k.val = copyright if copyright else ""
 
     version_info_path = str(Path(tempfile.gettempdir()).joinpath(str(uuid.uuid4())))
-    with open(version_info_path, "w") as f:
+    with open(version_info_path, "w", encoding="utf-8") as f:
         f.write(str(vs))
 
     # Remember overlay
@@ -103,7 +103,7 @@ def update_flet_view_version_info(
 
         # If the update removed the overlay data, re-append it
         if not overlay_after:
-            with open(exe_path, "ab") as exef:
+            with open(exe_path, "ab", encoding="utf-8") as exef:
                 exef.write(overlay_before)
 
     return version_info_path
