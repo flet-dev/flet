@@ -1596,10 +1596,9 @@ class Command(BaseCommand):
             package_args.append(f"flet=={flet_version}")
 
         # site-packages variable
-        if self.package_platform in ["Android", "iOS", "Darwin"]:
-            package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
-                self.build_dir / "site-packages"
-            )
+        package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
+            self.build_dir / "site-packages"
+        )
 
         # flutter-packages variable
         if self.flutter_packages_dir.exists():
@@ -1771,10 +1770,9 @@ class Command(BaseCommand):
         build_env = {}
 
         # site-packages variable
-        if self.package_platform in ["Android", "iOS", "Darwin"]:
-            build_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
-                self.build_dir / "site-packages"
-            )
+        build_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
+            self.build_dir / "site-packages"
+        )
 
         android_signing_key_store = (
             self.options.android_signing_key_store
