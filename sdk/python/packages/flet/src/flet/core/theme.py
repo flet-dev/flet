@@ -33,10 +33,9 @@ from flet.core.types import (
     OffsetValue,
     OptionalNumber,
     PaddingValue,
-    ThemeVisualDensity,
-    VisualDensity,
     StrokeCap,
     TextAlign,
+    VisualDensity,
 )
 from flet.utils.deprecated import deprecated_class, deprecated_property
 
@@ -234,7 +233,7 @@ class ElevatedButtonTheme:
     enabled_mouse_cursor: Optional[MouseCursor] = None
     shape: Optional[OutlinedBorder] = None
     text_style: Optional[TextStyle] = None
-    visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None
+    visual_density: Optional[VisualDensity] = None
     border_side: Optional[BorderSide] = None
     animation_duration: Optional[DurationValue] = None
     alignment: Optional[Alignment] = None
@@ -275,7 +274,7 @@ class IconButtonTheme:
     disabled_mouse_cursor: Optional[MouseCursor] = None
     enabled_mouse_cursor: Optional[MouseCursor] = None
     shape: Optional[OutlinedBorder] = None
-    visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None
+    visual_density: Optional[VisualDensity] = None
     border_side: Optional[BorderSide] = None
     animation_duration: Optional[DurationValue] = None
     alignment: Optional[Alignment] = None
@@ -419,7 +418,7 @@ class RadioTheme:
     overlay_color: ControlStateValue[ColorValue] = None
     splash_radius: OptionalNumber = None
     height: OptionalNumber = None
-    visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None
+    visual_density: Optional[VisualDensity] = None
     mouse_cursor: ControlStateValue[MouseCursor] = None
 
     def __post_init__(self):
@@ -438,7 +437,7 @@ class CheckboxTheme:
     fill_color: ControlStateValue[ColorValue] = None
     splash_radius: OptionalNumber = None
     border_side: Optional[BorderSide] = None
-    visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None
+    visual_density: Optional[VisualDensity] = None
     shape: Optional[OutlinedBorder] = None
     mouse_cursor: ControlStateValue[MouseCursor] = None
 
@@ -660,7 +659,7 @@ class ListTileTheme:
     enable_feedback: Optional[bool] = None
     dense: Optional[bool] = None
     shape: Optional[OutlinedBorder] = None
-    visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None
+    visual_density: Optional[VisualDensity] = None
     content_padding: Optional[PaddingValue] = None
     min_vertical_padding: Optional[PaddingValue] = None
     horizontal_spacing: OptionalNumber = None
@@ -1017,7 +1016,7 @@ class Theme:
     text_theme: Optional[TextTheme] = None
     time_picker_theme: Optional[TimePickerTheme] = None
     tooltip_theme: Optional[TooltipTheme] = None
-    visual_density: Union[VisualDensity, ThemeVisualDensity] = None
+    visual_density: Optional[VisualDensity] = None
 
     def __post_init__(self):
         if self.button_theme:

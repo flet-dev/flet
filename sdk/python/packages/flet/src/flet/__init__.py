@@ -429,7 +429,6 @@ from flet.core.types import (
     TabAlignment,
     TextAlign,
     ThemeMode,
-    ThemeVisualDensity,
     UrlTarget,
     VerticalAlignment,
     VisualDensity,

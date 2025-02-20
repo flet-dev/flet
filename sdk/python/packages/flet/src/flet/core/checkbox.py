@@ -21,7 +21,6 @@ from flet.core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ThemeVisualDensity,
     VisualDensity,
 )
 
@@ -79,7 +78,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         splash_radius: OptionalNumber = None,
         border_side: ControlStateValue[BorderSide] = None,
         is_error: Optional[bool] = None,
-        visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
+        visual_density: Optional[VisualDensity] = None,
         mouse_cursor: Optional[MouseCursor] = None,
         on_change: OptionalControlEventCallable = None,
         on_focus: OptionalControlEventCallable = None,
@@ -236,13 +235,13 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     # visual_density
     @property
-    def visual_density(self) -> Union[None, ThemeVisualDensity, VisualDensity]:
+    def visual_density(self) -> Optional[VisualDensity]:
         return self.__visual_density
 
     @visual_density.setter
-    def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
+    def visual_density(self, value: Optional[VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, (ThemeVisualDensity, VisualDensity))
+        self._set_enum_attr("visualDensity", value, VisualDensity)
 
     # autofocus
     @property
