@@ -36,6 +36,8 @@ class CupertinoSegmentedButton(ConstrainedControl):
         border_color: Optional[ColorValue] = None,
         padding: Optional[PaddingValue] = None,
         click_color: Optional[ColorValue] = None,
+        disabled_color: Optional[ColorValue] = None,
+        disabled_text_color: Optional[ColorValue] = None,
         on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
@@ -108,6 +110,8 @@ class CupertinoSegmentedButton(ConstrainedControl):
         self.unselected_color = unselected_color
         self.on_change = on_change
         self.click_color = click_color
+        self.disabled_color = disabled_color
+        self.disabled_text_color = disabled_text_color
 
     def _get_control_name(self):
         return "cupertinosegmentedbutton"
@@ -143,6 +147,26 @@ class CupertinoSegmentedButton(ConstrainedControl):
     def border_color(self, value: Optional[ColorValue]):
         self.__border_color = value
         self._set_enum_attr("borderColor", value, ColorEnums)
+
+    # disabled_color
+    @property
+    def disabled_color(self) -> Optional[ColorValue]:
+        return self.__disabled_color
+
+    @disabled_color.setter
+    def disabled_color(self, value: Optional[ColorValue]):
+        self.__disabled_color = value
+        self._set_enum_attr("disabledColor", value, ColorEnums)
+
+    # disabled_text_color
+    @property
+    def disabled_text_color(self) -> Optional[ColorValue]:
+        return self.__disabled_text_color
+
+    @disabled_text_color.setter
+    def disabled_text_color(self, value: Optional[ColorValue]):
+        self.__disabled_text_color = value
+        self._set_enum_attr("disabledTextColor", value, ColorEnums)
 
     # selected_index
     @property
