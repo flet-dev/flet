@@ -866,6 +866,7 @@ class NavigationBarTheme:
     label_text_style: ControlStateValue[TextStyle] = None
     indicator_shape: Optional[OutlinedBorder] = None
     label_behavior: Optional[NavigationBarLabelBehavior] = None
+    label_padding: Optional[PaddingValue] = None
 
     def __post_init__(self):
         if not isinstance(self.label_text_style, dict):

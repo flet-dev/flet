@@ -1434,6 +1434,7 @@ NavigationBarThemeData? parseNavigationBarTheme(
         ? NavigationDestinationLabelBehavior.values.firstWhereOrNull(
             (c) => c.name.toLowerCase() == j["label_behavior"].toLowerCase())
         : null,
+    labelPadding: edgeInsetsFromJson(j["label_padding"]),
   );
 }
 
