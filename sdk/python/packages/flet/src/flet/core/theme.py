@@ -836,6 +836,9 @@ class SearchViewTheme:
     border_side: Optional[BorderSide] = None
     size_constraints: Optional[BoxConstraints] = None
     header_height: OptionalNumber = None
+    padding: Optional[PaddingValue] = None
+    bar_padding: Optional[PaddingValue] = None
+    shrink_wrap: Optional[bool] = None
 
 
 @dataclass

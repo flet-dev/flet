@@ -1385,6 +1385,9 @@ SearchViewThemeData? parseSearchViewTheme(
     side: borderSideFromJSON(theme, j["border_side"]),
     constraints: boxConstraintsFromJSON(j["size_constraints"]),
     headerHeight: parseDouble(j["header_height"]),
+    padding: edgeInsetsFromJson(j["padding"]),
+    barPadding: edgeInsetsFromJson(j["bar_padding"]),
+    shrinkWrap: parseBool(j["shrink_wrap"]),
   );
 }
 
