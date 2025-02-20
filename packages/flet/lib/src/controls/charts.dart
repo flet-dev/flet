@@ -17,7 +17,7 @@ class ChartAxisLabelViewModel extends Equatable {
         value: control.attrDouble("value")!,
         control: store.state.controls[control.id]!.childIds
             .map((childId) => store.state.controls[childId])
-            .whereNotNull()
+            .nonNulls
             .where((c) => c.isVisible)
             .firstOrNull);
   }
@@ -37,7 +37,7 @@ class ChartAxisViewModel extends Equatable {
   static ChartAxisViewModel fromStore(Store<AppState> store, Control control) {
     var children = store.state.controls[control.id]!.childIds
         .map((childId) => store.state.controls[childId])
-        .whereNotNull()
+        .nonNulls
         .where((c) => c.isVisible);
 
     return ChartAxisViewModel(

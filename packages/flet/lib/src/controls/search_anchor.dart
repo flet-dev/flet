@@ -39,6 +39,7 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
   bool _focused = false;
   late final FocusNode _focusNode;
   String? _lastFocusValue;
+  String? _lastBlurValue;
 
   @override
   void initState() {
@@ -81,8 +82,6 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
     debugPrint("SearchAnchor build: ${widget.control.id}");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
-    debugPrint(widget.control.attrs.toString());
-
     var value = widget.control.attrString("value", "");
     if (value != null && value != _controller.text) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -111,9 +110,14 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
         widget.control.attrString("keyboardType"), TextInputType.text)!;
 
     var focusValue = widget.control.attrString("focus");
+    var blurValue = widget.control.attrString("blur");
     if (focusValue != null && focusValue != _lastFocusValue) {
       _lastFocusValue = focusValue;
       _focusNode.requestFocus();
+    }
+    if (blurValue != null && blurValue != _lastBlurValue) {
+      _lastBlurValue = blurValue;
+      _focusNode.unfocus();
     }
 
     var method = widget.control.attrString("method");

@@ -317,7 +317,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                       supportedDevicesJson is! Map)) {
                 return supportedDevicesJson
                     .map((d) => parsePointerDeviceKind(d))
-                    .whereNotNull()
+                    .nonNulls
                     .toSet();
               }
               return null;

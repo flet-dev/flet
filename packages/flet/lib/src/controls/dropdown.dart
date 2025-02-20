@@ -1,16 +1,22 @@
-import '../utils/icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../models/control_view_model.dart';
-import '../utils/alignment.dart';
 import '../utils/borders.dart';
+import '../utils/buttons.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/form_field.dart';
+import '../utils/icons.dart';
+import '../utils/numbers.dart';
 import '../utils/text.dart';
+import '../utils/textfield.dart';
 import 'create_control.dart';
 import 'flet_store_mixin.dart';
+import 'textfield.dart';
 
 class DropdownControl extends StatefulWidget {
   final Control? parent;
@@ -35,7 +41,6 @@ class DropdownControl extends StatefulWidget {
 
 class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
   String? _value;
-  bool _focused = false;
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 
@@ -47,9 +52,6 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
   }
 
   void _onFocusChange() {
-    setState(() {
-      _focused = _focusNode.hasFocus;
-    });
     widget.backend.triggerControlEvent(
         widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
   }
@@ -63,78 +65,171 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("Dropdown build: ${widget.control.id}");
-
+    debugPrint("DropdownMenu build: ${widget.control.id}");
     return withControls(widget.control.childIds, (context, itemsView) {
-      debugPrint("DropdownFletControlState build: ${widget.control.id}");
+      debugPrint("DropdownMenuFletControlState build: ${widget.control.id}");
 
-      bool autofocus = widget.control.attrBool("autofocus", false)!;
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
-
+      bool editable = widget.control.attrBool("editable", false)!;
+      bool autofocus = widget.control.attrBool("autofocus", false)!;
       var textSize = widget.control.attrDouble("textSize");
-      var alignment = parseAlignment(widget.control, "alignment");
-      var selectIconStr = parseIcon(widget.control.attrString("selectIcon"));
-      var selectIconCtrl =
-          widget.children.where((c) => c.name == "selectIcon" && c.isVisible);
-      var hintCtrl =
-          widget.children.where((c) => c.name == "hint" && c.isVisible);
-      var disabledHintCtrl = widget.children
-          .where((c) => c.name == "disabled_hint" && c.isVisible);
+      var label = widget.control.attrString("label");
+      var trailingIconCtrl = widget.children
+          .where((c) => c.name == "trailing_icon" && c.isVisible);
+      var trailingIconStr =
+          parseIcon(widget.control.attrString("trailingIcon"));
 
+      var leadingIconCtrl =
+          widget.children.where((c) => c.name == "leading_icon" && c.isVisible);
+      var leadingIconStr = parseIcon(widget.control.attrString("leadingIcon"));
+
+      var selectIconCtrl =
+          widget.children.where((c) => c.name == "select_icon" && c.isVisible);
+      var selectIconStr = parseIcon(widget.control.attrString("selectIcon"));
+
+      var selectedTrailingIconCtrl = widget.children
+          .where((c) => c.name == "selected_trailing_icon" && c.isVisible);
+      var selectedTrailingIconStr =
+          parseIcon(widget.control.attrString("selectedTrailingIcon"));
+      var prefixIconCtrl =
+          widget.children.where((c) => c.name == "prefix_icon" && c.isVisible);
+      var prefixIconStr = parseIcon(widget.control.attrString("prefixIcon"));
+      var labelCtrl =
+          widget.children.where((c) => c.name == "label" && c.isVisible);
       var color = widget.control.attrColor("color", context);
-      var focusedColor = widget.control.attrColor("focusedColor", context);
-      var bgcolor = widget.control.attrColor("bgcolor", context);
-      var selectIconEnabledColor =
-          widget.control.attrColor("selectIconEnabledColor", context);
-      var selectIconDisabledColor =
-          widget.control.attrColor("selectIconDisabledColor", context);
+
+      TextAlign textAlign = parseTextAlign(
+          widget.control.attrString("textAlign"), TextAlign.start)!;
+
+      var fillColor = widget.control.attrColor("fillColor", context);
+      var borderColor = widget.control.attrColor("borderColor", context);
+
+      var borderRadius = parseBorderRadius(widget.control, "borderRadius");
+      var focusedBorderColor =
+          widget.control.attrColor("focusedBorderColor", context);
+      var borderWidth = widget.control.attrDouble("borderWidth");
+      var focusedBorderWidth = widget.control.attrDouble("focusedBorderWidth");
+
+      FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
+        widget.control.attrString("border"),
+        FormFieldInputBorder.outline,
+      )!;
+
+      InputBorder? border;
+
+      if (inputBorder == FormFieldInputBorder.underline) {
+        border = UnderlineInputBorder(
+            borderSide: BorderSide(
+                color: borderColor ?? const Color(0xFF000000),
+                width: borderWidth ?? 1.0));
+      } else if (inputBorder == FormFieldInputBorder.none) {
+        border = InputBorder.none;
+      } else if (inputBorder == FormFieldInputBorder.outline ||
+          borderRadius != null ||
+          borderColor != null ||
+          borderWidth != null) {
+        border = OutlineInputBorder(
+            borderSide: BorderSide(
+                color: borderColor ?? const Color(0xFF000000),
+                width: borderWidth ?? 1.0));
+        if (borderRadius != null) {
+          border = (border as OutlineInputBorder)
+              .copyWith(borderRadius: borderRadius);
+        }
+        if (borderColor != null || borderWidth != null) {
+          border = (border as OutlineInputBorder).copyWith(
+              borderSide: borderWidth == 0
+                  ? BorderSide.none
+                  : BorderSide(
+                      color: borderColor ??
+                          Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.38),
+                      width: borderWidth ?? 1.0));
+        }
+      }
+
+      InputBorder? focusedBorder;
+      if (borderColor != null ||
+          borderWidth != null ||
+          focusedBorderColor != null ||
+          focusedBorderWidth != null) {
+        focusedBorder = border?.copyWith(
+            borderSide: borderWidth == 0
+                ? BorderSide.none
+                : BorderSide(
+                    color: focusedBorderColor ??
+                        borderColor ??
+                        Theme.of(context).colorScheme.primary,
+                    width: focusedBorderWidth ?? borderWidth ?? 2.0));
+      }
+
+      InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
+        filled: widget.control.attrBool("filled", false)!,
+        fillColor: fillColor,
+        hintStyle:
+            parseTextStyle(Theme.of(context), widget.control, "hintStyle"),
+        errorStyle:
+            parseTextStyle(Theme.of(context), widget.control, "errorStyle"),
+        helperStyle:
+            parseTextStyle(Theme.of(context), widget.control, "helperStyle"),
+        border: border,
+        enabledBorder: border,
+        focusedBorder: focusedBorder,
+        isDense: widget.control.attrBool("dense") ?? false,
+        contentPadding: parseEdgeInsets(widget.control, "contentPadding"),
+      );
 
       TextStyle? textStyle =
           parseTextStyle(Theme.of(context), widget.control, "textStyle");
-      if (textSize != null || color != null || focusedColor != null) {
+      if (textSize != null || color != null) {
         textStyle = (textStyle ?? const TextStyle()).copyWith(
             fontSize: textSize,
-            color: (_focused ? focusedColor ?? color : color) ??
-                Theme.of(context).colorScheme.onSurface);
+            color: color ?? Theme.of(context).colorScheme.onSurface);
       }
 
       var items = itemsView.controlViews
-          .where((c) => c.control.name == null && c.control.isVisible)
-          .map<DropdownMenuItem<String>>((ControlViewModel itemCtrlView) {
+          .where((c) =>
+              c.control.name == null &&
+              c.control.type == "dropdownoption" &&
+              c.control.isVisible)
+          .map<DropdownMenuEntry<String>>((ControlViewModel itemCtrlView) {
         var itemCtrl = itemCtrlView.control;
         bool itemDisabled = disabled || itemCtrl.isDisabled;
-        TextStyle? textStyle =
-            parseTextStyle(Theme.of(context), itemCtrl, "textStyle");
-        if (itemDisabled && textStyle != null) {
-          textStyle = textStyle.apply(color: Theme.of(context).disabledColor);
-        }
+        ButtonStyle? style =
+            parseButtonStyle(Theme.of(context), itemCtrl, "style");
+
         var contentCtrls = itemCtrlView.children
             .where((c) => c.name == "content" && c.isVisible);
-        Widget? itemChild;
-        if (contentCtrls.isNotEmpty) {
-          // custom content
-          itemChild = createControl(
-              itemCtrlView.control, contentCtrls.first.id, itemDisabled);
-        } else {
-          itemChild = Text(
-            itemCtrl.attrs["text"] ?? itemCtrl.attrs["key"] ?? itemCtrl.id,
-            style: textStyle,
-          );
-        }
-        var align = parseAlignment(itemCtrl, "alignment");
-        if (align != null) {
-          itemChild = Container(alignment: align, child: itemChild);
-        }
-        return DropdownMenuItem<String>(
+        var leadingIconCtrls = itemCtrlView.children
+            .where((c) => c.name == "leadingIcon" && c.isVisible);
+        var trailingIconCtrls = itemCtrlView.children
+            .where((c) => c.name == "trailingIcon" && c.isVisible);
+
+        return DropdownMenuEntry<String>(
           enabled: !itemDisabled,
           value: itemCtrl.attrs["key"] ?? itemCtrl.attrs["text"] ?? itemCtrl.id,
-          alignment: align ?? AlignmentDirectional.centerStart,
-          onTap: !(disabled || itemCtrl.isDisabled)
-              ? () {
-                  widget.backend.triggerControlEvent(itemCtrl.id, "click");
-                }
+          label: itemCtrl.attrs["text"] ?? itemCtrl.attrs["key"] ?? itemCtrl.id,
+          labelWidget: contentCtrls.isNotEmpty
+              ? createControl(
+                  itemCtrlView.control, contentCtrls.first.id, itemDisabled)
               : null,
-          child: itemChild,
+          leadingIcon: leadingIconCtrls.isNotEmpty
+              ? createControl(
+                  itemCtrlView.control, leadingIconCtrls.first.id, itemDisabled)
+              : itemCtrlView.control.attrString("leadingIcon") != null
+                  ? Icon(
+                      parseIcon(itemCtrlView.control.attrString("leadingIcon")))
+                  : null,
+          trailingIcon: trailingIconCtrls.isNotEmpty
+              ? createControl(itemCtrlView.control, trailingIconCtrls.first.id,
+                  itemDisabled)
+              : itemCtrlView.control.attrString("trailingIcon") != null
+                  ? Icon(parseIcon(
+                      itemCtrlView.control.attrString("trailingIcon")))
+                  : null,
+          style: style,
         );
       }).toList();
 
@@ -147,118 +242,111 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         _value = null;
       }
 
-      var prefixControls = itemsView.controlViews
-          .where((c) => c.control.name == "prefix" && c.control.isVisible);
-      var prefixIconControls = itemsView.controlViews
-          .where((c) => c.control.name == "prefix_icon" && c.control.isVisible);
-      var suffixControls = itemsView.controlViews
-          .where((c) => c.control.name == "suffix" && c.control.isVisible);
-      var suffixIconControls = itemsView.controlViews
-          .where((c) => c.control.name == "suffix_icon" && c.control.isVisible);
-      var counterControls = itemsView.controlViews
-          .where((c) => c.control.name == "counter" && c.control.isVisible);
-      var iconControls = itemsView.controlViews
-          .where((c) => c.control.name == "icon" && c.control.isVisible);
-      var errorCtrl = itemsView.controlViews
-          .where((c) => c.control.name == "error" && c.control.isVisible);
-      var helperCtrl = itemsView.controlViews
-          .where((c) => c.control.name == "helper" && c.control.isVisible);
-      var labelCtrl = itemsView.controlViews
-          .where((c) => c.control.name == "label" && c.control.isVisible);
-
       var focusValue = widget.control.attrString("focus");
       if (focusValue != null && focusValue != _lastFocusValue) {
         _lastFocusValue = focusValue;
         _focusNode.requestFocus();
       }
 
-      var borderRadius = parseBorderRadius(widget.control, "borderRadius");
+      TextCapitalization textCapitalization = parseTextCapitalization(
+          widget.control.attrString("capitalization"),
+          TextCapitalization.none)!;
 
-      Widget dropDown = DropdownButtonFormField<String>(
-        style: textStyle,
-        autofocus: autofocus,
+      FilteringTextInputFormatter? inputFilter =
+          parseInputFilter(widget.control, "inputFilter");
+
+      List<TextInputFormatter>? inputFormatters = [];
+      // add non-null input formatters
+      if (inputFilter != null) {
+        inputFormatters.add(inputFilter);
+      }
+      if (textCapitalization != TextCapitalization.none) {
+        inputFormatters.add(TextCapitalizationFormatter(textCapitalization));
+      }
+
+      _focusNode.canRequestFocus = editable;
+
+      Widget dropDown = DropdownMenu<String>(
+        enabled: !disabled,
         focusNode: _focusNode,
-        value: _value,
-        dropdownColor: bgcolor,
-        enableFeedback: widget.control.attrBool("enableFeedback"),
-        elevation: widget.control.attrInt("elevation", 8)!,
-        padding: parseEdgeInsets(widget.control, "padding"),
-        itemHeight: widget.control.attrDouble("itemHeight"),
-        menuMaxHeight: widget.control.attrDouble("maxMenuHeight"),
-        iconEnabledColor: selectIconEnabledColor,
-        iconDisabledColor: selectIconDisabledColor,
-        iconSize: widget.control.attrDouble("selectIconSize", 24.0)!,
-        borderRadius: borderRadius,
-        alignment: alignment ?? AlignmentDirectional.centerStart,
-        isExpanded: widget.control.attrBool("optionsFillHorizontally", true)!,
-        icon: selectIconCtrl.isNotEmpty
-            ? createControl(widget.control, selectIconCtrl.first.id, disabled)
-            : selectIconStr != null? Icon(selectIconStr): null,
-        hint: hintCtrl.isNotEmpty
-            ? createControl(widget.control, hintCtrl.first.id, disabled)
-            : null,
-        disabledHint: disabledHintCtrl.isNotEmpty
-            ? createControl(widget.control, disabledHintCtrl.first.id, disabled)
-            : null,
-        decoration: buildInputDecoration(context, widget.control,
-            prefix:
-                prefixControls.isNotEmpty ? prefixControls.first.control : null,
-            prefixIcon: prefixIconControls.isNotEmpty
-                ? prefixIconControls.first.control
+        initialSelection: _value,
+        //controller: controller,
+        //requestFocusOnTap: editable,
+        enableFilter: widget.control.attrBool("enableFilter", false)!,
+        enableSearch: widget.control.attrBool("enableSearch", true)!,
+        menuHeight: widget.control.attrDouble("maxMenuHeight"),
+        label: labelCtrl.isNotEmpty
+            ? createControl(widget.control, labelCtrl.first.id, disabled)
+            : label != null
+                ? Text(label,
+                    style: parseTextStyle(
+                        Theme.of(context), widget.control, "labelStyle"))
                 : null,
-            suffix:
-                suffixControls.isNotEmpty ? suffixControls.first.control : null,
-            suffixIcon: suffixIconControls.isNotEmpty
-                ? suffixIconControls.first.control
+        leadingIcon: leadingIconCtrl.isNotEmpty
+            ? createControl(widget.control, leadingIconCtrl.first.id, disabled)
+            : leadingIconStr != null
+                ? Icon(leadingIconStr)
+                : prefixIconCtrl.isNotEmpty
+                    ? createControl(
+                        widget.control, prefixIconCtrl.first.id, disabled)
+                    : prefixIconStr != null
+                        ? Icon(prefixIconStr)
+                        : null,
+        trailingIcon: trailingIconCtrl.isNotEmpty
+            ? createControl(widget.control, trailingIconCtrl.first.id, disabled)
+            : trailingIconStr != null
+                ? Icon(trailingIconStr)
+                : selectIconCtrl.isNotEmpty
+                    ? createControl(
+                        widget.control, selectIconCtrl.first.id, disabled)
+                    : selectIconStr != null
+                        ? Icon(selectIconStr)
+                        : null,
+        selectedTrailingIcon: selectedTrailingIconCtrl.isNotEmpty
+            ? createControl(
+                widget.control, selectedTrailingIconCtrl.first.id, disabled)
+            : selectedTrailingIconStr != null
+                ? Icon(selectedTrailingIconStr)
                 : null,
-            counter: counterControls.isNotEmpty
-                ? counterControls.first.control
-                : null,
-            icon: iconControls.isNotEmpty ? iconControls.first.control : null,
-            error: errorCtrl.isNotEmpty ? errorCtrl.first.control : null,
-            helper: helperCtrl.isNotEmpty ? helperCtrl.first.control : null,
-            label: labelCtrl.isNotEmpty ? labelCtrl.first.control : null,
-            customSuffix: null,
-            focused: _focused,
-            disabled: disabled,
-            adaptive: widget.parentAdaptive),
-        onTap: !disabled
-            ? () {
-                widget.backend.triggerControlEvent(widget.control.id, "click");
-              }
-            : null,
-        onChanged: disabled
+        textStyle: textStyle,
+        textAlign: textAlign,
+        width: widget.control.attrDouble("width"),
+        errorText: widget.control.attrString("errorText"),
+        hintText: widget.control.attrString("hintText"),
+        helperText: widget.control.attrString("helperText"),
+        //inputFormatters: inputFormatters,
+        //expandedInsets: parseEdgeInsets(widget.control, "expandedInsets"),
+        menuStyle: MenuStyle(
+          backgroundColor: parseWidgetStateColor(
+              Theme.of(context), widget.control, "bgcolor"),
+          elevation: parseWidgetStateDouble(widget.control, "elevation"),
+        ),
+
+        inputDecorationTheme: inputDecorationTheme,
+        onSelected: disabled
             ? null
             : (String? value) {
-                debugPrint("Dropdown selected value: $value");
+                debugPrint("DropdownMenu selected value: $value");
                 _value = value!;
                 widget.backend
                     .updateControlState(widget.control.id, {"value": value});
                 widget.backend
                     .triggerControlEvent(widget.control.id, "change", value);
               },
-        items: items,
+        dropdownMenuEntries: items,
       );
 
-      if (widget.control.attrInt("expand", 0)! > 0) {
-        return constrainedControl(
-            context, dropDown, widget.parent, widget.control);
-      } else {
-        return LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            if (constraints.maxWidth == double.infinity &&
-                widget.control.attrDouble("width") == null) {
-              dropDown = ConstrainedBox(
-                constraints: const BoxConstraints.tightFor(width: 300),
-                child: dropDown,
-              );
-            }
+      var didAutoFocus = false;
 
-            return constrainedControl(
-                context, dropDown, widget.parent, widget.control);
-          },
-        );
+      if (!didAutoFocus && autofocus) {
+        didAutoFocus = true;
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          FocusScope.of(context).autofocus(_focusNode);
+        });
       }
+
+      return constrainedControl(
+          context, dropDown, widget.parent, widget.control);
     });
   }
 }
