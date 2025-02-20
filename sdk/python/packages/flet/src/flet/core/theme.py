@@ -472,6 +472,7 @@ class SwitchTheme:
     track_outline_width: ControlStateValue[OptionalNumber] = None
     splash_radius: OptionalNumber = None
     mouse_cursor: ControlStateValue[MouseCursor] = None
+    padding: Optional[PaddingValue] = None
 
     def __post_init__(self):
         if not isinstance(self.thumb_color, dict):

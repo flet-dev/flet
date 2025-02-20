@@ -932,6 +932,7 @@ SwitchThemeData? parseSwitchTheme(ThemeData theme, Map<String, dynamic>? j) {
         j["track_outline_width"], (jv) => parseDouble(jv)),
     mouseCursor: getWidgetStateProperty<MouseCursor?>(
         j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
+    padding: edgeInsetsFromJson(j["padding"]),
   );
 }
 
