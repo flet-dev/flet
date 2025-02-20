@@ -363,6 +363,8 @@ class FloatingActionButtonTheme:
     extended_icon_label_spacing: OptionalNumber = None
     extended_size_constraints: Optional[BoxConstraints] = None
     size_constraints: Optional[BoxConstraints] = None
+    large_size_constraints: Optional[BoxConstraints] = None
+    small_size_constraints: Optional[BoxConstraints] = None
 
 
 @dataclass

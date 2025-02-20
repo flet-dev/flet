@@ -773,6 +773,8 @@ FloatingActionButtonThemeData? parseFloatingActionButtonTheme(
     extendedSizeConstraints:
         boxConstraintsFromJSON(j["extended_size_constraints"]),
     sizeConstraints: boxConstraintsFromJSON(j["size_constraints"]),
+    smallSizeConstraints: boxConstraintsFromJSON(j["small_size_constraints"]),
+    largeSizeConstraints: boxConstraintsFromJSON(j["large_size_constraints"]),
   );
 }
 
