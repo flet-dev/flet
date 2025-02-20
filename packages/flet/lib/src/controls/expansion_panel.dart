@@ -73,6 +73,9 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl>
             return ExpansionPanel(
               backgroundColor: panelView.control.attrColor("bgColor", context),
               isExpanded: panelView.control.attrBool("expanded", false)!,
+              highlightColor:
+                  panelView.control.attrColor("highlightColor", context),
+              splashColor: panelView.control.attrColor("splashColor", context),
               canTapOnHeader:
                   panelView.control.attrBool("canTapHeader", false)!,
               headerBuilder: (BuildContext context, bool isExpanded) {
