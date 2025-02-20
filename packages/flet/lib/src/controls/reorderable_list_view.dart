@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/edge_insets.dart';
+import '../utils/mouse.dart';
 import '../utils/others.dart';
 import 'create_control.dart';
 import 'scroll_notification_control.dart';
@@ -88,6 +89,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
         : null;
     var autoScrollerVelocityScalar =
         widget.control.attrDouble("autoScrollerVelocityScalar", 1.0);
+    var mouseCursor = parseMouseCursor(widget.control.attrString("mouseCursor"));
 
     void onReorder(int oldIndex, int newIndex) {
       debugPrint("onReorder: $oldIndex -> $newIndex");
@@ -134,6 +136,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
                 footer: footer,
                 prototypeItem: prototypeItem,
                 autoScrollerVelocityScalar: autoScrollerVelocityScalar,
+                mouseCursor: mouseCursor,
                 onReorder: onReorder,
                 onReorderEnd: onReorderEnd,
                 onReorderStart: onReorderStart,
@@ -157,6 +160,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
                 itemExtent: itemExtent,
                 prototypeItem: prototypeItem,
                 autoScrollerVelocityScalar: autoScrollerVelocityScalar,
+                mouseCursor: mouseCursor,
                 onReorder: onReorder,
                 onReorderEnd: onReorderEnd,
                 onReorderStart: onReorderStart,
