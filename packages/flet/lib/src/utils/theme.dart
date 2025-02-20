@@ -1284,6 +1284,16 @@ ProgressIndicatorThemeData? parseProgressIndicatorTheme(
     linearTrackColor: parseColor(theme, j["linear_track_color"]),
     refreshBackgroundColor: parseColor(theme, j["refresh_bgcolor"]),
     linearMinHeight: parseDouble(j["linear_min_height"]),
+    borderRadius: borderRadiusFromJSON(j["border_radius"]),
+    trackGap: parseDouble(j["track_gap"]),
+    circularTrackPadding: edgeInsetsFromJson(j["circular_track_padding"]),
+    constraints: boxConstraintsFromJSON(j["size_constraints"]),
+    stopIndicatorColor: parseColor(theme, j["stop_indicator_color"]),
+    stopIndicatorRadius: parseDouble(j["stop_indicator_radius"]),
+    strokeAlign: parseDouble(j["stroke_align"]),
+    strokeCap: parseStrokeCap(j["stroke_cap"]),
+    strokeWidth: parseDouble(j["stroke_width"]),
+    year2023: parseBool(j["year_2023"]),
   );
 }
 

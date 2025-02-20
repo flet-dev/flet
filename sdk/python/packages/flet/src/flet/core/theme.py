@@ -746,6 +746,25 @@ class ProgressIndicatorTheme:
     linear_track_color: Optional[ColorValue] = None
     refresh_bgcolor: Optional[ColorValue] = None
     linear_min_height: OptionalNumber = None
+    border_radius: Optional[BorderRadius] = None
+    track_gap: OptionalNumber = None
+    circular_track_padding: Optional[PaddingValue] = None
+    size_constraints: Optional[BoxConstraints] = None
+    stop_indicator_color: Optional[ColorValue] = None
+    stop_indicator_radius: OptionalNumber = None
+    stroke_align: OptionalNumber = None
+    stroke_cap: Optional[StrokeCap] = None
+    stroke_width: OptionalNumber = None
+    year_2023: Optional[bool] = None
+
+    def __post_init__(self):
+        if self.year_2023 is not None:
+            deprecated_property(
+                name="year_2023",
+                version="0.27.0",
+                delete_version=None,  # not known for now
+                reason="Set this flag to False to opt into the 2024 ProgressIndicator appearance. In the future, this flag will default to False.",
+            )
 
 
 @dataclass
