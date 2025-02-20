@@ -1195,6 +1195,7 @@ TooltipThemeData? parseTooltipTheme(ThemeData theme, Map<String, dynamic>? j) {
     exitDuration: durationFromJSON(j["exit_duration"]),
     showDuration: durationFromJSON(j["show_duration"]),
     margin: edgeInsetsFromJson(j["margin"]),
+    textAlign: parseTextAlign(j["text_align"]),
     triggerMode: parseTooltipTriggerMode(j["trigger_mode"]),
     // TODO: replace null with PageArgsModel
     decoration: boxDecorationFromJSON(theme, j["decoration"], null),

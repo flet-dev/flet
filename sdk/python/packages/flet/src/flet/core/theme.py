@@ -688,6 +688,7 @@ class TooltipTheme:
     margin: Optional[MarginValue] = None
     trigger_mode: Optional[TooltipTriggerMode] = None
     decoration: Optional[BoxDecoration] = None
+    text_align: Optional[TextAlign] = None
 
 
 @dataclass
