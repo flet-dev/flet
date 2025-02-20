@@ -395,7 +395,6 @@ class Markdown(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        self._set_attr_json("codeStyle", self.__code_style)
         self._set_attr_json("codeStyleSheet", self.__code_style_sheet)
         self._set_attr_json("mdStyleSheet", self.__md_style_sheet)
         self._set_attr_json(

@@ -40,7 +40,6 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
     bool disabled = control.isDisabled || parentDisabled;
 
     var value = control.attrString("value", "")!;
-    var codeTheme = control.attrString("codeTheme", "")!;
     md.ExtensionSet extensionSet = parseMarkdownExtensionSet(
         control.attrString("extensionSet"), md.ExtensionSet.none)!;
 
