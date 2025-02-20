@@ -851,6 +851,7 @@ class NavigationDrawerTheme:
     tile_height: OptionalNumber = None
     label_text_style: ControlStateValue[TextStyle] = None
     indicator_shape: Optional[OutlinedBorder] = None
+    indicator_size: Optional[Size] = None
 
     def __post_init__(self):
         if not isinstance(self.label_text_style, dict):

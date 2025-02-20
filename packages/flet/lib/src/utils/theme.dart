@@ -1403,7 +1403,7 @@ NavigationDrawerThemeData? parseNavigationDrawerTheme(
     surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
     indicatorColor: parseColor(theme, j["indicator_color"]),
     elevation: parseDouble(j["elevation"]),
-    //indicatorSize: ,
+    indicatorSize: sizeFromJson(j["indicator_size"]),
     tileHeight: parseDouble(j["tile_height"]),
     labelTextStyle: getWidgetStateProperty<TextStyle?>(
         j["label_text_style"], (jv) => textStyleFromJson(theme, jv)),
