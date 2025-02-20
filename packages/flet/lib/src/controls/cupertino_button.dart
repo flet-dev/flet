@@ -99,7 +99,6 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     String url = widget.control.attrString("url", "")!;
     Color disabledColor =
         widget.control.attrColor("disabledBgcolor", context) ??
-            widget.control.attrColor("disabledColor", context) ?? // deprecated
             CupertinoColors.quaternarySystemFill;
     Color? bgColor = widget.control.attrColor("bgColor", context);
     Color? color = widget.control.attrColor("color", context);

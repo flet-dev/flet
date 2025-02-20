@@ -82,11 +82,6 @@ class Container(ConstrainedControl, AdaptiveControl):
         blend_mode: Optional[BlendMode] = None,
         border: Optional[Border] = None,
         border_radius: Optional[BorderRadiusValue] = None,
-        image_src: Optional[str] = None,
-        image_src_base64: Optional[str] = None,
-        image_repeat: Optional[ImageRepeat] = None,
-        image_fit: Optional[ImageFit] = None,
-        image_opacity: OptionalNumber = None,
         shape: Optional[BoxShape] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         ink: Optional[bool] = None,
@@ -190,11 +185,6 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.blend_mode = blend_mode
         self.border = border
         self.border_radius = border_radius
-        self.image_src = image_src
-        self.image_src_base64 = image_src_base64
-        self.image_repeat = image_repeat
-        self.image_fit = image_fit
-        self.image_opacity = image_opacity
         self.shape = shape
         self.clip_behavior = clip_behavior
         self.ink = ink

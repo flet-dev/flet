@@ -44,7 +44,7 @@ class CupertinoFilledButton(CupertinoButton):
         icon: Optional[IconValue] = None,
         icon_color: Optional[ColorValue] = None,
         content: Optional[Control] = None,
-        disabled_color: Optional[ColorValue] = None,
+        disabled_bgcolor: Optional[ColorValue] = None,
         opacity_on_click: OptionalNumber = None,
         min_size: OptionalNumber = None,
         padding: Optional[PaddingValue] = None,
@@ -95,7 +95,7 @@ class CupertinoFilledButton(CupertinoButton):
             #
             color="onPrimary",
             bgcolor="primary",
-            disabled_color=disabled_color,
+            disabled_bgcolor=disabled_bgcolor,
             text=text,
             icon=icon,
             icon_color=icon_color,
