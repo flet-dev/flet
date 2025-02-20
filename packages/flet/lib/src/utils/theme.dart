@@ -829,6 +829,7 @@ AppBarTheme? parseAppBarTheme(ThemeData theme, Map<String, dynamic>? j) {
     titleSpacing: parseDouble(j["title_spacing"]),
     scrolledUnderElevation: parseDouble(j["scroll_elevation"]),
     toolbarHeight: parseDouble(j["toolbar_height"]),
+    actionsPadding: edgeInsetsFromJson(j["actions_padding"]),
   );
 }
 

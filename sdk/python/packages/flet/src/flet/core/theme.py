@@ -397,6 +397,7 @@ class AppBarTheme:
     title_spacing: OptionalNumber = None
     scroll_elevation: OptionalNumber = None
     toolbar_height: OptionalNumber = None
+    actions_padding: Optional[PaddingValue] = None
 
 
 @dataclass
