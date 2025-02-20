@@ -63,8 +63,8 @@ class Option(Control):
         for item in deprecated_properties_list:
             if eval(item) is not None:
                 warnings.warn(
-                    f"{item} is deprecated since version 0.26.0 "
-                    f"and will be removed in version 0.29.0.",
+                    f"{item} is deprecated since version 0.27.0 "
+                    f"and will be removed in version 0.30.0.",
                     category=DeprecationWarning,
                     stacklevel=2,
                 )
