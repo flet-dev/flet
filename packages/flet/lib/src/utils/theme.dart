@@ -1262,6 +1262,12 @@ SliderThemeData? parseSliderTheme(ThemeData theme, Map<String, dynamic>? j) {
     valueIndicatorStrokeColor:
         parseColor(theme, j["value_indicator_stroke_color"]),
     allowedInteraction: parseSliderInteraction(j["interaction"]),
+    padding: edgeInsetsFromJson(j["padding"]),
+    trackGap: parseDouble(j["track_gap"]),
+    thumbSize: getWidgetStateProperty<Size?>(
+        j["thumb_size"], (jv) => sizeFromJson(jv)),
+    // TODO: deprecated in v0.27.0, to be removed in future versions
+    year2023: parseBool(j["year_2023"]),
   );
 }
 

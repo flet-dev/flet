@@ -728,6 +728,10 @@ class SliderTheme:
     track_height: OptionalNumber = None
     value_indicator_stroke_color: Optional[ColorValue] = None
     interaction: Optional[SliderInteraction] = None
+    padding: Optional[PaddingValue] = None
+    track_gap: OptionalNumber = None
+    thumb_size: ControlStateValue[Size] = None
+    year_2023: Optional[bool] = None
 
     def __post_init__(self):
         if not isinstance(self.mouse_cursor, dict):
