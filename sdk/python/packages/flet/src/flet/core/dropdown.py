@@ -1,29 +1,32 @@
 import time
 import warnings
-from typing import Any, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from flet.core.alignment import Alignment
 from flet.core.animation import AnimationValue
-from flet.core.badge import BadgeValue
-from flet.core.box import BoxConstraints
+from flet.core.buttons import ButtonStyle
 from flet.core.control import Control, OptionalNumber
 from flet.core.form_field_control import FormFieldControl, InputBorder
+from flet.core.menu_bar import MenuStyle
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
-from flet.core.tooltip import TooltipValue
+from flet.core.textfield import InputFilter, TextCapitalization
 from flet.core.types import (
     BorderRadiusValue,
-    ColorEnums,
     ColorValue,
-    DurationValue,
+    ControlState,
+    ControlStateValue,
     IconEnums,
     IconValueOrControl,
+    Number,
     OffsetValue,
     OptionalControlEventCallable,
+    OptionalEventCallable,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    TextAlign,
 )
 
 
@@ -33,9 +36,12 @@ class Option(Control):
         key: Optional[str] = None,
         text: Optional[str] = None,
         content: Optional[Control] = None,
-        alignment: Optional[Alignment] = None,
-        text_style: Optional[TextStyle] = None,
-        on_click: OptionalControlEventCallable = None,
+        leading_icon: Optional[IconValueOrControl] = None,
+        trailing_icon: Optional[IconValueOrControl] = None,
+        style: Optional[ButtonStyle] = None,
+        alignment: Optional[Alignment] = None,  # to be deprecated
+        text_style: Optional[TextStyle] = None,  # to be deprecated
+        on_click: OptionalControlEventCallable = None,  # to be deprecated
         #
         # Control
         #
@@ -48,16 +54,33 @@ class Option(Control):
         self.key = key
         self.text = text
         self.content = content
-        self.on_click = on_click
-        self.alignment = alignment
-        self.text_style = text_style
+        self.leading_icon = leading_icon
+        self.trailing_icon = trailing_icon
+        self.style = style
+
+        deprecated_properties_list = ["text_style", "on_click", "alignment"]
+
+        for item in deprecated_properties_list:
+            if eval(item) is not None:
+                warnings.warn(
+                    f"{item} is deprecated since version 0.27.0 "
+                    f"and will be removed in version 0.30.0.",
+                    category=DeprecationWarning,
+                    stacklevel=2,
+                )
 
     def _get_control_name(self):
         return "dropdownoption"
 
     def _get_children(self):
-        children = []
-        if self.__content is not None:
+        children = super()._get_children()
+        if isinstance(self.__leading_icon, Control):
+            self.__leading_icon._set_attr_internal("n", "leadingIcon")
+            children.append(self.__leading_icon)
+        if isinstance(self.__trailing_icon, Control):
+            self.__trailing_icon._set_attr_internal("n", "trailing_icon")
+            children.append(self.__trailing_icon)
+        if isinstance(self.__content, Control):
             self.__content._set_attr_internal("n", "content")
             children.append(self.__content)
         return children
@@ -67,9 +90,7 @@ class Option(Control):
         assert (
             self.key is not None or self.text is not None
         ), "key or text must be specified"
-        self._set_attr_json("alignment", self.__alignment)
-        if isinstance(self.__text_style, TextStyle):
-            self._set_attr_json("textStyle", self.__text_style)
+        self._set_attr_json("style", self.__style)
 
     # key
     @property
@@ -98,178 +119,181 @@ class Option(Control):
     def content(self, value: Optional[Control]):
         self.__content = value
 
-    # alignment
+    # style
     @property
-    def alignment(self) -> Optional[Alignment]:
-        return self.__alignment
+    def style(self) -> Optional[ButtonStyle]:
+        return self.__style
 
-    @alignment.setter
-    def alignment(self, value: Optional[Alignment]):
-        self.__alignment = value
+    @style.setter
+    def style(self, value: Optional[ButtonStyle]):
+        self.__style = value
 
-    # text_style
+    # leading_icon
     @property
-    def text_style(self) -> Optional[TextStyle]:
-        return self.__text_style
+    def leading_icon(self) -> Optional[IconValueOrControl]:
+        return self.__leading_icon
 
-    @text_style.setter
-    def text_style(self, value: Optional[TextStyle]):
-        self.__text_style = value
+    @leading_icon.setter
+    def leading_icon(self, value: Optional[IconValueOrControl]):
+        self.__leading_icon = value
+        if not isinstance(value, Control):
+            self._set_enum_attr("leadingIcon", value, IconEnums)
 
-    # on_click
+    # trailing_icon
     @property
-    def on_click(self) -> OptionalControlEventCallable:
-        return self._get_event_handler("click")
+    def trailing_icon(self) -> Optional[IconValueOrControl]:
+        return self.__trailing_icon
 
-    @on_click.setter
-    def on_click(self, handler: OptionalControlEventCallable):
-        self._add_event_handler("click", handler)
+    @trailing_icon.setter
+    def trailing_icon(self, value: Optional[IconValueOrControl]):
+        self.__trailing_icon = value
+        if not isinstance(value, Control):
+            self._set_enum_attr("trailingIcon", value, IconEnums)
+
+
+class DropdownOption(Option):
+    """Alias for Option"""
 
 
 class Dropdown(FormFieldControl):
     """
-    A dropdown lets the user select from a number of items. The dropdown shows the currently selected item as well as an arrow that opens a menu for selecting another item.
-
-    Example:
-    ```
-    import flet as ft
-
-    def main(page: ft.Page):
-        def button_clicked(e):
-            t.value = f"Dropdown value is:  {dd.value}"
-            page.update()
-
-        t = ft.Text()
-        b = ft.ElevatedButton(text="Submit", on_click=button_clicked)
-        dd = ft.Dropdown(
-            width=200,
-            options=[
-                ft.dropdown.Option("Red"),
-                ft.dropdown.Option("Green"),
-                ft.dropdown.Option("Blue"),
-            ],
-        )
-        page.add(dd, b, t)
-
-    ft.app(target=main)
-    ```
-
+    A dropdown control that allows users to select a single option from a list of options.
     -----
-
     Online docs: https://flet.dev/docs/controls/dropdown
     """
 
     def __init__(
         self,
         value: Optional[str] = None,
-        options: Optional[List[Option]] = None,
-        alignment: Optional[Alignment] = None,
         autofocus: Optional[bool] = None,
-        hint_content: Optional[Control] = None,
-        select_icon: Optional[IconValueOrControl] = None,
-        icon_content: Optional[Control] = None,  # to be deprecated
-        elevation: OptionalNumber = None,
-        item_height: OptionalNumber = None,
+        text_align: Optional[TextAlign] = None,
+        elevation: ControlStateValue[OptionalNumber] = None,
+        options: Optional[List[Option]] = None,
+        label_content: Optional[str] = None,
+        enable_filter: Optional[bool] = None,
+        enable_search: Optional[bool] = None,
+        editable: Optional[bool] = None,
         max_menu_height: OptionalNumber = None,
-        select_icon_size: OptionalNumber = None,
+        expanded_insets: PaddingValue = None,
+        menu_style: Optional[MenuStyle] = None,
+        selected_suffix: Optional[Control] = None,
+        input_filter: Optional[InputFilter] = None,
+        capitalization: Optional[TextCapitalization] = None,
+        options_fill_horizontally: Optional[bool] = None,  # to be deprecated
+        padding: Optional[PaddingValue] = None,  # to be deprecated
+        trailing_icon: Optional[IconValueOrControl] = None,
+        leading_icon: Optional[IconValueOrControl] = None,
+        select_icon: Optional[IconValueOrControl] = None,  # to be deprecated
+        selected_trailing_icon: Optional[IconValueOrControl] = None,
+        on_change: OptionalEventCallable = None,
+        on_focus: OptionalEventCallable = None,
+        on_blur: OptionalEventCallable = None,
+        enable_feedback: Optional[bool] = None,  # to be deprecated
+        item_height: OptionalNumber = None,  # to be deprecated
+        alignment: Optional[Alignment] = None,  # to be deprecated
+        hint_content: Optional[Control] = None,  # to be deprecated
+        icon_content: Optional[Control] = None,  # to be deprecated
+        select_icon_size: OptionalNumber = None,  # to be deprecated
         icon_size: OptionalNumber = None,  # to be deprecated
-        enable_feedback: Optional[bool] = None,
-        padding: Optional[PaddingValue] = None,
-        select_icon_enabled_color: Optional[ColorValue] = None,
+        select_icon_enabled_color: Optional[ColorValue] = None,  # to be deprecated
         icon_enabled_color: Optional[ColorValue] = None,  # to be deprecated
-        select_icon_disabled_color: Optional[ColorValue] = None,
+        select_icon_disabled_color: Optional[ColorValue] = None,  # to be deprecated
         icon_disabled_color: Optional[ColorValue] = None,  # to be deprecated
-        options_fill_horizontally: Optional[bool] = None,
-        disabled_hint_content: Optional[Control] = None,
-        on_change: OptionalControlEventCallable = None,
-        on_focus: OptionalControlEventCallable = None,
-        on_blur: OptionalControlEventCallable = None,
-        on_click: OptionalControlEventCallable = None,
         #
         # FormField specific
         #
+        bgcolor: Optional[ColorValue] = None,
+        error_style: Optional[TextStyle] = None,
+        error_text: Optional[str] = None,
         text_size: OptionalNumber = None,
         text_style: Optional[TextStyle] = None,
-        label: Optional[Union[str, Control]] = None,
+        label: Optional[str] = None,
         label_style: Optional[TextStyle] = None,
-        icon: Optional[IconValueOrControl] = None,
+        icon: Optional[IconValueOrControl] = None,  # to deprecated
         border: Optional[InputBorder] = None,
-        color: Optional[ColorValue] = None,
-        bgcolor: Optional[ColorValue] = None,
-        border_radius: Optional[BorderRadiusValue] = None,
+        color: Optional[str] = None,
+        focused_color: Optional[str] = None,  # to be deprecated
+        focused_bgcolor: Optional[str] = None,  # to be deprecated
         border_width: OptionalNumber = None,
-        border_color: Optional[ColorValue] = None,
-        focused_color: Optional[ColorValue] = None,
-        focused_bgcolor: Optional[ColorValue] = None,
+        border_color: Optional[str] = None,
+        border_radius: Optional[BorderRadiusValue] = None,
         focused_border_width: OptionalNumber = None,
-        focused_border_color: Optional[ColorValue] = None,
-        content_padding: Optional[PaddingValue] = None,
+        focused_border_color: Optional[str] = None,
+        content_padding: PaddingValue = None,
         dense: Optional[bool] = None,
         filled: Optional[bool] = None,
-        fill_color: Optional[ColorValue] = None,
+        fill_color: Optional[str] = None,
+        hover_color: Optional[str] = None,
         hint_text: Optional[str] = None,
         hint_style: Optional[TextStyle] = None,
-        helper: Optional[Control] = None,
         helper_text: Optional[str] = None,
         helper_style: Optional[TextStyle] = None,
-        counter: Optional[Control] = None,
-        counter_text: Optional[str] = None,
-        counter_style: Optional[TextStyle] = None,
-        error: Optional[Control] = None,
-        error_text: Optional[str] = None,
-        error_style: Optional[TextStyle] = None,
-        prefix: Optional[Control] = None,
-        prefix_icon: Optional[IconValueOrControl] = None,
-        prefix_text: Optional[str] = None,
-        prefix_style: Optional[TextStyle] = None,
-        suffix: Optional[Control] = None,
-        suffix_icon: Optional[IconValueOrControl] = None,
-        suffix_text: Optional[str] = None,
-        suffix_style: Optional[TextStyle] = None,
-        focus_color: Optional[ColorValue] = None,
-        align_label_with_hint: Optional[bool] = None,
-        hint_fade_duration: Optional[DurationValue] = None,
-        hint_max_lines: Optional[int] = None,
-        helper_max_lines: Optional[int] = None,
-        error_max_lines: Optional[int] = None,
-        prefix_icon_size_constraints: Optional[BoxConstraints] = None,
-        suffix_icon_size_constraints: Optional[BoxConstraints] = None,
-        size_constraints: Optional[BoxConstraints] = None,
-        collapsed: Optional[bool] = None,
+        prefix: Optional[Control] = None,  # to be deprecated
+        prefix_text: Optional[str] = None,  # to be deprecated
+        prefix_style: Optional[TextStyle] = None,  # to be deprecated
+        prefix_icon: Optional[str] = None,  # to be deprecated
+        disabled_hint_content: Optional[Control] = None,  # to be deprecated
+        suffix: Optional[Control] = None,  # to be deprecated
+        suffix_icon: Optional[IconValueOrControl] = None,  # to be deprecated
+        suffix_text: Optional[str] = None,  # to be deprecated
+        suffix_style: Optional[TextStyle] = None,  # to be deprecated
+        counter: Optional[Control] = None,  # to be deprecated
+        counter_text: Optional[str] = None,  # to be deprecated
+        counter_style: Optional[TextStyle] = None,  # to be deprecated
         #
         # ConstrainedControl
         #
         ref: Optional[Ref] = None,
         key: Optional[str] = None,
         width: OptionalNumber = None,
-        height: OptionalNumber = None,
         expand: Union[None, bool, int] = None,
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: Optional[RotateValue] = None,
-        scale: Optional[ScaleValue] = None,
-        offset: Optional[OffsetValue] = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
         aspect_ratio: OptionalNumber = None,
-        animate_opacity: Optional[AnimationValue] = None,
-        animate_size: Optional[AnimationValue] = None,
-        animate_position: Optional[AnimationValue] = None,
-        animate_rotation: Optional[AnimationValue] = None,
-        animate_scale: Optional[AnimationValue] = None,
-        animate_offset: Optional[AnimationValue] = None,
-        on_animation_end: OptionalControlEventCallable = None,
-        tooltip: Optional[TooltipValue] = None,
-        badge: Optional[BadgeValue] = None,
+        animate_opacity: AnimationValue = None,
+        animate_size: AnimationValue = None,
+        animate_position: AnimationValue = None,
+        animate_rotation: AnimationValue = None,
+        animate_scale: AnimationValue = None,
+        animate_offset: AnimationValue = None,
+        on_animation_end: OptionalEventCallable = None,
+        tooltip: Optional[str] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
     ):
         FormFieldControl.__init__(
             self,
+            text_size=text_size,
+            text_style=text_style,
+            label=label,
+            label_style=label_style,
+            border=border,
+            color=color,
+            border_width=border_width,
+            border_color=border_color,
+            border_radius=border_radius,
+            focused_border_width=focused_border_width,
+            focused_border_color=focused_border_color,
+            content_padding=content_padding,
+            dense=dense,
+            filled=filled,
+            fill_color=fill_color,
+            hover_color=hover_color,
+            hint_text=hint_text,
+            hint_style=hint_style,
+            helper_text=helper_text,
+            helper_style=helper_style,
+            error_text=error_text,
+            error_style=error_style,
+            prefix_icon=prefix_icon,
             ref=ref,
             key=key,
             width=width,
-            height=height,
             expand=expand,
             expand_loose=expand_loose,
             col=col,
@@ -286,118 +310,99 @@ class Dropdown(FormFieldControl):
             animate_offset=animate_offset,
             on_animation_end=on_animation_end,
             tooltip=tooltip,
-            badge=badge,
             visible=visible,
             disabled=disabled,
             data=data,
-            #
-            # FormField specific
-            #
-            text_size=text_size,
-            text_style=text_style,
-            label=label,
-            label_style=label_style,
-            icon=icon,
-            border=border,
-            color=color,
-            bgcolor=bgcolor,
-            border_radius=border_radius,
-            border_width=border_width,
-            border_color=border_color,
-            focused_color=focused_color,
-            focused_bgcolor=focused_bgcolor,
-            focused_border_width=focused_border_width,
-            focused_border_color=focused_border_color,
-            content_padding=content_padding,
-            dense=dense,
-            filled=filled,
-            fill_color=fill_color,
-            hint_text=hint_text,
-            hint_style=hint_style,
-            helper_text=helper_text,
-            helper=helper,
-            helper_style=helper_style,
-            counter=counter,
-            counter_text=counter_text,
-            counter_style=counter_style,
-            error=error,
-            error_text=error_text,
-            error_style=error_style,
-            prefix=prefix,
-            prefix_icon=prefix_icon,
-            prefix_text=prefix_text,
-            prefix_style=prefix_style,
-            suffix=suffix,
-            suffix_icon=suffix_icon,
-            suffix_text=suffix_text,
-            suffix_style=suffix_style,
-            focus_color=focus_color,
-            align_label_with_hint=align_label_with_hint,
-            hint_fade_duration=hint_fade_duration,
-            hint_max_lines=hint_max_lines,
-            helper_max_lines=helper_max_lines,
-            error_max_lines=error_max_lines,
-            prefix_icon_size_constraints=prefix_icon_size_constraints,
-            suffix_icon_size_constraints=suffix_icon_size_constraints,
-            size_constraints=size_constraints,
-            collapsed=collapsed,
         )
 
-        self.value = value
-        self.autofocus = autofocus
+        deprecated_properties_list = [
+            "select_icon_size",
+            "select_icon_enabled_color",
+            "select_icon_disabled_color",
+            "suffix",
+            "suffix_icon",
+            "suffix_style",
+            "suffix_text",
+            "icon_content",
+            "icon_enabled_color",
+            "icon_disabled_color",
+            "icon_size",
+            "icon",
+            "hint_content",
+            "prefix_text",
+            "prefix_style",
+            "prefix",
+            "prefix_icon",
+            "focused_color",
+            "disabled_hint_content",
+            "alignment",
+            "focused_bgcolor",
+            "item_height",
+            "enable_feedback",
+            "options_fill_horizontally",
+            "padding",
+        ]
+
+        for item in deprecated_properties_list:
+            if eval(item) is not None:
+                warnings.warn(
+                    f"{item} is deprecated since version 0.27.0 "
+                    f"and will be removed in version 0.30.0.",
+                    category=DeprecationWarning,
+                    stacklevel=2,
+                )
+
         self.options = options
-        self.alignment = alignment
-        self.elevation = elevation
-        self.hint_content = hint_content
-        self.disabled_hint_content = disabled_hint_content
+        self.selected_suffix = selected_suffix
+        self.input_filter = input_filter
+        self.enable_filter = enable_filter
+        self.enable_search = enable_search
+        self.editable = editable
+        self.max_menu_height = max_menu_height
+        self.expanded_insets = expanded_insets
+        self.menu_style = menu_style
+        self.capitalization = capitalization
+        self.label_content = label_content
+        self.leading_icon = leading_icon
+        self.trailing_icon = trailing_icon
+        self.selected_trailing_icon = selected_trailing_icon
         self.select_icon = select_icon
-        self.icon_content = icon_content
-        self.padding = padding
-        self.enable_feedback = enable_feedback
+        self.on_change = on_change
         self.on_focus = on_focus
         self.on_blur = on_blur
-        self.on_change = on_change
-        self.item_height = item_height
-        self.max_menu_height = max_menu_height
-        self.select_icon_size = select_icon_size or icon_size
-        self.select_icon_enabled_color = select_icon_enabled_color or icon_enabled_color
-        self.icon_disabled_color = icon_disabled_color
-        self.select_icon_disabled_color = (
-            select_icon_disabled_color or icon_disabled_color
-        )
-        self.on_click = on_click
-        self.options_fill_horizontally = options_fill_horizontally
+        self.value = value
+        self.bgcolor = bgcolor
+        self.elevation = elevation
+        self.text_align = text_align
+        self.autofocus = autofocus
 
     def _get_control_name(self):
         return "dropdown"
 
     def before_update(self):
         super().before_update()
-        self._set_attr_json("padding", self.__padding)
-        self._set_attr_json("alignment", self.__alignment)
-        if (
-            (
-                self.bgcolor is not None
-                or self.fill_color is not None
-                or self.focused_bgcolor is not None
-            )
-        ) and self.filled is None:
-            self.filled = True  # required to display any of the above colors
+        self._set_attr_json("bgcolor", self.__bgcolor, wrap_attr_dict=True)
+        self._set_attr_json("elevation", self.__elevation, wrap_attr_dict=True)
+        ##self._set_attr_json("inputFilter", self.__input_filter)
+        ##self._set_attr_json("expandInsets", self.__expanded_insets)
+        self.expand_loose = self.expand  # to fix a display issue
 
     def _get_children(self):
         children = FormFieldControl._get_children(self) + self.__options
-        if isinstance(self.__hint_content, Control):
-            self.__hint_content._set_attr_internal("n", "hint")
-            children.append(self.__hint_content)
-        if isinstance(self.__icon_content, Control):
-            self.__icon_content._set_attr_internal("n", "icon")
-            children.append(self.__icon_content)
+        if isinstance(self.__leading_icon, Control):
+            self.__leading_icon._set_attr_internal("n", "leading_icon")
+            children.append(self.__leading_icon)
         if isinstance(self.__select_icon, Control):
-            self.__select_icon._set_attr_internal("n", "selectIcon")
+            self.__select_icon._set_attr_internal("n", "select_icon")
             children.append(self.__select_icon)
-        if isinstance(self.__disabled_hint_content, Control):
-            self.__disabled_hint_content._set_attr_internal("n", "disabled_hint")
-            children.append(self.__disabled_hint_content)
+        if isinstance(self.__trailing_icon, Control):
+            self.__trailing_icon._set_attr_internal("n", "trailing_icon")
+            children.append(self.__trailing_icon)
+        if isinstance(self.__selected_trailing_icon, Control):
+            self.__selected_trailing_icon._set_attr_internal(
+                "n", "selected_trailing_icon"
+            )
+            children.append(self.__selected_trailing_icon)
         return children
 
     def __contains__(self, item):
@@ -406,66 +411,6 @@ class Dropdown(FormFieldControl):
     def focus(self):
         self._set_attr_json("focus", str(time.time()))
         self.update()
-
-    # options
-    @property
-    def options(self):
-        return self.__options
-
-    @options.setter
-    def options(self, value):
-        self.__options = value if value is not None else []
-
-    # select_icon
-    @property
-    def select_icon(self) -> Optional[IconValueOrControl]:
-        return self.__select_icon
-
-    @select_icon.setter
-    def select_icon(self, value: Optional[IconValueOrControl]):
-        self.__select_icon = value
-        if not isinstance(value, Control):
-            self._set_enum_attr("selectIcon", value, IconEnums)
-
-    # icon_content
-    @property
-    def icon_content(self) -> Optional[Control]:
-        warnings.warn(
-            f"icon_content is deprecated since version 0.25.0 "
-            f"and will be removed in version 0.28.0. Use icon instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.__icon_content
-
-    @icon_content.setter
-    def icon_content(self, value: Optional[Control]):
-        self.__icon_content = value
-        if value is not None:
-            warnings.warn(
-                f"icon_content is deprecated since version 0.25.0 "
-                f"and will be removed in version 0.28.0. Use icon instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-
-    # hint_content
-    @property
-    def hint_content(self) -> Optional[Control]:
-        return self.__hint_content
-
-    @hint_content.setter
-    def hint_content(self, value: Optional[Control]):
-        self.__hint_content = value
-
-    # disabled_hint_content
-    @property
-    def disabled_hint_content(self) -> Optional[Control]:
-        return self.__disabled_hint_content
-
-    @disabled_hint_content.setter
-    def disabled_hint_content(self, value: Optional[Control]):
-        self.__disabled_hint_content = value
 
     # value
     @property
@@ -476,83 +421,14 @@ class Dropdown(FormFieldControl):
     def value(self, value: Optional[str]):
         self._set_attr("value", value)
 
-    # icon_enabled_color
+    # options
     @property
-    def icon_enabled_color(self) -> Optional[ColorValue]:
-        warnings.warn(
-            f"icon_enabled_color is deprecated since version 0.25.0 "
-            f"and will be removed in version 0.28.0. Use select_icon_enabled_color instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.__icon_enabled_color
+    def options(self) -> Optional[List[Option]]:
+        return self.__options
 
-    @icon_enabled_color.setter
-    def icon_enabled_color(self, value: Optional[ColorValue]):
-        self.__icon_enabled_color = value
-        self._set_enum_attr("selectIconEnabledColor", value, ColorEnums)
-        if value is not None:
-            warnings.warn(
-                f"icon_enabled_color is deprecated since version 0.25.0 "
-                f"and will be removed in version 0.28.0. Use select_icon_enabled_color instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-
-    # select_icon_enabled_color
-    @property
-    def select_icon_enabled_color(self) -> Optional[ColorValue]:
-        return self.__select_icon_enabled_color
-
-    @select_icon_enabled_color.setter
-    def select_icon_enabled_color(self, value: Optional[ColorValue]):
-        self.__select_icon_enabled_color = value
-        self._set_enum_attr("selectIconEnabledColor", value, ColorEnums)
-
-    # icon_disabled_color
-    @property
-    def icon_disabled_color(self) -> Optional[ColorValue]:
-        warnings.warn(
-            f"icon_disabled_color is deprecated since version 0.25.0 "
-            f"and will be removed in version 0.28.0. Use select_icon_disabled_color instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.__icon_disabled_color
-
-    @icon_disabled_color.setter
-    def icon_disabled_color(self, value: Optional[ColorValue]):
-        self.__icon_disabled_color = value
-        self._set_enum_attr("selectIconDisabledColor", value, ColorEnums)
-        if value is not None:
-            warnings.warn(
-                f"icon_disabled_color is deprecated since version 0.25.0 "
-                f"and will be removed in version 0.28.0. Use select_icon_disabled_color instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-
-    # select_icon_disabled_color
-    @property
-    def select_icon_disabled_color(self) -> Optional[ColorValue]:
-        return self.__select_icon_disabled_color
-
-    @select_icon_disabled_color.setter
-    def select_icon_disabled_color(self, value: Optional[ColorValue]):
-        self.__select_icon_disabled_color = value
-        self._set_enum_attr("selectIconDisabledColor", value, ColorEnums)
-
-    # item_height
-    @property
-    def item_height(self) -> OptionalNumber:
-        return self._get_attr("itemHeight", data_type="float")
-
-    @item_height.setter
-    def item_height(self, value: OptionalNumber):
-        assert (
-            value is None or value >= 48.0
-        ), "item_height must be greater than or equal to 48.0"
-        self._set_attr("itemHeight", value)
+    @options.setter
+    def options(self, value: Optional[List[Option]]):
+        self.__options = value if value is not None else []
 
     # max_menu_height
     @property
@@ -563,45 +439,119 @@ class Dropdown(FormFieldControl):
     def max_menu_height(self, value: OptionalNumber):
         self._set_attr("maxMenuHeight", value)
 
-    # icon_size
+    # editable
     @property
-    def icon_size(self) -> float:
+    def editable(self) -> bool:
+        return self._get_attr("editable", data_type="bool", def_value=False)
+
+    @editable.setter
+    def editable(self, value: Optional[bool]):
+        self._set_attr("editable", value)
+
+    # select_icon
+    @property
+    def select_icon(self) -> Optional[IconValueOrControl]:
         warnings.warn(
-            f"icon_size is deprecated since version 0.25.0 "
-            f"and will be removed in version 0.28.0. Use select_icon_size instead.",
+            f"select_icon is deprecated since version 0.27.0 "
+            f"and will be removed in version 0.30.0. Use trailing_icon instead.",
             category=DeprecationWarning,
             stacklevel=2,
         )
-        return self._get_attr("selectIconSize", data_type="float", def_value=24.0)
+        return self.__select_icon
 
-    @icon_size.setter
-    def icon_size(self, value: OptionalNumber):
-        self._set_attr("selectIconSize", value)
+    @select_icon.setter
+    def select_icon(self, value: Optional[IconValueOrControl]):
+        self.__select_icon = value
+
+        if not isinstance(value, Control):
+            self._set_enum_attr("selectIcon", value, IconEnums)
+
         if value is not None:
             warnings.warn(
-                f"icon_size is deprecated since version 0.25.0 "
-                f"and will be removed in version 0.28.0. Use select_icon_size instead.",
+                f"select_icon is deprecated since version 0.27.0 "
+                f"and will be removed in version 0.30.0. Use trailing_icon instead.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
 
-    # select_icon_size
+    # leading_icon
     @property
-    def select_icon_size(self) -> float:
-        return self._get_attr("selectIconSize", data_type="float", def_value=24.0)
+    def leading_icon(self) -> Optional[IconValueOrControl]:
+        return self.__leading_icon
 
-    @select_icon_size.setter
-    def select_icon_size(self, value: OptionalNumber):
-        self._set_attr("selectIconSize", value)
+    @leading_icon.setter
+    def leading_icon(self, value: Optional[IconValueOrControl]):
+        self.__leading_icon = value
+        if not isinstance(value, Control):
+            self._set_enum_attr("leadingIcon", value, IconEnums)
 
-    # padding
+    # trailing_icon
     @property
-    def padding(self) -> Optional[PaddingValue]:
-        return self.__padding
+    def trailing_icon(self) -> Optional[IconValueOrControl]:
+        return self.__trailing_icon
 
-    @padding.setter
-    def padding(self, value: Optional[PaddingValue]):
-        self.__padding = value
+    @trailing_icon.setter
+    def trailing_icon(self, value: Optional[IconValueOrControl]):
+        self.__trailing_icon = value
+        if not isinstance(value, Control):
+            self._set_enum_attr("trailingIcon", value, IconEnums)
+
+    # selected_trailing_icon
+    @property
+    def selected_trailing_icon(self) -> Optional[IconValueOrControl]:
+        return self.__selected_trailing_icon
+
+    @selected_trailing_icon.setter
+    def selected_trailing_icon(self, value: Optional[IconValueOrControl]):
+        self.__selected_trailing_icon = value
+        if not isinstance(value, Control):
+            self._set_enum_attr("selectedTrailingIcon", value, IconEnums)
+
+    # bgcolor
+    @property
+    def bgcolor(self) -> ControlStateValue[ColorValue]:
+        return self.__bgcolor
+
+    @bgcolor.setter
+    def bgcolor(self, value: ControlStateValue[ColorValue]):
+        self.__bgcolor = value
+
+    # text_align
+    @property
+    def text_align(self) -> Optional[TextAlign]:
+        return self.__text_align
+
+    @text_align.setter
+    def text_align(self, value: Optional[TextAlign]):
+        self.__text_align = value
+        self._set_enum_attr("textAlign", value, TextAlign)
+
+    # elevation
+    @property
+    def elevation(self) -> Union[OptionalNumber, Dict[ControlState, Number]]:
+        return self.__elevation
+
+    @elevation.setter
+    def elevation(self, value: Union[OptionalNumber, Dict[ControlState, Number]]):
+        self.__elevation = value
+
+    # enable_filter
+    @property
+    def enable_filter(self) -> bool:
+        return self._get_attr("enableFilter", data_type="bool", def_value=False)
+
+    @enable_filter.setter
+    def enable_filter(self, value: Optional[bool]):
+        self._set_attr("enableFilter", value)
+
+    # enable_search
+    @property
+    def enable_search(self) -> bool:
+        return self._get_attr("enableSearch", data_type="bool", def_value=True)
+
+    @enable_search.setter
+    def enable_search(self, value: Optional[bool]):
+        self._set_attr("enableSearch", value)
 
     # autofocus
     @property
@@ -611,44 +561,6 @@ class Dropdown(FormFieldControl):
     @autofocus.setter
     def autofocus(self, value: Optional[bool]):
         self._set_attr("autofocus", value)
-
-    # options_fill_horizontally
-    @property
-    def options_fill_horizontally(self) -> bool:
-        return self._get_attr(
-            "optionsFillHorizontally", data_type="bool", def_value=False
-        )
-
-    @options_fill_horizontally.setter
-    def options_fill_horizontally(self, value: Optional[bool]):
-        self._set_attr("optionsFillHorizontally", value)
-
-    # enable_feedback
-    @property
-    def enable_feedback(self) -> bool:
-        return self._get_attr("enableFeedback", data_type="bool", def_value=True)
-
-    @enable_feedback.setter
-    def enable_feedback(self, value: Optional[bool]):
-        self._set_attr("enableFeedback", value)
-
-    # elevation
-    @property
-    def elevation(self) -> float:
-        return self._get_attr("elevation", data_type="float", def_value=8.0)
-
-    @elevation.setter
-    def elevation(self, value: OptionalNumber):
-        self._set_attr("elevation", value)
-
-    # alignment
-    @property
-    def alignment(self) -> Optional[Alignment]:
-        return self.__alignment
-
-    @alignment.setter
-    def alignment(self, value: Optional[Alignment]):
-        self.__alignment = value
 
     # on_change
     @property
@@ -676,12 +588,3 @@ class Dropdown(FormFieldControl):
     @on_blur.setter
     def on_blur(self, handler: OptionalControlEventCallable):
         self._add_event_handler("blur", handler)
-
-    # on_click
-    @property
-    def on_click(self) -> OptionalControlEventCallable:
-        return self._get_event_handler("click")
-
-    @on_click.setter
-    def on_click(self, handler: OptionalControlEventCallable):
-        self._add_event_handler("click", handler)

@@ -59,6 +59,7 @@ import 'divider.dart';
 import 'drag_target.dart';
 import 'draggable.dart';
 import 'dropdown.dart';
+import 'dropdownm2.dart';
 import 'elevated_button.dart';
 import 'error.dart';
 import 'expansion_panel.dart';
@@ -851,6 +852,15 @@ Widget createWidget(
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           backend: backend);
+    case "dropdownm2":
+      return DropdownM2Control(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
     case "snackbar":
       return SnackBarControl(
           parent: parent,
@@ -1153,7 +1163,7 @@ Widget _scaledControl(
   var animation = parseAnimation(control, "animateScale");
   if (animation != null) {
     return AnimatedScale(
-        scale: scaleDetails?.scale! ?? 1.0,
+        scale: scaleDetails?.scale ?? 1.0,
         alignment: scaleDetails?.alignment ?? Alignment.center,
         duration: animation.duration,
         curve: animation.curve,

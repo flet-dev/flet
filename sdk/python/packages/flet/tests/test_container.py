@@ -1,5 +1,6 @@
-import flet as ft
 from flet.core.protocol import Command
+
+import flet as ft
 
 
 def test_instance_no_attrs_set():
@@ -20,7 +21,7 @@ def test_gradient():
     c = ft.Container(
         gradient=ft.LinearGradient(
             colors=[],
-            tile_mode="mirror",
+            tile_mode=ft.GradientTileMode.MIRROR,
         )
     )
     cmd = c._build_add_commands()
@@ -61,14 +62,6 @@ def test_blend_mode_enum():
     assert cmd[0].attrs["blendmode"] == "lighten"
 
 
-def test_blend_mode_str():
-    r = ft.Container(blend_mode="darken", bgcolor=ft.Colors.RED)
-    assert isinstance(r.blend_mode, str)
-    assert isinstance(r._get_attr("blendMode"), str)
-    cmd = r._build_add_commands()
-    assert cmd[0].attrs["blendmode"] == "darken"
-
-
 def test_clip_behavior_enum():
     r = ft.Container()
     assert r.clip_behavior is None
@@ -79,36 +72,24 @@ def test_clip_behavior_enum():
     assert r.clip_behavior == ft.ClipBehavior.ANTI_ALIAS
     assert r._get_attr("clipBehavior") == "antiAlias"
 
-    r = ft.Container(clip_behavior="none")
-    assert isinstance(r.clip_behavior, str)
+    r = ft.Container(clip_behavior=ft.ClipBehavior.NONE)
+    assert isinstance(r.clip_behavior, ft.ClipBehavior)
     assert r._get_attr("clipBehavior") == "none"
 
 
 def test_image_repeat_enum():
     r = ft.Container()
-    assert r.image_repeat is None
-    assert r._get_attr("imageRepeat") is None
+    assert r.image is None
 
-    r = ft.Container(image_repeat=ft.ImageRepeat.REPEAT)
-    assert isinstance(r.image_repeat, ft.ImageRepeat)
-    assert r.image_repeat == ft.ImageRepeat.REPEAT
-    assert r._get_attr("imageRepeat") == "repeat"
-
-    r = ft.Container(image_repeat="repeatX")
-    assert isinstance(r.image_repeat, str)
-    assert r._get_attr("imageRepeat") == "repeatX"
+    r = ft.Container(image=ft.DecorationImage(repeat=ft.ImageRepeat.REPEAT))
+    assert isinstance(r.image.repeat, ft.ImageRepeat)
+    assert r.image.repeat == ft.ImageRepeat.REPEAT
 
 
 def test_image_fit_enum():
     r = ft.Container()
-    assert r.image_fit is None
-    assert r._get_attr("imageFit") is None
+    assert r.image is None
 
-    r = ft.Container(image_fit=ft.ImageFit.FILL)
-    assert isinstance(r.image_fit, ft.ImageFit)
-    assert r.image_fit == ft.ImageFit.FILL
-    assert r._get_attr("imageFit") == "fill"
-
-    r = ft.Container(image_fit="none")
-    assert isinstance(r.image_fit, str)
-    assert r._get_attr("imageFit") == "none"
+    r = ft.Container(image=ft.DecorationImage(fit=ft.ImageFit.FILL))
+    assert isinstance(r.image.fit, ft.ImageFit)
+    assert r.image.fit == ft.ImageFit.FILL

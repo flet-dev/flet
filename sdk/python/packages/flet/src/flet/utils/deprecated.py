@@ -1,5 +1,6 @@
 import functools
 import warnings
+from typing import Optional
 
 
 def deprecated(reason: str, version: str, delete_version: str, is_method=True):
@@ -46,10 +47,12 @@ def deprecated_class(reason: str, version: str, delete_version: str):
     return decorator
 
 
-def deprecated_property(name: str, reason: str, version: str, delete_version: str):
+def deprecated_property(
+    name: str, reason: str, version: str, delete_version: Optional[str] = None
+):
     warnings.warn(
-        f"{name} property is deprecated since version {version} "
-        f"and will be removed in version {delete_version}. {reason}",
+        f"{name} property is deprecated since version {version}"
+        f"{' and will be removed in version ' + delete_version if delete_version else ''}. {reason}",
         category=DeprecationWarning,
         stacklevel=2,
     )

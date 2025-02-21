@@ -361,31 +361,6 @@ class StrokeJoin(Enum):
     BEVEL = "bevel"
 
 
-class ThemeVisualDensityDeprecated(EnumMeta):
-    def __getattribute__(self, item):
-        if item in [
-            "STANDARD",
-            "COMPACT",
-            "COMFORTABLE",
-            "ADAPTIVE_PLATFORM_DENSITY",
-        ]:
-            warn(
-                "ThemeVisualDensity enum is deprecated and will be removed in version 0.27.0. "
-                "Use VisualDensity enum instead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-        return EnumMeta.__getattribute__(self, item)
-
-
-class ThemeVisualDensity(Enum, metaclass=ThemeVisualDensityDeprecated):
-    STANDARD = "standard"
-    COMPACT = "compact"
-    COMFORTABLE = "comfortable"
-    ADAPTIVEPLATFORMDENSITY = "adaptivePlatformDensity"
-    ADAPTIVE_PLATFORM_DENSITY = "adaptivePlatformDensity"
-
-
 class VisualDensity(Enum):
     STANDARD = "standard"
     COMPACT = "compact"

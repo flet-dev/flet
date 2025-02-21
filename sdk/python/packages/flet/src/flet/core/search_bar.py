@@ -233,6 +233,10 @@ class SearchBar(ConstrainedControl):
         self._set_attr_json("focus", str(time.time()))
         self.update()
 
+    def blur(self):
+        self._set_attr_json("blur", str(time.time()))
+        self.update()
+
     def open_view(self):
         m = {
             "n": "openView",

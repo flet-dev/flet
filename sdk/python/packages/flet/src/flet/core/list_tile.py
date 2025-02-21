@@ -20,7 +20,6 @@ from flet.core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ThemeVisualDensity,
     UrlTarget,
     VisualDensity,
 )
@@ -108,7 +107,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
         icon_color: Optional[ColorValue] = None,
         text_color: Optional[ColorValue] = None,
         shape: Optional[OutlinedBorder] = None,
-        visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
+        visual_density: Optional[VisualDensity] = None,
         mouse_cursor: Optional[MouseCursor] = None,
         title_text_style: Optional[TextStyle] = None,
         subtitle_text_style: Optional[TextStyle] = None,
@@ -506,13 +505,13 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     # visual_density
     @property
-    def visual_density(self) -> Union[None, ThemeVisualDensity, VisualDensity]:
+    def visual_density(self) -> Optional[VisualDensity]:
         return self.__visual_density
 
     @visual_density.setter
-    def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
+    def visual_density(self, value: Optional[VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, (ThemeVisualDensity, VisualDensity))
+        self._set_enum_attr("visualDensity", value, VisualDensity)
 
     # shape
     @property

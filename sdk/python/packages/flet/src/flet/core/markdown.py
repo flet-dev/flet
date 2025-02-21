@@ -291,7 +291,6 @@ class Markdown(ConstrainedControl):
         selectable: Optional[bool] = None,
         extension_set: Optional[MarkdownExtensionSet] = None,
         code_theme: Optional[Union[MarkdownCodeTheme, MarkdownCustomCodeTheme]] = None,
-        code_style: Optional[TextStyle] = None,
         auto_follow_links: Optional[bool] = None,
         shrink_wrap: Optional[bool] = None,
         fit_content: Optional[bool] = None,
@@ -379,7 +378,6 @@ class Markdown(ConstrainedControl):
         self.selectable = selectable
         self.extension_set = extension_set
         self.code_theme = code_theme
-        self.code_style = code_style
         self.auto_follow_links = auto_follow_links
         self.auto_follow_links_target = auto_follow_links_target
         self.on_tap_link = on_tap_link
@@ -397,7 +395,6 @@ class Markdown(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        self._set_attr_json("codeStyle", self.__code_style)
         self._set_attr_json("codeStyleSheet", self.__code_style_sheet)
         self._set_attr_json("mdStyleSheet", self.__md_style_sheet)
         self._set_attr_json(
@@ -496,28 +493,6 @@ class Markdown(ConstrainedControl):
         self, value: Optional[Union[MarkdownCodeTheme, MarkdownCustomCodeTheme]]
     ):
         self.__code_theme = value
-
-    # code_style
-    @property
-    def code_style(self) -> Optional[TextStyle]:
-        warnings.warn(
-            f"code_style is deprecated since version 0.24.0 "
-            f"and will be removed in version 0.27.0. Use code_style_sheet.code_text_style instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.__code_style
-
-    @code_style.setter
-    def code_style(self, value: Optional[TextStyle]):
-        self.__code_style = value
-        if value is not None:
-            warnings.warn(
-                f"code_style is deprecated since version 0.24.0 "
-                f"and will be removed in version 0.27.0. Use code_style_sheet.code_text_style instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
 
     # auto_follow_links
     @property
