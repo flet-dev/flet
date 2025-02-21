@@ -41,7 +41,6 @@ class CupertinoButton(ConstrainedControl):
         content: Optional[Control] = None,
         bgcolor: Optional[ColorValue] = None,
         color: Optional[ColorValue] = None,
-        disabled_color: Optional[ColorValue] = None,
         disabled_bgcolor: Optional[ColorValue] = None,
         opacity_on_click: OptionalNumber = None,
         min_size: OptionalNumber = None,
@@ -118,7 +117,6 @@ class CupertinoButton(ConstrainedControl):
             data=data,
         )
 
-        self.disabled_color = disabled_color
         self.disabled_bgcolor = disabled_bgcolor
         self.text = text
         self.icon = icon
@@ -193,29 +191,6 @@ class CupertinoButton(ConstrainedControl):
     @alignment.setter
     def alignment(self, value: Optional[Alignment]):
         self.__alignment = value
-
-    # disabled_color
-    @property
-    def disabled_color(self) -> Optional[ColorValue]:
-        warnings.warn(
-            f"disabled_color is deprecated since version 0.24.0 "
-            f"and will be removed in version 0.27.0. Use disabled_bgcolor instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.__disabled_color
-
-    @disabled_color.setter
-    def disabled_color(self, value: Optional[ColorValue]):
-        self.__disabled_color = value
-        self._set_enum_attr("disabledColor", value, ColorEnums)
-        if value is not None:
-            warnings.warn(
-                f"disabled_color is deprecated since version 0.24.0 "
-                f"and will be removed in version 0.27.0. Use disabled_bgcolor instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
 
     # disabled_bgcolor
     @property

@@ -6,22 +6,13 @@ import re
 import shutil
 import sys
 from pathlib import Path
-from typing import Optional, Union, cast
+from typing import Optional, cast
 
 import flet.version
-import flet_cli.utils.processes as processes
 import yaml
 from flet.utils import cleanup_path, copy_tree, is_windows, slugify
 from flet.utils.platform_utils import get_bool_env_var
 from flet.version import update_version
-from flet_cli.commands.base import BaseCommand
-from flet_cli.utils.hash_stamp import HashStamp
-from flet_cli.utils.merge import merge_dict
-from flet_cli.utils.project_dependencies import (
-    get_poetry_dependencies,
-    get_project_dependencies,
-)
-from flet_cli.utils.pyproject_toml import load_pyproject_toml
 from packaging import version
 from rich.console import Console, Group
 from rich.live import Live
@@ -30,6 +21,16 @@ from rich.progress import Progress
 from rich.style import Style
 from rich.table import Column, Table
 from rich.theme import Theme
+
+import flet_cli.utils.processes as processes
+from flet_cli.commands.base import BaseCommand
+from flet_cli.utils.hash_stamp import HashStamp
+from flet_cli.utils.merge import merge_dict
+from flet_cli.utils.project_dependencies import (
+    get_poetry_dependencies,
+    get_project_dependencies,
+)
+from flet_cli.utils.pyproject_toml import load_pyproject_toml
 
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.2/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
@@ -601,6 +602,8 @@ class Command(BaseCommand):
             spinner="bouncingBall",
         )
         self.progress = Progress(transient=True)
+        self.no_rich_output = self.no_rich_output or self.options.no_rich_output
+        self.verbose = self.options.verbose
         with Live(Group(self.status, self.progress), console=console) as self.live:
             self.initialize_build()
             self.validate_target_platform()
@@ -630,8 +633,6 @@ class Command(BaseCommand):
 
     def initialize_build(self):
         assert self.options
-
-        self.verbose = self.options.verbose
         self.emojis = {
             "checkmark": "[green]OK[/]" if self.no_rich_output else "✅",
             "loading": "" if self.no_rich_output else "⏳",
@@ -640,7 +641,6 @@ class Command(BaseCommand):
         }
 
         self.python_app_path = Path(self.options.python_app_path).resolve()
-        self.no_rich_output = self.no_rich_output or self.options.no_rich_output
         self.skip_flutter_doctor = (
             self.skip_flutter_doctor or self.options.skip_flutter_doctor
         )
@@ -1131,7 +1131,9 @@ class Command(BaseCommand):
                 "target_arch": (
                     target_arch
                     if isinstance(target_arch, list)
-                    else [target_arch] if isinstance(target_arch, str) else []
+                    else [target_arch]
+                    if isinstance(target_arch, str)
+                    else []
                 ),
                 "info_plist": info_plist,
                 "macos_entitlements": macos_entitlements,
