@@ -4,6 +4,7 @@
 
 * `DropdownMenu` control ([#1088](https://github.com/flet-dev/flet/issues/1088))
 * feat: `ReorderableListView` Control ([#4865](https://github.com/flet-dev/flet/pull/4865))
+* Remove v0.24.0 deprecations [#4932](https://github.com/flet-dev/flet/pull/4932))
 * Implement `Container.dark_theme` property ([#4857](https://github.com/flet-dev/flet/issues/4857))
 * Upgrade to Pyodide 0.27 for `httpx` Support ([#4840](https://github.com/flet-dev/flet/issues/4840))
 * Remove `CupertinoCheckbox.inactive_color` in favor of `fill_color` ([#4837](https://github.com/flet-dev/flet/issues/4837))
