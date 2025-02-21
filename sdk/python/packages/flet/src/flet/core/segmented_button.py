@@ -46,7 +46,6 @@ class Segment(Control):
             expand_loose=expand_loose,
             col=col,
             opacity=opacity,
-            tooltip=tooltip,
             badge=badge,
             visible=visible,
             disabled=disabled,
@@ -56,6 +55,7 @@ class Segment(Control):
         self.value = value
         self.label = label
         self.icon = icon
+        self.tooltip = tooltip
 
     def _get_control_name(self):
         return "segment"
