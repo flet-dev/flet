@@ -21,7 +21,6 @@ from flet.core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ThemeVisualDensity,
     VisualDensity,
 )
 
@@ -97,7 +96,7 @@ class Chip(ConstrainedControl):
         color: ControlStateValue[ColorValue] = None,
         click_elevation: OptionalNumber = None,
         clip_behavior: Optional[ClipBehavior] = None,
-        visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
+        visual_density: Optional[VisualDensity] = None,
         border_side: Optional[BorderSide] = None,
         leading_size_constraints: Optional[BoxConstraints] = None,
         delete_icon_size_constraints: Optional[BoxConstraints] = None,
@@ -508,13 +507,13 @@ class Chip(ConstrainedControl):
 
     # visual_density
     @property
-    def visual_density(self) -> Union[None, ThemeVisualDensity, VisualDensity]:
+    def visual_density(self) -> Optional[VisualDensity]:
         return self.__visual_density
 
     @visual_density.setter
-    def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
+    def visual_density(self, value: Optional[VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, (ThemeVisualDensity, VisualDensity))
+        self._set_enum_attr("visualDensity", value, VisualDensity)
 
     # clip_behavior
     @property

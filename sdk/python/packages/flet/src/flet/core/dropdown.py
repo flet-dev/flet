@@ -63,8 +63,8 @@ class Option(Control):
         for item in deprecated_properties_list:
             if eval(item) is not None:
                 warnings.warn(
-                    f"{item} is deprecated since version 0.26.0 "
-                    f"and will be removed in version 0.29.0.",
+                    f"{item} is deprecated since version 0.27.0 "
+                    f"and will be removed in version 0.30.0.",
                     category=DeprecationWarning,
                     stacklevel=2,
                 )
@@ -152,7 +152,7 @@ class Option(Control):
 
 
 class DropdownOption(Option):
-    "Alias for Option"
+    """Alias for Option"""
 
 
 class Dropdown(FormFieldControl):
@@ -549,7 +549,7 @@ class Dropdown(FormFieldControl):
     def enable_search(self) -> bool:
         return self._get_attr("enableSearch", data_type="bool", def_value=True)
 
-    @enable_filter.setter
+    @enable_search.setter
     def enable_search(self, value: Optional[bool]):
         self._set_attr("enableSearch", value)
 
