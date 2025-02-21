@@ -87,8 +87,8 @@ class Control:
         pass
 
     def _before_build_command(self) -> None:
-        if self._get_control_name() not in ["segment", "bar_chart_rod"]:
-            # see https://github.com/flet-dev/flet/pull/4525
+        # checking if tooltip has getter/setter in inherited class
+        if "tooltip" not in vars(self.__class__):
             self._set_attr_json("tooltip", self.tooltip)
         if isinstance(self.badge, (Badge, str)):
             self._set_attr_json("badge", self.badge)
