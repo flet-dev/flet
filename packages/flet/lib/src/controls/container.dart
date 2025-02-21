@@ -70,16 +70,6 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     bool ignoreInteractions = control.attrBool("ignoreInteractions", false)!;
     bool disabled = control.isDisabled || parentDisabled;
     bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
-
-    // DEPRECATED START
-    var imageSrc = control.attrString("imageSrc", "")!;
-    var imageSrcBase64 = control.attrString("imageSrcBase64", "")!;
-    var imageRepeat = parseImageRepeat(
-        control.attrString("imageRepeat"), ImageRepeat.noRepeat)!;
-    var imageFit = parseBoxFit(control.attrString("imageFit"));
-    var imageOpacity = control.attrDouble("imageOpacity", 1)!;
-    // DEPRECATED END
-
     Widget? child = contentCtrls.isNotEmpty
         ? createControl(control, contentCtrls.first.id, disabled,
             parentAdaptive: adaptive)
@@ -96,14 +86,9 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     var alignment = parseAlignment(control, "alignment");
 
     return withPageArgs((context, pageArgs) {
-      ImageProvider? image =
-          getImageProvider(imageSrc, imageSrcBase64, pageArgs);
-
       var borderRadius = parseBorderRadius(control, "borderRadius");
-
       var clipBehavior = parseClip(control.attrString("clipBehavior"),
           borderRadius != null ? Clip.antiAlias : Clip.none)!;
-
       var decorationImage =
           parseDecorationImage(Theme.of(context), control, "image", pageArgs);
       var boxDecoration = boxDecorationFromDetails(
@@ -115,13 +100,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
             Theme.of(context).colorScheme.primary),
         boxShadow: parseBoxShadow(Theme.of(context), control, "shadow"),
         blendMode: parseBlendMode(control.attrString("blendMode")),
-        image: decorationImage == null && image != null
-            ? DecorationImage(
-                image: image,
-                repeat: imageRepeat,
-                fit: imageFit,
-                opacity: imageOpacity)
-            : decorationImage,
+        image: decorationImage,
       );
       var boxForegroundDecoration = parseBoxDecoration(
           Theme.of(context), control, "foregroundDecoration", pageArgs);
