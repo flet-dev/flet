@@ -1,3 +1,7 @@
+# 0.27.1
+
+* Fixed: binary file operations should not specify encoding.
+
 # 0.27.0
 
 * `DropdownMenu` control ([#1088](https://github.com/flet-dev/flet/issues/1088))
