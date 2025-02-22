@@ -9,7 +9,7 @@ def sha1(input_string):
 
 def calculate_file_hash(path, blocksize=65536):
     h = hashlib.sha256()
-    with open(path, "rb", encoding="utf-8") as f:
+    with open(path, "rb") as f:
         while True:
             data = f.read(blocksize)
             if not data:
