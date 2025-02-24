@@ -7,7 +7,6 @@ from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     LabelPosition,
     MouseCursor,
@@ -154,7 +153,7 @@ class CupertinoRadio(ConstrainedControl):
     @label_position.setter
     def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
-        self._set_enum_attr("labelPosition", value, LabelPosition)
+        self._set_attr("labelPosition", value)
 
     # fill_color
     @property
@@ -164,7 +163,7 @@ class CupertinoRadio(ConstrainedControl):
     @fill_color.setter
     def fill_color(self, value: Optional[ColorValue]):
         self.__fill_color = value
-        self._set_enum_attr("fillColor", value, ColorEnums)
+        self._set_attr("fillColor", value)
 
     # mouse_cursor
     @property
@@ -174,7 +173,7 @@ class CupertinoRadio(ConstrainedControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_enum_attr("mouseCursor", value, MouseCursor)
+        self._set_attr("mouseCursor", value)
 
     # focus_color
     @property
@@ -184,7 +183,7 @@ class CupertinoRadio(ConstrainedControl):
     @focus_color.setter
     def focus_color(self, value: Optional[ColorValue]):
         self.__focus_color = value
-        self._set_enum_attr("focusColor", value, ColorEnums)
+        self._set_attr("focusColor", value)
 
     # toggleable
     @property
@@ -239,7 +238,7 @@ class CupertinoRadio(ConstrainedControl):
     @active_color.setter
     def active_color(self, value: Optional[ColorValue]):
         self.__active_color = value
-        self._set_enum_attr("activeColor", value, ColorEnums)
+        self._set_attr("activeColor", value)
 
     # inactive_color
     @property
@@ -249,4 +248,4 @@ class CupertinoRadio(ConstrainedControl):
     @inactive_color.setter
     def inactive_color(self, value: Optional[ColorValue]):
         self.__inactive_color = value
-        self._set_enum_attr("inactiveColor", value, ColorEnums)
+        self._set_attr("inactiveColor", value)

@@ -4,7 +4,7 @@ from flet.core.control import Control, OptionalNumber
 from flet.core.map.map import MapLatitudeLongitude
 from flet.core.map.map_layer import MapLayer
 from flet.core.ref import Ref
-from flet.core.types import ColorEnums, ColorValue
+from flet.core.types import ColorValue
 
 
 class CircleMarker(Control):
@@ -70,7 +70,7 @@ class CircleMarker(Control):
     @color.setter
     def color(self, value: Optional[ColorValue]):
         self.__color = value
-        self._set_enum_attr("color", value, ColorEnums)
+        self._set_attr("color", value)
 
     # border_color
     @property
@@ -80,7 +80,7 @@ class CircleMarker(Control):
     @border_color.setter
     def border_color(self, value: Optional[ColorValue]):
         self.__border_color = value
-        self._set_enum_attr("borderColor", value, ColorEnums)
+        self._set_attr("borderColor", value)
 
     # radius
     @property

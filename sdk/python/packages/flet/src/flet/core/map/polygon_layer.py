@@ -5,7 +5,7 @@ from flet.core.map.map import MapLatitudeLongitude
 from flet.core.map.map_layer import MapLayer
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
-from flet.core.types import ColorEnums, ColorValue, StrokeCap, StrokeJoin
+from flet.core.types import ColorValue, StrokeCap, StrokeJoin
 
 
 class PolygonMarker(Control):
@@ -71,7 +71,7 @@ class PolygonMarker(Control):
     @stroke_cap.setter
     def stroke_cap(self, value: Optional[StrokeCap]):
         self.__stroke_cap = value
-        self._set_enum_attr("strokeCap", value, StrokeCap)
+        self._set_attr("strokeCap", value)
 
     # stroke_join
     @property
@@ -81,7 +81,7 @@ class PolygonMarker(Control):
     @stroke_join.setter
     def stroke_join(self, value: Optional[StrokeJoin]):
         self.__stroke_join = value
-        self._set_enum_attr("strokeJoin", value, StrokeJoin)
+        self._set_attr("strokeJoin", value)
 
     # label_text_style
     @property
@@ -127,7 +127,7 @@ class PolygonMarker(Control):
     @color.setter
     def color(self, value: Optional[ColorValue]):
         self.__color = value
-        self._set_enum_attr("color", value, ColorEnums)
+        self._set_attr("color", value)
 
     # border_color
     @property
@@ -137,7 +137,7 @@ class PolygonMarker(Control):
     @border_color.setter
     def border_color(self, value: Optional[ColorValue]):
         self.__border_color = value
-        self._set_enum_attr("borderColor", value, ColorEnums)
+        self._set_attr("borderColor", value)
 
     # border_stroke_width
     @property

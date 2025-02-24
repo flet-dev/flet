@@ -7,7 +7,6 @@ from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
@@ -177,7 +176,7 @@ class ProgressRing(ConstrainedControl):
     @stroke_cap.setter
     def stroke_cap(self, value: Optional[StrokeCap]):
         self.__stroke_cap = value
-        self._set_enum_attr("strokeCap", value, StrokeCap)
+        self._set_attr("strokeCap", value)
 
     # color
     @property
@@ -187,7 +186,7 @@ class ProgressRing(ConstrainedControl):
     @color.setter
     def color(self, value: Optional[ColorValue]):
         self.__color = value
-        self._set_enum_attr("color", value, ColorEnums)
+        self._set_attr("color", value)
 
     # bgcolor
     @property
@@ -197,4 +196,4 @@ class ProgressRing(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)

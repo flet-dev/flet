@@ -3,7 +3,7 @@ from typing import Any, List, Optional
 from flet.core.canvas.path import Path
 from flet.core.canvas.shape import Shape
 from flet.core.control import OptionalNumber
-from flet.core.types import ColorEnums, ColorValue
+from flet.core.types import ColorValue
 
 
 class Shadow(Shape):
@@ -52,7 +52,7 @@ class Shadow(Shape):
     @color.setter
     def color(self, value: Optional[ColorValue]):
         self.__color = value
-        self._set_enum_attr("color", value, ColorEnums)
+        self._set_attr("color", value)
 
     # elevation
     @property

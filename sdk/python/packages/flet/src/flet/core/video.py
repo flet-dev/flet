@@ -12,7 +12,6 @@ from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     ImageFit,
     OffsetValue,
@@ -356,7 +355,7 @@ class Video(ConstrainedControl):
     @fill_color.setter
     def fill_color(self, value: Optional[ColorValue]):
         self.__fill_color = value
-        self._set_enum_attr("fillColor", value, ColorEnums)
+        self._set_attr("fillColor", value)
 
     # wakelock
     @property
@@ -485,7 +484,7 @@ class Video(ConstrainedControl):
     @filter_quality.setter
     def filter_quality(self, value: Optional[FilterQuality]):
         self.__filter_quality = value
-        self._set_enum_attr("filterQuality", value, FilterQuality)
+        self._set_attr("filterQuality", value)
 
     # playlist_mode
     @property
@@ -495,7 +494,7 @@ class Video(ConstrainedControl):
     @playlist_mode.setter
     def playlist_mode(self, value: Optional[PlaylistMode]):
         self.__playlist_mode = value
-        self._set_enum_attr("playlistMode", value, PlaylistMode)
+        self._set_attr("playlistMode", value)
 
     # on_enter_fullscreen
     @property

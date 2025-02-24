@@ -9,10 +9,8 @@ from flet.core.ref import Ref
 from flet.core.textfield import KeyboardType
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     DateTimeValue,
-    IconEnums,
     IconValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
@@ -291,7 +289,7 @@ class DatePicker(Control):
     @keyboard_type.setter
     def keyboard_type(self, value: Optional[KeyboardType]):
         self.__keyboard_type = value
-        self._set_enum_attr("keyboardType", value, KeyboardType)
+        self._set_attr("keyboardType", value)
 
     # date_picker_mode
     @property
@@ -301,7 +299,7 @@ class DatePicker(Control):
     @date_picker_mode.setter
     def date_picker_mode(self, value: Optional[DatePickerMode]):
         self.__date_picker_mode = value
-        self._set_enum_attr("datePickerMode", value, DatePickerMode)
+        self._set_attr("datePickerMode", value)
 
     # date_picker_entry_mode
     @property
@@ -311,7 +309,7 @@ class DatePicker(Control):
     @date_picker_entry_mode.setter
     def date_picker_entry_mode(self, value: Optional[DatePickerEntryMode]):
         self.__date_picker_entry_mode = value
-        self._set_enum_attr("datePickerEntryMode", value, DatePickerEntryMode)
+        self._set_attr("datePickerEntryMode", value)
 
     # switch_to_calendar_icon
     @property
@@ -321,7 +319,7 @@ class DatePicker(Control):
     @switch_to_calendar_icon.setter
     def switch_to_calendar_icon(self, value: Optional[IconValue]):
         self.__switch_to_calendar_icon = value
-        self._set_enum_attr("switchToCalendarEntryModeIcon", value, IconEnums)
+        self._set_attr("switchToCalendarEntryModeIcon", value)
 
     # switch_to_input_icon
     @property
@@ -331,7 +329,7 @@ class DatePicker(Control):
     @switch_to_input_icon.setter
     def switch_to_input_icon(self, value: Optional[IconValue]):
         self.__switch_to_input_icon = value
-        self._set_enum_attr("switchToInputEntryModeIcon", value, IconEnums)
+        self._set_attr("switchToInputEntryModeIcon", value)
 
     # on_change
     @property
@@ -372,4 +370,4 @@ class DatePicker(Control):
     @barrier_color.setter
     def barrier_color(self, value: Optional[ColorValue]):
         self.__barrier_color = value
-        self._set_enum_attr("barrierColor", value, ColorEnums)
+        self._set_attr("barrierColor", value)

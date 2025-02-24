@@ -1,4 +1,3 @@
-import warnings
 from typing import Any, Optional, Union
 
 from flet.core.alignment import Alignment
@@ -10,9 +9,7 @@ from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
     BorderRadiusValue,
-    ColorEnums,
     ColorValue,
-    IconEnums,
     IconValue,
     OffsetValue,
     OptionalControlEventCallable,
@@ -171,7 +168,7 @@ class CupertinoButton(ConstrainedControl):
     @icon.setter
     def icon(self, value):
         self.__icon = value
-        self._set_enum_attr("icon", value, IconEnums)
+        self._set_attr("icon", value)
 
     # icon_color
     @property
@@ -181,7 +178,7 @@ class CupertinoButton(ConstrainedControl):
     @icon_color.setter
     def icon_color(self, value):
         self.__icon_color = value
-        self._set_enum_attr("iconColor", value, ColorEnums)
+        self._set_attr("iconColor", value)
 
     # alignment
     @property
@@ -200,7 +197,7 @@ class CupertinoButton(ConstrainedControl):
     @disabled_bgcolor.setter
     def disabled_bgcolor(self, value: Optional[str]):
         self.__disabled_bgcolor = value
-        self._set_enum_attr("disabledBgcolor", value, ColorEnums)
+        self._set_attr("disabledBgcolor", value)
 
     # opacity_on_click
     @property
@@ -248,7 +245,7 @@ class CupertinoButton(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgColor", value, ColorEnums)
+        self._set_attr("bgColor", value)
 
     # color
     @property
@@ -258,7 +255,7 @@ class CupertinoButton(ConstrainedControl):
     @color.setter
     def color(self, value: Optional[ColorValue]):
         self.__color = value
-        self._set_enum_attr("color", value, ColorEnums)
+        self._set_attr("color", value)
 
     # url
     @property
@@ -277,7 +274,7 @@ class CupertinoButton(ConstrainedControl):
     @url_target.setter
     def url_target(self, value: Optional[UrlTarget]):
         self.__url_target = value
-        self._set_enum_attr("urlTarget", value, UrlTarget)
+        self._set_attr("urlTarget", value)
 
     # on_click
     @property

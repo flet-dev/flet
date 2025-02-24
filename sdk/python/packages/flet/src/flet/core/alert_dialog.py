@@ -8,7 +8,6 @@ from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.types import (
     ClipBehavior,
-    ColorEnums,
     ColorValue,
     MainAxisAlignment,
     OptionalControlEventCallable,
@@ -197,7 +196,7 @@ class AlertDialog(AdaptiveControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # shadow_color
     @property
@@ -207,7 +206,7 @@ class AlertDialog(AdaptiveControl):
     @shadow_color.setter
     def shadow_color(self, value: Optional[ColorValue]):
         self.__shadow_color = value
-        self._set_enum_attr("shadowColor", value, ColorEnums)
+        self._set_attr("shadowColor", value)
 
     # barrier_color
     @property
@@ -217,7 +216,7 @@ class AlertDialog(AdaptiveControl):
     @barrier_color.setter
     def barrier_color(self, value: Optional[ColorValue]):
         self.__barrier_color = value
-        self._set_enum_attr("barrierColor", value, ColorEnums)
+        self._set_attr("barrierColor", value)
 
     # surface_tint_color
     @property
@@ -227,7 +226,7 @@ class AlertDialog(AdaptiveControl):
     @surface_tint_color.setter
     def surface_tint_color(self, value: Optional[ColorValue]):
         self.__surface_tint_color = value
-        self._set_enum_attr("surfaceTintColor", value, ColorEnums)
+        self._set_attr("surfaceTintColor", value)
 
     # icon_color
     @property
@@ -237,7 +236,7 @@ class AlertDialog(AdaptiveControl):
     @icon_color.setter
     def icon_color(self, value: Optional[ColorValue]):
         self.__icon_color = value
-        self._set_enum_attr("iconColor", value, ColorEnums)
+        self._set_attr("iconColor", value)
 
     # elevation
     @property
@@ -431,7 +430,7 @@ class AlertDialog(AdaptiveControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+        self._set_attr("clipBehavior", value)
 
     # on_dismiss
     @property

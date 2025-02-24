@@ -11,9 +11,7 @@ from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
     ClipBehavior,
-    ColorEnums,
     ColorValue,
-    IconEnums,
     IconValue,
     MouseCursor,
     OffsetValue,
@@ -95,7 +93,7 @@ class PopupMenuItem(Control):
 
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
-        self._set_enum_attr("mouseCursor", value, MouseCursor)
+        self._set_attr("mouseCursor", value)
 
     # icon
     @property
@@ -105,7 +103,7 @@ class PopupMenuItem(Control):
     @icon.setter
     def icon(self, value: Optional[IconValue]):
         self.__icon = value
-        self._set_enum_attr("icon", value, IconEnums)
+        self._set_attr("icon", value)
 
     # text
     @property
@@ -379,7 +377,7 @@ class PopupMenuButton(ConstrainedControl):
     @icon.setter
     def icon(self, value: Optional[IconValue]):
         self.__icon = value
-        self._set_enum_attr("icon", value, IconEnums)
+        self._set_attr("icon", value)
 
     # icon_color
     @property
@@ -389,7 +387,7 @@ class PopupMenuButton(ConstrainedControl):
     @icon_color.setter
     def icon_color(self, value: Optional[ColorValue]):
         self.__icon_color = value
-        self._set_enum_attr("iconColor", value, ColorEnums)
+        self._set_attr("iconColor", value)
 
     # bgcolor
     @property
@@ -399,7 +397,7 @@ class PopupMenuButton(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # shadow_color
     @property
@@ -409,7 +407,7 @@ class PopupMenuButton(ConstrainedControl):
     @shadow_color.setter
     def shadow_color(self, value: Optional[ColorValue]):
         self.__shadow_color = value
-        self._set_enum_attr("shadowColor", value, ColorEnums)
+        self._set_attr("shadowColor", value)
 
     # surface_tint_color
     @property
@@ -419,7 +417,7 @@ class PopupMenuButton(ConstrainedControl):
     @surface_tint_color.setter
     def surface_tint_color(self, value: Optional[ColorValue]):
         self.__surface_tint_color = value
-        self._set_enum_attr("surfaceTintColor", value, ColorEnums)
+        self._set_attr("surfaceTintColor", value)
 
     # icon_size
     @property
@@ -492,7 +490,7 @@ class PopupMenuButton(ConstrainedControl):
     @menu_position.setter
     def menu_position(self, value: Optional[PopupMenuPosition]):
         self.__menu_position = value
-        self._set_enum_attr("menuPosition", value, PopupMenuPosition)
+        self._set_attr("menuPosition", value)
 
     # clip_behavior
     @property
@@ -502,7 +500,7 @@ class PopupMenuButton(ConstrainedControl):
     @clip_behavior.setter
     def clip_behavior(self, value: ClipBehavior):
         self.__clip_behavior = value
-        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+        self._set_attr("clipBehavior", value)
 
     # on_cancel
     @property

@@ -26,10 +26,7 @@ from flet.core.types import (
     BlendMode,
     BorderRadiusValue,
     ClipBehavior,
-    ColorEnums,
     ColorValue,
-    ImageFit,
-    ImageRepeat,
     MarginValue,
     OffsetValue,
     OptionalControlEventCallable,
@@ -41,7 +38,6 @@ from flet.core.types import (
     ThemeMode,
     UrlTarget,
 )
-from flet.utils.deprecated import deprecated_property
 
 
 class Container(ConstrainedControl, AdaptiveControl):
@@ -299,7 +295,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgColor", value, ColorEnums)
+        self._set_attr("bgColor", value)
 
     # gradient
     @property
@@ -318,7 +314,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @blend_mode.setter
     def blend_mode(self, value: Optional[BlendMode]):
         self.__blend_mode = value
-        self._set_enum_attr("blendMode", value, BlendMode)
+        self._set_attr("blendMode", value)
 
     # blur
     @property
@@ -398,7 +394,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @shape.setter
     def shape(self, value: Optional[BoxShape]):
         self.__shape = value
-        self._set_enum_attr("shape", value, BoxShape)
+        self._set_attr("shape", value)
 
     # clip_behavior
     @property
@@ -408,7 +404,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+        self._set_attr("clipBehavior", value)
 
     # ink
     @property
@@ -427,7 +423,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @ink_color.setter
     def ink_color(self, value: Optional[ColorValue]):
         self.__ink_color = value
-        self._set_enum_attr("inkColor", value, ColorEnums)
+        self._set_attr("inkColor", value)
 
     # animate
     @property
@@ -455,7 +451,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @url_target.setter
     def url_target(self, value: Optional[UrlTarget]):
         self.__url_target = value
-        self._set_enum_attr("urlTarget", value, UrlTarget)
+        self._set_attr("urlTarget", value)
 
     # theme
     @property
@@ -483,7 +479,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     @theme_mode.setter
     def theme_mode(self, value: Optional[ThemeMode]):
         self.__theme_mode = value
-        self._set_enum_attr("themeMode", value, ThemeMode)
+        self._set_attr("themeMode", value)
 
     # on_click
     @property

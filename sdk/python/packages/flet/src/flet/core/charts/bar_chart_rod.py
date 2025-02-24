@@ -7,7 +7,7 @@ from flet.core.control import Control, OptionalNumber
 from flet.core.gradients import Gradient
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
-from flet.core.types import BorderRadiusValue, ColorEnums, ColorValue, TextAlign
+from flet.core.types import BorderRadiusValue, ColorValue, TextAlign
 
 
 class BarChartRod(Control):
@@ -124,7 +124,7 @@ class BarChartRod(Control):
     @color.setter
     def color(self, value: Optional[ColorValue]):
         self.__color = value
-        self._set_enum_attr("color", value, ColorEnums)
+        self._set_attr("color", value)
 
     # border_side
     @property
@@ -179,7 +179,7 @@ class BarChartRod(Control):
     @bg_color.setter
     def bg_color(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgColor", value, ColorEnums)
+        self._set_attr("bgColor", value)
 
     # bg_gradient
     @property

@@ -15,7 +15,6 @@ from flet.core.text_span import TextSpan
 from flet.core.text_style import TextOverflow, TextStyle, TextThemeStyle
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     FontWeight,
     OffsetValue,
@@ -272,7 +271,7 @@ class Text(ConstrainedControl):
     @text_align.setter
     def text_align(self, value: Optional[TextAlign]):
         self.__text_align = value
-        self._set_enum_attr("textAlign", value, TextAlign)
+        self._set_attr("textAlign", value)
 
     # font_family
     @property
@@ -300,7 +299,7 @@ class Text(ConstrainedControl):
     @weight.setter
     def weight(self, value: Optional[FontWeight]):
         self.__weight = value
-        self._set_enum_attr("weight", value, FontWeight)
+        self._set_attr("weight", value)
 
     # style
     @property
@@ -330,7 +329,7 @@ class Text(ConstrainedControl):
     @theme_style.setter
     def theme_style(self, value: Optional[TextThemeStyle]):
         self.__theme_style = value
-        self._set_enum_attr("theme_style", value, TextThemeStyle)
+        self._set_attr("theme_style", value)
 
     # italic
     @property
@@ -376,7 +375,7 @@ class Text(ConstrainedControl):
     @overflow.setter
     def overflow(self, value: Optional[TextOverflow]):
         self.__overflow = value
-        self._set_enum_attr("overflow", value, TextOverflow)
+        self._set_attr("overflow", value)
 
     # color
     @property
@@ -386,7 +385,7 @@ class Text(ConstrainedControl):
     @color.setter
     def color(self, value: Optional[ColorValue]):
         self.__color = value
-        self._set_enum_attr("color", value, ColorEnums)
+        self._set_attr("color", value)
 
     # bgcolor
     @property
@@ -396,7 +395,7 @@ class Text(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # semantics_label
     @property

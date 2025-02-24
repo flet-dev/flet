@@ -6,7 +6,6 @@ from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.types import (
     ClipBehavior,
-    ColorEnums,
     ColorValue,
     MarginValue,
     OptionalControlEventCallable,
@@ -181,7 +180,7 @@ class SnackBar(Control):
     @action_color.setter
     def action_color(self, value: Optional[ColorValue]):
         self.__action_color = value
-        self._set_enum_attr("actionColor", value, ColorEnums)
+        self._set_attr("actionColor", value)
 
     # bgcolor
     @property
@@ -191,7 +190,7 @@ class SnackBar(Control):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgColor", value, ColorEnums)
+        self._set_attr("bgColor", value)
 
     # close_icon_color
     @property
@@ -201,7 +200,7 @@ class SnackBar(Control):
     @close_icon_color.setter
     def close_icon_color(self, value: Optional[ColorValue]):
         self.__close_icon_color = value
-        self._set_enum_attr("closeIconColor", value, ColorEnums)
+        self._set_attr("closeIconColor", value)
 
     # duration
     @property
@@ -234,7 +233,7 @@ class SnackBar(Control):
     @behavior.setter
     def behavior(self, value: Optional[SnackBarBehavior]):
         self.__behavior = value
-        self._set_enum_attr("behavior", value, SnackBarBehavior)
+        self._set_attr("behavior", value)
 
     # dismissDirection
     @property
@@ -244,7 +243,7 @@ class SnackBar(Control):
     @dismiss_direction.setter
     def dismiss_direction(self, value: Optional[DismissDirection]):
         self.__dismiss_direction = value
-        self._set_enum_attr("dismissDirection", value, DismissDirection)
+        self._set_attr("dismissDirection", value)
 
     # padding
     @property
@@ -291,7 +290,7 @@ class SnackBar(Control):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+        self._set_attr("clipBehavior", value)
 
     # shape
     @property

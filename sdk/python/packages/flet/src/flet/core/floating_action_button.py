@@ -9,9 +9,7 @@ from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
     ClipBehavior,
-    ColorEnums,
     ColorValue,
-    IconEnums,
     IconValue,
     MouseCursor,
     OffsetValue,
@@ -212,7 +210,7 @@ class FloatingActionButton(ConstrainedControl):
     @icon.setter
     def icon(self, value: Optional[IconValue]):
         self.__icon = value
-        self._set_enum_attr("icon", value, IconEnums)
+        self._set_attr("icon", value)
 
     # bgcolor
     @property
@@ -222,7 +220,7 @@ class FloatingActionButton(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # url
     @property
@@ -241,7 +239,7 @@ class FloatingActionButton(ConstrainedControl):
     @url_target.setter
     def url_target(self, value: Optional[UrlTarget]):
         self.__url_target = value
-        self._set_enum_attr("urlTarget", value, UrlTarget)
+        self._set_attr("urlTarget", value)
 
     # mouse_cursor
     @property
@@ -251,7 +249,7 @@ class FloatingActionButton(ConstrainedControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_enum_attr("mouseCursor", value, MouseCursor)
+        self._set_attr("mouseCursor", value)
 
     # on_click
     @property
@@ -335,7 +333,7 @@ class FloatingActionButton(ConstrainedControl):
     @focus_color.setter
     def focus_color(self, value: Optional[ColorValue]):
         self.__focus_color = value
-        self._set_enum_attr("focusColor", value, ColorEnums)
+        self._set_attr("focusColor", value)
 
     # focus_elevation
     @property
@@ -355,7 +353,7 @@ class FloatingActionButton(ConstrainedControl):
     @foreground_color.setter
     def foreground_color(self, value: Optional[ColorValue]):
         self.__foreground_color = value
-        self._set_enum_attr("foregroundColor", value, ColorEnums)
+        self._set_attr("foregroundColor", value)
 
     # highlight_elevation
     @property
@@ -385,4 +383,4 @@ class FloatingActionButton(ConstrainedControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+        self._set_attr("clipBehavior", value)

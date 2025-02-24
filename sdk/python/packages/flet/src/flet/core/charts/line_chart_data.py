@@ -7,7 +7,7 @@ from flet.core.charts.line_chart_data_point import LineChartDataPoint
 from flet.core.control import Control, OptionalNumber
 from flet.core.gradients import Gradient
 from flet.core.ref import Ref
-from flet.core.types import ColorEnums, ColorValue
+from flet.core.types import ColorValue
 
 
 class LineChartData(Control):
@@ -129,7 +129,7 @@ class LineChartData(Control):
     @color.setter
     def color(self, value: Optional[ColorValue]):
         self.__color = value
-        self._set_enum_attr("color", value, ColorEnums)
+        self._set_attr("color", value)
 
     # gradient
     @property
@@ -213,7 +213,7 @@ class LineChartData(Control):
     @above_line_bgcolor.setter
     def above_line_bgcolor(self, value: Optional[str]):
         self.__above_line_bgcolor = value
-        self._set_enum_attr("aboveLineBgcolor", value, ColorEnums)
+        self._set_attr("aboveLineBgcolor", value)
 
     # above_line_gradient
     @property
@@ -250,7 +250,7 @@ class LineChartData(Control):
     @below_line_bgcolor.setter
     def below_line_bgcolor(self, value: Optional[str]):
         self.__below_line_bgcolor = value
-        self._set_enum_attr("belowLineBgcolor", value, ColorEnums)
+        self._set_attr("belowLineBgcolor", value)
 
     # below_line_gradient
     @property

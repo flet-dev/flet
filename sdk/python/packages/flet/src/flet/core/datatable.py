@@ -16,7 +16,6 @@ from flet.core.tooltip import TooltipValue
 from flet.core.types import (
     BorderRadiusValue,
     ClipBehavior,
-    ColorEnums,
     ColorValue,
     ControlStateValue,
     MainAxisAlignment,
@@ -110,7 +109,7 @@ class DataColumn(Control):
     @heading_row_alignment.setter
     def heading_row_alignment(self, value: Optional[MainAxisAlignment]):
         self.__heading_row_alignment = value
-        self._set_enum_attr("headingRowAlignment", value, MainAxisAlignment)
+        self._set_attr("headingRowAlignment", value)
 
     # on_sort
     @property
@@ -634,7 +633,7 @@ class DataTable(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgColor", value, ColorEnums)
+        self._set_attr("bgColor", value)
 
     # gradient
     @property
@@ -716,7 +715,7 @@ class DataTable(ConstrainedControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+        self._set_attr("clipBehavior", value)
 
     # on_select_all
     @property

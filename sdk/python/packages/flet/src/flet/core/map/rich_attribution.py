@@ -6,7 +6,7 @@ from flet.core.control import OptionalNumber
 from flet.core.map.map_layer import MapLayer
 from flet.core.map.text_source_attribution import TextSourceAttribution
 from flet.core.ref import Ref
-from flet.core.types import ColorEnums, ColorValue
+from flet.core.types import ColorValue
 
 
 class AttributionAlignment(Enum):
@@ -108,7 +108,7 @@ class RichAttribution(MapLayer):
     @alignment.setter
     def alignment(self, value: Optional[AttributionAlignment]):
         self.__alignment = value
-        self._set_enum_attr("alignment", value, AttributionAlignment)
+        self._set_attr("alignment", value)
 
     # show_flutter_map_attribution
     @property
@@ -129,7 +129,7 @@ class RichAttribution(MapLayer):
     @popup_bgcolor.setter
     def popup_bgcolor(self, value: Optional[str]):
         self.__popup_bgcolor = value
-        self._set_enum_attr("popupBgcolor", value, ColorEnums)
+        self._set_attr("popupBgcolor", value)
 
     # attributions
     @property

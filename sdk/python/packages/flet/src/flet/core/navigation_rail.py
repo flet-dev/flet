@@ -9,9 +9,7 @@ from flet.core.control import Control
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
-    IconEnums,
     IconValueOrControl,
     OffsetValue,
     OptionalControlEventCallable,
@@ -99,7 +97,7 @@ class NavigationRailDestination(Control):
     def icon(self, value: Optional[IconValueOrControl]):
         self.__icon = value
         if not isinstance(value, Control):
-            self._set_enum_attr("icon", value, IconEnums)
+            self._set_attr("icon", value)
 
     # icon_content
     @property
@@ -132,7 +130,7 @@ class NavigationRailDestination(Control):
     def selected_icon(self, value: Optional[IconValueOrControl]):
         self.__selected_icon = value
         if not isinstance(value, Control):
-            self._set_enum_attr("selectedIcon", value, IconEnums)
+            self._set_attr("selectedIcon", value)
 
     # selected_icon_content
     @property
@@ -182,7 +180,7 @@ class NavigationRailDestination(Control):
     @indicator_color.setter
     def indicator_color(self, value: Optional[ColorValue]):
         self.__indicator_color = value
-        self._set_enum_attr("indicatorColor", value, ColorEnums)
+        self._set_attr("indicatorColor", value)
 
     # indicator_shape
     @property
@@ -415,7 +413,7 @@ class NavigationRail(ConstrainedControl):
     @label_type.setter
     def label_type(self, value: Optional[NavigationRailLabelType]):
         self.__label_type = value
-        self._set_enum_attr("labelType", value, NavigationRailLabelType)
+        self._set_attr("labelType", value)
 
     # indicator_shape
     @property
@@ -434,7 +432,7 @@ class NavigationRail(ConstrainedControl):
     @indicator_color.setter
     def indicator_color(self, value: Optional[ColorValue]):
         self.__indicator_color = value
-        self._set_enum_attr("indicatorColor", value, ColorEnums)
+        self._set_attr("indicatorColor", value)
 
     # bgcolor
     @property
@@ -444,7 +442,7 @@ class NavigationRail(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # elevation
     @property

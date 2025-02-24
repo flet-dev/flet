@@ -6,7 +6,6 @@ from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.types import (
     ClipBehavior,
-    ColorEnums,
     ColorValue,
     NotchShape,
     OffsetValue,
@@ -136,7 +135,7 @@ class BottomAppBar(ConstrainedControl):
     @surface_tint_color.setter
     def surface_tint_color(self, value: Optional[ColorValue]):
         self.__surface_tint_color = value
-        self._set_enum_attr("surfaceTintColor", value, ColorEnums)
+        self._set_attr("surfaceTintColor", value)
 
     # bgcolor
     @property
@@ -146,7 +145,7 @@ class BottomAppBar(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # shadow_color
     @property
@@ -156,7 +155,7 @@ class BottomAppBar(ConstrainedControl):
     @shadow_color.setter
     def shadow_color(self, value: Optional[ColorValue]):
         self.__shadow_color = value
-        self._set_enum_attr("shadowColor", value, ColorEnums)
+        self._set_attr("shadowColor", value)
 
     # padding
     @property
@@ -175,7 +174,7 @@ class BottomAppBar(ConstrainedControl):
     @shape.setter
     def shape(self, value: Optional[NotchShape]):
         self.__shape = value
-        self._set_enum_attr("shape", value, NotchShape)
+        self._set_attr("shape", value)
 
     # clip_behavior
     @property
@@ -185,7 +184,7 @@ class BottomAppBar(ConstrainedControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+        self._set_attr("clipBehavior", value)
 
     # notch_margin
     @property

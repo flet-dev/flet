@@ -296,7 +296,7 @@ class CupertinoTextField(TextField):
     @blend_mode.setter
     def blend_mode(self, value: Optional[BlendMode]):
         self.__blend_mode = value
-        self._set_enum_attr("blendMode", value, BlendMode)
+        self._set_attr("blendMode", value)
 
     # shadow
     @property
@@ -324,7 +324,7 @@ class CupertinoTextField(TextField):
     @suffix_visibility_mode.setter
     def suffix_visibility_mode(self, value: Optional[VisibilityMode]):
         self.__suffix_visibility_mode = value
-        self._set_enum_attr("suffixVisibilityMode", value, VisibilityMode)
+        self._set_attr("suffixVisibilityMode", value)
 
     # clear_button_visibility_mode
     @property
@@ -334,7 +334,7 @@ class CupertinoTextField(TextField):
     @clear_button_visibility_mode.setter
     def clear_button_visibility_mode(self, value: Optional[VisibilityMode]):
         self.__clear_button_visibility_mode = value
-        self._set_enum_attr("clearButtonVisibilityMode", value, VisibilityMode)
+        self._set_attr("clearButtonVisibilityMode", value)
 
     # prefix_visibility_mode
     @property
@@ -344,7 +344,7 @@ class CupertinoTextField(TextField):
     @prefix_visibility_mode.setter
     def prefix_visibility_mode(self, value: Optional[VisibilityMode]):
         self.__prefix_visibility_mode = value
-        self._set_enum_attr("prefixVisibilityMode", value, VisibilityMode)
+        self._set_attr("prefixVisibilityMode", value)
 
     # clear_button_semantics_label
     @property

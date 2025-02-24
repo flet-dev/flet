@@ -17,7 +17,6 @@ from flet.core.types import (
     BorderRadiusValue,
     Brightness,
     ClipBehavior,
-    ColorEnums,
     ColorValue,
     DurationValue,
     IconValueOrControl,
@@ -464,7 +463,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     @keyboard_type.setter
     def keyboard_type(self, value: Optional[KeyboardType]):
         self.__keyboard_type = value
-        self._set_enum_attr("keyboardType", value, KeyboardType)
+        self._set_attr("keyboardType", value)
 
     # text_align
     @property
@@ -474,7 +473,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     @text_align.setter
     def text_align(self, value: Optional[TextAlign]):
         self.__text_align = value
-        self._set_enum_attr("textAlign", value, TextAlign)
+        self._set_attr("textAlign", value)
 
     # multiline
     @property
@@ -552,7 +551,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     @keyboard_brightness.setter
     def keyboard_brightness(self, value: Optional[Brightness]):
         self.__keyboard_brightness = value
-        self._set_enum_attr("keyboardBrightness", value, Brightness)
+        self._set_attr("keyboardBrightness", value)
 
     # mouse_cursor
     @property
@@ -562,7 +561,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_enum_attr("mouseCursor", value, MouseCursor)
+        self._set_attr("mouseCursor", value)
 
     # ignore_pointers
     @property
@@ -581,7 +580,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+        self._set_attr("clipBehavior", value)
 
     # can_request_focus
     @property
@@ -654,7 +653,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     @capitalization.setter
     def capitalization(self, value: Optional[TextCapitalization]):
         self.__capitalization = value
-        self._set_enum_attr("capitalization", value, TextCapitalization)
+        self._set_attr("capitalization", value)
 
     # autocorrect
     @property
@@ -709,7 +708,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     @cursor_color.setter
     def cursor_color(self, value):
         self.__cursor_color = value
-        self._set_enum_attr("cursorColor", value, ColorEnums)
+        self._set_attr("cursorColor", value)
 
     # cursor_height
     @property
@@ -746,7 +745,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     @selection_color.setter
     def selection_color(self, value: Optional[ColorValue]):
         self.__selection_color = value
-        self._set_enum_attr("selectionColor", value, ColorEnums)
+        self._set_attr("selectionColor", value)
 
     # input_filter
     @property
