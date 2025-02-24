@@ -1,7 +1,7 @@
 from dataclasses import dataclass
-from enum import Enum
 from typing import Optional, Union
 
+from flet.core.enumerations import ExtendedEnum
 from flet.core.types import DurationValue
 from flet.utils import deprecated
 
@@ -11,7 +11,7 @@ except ImportError:
     from typing_extensions import Literal
 
 
-class AnimationCurve(Enum):
+class AnimationCurve(ExtendedEnum):
     BOUNCE_IN = "bounceIn"
     BOUNCE_IN_OUT = "bounceInOut"
     BOUNCE_OUT = "bounceOut"

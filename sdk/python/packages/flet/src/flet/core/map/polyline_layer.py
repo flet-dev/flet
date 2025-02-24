@@ -1,15 +1,15 @@
 from dataclasses import dataclass
-from enum import Enum
 from typing import Any, List, Optional, Union
 
 from flet.core.control import Control, OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.map.map import MapLatitudeLongitude
 from flet.core.map.map_layer import MapLayer
 from flet.core.ref import Ref
 from flet.core.types import ColorValue, StrokeCap, StrokeJoin
 
 
-class PatternFit(Enum):
+class PatternFit(ExtendedEnum):
     SCALE_DOWN = "scaleDown"
     SCALE_UP = "scaleUp"
     APPEND_DOT = "appendDot"

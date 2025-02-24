@@ -1,5 +1,4 @@
 import warnings
-from enum import Enum
 from typing import Any, Callable, List, Optional, Union
 
 from flet.core.adaptive_control import AdaptiveControl
@@ -8,6 +7,7 @@ from flet.core.border import Border
 from flet.core.buttons import OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control
+from flet.core.enumerations import ExtendedEnum
 from flet.core.ref import Ref
 from flet.core.types import (
     ColorValue,
@@ -22,7 +22,7 @@ from flet.core.types import (
 )
 
 
-class NavigationBarLabelBehavior(Enum):
+class NavigationBarLabelBehavior(ExtendedEnum):
     """Defines how the destinations' labels will be laid out and when they'll be displayed."""
 
     ALWAYS_SHOW = "alwaysShow"

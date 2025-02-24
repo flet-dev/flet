@@ -1,9 +1,10 @@
 import dataclasses
-from enum import Enum
 from typing import Union
 
+from flet.core.enumerations import ExtendedEnum
 
-class Axis(Enum):
+
+class Axis(ExtendedEnum):
     HORIZONTAL = "horizontal"
     VERTICAL = "vertical"
 

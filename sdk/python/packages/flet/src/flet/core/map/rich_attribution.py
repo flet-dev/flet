@@ -1,15 +1,15 @@
-from enum import Enum
 from typing import Any, List, Optional
 
 from flet.core.border_radius import BorderRadius
 from flet.core.control import OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.map.map_layer import MapLayer
 from flet.core.map.text_source_attribution import TextSourceAttribution
 from flet.core.ref import Ref
 from flet.core.types import ColorValue
 
 
-class AttributionAlignment(Enum):
+class AttributionAlignment(ExtendedEnum):
     BOTTOM_LEFT = "bottomLeft"
     BOTTOM_RIGHT = "bottomRight"
 

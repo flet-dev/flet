@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Any, Optional, Union
 
 from flet.core.alignment import Alignment
@@ -6,6 +5,7 @@ from flet.core.animation import AnimationValue
 from flet.core.badge import BadgeValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
@@ -18,7 +18,7 @@ from flet.core.types import (
 )
 
 
-class CupertinoTimerPickerMode(Enum):
+class CupertinoTimerPickerMode(ExtendedEnum):
     HOUR_MINUTE = "hm"
     HOUR_MINUTE_SECONDS = "hms"
     MINUTE_SECONDS = "ms"

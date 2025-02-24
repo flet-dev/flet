@@ -1,6 +1,5 @@
 import dataclasses
 import time
-from enum import Enum
 from typing import Any, List, Optional, Union
 
 from flet.core.adaptive_control import AdaptiveControl
@@ -9,6 +8,7 @@ from flet.core.autofill_group import AutofillHint
 from flet.core.badge import BadgeValue
 from flet.core.box import BoxConstraints
 from flet.core.control import Control, OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.form_field_control import FormFieldControl, InputBorder
 from flet.core.ref import Ref
 from flet.core.text_style import StrutStyle, TextStyle
@@ -37,7 +37,7 @@ except ImportError:
     from typing_extensions import Literal
 
 
-class KeyboardType(Enum):
+class KeyboardType(ExtendedEnum):
     NONE = "none"
     TEXT = "text"
     MULTILINE = "multiline"
@@ -51,7 +51,7 @@ class KeyboardType(Enum):
     STREET_ADDRESS = "streetAddress"
 
 
-class TextCapitalization(Enum):
+class TextCapitalization(ExtendedEnum):
     CHARACTERS = "characters"
     WORDS = "words"
     SENTENCES = "sentences"

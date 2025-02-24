@@ -30,8 +30,10 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
+from flet.core.enumerations import ExtendedEnum
 
-class MarkdownExtensionSet(Enum):
+
+class MarkdownExtensionSet(ExtendedEnum):
     NONE = "none"
     COMMON_MARK = "commonMark"
     GITHUB_WEB = "gitHubWeb"
@@ -131,7 +133,7 @@ class MarkdownStyleSheet:
     unordered_list_alignment: Optional[MainAxisAlignment] = None
 
 
-class MarkdownCodeTheme(Enum):
+class MarkdownCodeTheme(ExtendedEnum):
     A11Y_DARK = "a11y-dark"
     A11Y_LIGHT = "a11y-light"
     AGATE = "agate"

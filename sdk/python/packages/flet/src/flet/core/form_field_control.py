@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Any, Optional, Union
 
 from flet.core.animation import AnimationValue
@@ -28,8 +27,10 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
+from flet.core.enumerations import ExtendedEnum
 
-class InputBorder(Enum):
+
+class InputBorder(ExtendedEnum):
     NONE = "none"
     OUTLINE = "outline"
     UNDERLINE = "underline"

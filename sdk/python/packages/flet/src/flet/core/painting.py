@@ -1,20 +1,20 @@
 import math
 from dataclasses import dataclass, field
-from enum import Enum
 from typing import List, Optional, Tuple, Union
 
 from flet.core.blur import Blur
+from flet.core.enumerations import ExtendedEnum
 from flet.core.gradients import GradientTileMode
 from flet.core.types import BlendMode, ColorValue, OffsetValue, StrokeCap
 
 
-class StrokeJoin(Enum):
+class StrokeJoin(ExtendedEnum):
     MITER = "miter"
     ROUND = "round"
     BEVEL = "bevel"
 
 
-class PaintingStyle(Enum):
+class PaintingStyle(ExtendedEnum):
     FILL = "fill"
     STROKE = "stroke"
 

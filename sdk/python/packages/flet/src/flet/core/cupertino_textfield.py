@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Any, List, Optional, Union
 
 from flet.core.animation import AnimationValue
@@ -7,6 +6,7 @@ from flet.core.badge import BadgeValue
 from flet.core.border import Border
 from flet.core.box import BoxShadow, DecorationImage
 from flet.core.control import Control, OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.gradients import Gradient
 from flet.core.ref import Ref
 from flet.core.text_style import StrutStyle, TextStyle
@@ -28,7 +28,7 @@ from flet.core.types import (
 )
 
 
-class VisibilityMode(Enum):
+class VisibilityMode(ExtendedEnum):
     NEVER = "never"
     EDITING = "editing"
     NOT_EDITING = "notEditing"

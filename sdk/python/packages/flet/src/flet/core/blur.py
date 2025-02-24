@@ -1,8 +1,9 @@
 from dataclasses import dataclass, field
-from enum import Enum
+
+from flet.core.enumerations import ExtendedEnum
 
 
-class BlurTileMode(Enum):
+class BlurTileMode(ExtendedEnum):
     CLAMP = "clamp"
     DECAL = "decal"
     MIRROR = "mirror"

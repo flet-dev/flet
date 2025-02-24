@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
-from enum import Enum
 from typing import List, Optional, Union
 
 from flet.core.alignment import Alignment
 from flet.core.border import Border
+from flet.core.enumerations import ExtendedEnum
 from flet.core.gradients import Gradient
 from flet.core.types import (
     BlendMode,
@@ -23,14 +23,14 @@ class ColorFilter:
     blend_mode: Optional[BlendMode] = None
 
 
-class FilterQuality(Enum):
+class FilterQuality(ExtendedEnum):
     NONE = "none"
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
 
 
-class ShadowBlurStyle(Enum):
+class ShadowBlurStyle(ExtendedEnum):
     NORMAL = "normal"
     SOLID = "solid"
     OUTER = "outer"
@@ -46,7 +46,7 @@ class BoxShadow:
     blur_style: ShadowBlurStyle = field(default=ShadowBlurStyle.NORMAL)
 
 
-class BoxShape(Enum):
+class BoxShape(ExtendedEnum):
     RECTANGLE = "rectangle"
     CIRCLE = "circle"
 

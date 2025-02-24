@@ -1,10 +1,10 @@
-from enum import Enum
 from typing import Any, Optional, Union
 
 from flet.core.animation import AnimationCurve, AnimationValue
 from flet.core.badge import BadgeValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
@@ -23,7 +23,7 @@ except ImportError:
 TransitionValueString = Literal["fade", "rotation", "scale"]
 
 
-class AnimatedSwitcherTransition(Enum):
+class AnimatedSwitcherTransition(ExtendedEnum):
     FADE = "fade"
     ROTATION = "rotation"
     SCALE = "scale"
