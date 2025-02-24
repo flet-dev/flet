@@ -74,6 +74,7 @@ class Command(BaseCommand):
         self.build_dir = None
         self.flutter_dir: Optional[Path] = None
         self.flutter_packages_dir = None
+        self.flutter_packages_temp_dir = None
         self.flutter_exe = None
         self.skip_flutter_doctor = get_bool_env_var("FLET_CLI_SKIP_FLUTTER_DOCTOR")
         self.no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
@@ -684,6 +685,9 @@ class Command(BaseCommand):
         self.build_dir = self.python_app_path.joinpath("build")
         self.flutter_dir = self.build_dir.joinpath("flutter")
         self.flutter_packages_dir = self.build_dir.joinpath("flutter-packages")
+        self.flutter_packages_temp_dir = self.build_dir.joinpath(
+            "flutter-packages-temp"
+        )
         self.out_dir = (
             Path(self.options.output_dir).resolve()
             if self.options.output_dir
@@ -1537,7 +1541,7 @@ class Command(BaseCommand):
         assert self.package_app_path
         assert self.build_dir
         assert self.flutter_dir
-        assert self.flutter_packages_dir
+        assert self.flutter_packages_temp_dir
 
         hash = HashStamp(self.build_dir / ".hash" / "package")
 
@@ -1600,10 +1604,12 @@ class Command(BaseCommand):
         )
 
         # flutter-packages variable
-        if self.flutter_packages_dir.exists():
-            shutil.rmtree(self.flutter_packages_dir)
+        if self.flutter_packages_temp_dir.exists():
+            shutil.rmtree(self.flutter_packages_temp_dir)
 
-        package_env["SERIOUS_PYTHON_FLUTTER_PACKAGES"] = str(self.flutter_packages_dir)
+        package_env["SERIOUS_PYTHON_FLUTTER_PACKAGES"] = str(
+            self.flutter_packages_temp_dir
+        )
 
         # exclude
         exclude_list = ["build"]
@@ -1727,13 +1733,19 @@ class Command(BaseCommand):
 
     def register_flutter_extensions(self):
         assert self.flutter_packages_dir
+        assert self.flutter_packages_temp_dir
         assert isinstance(self.flutter_dependencies, dict)
         assert self.template_data
 
-        if not self.flutter_packages_dir.exists():
+        if not self.flutter_packages_temp_dir.exists():
             return
 
         self.status.update(f"[bold blue]Registering Flutter user extensions...")
+
+        # copy packages from temp to permanent location
+        if self.flutter_packages_dir.exists():
+            shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
+        shutil.move(self.flutter_packages_temp_dir, self.flutter_packages_dir)
 
         for fp in os.listdir(self.flutter_packages_dir):
             if (self.flutter_packages_dir / fp / "pubspec.yaml").exists():
