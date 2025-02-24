@@ -1583,17 +1583,17 @@ class Command(BaseCommand):
             toml_dependencies.extend(platform_dependencies)
 
         if len(toml_dependencies) > 0:
-            develop_packages = (
-                self.get_pyproject(f"tool.flet.{self.config_platform}.develop_packages")
-                or self.get_pyproject(f"tool.flet.develop_packages")
+            dev_packages = (
+                self.get_pyproject(f"tool.flet.{self.config_platform}.dev_packages")
+                or self.get_pyproject(f"tool.flet.dev_packages")
                 or []
             )
-            if len(develop_packages) > 0:
+            if len(dev_packages) > 0:
                 no_cache = False
                 for i in range(0, len(toml_dependencies)):
                     package_name = Requirement(toml_dependencies[i]).name
-                    if package_name in develop_packages:
-                        dev_path = Path(develop_packages[package_name])
+                    if package_name in dev_packages:
+                        dev_path = Path(dev_packages[package_name])
                         if not dev_path.is_absolute():
                             dev_path = (self.python_app_path / dev_path).resolve()
                         toml_dependencies[i] = f"{package_name} @ file://{dev_path}"
