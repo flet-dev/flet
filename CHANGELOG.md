@@ -1,5 +1,9 @@
 # Flet changelog
 
+## 0.27.2
+
+* Error on second flet build run "Because {app} depends on flet_{package} from path which doesn't exist" ([#4955](https://github.com/flet-dev/flet/issues/4955))
+
 ## 0.27.1
 
 * Fixed: binary file operations should not specify encoding.
