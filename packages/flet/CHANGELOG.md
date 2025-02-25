@@ -1,6 +1,7 @@
 # 0.27.2
 
 * Error on second flet build run "Because {app} depends on flet_{package} from path which doesn't exist" ([#4955](https://github.com/flet-dev/flet/issues/4955))
+* Editable packages in pyproject.toml to install from a path by flet build command ([#4963](https://github.com/flet-dev/flet/issues/4963))
 
 # 0.27.1
 
