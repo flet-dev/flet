@@ -812,7 +812,11 @@ class Page(AdaptiveControl):
 
         for control in controls:
             control.build_update_commands(
-                self._index, commands, added_controls, removed_controls, control.is_isolated()
+                self._index,
+                commands,
+                added_controls,
+                removed_controls,
+                control.is_isolated(),
             )
         return commands, added_controls, removed_controls
 
