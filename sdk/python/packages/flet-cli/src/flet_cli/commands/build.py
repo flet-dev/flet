@@ -1480,6 +1480,10 @@ class Command(BaseCommand):
             )
         )
 
+        console.log(
+            f"Customized app icons and splash images {self.emojis['checkmark']}"
+        )
+
         # check if pubspec changed
         hash.update(pubspec)
 
@@ -1488,50 +1492,46 @@ class Command(BaseCommand):
             with open(self.pubspec_path, "w", encoding="utf-8") as f:
                 yaml.dump(pubspec, f)
 
-        console.log(
-            f"Customized app icons and splash images {self.emojis['checkmark']}"
-        )
-
-        self.status.update(f"[bold blue]Generating app icons...")
-        # icons
-        icons_result = self.run(
-            [
-                self.dart_exe,
-                "run",
-                "--suppress-analytics",
-                "flutter_launcher_icons",
-            ],
-            cwd=str(self.flutter_dir),
-            capture_output=self.verbose < 1,
-        )
-        if icons_result.returncode != 0:
-            if icons_result.stdout:
-                console.log(icons_result.stdout, style=verbose1_style)
-            if icons_result.stderr:
-                console.log(icons_result.stderr, style=error_style)
-            self.cleanup(icons_result.returncode)
-        console.log(f"Generated app icons {self.emojis['checkmark']}")
-
-        # splash screens
-        if self.options.target_platform in ["web", "ipa", "apk", "aab"]:
-            self.status.update(f"[bold blue]Generating splash screens...")
-            splash_result = self.run(
+            self.status.update(f"[bold blue]Generating app icons...")
+            # icons
+            icons_result = self.run(
                 [
                     self.dart_exe,
                     "run",
                     "--suppress-analytics",
-                    "flutter_native_splash:create",
+                    "flutter_launcher_icons",
                 ],
                 cwd=str(self.flutter_dir),
                 capture_output=self.verbose < 1,
             )
-            if splash_result.returncode != 0:
-                if splash_result.stdout:
-                    console.log(splash_result.stdout, style=verbose1_style)
-                if splash_result.stderr:
-                    console.log(splash_result.stderr, style=error_style)
-                self.cleanup(splash_result.returncode)
-            console.log(f"Generated splash screens {self.emojis['checkmark']}")
+            if icons_result.returncode != 0:
+                if icons_result.stdout:
+                    console.log(icons_result.stdout, style=verbose1_style)
+                if icons_result.stderr:
+                    console.log(icons_result.stderr, style=error_style)
+                self.cleanup(icons_result.returncode)
+            console.log(f"Generated app icons {self.emojis['checkmark']}")
+
+            # splash screens
+            if self.options.target_platform in ["web", "ipa", "apk", "aab"]:
+                self.status.update(f"[bold blue]Generating splash screens...")
+                splash_result = self.run(
+                    [
+                        self.dart_exe,
+                        "run",
+                        "--suppress-analytics",
+                        "flutter_native_splash:create",
+                    ],
+                    cwd=str(self.flutter_dir),
+                    capture_output=self.verbose < 1,
+                )
+                if splash_result.returncode != 0:
+                    if splash_result.stdout:
+                        console.log(splash_result.stdout, style=verbose1_style)
+                    if splash_result.stderr:
+                        console.log(splash_result.stderr, style=error_style)
+                    self.cleanup(splash_result.returncode)
+                console.log(f"Generated splash screens {self.emojis['checkmark']}")
 
         hash.commit()
 
