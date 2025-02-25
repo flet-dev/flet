@@ -5,8 +5,9 @@ import platform
 import re
 import shutil
 import sys
+import time
 from pathlib import Path
-from typing import Optional, Union, cast
+from typing import Optional, cast
 
 import flet.version
 import yaml
@@ -14,6 +15,7 @@ from flet.utils import cleanup_path, copy_tree, is_windows, slugify
 from flet.utils.platform_utils import get_bool_env_var
 from flet.version import update_version
 from packaging import version
+from packaging.requirements import Requirement
 from rich.console import Console, Group
 from rich.live import Live
 from rich.panel import Panel
@@ -75,6 +77,7 @@ class Command(BaseCommand):
         self.build_dir = None
         self.flutter_dir: Optional[Path] = None
         self.flutter_packages_dir = None
+        self.flutter_packages_temp_dir = None
         self.flutter_exe = None
         self.skip_flutter_doctor = get_bool_env_var("FLET_CLI_SKIP_FLUTTER_DOCTOR")
         self.no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
@@ -602,6 +605,8 @@ class Command(BaseCommand):
             spinner="bouncingBall",
         )
         self.progress = Progress(transient=True)
+        self.no_rich_output = self.no_rich_output or self.options.no_rich_output
+        self.verbose = self.options.verbose
         with Live(Group(self.status, self.progress), console=console) as self.live:
             self.initialize_build()
             self.validate_target_platform()
@@ -631,8 +636,6 @@ class Command(BaseCommand):
 
     def initialize_build(self):
         assert self.options
-
-        self.verbose = self.options.verbose
         self.emojis = {
             "checkmark": "[green]OK[/]" if self.no_rich_output else "✅",
             "loading": "" if self.no_rich_output else "⏳",
@@ -641,7 +644,6 @@ class Command(BaseCommand):
         }
 
         self.python_app_path = Path(self.options.python_app_path).resolve()
-        self.no_rich_output = self.no_rich_output or self.options.no_rich_output
         self.skip_flutter_doctor = (
             self.skip_flutter_doctor or self.options.skip_flutter_doctor
         )
@@ -686,6 +688,9 @@ class Command(BaseCommand):
         self.build_dir = self.python_app_path.joinpath("build")
         self.flutter_dir = self.build_dir.joinpath("flutter")
         self.flutter_packages_dir = self.build_dir.joinpath("flutter-packages")
+        self.flutter_packages_temp_dir = self.build_dir.joinpath(
+            "flutter-packages-temp"
+        )
         self.out_dir = (
             Path(self.options.output_dir).resolve()
             if self.options.output_dir
@@ -1065,7 +1070,7 @@ class Command(BaseCommand):
             or ios_export_method_opts.get("team_id")
         )
 
-        if not ios_provisioning_profile:
+        if self.options.target_platform in ["ipa"] and not ios_provisioning_profile:
             console.print(
                 Panel(
                     "This build will generate an .xcarchive (Xcode Archive). To produce an .ipa (iOS App Package), please specify a Provisioning Profile.",
@@ -1541,7 +1546,7 @@ class Command(BaseCommand):
         assert self.package_app_path
         assert self.build_dir
         assert self.flutter_dir
-        assert self.flutter_packages_dir
+        assert self.flutter_packages_temp_dir
 
         hash = HashStamp(self.build_dir / ".hash" / "package")
 
@@ -1581,7 +1586,27 @@ class Command(BaseCommand):
             toml_dependencies.extend(platform_dependencies)
 
         if len(toml_dependencies) > 0:
+            dev_packages = (
+                self.get_pyproject(f"tool.flet.{self.config_platform}.dev_packages")
+                or self.get_pyproject(f"tool.flet.dev_packages")
+                or []
+            )
+            if len(dev_packages) > 0:
+                no_cache = False
+                for i in range(0, len(toml_dependencies)):
+                    package_name = Requirement(toml_dependencies[i]).name
+                    if package_name in dev_packages:
+                        dev_path = Path(dev_packages[package_name])
+                        if not dev_path.is_absolute():
+                            dev_path = (self.python_app_path / dev_path).resolve()
+                        toml_dependencies[i] = f"{package_name} @ file://{dev_path}"
+                        no_cache = True
+                if no_cache:
+                    toml_dependencies.append("--no-cache-dir")
+                    hash.update(time.time())
+
             package_args.append(",".join(toml_dependencies))
+
         elif requirements_txt.exists():
             if self.verbose > 1:
                 with open(requirements_txt, "r", encoding="utf-8") as f:
@@ -1604,10 +1629,12 @@ class Command(BaseCommand):
         )
 
         # flutter-packages variable
-        if self.flutter_packages_dir.exists():
-            shutil.rmtree(self.flutter_packages_dir)
+        if self.flutter_packages_temp_dir.exists():
+            shutil.rmtree(self.flutter_packages_temp_dir)
 
-        package_env["SERIOUS_PYTHON_FLUTTER_PACKAGES"] = str(self.flutter_packages_dir)
+        package_env["SERIOUS_PYTHON_FLUTTER_PACKAGES"] = str(
+            self.flutter_packages_temp_dir
+        )
 
         # exclude
         exclude_list = ["build"]
@@ -1731,13 +1758,19 @@ class Command(BaseCommand):
 
     def register_flutter_extensions(self):
         assert self.flutter_packages_dir
+        assert self.flutter_packages_temp_dir
         assert isinstance(self.flutter_dependencies, dict)
         assert self.template_data
 
-        if not self.flutter_packages_dir.exists():
+        if not self.flutter_packages_temp_dir.exists():
             return
 
         self.status.update(f"[bold blue]Registering Flutter user extensions...")
+
+        # copy packages from temp to permanent location
+        if self.flutter_packages_dir.exists():
+            shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
+        shutil.move(self.flutter_packages_temp_dir, self.flutter_packages_dir)
 
         for fp in os.listdir(self.flutter_packages_dir):
             if (self.flutter_packages_dir / fp / "pubspec.yaml").exists():

@@ -107,12 +107,12 @@ def assemble_app_bundle(app_path, tar_path):
 
 
 def __load_info_plist(app_path):
-    with open(__get_plist_path(app_path), "rb", encoding="utf-8") as fp:
+    with open(__get_plist_path(app_path), "rb") as fp:
         return plistlib.load(fp)
 
 
 def __save_info_plist(app_path, pl):
-    with open(__get_plist_path(app_path), "wb", encoding="utf-8") as fp:
+    with open(__get_plist_path(app_path), "wb") as fp:
         plistlib.dump(pl, fp)
 
 

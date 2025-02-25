@@ -15,7 +15,7 @@ def download_with_progress(url, dest_path, progress: Optional[Progress] = None):
 
         if progress:
             task = progress.add_task("Downloading...", total=total_size)
-        with open(dest_path, "wb", encoding="utf-8") as out_file:
+        with open(dest_path, "wb") as out_file:
             while chunk := response.read(block_size):
                 out_file.write(chunk)
                 if progress:

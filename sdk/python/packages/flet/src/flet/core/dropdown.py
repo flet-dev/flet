@@ -152,7 +152,7 @@ class Option(Control):
 
 
 class DropdownOption(Option):
-    "Alias for Option"
+    """Alias for Option"""
 
 
 class Dropdown(FormFieldControl):
@@ -549,7 +549,7 @@ class Dropdown(FormFieldControl):
     def enable_search(self) -> bool:
         return self._get_attr("enableSearch", data_type="bool", def_value=True)
 
-    @enable_filter.setter
+    @enable_search.setter
     def enable_search(self, value: Optional[bool]):
         self._set_attr("enableSearch", value)
 

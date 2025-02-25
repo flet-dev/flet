@@ -796,6 +796,15 @@ class PopupMenuTheme:
     def __post_init__(self):
         if not isinstance(self.mouse_cursor, dict):
             self.mouse_cursor = {ControlState.DEFAULT: self.mouse_cursor}
+        if not isinstance(self.thumb_size, dict):
+            self.thumb_size = {ControlState.DEFAULT: self.thumb_size}
+        if self.year_2023 is not None:
+            deprecated_property(
+                name="year_2023",
+                version="0.27.0",
+                delete_version=None,  # not known for now
+                reason="Set this flag to False to opt into the 2024 Slider appearance. In the future, this flag will default to False.",
+            )
 
 
 @dataclass
