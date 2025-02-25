@@ -83,6 +83,9 @@ class Control:
     def is_isolated(self) -> bool:
         return False
 
+    def build(self):
+        pass
+
     def before_update(self):
         pass
 
@@ -526,6 +529,7 @@ class Control:
     ) -> List[Command]:
         if index:
             self.page = index["page"]
+        self.build()
 
         # remove control from index
         if self.__uid and index is not None and self.__uid in index:
