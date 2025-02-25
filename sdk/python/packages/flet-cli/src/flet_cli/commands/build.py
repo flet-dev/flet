@@ -1148,6 +1148,7 @@ class Command(BaseCommand):
                 "android_signing": self.options.android_signing_key_store is not None,
             },
             "flutter": {"dependencies": list(self.flutter_dependencies.keys())},
+            "pyproject": self.get_pyproject(),
         }
 
     def create_flutter_project(self, second_pass=False):
