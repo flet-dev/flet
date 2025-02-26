@@ -1229,13 +1229,9 @@ class Command(BaseCommand):
             pyproject_pubspec = self.get_pyproject("tool.flet.flutter.pubspec")
 
             if pyproject_pubspec:
-                with open(self.pubspec_path, encoding="utf-8") as f:
-                    pubspec = yaml.safe_load(f)
-
+                pubspec = self.load_yaml(self.pubspec_path)
                 pubspec = merge_dict(pubspec, pyproject_pubspec)
-
-                with open(self.pubspec_path, "w", encoding="utf-8") as f:
-                    yaml.dump(pubspec, f)
+                self.save_yaml(self.pubspec_path, pubspec)
 
             # make backup of pubspec.yaml
             shutil.copyfile(self.pubspec_path, f"{self.pubspec_path}.orig")
@@ -1287,8 +1283,7 @@ class Command(BaseCommand):
         assert self.build_dir
         assert isinstance(self.flutter_dependencies, dict)
 
-        with open(self.pubspec_path, encoding="utf-8") as f:
-            pubspec = yaml.safe_load(f)
+        pubspec = self.load_yaml(self.pubspec_path)
 
         # merge dependencies to a dest pubspec.yaml
         for k, v in self.flutter_dependencies.items():
@@ -1303,9 +1298,7 @@ class Command(BaseCommand):
                     f"Use --project option to specify a different project name.",
                 )
 
-        # save pubspec.yaml
-        with open(self.pubspec_path, "w", encoding="utf-8") as f:
-            yaml.dump(pubspec, f)
+        self.save_yaml(self.pubspec_path, pubspec)
 
     def customize_icons(self):
         assert self.package_app_path
@@ -1318,9 +1311,7 @@ class Command(BaseCommand):
         hash = HashStamp(self.build_dir / ".hash" / "icons")
 
         pubspec_origin_path = f"{self.pubspec_path}.orig"
-
-        with open(pubspec_origin_path, encoding="utf-8") as f:
-            pubspec = yaml.safe_load(f)
+        pubspec = self.load_yaml(pubspec_origin_path)
 
         copy_ops = []
         self.assets_path = self.package_app_path.joinpath("assets")
@@ -1416,15 +1407,11 @@ class Command(BaseCommand):
                     shutil.copy(op[0], op[1])
                 console.log(f"Customized app icons {self.emojis['checkmark']}")
 
-            with open(self.pubspec_path, encoding="utf-8") as f:
-                updated_pubspec = yaml.safe_load(f)
-
+            updated_pubspec = self.load_yaml(self.pubspec_path)
             updated_pubspec["flutter_launcher_icons"] = pubspec[
                 "flutter_launcher_icons"
             ]
-
-            with open(self.pubspec_path, "w", encoding="utf-8") as f:
-                yaml.dump(updated_pubspec, f)
+            self.save_yaml(self.pubspec_path, updated_pubspec)
 
             self.status.update(f"[bold blue]Generating app icons...")
 
@@ -1464,8 +1451,7 @@ class Command(BaseCommand):
 
         pubspec_origin_path = f"{self.pubspec_path}.orig"
 
-        with open(pubspec_origin_path, encoding="utf-8") as f:
-            pubspec = yaml.safe_load(f)
+        pubspec = self.load_yaml(pubspec_origin_path)
 
         copy_ops = []
         self.assets_path = self.package_app_path.joinpath("assets")
@@ -1652,13 +1638,9 @@ class Command(BaseCommand):
                     shutil.copy(op[0], op[1])
                 console.log(f"Customized app splash images {self.emojis['checkmark']}")
 
-            with open(self.pubspec_path, encoding="utf-8") as f:
-                updated_pubspec = yaml.safe_load(f)
-
+            updated_pubspec = self.load_yaml(self.pubspec_path)
             updated_pubspec["flutter_native_splash"] = pubspec["flutter_native_splash"]
-
-            with open(self.pubspec_path, "w", encoding="utf-8") as f:
-                yaml.dump(updated_pubspec, f)
+            self.save_yaml(self.pubspec_path, updated_pubspec)
 
             # splash screens
             self.status.update(f"[bold blue]Generating splash screens...")
@@ -2151,3 +2133,11 @@ class Command(BaseCommand):
                 style=verbose2_style,
                 markup=False,
             )
+
+    def load_yaml(self, path):
+        with open(str(path), encoding="utf-8") as f:
+            return yaml.safe_load(f)
+
+    def save_yaml(self, path, doc):
+        with open(str(path), "w", encoding="utf-8") as f:
+            yaml.dump(doc, f)
