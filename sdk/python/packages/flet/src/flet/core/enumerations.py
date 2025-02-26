@@ -18,4 +18,10 @@ class ExtendedEnum(Enum):
         """
         if isinstance(other, str):
             return self.value.lower() == other.lower()
-        return self.value == other.value
+        elif isinstance(other, ExtendedEnum):
+            return self.value == other.value
+        else:
+            return False
+
+    def __hash__(self):
+        return hash(self.value)

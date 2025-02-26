@@ -1,6 +1,7 @@
 import datetime as dt
 import json
 from difflib import SequenceMatcher
+from enum import Enum
 from typing import TYPE_CHECKING, Any, AnyStr, Dict, List, Optional, TypeVar, Union
 
 from flet.core.badge import Badge, BadgeValue
@@ -136,6 +137,8 @@ class Control:
             return s_val
 
     def _set_attr(self, name: str, value: V, dirty: bool = True) -> None:
+        if isinstance(value, Enum):
+            value = value.value
         self._set_attr_internal(name, value, dirty)
 
     def _get_value_or_list_attr(self, name: str, delimiter: str) -> Union[List[str], V]:
