@@ -1132,6 +1132,7 @@ class Command(BaseCommand):
             "ios_export_options": ios_export_options,
             "ios_team_id": ios_team_id,
             "options": {
+                "package_platform": self.package_platform,
                 "target_arch": (
                     target_arch
                     if isinstance(target_arch, list)
