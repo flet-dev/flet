@@ -43,7 +43,7 @@ class BoxShadow:
     blur_radius: Optional[float] = None
     color: Optional[ColorValue] = None
     offset: Optional[OffsetValue] = None
-    blur_style: ShadowBlurStyle = field(default=ShadowBlurStyle.NORMAL)
+    blur_style: Optional[ShadowBlurStyle] = ShadowBlurStyle.NORMAL
 
 
 class BoxShape(ExtendedEnum):
