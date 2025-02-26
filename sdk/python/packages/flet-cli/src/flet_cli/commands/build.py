@@ -612,8 +612,8 @@ class Command(BaseCommand):
             self.create_flutter_project()
             self.package_python_app()
             self.register_flutter_extensions()
-            self.create_flutter_project(second_pass=True)
-            self.update_flutter_dependencies()
+            if self.create_flutter_project(second_pass=True):
+                self.update_flutter_dependencies()
             self.customize_icons_and_splash_images()
             self.flutter_build()
             self.copy_build_output()
@@ -1157,6 +1157,7 @@ class Command(BaseCommand):
         assert self.flutter_dir
         assert self.template_data
         assert self.build_dir
+        assert self.pubspec_path
 
         hash = HashStamp(
             self.build_dir / ".hash" / f"template-{'2' if second_pass else '1'}"
@@ -1186,20 +1187,26 @@ class Command(BaseCommand):
         hash.update(template_dir)
         hash.update(self.template_data)
 
-        # if options.clear_cache is set, delete any existing Flutter bootstrap project directory
-        if self.options.clear_cache and self.flutter_dir.exists() and not second_pass:
-            if self.verbose > 1:
-                console.log(f"Deleting {self.flutter_dir}", style=verbose2_style)
-            shutil.rmtree(self.flutter_dir, ignore_errors=True)
+        hash_changed = hash.has_changed()
 
-        # create a new Flutter bootstrap project directory, if non-existent
-        if not second_pass:
-            self.flutter_dir.mkdir(parents=True, exist_ok=True)
-            self.status.update(
-                f'[bold blue]Creating Flutter bootstrap project from {template_url} with ref "{template_ref}"...'
-            )
+        if hash_changed:
+            # if options.clear_cache is set, delete any existing Flutter bootstrap project directory
+            if (
+                self.options.clear_cache
+                and self.flutter_dir.exists()
+                and not second_pass
+            ):
+                if self.verbose > 1:
+                    console.log(f"Deleting {self.flutter_dir}", style=verbose2_style)
+                shutil.rmtree(self.flutter_dir, ignore_errors=True)
 
-        if hash.has_changed():
+            # create a new Flutter bootstrap project directory, if non-existent
+            if not second_pass:
+                self.flutter_dir.mkdir(parents=True, exist_ok=True)
+                self.status.update(
+                    f'[bold blue]Creating Flutter bootstrap project from {template_url} with ref "{template_ref}"...'
+                )
+
             try:
                 from cookiecutter.main import cookiecutter
 
@@ -1217,12 +1224,57 @@ class Command(BaseCommand):
             except Exception as e:
                 shutil.rmtree(self.flutter_dir)
                 self.cleanup(1, f"{e}")
+
+            pyproject_pubspec = self.get_pyproject("tool.flet.flutter.pubspec")
+
+            if pyproject_pubspec:
+                with open(self.pubspec_path, encoding="utf-8") as f:
+                    pubspec = yaml.safe_load(f)
+
+                pubspec = merge_dict(pubspec, pyproject_pubspec)
+
+                with open(self.pubspec_path, "w", encoding="utf-8") as f:
+                    yaml.dump(pubspec, f)
+
+            # make backup of pubspec.yaml
+            shutil.copyfile(self.pubspec_path, f"{self.pubspec_path}.orig")
+
+            if not second_pass:
+                console.log(
+                    f"Created Flutter bootstrap project from {template_url} with ref \"{template_ref}\" {self.emojis['checkmark']}"
+                )
+
         hash.commit()
 
-        if not second_pass:
-            console.log(
-                f"Created Flutter bootstrap project from {template_url} with ref \"{template_ref}\" {self.emojis['checkmark']}"
-            )
+        return hash_changed
+
+    def register_flutter_extensions(self):
+        assert self.flutter_packages_dir
+        assert self.flutter_packages_temp_dir
+        assert isinstance(self.flutter_dependencies, dict)
+        assert self.template_data
+        assert self.build_dir
+
+        if self.flutter_packages_temp_dir.exists():
+            # copy packages from temp to permanent location
+            if self.flutter_packages_dir.exists():
+                shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
+            shutil.move(self.flutter_packages_temp_dir, self.flutter_packages_dir)
+
+        self.status.update(f"[bold blue]Registering Flutter user extensions...")
+
+        for fp in os.listdir(self.flutter_packages_dir):
+            if (self.flutter_packages_dir / fp / "pubspec.yaml").exists():
+                ext_dir = str(self.flutter_packages_dir / fp)
+                if self.verbose > 0:
+                    console.log(f"Found Flutter extension at {ext_dir}")
+                self.flutter_dependencies[fp] = {"path": ext_dir}
+
+        self.template_data["flutter"]["dependencies"] = list(
+            self.flutter_dependencies.keys()
+        )
+
+        console.log(f"Registered Flutter user extensions {self.emojis['checkmark']}")
 
     def update_flutter_dependencies(self):
         assert self.pubspec_path
@@ -1231,20 +1283,12 @@ class Command(BaseCommand):
         assert self.build_dir
         assert isinstance(self.flutter_dependencies, dict)
 
-        hash = HashStamp(self.build_dir / ".hash" / "flutter_deps")
-
         with open(self.pubspec_path, encoding="utf-8") as f:
             pubspec = yaml.safe_load(f)
 
         # merge dependencies to a dest pubspec.yaml
         for k, v in self.flutter_dependencies.items():
             pubspec["dependencies"][k] = v
-            hash.update(k)
-            hash.update(v)
-
-        pubspec = merge_dict(
-            pubspec, self.get_pyproject("tool.flet.flutter.pubspec") or {}
-        )
 
         # make sure project_name is not named as any of the dependencies
         for dep in pubspec["dependencies"].keys():
@@ -1256,10 +1300,8 @@ class Command(BaseCommand):
                 )
 
         # save pubspec.yaml
-        if hash.has_changed():
-            with open(self.pubspec_path, "w", encoding="utf-8") as f:
-                yaml.dump(pubspec, f)
-        hash.commit()
+        with open(self.pubspec_path, "w", encoding="utf-8") as f:
+            yaml.dump(pubspec, f)
 
     def customize_icons_and_splash_images(self):
         assert self.package_app_path
@@ -1273,7 +1315,9 @@ class Command(BaseCommand):
 
         hash = HashStamp(self.build_dir / ".hash" / "icons")
 
-        with open(self.pubspec_path, encoding="utf-8") as f:
+        pubspec_origin_path = f"{self.pubspec_path}.orig"
+
+        with open(pubspec_origin_path, encoding="utf-8") as f:
             pubspec = yaml.safe_load(f)
 
         self.assets_path = self.package_app_path.joinpath("assets")
@@ -1485,14 +1529,25 @@ class Command(BaseCommand):
         )
 
         # check if pubspec changed
-        hash.update(pubspec)
+        hash.update(Path(pubspec_origin_path).stat().st_mtime)
+        hash.update(pubspec["flutter_launcher_icons"])
+        hash.update(pubspec["flutter_native_splash"])
 
         # save pubspec.yaml
         if hash.has_changed():
+            with open(self.pubspec_path, encoding="utf-8") as f:
+                updated_pubspec = yaml.safe_load(f)
+
+            updated_pubspec["flutter_launcher_icons"] = pubspec[
+                "flutter_launcher_icons"
+            ]
+            updated_pubspec["flutter_native_splash"] = pubspec["flutter_native_splash"]
+
             with open(self.pubspec_path, "w", encoding="utf-8") as f:
-                yaml.dump(pubspec, f)
+                yaml.dump(updated_pubspec, f)
 
             self.status.update(f"[bold blue]Generating app icons...")
+
             # icons
             icons_result = self.run(
                 [
@@ -1543,6 +1598,7 @@ class Command(BaseCommand):
         assert self.build_dir
         assert self.flutter_dir
         assert self.flutter_packages_temp_dir
+        assert self.template_data
 
         hash = HashStamp(self.build_dir / ".hash" / "package")
 
@@ -1731,35 +1787,6 @@ class Command(BaseCommand):
                 )
             )
         )
-
-    def register_flutter_extensions(self):
-        assert self.flutter_packages_dir
-        assert self.flutter_packages_temp_dir
-        assert isinstance(self.flutter_dependencies, dict)
-        assert self.template_data
-
-        if not self.flutter_packages_temp_dir.exists():
-            return
-
-        self.status.update(f"[bold blue]Registering Flutter user extensions...")
-
-        # copy packages from temp to permanent location
-        if self.flutter_packages_dir.exists():
-            shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
-        shutil.move(self.flutter_packages_temp_dir, self.flutter_packages_dir)
-
-        for fp in os.listdir(self.flutter_packages_dir):
-            if (self.flutter_packages_dir / fp / "pubspec.yaml").exists():
-                ext_dir = str(self.flutter_packages_dir / fp)
-                if self.verbose > 0:
-                    console.log(f"Found Flutter extension at {ext_dir}")
-                self.flutter_dependencies[fp] = {"path": ext_dir}
-
-        self.template_data["flutter"]["dependencies"] = list(
-            self.flutter_dependencies.keys()
-        )
-
-        console.log(f"Registered Flutter user extensions {self.emojis['checkmark']}")
 
     def flutter_build(self):
         assert self.options
