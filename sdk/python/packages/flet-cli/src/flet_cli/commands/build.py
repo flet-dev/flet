@@ -5,6 +5,7 @@ import platform
 import re
 import shutil
 import sys
+import time
 from pathlib import Path
 from typing import Optional, cast
 
@@ -23,6 +24,7 @@ from flet_cli.utils.project_dependencies import (
 )
 from flet_cli.utils.pyproject_toml import load_pyproject_toml
 from packaging import version
+from packaging.requirements import Requirement
 from rich.console import Console, Group
 from rich.live import Live
 from rich.panel import Panel
@@ -1724,7 +1726,27 @@ class Command(BaseCommand):
             toml_dependencies.extend(platform_dependencies)
 
         if len(toml_dependencies) > 0:
+            dev_packages = (
+                self.get_pyproject(f"tool.flet.{self.config_platform}.dev_packages")
+                or self.get_pyproject(f"tool.flet.dev_packages")
+                or []
+            )
+            if len(dev_packages) > 0:
+                no_cache = False
+                for i in range(0, len(toml_dependencies)):
+                    package_name = Requirement(toml_dependencies[i]).name
+                    if package_name in dev_packages:
+                        dev_path = Path(dev_packages[package_name])
+                        if not dev_path.is_absolute():
+                            dev_path = (self.python_app_path / dev_path).resolve()
+                        toml_dependencies[i] = f"{package_name} @ file://{dev_path}"
+                        no_cache = True
+                if no_cache:
+                    toml_dependencies.append("--no-cache-dir")
+                    hash.update(time.time())
+
             package_args.append(",".join(toml_dependencies))
+
         elif requirements_txt.exists():
             if self.verbose > 1:
                 with open(requirements_txt, "r", encoding="utf-8") as f:
