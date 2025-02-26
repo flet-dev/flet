@@ -614,7 +614,8 @@ class Command(BaseCommand):
             self.register_flutter_extensions()
             if self.create_flutter_project(second_pass=True):
                 self.update_flutter_dependencies()
-            self.customize_icons_and_splash_images()
+            self.customize_icons()
+            self.customize_splash_images()
             self.flutter_build()
             self.copy_build_output()
 
@@ -1261,20 +1262,23 @@ class Command(BaseCommand):
                 shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
             shutil.move(self.flutter_packages_temp_dir, self.flutter_packages_dir)
 
-        self.status.update(f"[bold blue]Registering Flutter user extensions...")
+        if self.flutter_packages_dir.exists():
+            self.status.update(f"[bold blue]Registering Flutter user extensions...")
 
-        for fp in os.listdir(self.flutter_packages_dir):
-            if (self.flutter_packages_dir / fp / "pubspec.yaml").exists():
-                ext_dir = str(self.flutter_packages_dir / fp)
-                if self.verbose > 0:
-                    console.log(f"Found Flutter extension at {ext_dir}")
-                self.flutter_dependencies[fp] = {"path": ext_dir}
+            for fp in os.listdir(self.flutter_packages_dir):
+                if (self.flutter_packages_dir / fp / "pubspec.yaml").exists():
+                    ext_dir = str(self.flutter_packages_dir / fp)
+                    if self.verbose > 0:
+                        console.log(f"Found Flutter extension at {ext_dir}")
+                    self.flutter_dependencies[fp] = {"path": ext_dir}
 
-        self.template_data["flutter"]["dependencies"] = list(
-            self.flutter_dependencies.keys()
-        )
+            self.template_data["flutter"]["dependencies"] = list(
+                self.flutter_dependencies.keys()
+            )
 
-        console.log(f"Registered Flutter user extensions {self.emojis['checkmark']}")
+            console.log(
+                f"Registered Flutter user extensions {self.emojis['checkmark']}"
+            )
 
     def update_flutter_dependencies(self):
         assert self.pubspec_path
@@ -1303,15 +1307,13 @@ class Command(BaseCommand):
         with open(self.pubspec_path, "w", encoding="utf-8") as f:
             yaml.dump(pubspec, f)
 
-    def customize_icons_and_splash_images(self):
+    def customize_icons(self):
         assert self.package_app_path
         assert self.flutter_dir
         assert self.options
         assert self.get_pyproject
         assert self.pubspec_path
         assert self.build_dir
-
-        self.status.update(f"[bold blue]Customizing app icons and splash images...")
 
         hash = HashStamp(self.build_dir / ".hash" / "icons")
 
@@ -1320,8 +1322,10 @@ class Command(BaseCommand):
         with open(pubspec_origin_path, encoding="utf-8") as f:
             pubspec = yaml.safe_load(f)
 
+        copy_ops = []
         self.assets_path = self.package_app_path.joinpath("assets")
         if self.assets_path.exists():
+
             images_dir = "images"
             images_path = self.flutter_dir.joinpath(images_dir)
             images_path.mkdir(exist_ok=True)
@@ -1337,23 +1341,23 @@ class Command(BaseCommand):
                         return
 
             # copy icons
-            default_icon = self.copy_icon_image(
-                self.assets_path, images_path, "icon", hash
+            default_icon = self.find_platform_image(
+                self.assets_path, images_path, "icon", copy_ops, hash
             )
-            ios_icon = self.copy_icon_image(
-                self.assets_path, images_path, "icon_ios", hash
+            ios_icon = self.find_platform_image(
+                self.assets_path, images_path, "icon_ios", copy_ops, hash
             )
-            android_icon = self.copy_icon_image(
-                self.assets_path, images_path, "icon_android", hash
+            android_icon = self.find_platform_image(
+                self.assets_path, images_path, "icon_android", copy_ops, hash
             )
-            web_icon = self.copy_icon_image(
-                self.assets_path, images_path, "icon_web", hash
+            web_icon = self.find_platform_image(
+                self.assets_path, images_path, "icon_web", copy_ops, hash
             )
-            windows_icon = self.copy_icon_image(
-                self.assets_path, images_path, "icon_windows", hash
+            windows_icon = self.find_platform_image(
+                self.assets_path, images_path, "icon_windows", copy_ops, hash
             )
-            macos_icon = self.copy_icon_image(
-                self.assets_path, images_path, "icon_macos", hash
+            macos_icon = self.find_platform_image(
+                self.assets_path, images_path, "icon_macos", copy_ops, hash
             )
 
             fallback_image("flutter_launcher_icons/image_path", [default_icon])
@@ -1380,30 +1384,130 @@ class Command(BaseCommand):
                 [macos_icon, default_icon],
             )
 
+        adaptive_icon_background = (
+            self.options.android_adaptive_icon_background
+            or self.get_pyproject("tool.flet.android.adaptive_icon_background")
+        )
+        if adaptive_icon_background:
+            pubspec["flutter_launcher_icons"][
+                "adaptive_icon_background"
+            ] = adaptive_icon_background
+
+        # check if pubspec changed
+        hash.update(Path(pubspec_origin_path).stat().st_mtime)
+        hash.update(pubspec["flutter_launcher_icons"])
+
+        # save pubspec.yaml
+        if hash.has_changed():
+
+            if copy_ops:
+                self.status.update(f"[bold blue]Customizing app icons...")
+                for op in copy_ops:
+                    if self.verbose > 0:
+                        console.log(
+                            f"Copying image {op[0]} to {op[1]}", style=verbose1_style
+                        )
+                    shutil.copy(op[0], op[1])
+                console.log(f"Customized app icons {self.emojis['checkmark']}")
+
+            with open(self.pubspec_path, encoding="utf-8") as f:
+                updated_pubspec = yaml.safe_load(f)
+
+            updated_pubspec["flutter_launcher_icons"] = pubspec[
+                "flutter_launcher_icons"
+            ]
+
+            with open(self.pubspec_path, "w", encoding="utf-8") as f:
+                yaml.dump(updated_pubspec, f)
+
+            self.status.update(f"[bold blue]Generating app icons...")
+
+            # icons
+            icons_result = self.run(
+                [
+                    self.dart_exe,
+                    "run",
+                    "--suppress-analytics",
+                    "flutter_launcher_icons",
+                ],
+                cwd=str(self.flutter_dir),
+                capture_output=self.verbose < 1,
+            )
+            if icons_result.returncode != 0:
+                if icons_result.stdout:
+                    console.log(icons_result.stdout, style=verbose1_style)
+                if icons_result.stderr:
+                    console.log(icons_result.stderr, style=error_style)
+                self.cleanup(icons_result.returncode)
+            console.log(f"Generated app icons {self.emojis['checkmark']}")
+
+        hash.commit()
+
+    def customize_splash_images(self):
+        assert self.package_app_path
+        assert self.flutter_dir
+        assert self.options
+        assert self.get_pyproject
+        assert self.pubspec_path
+        assert self.build_dir
+
+        if not self.options.target_platform in ["web", "ipa", "apk", "aab"]:
+            return
+
+        hash = HashStamp(self.build_dir / ".hash" / "splashes")
+
+        pubspec_origin_path = f"{self.pubspec_path}.orig"
+
+        with open(pubspec_origin_path, encoding="utf-8") as f:
+            pubspec = yaml.safe_load(f)
+
+        copy_ops = []
+        self.assets_path = self.package_app_path.joinpath("assets")
+        if self.assets_path.exists():
+
+            images_dir = "images"
+            images_path = self.flutter_dir.joinpath(images_dir)
+            images_path.mkdir(exist_ok=True)
+
+            def fallback_image(yaml_path: str, images: list):
+                d = pubspec
+                pp = yaml_path.split("/")
+                for p in pp[:-1]:
+                    d = d[p]
+                for image in images:
+                    if image:
+                        d[pp[-1]] = f"{images_dir}/{image}"
+                        return
+
+            # copy icons
+            default_icon = self.find_platform_image(
+                self.assets_path, images_path, "icon", copy_ops, hash
+            )
+
             # copy splash images
-            default_splash = self.copy_icon_image(
-                self.assets_path, images_path, "splash", hash
+            default_splash = self.find_platform_image(
+                self.assets_path, images_path, "splash", copy_ops, hash
             )
-            default_dark_splash = self.copy_icon_image(
-                self.assets_path, images_path, "splash_dark", hash
+            default_dark_splash = self.find_platform_image(
+                self.assets_path, images_path, "splash_dark", copy_ops, hash
             )
-            ios_splash = self.copy_icon_image(
-                self.assets_path, images_path, "splash_ios", hash
+            ios_splash = self.find_platform_image(
+                self.assets_path, images_path, "splash_ios", copy_ops, hash
             )
-            ios_dark_splash = self.copy_icon_image(
-                self.assets_path, images_path, "splash_dark_ios", hash
+            ios_dark_splash = self.find_platform_image(
+                self.assets_path, images_path, "splash_dark_ios", copy_ops, hash
             )
-            android_splash = self.copy_icon_image(
-                self.assets_path, images_path, "splash_android", hash
+            android_splash = self.find_platform_image(
+                self.assets_path, images_path, "splash_android", copy_ops, hash
             )
-            android_dark_splash = self.copy_icon_image(
-                self.assets_path, images_path, "splash_dark_android", hash
+            android_dark_splash = self.find_platform_image(
+                self.assets_path, images_path, "splash_dark_android", copy_ops, hash
             )
-            web_splash = self.copy_icon_image(
-                self.assets_path, images_path, "splash_web", hash
+            web_splash = self.find_platform_image(
+                self.assets_path, images_path, "splash_web", copy_ops, hash
             )
-            web_dark_splash = self.copy_icon_image(
-                self.assets_path, images_path, "splash_dark_web", hash
+            web_dark_splash = self.find_platform_image(
+                self.assets_path, images_path, "splash_dark_web", copy_ops, hash
             )
             fallback_image(
                 "flutter_native_splash/image",
@@ -1470,30 +1574,21 @@ class Command(BaseCommand):
                 ],
             )
 
-            # splash colors
-            splash_color = self.options.splash_color or self.get_pyproject(
-                "tool.flet.splash.color"
-            )
-            if splash_color:
-                pubspec["flutter_native_splash"]["color"] = splash_color
-                pubspec["flutter_native_splash"]["android_12"]["color"] = splash_color
-            splash_dark_color = self.options.splash_dark_color or self.get_pyproject(
-                "tool.flet.splash.dark_color"
-            )
-            if splash_dark_color:
-                pubspec["flutter_native_splash"]["color_dark"] = splash_dark_color
-                pubspec["flutter_native_splash"]["android_12"][
-                    "color_dark"
-                ] = splash_dark_color
-
-        adaptive_icon_background = (
-            self.options.android_adaptive_icon_background
-            or self.get_pyproject("tool.flet.android.adaptive_icon_background")
+        # splash colors
+        splash_color = self.options.splash_color or self.get_pyproject(
+            "tool.flet.splash.color"
         )
-        if adaptive_icon_background:
-            pubspec["flutter_launcher_icons"][
-                "adaptive_icon_background"
-            ] = adaptive_icon_background
+        if splash_color:
+            pubspec["flutter_native_splash"]["color"] = splash_color
+            pubspec["flutter_native_splash"]["android_12"]["color"] = splash_color
+        splash_dark_color = self.options.splash_dark_color or self.get_pyproject(
+            "tool.flet.splash.dark_color"
+        )
+        if splash_dark_color:
+            pubspec["flutter_native_splash"]["color_dark"] = splash_dark_color
+            pubspec["flutter_native_splash"]["android_12"][
+                "color_dark"
+            ] = splash_dark_color
 
         # enable/disable splashes
         pubspec["flutter_native_splash"]["web"] = (
@@ -1524,69 +1619,50 @@ class Command(BaseCommand):
             )
         )
 
-        console.log(
-            f"Customized app icons and splash images {self.emojis['checkmark']}"
-        )
-
         # check if pubspec changed
         hash.update(Path(pubspec_origin_path).stat().st_mtime)
-        hash.update(pubspec["flutter_launcher_icons"])
         hash.update(pubspec["flutter_native_splash"])
 
         # save pubspec.yaml
         if hash.has_changed():
+
+            if copy_ops:
+                self.status.update(f"[bold blue]Customizing app splash images...")
+                for op in copy_ops:
+                    if self.verbose > 0:
+                        console.log(
+                            f"Copying image {op[0]} to {op[1]}", style=verbose1_style
+                        )
+                    shutil.copy(op[0], op[1])
+                console.log(f"Customized app splash images {self.emojis['checkmark']}")
+
             with open(self.pubspec_path, encoding="utf-8") as f:
                 updated_pubspec = yaml.safe_load(f)
 
-            updated_pubspec["flutter_launcher_icons"] = pubspec[
-                "flutter_launcher_icons"
-            ]
             updated_pubspec["flutter_native_splash"] = pubspec["flutter_native_splash"]
 
             with open(self.pubspec_path, "w", encoding="utf-8") as f:
                 yaml.dump(updated_pubspec, f)
 
-            self.status.update(f"[bold blue]Generating app icons...")
-
-            # icons
-            icons_result = self.run(
+            # splash screens
+            self.status.update(f"[bold blue]Generating splash screens...")
+            splash_result = self.run(
                 [
                     self.dart_exe,
                     "run",
                     "--suppress-analytics",
-                    "flutter_launcher_icons",
+                    "flutter_native_splash:create",
                 ],
                 cwd=str(self.flutter_dir),
                 capture_output=self.verbose < 1,
             )
-            if icons_result.returncode != 0:
-                if icons_result.stdout:
-                    console.log(icons_result.stdout, style=verbose1_style)
-                if icons_result.stderr:
-                    console.log(icons_result.stderr, style=error_style)
-                self.cleanup(icons_result.returncode)
-            console.log(f"Generated app icons {self.emojis['checkmark']}")
-
-            # splash screens
-            if self.options.target_platform in ["web", "ipa", "apk", "aab"]:
-                self.status.update(f"[bold blue]Generating splash screens...")
-                splash_result = self.run(
-                    [
-                        self.dart_exe,
-                        "run",
-                        "--suppress-analytics",
-                        "flutter_native_splash:create",
-                    ],
-                    cwd=str(self.flutter_dir),
-                    capture_output=self.verbose < 1,
-                )
-                if splash_result.returncode != 0:
-                    if splash_result.stdout:
-                        console.log(splash_result.stdout, style=verbose1_style)
-                    if splash_result.stderr:
-                        console.log(splash_result.stderr, style=error_style)
-                    self.cleanup(splash_result.returncode)
-                console.log(f"Generated splash screens {self.emojis['checkmark']}")
+            if splash_result.returncode != 0:
+                if splash_result.stdout:
+                    console.log(splash_result.stdout, style=verbose1_style)
+                if splash_result.stderr:
+                    console.log(splash_result.stderr, style=error_style)
+                self.cleanup(splash_result.returncode)
+            console.log(f"Generated splash screens {self.emojis['checkmark']}")
 
         hash.commit()
 
@@ -1597,6 +1673,7 @@ class Command(BaseCommand):
         assert self.package_app_path
         assert self.build_dir
         assert self.flutter_dir
+        assert self.flutter_packages_dir
         assert self.flutter_packages_temp_dir
         assert self.template_data
 
@@ -1745,6 +1822,9 @@ class Command(BaseCommand):
             hash.update(arg)
         if not hash.has_changed():
             package_args.append("--skip-site-packages")
+        else:
+            if self.flutter_packages_dir.exists():
+                shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
 
         package_result = self.run(
             package_args,
@@ -1958,14 +2038,21 @@ class Command(BaseCommand):
             f"Copied build to [cyan]{self.rel_out_dir}[/cyan] directory {self.emojis['checkmark']}"
         )
 
-    def copy_icon_image(
-        self, src_path: Path, dest_path: Path, image_name: str, hash: HashStamp
+    def find_platform_image(
+        self,
+        src_path: Path,
+        dest_path: Path,
+        image_name: str,
+        copy_ops: list,
+        hash: HashStamp,
     ):
         images = glob.glob(str(src_path.joinpath(f"{image_name}.*")))
         if len(images) > 0:
             if self.verbose > 0:
-                console.log(f"Copying {images[0]} to {dest_path}", style=verbose1_style)
-            shutil.copy(images[0], dest_path)
+                console.log(
+                    f'Found "{image_name}" image at {images[0]}', style=verbose1_style
+                )
+            copy_ops.append((images[0], dest_path))
             hash.update(images[0])
             hash.update(Path(images[0]).stat().st_mtime)
             return Path(images[0]).name
