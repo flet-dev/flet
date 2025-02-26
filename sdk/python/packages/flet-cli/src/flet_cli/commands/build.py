@@ -1330,16 +1330,6 @@ class Command(BaseCommand):
             images_path = self.flutter_dir.joinpath(images_dir)
             images_path.mkdir(exist_ok=True)
 
-            def fallback_image(yaml_path: str, images: list):
-                d = pubspec
-                pp = yaml_path.split("/")
-                for p in pp[:-1]:
-                    d = d[p]
-                for image in images:
-                    if image:
-                        d[pp[-1]] = f"{images_dir}/{image}"
-                        return
-
             # copy icons
             default_icon = self.find_platform_image(
                 self.assets_path, images_path, "icon", copy_ops, hash
@@ -1360,28 +1350,44 @@ class Command(BaseCommand):
                 self.assets_path, images_path, "icon_macos", copy_ops, hash
             )
 
-            fallback_image("flutter_launcher_icons/image_path", [default_icon])
-            fallback_image(
-                "flutter_launcher_icons/image_path_ios", [ios_icon, default_icon]
+            self.fallback_image(
+                pubspec, "flutter_launcher_icons.image_path", [default_icon], images_dir
             )
-            fallback_image(
-                "flutter_launcher_icons/image_path_android",
+            self.fallback_image(
+                pubspec,
+                "flutter_launcher_icons.image_path_ios",
+                [ios_icon, default_icon],
+                images_dir,
+            )
+            self.fallback_image(
+                pubspec,
+                "flutter_launcher_icons.image_path_android",
                 [android_icon, default_icon],
+                images_dir,
             )
-            fallback_image(
-                "flutter_launcher_icons/adaptive_icon_foreground",
+            self.fallback_image(
+                pubspec,
+                "flutter_launcher_icons.adaptive_icon_foreground",
                 [android_icon, default_icon],
+                images_dir,
             )
-            fallback_image(
-                "flutter_launcher_icons/web/image_path", [web_icon, default_icon]
+            self.fallback_image(
+                pubspec,
+                "flutter_launcher_icons.web.image_path",
+                [web_icon, default_icon],
+                images_dir,
             )
-            fallback_image(
-                "flutter_launcher_icons/windows/image_path",
+            self.fallback_image(
+                pubspec,
+                "flutter_launcher_icons.windows.image_path",
                 [windows_icon, default_icon],
+                images_dir,
             )
-            fallback_image(
-                "flutter_launcher_icons/macos/image_path",
+            self.fallback_image(
+                pubspec,
+                "flutter_launcher_icons.macos.image_path",
                 [macos_icon, default_icon],
+                images_dir,
             )
 
         adaptive_icon_background = (
@@ -1469,16 +1475,6 @@ class Command(BaseCommand):
             images_path = self.flutter_dir.joinpath(images_dir)
             images_path.mkdir(exist_ok=True)
 
-            def fallback_image(yaml_path: str, images: list):
-                d = pubspec
-                pp = yaml_path.split("/")
-                for p in pp[:-1]:
-                    d = d[p]
-                for image in images:
-                    if image:
-                        d[pp[-1]] = f"{images_dir}/{image}"
-                        return
-
             # copy icons
             default_icon = self.find_platform_image(
                 self.assets_path, images_path, "icon", copy_ops, hash
@@ -1509,20 +1505,27 @@ class Command(BaseCommand):
             web_dark_splash = self.find_platform_image(
                 self.assets_path, images_path, "splash_dark_web", copy_ops, hash
             )
-            fallback_image(
-                "flutter_native_splash/image",
+            self.fallback_image(
+                pubspec,
+                "flutter_native_splash.image",
                 [default_splash, default_icon],
+                images_dir,
             )
-            fallback_image(
-                "flutter_native_splash/image_dark",
+            self.fallback_image(
+                pubspec,
+                "flutter_native_splash.image_dark",
                 [default_dark_splash, default_splash, default_icon],
+                images_dir,
             )
-            fallback_image(
-                "flutter_native_splash/image_ios",
+            self.fallback_image(
+                pubspec,
+                "flutter_native_splash.image_ios",
                 [ios_splash, default_splash, default_icon],
+                images_dir,
             )
-            fallback_image(
-                "flutter_native_splash/image_dark_ios",
+            self.fallback_image(
+                pubspec,
+                "flutter_native_splash.image_dark_ios",
                 [
                     ios_dark_splash,
                     default_dark_splash,
@@ -1530,17 +1533,23 @@ class Command(BaseCommand):
                     default_splash,
                     default_icon,
                 ],
+                images_dir,
             )
-            fallback_image(
-                "flutter_native_splash/image_android",
+            self.fallback_image(
+                pubspec,
+                "flutter_native_splash.image_android",
                 [android_splash, default_splash, default_icon],
+                images_dir,
             )
-            fallback_image(
-                "flutter_native_splash/android_12/image",
+            self.fallback_image(
+                pubspec,
+                "flutter_native_splash.android_12.image",
                 [android_splash, default_splash, default_icon],
+                images_dir,
             )
-            fallback_image(
-                "flutter_native_splash/image_dark_android",
+            self.fallback_image(
+                pubspec,
+                "flutter_native_splash.image_dark_android",
                 [
                     android_dark_splash,
                     default_dark_splash,
@@ -1548,9 +1557,11 @@ class Command(BaseCommand):
                     default_splash,
                     default_icon,
                 ],
+                images_dir,
             )
-            fallback_image(
-                "flutter_native_splash/android_12/image_dark",
+            self.fallback_image(
+                pubspec,
+                "flutter_native_splash.android_12.image_dark",
                 [
                     android_dark_splash,
                     default_dark_splash,
@@ -1558,13 +1569,17 @@ class Command(BaseCommand):
                     default_splash,
                     default_icon,
                 ],
+                images_dir,
             )
-            fallback_image(
-                "flutter_native_splash/image_web",
+            self.fallback_image(
+                pubspec,
+                "flutter_native_splash.image_web",
                 [web_splash, default_splash, default_icon],
+                images_dir,
             )
-            fallback_image(
-                "flutter_native_splash/image_dark_web",
+            self.fallback_image(
+                pubspec,
+                "flutter_native_splash.image_dark_web",
                 [
                     web_dark_splash,
                     default_dark_splash,
@@ -1572,6 +1587,7 @@ class Command(BaseCommand):
                     default_splash,
                     default_icon,
                 ],
+                images_dir,
             )
 
         # splash colors
@@ -1665,6 +1681,16 @@ class Command(BaseCommand):
             console.log(f"Generated splash screens {self.emojis['checkmark']}")
 
         hash.commit()
+
+    def fallback_image(self, pubspec, yaml_path: str, images: list, images_dir: str):
+        d = pubspec
+        pp = yaml_path.split(".")
+        for p in pp[:-1]:
+            d = d[p]
+        for image in images:
+            if image:
+                d[pp[-1]] = f"{images_dir}/{image}"
+                return
 
     def package_python_app(self):
         assert self.options
