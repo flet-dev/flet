@@ -164,7 +164,15 @@ class AndroidSDK:
             (
                 ["sh", "-c", f'yes | {self.sdkmanager_exe(home_dir)} "{package_name}"']
                 if platform.system() != "Windows"
-                else ["cmd.exe", "/C", self.sdkmanager_exe(home_dir), package_name]
+                else [
+                    "cmd.exe",
+                    "/C",
+                    "echo",
+                    "y",
+                    "|",
+                    self.sdkmanager_exe(home_dir),
+                    package_name,
+                ]
             ),
             env={"ANDROID_HOME": str(home_dir)},
             capture_output=False,
@@ -181,7 +189,15 @@ class AndroidSDK:
             (
                 ["sh", "-c", f"yes | {self.sdkmanager_exe(home_dir)} --licenses"]
                 if platform.system() != "Windows"
-                else ["cmd.exe", "/C", self.sdkmanager_exe(home_dir), "--licenses"]
+                else [
+                    "cmd.exe",
+                    "/C",
+                    "echo",
+                    "y",
+                    "|",
+                    self.sdkmanager_exe(home_dir),
+                    "--licenses",
+                ]
             ),
             env={"ANDROID_HOME": str(home_dir)},
             capture_output=False,
