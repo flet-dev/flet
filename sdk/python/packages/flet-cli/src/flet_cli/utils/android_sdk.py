@@ -164,17 +164,13 @@ class AndroidSDK:
 
         self.log(f'Installing Android SDK package "{package_name}"')
 
-        is_windows = platform.system() == "Windows"
-        args = ["sh" if not is_windows else "cmd.exe"]
-        if not is_windows:
-            args.extend(
-                ["-c", f'yes | {self.sdkmanager_exe(home_dir)} "{package_name}"']
-            )
-        else:
-            args.extend(f'/C"{self.sdkmanager_exe(home_dir)} {package_name}"')
-
         p = self.run(
-            args,
+            (
+                ["sh" if platform.system() != "Windows" else "cmd.exe"]
+                + ["-c", f'yes | {self.sdkmanager_exe(home_dir)} "{package_name}"']
+                if platform.system() != "Windows"
+                else [f'/C"{self.sdkmanager_exe(home_dir)} {package_name}"']
+            ),
             env={"ANDROID_HOME": str(home_dir)},
             capture_output=False,
         )
@@ -186,15 +182,13 @@ class AndroidSDK:
     def _accept_licenses(self, home_dir: Path):
         self.log("Accepting Android SDK licenses")
 
-        is_windows = platform.system() == "Windows"
-        args = ["sh" if not is_windows else "cmd.exe"]
-        if not is_windows:
-            args.extend(["-c", f"yes | {self.sdkmanager_exe(home_dir)} --licenses"])
-        else:
-            args.extend(f'/C"{self.sdkmanager_exe(home_dir)} --licenses"')
-
         p = self.run(
-            args,
+            (
+                ["sh" if platform.system() != "Windows" else "cmd.exe"]
+                + ["-c", f"yes | {self.sdkmanager_exe(home_dir)} --licenses"]
+                if platform.system() != "Windows"
+                else [f'/C"{self.sdkmanager_exe(home_dir)} --licenses"']
+            ),
             env={"ANDROID_HOME": str(home_dir)},
             capture_output=False,
         )
