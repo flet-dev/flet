@@ -31,7 +31,7 @@ def run(
             text=True,
             encoding="utf8",
             env=cmd_env,
-            errors="replace"
+            errors="replace",
         )
     else:
         process = subprocess.Popen(
@@ -43,7 +43,7 @@ def run(
             text=True,
             encoding="utf8",
             env=cmd_env,
-            errors="replace"
+            errors="replace",
         )
 
         input_iterator = (
@@ -61,7 +61,7 @@ def run(
                     log(stdout_line.rstrip())
 
                 # Check if process is waiting for input
-                if process.poll() is None and process.stdin:
+                if input and process.poll() is None and process.stdin:
                     try:
                         next_input = next(input_iterator) + "\n"
                         process.stdin.write(next_input)
