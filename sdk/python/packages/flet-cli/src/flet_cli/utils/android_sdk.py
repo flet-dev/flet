@@ -166,10 +166,12 @@ class AndroidSDK:
 
         p = self.run(
             (
-                ["sh" if platform.system() != "Windows" else "cmd.exe"]
-                + ["-c", f'yes | {self.sdkmanager_exe(home_dir)} "{package_name}"']
+                ["sh", "-c", f'yes | {self.sdkmanager_exe(home_dir)} "{package_name}"']
                 if platform.system() != "Windows"
-                else [f'/C"{self.sdkmanager_exe(home_dir)} {package_name}"']
+                else [
+                    "cmd.exe",
+                    f"/C\"'{self.sdkmanager_exe(home_dir)}' '{package_name}'\"",
+                ]
             ),
             env={"ANDROID_HOME": str(home_dir)},
             capture_output=False,
@@ -184,10 +186,9 @@ class AndroidSDK:
 
         p = self.run(
             (
-                ["sh" if platform.system() != "Windows" else "cmd.exe"]
-                + ["-c", f"yes | {self.sdkmanager_exe(home_dir)} --licenses"]
+                ["sh", "-c", f"yes | {self.sdkmanager_exe(home_dir)} --licenses"]
                 if platform.system() != "Windows"
-                else [f'/C"{self.sdkmanager_exe(home_dir)} --licenses"']
+                else ["cmd.exe", f"/C\"'{self.sdkmanager_exe(home_dir)}' --licenses\""]
             ),
             env={"ANDROID_HOME": str(home_dir)},
             capture_output=False,
