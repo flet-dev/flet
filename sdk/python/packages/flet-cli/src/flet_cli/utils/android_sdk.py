@@ -162,7 +162,11 @@ class AndroidSDK:
 
         p = self.run(
             (
-                ["sh", "-c", f'yes | {self.sdkmanager_exe(home_dir)} "{package_name}"']
+                [
+                    "sh",
+                    "-c",
+                    f'yes | "{self.sdkmanager_exe(home_dir)}" "{package_name}"',
+                ]
                 if platform.system() != "Windows"
                 else [
                     "cmd.exe",
@@ -187,7 +191,7 @@ class AndroidSDK:
 
         p = self.run(
             (
-                ["sh", "-c", f"yes | {self.sdkmanager_exe(home_dir)} --licenses"]
+                ["sh", "-c", f'yes | "{self.sdkmanager_exe(home_dir)}" --licenses']
                 if platform.system() != "Windows"
                 else [
                     "cmd.exe",
