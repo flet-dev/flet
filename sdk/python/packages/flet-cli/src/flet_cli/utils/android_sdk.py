@@ -167,7 +167,7 @@ class AndroidSDK:
                 else [
                     "cmd.exe",
                     "/C",
-                    f'"{self.sdkmanager_exe(home_dir)}" "{package_name}"',
+                    f'{self.sdkmanager_exe(home_dir)} "{package_name}"',
                 ]
             ),
             env={"ANDROID_HOME": str(home_dir)},
