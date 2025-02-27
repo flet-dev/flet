@@ -38,9 +38,15 @@ DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
 MINIMAL_FLUTTER_VERSION = version.Version("3.27.4")
 
+no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
+
 error_style = Style(color="red", bold=True)
 warning_style = Style(color="yellow", bold=True)
-console = Console(log_path=False, theme=Theme({"log.message": "green bold"}))
+console = Console(
+    log_path=False,
+    theme=Theme({"log.message": "green bold"}),
+    force_terminal=not no_rich_output,
+)
 verbose1_style = Style(dim=True, bold=False)
 verbose2_style = Style(color="bright_black", bold=False)
 
@@ -79,7 +85,7 @@ class Command(BaseCommand):
         self.flutter_packages_temp_dir = None
         self.flutter_exe = None
         self.skip_flutter_doctor = get_bool_env_var("FLET_CLI_SKIP_FLUTTER_DOCTOR")
-        self.no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
+        self.no_rich_output = no_rich_output
         self.current_platform = platform.system()
         self.platforms = {
             "windows": {
