@@ -29,7 +29,7 @@ def run(
             cwd=cwd,
             capture_output=True,
             text=True,
-            encoding="utf8",
+            encoding="utf-8",
             env=cmd_env,
             errors="replace",
         )
@@ -41,7 +41,7 @@ def run(
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
-            encoding="utf8",
+            encoding="utf-8",
             env=cmd_env,
             errors="replace",
         )
