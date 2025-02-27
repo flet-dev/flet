@@ -14,7 +14,11 @@ ANDROID_CMDLINE_TOOLS_VERSION = "12.0"
 MINIMAL_PACKAGES = [
     "cmdline-tools;latest",
     "platform-tools",
+    "platforms;android-33",
+    "platforms;android-34",
     "platforms;android-35",
+    "ndk;25.1.8937393",
+    "cmake;3.22.1",
     "build-tools;34.0.0",
 ]
 
