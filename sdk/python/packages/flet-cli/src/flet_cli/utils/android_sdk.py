@@ -14,11 +14,7 @@ ANDROID_CMDLINE_TOOLS_VERSION = "12.0"
 MINIMAL_PACKAGES = [
     "cmdline-tools;latest",
     "platform-tools",
-    "platforms;android-33",
-    "platforms;android-34",
     "platforms;android-35",
-    "ndk;25.1.8937393",
-    "cmake;3.22.1",
     "build-tools;34.0.0",
 ]
 
@@ -170,7 +166,8 @@ class AndroidSDK:
                 if platform.system() != "Windows"
                 else [
                     "cmd.exe",
-                    f'/C""{self.sdkmanager_exe(home_dir)}" "{package_name}""',
+                    "/C",
+                    f'"{self.sdkmanager_exe(home_dir)}" "{package_name}"',
                 ]
             ),
             env={"ANDROID_HOME": str(home_dir)},
@@ -188,7 +185,7 @@ class AndroidSDK:
             (
                 ["sh", "-c", f"yes | {self.sdkmanager_exe(home_dir)} --licenses"]
                 if platform.system() != "Windows"
-                else ["cmd.exe", f'/C""{self.sdkmanager_exe(home_dir)}" --licenses"']
+                else ["cmd.exe", "/C", f'"{self.sdkmanager_exe(home_dir)}" --licenses']
             ),
             env={"ANDROID_HOME": str(home_dir)},
             capture_output=False,
