@@ -220,7 +220,7 @@ class AndroidSDK:
             )
         return p.stdout
 
-    def run(self, args, env=None, cwd=None, input=None, capture_output=True):
+    def run(self, args, env=None, cwd=None, capture_output=True):
 
         self.log(f"Run subprocess: {args}")
 
@@ -235,7 +235,6 @@ class AndroidSDK:
             args,
             cwd if cwd else os.getcwd(),
             env=cmd_env,
-            input=input,
             capture_output=capture_output,
             log=self.log,
         )
