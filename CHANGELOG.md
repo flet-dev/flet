@@ -1,5 +1,9 @@
 # Flet changelog
 
+## 0.27.4
+
+* Fix: do not remove `flutter-packages` on re-build if `dev_packages` configured.
+
 ## 0.27.3
 
 * Fixes to make `flet build` work in CI environment ([#4993](https://github.com/flet-dev/flet/issues/4993))

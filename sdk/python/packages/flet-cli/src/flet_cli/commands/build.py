@@ -1731,6 +1731,7 @@ class Command(BaseCommand):
         if platform_dependencies:
             toml_dependencies.extend(platform_dependencies)
 
+        dev_packages_configured = False
         if len(toml_dependencies) > 0:
             dev_packages = (
                 self.get_pyproject(f"tool.flet.{self.config_platform}.dev_packages")
@@ -1738,7 +1739,6 @@ class Command(BaseCommand):
                 or []
             )
             if len(dev_packages) > 0:
-                no_cache = False
                 for i in range(0, len(toml_dependencies)):
                     package_name = Requirement(toml_dependencies[i]).name
                     if package_name in dev_packages:
@@ -1746,10 +1746,9 @@ class Command(BaseCommand):
                         if not dev_path.is_absolute():
                             dev_path = (self.python_app_path / dev_path).resolve()
                         toml_dependencies[i] = f"{package_name} @ file://{dev_path}"
-                        no_cache = True
-                if no_cache:
+                        dev_packages_configured = True
+                if dev_packages_configured:
                     toml_dependencies.append("--no-cache-dir")
-                    hash.update(time.time())
 
             package_args.append(",".join(toml_dependencies))
 
@@ -1857,11 +1856,13 @@ class Command(BaseCommand):
         # check if site-packages installation could be skipped
         for arg in package_args:
             hash.update(arg)
-        if not hash.has_changed():
-            package_args.append("--skip-site-packages")
-        else:
-            if self.flutter_packages_dir.exists():
-                shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
+
+        if not dev_packages_configured:
+            if not hash.has_changed():
+                package_args.append("--skip-site-packages")
+            else:
+                if self.flutter_packages_dir.exists():
+                    shutil.rmtree(self.flutter_packages_dir, ignore_errors=True)
 
         package_result = self.run(
             package_args,
