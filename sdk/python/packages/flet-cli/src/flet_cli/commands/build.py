@@ -38,9 +38,15 @@ DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
 MINIMAL_FLUTTER_VERSION = version.Version("3.27.4")
 
+no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
+
 error_style = Style(color="red", bold=True)
 warning_style = Style(color="yellow", bold=True)
-console = Console(log_path=False, theme=Theme({"log.message": "green bold"}))
+console = Console(
+    log_path=False,
+    theme=Theme({"log.message": "green bold"}),
+    force_terminal=not no_rich_output,
+)
 verbose1_style = Style(dim=True, bold=False)
 verbose2_style = Style(color="bright_black", bold=False)
 
@@ -79,7 +85,7 @@ class Command(BaseCommand):
         self.flutter_packages_temp_dir = None
         self.flutter_exe = None
         self.skip_flutter_doctor = get_bool_env_var("FLET_CLI_SKIP_FLUTTER_DOCTOR")
-        self.no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
+        self.no_rich_output = no_rich_output
         self.current_platform = platform.system()
         self.platforms = {
             "windows": {
@@ -725,7 +731,7 @@ class Command(BaseCommand):
         return False
 
     def install_flutter(self):
-        self.status.update(
+        self.update_status(
             f"[bold blue]Installing Flutter {MINIMAL_FLUTTER_VERSION}..."
         )
         from flet_cli.utils.flutter import install_flutter
@@ -773,7 +779,7 @@ class Command(BaseCommand):
     def install_jdk(self):
         from flet_cli.utils.jdk import install_jdk
 
-        self.status.update(f"[bold blue]Installing JDK...")
+        self.update_status(f"[bold blue]Installing JDK...")
         jdk_dir = install_jdk(self.log_stdout, progress=self.progress)
         self.env["JAVA_HOME"] = jdk_dir
 
@@ -806,7 +812,7 @@ class Command(BaseCommand):
     def install_android_sdk(self):
         from flet_cli.utils.android_sdk import AndroidSDK
 
-        self.status.update(f"[bold blue]Installing Android SDK...")
+        self.update_status(f"[bold blue]Installing Android SDK...")
         self.env["ANDROID_HOME"] = AndroidSDK(
             self.env["JAVA_HOME"], self.log_stdout, progress=self.progress
         ).install()
@@ -1207,7 +1213,7 @@ class Command(BaseCommand):
             # create a new Flutter bootstrap project directory, if non-existent
             if not second_pass:
                 self.flutter_dir.mkdir(parents=True, exist_ok=True)
-                self.status.update(
+                self.update_status(
                     f'[bold blue]Creating Flutter bootstrap project from {template_url} with ref "{template_ref}"...'
                 )
 
@@ -1262,7 +1268,7 @@ class Command(BaseCommand):
             shutil.move(self.flutter_packages_temp_dir, self.flutter_packages_dir)
 
         if self.flutter_packages_dir.exists():
-            self.status.update(f"[bold blue]Registering Flutter user extensions...")
+            self.update_status(f"[bold blue]Registering Flutter user extensions...")
 
             for fp in os.listdir(self.flutter_packages_dir):
                 if (self.flutter_packages_dir / fp / "pubspec.yaml").exists():
@@ -1401,7 +1407,7 @@ class Command(BaseCommand):
         if hash.has_changed():
 
             if copy_ops:
-                self.status.update(f"[bold blue]Customizing app icons...")
+                self.update_status(f"[bold blue]Customizing app icons...")
                 for op in copy_ops:
                     if self.verbose > 0:
                         console.log(
@@ -1416,7 +1422,7 @@ class Command(BaseCommand):
             ]
             self.save_yaml(self.pubspec_path, updated_pubspec)
 
-            self.status.update(f"[bold blue]Generating app icons...")
+            self.update_status(f"[bold blue]Generating app icons...")
 
             # icons
             icons_result = self.run(
@@ -1632,7 +1638,7 @@ class Command(BaseCommand):
         if hash.has_changed():
 
             if copy_ops:
-                self.status.update(f"[bold blue]Customizing app splash images...")
+                self.update_status(f"[bold blue]Customizing app splash images...")
                 for op in copy_ops:
                     if self.verbose > 0:
                         console.log(
@@ -1646,7 +1652,7 @@ class Command(BaseCommand):
             self.save_yaml(self.pubspec_path, updated_pubspec)
 
             # splash screens
-            self.status.update(f"[bold blue]Generating splash screens...")
+            self.update_status(f"[bold blue]Generating splash screens...")
             splash_result = self.run(
                 [
                     self.dart_exe,
@@ -1690,7 +1696,7 @@ class Command(BaseCommand):
 
         hash = HashStamp(self.build_dir / ".hash" / "package")
 
-        self.status.update(f"[bold blue]Packaging Python app...")
+        self.update_status(f"[bold blue]Packaging Python app...")
         package_args = [
             self.dart_exe,
             "run",
@@ -1905,7 +1911,7 @@ class Command(BaseCommand):
         assert self.get_pyproject
         assert self.template_data
 
-        self.status.update(
+        self.update_status(
             f"[bold blue]Building [cyan]{self.platforms[self.options.target_platform]['status_text']}[/cyan]..."
         )
         # flutter build
@@ -2021,7 +2027,7 @@ class Command(BaseCommand):
         assert self.out_dir
         assert self.assets_path
 
-        self.status.update(
+        self.update_status(
             f"[bold blue]Copying build to [cyan]{self.rel_out_dir}[/cyan] directory...",
         )
         arch = platform.machine().lower()
@@ -2147,6 +2153,12 @@ class Command(BaseCommand):
         )
         if flutter_doctor.returncode == 0 and flutter_doctor.stdout:
             console.log(flutter_doctor.stdout, style=verbose1_style)
+
+    def update_status(self, status):
+        if self.no_rich_output:
+            console.log(status)
+        else:
+            self.status.update(status)
 
     def log_stdout(self, message):
         if self.verbose > 0:

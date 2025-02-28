@@ -1,3 +1,7 @@
+# 0.27.3
+
+* Fixes to make `flet build` work in CI environment ([#4993](https://github.com/flet-dev/flet/issues/4993))
+
 # 0.27.2
 
 * Error on second flet build run "Because {app} depends on flet_{package} from path which doesn't exist" ([#4955](https://github.com/flet-dev/flet/issues/4955))
