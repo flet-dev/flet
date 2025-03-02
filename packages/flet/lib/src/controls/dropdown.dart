@@ -1,21 +1,9 @@
+import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
-import '../flet_control_backend.dart';
-import '../models/control.dart';
-import '../models/control_view_model.dart';
-import '../utils/borders.dart';
-import '../utils/buttons.dart';
-import '../utils/colors.dart';
-import '../utils/edge_insets.dart';
 import '../utils/form_field.dart';
-import '../utils/icons.dart';
-import '../utils/numbers.dart';
-import '../utils/text.dart';
-import '../utils/textfield.dart';
-import 'create_control.dart';
-import 'flet_store_mixin.dart';
 import 'textfield.dart';
 
 class DropdownControl extends StatefulWidget {
@@ -109,6 +97,7 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
           widget.control.attrColor("focusedBorderColor", context);
       var borderWidth = widget.control.attrDouble("borderWidth");
       var focusedBorderWidth = widget.control.attrDouble("focusedBorderWidth");
+      var menuWidth = widget.control.attrDouble("menuWidth") ?? double.infinity;
 
       FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
         widget.control.attrString("border"),
@@ -274,7 +263,7 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         //requestFocusOnTap: editable,
         enableFilter: widget.control.attrBool("enableFilter", false)!,
         enableSearch: widget.control.attrBool("enableSearch", true)!,
-        menuHeight: widget.control.attrDouble("maxMenuHeight"),
+        menuHeight: widget.control.attrDouble("menuHeight"),
         label: labelCtrl.isNotEmpty
             ? createControl(widget.control, labelCtrl.first.id, disabled)
             : label != null
@@ -320,6 +309,7 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
           backgroundColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "bgcolor"),
           elevation: parseWidgetStateDouble(widget.control, "elevation"),
+          fixedSize: WidgetStateProperty.all(Size.fromWidth(menuWidth)),
         ),
 
         inputDecorationTheme: inputDecorationTheme,
