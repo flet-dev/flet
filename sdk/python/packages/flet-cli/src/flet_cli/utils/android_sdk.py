@@ -159,10 +159,26 @@ class AndroidSDK:
             return 0
 
         self.log(f'Installing Android SDK package "{package_name}"')
+
         p = self.run(
-            [self.sdkmanager_exe(home_dir), package_name],
+            (
+                [
+                    "sh",
+                    "-c",
+                    f'yes | "{self.sdkmanager_exe(home_dir)}" "{package_name}"',
+                ]
+                if platform.system() != "Windows"
+                else [
+                    "cmd.exe",
+                    "/C",
+                    "echo",
+                    "y",
+                    "|",
+                    self.sdkmanager_exe(home_dir),
+                    package_name,
+                ]
+            ),
             env={"ANDROID_HOME": str(home_dir)},
-            input="y\n" * 10,
             capture_output=False,
         )
         if p.returncode != 0:
@@ -172,13 +188,22 @@ class AndroidSDK:
 
     def _accept_licenses(self, home_dir: Path):
         self.log("Accepting Android SDK licenses")
+
         p = self.run(
-            [
-                self.sdkmanager_exe(home_dir),
-                "--licenses",
-            ],
+            (
+                ["sh", "-c", f'yes | "{self.sdkmanager_exe(home_dir)}" --licenses']
+                if platform.system() != "Windows"
+                else [
+                    "cmd.exe",
+                    "/C",
+                    "echo",
+                    "y",
+                    "|",
+                    self.sdkmanager_exe(home_dir),
+                    "--licenses",
+                ]
+            ),
             env={"ANDROID_HOME": str(home_dir)},
-            input="y\n" * 20,
             capture_output=False,
         )
         if p.returncode != 0:
@@ -199,7 +224,7 @@ class AndroidSDK:
             )
         return p.stdout
 
-    def run(self, args, env=None, cwd=None, input=None, capture_output=True):
+    def run(self, args, env=None, cwd=None, capture_output=True):
 
         self.log(f"Run subprocess: {args}")
 
@@ -214,7 +239,6 @@ class AndroidSDK:
             args,
             cwd if cwd else os.getcwd(),
             env=cmd_env,
-            input=input,
             capture_output=capture_output,
             log=self.log,
         )

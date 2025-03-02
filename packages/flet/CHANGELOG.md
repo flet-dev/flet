@@ -1,3 +1,18 @@
+# 0.27.4
+
+* Fix: do not remove `flutter-packages` on re-build if `dev_packages` configured.
+
+# 0.27.3
+
+* Fixes to make `flet build` work in CI environment ([#4993](https://github.com/flet-dev/flet/issues/4993))
+
+# 0.27.2
+
+* Error on second flet build run "Because {app} depends on flet_{package} from path which doesn't exist" ([#4955](https://github.com/flet-dev/flet/issues/4955))
+* Editable packages in pyproject.toml to install from a path by flet build command ([#4963](https://github.com/flet-dev/flet/issues/4963))
+* Setting Android manifest `<application>` element properties in `pyproject.toml` ([#4977](https://github.com/flet-dev/flet/issues/4977))
+* Fixed regression: Added back `Control.build()` method.
+
 # 0.27.1
 
 * Fixed: binary file operations should not specify encoding.
