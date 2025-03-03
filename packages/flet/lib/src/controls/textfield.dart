@@ -125,7 +125,8 @@ class _TextFieldControlState extends State<TextFieldControl>
         _value = value;
         _controller.value = TextEditingValue(
           text: value,
-          selection: TextSelection.collapsed(offset: value.length),
+          selection: TextSelection.collapsed(
+              offset: value.length), // preserve cursor position at the end
         );
       }
 
