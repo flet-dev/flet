@@ -26,7 +26,7 @@ class _NotificationControlState extends State<NotificationControl>
   @override
   void initState() {
     super.initState();
-    // _initializeService();
+    Future.microtask(() => _initializeService());
   }
 
   Future<void> _initializeService() async {
