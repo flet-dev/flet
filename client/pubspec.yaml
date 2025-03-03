@@ -93,6 +93,8 @@ dependencies:
       url: https://github.com/flet-dev/flet-flashlight.git
       ref: 0.1.0
       path: src/flutter/flet_flashlight
+  flet_notifications:
+    path: ../packages/flet_notifications
 
   url_strategy: ^0.2.0
   cupertino_icons: ^1.0.6

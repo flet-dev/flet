@@ -24,6 +24,20 @@ from flet.core.alignment import Alignment, Axis
 from flet.core.animated_switcher import AnimatedSwitcher, AnimatedSwitcherTransition
 from flet.core.animation import Animation, AnimationCurve
 from flet.core.app_bar import AppBar
+from flet.core.notifications import (
+    Notifications,
+    NotificationContent,
+    NotificationActionButton,
+    NotificationActionType,
+    NotificationChannel,
+    NotificationCategory,
+    NotificationPrivacy,
+    NotificationGroupAlertBehavior,
+    NotificationGroupSort,
+    NotificationImportance,
+    NotificationRingtoneType,
+    NotificationLayout,
+)
 from flet.core.audio import (
     Audio,
     AudioDurationChangeEvent,

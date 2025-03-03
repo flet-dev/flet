@@ -81,6 +81,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0"
+  awesome_notifications:
+    dependency: transitive
+    description:
+      name: awesome_notifications
+      sha256: d051ffb694a53da216ff13d02c8ec645d75320048262f7e6b3c1d95a4f54c902
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -263,7 +271,7 @@ packages:
       path: "../packages/flet"
       relative: true
     source: path
-    version: "0.27.1"
+    version: "0.27.4"
   flet_ads:
     dependency: "direct main"
     description:
@@ -326,6 +334,13 @@ packages:
       resolved-ref: dfa3cf6776b0dc5f238227d5f378cda7be190eaf
       url: "https://github.com/flet-dev/flet-map.git"
     source: git
+    version: "0.1.0"
+  flet_notifications:
+    dependency: "direct main"
+    description:
+      path: "../packages/flet_notifications"
+      relative: true
+    source: path
     version: "0.1.0"
   flet_permission_handler:
     dependency: "direct main"
