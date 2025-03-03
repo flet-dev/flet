@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_linux
+  awesome_notifications
   media_kit_libs_linux
   media_kit_video
   record_linux
