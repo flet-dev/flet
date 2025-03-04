@@ -173,9 +173,10 @@ class Dropdown(FormFieldControl):
         enable_filter: Optional[bool] = None,
         enable_search: Optional[bool] = None,
         editable: Optional[bool] = None,
-        max_menu_height: OptionalNumber = None,
+        max_menu_height: OptionalNumber = None,  # to be discontinued
+        menu_height: OptionalNumber = None,
+        menu_width: OptionalNumber = None,
         expanded_insets: PaddingValue = None,
-        menu_style: Optional[MenuStyle] = None,
         selected_suffix: Optional[Control] = None,
         input_filter: Optional[InputFilter] = None,
         capitalization: Optional[TextCapitalization] = None,
@@ -341,6 +342,7 @@ class Dropdown(FormFieldControl):
             "enable_feedback",
             "options_fill_horizontally",
             "padding",
+            "max_menu_height",
         ]
 
         for item in deprecated_properties_list:
@@ -358,9 +360,9 @@ class Dropdown(FormFieldControl):
         self.enable_filter = enable_filter
         self.enable_search = enable_search
         self.editable = editable
-        self.max_menu_height = max_menu_height
+        self.menu_height = menu_height
+        self.menu_width = menu_width
         self.expanded_insets = expanded_insets
-        self.menu_style = menu_style
         self.capitalization = capitalization
         self.label_content = label_content
         self.leading_icon = leading_icon
@@ -430,14 +432,23 @@ class Dropdown(FormFieldControl):
     def options(self, value: Optional[List[Option]]):
         self.__options = value if value is not None else []
 
-    # max_menu_height
+    # menu_height
     @property
-    def max_menu_height(self) -> OptionalNumber:
-        return self._get_attr("maxMenuHeight", data_type="float")
+    def menu_height(self) -> OptionalNumber:
+        return self._get_attr("menuHeight", data_type="float")
 
-    @max_menu_height.setter
-    def max_menu_height(self, value: OptionalNumber):
-        self._set_attr("maxMenuHeight", value)
+    @menu_height.setter
+    def menu_height(self, value: OptionalNumber):
+        self._set_attr("menuHeight", value)
+
+    # menu_width
+    @property
+    def menu_width(self) -> OptionalNumber:
+        return self._get_attr("menuWidth", data_type="float")
+
+    @menu_width.setter
+    def menu_width(self, value: OptionalNumber):
+        self._set_attr("menuWidth", value)
 
     # editable
     @property
