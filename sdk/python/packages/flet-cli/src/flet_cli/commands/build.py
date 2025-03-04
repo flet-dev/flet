@@ -1141,6 +1141,7 @@ class Command(BaseCommand):
             "ios_team_id": ios_team_id,
             "options": {
                 "package_platform": self.package_platform,
+                "config_platform": self.config_platform,
                 "target_arch": (
                     target_arch
                     if isinstance(target_arch, list)
@@ -1784,8 +1785,10 @@ class Command(BaseCommand):
         # exclude
         exclude_list = ["build"]
 
-        app_exclude = self.options.exclude or self.get_pyproject(
-            "tool.flet.app.exclude"
+        app_exclude = (
+            self.options.exclude
+            or self.get_pyproject(f"tool.flet.{self.config_platform}.app.exclude")
+            or self.get_pyproject("tool.flet.app.exclude")
         )
         if app_exclude:
             exclude_list.extend(app_exclude)

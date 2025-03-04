@@ -2,6 +2,7 @@
 
 ## 0.27.5
 
+* Added `FletApp.showAppStartupScreen` and `FletApp.appStartupScreenMessage` properties.
 * PBKDF2 iteration count increased to 600,000 ([#5023](https://github.com/flet-dev/flet/issues/5023))
 
 ## 0.27.4

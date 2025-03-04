@@ -4,7 +4,8 @@ class LoadingPage extends StatelessWidget {
   final bool isLoading;
   final String message;
 
-  const LoadingPage({super.key, required this.isLoading, required this.message});
+  const LoadingPage(
+      {super.key, required this.isLoading, required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class LoadingPage extends StatelessWidget {
       ];
       if (message != "") {
         children.addAll([
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           Text(
             message,
             style: Theme.of(context).textTheme.bodySmall,
