@@ -17,7 +17,7 @@ def __generate_fernet_key(secret_key: str) -> bytes:
 
 
 def __generate_fernet_key_kdf(secret_key: str, salt: bytes) -> bytes:
-    kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=salt, iterations=100000)
+    kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=salt, iterations=600000)
     return base64.urlsafe_b64encode(kdf.derive(secret_key.encode("utf-8")))
 
 

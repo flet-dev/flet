@@ -1,3 +1,7 @@
+# 0.27.5
+
+* PBKDF2 iteration count increased to 600,000 ([#5023](https://github.com/flet-dev/flet/issues/5023))
+
 # 0.27.4
 
 * Fix: do not remove `flutter-packages` on re-build if `dev_packages` configured.
