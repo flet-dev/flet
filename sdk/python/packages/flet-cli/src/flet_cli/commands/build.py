@@ -1587,20 +1587,43 @@ class Command(BaseCommand):
             )
 
         # splash colors
-        splash_color = self.options.splash_color or self.get_pyproject(
-            "tool.flet.splash.color"
+        splash_color = (
+            self.options.splash_color
+            or self.get_pyproject(f"tool.flet.{self.config_platform}.splash.color")
+            or self.get_pyproject("tool.flet.splash.color")
         )
         if splash_color:
             pubspec["flutter_native_splash"]["color"] = splash_color
             pubspec["flutter_native_splash"]["android_12"]["color"] = splash_color
-        splash_dark_color = self.options.splash_dark_color or self.get_pyproject(
-            "tool.flet.splash.dark_color"
+
+        splash_dark_color = (
+            self.options.splash_dark_color
+            or self.get_pyproject(f"tool.flet.{self.config_platform}.splash.dark_color")
+            or self.get_pyproject("tool.flet.splash.dark_color")
         )
         if splash_dark_color:
             pubspec["flutter_native_splash"]["color_dark"] = splash_dark_color
             pubspec["flutter_native_splash"]["android_12"][
                 "color_dark"
             ] = splash_dark_color
+
+        splash_icon_bgcolor = self.get_pyproject(
+            f"tool.flet.{self.config_platform}.splash.icon_bgcolor"
+        ) or self.get_pyproject("tool.flet.splash.icon_bgcolor")
+
+        if splash_icon_bgcolor:
+            pubspec["flutter_native_splash"]["android_12"][
+                "icon_background_color"
+            ] = splash_icon_bgcolor
+
+        splash_icon_dark_bgcolor = self.get_pyproject(
+            f"tool.flet.{self.config_platform}.splash.icon_dark_bgcolor"
+        ) or self.get_pyproject("tool.flet.splash.icon_dark_bgcolor")
+
+        if splash_icon_dark_bgcolor:
+            pubspec["flutter_native_splash"]["android_12"][
+                "icon_background_color_dark"
+            ] = splash_icon_dark_bgcolor
 
         # enable/disable splashes
         pubspec["flutter_native_splash"]["web"] = (
