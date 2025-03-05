@@ -1,7 +1,7 @@
 import copy
 import datetime
 import weakref
-from dataclasses import dataclass, field
+from dataclasses import InitVar, dataclass, field
 from enum import Enum
 from typing import Any, Callable, List, Optional
 
@@ -48,17 +48,17 @@ def update_page(new: Any, old: Any = None, show_details=True):
     print("\nTotal:", (end - start).total_seconds() * 1000)
 
 
-@control("Page")
+@control("Page", post_init_args=2)
 class Page(AdaptiveControl):
-    url: str
+    url: InitVar[str]
     controls: List[Any] = field(default_factory=list)
     prop_1: Optional[str] = None
     prop_2: Optional[str] = None
     prop_3: Optional[int] = None
 
-    def __post_init__(self, ref):
+    def __post_init__(self, ref, url):
         Control.__post_init__(self, ref)
-        print("PAGE POST INIT!")
+        print("PAGE POST INIT: URL", url)
 
 
 @control
@@ -105,7 +105,7 @@ assert e.name == "click"
 page_ref = Ref[Page]()
 
 page = Page(
-    "http://aaa.com",
+    url="http://aaa.com",
     controls=[Div(cls="div_1", some_value="Text")],
     prop_1="aaa",
     data=100000,

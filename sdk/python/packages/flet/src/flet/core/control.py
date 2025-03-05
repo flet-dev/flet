@@ -10,6 +10,7 @@ from typing import (
     TypeVar,
     Union,
     dataclass_transform,
+    get_type_hints,
 )
 
 from flet.core.badge import BadgeValue
@@ -37,38 +38,46 @@ T = TypeVar("T", bound="Control")
 
 @dataclass_transform()
 def control(
-    cls_or_type_name: Optional[Union[Type[T], str]] = None, **dataclass_kwargs
+    cls_or_type_name: Optional[Union[Type[T], str]] = None,
+    *,
+    post_init_args: int = 1,
+    **dataclass_kwargs,
 ) -> Union[Type[T], Callable[[Type[T]], Type[T]]]:
     """Decorator to optionally set 'type' while behaving like @dataclass.
 
     - Supports `@control` (without parentheses)
     - Supports `@control("custom_type")` (with optional arguments)
+    - Supports `@control("custom_type", post_init_args=1)` to specify the number of `InitVar` arguments
     """
 
     # Case 1: If used as `@control` (without parentheses)
     if isinstance(cls_or_type_name, type):
-        return _apply_control(cls_or_type_name, None, **dataclass_kwargs)
+        return _apply_control(
+            cls_or_type_name, None, post_init_args, **dataclass_kwargs
+        )
 
-    # Case 2: If used as `@control("custom_type")`
+    # Case 2: If used as `@control("custom_type", post_init_args=N)`
     def wrapper(cls: Type[T]) -> Type[T]:
-        return _apply_control(cls, cls_or_type_name, **dataclass_kwargs)
+        return _apply_control(cls, cls_or_type_name, post_init_args, **dataclass_kwargs)
 
     return wrapper
 
 
 def _apply_control(
-    cls: Type[T], type_name: Optional[str], **dataclass_kwargs
+    cls: Type[T], type_name: Optional[str], post_init_args: int, **dataclass_kwargs
 ) -> Type[T]:
     """Applies @control logic, ensuring compatibility with @dataclass."""
     cls = dataclass(**dataclass_kwargs)(cls)  # Apply @dataclass first
 
-    orig_post_init = getattr(cls, "__post_init__", lambda self, ref=None: None)
+    orig_post_init = getattr(cls, "__post_init__", lambda self, *args: None)
 
-    def new_post_init(self: T, ref: Optional["Ref[T]"] = None) -> None:
+    def new_post_init(self: T, *args):
         """Set the type only if a type_name is explicitly provided and type is not overridden."""
         if type_name is not None and (not hasattr(self, "type") or self.type is None):
             self.type = type_name  # Only set type if explicitly provided
-        orig_post_init(self, ref)  # Call the original __post_init__
+
+        # Pass only the correct number of arguments to `__post_init__`
+        orig_post_init(self, *args[:post_init_args])
 
     setattr(cls, "__post_init__", new_post_init)
     return cls
