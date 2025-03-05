@@ -125,16 +125,17 @@ page.controls[0].controls = [
         text="Button 😬",
         style=ButtonStyle(color=Colors.RED),
         on_click=lambda e: print(e),
+        opacity=1,
         ref=None,
     )
 ]
 print("PAGE:", page.controls[0].controls[0].page)
 update_page(page.controls[0])
 
-exit()
+# exit()
 
 # check _prev
-print("\nPrev:", page._prev_url)
+print("\nPrev:", page._prev_prop_1)
 
 # 2nd update
 # ==================

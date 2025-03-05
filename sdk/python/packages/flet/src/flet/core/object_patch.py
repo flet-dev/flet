@@ -504,6 +504,9 @@ class DiffBuilder(object):
 
         self.parent_control = dst
 
+        if self.control_cls and isinstance(dst, self.control_cls):
+            dst.before_update()
+
         for field in dataclasses.fields(dst):
             if "skip" in field.metadata:
                 continue
@@ -565,6 +568,9 @@ class DiffBuilder(object):
             for field in dataclasses.fields(item):
                 if not "skip" in field.metadata:
                     self._configure_control(getattr(item, field.name), item)
+
+            # call Control.before_update()
+            item.before_update()
 
         elif isinstance(item, dict):
             for v in item.values():

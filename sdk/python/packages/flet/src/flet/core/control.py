@@ -137,18 +137,15 @@ class Control:
         pass
 
     def before_update(self):
-        pass
+        assert (
+            self.opacity is None or 0.0 <= self.opacity <= 1.0
+        ), "opacity must be between 0.0 and 1.0"
 
     def did_mount(self):
         pass
 
     def will_unmount(self):
         pass
-
-    # def validate(self):
-    #     assert (
-    #         value is None or 0.0 <= value <= 1.0
-    #     ), "opacity must be between 0.0 and 1.0"
 
     # public methods
     def update(self) -> None:
