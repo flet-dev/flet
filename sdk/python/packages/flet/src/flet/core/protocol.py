@@ -1,6 +1,29 @@
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields, is_dataclass
+from enum import Enum
 from typing import Any, Dict, List, Optional
+
+
+def encode_object_for_msgpack(obj):
+    if is_dataclass(obj):
+        r = {}
+        for field in fields(obj):
+            if "skip" in field.metadata:
+                continue
+            v = getattr(obj, field.name)
+            if isinstance(v, list):
+                v = v[:]
+            elif isinstance(v, dict):
+                v = v.copy()
+            elif field.name.startswith("on_") and v is not None:
+                v = True
+            setattr(obj, f"_prev_{field.name}", v)
+            if v is not None:
+                r[field.name] = v
+        return r
+    elif isinstance(obj, Enum):
+        return obj.value
+    return obj
 
 
 class CommandEncoder(json.JSONEncoder):

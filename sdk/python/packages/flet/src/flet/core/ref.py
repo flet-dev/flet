@@ -1,16 +1,17 @@
-from typing import Generic, TypeVar
+import weakref
+from typing import Generic, Optional, TypeVar
 
 T = TypeVar("T")
 
 
 class Ref(Generic[T]):
     def __init__(self):
-        self._current: T = None
+        self._current: Optional[weakref.ref[T]] = None
 
     @property
-    def current(self) -> T:
-        return self._current
+    def current(self) -> Optional[T]:
+        return self._current() if self._current is not None else None
 
     @current.setter
     def current(self, value: T):
-        self._current = value
+        self._current = weakref.ref(value)

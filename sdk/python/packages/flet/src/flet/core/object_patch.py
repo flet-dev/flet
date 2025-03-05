@@ -505,6 +505,8 @@ class DiffBuilder(object):
         self.parent_control = dst
 
         for field in dataclasses.fields(dst):
+            if "skip" in field.metadata:
+                continue
             old = (
                 getattr(src, field.name)
                 if not self.in_place
@@ -558,7 +560,8 @@ class DiffBuilder(object):
 
             # recurse through fields
             for field in dataclasses.fields(item):
-                self._configure_control(getattr(item, field.name), item)
+                if not "skip" in field.metadata:
+                    self._configure_control(getattr(item, field.name), item)
 
         elif isinstance(item, dict):
             for v in item.values():
