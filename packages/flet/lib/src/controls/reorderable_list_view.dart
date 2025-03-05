@@ -87,7 +87,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
             parentAdaptive: adaptive)
         : null;
     var autoScrollerVelocityScalar =
-        widget.control.attrDouble("autoScrollerVelocityScalar", 1.0);
+        widget.control.attrDouble("autoScrollerVelocityScalar");
 
     void onReorder(int oldIndex, int newIndex) {
       debugPrint("onReorder: $oldIndex -> $newIndex");

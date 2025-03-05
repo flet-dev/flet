@@ -83,12 +83,15 @@ class Control:
     def is_isolated(self) -> bool:
         return False
 
+    def build(self):
+        pass
+
     def before_update(self):
         pass
 
     def _before_build_command(self) -> None:
-        if self._get_control_name() not in ["segment", "bar_chart_rod"]:
-            # see https://github.com/flet-dev/flet/pull/4525
+        # checking if tooltip has getter/setter in inherited class
+        if "tooltip" not in vars(self.__class__):
             self._set_attr_json("tooltip", self.tooltip)
         if isinstance(self.badge, (Badge, str)):
             self._set_attr_json("badge", self.badge)
@@ -526,6 +529,7 @@ class Control:
     ) -> List[Command]:
         if index:
             self.page = index["page"]
+        self.build()
 
         # remove control from index
         if self.__uid and index is not None and self.__uid in index:

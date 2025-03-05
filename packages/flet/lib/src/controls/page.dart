@@ -697,25 +697,29 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
         builder: (context, routesView) {
           debugPrint("_buildNavigator build");
 
-          var hideLoadingPage =
-              FletAppServices.of(context).hideLoadingPage ?? false;
+          var showAppStartupScreen =
+              FletAppServices.of(context).showAppStartupScreen ?? false;
+          var appStartupScreenMessage =
+              FletAppServices.of(context).appStartupScreenMessage ?? "";
 
           List<Page<dynamic>> pages = [];
           if (routesView.views.isEmpty) {
             pages.add(AnimatedTransitionPage(
                 fadeTransition: true,
                 duration: Duration.zero,
-                child: hideLoadingPage
-                    ? const Scaffold(
-                        body: PageMedia(),
-                      )
-                    : Stack(children: [
+                child: showAppStartupScreen
+                    ? Stack(children: [
                         const PageMedia(),
                         LoadingPage(
                           isLoading: routesView.isLoading,
-                          message: routesView.error,
+                          message: routesView.isLoading
+                              ? appStartupScreenMessage
+                              : routesView.error,
                         )
-                      ])));
+                      ])
+                    : const Scaffold(
+                        body: PageMedia(),
+                      )));
           } else {
             Widget? loadingPage;
             // offstage
@@ -739,10 +743,12 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
             }
 
             if ((routesView.isLoading || routesView.error != "") &&
-                !hideLoadingPage) {
+                showAppStartupScreen) {
               loadingPage = LoadingPage(
                 isLoading: routesView.isLoading,
-                message: routesView.error,
+                message: routesView.isLoading
+                    ? appStartupScreenMessage
+                    : routesView.error,
               );
             }
 
