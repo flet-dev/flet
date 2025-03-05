@@ -6,7 +6,11 @@ from enum import Enum
 from typing import Any, Callable, List, Optional
 
 import msgpack
+from flet.core.adaptive_control import AdaptiveControl
+from flet.core.buttons import ButtonStyle
+from flet.core.colors import Colors
 from flet.core.control import Control, control, event
+from flet.core.elevated_button import ElevatedButton
 from flet.core.event import Event
 from flet.core.object_patch import ObjectPatch
 from flet.core.protocol import encode_object_for_msgpack
@@ -44,13 +48,8 @@ def update_page(new: Any, old: Any = None, show_details=True):
     print("\nTotal:", (end - start).total_seconds() * 1000)
 
 
-@control(kw_only=True)
-class AdaptiveControl:
-    adaptive: Optional[bool] = None
-
-
 @control("Page")
-class Page(Control, AdaptiveControl):
+class Page(AdaptiveControl):
     url: str
     controls: List[Any] = field(default_factory=list)
     prop_1: Optional[str] = None
@@ -62,28 +61,8 @@ class Page(Control, AdaptiveControl):
         print("PAGE POST INIT!")
 
 
-class Color(Enum):
-    RED = "red"
-    GREEN = "green"
-    BLUE = "blue"
-
-
-@dataclass
-class ButtonStyle:
-    bold: bool = False
-    italic: bool = False
-    color: Optional[Color] = None
-
-
-@control("Button")
-class Button(Control):
-    text: Optional[str] = None
-    styles: Optional[dict[str, ButtonStyle]] = None
-    on_click: Optional[Callable[[Event], None]] = event(Event)
-
-
 @control
-class MyButton(Button):
+class MyButton(ElevatedButton):
     prop_2: Optional[str] = None
 
 
@@ -139,12 +118,9 @@ print("page.controls[0] PARENT:", page.controls[0].parent)
 # update sub-tree
 page.controls[0].some_value = "Another text"
 page.controls[0].controls = [
-    Button(
+    ElevatedButton(
         text="Button 😬",
-        styles={
-            "style_1": ButtonStyle(True, True, color=Color.RED),
-            "style_2": ButtonStyle(False, True),
-        },
+        style=ButtonStyle(color=Colors.RED),
         on_click=lambda e: print(e),
         ref=None,
     )
@@ -170,9 +146,7 @@ page.controls.append(Span(cls="span_3"))
 btn = page.controls[0].controls[0]
 print("PAGE:", btn.page)
 btn.text = "Supper button"
-btn.styles["style_1"].bold = False
-del btn.styles["style_2"]
-btn.styles["style_A"] = ButtonStyle(True, True, color=Color.GREEN)
+btn.style = ButtonStyle(color=Colors.GREEN)
 update_page(page)
 
 # exit()
@@ -198,7 +172,7 @@ update_page(page, show_details=False)
 
 # 5th update
 # ==================
-page.controls[3].controls.insert(0, Button(text="Click me"))
+page.controls[3].controls.insert(0, ElevatedButton(text="Click me"))
 page.controls[4].controls[0].text = "Hello world"
 page.controls[20].controls.pop()
 page.controls.pop()

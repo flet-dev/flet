@@ -100,7 +100,7 @@ from flet.core.circle_avatar import CircleAvatar
 from flet.core.colors import Colors, colors
 from flet.core.column import Column
 from flet.core.container import Container, ContainerTapEvent
-from flet.core.control import Control
+from flet.core.control import Control, control
 from flet.core.control_event import ControlEvent
 from flet.core.cupertino_action_sheet import CupertinoActionSheet
 from flet.core.cupertino_action_sheet_action import CupertinoActionSheetAction

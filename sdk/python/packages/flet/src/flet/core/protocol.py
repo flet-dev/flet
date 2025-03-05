@@ -13,13 +13,18 @@ def encode_object_for_msgpack(obj):
             v = getattr(obj, field.name)
             if isinstance(v, list):
                 v = v[:]
+                if len(v) > 0:
+                    r[field.name] = v
             elif isinstance(v, dict):
                 v = v.copy()
+                if len(v) > 0:
+                    r[field.name] = v
             elif field.name.startswith("on_") and v is not None:
                 v = True
-            setattr(obj, f"_prev_{field.name}", v)
-            if v is not None:
                 r[field.name] = v
+            elif v is not None:
+                r[field.name] = v
+            setattr(obj, f"_prev_{field.name}", v)
         return r
     elif isinstance(obj, Enum):
         return obj.value
