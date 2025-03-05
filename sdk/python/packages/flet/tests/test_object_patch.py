@@ -3,7 +3,17 @@ import datetime
 import weakref
 from dataclasses import dataclass, field, fields, is_dataclass
 from enum import Enum
-from typing import Any, Callable, List, Optional, Type, TypeAlias
+from typing import (
+    Any,
+    Callable,
+    List,
+    Optional,
+    Type,
+    TypeAlias,
+    TypeVar,
+    Union,
+    dataclass_transform,
+)
 
 import msgpack
 from flet.core.object_patch import ObjectPatch
@@ -75,6 +85,47 @@ def event(type: Type[Event]):
 EventHandler: TypeAlias = Callable[[Event], None]
 
 
+T = TypeVar("T", bound="Control")  # Ensures type safety
+
+
+@dataclass_transform()
+def control(
+    cls_or_type_name: Optional[Union[Type[T], str]] = None, **dataclass_kwargs
+) -> Union[Type[T], Callable[[Type[T]], Type[T]]]:
+    """Decorator to optionally set 'type' while behaving like @dataclass.
+
+    - Supports `@control` (without parentheses)
+    - Supports `@control("custom_type")` (with optional arguments)
+    """
+
+    # Case 1: If used as `@control` (without parentheses)
+    if isinstance(cls_or_type_name, type):
+        return _apply_control(cls_or_type_name, None, **dataclass_kwargs)
+
+    # Case 2: If used as `@control("custom_type")`
+    def wrapper(cls: Type[T]) -> Type[T]:
+        return _apply_control(cls, cls_or_type_name, **dataclass_kwargs)
+
+    return wrapper
+
+
+def _apply_control(
+    cls: Type[T], type_name: Optional[str], **dataclass_kwargs
+) -> Type[T]:
+    """Applies @control logic, ensuring compatibility with @dataclass."""
+    cls = dataclass(**dataclass_kwargs)(cls)  # Apply @dataclass first
+    orig_post_init = getattr(cls, "__post_init__", lambda self: None)
+
+    def new_post_init(self: T) -> None:
+        """Set the type only if a type_name is explicitly provided and type is not overridden."""
+        if type_name is not None and (not hasattr(self, "type") or self.type is None):
+            self.type = type_name  # Only set type if explicitly provided
+        orig_post_init(self)  # Call the original __post_init__
+
+    setattr(cls, "__post_init__", new_post_init)
+    return cls
+
+
 @dataclass(kw_only=True)
 class Control:
     id: int = field(init=False)
@@ -83,7 +134,11 @@ class Control:
     def __post_init__(self):
         self.__class__.__hash__ = Control.__hash__
         self.id = self.__hash__()
-        self.type = f"{self.__class__.__module__}.{self.__class__.__qualname__}"
+        if not hasattr(self, "type") or self.type is None:
+            cls_name = f"{self.__class__.__module__}.{self.__class__.__qualname__}"
+            raise Exception(
+                f"Control {cls_name} must have @control decorator with type_name specified."
+            )
 
     def __hash__(self) -> int:
         return object.__hash__(self)
@@ -103,12 +158,12 @@ class Control:
         return None
 
 
-@dataclass(kw_only=True)
+@control(kw_only=True)
 class AdaptiveControl:
     adaptive: Optional[bool] = None
 
 
-@dataclass()
+@control("Page")
 class Page(Control, AdaptiveControl):
     url: str
     controls: List[Any] = field(default_factory=list)
@@ -134,14 +189,19 @@ class ButtonStyle:
     color: Optional[Color] = None
 
 
-@dataclass
+@control("Button")
 class Button(Control):
     text: Optional[str] = None
     styles: Optional[dict[str, ButtonStyle]] = None
     on_click: Optional[Callable[[Event], None]] = event(Event)
 
 
-@dataclass
+@control
+class MyButton(Button):
+    prop_2: Optional[str] = None
+
+
+@control("Span")
 class Span(Control):
     text: Optional[str] = None
     cls: Optional[str] = None
@@ -149,7 +209,7 @@ class Span(Control):
     head_controls: List[Any] = field(default_factory=list)
 
 
-@dataclass
+@control("Div")
 class Div(Control):
     cls: Optional[str] = None
     some_value: Any = None
@@ -158,6 +218,11 @@ class Div(Control):
 
 if __name__ != "__main__":
     exit()
+
+btn = MyButton(prop_2="2")
+print(btn.type)
+
+# exit()
 
 # test event assignment
 event_handler_type = Event
