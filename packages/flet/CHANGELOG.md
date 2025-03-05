@@ -1,3 +1,11 @@
+# 0.27.5
+
+* Added `FletApp.showAppStartupScreen` and `FletApp.appStartupScreenMessage` properties.
+* Added `tool.flet.splash.icon_bgcolor` and `tool.flet.splash.icon_dark_bgcolor` settings for Android splash screen icon image.
+* Added `tool.flet.app.boot_screen` and `tool.flet.app.startup_screen` settings for customizing Flet app "loading" screens.
+* feat: `Dropdown.menu_width` property ([#5007](https://github.com/flet-dev/flet/issues/5007))
+* PBKDF2 iteration count increased to 600,000 ([#5023](https://github.com/flet-dev/flet/issues/5023))
+
 # 0.27.4
 
 * Fix: do not remove `flutter-packages` on re-build if `dev_packages` configured.
