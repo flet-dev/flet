@@ -576,6 +576,8 @@ class Page(AdaptiveControl):
         self.__dark_theme = None
         self.__locale_configuration = None
         self.__theme_mode = ThemeMode.SYSTEM  # Default Theme Mode
+        self.__back_exit_enabled: Optional[bool] = False # Flutter Popscope
+        self.__back_exit_message: Optional[str] = None # Flutter Popscope snack bar message
         self.__pubsub: PubSubClient = PubSubClient(conn.pubsubhub, session_id)
         self.__client_storage: ClientStorage = ClientStorage(self)
         self.__session_storage: SessionStorage = SessionStorage(self)
@@ -1633,6 +1635,26 @@ class Page(AdaptiveControl):
     @property
     def session(self) -> SessionStorage:
         return self.__session_storage
+
+    # back_exit_enabled
+    @property
+    def back_exit_enabled(self) -> Optional[bool]:
+        return self.__back_exit_enabled
+
+    @back_exit_enabled.setter
+    def back_exit_enabled(self, value: Optional[bool]):
+        self.__back_exit_enabled = value if value is not None else False
+        self._set_attr("back_exit_enabled", self.__back_exit_enabled)
+
+    # back_exit_message
+    @property
+    def back_exit_message(self) -> Optional[str]:
+        return self.__back_exit_message
+
+    @back_exit_message.setter
+    def back_exit_message(self, value: Optional[str]):
+        self.__back_exit_message = value if value is not None else "Press again to exit"
+        self._set_attr("back_exit_message", self.__back_exit_message)
 
     # theme_mode
     @property
