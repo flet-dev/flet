@@ -554,6 +554,9 @@ class DiffBuilder(object):
             if parent:
                 setattr(item, "_parent", weakref.ref(parent))
 
+            # call Control.build()
+            item.build()
+
             # add control to the index
             if self.controls_index is not None:
                 self.controls_index[item.id] = item

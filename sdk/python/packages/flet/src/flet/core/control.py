@@ -136,17 +136,10 @@ class Control:
     def will_unmount(self):
         pass
 
-    # # opacity
-    # @property
-    # def opacity(self) -> float:
-    #     return self._get_attr("opacity", data_type="float", def_value=1.0)
-
-    # @opacity.setter
-    # def opacity(self, value: OptionalNumber):
+    # def validate(self):
     #     assert (
     #         value is None or 0.0 <= value <= 1.0
     #     ), "opacity must be between 0.0 and 1.0"
-    #     self._set_attr("opacity", value)
 
     # public methods
     def update(self) -> None:

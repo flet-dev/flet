@@ -65,6 +65,9 @@ class Page(AdaptiveControl):
 class MyButton(ElevatedButton):
     prop_2: Optional[str] = None
 
+    def build(self):
+        print("MyButton.page:", self.page)
+
 
 @control("Span")
 class Span(Control):
@@ -118,7 +121,7 @@ print("page.controls[0] PARENT:", page.controls[0].parent)
 # update sub-tree
 page.controls[0].some_value = "Another text"
 page.controls[0].controls = [
-    ElevatedButton(
+    MyButton(
         text="Button 😬",
         style=ButtonStyle(color=Colors.RED),
         on_click=lambda e: print(e),
@@ -128,7 +131,7 @@ page.controls[0].controls = [
 print("PAGE:", page.controls[0].controls[0].page)
 update_page(page.controls[0])
 
-# exit()
+exit()
 
 # check _prev
 print("\nPrev:", page._prev_url)
@@ -147,6 +150,7 @@ btn = page.controls[0].controls[0]
 print("PAGE:", btn.page)
 btn.text = "Supper button"
 btn.style = ButtonStyle(color=Colors.GREEN)
+btn.on_click = None
 update_page(page)
 
 # exit()
