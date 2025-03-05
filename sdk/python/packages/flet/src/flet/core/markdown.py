@@ -1,4 +1,3 @@
-import warnings
 from dataclasses import dataclass
 from enum import Enum, EnumMeta
 from typing import Any, Optional, Union, cast
@@ -31,8 +30,10 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
+from flet.core.enumerations import ExtendedEnum
 
-class MarkdownExtensionSet(Enum):
+
+class MarkdownExtensionSet(ExtendedEnum):
     NONE = "none"
     COMMON_MARK = "commonMark"
     GITHUB_WEB = "gitHubWeb"
@@ -132,7 +133,7 @@ class MarkdownStyleSheet:
     unordered_list_alignment: Optional[MainAxisAlignment] = None
 
 
-class MarkdownCodeTheme(Enum):
+class MarkdownCodeTheme(ExtendedEnum):
     A11Y_DARK = "a11y-dark"
     A11Y_LIGHT = "a11y-light"
     AGATE = "agate"
@@ -463,7 +464,7 @@ class Markdown(ConstrainedControl):
     @extension_set.setter
     def extension_set(self, value: Optional[MarkdownExtensionSet]):
         self.__extension_set = value
-        self._set_enum_attr("extensionSet", value, MarkdownExtensionSet)
+        self._set_attr("extensionSet", value)
 
     # code_style_sheet
     @property

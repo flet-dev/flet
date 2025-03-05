@@ -3,7 +3,7 @@ from typing import Any, Optional
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.control import Control
 from flet.core.ref import Ref
-from flet.core.types import IconEnums, IconValue, OptionalControlEventCallable
+from flet.core.types import IconValue, OptionalControlEventCallable
 
 
 class CupertinoContextMenuAction(AdaptiveControl):
@@ -81,7 +81,7 @@ class CupertinoContextMenuAction(AdaptiveControl):
     @trailing_icon.setter
     def trailing_icon(self, value: Optional[IconValue]):
         self.__trailing_icon = value
-        self._set_enum_attr("trailingIcon", value, IconEnums)
+        self._set_attr("trailingIcon", value)
 
     # text
     @property

@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Any, Optional, Union
 
 from flet.core.adaptive_control import AdaptiveControl
@@ -7,11 +6,11 @@ from flet.core.badge import BadgeValue
 from flet.core.buttons import OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
     ClipBehavior,
-    ColorEnums,
     ColorValue,
     MarginValue,
     OffsetValue,
@@ -22,7 +21,7 @@ from flet.core.types import (
 )
 
 
-class CardVariant(Enum):
+class CardVariant(ExtendedEnum):
     ELEVATED = "elevated"
     FILLED = "filled"
     OUTLINED = "outlined"
@@ -204,7 +203,7 @@ class Card(ConstrainedControl, AdaptiveControl):
     @color.setter
     def color(self, value):
         self.__color = value
-        self._set_enum_attr("color", value, ColorEnums)
+        self._set_attr("color", value)
 
     # shadow_color
     @property
@@ -214,7 +213,7 @@ class Card(ConstrainedControl, AdaptiveControl):
     @shadow_color.setter
     def shadow_color(self, value):
         self.__shadow_color = value
-        self._set_enum_attr("shadowColor", value, ColorEnums)
+        self._set_attr("shadowColor", value)
 
     # surface_tint_color
     @property
@@ -224,7 +223,7 @@ class Card(ConstrainedControl, AdaptiveControl):
     @surface_tint_color.setter
     def surface_tint_color(self, value):
         self.__surface_tint_color = value
-        self._set_enum_attr("surfaceTintColor", value, ColorEnums)
+        self._set_attr("surfaceTintColor", value)
 
     # shape
     @property
@@ -252,7 +251,7 @@ class Card(ConstrainedControl, AdaptiveControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+        self._set_attr("clipBehavior", value)
 
     # is_semantic_container
     @property
@@ -282,4 +281,4 @@ class Card(ConstrainedControl, AdaptiveControl):
     @variant.setter
     def variant(self, value: Optional[CardVariant]):
         self.__variant = value
-        self._set_enum_attr("variant", value, CardVariant)
+        self._set_attr("variant", value)

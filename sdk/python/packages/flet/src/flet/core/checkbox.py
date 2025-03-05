@@ -11,7 +11,6 @@ from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     ControlStateValue,
     LabelPosition,
@@ -221,7 +220,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     @label_position.setter
     def label_position(self, value: Optional[LabelPosition]):
         self.__label_position = value
-        self._set_enum_attr("labelPosition", value, LabelPosition)
+        self._set_attr("labelPosition", value)
 
     # mouse_cursor
     @property
@@ -231,7 +230,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     @mouse_cursor.setter
     def mouse_cursor(self, value: Optional[MouseCursor]):
         self.__mouse_cursor = value
-        self._set_enum_attr("mouseCursor", value, MouseCursor)
+        self._set_attr("mouseCursor", value)
 
     # visual_density
     @property
@@ -241,7 +240,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     @visual_density.setter
     def visual_density(self, value: Optional[VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, VisualDensity)
+        self._set_attr("visualDensity", value)
 
     # autofocus
     @property
@@ -260,7 +259,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     @check_color.setter
     def check_color(self, value: Optional[ColorValue]):
         self.__check_color = value
-        self._set_enum_attr("checkColor", value, ColorEnums)
+        self._set_attr("checkColor", value)
 
     # active_color
     @property
@@ -270,7 +269,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     @active_color.setter
     def active_color(self, value: Optional[ColorValue]):
         self.__active_color = value
-        self._set_enum_attr("activeColor", value, ColorEnums)
+        self._set_attr("activeColor", value)
 
     # focus_color
     @property
@@ -280,7 +279,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     @focus_color.setter
     def focus_color(self, value: Optional[ColorValue]):
         self.__focus_color = value
-        self._set_enum_attr("focusColor", value, ColorEnums)
+        self._set_attr("focusColor", value)
 
     # hover_color
     @property
@@ -290,7 +289,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     @hover_color.setter
     def hover_color(self, value: Optional[ColorValue]):
         self.__hover_color = value
-        self._set_enum_attr("hoverColor", value, ColorEnums)
+        self._set_attr("hoverColor", value)
 
     # fill_color
     @property
