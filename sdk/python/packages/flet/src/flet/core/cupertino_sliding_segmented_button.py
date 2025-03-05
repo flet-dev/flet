@@ -33,6 +33,7 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
         bgcolor: Optional[ColorValue] = None,
         thumb_color: Optional[ColorValue] = None,
         padding: Optional[PaddingValue] = None,
+        proportional_width: Optional[bool] = None,
         on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
@@ -103,6 +104,7 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
         self.bgcolor = bgcolor
         self.thumb_color = thumb_color
         self.on_change = on_change
+        self.proportional_width = proportional_width
 
     def _get_control_name(self):
         return "cupertinoslidingsegmentedbutton"
@@ -147,6 +149,16 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
         self._set_enum_attr("bgcolor", value, ColorEnums)
+
+    # proportional_width
+
+    @property
+    def proportional_width(self) -> Optional[bool]:
+        return self._get_attr("proportionalWidth", data_type="bool", def_value=False)
+
+    @proportional_width.setter
+    def proportional_width(self, value: Optional[bool]):
+        self._set_attr("proportionalWidth", value)
 
     # thumb_color
     @property

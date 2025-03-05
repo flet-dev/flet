@@ -76,6 +76,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         padding: Optional[PaddingValue] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         semantic_child_count: Optional[int] = None,
+        build_controls_on_demand: Optional[bool] = None,
         cache_extent: OptionalNumber = None,
         #
         # ConstrainedControl
@@ -170,6 +171,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.clip_behavior = clip_behavior
         self.semantic_child_count = semantic_child_count
         self.cache_extent = cache_extent
+        self.build_controls_on_demand = build_controls_on_demand
 
     def _get_control_name(self):
         return "gridview"
@@ -187,6 +189,15 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     def clean(self):
         super().clean()
         self.__controls.clear()
+
+    # build_controls_on_demand
+    @property
+    def build_controls_on_demand(self) -> Optional[bool]:
+        return self._get_attr("buildControlsOnDemand", data_type="bool", def_value=True)
+
+    @build_controls_on_demand.setter
+    def build_controls_on_demand(self, value: Optional[bool]):
+        self._set_attr("buildControlsOnDemand", value)
 
     # horizontal
     @property
