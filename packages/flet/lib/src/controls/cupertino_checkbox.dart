@@ -73,15 +73,13 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoCheckBox build: ${widget.control.id}");
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
     String label = widget.control.attrString("label", "")!;
     LabelPosition labelPosition = parseLabelPosition(
         widget.control.attrString("labelPosition"), LabelPosition.right)!;
     _tristate = widget.control.attrBool("tristate", false)!;
     bool autofocus = widget.control.attrBool("autofocus", false)!;
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-
-    debugPrint("CupertinoCheckbox build: ${widget.control.id}");
 
     bool? value = widget.control.attrBool("value", _tristate ? null : false);
     if (_value != value) {
@@ -96,7 +94,6 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
             widget.control.attrString("activeColor", "primary")!),
         checkColor: widget.control.attrColor("checkColor", context),
         focusColor: widget.control.attrColor("focusColor", context),
-        inactiveColor: widget.control.attrColor("inactiveColor", context),
         shape: parseOutlinedBorder(widget.control, "shape"),
         mouseCursor: parseMouseCursor(widget.control.attrString("mouseCursor")),
         semanticLabel: widget.control.attrString("semanticsLabel"),

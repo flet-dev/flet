@@ -26,7 +26,3 @@ def test_extension_set_enum():
     assert isinstance(r.extension_set, ft.MarkdownExtensionSet)
     assert r.extension_set == ft.MarkdownExtensionSet.COMMON_MARK
     assert r._get_attr("extensionSet") == "commonMark"
-
-    r = ft.Markdown(extension_set="none")
-    assert isinstance(r.extension_set, str)
-    assert r._get_attr("extensionSet") == "none"

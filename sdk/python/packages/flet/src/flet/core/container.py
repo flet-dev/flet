@@ -82,11 +82,6 @@ class Container(ConstrainedControl, AdaptiveControl):
         blend_mode: Optional[BlendMode] = None,
         border: Optional[Border] = None,
         border_radius: Optional[BorderRadiusValue] = None,
-        image_src: Optional[str] = None,
-        image_src_base64: Optional[str] = None,
-        image_repeat: Optional[ImageRepeat] = None,
-        image_fit: Optional[ImageFit] = None,
-        image_opacity: OptionalNumber = None,
         shape: Optional[BoxShape] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         ink: Optional[bool] = None,
@@ -100,6 +95,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
         theme: Optional[Theme] = None,
+        dark_theme: Optional[Theme] = None,
         theme_mode: Optional[ThemeMode] = None,
         color_filter: Optional[ColorFilter] = None,
         ignore_interactions: Optional[bool] = None,
@@ -189,11 +185,6 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.blend_mode = blend_mode
         self.border = border
         self.border_radius = border_radius
-        self.image_src = image_src
-        self.image_src_base64 = image_src_base64
-        self.image_repeat = image_repeat
-        self.image_fit = image_fit
-        self.image_opacity = image_opacity
         self.shape = shape
         self.clip_behavior = clip_behavior
         self.ink = ink
@@ -204,6 +195,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.url = url
         self.url_target = url_target
         self.theme = theme
+        self.dark_theme = dark_theme
         self.theme_mode = theme_mode
         self.color_filter = color_filter
         self.ignore_interactions = ignore_interactions
@@ -237,6 +229,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("blur", self.__blur)
         self._set_attr_json("shadow", self.__shadow if self.__shadow else None)
         self._set_attr_json("theme", self.__theme)
+        self._set_attr_json("darkTheme", self.__dark_theme)
         self._set_attr_json("colorFilter", self.__color_filter)
         self._set_attr_json("image", self.__image)
         self._set_attr_json("foregroundDecoration", self.__foreground_decoration)
@@ -379,50 +372,6 @@ class Container(ConstrainedControl, AdaptiveControl):
     def border_radius(self, value: Optional[BorderRadiusValue]):
         self.__border_radius = value
 
-    # image_src
-    @property
-    def image_src(self) -> Optional[str]:
-        deprecated_property(
-            name="image_src",
-            reason="Use Container.image.src instead.",
-            version="0.24.0",
-            delete_version="0.27.0",
-        )
-        return self._get_attr("imageSrc")
-
-    @image_src.setter
-    def image_src(self, value: Optional[str]):
-        self._set_attr("imageSrc", value)
-        if value is not None:
-            deprecated_property(
-                name="image_src",
-                reason="Use Container.image.src instead.",
-                version="0.24.0",
-                delete_version="0.27.0",
-            )
-
-    # image_src_base64
-    @property
-    def image_src_base64(self) -> Optional[str]:
-        deprecated_property(
-            name="image_src_base64",
-            reason="Use Container.image.src_base64 instead.",
-            version="0.24.0",
-            delete_version="0.27.0",
-        )
-        return self._get_attr("imageSrcBase64")
-
-    @image_src_base64.setter
-    def image_src_base64(self, value: Optional[str]):
-        self._set_attr("imageSrcBase64", value)
-        if value is not None:
-            deprecated_property(
-                name="image_src_base64",
-                reason="Use Container.image.src_base64 instead.",
-                version="0.24.0",
-                delete_version="0.27.0",
-            )
-
     # ignore_interactions
     @property
     def ignore_interactions(self) -> Optional[bool]:
@@ -431,72 +380,6 @@ class Container(ConstrainedControl, AdaptiveControl):
     @ignore_interactions.setter
     def ignore_interactions(self, value: Optional[str]):
         self._set_attr("ignoreInteractions", value)
-
-    # image_fit
-    @property
-    def image_fit(self) -> Optional[ImageFit]:
-        deprecated_property(
-            name="image_fit",
-            reason="Use Container.image.fit instead.",
-            version="0.24.0",
-            delete_version="0.27.0",
-        )
-
-        return self.__image_fit
-
-    @image_fit.setter
-    def image_fit(self, value: Optional[ImageFit]):
-        self.__image_fit = value
-        self._set_enum_attr("imageFit", value, ImageFit)
-        if value is not None:
-            deprecated_property(
-                name="image_fit",
-                reason="Use Container.image.fit instead.",
-                version="0.24.0",
-                delete_version="0.27.0",
-            )
-
-    # image_repeat
-    @property
-    def image_repeat(self) -> Optional[ImageRepeat]:
-        deprecated_property(
-            "image_repeat",
-            "Use Container.image.repeat instead.",
-            "0.24.0",
-            "0.27.0",
-        )
-        return self.__image_repeat
-
-    @image_repeat.setter
-    def image_repeat(self, value: Optional[ImageRepeat]):
-        self.__image_repeat = value
-        self._set_enum_attr("imageRepeat", value, ImageRepeat)
-        if value is not None:
-            deprecated_property(
-                name="image_repeat",
-                reason="Use Container.image.repeat instead.",
-                version="0.24.0",
-                delete_version="0.27.0",
-            )
-
-    # image_opacity
-    @property
-    def image_opacity(self) -> float:
-        deprecated_property(
-            "image_opacity", "Use Container.image.opacity instead.", "0.24.0", "0.27.0"
-        )
-        return self._get_attr("imageOpacity", data_type="float", def_value=1.0)
-
-    @image_opacity.setter
-    def image_opacity(self, value: OptionalNumber):
-        self._set_attr("imageOpacity", value)
-        if value is not None:
-            deprecated_property(
-                name="image_opacity",
-                reason="Use Container.image.opacity instead.",
-                version="0.24.0",
-                delete_version="0.27.0",
-            )
 
     # content
     @property
@@ -582,6 +465,15 @@ class Container(ConstrainedControl, AdaptiveControl):
     @theme.setter
     def theme(self, value: Optional[Theme]):
         self.__theme = value
+
+    # dark_theme
+    @property
+    def dark_theme(self) -> Optional[Theme]:
+        return self.__dark_theme
+
+    @dark_theme.setter
+    def dark_theme(self, value: Optional[Theme]):
+        self.__dark_theme = value
 
     # theme_mode
     @property

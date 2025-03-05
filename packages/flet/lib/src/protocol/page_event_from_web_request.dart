@@ -1,7 +1,7 @@
 class PageEventFromWebRequest {
   final String eventTarget;
   final String eventName;
-  final String eventData;
+  final String? eventData;
 
   PageEventFromWebRequest(
       {required this.eventTarget,

@@ -90,8 +90,8 @@ class Control:
         pass
 
     def _before_build_command(self) -> None:
-        if self._get_control_name() not in ["segment", "bar_chart_rod"]:
-            # see https://github.com/flet-dev/flet/pull/4525
+        # checking if tooltip has getter/setter in inherited class
+        if "tooltip" not in vars(self.__class__):
             self._set_attr_json("tooltip", self.tooltip)
         if isinstance(self.badge, (Badge, str)):
             self._set_attr_json("badge", self.badge)
@@ -529,18 +529,8 @@ class Control:
     ) -> List[Command]:
         if index:
             self.page = index["page"]
-        content = self.build()
+        self.build()
 
-        # fix for UserControl
-        if content is not None:
-            if isinstance(content, Control) and hasattr(self, "controls"):
-                self.controls = [content]
-            elif (
-                isinstance(content, List)
-                and hasattr(self, "controls")
-                and all(isinstance(control, Control) for control in content)
-            ):
-                self.controls = content
         # remove control from index
         if self.__uid and index is not None and self.__uid in index:
             del index[self.__uid]

@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -134,11 +135,11 @@ WidgetStateBorderSide? parseWidgetStateBorderSide(
 
   var j = json.decode(v);
   if (j is Map<String, dynamic> && (j.containsKey("w") || j.containsKey("c"))) {
-    j = {"": j};
+    j = {"default": j};
   }
 
   return WidgetStateBorderSideFromJSON(
-      j, (jv) => borderSideFromJSON(theme, jv, null), BorderSide.none);
+      j, (jv) => borderSideFromJSON(theme, jv), BorderSide.none);
 }
 
 class WidgetStateBorderSideFromJSON extends WidgetStateBorderSide {
@@ -150,31 +151,31 @@ class WidgetStateBorderSideFromJSON extends WidgetStateBorderSide {
       BorderSide? Function(dynamic) converterFromJson,
       BorderSide defaultValue) {
     _defaultValue = defaultValue;
-    _states = {};
-    if (jsonDictValue != null) {
-      jsonDictValue.forEach((stateStr, jv) {
-        stateStr.split(",").map((s) => s.trim().toLowerCase()).forEach((state) {
-          _states[state] = converterFromJson(jv);
-        });
-      });
-    }
+
+    // preserve user-defined order
+    _states = LinkedHashMap<String, BorderSide?>.from(
+      jsonDictValue?.map((k, v) {
+            var key = k.trim().toLowerCase();
+            // "" is deprecated and renamed to "default"
+            if (key == "") key = "default";
+            return MapEntry(key, converterFromJson(v));
+          }) ??
+          {},
+    );
   }
 
   @override
   BorderSide? resolve(Set<WidgetState> states) {
-    // find specific state
-    for (var state in states) {
-      if (_states.containsKey(state.name)) {
-        return _states[state.name];
+    // Resolve using user-defined order in _states
+    for (var stateName in _states.keys) {
+      if (stateName == "default") continue; // Skip "default"; handled last
+      if (states.any((state) => state.name == stateName)) {
+        return _states[stateName];
       }
     }
 
-    // catch-all value
-    if (_states.containsKey("")) {
-      return _states[""];
-    }
-
-    return _defaultValue;
+    // Default state
+    return _states["default"] ?? _defaultValue;
   }
 }
 

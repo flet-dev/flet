@@ -9,6 +9,7 @@ import flet_cli.commands.create
 import flet_cli.commands.pack
 import flet_cli.commands.publish
 import flet_cli.commands.run
+import flet_cli.commands.doctor # Adding the doctor command
 
 
 # Source https://stackoverflow.com/a/26379693
@@ -75,6 +76,7 @@ def main():
     flet_cli.commands.pack.Command.register_to(sp, "pack")
     flet_cli.commands.publish.Command.register_to(sp, "publish")
     flet_cli.commands.build.Command.register_to(sp, "build")
+    flet_cli.commands.doctor.Command.register_to(sp, "doctor") # Register the doctor command
     parser.set_default_subparser("run", positional_args=1)
 
     # print usage if called without args

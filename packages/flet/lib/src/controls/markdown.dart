@@ -40,12 +40,8 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
     bool disabled = control.isDisabled || parentDisabled;
 
     var value = control.attrString("value", "")!;
-    var codeTheme = control.attrString("codeTheme", "")!;
     md.ExtensionSet extensionSet = parseMarkdownExtensionSet(
         control.attrString("extensionSet"), md.ExtensionSet.none)!;
-
-    TextStyle? codeStyle =
-        parseTextStyle(Theme.of(context), control, "codeStyle"); // DEPRECATED
 
     var autoFollowLinks = control.attrBool("autoFollowLinks", false)!;
     var autoFollowLinksTarget = control.attrString("autoFollowLinksTarget");
@@ -55,11 +51,10 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
       var codeStyleSheet = parseMarkdownStyleSheet(
               control, "codeStyleSheet", Theme.of(context), pageArgs) ??
           MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-              code: codeStyle ??
-                  Theme.of(context)
-                      .textTheme
-                      .bodyMedium!
-                      .copyWith(fontFamily: "monospace"));
+              code: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(fontFamily: "monospace"));
       var mdStyleSheet = parseMarkdownStyleSheet(
           control, "mdStyleSheet", Theme.of(context), pageArgs);
       var codeTheme =
@@ -133,7 +128,7 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
               openWebBrowser(href, webWindowName: autoFollowLinksTarget);
             }
             backend.triggerControlEvent(
-                control.id, "tap_link", href?.toString() ?? "");
+                control.id, "tap_link", href?.toString());
           });
 
       return constrainedControl(context, markdown, parent, control);
