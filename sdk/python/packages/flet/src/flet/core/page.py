@@ -109,8 +109,7 @@ try:
     from flet.auth.oauth_provider import OAuthProvider
 except ImportError as e:
 
-    class OAuthProvider:
-        ...
+    class OAuthProvider: ...
 
     class Authorization:
         def __init__(
@@ -119,8 +118,7 @@ except ImportError as e:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ):
-            ...
+        ): ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -1980,29 +1978,11 @@ class InvokeMethodResults:
     error: Optional[str]
 
 
+@dataclass
 class PageMediaData(ControlEvent):
-    def __init__(self, padding, view_padding, view_insets) -> None:
-        self.padding = Padding(
-            left=padding["left"],
-            top=padding["top"],
-            right=padding["right"],
-            bottom=padding["bottom"],
-        )
-        self.view_padding = Padding(
-            left=view_padding["left"],
-            top=view_padding["top"],
-            right=view_padding["right"],
-            bottom=view_padding["bottom"],
-        )
-        self.view_insets = Padding(
-            left=view_insets["left"],
-            top=view_insets["top"],
-            right=view_insets["right"],
-            bottom=view_insets["bottom"],
-        )
-
-    def __str__(self) -> str:
-        return f"PageMediaData(padding={self.padding}, view_padding={self.view_padding}, view_insets={self.view_insets})"
+    padding: Padding
+    view_padding: Padding
+    view_insets: Padding
 
 
 class AppLifecycleStateChangeEvent(ControlEvent):

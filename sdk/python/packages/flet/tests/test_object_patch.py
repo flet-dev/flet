@@ -62,11 +62,16 @@ class Page(AdaptiveControl):
 
 
 @control
-class MyButton(ElevatedButton):
+class SuperElevatedButton(ElevatedButton):
     prop_2: Optional[str] = None
 
     def build(self):
         print("MyButton.page:", self.page)
+
+
+@control("MyButton")
+class MyButton(ElevatedButton):
+    prop_1: Optional[str] = None
 
 
 @control("Span")
@@ -85,10 +90,19 @@ class Div(Control):
 
 
 if __name__ != "__main__":
-    exit()
 
-btn = MyButton(prop_2="2")
-print(btn.type)
+    def test_control_type():
+        btn = ElevatedButton("some button")
+        assert btn.type == "ElevatedButton"
+
+    def test_inherited_control_has_the_same_type():
+        btn = SuperElevatedButton(prop_2="2")
+        assert btn.type == "ElevatedButton"
+
+    def test_inherited_control_with_overridden_type():
+        btn = MyButton(prop_1="1")
+        assert btn.type == "MyButton"
+
 
 # exit()
 
@@ -121,7 +135,7 @@ print("page.controls[0] PARENT:", page.controls[0].parent)
 # update sub-tree
 page.controls[0].some_value = "Another text"
 page.controls[0].controls = [
-    MyButton(
+    SuperElevatedButton(
         text="Button 😬",
         style=ButtonStyle(color=Colors.RED),
         on_click=lambda e: print(e),

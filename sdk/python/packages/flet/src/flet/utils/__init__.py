@@ -9,6 +9,7 @@ from flet.utils.files import (
     safe_tar_extractall,
     which,
 )
+from flet.utils.from_dict import from_dict
 from flet.utils.hashing import calculate_file_hash, sha1
 from flet.utils.network import get_free_tcp_port, get_local_ip
 from flet.utils.once import Once
