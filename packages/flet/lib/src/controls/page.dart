@@ -698,7 +698,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
           debugPrint("_buildNavigator build");
 
           var showAppStartupScreen =
-              FletAppServices.of(context).showAppStartupScreen ?? false;
+              FletAppServices.of(context).showAppStartupScreen ?? true;
           var appStartupScreenMessage =
               FletAppServices.of(context).appStartupScreenMessage ?? "";
 
