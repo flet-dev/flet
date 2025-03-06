@@ -123,7 +123,7 @@ class FletApp(ConstrainedControl):
     # show_app_startup_screen
     @property
     def show_app_startup_screen(self) -> bool:
-        return self._get_attr("showAppStartupScreen", data_type="bool", def_value=False)
+        return self._get_attr("showAppStartupScreen", data_type="bool", def_value=True)
 
     @show_app_startup_screen.setter
     def show_app_startup_screen(self, value: Optional[bool]):
