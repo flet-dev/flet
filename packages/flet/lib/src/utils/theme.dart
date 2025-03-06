@@ -125,6 +125,7 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
     scaffoldBackgroundColor: parseColor(theme, json?["scaffold_bgcolor"]),
     cardColor: parseColor(theme, json?["card_color"]),
     dividerColor: parseColor(theme, json?["divider_color"]),
+    // TODO: deprecated in v0.27.0, and to be removed in v0.30.0
     dialogBackgroundColor: parseColor(theme, json?["dialog_bgcolor"]),
     indicatorColor: parseColor(theme, json?["indicator_color"]),
     hintColor: parseColor(theme, json?["hint_color"]),
@@ -772,6 +773,8 @@ FloatingActionButtonThemeData? parseFloatingActionButtonTheme(
     extendedSizeConstraints:
         boxConstraintsFromJSON(j["extended_size_constraints"]),
     sizeConstraints: boxConstraintsFromJSON(j["size_constraints"]),
+    smallSizeConstraints: boxConstraintsFromJSON(j["small_size_constraints"]),
+    largeSizeConstraints: boxConstraintsFromJSON(j["large_size_constraints"]),
   );
 }
 
@@ -826,6 +829,7 @@ AppBarTheme? parseAppBarTheme(ThemeData theme, Map<String, dynamic>? j) {
     titleSpacing: parseDouble(j["title_spacing"]),
     scrolledUnderElevation: parseDouble(j["scroll_elevation"]),
     toolbarHeight: parseDouble(j["toolbar_height"]),
+    actionsPadding: edgeInsetsFromJson(j["actions_padding"]),
   );
 }
 
@@ -929,6 +933,7 @@ SwitchThemeData? parseSwitchTheme(ThemeData theme, Map<String, dynamic>? j) {
         j["track_outline_width"], (jv) => parseDouble(jv)),
     mouseCursor: getWidgetStateProperty<MouseCursor?>(
         j["mouse_cursor"], (jv) => parseMouseCursor(jv)),
+    padding: edgeInsetsFromJson(j["padding"]),
   );
 }
 
@@ -1191,6 +1196,7 @@ TooltipThemeData? parseTooltipTheme(ThemeData theme, Map<String, dynamic>? j) {
     exitDuration: durationFromJSON(j["exit_duration"]),
     showDuration: durationFromJSON(j["show_duration"]),
     margin: edgeInsetsFromJson(j["margin"]),
+    textAlign: parseTextAlign(j["text_align"]),
     triggerMode: parseTooltipTriggerMode(j["trigger_mode"]),
     // TODO: replace null with PageArgsModel
     decoration: boxDecorationFromJSON(theme, j["decoration"], null),
@@ -1257,6 +1263,12 @@ SliderThemeData? parseSliderTheme(ThemeData theme, Map<String, dynamic>? j) {
     valueIndicatorStrokeColor:
         parseColor(theme, j["value_indicator_stroke_color"]),
     allowedInteraction: parseSliderInteraction(j["interaction"]),
+    padding: edgeInsetsFromJson(j["padding"]),
+    trackGap: parseDouble(j["track_gap"]),
+    thumbSize: getWidgetStateProperty<Size?>(
+        j["thumb_size"], (jv) => sizeFromJson(jv)),
+    // TODO: deprecated in v0.27.0, to be removed in future versions
+    year2023: parseBool(j["year_2023"]),
   );
 }
 
@@ -1272,6 +1284,16 @@ ProgressIndicatorThemeData? parseProgressIndicatorTheme(
     linearTrackColor: parseColor(theme, j["linear_track_color"]),
     refreshBackgroundColor: parseColor(theme, j["refresh_bgcolor"]),
     linearMinHeight: parseDouble(j["linear_min_height"]),
+    borderRadius: borderRadiusFromJSON(j["border_radius"]),
+    trackGap: parseDouble(j["track_gap"]),
+    circularTrackPadding: edgeInsetsFromJson(j["circular_track_padding"]),
+    constraints: boxConstraintsFromJSON(j["size_constraints"]),
+    stopIndicatorColor: parseColor(theme, j["stop_indicator_color"]),
+    stopIndicatorRadius: parseDouble(j["stop_indicator_radius"]),
+    strokeAlign: parseDouble(j["stroke_align"]),
+    strokeCap: parseStrokeCap(j["stroke_cap"]),
+    strokeWidth: parseDouble(j["stroke_width"]),
+    year2023: parseBool(j["year_2023"]),
   );
 }
 
@@ -1363,6 +1385,9 @@ SearchViewThemeData? parseSearchViewTheme(
     side: borderSideFromJSON(theme, j["border_side"]),
     constraints: boxConstraintsFromJSON(j["size_constraints"]),
     headerHeight: parseDouble(j["header_height"]),
+    padding: edgeInsetsFromJson(j["padding"]),
+    barPadding: edgeInsetsFromJson(j["bar_padding"]),
+    shrinkWrap: parseBool(j["shrink_wrap"]),
   );
 }
 
@@ -1378,7 +1403,7 @@ NavigationDrawerThemeData? parseNavigationDrawerTheme(
     surfaceTintColor: parseColor(theme, j["surface_tint_color"]),
     indicatorColor: parseColor(theme, j["indicator_color"]),
     elevation: parseDouble(j["elevation"]),
-    //indicatorSize: ,
+    indicatorSize: sizeFromJson(j["indicator_size"]),
     tileHeight: parseDouble(j["tile_height"]),
     labelTextStyle: getWidgetStateProperty<TextStyle?>(
         j["label_text_style"], (jv) => textStyleFromJson(theme, jv)),
@@ -1412,6 +1437,7 @@ NavigationBarThemeData? parseNavigationBarTheme(
         ? NavigationDestinationLabelBehavior.values.firstWhereOrNull(
             (c) => c.name.toLowerCase() == j["label_behavior"].toLowerCase())
         : null,
+    labelPadding: edgeInsetsFromJson(j["label_padding"]),
   );
 }
 
@@ -1462,6 +1488,8 @@ PageTransitionsBuilder parseTransitionsBuilder(
       return const NoPageTransitionsBuilder();
     case "predictive":
       return const PredictiveBackPageTransitionsBuilder();
+    case "fadeforwards":
+      return const FadeForwardsPageTransitionsBuilder();
     default:
       return defaultBuilder;
   }

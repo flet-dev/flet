@@ -10,6 +10,7 @@ from flet.core.ref import Ref
 from flet.core.scrollable_control import OnScrollEvent
 from flet.core.types import (
     ClipBehavior,
+    MouseCursor,
     OffsetValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
@@ -38,56 +39,57 @@ class ReorderableListView(ListView):
     """
 
     def __init__(
-            self,
-            controls: Optional[Sequence[Control]] = None,
-            horizontal: Optional[bool] = None,
-            item_extent: OptionalNumber = None,
-            first_item_prototype: Optional[bool] = None,
-            padding: PaddingValue = None,
-            clip_behavior: Optional[ClipBehavior] = None,
-            cache_extent: OptionalNumber = None,
-            anchor: OptionalNumber = None,
-            auto_scroller_velocity_scalar: OptionalNumber = None,
-            header: Optional[Control] = None,
-            footer: Optional[Control] = None,
-            build_controls_on_demand: Optional[bool] = None,
-            on_reorder: OptionalEventCallable[OnReorderEvent] = None,
-            on_reorder_start: OptionalEventCallable[OnReorderEvent] = None,
-            on_reorder_end: OptionalEventCallable[OnReorderEvent] = None,
-            #
-            # ScrollableControl
-            #
-            auto_scroll: Optional[bool] = None,
-            reverse: Optional[bool] = None,
-            on_scroll_interval: OptionalNumber = None,
-            on_scroll: OptionalEventCallable[OnScrollEvent] = None,
-            ref: Optional[Ref] = None,
-            key: Optional[str] = None,
-            width: OptionalNumber = None,
-            height: OptionalNumber = None,
-            left: OptionalNumber = None,
-            top: OptionalNumber = None,
-            right: OptionalNumber = None,
-            bottom: OptionalNumber = None,
-            expand: Union[None, bool, int] = None,
-            expand_loose: Optional[bool] = None,
-            col: Optional[ResponsiveNumber] = None,
-            opacity: OptionalNumber = None,
-            rotate: RotateValue = None,
-            scale: ScaleValue = None,
-            offset: OffsetValue = None,
-            aspect_ratio: OptionalNumber = None,
-            animate_opacity: Optional[AnimationValue] = None,
-            animate_size: Optional[AnimationValue] = None,
-            animate_position: Optional[AnimationValue] = None,
-            animate_rotation: Optional[AnimationValue] = None,
-            animate_scale: Optional[AnimationValue] = None,
-            animate_offset: Optional[AnimationValue] = None,
-            on_animation_end: OptionalControlEventCallable = None,
-            visible: Optional[bool] = None,
-            disabled: Optional[bool] = None,
-            data: Any = None,
-            adaptive: Optional[bool] = None,
+        self,
+        controls: Optional[Sequence[Control]] = None,
+        horizontal: Optional[bool] = None,
+        item_extent: OptionalNumber = None,
+        first_item_prototype: Optional[bool] = None,
+        padding: PaddingValue = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        cache_extent: OptionalNumber = None,
+        anchor: OptionalNumber = None,
+        auto_scroller_velocity_scalar: OptionalNumber = None,
+        header: Optional[Control] = None,
+        footer: Optional[Control] = None,
+        build_controls_on_demand: Optional[bool] = None,
+        mouse_cursor: Optional[MouseCursor] = None,
+        on_reorder: OptionalEventCallable[OnReorderEvent] = None,
+        on_reorder_start: OptionalEventCallable[OnReorderEvent] = None,
+        on_reorder_end: OptionalEventCallable[OnReorderEvent] = None,
+        #
+        # ScrollableControl
+        #
+        auto_scroll: Optional[bool] = None,
+        reverse: Optional[bool] = None,
+        on_scroll_interval: OptionalNumber = None,
+        on_scroll: OptionalEventCallable[OnScrollEvent] = None,
+        ref: Optional[Ref] = None,
+        key: Optional[str] = None,
+        width: OptionalNumber = None,
+        height: OptionalNumber = None,
+        left: OptionalNumber = None,
+        top: OptionalNumber = None,
+        right: OptionalNumber = None,
+        bottom: OptionalNumber = None,
+        expand: Union[None, bool, int] = None,
+        expand_loose: Optional[bool] = None,
+        col: Optional[ResponsiveNumber] = None,
+        opacity: OptionalNumber = None,
+        rotate: RotateValue = None,
+        scale: ScaleValue = None,
+        offset: OffsetValue = None,
+        aspect_ratio: OptionalNumber = None,
+        animate_opacity: Optional[AnimationValue] = None,
+        animate_size: Optional[AnimationValue] = None,
+        animate_position: Optional[AnimationValue] = None,
+        animate_rotation: Optional[AnimationValue] = None,
+        animate_scale: Optional[AnimationValue] = None,
+        animate_offset: Optional[AnimationValue] = None,
+        on_animation_end: OptionalControlEventCallable = None,
+        visible: Optional[bool] = None,
+        disabled: Optional[bool] = None,
+        data: Any = None,
+        adaptive: Optional[bool] = None,
     ):
         ListView.__init__(
             self,
@@ -147,6 +149,7 @@ class ReorderableListView(ListView):
         self.auto_scroller_velocity_scalar = auto_scroller_velocity_scalar
         self.on_reorder_start = on_reorder_start
         self.on_reorder_end = on_reorder_end
+        self.mouse_cursor = mouse_cursor
 
     def _get_control_name(self):
         return "reorderablelistview"
@@ -181,6 +184,16 @@ class ReorderableListView(ListView):
     @auto_scroller_velocity_scalar.setter
     def auto_scroller_velocity_scalar(self, value: OptionalNumber):
         self._set_attr("autoScrollerVelocityScalar", value)
+
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self.__mouse_cursor
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # header
     @property

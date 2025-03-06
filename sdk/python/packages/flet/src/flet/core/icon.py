@@ -8,6 +8,7 @@ from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
+    BlendMode,
     ColorEnums,
     ColorValue,
     IconEnums,
@@ -63,6 +64,7 @@ class Icon(ConstrainedControl):
         grade: OptionalNumber = None,
         weight: OptionalNumber = None,
         optical_size: OptionalNumber = None,
+        blend_mode: Optional[BlendMode] = None,
         #
         # ConstrainedControl
         #
@@ -125,6 +127,7 @@ class Icon(ConstrainedControl):
         self.grade = grade
         self.weight = weight
         self.optical_size = optical_size
+        self.blend_mode = blend_mode
 
     def _get_control_name(self):
         return "icon"
@@ -142,6 +145,16 @@ class Icon(ConstrainedControl):
     def name(self, value: Optional[IconValue]):
         self.__name = value
         self._set_enum_attr("name", value, IconEnums)
+
+    # blend_mode
+    @property
+    def blend_mode(self) -> Optional[BlendMode]:
+        return self.__blend_mode
+
+    @blend_mode.setter
+    def blend_mode(self, value: Optional[BlendMode]):
+        self.__blend_mode = value
+        self._set_enum_attr("blendMode", value, BlendMode)
 
     # color
     @property
