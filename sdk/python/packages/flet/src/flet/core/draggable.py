@@ -224,7 +224,7 @@ class Draggable(Control):
     @axis.setter
     def axis(self, value: Optional[Axis]):
         self.__axis = value
-        self._set_enum_attr("axis", value, Axis)
+        self._set_attr("axis", value)
 
     # affinity
     @property
@@ -234,7 +234,7 @@ class Draggable(Control):
     @affinity.setter
     def affinity(self, value: Optional[Axis]):
         self.__affinity = value
-        self._set_enum_attr("affinity", value, Axis)
+        self._set_attr("affinity", value)
 
     # on_drag_start
     @property

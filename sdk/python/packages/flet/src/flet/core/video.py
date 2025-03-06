@@ -1,5 +1,4 @@
 import dataclasses
-from enum import Enum
 from typing import Any, Dict, List, Optional, Union, cast
 
 from flet.core.alignment import Alignment
@@ -8,11 +7,11 @@ from flet.core.badge import BadgeValue
 from flet.core.box import FilterQuality
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     ImageFit,
     OffsetValue,
@@ -27,7 +26,7 @@ from flet.core.types import (
 from flet.utils import deprecated
 
 
-class PlaylistMode(Enum):
+class PlaylistMode(ExtendedEnum):
     NONE = "none"
     SINGLE = "single"
     LOOP = "loop"
@@ -356,7 +355,7 @@ class Video(ConstrainedControl):
     @fill_color.setter
     def fill_color(self, value: Optional[ColorValue]):
         self.__fill_color = value
-        self._set_enum_attr("fillColor", value, ColorEnums)
+        self._set_attr("fillColor", value)
 
     # wakelock
     @property
@@ -485,7 +484,7 @@ class Video(ConstrainedControl):
     @filter_quality.setter
     def filter_quality(self, value: Optional[FilterQuality]):
         self.__filter_quality = value
-        self._set_enum_attr("filterQuality", value, FilterQuality)
+        self._set_attr("filterQuality", value)
 
     # playlist_mode
     @property
@@ -495,7 +494,7 @@ class Video(ConstrainedControl):
     @playlist_mode.setter
     def playlist_mode(self, value: Optional[PlaylistMode]):
         self.__playlist_mode = value
-        self._set_enum_attr("playlistMode", value, PlaylistMode)
+        self._set_attr("playlistMode", value)
 
     # on_enter_fullscreen
     @property

@@ -5,12 +5,7 @@ from flet.core.box import BoxConstraints
 from flet.core.buttons import OutlinedBorder
 from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
-from flet.core.types import (
-    ClipBehavior,
-    ColorEnums,
-    ColorValue,
-    OptionalControlEventCallable,
-)
+from flet.core.types import ClipBehavior, ColorValue, OptionalControlEventCallable
 
 
 class BottomSheet(Control):
@@ -141,7 +136,7 @@ class BottomSheet(Control):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgColor", value, ColorEnums)
+        self._set_attr("bgColor", value)
 
     # dismissible
     @property
@@ -234,7 +229,7 @@ class BottomSheet(Control):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+        self._set_attr("clipBehavior", value)
 
     # shape
     @property

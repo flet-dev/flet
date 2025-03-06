@@ -1,12 +1,12 @@
-from enum import Enum
 from typing import Any, Optional
 
 from flet.core.control import Control
+from flet.core.enumerations import ExtendedEnum
 from flet.core.ref import Ref
 from flet.utils import deprecated
 
 
-class PermissionStatus(Enum):
+class PermissionStatus(ExtendedEnum):
     GRANTED = "granted"
     DENIED = "denied"
     PERMANENTLY_DENIED = "permanentlyDenied"
@@ -15,7 +15,7 @@ class PermissionStatus(Enum):
     RESTRICTED = "restricted"
 
 
-class PermissionType(Enum):
+class PermissionType(ExtendedEnum):
     ACCESS_MEDIA_LOCATION = "accessMediaLocation"
     ACCESS_NOTIFICATION_POLICY = "accessNotificationPolicy"
     ACTIVITY_RECOGNITION = "activityRecognition"

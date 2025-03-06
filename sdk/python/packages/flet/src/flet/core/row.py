@@ -192,7 +192,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @alignment.setter
     def alignment(self, value: Optional[MainAxisAlignment]):
         self.__alignment = value
-        self._set_enum_attr("alignment", value, MainAxisAlignment)
+        self._set_attr("alignment", value)
 
     # run_alignment
     @property
@@ -202,7 +202,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @run_alignment.setter
     def run_alignment(self, value: Optional[MainAxisAlignment]):
         self.__run_alignment = value
-        self._set_enum_attr("runAlignment", value, MainAxisAlignment)
+        self._set_attr("runAlignment", value)
 
     # vertical_alignment
     @property
@@ -212,7 +212,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     @vertical_alignment.setter
     def vertical_alignment(self, value: Optional[CrossAxisAlignment]):
         self.__vertical_alignment = value
-        self._set_enum_attr("verticalAlignment", value, CrossAxisAlignment)
+        self._set_attr("verticalAlignment", value)
 
     # spacing
     @property

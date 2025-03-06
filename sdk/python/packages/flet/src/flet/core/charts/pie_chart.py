@@ -1,5 +1,4 @@
 import json
-from enum import Enum
 from typing import Any, List, Optional, Union
 
 from flet.core.animation import AnimationValue
@@ -8,11 +7,11 @@ from flet.core.charts.pie_chart_section import PieChartSection
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
 from flet.core.control_event import ControlEvent
+from flet.core.enumerations import ExtendedEnum
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
@@ -136,7 +135,7 @@ class PieChart(ConstrainedControl):
     @center_space_color.setter
     def center_space_color(self, value: Optional[ColorValue]):
         self.__center_space_color = value
-        self._set_enum_attr("centerSpaceColor", value, ColorEnums)
+        self._set_attr("centerSpaceColor", value)
 
     # center_space_radius
     @property
@@ -185,7 +184,7 @@ class PieChart(ConstrainedControl):
         self._set_attr("onChartEvent", True if handler is not None else None)
 
 
-class PieChartEventType(Enum):
+class PieChartEventType(ExtendedEnum):
     POINTER_ENTER = "pointerEnter"
     POINTER_EXIT = "pointerExit"
     POINTER_HOVER = "pointerHover"

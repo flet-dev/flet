@@ -12,7 +12,6 @@ from flet.core.navigation_bar import NavigationBar
 from flet.core.navigation_drawer import NavigationDrawer
 from flet.core.scrollable_control import OnScrollEvent, ScrollableControl
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
@@ -235,7 +234,7 @@ class View(ScrollableControl, AdaptiveControl):
     @horizontal_alignment.setter
     def horizontal_alignment(self, value: CrossAxisAlignment):
         self.__horizontal_alignment = value
-        self._set_enum_attr("horizontalAlignment", value, CrossAxisAlignment)
+        self._set_attr("horizontalAlignment", value)
 
     # vertical_alignment
     @property
@@ -245,7 +244,7 @@ class View(ScrollableControl, AdaptiveControl):
     @vertical_alignment.setter
     def vertical_alignment(self, value: MainAxisAlignment):
         self.__vertical_alignment = value
-        self._set_enum_attr("verticalAlignment", value, MainAxisAlignment)
+        self._set_attr("verticalAlignment", value)
 
     # spacing
     @property
@@ -273,7 +272,7 @@ class View(ScrollableControl, AdaptiveControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # fullscreen_dialog
     @property

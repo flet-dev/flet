@@ -1,10 +1,10 @@
-from enum import Enum
 from typing import Any, Optional, Union
 
 from flet.core.animation import AnimationCurve, AnimationValue
 from flet.core.badge import BadgeValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
@@ -23,7 +23,7 @@ except ImportError:
 TransitionValueString = Literal["fade", "rotation", "scale"]
 
 
-class AnimatedSwitcherTransition(Enum):
+class AnimatedSwitcherTransition(ExtendedEnum):
     FADE = "fade"
     ROTATION = "rotation"
     SCALE = "scale"
@@ -202,7 +202,7 @@ class AnimatedSwitcher(ConstrainedControl):
     @switch_in_curve.setter
     def switch_in_curve(self, value: Optional[AnimationCurve]):
         self.__switch_in_curve = value
-        self._set_enum_attr("switchInCurve", value, AnimationCurve)
+        self._set_attr("switchInCurve", value)
 
     # switch_out_curve
     @property
@@ -212,7 +212,7 @@ class AnimatedSwitcher(ConstrainedControl):
     @switch_out_curve.setter
     def switch_out_curve(self, value: Optional[AnimationCurve]):
         self.__switch_out_curve = value
-        self._set_enum_attr("switchOutCurve", value, AnimationCurve)
+        self._set_attr("switchOutCurve", value)
 
     # transition
     @property
@@ -222,4 +222,4 @@ class AnimatedSwitcher(ConstrainedControl):
     @transition.setter
     def transition(self, value: Optional[AnimatedSwitcherTransition]):
         self.__transition = value
-        self._set_enum_attr("transition", value, AnimatedSwitcherTransition)
+        self._set_attr("transition", value)

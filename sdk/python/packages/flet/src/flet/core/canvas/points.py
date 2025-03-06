@@ -1,12 +1,12 @@
-from enum import Enum
 from typing import Any, List, Optional
 
 from flet.core.canvas.shape import Shape
+from flet.core.enumerations import ExtendedEnum
 from flet.core.painting import Paint
 from flet.core.types import OffsetValue
 
 
-class PointMode(Enum):
+class PointMode(ExtendedEnum):
     POINTS = "points"
     LINES = "lines"
     POLYGON = "polygon"

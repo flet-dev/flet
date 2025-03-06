@@ -1,16 +1,16 @@
 import json
-from enum import Enum
 from typing import Any, Optional
 
 from flet.core.control import Control, OptionalNumber
 from flet.core.control_event import ControlEvent
+from flet.core.enumerations import ExtendedEnum
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.types import OptionalEventCallable
 from flet.utils import deprecated
 
 
-class AudioRecorderState(Enum):
+class AudioRecorderState(ExtendedEnum):
     STOPPED = "stopped"
     RECORDING = "recording"
     PAUSED = "paused"
@@ -22,7 +22,7 @@ class AudioRecorderStateChangeEvent(ControlEvent):
         self.state: AudioRecorderState = AudioRecorderState(e.data)
 
 
-class AudioEncoder(Enum):
+class AudioEncoder(ExtendedEnum):
     AACLC = "aacLc"
     AACELD = "aacEld"
     AACHE = "aacHe"
@@ -245,7 +245,7 @@ class AudioRecorder(Control):
 
     @audio_encoder.setter
     def audio_encoder(self, value: Optional[AudioEncoder]):
-        self._set_enum_attr("audioEncoder", value, AudioEncoder)
+        self._set_attr("audioEncoder", value)
 
     # suppress_noise
     @property

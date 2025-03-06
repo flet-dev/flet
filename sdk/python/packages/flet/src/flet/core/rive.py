@@ -191,4 +191,4 @@ class Rive(ConstrainedControl):
     @fit.setter
     def fit(self, value: Optional[ImageFit]):
         self.__fit = value
-        self._set_enum_attr("fit", value, ImageFit)
+        self._set_attr("fit", value)

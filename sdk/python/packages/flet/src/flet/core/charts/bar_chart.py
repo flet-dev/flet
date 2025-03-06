@@ -1,5 +1,4 @@
 import json
-from enum import Enum
 from typing import Any, List, Optional, Union
 
 from flet.core.animation import AnimationValue
@@ -11,11 +10,11 @@ from flet.core.charts.chart_grid_lines import ChartGridLines
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
 from flet.core.control_event import ControlEvent
+from flet.core.enumerations import ExtendedEnum
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
@@ -27,7 +26,7 @@ from flet.core.types import (
 )
 
 
-class TooltipDirection(Enum):
+class TooltipDirection(ExtendedEnum):
     AUTO = "auto"
     TOP = "top"
     BOTTOM = "bottom"
@@ -221,7 +220,7 @@ class BarChart(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # interactive
     @property
@@ -240,7 +239,7 @@ class BarChart(ConstrainedControl):
     @tooltip_bgcolor.setter
     def tooltip_bgcolor(self, value: Optional[str]):
         self.__tooltip_bgcolor = value
-        self._set_enum_attr("tooltipBgcolor", value, ColorEnums)
+        self._set_attr("tooltipBgcolor", value)
 
     # border
     @property
@@ -412,7 +411,7 @@ class BarChart(ConstrainedControl):
     @tooltip_direction.setter
     def tooltip_direction(self, value: Optional[TooltipDirection]):
         self.__tooltip_direction = value
-        self._set_enum_attr("tooltipDirection", value, TooltipDirection)
+        self._set_attr("tooltipDirection", value)
 
     # on_chart_event
     @property
