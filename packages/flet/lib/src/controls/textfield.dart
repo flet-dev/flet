@@ -84,7 +84,8 @@ class _TextFieldControlState extends State<TextFieldControl>
     setState(() {
       _focused = _shiftEnterfocusNode.hasFocus;
     });
-    widget.backend.triggerControlEvent(widget.control.id, _shiftEnterfocusNode.hasFocus ? "focus" : "blur");
+    widget.backend.triggerControlEvent(
+        widget.control.id, _shiftEnterfocusNode.hasFocus ? "focus" : "blur");
   }
 
   void _onFocusChange() {
@@ -122,7 +123,11 @@ class _TextFieldControlState extends State<TextFieldControl>
       String value = widget.control.attrs["value"] ?? "";
       if (_value != value) {
         _value = value;
-        _controller.text = value;
+        _controller.value = TextEditingValue(
+          text: value,
+          selection: TextSelection.collapsed(
+              offset: value.length), // preserve cursor position at the end
+        );
       }
 
       var prefixControls =
