@@ -25,6 +25,7 @@ from typing import (
     TypeVar,
     Union,
     cast,
+    Literal,
 )
 from urllib.parse import urlparse
 
@@ -1187,7 +1188,10 @@ class Page(AdaptiveControl):
         control_id: Optional[str] = "",
         wait_for_result: Optional[bool] = False,
         wait_timeout: Optional[float] = 5,
-    ) -> Optional[str]:
+        result_type: Literal[
+            "string", "int", "float", "bool", "json_encoded"
+        ] = "string",
+    ) -> Optional[Any]:
         method_id = uuid.uuid4().hex
 
         # register callback
@@ -1218,8 +1222,22 @@ class Page(AdaptiveControl):
         result, err = self.__method_call_results.pop(evt)
         if err:
             raise Exception(err)
+
         if result is None or result == "null":
             return None
+
+        # parse result according to result_type
+        try:
+            if result_type == "int":
+                return int(result)
+            elif result_type == "float":
+                return float(result)
+            elif result_type == "bool":
+                return result == "true"
+            elif result_type == "json_encoded":
+                return json.loads(result)
+        except Exception:
+            return result
         return result
 
     async def _invoke_method_async(
@@ -1229,7 +1247,10 @@ class Page(AdaptiveControl):
         control_id: Optional[str] = "",
         wait_for_result: Optional[bool] = False,
         wait_timeout: Optional[float] = 5,
-    ) -> Optional[str]:
+        result_type: Literal[
+            "string", "int", "float", "bool", "json_encoded"
+        ] = "string",
+    ) -> Optional[Any]:
         method_id = uuid.uuid4().hex
 
         # register callback
@@ -1264,6 +1285,19 @@ class Page(AdaptiveControl):
             raise Exception(err)
         if result == "null":
             return None
+
+        # parse result according to result_type
+        try:
+            if result_type == "int":
+                return int(result)
+            elif result_type == "float":
+                return float(result)
+            elif result_type == "bool":
+                return result == "true"
+            elif result_type == "json_encoded":
+                return json.loads(result)
+        except Exception:
+            return result
         return result
 
     def __on_invoke_method_result(self, e) -> None:

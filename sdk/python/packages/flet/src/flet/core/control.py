@@ -345,7 +345,10 @@ class Control:
         arguments: Optional[Dict[str, str]] = None,
         wait_for_result: bool = False,
         wait_timeout: Optional[float] = 5,
-    ) -> Optional[str]:
+        result_type: Literal[
+            "string", "int", "float", "bool", "json_encoded"
+        ] = "string",
+    ) -> Optional[Any]:
         assert (
             self.__page
         ), f"{self.__class__.__qualname__} Control must be added to the page first"
@@ -358,6 +361,7 @@ class Control:
             arguments=arguments,
             wait_for_result=wait_for_result,
             wait_timeout=wait_timeout,
+            result_type=result_type,
         )
 
     def invoke_method_async(
@@ -366,7 +370,10 @@ class Control:
         arguments: Optional[Dict[str, str]] = None,
         wait_for_result: bool = False,
         wait_timeout: Optional[float] = 5,
-    ):
+        result_type: Literal[
+            "string", "int", "float", "bool", "json_encoded"
+        ] = "string",
+    ) -> Optional[Any]:
         assert (
             self.__page
         ), f"{self.__class__.__qualname__} Control must be added to the page first"
@@ -379,6 +386,7 @@ class Control:
             arguments=arguments,
             wait_for_result=wait_for_result,
             wait_timeout=wait_timeout,
+            result_type=result_type,
         )
 
     def copy_attrs(self, dest: Dict[str, Any]) -> None:

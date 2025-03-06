@@ -37,6 +37,9 @@ from flet.core.notifications import (
     NotificationImportance,
     NotificationRingtoneType,
     NotificationLayout,
+    NotificationLifeCycle,
+    NotificationCalendar,
+    NotificationInterval,
 )
 from flet.core.audio import (
     Audio,

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Optional, List
+from typing import Any, Optional, List, Union
 
 from flet.core.badge import BadgeValue
 from flet.core.control import Control, OptionalNumber
@@ -83,6 +83,39 @@ class NotificationGroupAlertBehavior(Enum):
     CHILDREN = "children"
 
 
+class NotificationLifeCycle(Enum):
+    FOREGROUND = "foreground"
+    BACKGROUND = "background"
+    TERMINATED = "terminated"
+
+
+@dataclass
+class NotificationInterval:
+    interval: DurationValue
+    time_zone: Optional[str] = None
+    allow_while_idle: bool = False
+    repeats: bool = False
+    precise_alarm: bool = False
+
+
+@dataclass
+class NotificationCalendar:
+    day: Optional[int] = None
+    hour: Optional[int] = None
+    minute: Optional[int] = None
+    second: Optional[int] = None
+    millisecond: Optional[int] = None
+    month: Optional[int] = None
+    weekday: Optional[int] = None
+    week_of_year: Optional[int] = None
+    year: Optional[int] = None
+    era: Optional[int] = None
+    time_zone: Optional[str] = None
+    allow_while_idle: bool = False
+    repeats: bool = False
+    precise_alarm: bool = False
+
+
 @dataclass
 class NotificationContent:
     id: int
@@ -99,27 +132,27 @@ class NotificationContent:
     large_icon: Optional[str] = None
     big_picture: Optional[str] = None
     custom_sound: Optional[str] = None
-    show_when: Optional[bool] = True
-    wake_up_screen: Optional[bool] = False
-    full_screen_intent: Optional[bool] = False
-    critical_alert: Optional[bool] = False
-    rounded_large_icon: Optional[bool] = False
-    rounded_big_picture: Optional[bool] = False
-    auto_dismissible: Optional[bool] = True
+    show_when: bool = True
+    wake_up_screen: bool = False
+    full_screen_intent: bool = False
+    critical_alert: bool = False
+    rounded_large_icon: bool = False
+    rounded_big_picture: bool = False
+    auto_dismissible: bool = True
     color: Optional[ColorValue] = None
     timeout_after: Optional[DurationValue] = None
     chronometer: Optional[DurationValue] = None
     bgcolor: Optional[ColorValue] = None
-    hide_large_icon_on_expand: Optional[bool] = False
+    hide_large_icon_on_expand: bool = False
     locked: Optional[bool] = False
     progress: OptionalNumber = None
     badge: Optional[int] = None
     ticker: Optional[str] = None
-    display_on_foreground: Optional[bool] = True
-    display_on_background: Optional[bool] = True
+    display_on_foreground: bool = True
+    display_on_background: bool = True
     duration: Optional[DurationValue] = None
     playback_speed: OptionalNumber = None
-    action_type: Optional[NotificationActionType] = NotificationActionType.DEFAULT
+    action_type: NotificationActionType = NotificationActionType.DEFAULT
     category: Optional[NotificationCategory] = None
     layout: Optional[NotificationLayout] = None
 
@@ -130,20 +163,20 @@ class NotificationChannel:
     channel_name: str
     channel_description: str
     channel_group_key: Optional[str] = None
-    channel_show_badge: Optional[bool] = True
-    critical_alerts: Optional[bool] = False
+    channel_show_badge: bool = True
+    critical_alerts: bool = False
     default_color: Optional[ColorValue] = None
-    enable_lights: Optional[bool] = True
-    enable_vibration: Optional[bool] = True
+    enable_lights: bool = True
+    enable_vibration: bool = True
     led_color: Optional[ColorValue] = None
     led_on_ms: Optional[int] = None
     led_off_ms: Optional[int] = None
-    only_alert_once: Optional[bool] = False
-    play_sound: Optional[bool] = True
+    only_alert_once: bool = False
+    play_sound: bool = True
     sound_source: Optional[str] = None
     group_key: Optional[str] = None
     icon: Optional[str] = None
-    locked: Optional[bool] = False
+    locked: bool = False
     privacy: Optional[NotificationPrivacy] = None
     group_sort: Optional[NotificationGroupSort] = None
     importance: Optional[NotificationImportance] = None
@@ -169,7 +202,7 @@ class NotificationActionButton:
 class Notifications(Control):
     def __init__(
         self,
-        channels: Optional[List[NotificationChannel]] = None,
+        channels: List[NotificationChannel],
         language_code: Optional[str] = None,
         #
         # Control
@@ -204,19 +237,198 @@ class Notifications(Control):
     def show(
         self,
         content: NotificationContent,
-        actions: Optional[List[NotificationActionButton]] = None,
-    ):
+        action_buttons: Optional[List[NotificationActionButton]] = None,
+        schedule: Optional[Union[NotificationCalendar, NotificationInterval]] = None,
+    ) -> None:
         self.invoke_method(
             "show",
             arguments={
                 "content": self._convert_attr_json(content),
-                "action_buttons": self._convert_attr_json(actions),
+                "action_buttons": self._convert_attr_json(action_buttons),
+                "schedule": self._convert_attr_json(schedule),
+                "schedule_parser": "interval"
+                if isinstance(schedule, NotificationInterval)
+                else "calendar",
             },
         )
 
-    # channels∂
+    def dismiss(
+        self,
+        id: Optional[int] = None,
+        channel_key: Optional[str] = None,
+        group_key: Optional[str] = None,
+    ) -> None:
+        self.invoke_method(
+            "dismiss",
+            arguments={
+                "id": id,
+                "channel_key": channel_key,
+                "group_key": group_key,
+            },
+        )
+
+    def dismiss_all(self) -> None:
+        self.invoke_method("dismiss_all")
+
+    def cancel(
+        self,
+        id: Optional[int] = None,
+        channel_key: Optional[str] = None,
+        group_key: Optional[str] = None,
+    ) -> None:
+        self.invoke_method(
+            "cancel",
+            arguments={
+                "id": id,
+                "channel_key": channel_key,
+                "group_key": group_key,
+            },
+        )
+
+    def cancel_schedule(
+        self,
+        id: Optional[int] = None,
+        channel_key: Optional[str] = None,
+        group_key: Optional[str] = None,
+    ) -> None:
+        self.invoke_method(
+            "cancel_schedule",
+            arguments={
+                "id": id,
+                "channel_key": channel_key,
+                "group_key": group_key,
+            },
+        )
+
+    def cancel_all_schedules(self) -> None:
+        self.invoke_method("cancel_all_schedules")
+
+    # badge_counter
+    def get_badge_counter(self, wait_timeout: float = 10) -> int:
+        return self.invoke_method(
+            "get_badge_counter",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+            result_type="int",
+        )
+
+    def set_badge_counter(self, value: int) -> None:
+        self.invoke_method("set_badge_counter", arguments={"value": str(value)})
+
+    def increment_badge_counter(self, wait_timeout: float = 10) -> bool:
+        return self.invoke_method(
+            "increment_badge_counter",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+            result_type="bool",
+        )
+
+    def decrement_badge_counter(self, wait_timeout: float = 10) -> bool:
+        return self.invoke_method(
+            "decrement_badge_counter",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+            result_type="bool",
+        )
+
+    def reset_badge_counter(self) -> None:
+        self.invoke_method("reset_badge_counter")
+
+    # channels
+    def set_channel(
+        self, channel: NotificationChannel, force_update: bool = False
+    ) -> None:
+        self.invoke_method(
+            "set_channel",
+            arguments={
+                "channel": self._convert_attr_json(channel),
+                "force_update": force_update,
+            },
+        )
+
+    def remove_channel(self, channel_key: str) -> None:
+        self.invoke_method("remove_channel", arguments={"channel_key": channel_key})
+
+    # permissions
+    def is_allowed(self, wait_timeout: float = 10) -> bool:
+        return self.invoke_method(
+            "is_allowed",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+            result_type="bool",
+        )
+
+    def request_permission(self, wait_timeout: float = 10) -> bool:
+        return self.invoke_method(
+            "request_permission",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+            result_type="bool",
+        )
+
+    # time
+    def get_local_timezone_identifier(self, wait_timeout: float = 10) -> str:
+        return self.invoke_method(
+            "get_local_timezone_identifier",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+
+    def get_utc_timezone_identifier(self, wait_timeout: float = 10) -> str:
+        return self.invoke_method(
+            "get_utc_timezone_identifier",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+
+    # others
+    def show_alarm_page(self) -> None:
+        self.invoke_method("show_alarm_page")
+
+    def get_initial_action(self, remove_from_action_events: bool = False) -> str:
+        return self.invoke_method(
+            "get_initial_action",
+            arguments={"remove_from_action_events": str(remove_from_action_events)},
+        )
+
+    def show_global_dnd_override_page(self) -> None:
+        self.invoke_method("show_global_dnd_override_page")
+
+    def get_lifecycle(self, wait_timeout: float = 10) -> NotificationLifeCycle:
+        result = self.invoke_method(
+            "get_app_lifecycle",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+        return NotificationLifeCycle(result)
+
+    def get_localization(self, wait_timeout: float = 10) -> str:
+        return self.invoke_method(
+            "get_localization",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+        )
+
+    def is_active_on_status_bar(self, id: int, wait_timeout: float = 10) -> bool:
+        return self.invoke_method(
+            "is_active_on_status_bar",
+            arguments={"id": str(id)},
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+            result_type="bool",
+        )
+
+    def get_ids_active_on_status_bar(self, wait_timeout: float = 10) -> List[int]:
+        return self.invoke_method(
+            "get_ids_active_on_status_bar",
+            wait_for_result=True,
+            wait_timeout=wait_timeout,
+            result_type="json_encoded",
+        )
+
+    # channels
     @property
-    def channels(self) -> Optional[List[NotificationChannel]]:
+    def channels(self) -> List[NotificationChannel]:
         return self.__channels
 
     # language_code

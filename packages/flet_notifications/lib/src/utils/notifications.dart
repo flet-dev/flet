@@ -17,9 +17,7 @@ NotificationContent? parseNotificationContent(
 
 NotificationContent? notificationContentFromJSON(ThemeData theme, dynamic j,
     [NotificationContent? defValue]) {
-  if (j == null) return defValue;
-
-  j = json.decode(j);
+  j = j != null ? json.decode(j) : null;
   var id = parseInt(j['id']);
   var channelKey = j['channel_key'];
 
@@ -72,10 +70,8 @@ NotificationContent? notificationContentFromJSON(ThemeData theme, dynamic j,
 NotificationActionButton? notificationActionButtonFromJSON(
     ThemeData theme, dynamic j,
     [NotificationActionButton? defValue]) {
-  if (j == null) return defValue;
-
-  var key = j['key'];
-  var label = j['label'];
+  var key = j?['key'];
+  var label = j?['label'];
 
   if (j == null || key == null || label == null) {
     return defValue;
@@ -99,9 +95,7 @@ NotificationActionButton? notificationActionButtonFromJSON(
 List<NotificationActionButton>? notificationActionButtonsFromJSON(
     ThemeData theme, dynamic j,
     [List<NotificationActionButton>? defValue]) {
-  if (j == null) return defValue;
-
-  j = json.decode(j);
+  j = j != null ? json.decode(j) : null;
   if (j == null) return defValue;
 
   var buttons = <NotificationActionButton>[];
@@ -139,12 +133,13 @@ List<NotificationChannel> parseNotificationChannels(
 }
 
 NotificationChannel? notificationChannelFromJSON(ThemeData theme, dynamic j,
-    [NotificationChannel? defValue]) {
-  if (j == null) return defValue;
-
-  var channelKey = j['channel_key'];
-  var channelName = j['channel_name'];
-  var channelDescription = j['channel_description'];
+    {NotificationChannel? defValue, bool jsonDecode = false}) {
+  if (jsonDecode && j is String) {
+    j = json.decode(j);
+  }
+  var channelKey = j?['channel_key'];
+  var channelName = j?['channel_name'];
+  var channelDescription = j?['channel_description'];
 
   if (j == null ||
       channelKey == null ||
@@ -177,6 +172,54 @@ NotificationChannel? notificationChannelFromJSON(ThemeData theme, dynamic j,
     importance: parseNotificationImportance(j["importance"]),
     defaultRingtoneType: parseRingtoneType(j["ringtone_type"]),
     groupAlertBehavior: parseGroupAlertBehavior(j["group_alert_behavior"]),
+  );
+}
+
+NotificationCalendar? notificationCalendarFromJSON(dynamic j,
+    {NotificationCalendar? defValue, bool jsonDecode = false}) {
+  if (jsonDecode && j is String) {
+    j = json.decode(j);
+  }
+
+  if (j == null) {
+    return defValue;
+  }
+
+  return NotificationCalendar(
+    allowWhileIdle: parseBool(j["allow_while_idle"], false)!,
+    preciseAlarm: parseBool(j["precise_alarm"], false)!,
+    repeats: parseBool(j["repeats"], false)!,
+    timeZone: j["time_zone"],
+    day: parseInt(j["day"]),
+    hour: parseInt(j["hour"]),
+    minute: parseInt(j["minute"]),
+    second: parseInt(j["second"]),
+    millisecond: parseInt(j["millisecond"]),
+    month: parseInt(j["month"]),
+    weekday: parseInt(j["weekday"]),
+    weekOfYear: parseInt(j["week_of_year"]),
+    year: parseInt(j["year"]),
+    era: parseInt(j["era"]),
+    // weekOfMonth (not fully implemented atm)
+  );
+}
+
+NotificationInterval? notificationIntervalFromJSON(dynamic j,
+    {NotificationInterval? defValue, bool jsonDecode = false}) {
+  if (jsonDecode && j is String) {
+    j = json.decode(j);
+  }
+
+  if (j == null || j["interval"] == null) {
+    return defValue;
+  }
+
+  return NotificationInterval(
+    interval: durationFromJSON(j["interval"]),
+    allowWhileIdle: parseBool(j["allow_while_idle"], false)!,
+    preciseAlarm: parseBool(j["precise_alarm"], false)!,
+    repeats: parseBool(j["repeats"], false)!,
+    timeZone: j["time_zone"],
   );
 }
 
@@ -307,4 +350,3 @@ GroupAlertBehavior? parseGroupAlertBehavior(String? value,
   };
   return behaviorMap[value.toLowerCase()] ?? defValue;
 }
-

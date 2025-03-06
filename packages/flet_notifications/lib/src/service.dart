@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 class NotificationService {
   static Future<void> initializeLocalNotifications(
-      {required List<NotificationChannel> channels, String? languageCode}) async {
+      {required List<NotificationChannel> channels, String? languageCode, String? icon}) async {
     await AwesomeNotifications().initialize(
-        null, //'resource://drawable/res_app_icon',//
+        icon,
         channels,
         languageCode: languageCode,
         debug: true);
@@ -36,10 +36,11 @@ class NotificationService {
   }
 
   static void showNotification(NotificationContent content,
-      {List<NotificationActionButton>? actionButtons}) {
+      {List<NotificationActionButton>? actionButtons, NotificationSchedule? schedule}) {
     AwesomeNotifications().createNotification(
       content: content,
       actionButtons: actionButtons,
+      schedule: schedule,
     );
   }
 }

@@ -18,20 +18,6 @@ CreateControlFactory createControl = (CreateControlArgs args) {
   }
 };
 
-void ensureInitialized() async {}
-
-// void ensureInitialized2() async {
-//   await NotificationService.initializeLocalNotifications(channels: [
-//     NotificationChannel(
-//         channelKey: 'alerts',
-//         channelName: 'Notification Channel Name',
-//         channelDescription: 'Notification Channel Description',
-//         playSound: true,
-//         onlyAlertOnce: true,
-//         groupAlertBehavior: GroupAlertBehavior.Children,
-//         importance: NotificationImportance.High,
-//         defaultPrivacy: NotificationPrivacy.Private,
-//         defaultColor: Colors.deepPurple,
-//         ledColor: Colors.deepPurple)
-//   ]);
-// }
+void ensureInitialized() async {
+  // initialization is done in NotificationControl.initState
+}
