@@ -236,7 +236,6 @@ class _FilePickerControlState extends State<FilePickerControl>
           _files!.firstWhereOrNull((f) => f.name == uf.name); // by name
 
       if (file != null) {
-        debugPrint("Uploading ${uf.name}");
         try {
           await uploadFile(
               file, server, getFullUploadUrl(pageUri, uf.uploadUrl), uf.method);
@@ -245,7 +244,7 @@ class _FilePickerControlState extends State<FilePickerControl>
           sendProgress(server, file.name, null, e.toString());
         }
       } else {
-        debugPrint("Error: File '${uf.name}' (ID: ${uf.id}) not found.");
+        debugPrint("Error: File '${uf.name}' (id: ${uf.id}) not found.");
       }
     }
   }
