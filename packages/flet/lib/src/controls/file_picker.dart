@@ -177,7 +177,7 @@ class _FilePickerControlState extends State<FilePickerControl>
             sendEvent();
           });
         }
-        // saveFile
+        // getDirectoryPath
         else if (state?.toLowerCase() == "getdirectorypath" && !kIsWeb) {
           FilePicker.platform
               .getDirectoryPath(
