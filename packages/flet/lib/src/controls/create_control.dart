@@ -117,7 +117,6 @@ import 'textfield.dart';
 import 'time_picker.dart';
 import 'transparent_pointer.dart';
 import 'vertical_divider.dart';
-import 'window_drag_area.dart';
 
 Widget createControl(Control? parent, String id, bool parentDisabled,
     {Widget? nextChild, bool? parentAdaptive}) {
@@ -979,13 +978,6 @@ Widget createWidget(
         parentAdaptive: parentAdaptive,
         children: controlView.children,
       );
-    case "windowdragarea":
-      return WindowDragAreaControl(
-          parent: parent,
-          control: controlView.control,
-          children: controlView.children,
-          parentDisabled: parentDisabled,
-          parentAdaptive: parentAdaptive);
     case "linechart":
       return LineChartControl(
           key: key,

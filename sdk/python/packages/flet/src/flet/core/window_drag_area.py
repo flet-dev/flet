@@ -1,21 +1,11 @@
-from typing import Any, Optional, Union
+from typing import Any
 
-from flet.core.animation import AnimationValue
-from flet.core.badge import BadgeValue
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, OptionalNumber
-from flet.core.ref import Ref
-from flet.core.tooltip import TooltipValue
-from flet.core.types import (
-    OffsetValue,
-    OptionalControlEventCallable,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
-)
+from flet.core.control import Control
+from flet.core.gesture_detector import DragStartEvent, GestureDetector, TapEvent
+from flet.core.types import OptionalEventCallable
 
 
-class WindowDragArea(ConstrainedControl):
+class WindowDragArea(GestureDetector):
     """
     A control for drag to move, maximize and restore application window.
 
@@ -49,97 +39,39 @@ class WindowDragArea(ConstrainedControl):
     def __init__(
         self,
         content: Control,
-        maximizable: Optional[bool] = None,
-        #
-        # ConstrainedControl
-        #
-        ref: Optional[Ref] = None,
-        width: OptionalNumber = None,
-        height: OptionalNumber = None,
-        left: OptionalNumber = None,
-        top: OptionalNumber = None,
-        right: OptionalNumber = None,
-        bottom: OptionalNumber = None,
-        expand: Union[None, bool, int] = None,
-        expand_loose: Optional[bool] = None,
-        col: Optional[ResponsiveNumber] = None,
-        opacity: OptionalNumber = None,
-        rotate: Optional[RotateValue] = None,
-        scale: Optional[ScaleValue] = None,
-        offset: Optional[OffsetValue] = None,
-        aspect_ratio: OptionalNumber = None,
-        animate_opacity: Optional[AnimationValue] = None,
-        animate_size: Optional[AnimationValue] = None,
-        animate_position: Optional[AnimationValue] = None,
-        animate_rotation: Optional[AnimationValue] = None,
-        animate_scale: Optional[AnimationValue] = None,
-        animate_offset: Optional[AnimationValue] = None,
-        on_animation_end: OptionalControlEventCallable = None,
-        tooltip: Optional[TooltipValue] = None,
-        badge: Optional[BadgeValue] = None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
+        maximizable: bool = True,
+        on_double_tap: OptionalEventCallable["TapEvent"] = None,
+        on_pan_start: OptionalEventCallable["DragStartEvent"] = None,
+        **kwargs: Any,
     ):
-        ConstrainedControl.__init__(
+        GestureDetector.__init__(
             self,
-            ref=ref,
-            width=width,
-            height=height,
-            left=left,
-            top=top,
-            right=right,
-            bottom=bottom,
-            expand=expand,
-            expand_loose=expand_loose,
-            col=col,
-            opacity=opacity,
-            rotate=rotate,
-            scale=scale,
-            offset=offset,
-            aspect_ratio=aspect_ratio,
-            animate_opacity=animate_opacity,
-            animate_size=animate_size,
-            animate_position=animate_position,
-            animate_rotation=animate_rotation,
-            animate_scale=animate_scale,
-            animate_offset=animate_offset,
-            on_animation_end=on_animation_end,
-            tooltip=tooltip,
-            badge=badge,
-            visible=visible,
-            disabled=disabled,
-            data=data,
+            content=content,
+            on_double_tap=self.handle_double_tap,
+            on_pan_start=self.handle_pan_start,
+            **kwargs,
         )
 
-        self.content = content
         self.maximizable = maximizable
-
-    def _get_control_name(self):
-        return "windowDragArea"
-
-    def _get_children(self):
-        self.__content._set_attr_internal("n", "content")
-        return [self.__content]
+        self.on_double_tap = on_double_tap
+        self.on_pan_start = on_pan_start
 
     def before_update(self):
         super().before_update()
-        assert self.__content.visible, "content must be visible"
+        assert self.content.visible, "content must be visible"
 
-    # content
-    @property
-    def content(self) -> Control:
-        return self.__content
+    def handle_double_tap(self, e: TapEvent):
+        if self.maximizable and self.page.window.maximizable:
+            if not self.page.window.maximized:
+                self.page.window.maximized = True
+            else:
+                self.page.window.maximized = False
+            self.page.update()
 
-    @content.setter
-    def content(self, value: Control):
-        self.__content = value
+        if self.on_double_tap is not None and self.page.window.maximized:
+            self.on_double_tap(e)
 
-    # maximizable
-    @property
-    def maximizable(self) -> bool:
-        return self._get_attr("maximizable", data_type="bool", def_value=True)
-
-    @maximizable.setter
-    def maximizable(self, value: Optional[bool]):
-        self._set_attr("maximizable", value)
+    def handle_pan_start(self, e: DragStartEvent):
+        self.page.window.start_dragging()
+        if self.on_pan_start is not None:
+            self.on_pan_start(e)
