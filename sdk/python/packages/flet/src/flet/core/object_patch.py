@@ -263,7 +263,7 @@ class ObjectPatch(object):
                     elif op["op"] == "move":
                         prev[parts[-1]] = {"$m": op["from"]}
                     else:
-                        raise ObjectPatchException(f"Unknown operation: {op["op"]}")
+                        raise ObjectPatchException(f"Unknown operation: {op['op']}")
                 else:
                     prev[parts[i]] = node
                 prev = node
