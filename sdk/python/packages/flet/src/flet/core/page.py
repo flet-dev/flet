@@ -37,7 +37,6 @@ from flet.core.app_bar import AppBar
 from flet.core.bottom_app_bar import BottomAppBar
 from flet.core.box import BoxDecoration
 from flet.core.client_storage import ClientStorage
-from flet.core.connection import Connection
 from flet.core.control import Control, control
 from flet.core.control_event import ControlEvent
 from flet.core.cupertino_app_bar import CupertinoAppBar
@@ -47,8 +46,6 @@ from flet.core.floating_action_button import FloatingActionButton
 from flet.core.navigation_bar import NavigationBar
 from flet.core.navigation_drawer import NavigationDrawer, NavigationDrawerPosition
 from flet.core.padding import Padding
-from flet.core.protocol import Command
-from flet.core.pubsub.pubsub_client import PubSubClient
 from flet.core.querystring import QueryString
 from flet.core.scrollable_control import OnScrollEvent
 from flet.core.session_storage import SessionStorage
@@ -73,6 +70,9 @@ from flet.core.types import (
     Wrapper,
 )
 from flet.core.view import View
+from flet.messaging.connection import Connection
+from flet.messaging.protocol import Command
+from flet.pubsub.pubsub_client import PubSubClient
 from flet.utils import classproperty, is_pyodide
 from flet.utils.locks import NopeLock
 

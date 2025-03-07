@@ -8,14 +8,14 @@ from typing import Any, List, Optional
 import msgpack
 from flet.core.buttons import ButtonStyle
 from flet.core.colors import Colors
-from flet.core.connection import Connection
 from flet.core.control import Control, control
 from flet.core.elevated_button import ElevatedButton
 from flet.core.event import Event
 from flet.core.object_patch import ObjectPatch
 from flet.core.page import Page
-from flet.core.protocol import encode_object_for_msgpack
 from flet.core.ref import Ref
+from flet.messaging.connection import Connection
+from flet.messaging.protocol import encode_object_for_msgpack
 
 controls_index = weakref.WeakValueDictionary()
 
