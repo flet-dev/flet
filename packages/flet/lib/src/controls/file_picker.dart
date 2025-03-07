@@ -193,7 +193,7 @@ class _FilePickerControlState extends State<FilePickerControl>
             sendEvent();
           });
         }
-        // saveFile
+        // getDirectoryPath
         else if (state?.toLowerCase() == "getdirectorypath" && !kIsWeb) {
           FilePicker.platform
               .getDirectoryPath(
@@ -223,7 +223,7 @@ class _FilePickerControlState extends State<FilePickerControl>
   Future uploadFiles(String filesJson, FletServer server, Uri pageUri) async {
     var uj = json.decode(filesJson);
     var uploadFiles = (uj as List).map((u) => FilePickerUploadFile(
-        id: parseInt(u["id"], -1)!,
+        id: parseInt(u["id"], -1)!, // -1 = invalid
         name: u["name"],
         uploadUrl: u["upload_url"],
         method: u["method"]));
