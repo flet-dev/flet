@@ -1,16 +1,6 @@
 import sys
 from dataclasses import InitVar, dataclass, field
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    Dict,
-    Optional,
-    Type,
-    TypeAlias,
-    TypeVar,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, Callable, Dict, Optional, Type, TypeVar, Union
 
 from flet.core.badge import BadgeValue
 from flet.core.event import Event
