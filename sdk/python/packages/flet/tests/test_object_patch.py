@@ -1,20 +1,19 @@
 import copy
 import datetime
 import weakref
-from dataclasses import field, fields
+from dataclasses import field
 from enum import Enum
-from typing import Any, Callable, List, Optional, cast, get_type_hints
+from typing import Any, List, Optional
 
 import msgpack
-from flet.core.adaptive_control import AdaptiveControl
 from flet.core.buttons import ButtonStyle
 from flet.core.colors import Colors
 from flet.core.connection import Connection
-from flet.core.control import Control, control, event
+from flet.core.control import Control, control
 from flet.core.elevated_button import ElevatedButton
 from flet.core.event import Event
 from flet.core.object_patch import ObjectPatch
-from flet.core.page import BrowserContextMenu, Page
+from flet.core.page import Page
 from flet.core.protocol import encode_object_for_msgpack
 from flet.core.ref import Ref
 
@@ -57,13 +56,16 @@ def update_page(new: Any, old: Any = None, show_details=True):
     print("\ncontrols_index:", len(controls_index))
     print("\nTotal:", (end - start).total_seconds() * 1000)
 
+    return msg
+
 
 @control
 class SuperElevatedButton(ElevatedButton):
     prop_2: Optional[str] = None
 
     def build(self):
-        print("SuperElevatedButton.page:", self.page)
+        print("SuperElevatedButton.build()")
+        assert self.page
 
 
 @control("MyButton")
@@ -117,10 +119,21 @@ def test_simple_page():
 
     # assert page._url == url
 
-    update_page(page, {})
+    msg = update_page(page, {}, show_details=False)
+    u_msg = b_unpack(msg)
 
     assert page.parent is None
     assert page.controls[0].parent == page.views[0]
+
+    print(u_msg)
+
+    assert isinstance(u_msg, dict)
+    assert "" in u_msg
+    assert u_msg[""]["id"] > 0
+    assert len(u_msg[""]["views"]) > 0
+    assert u_msg[""]["window"]["ignore_mouse_events"] == False
+    assert u_msg[""]["theme_mode"] == "system"
+    assert "on_connect" not in u_msg[""]
 
     # update sub-tree
     page.controls[0].some_value = "Another text"
@@ -135,9 +148,7 @@ def test_simple_page():
     ]
     assert page.controls[0].controls[0].page is None
 
-    update_page(page.controls[0])
-
-    print(page.controls[0].controls[0].page)
+    update_page(page.controls[0], show_details=True)
 
     assert page.views[0]._prev_bgcolor == "green"
 
