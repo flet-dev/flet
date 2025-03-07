@@ -2,8 +2,7 @@ from typing import Any, Dict, List
 
 
 class SessionStorage:
-    def __init__(self, page):
-        self.__page = page
+    def __init__(self):
         self.__store: Dict[str, Any] = {}
 
     def set(self, key: str, value: Any):

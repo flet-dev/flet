@@ -1,9 +1,9 @@
 import copy
 import datetime
 import weakref
-from dataclasses import InitVar, dataclass, field
+from dataclasses import field, fields
 from enum import Enum
-from typing import Any, Callable, List, Optional
+from typing import Any, Callable, List, Optional, cast, get_type_hints
 
 import msgpack
 from flet.core.adaptive_control import AdaptiveControl
@@ -99,6 +99,12 @@ def test_control_ref():
     page = Page(conn=Connection(), ref=page_ref)
 
     assert page_ref.current == page
+
+
+def test_event_type_hints():
+    hints = get_type_hints(Page)
+    on_scroll_type = hints["on_scroll"]
+    print("on_scroll_type:", cast(Optional, on_scroll_type))
 
 
 def test_simple_page():

@@ -274,13 +274,13 @@ class Page(AdaptiveControl):
         AdaptiveControl.__post_init__(self, ref)
         self.__conn = weakref.ref(conn)
         self.__expires_at = None
-        self.__browser_context_menu = BrowserContextMenu(self)
-        self.__query: QueryString = QueryString(page=self)  # Querystring
         self.__lock = threading.Lock() if not is_pyodide() else NopeLock()
 
+        self.__browser_context_menu = BrowserContextMenu(self)
+        self.__query: QueryString = QueryString(self)
         self.__pubsub: PubSubClient = PubSubClient(conn.pubsubhub, "session_id!!!")
         self.__client_storage: ClientStorage = ClientStorage(self)
-        self.__session_storage: SessionStorage = SessionStorage(self)
+        self.__session_storage: SessionStorage = SessionStorage()
         self.__authorization: Optional[Authorization] = None
 
         self.__last_route = None
@@ -903,9 +903,9 @@ class Page(AdaptiveControl):
                     self.drawer = control
                     self.update()
         else:
-            if control not in self.__offstage.controls:
-                self.__offstage.controls.append(control)
-                self.__offstage.update()
+            if control not in self.offstage.controls:
+                self.offstage.controls.append(control)
+                self.offstage.update()
 
         control.update()
 

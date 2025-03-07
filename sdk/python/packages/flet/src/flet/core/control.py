@@ -1,3 +1,4 @@
+import sys
 from dataclasses import InitVar, dataclass, field
 from typing import (
     TYPE_CHECKING,
@@ -9,8 +10,6 @@ from typing import (
     TypeAlias,
     TypeVar,
     Union,
-    dataclass_transform,
-    get_type_hints,
 )
 
 from flet.core.badge import BadgeValue
@@ -18,6 +17,16 @@ from flet.core.event import Event
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import OptionalNumber, ResponsiveNumber
+
+# Try importing `dataclass_transform()` for Python 3.11+, else use a no-op function
+
+if sys.version_info >= (3, 11):  # Only use it for Python 3.11+
+    from typing import dataclass_transform
+else:
+
+    def dataclass_transform():  # No-op decorator for older Python versions
+        return lambda x: x
+
 
 if TYPE_CHECKING:
     from .page import Page

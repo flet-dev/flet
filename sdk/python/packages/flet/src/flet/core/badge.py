@@ -23,4 +23,4 @@ class Badge:
     text_style: Optional[TextStyle] = None
 
 
-BadgeValue = Union[str, "Badge"]
+BadgeValue = Union[str, Badge]

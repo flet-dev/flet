@@ -1,5 +1,6 @@
 import re
 import urllib.parse
+import weakref
 
 
 class UrlComponents:
@@ -64,8 +65,8 @@ class QueryString(UrlComponents):
 
     """
 
-    def __init__(self, page=None):
-        self.page = page
+    def __init__(self, page):
+        self.__page = weakref.ref(page)
         self.url = None
 
     def get(self, key: str) -> str:
@@ -90,13 +91,16 @@ class QueryString(UrlComponents):
         """
         Call dunder method updates url after updating `Page`
         """
-        self.url = self.page.url + self.page.route
+        if page := self.__page():
+            self.url = page.url + page.route
 
-        # Checking if self.url is encoded and decoding it accordingly
-        if self._is_encoded() is True:
-            self.url = (
-                self.page.url
-                + urllib.parse.urlparse(self.url).path
-                + "?"
-                + self._decode_url_component(self._querystring_part(url_string=True))
-            )
+            # Checking if self.url is encoded and decoding it accordingly
+            if self._is_encoded() is True:
+                self.url = (
+                    page.url
+                    + urllib.parse.urlparse(self.url).path
+                    + "?"
+                    + self._decode_url_component(
+                        self._querystring_part(url_string=True)
+                    )
+                )
