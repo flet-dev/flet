@@ -21,6 +21,14 @@ from flet.core.ref import Ref
 controls_index = weakref.WeakValueDictionary()
 
 
+def b_pack(data):
+    return msgpack.packb(data, default=encode_object_for_msgpack)
+
+
+def b_unpack(packed_data):
+    return msgpack.unpackb(packed_data)
+
+
 def update_page(new: Any, old: Any = None, show_details=True):
     if old is None:
         old = new
@@ -99,12 +107,6 @@ def test_control_ref():
     page = Page(conn=Connection(), ref=page_ref)
 
     assert page_ref.current == page
-
-
-def test_event_type_hints():
-    hints = get_type_hints(Page)
-    on_scroll_type = hints["on_scroll"]
-    print("on_scroll_type:", cast(Optional, on_scroll_type))
 
 
 def test_simple_page():

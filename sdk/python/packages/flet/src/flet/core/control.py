@@ -32,15 +32,9 @@ if TYPE_CHECKING:
     from .page import Page
 
 
-def event(type: Type[Event]):
-    return field(default=None, metadata={"type": type})
-
-
 def skip_field():
     return field(default=None, repr=False, metadata={"skip": True})
 
-
-EventHandler: TypeAlias = Callable[[Event], None]
 
 T = TypeVar("T", bound="Control")
 
