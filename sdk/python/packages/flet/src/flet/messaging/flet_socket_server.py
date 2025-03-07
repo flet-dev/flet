@@ -10,8 +10,8 @@ from pathlib import Path
 from typing import List, Optional
 
 import flet
-from flet.core.local_connection import LocalConnection
-from flet.core.protocol import (
+from flet.messaging.connection import Connection
+from flet.messaging.protocol import (
     ClientActions,
     ClientMessage,
     Command,
@@ -20,13 +20,13 @@ from flet.core.protocol import (
     PageCommandsBatchResponsePayload,
     RegisterWebClientRequestPayload,
 )
-from flet.core.pubsub.pubsub_hub import PubSubHub
+from flet.pubsub.pubsub_hub import PubSubHub
 from flet.utils import get_free_tcp_port, is_windows, random_string
 
 logger = logging.getLogger(flet.__name__)
 
 
-class FletSocketServer(LocalConnection):
+class FletSocketServer(Connection):
     def __init__(
         self,
         loop: asyncio.AbstractEventLoop,

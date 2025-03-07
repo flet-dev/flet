@@ -44,7 +44,6 @@ from flet.core.cupertino_app_bar import CupertinoAppBar
 from flet.core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.core.event import Event
 from flet.core.floating_action_button import FloatingActionButton
-from flet.core.locks import NopeLock
 from flet.core.navigation_bar import NavigationBar
 from flet.core.navigation_drawer import NavigationDrawer, NavigationDrawerPosition
 from flet.core.padding import Padding
@@ -75,6 +74,7 @@ from flet.core.types import (
 )
 from flet.core.view import View
 from flet.utils import classproperty, is_pyodide
+from flet.utils.locks import NopeLock
 
 try:
     from typing import ParamSpec
@@ -925,7 +925,7 @@ class Page(AdaptiveControl):
     # url
     @property
     def url(self) -> Optional[str]:
-        return self.__conn.page_url
+        return self.__conn().page_url
 
     # name
     @property

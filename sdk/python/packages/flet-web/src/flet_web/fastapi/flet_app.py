@@ -10,9 +10,9 @@ from typing import Any, Dict, List, Optional
 import flet_web.fastapi as flet_fastapi
 from fastapi import WebSocket, WebSocketDisconnect
 from flet.core.event import Event
-from flet.core.local_connection import LocalConnection
 from flet.core.page import Page, PageDisconnectedException
-from flet.core.protocol import (
+from flet.messaging.connection import Connection
+from flet.messaging.protocol import (
     ClientActions,
     ClientMessage,
     Command,
@@ -32,7 +32,7 @@ DEFAULT_FLET_SESSION_TIMEOUT = 3600
 DEFAULT_FLET_OAUTH_STATE_TIMEOUT = 600
 
 
-class FletApp(LocalConnection):
+class FletApp(Connection):
     def __init__(
         self,
         loop: asyncio.AbstractEventLoop,

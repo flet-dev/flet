@@ -3,9 +3,10 @@ import json
 import logging
 from typing import List
 
+import flet
 import flet_js
-from flet.core.local_connection import LocalConnection
-from flet.core.protocol import (
+from flet.messaging.connection import Connection
+from flet.messaging.protocol import (
     ClientActions,
     ClientMessage,
     Command,
@@ -15,12 +16,10 @@ from flet.core.protocol import (
     RegisterWebClientRequestPayload,
 )
 
-import flet
-
 logger = logging.getLogger(flet.__name__)
 
 
-class PyodideConnection(LocalConnection):
+class PyodideConnection(Connection):
     def __init__(
         self,
         on_event,

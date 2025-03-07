@@ -5,8 +5,8 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Awaitable, Callable, Dict, Iterable, Optional, Union
 
 import flet.core
-from flet.core.locks import NopeLock
 from flet.utils import is_pyodide
+from flet.utils.locks import NopeLock
 
 logger = logging.getLogger(flet.__name__)
 

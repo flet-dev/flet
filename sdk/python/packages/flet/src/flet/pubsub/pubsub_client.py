@@ -2,7 +2,7 @@ import logging
 from typing import Any, Callable
 
 import flet.core
-from flet.core.pubsub.pubsub_hub import PubSubHub
+from flet.pubsub.pubsub_hub import PubSubHub
 
 logger = logging.getLogger(flet.__name__)
 

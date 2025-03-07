@@ -1,17 +1,46 @@
+import json
 import logging
+from typing import Any, Dict, List, Optional
 
 import flet.core
-from flet.core.connection import Connection
-from flet.core.protocol import *
+from flet.messaging.protocol import (
+    AddPageControlsPayload,
+    CleanControlPayload,
+    ClientActions,
+    ClientMessage,
+    Command,
+    InvokeMethodPayload,
+    PageEventFromWebPayload,
+    PageEventPayload,
+    PageSessionCreatedPayload,
+    RegisterWebClientResponsePayload,
+    RemoveControlPayload,
+    SessionCrashedPayload,
+    SessionPayload,
+    UpdateControlPropsPayload,
+)
+from flet.pubsub.pubsub_hub import PubSubHub
 
 logger = logging.getLogger(flet.__name__)
 
 
-class LocalConnection(Connection):
+class Connection:
     def __init__(self):
-        super().__init__()
+        self.page_name: str = ""
+        self.page_url: Optional[str] = None
+        self.sessions = {}
+        self.pubsubhub = PubSubHub()
         self.__control_id = 1
         self._client_details = None
+
+    def send_command(self, session_id: str, command: Command):
+        raise NotImplementedError()
+
+    def send_commands(self, session_id: str, commands: List[Command]):
+        raise NotImplementedError()
+
+    def dispose(self):
+        pass
 
     def _create_register_web_client_response(
         self, controls: Optional[Dict[str, Dict[str, Any]]] = None
