@@ -4,13 +4,11 @@ import asyncio
 import json
 import logging
 import threading
-import time
 import uuid
 import weakref
 from concurrent.futures import CancelledError, Future, ThreadPoolExecutor
 from contextvars import ContextVar
 from dataclasses import InitVar, dataclass, field
-from datetime import datetime, timedelta, timezone
 from functools import partial
 from typing import (
     TYPE_CHECKING,
@@ -72,12 +70,12 @@ from flet.core.types import (
 )
 from flet.core.view import View
 from flet.messaging.protocol import Command
-from flet.pubsub.pubsub_client import PubSubClient
 from flet.utils import classproperty, is_pyodide
 from flet.utils.locks import NopeLock
 
 if TYPE_CHECKING:
     from flet.messaging.session import Session
+    from flet.pubsub.pubsub_client import PubSubClient
 
 try:
     from typing import ParamSpec

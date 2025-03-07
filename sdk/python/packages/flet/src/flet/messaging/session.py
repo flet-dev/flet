@@ -6,12 +6,13 @@ from flet.core.control import Control
 from flet.core.page import Page, _session_page
 from flet.messaging.connection import Connection
 from flet.pubsub.pubsub_client import PubSubClient
+from flet.utils.strings import random_string
 
 
 class Session:
-    def __init__(self, conn: Connection, id: str):
+    def __init__(self, conn: Connection):
         self.__conn: weakref.ReferenceType = weakref.ref(conn)
-        self.__id = id
+        self.__id = random_string(16)
         self.__expires_at = None
         self.__index: weakref.WeakValueDictionary[int, Control] = (
             weakref.WeakValueDictionary()
