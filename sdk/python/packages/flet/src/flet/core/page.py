@@ -13,6 +13,7 @@ from dataclasses import InitVar, dataclass, field
 from datetime import datetime, timedelta, timezone
 from functools import partial
 from typing import (
+    TYPE_CHECKING,
     Any,
     Awaitable,
     Callable,
@@ -70,11 +71,13 @@ from flet.core.types import (
     Wrapper,
 )
 from flet.core.view import View
-from flet.messaging.connection import Connection
 from flet.messaging.protocol import Command
 from flet.pubsub.pubsub_client import PubSubClient
 from flet.utils import classproperty, is_pyodide
 from flet.utils.locks import NopeLock
+
+if TYPE_CHECKING:
+    from flet.messaging.session import Session
 
 try:
     from typing import ParamSpec
@@ -223,7 +226,7 @@ class Page(AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/page
     """
 
-    conn: InitVar[Connection]
+    sess: InitVar[Session]
 
     views: List[View] = field(default_factory=lambda: [View()])
     offstage: Offstage = field(default_factory=lambda: Offstage())
@@ -269,16 +272,14 @@ class Page(AdaptiveControl):
     def __post_init__(
         self,
         ref,
-        conn: Connection,
+        sess: Session,
     ) -> None:
         AdaptiveControl.__post_init__(self, ref)
-        self.__conn = weakref.ref(conn)
-        self.__expires_at = None
+        self.__session = weakref.ref(sess)
         self.__lock = threading.Lock() if not is_pyodide() else NopeLock()
 
         self.__browser_context_menu = BrowserContextMenu(self)
         self.__query: QueryString = QueryString(self)
-        self.__pubsub: PubSubClient = PubSubClient(conn.pubsubhub, "session_id!!!")
         self.__client_storage: ClientStorage = ClientStorage(self)
         self.__session_storage: SessionStorage = SessionStorage()
         self.__authorization: Optional[Authorization] = None
@@ -290,8 +291,8 @@ class Page(AdaptiveControl):
             Union[threading.Event, asyncio.Event], tuple[Optional[str], Optional[str]]
         ] = {}
 
-    def get_control(self, id: str) -> Control:
-        return self._index.get(id)
+    def get_control(self, id: int) -> Optional[Control]:
+        return self.__get_session().index.get(id)
 
     def __default_view(self):
         assert len(self.views) > 0, "views list is empty."
@@ -324,18 +325,6 @@ class Page(AdaptiveControl):
     #     ).results
     #     for i in range(len(props)):
     #         self._set_attr(props[i], values[i], False)
-
-    async def _connect(self, conn: Connection) -> None:
-        _session_page.set(self)
-        self.__conn = conn
-        self.__expires_at = None
-        await self.on_event_async(Event("page", "connect", ""))
-
-    async def _disconnect(self, session_timeout_seconds: int) -> None:
-        self.__expires_at = datetime.now(timezone.utc) + timedelta(
-            seconds=session_timeout_seconds
-        )
-        await self.on_event_async(Event("page", "disconnect", ""))
 
     def update(self, *controls) -> None:
         with self.__lock:
@@ -403,6 +392,11 @@ class Page(AdaptiveControl):
         # self.__session_storage = None
         # self.__conn = None
         pass
+
+    def __get_session(self):
+        if sess := self.__session():
+            return sess
+        raise Exception("An attempt to fetch destroyed session.")
 
     def __update(self, *controls: Control) -> Tuple[List[Control], List[Control]]:
         if not self.__conn:
@@ -925,22 +919,12 @@ class Page(AdaptiveControl):
     # url
     @property
     def url(self) -> Optional[str]:
-        return self.__conn().page_url
+        return self.__get_session().connection.page_url
 
     # name
     @property
     def name(self) -> str:
-        return self.__conn.page_name
-
-    # connection
-    @property
-    def connection(self) -> Optional[Connection]:
-        return self.__conn
-
-    # # snapshot
-    # @property
-    # def snapshot(self) -> Dict[str, Dict[str, Any]]:
-    #     return self.__snapshot
+        return self.__get_session().connection.page_name
 
     # loop
     @property
@@ -952,21 +936,6 @@ class Page(AdaptiveControl):
     def executor(self) -> Optional[ThreadPoolExecutor]:
         return self.__executor
 
-    # expires_at
-    @property
-    def expires_at(self) -> Optional[datetime]:
-        return self.__expires_at
-
-    # index
-    @property
-    def index(self) -> "Dict[str, Page]":
-        return self._index
-
-    # session_id
-    @property
-    def session_id(self) -> Any:
-        return self._session_id
-
     # auth
     @property
     def auth(self) -> Optional[Authorization]:
@@ -975,7 +944,7 @@ class Page(AdaptiveControl):
     # pubsub
     @property
     def pubsub(self) -> PubSubClient:
-        return self.__pubsub
+        return self.__get_session().pubsub_client
 
     # overlay
     @property
