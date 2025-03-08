@@ -898,7 +898,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
             } else if (ctrl.type == "bottomappbar") {
               bottomAppBar = ctrl;
               continue;
-            } else if (ctrl.type == "floatingactionbutton") {
+            } else if (ctrl.name == "fab") {
               fab = ctrl;
               continue;
             } else if (ctrl.type == "navigationbar" ||

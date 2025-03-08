@@ -122,6 +122,7 @@ class View(ScrollableControl, AdaptiveControl):
         if self.__bottom_appbar:
             children.append(self.__bottom_appbar)
         if self.__fab:
+            self.__fab._set_attr_internal("n", "fab")
             children.append(self.__fab)
         if self.__navigation_bar:
             children.append(self.__navigation_bar)
