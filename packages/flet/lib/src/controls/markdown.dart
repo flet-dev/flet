@@ -10,7 +10,6 @@ import '../utils/box.dart';
 import '../utils/images.dart';
 import '../utils/launch_url.dart';
 import '../utils/markdown.dart';
-import '../utils/text.dart';
 import '../utils/uri.dart';
 import 'create_control.dart';
 import 'error.dart';

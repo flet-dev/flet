@@ -874,9 +874,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
               control.attrString("horizontalAlignment"),
               CrossAxisAlignment.start)!;
           final fabLocation = parseFloatingActionButtonLocation(
-              control,
-              "floatingActionButtonLocation",
-              FloatingActionButtonLocation.endFloat);
+              control, "floatingActionButtonLocation");
 
           Control? appBar;
           Control? cupertinoAppBar;
@@ -898,7 +896,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
             } else if (ctrl.type == "bottomappbar") {
               bottomAppBar = ctrl;
               continue;
-            } else if (ctrl.type == "floatingactionbutton") {
+            } else if (ctrl.name == "fab") {
               fab = ctrl;
               continue;
             } else if (ctrl.type == "navigationbar" ||
@@ -906,10 +904,10 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
               navBar = ctrl;
               continue;
             } else if (ctrl.type == "navigationdrawer" &&
-                ctrl.name == "start") {
+                ctrl.name == "drawer_start") {
               drawer = ctrl;
               continue;
-            } else if (ctrl.type == "navigationdrawer" && ctrl.name == "end") {
+            } else if (ctrl.type == "navigationdrawer" && ctrl.name == "drawer_end") {
               endDrawer = ctrl;
               continue;
             }
