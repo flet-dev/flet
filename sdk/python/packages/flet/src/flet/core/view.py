@@ -127,10 +127,10 @@ class View(ScrollableControl, AdaptiveControl):
         if self.__navigation_bar:
             children.append(self.__navigation_bar)
         if self.__drawer:
-            self.__drawer._set_attr_internal("n", "start")
+            self.__drawer._set_attr_internal("n", "drawer_start")
             children.append(self.__drawer)
         if self.__end_drawer:
-            self.__end_drawer._set_attr_internal("n", "end")
+            self.__end_drawer._set_attr_internal("n", "drawer_end")
             children.append(self.__end_drawer)
         return children + self.__controls
 
