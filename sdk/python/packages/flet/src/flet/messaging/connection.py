@@ -6,7 +6,7 @@ import flet.core
 from flet.messaging.protocol import (
     AddPageControlsPayload,
     CleanControlPayload,
-    ClientActions,
+    ClientAction,
     ClientMessage,
     Command,
     InvokeMethodPayload,
@@ -47,7 +47,7 @@ class Connection:
     ):
         assert self._client_details
         return ClientMessage(
-            ClientActions.REGISTER_WEB_CLIENT,
+            ClientAction.REGISTER_CLIENT,
             RegisterWebClientResponsePayload(
                 session=SessionPayload(
                     id=self._client_details.sessionId,
@@ -199,7 +199,7 @@ class Connection:
             i += 1
 
         return " ".join(ids), ClientMessage(
-            ClientActions.ADD_PAGE_CONTROLS, AddPageControlsPayload(controls=controls)
+            ClientAction.ADD_PAGE_CONTROLS, AddPageControlsPayload(controls=controls)
         )
 
     def _process_set_command(self, values, attrs):
@@ -209,32 +209,32 @@ class Connection:
             props[k] = v
 
         return "", ClientMessage(
-            ClientActions.UPDATE_CONTROL_PROPS, UpdateControlPropsPayload(props=[props])
+            ClientAction.UPDATE_CONTROL_PROPS, UpdateControlPropsPayload(props=[props])
         )
 
     def _process_remove_command(self, values):
         assert len(values) > 0, '"remove" command has wrong number of values'
         return "", ClientMessage(
-            ClientActions.REMOVE_CONTROL, RemoveControlPayload(ids=values)
+            ClientAction.REMOVE_CONTROL, RemoveControlPayload(ids=values)
         )
 
     def _process_clean_command(self, values):
         assert len(values) > 0, '"clean" command has wrong number of values'
         return "", ClientMessage(
-            ClientActions.CLEAN_CONTROL, CleanControlPayload(ids=values)
+            ClientAction.CLEAN_CONTROL, CleanControlPayload(ids=values)
         )
 
     def _process_error_command(self, values):
         assert len(values) == 1, '"error" command has wrong number of values'
         return "", ClientMessage(
-            ClientActions.SESSION_CRASHED, SessionCrashedPayload(message=values[0])
+            ClientAction.SESSION_CRASHED, SessionCrashedPayload(message=values[0])
         )
 
     def _process_invoke_method_command(self, values, attrs):
         # "invokeMethod", values=[method_id, method_name], attrs=arguments
         assert len(values) == 3, '"invokeMethod" command has wrong number of values'
         return "", ClientMessage(
-            ClientActions.INVOKE_METHOD,
+            ClientAction.INVOKE_METHOD,
             InvokeMethodPayload(
                 methodId=values[0],
                 methodName=values[1],

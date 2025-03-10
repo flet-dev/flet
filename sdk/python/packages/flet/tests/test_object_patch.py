@@ -107,13 +107,13 @@ def test_inherited_control_with_overridden_type():
 def test_control_ref():
     page_ref = Ref[Page]()
 
-    page = Page(sess=Session(Connection(), ""), ref=page_ref)
+    page = Page(sess=Session(Connection()), ref=page_ref)
 
     assert page_ref.current == page
 
 
 def test_simple_page():
-    page = Page(sess=Session(Connection(), ""))
+    page = Page(sess=Session(Connection()))
     page.controls = [Div(cls="div_1", some_value="Text")]
     page.data = 100000
     page.bgcolor = Colors.GREEN

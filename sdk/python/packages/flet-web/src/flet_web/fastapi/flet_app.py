@@ -13,7 +13,7 @@ from flet.core.event import Event
 from flet.core.page import Page, PageDisconnectedException
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
-    ClientActions,
+    ClientAction,
     ClientMessage,
     Command,
     CommandEncoder,
@@ -187,7 +187,7 @@ class FletApp(Connection):
         logger.debug(f"_on_message: {data}")
         msg_dict = json.loads(data)
         msg = ClientMessage(**msg_dict)
-        if msg.action == ClientActions.REGISTER_WEB_CLIENT:
+        if msg.action == ClientAction.REGISTER_CLIENT:
             self._client_details = RegisterWebClientRequestPayload(**msg.payload)
 
             new_session = True
@@ -278,13 +278,13 @@ class FletApp(Connection):
                 if original_route != self.__page.route:
                     self.__page.go(self.__page.route)
 
-        elif msg.action == ClientActions.PAGE_EVENT_FROM_WEB:
+        elif msg.action == ClientAction.CONTROL_EVENT:
             if self.__on_event is not None:
                 asyncio.create_task(
                     self.__on_event(self._create_page_event_handler_arg(msg))
                 )
 
-        elif msg.action == ClientActions.UPDATE_CONTROL_PROPS:
+        elif msg.action == ClientAction.UPDATE_CONTROL_PROPS:
             if self.__on_event is not None:
                 asyncio.create_task(
                     self.__on_event(self._create_update_control_props_handler_arg(msg))
@@ -408,7 +408,7 @@ class FletApp(Connection):
             if message:
                 messages.append(message)
         if len(messages) > 0:
-            self.__send(ClientMessage(ClientActions.PAGE_CONTROLS_BATCH, messages))
+            self.__send(ClientMessage(ClientAction.PAGE_CONTROLS_BATCH, messages))
         return PageCommandsBatchResponsePayload(results=results, error="")
 
     def __send(self, message: ClientMessage):

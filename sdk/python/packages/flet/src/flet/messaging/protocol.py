@@ -33,9 +33,7 @@ def encode_object_for_msgpack(obj):
 
 class CommandEncoder(json.JSONEncoder):
     def default(self, obj):
-        if isinstance(obj, Message):
-            return obj.__dict__
-        elif isinstance(obj, ClientMessage):
+        if isinstance(obj, ClientMessage):
             return obj.__dict__
         elif isinstance(obj, Command):
             d = {}
@@ -55,14 +53,6 @@ class CommandEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-class Actions:
-    REGISTER_HOST_CLIENT = "registerHostClient"
-    SESSION_CREATED = "sessionCreated"
-    PAGE_COMMAND_FROM_HOST = "pageCommandFromHost"
-    PAGE_COMMANDS_BATCH_FROM_HOST = "pageCommandsBatchFromHost"
-    PAGE_EVENT_TO_HOST = "pageEventToHost"
-
-
 @dataclass
 class Command:
     indent: int
@@ -76,30 +66,9 @@ class Command:
 
 
 @dataclass
-class Message:
-    id: str
-    action: str
-    payload: Any
-
-
-@dataclass
-class PageCommandRequestPayload:
-    pageName: str
-    sessionID: str
-    command: Command
-
-
-@dataclass
 class PageCommandResponsePayload:
     result: str
     error: str
-
-
-@dataclass
-class PageCommandsBatchRequestPayload:
-    pageName: str
-    sessionID: str
-    commands: List[Command]
 
 
 @dataclass
@@ -118,43 +87,18 @@ class PageEventPayload:
 
 
 @dataclass
-class RegisterHostClientRequestPayload:
-    hostClientID: Optional[str]
-    pageName: str
-    assetsDir: Optional[str]
-    authToken: Optional[str]
-    permissions: Optional[str]
-
-
-@dataclass
-class RegisterHostClientResponsePayload:
-    hostClientID: str
-    pageName: str
-    sessionID: str
-    error: str
-
-
-@dataclass
 class PageSessionCreatedPayload:
     pageName: str
     sessionID: str
 
 
-#
-# Local client protocol for desktop apps
-#
-
-
-class ClientActions:
-    REGISTER_WEB_CLIENT = "registerWebClient"
-    PAGE_EVENT_FROM_WEB = "pageEventFromWeb"
-    SESSION_CRASHED = "sessionCrashed"
-    INVOKE_METHOD = "invokeMethod"
-    PAGE_CONTROLS_BATCH = "pageControlsBatch"
-    ADD_PAGE_CONTROLS = "addPageControls"
-    UPDATE_CONTROL_PROPS = "updateControlProps"
-    CLEAN_CONTROL = "cleanControl"
-    REMOVE_CONTROL = "removeControl"
+class ClientAction:
+    REGISTER_CLIENT = 1
+    PATCH_CLIENT = 2
+    CONTROL_EVENT = 3
+    CONTROL_PROPS = 4
+    INVOKE_METHOD = 5
+    SESSION_CRASHED = 6
 
 
 @dataclass
