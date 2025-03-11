@@ -1,5 +1,9 @@
 # Flet changelog
 
+## 0.27.6
+
+* Fix `flet build`: allow dependencies with commas ([#5033](https://github.com/flet-dev/flet/issues/5033))
+
 ## 0.27.5
 
 * Added `FletApp.showAppStartupScreen` and `FletApp.appStartupScreenMessage` properties.

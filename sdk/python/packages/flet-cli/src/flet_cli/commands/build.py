@@ -1740,7 +1740,6 @@ class Command(BaseCommand):
         package_env = {}
 
         # requirements
-        package_args.append("--requirements")
         requirements_txt = self.python_app_path.joinpath("requirements.txt")
 
         toml_dependencies = (
@@ -1774,7 +1773,8 @@ class Command(BaseCommand):
                 if dev_packages_configured:
                     toml_dependencies.append("--no-cache-dir")
 
-            package_args.append(",".join(toml_dependencies))
+            for toml_dep in toml_dependencies:
+                package_args.extend(["-r", toml_dep])
 
         elif requirements_txt.exists():
             if self.verbose > 1:
@@ -1785,12 +1785,12 @@ class Command(BaseCommand):
                         style=verbose2_style,
                     )
                     hash.update(reqs_txt_contents)
-            package_args.append(f"-r,{requirements_txt}")
+            package_args.extend(["-r", "-r", "-r", str(requirements_txt)])
         else:
             flet_version = (
                 flet.version.version if flet.version.version else update_version()
             )
-            package_args.append(f"flet=={flet_version}")
+            package_args.extend(["-r", f"flet=={flet_version}"])
 
         # site-packages variable
         package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
