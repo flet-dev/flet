@@ -4,6 +4,7 @@
 * Show app startup screen by default ([#5036](https://github.com/flet-dev/flet/issues/5036))
 * fix: `Textfield` cursor position changes when modifying field content in `on_change` ([#5019](https://github.com/flet-dev/flet/issues/5019))
 * Remove deperecated `Control.update_async()` method ([#5005](https://github.com/flet-dev/flet/issues/5005))
+* fix: incorrect positioning of non-FAB controls assigned to page.floating_action_button ([#5049](https://github.com/flet-dev/flet/issues/5049))
 
 # 0.27.5
 
