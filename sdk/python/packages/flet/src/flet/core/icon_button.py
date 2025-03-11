@@ -96,6 +96,8 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         on_click: OptionalControlEventCallable = None,
         on_focus: OptionalControlEventCallable = None,
         on_blur: OptionalControlEventCallable = None,
+        on_long_press: OptionalControlEventCallable = None,
+        on_hover: OptionalControlEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -189,6 +191,8 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self.mouse_cursor = mouse_cursor
         self.visual_density = visual_density
         self.size_constraints = size_constraints
+        self.on_long_press = on_long_press
+        self.on_hover = on_hover
 
     def _get_control_name(self):
         return "iconbutton"
@@ -460,6 +464,15 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @on_blur.setter
     def on_blur(self, handler: OptionalControlEventCallable):
         self._add_event_handler("blur", handler)
+
+    # on_hover
+    @property
+    def on_hover(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("hover")
+
+    @on_hover.setter
+    def on_hover(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("hover", handler)
 
     # alignment
     @property

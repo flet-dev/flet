@@ -1,5 +1,6 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
+from typing import Optional
 
 
 class BlurTileMode(Enum):
@@ -13,4 +14,4 @@ class BlurTileMode(Enum):
 class Blur:
     sigma_x: float
     sigma_y: float
-    tile_mode: BlurTileMode = field(default=BlurTileMode.CLAMP)
+    tile_mode: Optional[BlurTileMode] = None

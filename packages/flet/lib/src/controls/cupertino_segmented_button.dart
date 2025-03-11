@@ -38,10 +38,6 @@ class _CupertinoSegmentedButtonControlState
     bool? adaptive =
         widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
 
-    var borderColor = widget.control.attrColor("borderColor", context);
-    var selectedColor = widget.control.attrColor("selectedColor", context);
-    var unselectedColor = widget.control.attrColor("unselectedColor", context);
-    var clickColor = widget.control.attrColor("clickColor", context);
     List<Control> ctrls = widget.children.where((c) => c.isVisible).toList();
     int? selectedIndex = widget.control.attrInt("selectedIndex");
 
@@ -70,10 +66,12 @@ class _CupertinoSegmentedButtonControlState
               });
             }
           },
-          borderColor: borderColor,
-          selectedColor: selectedColor,
-          unselectedColor: unselectedColor,
-          pressedColor: clickColor,
+          borderColor: widget.control.attrColor("borderColor", context),
+          selectedColor: widget.control.attrColor("selectedColor", context),
+          unselectedColor: widget.control.attrColor("unselectedColor", context),
+          pressedColor: widget.control.attrColor("clickColor", context),
+          disabledColor: widget.control.attrColor("disabledColor", context),
+          disabledTextColor: widget.control.attrColor("disabledTextColor", context),
           padding: parseEdgeInsets(widget.control, "padding"),
         ),
         widget.parent,

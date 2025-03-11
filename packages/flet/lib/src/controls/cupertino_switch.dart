@@ -91,7 +91,7 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl>
           activeTrackColor:
               widget.control.attrColor("activeTrackColor", context) ??
                   widget.control.attrColor("activeColor", context),
-          // deprecated in v0.26.0, remove in v0.29.0
+          // TODO: deprecated in v0.26.0, remove in v0.29.0
           thumbColor: materialThumbColor?.resolve({}),
           trackColor: materialTrackColor?.resolve({}),
           focusColor: widget.control.attrColor("focusColor", context),

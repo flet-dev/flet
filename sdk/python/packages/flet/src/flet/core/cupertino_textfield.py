@@ -100,6 +100,7 @@ class CupertinoTextField(TextField):
         on_submit: OptionalControlEventCallable = None,
         on_focus: OptionalControlEventCallable = None,
         on_blur: OptionalControlEventCallable = None,
+        on_tap_outside: OptionalControlEventCallable = None,
         #
         # FormField
         #
@@ -234,6 +235,7 @@ class CupertinoTextField(TextField):
             on_submit=on_submit,
             on_focus=on_focus,
             on_blur=on_blur,
+            on_tap_outside=on_tap_outside,
         )
 
         self.placeholder_text = placeholder_text
