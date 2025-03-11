@@ -110,6 +110,7 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
       var borderWidth = widget.control.attrDouble("borderWidth");
       var focusedBorderWidth = widget.control.attrDouble("focusedBorderWidth");
       var menuWidth = widget.control.attrDouble("menuWidth") ?? double.infinity;
+      var isDense = widget.control.attrBool("dense") ?? false;
 
       FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
         widget.control.attrString("border"),
@@ -178,8 +179,10 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         border: border,
         enabledBorder: border,
         focusedBorder: focusedBorder,
-        isDense: widget.control.attrBool("dense") ?? false,
         contentPadding: parseEdgeInsets(widget.control, "contentPadding"),
+        isDense: isDense,
+        isCollapsed: isDense,
+        constraints: isDense ? BoxConstraints.tight(const Size.fromHeight(24)) : null,
       );
 
       TextStyle? textStyle =
