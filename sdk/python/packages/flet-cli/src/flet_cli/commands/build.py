@@ -1793,9 +1793,10 @@ class Command(BaseCommand):
             package_args.extend(["-r", f"flet=={flet_version}"])
 
         # site-packages variable
-        package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
-            self.build_dir / "site-packages"
-        )
+        if self.package_platform != "Pyodide":
+            package_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
+                self.build_dir / "site-packages"
+            )
 
         # flutter-packages variable
         if self.flutter_packages_temp_dir.exists():
@@ -1953,9 +1954,10 @@ class Command(BaseCommand):
         build_env = {}
 
         # site-packages variable
-        build_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
-            self.build_dir / "site-packages"
-        )
+        if self.package_platform != "Pyodide":
+            build_env["SERIOUS_PYTHON_SITE_PACKAGES"] = str(
+                self.build_dir / "site-packages"
+            )
 
         android_signing_key_store = (
             self.options.android_signing_key_store
