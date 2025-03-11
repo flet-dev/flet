@@ -92,18 +92,18 @@ class PageSessionCreatedPayload:
     sessionID: str
 
 
-class ClientAction:
+class ClientAction(Enum):
     REGISTER_CLIENT = 1
     PATCH_CLIENT = 2
     CONTROL_EVENT = 3
-    CONTROL_PROPS = 4
+    UPDATE_CONTROL_PROPS = 4
     INVOKE_METHOD = 5
     SESSION_CRASHED = 6
 
 
 @dataclass
 class ClientMessage:
-    action: str
+    action: ClientAction
     payload: Any
 
 

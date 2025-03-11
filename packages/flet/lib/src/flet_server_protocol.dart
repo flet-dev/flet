@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'flet_server_protocol_javascript_io.dart'
     if (dart.library.js) "flet_server_protocol_javascript_web.dart";
 import 'flet_server_protocol_tcp_socket.dart';
@@ -6,7 +8,7 @@ import 'utils/platform_utils_non_web.dart'
     if (dart.library.js) "utils/platform_utils_web.dart";
 
 typedef FletServerProtocolOnDisconnectCallback = void Function();
-typedef FletServerProtocolOnMessageCallback = void Function(String message);
+typedef FletServerProtocolOnMessageCallback = void Function(Uint8List data);
 typedef ControlInvokeMethodCallback = Future<String?> Function(
     String methodName, Map<String, String> args);
 
@@ -34,6 +36,6 @@ abstract class FletServerProtocol {
   Future connect();
   bool get isLocalConnection;
   int get defaultReconnectIntervalMs;
-  void send(String message);
+  void send(Uint8List data);
   void disconnect();
 }

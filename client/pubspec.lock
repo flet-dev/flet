@@ -782,6 +782,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  msgpack_dart:
+    dependency: transitive
+    description:
+      name: msgpack_dart
+      sha256: c2d235ed01f364719b5296aecf43ac330f0d7bc865fa134d0d7910a40454dffb
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   package_info_plus:
     dependency: transitive
     description:

@@ -43,7 +43,8 @@ dependencies:
   js: ^0.6.5
   fl_chart: ^0.69.0
   device_info_plus: ^11.2.0
-
+  msgpack_dart: ^1.0.1
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

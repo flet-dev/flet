@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'flet_server_protocol.dart';
 
 class FletJavaScriptServerProtocol implements FletServerProtocol {
@@ -20,7 +22,7 @@ class FletJavaScriptServerProtocol implements FletServerProtocol {
   int get defaultReconnectIntervalMs => 10;
 
   @override
-  void send(String message) {}
+  void send(Uint8List data) {}
 
   @override
   void disconnect() {}

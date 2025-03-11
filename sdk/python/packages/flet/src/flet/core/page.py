@@ -708,22 +708,6 @@ class Page(AdaptiveControl):
             ),
         )
 
-    def _send_command(
-        self,
-        name: str,
-        values: Optional[List[str]] = None,
-        attrs: Optional[Dict[str, str]] = None,
-    ):
-        return self.__conn.send_command(
-            self._session_id,
-            Command(
-                indent=0,
-                name=name,
-                values=values if values is not None else [],
-                attrs=attrs or {},
-            ),
-        )
-
     def set_clipboard(self, value: str, wait_timeout: Optional[float] = 10) -> None:
         self._invoke_method("setClipboard", {"data": value}, wait_timeout=wait_timeout)
 

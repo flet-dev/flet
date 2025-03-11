@@ -1,23 +1,16 @@
 import 'dart:convert';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flet/src/utils/browser_context_menu.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-
-
 
 import 'actions.dart';
 import 'flet_control_backend.dart';
 import 'models/app_state.dart';
 import 'models/control.dart';
 import 'models/window_media_data.dart';
-import 'protocol/add_page_controls_payload.dart';
-import 'protocol/clean_control_payload.dart';
 import 'protocol/invoke_method_result.dart';
-import 'protocol/message.dart';
-import 'protocol/remove_control_payload.dart';
-import 'protocol/update_control_props_payload.dart';
 import 'utils/client_storage.dart';
 import 'utils/clipboard.dart';
 import 'utils/desktop.dart';
@@ -97,7 +90,8 @@ AppState appReducer(AppState state, dynamic action) {
             try {
               DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
               AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-              if (androidInfo.systemFeatures.contains('android.software.leanback')) {
+              if (androidInfo.systemFeatures
+                  .contains('android.software.leanback')) {
                 platformValue = "android_tv";
               }
             } on Exception catch (e) {
@@ -235,17 +229,6 @@ AppState appReducer(AppState state, dynamic action) {
         isLoading: true,
         error: "", //action.connectMessage,
         reconnectDelayMs: action.nextReconnectDelayMs);
-  } else if (action is AppBecomeActiveAction) {
-    //
-    // app become active
-    //
-    action.server.registerWebClientInternal();
-    return state.copyWith(error: "");
-  } else if (action is AppBecomeInactiveAction) {
-    //
-    // app become inactive
-    //
-    return state.copyWith(isLoading: true, error: "");
   } else if (action is SessionCrashedAction) {
     //
     // session crashed
@@ -342,39 +325,27 @@ AppState appReducer(AppState state, dynamic action) {
     addControls(controls, action.payload.controls);
     removeControls(controls, action.payload.trimIDs);
     return state.copyWith(controls: controls);
-  } else if (action is ReplacePageControlsAction) {
-    //
-    // replace controls
-    //
-    var controls = Map.of(state.controls);
-    if (action.payload.remove) {
-      removeControls(controls, action.payload.ids);
-    } else {
-      cleanControls(controls, action.payload.ids);
-    }
-    addControls(controls, action.payload.controls);
-    return state.copyWith(controls: controls);
   } else if (action is PageControlsBatchAction) {
     //
     // batch of commands
     //
     var controls = Map.of(state.controls);
-    for (var message in action.payload.messages) {
-      if (message.action == MessageAction.addPageControls) {
-        var payload = AddPageControlsPayload.fromJson(message.payload);
-        addControls(controls, payload.controls);
-        removeControls(controls, payload.trimIDs);
-      } else if (message.action == MessageAction.updateControlProps) {
-        var payload = UpdateControlPropsPayload.fromJson(message.payload);
-        changeProps(controls, payload.props);
-      } else if (message.action == MessageAction.cleanControl) {
-        var payload = CleanControlPayload.fromJson(message.payload);
-        cleanControls(controls, payload.ids);
-      } else if (message.action == MessageAction.removeControl) {
-        var payload = RemoveControlPayload.fromJson(message.payload);
-        removeControls(controls, payload.ids);
-      }
-    }
+    // for (var message in action.payload.messages) {
+    //   if (message.action == MessageAction.addPageControls) {
+    //     var payload = AddPageControlsPayload.fromJson(message.payload);
+    //     addControls(controls, payload.controls);
+    //     removeControls(controls, payload.trimIDs);
+    //   } else if (message.action == MessageAction.updateControlProps) {
+    //     var payload = UpdateControlPropsPayload.fromJson(message.payload);
+    //     changeProps(controls, payload.props);
+    //   } else if (message.action == MessageAction.cleanControl) {
+    //     var payload = CleanControlPayload.fromJson(message.payload);
+    //     cleanControls(controls, payload.ids);
+    //   } else if (message.action == MessageAction.removeControl) {
+    //     var payload = RemoveControlPayload.fromJson(message.payload);
+    //     removeControls(controls, payload.ids);
+    //   }
+    // }
     return state.copyWith(controls: controls);
   } else if (action is UpdateControlPropsAction) {
     //
@@ -382,27 +353,6 @@ AppState appReducer(AppState state, dynamic action) {
     //
     var controls = Map.of(state.controls);
     changeProps(controls, action.payload.props);
-    return state.copyWith(controls: controls);
-  } else if (action is AppendControlPropsAction) {
-    //
-    // append control props
-    //
-    var controls = Map.of(state.controls);
-    appendProps(controls, action.payload.props);
-    return state.copyWith(controls: controls);
-  } else if (action is CleanControlAction) {
-    //
-    // clean controls
-    //
-    var controls = Map.of(state.controls);
-    cleanControls(controls, action.payload.ids);
-    return state.copyWith(controls: controls);
-  } else if (action is RemoveControlAction) {
-    //
-    // remove controls
-    //
-    var controls = Map.of(state.controls);
-    removeControls(controls, action.payload.ids);
     return state.copyWith(controls: controls);
   }
 

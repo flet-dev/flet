@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:msgpack_dart/msgpack_dart.dart' as msgpack;
 import 'package:redux/redux.dart';
 
 import 'actions.dart';
@@ -8,19 +9,11 @@ import 'flet_app_errors_handler.dart';
 import 'flet_control_backend.dart';
 import 'flet_server_protocol.dart';
 import 'models/app_state.dart';
-import 'protocol/add_page_controls_payload.dart';
-import 'protocol/app_become_active_payload.dart';
-import 'protocol/app_become_inactive_payload.dart';
-import 'protocol/append_control_props_request.dart';
-import 'protocol/clean_control_payload.dart';
 import 'protocol/invoke_method_payload.dart';
 import 'protocol/message.dart';
-import 'protocol/page_controls_batch_payload.dart';
 import 'protocol/page_event_from_web_request.dart';
 import 'protocol/register_webclient_request.dart';
 import 'protocol/register_webclient_response.dart';
-import 'protocol/remove_control_payload.dart';
-import 'protocol/replace_page_controls_payload.dart';
 import 'protocol/session_crashed_payload.dart';
 import 'protocol/update_control_props_payload.dart';
 import 'protocol/update_control_props_request.dart';
@@ -141,7 +134,7 @@ class FletServer implements FletControlBackend {
     debugPrint("registerWebClientInternal");
     var page = _store.state.controls["page"];
     send(Message(
-        action: MessageAction.registerWebClient,
+        action: MessageAction.registerClient,
         payload: RegisterWebClientRequest(
             pageName: _pageName,
             pageRoute: _pageHash != "" ? _pageHash : _store.state.route,
@@ -200,7 +193,7 @@ class FletServer implements FletControlBackend {
       required String eventName,
       String? eventData}) {
     send(Message(
-        action: MessageAction.pageEventFromWeb,
+        action: MessageAction.controlEvent,
         payload: PageEventFromWebRequest(
             eventTarget: eventTarget,
             eventName: eventName,
@@ -217,17 +210,9 @@ class FletServer implements FletControlBackend {
     debugPrint("WS message: $message");
     final msg = Message.fromJson(json.decode(message));
     switch (msg.action) {
-      case MessageAction.registerWebClient:
+      case MessageAction.registerClient:
         _store.dispatch(RegisterWebClientAction(
             RegisterWebClientResponse.fromJson(msg.payload), this));
-        break;
-      case MessageAction.appBecomeActive:
-        _store.dispatch(AppBecomeActiveAction(
-            this, AppBecomeActivePayload.fromJson(msg.payload)));
-        break;
-      case MessageAction.appBecomeInactive:
-        _store.dispatch(AppBecomeInactiveAction(
-            AppBecomeInactivePayload.fromJson(msg.payload)));
         break;
       case MessageAction.sessionCrashed:
         _store.dispatch(
@@ -237,41 +222,21 @@ class FletServer implements FletControlBackend {
         _store.dispatch(InvokeMethodAction(
             InvokeMethodPayload.fromJson(msg.payload), this));
         break;
-      case MessageAction.addPageControls:
-        _store.dispatch(AddPageControlsAction(
-            AddPageControlsPayload.fromJson(msg.payload)));
-        break;
-      case MessageAction.appendControlProps:
-        _store.dispatch(AppendControlPropsAction(
-            AppendControlPropsPayload.fromJson(msg.payload)));
-        break;
       case MessageAction.updateControlProps:
         _store.dispatch(UpdateControlPropsAction(
             UpdateControlPropsPayload.fromJson(msg.payload)));
         break;
-      case MessageAction.replacePageControls:
-        _store.dispatch(ReplacePageControlsAction(
-            ReplacePageControlsPayload.fromJson(msg.payload)));
-        break;
-      case MessageAction.cleanControl:
-        _store.dispatch(
-            CleanControlAction(CleanControlPayload.fromJson(msg.payload)));
-        break;
-      case MessageAction.removeControl:
-        _store.dispatch(
-            RemoveControlAction(RemoveControlPayload.fromJson(msg.payload)));
-        break;
-      case MessageAction.pageControlsBatch:
-        _store.dispatch(PageControlsBatchAction(
-            PageControlsBatchPayload.fromJson(msg.payload)));
-        break;
+      // case MessageAction.pageControlsBatch:
+      //   _store.dispatch(PageControlsBatchAction(
+      //       PageControlsBatchPayload.fromJson(msg.payload)));
+      //   break;
       default:
     }
   }
 
   send(Message message) {
-    final m = json.encode(message.toJson());
-    _clientProtocol?.send(m);
+    final data = msgpack.serialize(message.toJson());
+    _clientProtocol?.send(data);
   }
 
   void disconnect() {

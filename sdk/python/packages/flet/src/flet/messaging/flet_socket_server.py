@@ -7,9 +7,10 @@ import sys
 import tempfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, List, Optional
 
 import flet
+import msgpack
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,
@@ -19,6 +20,7 @@ from flet.messaging.protocol import (
     PageCommandResponsePayload,
     PageCommandsBatchResponsePayload,
     RegisterWebClientRequestPayload,
+    encode_object_for_msgpack,
 )
 from flet.pubsub.pubsub_hub import PubSubHub
 from flet.utils import get_free_tcp_port, is_windows, random_string
@@ -90,39 +92,38 @@ class FletSocketServer(Connection):
             self.__send_loop_task = asyncio.create_task(self.__send_loop(writer))
 
     async def __receive_loop(self, reader: asyncio.StreamReader):
+        unpacker = msgpack.Unpacker()
         while True:
             try:
-                raw_msglen = await reader.readexactly(4)
-            except Exception:
+                buf = await reader.read(1024**2)
+                if not buf:
+                    return None
+                unpacker.feed(buf)
+            except Exception as e:
+                logger.debug(f"Error receiving socket data from Flet client: {e}")
                 return None
 
-            if not raw_msglen:
-                return None
-            msglen = struct.unpack(">I", raw_msglen)[0]
-
-            data = await reader.readexactly(msglen)
-            await self.__on_message(data.decode("utf-8"))
+            for msg in unpacker:
+                await self.__on_message(msg)
 
     async def __send_loop(self, writer: asyncio.StreamWriter):
         while True:
             message = await self.__send_queue.get()
             try:
-                data = message.encode("utf-8")
-                msg = struct.pack(">I", len(data)) + data
-                writer.write(msg)
+                writer.write(message)
                 # await writer.drain()
-                logger.debug(f"sent to TCP: {len(msg)}")
+                print(f"sent to TCP: {len(message)}")
             except Exception:
                 # re-enqueue the message to repeat it when re-connected
                 self.__send_queue.put_nowait(message)
                 raise
 
-    async def __on_message(self, data: str):
-        logger.debug(f"_on_message: {data}")
-        msg_dict = json.loads(data)
-        msg = ClientMessage(**msg_dict)
+    async def __on_message(self, data: Any):
+        msg = ClientMessage(action=data[0], payload=data[1])
+        print(f"_on_message: {data}", ClientAction(msg.action))
         task = None
-        if msg.action == ClientAction.REGISTER_CLIENT:
+        if ClientAction(msg.action) == ClientAction.REGISTER_CLIENT:
+            print("REGISTER CLIENT")
             self._client_details = RegisterWebClientRequestPayload(**msg.payload)
 
             # register response
@@ -134,13 +135,13 @@ class FletSocketServer(Connection):
                     self.__on_session_created(self._create_session_handler_arg())
                 )
 
-        elif msg.action == ClientAction.CONTROL_EVENT:
+        elif ClientAction(msg.action) == ClientAction.CONTROL_EVENT:
             if self.__on_event is not None:
                 task = asyncio.create_task(
                     self.__on_event(self._create_page_event_handler_arg(msg))
                 )
 
-        elif msg.action == ClientAction.UPDATE_CONTROL_PROPS:
+        elif ClientAction(msg.action) == ClientAction.UPDATE_CONTROL_PROPS:
             if self.__on_event is not None:
                 task = asyncio.create_task(
                     self.__on_event(self._create_update_control_props_handler_arg(msg))
@@ -173,9 +174,11 @@ class FletSocketServer(Connection):
         return PageCommandsBatchResponsePayload(results=results, error="")
 
     def __send(self, message: ClientMessage):
-        j = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
-        logger.debug(f"__send: {j}")
-        self.__loop.call_soon_threadsafe(self.__send_queue.put_nowait, j)
+        m = msgpack.packb(
+            [message.action, message.payload], default=encode_object_for_msgpack
+        )
+        print(f"__send: {m}")
+        self.__loop.call_soon_threadsafe(self.__send_queue.put_nowait, m)
 
     async def close(self):
         logger.debug("Closing connection...")

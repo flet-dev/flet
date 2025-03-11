@@ -57,7 +57,7 @@ class FletWebSocketServerProtocol implements FletServerProtocol {
   }
 
   @override
-  void send(String message) {
+  void send(Uint8List message) {
     _channel?.sink.add(message);
   }
 

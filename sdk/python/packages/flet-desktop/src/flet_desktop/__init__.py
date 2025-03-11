@@ -149,6 +149,8 @@ def __locate_and_unpack_flet_view(page_url, assets_dir, hidden):
                 app_name is not None
             ), f"Application bundle not found in {temp_flet_dir}"
             app_path = temp_flet_dir.joinpath(app_name)
+        logger.info(f"page_url: {page_url}")
+        logger.info(f"pid_file: {pid_file}")
         args = ["open", str(app_path), "-n", "-W", "--args", page_url, pid_file]
     elif is_linux():
         app_path = None

@@ -12,7 +12,7 @@ import 'flet_server_protocol.dart';
 external dynamic jsConnect(FletServerProtocolOnMessageCallback onMessage);
 
 @JS()
-external dynamic jsSend(String data);
+external dynamic jsSend(Uint8List data);
 
 class FletJavaScriptServerProtocol implements FletServerProtocol {
   final String address;
@@ -37,8 +37,8 @@ class FletJavaScriptServerProtocol implements FletServerProtocol {
   int get defaultReconnectIntervalMs => 10;
 
   @override
-  void send(String message) {
-    jsSend(message);
+  void send(Uint8List data) {
+    jsSend(data);
   }
 
   @override
