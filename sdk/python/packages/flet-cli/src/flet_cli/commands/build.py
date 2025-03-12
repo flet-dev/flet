@@ -605,8 +605,9 @@ class Command(BaseCommand):
 
     def handle(self, options: argparse.Namespace) -> None:
         self.options = options
+        self.target_platform = self.options.target_platform
         self.status = console.status(
-            f"[bold blue]Initializing {self.options.target_platform} build...",
+            f"[bold blue]Initializing {self.target_platform} build...",
             spinner="bouncingBall",
         )
         self.progress = Progress(transient=True)
@@ -630,11 +631,11 @@ class Command(BaseCommand):
             self.cleanup(
                 0,
                 message=(
-                    f"Successfully built your [cyan]{self.platforms[self.options.target_platform]['status_text']}[/cyan]! {self.emojis['success']} "
+                    f"Successfully built your [cyan]{self.platforms[self.target_platform]['status_text']}[/cyan]! {self.emojis['success']} "
                     f"Find it in [cyan]{self.rel_out_dir}[/cyan] directory. {self.emojis['directory']}"
                     + (
                         f"\nRun [cyan]python -m http.server --directory {self.rel_out_dir}[/cyan] command to start dev web server with your app. "
-                        if self.options.target_platform == "web"
+                        if self.target_platform == "web"
                         else ""
                     )
                 ),
@@ -653,12 +654,8 @@ class Command(BaseCommand):
         self.skip_flutter_doctor = (
             self.skip_flutter_doctor or self.options.skip_flutter_doctor
         )
-        self.package_platform = self.platforms[self.options.target_platform][
-            "package_platform"
-        ]
-        self.config_platform = self.platforms[self.options.target_platform][
-            "config_platform"
-        ]
+        self.package_platform = self.platforms[self.target_platform]["package_platform"]
+        self.config_platform = self.platforms[self.target_platform]["config_platform"]
 
         if not (
             os.path.exists(self.python_app_path) or os.path.isdir(self.python_app_path)
@@ -688,7 +685,7 @@ class Command(BaseCommand):
             self.install_android_sdk()
 
         self.rel_out_dir = self.options.output_dir or os.path.join(
-            "build", self.platforms[self.options.target_platform]["dist"]
+            "build", self.platforms[self.target_platform]["dist"]
         )
 
         self.build_dir = self.python_app_path.joinpath("build")
@@ -822,13 +819,13 @@ class Command(BaseCommand):
         assert self.options
         if (
             self.current_platform
-            not in self.platforms[self.options.target_platform]["can_be_run_on"]
+            not in self.platforms[self.target_platform]["can_be_run_on"]
             or self.options.show_platform_matrix
         ):
             can_build_message = (
                 "can't"
                 if self.current_platform
-                not in self.platforms[self.options.target_platform]["can_be_run_on"]
+                not in self.platforms[self.target_platform]["can_be_run_on"]
                 else "can"
             )
             # replace "Darwin" with "macOS" for user-friendliness
@@ -837,11 +834,11 @@ class Command(BaseCommand):
             )
             # highlight the current platform in the build matrix table
             self.platform_matrix_table.rows[
-                list(self.platforms.keys()).index(self.options.target_platform)
+                list(self.platforms.keys()).index(self.target_platform)
             ].style = "bold red1"
             console.log(self.platform_matrix_table)
 
-            message = f"You {can_build_message} build [cyan]{self.options.target_platform}[/] on [magenta]{self.current_platform}[/]."
+            message = f"You {can_build_message} build [cyan]{self.target_platform}[/] on [magenta]{self.current_platform}[/]."
             self.cleanup(1, message)
 
     def validate_entry_point(self):
@@ -1076,7 +1073,7 @@ class Command(BaseCommand):
             or ios_export_method_opts.get("team_id")
         )
 
-        if self.options.target_platform in ["ipa"] and not ios_provisioning_profile:
+        if self.target_platform in ["ipa"] and not ios_provisioning_profile:
             console.print(
                 Panel(
                     "This build will generate an .xcarchive (Xcode Archive). To produce an .ipa (iOS App Package), please specify a Provisioning Profile.",
@@ -1145,7 +1142,9 @@ class Command(BaseCommand):
                 "target_arch": (
                     target_arch
                     if isinstance(target_arch, list)
-                    else [target_arch] if isinstance(target_arch, str) else []
+                    else [target_arch]
+                    if isinstance(target_arch, str)
+                    else []
                 ),
                 "info_plist": info_plist,
                 "macos_entitlements": macos_entitlements,
@@ -1454,7 +1453,7 @@ class Command(BaseCommand):
         assert self.pubspec_path
         assert self.build_dir
 
-        if not self.options.target_platform in ["web", "ipa", "apk", "aab"]:
+        if not self.target_platform in ["web", "ipa", "apk", "aab"]:
             return
 
         hash = HashStamp(self.build_dir / ".hash" / "splashes")
@@ -1817,7 +1816,7 @@ class Command(BaseCommand):
         if app_exclude:
             exclude_list.extend(app_exclude)
 
-        if self.options.target_platform == "web":
+        if self.target_platform == "web":
             exclude_list.append("assets")
         package_args.extend(["--exclude", ",".join(exclude_list)])
 
@@ -1940,13 +1939,13 @@ class Command(BaseCommand):
         assert self.template_data
 
         self.update_status(
-            f"[bold blue]Building [cyan]{self.platforms[self.options.target_platform]['status_text']}[/cyan]..."
+            f"[bold blue]Building [cyan]{self.platforms[self.target_platform]['status_text']}[/cyan]..."
         )
         # flutter build
         build_args = [
             self.flutter_exe,
             "build",
-            self.platforms[self.options.target_platform]["flutter_build_command"],
+            self.platforms[self.target_platform]["flutter_build_command"],
             "--no-version-check",
             "--suppress-analytics",
         ]
@@ -1988,13 +1987,10 @@ class Command(BaseCommand):
         if android_signing_key_alias:
             build_env["FLET_ANDROID_SIGNING_KEY_ALIAS"] = android_signing_key_alias
 
-        if (
-            self.options.target_platform in "apk"
-            and self.template_data["split_per_abi"]
-        ):
+        if self.target_platform in "apk" and self.template_data["split_per_abi"]:
             build_args.append("--split-per-abi")
 
-        if self.options.target_platform in ["ipa"]:
+        if self.target_platform in ["ipa"]:
             if self.template_data["ios_provisioning_profile"]:
                 build_args.extend(
                     [
@@ -2046,7 +2042,7 @@ class Command(BaseCommand):
                 console.log(build_result.stderr, style=error_style)
             self.cleanup(build_result.returncode if build_result.returncode else 1)
         console.log(
-            f"Built [cyan]{self.platforms[self.options.target_platform]['status_text']}[/cyan] {self.emojis['checkmark']}",
+            f"Built [cyan]{self.platforms[self.target_platform]['status_text']}[/cyan] {self.emojis['checkmark']}",
         )
 
     def copy_build_output(self):
@@ -2065,7 +2061,7 @@ class Command(BaseCommand):
         elif arch in {"arm64", "aarch64"}:
             arch = "arm64"
 
-        for build_output in self.platforms[self.options.target_platform]["outputs"]:
+        for build_output in self.platforms[self.target_platform]["outputs"]:
             build_output_dir = (
                 str(self.flutter_dir.joinpath(build_output))
                 .replace("{arch}", arch)
@@ -2096,7 +2092,7 @@ class Command(BaseCommand):
             # copy build result to out_dir
             copy_tree(build_output_dir, str(self.out_dir), ignore=ignore_build_output)
 
-        if self.options.target_platform == "web" and self.assets_path.exists():
+        if self.target_platform == "web" and self.assets_path.exists():
             # copy `assets` directory contents to the output directory
             copy_tree(str(self.assets_path), str(self.out_dir))
 
