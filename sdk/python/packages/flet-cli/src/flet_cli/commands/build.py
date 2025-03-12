@@ -102,7 +102,7 @@ class Command(BaseCommand):
                 "config_platform": "macos",
                 "flutter_build_command": "macos",
                 "status_text": "macOS bundle",
-                "outputs": ["build/macos/Build/Products/Release/{product_name}.app"],
+                "outputs": ["build/macos/Build/Products/Release/{project_name}.app"],
                 "dist": "macos",
                 "can_be_run_on": ["Darwin"],
             },
