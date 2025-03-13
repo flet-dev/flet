@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Any, List, Optional, Union
 
 from flet.core.animation import AnimationValue
@@ -7,6 +6,7 @@ from flet.core.badge import BadgeValue
 from flet.core.border import Border
 from flet.core.box import BoxShadow, DecorationImage
 from flet.core.control import Control, OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.gradients import Gradient
 from flet.core.ref import Ref
 from flet.core.text_style import StrutStyle, TextStyle
@@ -28,7 +28,7 @@ from flet.core.types import (
 )
 
 
-class VisibilityMode(Enum):
+class VisibilityMode(ExtendedEnum):
     NEVER = "never"
     EDITING = "editing"
     NOT_EDITING = "notEditing"
@@ -296,7 +296,7 @@ class CupertinoTextField(TextField):
     @blend_mode.setter
     def blend_mode(self, value: Optional[BlendMode]):
         self.__blend_mode = value
-        self._set_enum_attr("blendMode", value, BlendMode)
+        self._set_attr("blendMode", value)
 
     # shadow
     @property
@@ -324,7 +324,7 @@ class CupertinoTextField(TextField):
     @suffix_visibility_mode.setter
     def suffix_visibility_mode(self, value: Optional[VisibilityMode]):
         self.__suffix_visibility_mode = value
-        self._set_enum_attr("suffixVisibilityMode", value, VisibilityMode)
+        self._set_attr("suffixVisibilityMode", value)
 
     # clear_button_visibility_mode
     @property
@@ -334,7 +334,7 @@ class CupertinoTextField(TextField):
     @clear_button_visibility_mode.setter
     def clear_button_visibility_mode(self, value: Optional[VisibilityMode]):
         self.__clear_button_visibility_mode = value
-        self._set_enum_attr("clearButtonVisibilityMode", value, VisibilityMode)
+        self._set_attr("clearButtonVisibilityMode", value)
 
     # prefix_visibility_mode
     @property
@@ -344,7 +344,7 @@ class CupertinoTextField(TextField):
     @prefix_visibility_mode.setter
     def prefix_visibility_mode(self, value: Optional[VisibilityMode]):
         self.__prefix_visibility_mode = value
-        self._set_enum_attr("prefixVisibilityMode", value, VisibilityMode)
+        self._set_attr("prefixVisibilityMode", value)
 
     # clear_button_semantics_label
     @property

@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Any, Optional, Union
 
 from flet.core.alignment import Alignment
@@ -6,10 +5,10 @@ from flet.core.animation import AnimationValue
 from flet.core.badge import BadgeValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
@@ -19,7 +18,7 @@ from flet.core.types import (
 )
 
 
-class CupertinoTimerPickerMode(Enum):
+class CupertinoTimerPickerMode(ExtendedEnum):
     HOUR_MINUTE = "hm"
     HOUR_MINUTE_SECONDS = "hms"
     MINUTE_SECONDS = "ms"
@@ -152,7 +151,7 @@ class CupertinoTimerPicker(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # second_interval
     @property
@@ -189,7 +188,7 @@ class CupertinoTimerPicker(ConstrainedControl):
     @mode.setter
     def mode(self, value: Optional[CupertinoTimerPickerMode]):
         self.__mode = value
-        self._set_enum_attr("mode", value, CupertinoTimerPickerMode)
+        self._set_attr("mode", value)
 
     # on_change
     @property

@@ -1,10 +1,10 @@
 import json
 from dataclasses import dataclass
-from enum import Enum
 from typing import Any, Optional
 
 from flet.core.control import Control
 from flet.core.control_event import ControlEvent
+from flet.core.enumerations import ExtendedEnum
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.types import (
@@ -17,7 +17,7 @@ from flet.core.types import (
 from flet.utils import deprecated
 
 
-class GeolocatorPositionAccuracy(Enum):
+class GeolocatorPositionAccuracy(ExtendedEnum):
     LOWEST = "lowest"
     LOW = "low"
     MEDIUM = "medium"
@@ -27,7 +27,7 @@ class GeolocatorPositionAccuracy(Enum):
     REDUCED = "reduced"
 
 
-class GeolocatorPermissionStatus(Enum):
+class GeolocatorPermissionStatus(ExtendedEnum):
     DENIED = "denied"
     DENIED_FOREVER = "deniedForever"
     WHILE_IN_USE = "whileInUse"
@@ -35,7 +35,7 @@ class GeolocatorPermissionStatus(Enum):
     UNABLE_TO_DETERMINE = "unableToDetermine"
 
 
-class GeolocatorActivityType(Enum):
+class GeolocatorActivityType(ExtendedEnum):
     AUTOMOTIVE_NAVIGATION = "automotiveNavigation"
     FITNESS = "fitness"
     OTHER_NAVIGATION = "otherNavigation"

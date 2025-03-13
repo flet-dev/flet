@@ -7,7 +7,6 @@ from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
@@ -146,7 +145,7 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # thumb_color
     @property
@@ -156,7 +155,7 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
     @thumb_color.setter
     def thumb_color(self, value: Optional[ColorValue]):
         self.__thumb_color = value
-        self._set_enum_attr("thumbColor", value, ColorEnums)
+        self._set_attr("thumbColor", value)
 
     # padding
     @property

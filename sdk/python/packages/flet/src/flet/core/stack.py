@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Any, List, Optional, Sequence, Union
 
 from flet.core.adaptive_control import AdaptiveControl
@@ -6,6 +5,7 @@ from flet.core.alignment import Alignment
 from flet.core.animation import AnimationValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.ref import Ref
 from flet.core.types import (
     ClipBehavior,
@@ -17,7 +17,7 @@ from flet.core.types import (
 )
 
 
-class StackFit(Enum):
+class StackFit(ExtendedEnum):
     LOOSE = "loose"
     EXPAND = "expand"
     PASS_THROUGH = "passThrough"
@@ -177,7 +177,7 @@ class Stack(ConstrainedControl, AdaptiveControl):
     @clip_behavior.setter
     def clip_behavior(self, value: Optional[ClipBehavior]):
         self.__clip_behavior = value
-        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+        self._set_attr("clipBehavior", value)
 
     # alignment
     @property
@@ -196,4 +196,4 @@ class Stack(ConstrainedControl, AdaptiveControl):
     @fit.setter
     def fit(self, value: Optional[StackFit]):
         self.__fit = value
-        self._set_enum_attr("fit", value, StackFit)
+        self._set_attr("fit", value)

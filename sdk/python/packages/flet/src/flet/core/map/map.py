@@ -8,13 +8,13 @@ from flet.core.animation import AnimationCurve, AnimationValue
 from flet.core.badge import BadgeValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.event_handler import EventHandler
 from flet.core.map.map_layer import MapLayer
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.transform import Offset
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     ControlEvent,
     DurationValue,
@@ -442,7 +442,7 @@ class Map(ConstrainedControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # keep_alive
     @property
@@ -479,7 +479,7 @@ class Map(ConstrainedControl):
     @animation_curve.setter
     def animation_curve(self, value: Optional[AnimationCurve]):
         self.__animation_curve = value
-        self._set_enum_attr("animationCurve", value, AnimationCurve)
+        self._set_attr("animationCurve", value)
 
     # animation_duration
     @property
@@ -593,7 +593,7 @@ class Map(ConstrainedControl):
         self._set_attr("onPointerUp", True if handler is not None else None)
 
 
-class MapEventSource(Enum):
+class MapEventSource(ExtendedEnum):
     MAP_CONTROLLER = "mapController"
     TAP = "tap"
     SECONDARY_TAP = "secondaryTap"

@@ -16,7 +16,6 @@ from flet.core.types import (
     ColorValue,
     ControlState,
     ControlStateValue,
-    IconEnums,
     IconValueOrControl,
     Number,
     OffsetValue,
@@ -137,7 +136,7 @@ class Option(Control):
     def leading_icon(self, value: Optional[IconValueOrControl]):
         self.__leading_icon = value
         if not isinstance(value, Control):
-            self._set_enum_attr("leadingIcon", value, IconEnums)
+            self._set_attr("leadingIcon", value)
 
     # trailing_icon
     @property
@@ -148,7 +147,7 @@ class Option(Control):
     def trailing_icon(self, value: Optional[IconValueOrControl]):
         self.__trailing_icon = value
         if not isinstance(value, Control):
-            self._set_enum_attr("trailingIcon", value, IconEnums)
+            self._set_attr("trailingIcon", value)
 
 
 class DropdownOption(Option):
@@ -475,7 +474,7 @@ class Dropdown(FormFieldControl):
         self.__select_icon = value
 
         if not isinstance(value, Control):
-            self._set_enum_attr("selectIcon", value, IconEnums)
+            self._set_attr("selectIcon", value)
 
         if value is not None:
             warnings.warn(
@@ -494,7 +493,7 @@ class Dropdown(FormFieldControl):
     def leading_icon(self, value: Optional[IconValueOrControl]):
         self.__leading_icon = value
         if not isinstance(value, Control):
-            self._set_enum_attr("leadingIcon", value, IconEnums)
+            self._set_attr("leadingIcon", value)
 
     # trailing_icon
     @property
@@ -505,7 +504,7 @@ class Dropdown(FormFieldControl):
     def trailing_icon(self, value: Optional[IconValueOrControl]):
         self.__trailing_icon = value
         if not isinstance(value, Control):
-            self._set_enum_attr("trailingIcon", value, IconEnums)
+            self._set_attr("trailingIcon", value)
 
     # selected_trailing_icon
     @property
@@ -516,7 +515,7 @@ class Dropdown(FormFieldControl):
     def selected_trailing_icon(self, value: Optional[IconValueOrControl]):
         self.__selected_trailing_icon = value
         if not isinstance(value, Control):
-            self._set_enum_attr("selectedTrailingIcon", value, IconEnums)
+            self._set_attr("selectedTrailingIcon", value)
 
     # bgcolor
     @property
@@ -535,7 +534,7 @@ class Dropdown(FormFieldControl):
     @text_align.setter
     def text_align(self, value: Optional[TextAlign]):
         self.__text_align = value
-        self._set_enum_attr("textAlign", value, TextAlign)
+        self._set_attr("textAlign", value)
 
     # elevation
     @property

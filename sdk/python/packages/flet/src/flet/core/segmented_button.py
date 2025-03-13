@@ -324,7 +324,7 @@ class SegmentedButton(ConstrainedControl):
     @direction.setter
     def direction(self, value: Optional[Axis]):
         self.__direction = value
-        self._set_enum_attr("direction", value, Axis)
+        self._set_attr("direction", value)
 
     # selected_icon
     @property

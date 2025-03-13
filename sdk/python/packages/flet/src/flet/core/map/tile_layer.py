@@ -1,14 +1,14 @@
-from enum import Enum
 from typing import Any, Dict, List, Optional
 
 from flet.core.control import OptionalNumber
+from flet.core.enumerations import ExtendedEnum
 from flet.core.map.map import MapLatitudeLongitudeBounds
 from flet.core.map.map_layer import MapLayer
 from flet.core.ref import Ref
 from flet.core.types import OptionalControlEventCallable
 
 
-class MapTileLayerEvictErrorTileStrategy(Enum):
+class MapTileLayerEvictErrorTileStrategy(ExtendedEnum):
     DISPOSE = "dispose"
     NOT_VISIBLE = "notVisible"
     NOT_VISIBLE_RESPECT_MARGIN = "notVisibleRespectMargin"

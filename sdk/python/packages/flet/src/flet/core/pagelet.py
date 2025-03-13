@@ -15,7 +15,6 @@ from flet.core.navigation_drawer import NavigationDrawer
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     FloatingActionButtonLocation,
     OffsetValue,
@@ -234,7 +233,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     @bgcolor.setter
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
+        self._set_attr("bgcolor", value)
 
     # bottom_appbar
     @property
