@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flet/src/utils/platform.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:window_to_front/window_to_front.dart';
@@ -246,9 +249,15 @@ Future blurWindow() async {
 }
 
 Future destroyWindow() async {
-  if (isDesktopPlatform()) {
+  if (isDesktopPlatform() || isMobilePlatform()) {
     debugPrint("destroyWindow()");
+  }
+  if (isDesktopPlatform()) {
     await windowManager.destroy();
+  } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+    exit(0);
+  } else if (defaultTargetPlatform == TargetPlatform.android) {
+    SystemNavigator.pop();
   }
 }
 
