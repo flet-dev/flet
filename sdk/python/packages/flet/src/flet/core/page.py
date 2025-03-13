@@ -503,6 +503,9 @@ class Window:
     def to_front(self) -> None:
         self.page._invoke_method("windowToFront")
 
+    def start_dragging(self) -> None:
+        self.page._invoke_method("windowStartDragging")
+
     # Events
     # on_event
     @property
