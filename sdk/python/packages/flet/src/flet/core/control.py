@@ -66,8 +66,8 @@ def _apply_control(
 
     def new_post_init(self: T, *args):
         """Set the type only if a type_name is explicitly provided and type is not overridden."""
-        if type_name is not None and (not hasattr(self, "type") or self.type is None):
-            self.type = type_name  # Only set type if explicitly provided
+        if type_name is not None and (not hasattr(self, "_c") or self._c is None):
+            self._c = type_name  # Only set type if explicitly provided
 
         # Pass only the correct number of arguments to `__post_init__`
         orig_post_init(self, *args[:post_init_args])
@@ -78,8 +78,8 @@ def _apply_control(
 
 @dataclass(kw_only=True)
 class Control:
-    id: int = field(init=False)
-    type: str = field(init=False)
+    _i: int = field(init=False)
+    _c: str = field(init=False)
     expand: Union[None, bool, int] = None
     expand_loose: Optional[bool] = None
     col: Optional[ResponsiveNumber] = None
@@ -94,8 +94,8 @@ class Control:
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
         self.__class__.__hash__ = Control.__hash__
-        self.id = self.__hash__()
-        if not hasattr(self, "type") or self.type is None:
+        self._i = self.__hash__()
+        if not hasattr(self, "_c") or self._c is None:
             cls_name = f"{self.__class__.__module__}.{self.__class__.__qualname__}"
             raise Exception(
                 f"Control {cls_name} must have @control decorator with type_name specified."

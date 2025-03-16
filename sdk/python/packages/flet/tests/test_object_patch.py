@@ -91,17 +91,22 @@ class Div(Control):
 
 def test_control_type():
     btn = ElevatedButton("some button")
-    assert btn.type == "ElevatedButton"
+    assert btn._c == "ElevatedButton"
+
+
+def test_control_id():
+    btn = ElevatedButton("some button")
+    assert btn._i > 0
 
 
 def test_inherited_control_has_the_same_type():
     btn = SuperElevatedButton(prop_2="2")
-    assert btn.type == "ElevatedButton"
+    assert btn._c == "ElevatedButton"
 
 
 def test_inherited_control_with_overridden_type():
     btn = MyButton(prop_1="1")
-    assert btn.type == "MyButton"
+    assert btn._c == "MyButton"
 
 
 def test_control_ref():
@@ -130,7 +135,7 @@ def test_simple_page():
 
     assert isinstance(u_msg, dict)
     assert "" in u_msg
-    assert u_msg[""]["id"] > 0
+    assert u_msg[""]["_i"] > 0
     assert len(u_msg[""]["views"]) > 0
     assert u_msg[""]["window"]["ignore_mouse_events"] == False
     assert u_msg[""]["theme_mode"] == "system"

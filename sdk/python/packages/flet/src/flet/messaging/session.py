@@ -18,7 +18,7 @@ class Session:
             weakref.WeakValueDictionary()
         )
         self.__page = Page(self)
-        self.__index[self.__page.id] = self.__page
+        self.__index[self.__page._i] = self.__page
         self.__pubsub_client = PubSubClient(conn.pubsubhub, self.__id)
 
     @property

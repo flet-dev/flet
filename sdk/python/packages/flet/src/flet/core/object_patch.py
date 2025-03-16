@@ -562,7 +562,7 @@ class DiffBuilder(object):
 
             # add control to the index
             if self.controls_index is not None:
-                self.controls_index[item.id] = item
+                self.controls_index[item._i] = item
 
             # recurse through fields
             for field in dataclasses.fields(item):
