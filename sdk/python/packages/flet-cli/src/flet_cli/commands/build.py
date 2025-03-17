@@ -5,7 +5,6 @@ import platform
 import re
 import shutil
 import sys
-import time
 from pathlib import Path
 from typing import Optional, cast
 
@@ -36,7 +35,7 @@ from rich.theme import Theme
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.2/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
 
-MINIMAL_FLUTTER_VERSION = version.Version("3.27.4")
+MINIMAL_FLUTTER_VERSION = version.Version("3.29.0")
 
 no_rich_output = get_bool_env_var("FLET_CLI_NO_RICH_OUTPUT")
 
@@ -1145,7 +1144,9 @@ class Command(BaseCommand):
                 "target_arch": (
                     target_arch
                     if isinstance(target_arch, list)
-                    else [target_arch] if isinstance(target_arch, str) else []
+                    else [target_arch]
+                    if isinstance(target_arch, str)
+                    else []
                 ),
                 "info_plist": info_plist,
                 "macos_entitlements": macos_entitlements,
