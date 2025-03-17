@@ -327,12 +327,6 @@ class Control:
         ), f"{self.__class__.__qualname__} Control must be added to the page first"
         self.__page.update(self)
 
-    async def update_async(self) -> None:
-        assert (
-            self.__page
-        ), f"{self.__class__.__qualname__} Control must be added to the page"
-        await self.__page.update_async(self)
-
     def clean(self) -> None:
         assert (
             self.__page

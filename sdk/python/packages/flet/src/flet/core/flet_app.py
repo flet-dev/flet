@@ -20,6 +20,8 @@ class FletApp(ConstrainedControl):
         url: Optional[str] = None,
         reconnect_interval_ms: Optional[int] = None,
         reconnect_timeout_ms: Optional[int] = None,
+        show_app_startup_screen: Optional[bool] = None,
+        app_startup_screen_message: Optional[str] = None,
         on_error: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
@@ -84,6 +86,8 @@ class FletApp(ConstrainedControl):
         self.url = url
         self.reconnect_interval_ms = reconnect_interval_ms
         self.reconnect_timeout_ms = reconnect_timeout_ms
+        self.show_app_startup_screen = show_app_startup_screen
+        self.app_startup_screen_message = app_startup_screen_message
         self.on_error = on_error
 
     def _get_control_name(self):
@@ -115,6 +119,24 @@ class FletApp(ConstrainedControl):
     @reconnect_timeout_ms.setter
     def reconnect_timeout_ms(self, value: Optional[int]):
         self._set_attr("reconnectTimeoutMs", value)
+
+    # show_app_startup_screen
+    @property
+    def show_app_startup_screen(self) -> bool:
+        return self._get_attr("showAppStartupScreen", data_type="bool", def_value=False)
+
+    @show_app_startup_screen.setter
+    def show_app_startup_screen(self, value: Optional[bool]):
+        self._set_attr("showAppStartupScreen", value)
+
+    # app_startup_screen_message
+    @property
+    def app_startup_screen_message(self) -> Optional[str]:
+        return self._get_attr("appStartupScreenMessage")
+
+    @app_startup_screen_message.setter
+    def app_startup_screen_message(self, value: Optional[str]):
+        self._set_attr("appStartupScreenMessage", value)
 
     # on_error
     @property

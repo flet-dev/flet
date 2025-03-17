@@ -1,5 +1,21 @@
 # Flet changelog
 
+## 0.27.6
+
+* Fix `flet build`: allow dependencies with commas ([#5033](https://github.com/flet-dev/flet/issues/5033))
+* Show app startup screen by default ([#5036](https://github.com/flet-dev/flet/issues/5036))
+* fix: `Textfield` cursor position changes when modifying field content in `on_change` ([#5019](https://github.com/flet-dev/flet/issues/5019))
+* Remove deperecated `Control.update_async()` method ([#5005](https://github.com/flet-dev/flet/issues/5005))
+* fix: incorrect positioning of non-FAB controls assigned to page.floating_action_button ([#5049](https://github.com/flet-dev/flet/issues/5049))
+
+## 0.27.5
+
+* Added `FletApp.showAppStartupScreen` and `FletApp.appStartupScreenMessage` properties.
+* Added `tool.flet.splash.icon_bgcolor` and `tool.flet.splash.icon_dark_bgcolor` settings for Android splash screen icon image.
+* Added `tool.flet.app.boot_screen` and `tool.flet.app.startup_screen` settings for customizing Flet app "loading" screens.
+* feat: `Dropdown.menu_width` property ([#5007](https://github.com/flet-dev/flet/issues/5007))
+* PBKDF2 iteration count increased to 600,000 ([#5023](https://github.com/flet-dev/flet/issues/5023))
+
 ## 0.27.4
 
 * Fix: do not remove `flutter-packages` on re-build if `dev_packages` configured.
