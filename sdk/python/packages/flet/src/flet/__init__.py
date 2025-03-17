@@ -24,6 +24,7 @@ from flet.core.alignment import Alignment, Axis
 from flet.core.animated_switcher import AnimatedSwitcher, AnimatedSwitcherTransition
 from flet.core.animation import Animation, AnimationCurve
 from flet.core.app_bar import AppBar
+from flet.core.reorderable_draggable import ReorderableDraggable
 from flet.core.audio import (
     Audio,
     AudioDurationChangeEvent,
