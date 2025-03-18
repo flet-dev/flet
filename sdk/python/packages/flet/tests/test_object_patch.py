@@ -49,7 +49,8 @@ def update_page(new: Any, old: Any = None, show_details=True):
     end = datetime.datetime.now()
 
     if show_details:
-        print("\nPatch:", graph_patch)
+        # print("\nPatch:", patch)
+        print("\nGraph patch:", graph_patch)
         print("\nMessage:", msg)
     else:
         print("\nMessage length:", len(msg))
@@ -122,10 +123,12 @@ def test_simple_page():
     page.controls = [Div(cls="div_1", some_value="Text")]
     page.data = 100000
     page.bgcolor = Colors.GREEN
+    page.fonts = {"font1": "font_url_1", "font2": "font_url_2"}
+    page.on_close = lambda e: print("on close")
 
     # assert page._url == url
 
-    msg = update_page(page, {}, show_details=False)
+    msg = update_page(page, {}, show_details=True)
     u_msg = b_unpack(msg)
 
     assert page.parent is None
@@ -136,12 +139,14 @@ def test_simple_page():
     assert isinstance(u_msg, dict)
     assert "" in u_msg
     assert u_msg[""]["_i"] > 0
+    assert u_msg[""]["on_close"]
     assert len(u_msg[""]["views"]) > 0
     assert u_msg[""]["window"]["ignore_mouse_events"] == False
     assert u_msg[""]["theme_mode"] == "system"
     assert "on_connect" not in u_msg[""]
 
     # update sub-tree
+    page.on_close = None
     page.controls[0].some_value = "Another text"
     page.controls[0].controls = [
         SuperElevatedButton(
@@ -152,9 +157,10 @@ def test_simple_page():
             ref=None,
         )
     ]
+    del page.fonts["font2"]
     assert page.controls[0].controls[0].page is None
 
-    update_page(page.controls[0], show_details=True)
+    update_page(page, show_details=True)
 
     assert page.views[0]._prev_bgcolor == "green"
 

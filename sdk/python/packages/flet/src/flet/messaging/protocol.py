@@ -19,9 +19,10 @@ def encode_object_for_msgpack(obj):
                 v = v.copy()
                 if len(v) > 0:
                     r[field.name] = v
-            elif field.name.startswith("on_") and v is not None:
-                v = True
-                r[field.name] = v
+            elif field.name.startswith("on_"):
+                v = v is not None
+                if v:
+                    r[field.name] = v
             elif v is not None:
                 r[field.name] = v
             setattr(obj, f"_prev_{field.name}", v)
