@@ -19,18 +19,15 @@ from typing import (
     Dict,
     List,
     Optional,
-    Sequence,
     Tuple,
     Type,
     TypeVar,
     Union,
-    cast,
 )
 from urllib.parse import urlparse
 
 import flet.core
 from flet.core.adaptive_control import AdaptiveControl
-from flet.core.alignment import Alignment
 from flet.core.animation import AnimationCurve
 from flet.core.app_bar import AppBar
 from flet.core.bottom_app_bar import BottomAppBar
@@ -69,6 +66,7 @@ from flet.core.types import (
     Wrapper,
 )
 from flet.core.view import View
+from flet.core.window import Window
 from flet.messaging.protocol import Command
 from flet.utils import classproperty, is_pyodide
 from flet.utils.locks import NopeLock
@@ -148,56 +146,6 @@ class BrowserContextMenu:
         return self.__disabled
 
 
-@control("window")
-class Window(Control):
-    bgcolor: Optional[ColorValue] = None
-    width: OptionalNumber = None
-    height: OptionalNumber = None
-    top: OptionalNumber = None
-    left: OptionalNumber = None
-    max_width: OptionalNumber = None
-    max_height: OptionalNumber = None
-    min_width: OptionalNumber = None
-    min_height: OptionalNumber = None
-    opacity: OptionalNumber = field(default=1.0)
-    maximized: Optional[bool] = field(default=False)
-    minimized: Optional[bool] = field(default=False)
-    minimizable: Optional[bool] = field(default=True)
-    maximizable: Optional[bool] = field(default=True)
-    resizable: Optional[bool] = field(default=True)
-    movable: Optional[bool] = field(default=True)
-    full_screen: Optional[bool] = field(default=False)
-    always_on_top: Optional[bool] = field(default=False)
-    prevent_close: Optional[bool] = field(default=False)
-    title_bar_hidden: Optional[bool] = field(default=False)
-    title_bar_buttons_hidden: Optional[bool] = field(default=False)
-    skip_task_bar: Optional[bool] = field(default=False)
-    frameless: Optional[bool] = field(default=False)
-    progress_bar: OptionalNumber = None
-    focused: Optional[bool] = field(default=True)
-    visible: Optional[bool] = field(default=True)
-    always_on_bottom: Optional[bool] = field(default=False)
-    wait_until_ready_to_show: Optional[bool] = field(default=False)
-    shadow: Optional[bool] = field(default=False)
-    alignment: Optional[Alignment] = None
-    badge_label: Optional[str] = None
-    icon: Optional[str] = None
-    ignore_mouse_events: Optional[bool] = field(default=False)
-    on_event: OptionalEventCallable["WindowEvent"] = None
-
-    def destroy(self):
-        self.invoke_method("destroy")
-
-    def center(self):
-        self.invoke_method("center")
-
-    def close(self):
-        self.invoke_method("close")
-
-    def to_front(self):
-        self.invoke_method("to_front")
-
-
 @control("page", post_init_args=2)
 class Page(AdaptiveControl):
     """
@@ -248,8 +196,8 @@ class Page(AdaptiveControl):
     client_ip: Optional[str] = None
     client_user_agent: Optional[str] = None
     fonts: Optional[Dict[str, str]] = None
+    scroll_event_interval: OptionalNumber = None
 
-    on_scroll_interval: OptionalNumber = None
     on_close: OptionalControlEventCallable = None
     on_resized: OptionalEventCallable["WindowResizeEvent"] = None
     on_platform_brightness_change: OptionalControlEventCallable = None
@@ -1160,11 +1108,6 @@ class PageMediaData(ControlEvent):
 @dataclass
 class AppLifecycleStateChangeEvent(ControlEvent):
     state: AppLifecycleState
-
-
-@dataclass
-class WindowEvent(ControlEvent):
-    type: WindowEventType
 
 
 @dataclass

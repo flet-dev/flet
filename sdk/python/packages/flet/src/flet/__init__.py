@@ -100,7 +100,7 @@ from flet.core.circle_avatar import CircleAvatar
 from flet.core.colors import Colors, colors
 from flet.core.column import Column
 from flet.core.container import Container, ContainerTapEvent
-from flet.core.control import Control, control
+from flet.core.control import Control, Service, control
 from flet.core.control_event import ControlEvent
 from flet.core.cupertino_action_sheet import CupertinoActionSheet
 from flet.core.cupertino_action_sheet_action import CupertinoActionSheetAction
@@ -265,8 +265,6 @@ from flet.core.page import (
     PageMediaData,
     RouteChangeEvent,
     ViewPopEvent,
-    Window,
-    WindowEvent,
     WindowResizeEvent,
     context,
 )
@@ -450,6 +448,7 @@ from flet.core.webview import (
     WebviewRequestMethod,
     WebviewScrollEvent,
 )
+from flet.core.window import Window, WindowEvent
 from flet.core.window_drag_area import WindowDragArea
 from flet.pubsub.pubsub_client import PubSubClient
 from flet.pubsub.pubsub_hub import PubSubHub

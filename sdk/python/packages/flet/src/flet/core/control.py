@@ -77,23 +77,14 @@ def _apply_control(
 
 
 @dataclass(kw_only=True)
-class Control:
+class BaseControl:
     _i: int = field(init=False)
     _c: str = field(init=False)
-    expand: Union[None, bool, int] = None
-    expand_loose: Optional[bool] = None
-    col: Optional[ResponsiveNumber] = None
-    opacity: OptionalNumber = None
-    tooltip: Optional[TooltipValue] = None
-    badge: Optional[BadgeValue] = None
-    visible: Optional[bool] = None
-    disabled: Optional[bool] = None
-    rtl: Optional[bool] = None
     data: Any = skip_field()
     ref: InitVar[Optional[Ref[Any]]] = None
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
-        self.__class__.__hash__ = Control.__hash__
+        self.__class__.__hash__ = BaseControl.__hash__
         self._i = self.__hash__()
         if not hasattr(self, "_c") or self._c is None:
             cls_name = f"{self.__class__.__module__}.{self.__class__.__qualname__}"
@@ -123,16 +114,8 @@ class Control:
             parent = parent.parent
         return None
 
-    def is_isolated(self) -> bool:
-        return False
-
     def build(self):
         pass
-
-    def before_update(self):
-        assert (
-            self.opacity is None or 0.0 <= self.opacity <= 1.0
-        ), "opacity must be between 0.0 and 1.0"
 
     def did_mount(self):
         pass
@@ -154,9 +137,6 @@ class Control:
         # ), f"{self.__class__.__qualname__} Control must be added to the page"
         # await self.__page.update_async(self)
         pass
-
-    def clean(self) -> None:
-        raise Exception("Deprecated!")
 
     def invoke_method(
         self,
@@ -201,3 +181,32 @@ class Control:
         #     wait_timeout=wait_timeout,
         # )
         return None
+
+
+@dataclass(kw_only=True)
+class Control(BaseControl):
+    expand: Union[None, bool, int] = None
+    expand_loose: Optional[bool] = None
+    col: Optional[ResponsiveNumber] = None
+    opacity: OptionalNumber = None
+    tooltip: Optional[TooltipValue] = None
+    badge: Optional[BadgeValue] = None
+    visible: Optional[bool] = None
+    disabled: Optional[bool] = None
+    rtl: Optional[bool] = None
+
+    def before_update(self):
+        assert (
+            self.opacity is None or 0.0 <= self.opacity <= 1.0
+        ), "opacity must be between 0.0 and 1.0"
+
+    def is_isolated(self) -> bool:
+        return False
+
+    def clean(self) -> None:
+        raise Exception("Deprecated!")
+
+
+@dataclass(kw_only=True)
+class Service(BaseControl):
+    pass
