@@ -8,7 +8,7 @@ from typing import Any, List, Optional
 import msgpack
 from flet.core.buttons import ButtonStyle
 from flet.core.colors import Colors
-from flet.core.control import Control, control
+from flet.core.control import BaseControl, Control, Service, control
 from flet.core.elevated_button import ElevatedButton
 from flet.core.event import Event
 from flet.core.object_patch import ObjectPatch
@@ -36,7 +36,7 @@ def update_page(new: Any, old: Any = None, show_details=True):
 
     # 1 -calculate diff
     patch = ObjectPatch.from_diff(
-        old, new, in_place=True, controls_index=controls_index, control_cls=Control
+        old, new, in_place=True, controls_index=controls_index, control_cls=BaseControl
     )
 
     # 2 - convert patch to hierarchy
@@ -73,6 +73,12 @@ class SuperElevatedButton(ElevatedButton):
 @control("MyButton")
 class MyButton(ElevatedButton):
     prop_1: Optional[str] = None
+
+
+@control("MyService")
+class MyService(Service):
+    prop_1: Optional[str] = None
+    prop_2: Optional[bool] = None
 
 
 @control("Span")
@@ -125,6 +131,7 @@ def test_simple_page():
     page.bgcolor = Colors.GREEN
     page.fonts = {"font1": "font_url_1", "font2": "font_url_2"}
     page.on_close = lambda e: print("on close")
+    page.services.append(MyService(prop_1="Hello"))
 
     # assert page._url == url
 

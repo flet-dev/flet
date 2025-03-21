@@ -33,7 +33,7 @@ from flet.core.app_bar import AppBar
 from flet.core.bottom_app_bar import BottomAppBar
 from flet.core.box import BoxDecoration
 from flet.core.client_storage import ClientStorage
-from flet.core.control import Control, control
+from flet.core.control import Control, Service, control
 from flet.core.control_event import ControlEvent
 from flet.core.cupertino_app_bar import CupertinoAppBar
 from flet.core.cupertino_navigation_bar import CupertinoNavigationBar
@@ -146,7 +146,7 @@ class BrowserContextMenu:
         return self.__disabled
 
 
-@control("page", post_init_args=2)
+@control("Page", post_init_args=2)
 class Page(AdaptiveControl):
     """
     Page is a container for `View` (https://flet.dev/docs/controls/view) controls.
@@ -177,6 +177,7 @@ class Page(AdaptiveControl):
     views: List[View] = field(default_factory=lambda: [View()])
     offstage: Offstage = field(default_factory=lambda: Offstage())
     window: Window = field(default_factory=lambda: Window())
+    _user_services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
 
     theme_mode: Optional[ThemeMode] = field(default=ThemeMode.SYSTEM)
     theme: Optional[Theme] = None
@@ -895,6 +896,15 @@ class Page(AdaptiveControl):
     def controls(self, value: List[Control]):
         self.__default_view().controls = value
 
+    # services
+    @property
+    def services(self) -> List[Service]:
+        return self._user_services.services
+
+    @services.setter
+    def services(self, value: List[Service]):
+        self._user_services.services = value
+
     # appbar
     @property
     def appbar(self) -> Union[AppBar, CupertinoAppBar, None]:
@@ -1061,9 +1071,14 @@ class Page(AdaptiveControl):
         return item in self.controls
 
 
-@control("offstage")
+@control("Offstage")
 class Offstage(Control):
     controls: List[Control] = field(default_factory=lambda: [])
+
+
+@control("ServiceRegistry")
+class ServiceRegistry(Service):
+    services: List[Service] = field(default_factory=lambda: [])
 
 
 @dataclass

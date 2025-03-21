@@ -99,7 +99,7 @@ class BaseControl:
         return object.__hash__(self)
 
     @property
-    def parent(self) -> Optional["Control"]:
+    def parent(self) -> Optional["BaseControl"]:
         parent_ref = getattr(self, "_parent", None)
         return parent_ref() if parent_ref else None
 
@@ -115,6 +115,9 @@ class BaseControl:
         return None
 
     def build(self):
+        pass
+
+    def before_update(self):
         pass
 
     def did_mount(self):
