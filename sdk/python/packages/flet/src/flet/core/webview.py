@@ -264,7 +264,7 @@ class WebView(ConstrainedControl):
             self.invoke_method(
                 "can_go_back",
                 wait_for_result=True,
-                wait_timeout=wait_timeout,
+                timeout=wait_timeout,
             )
             == "true"
         )
@@ -275,7 +275,7 @@ class WebView(ConstrainedControl):
             self.invoke_method(
                 "can_go_forward",
                 wait_for_result=True,
-                wait_timeout=wait_timeout,
+                timeout=wait_timeout,
             )
             == "true"
         )
@@ -307,19 +307,19 @@ class WebView(ConstrainedControl):
     def get_current_url(self, wait_timeout: OptionalNumber = 10) -> Optional[str]:
         self._check_mobile_or_mac_platform()
         return self.invoke_method(
-            "get_current_url", wait_for_result=True, wait_timeout=wait_timeout
+            "get_current_url", wait_for_result=True, timeout=wait_timeout
         )
 
     def get_title(self, wait_timeout: OptionalNumber = 10) -> Optional[str]:
         self._check_mobile_or_mac_platform()
         return self.invoke_method(
-            "get_title", wait_for_result=True, wait_timeout=wait_timeout
+            "get_title", wait_for_result=True, timeout=wait_timeout
         )
 
     def get_user_agent(self, wait_timeout: OptionalNumber = 10) -> Optional[str]:
         self._check_mobile_or_mac_platform()
         return self.invoke_method(
-            "get_user_agent", wait_for_result=True, wait_timeout=wait_timeout
+            "get_user_agent", wait_for_result=True, timeout=wait_timeout
         )
 
     def load_file(self, absolute_path: str):

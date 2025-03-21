@@ -5,6 +5,7 @@ import json
 import logging
 import threading
 import uuid
+import warnings
 import weakref
 from concurrent.futures import CancelledError, Future, ThreadPoolExecutor
 from contextvars import ContextVar
@@ -32,7 +33,8 @@ from flet.core.animation import AnimationCurve
 from flet.core.app_bar import AppBar
 from flet.core.bottom_app_bar import BottomAppBar
 from flet.core.box import BoxDecoration
-from flet.core.client_storage import ClientStorage
+from flet.core.browser_context_menu import BrowserContextMenu
+from flet.core.clipboard import Clipboard
 from flet.core.control import Control, Service, control
 from flet.core.control_event import ControlEvent
 from flet.core.cupertino_app_bar import CupertinoAppBar
@@ -45,6 +47,7 @@ from flet.core.padding import Padding
 from flet.core.querystring import QueryString
 from flet.core.scrollable_control import OnScrollEvent
 from flet.core.session_storage import SessionStorage
+from flet.core.shared_preferences import SharedPreferences
 from flet.core.theme import Theme
 from flet.core.types import (
     AppLifecycleState,
@@ -65,6 +68,7 @@ from flet.core.types import (
     WindowEventType,
     Wrapper,
 )
+from flet.core.url_launcher import UrlLauncher
 from flet.core.view import View
 from flet.core.window import Window
 from flet.messaging.protocol import Command
@@ -124,28 +128,6 @@ class PageDisconnectedException(Exception):
         super().__init__(message)
 
 
-@control("browser_context_menu")
-class BrowserContextMenu:
-
-    def __init__(self, page: Page):
-        self.__page = weakref.ref(page)
-        self.__disabled = False
-
-    def enable(self, wait_timeout: Optional[float] = 10):
-        if page := self.__page():
-            page.invoke_method("enableBrowserContextMenu", wait_timeout=wait_timeout)
-            self.__disabled = False
-
-    def disable(self, wait_timeout: Optional[float] = 10):
-        if page := self.__page():
-            page.invoke_method("disableBrowserContextMenu", wait_timeout=wait_timeout)
-            self.__disabled = True
-
-    @property
-    def disabled(self):
-        return self.__disabled
-
-
 @control("Page", post_init_args=2)
 class Page(AdaptiveControl):
     """
@@ -178,6 +160,7 @@ class Page(AdaptiveControl):
     offstage: Offstage = field(default_factory=lambda: Offstage())
     window: Window = field(default_factory=lambda: Window())
     _user_services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
+    _page_services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
 
     theme_mode: Optional[ThemeMode] = field(default=ThemeMode.SYSTEM)
     theme: Optional[Theme] = None
@@ -225,9 +208,13 @@ class Page(AdaptiveControl):
         self.__session = weakref.ref(sess)
         self.__lock = threading.Lock() if not is_pyodide() else NopeLock()
 
-        self.__browser_context_menu = BrowserContextMenu(self)
+        # page services
+        self.__browser_context_menu = BrowserContextMenu()
+        self.__shared_preferences = SharedPreferences()
+        self.__clipboard = Clipboard()
+        self.__url_launcher = UrlLauncher()
+
         self.__query: QueryString = QueryString(self)
-        self.__client_storage: ClientStorage = ClientStorage(self)
         self.__session_storage: SessionStorage = SessionStorage()
         self.__authorization: Optional[Authorization] = None
 
@@ -272,6 +259,15 @@ class Page(AdaptiveControl):
     #     ).results
     #     for i in range(len(props)):
     #         self._set_attr(props[i], values[i], False)
+
+    def before_update(self):
+        super().before_update()
+        self._page_services.services = [
+            self.__browser_context_menu,
+            self.__shared_preferences,
+            self.__clipboard,
+            self.__url_launcher,
+        ]
 
     def update(self, *controls) -> None:
         with self.__lock:
@@ -657,20 +653,35 @@ class Page(AdaptiveControl):
             ),
         )
 
-    def set_clipboard(self, value: str, wait_timeout: Optional[float] = 10) -> None:
-        self._invoke_method("setClipboard", {"data": value}, wait_timeout=wait_timeout)
-
-    def get_clipboard(self, wait_timeout: Optional[float] = 10) -> Optional[str]:
-        return self._invoke_method(
-            "getClipboard", wait_for_result=True, wait_timeout=wait_timeout
+    def set_clipboard(self, value: str, timeout: Optional[float] = 10) -> None:
+        warnings.warn(
+            "page.set_clipboard() is deprecated since version 1.0.0 "
+            "and will be removed in version 1.1.0. "
+            "Use page.clipboard.set() instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
         )
+        self.clipboard.set(value, timeout=timeout)
 
-    async def get_clipboard_async(
-        self, wait_timeout: Optional[float] = 10
-    ) -> Optional[str]:
-        return await self._invoke_method_async(
-            "getClipboard", wait_for_result=True, wait_timeout=wait_timeout
+    def get_clipboard(self, timeout: Optional[float] = 10) -> Optional[str]:
+        warnings.warn(
+            "page.get_clipboard() is deprecated since version 1.0.0 "
+            "and will be removed in version 1.1.0. "
+            "Use page.clipboard.get() instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
         )
+        return self.clipboard.get(timeout=timeout)
+
+    async def get_clipboard_async(self, timeout: Optional[float] = 10) -> Optional[str]:
+        warnings.warn(
+            "page.get_clipboard_async() is deprecated since version 1.0.0 "
+            "and will be removed in version 1.1.0. "
+            "Use page.clipboard.get() instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
+        return await self.clipboard.get_async(timeout=timeout)
 
     def launch_url(
         self,
@@ -680,30 +691,22 @@ class Page(AdaptiveControl):
         window_width: Optional[int] = None,
         window_height: Optional[int] = None,
     ) -> None:
-        args = {"url": url}
-        if web_window_name:
-            args["web_window_name"] = web_window_name
-        if web_popup_window:
-            args["web_popup_window"] = str(web_popup_window)
-        if window_width:
-            args["window_width"] = str(window_width)
-        if window_height:
-            args["window_height"] = str(window_height)
-        self._invoke_method("launchUrl", args)
-
-    def can_launch_url(self, url: str) -> bool:
-        args = {"url": url}
-        return self._invoke_method("canLaunchUrl", args, wait_for_result=True) == "true"
-
-    async def can_launch_url_async(self, url: str) -> bool:
-        args = {"url": url}
-        return (
-            await self._invoke_method_async("canLaunchUrl", args, wait_for_result=True)
-            == "true"
+        self.url_launcher.launch_url(
+            url,
+            web_window_name=web_window_name,
+            web_popup_window=web_popup_window,
+            window_width=window_width,
+            window_height=window_height,
         )
 
+    def can_launch_url(self, url: str) -> bool:
+        return self.url_launcher.can_launch_url(url)
+
+    async def can_launch_url_async(self, url: str) -> bool:
+        return await self.url_launcher.can_launch_url_async(url)
+
     def close_in_app_web_view(self) -> None:
-        self._invoke_method("closeInAppWebView")
+        self.url_launcher.close_in_app_web_view()
 
     def scroll_to(
         self,
@@ -887,6 +890,38 @@ class Page(AdaptiveControl):
     def browser_context_menu(self) -> BrowserContextMenu:
         return self.__browser_context_menu
 
+    # client_storage
+    @property
+    def client_storage(self) -> SharedPreferences:
+        warnings.warn(
+            "page.client_storage is deprecated since version 1.0.0 "
+            "and will be removed in version 1.1.0. "
+            "Use page.shared_preferences instead.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.__shared_preferences
+
+    # shared_preferences
+    @property
+    def shared_preferences(self) -> SharedPreferences:
+        return self.__shared_preferences
+
+    # clipboard
+    @property
+    def clipboard(self) -> Clipboard:
+        return self.__clipboard
+
+    # url_launcher
+    @property
+    def url_launcher(self) -> UrlLauncher:
+        return self.__url_launcher
+
+    # session_storage
+    @property
+    def session(self) -> SessionStorage:
+        return self.__session_storage
+
     # controls
     @property
     def controls(self) -> List[Control]:
@@ -1055,16 +1090,6 @@ class Page(AdaptiveControl):
     @auto_scroll.setter
     def auto_scroll(self, value: Optional[bool]):
         self.__default_view().auto_scroll = value
-
-    # client_storage
-    @property
-    def client_storage(self) -> ClientStorage:
-        return self.__client_storage
-
-    # session_storage
-    @property
-    def session(self) -> SessionStorage:
-        return self.__session_storage
 
     # Magic methods
     def __contains__(self, item: Control) -> bool:

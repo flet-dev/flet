@@ -164,7 +164,7 @@ class Geolocator(Control):
             "get_current_position",
             {"location_settings": self._convert_attr_json(ls)},
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return (
             GeolocatorPosition(**json.loads(output))
@@ -189,7 +189,7 @@ class Geolocator(Control):
             "get_current_position",
             {"location_settings": self._convert_attr_json(ls)},
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return (
             GeolocatorPosition(**json.loads(output))
@@ -205,7 +205,7 @@ class Geolocator(Control):
         output = self.invoke_method(
             "get_last_known_position",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return (
             GeolocatorPosition(**json.loads(output))
@@ -221,7 +221,7 @@ class Geolocator(Control):
         output = await self.invoke_method_async(
             "get_last_known_position",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return (
             GeolocatorPosition(**json.loads(output))
@@ -235,7 +235,7 @@ class Geolocator(Control):
         p = self.invoke_method(
             "get_permission_status",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return GeolocatorPermissionStatus(p)
 
@@ -245,7 +245,7 @@ class Geolocator(Control):
         p = await self.invoke_method_async(
             "get_permission_status",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return GeolocatorPermissionStatus(p)
 
@@ -255,7 +255,7 @@ class Geolocator(Control):
         p = self.invoke_method(
             "request_permission",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return GeolocatorPermissionStatus(p)
 
@@ -265,7 +265,7 @@ class Geolocator(Control):
         p = await self.invoke_method_async(
             "request_permission",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return GeolocatorPermissionStatus(p)
 
@@ -273,7 +273,7 @@ class Geolocator(Control):
         enabled = self.invoke_method(
             "is_location_service_enabled",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return enabled == "true"
 
@@ -283,7 +283,7 @@ class Geolocator(Control):
         enabled = await self.invoke_method_async(
             "is_location_service_enabled",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return enabled == "true"
 
@@ -292,7 +292,7 @@ class Geolocator(Control):
         opened = self.invoke_method(
             "open_app_settings",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return opened == "true"
 
@@ -301,7 +301,7 @@ class Geolocator(Control):
         opened = await self.invoke_method_async(
             "open_app_settings",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return opened == "true"
 
@@ -310,7 +310,7 @@ class Geolocator(Control):
         opened = self.invoke_method(
             "open_location_settings",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return opened == "true"
 
@@ -321,7 +321,7 @@ class Geolocator(Control):
         opened = await self.invoke_method_async(
             "open_location_settings",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return opened == "true"
 

@@ -149,7 +149,7 @@ class Audio(Control):
         sr = self.invoke_method(
             "get_duration",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return int(sr) if sr else None
 
@@ -159,7 +159,7 @@ class Audio(Control):
         sr = await self.invoke_method_async(
             "get_duration",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return int(sr) if sr else None
 
@@ -167,7 +167,7 @@ class Audio(Control):
         sr = self.invoke_method(
             "get_current_position",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return int(sr) if sr else None
 
@@ -177,7 +177,7 @@ class Audio(Control):
         sr = await self.invoke_method_async(
             "get_current_position",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return int(sr) if sr else None
 

@@ -96,7 +96,7 @@ class PermissionHandler(Control):
             "check_permission",
             {"of": of.value if isinstance(of, PermissionType) else of},
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return PermissionStatus(out) if out is not None else None
 
@@ -107,7 +107,7 @@ class PermissionHandler(Control):
             "check_permission",
             {"of": of.value if isinstance(of, PermissionType) else of},
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return PermissionStatus(out) if out is not None else None
 
@@ -118,7 +118,7 @@ class PermissionHandler(Control):
             "request_permission",
             {"of": of.value if isinstance(of, PermissionType) else of},
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return PermissionStatus(out) if out is not None else None
 
@@ -129,7 +129,7 @@ class PermissionHandler(Control):
             "request_permission",
             {"of": of.value if isinstance(of, PermissionType) else of},
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return PermissionStatus(out) if out is not None else None
 
@@ -137,7 +137,7 @@ class PermissionHandler(Control):
         opened = self.invoke_method(
             "open_app_settings",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return opened == "true"
 
@@ -145,6 +145,6 @@ class PermissionHandler(Control):
         opened = await self.invoke_method_async(
             "open_app_settings",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return opened == "true"

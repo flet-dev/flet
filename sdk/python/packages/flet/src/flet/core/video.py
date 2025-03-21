@@ -251,7 +251,7 @@ class Video(ConstrainedControl):
         playing = self.invoke_method(
             "is_playing",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return playing == "true"
 
@@ -259,7 +259,7 @@ class Video(ConstrainedControl):
         playing = await self.invoke_method_async(
             "is_playing",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return playing == "true"
 
@@ -267,7 +267,7 @@ class Video(ConstrainedControl):
         completed = self.invoke_method(
             "is_completed",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return completed == "true"
 
@@ -275,7 +275,7 @@ class Video(ConstrainedControl):
         completed = await self.invoke_method_async(
             "is_completed",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return completed == "true"
 
@@ -283,7 +283,7 @@ class Video(ConstrainedControl):
         sr = self.invoke_method(
             "get_duration",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return int(sr) if sr else None
 
@@ -293,7 +293,7 @@ class Video(ConstrainedControl):
         sr = await self.invoke_method_async(
             "get_duration",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return int(sr) if sr else None
 
@@ -301,7 +301,7 @@ class Video(ConstrainedControl):
         sr = self.invoke_method(
             "get_current_position",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return int(sr) if sr else None
 
@@ -311,7 +311,7 @@ class Video(ConstrainedControl):
         sr = await self.invoke_method_async(
             "get_current_position",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return int(sr) if sr else None
 

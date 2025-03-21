@@ -145,9 +145,9 @@ class BaseControl:
         self,
         method_name: str,
         arguments: Optional[Dict[str, str]] = None,
-        wait_for_result: bool = False,
-        wait_timeout: Optional[float] = 5,
-    ) -> Optional[str]:
+        wait_for_result: bool = True,
+        timeout: Optional[float] = 10,
+    ) -> Any:
         # assert (
         #     self.__page
         # ), f"{self.__class__.__qualname__} Control must be added to the page first"
@@ -167,9 +167,9 @@ class BaseControl:
         self,
         method_name: str,
         arguments: Optional[Dict[str, str]] = None,
-        wait_for_result: bool = False,
-        wait_timeout: Optional[float] = 5,
-    ):
+        wait_for_result: bool = True,
+        timeout: Optional[float] = 10,
+    ) -> Any:
         # assert (
         #     self.__page
         # ), f"{self.__class__.__qualname__} Control must be added to the page first"

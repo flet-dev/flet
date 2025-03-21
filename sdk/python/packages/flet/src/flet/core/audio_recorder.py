@@ -97,7 +97,7 @@ class AudioRecorder(Control):
             "start_recording",
             {"outputPath": output_path},
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return started == "true"
 
@@ -111,7 +111,7 @@ class AudioRecorder(Control):
             "start_recording",
             {"outputPath": output_path},
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return started == "true"
 
@@ -119,7 +119,7 @@ class AudioRecorder(Control):
         recording = self.invoke_method(
             "is_recording",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return recording == "true"
 
@@ -127,7 +127,7 @@ class AudioRecorder(Control):
         recording = await self.invoke_method_async(
             "is_recording",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return recording == "true"
 
@@ -135,7 +135,7 @@ class AudioRecorder(Control):
         return self.invoke_method(
             "stop_recording",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
 
     async def stop_recording_async(
@@ -144,14 +144,14 @@ class AudioRecorder(Control):
         return await self.invoke_method_async(
             "stop_recording",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
 
     def cancel_recording(self, wait_timeout: Optional[float] = 5) -> None:
         self.invoke_method(
             "cancel_recording",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
 
     def resume_recording(self):
@@ -164,7 +164,7 @@ class AudioRecorder(Control):
         paused = self.invoke_method(
             "is_paused",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return paused == "true"
 
@@ -172,7 +172,7 @@ class AudioRecorder(Control):
         supported = await self.invoke_method_async(
             "is_paused",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return supported == "true"
 
@@ -187,7 +187,7 @@ class AudioRecorder(Control):
                 )
             },
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return supported == "true"
 
@@ -202,7 +202,7 @@ class AudioRecorder(Control):
                 )
             },
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return supported == "true"
 
@@ -210,7 +210,7 @@ class AudioRecorder(Control):
         devices = self.invoke_method(
             "get_input_devices",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return json.loads(devices)
 
@@ -218,7 +218,7 @@ class AudioRecorder(Control):
         devices = await self.invoke_method_async(
             "get_input_devices",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return json.loads(devices)
 
@@ -226,7 +226,7 @@ class AudioRecorder(Control):
         p = self.invoke_method(
             "has_permission",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return p == "true"
 
@@ -234,7 +234,7 @@ class AudioRecorder(Control):
         p = await self.invoke_method_async(
             "has_permission",
             wait_for_result=True,
-            wait_timeout=wait_timeout,
+            timeout=wait_timeout,
         )
         return p == "true"
 
