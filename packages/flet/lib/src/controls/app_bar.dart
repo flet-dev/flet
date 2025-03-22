@@ -33,7 +33,9 @@ class AppBarControl extends StatelessWidget
     debugPrint("AppBar build: ${control.id}");
 
     return withPagePlatform((context, platform) {
-      bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
+      bool? adaptive = control.isAdaptive ?? parentAdaptive;
+      bool disabled = control.isDisabled || parentDisabled;
+
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
@@ -53,14 +55,14 @@ class AppBarControl extends StatelessWidget
 
       var appBar = AppBar(
         leading: leadingCtrls.isNotEmpty
-            ? createControl(control, leadingCtrls.first.id, control.isDisabled,
+            ? createControl(control, leadingCtrls.first.id, disabled,
                 parentAdaptive: adaptive)
             : null,
         leadingWidth: control.attrDouble("leadingWidth"),
         automaticallyImplyLeading:
             control.attrBool("automaticallyImplyLeading", true)!,
         title: titleCtrls.isNotEmpty
-            ? createControl(control, titleCtrls.first.id, control.isDisabled,
+            ? createControl(control, titleCtrls.first.id, disabled,
                 parentAdaptive: adaptive)
             : null,
         centerTitle: control.attrBool("centerTitle", false)!,
@@ -69,7 +71,7 @@ class AppBarControl extends StatelessWidget
         backgroundColor: control.attrColor("bgcolor", context),
         elevation: control.attrDouble("elevation"),
         actions: actionCtrls
-            .map((c) => createControl(control, c.id, control.isDisabled,
+            .map((c) => createControl(control, c.id, disabled,
                 parentAdaptive: adaptive))
             .toList(),
         systemOverlayStyle: Theme.of(context)

@@ -77,13 +77,16 @@ class AppBar(AdaptiveControl):
         toolbar_text_style: Optional[TextStyle] = None,
         shape: Optional[OutlinedBorder] = None,
         #
-        # AdaptiveControl
+        # Control
         #
         ref: Optional[Ref] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
         data: Any = None,
         rtl: Optional[bool] = None,
+        #
+        # AdaptiveControl
+        #
         adaptive: Optional[bool] = None,
     ):
         Control.__init__(
