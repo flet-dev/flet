@@ -66,6 +66,7 @@ import 'expansion_panel.dart';
 import 'expansion_tile.dart';
 import 'file_picker.dart';
 import 'flet_app_control.dart';
+import 'flexible_space_bar.dart';
 import 'floating_action_button.dart';
 import 'gesture_detector.dart';
 import 'grid_view.dart';
@@ -106,6 +107,12 @@ import 'semantics_service.dart';
 import 'shader_mask.dart';
 import 'shake_detector.dart';
 import 'slider.dart';
+import 'sliver_app_bar.dart';
+import 'sliver_grid_view.dart';
+import 'sliver_list_view.dart';
+import 'sliver_reorderable_list_view.dart';
+import 'sliver_safe_area.dart';
+import 'sliver_scroll_view.dart';
 import 'snack_bar.dart';
 import 'stack.dart';
 import 'submenu_button.dart';
@@ -212,6 +219,18 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
       }
     },
   );
+}
+
+List<Widget>? createControls(
+    Control? parent, Iterable<Control> controls, bool parentDisabled,
+    {bool? parentAdaptive, Widget? nextChild}) {
+  if (controls.isEmpty) {
+    return null;
+  }
+  return controls
+      .map((control) => createControl(parent, control.id, parentDisabled,
+          parentAdaptive: parentAdaptive, nextChild: nextChild))
+      .toList();
 }
 
 Widget createWidget(
@@ -973,6 +992,58 @@ Widget createWidget(
           backend: backend);
     case "bottomappbar":
       return BottomAppBarControl(
+        parent: parent,
+        control: controlView.control,
+        parentDisabled: parentDisabled,
+        parentAdaptive: parentAdaptive,
+        children: controlView.children,
+      );
+    case "sliverappbar":
+      return SliverAppBarControl(
+        parent: parent,
+        control: controlView.control,
+        parentDisabled: parentDisabled,
+        parentAdaptive: parentAdaptive,
+        children: controlView.children,
+        backend: backend,
+      );
+    case "sliverscrollview":
+      return SliverScrollViewControl(
+        parent: parent,
+        control: controlView.control,
+        parentDisabled: parentDisabled,
+        parentAdaptive: parentAdaptive,
+        children: controlView.children,
+        backend: backend,
+      );
+    case "slivergridview":
+      return SliverGridViewControl(
+        parent: parent,
+        control: controlView.control,
+        parentDisabled: parentDisabled,
+        parentAdaptive: parentAdaptive,
+        children: controlView.children,
+        backend: backend,
+      );
+    case "sliverlistview":
+      return SliverListViewControl(
+        parent: parent,
+        control: controlView.control,
+        parentDisabled: parentDisabled,
+        parentAdaptive: parentAdaptive,
+        children: controlView.children,
+        backend: backend,
+      );
+    case "sliversafearea":
+      return SliverSafeAreaControl(
+        parent: parent,
+        control: controlView.control,
+        parentDisabled: parentDisabled,
+        parentAdaptive: parentAdaptive,
+        children: controlView.children,
+      );
+    case "flexiblespacebar":
+      return FlexibleSpaceBarControl(
         parent: parent,
         control: controlView.control,
         parentDisabled: parentDisabled,

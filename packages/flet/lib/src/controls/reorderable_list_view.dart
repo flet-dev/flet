@@ -28,10 +28,10 @@ class ReorderableListViewControl extends StatefulWidget {
       required this.backend});
 
   @override
-  State<ReorderableListViewControl> createState() => _ListViewControlState();
+  State<ReorderableListViewControl> createState() => _ReorderableListViewControlState();
 }
 
-class _ListViewControlState extends State<ReorderableListViewControl> {
+class _ReorderableListViewControlState extends State<ReorderableListViewControl> {
   late final ScrollController _controller;
 
   @override
@@ -48,7 +48,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("ListViewControl build: ${widget.control.id}");
+    debugPrint("ReorderableListViewControl build: ${widget.control.id}");
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     bool? adaptive =

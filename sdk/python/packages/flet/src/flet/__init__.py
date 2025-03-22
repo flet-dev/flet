@@ -176,6 +176,7 @@ from flet.core.filled_button import FilledButton
 from flet.core.filled_tonal_button import FilledTonalButton
 from flet.core.flashlight import Flashlight
 from flet.core.flet_app import FletApp
+from flet.core.flexible_space_bar import FlexibleSpaceBar, CollapseMode, StretchMode
 from flet.core.floating_action_button import FloatingActionButton
 from flet.core.form_field_control import InputBorder
 from flet.core.geolocator import (
@@ -313,6 +314,12 @@ from flet.core.shader_mask import ShaderMask
 from flet.core.shake_detector import ShakeDetector
 from flet.core.size import Size
 from flet.core.slider import Slider, SliderInteraction
+from flet.core.sliver import Sliver
+from flet.core.sliver_app_bar import SliverAppBar, SliverAppBarType
+from flet.core.sliver_grid_view import SliverGridView
+from flet.core.sliver_list_view import SliverListView
+from flet.core.sliver_safe_area import SliverSafeArea
+from flet.core.sliver_scroll_view import SliverScrollView
 from flet.core.snack_bar import DismissDirection, SnackBar, SnackBarBehavior
 from flet.core.stack import Stack, StackFit
 from flet.core.submenu_button import SubmenuButton

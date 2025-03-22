@@ -7,7 +7,6 @@ from flet.core.animation import AnimationValue
 from flet.core.buttons import ButtonStyle
 from flet.core.control import Control, OptionalNumber
 from flet.core.form_field_control import FormFieldControl, InputBorder
-from flet.core.menu_bar import MenuStyle
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.textfield import InputFilter, TextCapitalization
