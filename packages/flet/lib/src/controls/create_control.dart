@@ -110,7 +110,6 @@ import 'slider.dart';
 import 'sliver_app_bar.dart';
 import 'sliver_grid_view.dart';
 import 'sliver_list_view.dart';
-import 'sliver_reorderable_list_view.dart';
 import 'sliver_safe_area.dart';
 import 'sliver_scroll_view.dart';
 import 'snack_bar.dart';
