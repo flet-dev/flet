@@ -286,3 +286,35 @@ PointerDeviceKind? parsePointerDeviceKind(String? value,
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
       defValue;
 }
+
+CollapseMode? parseCollapseMode(String? value, [CollapseMode? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return CollapseMode.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+StretchMode? parseStretchMode(String? value, [StretchMode? defValue]) {
+  if (value == null) {
+    return defValue;
+  }
+  return StretchMode.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defValue;
+}
+
+List<StretchMode>? parseStretchModes(Control control, String propName,
+    [List<StretchMode>? defValue]) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return defValue;
+  }
+
+  final j = json.decode(v);
+  return (j as List)
+      .map((e) => parseStretchMode(e as String))
+      .nonNulls
+      .toList();
+}

@@ -28,8 +28,6 @@ from flet.core.types import (
     ClipBehavior,
     ColorEnums,
     ColorValue,
-    ImageFit,
-    ImageRepeat,
     MarginValue,
     OffsetValue,
     OptionalControlEventCallable,
@@ -41,7 +39,6 @@ from flet.core.types import (
     ThemeMode,
     UrlTarget,
 )
-from flet.utils.deprecated import deprecated_property
 
 
 class Container(ConstrainedControl, AdaptiveControl):

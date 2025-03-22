@@ -71,7 +71,7 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         cache_extent: OptionalNumber = None,
         build_controls_on_demand: Optional[bool] = None,
         #
-        # ScrollableControl specific
+        # ScrollableControl
         #
         auto_scroll: Optional[bool] = None,
         reverse: Optional[bool] = None,
