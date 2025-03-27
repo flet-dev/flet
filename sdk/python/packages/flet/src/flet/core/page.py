@@ -71,7 +71,6 @@ from flet.core.types import (
 from flet.core.url_launcher import UrlLauncher
 from flet.core.view import View
 from flet.core.window import Window
-from flet.messaging.protocol import Command
 from flet.utils import classproperty, is_pyodide
 from flet.utils.locks import NopeLock
 
@@ -205,6 +204,7 @@ class Page(AdaptiveControl):
         sess: Session,
     ) -> None:
         AdaptiveControl.__post_init__(self, ref)
+        self._i = 1
         self.__session = weakref.ref(sess)
         self.__lock = threading.Lock() if not is_pyodide() else NopeLock()
 
@@ -1139,7 +1139,7 @@ class InvokeMethodResults:
 
 
 @dataclass
-class PageMediaData(ControlEvent):
+class PageMediaData:
     padding: Padding
     view_padding: Padding
     view_insets: Padding

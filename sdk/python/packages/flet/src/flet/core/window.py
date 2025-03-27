@@ -12,7 +12,7 @@ from flet.core.types import (
 )
 
 
-@control("window")
+@control("Window")
 class Window(Control):
     bgcolor: Optional[ColorValue] = None
     width: OptionalNumber = None
@@ -47,6 +47,9 @@ class Window(Control):
     icon: Optional[str] = None
     ignore_mouse_events: Optional[bool] = field(default=False)
     on_event: OptionalEventCallable["WindowEvent"] = None
+
+    def __post_init__(self, ref) -> None:
+        self._i = 2
 
     def wait_until_ready_to_show(self):
         self.invoke_method("wait_until_ready_to_show")

@@ -14,6 +14,7 @@ from flet.utils.hashing import calculate_file_hash, sha1
 from flet.utils.json_utils import to_json
 from flet.utils.network import get_free_tcp_port, get_local_ip
 from flet.utils.once import Once
+from flet.utils.patch_dataclass import patch_dataclass
 from flet.utils.platform_utils import (
     get_arch,
     get_bool_env_var,

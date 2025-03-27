@@ -78,7 +78,7 @@ class MyButton(ElevatedButton):
 @control("MyService")
 class MyService(Service):
     prop_1: Optional[str] = None
-    prop_2: Optional[bool] = None
+    prop_2: List[int] = field(default_factory=list)
 
 
 @control("Span")
@@ -131,9 +131,11 @@ def test_simple_page():
     page.bgcolor = Colors.GREEN
     page.fonts = {"font1": "font_url_1", "font2": "font_url_2"}
     page.on_close = lambda e: print("on close")
-    page.services.append(MyService(prop_1="Hello"))
+    page.services.append(MyService(prop_1="Hello", prop_2=[1, 2, 3]))
 
-    # assert page._url == url
+    # page and window have hard-coded IDs
+    assert page._i == 1
+    assert page.window and page.window._i == 2
 
     msg = update_page(page, {}, show_details=True)
     u_msg = b_unpack(msg)
@@ -166,6 +168,8 @@ def test_simple_page():
     ]
     del page.fonts["font2"]
     assert page.controls[0].controls[0].page is None
+
+    page.services[0].prop_2 = [2, 6]
 
     update_page(page, show_details=True)
 
