@@ -1,9 +1,13 @@
 from dataclasses import dataclass
 
+import msgpack
+from flet.core.control import BaseControl
+from flet.core.object_patch import ObjectPatch
 from flet.core.padding import Padding
 from flet.core.page import Page, PageMediaData
-from flet.core.types import Brightness
+from flet.core.types import Brightness, PagePlatform
 from flet.messaging.connection import Connection
+from flet.messaging.protocol import encode_object_for_msgpack
 from flet.messaging.session import Session
 from flet.utils import patch_dataclass
 
@@ -37,6 +41,18 @@ def test_page_patch_dataclass():
     assert page.window.height is None
     assert page.debug is False
 
+    # 1 -calculate diff
+    patch = ObjectPatch.from_diff(
+        None, page, in_place=True, controls_index=None, control_cls=BaseControl
+    )
+
+    # 2 - convert patch to hierarchy
+    graph_patch = patch.to_graph()
+
+    msg = msgpack.packb(graph_patch, default=encode_object_for_msgpack)
+
+    print("Message:", msg)
+
     patch_dataclass(
         page,
         {
@@ -68,7 +84,7 @@ def test_page_patch_dataclass():
             "platform": "macos",
         },
     )
-    print(page)
+    # print(page)
     assert page.window.width == 800.0
     assert page.window.height == 628.0
     assert page.debug is True
@@ -79,5 +95,39 @@ def test_page_patch_dataclass():
     assert isinstance(page.media.padding, Padding)
     assert isinstance(page.media.view_insets, Padding)
     assert isinstance(page.media.view_padding, Padding)
-    assert page.media.padding._prev_left == 0
-    assert page.media.view_insets._prev_top == 0
+    assert page.media.padding._prev_left == 0.0
+    assert page.media.view_insets._prev_top == 0.0
+    assert page.platform == PagePlatform.MACOS
+
+    # 1 -calculate diff
+    patch = ObjectPatch.from_diff(
+        page, page, in_place=True, controls_index=None, control_cls=BaseControl
+    )
+
+    # 2 - convert patch to hierarchy
+    graph_patch = patch.to_graph()
+    print("PATCH 1:", graph_patch)
+
+    assert graph_patch == {}
+
+    page.media.padding.left = 1
+    page.platform_brightness = Brightness.DARK
+    page.window.width = 1024
+    page.window.height = 768
+
+    # 1 -calculate diff
+    patch = ObjectPatch.from_diff(
+        page, page, in_place=True, controls_index=None, control_cls=BaseControl
+    )
+
+    # 2 - convert patch to hierarchy
+    graph_patch = patch.to_graph()
+    print("PATCH 2:", graph_patch)
+
+    assert graph_patch["window"]["width"] == 1024
+    assert graph_patch["platform_brightness"] == Brightness.DARK
+    assert graph_patch["media"]["padding"]["left"] == 1
+
+    msg = msgpack.packb(graph_patch, default=encode_object_for_msgpack)
+
+    print("Message 2:", msg)

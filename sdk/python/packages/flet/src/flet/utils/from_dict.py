@@ -42,8 +42,8 @@ def from_dict(cls: Type[T], data: Any) -> T:
                 converted = convert_value(field_type, value)
                 init_values[field_name] = converted
 
-                if is_literal(converted) or is_enum(converted):
-                    post_values[f"_prev_{field_name}"] = converted
+                # set _prev_* values
+                post_values[f"_prev_{field_name}"] = converted
 
         # First create the object using init-only fields
         instance = cls(**init_values)
@@ -95,7 +95,3 @@ def convert_value(field_type: Type, value: Any) -> Any:
 
 def is_literal(value: Any) -> bool:
     return isinstance(value, (int, float, str, bool, type(None)))
-
-
-def is_enum(value: Any) -> bool:
-    return isinstance(value, Enum)
