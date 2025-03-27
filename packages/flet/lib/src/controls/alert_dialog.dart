@@ -43,6 +43,7 @@ class _AlertDialogControlState extends State<AlertDialogControl>
         widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
     var titleCtrls =
         widget.children.where((c) => c.name == "title" && c.isVisible);
+    String titleStr = widget.control.attrString("title", "")!;
     var iconCtrls =
         widget.children.where((c) => c.name == "icon" && c.isVisible);
     var contentCtrls =
@@ -51,7 +52,11 @@ class _AlertDialogControlState extends State<AlertDialogControl>
         widget.children.where((c) => c.name == "action" && c.isVisible);
     final actionsAlignment =
         parseMainAxisAlignment(widget.control.attrString("actionsAlignment"));
-    if (titleCtrls.isEmpty && contentCtrls.isEmpty && actionCtrls.isEmpty) {
+
+    if (titleCtrls.isEmpty &&
+        titleStr == "" &&
+        contentCtrls.isEmpty &&
+        actionCtrls.isEmpty) {
       return const ErrorControl(
           "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions");
     }
@@ -63,7 +68,9 @@ class _AlertDialogControlState extends State<AlertDialogControl>
       title: titleCtrls.isNotEmpty
           ? createControl(widget.control, titleCtrls.first.id, disabled,
               parentAdaptive: adaptive)
-          : null,
+          : titleStr != ""
+              ? Text(titleStr)
+              : null,
       titlePadding: parseEdgeInsets(widget.control, "titlePadding"),
       content: contentCtrls.isNotEmpty
           ? createControl(widget.control, contentCtrls.first.id, disabled,

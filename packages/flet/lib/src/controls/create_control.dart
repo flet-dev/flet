@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:collection/collection.dart';
 import 'package:flet/src/utils/badge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -767,6 +766,7 @@ Widget createWidget(
           control: controlView.control,
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
+          children: controlView.children,
           backend: backend);
     case "cupertinocheckbox":
       return CupertinoCheckboxControl(
@@ -782,6 +782,7 @@ Widget createWidget(
           control: controlView.control,
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
+          children: controlView.children,
           backend: backend);
     case "cupertinoswitch":
       return CupertinoSwitchControl(

@@ -61,6 +61,7 @@ class _CupertinoSlidingSegmentedButtonControlState
               widget.control.id, "change", index?.toString());
         }
       },
+      proportionalWidth: widget.control.attrBool("proportionalWidth", false)!,
       thumbColor: widget.control.attrColor(
           "thumbColor",
           context,

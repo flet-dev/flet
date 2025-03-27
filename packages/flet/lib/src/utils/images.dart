@@ -50,20 +50,20 @@ ImageFilter? parseBlur(Control control, String propName,
 }
 
 ImageFilter? blurImageFilterFromJSON(dynamic json) {
-  double sigmaX = 0.0;
-  double sigmaY = 0.0;
-  TileMode tileMode = TileMode.clamp;
-  if (json == null) {
-    return null;
-  } else if (json is int || json is double) {
+  if (json == null) return null;
+
+  double sigmaX = 0.0, sigmaY = 0.0;
+  TileMode? tileMode;
+
+  if (json is num) {
     sigmaX = sigmaY = parseDouble(json, 0)!;
-  } else if (json is List && json.length > 1) {
-    sigmaX = parseDouble(json[0], 0)!;
-    sigmaY = parseDouble(json[1], 0)!;
-  } else {
+  } else if (json is List) {
+    sigmaX = parseDouble(json.isNotEmpty ? json[0] : 0, 0)!;
+    sigmaY = parseDouble(json.length > 1 ? json[1] : json[0], 0)!;
+  } else if (json is Map<String, dynamic>) {
     sigmaX = parseDouble(json["sigma_x"], 0)!;
     sigmaY = parseDouble(json["sigma_y"], 0)!;
-    tileMode = parseTileMode(json["tile_mode"], TileMode.clamp)!;
+    tileMode = parseTileMode(json["tile_mode"]);
   }
 
   return ImageFilter.blur(sigmaX: sigmaX, sigmaY: sigmaY, tileMode: tileMode);

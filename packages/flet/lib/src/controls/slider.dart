@@ -4,6 +4,7 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
+import '../utils/edge_insets.dart';
 import '../utils/mouse.dart';
 import '../utils/others.dart';
 import '../utils/platform.dart';
@@ -107,6 +108,7 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
           value: _value,
           min: min,
           max: max,
+          year2023: widget.control.attrBool("year2023"),
           divisions: widget.control.attrInt("divisions"),
           label: label?.replaceAll("{value}", _value.toStringAsFixed(round)),
           activeColor: widget.control.attrColor("activeColor", context),
@@ -116,6 +118,7 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
           allowedInteraction:
               parseSliderInteraction(widget.control.attrString("interaction")),
           thumbColor: widget.control.attrColor("thumbColor", context),
+          padding: parseEdgeInsets(widget.control, "padding"),
           onChanged: !disabled
               ? (double value) {
                   onChange(value);

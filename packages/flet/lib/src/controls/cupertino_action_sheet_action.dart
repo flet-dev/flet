@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/mouse.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -45,6 +46,7 @@ class CupertinoActionSheetActionControl extends StatelessWidget {
               backend.triggerControlEvent(control.id, "click");
             }
           },
+          mouseCursor: parseMouseCursor(control.attrString("mouseCursor")),
           child: contentCtrls.isNotEmpty
               ? createControl(control, contentCtrls.first.id, disabled,
                   parentAdaptive: parentAdaptive)

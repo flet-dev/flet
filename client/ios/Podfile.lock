@@ -1,6 +1,8 @@
 PODS:
   - audioplayers_darwin (0.0.1):
     - Flutter
+  - device_info_plus (0.0.1):
+    - Flutter
   - DKImagePickerController/Core (4.3.9):
     - DKImagePickerController/ImageDataManager
     - DKImagePickerController/Resource
@@ -90,6 +92,7 @@ PODS:
 
 DEPENDENCIES:
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
+  - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
@@ -124,6 +127,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   audioplayers_darwin:
     :path: ".symlinks/plugins/audioplayers_darwin/ios"
+  device_info_plus:
+    :path: ".symlinks/plugins/device_info_plus/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   Flutter:
@@ -168,35 +173,36 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
-  audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
+  audioplayers_darwin: ccf9c770ee768abb07e26d90af093f7bab1c12ab
+  device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
   DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
-  file_picker: 09aa5ec1ab24135ccd7a1621c46c84134bfd6655
+  file_picker: 9b3292d7c8bc68c8a7bf8eb78f730e49c8efc517
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  geolocator_apple: 6cbaf322953988e009e5ecb481f07efece75c450
+  geolocator_apple: d981750b9f47dbdb02427e1476d9a04397beb8d9
   Google-Mobile-Ads-SDK: 13e6e98edfd78ad8d8a791edb927658cc260a56f
-  google_mobile_ads: 2a538d8e42b1813809782792e48f8cf4374c2180
+  google_mobile_ads: dc2b2a5884bef7ab2b4ff30022a513df5373e208
   GoogleUserMessagingPlatform: a8b56893477f67212fbc8411c139e61d463349f5
-  integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
-  media_kit_libs_ios_video: a5fe24bc7875ccd6378a0978c13185e1344651c1
-  media_kit_native_event_loop: e6b2ab20cf0746eb1c33be961fcf79667304fa2a
-  media_kit_video: 5da63f157170e5bf303bf85453b7ef6971218a2e
-  package_info_plus: 58f0028419748fad15bf008b270aaa8e54380b1c
-  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
-  record_darwin: df0a677188e5fed18472550298e675f19ddaffbe
-  rive_common: c537b4eed761e903a9403d93c347b69bd7a4762f
-  screen_brightness_ios: 715ca807df953bf676d339f11464e438143ee625
+  integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
+  media_kit_libs_ios_video: 5a18affdb97d1f5d466dc79988b13eff6c5e2854
+  media_kit_native_event_loop: 5fba1a849a6c87a34985f1e178a0de5bd444a0cf
+  media_kit_video: 1746e198cb697d1ffb734b1d05ec429d1fcd1474
+  package_info_plus: 580e9a5f1b6ca5594e7c9ed5f92d1dfb2a66b5e1
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
+  record_darwin: 1630616226de4038fa17cec21b11403ca510ec3e
+  rive_common: dd421daaf9ae69f0125aa761dd96abd278399952
+  screen_brightness_ios: 5ed898fa50fa82a26171c086ca5e28228f932576
   SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
-  sensors_plus: 42b9de1b8237675fa8d8121e4bb93be0f79fa61d
-  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
+  sensors_plus: 1c5f0a01ce21c609a4df404c4e6879d62bce287f
+  shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
   SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
-  torch_light: 682062fa12102172fa38b6b14c106d93b060f83e
-  url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
-  volume_controller: 531ddf792994285c9b17f9d8a7e4dcdd29b3eae9
-  wakelock_plus: 78ec7c5b202cab7761af8e2b2b3d0671be6c4ae1
-  webview_flutter_wkwebview: 0982481e3d9c78fd5c6f62a002fcd24fc791f1e4
+  torch_light: d093d579a221a59ef8a6b8c0eca20d52f7178087
+  url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
+  volume_controller: ca1cde542ee70fad77d388f82e9616488110942b
+  wakelock_plus: fd58c82b1388f4afe3fe8aa2c856503a262a5b03
+  webview_flutter_wkwebview: 44d4dee7d7056d5ad185d25b38404436d56c547c
 
 PODFILE CHECKSUM: c4c93c5f6502fe2754f48404d3594bf779584011
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2
