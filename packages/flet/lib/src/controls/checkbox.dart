@@ -98,7 +98,7 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
             backend: widget.backend);
       }
       var label = widget.children.firstWhereOrNull((c) => c.isVisible);
-      String? labelStr = widget.control.attrString("label", "")!;
+      String labelStr = widget.control.attrString("label", "")!;
       LabelPosition labelPosition = parseLabelPosition(
           widget.control.attrString("labelPosition"), LabelPosition.right)!;
       _tristate = widget.control.attrBool("tristate", false)!;

@@ -85,7 +85,7 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
       }
 
       var label = widget.children.firstWhereOrNull((c) => c.isVisible);
-      String? labelStr = widget.control.attrString("label", "")!;
+      String labelStr = widget.control.attrString("label", "")!;
       LabelPosition labelPosition = parseLabelPosition(
           widget.control.attrString("labelPosition"), LabelPosition.right)!;
       double? width = widget.control.attrDouble("width");
