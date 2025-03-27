@@ -370,7 +370,7 @@ class DropdownM2(FormFieldControl):
 
         warnings.warn(
             f"DropdownM2 control is deprecated since version 0.27.0 "
-            f"and will be removed in version 0.20.0. User Dropdown control instead",
+            f"and will be removed in version 0.30.0. User Dropdown control instead",
             category=DeprecationWarning,
             stacklevel=2,
         )

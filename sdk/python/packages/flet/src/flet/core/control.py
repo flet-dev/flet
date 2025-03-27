@@ -83,6 +83,9 @@ class Control:
     def is_isolated(self) -> bool:
         return False
 
+    def build(self):
+        pass
+
     def before_update(self):
         pass
 
@@ -324,12 +327,6 @@ class Control:
         ), f"{self.__class__.__qualname__} Control must be added to the page first"
         self.__page.update(self)
 
-    async def update_async(self) -> None:
-        assert (
-            self.__page
-        ), f"{self.__class__.__qualname__} Control must be added to the page"
-        await self.__page.update_async(self)
-
     def clean(self) -> None:
         assert (
             self.__page
@@ -526,6 +523,7 @@ class Control:
     ) -> List[Command]:
         if index:
             self.page = index["page"]
+        self.build()
 
         # remove control from index
         if self.__uid and index is not None and self.__uid in index:

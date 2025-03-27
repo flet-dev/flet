@@ -103,6 +103,7 @@ void main([List<String>? args]) async {
     pageUrl: pageUrl,
     assetsDir: assetsDir,
     errorsHandler: errorsHandler,
+    showAppStartupScreen: true,
     createControlFactories: [
 // --FAT_CLIENT_START--
       flet_audio.createControl,

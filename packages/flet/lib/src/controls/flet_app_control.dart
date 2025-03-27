@@ -27,6 +27,9 @@ class _FletAppControlState extends State<FletAppControl> {
     var url = widget.control.attrString("url", "")!;
     var reconnectIntervalMs = widget.control.attrInt("reconnectIntervalMs");
     var reconnectTimeoutMs = widget.control.attrInt("reconnectTimeoutMs");
+    var showAppStartupScreen = widget.control.attrBool("showAppStartupScreen");
+    var appStartupScreenMessage =
+        widget.control.attrString("appStartupScreenMessage");
 
     return constrainedControl(
         context,
@@ -34,6 +37,8 @@ class _FletAppControlState extends State<FletAppControl> {
           controlId: widget.control.id,
           reconnectIntervalMs: reconnectIntervalMs,
           reconnectTimeoutMs: reconnectTimeoutMs,
+          showAppStartupScreen: showAppStartupScreen,
+          appStartupScreenMessage: appStartupScreenMessage,
           pageUrl: url,
           assetsDir: "",
           errorsHandler: _errorsHandler,

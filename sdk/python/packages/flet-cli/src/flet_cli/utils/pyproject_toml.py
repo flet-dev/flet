@@ -11,7 +11,10 @@ def load_pyproject_toml(project_dir: Path):
         with pyproject_toml_file.open("r") as f:
             pyproject_toml = toml.loads(f.read())
 
-    def get_pyproject(setting: str):
+    def get_pyproject(setting: Optional[str] = None):
+        if not setting:
+            return pyproject_toml
+
         d = pyproject_toml
         for k in setting.split("."):
             d = d.get(k)

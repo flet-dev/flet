@@ -109,6 +109,7 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
           widget.control.attrColor("focusedBorderColor", context);
       var borderWidth = widget.control.attrDouble("borderWidth");
       var focusedBorderWidth = widget.control.attrDouble("focusedBorderWidth");
+      var menuWidth = widget.control.attrDouble("menuWidth") ?? double.infinity;
 
       FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
         widget.control.attrString("border"),
@@ -274,7 +275,7 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         //requestFocusOnTap: editable,
         enableFilter: widget.control.attrBool("enableFilter", false)!,
         enableSearch: widget.control.attrBool("enableSearch", true)!,
-        menuHeight: widget.control.attrDouble("maxMenuHeight"),
+        menuHeight: widget.control.attrDouble("menuHeight"),
         label: labelCtrl.isNotEmpty
             ? createControl(widget.control, labelCtrl.first.id, disabled)
             : label != null
@@ -320,6 +321,7 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
           backgroundColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "bgcolor"),
           elevation: parseWidgetStateDouble(widget.control, "elevation"),
+          fixedSize: WidgetStateProperty.all(Size.fromWidth(menuWidth)),
         ),
 
         inputDecorationTheme: inputDecorationTheme,
