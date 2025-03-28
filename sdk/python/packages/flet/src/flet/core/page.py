@@ -1042,12 +1042,12 @@ class Page(AdaptiveControl):
 
 @control("Offstage")
 class Offstage(Control):
-    controls: List[Control] = field(default_factory=lambda: [])
+    controls: List[Control] = field(default_factory=list)
 
 
 @control("ServiceRegistry")
 class ServiceRegistry(Service):
-    services: List[Service] = field(default_factory=lambda: [])
+    services: List[Service] = field(default_factory=list)
 
 
 @dataclass

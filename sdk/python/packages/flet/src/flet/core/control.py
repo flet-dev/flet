@@ -128,18 +128,10 @@ class BaseControl:
 
     # public methods
     def update(self) -> None:
-        # assert (
-        #     self.__page
-        # ), f"{self.__class__.__qualname__} Control must be added to the page first"
-        # self.__page.update(self)
-        pass
-
-    async def update_async(self) -> None:
-        # assert (
-        #     self.__page
-        # ), f"{self.__class__.__qualname__} Control must be added to the page"
-        # await self.__page.update_async(self)
-        pass
+        assert (
+            self.page
+        ), f"{self.__class__.__qualname__} Control must be added to the page first"
+        self.page.update(self)
 
     def invoke_method(
         self,

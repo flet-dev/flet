@@ -61,7 +61,7 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/row
     """
 
-    controls: Optional[Sequence[Control]] = field(default_factory=list)
+    controls: List[Control] = field(default_factory=list)
     alignment: Optional[MainAxisAlignment] = None
     vertical_alignment: Optional[CrossAxisAlignment] = None
     spacing: OptionalNumber = None

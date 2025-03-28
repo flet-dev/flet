@@ -109,8 +109,6 @@ class FletSocketServer(Connection):
             message = await self.__send_queue.get()
             try:
                 writer.write(message)
-                # await writer.drain()
-                print(f"sent to TCP: {len(message)}")
             except Exception:
                 # re-enqueue the message to repeat it when re-connected
                 self.__send_queue.put_nowait(message)
@@ -168,6 +166,7 @@ class FletSocketServer(Connection):
             task.add_done_callback(self.__running_tasks.discard)
 
     def send_message(self, message: ClientMessage):
+        # print(f"Sending: {message}")
         m = msgpack.packb(
             [message.action, message.body], default=encode_object_for_msgpack
         )

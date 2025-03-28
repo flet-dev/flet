@@ -37,7 +37,7 @@ class Control:
 
 @dataclass(kw_only=True)
 class Page(Control):
-    controls: list[Control] = field(default_factory=lambda: [])
+    controls: list[Control] = field(default_factory=list)
 
 
 @dataclass
