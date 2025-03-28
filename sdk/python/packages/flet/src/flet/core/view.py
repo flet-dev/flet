@@ -22,7 +22,7 @@ from flet.core.types import (
 )
 
 
-@control("view")
+@control("View")
 class View(ScrollableControl, AdaptiveControl):
     """
     View is the top most container for all other controls.

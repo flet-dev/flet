@@ -13,7 +13,7 @@ from flet.messaging.protocol import (
     CommandEncoder,
     PageCommandResponsePayload,
     PageCommandsBatchResponsePayload,
-    RegisterWebClientRequestPayload,
+    RegisterClientRequestBody,
 )
 
 logger = logging.getLogger(flet.__name__)
@@ -52,7 +52,7 @@ class PyodideConnection(Connection):
         msg_dict = json.loads(data)
         msg = ClientMessage(**msg_dict)
         if msg.action == ClientAction.REGISTER_CLIENT:
-            self._client_details = RegisterWebClientRequestPayload(**msg.payload)
+            self._client_details = RegisterClientRequestBody(**msg.payload)
 
             # register response
             self.__send(self._create_register_web_client_response())

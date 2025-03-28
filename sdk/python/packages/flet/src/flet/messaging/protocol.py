@@ -1,14 +1,14 @@
 import json
-from dataclasses import dataclass, field, fields, is_dataclass
+from dataclasses import dataclass, fields, is_dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 
 
 def encode_object_for_msgpack(obj):
     if is_dataclass(obj):
         r = {}
         for field in fields(obj):
-            if "skip" in field.metadata:
+            if "skip" in field.metadata:  # or hasattr(obj, f"_prev_{field.name}"):
                 continue
             v = getattr(obj, field.name)
             if isinstance(v, list):
@@ -32,50 +32,19 @@ def encode_object_for_msgpack(obj):
     return obj
 
 
-class CommandEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, ClientMessage):
-            return obj.__dict__
-        elif isinstance(obj, Command):
-            d = {}
-            if obj.indent > 0:
-                d["i"] = obj.indent
-            if obj.name is not None:
-                d["n"] = obj.name
-            if obj.values and len(obj.values) > 0:
-                d["v"] = obj.values
-            if obj.attrs and len(obj.attrs) > 0:
-                d["a"] = obj.attrs
-            if obj.commands and len(obj.commands) > 0:
-                d["c"] = obj.commands
-            return d
-        elif isinstance(obj, object):
-            return obj.__dict__
-        return json.JSONEncoder.default(self, obj)
+class ClientAction(Enum):
+    REGISTER_CLIENT = 1
+    PATCH_CONTROL = 2
+    CONTROL_EVENT = 3
+    UPDATE_CONTROL_PROPS = 4
+    INVOKE_METHOD = 5
+    SESSION_CRASHED = 6
 
 
 @dataclass
-class Command:
-    indent: int
-    name: Optional[str]
-    values: List[str] = field(default_factory=list)
-    attrs: Dict[str, str] = field(default_factory=dict)
-    commands: List[Any] = field(default_factory=list)
-
-    def __str__(self):
-        return f"{self.name} {self.values} {self.attrs}"
-
-
-@dataclass
-class PageCommandResponsePayload:
-    result: str
-    error: str
-
-
-@dataclass
-class PageCommandsBatchResponsePayload:
-    results: List[str]
-    error: str
+class ClientMessage:
+    action: ClientAction
+    body: Any
 
 
 @dataclass
@@ -88,43 +57,10 @@ class PageEventPayload:
 
 
 @dataclass
-class PageSessionCreatedPayload:
-    pageName: str
-    sessionID: str
-
-
-class ClientAction(Enum):
-    REGISTER_CLIENT = 1
-    PATCH_CLIENT = 2
-    CONTROL_EVENT = 3
-    UPDATE_CONTROL_PROPS = 4
-    INVOKE_METHOD = 5
-    SESSION_CRASHED = 6
-
-
-@dataclass
-class ClientMessage:
-    action: ClientAction
-    payload: Any
-
-
-@dataclass
-class RegisterWebClientRequestPayload:
-    pageName: str
-    pageRoute: str
-    pageWidth: str
-    pageHeight: str
-    windowWidth: str
-    windowHeight: str
-    windowTop: str
-    windowLeft: str
-    isPWA: str
-    isWeb: str
-    isDebug: str
-    platform: str
-    platformBrightness: str
-    media: str
-    sessionId: str
+class RegisterClientRequestBody:
+    session_id: str
+    page_name: str
+    page: dict[str, Any]
 
 
 @dataclass
@@ -134,10 +70,16 @@ class SessionPayload:
 
 
 @dataclass
-class RegisterWebClientResponsePayload:
-    session: SessionPayload
+class RegisterClientResponseBody:
+    session_id: str
+    page_patch: Any
     error: str
-    appInactive: bool
+
+
+@dataclass
+class PatchControlBody:
+    id: int
+    patch: Any
 
 
 @dataclass
@@ -148,7 +90,7 @@ class PageEventFromWebPayload:
 
 
 @dataclass
-class SessionCrashedPayload:
+class SessionCrashedBody:
     message: str
 
 
@@ -158,24 +100,3 @@ class InvokeMethodPayload:
     methodName: str
     controlId: str
     arguments: Dict[str, str]
-
-
-@dataclass
-class AddPageControlsPayload:
-    controls: List[Dict[str, Any]]
-    trimIDs: List[str] = field(default_factory=lambda: [])
-
-
-@dataclass
-class UpdateControlPropsPayload:
-    props: List[Dict[str, str]]
-
-
-@dataclass
-class CleanControlPayload:
-    ids: List[str]
-
-
-@dataclass
-class RemoveControlPayload:
-    ids: List[str]

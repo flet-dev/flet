@@ -78,8 +78,8 @@ def _apply_control(
 
 @dataclass(kw_only=True)
 class BaseControl:
-    _i: int = field(init=False, metadata={"skip": True})
-    _c: str = field(init=False, metadata={"skip": True})
+    _i: int = field(init=False)
+    _c: str = field(init=False)
     data: Any = skip_field()
     ref: InitVar[Optional[Ref[Any]]] = None
 

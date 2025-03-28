@@ -12,6 +12,7 @@ import flet.version
 from flet.core.event import Event
 from flet.core.page import Page
 from flet.core.types import AppView, WebRenderer
+from flet.messaging.session import Session
 from flet.utils import (
     get_bool_env_var,
     get_current_script_dir,
@@ -227,32 +228,30 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
                 page._close()
                 del page
 
-    async def on_session_created(session_data):
-        page = Page(
-            conn,
-            session_data.sessionID,
-            executor=executor,
-            loop=asyncio.get_running_loop(),
-        )
-        await page.fetch_page_details_async()
-        conn.sessions[session_data.sessionID] = page
+    async def on_session_created(session: Session):
+        # page = Page(
+        #     conn,
+        #     session_data.sessionID,
+        #     executor=executor,
+        #     loop=asyncio.get_running_loop(),
+        # )
         logger.info("App session started")
         try:
             assert session_handler is not None
             if asyncio.iscoroutinefunction(session_handler):
-                await session_handler(page)
+                await session_handler(session.page)
             else:
                 # run in thread pool
                 await asyncio.get_running_loop().run_in_executor(
-                    executor, session_handler, page
+                    executor, session_handler, session.page
                 )
 
         except Exception as e:
             print(
-                f"Unhandled error processing page session {page.session_id}:",
+                f"Unhandled error processing page session {session.id}:",
                 traceback.format_exc(),
             )
-            page.error(f"There was an error while processing your request: {e}")
+            session.error(f"The application encountered an error: {e}")
 
     conn = FletSocketServer(
         loop=asyncio.get_running_loop(),

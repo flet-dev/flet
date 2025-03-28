@@ -228,37 +228,9 @@ class Page(AdaptiveControl):
     def get_control(self, id: int) -> Optional[Control]:
         return self.__get_session().index.get(id)
 
-    def __default_view(self):
+    def __default_view(self) -> View:
         assert len(self.views) > 0, "views list is empty."
         return self.views[0]
-
-    # async def fetch_page_details_async(self) -> None:
-    #     assert self.__conn
-    #     props = [
-    #         "route",
-    #         "pwa",
-    #         "web",
-    #         "debug",
-    #         "platform",
-    #         "platformBrightness",
-    #         "media",
-    #         "width",
-    #         "height",
-    #         "windowWidth",
-    #         "windowHeight",
-    #         "windowTop",
-    #         "windowLeft",
-    #         "clientIP",
-    #         "clientUserAgent",
-    #     ]
-    #     values = (
-    #         self.__conn.send_commands(
-    #             self._session_id,
-    #             [Command(0, "get", ["page", prop]) for prop in props],
-    #         )
-    #     ).results
-    #     for i in range(len(props)):
-    #         self._set_attr(props[i], values[i], False)
 
     def before_update(self):
         super().before_update()
@@ -342,28 +314,14 @@ class Page(AdaptiveControl):
         raise Exception("An attempt to fetch destroyed session.")
 
     def __update(self, *controls: Control) -> Tuple[List[Control], List[Control]]:
-        if not self.__conn:
-            raise PageDisconnectedException("Page has been disconnected")
-        commands, added_controls, removed_controls = self.__prepare_update(*controls)
-        self.__validate_controls_page(added_controls)
-        results = self.__conn.send_commands(self._session_id, commands).results
-        self.__update_control_ids(added_controls, results)
-        return added_controls, removed_controls
-
-    def __prepare_update(
-        self, *controls: Control
-    ) -> Tuple[List[Any], List[Control], List[Control]]:
-        added_controls = []
-        removed_controls = []
-        commands = []
-
-        # build commands
-
+        # if not self.__get_session().is_connected:
+        #     raise PageDisconnectedException("Page has been disconnected")
+        # commands, added_controls, removed_controls = self.__prepare_update(*controls)
+        # self.__validate_controls_page(added_controls)
+        # results = self.__conn.send_commands(self._session_id, commands).results
         for control in controls:
-            control.build_update_commands(
-                self._index, commands, added_controls, removed_controls
-            )
-        return commands, added_controls, removed_controls
+            self.__get_session().patch_control(control)
+        return [], []  # added_controls, removed_controls
 
     def __validate_controls_page(self, added_controls: List[Control]) -> None:
         for ctrl in added_controls:
@@ -372,31 +330,17 @@ class Page(AdaptiveControl):
                     f"Control has already been added to another page: {ctrl}"
                 )
 
-    def __update_control_ids(
-        self, added_controls: List[Control], results: List[Any]
-    ) -> None:
-        if len(results) > 0:
-            n = 0
-            for line in results:
-                for id in line.split(" "):
-                    added_controls[n]._Control__uid = id
-
-                    # add to index
-                    self._index[id] = added_controls[n]
-
-                    n += 1
-
     def __handle_mount_unmount(self, added_controls, removed_controls) -> None:
-        for ctrl in removed_controls:
-            ctrl.will_unmount()
-            ctrl.parent = None  # remove parent reference
-            ctrl.page = None
-        for ctrl in added_controls:
-            ctrl.did_mount()
+        # for ctrl in removed_controls:
+        #     ctrl.will_unmount()
+        #     ctrl.parent = None  # remove parent reference
+        #     ctrl.page = None
+        # for ctrl in added_controls:
+        #     ctrl.did_mount()
+        pass
 
-    def error(self, message: str = "") -> None:
-        with self.__lock:
-            self._send_command("error", [message])
+    def error(self, message: str) -> None:
+        self.__get_session().error(message)
 
     async def on_event_async(self, e: Event) -> None:
         logger.debug(f"page.on_event_async: {e.target} {e.name} {e.data}")
@@ -716,7 +660,7 @@ class Page(AdaptiveControl):
         duration: Optional[int] = None,
         curve: Optional[AnimationCurve] = None,
     ) -> None:
-        self.__default_view.scroll_to(
+        self.__default_view().scroll_to(
             offset=offset, delta=delta, key=key, duration=duration, curve=curve
         )
 

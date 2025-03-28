@@ -19,7 +19,7 @@ from flet.messaging.protocol import (
     CommandEncoder,
     PageCommandResponsePayload,
     PageCommandsBatchResponsePayload,
-    RegisterWebClientRequestPayload,
+    RegisterClientRequestBody,
 )
 from flet.utils import random_string, sha1
 from flet_web.fastapi.flet_app_manager import app_manager
@@ -188,7 +188,7 @@ class FletApp(Connection):
         msg_dict = json.loads(data)
         msg = ClientMessage(**msg_dict)
         if msg.action == ClientAction.REGISTER_CLIENT:
-            self._client_details = RegisterWebClientRequestPayload(**msg.payload)
+            self._client_details = RegisterClientRequestBody(**msg.payload)
 
             new_session = True
             if (

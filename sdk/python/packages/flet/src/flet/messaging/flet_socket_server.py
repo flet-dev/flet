@@ -15,13 +15,11 @@ from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,
     ClientMessage,
-    Command,
-    CommandEncoder,
-    PageCommandResponsePayload,
-    PageCommandsBatchResponsePayload,
-    RegisterWebClientRequestPayload,
+    RegisterClientRequestBody,
+    RegisterClientResponseBody,
     encode_object_for_msgpack,
 )
+from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
 from flet.utils import get_free_tcp_port, is_windows, random_string
 
@@ -119,74 +117,68 @@ class FletSocketServer(Connection):
                 raise
 
     async def __on_message(self, data: Any):
-        msg = ClientMessage(action=data[0], payload=data[1])
-        print(f"_on_message: {data}", ClientAction(msg.action))
+        action = ClientAction(data[0])
+        body = data[1]
+        print(f"_on_message: {action} {body}")
         task = None
-        if ClientAction(msg.action) == ClientAction.REGISTER_CLIENT:
-            print("REGISTER CLIENT")
-            self._client_details = RegisterWebClientRequestPayload(**msg.payload)
+        if action == ClientAction.REGISTER_CLIENT:
+            req = RegisterClientRequestBody(**body)
+
+            # create new session
+            self.session = Session(self)
+
+            # apply page patch
+            self.session.apply_page_patch(req.page)
 
             # register response
-            self.__send(self._create_register_web_client_response())
+            self.send_message(
+                ClientMessage(
+                    ClientAction.REGISTER_CLIENT,
+                    RegisterClientResponseBody(
+                        session_id=self.session.id,
+                        page_patch=self.session.get_page_patch(),
+                        error="",
+                    ),
+                )
+            )
 
             # start session
             if self.__on_session_created is not None:
-                task = asyncio.create_task(
-                    self.__on_session_created(self._create_session_handler_arg())
-                )
+                task = asyncio.create_task(self.__on_session_created(self.session))
 
-        elif ClientAction(msg.action) == ClientAction.CONTROL_EVENT:
-            if self.__on_event is not None:
-                task = asyncio.create_task(
-                    self.__on_event(self._create_page_event_handler_arg(msg))
-                )
+        elif action == ClientAction.CONTROL_EVENT:
+            # if self.__on_event is not None:
+            #     task = asyncio.create_task(
+            #         self.__on_event(self._create_page_event_handler_arg(msg))
+            #     )
+            pass
 
-        elif ClientAction(msg.action) == ClientAction.UPDATE_CONTROL_PROPS:
-            if self.__on_event is not None:
-                task = asyncio.create_task(
-                    self.__on_event(self._create_update_control_props_handler_arg(msg))
-                )
+        elif action == ClientAction.UPDATE_CONTROL_PROPS:
+            # if self.__on_event is not None:
+            #     task = asyncio.create_task(
+            #         self.__on_event(self._create_update_control_props_handler_arg(msg))
+            #     )
+            pass
         else:
             # it's something else
-            raise Exception(f'Unknown message "{msg.action}": {msg.payload}')
+            raise Exception(f'Unknown message "{action}": {body}')
 
         if task:
             self.__running_tasks.add(task)
             task.add_done_callback(self.__running_tasks.discard)
 
-    def send_command(self, session_id: str, command: Command):
-        result, message = self._process_command(command)
-        if message:
-            self.__send(message)
-        return PageCommandResponsePayload(result=result, error="")
-
-    def send_commands(self, session_id: str, commands: List[Command]):
-        results = []
-        messages = []
-        for command in commands:
-            result, message = self._process_command(command)
-            if command.name in ["add", "get"]:
-                results.append(result)
-            if message:
-                messages.append(message)
-        if len(messages) > 0:
-            self.__send(ClientMessage(ClientAction.PAGE_CONTROLS_BATCH, messages))
-        return PageCommandsBatchResponsePayload(results=results, error="")
-
-    def __send(self, message: ClientMessage):
+    def send_message(self, message: ClientMessage):
         m = msgpack.packb(
-            [message.action, message.payload], default=encode_object_for_msgpack
+            [message.action, message.body], default=encode_object_for_msgpack
         )
-        print(f"__send: {m}")
         self.__loop.call_soon_threadsafe(self.__send_queue.put_nowait, m)
 
     async def close(self):
         logger.debug("Closing connection...")
 
-        logger.debug(f"Disconnecting all pages...")
-        while self.sessions:
-            _, page = self.sessions.popitem()
-            await page._disconnect(0)
+        logger.debug(f"Finishing all sessions...")
+        if self.session:
+            await self.session.disconnect(0)
 
         if self.__executor:
             logger.debug("Shutting down thread pool...")

@@ -41,18 +41,6 @@ def test_page_patch_dataclass():
     assert page.window.height is None
     assert page.debug is False
 
-    # 1 -calculate diff
-    patch = ObjectPatch.from_diff(
-        None, page, in_place=True, controls_index=None, control_cls=BaseControl
-    )
-
-    # 2 - convert patch to hierarchy
-    graph_patch = patch.to_graph()
-
-    msg = msgpack.packb(graph_patch, default=encode_object_for_msgpack)
-
-    print("Message:", msg)
-
     patch_dataclass(
         page,
         {
@@ -84,6 +72,20 @@ def test_page_patch_dataclass():
             "platform": "macos",
         },
     )
+
+    # 1 -calculate diff
+    patch = ObjectPatch.from_diff(
+        None, page, in_place=True, controls_index=None, control_cls=BaseControl
+    )
+
+    # 2 - convert patch to hierarchy
+    graph_patch = patch.to_graph()
+    print("Patch 1:", graph_patch)
+
+    msg = msgpack.packb(graph_patch, default=encode_object_for_msgpack)
+
+    print("Message 1:", msg)
+
     # print(page)
     assert page.window.width == 800.0
     assert page.window.height == 628.0
