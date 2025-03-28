@@ -83,6 +83,12 @@ class PatchControlBody:
 
 
 @dataclass
+class UpdateControlPropsBody:
+    id: int
+    props: Any
+
+
+@dataclass
 class PageEventFromWebPayload:
     eventTarget: str
     eventName: str

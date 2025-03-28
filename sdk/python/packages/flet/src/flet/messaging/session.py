@@ -78,6 +78,7 @@ class Session:
     def apply_patch(self, control_id: int, patch: dict[str, Any]):
         if control := self.__index.get(control_id):
             patch_dataclass(control, patch)
+            # print("patch_dataclass:", control)
 
     def apply_page_patch(self, patch: dict[str, Any]):
         self.apply_patch(self.__page._i, patch)

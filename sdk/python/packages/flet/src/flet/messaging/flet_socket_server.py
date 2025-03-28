@@ -17,6 +17,7 @@ from flet.messaging.protocol import (
     ClientMessage,
     RegisterClientRequestBody,
     RegisterClientResponseBody,
+    UpdateControlPropsBody,
     encode_object_for_msgpack,
 )
 from flet.messaging.session import Session
@@ -152,11 +153,8 @@ class FletSocketServer(Connection):
             pass
 
         elif action == ClientAction.UPDATE_CONTROL_PROPS:
-            # if self.__on_event is not None:
-            #     task = asyncio.create_task(
-            #         self.__on_event(self._create_update_control_props_handler_arg(msg))
-            #     )
-            pass
+            req = UpdateControlPropsBody(**body)
+            self.session.apply_patch(req.id, req.props)
         else:
             # it's something else
             raise Exception(f'Unknown message "{action}": {body}')
