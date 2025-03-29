@@ -24,9 +24,8 @@ class AutofillGroupControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("AutofillGroup build: ${control.id}");
 
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    bool disabled = control.isDisabled || parentDisabled;
+    var contentCtrls = children.where((c) => c.name == "content" && c.visible);
+    bool disabled = control.disabled || parentDisabled;
 
     if (contentCtrls.isEmpty) {
       return const ErrorControl("AutofillGroup control has no content.");
@@ -34,7 +33,7 @@ class AutofillGroupControl extends StatelessWidget {
 
     return AutofillGroup(
         onDisposeAction: parseAutofillContextAction(
-            control.attrString("disposeAction"), AutofillContextAction.commit)!,
+            control.getString("disposeAction"), AutofillContextAction.commit)!,
         child: createControl(control, contentCtrls.first.id, disabled,
             parentAdaptive: parentAdaptive));
   }

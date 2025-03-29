@@ -239,10 +239,10 @@ extension ColorExtension on Color {
   }
 }
 
-WidgetStateProperty<Color?>? parseWidgetStateColor(ThemeData theme,
-    Control control, String propName,
+WidgetStateProperty<Color?>? parseWidgetStateColor(
+    ThemeData theme, Control control, String propName,
     [Color? defaultValue]) {
-  var v = control.attrString(propName);
+  var v = control.getString(propName);
   if (v == null) {
     return null;
   }

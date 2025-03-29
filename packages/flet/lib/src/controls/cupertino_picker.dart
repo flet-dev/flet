@@ -40,7 +40,7 @@ class _CupertinoPickerControlState extends State<CupertinoPickerControl> {
   void initState() {
     super.initState();
     scrollController = FixedExtentScrollController(
-        initialItem: widget.control.attrInt("selectedIndex", _index)!);
+        initialItem: widget.control.getInt("selectedIndex", _index)!);
     scrollController.addListener(_manageScroll);
   }
 
@@ -72,34 +72,34 @@ class _CupertinoPickerControlState extends State<CupertinoPickerControl> {
   Widget build(BuildContext context) {
     debugPrint("CupertinoPicker build: ${widget.control.id}");
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
 
-    List<Widget> ctrls = widget.children.where((c) => c.isVisible).map((c) {
+    List<Widget> ctrls = widget.children.where((c) => c.visible).map((c) {
       return Center(
           child: createControl(widget.control, c.id, disabled,
               parentAdaptive: widget.parentAdaptive));
     }).toList();
 
     var selectionOverlayCtrl = widget.children
-        .where((c) => c.isVisible && c.name == "selection_overlay");
+        .where((c) => c.visible && c.name == "selection_overlay");
 
     Widget picker = CupertinoPicker(
       scrollController: scrollController,
-      backgroundColor: widget.control.attrColor("bgColor", context),
+      backgroundColor: widget.control.getColor("bgColor", context),
       diameterRatio:
-          widget.control.attrDouble("diameterRatio", _kDefaultDiameterRatio)!,
-      magnification: widget.control.attrDouble("magnification", 1.0)!,
-      squeeze: widget.control.attrDouble("squeeze", _kSqueeze)!,
-      offAxisFraction: widget.control.attrDouble("offAxisFraction", 0.0)!,
-      itemExtent: widget.control.attrDouble("itemExtent", _kItemExtent)!,
-      useMagnifier: widget.control.attrBool("useMagnifier", false)!,
-      looping: widget.control.attrBool("looping", false)!,
+          widget.control.getDouble("diameterRatio", _kDefaultDiameterRatio)!,
+      magnification: widget.control.getDouble("magnification", 1.0)!,
+      squeeze: widget.control.getDouble("squeeze", _kSqueeze)!,
+      offAxisFraction: widget.control.getDouble("offAxisFraction", 0.0)!,
+      itemExtent: widget.control.getDouble("itemExtent", _kItemExtent)!,
+      useMagnifier: widget.control.getBool("useMagnifier", false)!,
+      looping: widget.control.getBool("looping", false)!,
       selectionOverlay: selectionOverlayCtrl.isNotEmpty
           ? createControl(
               widget.control, selectionOverlayCtrl.first.id, disabled,
               parentAdaptive: widget.parentAdaptive)
           : CupertinoPickerDefaultSelectionOverlay(
-              background: widget.control.attrColor(
+              background: widget.control.getColor(
                   "defaultSelectionOverlayBgcolor",
                   context,
                   CupertinoColors.tertiarySystemFill)!,

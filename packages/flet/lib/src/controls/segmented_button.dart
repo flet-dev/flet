@@ -56,19 +56,18 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
     bool allowEmptySelection =
-        widget.control.attrBool("allowEmptySelection", false)!;
+        widget.control.getBool("allowEmptySelection", false)!;
 
     bool allowMultipleSelection =
-        widget.control.attrBool("allowMultipleSelection", false)!;
+        widget.control.getBool("allowMultipleSelection", false)!;
 
     Set<String> selected =
-        (jsonDecode(widget.control.attrString("selected", "[]")!) as List)
+        (jsonDecode(widget.control.getString("selected", "[]")!) as List)
             .map((e) => e.toString())
             .toSet();
 
-    List<Control> segments = widget.children
-        .where((c) => c.name == "segment" && c.isVisible)
-        .toList();
+    List<Control> segments =
+        widget.children.where((c) => c.name == "segment" && c.visible).toList();
 
     if (segments.isEmpty) {
       return const ErrorControl(
@@ -93,11 +92,11 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
     }
 
     var selectedIcon =
-        widget.children.where((c) => c.name == "selectedIcon" && c.isVisible);
+        widget.children.where((c) => c.name == "selectedIcon" && c.visible);
 
-    bool showSelectedIcon = widget.control.attrBool("showSelectedIcon", true)!;
+    bool showSelectedIcon = widget.control.getBool("showSelectedIcon", true)!;
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
     debugPrint("SegmentedButtonControl build: ${widget.control.id}");
 
     var sb = withControls(segments.map((s) => s.id), (content, segmentViews) {
@@ -116,17 +115,17 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
                 }
               : null,
           direction: parseAxis(
-              widget.control.attrString("direction"), Axis.horizontal)!,
+              widget.control.getString("direction"), Axis.horizontal)!,
           expandedInsets: parseEdgeInsets(widget.control, "padding"),
           segments: segmentViews.controlViews.map((segmentView) {
             var iconCtrls = segmentView.children
-                .where((c) => c.name == "icon" && c.isVisible);
+                .where((c) => c.name == "icon" && c.visible);
             var labelCtrls = segmentView.children
-                .where((c) => c.name == "label" && c.isVisible);
-            var segmentDisabled = segmentView.control.isDisabled || disabled;
-            var segmentTooltip = segmentView.control.attrString("tooltip");
+                .where((c) => c.name == "label" && c.visible);
+            var segmentDisabled = segmentView.control.disabled || disabled;
+            var segmentTooltip = segmentView.control.getString("tooltip");
             return ButtonSegment(
-                value: segmentView.control.attrString("value")!,
+                value: segmentView.control.getString("value")!,
                 enabled: !segmentDisabled,
                 tooltip: segmentDisabled ? null : segmentTooltip,
                 icon: iconCtrls.isNotEmpty

@@ -9,7 +9,7 @@ import 'numbers.dart';
 
 RotationDetails? parseRotate(Control control, String propName,
     [RotationDetails? defaultValue]) {
-  var v = control.attrString(propName);
+  var v = control.getString(propName);
   if (v == null) {
     return defaultValue;
   }
@@ -32,7 +32,7 @@ RotationDetails rotateFromJSON(dynamic json, [RotationDetails? defaultValue]) {
 
 ScaleDetails? parseScale(Control control, String propName,
     [ScaleDetails? defaultValue]) {
-  var v = control.attrString(propName);
+  var v = control.getString(propName);
   if (v == null) {
     return defaultValue;
   }
@@ -57,7 +57,7 @@ ScaleDetails? scaleFromJSON(dynamic json, [ScaleDetails? defaultValue]) {
 }
 
 Offset? parseOffset(Control control, String propName, [Offset? defaultValue]) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return defaultValue;
   }
@@ -76,7 +76,7 @@ Offset? offsetFromJSON(dynamic json, [Offset? defaultValue]) {
 
 List<Offset>? parseOffsetList(Control control, String propName,
     [List<Offset>? defaultValue]) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return defaultValue;
   }

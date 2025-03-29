@@ -34,10 +34,10 @@ class CupertinoBottomSheetControl extends StatefulWidget {
 class _CupertinoBottomSheetControlState
     extends State<CupertinoBottomSheetControl> {
   Widget _createDialog() {
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
 
     var contentCtrls =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
+        widget.children.where((c) => c.name == "content" && c.visible);
 
     Widget content = contentCtrls.isNotEmpty
         ? createControl(widget.control, contentCtrls.first.id, disabled,
@@ -48,13 +48,13 @@ class _CupertinoBottomSheetControlState
         ["cupertinopicker", "cupertinotimerpicker", "cupertinodatepicker"]
             .contains(contentCtrls.first.type)) {
       content = Container(
-        height: widget.control.attrDouble("height", 220.0)!,
+        height: widget.control.getDouble("height", 220.0)!,
         padding: parseEdgeInsets(widget.control, "padding"),
         // bottom margin is provided to align the popup above the system navigation bar
         margin:
             EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         // popup background color
-        color: widget.control.attrColor("bgcolor", context,
+        color: widget.control.getColor("bgcolor", context,
             CupertinoColors.systemBackground.resolveFrom(context))!,
         // Use SafeArea to avoid system overlaps
         child: SafeArea(
@@ -73,8 +73,8 @@ class _CupertinoBottomSheetControlState
 
     bool lastOpen = widget.control.state["open"] ?? false;
 
-    var open = widget.control.attrBool("open", false)!;
-    var modal = widget.control.attrBool("modal", false)!;
+    var open = widget.control.getBool("open", false)!;
+    var modal = widget.control.getBool("modal", false)!;
 
     debugPrint("Current open state: $lastOpen");
     debugPrint("New open state: $open");

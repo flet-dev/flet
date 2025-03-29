@@ -23,15 +23,15 @@ class StackControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("Stack build: ${control.id}");
-    bool disabled = control.isDisabled || parentDisabled;
-    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
+    bool disabled = control.disabled || parentDisabled;
+    bool? adaptive = control.getBool("adaptive") ?? parentAdaptive;
 
     var clipBehavior =
-        parseClip(control.attrString("clipBehavior"), Clip.hardEdge)!;
+        parseClip(control.getString("clipBehavior"), Clip.hardEdge)!;
 
-    StackFit fit = parseStackFit(control.attrString("fit"), StackFit.loose)!;
+    StackFit fit = parseStackFit(control.getString("fit"), StackFit.loose)!;
     var ctrls = children
-        .where((c) => c.isVisible)
+        .where((c) => c.visible)
         .map((c) =>
             createControl(control, c.id, disabled, parentAdaptive: adaptive))
         .toList();

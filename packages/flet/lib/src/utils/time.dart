@@ -5,7 +5,7 @@ import 'numbers.dart';
 
 Duration? parseDuration(Control control, String propName,
     [Duration? defaultValue]) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return defaultValue;
   }

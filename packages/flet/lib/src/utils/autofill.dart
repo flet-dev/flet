@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 
 List<String>? parseAutofillHints(Control control, String propName) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return null;
   }

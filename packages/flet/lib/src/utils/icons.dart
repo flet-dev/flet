@@ -11,12 +11,13 @@ IconData? parseIcon(String? iconName, [IconData? defaultIcon]) {
   if (iconName == null) {
     return defaultIcon;
   }
-  return materialIcons[iconName.toLowerCase()] ?? cupertinoIcons[iconName.toLowerCase()];
+  return materialIcons[iconName.toLowerCase()] ??
+      cupertinoIcons[iconName.toLowerCase()];
 }
 
 WidgetStateProperty<Icon?>? parseWidgetStateIcon(
     ThemeData theme, Control control, String propName) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return null;
   }

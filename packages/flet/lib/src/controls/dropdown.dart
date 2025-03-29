@@ -69,50 +69,49 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
     return withControls(widget.control.childIds, (context, itemsView) {
       debugPrint("DropdownMenuFletControlState build: ${widget.control.id}");
 
-      bool disabled = widget.control.isDisabled || widget.parentDisabled;
-      bool editable = widget.control.attrBool("editable", false)!;
-      bool autofocus = widget.control.attrBool("autofocus", false)!;
-      var textSize = widget.control.attrDouble("textSize");
-      var label = widget.control.attrString("label");
-      var trailingIconCtrl = widget.children
-          .where((c) => c.name == "trailing_icon" && c.isVisible);
-      var trailingIconStr =
-          parseIcon(widget.control.attrString("trailingIcon"));
+      bool disabled = widget.control.disabled || widget.parentDisabled;
+      bool editable = widget.control.getBool("editable", false)!;
+      bool autofocus = widget.control.getBool("autofocus", false)!;
+      var textSize = widget.control.getDouble("textSize");
+      var label = widget.control.getString("label");
+      var trailingIconCtrl =
+          widget.children.where((c) => c.name == "trailing_icon" && c.visible);
+      var trailingIconStr = parseIcon(widget.control.getString("trailingIcon"));
 
       var leadingIconCtrl =
-          widget.children.where((c) => c.name == "leading_icon" && c.isVisible);
-      var leadingIconStr = parseIcon(widget.control.attrString("leadingIcon"));
+          widget.children.where((c) => c.name == "leading_icon" && c.visible);
+      var leadingIconStr = parseIcon(widget.control.getString("leadingIcon"));
 
       var selectIconCtrl =
-          widget.children.where((c) => c.name == "select_icon" && c.isVisible);
-      var selectIconStr = parseIcon(widget.control.attrString("selectIcon"));
+          widget.children.where((c) => c.name == "select_icon" && c.visible);
+      var selectIconStr = parseIcon(widget.control.getString("selectIcon"));
 
       var selectedTrailingIconCtrl = widget.children
-          .where((c) => c.name == "selected_trailing_icon" && c.isVisible);
+          .where((c) => c.name == "selected_trailing_icon" && c.visible);
       var selectedTrailingIconStr =
-          parseIcon(widget.control.attrString("selectedTrailingIcon"));
+          parseIcon(widget.control.getString("selectedTrailingIcon"));
       var prefixIconCtrl =
-          widget.children.where((c) => c.name == "prefix_icon" && c.isVisible);
-      var prefixIconStr = parseIcon(widget.control.attrString("prefixIcon"));
+          widget.children.where((c) => c.name == "prefix_icon" && c.visible);
+      var prefixIconStr = parseIcon(widget.control.getString("prefixIcon"));
       var labelCtrl =
-          widget.children.where((c) => c.name == "label" && c.isVisible);
-      var color = widget.control.attrColor("color", context);
+          widget.children.where((c) => c.name == "label" && c.visible);
+      var color = widget.control.getColor("color", context);
 
       TextAlign textAlign = parseTextAlign(
-          widget.control.attrString("textAlign"), TextAlign.start)!;
+          widget.control.getString("textAlign"), TextAlign.start)!;
 
-      var fillColor = widget.control.attrColor("fillColor", context);
-      var borderColor = widget.control.attrColor("borderColor", context);
+      var fillColor = widget.control.getColor("fillColor", context);
+      var borderColor = widget.control.getColor("borderColor", context);
 
       var borderRadius = parseBorderRadius(widget.control, "borderRadius");
       var focusedBorderColor =
-          widget.control.attrColor("focusedBorderColor", context);
-      var borderWidth = widget.control.attrDouble("borderWidth");
-      var focusedBorderWidth = widget.control.attrDouble("focusedBorderWidth");
-      var menuWidth = widget.control.attrDouble("menuWidth") ?? double.infinity;
+          widget.control.getColor("focusedBorderColor", context);
+      var borderWidth = widget.control.getDouble("borderWidth");
+      var focusedBorderWidth = widget.control.getDouble("focusedBorderWidth");
+      var menuWidth = widget.control.getDouble("menuWidth") ?? double.infinity;
 
       FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
-        widget.control.attrString("border"),
+        widget.control.getString("border"),
         FormFieldInputBorder.outline,
       )!;
 
@@ -167,7 +166,7 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
       }
 
       InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
-        filled: widget.control.attrBool("filled", false)!,
+        filled: widget.control.getBool("filled", false)!,
         fillColor: fillColor,
         hintStyle:
             parseTextStyle(Theme.of(context), widget.control, "hintStyle"),
@@ -178,7 +177,7 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         border: border,
         enabledBorder: border,
         focusedBorder: focusedBorder,
-        isDense: widget.control.attrBool("dense") ?? false,
+        isDense: widget.control.getBool("dense") ?? false,
         contentPadding: parseEdgeInsets(widget.control, "contentPadding"),
       );
 
@@ -194,19 +193,19 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
           .where((c) =>
               c.control.name == null &&
               c.control.type == "dropdownoption" &&
-              c.control.isVisible)
+              c.control.visible)
           .map<DropdownMenuEntry<String>>((ControlViewModel itemCtrlView) {
         var itemCtrl = itemCtrlView.control;
-        bool itemDisabled = disabled || itemCtrl.isDisabled;
+        bool itemDisabled = disabled || itemCtrl.disabled;
         ButtonStyle? style =
             parseButtonStyle(Theme.of(context), itemCtrl, "style");
 
         var contentCtrls = itemCtrlView.children
-            .where((c) => c.name == "content" && c.isVisible);
+            .where((c) => c.name == "content" && c.visible);
         var leadingIconCtrls = itemCtrlView.children
-            .where((c) => c.name == "leadingIcon" && c.isVisible);
+            .where((c) => c.name == "leadingIcon" && c.visible);
         var trailingIconCtrls = itemCtrlView.children
-            .where((c) => c.name == "trailingIcon" && c.isVisible);
+            .where((c) => c.name == "trailingIcon" && c.visible);
 
         return DropdownMenuEntry<String>(
           enabled: !itemDisabled,
@@ -219,22 +218,22 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
           leadingIcon: leadingIconCtrls.isNotEmpty
               ? createControl(
                   itemCtrlView.control, leadingIconCtrls.first.id, itemDisabled)
-              : itemCtrlView.control.attrString("leadingIcon") != null
+              : itemCtrlView.control.getString("leadingIcon") != null
                   ? Icon(
-                      parseIcon(itemCtrlView.control.attrString("leadingIcon")))
+                      parseIcon(itemCtrlView.control.getString("leadingIcon")))
                   : null,
           trailingIcon: trailingIconCtrls.isNotEmpty
               ? createControl(itemCtrlView.control, trailingIconCtrls.first.id,
                   itemDisabled)
-              : itemCtrlView.control.attrString("trailingIcon") != null
-                  ? Icon(parseIcon(
-                      itemCtrlView.control.attrString("trailingIcon")))
+              : itemCtrlView.control.getString("trailingIcon") != null
+                  ? Icon(
+                      parseIcon(itemCtrlView.control.getString("trailingIcon")))
                   : null,
           style: style,
         );
       }).toList();
 
-      String? value = widget.control.attrString("value");
+      String? value = widget.control.getString("value");
       if (_value != value) {
         _value = value;
       }
@@ -243,15 +242,14 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         _value = null;
       }
 
-      var focusValue = widget.control.attrString("focus");
+      var focusValue = widget.control.getString("focus");
       if (focusValue != null && focusValue != _lastFocusValue) {
         _lastFocusValue = focusValue;
         _focusNode.requestFocus();
       }
 
       TextCapitalization textCapitalization = parseTextCapitalization(
-          widget.control.attrString("capitalization"),
-          TextCapitalization.none)!;
+          widget.control.getString("capitalization"), TextCapitalization.none)!;
 
       FilteringTextInputFormatter? inputFilter =
           parseInputFilter(widget.control, "inputFilter");
@@ -273,9 +271,9 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         initialSelection: _value,
         //controller: controller,
         //requestFocusOnTap: editable,
-        enableFilter: widget.control.attrBool("enableFilter", false)!,
-        enableSearch: widget.control.attrBool("enableSearch", true)!,
-        menuHeight: widget.control.attrDouble("menuHeight"),
+        enableFilter: widget.control.getBool("enableFilter", false)!,
+        enableSearch: widget.control.getBool("enableSearch", true)!,
+        menuHeight: widget.control.getDouble("menuHeight"),
         label: labelCtrl.isNotEmpty
             ? createControl(widget.control, labelCtrl.first.id, disabled)
             : label != null
@@ -311,10 +309,10 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
                 : null,
         textStyle: textStyle,
         textAlign: textAlign,
-        width: widget.control.attrDouble("width"),
-        errorText: widget.control.attrString("errorText"),
-        hintText: widget.control.attrString("hintText"),
-        helperText: widget.control.attrString("helperText"),
+        width: widget.control.getDouble("width"),
+        errorText: widget.control.getString("errorText"),
+        hintText: widget.control.getString("hintText"),
+        helperText: widget.control.getString("helperText"),
         //inputFormatters: inputFormatters,
         //expandedInsets: parseEdgeInsets(widget.control, "expandedInsets"),
         menuStyle: MenuStyle(

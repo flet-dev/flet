@@ -50,34 +50,34 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
   Widget build(BuildContext context) {
     debugPrint("ListViewControl build: ${widget.control.id}");
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
     bool? adaptive =
-        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+        widget.control.getBool("adaptive") ?? widget.parentAdaptive;
 
-    var horizontal = widget.control.attrBool("horizontal", false)!;
+    var horizontal = widget.control.getBool("horizontal", false)!;
     var buildControlsOnDemand =
-        widget.control.attrBool("buildControlsOnDemand", true)!;
-    var itemExtent = widget.control.attrDouble("itemExtent");
-    var cacheExtent = widget.control.attrDouble("cacheExtent");
+        widget.control.getBool("buildControlsOnDemand", true)!;
+    var itemExtent = widget.control.getDouble("itemExtent");
+    var cacheExtent = widget.control.getDouble("cacheExtent");
     var firstItemPrototype =
-        widget.control.attrBool("firstItemPrototype", false)!;
+        widget.control.getBool("firstItemPrototype", false)!;
     var padding = parseEdgeInsets(widget.control, "padding");
-    var reverse = widget.control.attrBool("reverse", false)!;
-    var anchor = widget.control.attrDouble("anchor", 0.0)!;
+    var reverse = widget.control.getBool("reverse", false)!;
+    var anchor = widget.control.getDouble("anchor", 0.0)!;
     var clipBehavior =
-        parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
+        parseClip(widget.control.getString("clipBehavior"), Clip.hardEdge)!;
     List<Control> ctrls = widget.children
-        .where((c) => c.name != "header" && c.name != "footer" && c.isVisible)
+        .where((c) => c.name != "header" && c.name != "footer" && c.visible)
         .toList();
     var scrollDirection = horizontal ? Axis.horizontal : Axis.vertical;
     var headerCtrls =
-        widget.children.where((c) => c.name == "header" && c.isVisible);
+        widget.children.where((c) => c.name == "header" && c.visible);
     var header = headerCtrls.isNotEmpty
         ? createControl(widget.control, headerCtrls.first.id, disabled,
             parentAdaptive: adaptive)
         : null;
     var footerCtrls =
-        widget.children.where((c) => c.name == "footer" && c.isVisible);
+        widget.children.where((c) => c.name == "footer" && c.visible);
     var footer = footerCtrls.isNotEmpty
         ? createControl(widget.control, footerCtrls.first.id, disabled,
             parentAdaptive: adaptive)
@@ -87,7 +87,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
             parentAdaptive: adaptive)
         : null;
     var autoScrollerVelocityScalar =
-        widget.control.attrDouble("autoScrollerVelocityScalar");
+        widget.control.getDouble("autoScrollerVelocityScalar");
 
     void onReorder(int oldIndex, int newIndex) {
       debugPrint("onReorder: $oldIndex -> $newIndex");
@@ -174,7 +174,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
             parentAdaptive: adaptive,
             child: child);
 
-        if (widget.control.attrBool("onScroll", false)!) {
+        if (widget.control.getBool("onScroll", false)!) {
           child = ScrollNotificationControl(
               control: widget.control, backend: widget.backend, child: child);
         }

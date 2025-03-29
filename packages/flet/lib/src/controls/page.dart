@@ -72,12 +72,12 @@ class RoutesViewModel extends Equatable {
         offstageControls: offstageControl != null
             ? store.state.controls[offstageControl.id]!.childIds
                 .map((childId) => store.state.controls[childId]!)
-                .where((c) => c.isVisible)
+                .where((c) => c.visible)
                 .toList()
             : [],
         views: store.state.controls["page"]!.childIds
             .map((childId) => store.state.controls[childId]!)
-            .where((c) => c.type != "offstage" && c.isVisible)
+            .where((c) => c.type != "offstage" && c.visible)
             .toList());
   }
 
@@ -264,7 +264,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     FletAppServices.of(context).globalKeys.clear();
 
     // page route
-    var route = widget.control.attrString("route");
+    var route = widget.control.getString("route");
     if (_routeState.route != route && route != null) {
       // route updated
       _routeState.route = route;
@@ -273,10 +273,10 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     _platform = TargetPlatform.values.firstWhere(
         (a) =>
             a.name.toLowerCase() ==
-            widget.control.attrString("platform", "")!.toLowerCase(),
+            widget.control.getString("platform", "")!.toLowerCase(),
         orElse: () => defaultTargetPlatform);
 
-    _adaptive = widget.control.attrBool("adaptive");
+    _adaptive = widget.control.getBool("adaptive");
 
     _widgetsDesign = _adaptive == true &&
             (_platform == TargetPlatform.iOS ||
@@ -287,60 +287,60 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     // theme
     _themeMode = ThemeMode.values.firstWhereOrNull((t) =>
             t.name.toLowerCase() ==
-            widget.control.attrString("themeMode", "")!.toLowerCase()) ??
+            widget.control.getString("themeMode", "")!.toLowerCase()) ??
         FletAppContext.of(context)?.themeMode;
 
     _localeConfiguration =
         parseLocaleConfiguration(widget.control, "localeConfiguration");
 
     // keyboard handler
-    var onKeyboardEvent = widget.control.attrBool("onKeyboardEvent", false)!;
+    var onKeyboardEvent = widget.control.getBool("onKeyboardEvent", false)!;
     if (onKeyboardEvent && !_keyboardHandlerSubscribed) {
       HardwareKeyboard.instance.addHandler(_handleKeyDown);
       _keyboardHandlerSubscribed = true;
     }
 
     // window params
-    var windowTitle = widget.control.attrString("title", "")!;
-    var windowBgcolor = widget.control.attrColor("windowBgcolor", context);
-    var windowWidth = widget.control.attrDouble("windowWidth");
-    var windowHeight = widget.control.attrDouble("windowHeight");
-    var windowMinWidth = widget.control.attrDouble("windowMinWidth");
-    var windowMinHeight = widget.control.attrDouble("windowMinHeight");
-    var windowMaxWidth = widget.control.attrDouble("windowMaxWidth");
-    var windowMaxHeight = widget.control.attrDouble("windowMaxHeight");
-    var windowTop = widget.control.attrDouble("windowTop");
-    var windowLeft = widget.control.attrDouble("windowLeft");
-    var windowCenter = widget.control.attrString("windowCenter");
-    var windowClose = widget.control.attrString("windowClose");
-    var windowFullScreen = widget.control.attrBool("windowFullScreen");
-    var windowMinimized = widget.control.attrBool("windowMinimized");
-    var windowMaximized = widget.control.attrBool("windowMaximized");
+    var windowTitle = widget.control.getString("title", "")!;
+    var windowBgcolor = widget.control.getColor("windowBgcolor", context);
+    var windowWidth = widget.control.getDouble("windowWidth");
+    var windowHeight = widget.control.getDouble("windowHeight");
+    var windowMinWidth = widget.control.getDouble("windowMinWidth");
+    var windowMinHeight = widget.control.getDouble("windowMinHeight");
+    var windowMaxWidth = widget.control.getDouble("windowMaxWidth");
+    var windowMaxHeight = widget.control.getDouble("windowMaxHeight");
+    var windowTop = widget.control.getDouble("windowTop");
+    var windowLeft = widget.control.getDouble("windowLeft");
+    var windowCenter = widget.control.getString("windowCenter");
+    var windowClose = widget.control.getString("windowClose");
+    var windowFullScreen = widget.control.getBool("windowFullScreen");
+    var windowMinimized = widget.control.getBool("windowMinimized");
+    var windowMaximized = widget.control.getBool("windowMaximized");
     var windowAlignment = parseAlignment(widget.control, "windowAlignment");
-    var windowBadgeLabel = widget.control.attrString("windowBadgeLabel");
-    var windowIcon = widget.control.attrString("windowIcon");
-    var windowHasShadow = widget.control.attrBool("windowShadow");
-    var windowOpacity = widget.control.attrDouble("windowOpacity");
-    var windowMinimizable = widget.control.attrBool("windowMinimizable");
-    var windowMaximizable = widget.control.attrBool("windowMaximizable");
-    var windowAlwaysOnTop = widget.control.attrBool("windowAlwaysOnTop");
-    var windowAlwaysOnBottom = widget.control.attrBool("windowAlwaysOnBottom");
-    var windowResizable = widget.control.attrBool("windowResizable");
-    var windowMovable = widget.control.attrBool("windowMovable");
-    var windowPreventClose = widget.control.attrBool("windowPreventClose");
-    var windowTitleBarHidden = widget.control.attrBool("windowTitleBarHidden");
+    var windowBadgeLabel = widget.control.getString("windowBadgeLabel");
+    var windowIcon = widget.control.getString("windowIcon");
+    var windowHasShadow = widget.control.getBool("windowShadow");
+    var windowOpacity = widget.control.getDouble("windowOpacity");
+    var windowMinimizable = widget.control.getBool("windowMinimizable");
+    var windowMaximizable = widget.control.getBool("windowMaximizable");
+    var windowAlwaysOnTop = widget.control.getBool("windowAlwaysOnTop");
+    var windowAlwaysOnBottom = widget.control.getBool("windowAlwaysOnBottom");
+    var windowResizable = widget.control.getBool("windowResizable");
+    var windowMovable = widget.control.getBool("windowMovable");
+    var windowPreventClose = widget.control.getBool("windowPreventClose");
+    var windowTitleBarHidden = widget.control.getBool("windowTitleBarHidden");
     var windowTitleBarButtonsHidden =
-        widget.control.attrBool("windowTitleBarButtonsHidden", false)!;
-    var windowVisible = widget.control.attrBool("windowVisible");
-    var windowFocused = widget.control.attrBool("windowFocused");
-    var windowDestroy = widget.control.attrBool("windowDestroy");
+        widget.control.getBool("windowTitleBarButtonsHidden", false)!;
+    var windowVisible = widget.control.getBool("windowVisible");
+    var windowFocused = widget.control.getBool("windowFocused");
+    var windowDestroy = widget.control.getBool("windowDestroy");
     var windowWaitUntilReadyToShow =
-        widget.control.attrBool("windowWaitUntilReadyToShow");
-    var windowSkipTaskBar = widget.control.attrBool("windowSkipTaskBar");
-    var windowFrameless = widget.control.attrBool("windowFrameless");
-    var windowProgressBar = widget.control.attrDouble("windowProgressBar");
+        widget.control.getBool("windowWaitUntilReadyToShow");
+    var windowSkipTaskBar = widget.control.getBool("windowSkipTaskBar");
+    var windowFrameless = widget.control.getBool("windowFrameless");
+    var windowProgressBar = widget.control.getDouble("windowProgressBar");
     var windowIgnoreMouseEvents =
-        widget.control.attrBool("windowIgnoreMouseEvents");
+        widget.control.getBool("windowIgnoreMouseEvents");
 
     updateWindow(PageArgsModel? pageArgs) async {
       try {
@@ -625,7 +625,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                     ? CupertinoApp.router(
                         debugShowCheckedModeBanner: false,
                         showSemanticsDebugger: widget.control
-                            .attrBool("showSemanticsDebugger", false)!,
+                            .getBool("showSemanticsDebugger", false)!,
                         routerDelegate: _routerDelegate,
                         routeInformationParser: _routeParser,
                         title: windowTitle,
@@ -635,7 +635,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                                     _brightness == Brightness.light)
                             ? parseCupertinoTheme(
                                 widget.control, "theme", Brightness.light)
-                            : widget.control.attrString("darkTheme") != null
+                            : widget.control.getString("darkTheme") != null
                                 ? parseCupertinoTheme(widget.control,
                                     "darkTheme", Brightness.dark)
                                 : parseCupertinoTheme(
@@ -655,7 +655,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                     : MaterialApp.router(
                         debugShowCheckedModeBanner: false,
                         showSemanticsDebugger: widget.control
-                            .attrBool("showSemanticsDebugger", false)!,
+                            .getBool("showSemanticsDebugger", false)!,
                         routerDelegate: _routerDelegate,
                         routeInformationParser: _routeParser,
                         title: windowTitle,
@@ -672,8 +672,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                             : null,
                         theme: parseTheme(
                             widget.control, "theme", Brightness.light),
-                        darkTheme: widget.control.attrString("darkTheme") ==
-                                null
+                        darkTheme: widget.control.getString("darkTheme") == null
                             ? parseTheme(
                                 widget.control, "theme", Brightness.dark)
                             : parseTheme(
@@ -730,7 +729,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                 overlayWidgets.addAll(routesView.offstageControls
                     .where((c) => !c.isNonVisual)
                     .map((c) => createControl(
-                        routesView.page, c.id, routesView.page.isDisabled,
+                        routesView.page, c.id, routesView.page.disabled,
                         parentAdaptive: _adaptive)));
                 overlayWidgets.add(const PageMedia());
               }
@@ -753,11 +752,11 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
             }
 
             String viewRoutes = routesView.views
-                .map((v) => v.attrString("route") ?? v.id)
+                .map((v) => v.getString("route") ?? v.id)
                 .join();
 
             pages = routesView.views.map((view) {
-              var key = ValueKey(view.attrString("route") ?? view.id);
+              var key = ValueKey(view.getString("route") ?? view.id);
               var child = ViewControl(
                 parent: routesView.page,
                 viewId: view.id,
@@ -783,7 +782,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                       key: key,
                       child: child,
                       fullscreenDialog:
-                          view.attrBool("fullscreenDialog", false)!);
+                          view.getBool("fullscreenDialog", false)!);
             }).toList();
 
             _prevViewRoutes = viewRoutes;
@@ -802,7 +801,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
           for (var c
               in routesView.offstageControls.where((c) => c.isNonVisual)) {
             nextChild = createControl(
-                routesView.page, c.id, routesView.page.isDisabled,
+                routesView.page, c.id, routesView.page.disabled,
                 parentAdaptive: _adaptive, nextChild: nextChild);
           }
 
@@ -864,14 +863,13 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
           var control = controlView.control;
           var children = controlView.children;
 
-          var adaptive = control.attrBool("adaptive") ?? widget.parentAdaptive;
+          var adaptive = control.getBool("adaptive") ?? widget.parentAdaptive;
 
-          final spacing = control.attrDouble("spacing", 10)!;
+          final spacing = control.getDouble("spacing", 10)!;
           final mainAlignment = parseMainAxisAlignment(
-              control.attrString("verticalAlignment"),
-              MainAxisAlignment.start)!;
+              control.getString("verticalAlignment"), MainAxisAlignment.start)!;
           final crossAlignment = parseCrossAxisAlignment(
-              control.attrString("horizontalAlignment"),
+              control.getString("horizontalAlignment"),
               CrossAxisAlignment.start)!;
           final fabLocation = parseFloatingActionButtonLocation(
               control,
@@ -888,7 +886,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
           List<Widget> controls = [];
           bool firstControl = true;
 
-          for (var ctrl in children.where((c) => c.isVisible)) {
+          for (var ctrl in children.where((c) => c.visible)) {
             if (ctrl.type == "appbar") {
               appBar = ctrl;
               continue;
@@ -924,7 +922,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
             firstControl = false;
 
             // displayed control
-            controls.add(createControl(control, ctrl.id, control.isDisabled,
+            controls.add(createControl(control, ctrl.id, control.disabled,
                 parentAdaptive: adaptive));
           }
 
@@ -935,7 +933,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
             endDrawer?.id
           ].nonNulls.toList();
 
-          final textDirection = widget.parent.attrBool("rtl", false)!
+          final textDirection = widget.parent.getBool("rtl", false)!
               ? TextDirection.rtl
               : TextDirection.ltr;
 
@@ -964,7 +962,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                 parentAdaptive: adaptive,
                 child: column);
 
-            if (control.attrBool("onScroll", false)!) {
+            if (control.getBool("onScroll", false)!) {
               child = ScrollNotificationControl(
                   control: control, backend: widget.backend, child: child);
             }
@@ -985,7 +983,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                   widget.parent.state["drawerOpened"] = false;
                   dismissDrawer(drawerView.control.id);
                 }
-                if (drawerView.control.attrBool("open", false)! &&
+                if (drawerView.control.getBool("open", false)! &&
                     drawerOpened != true) {
                   if (scaffoldKey.currentState?.isEndDrawerOpen == true) {
                     scaffoldKey.currentState?.closeEndDrawer();
@@ -994,7 +992,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                     scaffoldKey.currentState?.openDrawer();
                     widget.parent.state["drawerOpened"] = true;
                   });
-                } else if (!drawerView.control.attrBool("open", false)! &&
+                } else if (!drawerView.control.getBool("open", false)! &&
                     drawerOpened == true) {
                   scaffoldKey.currentState?.closeDrawer();
                   widget.parent.state["drawerOpened"] = false;
@@ -1006,7 +1004,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                   widget.parent.state["endDrawerOpened"] = false;
                   dismissDrawer(endDrawerView.control.id);
                 }
-                if (endDrawerView.control.attrBool("open", false)! &&
+                if (endDrawerView.control.getBool("open", false)! &&
                     endDrawerOpened != true) {
                   if (scaffoldKey.currentState?.isDrawerOpen == true) {
                     scaffoldKey.currentState?.closeDrawer();
@@ -1015,7 +1013,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                     scaffoldKey.currentState?.openEndDrawer();
                     widget.parent.state["endDrawerOpened"] = true;
                   });
-                } else if (!endDrawerView.control.attrBool("open", false)! &&
+                } else if (!endDrawerView.control.getBool("open", false)! &&
                     endDrawerOpened == true) {
                   scaffoldKey.currentState?.closeEndDrawer();
                   widget.parent.state["endDrawerOpened"] = false;
@@ -1031,22 +1029,22 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                         parent: control,
                         control: appBarView.control,
                         children: appBarView.children,
-                        parentDisabled: control.isDisabled,
+                        parentDisabled: control.disabled,
                         parentAdaptive: adaptive)
                     : AppBarControl(
                         parent: control,
                         control: appBarView.control,
                         children: appBarView.children,
-                        parentDisabled: control.isDisabled,
+                        parentDisabled: control.disabled,
                         parentAdaptive: adaptive,
                         height: appBarView.control
-                            .attrDouble("toolbarHeight", kToolbarHeight)!)
+                            .getDouble("toolbarHeight", kToolbarHeight)!)
                 : cupertinoAppBarView != null
                     ? CupertinoAppBarControl(
                         parent: control,
                         control: cupertinoAppBarView.control,
                         children: cupertinoAppBarView.children,
-                        parentDisabled: control.isDisabled,
+                        parentDisabled: control.disabled,
                         parentAdaptive: adaptive,
                       ) as ObstructingPreferredSizeWidget
                     : null;
@@ -1065,20 +1063,20 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                             widget.themeMode == ThemeMode.system) &&
                         widget.brightness == Brightness.light)
                 ? parseTheme(widget.parent, "theme", Brightness.light)
-                : widget.parent.attrString("darkTheme") != null
+                : widget.parent.getString("darkTheme") != null
                     ? parseTheme(widget.parent, "darkTheme", Brightness.dark)
                     : parseTheme(widget.parent, "theme", Brightness.dark);
 
             Widget scaffold = Scaffold(
               key: bar == null || bar is AppBarControl ? scaffoldKey : null,
-              backgroundColor: control.attrColor("bgcolor", context) ??
+              backgroundColor: control.getColor("bgcolor", context) ??
                   CupertinoTheme.of(context).scaffoldBackgroundColor,
               appBar: bar is AppBarControl ? bar : null,
               drawer: drawerView != null
                   ? NavigationDrawerControl(
                       control: drawerView.control,
                       children: drawerView.children,
-                      parentDisabled: control.isDisabled,
+                      parentDisabled: control.disabled,
                       parentAdaptive: adaptive,
                       backend: widget.backend)
                   : null,
@@ -1092,7 +1090,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                   ? NavigationDrawerControl(
                       control: endDrawerView.control,
                       children: endDrawerView.children,
-                      parentDisabled: control.isDisabled,
+                      parentDisabled: control.disabled,
                       parentAdaptive: adaptive,
                       backend: widget.backend)
                   : null,
@@ -1104,11 +1102,11 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
               },
               body: body,
               bottomNavigationBar: bnb != null
-                  ? createControl(control, bnb.id, control.isDisabled,
+                  ? createControl(control, bnb.id, control.disabled,
                       parentAdaptive: adaptive)
                   : null,
               floatingActionButton: fab != null
-                  ? createControl(control, fab.id, control.isDisabled,
+                  ? createControl(control, fab.id, control.disabled,
                       parentAdaptive: adaptive)
                   : null,
               floatingActionButtonLocation: fabLocation,
@@ -1129,7 +1127,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
             if (bar is CupertinoAppBarControl) {
               scaffold = CupertinoPageScaffold(
                   key: scaffoldKey,
-                  backgroundColor: control.attrColor("bgcolor", context),
+                  backgroundColor: control.getColor("bgcolor", context),
                   navigationBar: bar as ObstructingPreferredSizeWidget,
                   child: scaffold);
             }
@@ -1142,7 +1140,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
                             widget.brightness == Brightness.light)
                     ? parseCupertinoTheme(
                         widget.parent, "theme", Brightness.light)
-                    : widget.parent.attrString("darkTheme") != null
+                    : widget.parent.getString("darkTheme") != null
                         ? parseCupertinoTheme(
                             widget.parent, "darkTheme", Brightness.dark)
                         : parseCupertinoTheme(

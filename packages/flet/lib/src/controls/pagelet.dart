@@ -45,30 +45,30 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
     debugPrint("Pagelet build: ${widget.control.id}");
 
     var appBarCtrls =
-        widget.children.where((c) => c.name == "appbar" && c.isVisible);
+        widget.children.where((c) => c.name == "appbar" && c.visible);
     var contentCtrls =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
+        widget.children.where((c) => c.name == "content" && c.visible);
     var navigationBarCtrls =
-        widget.children.where((c) => c.name == "navigationbar" && c.isVisible);
+        widget.children.where((c) => c.name == "navigationbar" && c.visible);
     var bottomAppBarCtrls =
-        widget.children.where((c) => c.name == "bottomappbar" && c.isVisible);
+        widget.children.where((c) => c.name == "bottomappbar" && c.visible);
     var bottomSheetCtrls =
-        widget.children.where((c) => c.name == "bottomsheet" && c.isVisible);
+        widget.children.where((c) => c.name == "bottomsheet" && c.visible);
     var drawerCtrls =
-        widget.children.where((c) => c.name == "drawer" && c.isVisible);
+        widget.children.where((c) => c.name == "drawer" && c.visible);
     var endDrawerCtrls =
-        widget.children.where((c) => c.name == "enddrawer" && c.isVisible);
+        widget.children.where((c) => c.name == "enddrawer" && c.visible);
     var fabCtrls = widget.children
-        .where((c) => c.name == "floatingactionbutton" && c.isVisible);
+        .where((c) => c.name == "floatingactionbutton" && c.visible);
 
     if (contentCtrls.isEmpty) {
       return const ErrorControl("Pagelet.content must be provided and visible");
     }
 
     return withPagePlatform((context, platform) {
-      bool disabled = widget.control.isDisabled || widget.parentDisabled;
+      bool disabled = widget.control.disabled || widget.parentDisabled;
       bool? adaptive =
-          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+          widget.control.getBool("adaptive") ?? widget.parentAdaptive;
 
       var widgetsDesign = adaptive == true &&
               (platform == TargetPlatform.iOS ||
@@ -136,7 +136,7 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
                   widget.control.state["drawerOpened"] = false;
                   dismissDrawer(drawerView.control.id);
                 }
-                if (drawerView.control.attrBool("open", false)! &&
+                if (drawerView.control.getBool("open", false)! &&
                     drawerOpened != true) {
                   if (scaffoldKey.currentState?.isEndDrawerOpen == true) {
                     scaffoldKey.currentState?.closeEndDrawer();
@@ -145,7 +145,7 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
                     scaffoldKey.currentState?.openDrawer();
                     widget.control.state["drawerOpened"] = true;
                   });
-                } else if (!drawerView.control.attrBool("open", false)! &&
+                } else if (!drawerView.control.getBool("open", false)! &&
                     drawerOpened == true) {
                   scaffoldKey.currentState?.closeDrawer();
                   widget.control.state["drawerOpened"] = false;
@@ -157,7 +157,7 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
                   widget.control.state["endDrawerOpened"] = false;
                   dismissDrawer(endDrawerView.control.id);
                 }
-                if (endDrawerView.control.attrBool("open", false)! &&
+                if (endDrawerView.control.getBool("open", false)! &&
                     endDrawerOpened != true) {
                   if (scaffoldKey.currentState?.isDrawerOpen == true) {
                     scaffoldKey.currentState?.closeDrawer();
@@ -166,7 +166,7 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
                     scaffoldKey.currentState?.openEndDrawer();
                     widget.control.state["endDrawerOpened"] = true;
                   });
-                } else if (!endDrawerView.control.attrBool("open", false)! &&
+                } else if (!endDrawerView.control.getBool("open", false)! &&
                     endDrawerOpened == true) {
                   scaffoldKey.currentState?.closeEndDrawer();
                   widget.control.state["endDrawerOpened"] = false;
@@ -181,22 +181,22 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
                             parent: widget.control,
                             control: appBarView.control,
                             children: appBarView.children,
-                            parentDisabled: widget.control.isDisabled,
+                            parentDisabled: widget.control.disabled,
                             parentAdaptive: adaptive)
                         : AppBarControl(
                             parent: widget.control,
                             control: appBarView.control,
                             children: appBarView.children,
-                            parentDisabled: widget.control.isDisabled,
+                            parentDisabled: widget.control.disabled,
                             parentAdaptive: adaptive,
                             height: appBarView.control
-                                .attrDouble("toolbarHeight", kToolbarHeight)!)
+                                .getDouble("toolbarHeight", kToolbarHeight)!)
                     : appBarView.control.type == "cupertinoappbar"
                         ? CupertinoAppBarControl(
                             parent: widget.control,
                             control: appBarView.control,
                             children: appBarView.children,
-                            parentDisabled: widget.control.isDisabled,
+                            parentDisabled: widget.control.disabled,
                             parentAdaptive: adaptive,
                           ) as ObstructingPreferredSizeWidget
                         : null
@@ -204,14 +204,14 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
 
             Widget scaffold = Scaffold(
                 key: bar == null || bar is AppBarControl ? scaffoldKey : null,
-                backgroundColor: widget.control.attrColor("bgcolor", context) ??
+                backgroundColor: widget.control.getColor("bgcolor", context) ??
                     CupertinoTheme.of(context).scaffoldBackgroundColor,
                 appBar: bar is AppBarControl ? bar : null,
                 drawer: drawerView != null
                     ? NavigationDrawerControl(
                         control: drawerView.control,
                         children: drawerView.children,
-                        parentDisabled: widget.control.isDisabled,
+                        parentDisabled: widget.control.disabled,
                         parentAdaptive: adaptive,
                         backend: widget.backend)
                     : null,
@@ -225,7 +225,7 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
                     ? NavigationDrawerControl(
                         control: endDrawerView.control,
                         children: endDrawerView.children,
-                        parentDisabled: widget.control.isDisabled,
+                        parentDisabled: widget.control.disabled,
                         parentAdaptive: adaptive,
                         backend: widget.backend)
                     : null,
@@ -255,7 +255,7 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
             if (bar is CupertinoAppBarControl) {
               scaffold = CupertinoPageScaffold(
                   key: scaffoldKey,
-                  backgroundColor: widget.control.attrColor("bgcolor", context),
+                  backgroundColor: widget.control.getColor("bgcolor", context),
                   navigationBar: bar as ObstructingPreferredSizeWidget,
                   child: scaffold);
             }

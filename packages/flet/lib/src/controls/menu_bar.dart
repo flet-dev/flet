@@ -30,7 +30,7 @@ class _MenuBarControlState extends State<MenuBarControl> {
   Widget build(BuildContext context) {
     debugPrint("MenuBar build: ${widget.control.id}");
 
-    var ctrls = widget.children.where((c) => c.isVisible).toList();
+    var ctrls = widget.children.where((c) => c.visible).toList();
     if (ctrls.isEmpty) {
       return const ErrorControl(
           "MenuBar must have at minimum one visible child control");
@@ -41,12 +41,12 @@ class _MenuBarControlState extends State<MenuBarControl> {
         MenuBar(
           style: parseMenuStyle(Theme.of(context), widget.control, "style"),
           clipBehavior:
-              parseClip(widget.control.attrString("clipBehavior"), Clip.none)!,
+              parseClip(widget.control.getString("clipBehavior"), Clip.none)!,
           children: ctrls
               .map((c) => createControl(widget.control, c.id,
-                  widget.control.isDisabled || widget.parentDisabled,
+                  widget.control.disabled || widget.parentDisabled,
                   parentAdaptive:
-                      widget.control.isAdaptive ?? widget.parentAdaptive))
+                      widget.control.adaptive ?? widget.parentAdaptive))
               .toList(),
         ),
         widget.parent,

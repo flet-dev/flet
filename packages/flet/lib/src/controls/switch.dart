@@ -71,7 +71,7 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
 
     return withPagePlatform((context, platform) {
       bool? adaptive =
-          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+          widget.control.getBool("adaptive") ?? widget.parentAdaptive;
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
@@ -81,13 +81,13 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
             backend: widget.backend);
       }
 
-      String label = widget.control.attrString("label", "")!;
+      String label = widget.control.getString("label", "")!;
       LabelPosition labelPosition = parseLabelPosition(
-          widget.control.attrString("labelPosition"), LabelPosition.right)!;
-      double? width = widget.control.attrDouble("width");
-      double? height = widget.control.attrDouble("height");
-      bool autofocus = widget.control.attrBool("autofocus", false)!;
-      bool disabled = widget.control.isDisabled || widget.parentDisabled;
+          widget.control.getString("labelPosition"), LabelPosition.right)!;
+      double? width = widget.control.getDouble("width");
+      double? height = widget.control.getDouble("height");
+      bool autofocus = widget.control.getBool("autofocus", false)!;
+      bool disabled = widget.control.disabled || widget.parentDisabled;
 
       TextStyle? labelStyle =
           parseTextStyle(Theme.of(context), widget.control, "labelStyle");
@@ -95,7 +95,7 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
         labelStyle = labelStyle.apply(color: Theme.of(context).disabledColor);
       }
 
-      bool value = widget.control.attrBool("value", false)!;
+      bool value = widget.control.getBool("value", false)!;
       if (_value != value) {
         _value = value;
       }
@@ -103,25 +103,25 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
       var s = Switch(
           autofocus: autofocus,
           focusNode: _focusNode,
-          activeColor: widget.control.attrColor("activeColor", context),
+          activeColor: widget.control.getColor("activeColor", context),
           activeTrackColor:
-              widget.control.attrColor("activeTrackColor", context),
+              widget.control.getColor("activeTrackColor", context),
           inactiveThumbColor:
-              widget.control.attrColor("inactiveThumbColor", context),
+              widget.control.getColor("inactiveThumbColor", context),
           inactiveTrackColor:
-              widget.control.attrColor("inactiveTrackColor", context),
+              widget.control.getColor("inactiveTrackColor", context),
           thumbColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "thumbColor"),
           thumbIcon: parseWidgetStateIcon(
               Theme.of(context), widget.control, "thumbIcon"),
           trackColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "trackColor"),
-          focusColor: widget.control.attrColor("focusColor", context),
+          focusColor: widget.control.getColor("focusColor", context),
           value: _value,
           mouseCursor:
-              parseMouseCursor(widget.control.attrString("mouseCursor")),
-          splashRadius: widget.control.attrDouble("splashRadius"),
-          hoverColor: widget.control.attrColor("hoverColor", context),
+              parseMouseCursor(widget.control.getString("mouseCursor")),
+          splashRadius: widget.control.getDouble("splashRadius"),
+          hoverColor: widget.control.getColor("hoverColor", context),
           overlayColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "overlayColor"),
           trackOutlineColor: parseWidgetStateColor(

@@ -18,14 +18,14 @@ class ProgressRingControl extends StatelessWidget {
     return constrainedControl(
         context,
         CircularProgressIndicator(
-          value: control.attrDouble("value"),
-          strokeWidth: control.attrDouble("strokeWidth", 4)!,
-          color: control.attrColor("color", context),
-          backgroundColor: control.attrColor("bgColor", context),
-          semanticsLabel: control.attrString("semanticsLabel"),
-          strokeCap: parseStrokeCap(control.attrString("strokeCap")),
-          semanticsValue: control.attrDouble("semanticsValue")?.toString(),
-          strokeAlign: control.attrDouble("strokeAlign", 0)!,
+          value: control.getDouble("value"),
+          strokeWidth: control.getDouble("strokeWidth", 4)!,
+          color: control.getColor("color", context),
+          backgroundColor: control.getColor("bgColor", context),
+          semanticsLabel: control.getString("semanticsLabel"),
+          strokeCap: parseStrokeCap(control.getString("strokeCap")),
+          semanticsValue: control.getDouble("semanticsValue")?.toString(),
+          strokeAlign: control.getDouble("strokeAlign", 0)!,
         ),
         parent,
         control);

@@ -35,11 +35,11 @@ class _CupertinoSlidingSegmentedButtonControlState
   Widget build(BuildContext context) {
     debugPrint(
         "CupertinoSlidingSegmentedButtonControl build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
     bool? adaptive =
-        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+        widget.control.getBool("adaptive") ?? widget.parentAdaptive;
 
-    List<Control> ctrls = widget.children.where((c) => c.isVisible).toList();
+    List<Control> ctrls = widget.children.where((c) => c.visible).toList();
 
     if (ctrls.length < 2) {
       return const ErrorControl(
@@ -52,7 +52,7 @@ class _CupertinoSlidingSegmentedButtonControlState
 
     var button = CupertinoSlidingSegmentedControl(
       children: children,
-      groupValue: widget.control.attrInt("selectedIndex"),
+      groupValue: widget.control.getInt("selectedIndex"),
       onValueChanged: (int? index) {
         if (!disabled) {
           widget.backend.updateControlState(widget.control.id,
@@ -61,7 +61,7 @@ class _CupertinoSlidingSegmentedButtonControlState
               widget.control.id, "change", index?.toString());
         }
       },
-      thumbColor: widget.control.attrColor(
+      thumbColor: widget.control.getColor(
           "thumbColor",
           context,
           const CupertinoDynamicColor.withBrightness(
@@ -69,7 +69,7 @@ class _CupertinoSlidingSegmentedButtonControlState
             darkColor: Color(0xFF636366),
           ))!,
       backgroundColor: widget.control
-          .attrColor("bgColor", context, CupertinoColors.tertiarySystemFill)!,
+          .getColor("bgColor", context, CupertinoColors.tertiarySystemFill)!,
       padding: parseEdgeInsets(widget.control, "padding",
           const EdgeInsets.symmetric(vertical: 2, horizontal: 3))!,
     );

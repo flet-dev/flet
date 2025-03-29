@@ -31,30 +31,30 @@ class _BottomAppBarControlState extends State<BottomAppBarControl>
   Widget build(BuildContext context) {
     debugPrint("BottomAppBarControl build: ${widget.control.id}");
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
     var contentCtrls =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
+        widget.children.where((c) => c.name == "content" && c.visible);
 
-    var shape = parseNotchedShape(widget.control.attrString("shape"));
+    var shape = parseNotchedShape(widget.control.getString("shape"));
 
-    var elevation = widget.control.attrDouble("elevation", 0)!;
+    var elevation = widget.control.getDouble("elevation", 0)!;
 
     var clipBehavior =
-        parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
+        parseClip(widget.control.getString("clipBehavior"), Clip.none)!;
     var bottomAppBar = withControls(
         widget.children
-            .where((c) => c.isVisible && c.name == null)
+            .where((c) => c.visible && c.name == null)
             .map((c) => c.id), (content, viewModel) {
       return BottomAppBar(
         clipBehavior: clipBehavior,
         padding: parseEdgeInsets(widget.control, "padding"),
-        height: widget.control.attrDouble("height"),
+        height: widget.control.getDouble("height"),
         elevation: elevation,
         shape: shape,
-        shadowColor: widget.control.attrColor("shadowColor", context),
-        surfaceTintColor: widget.control.attrColor("surfaceTintColor", context),
-        color: widget.control.attrColor("bgColor", context),
-        notchMargin: widget.control.attrDouble("notchMargin", 4.0)!,
+        shadowColor: widget.control.getColor("shadowColor", context),
+        surfaceTintColor: widget.control.getColor("surfaceTintColor", context),
+        color: widget.control.getColor("bgColor", context),
+        notchMargin: widget.control.getDouble("notchMargin", 4.0)!,
         child: contentCtrls.isNotEmpty
             ? createControl(widget.control, contentCtrls.first.id, disabled,
                 parentAdaptive: widget.parentAdaptive)

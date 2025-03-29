@@ -38,18 +38,18 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
     debugPrint("BottomSheet build: ${widget.control.id}");
 
     bool lastOpen = widget.control.state["open"] ?? false;
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
 
-    var open = widget.control.attrBool("open", false)!;
+    var open = widget.control.getBool("open", false)!;
     //var modal = widget.control.attrBool("modal", true)!;
-    var dismissible = widget.control.attrBool("dismissible", true)!;
-    var enableDrag = widget.control.attrBool("enableDrag", false)!;
-    var showDragHandle = widget.control.attrBool("showDragHandle", false)!;
-    var useSafeArea = widget.control.attrBool("useSafeArea", true)!;
+    var dismissible = widget.control.getBool("dismissible", true)!;
+    var enableDrag = widget.control.getBool("enableDrag", false)!;
+    var showDragHandle = widget.control.getBool("showDragHandle", false)!;
+    var useSafeArea = widget.control.getBool("useSafeArea", true)!;
     var isScrollControlled =
-        widget.control.attrBool("isScrollControlled", false)!;
+        widget.control.getBool("isScrollControlled", false)!;
     var maintainBottomViewInsetsPadding =
-        widget.control.attrBool("maintainBottomViewInsetsPadding", true)!;
+        widget.control.getBool("maintainBottomViewInsetsPadding", true)!;
 
     void resetOpenState() {
       widget.backend.updateControlState(widget.control.id, {"open": "false"});
@@ -63,7 +63,7 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
                 context: context,
                 builder: (context) {
                   var contentCtrls = widget.children
-                      .where((c) => c.name == "content" && c.isVisible);
+                      .where((c) => c.name == "content" && c.visible);
 
                   if (contentCtrls.isEmpty) {
                     return const ErrorControl(
@@ -92,18 +92,18 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
                   return content;
                 },
                 isDismissible: dismissible,
-                backgroundColor: widget.control.attrColor("bgColor", context),
-                elevation: widget.control.attrDouble("elevation"),
+                backgroundColor: widget.control.getColor("bgColor", context),
+                elevation: widget.control.getDouble("elevation"),
                 isScrollControlled: isScrollControlled,
                 enableDrag: enableDrag,
-                barrierColor: widget.control.attrColor("barrierColor", context),
+                barrierColor: widget.control.getColor("barrierColor", context),
                 sheetAnimationStyle:
                     parseAnimationStyle(widget.control, "animationStyle"),
                 constraints:
                     parseBoxConstraints(widget.control, "sizeConstraints"),
                 showDragHandle: showDragHandle,
                 clipBehavior:
-                    parseClip(widget.control.attrString("clipBehavior")),
+                    parseClip(widget.control.getString("clipBehavior")),
                 shape: parseOutlinedBorder(widget.control, "shape"),
                 useSafeArea: useSafeArea)
             .then((value) {

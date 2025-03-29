@@ -62,12 +62,12 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
   Widget build(BuildContext context) {
     debugPrint("CupertinoRadio build: ${widget.control.id}");
 
-    String label = widget.control.attrString("label", "")!;
-    String value = widget.control.attrString("value", "")!;
+    String label = widget.control.getString("label", "")!;
+    String value = widget.control.getString("value", "")!;
     LabelPosition labelPosition = parseLabelPosition(
-        widget.control.attrString("labelPosition"), LabelPosition.right)!;
-    bool autofocus = widget.control.attrBool("autofocus", false)!;
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+        widget.control.getString("labelPosition"), LabelPosition.right)!;
+    bool autofocus = widget.control.getBool("autofocus", false)!;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
 
     return withControlAncestor(widget.control.id, "radiogroup",
         (context, viewModel) {
@@ -78,7 +78,7 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
             "CupertinoRadio control must be enclosed with RadioGroup.");
       }
 
-      String groupValue = viewModel.ancestor!.attrString("value", "")!;
+      String groupValue = viewModel.ancestor!.getString("value", "")!;
       String ancestorId = viewModel.ancestor!.id;
 
       var cupertinoRadio = CupertinoRadio<String>(
@@ -87,15 +87,15 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
           groupValue: groupValue,
           value: value,
           useCheckmarkStyle:
-              widget.control.attrBool("useCheckmarkStyle", false)!,
-          fillColor: widget.control.attrColor("fillColor", context),
-          focusColor: widget.control.attrColor("focusColor", context),
-          toggleable: widget.control.attrBool("toggleable", false)!,
+              widget.control.getBool("useCheckmarkStyle", false)!,
+          fillColor: widget.control.getColor("fillColor", context),
+          focusColor: widget.control.getColor("focusColor", context),
+          toggleable: widget.control.getBool("toggleable", false)!,
           mouseCursor:
-              parseMouseCursor(widget.control.attrString("mouseCursor")),
+              parseMouseCursor(widget.control.getString("mouseCursor")),
           activeColor: parseColor(Theme.of(context),
-              widget.control.attrString("activeColor", "primary")!),
-          inactiveColor: widget.control.attrColor("inactiveColor", context),
+              widget.control.getString("activeColor", "primary")!),
+          inactiveColor: widget.control.getColor("inactiveColor", context),
           onChanged: !disabled
               ? (String? value) {
                   _onChange(ancestorId, value);

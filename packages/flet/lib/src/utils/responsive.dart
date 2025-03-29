@@ -5,7 +5,7 @@ import '../utils/numbers.dart';
 
 Map<String, double> parseResponsiveNumber(
     Control control, String propName, double defaultValue) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   Map<String, double> result = {};
   if (v != null) {
     var j = json.decode(v);

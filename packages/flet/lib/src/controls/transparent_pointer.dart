@@ -23,9 +23,8 @@ class TransparentPointerControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("TransparentPointer build: ${control.id}");
 
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    bool disabled = control.isDisabled || parentDisabled;
+    var contentCtrls = children.where((c) => c.name == "content" && c.visible);
+    bool disabled = control.disabled || parentDisabled;
 
     return constrainedControl(
         context,

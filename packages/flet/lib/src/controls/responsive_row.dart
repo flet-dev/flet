@@ -32,8 +32,8 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
     final columns = parseResponsiveNumber(control, "columns", 12);
     final spacing = parseResponsiveNumber(control, "spacing", 10);
     final runSpacing = parseResponsiveNumber(control, "runSpacing", 10);
-    bool disabled = control.isDisabled || parentDisabled;
-    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
+    bool disabled = control.disabled || parentDisabled;
+    bool? adaptive = control.getBool("adaptive") ?? parentAdaptive;
     return withPageSize((context, view) {
       var w = LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -50,7 +50,7 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
 
         double totalCols = 0;
         List<Widget> controls = [];
-        for (var ctrl in children.where((c) => c.isVisible)) {
+        for (var ctrl in children.where((c) => c.visible)) {
           final col = parseResponsiveNumber(ctrl, "col", 12);
           var bpCol =
               getBreakpointNumber(col, view.size.width, view.breakpoints);
@@ -81,20 +81,19 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
                   runSpacing: getBreakpointNumber(
                       runSpacing, view.size.width, view.breakpoints),
                   alignment: parseWrapAlignment(
-                      control.attrString("alignment"), WrapAlignment.start)!,
+                      control.getString("alignment"), WrapAlignment.start)!,
                   crossAxisAlignment: parseWrapCrossAlignment(
-                      control.attrString("verticalAlignment"),
+                      control.getString("verticalAlignment"),
                       WrapCrossAlignment.start)!,
                   children: controls,
                 )
               : Row(
                   spacing: bpSpacing - 0.1,
                   mainAxisAlignment: parseMainAxisAlignment(
-                      control.attrString("alignment"),
-                      MainAxisAlignment.start)!,
+                      control.getString("alignment"), MainAxisAlignment.start)!,
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: parseCrossAxisAlignment(
-                      control.attrString("verticalAlignment"),
+                      control.getString("verticalAlignment"),
                       CrossAxisAlignment.start)!,
                   children: controls,
                 );

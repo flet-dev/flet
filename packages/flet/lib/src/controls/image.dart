@@ -31,16 +31,16 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
   @override
   Widget build(BuildContext context) {
     debugPrint("Image build: ${control.id}");
-    bool disabled = control.isDisabled || parentDisabled;
+    bool disabled = control.disabled || parentDisabled;
 
-    var src = control.attrString("src", "")!;
-    var srcBase64 = control.attrString("srcBase64", "")!;
+    var src = control.getString("src", "")!;
+    var srcBase64 = control.getString("srcBase64", "")!;
     if (src == "" && srcBase64 == "") {
       return const ErrorControl(
           "Image must have either \"src\" or \"src_base64\" specified.");
     }
     var errorContentCtrls =
-        children.where((c) => c.name == "error_content" && c.isVisible);
+        children.where((c) => c.name == "error_content" && c.visible);
 
     return withPageArgs((context, pageArgs) {
       Widget? image = buildImage(
@@ -48,26 +48,26 @@ class ImageControl extends StatelessWidget with FletStoreMixin {
         control: control,
         src: src,
         srcBase64: srcBase64,
-        width: control.attrDouble("width"),
-        height: control.attrDouble("height"),
-        cacheWidth: control.attrInt("cacheWidth"),
-        cacheHeight: control.attrInt("cacheHeight"),
-        antiAlias: control.attrBool("antiAlias", false)!,
+        width: control.getDouble("width"),
+        height: control.getDouble("height"),
+        cacheWidth: control.getInt("cacheWidth"),
+        cacheHeight: control.getInt("cacheHeight"),
+        antiAlias: control.getBool("antiAlias", false)!,
         repeat: parseImageRepeat(
-            control.attrString("repeat"), ImageRepeat.noRepeat)!,
-        fit: parseBoxFit(control.attrString("fit")),
-        colorBlendMode: parseBlendMode(control.attrString("colorBlendMode")),
-        color: control.attrColor("color", context),
-        semanticsLabel: control.attrString("semanticsLabel"),
-        gaplessPlayback: control.attrBool("gaplessPlayback"),
-        excludeFromSemantics: control.attrBool("excludeFromSemantics", false)!,
+            control.getString("repeat"), ImageRepeat.noRepeat)!,
+        fit: parseBoxFit(control.getString("fit")),
+        colorBlendMode: parseBlendMode(control.getString("colorBlendMode")),
+        color: control.getColor("color", context),
+        semanticsLabel: control.getString("semanticsLabel"),
+        gaplessPlayback: control.getBool("gaplessPlayback"),
+        excludeFromSemantics: control.getBool("excludeFromSemantics", false)!,
         filterQuality: parseFilterQuality(
-            control.attrString("filterQuality"), FilterQuality.medium)!,
+            control.getString("filterQuality"), FilterQuality.medium)!,
         disabled: disabled,
         pageArgs: pageArgs,
         errorCtrl: errorContentCtrls.isNotEmpty
             ? createControl(control, errorContentCtrls.first.id, disabled,
-                parentAdaptive: control.isAdaptive ?? parentAdaptive)
+                parentAdaptive: control.adaptive ?? parentAdaptive)
             : null,
       );
       return constrainedControl(

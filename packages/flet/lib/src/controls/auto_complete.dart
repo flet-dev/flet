@@ -22,7 +22,7 @@ class AutoCompleteControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("AutoComplete build: ${control.id}");
 
-    var suggestionsMaxHeight = control.attrDouble("suggestionsMaxHeight", 200)!;
+    var suggestionsMaxHeight = control.getDouble("suggestionsMaxHeight", 200)!;
     var suggestions = parseAutoCompleteSuggestions(control, "suggestions");
 
     var auto = Autocomplete(

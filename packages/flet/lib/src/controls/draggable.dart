@@ -28,16 +28,15 @@ class DraggableControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("DragTarget build: ${control.id}");
-    var adaptive = control.isAdaptive ?? parentAdaptive;
+    var adaptive = control.adaptive ?? parentAdaptive;
 
-    var group = control.attrString("group", "");
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
+    var group = control.getString("group", "");
+    var contentCtrls = children.where((c) => c.name == "content" && c.visible);
     var contentWhenDraggingCtrls =
-        children.where((c) => c.name == "content_when_dragging" && c.isVisible);
+        children.where((c) => c.name == "content_when_dragging" && c.visible);
     var contentFeedbackCtrls =
-        children.where((c) => c.name == "content_feedback" && c.isVisible);
-    bool disabled = control.isDisabled || parentDisabled;
+        children.where((c) => c.name == "content_feedback" && c.visible);
+    bool disabled = control.disabled || parentDisabled;
 
     Widget? child = contentCtrls.isNotEmpty
         ? createControl(control, contentCtrls.first.id, disabled,
@@ -58,9 +57,9 @@ class DraggableControl extends StatelessWidget {
 
     return Draggable<String>(
       data: data,
-      axis: parseAxis(control.attrString("axis")),
-      affinity: parseAxis(control.attrString("affinity")),
-      maxSimultaneousDrags: control.attrInt("maxSimultaneousDrags"),
+      axis: parseAxis(control.getString("axis")),
+      affinity: parseAxis(control.getString("affinity")),
+      maxSimultaneousDrags: control.getInt("maxSimultaneousDrags"),
       childWhenDragging: contentWhenDraggingCtrls.isNotEmpty
           ? createControl(control, contentWhenDraggingCtrls.first.id, disabled,
               parentAdaptive: adaptive)

@@ -44,7 +44,7 @@ class AutoCompleteSuggestion {
 
 List<AutoCompleteSuggestion> parseAutoCompleteSuggestions(
     Control control, String propName) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return [];
   }

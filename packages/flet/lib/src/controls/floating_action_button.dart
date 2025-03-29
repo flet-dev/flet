@@ -31,30 +31,28 @@ class FloatingActionButtonControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("FloatingActionButtonControl build: ${control.id}");
 
-    String? text = control.attrString("text");
-    IconData? icon = parseIcon(control.attrString("icon"));
-    String url = control.attrString("url", "")!;
-    String? urlTarget = control.attrString("urlTarget");
-    double? disabledElevation = control.attrDouble("disabledElevation");
-    double? elevation = control.attrDouble("elevation");
-    double? hoverElevation = control.attrDouble("hoverElevation");
-    double? highlightElevation = control.attrDouble("highlightElevation");
-    double? focusElevation = control.attrDouble("focusElevation");
-    Color? bgColor = control.attrColor("bgColor", context);
-    Color? foregroundColor = control.attrColor("foregroundColor", context);
-    Color? splashColor = control.attrColor("splashColor", context);
-    Color? hoverColor = control.attrColor("hoverColor", context);
-    Color? focusColor = control.attrColor("focusColor", context);
+    String? text = control.getString("text");
+    IconData? icon = parseIcon(control.getString("icon"));
+    String url = control.getString("url", "")!;
+    String? urlTarget = control.getString("urlTarget");
+    double? disabledElevation = control.getDouble("disabledElevation");
+    double? elevation = control.getDouble("elevation");
+    double? hoverElevation = control.getDouble("hoverElevation");
+    double? highlightElevation = control.getDouble("highlightElevation");
+    double? focusElevation = control.getDouble("focusElevation");
+    Color? bgColor = control.getColor("bgColor", context);
+    Color? foregroundColor = control.getColor("foregroundColor", context);
+    Color? splashColor = control.getColor("splashColor", context);
+    Color? hoverColor = control.getColor("hoverColor", context);
+    Color? focusColor = control.getColor("focusColor", context);
     OutlinedBorder? shape = parseOutlinedBorder(control, "shape");
-    var clipBehavior =
-        parseClip(control.attrString("clipBehavior"), Clip.none)!;
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    bool autofocus = control.attrBool("autofocus", false)!;
-    bool mini = control.attrBool("mini", false)!;
-    bool? enableFeedback = control.attrBool("enableFeedback");
-    var mouseCursor = parseMouseCursor(control.attrString("mouseCursor"));
-    bool disabled = control.isDisabled || parentDisabled;
+    var clipBehavior = parseClip(control.getString("clipBehavior"), Clip.none)!;
+    var contentCtrls = children.where((c) => c.name == "content" && c.visible);
+    bool autofocus = control.getBool("autofocus", false)!;
+    bool mini = control.getBool("mini", false)!;
+    bool? enableFeedback = control.getBool("enableFeedback");
+    var mouseCursor = parseMouseCursor(control.getString("mouseCursor"));
+    bool disabled = control.disabled || parentDisabled;
 
     Function()? onPressed = disabled
         ? null

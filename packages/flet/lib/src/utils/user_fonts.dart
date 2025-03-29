@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/control.dart';
-
 import 'user_fonts_io.dart' if (dart.library.js) "user_fonts_web.dart";
 
 class UserFonts {
@@ -48,7 +47,7 @@ class UserFonts {
 }
 
 Map<String, String> parseFonts(Control control, String propName) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return {};
   }

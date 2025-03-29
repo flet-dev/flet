@@ -65,7 +65,7 @@ class BarChartGroupViewModel extends Equatable {
         barRods: store.state.controls[control.id]!.childIds
             .map((childId) => store.state.controls[childId])
             .nonNulls
-            .where((c) => c.isVisible)
+            .where((c) => c.visible)
             .map((c) => BarChartRodViewModel.fromStore(store, c))
             .toList());
   }
@@ -102,7 +102,7 @@ class BarChartRodViewModel extends Equatable {
         rodStackItems: store.state.controls[control.id]!.childIds
             .map((childId) => store.state.controls[childId])
             .nonNulls
-            .where((c) => c.isVisible)
+            .where((c) => c.visible)
             .map((c) => BarChartRodStackItemViewModel.fromStore(store, c))
             .toList());
   }
@@ -130,13 +130,13 @@ class BarChartViewModel extends Equatable {
   static BarChartViewModel fromStore(
       Store<AppState> store, Control control, List<Control> children) {
     var leftAxisCtrls =
-        children.where((c) => c.type == "axis" && c.name == "l" && c.isVisible);
+        children.where((c) => c.type == "axis" && c.name == "l" && c.visible);
     var topAxisCtrls =
-        children.where((c) => c.type == "axis" && c.name == "t" && c.isVisible);
+        children.where((c) => c.type == "axis" && c.name == "t" && c.visible);
     var rightAxisCtrls =
-        children.where((c) => c.type == "axis" && c.name == "r" && c.isVisible);
+        children.where((c) => c.type == "axis" && c.name == "r" && c.visible);
     var bottomAxisCtrls =
-        children.where((c) => c.type == "axis" && c.name == "b" && c.isVisible);
+        children.where((c) => c.type == "axis" && c.name == "b" && c.visible);
     return BarChartViewModel(
         control: control,
         leftAxis: leftAxisCtrls.isNotEmpty
@@ -152,7 +152,7 @@ class BarChartViewModel extends Equatable {
             ? ChartAxisViewModel.fromStore(store, bottomAxisCtrls.first)
             : null,
         barGroups: children
-            .where((c) => c.type == "group" && c.isVisible)
+            .where((c) => c.type == "group" && c.visible)
             .map((c) => BarChartGroupViewModel.fromStore(store, c))
             .toList());
   }
@@ -190,7 +190,7 @@ class _BarChartControlState extends State<BarChartControl> {
 
     var animate = parseAnimation(widget.control, "animate");
     var border = parseBorder(Theme.of(context), widget.control, "border");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
 
     var result = StoreConnector<AppState, BarChartViewModel>(
         distinct: true,
@@ -206,7 +206,7 @@ class _BarChartControlState extends State<BarChartControl> {
           var bottomTitles =
               getAxisTitles(widget.control, viewModel.bottomAxis, disabled);
 
-          var interactive = viewModel.control.attrBool("interactive", true)!;
+          var interactive = viewModel.control.getBool("interactive", true)!;
 
           List<BarChartGroupData> barGroups = viewModel.barGroups
               .map((g) => getGroupData(
@@ -215,10 +215,10 @@ class _BarChartControlState extends State<BarChartControl> {
 
           var chart = BarChart(
             BarChartData(
-              backgroundColor: widget.control.attrColor("bgcolor", context),
-              minY: widget.control.attrDouble("miny"),
-              maxY: widget.control.attrDouble("maxy"),
-              baselineY: widget.control.attrDouble("baseliney"),
+              backgroundColor: widget.control.getColor("bgcolor", context),
+              minY: widget.control.getDouble("miny"),
+              maxY: widget.control.getDouble("maxy"),
+              baselineY: widget.control.getDouble("baseliney"),
               titlesData: (leftTitles.sideTitles.showTitles ||
                       topTitles.sideTitles.showTitles ||
                       rightTitles.sideTitles.showTitles ||
@@ -236,35 +236,35 @@ class _BarChartControlState extends State<BarChartControl> {
                   : FlBorderData(show: false),
               gridData: parseChartGridData(Theme.of(context), widget.control,
                   "horizontalGridLines", "verticalGridLines"),
-              groupsSpace: widget.control.attrDouble("groupsSpace"),
+              groupsSpace: widget.control.getDouble("groupsSpace"),
               barTouchData: BarTouchData(
                 enabled: interactive,
                 touchTooltipData: BarTouchTooltipData(
                   getTooltipColor: (BarChartGroupData group) => widget.control
-                      .attrColor("tooltipBgColor", context,
+                      .getColor("tooltipBgColor", context,
                           Theme.of(context).colorScheme.secondary)!,
                   tooltipRoundedRadius:
-                      widget.control.attrDouble("tooltipRoundedRadius"),
-                  tooltipMargin: widget.control.attrDouble("tooltipMargin"),
+                      widget.control.getDouble("tooltipRoundedRadius"),
+                  tooltipMargin: widget.control.getDouble("tooltipMargin"),
                   tooltipPadding:
                       parseEdgeInsets(widget.control, "tooltipPadding"),
-                  maxContentWidth: widget.control.attrDouble("tooltipMaxWidth"),
-                  rotateAngle: widget.control.attrDouble("tooltipRotateAngle"),
+                  maxContentWidth: widget.control.getDouble("tooltipMaxWidth"),
+                  rotateAngle: widget.control.getDouble("tooltipRotateAngle"),
                   tooltipHorizontalOffset:
-                      widget.control.attrDouble("tooltipHorizontalOffset"),
+                      widget.control.getDouble("tooltipHorizontalOffset"),
                   tooltipBorder: parseBorderSide(
                       Theme.of(context), widget.control, "tooltipBorderSide"),
                   fitInsideHorizontally:
-                      widget.control.attrBool("tooltipFitInsideHorizontally"),
+                      widget.control.getBool("tooltipFitInsideHorizontally"),
                   fitInsideVertically:
-                      widget.control.attrBool("tooltipFitInsideVertically"),
+                      widget.control.getBool("tooltipFitInsideVertically"),
                   direction: parseTooltipDirection(
-                      widget.control.attrString("tooltipDirection")),
+                      widget.control.getString("tooltipDirection")),
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
                     var dp = viewModel.barGroups[groupIndex].barRods[rodIndex];
 
-                    var tooltip = dp.control.attrString("tooltip",
-                        dp.control.attrDouble("toY", 0)!.toString())!;
+                    var tooltip = dp.control.getString(
+                        "tooltip", dp.control.getDouble("toY", 0)!.toString())!;
                     var tooltipStyle = parseTextStyle(
                         Theme.of(context), dp.control, "tooltipStyle");
                     tooltipStyle ??= const TextStyle();
@@ -275,15 +275,15 @@ class _BarChartControlState extends State<BarChartControl> {
                               Colors.blueGrey);
                     }
                     TextAlign? tooltipAlign = parseTextAlign(
-                        dp.control.attrString("tooltipAlign", ""),
+                        dp.control.getString("tooltipAlign", ""),
                         TextAlign.center)!;
-                    return dp.control.attrBool("showTooltip", true)!
+                    return dp.control.getBool("showTooltip", true)!
                         ? BarTooltipItem(tooltip, tooltipStyle,
                             textAlign: tooltipAlign)
                         : null;
                   },
                 ),
-                touchCallback: widget.control.attrBool("onChartEvent", false)!
+                touchCallback: widget.control.getBool("onChartEvent", false)!
                     ? (evt, resp) {
                         var eventData = resp != null && resp.spot != null
                             ? BarChartEventData(
@@ -336,14 +336,14 @@ class _BarChartControlState extends State<BarChartControl> {
   BarChartGroupData getGroupData(ThemeData theme, Control parent,
       bool interactiveChart, BarChartGroupViewModel groupViewModel) {
     return BarChartGroupData(
-      x: groupViewModel.control.attrInt("x", 0)!,
-      barsSpace: groupViewModel.control.attrDouble("barsSpace"),
-      groupVertically: groupViewModel.control.attrBool("groupVertically"),
+      x: groupViewModel.control.getInt("x", 0)!,
+      barsSpace: groupViewModel.control.getDouble("barsSpace"),
+      groupVertically: groupViewModel.control.getBool("groupVertically"),
       showingTooltipIndicators: groupViewModel.barRods
           .asMap()
           .entries
           .where((e) =>
-              !interactiveChart && e.value.control.attrBool("selected", false)!)
+              !interactiveChart && e.value.control.getBool("selected", false)!)
           .map((e) => e.key)
           .toList(),
       barRods: groupViewModel.barRods
@@ -355,16 +355,16 @@ class _BarChartControlState extends State<BarChartControl> {
 
   BarChartRodData getRodData(ThemeData theme, Control parent,
       bool interactiveChart, BarChartRodViewModel rodViewModel) {
-    var bgFromY = rodViewModel.control.attrDouble("bgFromY");
-    var bgToY = rodViewModel.control.attrDouble("bgToY");
-    var bgColor = rodViewModel.control.attrColor("bgColor", context);
+    var bgFromY = rodViewModel.control.getDouble("bgFromY");
+    var bgToY = rodViewModel.control.getDouble("bgToY");
+    var bgColor = rodViewModel.control.getColor("bgColor", context);
     var bgGradient = parseGradient(theme, rodViewModel.control, "bgGradient");
 
     return BarChartRodData(
-        fromY: rodViewModel.control.attrDouble("fromY"),
-        toY: rodViewModel.control.attrDouble("toY", 0)!,
-        width: rodViewModel.control.attrDouble("width"),
-        color: rodViewModel.control.attrColor("color", context),
+        fromY: rodViewModel.control.getDouble("fromY"),
+        toY: rodViewModel.control.getDouble("toY", 0)!,
+        width: rodViewModel.control.getDouble("width"),
+        color: rodViewModel.control.getColor("color", context),
         gradient: parseGradient(theme, rodViewModel.control, "gradient"),
         borderRadius: parseBorderRadius(rodViewModel.control, "borderRadius"),
         borderSide:
@@ -390,9 +390,9 @@ class _BarChartControlState extends State<BarChartControl> {
   BarChartRodStackItem getRodStackItem(ThemeData theme, Control parent,
       bool interactiveChart, BarChartRodStackItemViewModel stackItemViewModel) {
     return BarChartRodStackItem(
-        stackItemViewModel.control.attrDouble("fromY")!,
-        stackItemViewModel.control.attrDouble("toY", 0)!,
-        stackItemViewModel.control.attrColor("color", context)!,
+        stackItemViewModel.control.getDouble("fromY")!,
+        stackItemViewModel.control.getDouble("toY", 0)!,
+        stackItemViewModel.control.getColor("color", context)!,
         parseBorderSide(theme, stackItemViewModel.control, "borderSide") ??
             BorderSide.none);
   }
@@ -407,11 +407,11 @@ class _BarChartControlState extends State<BarChartControl> {
         axisNameWidget: axisViewModel.title != null
             ? createControl(parent, axisViewModel.title!.id, disabled)
             : null,
-        axisNameSize: axisViewModel.control.attrDouble("titleSize") ?? 16,
+        axisNameSize: axisViewModel.control.getDouble("titleSize") ?? 16,
         sideTitles: SideTitles(
-          showTitles: axisViewModel.control.attrBool("showLabels", true)!,
-          reservedSize: axisViewModel.control.attrDouble("labelsSize") ?? 22,
-          interval: axisViewModel.control.attrDouble("labelsInterval"),
+          showTitles: axisViewModel.control.getBool("showLabels", true)!,
+          reservedSize: axisViewModel.control.getDouble("labelsSize") ?? 22,
+          interval: axisViewModel.control.getDouble("labelsInterval"),
           getTitlesWidget: axisViewModel.labels.isEmpty
               ? defaultGetTitle
               : (value, meta) {

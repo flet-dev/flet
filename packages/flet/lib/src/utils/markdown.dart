@@ -35,7 +35,7 @@ Map<String, TextStyle> parseMarkdownCodeTheme(
   String propName,
   ThemeData theme,
 ) {
-  final v = control.attrString(propName);
+  final v = control.getString(propName);
   if (v == null) {
     return {};
   }
@@ -65,7 +65,7 @@ Map<String, TextStyle> parseMarkdownCodeTheme(
 
 MarkdownStyleSheet? parseMarkdownStyleSheet(Control control, String propName,
     ThemeData theme, PageArgsModel? pageArgs) {
-  var v = control.attrString(propName);
+  var v = control.getString(propName);
   if (v == null) {
     return null;
   }

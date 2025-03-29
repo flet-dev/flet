@@ -36,20 +36,20 @@ class _SnackBarControlState extends State<SnackBarControl> {
   bool _open = false;
 
   Widget _createSnackBar() {
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
     var contentCtrls =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
+        widget.children.where((c) => c.name == "content" && c.visible);
 
     if (contentCtrls.isEmpty) {
       return const ErrorControl(
           "SnackBar.content must be provided and visible");
     }
 
-    var actionName = widget.control.attrString("action", "")!;
+    var actionName = widget.control.getString("action", "")!;
     SnackBarAction? action = actionName != ""
         ? SnackBarAction(
             label: actionName,
-            textColor: widget.control.attrColor("actionColor", context),
+            textColor: widget.control.getColor("actionColor", context),
             onPressed: () {
               debugPrint("SnackBar ${widget.control.id} clicked!");
               widget.backend.triggerControlEvent(widget.control.id, "action");
@@ -57,9 +57,9 @@ class _SnackBarControlState extends State<SnackBarControl> {
         : null;
 
     SnackBarBehavior? behavior =
-        parseSnackBarBehavior(widget.control.attrString("behavior"));
+        parseSnackBarBehavior(widget.control.getString("behavior"));
 
-    var width = widget.control.attrDouble("width");
+    var width = widget.control.getDouble("width");
     var margin = parseEdgeInsets(widget.control, "margin");
 
     // if behavior is not floating, ignore margin and width
@@ -73,36 +73,36 @@ class _SnackBarControlState extends State<SnackBarControl> {
 
     return SnackBar(
         behavior: behavior,
-        clipBehavior: parseClip(
-            widget.control.attrString("clipBehavior"), Clip.hardEdge)!,
+        clipBehavior:
+            parseClip(widget.control.getString("clipBehavior"), Clip.hardEdge)!,
         actionOverflowThreshold:
-            widget.control.attrDouble("actionOverflowThreshold"),
+            widget.control.getDouble("actionOverflowThreshold"),
         shape: parseOutlinedBorder(widget.control, "shape"),
         onVisible: () {
           debugPrint("SnackBar.onVisible(${widget.control.id})");
           widget.backend.triggerControlEvent(widget.control.id, "visible");
         },
-        dismissDirection: parseDismissDirection(
-            widget.control.attrString("dismissDirection")),
-        showCloseIcon: widget.control.attrBool("showCloseIcon"),
-        closeIconColor: widget.control.attrColor("closeIconColor", context),
+        dismissDirection:
+            parseDismissDirection(widget.control.getString("dismissDirection")),
+        showCloseIcon: widget.control.getBool("showCloseIcon"),
+        closeIconColor: widget.control.getColor("closeIconColor", context),
         content: createControl(widget.control, contentCtrls.first.id, disabled,
             parentAdaptive: widget.parentAdaptive),
-        backgroundColor: widget.control.attrColor("bgColor", context),
+        backgroundColor: widget.control.getColor("bgColor", context),
         action: action,
         margin: margin,
         padding: parseEdgeInsets(widget.control, "padding"),
         width: width,
-        elevation: widget.control.attrDouble("elevation"),
+        elevation: widget.control.getDouble("elevation"),
         duration:
-            Duration(milliseconds: widget.control.attrInt("duration", 4000)!));
+            Duration(milliseconds: widget.control.getInt("duration", 4000)!));
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("SnackBar build: ${widget.control.id}");
 
-    var open = widget.control.attrBool("open", false)!;
+    var open = widget.control.getBool("open", false)!;
     var removeCurrentSnackbar = true;
 
     //widget.control.attrBool("removeCurrentSnackBar", false)!;

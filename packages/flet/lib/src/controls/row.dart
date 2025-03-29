@@ -27,17 +27,17 @@ class RowControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("Row build: ${control.id}");
-    bool disabled = control.isDisabled || parentDisabled;
-    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
+    bool disabled = control.disabled || parentDisabled;
+    bool? adaptive = control.getBool("adaptive") ?? parentAdaptive;
 
-    var spacing = control.attrDouble("spacing", 10)!;
+    var spacing = control.getDouble("spacing", 10)!;
     var mainAlignment = parseMainAxisAlignment(
-        control.attrString("alignment"), MainAxisAlignment.start)!;
-    var tight = control.attrBool("tight", false)!;
-    var wrap = control.attrBool("wrap", false)!;
-    var verticalAlignment = control.attrString("verticalAlignment");
+        control.getString("alignment"), MainAxisAlignment.start)!;
+    var tight = control.getBool("tight", false)!;
+    var wrap = control.getBool("wrap", false)!;
+    var verticalAlignment = control.getString("verticalAlignment");
 
-    List<Widget> controls = children.where((c) => c.isVisible).map((c) {
+    List<Widget> controls = children.where((c) => c.visible).map((c) {
       return createControl(control, c.id, disabled, parentAdaptive: adaptive);
     }).toList();
 
@@ -45,11 +45,11 @@ class RowControl extends StatelessWidget {
         ? Wrap(
             direction: Axis.horizontal,
             spacing: spacing,
-            runSpacing: control.attrDouble("runSpacing", 10)!,
+            runSpacing: control.getDouble("runSpacing", 10)!,
             alignment: parseWrapAlignment(
-                control.attrString("alignment"), WrapAlignment.start)!,
+                control.getString("alignment"), WrapAlignment.start)!,
             runAlignment: parseWrapAlignment(
-                control.attrString("runAlignment"), WrapAlignment.start)!,
+                control.getString("runAlignment"), WrapAlignment.start)!,
             crossAxisAlignment: parseWrapCrossAlignment(
                 verticalAlignment, WrapCrossAlignment.center)!,
             children: controls,
@@ -70,7 +70,7 @@ class RowControl extends StatelessWidget {
         parentAdaptive: adaptive,
         child: child);
 
-    if (control.attrBool("onScroll", false)!) {
+    if (control.getBool("onScroll", false)!) {
       child = ScrollNotificationControl(
           control: control, backend: backend, child: child);
     }

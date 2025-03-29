@@ -30,13 +30,13 @@ class _DatePickerControlState extends State<DatePickerControl> {
 
     bool lastOpen = widget.control.state["open"] ?? false;
 
-    var open = widget.control.attrBool("open", false)!;
-    DateTime? value = widget.control.attrDateTime("value");
-    DateTime? currentDate = widget.control.attrDateTime("currentDate");
+    var open = widget.control.getBool("open", false)!;
+    DateTime? value = widget.control.getDateTime("value");
+    DateTime? currentDate = widget.control.getDateTime("currentDate");
     IconData? switchToCalendarEntryModeIcon = parseIcon(
-        widget.control.attrString("switchToCalendarEntryModeIcon", "")!);
+        widget.control.getString("switchToCalendarEntryModeIcon", "")!);
     IconData? switchToInputEntryModeIcon =
-        parseIcon(widget.control.attrString("switchToInputEntryModeIcon"));
+        parseIcon(widget.control.getString("switchToInputEntryModeIcon"));
 
     void onClosed(DateTime? dateValue) {
       String stringValue;
@@ -59,23 +59,23 @@ class _DatePickerControlState extends State<DatePickerControl> {
     Widget createSelectDateDialog() {
       Widget dialog = DatePickerDialog(
         initialDate: value ?? currentDate ?? DateTime.now(),
-        firstDate: widget.control.attrDateTime("firstDate", DateTime(1900))!,
-        lastDate: widget.control.attrDateTime("lastDate", DateTime(2050))!,
+        firstDate: widget.control.getDateTime("firstDate", DateTime(1900))!,
+        lastDate: widget.control.getDateTime("lastDate", DateTime(2050))!,
         currentDate: currentDate ?? DateTime.now(),
-        helpText: widget.control.attrString("helpText"),
-        cancelText: widget.control.attrString("cancelText"),
-        confirmText: widget.control.attrString("confirmText"),
-        errorFormatText: widget.control.attrString("errorFormatText"),
-        errorInvalidText: widget.control.attrString("errorInvalidText"),
+        helpText: widget.control.getString("helpText"),
+        cancelText: widget.control.getString("cancelText"),
+        confirmText: widget.control.getString("confirmText"),
+        errorFormatText: widget.control.getString("errorFormatText"),
+        errorInvalidText: widget.control.getString("errorInvalidText"),
         keyboardType: parseTextInputType(
-            widget.control.attrString("keyboardType"), TextInputType.text)!,
+            widget.control.getString("keyboardType"), TextInputType.text)!,
         initialCalendarMode: parseDatePickerMode(
-            widget.control.attrString("datePickerMode"), DatePickerMode.day)!,
+            widget.control.getString("datePickerMode"), DatePickerMode.day)!,
         initialEntryMode: parseDatePickerEntryMode(
-            widget.control.attrString("datePickerEntryMode"),
+            widget.control.getString("datePickerEntryMode"),
             DatePickerEntryMode.calendar)!,
-        fieldHintText: widget.control.attrString("fieldHintText"),
-        fieldLabelText: widget.control.attrString("fieldLabelText"),
+        fieldHintText: widget.control.getString("fieldHintText"),
+        fieldLabelText: widget.control.getString("fieldLabelText"),
         onDatePickerModeChange: (DatePickerEntryMode mode) {
           widget.backend.triggerControlEvent(
               widget.control.id, "entryModeChange", mode.name);
@@ -96,7 +96,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog<DateTime>(
-            barrierColor: widget.control.attrColor("barrierColor", context),
+            barrierColor: widget.control.getColor("barrierColor", context),
             useRootNavigator: false,
             context: context,
             builder: (context) => createSelectDateDialog()).then((result) {

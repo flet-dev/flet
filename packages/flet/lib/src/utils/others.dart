@@ -78,7 +78,7 @@ SliderInteraction? parseSliderInteraction(String? value,
 }
 
 Size? parseSize(Control control, String propName, [Size? defValue]) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return defValue;
   }

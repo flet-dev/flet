@@ -37,9 +37,10 @@ class PieChartEventData extends Equatable {
   final int? sectionIndex;
   final Offset? localPosition;
 
-  const PieChartEventData({required this.eventType,
-    required this.sectionIndex,
-    this.localPosition});
+  const PieChartEventData(
+      {required this.eventType,
+      required this.sectionIndex,
+      this.localPosition});
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'type': eventType,
@@ -63,7 +64,7 @@ class PieChartSectionViewModel extends Equatable {
     var children = store.state.controls[control.id]!.childIds
         .map((childId) => store.state.controls[childId])
         .nonNulls
-        .where((c) => c.isVisible);
+        .where((c) => c.visible);
 
     return PieChartSectionViewModel(
         control: control,
@@ -85,7 +86,7 @@ class PieChartViewModel extends Equatable {
     return PieChartViewModel(
         control: control,
         sections: children
-            .where((c) => c.type == "section" && c.isVisible)
+            .where((c) => c.type == "section" && c.visible)
             .map((c) => PieChartSectionViewModel.fromStore(store, c))
             .toList());
   }
@@ -134,13 +135,13 @@ class _PieChartControlState extends State<PieChartControl> {
           Widget chart = PieChart(
             PieChartData(
               centerSpaceColor:
-                  widget.control.attrColor("centerSpaceColor", context),
-              centerSpaceRadius: widget.control.attrDouble("centerSpaceRadius"),
-              sectionsSpace: widget.control.attrDouble("sectionsSpace"),
-              startDegreeOffset: widget.control.attrDouble("startDegreeOffset"),
+                  widget.control.getColor("centerSpaceColor", context),
+              centerSpaceRadius: widget.control.getDouble("centerSpaceRadius"),
+              sectionsSpace: widget.control.getDouble("sectionsSpace"),
+              startDegreeOffset: widget.control.getDouble("startDegreeOffset"),
               pieTouchData: PieTouchData(
                 enabled: true,
-                touchCallback: widget.control.attrBool("onChartEvent", false)!
+                touchCallback: widget.control.getBool("onChartEvent", false)!
                     ? (FlTouchEvent evt, PieTouchResponse? resp) {
                         var type = evt.toString();
                         var eventData = PieChartEventData(
@@ -188,24 +189,24 @@ class _PieChartControlState extends State<PieChartControl> {
   PieChartSectionData getSectionData(ThemeData theme, Control parent,
       PieChartSectionViewModel sectionViewModel) {
     return PieChartSectionData(
-      value: sectionViewModel.control.attrDouble("value"),
-      color: sectionViewModel.control.attrColor("color", context),
-      radius: sectionViewModel.control.attrDouble("radius"),
-      showTitle: sectionViewModel.control.attrString("title", "")! != "",
-      title: sectionViewModel.control.attrString("title"),
+      value: sectionViewModel.control.getDouble("value"),
+      color: sectionViewModel.control.getColor("color", context),
+      radius: sectionViewModel.control.getDouble("radius"),
+      showTitle: sectionViewModel.control.getString("title", "")! != "",
+      title: sectionViewModel.control.getString("title"),
       titleStyle: parseTextStyle(
           Theme.of(context), sectionViewModel.control, "titleStyle"),
       borderSide:
           parseBorderSide(theme, sectionViewModel.control, "borderSide") ??
               BorderSide.none,
       titlePositionPercentageOffset:
-          sectionViewModel.control.attrDouble("titlePosition"),
+          sectionViewModel.control.getDouble("titlePosition"),
       badgeWidget: sectionViewModel.badge != null
           ? createControl(sectionViewModel.control, sectionViewModel.badge!.id,
-              sectionViewModel.control.isDisabled)
+              sectionViewModel.control.disabled)
           : null,
       badgePositionPercentageOffset:
-          sectionViewModel.control.attrDouble("badgePosition"),
+          sectionViewModel.control.getDouble("badgePosition"),
     );
   }
 }

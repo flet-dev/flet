@@ -57,19 +57,18 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
   Widget build(BuildContext context) {
     debugPrint("Container build: ${control.id}");
 
-    var bgColor = control.attrColor("bgColor", context);
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    bool ink = control.attrBool("ink", false)!;
-    bool onClick = control.attrBool("onclick", false)!;
-    bool onTapDown = control.attrBool("onTapDown", false)!;
-    String url = control.attrString("url", "")!;
-    String? urlTarget = control.attrString("urlTarget");
-    bool onLongPress = control.attrBool("onLongPress", false)!;
-    bool onHover = control.attrBool("onHover", false)!;
-    bool ignoreInteractions = control.attrBool("ignoreInteractions", false)!;
-    bool disabled = control.isDisabled || parentDisabled;
-    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
+    var bgColor = control.getColor("bgColor", context);
+    var contentCtrls = children.where((c) => c.name == "content" && c.visible);
+    bool ink = control.getBool("ink", false)!;
+    bool onClick = control.getBool("onclick", false)!;
+    bool onTapDown = control.getBool("onTapDown", false)!;
+    String url = control.getString("url", "")!;
+    String? urlTarget = control.getString("urlTarget");
+    bool onLongPress = control.getBool("onLongPress", false)!;
+    bool onHover = control.getBool("onHover", false)!;
+    bool ignoreInteractions = control.getBool("ignoreInteractions", false)!;
+    bool disabled = control.disabled || parentDisabled;
+    bool? adaptive = control.getBool("adaptive") ?? parentAdaptive;
     Widget? child = contentCtrls.isNotEmpty
         ? createControl(control, contentCtrls.first.id, disabled,
             parentAdaptive: adaptive)
@@ -79,34 +78,34 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     var blur = parseBlur(control, "blur");
     var colorFilter =
         parseColorFilter(control, "colorFilter", Theme.of(context));
-    var width = control.attrDouble("width");
-    var height = control.attrDouble("height");
+    var width = control.getDouble("width");
+    var height = control.getDouble("height");
     var padding = parseEdgeInsets(control, "padding");
     var margin = parseEdgeInsets(control, "margin");
     var alignment = parseAlignment(control, "alignment");
 
     return withPageArgs((context, pageArgs) {
       var borderRadius = parseBorderRadius(control, "borderRadius");
-      var clipBehavior = parseClip(control.attrString("clipBehavior"),
+      var clipBehavior = parseClip(control.getString("clipBehavior"),
           borderRadius != null ? Clip.antiAlias : Clip.none)!;
       var decorationImage =
           parseDecorationImage(Theme.of(context), control, "image", pageArgs);
       var boxDecoration = boxDecorationFromDetails(
-        shape: parseBoxShape(control.attrString("shape"), BoxShape.rectangle)!,
+        shape: parseBoxShape(control.getString("shape"), BoxShape.rectangle)!,
         color: bgColor,
         gradient: parseGradient(Theme.of(context), control, "gradient"),
         borderRadius: borderRadius,
         border: parseBorder(Theme.of(context), control, "border",
             Theme.of(context).colorScheme.primary),
         boxShadow: parseBoxShadow(Theme.of(context), control, "shadow"),
-        blendMode: parseBlendMode(control.attrString("blendMode")),
+        blendMode: parseBlendMode(control.getString("blendMode")),
         image: decorationImage,
       );
       var boxForegroundDecoration = parseBoxDecoration(
           Theme.of(context), control, "foregroundDecoration", pageArgs);
       Widget? result;
 
-      var onAnimationEnd = control.attrBool("onAnimationEnd", false)!
+      var onAnimationEnd = control.getBool("onAnimationEnd", false)!
           ? () {
               backend.triggerControlEvent(
                   control.id, "animation_end", "container");
@@ -160,7 +159,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                     }
                   : null,
               borderRadius: borderRadius,
-              splashColor: control.attrColor("inkColor", context),
+              splashColor: control.getColor("inkColor", context),
               child: Container(
                 padding: padding,
                 alignment: alignment,

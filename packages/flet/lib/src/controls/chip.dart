@@ -71,28 +71,28 @@ class _ChipControlState extends State<ChipControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("Chip build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
 
     var labelCtrls =
-        widget.children.where((c) => c.name == "label" && c.isVisible);
+        widget.children.where((c) => c.name == "label" && c.visible);
     if (labelCtrls.isEmpty) {
       return const ErrorControl("Chip.label must be provided and visible");
     }
     var leadingCtrls =
-        widget.children.where((c) => c.name == "leading" && c.isVisible);
+        widget.children.where((c) => c.name == "leading" && c.visible);
     var deleteIconCtrls =
-        widget.children.where((c) => c.name == "deleteIcon" && c.isVisible);
+        widget.children.where((c) => c.name == "deleteIcon" && c.visible);
 
-    var onClick = widget.control.attrBool("onclick", false)!;
-    var onDelete = widget.control.attrBool("onDelete", false)!;
-    var onSelect = widget.control.attrBool("onSelect", false)!;
+    var onClick = widget.control.getBool("onclick", false)!;
+    var onDelete = widget.control.getBool("onDelete", false)!;
+    var onSelect = widget.control.getBool("onSelect", false)!;
 
     if (onSelect && onClick) {
       return const ErrorControl(
           "Chip cannot have both on_select and on_click events specified");
     }
 
-    bool selected = widget.control.attrBool("selected", false)!;
+    bool selected = widget.control.getBool("selected", false)!;
     if (_selected != selected) {
       _selected = selected;
     }
@@ -100,7 +100,7 @@ class _ChipControlState extends State<ChipControl> {
     return constrainedControl(
         context,
         InputChip(
-          autofocus: widget.control.attrBool("autofocus", false)!,
+          autofocus: widget.control.getBool("autofocus", false)!,
           focusNode: _focusNode,
           label: createControl(widget.control, labelCtrls.first.id, disabled,
               parentAdaptive: widget.parentAdaptive),
@@ -108,41 +108,41 @@ class _ChipControlState extends State<ChipControl> {
               ? createControl(widget.control, leadingCtrls.first.id, disabled,
                   parentAdaptive: widget.parentAdaptive)
               : null,
-          backgroundColor: widget.control.attrColor("bgcolor", context),
-          checkmarkColor: widget.control.attrColor("checkColor", context),
+          backgroundColor: widget.control.getColor("bgcolor", context),
+          checkmarkColor: widget.control.getColor("checkColor", context),
           selected: _selected,
-          showCheckmark: widget.control.attrBool("showCheckmark", true)!,
+          showCheckmark: widget.control.getBool("showCheckmark", true)!,
           deleteButtonTooltipMessage:
-              widget.control.attrString("deleteButtonTooltip"),
+              widget.control.getString("deleteButtonTooltip"),
           deleteIcon: deleteIconCtrls.isNotEmpty
               ? createControl(
                   widget.control, deleteIconCtrls.first.id, disabled,
                   parentAdaptive: widget.parentAdaptive)
               : null,
-          deleteIconColor: widget.control.attrColor("deleteIconColor", context),
-          disabledColor: widget.control.attrColor("disabledColor", context),
-          elevation: widget.control.attrDouble("elevation"),
+          deleteIconColor: widget.control.getColor("deleteIconColor", context),
+          disabledColor: widget.control.getColor("disabledColor", context),
+          elevation: widget.control.getDouble("elevation"),
           isEnabled: !disabled,
           padding: parseEdgeInsets(widget.control, "padding"),
           labelPadding: parseEdgeInsets(widget.control, "labelPadding"),
           labelStyle:
               parseTextStyle(Theme.of(context), widget.control, "labelStyle"),
-          selectedColor: widget.control.attrColor("selectedColor", context),
+          selectedColor: widget.control.getColor("selectedColor", context),
           selectedShadowColor:
-              widget.control.attrColor("selectedShadowColor", context),
-          shadowColor: widget.control.attrColor("shadowColor", context),
+              widget.control.getColor("selectedShadowColor", context),
+          shadowColor: widget.control.getColor("shadowColor", context),
           shape: parseOutlinedBorder(widget.control, "shape"),
           color:
               parseWidgetStateColor(Theme.of(context), widget.control, "color"),
           surfaceTintColor:
-              widget.control.attrColor("surfaceTintColor", context),
-          pressElevation: widget.control.attrDouble("clickElevation"),
+              widget.control.getColor("surfaceTintColor", context),
+          pressElevation: widget.control.getDouble("clickElevation"),
           side:
               parseBorderSide(Theme.of(context), widget.control, "borderSide"),
           clipBehavior:
-              parseClip(widget.control.attrString("clipBehavior"), Clip.none)!,
+              parseClip(widget.control.getString("clipBehavior"), Clip.none)!,
           visualDensity:
-              parseVisualDensity(widget.control.attrString("visualDensity")),
+              parseVisualDensity(widget.control.getString("visualDensity")),
           avatarBoxConstraints:
               parseBoxConstraints(widget.control, "leadingSizeConstraints"),
           deleteIconBoxConstraints:

@@ -8,7 +8,7 @@ import 'time.dart';
 
 ImplicitAnimationDetails? parseAnimation(Control control, String propName,
     [ImplicitAnimationDetails? defaultValue]) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return defaultValue;
   }
@@ -134,7 +134,7 @@ Curve? parseCurve(String? value, [Curve? defValue]) {
 
 AnimationStyle? parseAnimationStyle(Control control, String propName,
     [AnimationStyle? defaultValue]) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return defaultValue;
   }

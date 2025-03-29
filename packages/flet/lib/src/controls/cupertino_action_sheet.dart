@@ -32,16 +32,16 @@ class _CupertinoActionSheetControlState
   Widget build(BuildContext context) {
     debugPrint("CupertinoActionSheetControl build: ${widget.control.id}");
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
 
     var titleCtrls =
-        widget.children.where((c) => c.name == "title" && c.isVisible);
+        widget.children.where((c) => c.name == "title" && c.visible);
     var messageCtrls =
-        widget.children.where((c) => c.name == "message" && c.isVisible);
+        widget.children.where((c) => c.name == "message" && c.visible);
     var cancelButtonCtrls =
-        widget.children.where((c) => c.name == "cancel" && c.isVisible);
+        widget.children.where((c) => c.name == "cancel" && c.visible);
     var actionCtrls =
-        widget.children.where((c) => c.name == "action" && c.isVisible);
+        widget.children.where((c) => c.name == "action" && c.visible);
 
     var sheet = CupertinoActionSheet(
       title: titleCtrls.isNotEmpty

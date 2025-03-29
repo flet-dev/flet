@@ -24,12 +24,12 @@ class _FletAppControlState extends State<FletAppControl> {
   Widget build(BuildContext context) {
     debugPrint("FletApp build: ${widget.control.id}");
 
-    var url = widget.control.attrString("url", "")!;
-    var reconnectIntervalMs = widget.control.attrInt("reconnectIntervalMs");
-    var reconnectTimeoutMs = widget.control.attrInt("reconnectTimeoutMs");
-    var showAppStartupScreen = widget.control.attrBool("showAppStartupScreen");
+    var url = widget.control.getString("url", "")!;
+    var reconnectIntervalMs = widget.control.getInt("reconnectIntervalMs");
+    var reconnectTimeoutMs = widget.control.getInt("reconnectTimeoutMs");
+    var showAppStartupScreen = widget.control.getBool("showAppStartupScreen");
     var appStartupScreenMessage =
-        widget.control.attrString("appStartupScreenMessage");
+        widget.control.getString("appStartupScreenMessage");
 
     return constrainedControl(
         context,

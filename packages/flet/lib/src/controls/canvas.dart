@@ -36,10 +36,10 @@ class CanvasViewModel extends Equatable {
         child: store.state.controls[control.id]!.childIds
             .map((childId) => store.state.controls[childId])
             .nonNulls
-            .where((c) => c.name == "content" && c.isVisible)
+            .where((c) => c.name == "content" && c.visible)
             .firstOrNull,
         shapes: children
-            .where((c) => c.name != "content" && c.isVisible)
+            .where((c) => c.name != "content" && c.visible)
             .map((c) => ControlTreeViewModel.fromStore(store, c))
             .toList());
   }
@@ -87,8 +87,8 @@ class _CanvasControlState extends State<CanvasControl> {
         converter: (store) =>
             CanvasViewModel.fromStore(store, widget.control, widget.children),
         builder: (context, viewModel) {
-          var onResize = viewModel.control.attrBool("onResize", false)!;
-          var resizeInterval = viewModel.control.attrInt("resizeInterval", 10)!;
+          var onResize = viewModel.control.getBool("onResize", false)!;
+          var resizeInterval = viewModel.control.getInt("resizeInterval", 10)!;
 
           var paint = CustomPaint(
             painter: FletCustomPainter(
@@ -113,7 +113,7 @@ class _CanvasControlState extends State<CanvasControl> {
             ),
             child: viewModel.child != null
                 ? createControl(viewModel.control, viewModel.child!.id,
-                    viewModel.control.isDisabled,
+                    viewModel.control.disabled,
                     parentAdaptive: widget.parentAdaptive)
                 : null,
           );
@@ -180,10 +180,8 @@ class FletCustomPainter extends CustomPainter {
     var dashPattern = parsePaintStrokeDashPattern(shape.control, "paint");
     paint.style = ui.PaintingStyle.stroke;
     var path = ui.Path();
-    path.moveTo(
-        shape.control.attrDouble("x1")!, shape.control.attrDouble("y1")!);
-    path.lineTo(
-        shape.control.attrDouble("x2")!, shape.control.attrDouble("y2")!);
+    path.moveTo(shape.control.getDouble("x1")!, shape.control.getDouble("y1")!);
+    path.lineTo(shape.control.getDouble("x2")!, shape.control.getDouble("y2")!);
 
     if (dashPattern != null) {
       path = dashPath(path, dashArray: CircularIntervalList(dashPattern));
@@ -192,34 +190,34 @@ class FletCustomPainter extends CustomPainter {
   }
 
   void drawCircle(Canvas canvas, ControlTreeViewModel shape) {
-    var radius = shape.control.attrDouble("radius", 0)!;
+    var radius = shape.control.getDouble("radius", 0)!;
     Paint paint = parsePaint(theme, shape.control, "paint");
     canvas.drawCircle(
-        Offset(shape.control.attrDouble("x")!, shape.control.attrDouble("y")!),
+        Offset(shape.control.getDouble("x")!, shape.control.getDouble("y")!),
         radius,
         paint);
   }
 
   void drawOval(Canvas canvas, ControlTreeViewModel shape) {
-    var width = shape.control.attrDouble("width", 0)!;
-    var height = shape.control.attrDouble("height", 0)!;
+    var width = shape.control.getDouble("width", 0)!;
+    var height = shape.control.getDouble("height", 0)!;
     Paint paint = parsePaint(theme, shape.control, "paint");
     canvas.drawOval(
-        Rect.fromLTWH(shape.control.attrDouble("x")!,
-            shape.control.attrDouble("y")!, width, height),
+        Rect.fromLTWH(shape.control.getDouble("x")!,
+            shape.control.getDouble("y")!, width, height),
         paint);
   }
 
   void drawArc(Canvas canvas, ControlTreeViewModel shape) {
-    var width = shape.control.attrDouble("width", 0)!;
-    var height = shape.control.attrDouble("height", 0)!;
-    var startAngle = shape.control.attrDouble("startAngle", 0)!;
-    var sweepAngle = shape.control.attrDouble("sweepAngle", 0)!;
-    var useCenter = shape.control.attrBool("useCenter", false)!;
+    var width = shape.control.getDouble("width", 0)!;
+    var height = shape.control.getDouble("height", 0)!;
+    var startAngle = shape.control.getDouble("startAngle", 0)!;
+    var sweepAngle = shape.control.getDouble("sweepAngle", 0)!;
+    var useCenter = shape.control.getBool("useCenter", false)!;
     Paint paint = parsePaint(theme, shape.control, "paint");
     canvas.drawArc(
-        Rect.fromLTWH(shape.control.attrDouble("x")!,
-            shape.control.attrDouble("y")!, width, height),
+        Rect.fromLTWH(shape.control.getDouble("x")!,
+            shape.control.getDouble("y")!, width, height),
         startAngle,
         sweepAngle,
         useCenter,
@@ -232,9 +230,9 @@ class FletCustomPainter extends CustomPainter {
   }
 
   void drawColor(Canvas canvas, ControlTreeViewModel shape) {
-    var color = shape.control.attrColor("color", context) ?? Colors.black;
+    var color = shape.control.getColor("color", context) ?? Colors.black;
     var blendMode = parseBlendMode(
-        shape.control.attrString("blendMode"), BlendMode.srcOver)!;
+        shape.control.getString("blendMode"), BlendMode.srcOver)!;
     canvas.drawColor(color, blendMode);
   }
 
@@ -243,21 +241,21 @@ class FletCustomPainter extends CustomPainter {
     var pointMode = ui.PointMode.values.firstWhere(
         (e) =>
             e.name.toLowerCase() ==
-            shape.control.attrString("pointMode", "")!.toLowerCase(),
+            shape.control.getString("pointMode", "")!.toLowerCase(),
         orElse: () => ui.PointMode.points);
     Paint paint = parsePaint(theme, shape.control, "paint");
     canvas.drawPoints(pointMode, points, paint);
   }
 
   void drawRect(Canvas canvas, ControlTreeViewModel shape) {
-    var width = shape.control.attrDouble("width", 0)!;
-    var height = shape.control.attrDouble("height", 0)!;
+    var width = shape.control.getDouble("width", 0)!;
+    var height = shape.control.getDouble("height", 0)!;
     var borderRadius = parseBorderRadius(shape.control, "borderRadius");
     Paint paint = parsePaint(theme, shape.control, "paint");
     canvas.drawRRect(
         RRect.fromRectAndCorners(
-            Rect.fromLTWH(shape.control.attrDouble("x")!,
-                shape.control.attrDouble("y")!, width, height),
+            Rect.fromLTWH(shape.control.getDouble("x")!,
+                shape.control.getDouble("y")!, width, height),
             topLeft: borderRadius?.topLeft ?? Radius.zero,
             topRight: borderRadius?.topRight ?? Radius.zero,
             bottomLeft: borderRadius?.bottomLeft ?? Radius.zero,
@@ -268,10 +266,10 @@ class FletCustomPainter extends CustomPainter {
   void drawText(
       BuildContext context, Canvas canvas, ControlTreeViewModel shape) {
     var offset =
-        Offset(shape.control.attrDouble("x")!, shape.control.attrDouble("y")!);
+        Offset(shape.control.getDouble("x")!, shape.control.getDouble("y")!);
     var alignment =
         parseAlignment(shape.control, "alignment", Alignment.topLeft)!;
-    var text = shape.control.attrString("text", "")!;
+    var text = shape.control.getString("text", "")!;
     TextStyle style = parseTextStyle(theme, shape.control, "style") ??
         theme.textTheme.bodyMedium!;
 
@@ -280,15 +278,15 @@ class FletCustomPainter extends CustomPainter {
     }
 
     TextAlign? textAlign =
-        parseTextAlign(shape.control.attrString("textAlign"), TextAlign.start)!;
+        parseTextAlign(shape.control.getString("textAlign"), TextAlign.start)!;
     TextSpan span = TextSpan(
         text: text,
         style: style,
         children: parseTextSpans(theme, shape, false, null));
 
-    var maxLines = shape.control.attrInt("maxLines");
-    var maxWidth = shape.control.attrDouble("maxWidth");
-    var ellipsis = shape.control.attrString("ellipsis");
+    var maxLines = shape.control.getInt("maxLines");
+    var maxWidth = shape.control.getDouble("maxWidth");
+    var ellipsis = shape.control.getString("ellipsis");
 
     // paint
     TextPainter textPainter = TextPainter(
@@ -299,7 +297,7 @@ class FletCustomPainter extends CustomPainter {
         textDirection: Directionality.of(context));
     textPainter.layout(maxWidth: maxWidth ?? double.infinity);
 
-    var angle = shape.control.attrDouble("rotate", 0)!;
+    var angle = shape.control.getDouble("rotate", 0)!;
 
     final delta = Offset(
         offset.dx - textPainter.size.width / 2 * (alignment.x + 1.0),
@@ -316,7 +314,7 @@ class FletCustomPainter extends CustomPainter {
 
   void drawPath(Canvas canvas, ControlTreeViewModel shape) {
     var path =
-        buildPath(json.decode(shape.control.attrString("elements", "[]")!));
+        buildPath(json.decode(shape.control.getString("elements", "[]")!));
     Paint paint = parsePaint(theme, shape.control, "paint");
     var dashPattern = parsePaintStrokeDashPattern(shape.control, "paint");
     if (dashPattern != null) {
@@ -326,11 +324,11 @@ class FletCustomPainter extends CustomPainter {
   }
 
   void drawShadow(Canvas canvas, ControlTreeViewModel shape) {
-    var path = buildPath(json.decode(shape.control.attrString("path", "[]")!));
-    var color = shape.control.attrColor("color", context) ?? Colors.black;
-    var elevation = shape.control.attrDouble("elevation", 0)!;
+    var path = buildPath(json.decode(shape.control.getString("path", "[]")!));
+    var color = shape.control.getColor("color", context) ?? Colors.black;
+    var elevation = shape.control.getDouble("elevation", 0)!;
     var transparentOccluder =
-        shape.control.attrBool("transparentOccluder", false)!;
+        shape.control.getBool("transparentOccluder", false)!;
     canvas.drawShadow(path, color, elevation, transparentOccluder);
   }
 

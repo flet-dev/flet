@@ -7,7 +7,7 @@ import '../utils/numbers.dart';
 
 FilteringTextInputFormatter? parseInputFilter(
     Control control, String propName) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return null;
   }

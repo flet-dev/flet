@@ -34,13 +34,13 @@ class _CupertinoContextMenuControlState
   Widget build(BuildContext context) {
     debugPrint("CupertinoContextMenu build ($hashCode): ${widget.control.id}");
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
     bool? adaptive =
-        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+        widget.control.getBool("adaptive") ?? widget.parentAdaptive;
     var contentCtrls =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
+        widget.children.where((c) => c.name == "content" && c.visible);
     var actionCtrls =
-        widget.children.where((c) => c.name == "action" && c.isVisible);
+        widget.children.where((c) => c.name == "action" && c.visible);
 
     if (actionCtrls.isEmpty) {
       return const ErrorControl(
@@ -53,7 +53,7 @@ class _CupertinoContextMenuControlState
 
     return CupertinoContextMenu(
       enableHapticFeedback:
-          widget.control.attrBool("enableHapticFeedback", false)!,
+          widget.control.getBool("enableHapticFeedback", false)!,
       actions: actionCtrls.map((c) {
         return createControl(widget.control, c.id, disabled,
             parentAdaptive: adaptive);

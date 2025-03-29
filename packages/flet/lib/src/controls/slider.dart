@@ -70,10 +70,10 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
   @override
   Widget build(BuildContext context) {
     debugPrint("SliderControl build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
     return withPagePlatform((context, platform) {
       bool? adaptive =
-          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+          widget.control.getBool("adaptive") ?? widget.parentAdaptive;
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
@@ -83,13 +83,13 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
             backend: widget.backend);
       }
 
-      String? label = widget.control.attrString("label");
+      String? label = widget.control.getString("label");
 
-      double min = widget.control.attrDouble("min", 0)!;
-      double max = widget.control.attrDouble("max", 1)!;
-      int round = widget.control.attrInt("round", 0)!;
+      double min = widget.control.getDouble("min", 0)!;
+      double max = widget.control.getDouble("max", 1)!;
+      int round = widget.control.getInt("round", 0)!;
 
-      double value = widget.control.attrDouble("value", min)!;
+      double value = widget.control.getDouble("value", min)!;
       if (_value != value) {
         // verify limits
         if (value < min) {
@@ -102,30 +102,30 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
       }
 
       var slider = Slider(
-          autofocus: widget.control.attrBool("autofocus", false)!,
+          autofocus: widget.control.getBool("autofocus", false)!,
           focusNode: _focusNode,
           value: _value,
           min: min,
           max: max,
-          divisions: widget.control.attrInt("divisions"),
+          divisions: widget.control.getInt("divisions"),
           label: label?.replaceAll("{value}", _value.toStringAsFixed(round)),
-          activeColor: widget.control.attrColor("activeColor", context),
-          inactiveColor: widget.control.attrColor("inactiveColor", context),
+          activeColor: widget.control.getColor("activeColor", context),
+          inactiveColor: widget.control.getColor("inactiveColor", context),
           overlayColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "overlayColor"),
           allowedInteraction:
-              parseSliderInteraction(widget.control.attrString("interaction")),
-          thumbColor: widget.control.attrColor("thumbColor", context),
+              parseSliderInteraction(widget.control.getString("interaction")),
+          thumbColor: widget.control.getColor("thumbColor", context),
           onChanged: !disabled
               ? (double value) {
                   onChange(value);
                 }
               : null,
           mouseCursor:
-              parseMouseCursor(widget.control.attrString("mouseCursor")),
+              parseMouseCursor(widget.control.getString("mouseCursor")),
           secondaryActiveColor:
-              widget.control.attrColor("secondaryActiveColor", context),
-          secondaryTrackValue: widget.control.attrDouble("secondaryTrackValue"),
+              widget.control.getColor("secondaryActiveColor", context),
+          secondaryTrackValue: widget.control.getDouble("secondaryTrackValue"),
           onChangeStart: !disabled
               ? (double value) {
                   widget.backend.triggerControlEvent(

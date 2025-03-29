@@ -32,10 +32,9 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
   Widget build(BuildContext context) {
     debugPrint("PopupMenuButton build: ${control.id}");
 
-    var icon = parseIcon(control.attrString("icon"));
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    bool disabled = control.isDisabled || parentDisabled;
+    var icon = parseIcon(control.getString("icon"));
+    var contentCtrls = children.where((c) => c.name == "content" && c.visible);
+    bool disabled = control.disabled || parentDisabled;
 
     Widget? child = contentCtrls.isNotEmpty
         ? createControl(control, contentCtrls.first.id, disabled)
@@ -43,24 +42,24 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
 
     var popupButton = withControls(
         children
-            .where((c) => c.name != "content" && c.isVisible)
+            .where((c) => c.name != "content" && c.visible)
             .map((c) => c.id), (content, viewModel) {
       return PopupMenuButton<String>(
           enabled: !disabled,
           tooltip: null,
           icon: icon != null ? Icon(icon) : null,
-          iconSize: control.attrDouble("iconSize"),
-          splashRadius: control.attrDouble("splashRadius"),
-          shadowColor: control.attrColor("shadowColor", context),
-          surfaceTintColor: control.attrColor("surfaceTintColor", context),
-          iconColor: control.attrColor("iconColor", context),
-          elevation: control.attrDouble("elevation"),
-          enableFeedback: control.attrBool("enableFeedback"),
+          iconSize: control.getDouble("iconSize"),
+          splashRadius: control.getDouble("splashRadius"),
+          shadowColor: control.getColor("shadowColor", context),
+          surfaceTintColor: control.getColor("surfaceTintColor", context),
+          iconColor: control.getColor("iconColor", context),
+          elevation: control.getDouble("elevation"),
+          enableFeedback: control.getBool("enableFeedback"),
           padding:
               parseEdgeInsets(control, "padding", const EdgeInsets.all(8))!,
-          color: control.attrColor("bgcolor", context),
+          color: control.getColor("bgcolor", context),
           clipBehavior:
-              parseClip(control.attrString("clipBehavior"), Clip.none)!,
+              parseClip(control.getString("clipBehavior"), Clip.none)!,
           shape: parseOutlinedBorder(control, "shape") ??
               (Theme.of(context).useMaterial3
                   ? RoundedRectangleBorder(
@@ -80,17 +79,17 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
           onOpened: () {
             backend.triggerControlEvent(control.id, "open");
           },
-          position: parsePopupMenuPosition(control.attrString("menuPosition")),
+          position: parsePopupMenuPosition(control.getString("menuPosition")),
           itemBuilder: (BuildContext context) =>
               viewModel.controlViews.map((cv) {
-                var itemIcon = parseIcon(cv.control.attrString("icon"));
-                var text = cv.control.attrString("text", "")!;
-                var checked = cv.control.attrBool("checked");
-                var height = cv.control.attrDouble("height", 48.0)!;
+                var itemIcon = parseIcon(cv.control.getString("icon"));
+                var text = cv.control.getString("text", "")!;
+                var checked = cv.control.getBool("checked");
+                var height = cv.control.getDouble("height", 48.0)!;
                 var padding = parseEdgeInsets(cv.control, "padding");
-                var disabled = cv.control.isDisabled || parentDisabled;
-                var contentCtrls = cv.children
-                    .where((c) => c.name == "content" && c.isVisible);
+                var disabled = cv.control.disabled || parentDisabled;
+                var contentCtrls =
+                    cv.children.where((c) => c.name == "content" && c.visible);
 
                 Widget? child;
                 if (contentCtrls.isNotEmpty) {
@@ -114,9 +113,9 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
                         checked: checked,
                         height: height,
                         padding: padding,
-                        enabled: !disabled || !cv.control.isDisabled,
+                        enabled: !disabled || !cv.control.disabled,
                         mouseCursor: parseMouseCursor(
-                            cv.control.attrString("mouseCursor")),
+                            cv.control.getString("mouseCursor")),
                         onTap: () {
                           backend.triggerControlEvent(
                               cv.control.id, "click", "${!checked}");
@@ -127,9 +126,9 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
                         value: cv.control.id,
                         height: height,
                         padding: padding,
-                        enabled: !disabled || !cv.control.isDisabled,
+                        enabled: !disabled || !cv.control.disabled,
                         mouseCursor: parseMouseCursor(
-                            cv.control.attrString("mouseCursor")),
+                            cv.control.getString("mouseCursor")),
                         onTap: () {
                           backend.triggerControlEvent(cv.control.id, "click");
                         },
@@ -144,7 +143,7 @@ class PopupMenuButtonControl extends StatelessWidget with FletStoreMixin {
     return constrainedControl(
         context,
         TooltipVisibility(
-            visible: control.attrString("tooltip") == null, child: popupButton),
+            visible: control.getString("tooltip") == null, child: popupButton),
         parent,
         control);
   }

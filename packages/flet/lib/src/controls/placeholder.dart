@@ -21,20 +21,19 @@ class PlaceholderControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("Placeholder build: ${control.id}");
-    var contentCtrls = children.where((c) => c.isVisible);
+    var contentCtrls = children.where((c) => c.visible);
 
     return baseControl(
         context,
         Placeholder(
-            fallbackHeight: control.attrDouble("fallbackHeight", 400.0)!,
-            fallbackWidth: control.attrDouble("fallbackWidth", 400.0)!,
-            color:
-                control.attrColor("color", context, const Color(0xFF455A64))!,
-            strokeWidth: control.attrDouble("strokeWidth", 2.0)!,
+            fallbackHeight: control.getDouble("fallbackHeight", 400.0)!,
+            fallbackWidth: control.getDouble("fallbackWidth", 400.0)!,
+            color: control.getColor("color", context, const Color(0xFF455A64))!,
+            strokeWidth: control.getDouble("strokeWidth", 2.0)!,
             child: contentCtrls.isNotEmpty
                 ? createControl(control, contentCtrls.first.id,
-                    control.isDisabled || parentDisabled,
-                    parentAdaptive: control.isAdaptive ?? parentAdaptive)
+                    control.disabled || parentDisabled,
+                    parentAdaptive: control.adaptive ?? parentAdaptive)
                 : null),
         parent,
         control);

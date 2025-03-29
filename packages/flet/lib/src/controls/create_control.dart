@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:collection/collection.dart';
 import 'package:flet/src/utils/badge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -142,7 +141,7 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
       }
 
       Key? controlKey;
-      var key = controlView.control.attrString("key", "")!;
+      var key = controlView.control.getString("key", "")!;
       if (key != "") {
         if (key.startsWith("test:")) {
           controlKey = Key(key.substring(5));
@@ -176,10 +175,10 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
 
       // no theme defined? return widget
       var themeMode =
-          parseThemeMode(controlView.control.attrString("themeMode"));
+          parseThemeMode(controlView.control.getString("themeMode"));
       if (id == "page" ||
-          (controlView.control.attrString("theme") == null &&
-              controlView.control.attrString("darkTheme") == null &&
+          (controlView.control.getString("theme") == null &&
+              controlView.control.getString("darkTheme") == null &&
               themeMode == null)) {
         return widget;
       }
@@ -1084,14 +1083,14 @@ Widget constrainedControl(
 
 Widget _opacity(
     BuildContext context, Widget widget, Control? parent, Control control) {
-  var opacity = control.attrDouble("opacity");
+  var opacity = control.getDouble("opacity");
   var animation = parseAnimation(control, "animateOpacity");
   if (animation != null) {
     return AnimatedOpacity(
       duration: animation.duration,
       curve: animation.curve,
       opacity: opacity ?? 1.0,
-      onEnd: control.attrBool("onAnimationEnd", false)!
+      onEnd: control.getBool("onAnimationEnd", false)!
           ? () {
               FletAppServices.of(context)
                   .server
@@ -1122,7 +1121,7 @@ Widget _badge(
 }
 
 Widget _aspectRatio(Widget widget, Control? parent, Control control) {
-  var aspectRatio = control.attrDouble("aspectRatio");
+  var aspectRatio = control.getDouble("aspectRatio");
   return aspectRatio != null
       ? AspectRatio(
           aspectRatio: aspectRatio,
@@ -1141,7 +1140,7 @@ Widget _rotatedControl(
         alignment: rotationDetails?.alignment ?? Alignment.center,
         duration: animation.duration,
         curve: animation.curve,
-        onEnd: control.attrBool("onAnimationEnd", false)!
+        onEnd: control.getBool("onAnimationEnd", false)!
             ? () {
                 FletAppServices.of(context).server.triggerControlEvent(
                     control.id, "animation_end", "rotation");
@@ -1167,7 +1166,7 @@ Widget _scaledControl(
         alignment: scaleDetails?.alignment ?? Alignment.center,
         duration: animation.duration,
         curve: animation.curve,
-        onEnd: control.attrBool("onAnimationEnd", false)!
+        onEnd: control.getBool("onAnimationEnd", false)!
             ? () {
                 FletAppServices.of(context)
                     .server
@@ -1195,7 +1194,7 @@ Widget _offsetControl(
         offset: offset,
         duration: animation.duration,
         curve: animation.curve,
-        onEnd: control.attrBool("onAnimationEnd", false)!
+        onEnd: control.getBool("onAnimationEnd", false)!
             ? () {
                 FletAppServices.of(context)
                     .server
@@ -1211,10 +1210,10 @@ Widget _offsetControl(
 
 Widget _positionedControl(
     BuildContext context, Widget widget, Control? parent, Control control) {
-  var left = control.attrDouble("left", null);
-  var top = control.attrDouble("top", null);
-  var right = control.attrDouble("right", null);
-  var bottom = control.attrDouble("bottom", null);
+  var left = control.getDouble("left", null);
+  var top = control.getDouble("top", null);
+  var right = control.getDouble("right", null);
+  var bottom = control.getDouble("bottom", null);
 
   var animation = parseAnimation(control, "animatePosition");
   if (animation != null) {
@@ -1230,7 +1229,7 @@ Widget _positionedControl(
       top: top,
       right: right,
       bottom: bottom,
-      onEnd: control.attrBool("onAnimationEnd", false)!
+      onEnd: control.getBool("onAnimationEnd", false)!
           ? () {
               FletAppServices.of(context)
                   .server
@@ -1257,8 +1256,8 @@ Widget _positionedControl(
 }
 
 Widget _sizedControl(Widget widget, Control? parent, Control control) {
-  var width = control.attrDouble("width");
-  var height = control.attrDouble("height");
+  var width = control.getDouble("width");
+  var height = control.getDouble("height");
   if ((width != null || height != null) &&
       !["container", "image"].contains(control.type)) {
     widget = ConstrainedBox(
@@ -1276,8 +1275,8 @@ Widget _sizedControl(Widget widget, Control? parent, Control control) {
 
 Widget _expandable(Widget widget, Control? parent, Control control) {
   if (parent != null && ["view", "column", "row"].contains(parent.type)) {
-    int? expand = control.attrInt("expand");
-    var expandLoose = control.attrBool("expandLoose");
+    int? expand = control.getInt("expand");
+    var expandLoose = control.getBool("expandLoose");
     return expand != null
         ? (expandLoose == true)
             ? Flexible(flex: expand, child: widget)
@@ -1288,7 +1287,7 @@ Widget _expandable(Widget widget, Control? parent, Control control) {
 }
 
 Widget _directionality(Widget widget, Control? parent, Control control) {
-  bool rtl = control.attrBool("rtl", false)!;
+  bool rtl = control.getBool("rtl", false)!;
   return rtl
       ? Directionality(textDirection: TextDirection.rtl, child: widget)
       : widget;

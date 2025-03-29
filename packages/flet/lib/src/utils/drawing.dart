@@ -12,7 +12,7 @@ import 'gradient.dart';
 import 'images.dart';
 
 Paint parsePaint(ThemeData theme, Control control, String propName) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return Paint();
   }
@@ -32,7 +32,7 @@ PaintingStyle? parsePaintingStyle(String? value, [PaintingStyle? defValue]) {
 }
 
 List<double>? parsePaintStrokeDashPattern(Control control, String propName) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return null;
   }

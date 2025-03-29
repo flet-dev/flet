@@ -55,15 +55,15 @@ class _SliderControlState extends State<RangeSliderControl> {
   Widget build(BuildContext context) {
     debugPrint("RangeSliderControl build: ${widget.control.id}");
 
-    double startValue = widget.control.attrDouble("startValue", 0)!;
-    double endValue = widget.control.attrDouble("endValue", 0)!;
-    String label = widget.control.attrString("label", "")!;
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    double startValue = widget.control.getDouble("startValue", 0)!;
+    double endValue = widget.control.getDouble("endValue", 0)!;
+    String label = widget.control.getString("label", "")!;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
 
-    double min = widget.control.attrDouble("min", 0)!;
-    double max = widget.control.attrDouble("max", 1)!;
+    double min = widget.control.getDouble("min", 0)!;
+    double max = widget.control.getDouble("max", 1)!;
 
-    int round = widget.control.attrInt("round", 0)!;
+    int round = widget.control.getInt("round", 0)!;
 
     debugPrint("SliderControl build: ${widget.control.id}");
 
@@ -74,9 +74,9 @@ class _SliderControlState extends State<RangeSliderControl> {
             (label).replaceAll("{value}", endValue.toStringAsFixed(round))),
         min: min,
         max: max,
-        divisions: widget.control.attrInt("divisions"),
-        activeColor: widget.control.attrColor("activeColor", context),
-        inactiveColor: widget.control.attrColor("inactiveColor", context),
+        divisions: widget.control.getInt("divisions"),
+        activeColor: widget.control.getColor("activeColor", context),
+        inactiveColor: widget.control.getColor("inactiveColor", context),
         mouseCursor: parseWidgetStateMouseCursor(widget.control, "mouseCursor"),
         overlayColor: parseWidgetStateColor(
             Theme.of(context), widget.control, "overlayColor"),

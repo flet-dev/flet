@@ -35,19 +35,19 @@ class _CupertinoContextMenuActionControlState
     debugPrint(
         "CupertinoContextMenuAction build ($hashCode): ${widget.control.id}");
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
     bool? adaptive =
-        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
-    String text = widget.control.attrString("text", "")!;
+        widget.control.getBool("adaptive") ?? widget.parentAdaptive;
+    String text = widget.control.getString("text", "")!;
     var contentCtrls =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
+        widget.children.where((c) => c.name == "content" && c.visible);
     IconData? trailingIcon =
-        parseIcon(widget.control.attrString("trailingIcon"));
+        parseIcon(widget.control.getString("trailingIcon"));
 
     return CupertinoContextMenuAction(
-      isDefaultAction: widget.control.attrBool("isDefaultAction", false)!,
+      isDefaultAction: widget.control.getBool("isDefaultAction", false)!,
       isDestructiveAction:
-          widget.control.attrBool("isDestructiveAction", false)!,
+          widget.control.getBool("isDestructiveAction", false)!,
       onPressed: () {
         if (!disabled) {
           widget.backend.triggerControlEvent(widget.control.id, "click");

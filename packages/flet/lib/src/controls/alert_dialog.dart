@@ -38,26 +38,25 @@ class AlertDialogControl extends StatefulWidget {
 class _AlertDialogControlState extends State<AlertDialogControl>
     with FletStoreMixin {
   Widget _createAlertDialog() {
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
     bool? adaptive =
-        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+        widget.control.getBool("adaptive") ?? widget.parentAdaptive;
     var titleCtrls =
-        widget.children.where((c) => c.name == "title" && c.isVisible);
-    var iconCtrls =
-        widget.children.where((c) => c.name == "icon" && c.isVisible);
+        widget.children.where((c) => c.name == "title" && c.visible);
+    var iconCtrls = widget.children.where((c) => c.name == "icon" && c.visible);
     var contentCtrls =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
+        widget.children.where((c) => c.name == "content" && c.visible);
     var actionCtrls =
-        widget.children.where((c) => c.name == "action" && c.isVisible);
+        widget.children.where((c) => c.name == "action" && c.visible);
     final actionsAlignment =
-        parseMainAxisAlignment(widget.control.attrString("actionsAlignment"));
+        parseMainAxisAlignment(widget.control.getString("actionsAlignment"));
     if (titleCtrls.isEmpty && contentCtrls.isEmpty && actionCtrls.isEmpty) {
       return const ErrorControl(
           "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions");
     }
 
     var clipBehavior =
-        parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
+        parseClip(widget.control.getString("clipBehavior"), Clip.none)!;
 
     return AlertDialog(
       title: titleCtrls.isNotEmpty
@@ -78,24 +77,24 @@ class _AlertDialogControlState extends State<AlertDialogControl>
       actionsPadding: parseEdgeInsets(widget.control, "actionsPadding"),
       actionsAlignment: actionsAlignment,
       shape: parseOutlinedBorder(widget.control, "shape"),
-      semanticLabel: widget.control.attrString("semanticsLabel"),
+      semanticLabel: widget.control.getString("semanticsLabel"),
       insetPadding: parseEdgeInsets(widget.control, "insetPadding",
           const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0))!,
       iconPadding: parseEdgeInsets(widget.control, "iconPadding"),
-      backgroundColor: widget.control.attrColor("bgcolor", context),
+      backgroundColor: widget.control.getColor("bgcolor", context),
       buttonPadding: parseEdgeInsets(widget.control, "actionButtonPadding"),
-      surfaceTintColor: widget.control.attrColor("surfaceTintColor", context),
-      shadowColor: widget.control.attrColor("shadowColor", context),
-      elevation: widget.control.attrDouble("elevation"),
+      surfaceTintColor: widget.control.getColor("surfaceTintColor", context),
+      shadowColor: widget.control.getColor("shadowColor", context),
+      elevation: widget.control.getDouble("elevation"),
       clipBehavior: clipBehavior,
       icon: iconCtrls.isNotEmpty
           ? createControl(widget.control, iconCtrls.first.id, disabled,
               parentAdaptive: adaptive)
           : null,
-      iconColor: widget.control.attrColor("iconColor", context),
-      scrollable: widget.control.attrBool("scrollable", false)!,
+      iconColor: widget.control.getColor("iconColor", context),
+      scrollable: widget.control.getBool("scrollable", false)!,
       actionsOverflowButtonSpacing:
-          widget.control.attrDouble("actionsOverflowButtonSpacing"),
+          widget.control.getDouble("actionsOverflowButtonSpacing"),
       alignment: parseAlignment(widget.control, "alignment"),
       contentTextStyle:
           parseTextStyle(Theme.of(context), widget.control, "contentTextStyle"),
@@ -110,7 +109,7 @@ class _AlertDialogControlState extends State<AlertDialogControl>
 
     return withPagePlatform((context, platform) {
       bool? adaptive =
-          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+          widget.control.getBool("adaptive") ?? widget.parentAdaptive;
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
@@ -127,8 +126,8 @@ class _AlertDialogControlState extends State<AlertDialogControl>
 
       debugPrint("AlertDialog build: ${widget.control.id}");
 
-      var open = widget.control.attrBool("open", false)!;
-      var modal = widget.control.attrBool("modal", false)!;
+      var open = widget.control.getBool("open", false)!;
+      var modal = widget.control.getBool("modal", false)!;
 
       debugPrint("Current open state: $lastOpen");
       debugPrint("New open state: $open");
@@ -149,7 +148,7 @@ class _AlertDialogControlState extends State<AlertDialogControl>
         WidgetsBinding.instance.addPostFrameCallback((_) {
           showDialog(
               barrierDismissible: !modal,
-              barrierColor: widget.control.attrColor("barrierColor", context),
+              barrierColor: widget.control.getColor("barrierColor", context),
               useRootNavigator: false,
               context: context,
               builder: (context) => _createAlertDialog()).then((value) {

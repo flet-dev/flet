@@ -35,11 +35,11 @@ class _DismissibleControlState extends State<DismissibleControl> {
   Widget build(BuildContext context) {
     debugPrint("Dismissible build: ${widget.control.id}");
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
     bool? adaptive =
-        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+        widget.control.getBool("adaptive") ?? widget.parentAdaptive;
     var contentCtrls =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
+        widget.children.where((c) => c.name == "content" && c.visible);
 
     if (contentCtrls.isEmpty) {
       return const ErrorControl(
@@ -47,16 +47,17 @@ class _DismissibleControlState extends State<DismissibleControl> {
     }
 
     var backgroundCtrls =
-        widget.children.where((c) => c.name == "background" && c.isVisible);
+        widget.children.where((c) => c.name == "background" && c.visible);
 
     var secondaryBackgroundCtrls = widget.children
-        .where((c) => c.name == "secondaryBackground" && c.isVisible);
+        .where((c) => c.name == "secondaryBackground" && c.visible);
 
     var dismissThresholds =
         parseDismissThresholds(widget.control, "dismissThresholds");
 
     DismissDirection direction = parseDismissDirection(
-        widget.control.attrString("dismissDirection"), DismissDirection.horizontal)!;
+        widget.control.getString("dismissDirection"),
+        DismissDirection.horizontal)!;
 
     widget.backend.subscribeMethods(widget.control.id,
         (methodName, args) async {
@@ -85,19 +86,19 @@ class _DismissibleControlState extends State<DismissibleControl> {
                     widget.control, secondaryBackgroundCtrls.first.id, disabled,
                     parentAdaptive: adaptive)
                 : Container(color: Colors.transparent),
-            onDismissed: widget.control.attrBool("onDismiss", false)!
+            onDismissed: widget.control.getBool("onDismiss", false)!
                 ? (DismissDirection direction) {
                     widget.backend.triggerControlEvent(
                         widget.control.id, "dismiss", direction.name);
                   }
                 : null,
-            onResize: widget.control.attrBool("onResize", false)!
+            onResize: widget.control.getBool("onResize", false)!
                 ? () {
                     widget.backend
                         .triggerControlEvent(widget.control.id, "resize");
                   }
                 : null,
-            onUpdate: widget.control.attrBool("onUpdate", false)!
+            onUpdate: widget.control.getBool("onUpdate", false)!
                 ? (DismissUpdateDetails details) {
                     widget.backend.triggerControlEvent(
                         widget.control.id,
@@ -110,7 +111,7 @@ class _DismissibleControlState extends State<DismissibleControl> {
                             .toJson()));
                   }
                 : null,
-            confirmDismiss: widget.control.attrBool("onConfirmDismiss", false)!
+            confirmDismiss: widget.control.getBool("onConfirmDismiss", false)!
                 ? (DismissDirection direction) {
                     debugPrint(
                         "Dismissible.confirmDismiss(${widget.control.id})");
@@ -121,12 +122,12 @@ class _DismissibleControlState extends State<DismissibleControl> {
                     return completer.future;
                   }
                 : null,
-            movementDuration: Duration(
-                milliseconds: widget.control.attrInt("duration", 200)!),
+            movementDuration:
+                Duration(milliseconds: widget.control.getInt("duration", 200)!),
             resizeDuration: Duration(
-                milliseconds: widget.control.attrInt("resizeDuration", 300)!),
+                milliseconds: widget.control.getInt("resizeDuration", 300)!),
             crossAxisEndOffset:
-                widget.control.attrDouble("crossAxisEndOffset", 0.0)!,
+                widget.control.getDouble("crossAxisEndOffset", 0.0)!,
             dismissThresholds: dismissThresholds ?? {},
             child: createControl(
                 widget.control, contentCtrls.first.id, disabled,

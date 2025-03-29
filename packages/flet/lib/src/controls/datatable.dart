@@ -38,12 +38,12 @@ class _DataTableControlState extends State<DataTableControl>
   Widget build(BuildContext context) {
     debugPrint("DataTableControl build: ${widget.control.id}");
 
-    bool tableDisabled = widget.control.isDisabled || widget.parentDisabled;
+    bool tableDisabled = widget.control.disabled || widget.parentDisabled;
 
     var datatable =
-        withControls(widget.children.where((c) => c.isVisible).map((c) => c.id),
+        withControls(widget.children.where((c) => c.visible).map((c) => c.id),
             (content, viewModel) {
-      var bgColor = widget.control.attrString("bgColor");
+      var bgColor = widget.control.getString("bgColor");
       var border = parseBorder(Theme.of(context), widget.control, "border");
       var borderRadius = parseBorderRadius(widget.control, "borderRadius");
       var gradient =
@@ -75,52 +75,51 @@ class _DataTableControlState extends State<DataTableControl>
       }
 
       Clip clipBehavior =
-          parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
+          parseClip(widget.control.getString("clipBehavior"), Clip.none)!;
 
       return DataTable(
           decoration: decoration,
           border: tableBorder,
           clipBehavior: clipBehavior,
           checkboxHorizontalMargin:
-              widget.control.attrDouble("checkboxHorizontalMargin"),
-          columnSpacing: widget.control.attrDouble("columnSpacing"),
+              widget.control.getDouble("checkboxHorizontalMargin"),
+          columnSpacing: widget.control.getDouble("columnSpacing"),
           dataRowColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "dataRowColor"),
-          dataRowMinHeight: widget.control.attrDouble("dataRowMinHeight"),
-          dataRowMaxHeight: widget.control.attrDouble("dataRowMaxHeight"),
+          dataRowMinHeight: widget.control.getDouble("dataRowMinHeight"),
+          dataRowMaxHeight: widget.control.getDouble("dataRowMaxHeight"),
           dataTextStyle: parseTextStyle(
               Theme.of(context), widget.control, "dataTextStyle"),
           headingRowColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "headingRowColor"),
-          headingRowHeight: widget.control.attrDouble("headingRowHeight"),
+          headingRowHeight: widget.control.getDouble("headingRowHeight"),
           headingTextStyle: parseTextStyle(
               Theme.of(context), widget.control, "headingTextStyle"),
-          dividerThickness: widget.control.attrDouble("dividerThickness"),
-          horizontalMargin: widget.control.attrDouble("horizontalMargin"),
-          showBottomBorder: widget.control.attrBool("showBottomBorder", false)!,
+          dividerThickness: widget.control.getDouble("dividerThickness"),
+          horizontalMargin: widget.control.getDouble("horizontalMargin"),
+          showBottomBorder: widget.control.getBool("showBottomBorder", false)!,
           showCheckboxColumn:
-              widget.control.attrBool("showCheckboxColumn", false)!,
-          sortAscending: widget.control.attrBool("sortAscending", false)!,
-          sortColumnIndex: widget.control.attrInt("sortColumnIndex"),
-          onSelectAll: widget.control.attrBool("onSelectAll", false)!
+              widget.control.getBool("showCheckboxColumn", false)!,
+          sortAscending: widget.control.getBool("sortAscending", false)!,
+          sortColumnIndex: widget.control.getInt("sortColumnIndex"),
+          onSelectAll: widget.control.getBool("onSelectAll", false)!
               ? (bool? selected) {
                   widget.backend.triggerControlEvent(
                       widget.control.id, "select_all", selected?.toString());
                 }
               : null,
           columns: viewModel.controlViews
-              .where(
-                  (c) => c.control.type == "datacolumn" && c.control.isVisible)
+              .where((c) => c.control.type == "datacolumn" && c.control.visible)
               .map((column) {
             var labelCtrls =
-                column.children.where((c) => c.name == "label" && c.isVisible);
+                column.children.where((c) => c.name == "label" && c.visible);
             return DataColumn(
-                numeric: column.control.attrBool("numeric", false)!,
-                tooltip: column.control.attrString("tooltip"),
+                numeric: column.control.getBool("numeric", false)!,
+                tooltip: column.control.getString("tooltip"),
                 headingRowAlignment: parseMainAxisAlignment(
-                    column.control.attrString("headingRowAlignment")),
+                    column.control.getString("headingRowAlignment")),
                 mouseCursor: WidgetStateMouseCursor.clickable,
-                onSort: column.control.attrBool("onSort", false)!
+                onSort: column.control.getBool("onSort", false)!
                     ? (columnIndex, ascending) {
                         widget.backend.triggerControlEvent(
                             column.control.id,
@@ -129,60 +128,60 @@ class _DataTableControlState extends State<DataTableControl>
                       }
                     : null,
                 label: createControl(column.control, labelCtrls.first.id,
-                    column.control.isDisabled || tableDisabled));
+                    column.control.disabled || tableDisabled));
           }).toList(),
           rows: viewModel.controlViews
-              .where((c) => c.control.type == "datarow" && c.control.isVisible)
+              .where((c) => c.control.type == "datarow" && c.control.visible)
               .map((row) {
             return DataRow(
                 key: ValueKey(row.control.id),
-                selected: row.control.attrBool("selected", false)!,
+                selected: row.control.getBool("selected", false)!,
                 color: parseWidgetStateColor(
                     Theme.of(context), row.control, "color"),
-                onSelectChanged: row.control.attrBool("onSelectChanged", false)!
+                onSelectChanged: row.control.getBool("onSelectChanged", false)!
                     ? (selected) {
                         widget.backend.triggerControlEvent(row.control.id,
                             "select_changed", selected?.toString());
                       }
                     : null,
-                onLongPress: row.control.attrBool("onLongPress", false)!
+                onLongPress: row.control.getBool("onLongPress", false)!
                     ? () {
                         widget.backend
                             .triggerControlEvent(row.control.id, "long_press");
                       }
                     : null,
                 cells: row.children
-                    .where((c) => c.type == "datacell" && c.isVisible)
+                    .where((c) => c.type == "datacell" && c.visible)
                     .map((cell) => DataCell(
                           createControl(row.control, cell.childIds.first,
-                              row.control.isDisabled || tableDisabled),
-                          placeholder: cell.attrBool("placeholder", false)!,
-                          showEditIcon: cell.attrBool("showEditIcon", false)!,
-                          onDoubleTap: cell.attrBool("onDoubleTap", false)!
+                              row.control.disabled || tableDisabled),
+                          placeholder: cell.getBool("placeholder", false)!,
+                          showEditIcon: cell.getBool("showEditIcon", false)!,
+                          onDoubleTap: cell.getBool("onDoubleTap", false)!
                               ? () {
                                   widget.backend.triggerControlEvent(
                                       cell.id, "double_tap");
                                 }
                               : null,
-                          onLongPress: cell.attrBool("onLongPress", false)!
+                          onLongPress: cell.getBool("onLongPress", false)!
                               ? () {
                                   widget.backend.triggerControlEvent(
                                       cell.id, "long_press");
                                 }
                               : null,
-                          onTap: cell.attrBool("onTap", false)!
+                          onTap: cell.getBool("onTap", false)!
                               ? () {
                                   widget.backend
                                       .triggerControlEvent(cell.id, "tap");
                                 }
                               : null,
-                          onTapCancel: cell.attrBool("onTapCancel", false)!
+                          onTapCancel: cell.getBool("onTapCancel", false)!
                               ? () {
                                   widget.backend.triggerControlEvent(
                                       cell.id, "tap_cancel");
                                 }
                               : null,
-                          onTapDown: cell.attrBool("onTapDown", false)!
+                          onTapDown: cell.getBool("onTapDown", false)!
                               ? (details) {
                                   widget.backend.triggerControlEvent(
                                       cell.id,

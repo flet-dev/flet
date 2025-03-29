@@ -48,27 +48,27 @@ class _ListViewControlState extends State<ListViewControl> {
   Widget build(BuildContext context) {
     debugPrint("ListViewControl build: ${widget.control.id}");
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
     bool? adaptive =
-        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+        widget.control.getBool("adaptive") ?? widget.parentAdaptive;
 
-    var horizontal = widget.control.attrBool("horizontal", false)!;
-    var spacing = widget.control.attrDouble("spacing", 0)!;
-    var dividerThickness = widget.control.attrDouble("dividerThickness", 0)!;
-    var itemExtent = widget.control.attrDouble("itemExtent");
-    var cacheExtent = widget.control.attrDouble("cacheExtent");
-    var semanticChildCount = widget.control.attrInt("semanticChildCount");
+    var horizontal = widget.control.getBool("horizontal", false)!;
+    var spacing = widget.control.getDouble("spacing", 0)!;
+    var dividerThickness = widget.control.getDouble("dividerThickness", 0)!;
+    var itemExtent = widget.control.getDouble("itemExtent");
+    var cacheExtent = widget.control.getDouble("cacheExtent");
+    var semanticChildCount = widget.control.getInt("semanticChildCount");
     var firstItemPrototype =
-        widget.control.attrBool("firstItemPrototype", false)!;
+        widget.control.getBool("firstItemPrototype", false)!;
     var padding = parseEdgeInsets(widget.control, "padding");
-    var reverse = widget.control.attrBool("reverse", false)!;
+    var reverse = widget.control.getBool("reverse", false)!;
     var clipBehavior =
-        parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
+        parseClip(widget.control.getString("clipBehavior"), Clip.hardEdge)!;
 
-    List<Control> ctrls = widget.children.where((c) => c.isVisible).toList();
+    List<Control> ctrls = widget.children.where((c) => c.visible).toList();
     var scrollDirection = horizontal ? Axis.horizontal : Axis.vertical;
     var buildControlsOnDemand =
-        widget.control.attrBool("buildControlsOnDemand", true)!;
+        widget.control.getBool("buildControlsOnDemand", true)!;
     var prototypeItem = firstItemPrototype && widget.children.isNotEmpty
         ? createControl(widget.control, ctrls[0].id, disabled,
             parentAdaptive: adaptive)
@@ -153,7 +153,7 @@ class _ListViewControlState extends State<ListViewControl> {
             parentAdaptive: adaptive,
             child: child);
 
-        if (widget.control.attrBool("onScroll", false)!) {
+        if (widget.control.getBool("onScroll", false)!) {
           child = ScrollNotificationControl(
               control: widget.control, backend: widget.backend, child: child);
         }

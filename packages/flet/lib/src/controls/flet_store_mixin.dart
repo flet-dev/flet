@@ -33,7 +33,7 @@ mixin FletStoreMixin {
             (a) =>
                 a.name.toLowerCase() ==
                 store.state.controls["page"]!
-                    .attrString("platform", "")!
+                    .getString("platform", "")!
                     .toLowerCase(),
             orElse: () => defaultTargetPlatform),
         builder: build);

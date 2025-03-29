@@ -8,7 +8,7 @@ import 'numbers.dart';
 
 EdgeInsets? parseEdgeInsets(Control control, String propName,
     [EdgeInsets? defaultValue]) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return defaultValue;
   }
@@ -33,7 +33,7 @@ EdgeInsets? edgeInsetsFromJson(dynamic json, [EdgeInsets? defaultValue]) {
 EdgeInsetsDirectional? parseEdgeInsetsDirectional(
     Control control, String propName,
     [EdgeInsetsDirectional? defaultValue]) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return defaultValue;
   }
@@ -59,7 +59,7 @@ EdgeInsetsDirectional? edgeInsetsDirectionalFromJson(dynamic json,
 WidgetStateProperty<EdgeInsets?>? parseWidgetStateEdgeInsets(
     Control control, String propName,
     [EdgeInsets? defaultValue]) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return null;
   }

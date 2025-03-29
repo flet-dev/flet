@@ -41,12 +41,12 @@ class _ShakeDetectorControlState extends State<ShakeDetectorControl> {
   Widget build(BuildContext context) {
     debugPrint("ShakeDetector build: ${widget.control.id}");
 
-    var minimumShakeCount = widget.control.attrInt("minimumShakeCount", 1)!;
-    var shakeSlopTimeMs = widget.control.attrInt("shakeSlopTimeMs", 500)!;
+    var minimumShakeCount = widget.control.getInt("minimumShakeCount", 1)!;
+    var shakeSlopTimeMs = widget.control.getInt("shakeSlopTimeMs", 500)!;
     var shakeCountResetTimeMs =
-        widget.control.attrInt("shakeCountResetTimeMs", 3000)!;
+        widget.control.getInt("shakeCountResetTimeMs", 3000)!;
     var shakeThresholdGravity =
-        widget.control.attrDouble("shakeThresholdGravity", 2.7)!;
+        widget.control.getDouble("shakeThresholdGravity", 2.7)!;
 
     if (minimumShakeCount != _minimumShakeCount ||
         shakeSlopTimeMs != _shakeSlopTimeMs ||

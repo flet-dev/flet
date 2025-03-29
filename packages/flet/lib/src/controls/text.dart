@@ -27,17 +27,17 @@ class TextControl extends StatelessWidget with FletStoreMixin {
     var result = withControlTree(control, (context, viewModel) {
       debugPrint("Text build: ${control.id}");
 
-      bool disabled = control.isDisabled || parentDisabled;
+      bool disabled = control.disabled || parentDisabled;
 
-      String text = control.attrString("value", "")!;
+      String text = control.getString("value", "")!;
       var selectionCursorColor =
-          control.attrColor("selectionCursorColor", context);
+          control.getColor("selectionCursorColor", context);
       var selectionCursorWidth =
-          control.attrDouble("selectionCursorWidth", 2.0)!;
-      var selectionCursorHeight = control.attrDouble("selectionCursorHeight");
-      var showSelectionCursor = control.attrBool("showSelectionCursor", false)!;
+          control.getDouble("selectionCursorWidth", 2.0)!;
+      var selectionCursorHeight = control.getDouble("selectionCursorHeight");
+      var showSelectionCursor = control.getBool("showSelectionCursor", false)!;
       var enableInteractiveSelection =
-          control.attrBool("enableInteractiveSelection", true)!;
+          control.getBool("enableInteractiveSelection", true)!;
 
       List<InlineSpan>? spans = parseTextSpans(
         Theme.of(context),
@@ -47,12 +47,12 @@ class TextControl extends StatelessWidget with FletStoreMixin {
           backend.triggerControlEvent(controlId, eventName, eventData);
         },
       );
-      String? semanticsLabel = control.attrString("semanticsLabel");
-      bool noWrap = control.attrBool("noWrap", false)!;
-      int? maxLines = control.attrInt("maxLines");
+      String? semanticsLabel = control.getString("semanticsLabel");
+      bool noWrap = control.getBool("noWrap", false)!;
+      int? maxLines = control.getInt("maxLines");
 
       TextStyle? style;
-      var styleNameOrData = control.attrString("style", null);
+      var styleNameOrData = control.getString("style", null);
       if (styleNameOrData != null) {
         style = getTextStyle(context, styleNameOrData);
       }
@@ -65,7 +65,7 @@ class TextControl extends StatelessWidget with FletStoreMixin {
       }
 
       TextStyle? themeStyle;
-      var styleName = control.attrString("theme_style", null);
+      var styleName = control.getString("theme_style", null);
       if (styleName != null) {
         themeStyle = getTextStyle(context, styleName);
       }
@@ -76,7 +76,7 @@ class TextControl extends StatelessWidget with FletStoreMixin {
         style = themeStyle.merge(style);
       }
 
-      var fontWeight = control.attrString("weight", "")!;
+      var fontWeight = control.getString("weight", "")!;
 
       List<FontVariation> variations = [];
       if (fontWeight.startsWith("w")) {
@@ -85,28 +85,28 @@ class TextControl extends StatelessWidget with FletStoreMixin {
       }
 
       style = (style ?? const TextStyle()).copyWith(
-        fontSize: control.attrDouble("size", null),
+        fontSize: control.getDouble("size", null),
         fontWeight: getFontWeight(fontWeight),
-        fontStyle: control.attrBool(
+        fontStyle: control.getBool(
           "italic",
           false,
         )!
             ? FontStyle.italic
             : null,
-        fontFamily: control.attrString("fontFamily"),
+        fontFamily: control.getString("fontFamily"),
         fontVariations: variations,
-        color: control.attrColor("color", context) ??
+        color: control.getColor("color", context) ??
             (spans.isNotEmpty
                 ? DefaultTextStyle.of(context).style.color
                 : null),
-        backgroundColor: control.attrColor("bgcolor", context),
+        backgroundColor: control.getColor("bgcolor", context),
       );
 
       TextAlign textAlign =
-          parseTextAlign(control.attrString("textAlign"), TextAlign.start)!;
+          parseTextAlign(control.getString("textAlign"), TextAlign.start)!;
 
       TextOverflow overflow =
-          parseTextOverflow(control.attrString("overflow"), TextOverflow.clip)!;
+          parseTextOverflow(control.getString("overflow"), TextOverflow.clip)!;
 
       onSelectionChanged(
           TextSelection selection, SelectionChangedCause? cause) {
@@ -137,7 +137,7 @@ class TextControl extends StatelessWidget with FletStoreMixin {
         );
       }
 
-      return control.attrBool("selectable", false)!
+      return control.getBool("selectable", false)!
           ? (spans.isNotEmpty)
               ? SelectableText.rich(
                   TextSpan(text: text, style: style, children: spans),

@@ -34,13 +34,13 @@ class CupertinoAlertDialogControl extends StatefulWidget {
 class _CupertinoAlertDialogControlState
     extends State<CupertinoAlertDialogControl> {
   Widget _createCupertinoAlertDialog() {
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
     var titleCtrls =
-        widget.children.where((c) => c.name == "title" && c.isVisible);
+        widget.children.where((c) => c.name == "title" && c.visible);
     var contentCtrls =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
+        widget.children.where((c) => c.name == "content" && c.visible);
     var actionCtrls =
-        widget.children.where((c) => c.name == "action" && c.isVisible);
+        widget.children.where((c) => c.name == "action" && c.visible);
     if (titleCtrls.isEmpty && contentCtrls.isEmpty && actionCtrls.isEmpty) {
       return const ErrorControl(
           "CupertinoAlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions");
@@ -78,8 +78,8 @@ class _CupertinoAlertDialogControlState
 
     debugPrint("CupertinoAlertDialog build: ${widget.control.id}");
 
-    var open = widget.control.attrBool("open", false)!;
-    var modal = widget.control.attrBool("modal", false)!;
+    var open = widget.control.getBool("open", false)!;
+    var modal = widget.control.getBool("modal", false)!;
 
     debugPrint("Current open state: $lastOpen");
     debugPrint("New open state: $open");
@@ -100,7 +100,7 @@ class _CupertinoAlertDialogControlState
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             barrierDismissible: !modal,
-            barrierColor: widget.control.attrColor("barrierColor", context),
+            barrierColor: widget.control.getColor("barrierColor", context),
             useRootNavigator: false,
             context: context,
             builder: (context) => dialog).then((value) {

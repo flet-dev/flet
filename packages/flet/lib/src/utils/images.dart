@@ -40,7 +40,7 @@ BoxFit? parseBoxFit(String? fit, [BoxFit? defValue]) {
 
 ImageFilter? parseBlur(Control control, String propName,
     [ImageFilter? defValue]) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return defValue;
   }
@@ -71,7 +71,7 @@ ImageFilter? blurImageFilterFromJSON(dynamic json) {
 
 ColorFilter? parseColorFilter(Control control, String propName, ThemeData theme,
     [ColorFilter? defValue]) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return defValue;
   }

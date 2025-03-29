@@ -18,12 +18,12 @@ class ProgressBarControl extends StatelessWidget {
     return constrainedControl(
         context,
         LinearProgressIndicator(
-          value: control.attrDouble("value"),
-          minHeight: control.attrDouble("minHeight", 4)!,
-          color: control.attrColor("color", context),
-          backgroundColor: control.attrColor("bgColor", context),
-          semanticsLabel: control.attrString("semanticsLabel"),
-          semanticsValue: control.attrDouble("semanticsValue")?.toString(),
+          value: control.getDouble("value"),
+          minHeight: control.getDouble("minHeight", 4)!,
+          color: control.getColor("color", context),
+          backgroundColor: control.getColor("bgColor", context),
+          semanticsLabel: control.getString("semanticsLabel"),
+          semanticsValue: control.getDouble("semanticsValue")?.toString(),
           borderRadius:
               parseBorderRadius(control, "borderRadius", BorderRadius.zero)!,
         ),

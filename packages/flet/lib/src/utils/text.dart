@@ -96,15 +96,15 @@ InlineSpan? parseInlineSpan(
     bool parentDisabled,
     void Function(String, String, String)? sendControlEvent) {
   if (spanViewModel.control.type == "textspan") {
-    bool disabled = spanViewModel.control.isDisabled || parentDisabled;
-    var onClick = spanViewModel.control.attrBool("onClick", false)!;
-    String url = spanViewModel.control.attrString("url", "")!;
-    String? urlTarget = spanViewModel.control.attrString("urlTarget");
+    bool disabled = spanViewModel.control.disabled || parentDisabled;
+    var onClick = spanViewModel.control.getBool("onClick", false)!;
+    String url = spanViewModel.control.getString("url", "")!;
+    String? urlTarget = spanViewModel.control.getString("urlTarget");
     return TextSpan(
-      text: spanViewModel.control.attrString("text"),
+      text: spanViewModel.control.getString("text"),
       style: parseTextStyle(theme, spanViewModel.control, "style"),
-      spellOut: spanViewModel.control.attrBool("spellOut"),
-      semanticsLabel: spanViewModel.control.attrString("semanticsLabel"),
+      spellOut: spanViewModel.control.getBool("spellOut"),
+      semanticsLabel: spanViewModel.control.getString("semanticsLabel"),
       children: parseTextSpans(
           theme, spanViewModel, parentDisabled, sendControlEvent),
       mouseCursor: onClick && !disabled && sendControlEvent != null
@@ -123,7 +123,7 @@ InlineSpan? parseInlineSpan(
                   }
                 })
               : null,
-      onEnter: spanViewModel.control.attrBool("onEnter", false)! &&
+      onEnter: spanViewModel.control.getBool("onEnter", false)! &&
               !disabled &&
               sendControlEvent != null
           ? (event) {
@@ -131,7 +131,7 @@ InlineSpan? parseInlineSpan(
               sendControlEvent(spanViewModel.control.id, "enter", "");
             }
           : null,
-      onExit: spanViewModel.control.attrBool("onExit", false)! &&
+      onExit: spanViewModel.control.getBool("onExit", false)! &&
               !disabled &&
               sendControlEvent != null
           ? (event) {
@@ -183,7 +183,7 @@ TextBaseline? parseTextBaseline(String? value, [TextBaseline? defaultValue]) {
 
 TextStyle? parseTextStyle(ThemeData theme, Control control, String propName) {
   dynamic j;
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return null;
   }
@@ -249,7 +249,7 @@ TextStyle? textStyleFromJson(ThemeData theme, Map<String, dynamic>? json) {
 
 WidgetStateProperty<TextStyle?>? parseWidgetStateTextStyle(
     ThemeData theme, Control control, String propName) {
-  var v = control.attrString(propName);
+  var v = control.getString(propName);
   if (v == null) {
     return null;
   }

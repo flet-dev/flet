@@ -34,16 +34,16 @@ class _CupertinoSegmentedButtonControlState
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoSegmentedButtonControl build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
     bool? adaptive =
-        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+        widget.control.getBool("adaptive") ?? widget.parentAdaptive;
 
-    var borderColor = widget.control.attrColor("borderColor", context);
-    var selectedColor = widget.control.attrColor("selectedColor", context);
-    var unselectedColor = widget.control.attrColor("unselectedColor", context);
-    var clickColor = widget.control.attrColor("clickColor", context);
-    List<Control> ctrls = widget.children.where((c) => c.isVisible).toList();
-    int? selectedIndex = widget.control.attrInt("selectedIndex");
+    var borderColor = widget.control.getColor("borderColor", context);
+    var selectedColor = widget.control.getColor("selectedColor", context);
+    var unselectedColor = widget.control.getColor("unselectedColor", context);
+    var clickColor = widget.control.getColor("clickColor", context);
+    List<Control> ctrls = widget.children.where((c) => c.visible).toList();
+    int? selectedIndex = widget.control.getInt("selectedIndex");
 
     if (ctrls.length < 2) {
       return const ErrorControl(

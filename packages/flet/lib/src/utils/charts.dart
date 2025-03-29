@@ -11,8 +11,8 @@ import 'numbers.dart';
 
 FlGridData parseChartGridData(ThemeData theme, Control control,
     String horizPropName, String vertPropName) {
-  var hv = control.attrString(horizPropName, null);
-  var vv = control.attrString(vertPropName, null);
+  var hv = control.getString(horizPropName, null);
+  var vv = control.getString(vertPropName, null);
   if (hv == null && vv == null) {
     return const FlGridData(show: false);
   }
@@ -39,7 +39,7 @@ FlGridData parseChartGridData(ThemeData theme, Control control,
 }
 
 FlLine? parseFlLine(ThemeData theme, Control control, String propName) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return null;
   }
@@ -50,7 +50,7 @@ FlLine? parseFlLine(ThemeData theme, Control control, String propName) {
 
 FlLine? parseSelectedFlLine(ThemeData theme, Control control, String propName,
     Color? color, Gradient? gradient) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return null;
   }
@@ -100,7 +100,7 @@ FlDotPainter? parseChartDotPainter(
     Color? barColor,
     Gradient? barGradient,
     double percentage) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return null;
   }
@@ -121,7 +121,7 @@ FlDotPainter? parseChartSelectedDotPainter(
     Color? barColor,
     Gradient? barGradient,
     double percentage) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return null;
   }

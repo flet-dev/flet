@@ -62,7 +62,7 @@ class _TextButtonControlState extends State<TextButtonControl>
 
     return withPagePlatform((context, platform) {
       bool? adaptive =
-          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+          widget.control.getBool("adaptive") ?? widget.parentAdaptive;
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
@@ -83,18 +83,18 @@ class _TextButtonControlState extends State<TextButtonControl>
                 backend: widget.backend);
       }
 
-      String text = widget.control.attrString("text", "")!;
-      var clipBehavior = parseClip(widget.control.attrString("clipBehavior"));
-      IconData? icon = parseIcon(widget.control.attrString("icon"));
-      Color? iconColor = widget.control.attrColor("iconColor", context);
+      String text = widget.control.getString("text", "")!;
+      var clipBehavior = parseClip(widget.control.getString("clipBehavior"));
+      IconData? icon = parseIcon(widget.control.getString("icon"));
+      Color? iconColor = widget.control.getColor("iconColor", context);
       var contentCtrls =
-          widget.children.where((c) => c.name == "content" && c.isVisible);
-      bool onHover = widget.control.attrBool("onHover", false)!;
-      bool onLongPress = widget.control.attrBool("onLongPress", false)!;
-      String url = widget.control.attrString("url", "")!;
-      String? urlTarget = widget.control.attrString("urlTarget");
-      bool autofocus = widget.control.attrBool("autofocus", false)!;
-      bool disabled = widget.control.isDisabled || widget.parentDisabled;
+          widget.children.where((c) => c.name == "content" && c.visible);
+      bool onHover = widget.control.getBool("onHover", false)!;
+      bool onLongPress = widget.control.getBool("onLongPress", false)!;
+      String url = widget.control.getString("url", "")!;
+      String? urlTarget = widget.control.getString("urlTarget");
+      bool autofocus = widget.control.getBool("autofocus", false)!;
+      bool disabled = widget.control.disabled || widget.parentDisabled;
 
       Function()? onPressed = !disabled
           ? () {
@@ -176,7 +176,7 @@ class _TextButtonControlState extends State<TextButtonControl>
             child: Text(text));
       }
 
-      var focusValue = widget.control.attrString("focus");
+      var focusValue = widget.control.getString("focus");
       if (focusValue != null && focusValue != _lastFocusValue) {
         _lastFocusValue = focusValue;
         _focusNode.requestFocus();

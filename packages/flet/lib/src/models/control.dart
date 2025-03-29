@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -42,16 +40,16 @@ class Control extends Equatable {
         attrs: attrs);
   }
 
-  bool get isDisabled {
-    return attrBool("disabled", false)!;
+  bool get disabled {
+    return getBool("disabled", false)!;
   }
 
-  bool? get isAdaptive {
-    return attrBool("adaptive");
+  bool? get adaptive {
+    return getBool("adaptive");
   }
 
-  bool get isVisible {
-    return attrBool("visible", true)!;
+  bool get visible {
+    return getBool("visible", true)!;
   }
 
   bool get isNonVisual {
@@ -68,16 +66,16 @@ class Control extends Equatable {
     ].contains(type);
   }
 
-  bool? attrBool(String name, [bool? defValue]) {
+  bool? getBool(String name, [bool? defValue]) {
     var r = attrs[name.toLowerCase()];
     return r != null ? r.toLowerCase() == "true" : defValue;
   }
 
-  String? attrString(String name, [String? defValue]) {
+  String? getString(String name, [String? defValue]) {
     return attrs[name.toLowerCase()] ?? defValue;
   }
 
-  int? attrInt(String name, [int? defValue]) {
+  int? getInt(String name, [int? defValue]) {
     var r = attrs[name.toLowerCase()];
     if (r != null) {
       var i = int.tryParse(r);
@@ -86,7 +84,7 @@ class Control extends Equatable {
     return defValue;
   }
 
-  double? attrDouble(String name, [double? defValue]) {
+  double? getDouble(String name, [double? defValue]) {
     var r = attrs[name.toLowerCase()];
     if (r != null && r.toLowerCase() == "inf") {
       return double.infinity;
@@ -97,7 +95,7 @@ class Control extends Equatable {
     return defValue;
   }
 
-  DateTime? attrDateTime(String name, [DateTime? defValue]) {
+  DateTime? getDateTime(String name, [DateTime? defValue]) {
     var value = attrs[name.toLowerCase()];
     if (value == null) {
       return defValue;
@@ -109,7 +107,7 @@ class Control extends Equatable {
     }
   }
 
-  TimeOfDay? attrTime(String name, [TimeOfDay? defValue]) {
+  TimeOfDay? getTime(String name, [TimeOfDay? defValue]) {
     var value = attrs[name.toLowerCase()];
     if (value == null) {
       return defValue;
@@ -119,23 +117,9 @@ class Control extends Equatable {
         hour: int.parse(splitted[0]), minute: int.parse(splitted[1]));
   }
 
-  Color? attrColor(String name, BuildContext? context, [Color? defValue]) {
+  Color? getColor(String name, BuildContext? context, [Color? defValue]) {
     return parseColor(
-        context != null ? Theme.of(context) : null, attrString(name), defValue);
-  }
-
-  List? attrList(String name, [List? defValue = const []]) {
-    var l = attrString(name);
-    if (l == null) {
-      return defValue;
-    } else {
-      try {
-        return jsonDecode(l) as List;
-      } catch (e) {
-        debugPrint("attrList error while parsing $name: $e");
-        return defValue;
-      }
-    }
+        context != null ? Theme.of(context) : null, getString(name), defValue);
   }
 
   Control copyWith(

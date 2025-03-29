@@ -24,13 +24,13 @@ class CircleAvatarControl extends StatelessWidget with FletStoreMixin {
   @override
   Widget build(BuildContext context) {
     debugPrint("CircleAvatar build: ${control.id}");
-    bool disabled = control.isDisabled || parentDisabled;
+    bool disabled = control.disabled || parentDisabled;
 
     return withPageArgs((context, pageArgs) {
-      var foregroundImageSrc = control.attrString("foregroundImageSrc");
-      var backgroundImageSrc = control.attrString("backgroundImageSrc");
+      var foregroundImageSrc = control.getString("foregroundImageSrc");
+      var backgroundImageSrc = control.getString("backgroundImageSrc");
       var contentCtrls =
-          children.where((c) => c.name == "content" && c.isVisible);
+          children.where((c) => c.name == "content" && c.visible);
 
       ImageProvider<Object>? backgroundImage;
       ImageProvider<Object>? foregroundImage;
@@ -65,11 +65,11 @@ class CircleAvatarControl extends StatelessWidget with FletStoreMixin {
       var avatar = CircleAvatar(
           foregroundImage: foregroundImage,
           backgroundImage: backgroundImage,
-          backgroundColor: control.attrColor("bgColor", context),
-          foregroundColor: control.attrColor("color", context),
-          radius: control.attrDouble("radius"),
-          minRadius: control.attrDouble("minRadius"),
-          maxRadius: control.attrDouble("maxRadius"),
+          backgroundColor: control.getColor("bgColor", context),
+          foregroundColor: control.getColor("color", context),
+          radius: control.getDouble("radius"),
+          minRadius: control.getDouble("minRadius"),
+          maxRadius: control.getDouble("maxRadius"),
           onBackgroundImageError: backgroundImage != null
               ? (object, trace) {
                   backend.triggerControlEvent(

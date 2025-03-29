@@ -33,7 +33,7 @@ class AppBarControl extends StatelessWidget
     debugPrint("AppBar build: ${control.id}");
 
     return withPagePlatform((context, platform) {
-      bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
+      bool? adaptive = control.getBool("adaptive") ?? parentAdaptive;
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
@@ -45,50 +45,49 @@ class AppBarControl extends StatelessWidget
       }
 
       var leadingCtrls =
-          children.where((c) => c.name == "leading" && c.isVisible);
-      var titleCtrls = children.where((c) => c.name == "title" && c.isVisible);
-      var actionCtrls =
-          children.where((c) => c.name == "action" && c.isVisible);
-      var isSecondary = control.attrBool("isSecondary", false)!;
+          children.where((c) => c.name == "leading" && c.visible);
+      var titleCtrls = children.where((c) => c.name == "title" && c.visible);
+      var actionCtrls = children.where((c) => c.name == "action" && c.visible);
+      var isSecondary = control.getBool("isSecondary", false)!;
 
       var appBar = AppBar(
         leading: leadingCtrls.isNotEmpty
-            ? createControl(control, leadingCtrls.first.id, control.isDisabled,
+            ? createControl(control, leadingCtrls.first.id, control.disabled,
                 parentAdaptive: adaptive)
             : null,
-        leadingWidth: control.attrDouble("leadingWidth"),
+        leadingWidth: control.getDouble("leadingWidth"),
         automaticallyImplyLeading:
-            control.attrBool("automaticallyImplyLeading", true)!,
+            control.getBool("automaticallyImplyLeading", true)!,
         title: titleCtrls.isNotEmpty
-            ? createControl(control, titleCtrls.first.id, control.isDisabled,
+            ? createControl(control, titleCtrls.first.id, control.disabled,
                 parentAdaptive: adaptive)
             : null,
-        centerTitle: control.attrBool("centerTitle", false)!,
+        centerTitle: control.getBool("centerTitle", false)!,
         toolbarHeight: preferredSize.height,
-        foregroundColor: control.attrColor("color", context),
-        backgroundColor: control.attrColor("bgcolor", context),
-        elevation: control.attrDouble("elevation"),
+        foregroundColor: control.getColor("color", context),
+        backgroundColor: control.getColor("bgcolor", context),
+        elevation: control.getDouble("elevation"),
         actions: actionCtrls
-            .map((c) => createControl(control, c.id, control.isDisabled,
+            .map((c) => createControl(control, c.id, control.disabled,
                 parentAdaptive: adaptive))
             .toList(),
         systemOverlayStyle: Theme.of(context)
             .extension<SystemUiOverlayStyleTheme>()
             ?.systemUiOverlayStyle,
-        shadowColor: control.attrColor("shadowColor", context),
-        surfaceTintColor: control.attrColor("surfaceTintColor", context),
-        scrolledUnderElevation: control.attrDouble("elevationOnScroll"),
+        shadowColor: control.getColor("shadowColor", context),
+        surfaceTintColor: control.getColor("surfaceTintColor", context),
+        scrolledUnderElevation: control.getDouble("elevationOnScroll"),
         forceMaterialTransparency:
-            control.attrBool("forceMaterialTransparency", false)!,
+            control.getBool("forceMaterialTransparency", false)!,
         primary: !isSecondary,
-        titleSpacing: control.attrDouble("titleSpacing"),
+        titleSpacing: control.getDouble("titleSpacing"),
         excludeHeaderSemantics:
-            control.attrBool("excludeHeaderSemantics", false)!,
-        clipBehavior: parseClip(control.attrString("clipBehavior")),
+            control.getBool("excludeHeaderSemantics", false)!,
+        clipBehavior: parseClip(control.getString("clipBehavior")),
         titleTextStyle:
             parseTextStyle(Theme.of(context), control, "titleTextStyle"),
         shape: parseOutlinedBorder(control, "shape"),
-        toolbarOpacity: control.attrDouble("toolbarOpacity", 1)!,
+        toolbarOpacity: control.getDouble("toolbarOpacity", 1)!,
         toolbarTextStyle:
             parseTextStyle(Theme.of(context), control, "toolbarTextStyle"),
       );

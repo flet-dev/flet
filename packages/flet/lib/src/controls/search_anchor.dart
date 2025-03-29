@@ -80,37 +80,37 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("SearchAnchor build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
 
-    var value = widget.control.attrString("value", "");
+    var value = widget.control.getString("value", "");
     if (value != null && value != _controller.text) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _controller.text = value;
       });
     }
 
-    bool onChange = widget.control.attrBool("onChange", false)!;
-    bool onTap = widget.control.attrBool("onTap", false)!;
-    bool onSubmit = widget.control.attrBool("onSubmit", false)!;
+    bool onChange = widget.control.getBool("onChange", false)!;
+    bool onTap = widget.control.getBool("onTap", false)!;
+    bool onSubmit = widget.control.getBool("onSubmit", false)!;
 
     var suggestionCtrls =
-        widget.children.where((c) => c.name == "controls" && c.isVisible);
+        widget.children.where((c) => c.name == "controls" && c.visible);
     var barLeadingCtrls =
-        widget.children.where((c) => c.name == "barLeading" && c.isVisible);
+        widget.children.where((c) => c.name == "barLeading" && c.visible);
     var barTrailingCtrls =
-        widget.children.where((c) => c.name == "barTrailing" && c.isVisible);
+        widget.children.where((c) => c.name == "barTrailing" && c.visible);
     var viewLeadingCtrls =
-        widget.children.where((c) => c.name == "viewLeading" && c.isVisible);
+        widget.children.where((c) => c.name == "viewLeading" && c.visible);
     var viewTrailingCtrls =
-        widget.children.where((c) => c.name == "viewTrailing" && c.isVisible);
+        widget.children.where((c) => c.name == "viewTrailing" && c.visible);
 
-    var textCapitalization = parseTextCapitalization(
-        widget.control.attrString("textCapitalization"));
+    var textCapitalization =
+        parseTextCapitalization(widget.control.getString("textCapitalization"));
     TextInputType keyboardType = parseTextInputType(
-        widget.control.attrString("keyboardType"), TextInputType.text)!;
+        widget.control.getString("keyboardType"), TextInputType.text)!;
 
-    var focusValue = widget.control.attrString("focus");
-    var blurValue = widget.control.attrString("blur");
+    var focusValue = widget.control.getString("focus");
+    var blurValue = widget.control.getString("blur");
     if (focusValue != null && focusValue != _lastFocusValue) {
       _lastFocusValue = focusValue;
       _focusNode.requestFocus();
@@ -120,7 +120,7 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
       _focusNode.unfocus();
     }
 
-    var method = widget.control.attrString("method");
+    var method = widget.control.getString("method");
 
     if (method != null) {
       debugPrint("SearchAnchor JSON method: $method");
@@ -160,12 +160,12 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
             Theme.of(context), widget.control, "viewHeaderTextStyle"),
         viewSide:
             parseBorderSide(Theme.of(context), widget.control, "viewSide"),
-        isFullScreen: widget.control.attrBool("fullScreen", false),
-        viewBackgroundColor: widget.control.attrColor("viewBgcolor", context),
-        dividerColor: widget.control.attrColor("dividerColor", context),
-        viewHintText: widget.control.attrString("viewHintText"),
-        viewElevation: widget.control.attrDouble("viewElevation"),
-        headerHeight: widget.control.attrDouble("viewHeaderHeight"),
+        isFullScreen: widget.control.getBool("fullScreen", false),
+        viewBackgroundColor: widget.control.getColor("viewBgcolor", context),
+        dividerColor: widget.control.getColor("dividerColor", context),
+        viewHintText: widget.control.getString("viewHintText"),
+        viewElevation: widget.control.getDouble("viewElevation"),
+        headerHeight: widget.control.getDouble("viewHeaderHeight"),
         viewConstraints:
             parseBoxConstraints(widget.control, "viewSizeConstraints"),
         viewShape: parseOutlinedBorder(widget.control, "viewShape"),
@@ -196,7 +196,7 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
               }
             : null,
         viewSurfaceTintColor:
-            widget.control.attrColor("viewSurfaceTintColor", context),
+            widget.control.getColor("viewSurfaceTintColor", context),
         textCapitalization: textCapitalization,
         keyboardType: keyboardType,
         builder: (BuildContext context, SearchController controller) {
@@ -204,9 +204,9 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
             controller: controller,
             keyboardType: keyboardType,
             textCapitalization: textCapitalization,
-            autoFocus: widget.control.attrBool("autoFocus", false)!,
+            autoFocus: widget.control.getBool("autoFocus", false)!,
             focusNode: _focusNode,
-            hintText: widget.control.attrString("barHintText"),
+            hintText: widget.control.getString("barHintText"),
             elevation: parseWidgetStateDouble(widget.control, "barElevation"),
             shape: parseWidgetStateOutlinedBorder(widget.control, "barShape"),
             padding: parseWidgetStateEdgeInsets(widget.control, "barPadding"),
@@ -243,7 +243,7 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
                         .triggerControlEvent(widget.control.id, "tap");
                   }
                 : null,
-            onTapOutside: widget.control.attrBool("onTapOutsideBar", false)!
+            onTapOutside: widget.control.getBool("onTapOutsideBar", false)!
                 ? (PointerDownEvent? event) {
                     widget.backend.triggerControlEvent(
                         widget.control.id, "tapOutsideBar");

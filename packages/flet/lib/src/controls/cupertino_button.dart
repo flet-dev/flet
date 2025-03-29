@@ -37,23 +37,23 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoButton build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
     var theme = Theme.of(context);
 
     var contentCtrls =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
+        widget.children.where((c) => c.name == "content" && c.visible);
 
-    String? text = widget.control.attrString("text");
-    IconData? icon = parseIcon(widget.control.attrString("icon"));
-    Color? iconColor = widget.control.attrColor("iconColor", context);
+    String? text = widget.control.getString("text");
+    IconData? icon = parseIcon(widget.control.getString("icon"));
+    Color? iconColor = widget.control.getColor("iconColor", context);
 
     // IconButton props below
-    double? iconSize = widget.control.attrDouble("iconSize");
-    bool selected = widget.control.attrBool("selected", false)!;
+    double? iconSize = widget.control.getDouble("iconSize");
+    bool selected = widget.control.getBool("selected", false)!;
     IconData? selectedIcon =
-        parseIcon(widget.control.attrString("selectedIcon"));
+        parseIcon(widget.control.getString("selectedIcon"));
     Color? selectedIconColor =
-        widget.control.attrColor("selectedIconColor", context);
+        widget.control.getColor("selectedIconColor", context);
 
     Widget? content;
     List<Widget> children = [];
@@ -94,14 +94,13 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       );
     }
 
-    double pressedOpacity = widget.control.attrDouble("opacityOnClick", 0.4)!;
-    double minSize = widget.control.attrDouble("minSize", 44.0)!;
-    String url = widget.control.attrString("url", "")!;
-    Color disabledColor =
-        widget.control.attrColor("disabledBgcolor", context) ??
-            CupertinoColors.quaternarySystemFill;
-    Color? bgColor = widget.control.attrColor("bgColor", context);
-    Color? color = widget.control.attrColor("color", context);
+    double pressedOpacity = widget.control.getDouble("opacityOnClick", 0.4)!;
+    double minSize = widget.control.getDouble("minSize", 44.0)!;
+    String url = widget.control.getString("url", "")!;
+    Color disabledColor = widget.control.getColor("disabledBgcolor", context) ??
+        CupertinoColors.quaternarySystemFill;
+    Color? bgColor = widget.control.getColor("bgColor", context);
+    Color? color = widget.control.getColor("color", context);
     AlignmentGeometry alignment =
         parseAlignment(widget.control, "alignment", Alignment.center)!;
     BorderRadius borderRadius = parseBorderRadius(widget.control,
@@ -153,7 +152,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
             debugPrint("CupertinoButton ${widget.control.id} clicked!");
             if (url != "") {
               openWebBrowser(url,
-                  webWindowName: widget.control.attrString("urlTarget"));
+                  webWindowName: widget.control.getString("urlTarget"));
             }
             widget.backend.triggerControlEvent(widget.control.id, "click");
           }

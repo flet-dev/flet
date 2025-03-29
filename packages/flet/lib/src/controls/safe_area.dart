@@ -24,17 +24,16 @@ class SafeAreaControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("SafeArea build: ${control.id}");
 
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    bool disabled = control.isDisabled || parentDisabled;
-    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
+    var contentCtrls = children.where((c) => c.name == "content" && c.visible);
+    bool disabled = control.disabled || parentDisabled;
+    bool? adaptive = control.getBool("adaptive") ?? parentAdaptive;
     var safeArea = SafeArea(
-        left: control.attrBool("left", true)!,
-        top: control.attrBool("top", true)!,
-        right: control.attrBool("right", true)!,
-        bottom: control.attrBool("bottom", true)!,
+        left: control.getBool("left", true)!,
+        top: control.getBool("top", true)!,
+        right: control.getBool("right", true)!,
+        bottom: control.getBool("bottom", true)!,
         maintainBottomViewPadding:
-            control.attrBool("maintainBottomViewPadding", false)!,
+            control.getBool("maintainBottomViewPadding", false)!,
         minimum: parseEdgeInsets(control, "minimumPadding") ??
             parseEdgeInsets(control, "minimum") ??
             EdgeInsets.zero,

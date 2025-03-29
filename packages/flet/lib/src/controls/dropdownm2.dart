@@ -69,26 +69,26 @@ class _DropdownM2ControlState extends State<DropdownM2Control>
     return withControls(widget.control.childIds, (context, itemsView) {
       debugPrint("DropdownFletControlState build: ${widget.control.id}");
 
-      bool autofocus = widget.control.attrBool("autofocus", false)!;
-      bool disabled = widget.control.isDisabled || widget.parentDisabled;
+      bool autofocus = widget.control.getBool("autofocus", false)!;
+      bool disabled = widget.control.disabled || widget.parentDisabled;
 
-      var textSize = widget.control.attrDouble("textSize");
+      var textSize = widget.control.getDouble("textSize");
       var alignment = parseAlignment(widget.control, "alignment");
-      var selectIconStr = parseIcon(widget.control.attrString("selectIcon"));
+      var selectIconStr = parseIcon(widget.control.getString("selectIcon"));
       var selectIconCtrl =
-          widget.children.where((c) => c.name == "selectIcon" && c.isVisible);
+          widget.children.where((c) => c.name == "selectIcon" && c.visible);
       var hintCtrl =
-          widget.children.where((c) => c.name == "hint" && c.isVisible);
-      var disabledHintCtrl = widget.children
-          .where((c) => c.name == "disabled_hint" && c.isVisible);
+          widget.children.where((c) => c.name == "hint" && c.visible);
+      var disabledHintCtrl =
+          widget.children.where((c) => c.name == "disabled_hint" && c.visible);
 
-      var color = widget.control.attrColor("color", context);
-      var focusedColor = widget.control.attrColor("focusedColor", context);
-      var bgcolor = widget.control.attrColor("bgcolor", context);
+      var color = widget.control.getColor("color", context);
+      var focusedColor = widget.control.getColor("focusedColor", context);
+      var bgcolor = widget.control.getColor("bgcolor", context);
       var selectIconEnabledColor =
-          widget.control.attrColor("selectIconEnabledColor", context);
+          widget.control.getColor("selectIconEnabledColor", context);
       var selectIconDisabledColor =
-          widget.control.attrColor("selectIconDisabledColor", context);
+          widget.control.getColor("selectIconDisabledColor", context);
 
       TextStyle? textStyle =
           parseTextStyle(Theme.of(context), widget.control, "textStyle");
@@ -100,17 +100,17 @@ class _DropdownM2ControlState extends State<DropdownM2Control>
       }
 
       var items = itemsView.controlViews
-          .where((c) => c.control.name == null && c.control.isVisible)
+          .where((c) => c.control.name == null && c.control.visible)
           .map<DropdownMenuItem<String>>((ControlViewModel itemCtrlView) {
         var itemCtrl = itemCtrlView.control;
-        bool itemDisabled = disabled || itemCtrl.isDisabled;
+        bool itemDisabled = disabled || itemCtrl.disabled;
         TextStyle? textStyle =
             parseTextStyle(Theme.of(context), itemCtrl, "textStyle");
         if (itemDisabled && textStyle != null) {
           textStyle = textStyle.apply(color: Theme.of(context).disabledColor);
         }
         var contentCtrls = itemCtrlView.children
-            .where((c) => c.name == "content" && c.isVisible);
+            .where((c) => c.name == "content" && c.visible);
         Widget? itemChild;
         if (contentCtrls.isNotEmpty) {
           // custom content
@@ -130,7 +130,7 @@ class _DropdownM2ControlState extends State<DropdownM2Control>
           enabled: !itemDisabled,
           value: itemCtrl.attrs["key"] ?? itemCtrl.attrs["text"] ?? itemCtrl.id,
           alignment: align ?? AlignmentDirectional.centerStart,
-          onTap: !(disabled || itemCtrl.isDisabled)
+          onTap: !(disabled || itemCtrl.disabled)
               ? () {
                   widget.backend.triggerControlEvent(itemCtrl.id, "click");
                 }
@@ -139,7 +139,7 @@ class _DropdownM2ControlState extends State<DropdownM2Control>
         );
       }).toList();
 
-      String? value = widget.control.attrString("value");
+      String? value = widget.control.getString("value");
       if (_value != value) {
         _value = value;
       }
@@ -149,25 +149,25 @@ class _DropdownM2ControlState extends State<DropdownM2Control>
       }
 
       var prefixControls = itemsView.controlViews
-          .where((c) => c.control.name == "prefix" && c.control.isVisible);
+          .where((c) => c.control.name == "prefix" && c.control.visible);
       var prefixIconControls = itemsView.controlViews
-          .where((c) => c.control.name == "prefix_icon" && c.control.isVisible);
+          .where((c) => c.control.name == "prefix_icon" && c.control.visible);
       var suffixControls = itemsView.controlViews
-          .where((c) => c.control.name == "suffix" && c.control.isVisible);
+          .where((c) => c.control.name == "suffix" && c.control.visible);
       var suffixIconControls = itemsView.controlViews
-          .where((c) => c.control.name == "suffix_icon" && c.control.isVisible);
+          .where((c) => c.control.name == "suffix_icon" && c.control.visible);
       var counterControls = itemsView.controlViews
-          .where((c) => c.control.name == "counter" && c.control.isVisible);
+          .where((c) => c.control.name == "counter" && c.control.visible);
       var iconControls = itemsView.controlViews
-          .where((c) => c.control.name == "icon" && c.control.isVisible);
+          .where((c) => c.control.name == "icon" && c.control.visible);
       var errorCtrl = itemsView.controlViews
-          .where((c) => c.control.name == "error" && c.control.isVisible);
+          .where((c) => c.control.name == "error" && c.control.visible);
       var helperCtrl = itemsView.controlViews
-          .where((c) => c.control.name == "helper" && c.control.isVisible);
+          .where((c) => c.control.name == "helper" && c.control.visible);
       var labelCtrl = itemsView.controlViews
-          .where((c) => c.control.name == "label" && c.control.isVisible);
+          .where((c) => c.control.name == "label" && c.control.visible);
 
-      var focusValue = widget.control.attrString("focus");
+      var focusValue = widget.control.getString("focus");
       if (focusValue != null && focusValue != _lastFocusValue) {
         _lastFocusValue = focusValue;
         _focusNode.requestFocus();
@@ -181,17 +181,17 @@ class _DropdownM2ControlState extends State<DropdownM2Control>
         focusNode: _focusNode,
         value: _value,
         dropdownColor: bgcolor,
-        enableFeedback: widget.control.attrBool("enableFeedback"),
-        elevation: widget.control.attrInt("elevation", 8)!,
+        enableFeedback: widget.control.getBool("enableFeedback"),
+        elevation: widget.control.getInt("elevation", 8)!,
         padding: parseEdgeInsets(widget.control, "padding"),
-        itemHeight: widget.control.attrDouble("itemHeight"),
-        menuMaxHeight: widget.control.attrDouble("maxMenuHeight"),
+        itemHeight: widget.control.getDouble("itemHeight"),
+        menuMaxHeight: widget.control.getDouble("maxMenuHeight"),
         iconEnabledColor: selectIconEnabledColor,
         iconDisabledColor: selectIconDisabledColor,
-        iconSize: widget.control.attrDouble("selectIconSize", 24.0)!,
+        iconSize: widget.control.getDouble("selectIconSize", 24.0)!,
         borderRadius: borderRadius,
         alignment: alignment ?? AlignmentDirectional.centerStart,
-        isExpanded: widget.control.attrBool("optionsFillHorizontally", true)!,
+        isExpanded: widget.control.getBool("optionsFillHorizontally", true)!,
         icon: selectIconCtrl.isNotEmpty
             ? createControl(widget.control, selectIconCtrl.first.id, disabled)
             : selectIconStr != null
@@ -243,14 +243,14 @@ class _DropdownM2ControlState extends State<DropdownM2Control>
         items: items,
       );
 
-      if (widget.control.attrInt("expand", 0)! > 0) {
+      if (widget.control.getInt("expand", 0)! > 0) {
         return constrainedControl(
             context, dropDown, widget.parent, widget.control);
       } else {
         return LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
             if (constraints.maxWidth == double.infinity &&
-                widget.control.attrDouble("width") == null) {
+                widget.control.getDouble("width") == null) {
               dropDown = ConstrainedBox(
                 constraints: const BoxConstraints.tightFor(width: 300),
                 child: dropDown,

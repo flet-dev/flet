@@ -22,9 +22,8 @@ class MergeSemanticsControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("MergeSemantics build: ${control.id}");
 
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    bool disabled = control.isDisabled || parentDisabled;
+    var contentCtrls = children.where((c) => c.name == "content" && c.visible);
+    bool disabled = control.disabled || parentDisabled;
 
     MergeSemantics mergeSemantics = MergeSemantics(
         child: contentCtrls.isNotEmpty

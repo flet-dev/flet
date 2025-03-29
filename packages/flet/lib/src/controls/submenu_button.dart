@@ -53,16 +53,15 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("SubMenuButton build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
 
     var content =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
-    var ctrls =
-        widget.children.where((c) => c.name == "controls" && c.isVisible);
+        widget.children.where((c) => c.name == "content" && c.visible);
+    var ctrls = widget.children.where((c) => c.name == "controls" && c.visible);
     var leading =
-        widget.children.where((c) => c.name == "leading" && c.isVisible);
+        widget.children.where((c) => c.name == "leading" && c.visible);
     var trailing =
-        widget.children.where((c) => c.name == "trailing" && c.isVisible);
+        widget.children.where((c) => c.name == "trailing" && c.visible);
 
     var theme = Theme.of(context);
     var style = parseButtonStyle(Theme.of(context), widget.control, "style",
@@ -78,14 +77,14 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
             ? const StadiumBorder()
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
-    bool onOpen = widget.control.attrBool("onOpen", false)!;
-    bool onClose = widget.control.attrBool("onClose", false)!;
-    bool onHover = widget.control.attrBool("onHover", false)!;
+    bool onOpen = widget.control.getBool("onOpen", false)!;
+    bool onClose = widget.control.getBool("onClose", false)!;
+    bool onHover = widget.control.getBool("onHover", false)!;
 
     var subMenu = SubmenuButton(
       focusNode: _focusNode,
       clipBehavior:
-          parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!,
+          parseClip(widget.control.getString("clipBehavior"), Clip.hardEdge)!,
       style: style,
       menuStyle: parseMenuStyle(Theme.of(context), widget.control, "menuStyle"),
       alignmentOffset: parseOffset(widget.control, "alignmentOffset"),
@@ -119,7 +118,7 @@ class _SubMenuButtonControlState extends State<SubMenuButtonControl> {
           : null,
     );
 
-    var focusValue = widget.control.attrString("focus");
+    var focusValue = widget.control.getString("focus");
     if (focusValue != null && focusValue != _lastFocusValue) {
       _lastFocusValue = focusValue;
       _focusNode.requestFocus();

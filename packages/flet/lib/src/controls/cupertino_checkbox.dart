@@ -73,15 +73,15 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoCheckBox build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
 
-    String label = widget.control.attrString("label", "")!;
+    String label = widget.control.getString("label", "")!;
     LabelPosition labelPosition = parseLabelPosition(
-        widget.control.attrString("labelPosition"), LabelPosition.right)!;
-    _tristate = widget.control.attrBool("tristate", false)!;
-    bool autofocus = widget.control.attrBool("autofocus", false)!;
+        widget.control.getString("labelPosition"), LabelPosition.right)!;
+    _tristate = widget.control.getBool("tristate", false)!;
+    bool autofocus = widget.control.getBool("autofocus", false)!;
 
-    bool? value = widget.control.attrBool("value", _tristate ? null : false);
+    bool? value = widget.control.getBool("value", _tristate ? null : false);
     if (_value != value) {
       _value = value;
     }
@@ -91,12 +91,12 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
         focusNode: _focusNode,
         value: _value,
         activeColor: parseColor(Theme.of(context),
-            widget.control.attrString("activeColor", "primary")!),
-        checkColor: widget.control.attrColor("checkColor", context),
-        focusColor: widget.control.attrColor("focusColor", context),
+            widget.control.getString("activeColor", "primary")!),
+        checkColor: widget.control.getColor("checkColor", context),
+        focusColor: widget.control.getColor("focusColor", context),
         shape: parseOutlinedBorder(widget.control, "shape"),
-        mouseCursor: parseMouseCursor(widget.control.attrString("mouseCursor")),
-        semanticLabel: widget.control.attrString("semanticsLabel"),
+        mouseCursor: parseMouseCursor(widget.control.getString("mouseCursor")),
+        semanticLabel: widget.control.getString("semanticsLabel"),
         side: parseWidgetStateBorderSide(
             Theme.of(context), widget.control, "borderSide"),
         fillColor: parseWidgetStateColor(

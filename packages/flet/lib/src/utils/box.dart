@@ -19,7 +19,7 @@ import 'others.dart';
 import 'transforms.dart';
 
 BoxConstraints? parseBoxConstraints(Control control, String propName) {
-  var v = control.attrString(propName);
+  var v = control.getString(propName);
   if (v == null) {
     return null;
   }
@@ -44,7 +44,7 @@ BoxConstraints? boxConstraintsFromJSON(dynamic json,
 List<BoxShadow>? parseBoxShadow(
     ThemeData theme, Control control, String propName,
     [List<BoxShadow>? defValue]) {
-  var v = control.attrString(propName);
+  var v = control.getString(propName);
   if (v == null) {
     return defValue;
   }
@@ -81,7 +81,7 @@ BoxShadow boxShadowFromJSON(ThemeData theme, dynamic json) {
 
 BoxDecoration? parseBoxDecoration(ThemeData theme, Control control,
     String propName, PageArgsModel? pageArgs) {
-  var v = control.attrString(propName);
+  var v = control.getString(propName);
   if (v == null) {
     return null;
   }
@@ -150,7 +150,7 @@ BoxDecoration? boxDecorationFromDetails({
 
 DecorationImage? parseDecorationImage(ThemeData theme, Control control,
     String propName, PageArgsModel? pageArgs) {
-  var v = control.attrString(propName);
+  var v = control.getString(propName);
   if (v == null) {
     return null;
   }

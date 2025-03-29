@@ -72,36 +72,36 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
     bool disabled = false,
     bool? adaptive}) {
   FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
-    control.attrString("border"),
+    control.getString("border"),
     FormFieldInputBorder.outline,
   )!;
-  var iconStr = parseIcon(control.attrString("icon"));
-  var prefixIconData = parseIcon(control.attrString("prefixIcon"));
+  var iconStr = parseIcon(control.getString("icon"));
+  var prefixIconData = parseIcon(control.getString("prefixIcon"));
   var prefixIconWidget = prefixIcon != null
-      ? createControl(control, prefixIcon.id, control.isDisabled,
+      ? createControl(control, prefixIcon.id, control.disabled,
           parentAdaptive: adaptive)
       : (prefixIconData != null ? Icon(prefixIconData) : null);
-  var suffixIconData = parseIcon(control.attrString("suffixIcon"));
+  var suffixIconData = parseIcon(control.getString("suffixIcon"));
   var suffixIconWidget = suffixIcon != null
-      ? createControl(control, suffixIcon.id, control.isDisabled,
+      ? createControl(control, suffixIcon.id, control.disabled,
           parentAdaptive: adaptive)
       : (suffixIconData != null ? Icon(suffixIconData) : null);
-  var prefixText = control.attrString("prefixText");
-  var suffixText = control.attrString("suffixText");
+  var prefixText = control.getString("prefixText");
+  var suffixText = control.getString("suffixText");
 
-  var bgcolor = control.attrColor("bgcolor", context);
-  var focusedBgcolor = control.attrColor("focusedBgcolor", context);
-  var fillColor = control.attrColor("fillColor", context);
-  var hoverColor = control.attrColor("hoverColor", context);
-  var borderColor = control.attrColor("borderColor", context);
+  var bgcolor = control.getColor("bgcolor", context);
+  var focusedBgcolor = control.getColor("focusedBgcolor", context);
+  var fillColor = control.getColor("fillColor", context);
+  var hoverColor = control.getColor("hoverColor", context);
+  var borderColor = control.getColor("borderColor", context);
 
   var borderRadius = parseBorderRadius(control, "borderRadius");
-  var focusedBorderColor = control.attrColor("focusedBorderColor", context);
-  var borderWidth = control.attrDouble("borderWidth");
-  var focusedBorderWidth = control.attrDouble("focusedBorderWidth");
+  var focusedBorderColor = control.getColor("focusedBorderColor", context);
+  var borderWidth = control.getDouble("borderWidth");
+  var focusedBorderWidth = control.getDouble("focusedBorderWidth");
 
   var counterText = control
-      .attrString("counterText", "")
+      .getString("counterText", "")
       ?.replaceAll("{value_length}", valueLength.toString())
       .replaceAll("{max_length}", maxLength?.toString() ?? "None")
       .replaceAll("{symbols_left}",
@@ -156,12 +156,12 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
   return InputDecoration(
       enabled: !disabled,
       contentPadding: parseEdgeInsets(control, "contentPadding"),
-      isDense: control.attrBool("dense"),
+      isDense: control.getBool("dense"),
       label: label != null
-          ? createControl(control, label.id, control.isDisabled,
+          ? createControl(control, label.id, control.disabled,
               parentAdaptive: adaptive)
-          : control.attrString("label") != null
-              ? Text(control.attrString("label")!)
+          : control.getString("label") != null
+              ? Text(control.getString("label")!)
               : null,
       labelStyle: parseTextStyle(Theme.of(context), control, "labelStyle"),
       border: border,
@@ -169,55 +169,55 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       focusedBorder: focusedBorder,
       hoverColor: hoverColor,
       icon: icon != null
-          ? createControl(control, icon.id, control.isDisabled,
+          ? createControl(control, icon.id, control.disabled,
               parentAdaptive: adaptive)
           : iconStr != null
               ? Icon(iconStr)
               : null,
-      filled: control.attrBool("filled", false)!,
+      filled: control.getBool("filled", false)!,
       fillColor: fillColor ?? (focused ? focusedBgcolor ?? bgcolor : bgcolor),
-      hintText: control.attrString("hintText"),
+      hintText: control.getString("hintText"),
       hintStyle: parseTextStyle(Theme.of(context), control, "hintStyle"),
-      helperText: control.attrString("helperText"),
+      helperText: control.getString("helperText"),
       helperStyle: parseTextStyle(Theme.of(context), control, "helperStyle"),
       counterText: counterText,
       counterStyle: parseTextStyle(Theme.of(context), control, "counterStyle"),
       counter: counter != null
-          ? createControl(control, counter.id, control.isDisabled,
+          ? createControl(control, counter.id, control.disabled,
               parentAdaptive: adaptive)
           : null,
       error: error != null
-          ? createControl(control, error.id, control.isDisabled,
+          ? createControl(control, error.id, control.disabled,
               parentAdaptive: adaptive)
           : null,
       helper: helper != null
-          ? createControl(control, helper.id, control.isDisabled,
+          ? createControl(control, helper.id, control.disabled,
               parentAdaptive: adaptive)
           : null,
       constraints: parseBoxConstraints(control, "sizeConstraints"),
-      isCollapsed: control.attrBool("collapsed"),
+      isCollapsed: control.getBool("collapsed"),
       prefixIconConstraints:
           parseBoxConstraints(control, "prefixIconConstraints"),
       suffixIconConstraints:
           parseBoxConstraints(control, "suffixIconConstraints"),
-      focusColor: control.attrColor("focusColor", context),
-      errorMaxLines: control.attrInt("errorMaxLines"),
-      alignLabelWithHint: control.attrBool("alignLabelWithHint"),
-      errorText: control.attrString("errorText"),
+      focusColor: control.getColor("focusColor", context),
+      errorMaxLines: control.getInt("errorMaxLines"),
+      alignLabelWithHint: control.getBool("alignLabelWithHint"),
+      errorText: control.getString("errorText"),
       errorStyle: parseTextStyle(Theme.of(context), control, "errorStyle"),
       prefixIcon: prefixIconWidget,
       prefixText:
           prefix == null ? prefixText : null, // ignored if prefix is set
       hintFadeDuration: parseDuration(control, "hintFadeDuration"),
-      hintMaxLines: control.attrInt("hintMaxLines"),
-      helperMaxLines: control.attrInt("helperMaxLines"),
+      hintMaxLines: control.getInt("hintMaxLines"),
+      helperMaxLines: control.getInt("helperMaxLines"),
       prefixStyle: parseTextStyle(Theme.of(context), control, "prefixStyle"),
       prefix: prefix != null
-          ? createControl(control, prefix.id, control.isDisabled,
+          ? createControl(control, prefix.id, control.disabled,
               parentAdaptive: adaptive)
           : null,
       suffix: suffix != null
-          ? createControl(control, suffix.id, control.isDisabled,
+          ? createControl(control, suffix.id, control.disabled,
               parentAdaptive: adaptive)
           : null,
       suffixIcon: suffixIconWidget ?? customSuffix,
@@ -243,7 +243,7 @@ OverlayVisibilityMode? parseVisibilityMode(String? value,
 
 StrutStyle? parseStrutStyle(Control control, String propName) {
   dynamic j;
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return null;
   }

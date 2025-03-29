@@ -29,22 +29,21 @@ class CupertinoListTileControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("CupertinoListTile build: ${control.id}");
 
-    var leadingCtrls =
-        children.where((c) => c.name == "leading" && c.isVisible);
-    var titleCtrls = children.where((c) => c.name == "title" && c.isVisible);
+    var leadingCtrls = children.where((c) => c.name == "leading" && c.visible);
+    var titleCtrls = children.where((c) => c.name == "title" && c.visible);
     var subtitleCtrls =
-        children.where((c) => c.name == "subtitle" && c.isVisible);
+        children.where((c) => c.name == "subtitle" && c.visible);
     var trailingCtrls =
-        children.where((c) => c.name == "trailing" && c.isVisible);
+        children.where((c) => c.name == "trailing" && c.visible);
     var additionalInfoCtrls =
-        children.where((c) => c.name == "additionalInfo" && c.isVisible);
+        children.where((c) => c.name == "additionalInfo" && c.visible);
 
-    bool notched = control.attrBool("notched", false)!;
-    bool onclick = control.attrBool("onclick", false)!;
-    bool toggleInputs = control.attrBool("toggleInputs", false)!;
-    String url = control.attrString("url", "")!;
-    String? urlTarget = control.attrString("urlTarget");
-    bool disabled = control.isDisabled || parentDisabled;
+    bool notched = control.getBool("notched", false)!;
+    bool onclick = control.getBool("onclick", false)!;
+    bool toggleInputs = control.getBool("toggleInputs", false)!;
+    String url = control.getString("url", "")!;
+    String? urlTarget = control.getString("urlTarget");
+    bool disabled = control.disabled || parentDisabled;
 
     Widget? additionalInfo = additionalInfoCtrls.isNotEmpty
         ? createControl(control, additionalInfoCtrls.first.id, disabled,
@@ -70,12 +69,12 @@ class CupertinoListTileControl extends StatelessWidget {
             parentAdaptive: parentAdaptive)
         : null;
 
-    Color? backgroundColor = control.attrColor("bgcolor", context);
-    Color? bgcolorActivated = control.attrColor("bgcolorActivated", context);
+    Color? backgroundColor = control.getColor("bgcolor", context);
+    Color? bgcolorActivated = control.getColor("bgcolorActivated", context);
 
     var padding = parseEdgeInsets(control, "contentPadding");
-    var leadingSize = control.attrDouble("leadingSize");
-    var leadingToTitle = control.attrDouble("leadingToTitle");
+    var leadingSize = control.getDouble("leadingSize");
+    var leadingToTitle = control.getDouble("leadingToTitle");
 
     Function()? onPressed = (onclick || toggleInputs || url != "") && !disabled
         ? () {

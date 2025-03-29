@@ -27,13 +27,12 @@ class SelectionAreaControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("SelectionArea build: ${control.id}");
 
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
+    var contentCtrls = children.where((c) => c.name == "content" && c.visible);
     if (contentCtrls.isEmpty) {
       return const ErrorControl(
           "SelectionArea.content must be provided and visible");
     }
-    bool disabled = control.isDisabled || parentDisabled;
+    bool disabled = control.disabled || parentDisabled;
     var selectionArea = SelectionArea(
       child: createControl(control, contentCtrls.first.id, disabled,
           parentAdaptive: parentAdaptive),

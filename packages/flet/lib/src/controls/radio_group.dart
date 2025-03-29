@@ -23,9 +23,8 @@ class RadioGroupControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("RadioGroupControl build: ${control.id}");
 
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    bool disabled = control.isDisabled || parentDisabled;
+    var contentCtrls = children.where((c) => c.name == "content" && c.visible);
+    bool disabled = control.disabled || parentDisabled;
 
     if (contentCtrls.isEmpty) {
       return const ErrorControl(

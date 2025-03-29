@@ -73,7 +73,7 @@ ThemeMode? parseThemeMode(String? value, [ThemeMode? defValue]) {
 ThemeData parseTheme(Control control, String propName, Brightness? brightness,
     {ThemeData? parentTheme}) {
   dynamic j;
-  var v = control.attrString(propName);
+  var v = control.getString(propName);
   if (v != null) {
     j = json.decode(v);
   }

@@ -24,10 +24,9 @@ class WindowDragAreaControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("WindowDragArea build: ${control.id}");
 
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    bool maximizable = control.attrBool("maximizable", true)!;
-    bool disabled = control.isDisabled || parentDisabled;
+    var contentCtrls = children.where((c) => c.name == "content" && c.visible);
+    bool maximizable = control.getBool("maximizable", true)!;
+    bool disabled = control.disabled || parentDisabled;
 
     if (contentCtrls.isEmpty) {
       return const ErrorControl(

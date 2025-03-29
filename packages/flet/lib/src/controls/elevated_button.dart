@@ -60,11 +60,11 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
   @override
   Widget build(BuildContext context) {
     debugPrint("Button build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
 
     return withPagePlatform((context, platform) {
       bool? adaptive =
-          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+          widget.control.getBool("adaptive") ?? widget.parentAdaptive;
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
@@ -87,24 +87,24 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
 
       bool isFilledButton = widget.control.type == "filledbutton";
       bool isFilledTonalButton = widget.control.type == "filledtonalbutton";
-      String text = widget.control.attrString("text", "")!;
-      String url = widget.control.attrString("url", "")!;
-      IconData? icon = parseIcon(widget.control.attrString("icon"));
-      Color? iconColor = widget.control.attrColor("iconColor", context);
+      String text = widget.control.getString("text", "")!;
+      String url = widget.control.getString("url", "")!;
+      IconData? icon = parseIcon(widget.control.getString("icon"));
+      Color? iconColor = widget.control.getColor("iconColor", context);
       var contentCtrls =
-          widget.children.where((c) => c.name == "content" && c.isVisible);
+          widget.children.where((c) => c.name == "content" && c.visible);
       var clipBehavior =
-          parseClip(widget.control.attrString("clipBehavior"), Clip.none)!;
-      bool onHover = widget.control.attrBool("onHover", false)!;
-      bool onLongPress = widget.control.attrBool("onLongPress", false)!;
-      bool autofocus = widget.control.attrBool("autofocus", false)!;
+          parseClip(widget.control.getString("clipBehavior"), Clip.none)!;
+      bool onHover = widget.control.getBool("onHover", false)!;
+      bool onLongPress = widget.control.getBool("onLongPress", false)!;
+      bool autofocus = widget.control.getBool("autofocus", false)!;
 
       Function()? onPressed = !disabled
           ? () {
               debugPrint("Button ${widget.control.id} clicked!");
               if (url != "") {
                 openWebBrowser(url,
-                    webWindowName: widget.control.attrString("urlTarget"));
+                    webWindowName: widget.control.getString("urlTarget"));
               }
               widget.backend.triggerControlEvent(widget.control.id, "click");
             }
@@ -234,7 +234,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
         }
       }
 
-      var focusValue = widget.control.attrString("focus");
+      var focusValue = widget.control.getString("focus");
       if (focusValue != null && focusValue != _lastFocusValue) {
         _lastFocusValue = focusValue;
         _focusNode.requestFocus();

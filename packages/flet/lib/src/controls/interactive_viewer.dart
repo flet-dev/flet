@@ -107,24 +107,24 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
   Widget build(BuildContext context) {
     debugPrint("InteractiveViewer build: ${widget.control.id}");
 
-    var contentCtrls = widget.children.where((c) => c.isVisible);
-    bool? adaptive = widget.control.isAdaptive ?? widget.parentAdaptive;
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    var contentCtrls = widget.children.where((c) => c.visible);
+    bool? adaptive = widget.control.adaptive ?? widget.parentAdaptive;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
 
     var interactiveViewer = InteractiveViewer(
       transformationController: _transformationController,
-      panEnabled: widget.control.attrBool("panEnabled", true)!,
-      scaleEnabled: widget.control.attrBool("scaleEnabled", true)!,
+      panEnabled: widget.control.getBool("panEnabled", true)!,
+      scaleEnabled: widget.control.getBool("scaleEnabled", true)!,
       trackpadScrollCausesScale:
-          widget.control.attrBool("trackpadScrollCausesScale", false)!,
-      constrained: widget.control.attrBool("constrained", true)!,
-      maxScale: widget.control.attrDouble("maxScale", 2.5)!,
-      minScale: widget.control.attrDouble("minScale", 0.8)!,
+          widget.control.getBool("trackpadScrollCausesScale", false)!,
+      constrained: widget.control.getBool("constrained", true)!,
+      maxScale: widget.control.getDouble("maxScale", 2.5)!,
+      minScale: widget.control.getDouble("minScale", 0.8)!,
       interactionEndFrictionCoefficient: widget.control
-          .attrDouble("interactionEndFrictionCoefficient", 0.0000135)!,
-      scaleFactor: widget.control.attrDouble("scaleFactor", 200)!,
+          .getDouble("interactionEndFrictionCoefficient", 0.0000135)!,
+      scaleFactor: widget.control.getDouble("scaleFactor", 200)!,
       clipBehavior:
-          parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!,
+          parseClip(widget.control.getString("clipBehavior"), Clip.hardEdge)!,
       alignment: parseAlignment(widget.control, "alignment"),
       boundaryMargin:
           parseEdgeInsets(widget.control, "boundaryMargin", EdgeInsets.zero)!,
@@ -160,7 +160,7 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
       onInteractionUpdate: !disabled
           ? (ScaleUpdateDetails details) {
               var interactionUpdateInterval =
-                  widget.control.attrInt("interactionUpdateInterval", 200)!;
+                  widget.control.getInt("interactionUpdateInterval", 200)!;
               var now = DateTime.now().millisecondsSinceEpoch;
               if (now - _interactionUpdateTimestamp >
                   interactionUpdateInterval) {

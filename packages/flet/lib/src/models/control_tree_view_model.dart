@@ -18,7 +18,7 @@ class ControlTreeViewModel extends Equatable {
         children: control.childIds
             .map((childId) => store.state.controls[childId])
             .whereNotNull()
-            .where((c) => c.isVisible)
+            .where((c) => c.visible)
             .map((c) => ControlTreeViewModel.fromStore(store, c))
             .toList());
   }

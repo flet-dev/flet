@@ -10,7 +10,6 @@ import '../utils/box.dart';
 import '../utils/images.dart';
 import '../utils/launch_url.dart';
 import '../utils/markdown.dart';
-import '../utils/text.dart';
 import '../utils/uri.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -37,17 +36,17 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
   @override
   Widget build(BuildContext context) {
     debugPrint("Markdown build: ${control.id}");
-    bool disabled = control.isDisabled || parentDisabled;
+    bool disabled = control.disabled || parentDisabled;
 
-    var value = control.attrString("value", "")!;
+    var value = control.getString("value", "")!;
     md.ExtensionSet extensionSet = parseMarkdownExtensionSet(
-        control.attrString("extensionSet"), md.ExtensionSet.none)!;
+        control.getString("extensionSet"), md.ExtensionSet.none)!;
 
-    var autoFollowLinks = control.attrBool("autoFollowLinks", false)!;
-    var autoFollowLinksTarget = control.attrString("autoFollowLinksTarget");
+    var autoFollowLinks = control.getBool("autoFollowLinks", false)!;
+    var autoFollowLinksTarget = control.getString("autoFollowLinksTarget");
 
     return withPageArgs((context, pageArgs) {
-      bool selectable = control.attrBool("selectable", false)!;
+      bool selectable = control.getBool("selectable", false)!;
       var codeStyleSheet = parseMarkdownStyleSheet(
               control, "codeStyleSheet", Theme.of(context), pageArgs) ??
           MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
@@ -78,7 +77,7 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
               return ErrorControl("Invalid image URI: $s");
             }
             var errorContentCtrls =
-                children.where((c) => c.name == "error" && c.isVisible);
+                children.where((c) => c.name == "error" && c.visible);
 
             var errorContent = errorContentCtrls.isNotEmpty
                 ? createControl(control, errorContentCtrls.first.id, disabled)
@@ -95,9 +94,9 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
               errorCtrl: errorContent,
             );
           },
-          shrinkWrap: control.attrBool("shrinkWrap", true)!,
-          fitContent: control.attrBool("fitContent", true)!,
-          softLineBreak: control.attrBool("softLineBreak", false)!,
+          shrinkWrap: control.getBool("shrinkWrap", true)!,
+          fitContent: control.getBool("fitContent", true)!,
+          softLineBreak: control.getBool("softLineBreak", false)!,
           onSelectionChanged: (String? text, TextSelection selection,
               SelectionChangedCause? cause) {
             debugPrint("Markdown ${control.id} selection changed");

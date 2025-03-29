@@ -64,14 +64,14 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl>
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoSwitchControl build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
 
-    String label = widget.control.attrString("label", "")!;
+    String label = widget.control.getString("label", "")!;
     LabelPosition labelPosition = parseLabelPosition(
-        widget.control.attrString("labelPosition"), LabelPosition.right)!;
-    bool autofocus = widget.control.attrBool("autofocus", false)!;
+        widget.control.getString("labelPosition"), LabelPosition.right)!;
+    bool autofocus = widget.control.getBool("autofocus", false)!;
 
-    bool value = widget.control.attrBool("value", false)!;
+    bool value = widget.control.getBool("value", false)!;
     if (_value != value) {
       _value = value;
     }
@@ -81,24 +81,24 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl>
 
     var materialTrackColor =
         parseWidgetStateColor(Theme.of(context), widget.control, "trackColor");
-    var activeThumbImage = widget.control.attrString("activeThumbImage");
-    var inactiveThumbImage = widget.control.attrString("inactiveThumbImage");
+    var activeThumbImage = widget.control.getString("activeThumbImage");
+    var inactiveThumbImage = widget.control.getString("inactiveThumbImage");
 
     return withPageArgs((context, pageArgs) {
       var swtch = CupertinoSwitch(
           autofocus: autofocus,
           focusNode: _focusNode,
           activeTrackColor:
-              widget.control.attrColor("activeTrackColor", context) ??
-                  widget.control.attrColor("activeColor", context),
+              widget.control.getColor("activeTrackColor", context) ??
+                  widget.control.getColor("activeColor", context),
           // deprecated in v0.26.0, remove in v0.29.0
           thumbColor: materialThumbColor?.resolve({}),
           trackColor: materialTrackColor?.resolve({}),
-          focusColor: widget.control.attrColor("focusColor", context),
+          focusColor: widget.control.getColor("focusColor", context),
           inactiveTrackColor:
-              widget.control.attrColor("inactiveTrackColor", context),
+              widget.control.getColor("inactiveTrackColor", context),
           inactiveThumbColor:
-              widget.control.attrColor("inactiveThumbColor", context),
+              widget.control.getColor("inactiveThumbColor", context),
           trackOutlineColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "trackOutlineColor"),
           trackOutlineWidth:
@@ -122,8 +122,8 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl>
                       widget.control.id, "image_error", exception.toString());
                 },
           value: _value,
-          offLabelColor: widget.control.attrColor("offLabelColor", context),
-          onLabelColor: widget.control.attrColor("onLabelColor", context),
+          offLabelColor: widget.control.getColor("offLabelColor", context),
+          onLabelColor: widget.control.getColor("onLabelColor", context),
           onChanged: !disabled
               ? (bool value) {
                   _onChange(value);

@@ -48,8 +48,8 @@ class _NavigationRailControlState extends State<NavigationRailControl>
   Widget build(BuildContext context) {
     debugPrint("NavigationRailControl build: ${widget.control.id}");
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
-    var selectedIndex = widget.control.attrInt("selectedIndex");
+    bool disabled = widget.control.disabled || widget.parentDisabled;
+    var selectedIndex = widget.control.getInt("selectedIndex");
 
     if (_selectedIndex != selectedIndex) {
       _selectedIndex = selectedIndex;
@@ -59,19 +59,19 @@ class _NavigationRailControlState extends State<NavigationRailControl>
         .firstWhere(
             (a) =>
                 a.name.toLowerCase() ==
-                widget.control.attrString("labelType", "")!.toLowerCase(),
+                widget.control.getString("labelType", "")!.toLowerCase(),
             orElse: () => NavigationRailLabelType.all);
 
     var leadingCtrls =
-        widget.children.where((c) => c.name == "leading" && c.isVisible);
+        widget.children.where((c) => c.name == "leading" && c.visible);
     var trailingCtrls =
-        widget.children.where((c) => c.name == "trailing" && c.isVisible);
+        widget.children.where((c) => c.name == "trailing" && c.visible);
 
-    var extended = widget.control.attrBool("extended", false)!;
+    var extended = widget.control.getBool("extended", false)!;
 
     var rail = withControls(
         widget.children
-            .where((c) => c.isVisible && c.name == null)
+            .where((c) => c.visible && c.name == null)
             .map((c) => c.id), (content, viewModel) {
       return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
@@ -81,7 +81,7 @@ class _NavigationRailControlState extends State<NavigationRailControl>
               "NavigationRail constraints.maxHeight: ${constraints.maxHeight}");
 
           if (constraints.maxHeight == double.infinity &&
-              widget.control.attrDouble("height") == null) {
+              widget.control.getDouble("height") == null) {
             return const ErrorControl("Error displaying NavigationRail",
                 description:
                     "Control's height is unbounded. Either set \"expand\" property, set a fixed \"height\" or nest NavigationRail inside another control with a fixed height.");
@@ -90,19 +90,19 @@ class _NavigationRailControlState extends State<NavigationRailControl>
           return NavigationRail(
               labelType: extended ? NavigationRailLabelType.none : labelType,
               extended: extended,
-              elevation: widget.control.attrDouble("elevation"),
+              elevation: widget.control.getDouble("elevation"),
               selectedLabelTextStyle: parseTextStyle(
                   Theme.of(context), widget.control, "selectedLabelTextStyle"),
               unselectedLabelTextStyle: parseTextStyle(Theme.of(context),
                   widget.control, "unselectedLabelTextStyle"),
               indicatorShape:
                   parseOutlinedBorder(widget.control, "indicatorShape"),
-              minWidth: widget.control.attrDouble("minWidth"),
-              minExtendedWidth: widget.control.attrDouble("minExtendedWidth"),
-              groupAlignment: widget.control.attrDouble("groupAlignment"),
-              backgroundColor: widget.control.attrColor("bgColor", context),
+              minWidth: widget.control.getDouble("minWidth"),
+              minExtendedWidth: widget.control.getDouble("minExtendedWidth"),
+              groupAlignment: widget.control.getDouble("groupAlignment"),
+              backgroundColor: widget.control.getColor("bgColor", context),
               indicatorColor:
-                  widget.control.attrColor("indicatorColor", context),
+                  widget.control.getColor("indicatorColor", context),
               leading: leadingCtrls.isNotEmpty
                   ? createControl(
                       widget.control, leadingCtrls.first.id, disabled,
@@ -116,37 +116,41 @@ class _NavigationRailControlState extends State<NavigationRailControl>
               selectedIndex: _selectedIndex,
               onDestinationSelected: _destinationChanged,
               destinations: viewModel.controlViews.map((destView) {
-                var label = destView.control.attrString("label", "")!;
+                var label = destView.control.getString("label", "")!;
                 var labelContentCtrls = destView.children
-                    .where((c) => c.name == "label_content" && c.isVisible);
+                    .where((c) => c.name == "label_content" && c.visible);
 
-                var iconStr = parseIcon(destView.control.attrString("icon"));
+                var iconStr = parseIcon(destView.control.getString("icon"));
                 var iconCtrls = destView.children
-                  .where((c) => c.name == "icon" && c.isVisible);
-                // if no control provided in "icon" property, replace iconCtrls with control provided in icon_content, if any 
+                    .where((c) => c.name == "icon" && c.visible);
+                // if no control provided in "icon" property, replace iconCtrls with control provided in icon_content, if any
                 // the line below needs to be deleted after icon_content is deprecated
-                iconCtrls = iconCtrls.isEmpty? destView.children
-                  .where((c) => c.name == "icon_content" && c.isVisible) : iconCtrls;
+                iconCtrls = iconCtrls.isEmpty
+                    ? destView.children
+                        .where((c) => c.name == "icon_content" && c.visible)
+                    : iconCtrls;
 
                 var selectedIconStr =
-                    parseIcon(destView.control.attrString("selectedIcon"));
+                    parseIcon(destView.control.getString("selectedIcon"));
                 var selectedIconCtrls = destView.children
-                  .where((c) => c.name == "selected_icon" && c.isVisible);
-                // if no control provided in "selected_icon" property, replace selectedIconCtrls with control provided in selected_icon_content, if any 
+                    .where((c) => c.name == "selected_icon" && c.visible);
+                // if no control provided in "selected_icon" property, replace selectedIconCtrls with control provided in selected_icon_content, if any
                 // the line below needs to be deleted after selected_icon_content is deprecated
-                selectedIconCtrls = selectedIconCtrls.isEmpty? destView.children
-                  .where((c) => c.name == "selected_icon_content" && c.isVisible): selectedIconCtrls;
+                selectedIconCtrls = selectedIconCtrls.isEmpty
+                    ? destView.children.where(
+                        (c) => c.name == "selected_icon_content" && c.visible)
+                    : selectedIconCtrls;
 
                 return NavigationRailDestination(
-                    disabled: disabled || destView.control.isDisabled,
+                    disabled: disabled || destView.control.disabled,
                     padding: parseEdgeInsets(destView.control, "padding"),
                     indicatorColor:
-                        destView.control.attrColor("indicatorColor", context),
+                        destView.control.getColor("indicatorColor", context),
                     indicatorShape:
                         parseOutlinedBorder(destView.control, "indicatorShape"),
                     icon: iconCtrls.isNotEmpty
-                        ? createControl(destView.control,
-                            iconCtrls.first.id, disabled,
+                        ? createControl(
+                            destView.control, iconCtrls.first.id, disabled,
                             parentAdaptive: widget.parentAdaptive)
                         : Icon(iconStr),
                     selectedIcon: selectedIconCtrls.isNotEmpty

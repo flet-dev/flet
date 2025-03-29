@@ -53,14 +53,14 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("MenuItemButton build: ${widget.control.id}");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
 
     var content =
-        widget.children.where((c) => c.name == "content" && c.isVisible);
+        widget.children.where((c) => c.name == "content" && c.visible);
     var leading =
-        widget.children.where((c) => c.name == "leading" && c.isVisible);
+        widget.children.where((c) => c.name == "leading" && c.visible);
     var trailing =
-        widget.children.where((c) => c.name == "trailing" && c.isVisible);
+        widget.children.where((c) => c.name == "trailing" && c.visible);
 
     var theme = Theme.of(context);
     var style = parseButtonStyle(Theme.of(context), widget.control, "style",
@@ -76,22 +76,22 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
             ? const StadiumBorder()
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
-    bool onClick = widget.control.attrBool("onClick", false)!;
-    bool onHover = widget.control.attrBool("onHover", false)!;
+    bool onClick = widget.control.getBool("onClick", false)!;
+    bool onHover = widget.control.getBool("onHover", false)!;
 
-    var adaptive = widget.control.isAdaptive ?? widget.parentAdaptive;
+    var adaptive = widget.control.adaptive ?? widget.parentAdaptive;
 
     var menuItem = MenuItemButton(
       focusNode: _focusNode,
       clipBehavior:
-          parseClip(widget.control.attrString("clipBehavior"), Clip.none)!,
+          parseClip(widget.control.getString("clipBehavior"), Clip.none)!,
       style: style,
-      closeOnActivate: widget.control.attrBool("closeOnClick", true)!,
-      requestFocusOnHover: widget.control.attrBool("focusOnHover", true)!,
-      semanticsLabel: widget.control.attrString("semanticsLabel"),
-      autofocus: widget.control.attrBool("autofocus", false)!,
-      overflowAxis: parseAxis(
-          widget.control.attrString("overflowAxis"), Axis.horizontal)!,
+      closeOnActivate: widget.control.getBool("closeOnClick", true)!,
+      requestFocusOnHover: widget.control.getBool("focusOnHover", true)!,
+      semanticsLabel: widget.control.getString("semanticsLabel"),
+      autofocus: widget.control.getBool("autofocus", false)!,
+      overflowAxis:
+          parseAxis(widget.control.getString("overflowAxis"), Axis.horizontal)!,
       onHover: onHover && !disabled
           ? (bool value) {
               widget.backend
@@ -117,7 +117,7 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
           : null,
     );
 
-    var focusValue = widget.control.attrString("focus");
+    var focusValue = widget.control.getString("focus");
     if (focusValue != null && focusValue != _lastFocusValue) {
       _lastFocusValue = focusValue;
       _focusNode.requestFocus();

@@ -24,16 +24,15 @@ class AnimatedSwitcherControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("AnimatedSwitcher build: ${control.id}");
 
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
+    var contentCtrls = children.where((c) => c.name == "content" && c.visible);
 
     var switchInCurve =
-        parseCurve(control.attrString("switchInCurve"), Curves.linear)!;
+        parseCurve(control.getString("switchInCurve"), Curves.linear)!;
     var switchOutCurve =
-        parseCurve(control.attrString("switchOutCurve"), Curves.linear)!;
-    var duration = control.attrInt("duration", 1000)!;
-    var reverseDuration = control.attrInt("reverseDuration", 1000)!;
-    bool disabled = control.isDisabled || parentDisabled;
+        parseCurve(control.getString("switchOutCurve"), Curves.linear)!;
+    var duration = control.getInt("duration", 1000)!;
+    var reverseDuration = control.getInt("reverseDuration", 1000)!;
+    bool disabled = control.disabled || parentDisabled;
 
     if (contentCtrls.isEmpty) {
       return const ErrorControl(
@@ -51,7 +50,7 @@ class AnimatedSwitcherControl extends StatelessWidget {
             switchInCurve: switchInCurve,
             switchOutCurve: switchOutCurve,
             transitionBuilder: (child, animation) {
-              switch (control.attrString("transition", "")!.toLowerCase()) {
+              switch (control.getString("transition", "")!.toLowerCase()) {
                 case "rotation":
                   return RotationTransition(turns: animation, child: child);
                 case "scale":

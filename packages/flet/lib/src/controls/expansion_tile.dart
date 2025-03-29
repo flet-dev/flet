@@ -31,40 +31,38 @@ class ExpansionTileControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("ExpansionTile build: ${control.id}");
 
-    var ctrls = children.where((c) => c.name == "controls" && c.isVisible);
-    var leadingCtrls =
-        children.where((c) => c.name == "leading" && c.isVisible);
-    var titleCtrls = children.where((c) => c.name == "title" && c.isVisible);
+    var ctrls = children.where((c) => c.name == "controls" && c.visible);
+    var leadingCtrls = children.where((c) => c.name == "leading" && c.visible);
+    var titleCtrls = children.where((c) => c.name == "title" && c.visible);
     var subtitleCtrls =
-        children.where((c) => c.name == "subtitle" && c.isVisible);
+        children.where((c) => c.name == "subtitle" && c.visible);
     var trailingCtrls =
-        children.where((c) => c.name == "trailing" && c.isVisible);
+        children.where((c) => c.name == "trailing" && c.visible);
 
     if (titleCtrls.isEmpty) {
       return const ErrorControl(
           "ExpansionTile.title must be provided and visible");
     }
 
-    bool disabled = control.isDisabled || parentDisabled;
-    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
-    bool onchange = control.attrBool("onchange", false)!;
-    bool maintainState = control.attrBool("maintainState", false)!;
-    bool initiallyExpanded = control.attrBool("initiallyExpanded", false)!;
+    bool disabled = control.disabled || parentDisabled;
+    bool? adaptive = control.getBool("adaptive") ?? parentAdaptive;
+    bool onchange = control.getBool("onchange", false)!;
+    bool maintainState = control.getBool("maintainState", false)!;
+    bool initiallyExpanded = control.getBool("initiallyExpanded", false)!;
 
-    var iconColor = control.attrColor("iconColor", context);
-    var textColor = control.attrColor("textColor", context);
-    var bgColor = control.attrColor("bgColor", context);
-    var collapsedBgColor = control.attrColor("collapsedBgColor", context);
-    var collapsedIconColor = control.attrColor("collapsedIconColor", context);
-    var collapsedTextColor = control.attrColor("collapsedTextColor", context);
+    var iconColor = control.getColor("iconColor", context);
+    var textColor = control.getColor("textColor", context);
+    var bgColor = control.getColor("bgColor", context);
+    var collapsedBgColor = control.getColor("collapsedBgColor", context);
+    var collapsedIconColor = control.getColor("collapsedIconColor", context);
+    var collapsedTextColor = control.getColor("collapsedTextColor", context);
 
     var affinity = parseListTileControlAffinity(
-        control.attrString("affinity"), ListTileControlAffinity.platform)!;
-    var clipBehavior =
-        parseClip(control.attrString("clipBehavior"), Clip.none)!;
+        control.getString("affinity"), ListTileControlAffinity.platform)!;
+    var clipBehavior = parseClip(control.getString("clipBehavior"), Clip.none)!;
 
     var expandedCrossAxisAlignment = parseCrossAxisAlignment(
-        control.attrString("crossAxisAlignment"), CrossAxisAlignment.center)!;
+        control.getString("crossAxisAlignment"), CrossAxisAlignment.center)!;
 
     if (expandedCrossAxisAlignment == CrossAxisAlignment.baseline) {
       return const ErrorControl(
@@ -87,7 +85,7 @@ class ExpansionTileControl extends StatelessWidget {
       tilePadding: parseEdgeInsets(control, "tilePadding"),
       expandedAlignment: parseAlignment(control, "expandedAlignment"),
       expandedCrossAxisAlignment:
-          parseCrossAxisAlignment(control.attrString("crossAxisAlignment")),
+          parseCrossAxisAlignment(control.getString("crossAxisAlignment")),
       backgroundColor: bgColor,
       iconColor: iconColor,
       textColor: textColor,
@@ -100,12 +98,12 @@ class ExpansionTileControl extends StatelessWidget {
       shape: parseOutlinedBorder(control, "shape"),
       collapsedShape: parseOutlinedBorder(control, "collapsedShape"),
       onExpansionChanged: onChange,
-      visualDensity: parseVisualDensity(control.attrString("visualDensity")),
-      enableFeedback: control.attrBool("enableFeedback"),
-      showTrailingIcon: control.attrBool("showTrailingIcon", true)!,
+      visualDensity: parseVisualDensity(control.getString("visualDensity")),
+      enableFeedback: control.getBool("enableFeedback"),
+      showTrailingIcon: control.getBool("showTrailingIcon", true)!,
       enabled: !disabled,
-      minTileHeight: control.attrDouble("minTileHeight"),
-      dense: control.attrBool("dense"),
+      minTileHeight: control.getDouble("minTileHeight"),
+      dense: control.getBool("dense"),
       leading: leadingCtrls.isNotEmpty
           ? createControl(control, leadingCtrls.first.id, disabled,
               parentAdaptive: adaptive)

@@ -46,10 +46,9 @@ class DragTargetControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("DragTarget build: ${control.id}");
 
-    var group = control.attrString("group", "");
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    bool disabled = control.isDisabled || parentDisabled;
+    var group = control.getString("group", "");
+    var contentCtrls = children.where((c) => c.name == "content" && c.visible);
+    bool disabled = control.disabled || parentDisabled;
 
     Widget? child = contentCtrls.isNotEmpty
         ? createControl(control, contentCtrls.first.id, disabled,

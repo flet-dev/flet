@@ -52,7 +52,7 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
   Widget build(BuildContext context) {
     debugPrint("ListTile build: ${control.id}");
     return withPagePlatform((context, platform) {
-      bool? adaptive = control.isAdaptive ?? parentAdaptive;
+      bool? adaptive = control.adaptive ?? parentAdaptive;
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
@@ -66,19 +66,19 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
       }
 
       var leadingCtrls =
-          children.where((c) => c.name == "leading" && c.isVisible);
-      var titleCtrls = children.where((c) => c.name == "title" && c.isVisible);
+          children.where((c) => c.name == "leading" && c.visible);
+      var titleCtrls = children.where((c) => c.name == "title" && c.visible);
       var subtitleCtrls =
-          children.where((c) => c.name == "subtitle" && c.isVisible);
+          children.where((c) => c.name == "subtitle" && c.visible);
       var trailingCtrls =
-          children.where((c) => c.name == "trailing" && c.isVisible);
+          children.where((c) => c.name == "trailing" && c.visible);
 
-      bool onclick = control.attrBool("onclick", false)!;
-      bool toggleInputs = control.attrBool("toggleInputs", false)!;
-      bool onLongPressDefined = control.attrBool("onLongPress", false)!;
-      String url = control.attrString("url", "")!;
-      String? urlTarget = control.attrString("urlTarget");
-      bool disabled = control.isDisabled || parentDisabled;
+      bool onclick = control.getBool("onclick", false)!;
+      bool toggleInputs = control.getBool("toggleInputs", false)!;
+      bool onLongPressDefined = control.getBool("onLongPress", false)!;
+      String url = control.getString("url", "")!;
+      String? urlTarget = control.getString("urlTarget");
+      bool disabled = control.disabled || parentDisabled;
 
       Function()? onPressed =
           (onclick || toggleInputs || url != "") && !disabled
@@ -104,29 +104,29 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
           : null;
 
       Widget tile = ListTile(
-        autofocus: control.attrBool("autofocus", false)!,
+        autofocus: control.getBool("autofocus", false)!,
         contentPadding: parseEdgeInsets(control, "contentPadding"),
-        isThreeLine: control.attrBool("isThreeLine", false)!,
-        selected: control.attrBool("selected", false)!,
-        dense: control.attrBool("dense", false)!,
+        isThreeLine: control.getBool("isThreeLine", false)!,
+        selected: control.getBool("selected", false)!,
+        dense: control.getBool("dense", false)!,
         onTap: onPressed,
         onLongPress: onLongPress,
         enabled: !disabled,
-        horizontalTitleGap: control.attrDouble("horizontalSpacing"),
-        enableFeedback: control.attrBool("enableFeedback"),
-        minLeadingWidth: control.attrDouble("minLeadingWidth"),
-        minVerticalPadding: control.attrDouble("minVerticalPadding"),
-        minTileHeight: control.attrDouble("minHeight"),
-        selectedTileColor: control.attrColor("selectedTileColor", context),
-        selectedColor: control.attrColor("selectedColor", context),
-        focusColor: control.attrColor("focusColor", context),
-        tileColor: control.attrColor("bgcolor", context),
-        splashColor: control.attrColor("bgcolorActivated", context),
-        hoverColor: control.attrColor("hoverColor", context),
-        iconColor: control.attrColor("iconColor", context),
-        textColor: control.attrColor("textColor", context),
-        mouseCursor: parseMouseCursor(control.attrString("mouseCursor")),
-        visualDensity: parseVisualDensity(control.attrString("visualDensity")),
+        horizontalTitleGap: control.getDouble("horizontalSpacing"),
+        enableFeedback: control.getBool("enableFeedback"),
+        minLeadingWidth: control.getDouble("minLeadingWidth"),
+        minVerticalPadding: control.getDouble("minVerticalPadding"),
+        minTileHeight: control.getDouble("minHeight"),
+        selectedTileColor: control.getColor("selectedTileColor", context),
+        selectedColor: control.getColor("selectedColor", context),
+        focusColor: control.getColor("focusColor", context),
+        tileColor: control.getColor("bgcolor", context),
+        splashColor: control.getColor("bgcolorActivated", context),
+        hoverColor: control.getColor("hoverColor", context),
+        iconColor: control.getColor("iconColor", context),
+        textColor: control.getColor("textColor", context),
+        mouseCursor: parseMouseCursor(control.getString("mouseCursor")),
+        visualDensity: parseVisualDensity(control.getString("visualDensity")),
         shape: parseOutlinedBorder(control, "shape"),
         titleTextStyle:
             parseTextStyle(Theme.of(context), control, "titleTextStyle"),
@@ -135,8 +135,8 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
         subtitleTextStyle:
             parseTextStyle(Theme.of(context), control, "subtitleTextStyle"),
         titleAlignment:
-            parseListTileTitleAlignment(control.attrString("titleAlignment")),
-        style: parseListTileStyle(control.attrString("style")),
+            parseListTileTitleAlignment(control.getString("titleAlignment")),
+        style: parseListTileStyle(control.getString("style")),
         onFocusChange: (bool hasFocus) {
           backend.triggerControlEvent(control.id, hasFocus ? "focus" : "blur");
         },

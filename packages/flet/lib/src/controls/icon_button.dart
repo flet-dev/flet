@@ -66,7 +66,7 @@ class _IconButtonControlState extends State<IconButtonControl>
 
     return withPagePlatform((context, platform) {
       bool? adaptive =
-          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+          widget.control.getBool("adaptive") ?? widget.parentAdaptive;
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
@@ -78,37 +78,37 @@ class _IconButtonControlState extends State<IconButtonControl>
             backend: widget.backend);
       }
 
-      IconData? icon = parseIcon(widget.control.attrString("icon"));
+      IconData? icon = parseIcon(widget.control.getString("icon"));
       IconData? selectedIcon =
-          parseIcon(widget.control.attrString("selectedIcon"));
-      Color? iconColor = widget.control.attrColor("iconColor", context);
+          parseIcon(widget.control.getString("selectedIcon"));
+      Color? iconColor = widget.control.getColor("iconColor", context);
       Color? highlightColor =
-          widget.control.attrColor("highlightColor", context);
+          widget.control.getColor("highlightColor", context);
       Color? selectedIconColor =
-          widget.control.attrColor("selectedIconColor", context);
-      Color? bgColor = widget.control.attrColor("bgColor", context);
-      Color? disabledColor = widget.control.attrColor("disabledColor", context);
-      Color? hoverColor = widget.control.attrColor("hoverColor", context);
-      Color? splashColor = widget.control.attrColor("splashColor", context);
-      Color? focusColor = widget.control.attrColor("focusColor", context);
-      double? iconSize = widget.control.attrDouble("iconSize");
-      double? splashRadius = widget.control.attrDouble("splashRadius");
+          widget.control.getColor("selectedIconColor", context);
+      Color? bgColor = widget.control.getColor("bgColor", context);
+      Color? disabledColor = widget.control.getColor("disabledColor", context);
+      Color? hoverColor = widget.control.getColor("hoverColor", context);
+      Color? splashColor = widget.control.getColor("splashColor", context);
+      Color? focusColor = widget.control.getColor("focusColor", context);
+      double? iconSize = widget.control.getDouble("iconSize");
+      double? splashRadius = widget.control.getDouble("splashRadius");
       var padding = parseEdgeInsets(widget.control, "padding");
       var alignment = parseAlignment(widget.control, "alignment");
       var sizeConstraints =
           parseBoxConstraints(widget.control, "sizeConstraints");
       var contentCtrls =
-          widget.children.where((c) => c.name == "content" && c.isVisible);
-      bool autofocus = widget.control.attrBool("autofocus", false)!;
-      bool enableFeedback = widget.control.attrBool("enableFeedback", true)!;
-      bool selected = widget.control.attrBool("selected", false)!;
-      String url = widget.control.attrString("url", "")!;
-      String? urlTarget = widget.control.attrString("urlTarget");
-      bool disabled = widget.control.isDisabled || widget.parentDisabled;
+          widget.children.where((c) => c.name == "content" && c.visible);
+      bool autofocus = widget.control.getBool("autofocus", false)!;
+      bool enableFeedback = widget.control.getBool("enableFeedback", true)!;
+      bool selected = widget.control.getBool("selected", false)!;
+      String url = widget.control.getString("url", "")!;
+      String? urlTarget = widget.control.getString("urlTarget");
+      bool disabled = widget.control.disabled || widget.parentDisabled;
       var mouseCursor =
-          parseMouseCursor(widget.control.attrString("mouseCursor"));
+          parseMouseCursor(widget.control.getString("mouseCursor"));
       var visualDensity =
-          parseVisualDensity(widget.control.attrString("visualDensity"));
+          parseVisualDensity(widget.control.getString("visualDensity"));
 
       Function()? onPressed = disabled
           ? null
@@ -202,7 +202,7 @@ class _IconButtonControlState extends State<IconButtonControl>
         );
       }
 
-      var focusValue = widget.control.attrString("focus");
+      var focusValue = widget.control.getString("focus");
       if (focusValue != null && focusValue != _lastFocusValue) {
         _lastFocusValue = focusValue;
         _focusNode.requestFocus();

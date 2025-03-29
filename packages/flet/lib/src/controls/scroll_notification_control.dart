@@ -27,7 +27,7 @@ class _ScrollNotificationControlState extends State<ScrollNotificationControl> {
 
   @override
   Widget build(BuildContext context) {
-    _onScrollInterval = widget.control.attrInt("onScrollInterval", 10)!;
+    _onScrollInterval = widget.control.getInt("onScrollInterval", 10)!;
 
     return NotificationListener<ScrollNotification>(
       child: widget.child,

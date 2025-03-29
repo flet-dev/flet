@@ -24,30 +24,29 @@ class CardControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("Card build: ${control.id}");
-    bool disabled = control.isDisabled || parentDisabled;
-    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
+    bool disabled = control.disabled || parentDisabled;
+    bool? adaptive = control.getBool("adaptive") ?? parentAdaptive;
 
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
+    var contentCtrls = children.where((c) => c.name == "content" && c.visible);
     var content = contentCtrls.isNotEmpty
         ? createControl(control, contentCtrls.first.id, disabled,
             parentAdaptive: adaptive)
         : null;
-    var clipBehavior = parseClip(control.attrString("clipBehavior"));
-    var elevation = control.attrDouble("elevation");
+    var clipBehavior = parseClip(control.getString("clipBehavior"));
+    var elevation = control.getDouble("elevation");
     var shape = parseOutlinedBorder(control, "shape");
     var margin = parseEdgeInsets(control, "margin");
-    var isSemanticContainer = control.attrBool("isSemanticContainer", true)!;
+    var isSemanticContainer = control.getBool("isSemanticContainer", true)!;
     var showBorderOnForeground =
-        control.attrBool("showBorderOnForeground", true)!;
-    var color = control.attrColor("color", context);
-    var shadowColor = control.attrColor("shadowColor", context);
-    var surfaceTintColor = control.attrColor("surfaceTintColor", context);
+        control.getBool("showBorderOnForeground", true)!;
+    var color = control.getColor("color", context);
+    var shadowColor = control.getColor("shadowColor", context);
+    var surfaceTintColor = control.getColor("surfaceTintColor", context);
 
     Widget? card;
 
     CardVariant variant =
-        parseCardVariant(control.attrString("variant"), CardVariant.elevated)!;
+        parseCardVariant(control.getString("variant"), CardVariant.elevated)!;
 
     if (variant == CardVariant.outlined) {
       card = Card.outlined(

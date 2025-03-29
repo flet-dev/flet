@@ -81,7 +81,7 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
 
     return withPagePlatform((context, platform) {
       bool? adaptive =
-          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+          widget.control.getBool("adaptive") ?? widget.parentAdaptive;
 
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
@@ -92,17 +92,17 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
             backend: widget.backend);
       }
 
-      String label = widget.control.attrString("label", "")!;
+      String label = widget.control.getString("label", "")!;
       LabelPosition labelPosition = parseLabelPosition(
-          widget.control.attrString("labelPosition"), LabelPosition.right)!;
-      _tristate = widget.control.attrBool("tristate", false)!;
-      bool autofocus = widget.control.attrBool("autofocus", false)!;
+          widget.control.getString("labelPosition"), LabelPosition.right)!;
+      _tristate = widget.control.getBool("tristate", false)!;
+      bool autofocus = widget.control.getBool("autofocus", false)!;
 
-      bool disabled = widget.control.isDisabled || widget.parentDisabled;
+      bool disabled = widget.control.disabled || widget.parentDisabled;
 
       debugPrint("Checkbox build: ${widget.control.id}");
 
-      bool? value = widget.control.attrBool("value", _tristate ? null : false);
+      bool? value = widget.control.getBool("value", _tristate ? null : false);
       if (_value != value) {
         _value = value;
       }
@@ -117,25 +117,25 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
           autofocus: autofocus,
           focusNode: _focusNode,
           value: _value,
-          isError: widget.control.attrBool("isError", false)!,
-          semanticLabel: widget.control.attrString("semanticsLabel"),
+          isError: widget.control.getBool("isError", false)!,
+          semanticLabel: widget.control.getString("semanticsLabel"),
           shape: parseOutlinedBorder(widget.control, "shape"),
           side: parseWidgetStateBorderSide(
               Theme.of(context), widget.control, "borderSide"),
-          splashRadius: widget.control.attrDouble("splashRadius"),
-          activeColor: widget.control.attrColor("activeColor", context),
-          focusColor: widget.control.attrColor("focusColor", context),
-          hoverColor: widget.control.attrColor("hoverColor", context),
+          splashRadius: widget.control.getDouble("splashRadius"),
+          activeColor: widget.control.getColor("activeColor", context),
+          focusColor: widget.control.getColor("focusColor", context),
+          hoverColor: widget.control.getColor("hoverColor", context),
           overlayColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "overlayColor"),
-          checkColor: widget.control.attrColor("checkColor", context),
+          checkColor: widget.control.getColor("checkColor", context),
           fillColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "fillColor"),
           tristate: _tristate,
           visualDensity:
-              parseVisualDensity(widget.control.attrString("visualDensity")),
+              parseVisualDensity(widget.control.getString("visualDensity")),
           mouseCursor:
-              parseMouseCursor(widget.control.attrString("mouseCursor")),
+              parseMouseCursor(widget.control.getString("mouseCursor")),
           onChanged: !disabled
               ? (bool? value) {
                   _onChange(value);

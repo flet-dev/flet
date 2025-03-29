@@ -49,13 +49,13 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
   Widget build(BuildContext context) {
     debugPrint("CupertinoSliderControl build: ${widget.control.id}");
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
 
-    double min = widget.control.attrDouble("min", 0)!;
-    double max = widget.control.attrDouble("max", 1)!;
-    int? divisions = widget.control.attrInt("divisions");
+    double min = widget.control.getDouble("min", 0)!;
+    double max = widget.control.getDouble("max", 1)!;
+    int? divisions = widget.control.getInt("divisions");
 
-    double value = widget.control.attrDouble("value", min)!;
+    double value = widget.control.getDouble("value", min)!;
     if (_value != value) {
       // verify limits
       if (value < min) {
@@ -72,8 +72,8 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
         min: min,
         max: max,
         divisions: divisions,
-        activeColor: widget.control.attrColor("activeColor", context),
-        thumbColor: widget.control.attrColor("thumbColor", context) ??
+        activeColor: widget.control.getColor("activeColor", context),
+        thumbColor: widget.control.getColor("thumbColor", context) ??
             CupertinoColors.white,
         onChanged: !disabled
             ? (double value) {

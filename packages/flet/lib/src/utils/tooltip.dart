@@ -27,7 +27,7 @@ TooltipTriggerMode? parseTooltipTriggerMode(String? value,
 
 Tooltip? parseTooltip(
     Control control, String propName, Widget widget, ThemeData theme) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return null;
   }

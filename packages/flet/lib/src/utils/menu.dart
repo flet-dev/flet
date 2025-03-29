@@ -21,7 +21,7 @@ MenuStyle? parseMenuStyle(ThemeData theme, Control control, String propName,
     EdgeInsets? defaultPadding,
     BorderSide? defaultBorderSide,
     OutlinedBorder? defaultShape}) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return null;
   }

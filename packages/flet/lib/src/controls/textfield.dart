@@ -84,7 +84,8 @@ class _TextFieldControlState extends State<TextFieldControl>
     setState(() {
       _focused = _shiftEnterfocusNode.hasFocus;
     });
-    widget.backend.triggerControlEvent(widget.control.id, _shiftEnterfocusNode.hasFocus ? "focus" : "blur");
+    widget.backend.triggerControlEvent(
+        widget.control.id, _shiftEnterfocusNode.hasFocus ? "focus" : "blur");
   }
 
   void _onFocusChange() {
@@ -100,11 +101,11 @@ class _TextFieldControlState extends State<TextFieldControl>
     debugPrint("TextField build: ${widget.control.id}");
 
     return withPagePlatform((context, platform) {
-      bool autofocus = widget.control.attrBool("autofocus", false)!;
-      bool disabled = widget.control.isDisabled || widget.parentDisabled;
+      bool autofocus = widget.control.getBool("autofocus", false)!;
+      bool disabled = widget.control.disabled || widget.parentDisabled;
 
       bool? adaptive =
-          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+          widget.control.getBool("adaptive") ?? widget.parentAdaptive;
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
@@ -126,38 +127,38 @@ class _TextFieldControlState extends State<TextFieldControl>
       }
 
       var prefixControls =
-          widget.children.where((c) => c.name == "prefix" && c.isVisible);
+          widget.children.where((c) => c.name == "prefix" && c.visible);
       var prefixIconControls =
-          widget.children.where((c) => c.name == "prefix_icon" && c.isVisible);
+          widget.children.where((c) => c.name == "prefix_icon" && c.visible);
       var suffixControls =
-          widget.children.where((c) => c.name == "suffix" && c.isVisible);
+          widget.children.where((c) => c.name == "suffix" && c.visible);
       var suffixIconControls =
-          widget.children.where((c) => c.name == "suffix_icon" && c.isVisible);
+          widget.children.where((c) => c.name == "suffix_icon" && c.visible);
       var iconControls =
-          widget.children.where((c) => c.name == "icon" && c.isVisible);
+          widget.children.where((c) => c.name == "icon" && c.visible);
       var counterControls =
-          widget.children.where((c) => c.name == "counter" && c.isVisible);
+          widget.children.where((c) => c.name == "counter" && c.visible);
       var errorCtrl =
-          widget.children.where((c) => c.name == "error" && c.isVisible);
+          widget.children.where((c) => c.name == "error" && c.visible);
       var helperCtrl =
-          widget.children.where((c) => c.name == "helper" && c.isVisible);
+          widget.children.where((c) => c.name == "helper" && c.visible);
       var labelCtrl =
-          widget.children.where((c) => c.name == "label" && c.isVisible);
+          widget.children.where((c) => c.name == "label" && c.visible);
 
-      bool shiftEnter = widget.control.attrBool("shiftEnter", false)!;
+      bool shiftEnter = widget.control.getBool("shiftEnter", false)!;
       bool multiline =
-          widget.control.attrBool("multiline", false)! || shiftEnter;
-      int minLines = widget.control.attrInt("minLines", 1)!;
-      int? maxLines = widget.control.attrInt("maxLines", multiline ? null : 1);
+          widget.control.getBool("multiline", false)! || shiftEnter;
+      int minLines = widget.control.getInt("minLines", 1)!;
+      int? maxLines = widget.control.getInt("maxLines", multiline ? null : 1);
 
-      bool password = widget.control.attrBool("password", false)!;
+      bool password = widget.control.getBool("password", false)!;
       bool canRevealPassword =
-          widget.control.attrBool("canRevealPassword", false)!;
-      var cursorColor = widget.control.attrColor("cursorColor", context);
-      var selectionColor = widget.control.attrColor("selectionColor", context);
-      var textSize = widget.control.attrDouble("textSize");
-      var color = widget.control.attrColor("color", context);
-      var focusedColor = widget.control.attrColor("focusedColor", context);
+          widget.control.getBool("canRevealPassword", false)!;
+      var cursorColor = widget.control.getColor("cursorColor", context);
+      var selectionColor = widget.control.getColor("selectionColor", context);
+      var textSize = widget.control.getDouble("textSize");
+      var color = widget.control.getColor("color", context);
+      var focusedColor = widget.control.getColor("focusedColor", context);
 
       TextStyle? textStyle =
           parseTextStyle(Theme.of(context), widget.control, "textStyle");
@@ -168,8 +169,7 @@ class _TextFieldControlState extends State<TextFieldControl>
       }
 
       TextCapitalization textCapitalization = parseTextCapitalization(
-          widget.control.attrString("capitalization"),
-          TextCapitalization.none)!;
+          widget.control.getString("capitalization"), TextCapitalization.none)!;
 
       FilteringTextInputFormatter? inputFilter =
           parseInputFilter(widget.control, "inputFilter");
@@ -196,19 +196,18 @@ class _TextFieldControlState extends State<TextFieldControl>
             });
       }
 
-      double? textVerticalAlign =
-          widget.control.attrDouble("textVerticalAlign");
+      double? textVerticalAlign = widget.control.getDouble("textVerticalAlign");
 
       FocusNode focusNode = shiftEnter ? _shiftEnterfocusNode : _focusNode;
 
-      var focusValue = widget.control.attrString("focus");
+      var focusValue = widget.control.getString("focus");
       if (focusValue != null && focusValue != _lastFocusValue) {
         _lastFocusValue = focusValue;
         focusNode.requestFocus();
       }
-      var fitParentSize = widget.control.attrBool("fitParentSize", false)!;
+      var fitParentSize = widget.control.getBool("fitParentSize", false)!;
 
-      var maxLength = widget.control.attrInt("maxLength");
+      var maxLength = widget.control.getInt("maxLength");
 
       Widget textField = TextFormField(
           style: textStyle,
@@ -241,32 +240,31 @@ class _TextFieldControlState extends State<TextFieldControl>
               focused: _focused,
               disabled: disabled,
               adaptive: adaptive),
-          showCursor: widget.control.attrBool("showCursor"),
+          showCursor: widget.control.getBool("showCursor"),
           textAlignVertical: textVerticalAlign != null
               ? TextAlignVertical(y: textVerticalAlign)
               : null,
-          cursorHeight: widget.control.attrDouble("cursorHeight"),
-          cursorWidth: widget.control.attrDouble("cursorWidth", 2.0)!,
+          cursorHeight: widget.control.getDouble("cursorHeight"),
+          cursorWidth: widget.control.getDouble("cursorWidth", 2.0)!,
           cursorRadius: parseRadius(widget.control, "cursorRadius"),
           keyboardType: multiline
               ? TextInputType.multiline
-              : parseTextInputType(widget.control.attrString("keyboardType"),
+              : parseTextInputType(widget.control.getString("keyboardType"),
                   TextInputType.text)!,
-          autocorrect: widget.control.attrBool("autocorrect", true)!,
-          enableSuggestions:
-              widget.control.attrBool("enableSuggestions", true)!,
-          smartDashesType: widget.control.attrBool("smartDashesType", true)!
+          autocorrect: widget.control.getBool("autocorrect", true)!,
+          enableSuggestions: widget.control.getBool("enableSuggestions", true)!,
+          smartDashesType: widget.control.getBool("smartDashesType", true)!
               ? SmartDashesType.enabled
               : SmartDashesType.disabled,
-          smartQuotesType: widget.control.attrBool("smartQuotesType", true)!
+          smartQuotesType: widget.control.getBool("smartQuotesType", true)!
               ? SmartQuotesType.enabled
               : SmartQuotesType.disabled,
           textAlign: parseTextAlign(
-              widget.control.attrString("textAlign"), TextAlign.start)!,
+              widget.control.getString("textAlign"), TextAlign.start)!,
           minLines: fitParentSize ? null : minLines,
           maxLines: fitParentSize ? null : maxLines,
           maxLength: maxLength,
-          readOnly: widget.control.attrBool("readOnly", false)!,
+          readOnly: widget.control.getBool("readOnly", false)!,
           inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
           obscureText: password && !_revealPassword,
           controller: _controller,
@@ -274,29 +272,29 @@ class _TextFieldControlState extends State<TextFieldControl>
           autofillHints: parseAutofillHints(widget.control, "autofillHints"),
           expands: fitParentSize,
           enableInteractiveSelection:
-              widget.control.attrBool("enableInteractiveSelection"),
-          canRequestFocus: widget.control.attrBool("canRequestFocus", true)!,
+              widget.control.getBool("enableInteractiveSelection"),
+          canRequestFocus: widget.control.getBool("canRequestFocus", true)!,
           clipBehavior: parseClip(
-              widget.control.attrString("clipBehavior"), Clip.hardEdge)!,
+              widget.control.getString("clipBehavior"), Clip.hardEdge)!,
           cursorColor: cursorColor,
-          ignorePointers: widget.control.attrBool("ignorePointers"),
+          ignorePointers: widget.control.getBool("ignorePointers"),
           cursorErrorColor:
-              widget.control.attrColor("cursorErrorColor", context),
-          scribbleEnabled: widget.control.attrBool("enableScribble", true)!,
+              widget.control.getColor("cursorErrorColor", context),
+          scribbleEnabled: widget.control.getBool("enableScribble", true)!,
           scrollPadding: parseEdgeInsets(
               widget.control, "scrollPadding", const EdgeInsets.all(20.0))!,
           keyboardAppearance:
-              parseBrightness(widget.control.attrString("keyboardBrightness")),
+              parseBrightness(widget.control.getString("keyboardBrightness")),
           enableIMEPersonalizedLearning:
-              widget.control.attrBool("enableIMEPersonalizedLearning", true)!,
+              widget.control.getBool("enableIMEPersonalizedLearning", true)!,
           obscuringCharacter:
-              widget.control.attrString("obscuringCharacter", '•')!,
+              widget.control.getString("obscuringCharacter", '•')!,
           mouseCursor:
-              parseMouseCursor(widget.control.attrString("mouseCursor")),
-          cursorOpacityAnimates: widget.control.attrBool("animateCursorOpacity",
+              parseMouseCursor(widget.control.getString("mouseCursor")),
+          cursorOpacityAnimates: widget.control.getBool("animateCursorOpacity",
               Theme.of(context).platform == TargetPlatform.iOS)!,
           onTapAlwaysCalled:
-              widget.control.attrBool("animateCursorOpacity", false)!,
+              widget.control.getBool("animateCursorOpacity", false)!,
           strutStyle: parseStrutStyle(widget.control, "strutStyle"),
           onTap: () {
             widget.backend.triggerControlEvent(widget.control.id, "click");
@@ -305,7 +303,7 @@ class _TextFieldControlState extends State<TextFieldControl>
             _value = value;
             widget.backend
                 .updateControlState(widget.control.id, {"value": value});
-            if (widget.control.attrBool("onChange", false)!) {
+            if (widget.control.getBool("onChange", false)!) {
               widget.backend
                   .triggerControlEvent(widget.control.id, "change", value);
             }
@@ -322,14 +320,14 @@ class _TextFieldControlState extends State<TextFieldControl>
       textField =
           isLinuxDesktop() ? ExcludeSemantics(child: textField) : textField;
 
-      if (widget.control.attrInt("expand", 0)! > 0) {
+      if (widget.control.getInt("expand", 0)! > 0) {
         return constrainedControl(
             context, textField, widget.parent, widget.control);
       } else {
         return LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
             if (constraints.maxWidth == double.infinity &&
-                widget.control.attrDouble("width") == null) {
+                widget.control.getDouble("width") == null) {
               textField = ConstrainedBox(
                 constraints: const BoxConstraints.tightFor(width: 300),
                 child: textField,

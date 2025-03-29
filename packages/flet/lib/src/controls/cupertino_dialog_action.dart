@@ -26,14 +26,13 @@ class CupertinoDialogActionControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoDialogAction build: ${control.id}");
-    bool disabled = control.isDisabled || parentDisabled;
+    bool disabled = control.disabled || parentDisabled;
 
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
+    var contentCtrls = children.where((c) => c.name == "content" && c.visible);
 
     var cupertinoDialogAction = CupertinoDialogAction(
-        isDefaultAction: control.attrBool("isDefaultAction", false)!,
-        isDestructiveAction: control.attrBool("isDestructiveAction", false)!,
+        isDefaultAction: control.getBool("isDefaultAction", false)!,
+        isDestructiveAction: control.getBool("isDestructiveAction", false)!,
         textStyle: parseTextStyle(Theme.of(context), control, "textStyle"),
         onPressed: !disabled
             ? () {
@@ -44,7 +43,7 @@ class CupertinoDialogActionControl extends StatelessWidget {
         child: contentCtrls.isNotEmpty
             ? createControl(control, contentCtrls.first.id, disabled,
                 parentAdaptive: parentAdaptive)
-            : Text(control.attrString("text", "")!));
+            : Text(control.getString("text", "")!));
 
     return baseControl(context, cupertinoDialogAction, parent, control);
   }

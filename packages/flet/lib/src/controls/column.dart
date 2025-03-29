@@ -27,16 +27,16 @@ class ColumnControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("Column build: ${control.id}");
-    bool disabled = control.isDisabled || parentDisabled;
-    bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
+    bool disabled = control.disabled || parentDisabled;
+    bool? adaptive = control.getBool("adaptive") ?? parentAdaptive;
 
-    var spacing = control.attrDouble("spacing", 10)!;
-    var alignment = control.attrString("alignment");
-    var tight = control.attrBool("tight", false)!;
-    var wrap = control.attrBool("wrap", false)!;
-    var horizontalAlignment = control.attrString("horizontalAlignment");
+    var spacing = control.getDouble("spacing", 10)!;
+    var alignment = control.getString("alignment");
+    var tight = control.getBool("tight", false)!;
+    var wrap = control.getBool("wrap", false)!;
+    var horizontalAlignment = control.getString("horizontalAlignment");
 
-    List<Widget> controls = children.where((c) => c.isVisible).map((c) {
+    List<Widget> controls = children.where((c) => c.visible).map((c) {
       return createControl(control, c.id, disabled, parentAdaptive: adaptive);
     }).toList();
 
@@ -44,10 +44,10 @@ class ColumnControl extends StatelessWidget {
         ? Wrap(
             direction: Axis.vertical,
             spacing: spacing,
-            runSpacing: control.attrDouble("runSpacing", 10)!,
+            runSpacing: control.getDouble("runSpacing", 10)!,
             alignment: parseWrapAlignment(alignment, WrapAlignment.start)!,
             runAlignment: parseWrapAlignment(
-                control.attrString("runAlignment"), WrapAlignment.start)!,
+                control.getString("runAlignment"), WrapAlignment.start)!,
             crossAxisAlignment: parseWrapCrossAlignment(
                 horizontalAlignment, WrapCrossAlignment.start)!,
             children: controls,
@@ -70,7 +70,7 @@ class ColumnControl extends StatelessWidget {
       child: child,
     );
 
-    if (control.attrBool("onScroll", false)!) {
+    if (control.getBool("onScroll", false)!) {
       child = ScrollNotificationControl(
           control: control, backend: backend, child: child);
     }

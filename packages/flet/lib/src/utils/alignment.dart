@@ -57,7 +57,7 @@ WrapCrossAlignment? parseWrapCrossAlignment(String? alignment,
 
 Alignment? parseAlignment(Control control, String propName,
     [Alignment? defValue]) {
-  var v = control.attrString(propName, null);
+  var v = control.getString(propName, null);
   if (v == null) {
     return defValue;
   }
@@ -71,5 +71,5 @@ Alignment? alignmentFromJson(Map<String, dynamic>? json,
   if (json == null) {
     return defValue;
   }
-  return Alignment(parseDouble(json['x'], 0)!, parseDouble(json['y'],0)!);
+  return Alignment(parseDouble(json['x'], 0)!, parseDouble(json['y'], 0)!);
 }

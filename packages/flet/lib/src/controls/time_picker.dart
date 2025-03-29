@@ -30,8 +30,8 @@ class _TimePickerControlState extends State<TimePickerControl> {
 
     bool lastOpen = widget.control.state["open"] ?? false;
 
-    var open = widget.control.attrBool("open", false)!;
-    TimeOfDay value = widget.control.attrTime("value", TimeOfDay.now())!;
+    var open = widget.control.getBool("open", false)!;
+    TimeOfDay value = widget.control.getTime("value", TimeOfDay.now())!;
 
     void onClosed(TimeOfDay? timeValue) {
       String stringValue;
@@ -57,16 +57,16 @@ class _TimePickerControlState extends State<TimePickerControl> {
     Widget createSelectTimeDialog() {
       Widget dialog = TimePickerDialog(
         initialTime: value,
-        helpText: widget.control.attrString("helpText"),
-        cancelText: widget.control.attrString("cancelText"),
-        confirmText: widget.control.attrString("confirmText"),
-        hourLabelText: widget.control.attrString("hourLabelText"),
-        minuteLabelText: widget.control.attrString("minuteLabelText"),
-        errorInvalidText: widget.control.attrString("errorInvalidText"),
+        helpText: widget.control.getString("helpText"),
+        cancelText: widget.control.getString("cancelText"),
+        confirmText: widget.control.getString("confirmText"),
+        hourLabelText: widget.control.getString("hourLabelText"),
+        minuteLabelText: widget.control.getString("minuteLabelText"),
+        errorInvalidText: widget.control.getString("errorInvalidText"),
         initialEntryMode: parseTimePickerEntryMode(
-            widget.control.attrString("timePickerEntryMode"),
+            widget.control.getString("timePickerEntryMode"),
             TimePickerEntryMode.dial)!,
-        orientation: parseOrientation(widget.control.attrString("orientation")),
+        orientation: parseOrientation(widget.control.getString("orientation")),
         onEntryModeChanged: (TimePickerEntryMode mode) {
           widget.backend.triggerControlEvent(
               widget.control.id, "entryModeChange", mode.name);
@@ -81,7 +81,7 @@ class _TimePickerControlState extends State<TimePickerControl> {
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog<TimeOfDay>(
-            barrierColor: widget.control.attrColor("barrierColor", context),
+            barrierColor: widget.control.getColor("barrierColor", context),
             useRootNavigator: false,
             context: context,
             builder: (context) => createSelectTimeDialog()).then((result) {

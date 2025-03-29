@@ -15,11 +15,11 @@ class DividerControl extends StatelessWidget {
     debugPrint("Divider build: ${control.id}");
 
     var divider = Divider(
-      height: control.attrDouble("height"),
-      thickness: control.attrDouble("thickness"),
-      color: control.attrColor("color", context),
-      indent: control.attrDouble("leadingIndent"),
-      endIndent: control.attrDouble("trailingIndent"),
+      height: control.getDouble("height"),
+      thickness: control.getDouble("thickness"),
+      color: control.getColor("color", context),
+      indent: control.getDouble("leadingIndent"),
+      endIndent: control.getDouble("trailingIndent"),
     );
     return baseControl(context, divider, parent, control);
   }

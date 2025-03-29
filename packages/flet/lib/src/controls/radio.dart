@@ -13,7 +13,6 @@ import 'error.dart';
 import 'flet_store_mixin.dart';
 import 'list_tile.dart';
 
-
 class RadioControl extends StatefulWidget {
   final Control? parent;
   final Control control;
@@ -68,7 +67,7 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
 
     return withPagePlatform((context, platform) {
       bool? adaptive =
-          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+          widget.control.getBool("adaptive") ?? widget.parentAdaptive;
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
@@ -78,14 +77,14 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
             backend: widget.backend);
       }
 
-      String label = widget.control.attrString("label", "")!;
-      String value = widget.control.attrString("value", "")!;
+      String label = widget.control.getString("label", "")!;
+      String value = widget.control.getString("value", "")!;
       LabelPosition labelPosition = parseLabelPosition(
-          widget.control.attrString("labelPosition"), LabelPosition.right)!;
+          widget.control.getString("labelPosition"), LabelPosition.right)!;
       VisualDensity? visualDensity =
-          parseVisualDensity(widget.control.attrString("visualDensity"));
-      bool autofocus = widget.control.attrBool("autofocus", false)!;
-      bool disabled = widget.control.isDisabled || widget.parentDisabled;
+          parseVisualDensity(widget.control.getString("visualDensity"));
+      bool autofocus = widget.control.getBool("autofocus", false)!;
+      bool disabled = widget.control.disabled || widget.parentDisabled;
 
       TextStyle? labelStyle =
           parseTextStyle(Theme.of(context), widget.control, "labelStyle");
@@ -101,20 +100,21 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
           return const ErrorControl("Radio must be enclosed within RadioGroup");
         }
 
-        String groupValue = viewModel.ancestor!.attrString("value", "")!;
+        String groupValue = viewModel.ancestor!.getString("value", "")!;
         String ancestorId = viewModel.ancestor!.id;
 
         var radio = Radio<String>(
             autofocus: autofocus,
             focusNode: _focusNode,
             groupValue: groupValue,
-            mouseCursor: parseMouseCursor(widget.control.attrString("mouseCursor")),
+            mouseCursor:
+                parseMouseCursor(widget.control.getString("mouseCursor")),
             value: value,
-            activeColor: widget.control.attrColor("activeColor", context),
-            focusColor: widget.control.attrColor("focusColor", context),
-            hoverColor: widget.control.attrColor("hoverColor", context),
-            splashRadius: widget.control.attrDouble("splashRadius"),
-            toggleable: widget.control.attrBool("toggleable", false)!,
+            activeColor: widget.control.getColor("activeColor", context),
+            focusColor: widget.control.getColor("focusColor", context),
+            hoverColor: widget.control.getColor("hoverColor", context),
+            splashRadius: widget.control.getDouble("splashRadius"),
+            toggleable: widget.control.getBool("toggleable", false)!,
             fillColor: parseWidgetStateColor(
                 Theme.of(context), widget.control, "fillColor"),
             overlayColor: parseWidgetStateColor(

@@ -14,11 +14,11 @@ class ChartAxisLabelViewModel extends Equatable {
   static ChartAxisLabelViewModel fromStore(
       Store<AppState> store, Control control) {
     return ChartAxisLabelViewModel(
-        value: control.attrDouble("value")!,
+        value: control.getDouble("value")!,
         control: store.state.controls[control.id]!.childIds
             .map((childId) => store.state.controls[childId])
             .nonNulls
-            .where((c) => c.isVisible)
+            .where((c) => c.visible)
             .firstOrNull);
   }
 
@@ -38,14 +38,14 @@ class ChartAxisViewModel extends Equatable {
     var children = store.state.controls[control.id]!.childIds
         .map((childId) => store.state.controls[childId])
         .nonNulls
-        .where((c) => c.isVisible);
+        .where((c) => c.visible);
 
     return ChartAxisViewModel(
         control: control,
-        title: children.where((c) => c.name == "t" && c.isVisible).firstOrNull,
+        title: children.where((c) => c.name == "t" && c.visible).firstOrNull,
         labels: {
           for (var e in children
-              .where((c) => c.name == "l" && c.isVisible)
+              .where((c) => c.name == "l" && c.visible)
               .map((c) => ChartAxisLabelViewModel.fromStore(store, c))
               .where((c) => c.control != null))
             e.value: e.control!

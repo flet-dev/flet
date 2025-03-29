@@ -24,9 +24,9 @@ class CupertinoActivityIndicatorControl extends StatelessWidget {
     return constrainedControl(
         context,
         CupertinoActivityIndicator(
-          radius: control.attrDouble("radius", 10)!,
-          animating: control.attrBool("animating", true)!,
-          color: control.attrColor("color", context),
+          radius: control.getDouble("radius", 10)!,
+          animating: control.getBool("animating", true)!,
+          color: control.getColor("color", context),
         ),
         parent,
         control);

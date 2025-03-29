@@ -48,26 +48,26 @@ class _GridViewControlState extends State<GridViewControl> {
   Widget build(BuildContext context) {
     debugPrint("GridViewControl build: ${widget.control.id}");
 
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
     bool? adaptive =
-        widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+        widget.control.getBool("adaptive") ?? widget.parentAdaptive;
 
-    final horizontal = widget.control.attrBool("horizontal", false)!;
-    final runsCount = widget.control.attrInt("runsCount", 1)!;
-    final maxExtent = widget.control.attrDouble("maxExtent");
-    final spacing = widget.control.attrDouble("spacing", 10)!;
-    final semanticChildCount = widget.control.attrInt("semanticChildCount");
-    final runSpacing = widget.control.attrDouble("runSpacing", 10)!;
+    final horizontal = widget.control.getBool("horizontal", false)!;
+    final runsCount = widget.control.getInt("runsCount", 1)!;
+    final maxExtent = widget.control.getDouble("maxExtent");
+    final spacing = widget.control.getDouble("spacing", 10)!;
+    final semanticChildCount = widget.control.getInt("semanticChildCount");
+    final runSpacing = widget.control.getDouble("runSpacing", 10)!;
     final padding = parseEdgeInsets(widget.control, "padding");
-    final childAspectRatio = widget.control.attrDouble("childAspectRatio", 1)!;
-    final reverse = widget.control.attrBool("reverse", false)!;
-    final cacheExtent = widget.control.attrDouble("cacheExtent");
+    final childAspectRatio = widget.control.getDouble("childAspectRatio", 1)!;
+    final reverse = widget.control.getBool("reverse", false)!;
+    final cacheExtent = widget.control.getDouble("cacheExtent");
 
     var clipBehavior =
-        parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
+        parseClip(widget.control.getString("clipBehavior"), Clip.hardEdge)!;
 
     List<Control> visibleControls =
-        widget.children.where((c) => c.isVisible).toList();
+        widget.children.where((c) => c.visible).toList();
 
     var gridView = LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
@@ -116,7 +116,7 @@ class _GridViewControlState extends State<GridViewControl> {
             parentAdaptive: adaptive,
             child: child);
 
-        if (widget.control.attrBool("onScroll", false)!) {
+        if (widget.control.getBool("onScroll", false)!) {
           child = ScrollNotificationControl(
               control: widget.control, backend: widget.backend, child: child);
         }

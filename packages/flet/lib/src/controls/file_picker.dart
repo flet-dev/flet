@@ -90,18 +90,18 @@ class _FilePickerControlState extends State<FilePickerControl>
     debugPrint("FilePicker build: ${widget.control.id}");
 
     return withPageArgs((context, pageArgs) {
-      var state = widget.control.attrString("state");
-      var upload = widget.control.attrString("upload");
-      var dialogTitle = widget.control.attrString("dialogTitle");
-      var fileName = widget.control.attrString("fileName");
-      var initialDirectory = widget.control.attrString("initialDirectory");
-      var allowMultiple = widget.control.attrBool("allowMultiple", false)!;
+      var state = widget.control.getString("state");
+      var upload = widget.control.getString("upload");
+      var dialogTitle = widget.control.getString("dialogTitle");
+      var fileName = widget.control.getString("fileName");
+      var initialDirectory = widget.control.getString("initialDirectory");
+      var allowMultiple = widget.control.getBool("allowMultiple", false)!;
       var allowedExtensions =
           parseStringList(widget.control, "allowedExtensions");
       FileType fileType = FileType.values.firstWhere(
           (m) =>
               m.name.toLowerCase() ==
-              widget.control.attrString("fileType", "")!.toLowerCase(),
+              widget.control.getString("fileType", "")!.toLowerCase(),
           orElse: () => FileType.any);
       if (allowedExtensions != null && allowedExtensions.isNotEmpty) {
         fileType = FileType.custom;

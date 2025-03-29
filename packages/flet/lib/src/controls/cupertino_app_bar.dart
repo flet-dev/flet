@@ -27,50 +27,48 @@ class CupertinoAppBarControl extends StatelessWidget
   Widget build(BuildContext context) {
     debugPrint("CupertinoAppBar build: ${control.id}");
 
-    var leadingCtrls =
-        children.where((c) => c.name == "leading" && c.isVisible);
+    var leadingCtrls = children.where((c) => c.name == "leading" && c.visible);
 
     // if the material AppBar was used with adaptive=True, AppBar.title will be used as middle control
     var middleCtrls = children
-        .where((c) => (c.name == "middle" || c.name == "title") && c.isVisible);
+        .where((c) => (c.name == "middle" || c.name == "title") && c.visible);
 
     // if the material AppBar was used with adaptive=True, AppBar.actions[0] will be used as trailing control
     var trailingCtrls = children.where(
-        (c) => (c.name == "trailing" || c.name == "action") && c.isVisible);
+        (c) => (c.name == "trailing" || c.name == "action") && c.visible);
 
     var bar = CupertinoNavigationBar(
       leading: leadingCtrls.isNotEmpty
-          ? createControl(control, leadingCtrls.first.id, control.isDisabled,
+          ? createControl(control, leadingCtrls.first.id, control.disabled,
               parentAdaptive: parentAdaptive)
           : null,
       automaticallyImplyLeading:
-          control.attrBool("automaticallyImplyLeading", true)!,
+          control.getBool("automaticallyImplyLeading", true)!,
       automaticallyImplyMiddle:
-          control.attrBool("automaticallyImplyMiddle", true)!,
+          control.getBool("automaticallyImplyMiddle", true)!,
       transitionBetweenRoutes:
-          control.attrBool("transitionBetweenRoutes", true)!,
+          control.getBool("transitionBetweenRoutes", true)!,
       border: parseBorder(Theme.of(context), control, "border"),
-      previousPageTitle: control.attrString("previousPageTitle"),
+      previousPageTitle: control.getString("previousPageTitle"),
       padding: parseEdgeInsetsDirectional(control, "padding"),
-      backgroundColor: control.attrColor("bgcolor", context),
+      backgroundColor: control.getColor("bgcolor", context),
       automaticBackgroundVisibility:
-          control.attrBool("automaticBackgroundVisibility", true)!,
+          control.getBool("automaticBackgroundVisibility", true)!,
       enableBackgroundFilterBlur:
-          control.attrBool("backgroundFilterBlur", true)!,
-      brightness: parseBrightness(control.attrString("brightness")),
+          control.getBool("backgroundFilterBlur", true)!,
+      brightness: parseBrightness(control.getString("brightness")),
       middle: middleCtrls.isNotEmpty
-          ? createControl(control, middleCtrls.first.id, control.isDisabled,
+          ? createControl(control, middleCtrls.first.id, control.disabled,
               parentAdaptive: parentAdaptive)
           : null,
       trailing: trailingCtrls.length == 1
-          ? createControl(control, trailingCtrls.first.id, control.isDisabled,
+          ? createControl(control, trailingCtrls.first.id, control.disabled,
               parentAdaptive: parentAdaptive)
           : trailingCtrls.length > 1
               ? Row(
                   mainAxisSize: MainAxisSize.min,
                   children: trailingCtrls
-                      .map((c) => createControl(
-                          control, c.id, control.isDisabled,
+                      .map((c) => createControl(control, c.id, control.disabled,
                           parentAdaptive: parentAdaptive))
                       .toList(),
                 )
@@ -87,7 +85,7 @@ class CupertinoAppBarControl extends StatelessWidget
   @override
   bool shouldFullyObstruct(BuildContext context) {
     final Color backgroundColor = CupertinoDynamicColor.maybeResolve(
-            control.attrColor("bgcolor", context), context) ??
+            control.getColor("bgcolor", context), context) ??
         CupertinoTheme.of(context).barBackgroundColor;
     return backgroundColor.alpha == 0xFF;
   }

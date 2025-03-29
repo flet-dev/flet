@@ -38,9 +38,9 @@ class LineChartDataPointViewModel extends Equatable {
       Store<AppState> store, Control control) {
     return LineChartDataPointViewModel(
         control: control,
-        x: control.attrDouble("x")!,
-        y: control.attrDouble("y")!,
-        tooltip: control.attrString("tooltip"));
+        x: control.getDouble("x")!,
+        y: control.getDouble("y")!,
+        tooltip: control.getString("tooltip"));
   }
 
   @override
@@ -61,7 +61,7 @@ class LineChartDataViewModel extends Equatable {
         dataPoints: store.state.controls[control.id]!.childIds
             .map((childId) => store.state.controls[childId])
             .nonNulls
-            .where((c) => c.isVisible)
+            .where((c) => c.visible)
             .map((c) => LineChartDataPointViewModel.fromStore(store, c))
             .toList());
   }
@@ -120,13 +120,13 @@ class LineChartViewModel extends Equatable {
   static LineChartViewModel fromStore(
       Store<AppState> store, Control control, List<Control> children) {
     var leftAxisCtrls =
-        children.where((c) => c.type == "axis" && c.name == "l" && c.isVisible);
+        children.where((c) => c.type == "axis" && c.name == "l" && c.visible);
     var topAxisCtrls =
-        children.where((c) => c.type == "axis" && c.name == "t" && c.isVisible);
+        children.where((c) => c.type == "axis" && c.name == "t" && c.visible);
     var rightAxisCtrls =
-        children.where((c) => c.type == "axis" && c.name == "r" && c.isVisible);
+        children.where((c) => c.type == "axis" && c.name == "r" && c.visible);
     var bottomAxisCtrls =
-        children.where((c) => c.type == "axis" && c.name == "b" && c.isVisible);
+        children.where((c) => c.type == "axis" && c.name == "b" && c.visible);
     return LineChartViewModel(
         control: control,
         leftAxis: leftAxisCtrls.isNotEmpty
@@ -142,7 +142,7 @@ class LineChartViewModel extends Equatable {
             ? ChartAxisViewModel.fromStore(store, bottomAxisCtrls.first)
             : null,
         dataSeries: children
-            .where((c) => c.type == "data" && c.isVisible)
+            .where((c) => c.type == "data" && c.visible)
             .map((c) => LineChartDataViewModel.fromStore(store, c))
             .toList());
   }
@@ -180,7 +180,7 @@ class _LineChartControlState extends State<LineChartControl> {
 
     var animate = parseAnimation(widget.control, "animate");
     var border = parseBorder(Theme.of(context), widget.control, "border");
-    bool disabled = widget.control.isDisabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.parentDisabled;
 
     var result = StoreConnector<AppState, LineChartViewModel>(
         distinct: true,
@@ -196,9 +196,9 @@ class _LineChartControlState extends State<LineChartControl> {
           var bottomTitles =
               getAxisTitles(widget.control, viewModel.bottomAxis, disabled);
 
-          var interactive = viewModel.control.attrBool("interactive", true)!;
-          var pointLineStart = viewModel.control.attrDouble("pointLineStart");
-          var pointLineEnd = viewModel.control.attrDouble("pointLineEnd");
+          var interactive = viewModel.control.getBool("interactive", true)!;
+          var pointLineStart = viewModel.control.getDouble("pointLineStart");
+          var pointLineEnd = viewModel.control.getDouble("pointLineEnd");
 
           List<LineChartBarData> barsData = [];
           List<LineBarSpot> selectedPoints = [];
@@ -212,7 +212,7 @@ class _LineChartControlState extends State<LineChartControl> {
             if (!interactive) {
               var spotIndex = 0;
               for (var p in ds.dataPoints) {
-                if (p.control.attrBool("selected", false)!) {
+                if (p.control.getBool("selected", false)!) {
                   selectedPoints.add(
                       LineBarSpot(barData, barIndex, barData.spots[spotIndex]));
                 }
@@ -226,13 +226,13 @@ class _LineChartControlState extends State<LineChartControl> {
           var chart = LineChart(
             LineChartData(
                 backgroundColor: parseColor(
-                    Theme.of(context), widget.control.attrString("bgcolor")),
-                minX: widget.control.attrDouble("minx"),
-                maxX: widget.control.attrDouble("maxx"),
-                minY: widget.control.attrDouble("miny"),
-                maxY: widget.control.attrDouble("maxy"),
-                baselineX: widget.control.attrDouble("baselinex"),
-                baselineY: widget.control.attrDouble("baseliney"),
+                    Theme.of(context), widget.control.getString("bgcolor")),
+                minX: widget.control.getDouble("minx"),
+                maxX: widget.control.getDouble("maxx"),
+                minY: widget.control.getDouble("miny"),
+                maxY: widget.control.getDouble("maxy"),
+                baselineX: widget.control.getDouble("baselinex"),
+                baselineY: widget.control.getDouble("baseliney"),
                 showingTooltipIndicators: groupBy(selectedPoints, (p) => p.x)
                     .values
                     .map((e) => ShowingTooltipIndicators(e))
@@ -326,32 +326,32 @@ class _LineChartControlState extends State<LineChartControl> {
                   },
                   touchTooltipData: LineTouchTooltipData(
                     getTooltipColor: (LineBarSpot spot) => widget.control
-                        .attrColor("tooltipBgColor", context,
+                        .getColor("tooltipBgColor", context,
                             const Color.fromRGBO(96, 125, 139, 1))!,
                     tooltipRoundedRadius:
-                        widget.control.attrDouble("tooltipRoundedRadius", 4)!,
+                        widget.control.getDouble("tooltipRoundedRadius", 4)!,
                     tooltipMargin:
-                        widget.control.attrDouble("tooltipMargin", 16)!,
+                        widget.control.getDouble("tooltipMargin", 16)!,
                     tooltipPadding: parseEdgeInsets(
                         widget.control,
                         "tooltipPadding",
                         const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 8))!,
                     maxContentWidth: widget.control
-                        .attrDouble("tooltipMaxContentWidth", 120)!,
+                        .getDouble("tooltipMaxContentWidth", 120)!,
                     rotateAngle:
-                        widget.control.attrDouble("tooltipRotateAngle", 0.0)!,
-                    tooltipHorizontalOffset: widget.control
-                        .attrDouble("tooltipHorizontalOffset", 0)!,
+                        widget.control.getDouble("tooltipRotateAngle", 0.0)!,
+                    tooltipHorizontalOffset:
+                        widget.control.getDouble("tooltipHorizontalOffset", 0)!,
                     tooltipBorder: parseBorderSide(Theme.of(context),
                             widget.control, "tooltipBorderSide") ??
                         BorderSide.none,
                     fitInsideHorizontally: widget.control
-                        .attrBool("tooltipFitInsideHorizontally", false)!,
+                        .getBool("tooltipFitInsideHorizontally", false)!,
                     fitInsideVertically: widget.control
-                        .attrBool("tooltipFitInsideVertically", false)!,
+                        .getBool("tooltipFitInsideVertically", false)!,
                     showOnTopOfTheChartBoxArea: widget.control
-                        .attrBool("tooltipShowOnTopOfChartBoxArea", false)!,
+                        .getBool("tooltipShowOnTopOfChartBoxArea", false)!,
                     getTooltipItems: (touchedSpots) {
                       return touchedSpots.map((spot) {
                         var dp = viewModel.dataSeries[spot.barIndex]
@@ -369,16 +369,16 @@ class _LineChartControlState extends State<LineChartControl> {
                                   Colors.blueGrey);
                         }
                         TextAlign? tooltipAlign = parseTextAlign(
-                            dp.control.attrString("tooltipAlign"),
+                            dp.control.getString("tooltipAlign"),
                             TextAlign.center)!;
-                        return dp.control.attrBool("showTooltip", true)!
+                        return dp.control.getBool("showTooltip", true)!
                             ? LineTooltipItem(tooltip, tooltipStyle,
                                 textAlign: tooltipAlign)
                             : null;
                       }).toList();
                     },
                   ),
-                  touchCallback: widget.control.attrBool("onChartEvent", false)!
+                  touchCallback: widget.control.getBool("onChartEvent", false)!
                       ? (evt, resp) {
                           var eventData = LineChartEventData(
                               eventType: evt.runtimeType
@@ -427,18 +427,18 @@ class _LineChartControlState extends State<LineChartControl> {
   LineChartBarData getBarData(ThemeData theme, Control parent,
       bool interactiveChart, LineChartDataViewModel dataViewModel) {
     Color? aboveLineBgcolor =
-        dataViewModel.control.attrColor("aboveLineBgcolor", context);
+        dataViewModel.control.getColor("aboveLineBgcolor", context);
     Gradient? aboveLineGradient =
         parseGradient(theme, dataViewModel.control, "aboveLineGradient");
     Color? belowLineBgcolor =
-        dataViewModel.control.attrColor("belowLineBgcolor", context);
+        dataViewModel.control.getColor("belowLineBgcolor", context);
     Gradient? belowLineGradient =
         parseGradient(theme, dataViewModel.control, "belowLineGradient");
-    var dashPattern = dataViewModel.control.attrString("dashPattern");
+    var dashPattern = dataViewModel.control.getString("dashPattern");
     var shadow =
         parseBoxShadow(Theme.of(context), dataViewModel.control, "shadow", [])!;
     Color barColor =
-        dataViewModel.control.attrColor("color", context) ?? Colors.cyan;
+        dataViewModel.control.getColor("color", context) ?? Colors.cyan;
     Gradient? barGradient =
         parseGradient(theme, dataViewModel.control, "gradient");
     FlLine? aboveLine =
@@ -446,31 +446,31 @@ class _LineChartControlState extends State<LineChartControl> {
     FlLine? belowLine =
         parseFlLine(Theme.of(context), dataViewModel.control, "belowLine");
     double? aboveLineCutoffY =
-        dataViewModel.control.attrDouble("aboveLineCutoffY");
+        dataViewModel.control.getDouble("aboveLineCutoffY");
     double? belowLineCutoffY =
-        dataViewModel.control.attrDouble("belowLineCutoffY");
+        dataViewModel.control.getDouble("belowLineCutoffY");
 
     Map<FlSpot, LineChartDataPointViewModel> spots = {
       for (var e in dataViewModel.dataPoints) FlSpot(e.x, e.y): e
     };
     return LineChartBarData(
         preventCurveOverShooting:
-            dataViewModel.control.attrBool("preventCurveOverShooting", false)!,
+            dataViewModel.control.getBool("preventCurveOverShooting", false)!,
         preventCurveOvershootingThreshold: dataViewModel.control
-            .attrDouble("preventCurveOverShootingThreshold", 10.0)!,
+            .getDouble("preventCurveOverShootingThreshold", 10.0)!,
         spots: dataViewModel.dataPoints.map((p) => FlSpot(p.x, p.y)).toList(),
         showingIndicators: dataViewModel.dataPoints
             .asMap()
             .entries
             .where((e) =>
                 !interactiveChart &&
-                e.value.control.attrBool("selected", false)!)
+                e.value.control.getBool("selected", false)!)
             .map((e) => e.key)
             .toList(),
-        isCurved: dataViewModel.control.attrBool("curved", false)!,
+        isCurved: dataViewModel.control.getBool("curved", false)!,
         isStrokeCapRound:
-            dataViewModel.control.attrBool("strokeCapRound", false)!,
-        barWidth: dataViewModel.control.attrDouble("strokeWidth") ?? 2.0,
+            dataViewModel.control.getBool("strokeCapRound", false)!,
+        barWidth: dataViewModel.control.getDouble("strokeWidth") ?? 2.0,
         dashArray: dashPattern != null
             ? (json.decode(dashPattern) as List)
                 .map((e) => parseInt(e))
@@ -512,7 +512,7 @@ class _LineChartControlState extends State<LineChartControl> {
                   show: aboveLine != null,
                   flLineStyle: aboveLine ?? const FlLine(),
                   checkToShowSpotLine: (spot) =>
-                      spots[spot]!.control.attrBool("showAboveLine", true)!,
+                      spots[spot]!.control.getBool("showAboveLine", true)!,
                 ))
             : null,
         belowBarData: belowLineBgcolor != null ||
@@ -528,7 +528,7 @@ class _LineChartControlState extends State<LineChartControl> {
                   show: belowLine != null,
                   flLineStyle: belowLine ?? const FlLine(),
                   checkToShowSpotLine: (spot) =>
-                      spots[spot]!.control.attrBool("showBelowLine", true)!,
+                      spots[spot]!.control.getBool("showBelowLine", true)!,
                 ))
             : null,
         color: barColor,
@@ -545,11 +545,11 @@ class _LineChartControlState extends State<LineChartControl> {
         axisNameWidget: axisViewModel.title != null
             ? createControl(parent, axisViewModel.title!.id, disabled)
             : null,
-        axisNameSize: axisViewModel.control.attrDouble("titleSize") ?? 16,
+        axisNameSize: axisViewModel.control.getDouble("titleSize") ?? 16,
         sideTitles: SideTitles(
-          showTitles: axisViewModel.control.attrBool("showLabels", true)!,
-          reservedSize: axisViewModel.control.attrDouble("labelsSize") ?? 22,
-          interval: axisViewModel.control.attrDouble("labelsInterval"),
+          showTitles: axisViewModel.control.getBool("showLabels", true)!,
+          reservedSize: axisViewModel.control.getDouble("labelsSize") ?? 22,
+          interval: axisViewModel.control.getDouble("labelsInterval"),
           getTitlesWidget: axisViewModel.labels.isEmpty
               ? defaultGetTitle
               : (value, meta) {

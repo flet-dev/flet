@@ -26,11 +26,10 @@ class ShaderMaskControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("ShaderMask build: ${control.id}");
 
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
+    var contentCtrls = children.where((c) => c.name == "content" && c.visible);
     var blendMode =
-        parseBlendMode(control.attrString("blendMode"), BlendMode.modulate)!;
-    bool disabled = control.isDisabled || parentDisabled;
+        parseBlendMode(control.getString("blendMode"), BlendMode.modulate)!;
+    bool disabled = control.disabled || parentDisabled;
 
     var gradient = parseGradient(Theme.of(context), control, "shader");
     if (gradient == null) {
