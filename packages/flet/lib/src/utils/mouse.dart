@@ -88,7 +88,7 @@ MouseCursor? parseMouseCursor(String? cursor,
 WidgetStateProperty<MouseCursor?>? parseWidgetStateMouseCursor(
     Control control, String propName,
     [MouseCursor? defaultValue]) {
-  var v = control.getString(propName);
+  var v = control.get<String>(propName);
   if (v == null) {
     return null;
   }

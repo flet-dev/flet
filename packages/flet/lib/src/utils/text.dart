@@ -79,32 +79,26 @@ FontWeight? getFontWeight(String? weightName, [FontWeight? defaultWeight]) {
   }
 }
 
-List<InlineSpan> parseTextSpans(
-    ThemeData theme,
-    ControlTreeViewModel viewModel,
-    bool parentDisabled,
-    void Function(String, String, String)? sendControlEvent) {
+List<InlineSpan> parseTextSpans(ThemeData theme, ControlTreeViewModel viewModel,
+    bool parentDisabled, void Function(int, String, String)? sendControlEvent) {
   return viewModel.children
       .map((c) => parseInlineSpan(theme, c, parentDisabled, sendControlEvent))
-      .whereNotNull()
+      .nonNulls
       .toList();
 }
 
-InlineSpan? parseInlineSpan(
-    ThemeData theme,
-    ControlTreeViewModel spanViewModel,
-    bool parentDisabled,
-    void Function(String, String, String)? sendControlEvent) {
+InlineSpan? parseInlineSpan(ThemeData theme, ControlTreeViewModel spanViewModel,
+    bool parentDisabled, void Function(int, String, String)? sendControlEvent) {
   if (spanViewModel.control.type == "textspan") {
     bool disabled = spanViewModel.control.disabled || parentDisabled;
-    var onClick = spanViewModel.control.getBool("onClick", false)!;
-    String url = spanViewModel.control.getString("url", "")!;
-    String? urlTarget = spanViewModel.control.getString("urlTarget");
+    var onClick = spanViewModel.control.get<bool>("onClick", false)!;
+    String url = spanViewModel.control.get<String>("url", "")!;
+    String? urlTarget = spanViewModel.control.get<String>("urlTarget");
     return TextSpan(
-      text: spanViewModel.control.getString("text"),
+      text: spanViewModel.control.get<String>("text"),
       style: parseTextStyle(theme, spanViewModel.control, "style"),
-      spellOut: spanViewModel.control.getBool("spellOut"),
-      semanticsLabel: spanViewModel.control.getString("semanticsLabel"),
+      spellOut: spanViewModel.control.get<bool>("spellOut"),
+      semanticsLabel: spanViewModel.control.get<String>("semanticsLabel"),
       children: parseTextSpans(
           theme, spanViewModel, parentDisabled, sendControlEvent),
       mouseCursor: onClick && !disabled && sendControlEvent != null
@@ -123,7 +117,7 @@ InlineSpan? parseInlineSpan(
                   }
                 })
               : null,
-      onEnter: spanViewModel.control.getBool("onEnter", false)! &&
+      onEnter: spanViewModel.control.get<bool>("onEnter", false)! &&
               !disabled &&
               sendControlEvent != null
           ? (event) {
@@ -131,7 +125,7 @@ InlineSpan? parseInlineSpan(
               sendControlEvent(spanViewModel.control.id, "enter", "");
             }
           : null,
-      onExit: spanViewModel.control.getBool("onExit", false)! &&
+      onExit: spanViewModel.control.get<bool>("onExit", false)! &&
               !disabled &&
               sendControlEvent != null
           ? (event) {
@@ -183,7 +177,7 @@ TextBaseline? parseTextBaseline(String? value, [TextBaseline? defaultValue]) {
 
 TextStyle? parseTextStyle(ThemeData theme, Control control, String propName) {
   dynamic j;
-  var v = control.getString(propName, null);
+  var v = control.get<String>(propName, null);
   if (v == null) {
     return null;
   }
@@ -249,7 +243,7 @@ TextStyle? textStyleFromJson(ThemeData theme, Map<String, dynamic>? json) {
 
 WidgetStateProperty<TextStyle?>? parseWidgetStateTextStyle(
     ThemeData theme, Control control, String propName) {
-  var v = control.getString(propName);
+  var v = control.get<String>(propName);
   if (v == null) {
     return null;
   }

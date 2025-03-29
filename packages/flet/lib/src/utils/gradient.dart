@@ -10,7 +10,7 @@ import 'colors.dart';
 import 'numbers.dart';
 
 Gradient? parseGradient(ThemeData theme, Control control, String propName) {
-  var v = control.getString(propName);
+  var v = control.get<String>(propName);
   if (v == null) {
     return null;
   }

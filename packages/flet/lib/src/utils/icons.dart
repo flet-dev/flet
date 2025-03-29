@@ -17,7 +17,7 @@ IconData? parseIcon(String? iconName, [IconData? defaultIcon]) {
 
 WidgetStateProperty<Icon?>? parseWidgetStateIcon(
     ThemeData theme, Control control, String propName) {
-  var v = control.getString(propName, null);
+  var v = control.get<String>(propName, null);
   if (v == null) {
     return null;
   }

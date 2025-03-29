@@ -1,15 +1,10 @@
 import 'package:flutter/foundation.dart';
 
 class SessionStore {
-  static String? get sessionId {
-    return null;
-  }
-
-  static set sessionId(String? value) {
-    // nothing to do
-  }
+  static String? sessionId;
 
   static String? get(String name) {
+    if (name == "sessionId") return sessionId;
     return null;
   }
 

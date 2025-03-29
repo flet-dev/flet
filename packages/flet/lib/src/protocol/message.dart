@@ -1,9 +1,9 @@
 enum MessageAction {
   registerClient(1),
-  patchClient(2),
+  patchControl(2),
   controlEvent(3),
-  updateControlProps(4),
-  invokeMethod(5),
+  updateControl(4),
+  invokeControlMethod(5),
   sessionCrashed(6);
 
   final int value;
@@ -16,7 +16,7 @@ class Message {
 
   Message({required this.action, required this.payload});
 
-  dynamic toJson() => [action.value, payload.toJson()];
+  dynamic toJson() => [action.value, payload];
 
   factory Message.fromJson(List<dynamic> json) {
     return Message(

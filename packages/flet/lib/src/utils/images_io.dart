@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:path/path.dart' as p;
 
-import '../models/asset_src.dart';
+import '../models/asset_source.dart';
 import 'uri.dart';
 
 SvgPicture getSvgPictureFromFile(
@@ -23,21 +23,21 @@ SvgPicture getSvgPictureFromFile(
       semanticsLabel: semanticsLabel);
 }
 
-AssetSrc getAssetSrc(String src, Uri pageUri, String assetsDir) {
+AssetSource getAssetSrc(String src, Uri pageUri, String assetsDir) {
   if (src.startsWith("http://") || src.startsWith("https://")) {
-    return AssetSrc(path: src, isFile: false);
+    return AssetSource(path: src, isFile: false);
   } else if (io.File(src).existsSync()) {
-    return AssetSrc(path: src, isFile: true);
+    return AssetSource(path: src, isFile: true);
   } else if (assetsDir != "") {
     var filePath = normalizePath(src);
     if (filePath.startsWith(p.separator)) {
       filePath = filePath.substring(1);
     }
-    return AssetSrc(
+    return AssetSource(
         path: p.join(normalizePath(assetsDir), filePath), isFile: true);
   } else {
     var uri = Uri.parse(src);
-    return AssetSrc(
+    return AssetSource(
         path: uri.hasAuthority ? src : getAssetUri(pageUri, src).toString(),
         isFile: false);
   }

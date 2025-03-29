@@ -1,20 +1,14 @@
-import 'dart:convert';
-
 import 'package:flutter/widgets.dart';
 
-import '../flet_control_backend.dart';
+import '../flet_backend.dart';
 import '../models/control.dart';
 
 class ScrollNotificationControl extends StatefulWidget {
   final Widget child;
   final Control control;
-  final FletControlBackend backend;
 
   const ScrollNotificationControl(
-      {super.key,
-      required this.child,
-      required this.control,
-      required this.backend});
+      {super.key, required this.child, required this.control});
 
   @override
   State<ScrollNotificationControl> createState() =>
@@ -27,7 +21,7 @@ class _ScrollNotificationControlState extends State<ScrollNotificationControl> {
 
   @override
   Widget build(BuildContext context) {
-    _onScrollInterval = widget.control.getInt("onScrollInterval", 10)!;
+    _onScrollInterval = widget.control.get<int>("on_scroll_interval", 10)!;
 
     return NotificationListener<ScrollNotification>(
       child: widget.child,
@@ -36,18 +30,6 @@ class _ScrollNotificationControlState extends State<ScrollNotificationControl> {
   }
 
   bool _onNotification(ScrollNotification notification, BuildContext context) {
-    void sendEvent(dynamic eventData) {
-      var d = "";
-      if (eventData is String) {
-        d = eventData;
-      } else if (eventData is Map) {
-        d = json.encode(eventData);
-      }
-
-      debugPrint("ScrollNotification ${widget.control.id} event");
-      widget.backend.triggerControlEvent(widget.control.id, "onScroll", d);
-    }
-
     if (notification.depth == 0) {
       var eventType = notification.runtimeType.toString();
       var now = DateTime.now().millisecondsSinceEpoch;
@@ -79,7 +61,9 @@ class _ScrollNotificationControlState extends State<ScrollNotificationControl> {
         }
 
         if (data["t"] != null) {
-          sendEvent(data);
+          debugPrint("ScrollNotification ${widget.control.id} event");
+          FletBackend.of(context)
+              .triggerControlEvent(widget.control, "on_scroll", data);
         }
       }
     }

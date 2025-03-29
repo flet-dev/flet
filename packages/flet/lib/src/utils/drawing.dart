@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:collection/collection.dart';
-import 'package:flet/src/utils/others.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -10,9 +9,10 @@ import '../utils/numbers.dart';
 import 'colors.dart';
 import 'gradient.dart';
 import 'images.dart';
+import 'others.dart';
 
 Paint parsePaint(ThemeData theme, Control control, String propName) {
-  var v = control.getString(propName, null);
+  var v = control.get<String>(propName, null);
   if (v == null) {
     return Paint();
   }
@@ -32,7 +32,7 @@ PaintingStyle? parsePaintingStyle(String? value, [PaintingStyle? defValue]) {
 }
 
 List<double>? parsePaintStrokeDashPattern(Control control, String propName) {
-  var v = control.getString(propName, null);
+  var v = control.get<String>(propName, null);
   if (v == null) {
     return null;
   }

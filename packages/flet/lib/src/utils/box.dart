@@ -5,9 +5,9 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../controls/error.dart';
 import '../models/control.dart';
 import '../models/page_args_model.dart';
+import '../widgets/error.dart';
 import 'alignment.dart';
 import 'borders.dart';
 import 'collections.dart';
@@ -19,7 +19,7 @@ import 'others.dart';
 import 'transforms.dart';
 
 BoxConstraints? parseBoxConstraints(Control control, String propName) {
-  var v = control.getString(propName);
+  var v = control.get<String>(propName);
   if (v == null) {
     return null;
   }
@@ -44,7 +44,7 @@ BoxConstraints? boxConstraintsFromJSON(dynamic json,
 List<BoxShadow>? parseBoxShadow(
     ThemeData theme, Control control, String propName,
     [List<BoxShadow>? defValue]) {
-  var v = control.getString(propName);
+  var v = control.get<String>(propName);
   if (v == null) {
     return defValue;
   }
@@ -81,13 +81,12 @@ BoxShadow boxShadowFromJSON(ThemeData theme, dynamic json) {
 
 BoxDecoration? parseBoxDecoration(ThemeData theme, Control control,
     String propName, PageArgsModel? pageArgs) {
-  var v = control.getString(propName);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
 
-  final j1 = json.decode(v);
-  return boxDecorationFromJSON(theme, j1, pageArgs);
+  return boxDecorationFromJSON(theme, v, pageArgs);
 }
 
 BoxDecoration? boxDecorationFromJSON(
@@ -150,7 +149,7 @@ BoxDecoration? boxDecorationFromDetails({
 
 DecorationImage? parseDecorationImage(ThemeData theme, Control control,
     String propName, PageArgsModel? pageArgs) {
-  var v = control.getString(propName);
+  var v = control.get<String>(propName);
   if (v == null) {
     return null;
   }

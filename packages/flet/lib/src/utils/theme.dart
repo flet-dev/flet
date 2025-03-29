@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:collection/collection.dart';
-import 'package:flet/src/utils/locale.dart';
-import 'package:flet/src/utils/others.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -17,10 +14,12 @@ import 'dismissible.dart';
 import 'drawing.dart';
 import 'edge_insets.dart';
 import 'icons.dart';
+import 'locale.dart';
 import 'material_state.dart';
 import 'menu.dart';
 import 'mouse.dart';
 import 'numbers.dart';
+import 'others.dart';
 import 'overlay_style.dart';
 import 'text.dart';
 import 'time.dart';
@@ -32,15 +31,27 @@ class SystemUiOverlayStyleTheme
   SystemUiOverlayStyleTheme(this.systemUiOverlayStyle);
 
   @override
-  ThemeExtension<SystemUiOverlayStyleTheme> copyWith() {
+  SystemUiOverlayStyleTheme copyWith() {
     return SystemUiOverlayStyleTheme(systemUiOverlayStyle);
   }
 
   @override
-  ThemeExtension<SystemUiOverlayStyleTheme> lerp(
-      covariant ThemeExtension<SystemUiOverlayStyleTheme>? other, double t) {
-    return this;
+  SystemUiOverlayStyleTheme lerp(
+      covariant SystemUiOverlayStyleTheme? other, double t) {
+    if (other is! SystemUiOverlayStyleTheme) {
+      return this;
+    }
+    return other;
   }
+
+  @override
+  bool operator ==(Object other) {
+    return systemUiOverlayStyle ==
+        (other as SystemUiOverlayStyleTheme).systemUiOverlayStyle;
+  }
+
+  @override
+  int get hashCode => systemUiOverlayStyle.hashCode;
 }
 
 CupertinoThemeData parseCupertinoTheme(
@@ -53,12 +64,13 @@ CupertinoThemeData parseCupertinoTheme(
 
 CupertinoThemeData fixCupertinoTheme(
     CupertinoThemeData cupertinoTheme, ThemeData theme) {
-  return cupertinoTheme.copyWith(
+  var r = cupertinoTheme.copyWith(
       applyThemeToAll: true,
       barBackgroundColor: theme.colorScheme.surface,
       textTheme: cupertinoTheme.textTheme.copyWith(
           navTitleTextStyle: cupertinoTheme.textTheme.navTitleTextStyle
               .copyWith(color: theme.colorScheme.onSurface)));
+  return r;
 }
 
 ThemeMode? parseThemeMode(String? value, [ThemeMode? defValue]) {
@@ -72,12 +84,8 @@ ThemeMode? parseThemeMode(String? value, [ThemeMode? defValue]) {
 
 ThemeData parseTheme(Control control, String propName, Brightness? brightness,
     {ThemeData? parentTheme}) {
-  dynamic j;
-  var v = control.getString(propName);
-  if (v != null) {
-    j = json.decode(v);
-  }
-  return themeFromJson(j, brightness, parentTheme);
+  var v = control.get(propName);
+  return themeFromJson(v, brightness, parentTheme);
 }
 
 ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
@@ -97,14 +105,21 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
 
   // create new theme
   theme ??= ThemeData(
-      primarySwatch:
-          primarySwatch != null ? primarySwatch as MaterialColor : null,
-      colorSchemeSeed: colorSchemeSeed,
-      fontFamily: json?["font_family"],
-      brightness: brightness,
-      useMaterial3: json?["use_material3"] ?? primarySwatch == null);
+    primarySwatch:
+        primarySwatch != null ? primarySwatch as MaterialColor : null,
+    colorSchemeSeed: colorSchemeSeed,
+    fontFamily: json?["font_family"],
+    brightness: brightness,
+    useMaterial3: json?["use_material3"] ?? primarySwatch == null,
+  );
 
   theme = theme.copyWith(
+    extensions: {
+      SystemUiOverlayStyleTheme(json?["system_overlay_style"] != null
+          ? overlayStyleFromJson(
+              theme, json?["system_overlay_style"], brightness)
+          : null)
+    },
     visualDensity:
         parseVisualDensity(json?["visual_density"], theme.visualDensity)!,
     pageTransitionsTheme: parsePageTransitions(
@@ -125,7 +140,6 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
     scaffoldBackgroundColor: parseColor(theme, json?["scaffold_bgcolor"]),
     cardColor: parseColor(theme, json?["card_color"]),
     dividerColor: parseColor(theme, json?["divider_color"]),
-    dialogBackgroundColor: parseColor(theme, json?["dialog_bgcolor"]),
     indicatorColor: parseColor(theme, json?["indicator_color"]),
     hintColor: parseColor(theme, json?["hint_color"]),
     shadowColor: parseColor(theme, json?["shadow_color"]),
@@ -188,12 +202,7 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
     timePickerTheme: parseTimePickerTheme(theme, json?["time_picker_theme"]),
   );
 
-  var systemOverlayStyle = json?["system_overlay_style"] != null
-      ? overlayStyleFromJson(theme, json?["system_overlay_style"], brightness)
-      : null;
-
   return theme.copyWith(
-      extensions: {SystemUiOverlayStyleTheme(systemOverlayStyle)},
       cupertinoOverrideTheme: fixCupertinoTheme(
           MaterialBasedCupertinoThemeData(materialTheme: theme), theme));
 }
@@ -1420,10 +1429,10 @@ SegmentedButtonThemeData? parseSegmentedButtonTheme(
   if (j == null) {
     return null;
   }
-  var selected_icon = parseIcon(j["selected_icon"]);
+  var selectedIcon = parseIcon(j["selected_icon"]);
 
   return theme.segmentedButtonTheme.copyWith(
-    selectedIcon: selected_icon != null ? Icon(selected_icon) : null,
+    selectedIcon: selectedIcon != null ? Icon(selectedIcon) : null,
     style: buttonStyleFromJSON(theme, j["style"]),
   );
 }
@@ -1481,4 +1490,92 @@ class NoPageTransitionsBuilder extends PageTransitionsBuilder {
     // only return the child without warping it with animations
     return child!;
   }
+}
+
+// Trying to fix https://github.com/flutter/flutter/issues/165455
+// TODO: remove this when the fix is available
+bool themesEqual(ThemeData a, ThemeData b) {
+  return mapEquals(a.adaptationMap, b.adaptationMap) &&
+      a.applyElevationOverlayColor == b.applyElevationOverlayColor &&
+      //a.cupertinoOverrideTheme == b.cupertinoOverrideTheme &&
+      mapEquals(a.extensions, b.extensions) &&
+      a.inputDecorationTheme == b.inputDecorationTheme &&
+      a.materialTapTargetSize == b.materialTapTargetSize &&
+      a.pageTransitionsTheme == b.pageTransitionsTheme &&
+      a.platform == b.platform &&
+      a.scrollbarTheme == b.scrollbarTheme &&
+      a.splashFactory == b.splashFactory &&
+      a.useMaterial3 == b.useMaterial3 &&
+      a.visualDensity == b.visualDensity &&
+      // COLOR
+      a.canvasColor == b.canvasColor &&
+      a.cardColor == b.cardColor &&
+      a.colorScheme == b.colorScheme &&
+      a.disabledColor == b.disabledColor &&
+      a.dividerColor == b.dividerColor &&
+      a.focusColor == b.focusColor &&
+      a.highlightColor == b.highlightColor &&
+      a.hintColor == b.hintColor &&
+      a.hoverColor == b.hoverColor &&
+      a.indicatorColor == b.indicatorColor &&
+      a.primaryColor == b.primaryColor &&
+      a.primaryColorDark == b.primaryColorDark &&
+      a.primaryColorLight == b.primaryColorLight &&
+      a.scaffoldBackgroundColor == b.scaffoldBackgroundColor &&
+      a.secondaryHeaderColor == b.secondaryHeaderColor &&
+      a.shadowColor == b.shadowColor &&
+      a.splashColor == b.splashColor &&
+      a.unselectedWidgetColor == b.unselectedWidgetColor &&
+      // TYPOGRAPHY & ICONOGRAPHY
+      a.iconTheme == b.iconTheme &&
+      a.primaryIconTheme == b.primaryIconTheme &&
+      a.primaryTextTheme == b.primaryTextTheme &&
+      a.textTheme == b.textTheme &&
+      a.typography == b.typography &&
+      // COMPONENT THEMES
+      a.actionIconTheme == b.actionIconTheme &&
+      a.appBarTheme == b.appBarTheme &&
+      a.badgeTheme == b.badgeTheme &&
+      a.bannerTheme == b.bannerTheme &&
+      a.bottomAppBarTheme == b.bottomAppBarTheme &&
+      a.bottomNavigationBarTheme == b.bottomNavigationBarTheme &&
+      a.bottomSheetTheme == b.bottomSheetTheme &&
+      a.buttonTheme == b.buttonTheme &&
+      a.cardTheme == b.cardTheme &&
+      a.checkboxTheme == b.checkboxTheme &&
+      a.chipTheme == b.chipTheme &&
+      a.dataTableTheme == b.dataTableTheme &&
+      a.datePickerTheme == b.datePickerTheme &&
+      a.dialogTheme == b.dialogTheme &&
+      a.dividerTheme == b.dividerTheme &&
+      a.drawerTheme == b.drawerTheme &&
+      a.dropdownMenuTheme == b.dropdownMenuTheme &&
+      a.elevatedButtonTheme == b.elevatedButtonTheme &&
+      a.expansionTileTheme == b.expansionTileTheme &&
+      a.filledButtonTheme == b.filledButtonTheme &&
+      a.floatingActionButtonTheme == b.floatingActionButtonTheme &&
+      a.iconButtonTheme == b.iconButtonTheme &&
+      a.listTileTheme == b.listTileTheme &&
+      a.menuBarTheme == b.menuBarTheme &&
+      a.menuButtonTheme == b.menuButtonTheme &&
+      a.menuTheme == b.menuTheme &&
+      a.navigationBarTheme == b.navigationBarTheme &&
+      a.navigationDrawerTheme == b.navigationDrawerTheme &&
+      a.navigationRailTheme == b.navigationRailTheme &&
+      a.outlinedButtonTheme == b.outlinedButtonTheme &&
+      a.popupMenuTheme == b.popupMenuTheme &&
+      a.progressIndicatorTheme == b.progressIndicatorTheme &&
+      a.radioTheme == b.radioTheme &&
+      a.searchBarTheme == b.searchBarTheme &&
+      a.searchViewTheme == b.searchViewTheme &&
+      a.segmentedButtonTheme == b.segmentedButtonTheme &&
+      a.sliderTheme == b.sliderTheme &&
+      a.snackBarTheme == b.snackBarTheme &&
+      a.switchTheme == b.switchTheme &&
+      a.tabBarTheme == b.tabBarTheme &&
+      a.textButtonTheme == b.textButtonTheme &&
+      a.textSelectionTheme == b.textSelectionTheme &&
+      a.timePickerTheme == b.timePickerTheme &&
+      a.toggleButtonsTheme == b.toggleButtonsTheme &&
+      a.tooltipTheme == b.tooltipTheme;
 }

@@ -10,7 +10,7 @@ import 'numbers.dart';
 
 BorderRadius? parseBorderRadius(Control control, String propName,
     [BorderRadius? defaultValue]) {
-  var v = control.getString(propName, null);
+  var v = control.get<String>(propName, null);
   if (v == null) {
     return defaultValue;
   }
@@ -20,7 +20,7 @@ BorderRadius? parseBorderRadius(Control control, String propName,
 }
 
 Radius? parseRadius(Control control, String propName, [Radius? defaultValue]) {
-  var r = control.getDouble(propName, null);
+  var r = control.get<double>(propName);
   if (r == null) {
     return defaultValue;
   }
@@ -30,7 +30,7 @@ Radius? parseRadius(Control control, String propName, [Radius? defaultValue]) {
 
 Border? parseBorder(ThemeData theme, Control control, String propName,
     [Color? defaultSideColor]) {
-  var v = control.getString(propName, null);
+  var v = control.get<String>(propName, null);
   if (v == null) {
     return null;
   }
@@ -41,7 +41,7 @@ Border? parseBorder(ThemeData theme, Control control, String propName,
 
 BorderSide? parseBorderSide(ThemeData theme, Control control, String propName,
     {Color? defaultSideColor}) {
-  var v = control.getString(propName, null);
+  var v = control.get<String>(propName, null);
   if (v == null) {
     return null;
   }
@@ -51,7 +51,7 @@ BorderSide? parseBorderSide(ThemeData theme, Control control, String propName,
 }
 
 OutlinedBorder? parseOutlinedBorder(Control control, String propName) {
-  var v = control.getString(propName, null);
+  var v = control.get<String>(propName, null);
   if (v == null) {
     return null;
   }
@@ -128,7 +128,7 @@ OutlinedBorder? outlinedBorderFromJSON(Map<String, dynamic>? json) {
 
 WidgetStateBorderSide? parseWidgetStateBorderSide(
     ThemeData theme, Control control, String propName) {
-  var v = control.getString(propName, null);
+  var v = control.get<String>(propName, null);
   if (v == null) {
     return null;
   }
@@ -181,7 +181,7 @@ class WidgetStateBorderSideFromJSON extends WidgetStateBorderSide {
 
 WidgetStateProperty<OutlinedBorder?>? parseWidgetStateOutlinedBorder(
     Control control, String propName) {
-  var v = control.getString(propName, null);
+  var v = control.get<String>(propName, null);
   if (v == null) {
     return null;
   }

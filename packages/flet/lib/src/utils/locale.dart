@@ -1,18 +1,15 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 
 Map<String, dynamic>? parseLocaleConfiguration(
     Control control, String propName) {
-  var v = control.getString(propName, null);
+  var v = control.get<String>(propName, null);
   if (v == null) {
     return null;
   }
 
-  final j1 = json.decode(v);
-  return localeConfigurationFromJSON(j1);
+  return localeConfigurationFromJSON(v);
 }
 
 Map<String, dynamic> localeConfigurationFromJSON(dynamic json) {

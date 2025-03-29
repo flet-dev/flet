@@ -28,7 +28,6 @@ bool isLocalhost(Uri uri) {
   return uri.host == "localhost" || uri.host == "127.0.0.1";
 }
 
-bool isUdsPath(String address) {
-  var uri = Uri.tryParse(address);
-  return uri == null || !uri.hasScheme;
+bool isUdsPath(Uri address) {
+  return !address.hasScheme;
 }

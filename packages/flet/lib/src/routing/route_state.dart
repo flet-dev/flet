@@ -19,7 +19,6 @@ class RouteState extends ChangeNotifier {
     if (_route == route) return;
 
     _route = route;
-    debugPrint("Route changed to: $route");
     notifyListeners();
   }
 

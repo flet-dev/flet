@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flet/src/utils/transforms.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -13,6 +12,7 @@ import 'mouse.dart';
 import 'numbers.dart';
 import 'text.dart';
 import 'theme.dart';
+import 'transforms.dart';
 
 ButtonStyle? parseButtonStyle(ThemeData theme, Control control, String propName,
     {Color? defaultForegroundColor,
@@ -24,7 +24,7 @@ ButtonStyle? parseButtonStyle(ThemeData theme, Control control, String propName,
     EdgeInsets? defaultPadding,
     BorderSide? defaultBorderSide,
     OutlinedBorder? defaultShape}) {
-  var v = control.getString(propName, null);
+  var v = control.get<String>(propName, null);
   if (v == null) {
     return null;
   }
@@ -127,7 +127,7 @@ FloatingActionButtonLocation parseFloatingActionButtonLocation(
       return defValue;
     }
   } catch (e) {
-    var key = control.getString(propName, "")!.toLowerCase();
+    var key = control.get<String>(propName, "")!.toLowerCase();
     return fabLocations.containsKey(key) ? fabLocations[key]! : defValue;
   }
 }

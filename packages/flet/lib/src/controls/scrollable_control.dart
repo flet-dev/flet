@@ -3,30 +3,25 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_app_services.dart';
-import '../flet_control_backend.dart';
+import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
 import '../utils/numbers.dart';
 import '../utils/others.dart';
-import 'flet_store_mixin.dart';
+import '../widgets/flet_store_mixin.dart';
 
 class ScrollableControl extends StatefulWidget {
   final Control control;
   final Widget child;
   final Axis scrollDirection;
   final ScrollController? scrollController;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
   const ScrollableControl(
       {super.key,
       required this.control,
       required this.child,
       required this.scrollDirection,
-      this.scrollController,
-      required this.parentAdaptive,
-      required this.backend});
+      this.scrollController});
 
   @override
   State<ScrollableControl> createState() => _ScrollableControlState();
@@ -60,12 +55,12 @@ class _ScrollableControlState extends State<ScrollableControl>
   @override
   Widget build(BuildContext context) {
     return withPagePlatform((context, platform) {
-      ScrollMode scrollMode =
-          parseScrollMode(widget.control.getString("scroll"), ScrollMode.none)!;
+      ScrollMode scrollMode = parseScrollMode(
+          widget.control.get<String>("scroll"), ScrollMode.none)!;
 
-      var method = widget.control.getString("method");
+      var method = widget.control.get<String>("method");
 
-      if (widget.control.getBool("autoScroll", false)!) {
+      if (widget.control.get<bool>("autoScroll", false)!) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _controller.animateTo(
             _controller.position.maxScrollExtent,
@@ -76,7 +71,8 @@ class _ScrollableControlState extends State<ScrollableControl>
       } else if (method != null && method != _method) {
         _method = method;
         debugPrint("ScrollableControl JSON method: $method");
-        widget.backend.updateControlState(widget.control.id, {"method": ""});
+        FletBackend.of(context)
+            .updateControl(widget.control.id, {"method": ""});
 
         var mj = json.decode(method);
         var name = mj["n"] as String;
@@ -87,7 +83,7 @@ class _ScrollableControlState extends State<ScrollableControl>
           var curve = parseCurve(params["curve"], Curves.ease)!;
           if (params["key"] != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              var key = FletAppServices.of(context).globalKeys[params["key"]];
+              var key = FletBackend.of(context).globalKeys[params["key"]];
               if (key != null) {
                 var ctx = key.currentContext;
                 if (ctx != null) {

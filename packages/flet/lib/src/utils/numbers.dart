@@ -20,7 +20,7 @@ double? parseDouble(dynamic v, [double? defValue]) {
 WidgetStateProperty<double?>? parseWidgetStateDouble(
     Control control, String propName,
     [double? defaultValue]) {
-  var v = control.getString(propName, null);
+  var v = control.get<String>(propName, null);
   if (v == null) {
     return null;
   }
@@ -40,7 +40,7 @@ int? parseInt(dynamic v, [int? defValue]) {
 
 WidgetStateProperty<int?>? parseWidgetStateInt(Control control, String propName,
     [int? defaultValue]) {
-  var v = control.getString(propName, null);
+  var v = control.get<String>(propName, null);
   if (v == null) {
     return null;
   }
@@ -61,7 +61,7 @@ bool? parseBool(dynamic v, [bool? defValue]) {
 WidgetStateProperty<bool?>? parseWidgetStateBool(
     Control control, String propName,
     [bool? defaultValue]) {
-  var v = control.getString(propName, null);
+  var v = control.get<String>(propName, null);
   if (v == null) {
     return null;
   }

@@ -12,9 +12,9 @@ class PageMediaData extends Equatable {
       required this.viewInsets});
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'padding': padding,
-        'view_padding': viewPadding,
-        'view_insets': viewInsets,
+        'padding': padding.toJson(),
+        'view_padding': viewPadding.toJson(),
+        'view_insets': viewInsets.toJson(),
       };
 
   @override

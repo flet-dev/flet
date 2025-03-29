@@ -18,7 +18,7 @@ DismissDirection? parseDismissDirection(String? value,
 
 Map<DismissDirection, double>? parseDismissThresholds(
     Control control, String propName) {
-  var v = control.getString(propName, null);
+  var v = control.get<String>(propName, null);
   if (v == null) {
     return null;
   }
