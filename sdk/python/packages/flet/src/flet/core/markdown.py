@@ -1,8 +1,6 @@
-import warnings
 from dataclasses import dataclass
-from enum import Enum, EnumMeta
+from enum import Enum
 from typing import Any, Optional, Union, cast
-from warnings import warn
 
 from flet.core.animation import AnimationValue
 from flet.core.badge import BadgeValue
@@ -37,47 +35,6 @@ class MarkdownExtensionSet(Enum):
     COMMON_MARK = "commonMark"
     GITHUB_WEB = "gitHubWeb"
     GITHUB_FLAVORED = "gitHubFlavored"
-
-
-class MarkdownSelectionChangeCauseDeprecated(EnumMeta):
-    def __getattribute__(self, item):
-        if item in [
-            "UNKNOWN",
-            "TAP",
-            "DOUBLE_TAP",
-            "LONG_PRESS",
-            "FORCE_PRESS",
-            "KEYBOARD",
-            "TOOLBAR",
-            "DRAG",
-            "SCRIBBLE",
-        ]:
-            warn(
-                "MarkdownSelectionChangeCause enum is deprecated since version 0.25.0 "
-                "and will be removed in version 0.28.0. Use TextSelectionChangeCause enum instead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-        return EnumMeta.__getattribute__(self, item)
-
-
-class MarkdownSelectionChangeCause(
-    Enum, metaclass=MarkdownSelectionChangeCauseDeprecated
-):
-    UNKNOWN = "unknown"
-    TAP = "tap"
-    DOUBLE_TAP = "doubleTap"
-    LONG_PRESS = "longPress"
-    FORCE_PRESS = "forcePress"
-    KEYBOARD = "keyboard"
-    TOOLBAR = "toolbar"
-    DRAG = "drag"
-    SCRIBBLE = "scribble"
-
-
-# deprecated in v0.25.0 and will be removed in v0.28.0
-class MarkdownSelectionChangeEvent(TextSelectionChangeEvent):
-    pass
 
 
 @dataclass
@@ -300,9 +257,7 @@ class Markdown(ConstrainedControl):
         code_style_sheet: Optional[MarkdownStyleSheet] = None,
         md_style_sheet: Optional[MarkdownStyleSheet] = None,
         on_tap_text: OptionalControlEventCallable = None,
-        on_selection_change: OptionalEventCallable[
-            Union[TextSelectionChangeEvent, MarkdownSelectionChangeEvent]
-        ] = None,
+        on_selection_change: OptionalEventCallable[TextSelectionChangeEvent] = None,
         on_tap_link: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
@@ -546,16 +501,12 @@ class Markdown(ConstrainedControl):
     @property
     def on_selection_change(
         self,
-    ) -> OptionalEventCallable[
-        Union[TextSelectionChangeEvent, MarkdownSelectionChangeEvent]
-    ]:
+    ) -> OptionalEventCallable[TextSelectionChangeEvent]:
         return self.__on_selection_change.handler
 
     @on_selection_change.setter
     def on_selection_change(
         self,
-        handler: OptionalEventCallable[
-            Union[TextSelectionChangeEvent, MarkdownSelectionChangeEvent]
-        ],
+        handler: OptionalEventCallable[TextSelectionChangeEvent],
     ):
         self.__on_selection_change.handler = handler

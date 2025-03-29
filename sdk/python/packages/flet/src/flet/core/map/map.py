@@ -1,8 +1,7 @@
 import json
 from dataclasses import dataclass
-from enum import Enum, EnumMeta, IntFlag
+from enum import Enum, IntFlag
 from typing import Any, List, Optional, Tuple, Union
-from warnings import warn
 
 from flet.core.animation import AnimationCurve, AnimationValue
 from flet.core.badge import BadgeValue
@@ -22,6 +21,7 @@ from flet.core.types import (
     OffsetValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
+    PointerDeviceType,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -69,34 +69,6 @@ class MapMultiFingerGesture(IntFlag):
     PINCH_ZOOM = 1 << 1
     ROTATE = 1 << 2
     ALL = (1 << 0) | (1 << 1) | (1 << 2)
-
-
-class MapPointerDeviceTypeDeprecated(EnumMeta):
-    def __getattribute__(self, item):
-        if item in [
-            "TOUCH",
-            "MOUSE",
-            "STYLUS",
-            "INVERTED_STYLUS",
-            "TRACKPAD",
-            "UNKNOWN",
-        ]:
-            warn(
-                "MapPointerDeviceType enum is deprecated since version 0.25.0 "
-                "and will be removed in version 0.28.0. Use PointerDeviceType enum instead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-        return EnumMeta.__getattribute__(self, item)
-
-
-class MapPointerDeviceType(Enum, metaclass=MapPointerDeviceTypeDeprecated):
-    TOUCH = "touch"
-    MOUSE = "mouse"
-    STYLUS = "stylus"
-    INVERTED_STYLUS = "invertedStylus"
-    TRACKPAD = "trackpad"
-    UNKNOWN = "unknown"
 
 
 @dataclass
@@ -637,7 +609,7 @@ class MapHoverEvent(ControlEvent):
         self.local_y: Optional[float] = d.get("ly")
         self.global_x: float = d.get("gx")
         self.global_y: float = d.get("gy")
-        self.device_type: MapPointerDeviceType = MapPointerDeviceType(d.get("kind"))
+        self.device_type: PointerDeviceType = PointerDeviceType(d.get("kind"))
         self.coordinates: MapLatitudeLongitude = MapLatitudeLongitude(
             d.get("lat"), d.get("long")
         )
@@ -659,7 +631,7 @@ class MapPointerEvent(ControlEvent):
     def __init__(self, e: ControlEvent) -> None:
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.device_type: MapPointerDeviceType = MapPointerDeviceType(d.get("kind"))
+        self.device_type: PointerDeviceType = PointerDeviceType(d.get("kind"))
         self.global_y: float = d.get("gy")
         self.global_x: float = d.get("gx")
         self.coordinates: MapLatitudeLongitude = MapLatitudeLongitude(
