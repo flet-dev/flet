@@ -1,27 +1,15 @@
 from dataclasses import dataclass
 from datetime import date, datetime
-from enum import Enum, EnumMeta
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    Dict,
-    List,
-    Optional,
-    Protocol,
-    Tuple,
-    TypeVar,
-    Union,
-)
-from warnings import warn
+from enum import Enum
+from typing import Any, Callable, Dict, List, Optional, Protocol, Tuple, TypeVar, Union
 
 from flet.core.border_radius import BorderRadius
-from flet.core.colors import Colors, colors
+from flet.core.colors import Colors
 from flet.core.control_event import ControlEvent
-from flet.core.cupertino_colors import CupertinoColors, cupertino_colors
-from flet.core.cupertino_icons import CupertinoIcons, cupertino_icons
+from flet.core.cupertino_colors import CupertinoColors
+from flet.core.cupertino_icons import CupertinoIcons
 from flet.core.event import Event
-from flet.core.icons import Icons, icons
+from flet.core.icons import Icons
 from flet.core.margin import Margin
 from flet.core.padding import Padding
 from flet.core.transform import Offset, Rotate, Scale
@@ -395,12 +383,12 @@ class OnFocusEvent(ControlEvent):
 
 
 # Colors
-ColorEnums = (colors, Colors, cupertino_colors, CupertinoColors)
-ColorValue = Union[str, colors, Colors, cupertino_colors, CupertinoColors]
+ColorEnums = (Colors, CupertinoColors)
+ColorValue = Union[str, Colors, CupertinoColors]
 
 # Icons
-IconEnums = (icons, Icons, cupertino_icons, CupertinoIcons)
-IconValue = Union[str, icons, Icons, cupertino_icons, CupertinoIcons]
+IconEnums = (Icons, CupertinoIcons)
+IconValue = Union[str, Icons, CupertinoIcons]
 IconValueOrControl = Union[IconValue, "Control"]
 
 # ControlState

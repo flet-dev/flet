@@ -1,4 +1,3 @@
-import warnings
 from enum import Enum
 from typing import Any, Callable, List, Optional, Union
 
@@ -33,9 +32,7 @@ class NavigationRailDestination(Control):
     def __init__(
         self,
         icon: Optional[IconValueOrControl] = None,
-        icon_content: Optional[Control] = None,
         selected_icon: Optional[IconValueOrControl] = None,
-        selected_icon_content: Optional[Control] = None,
         label: Optional[str] = None,
         label_content: Optional[Control] = None,
         padding: Optional[PaddingValue] = None,
@@ -52,9 +49,7 @@ class NavigationRailDestination(Control):
         Control.__init__(self, ref=ref, disabled=disabled, visible=visible, data=data)
         self.label = label
         self.icon = icon
-        self.icon_content = icon_content
         self.selected_icon = selected_icon
-        self.selected_icon_content = selected_icon_content
         self.label_content = label_content
         self.padding = padding
         self.indicator_color = indicator_color
@@ -77,17 +72,9 @@ class NavigationRailDestination(Control):
         if isinstance(self.__icon, Control):
             self.__icon._set_attr_internal("n", "icon")
             children.append(self.__icon)
-        if self.__icon_content:
-            self.__icon_content._set_attr_internal("n", "icon_content")
-            children.append(self.__icon_content)
         if isinstance(self.__selected_icon, Control):
             self.__selected_icon._set_attr_internal("n", "selected_icon")
             children.append(self.__selected_icon)
-        if self.__selected_icon_content:
-            self.__selected_icon_content._set_attr_internal(
-                "n", "selected_icon_content"
-            )
-            children.append(self.__selected_icon_content)
         return children
 
     # icon
@@ -101,28 +88,6 @@ class NavigationRailDestination(Control):
         if not isinstance(value, Control):
             self._set_enum_attr("icon", value, IconEnums)
 
-    # icon_content
-    @property
-    def icon_content(self) -> Optional[Control]:
-        warnings.warn(
-            f"icon_content is deprecated since version 0.25.0 "
-            f"and will be removed in version 0.28.0. Use icon instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.__icon_content
-
-    @icon_content.setter
-    def icon_content(self, value: Optional[Control]):
-        self.__icon_content = value
-        if value is not None:
-            warnings.warn(
-                f"icon_content is deprecated since version 0.25.0 "
-                f"and will be removed in version 0.28.0. Use icon instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-
     # selected_icon
     @property
     def selected_icon(self) -> Optional[IconValueOrControl]:
@@ -133,28 +98,6 @@ class NavigationRailDestination(Control):
         self.__selected_icon = value
         if not isinstance(value, Control):
             self._set_enum_attr("selectedIcon", value, IconEnums)
-
-    # selected_icon_content
-    @property
-    def selected_icon_content(self) -> Optional[Control]:
-        warnings.warn(
-            f"selected_icon_content is deprecated since version 0.25.0 "
-            f"and will be removed in version 0.28.0. Use selected_icon instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.__selected_icon_content
-
-    @selected_icon_content.setter
-    def selected_icon_content(self, value: Optional[Control]):
-        self.__selected_icon_content = value
-        if value is not None:
-            warnings.warn(
-                f"selected_icon_content is deprecated since version 0.25.0 "
-                f"and will be removed in version 0.28.0. Use selected_icon instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
 
     # label
     @property

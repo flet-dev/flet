@@ -167,18 +167,14 @@ class DropdownM2(FormFieldControl):
         autofocus: Optional[bool] = None,
         hint_content: Optional[Control] = None,
         select_icon: Optional[IconValueOrControl] = None,
-        icon_content: Optional[Control] = None,  # to be deprecated
         elevation: OptionalNumber = None,
         item_height: OptionalNumber = None,
         max_menu_height: OptionalNumber = None,
         select_icon_size: OptionalNumber = None,
-        icon_size: OptionalNumber = None,  # to be deprecated
         enable_feedback: Optional[bool] = None,
         padding: Optional[PaddingValue] = None,
         select_icon_enabled_color: Optional[ColorValue] = None,
-        icon_enabled_color: Optional[ColorValue] = None,  # to be deprecated
         select_icon_disabled_color: Optional[ColorValue] = None,
-        icon_disabled_color: Optional[ColorValue] = None,  # to be deprecated
         options_fill_horizontally: Optional[bool] = None,
         disabled_hint_content: Optional[Control] = None,
         on_change: OptionalControlEventCallable = None,
@@ -351,7 +347,6 @@ class DropdownM2(FormFieldControl):
         self.hint_content = hint_content
         self.disabled_hint_content = disabled_hint_content
         self.select_icon = select_icon
-        self.icon_content = icon_content
         self.padding = padding
         self.enable_feedback = enable_feedback
         self.on_focus = on_focus
@@ -359,12 +354,10 @@ class DropdownM2(FormFieldControl):
         self.on_change = on_change
         self.item_height = item_height
         self.max_menu_height = max_menu_height
-        self.select_icon_size = select_icon_size or icon_size
-        self.select_icon_enabled_color = select_icon_enabled_color or icon_enabled_color
-        self.icon_disabled_color = icon_disabled_color
-        self.select_icon_disabled_color = (
-            select_icon_disabled_color or icon_disabled_color
-        )
+        self.select_icon_size = select_icon_size
+        self.select_icon_enabled_color = select_icon_enabled_color
+        self.select_icon_disabled_color = select_icon_disabled_color
+
         self.on_click = on_click
         self.options_fill_horizontally = options_fill_horizontally
 
@@ -396,9 +389,6 @@ class DropdownM2(FormFieldControl):
         if isinstance(self.__hint_content, Control):
             self.__hint_content._set_attr_internal("n", "hint")
             children.append(self.__hint_content)
-        if isinstance(self.__icon_content, Control):
-            self.__icon_content._set_attr_internal("n", "icon")
-            children.append(self.__icon_content)
         if isinstance(self.__select_icon, Control):
             self.__select_icon._set_attr_internal("n", "selectIcon")
             children.append(self.__select_icon)
@@ -434,28 +424,6 @@ class DropdownM2(FormFieldControl):
         if not isinstance(value, Control):
             self._set_enum_attr("selectIcon", value, IconEnums)
 
-    # icon_content
-    @property
-    def icon_content(self) -> Optional[Control]:
-        warnings.warn(
-            f"icon_content is deprecated since version 0.25.0 "
-            f"and will be removed in version 0.28.0. Use icon instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.__icon_content
-
-    @icon_content.setter
-    def icon_content(self, value: Optional[Control]):
-        self.__icon_content = value
-        if value is not None:
-            warnings.warn(
-                f"icon_content is deprecated since version 0.25.0 "
-                f"and will be removed in version 0.28.0. Use icon instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-
     # hint_content
     @property
     def hint_content(self) -> Optional[Control]:
@@ -483,29 +451,6 @@ class DropdownM2(FormFieldControl):
     def value(self, value: Optional[str]):
         self._set_attr("value", value)
 
-    # icon_enabled_color
-    @property
-    def icon_enabled_color(self) -> Optional[ColorValue]:
-        warnings.warn(
-            f"icon_enabled_color is deprecated since version 0.25.0 "
-            f"and will be removed in version 0.28.0. Use select_icon_enabled_color instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.__icon_enabled_color
-
-    @icon_enabled_color.setter
-    def icon_enabled_color(self, value: Optional[ColorValue]):
-        self.__icon_enabled_color = value
-        self._set_enum_attr("selectIconEnabledColor", value, ColorEnums)
-        if value is not None:
-            warnings.warn(
-                f"icon_enabled_color is deprecated since version 0.25.0 "
-                f"and will be removed in version 0.28.0. Use select_icon_enabled_color instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-
     # select_icon_enabled_color
     @property
     def select_icon_enabled_color(self) -> Optional[ColorValue]:
@@ -515,29 +460,6 @@ class DropdownM2(FormFieldControl):
     def select_icon_enabled_color(self, value: Optional[ColorValue]):
         self.__select_icon_enabled_color = value
         self._set_enum_attr("selectIconEnabledColor", value, ColorEnums)
-
-    # icon_disabled_color
-    @property
-    def icon_disabled_color(self) -> Optional[ColorValue]:
-        warnings.warn(
-            f"icon_disabled_color is deprecated since version 0.25.0 "
-            f"and will be removed in version 0.28.0. Use select_icon_disabled_color instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.__icon_disabled_color
-
-    @icon_disabled_color.setter
-    def icon_disabled_color(self, value: Optional[ColorValue]):
-        self.__icon_disabled_color = value
-        self._set_enum_attr("selectIconDisabledColor", value, ColorEnums)
-        if value is not None:
-            warnings.warn(
-                f"icon_disabled_color is deprecated since version 0.25.0 "
-                f"and will be removed in version 0.28.0. Use select_icon_disabled_color instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
 
     # select_icon_disabled_color
     @property
@@ -569,28 +491,6 @@ class DropdownM2(FormFieldControl):
     @max_menu_height.setter
     def max_menu_height(self, value: OptionalNumber):
         self._set_attr("maxMenuHeight", value)
-
-    # icon_size
-    @property
-    def icon_size(self) -> float:
-        warnings.warn(
-            f"icon_size is deprecated since version 0.25.0 "
-            f"and will be removed in version 0.28.0. Use select_icon_size instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self._get_attr("selectIconSize", data_type="float", def_value=24.0)
-
-    @icon_size.setter
-    def icon_size(self, value: OptionalNumber):
-        self._set_attr("selectIconSize", value)
-        if value is not None:
-            warnings.warn(
-                f"icon_size is deprecated since version 0.25.0 "
-                f"and will be removed in version 0.28.0. Use select_icon_size instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
 
     # select_icon_size
     @property

@@ -63,19 +63,11 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl>
           var iconStr = parseIcon(destView.control.attrString("icon"));
           var iconCtrls = destView.children
                   .where((c) => c.name == "icon" && c.isVisible);
-          // if no control provided in "icon" property, replace iconCtrls with control provided in icon_content, if any 
-          // the line below needs to be deleted after icon_content is deprecated
-          iconCtrls = iconCtrls.isEmpty? destView.children
-                  .where((c) => c.name == "icon_content" && c.isVisible) : iconCtrls;
           
           var selectedIconStr =
               parseIcon(destView.control.attrString("selectedIcon"));
           var selectedIconCtrls = destView.children
                   .where((c) => c.name == "selected_icon" && c.isVisible);
-          // if no control provided in "selected_icon" property, replace selectedIconCtrls with control provided in selected_icon_content, if any 
-          // the line below needs to be deleted after selected_icon_content is deprecated
-          selectedIconCtrls = selectedIconCtrls.isEmpty? destView.children
-                  .where((c) => c.name == "selected_icon_content" && c.isVisible): selectedIconCtrls;
           return NavigationDrawerDestination(
             enabled: !(disabled || destView.control.isDisabled),
             backgroundColor: destView.control.attrColor("bgColor", context),

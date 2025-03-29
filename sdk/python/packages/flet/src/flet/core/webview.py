@@ -1,5 +1,4 @@
 import json
-import warnings
 from enum import Enum
 from typing import Any, Optional, Union
 
@@ -134,7 +133,6 @@ class WebView(ConstrainedControl):
     def __init__(
         self,
         url: str,
-        javascript_enabled: Optional[bool] = None,
         enable_javascript: Optional[bool] = None,
         prevent_link: Optional[str] = None,
         bgcolor: Optional[ColorValue] = None,
@@ -227,7 +225,6 @@ class WebView(ConstrainedControl):
         )
 
         self.url = url
-        self.javascript_enabled = javascript_enabled
         self.enable_javascript = enable_javascript
         self.prevent_link = prevent_link
         self.bgcolor = bgcolor
@@ -373,33 +370,6 @@ class WebView(ConstrainedControl):
         self._set_attr("url", value)
         if self.page:
             self.load_request(value, WebviewRequestMethod.GET)
-
-    # javascript_enabled
-    @property
-    def javascript_enabled(self) -> bool:
-        warnings.warn(
-            f"javascript_enabled is deprecated since version 0.25.0 "
-            f"and will be removed in version 0.28.0. Use enable_javascript instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self._get_attr("javascriptEnabled", data_type="bool", def_value=False)
-
-    @javascript_enabled.setter
-    def javascript_enabled(self, value: Optional[bool]):
-        self._set_attr("javascriptEnabled", value)
-        if value is not None:
-            warnings.warn(
-                f"javascript_enabled is deprecated since version 0.25.0 "
-                f"and will be removed in version 0.28.0. Use enable_javascript instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-            if self.page:
-                self.invoke_method(
-                    "set_javascript_mode",
-                    arguments={"value": str(value)},
-                )
 
     # enable_javascript
     @property
