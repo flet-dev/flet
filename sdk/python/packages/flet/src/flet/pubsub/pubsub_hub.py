@@ -20,7 +20,6 @@ class PubSubHub:
         logger.debug("Creating new PubSubHub instance")
         self.__loop = loop
         self.__executor = executor
-        self.__lock = threading.Lock() if not is_pyodide() else NopeLock()
         self.__subscribers: Dict[
             str, Union[Callable, Callable[..., Awaitable[Any]]]
         ] = {}  # key: session_id, value: handler
@@ -33,38 +32,33 @@ class PubSubHub:
 
     def send_all(self, message: Any):
         logger.debug(f"pubsub.send_all({message})")
-        with self.__lock:
-            for handler in self.__subscribers.values():
-                self.__send(handler, [message])
+        for handler in self.__subscribers.values():
+            self.__send(handler, [message])
 
     def send_all_on_topic(self, topic: str, message: Any):
         logger.debug(f"pubsub.send_all_on_topic({topic}, {message})")
-        with self.__lock:
-            if topic in self.__topic_subscribers:
-                for handler in self.__topic_subscribers[topic].values():
-                    self.__send(handler, [topic, message])
+        if topic in self.__topic_subscribers:
+            for handler in self.__topic_subscribers[topic].values():
+                self.__send(handler, [topic, message])
 
     def send_others(self, except_session_id: str, message: Any):
         logger.debug(f"pubsub.send_others({except_session_id}, {message})")
-        with self.__lock:
-            for session_id, handler in self.__subscribers.items():
-                if except_session_id != session_id:
-                    self.__send(handler, [message])
+        for session_id, handler in self.__subscribers.items():
+            if except_session_id != session_id:
+                self.__send(handler, [message])
 
     def send_others_on_topic(self, except_session_id: str, topic: str, message: Any):
         logger.debug(
             f"pubsub.send_others_on_topic({except_session_id}, {topic}, {message})"
         )
-        with self.__lock:
-            if topic in self.__topic_subscribers:
-                for session_id, handler in self.__topic_subscribers[topic].items():
-                    if except_session_id != session_id:
-                        self.__send(handler, [topic, message])
+        if topic in self.__topic_subscribers:
+            for session_id, handler in self.__topic_subscribers[topic].items():
+                if except_session_id != session_id:
+                    self.__send(handler, [topic, message])
 
     def subscribe(self, session_id: str, handler: Callable):
         logger.debug(f"pubsub.subscribe({session_id})")
-        with self.__lock:
-            self.__subscribers[session_id] = handler
+        self.__subscribers[session_id] = handler
 
     def subscribe_topic(
         self,
@@ -73,8 +67,7 @@ class PubSubHub:
         handler: Union[Callable, Callable[..., Awaitable[Any]]],
     ):
         logger.debug(f"pubsub.subscribe_topic({session_id}, {topic})")
-        with self.__lock:
-            self.__subscribe_topic(session_id, topic, handler)
+        self.__subscribe_topic(session_id, topic, handler)
 
     def __subscribe_topic(
         self,
@@ -95,21 +88,18 @@ class PubSubHub:
 
     def unsubscribe(self, session_id: str):
         logger.debug(f"pubsub.unsubscribe({session_id})")
-        with self.__lock:
-            self.__unsubscribe(session_id)
+        self.__unsubscribe(session_id)
 
     def unsubscribe_topic(self, session_id: str, topic: str):
         logger.debug(f"pubsub.unsubscribe({session_id}, {topic})")
-        with self.__lock:
-            self.__unsubscribe_topic(session_id, topic)
+        self.__unsubscribe_topic(session_id, topic)
 
     def unsubscribe_all(self, session_id: str):
         logger.debug(f"pubsub.unsubscribe_all({session_id})")
-        with self.__lock:
-            self.__unsubscribe(session_id)
-            if session_id in self.__subscriber_topics:
-                for topic in list(self.__subscriber_topics[session_id].keys()):
-                    self.__unsubscribe_topic(session_id, topic)
+        self.__unsubscribe(session_id)
+        if session_id in self.__subscriber_topics:
+            for topic in list(self.__subscriber_topics[session_id].keys()):
+                self.__unsubscribe_topic(session_id, topic)
 
     def __unsubscribe(self, session_id: str):
         logger.debug(f"pubsub.__unsubscribe({session_id})")

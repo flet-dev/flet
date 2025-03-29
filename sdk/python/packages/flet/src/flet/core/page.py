@@ -39,7 +39,6 @@ from flet.core.control import Control, Service, control
 from flet.core.control_event import ControlEvent
 from flet.core.cupertino_app_bar import CupertinoAppBar
 from flet.core.cupertino_navigation_bar import CupertinoNavigationBar
-from flet.core.event import Event
 from flet.core.floating_action_button import FloatingActionButton
 from flet.core.navigation_bar import NavigationBar
 from flet.core.navigation_drawer import NavigationDrawer, NavigationDrawerPosition
@@ -153,13 +152,13 @@ class Page(AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/page
     """
 
-    sess: InitVar[Session]
+    sess: InitVar["Session"]
 
     views: List[View] = field(default_factory=lambda: [View()])
-    offstage: Offstage = field(default_factory=lambda: Offstage())
+    offstage: "Offstage" = field(default_factory=lambda: Offstage())
     window: Window = field(default_factory=lambda: Window())
-    _user_services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
-    _page_services: ServiceRegistry = field(default_factory=lambda: ServiceRegistry())
+    _user_services: "ServiceRegistry" = field(default_factory=lambda: ServiceRegistry())
+    _page_services: "ServiceRegistry" = field(default_factory=lambda: ServiceRegistry())
 
     theme_mode: Optional[ThemeMode] = field(default=ThemeMode.SYSTEM)
     theme: Optional[Theme] = None
@@ -190,7 +189,7 @@ class Page(AdaptiveControl):
     on_route_change: OptionalEventCallable["RouteChangeEvent"] = None
     on_view_pop: OptionalEventCallable["ViewPopEvent"] = None
     on_keyboard_event: OptionalEventCallable["KeyboardEvent"] = None
-    on_media_change: OptionalEventCallable["PageMediaData"] = None
+    on_media_change: OptionalControlEventCallable = None
     on_connect: OptionalControlEventCallable = None
     on_disconnect: OptionalControlEventCallable = None
     on_login: OptionalEventCallable["LoginEvent"] = None
@@ -201,12 +200,11 @@ class Page(AdaptiveControl):
     def __post_init__(
         self,
         ref,
-        sess: Session,
+        sess: "Session",
     ) -> None:
         AdaptiveControl.__post_init__(self, ref)
         self._i = 1
         self.__session = weakref.ref(sess)
-        self.__lock = threading.Lock() if not is_pyodide() else NopeLock()
 
         # page services
         self.__browser_context_menu = BrowserContextMenu()
@@ -242,39 +240,34 @@ class Page(AdaptiveControl):
         ]
 
     def update(self, *controls) -> None:
-        with self.__lock:
-            if len(controls) == 0:
-                r = self.__update(self)
-            else:
-                r = self.__update(*controls)
+        if len(controls) == 0:
+            r = self.__update(self)
+        else:
+            r = self.__update(*controls)
         self.__handle_mount_unmount(*r)
 
     def add(self, *controls: Control) -> None:
-        with self.__lock:
-            self.controls.extend(controls)
-            r = self.__update(self)
+        self.controls.extend(controls)
+        r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
     def insert(self, at: int, *controls: Control) -> None:
-        with self.__lock:
-            n = at
-            for control in controls:
-                self.controls.insert(n, control)
-                n += 1
-            r = self.__update(self)
+        n = at
+        for control in controls:
+            self.controls.insert(n, control)
+            n += 1
+        r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
     def remove(self, *controls: Control) -> None:
-        with self.__lock:
-            for control in controls:
-                self.controls.remove(control)
-            r = self.__update(self)
+        for control in controls:
+            self.controls.remove(control)
+        r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
     def remove_at(self, index: int) -> None:
-        with self.__lock:
-            self.controls.pop(index)
-            r = self.__update(self)
+        self.controls.pop(index)
+        r = self.__update(self)
         self.__handle_mount_unmount(*r)
 
     def clean(self) -> None:
@@ -341,31 +334,6 @@ class Page(AdaptiveControl):
 
     def error(self, message: str) -> None:
         self.__get_session().error(message)
-
-    async def on_event_async(self, e: Event) -> None:
-        logger.debug(f"page.on_event_async: {e.target} {e.name} {e.data}")
-
-        if e.target == "page" and e.name == "change":
-            with self.__lock:
-                self.__on_page_change_event(e.data)
-        elif e.target in self._index:
-            ce = ControlEvent(e.target, e.name, e.data, self._index[e.target], self)
-            handler = self._index[e.target].event_handlers.get(e.name)
-            if handler:
-                if asyncio.iscoroutinefunction(handler):
-                    await handler(ce)
-                else:
-                    self.run_thread(handler, ce)
-
-    def __on_page_change_event(self, data: str) -> None:
-        for props in json.loads(data):
-            id = props["i"]
-            if id in self._index:
-                for name in props:
-                    if name != "i":
-                        self._index[id]._set_attr(name, props[name], dirty=False)
-                        if id in self.__snapshot:
-                            self.__snapshot[id][name] = props[name]
 
     def run_task(
         self,
@@ -550,7 +518,7 @@ class Page(AdaptiveControl):
         return self.__authorization
 
     async def _authorize_callback_async(self, data: str) -> None:
-        await self.on_event_async(Event("page", "authorize", json.dumps(data)))
+        await self.on_event_async(ControlEvent("page", "authorize", json.dumps(data)))
 
     async def __on_authorize_async(self, e) -> None:
         assert self.__authorization
@@ -821,7 +789,7 @@ class Page(AdaptiveControl):
 
     # pubsub
     @property
-    def pubsub(self) -> PubSubClient:
+    def pubsub(self) -> "PubSubClient":
         return self.__get_session().pubsub_client
 
     # overlay
@@ -1097,4 +1065,4 @@ class AppLifecycleStateChangeEvent(ControlEvent):
 @dataclass
 class WindowResizeEvent(ControlEvent):
     width: float
-    sheight: float
+    height: float

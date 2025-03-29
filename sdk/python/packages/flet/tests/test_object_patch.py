@@ -10,7 +10,6 @@ from flet.core.buttons import ButtonStyle
 from flet.core.colors import Colors
 from flet.core.control import BaseControl, Control, Service, control
 from flet.core.elevated_button import ElevatedButton
-from flet.core.event import Event
 from flet.core.object_patch import ObjectPatch
 from flet.core.page import Page
 from flet.core.ref import Ref

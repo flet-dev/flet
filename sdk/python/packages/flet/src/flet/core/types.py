@@ -20,7 +20,6 @@ from flet.core.colors import Colors, colors
 from flet.core.control_event import ControlEvent
 from flet.core.cupertino_colors import CupertinoColors, cupertino_colors
 from flet.core.cupertino_icons import CupertinoIcons, cupertino_icons
-from flet.core.event import Event
 from flet.core.icons import Icons, icons
 from flet.core.margin import Margin
 from flet.core.padding import Padding
@@ -382,8 +381,7 @@ class LocaleConfiguration:
 
 
 # Events
-ControlEventType = TypeVar("ControlEventType", bound=ControlEvent)
-EventType = TypeVar("EventType", bound=Event)
+EventType = TypeVar("EventType", bound=ControlEvent)
 OptionalEventCallable = Optional[Callable[[EventType], Any]]
 OptionalControlEventCallable = Optional[Callable[[ControlEvent], Any]]
 
@@ -416,5 +414,4 @@ Wrapper = Callable[..., Any]
 
 # Protocols
 class SupportsStr(Protocol):
-    def __str__(self) -> str:
-        ...
+    def __str__(self) -> str: ...

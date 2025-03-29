@@ -1,8 +1,11 @@
+import asyncio
+import traceback
 import weakref
 from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
 from flet.core.control import BaseControl, Control
+from flet.core.control_event import ControlEvent
 from flet.core.object_patch import ObjectPatch
 from flet.core.page import Page, _session_page
 from flet.messaging.connection import Connection
@@ -13,6 +16,7 @@ from flet.messaging.protocol import (
     SessionCrashedBody,
 )
 from flet.pubsub.pubsub_client import PubSubClient
+from flet.utils.from_dict import from_dict
 from flet.utils.patch_dataclass import patch_dataclass
 from flet.utils.strings import random_string
 
@@ -85,6 +89,32 @@ class Session:
 
     def get_page_patch(self):
         return self.__get_update_control_patch(self.__page, prev_control=None)[""]
+
+    async def dispatch_event(self, control_id: int, event_name: str, event_data: Any):
+        if control := self.__index.get(control_id):
+            field_name = f"on_{event_name}"
+            event_type = ControlEvent.get_event_field_type(control, field_name)
+            if event_type is not None:
+                if event_type == ControlEvent or not isinstance(event_data, dict):
+                    # simple event
+                    e = ControlEvent(control=control, name=event_name, data=event_data)
+                else:
+                    # custom event
+                    args = dict(event_data)
+                    args["control"] = control
+                    args["name"] = event_name
+                    args["data"] = event_data
+                    e = from_dict(event_type, args)
+                if hasattr(control, field_name):
+                    event_handler = getattr(control, field_name)
+                    try:
+                        if asyncio.iscoroutinefunction(event_handler):
+                            await event_handler(e)
+                        elif callable(event_handler):
+                            event_handler(e)
+                    except Exception as ex:
+                        tb = traceback.format_exc()
+                        self.error(f"Exception in '{field_name}': {ex}\n{tb}")
 
     def error(self, message: str):
         self.connection.send_message(

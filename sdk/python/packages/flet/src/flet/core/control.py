@@ -3,7 +3,6 @@ from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING, Any, Callable, Dict, Optional, Type, TypeVar, Union
 
 from flet.core.badge import BadgeValue
-from flet.core.event import Event
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import OptionalNumber, ResponsiveNumber

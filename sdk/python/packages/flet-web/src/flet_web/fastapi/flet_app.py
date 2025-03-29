@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional
 
 import flet_web.fastapi as flet_fastapi
 from fastapi import WebSocket, WebSocketDisconnect
-from flet.core.event import Event
+from flet.core.control_event import ControlEvent
 from flet.core.page import Page, PageDisconnectedException
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
@@ -117,7 +117,7 @@ class FletApp(Connection):
         if session is not None:
             try:
                 await session.on_event_async(
-                    Event(e.eventTarget, e.eventName, e.eventData)
+                    ControlEvent(e.eventTarget, e.eventName, e.eventData)
                 )
             except PageDisconnectedException:
                 logger.debug(

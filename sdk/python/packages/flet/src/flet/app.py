@@ -9,7 +9,7 @@ from typing import Optional
 
 import flet
 import flet.version
-from flet.core.event import Event
+from flet.core.control_event import ControlEvent
 from flet.core.page import Page
 from flet.core.types import AppView, WebRenderer
 from flet.messaging.session import Session
@@ -220,7 +220,7 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
     async def on_event(e):
         if e.sessionID in conn.sessions:
             await conn.sessions[e.sessionID].on_event_async(
-                Event(e.eventTarget, e.eventName, e.eventData)
+                ControlEvent(e.eventTarget, e.eventName, e.eventData)
             )
             if e.eventTarget == "page" and e.eventName == "close":
                 logger.info(f"Session closed: {e.sessionID}")
@@ -317,7 +317,7 @@ def __run_pyodide(target):
     async def on_event(e):
         if e.sessionID in conn.sessions:
             await conn.sessions[e.sessionID].on_event_async(
-                Event(e.eventTarget, e.eventName, e.eventData)
+                ControlEvent(e.eventTarget, e.eventName, e.eventData)
             )
             if e.eventTarget == "page" and e.eventName == "close":
                 logger.info(f"Session closed: {e.sessionID}")

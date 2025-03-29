@@ -48,15 +48,6 @@ class ClientMessage:
 
 
 @dataclass
-class PageEventPayload:
-    pageName: str
-    sessionID: str
-    eventTarget: str
-    eventName: str
-    eventData: str
-
-
-@dataclass
 class RegisterClientRequestBody:
     session_id: str
     page_name: str
@@ -89,10 +80,10 @@ class UpdateControlPropsBody:
 
 
 @dataclass
-class PageEventFromWebPayload:
-    eventTarget: str
-    eventName: str
-    eventData: str
+class ControlEventBody:
+    target: int
+    name: str
+    data: Any
 
 
 @dataclass

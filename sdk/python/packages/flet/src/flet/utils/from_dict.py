@@ -1,20 +1,5 @@
 import dataclasses
 import sys
-from typing import Any, Type, TypeVar, get_args, get_origin, get_type_hints
-
-T = TypeVar("T")
-
-
-import dataclasses
-import sys
-from enum import Enum
-from typing import Any, Type, TypeVar, Union, get_args, get_origin, get_type_hints
-
-T = TypeVar("T")
-
-
-import dataclasses
-import sys
 from enum import Enum
 from typing import Any, Type, TypeVar, Union, get_args, get_origin, get_type_hints
 
@@ -74,7 +59,7 @@ def convert_value(field_type: Type, value: Any) -> Any:
         return field_type(value)
 
     # Dataclass
-    if dataclasses.is_dataclass(field_type):
+    if dataclasses.is_dataclass(field_type) and isinstance(value, dict):
         return from_dict(field_type, value)
 
     # List[T]

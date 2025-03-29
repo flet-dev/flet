@@ -15,6 +15,7 @@ from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,
     ClientMessage,
+    ControlEventBody,
     RegisterClientRequestBody,
     RegisterClientResponseBody,
     UpdateControlPropsBody,
@@ -118,7 +119,7 @@ class FletSocketServer(Connection):
     async def __on_message(self, data: Any):
         action = ClientAction(data[0])
         body = data[1]
-        print(f"_on_message: {action} {body}")
+        # print(f"_on_message: {action} {body}")
         task = None
         if action == ClientAction.REGISTER_CLIENT:
             req = RegisterClientRequestBody(**body)
@@ -146,11 +147,10 @@ class FletSocketServer(Connection):
                 task = asyncio.create_task(self.__on_session_created(self.session))
 
         elif action == ClientAction.CONTROL_EVENT:
-            # if self.__on_event is not None:
-            #     task = asyncio.create_task(
-            #         self.__on_event(self._create_page_event_handler_arg(msg))
-            #     )
-            pass
+            req = ControlEventBody(**body)
+            task = asyncio.create_task(
+                self.session.dispatch_event(req.target, req.name, req.data)
+            )
 
         elif action == ClientAction.UPDATE_CONTROL_PROPS:
             req = UpdateControlPropsBody(**body)
