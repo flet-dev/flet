@@ -42,7 +42,7 @@ class FletBackend extends ChangeNotifier {
   final String? appStartupScreenMessage;
   final int? controlId;
   final FletAppErrorsHandler? errorsHandler;
-  final List<FletExtension> extensions;
+  late final List<FletExtension> extensions;
   final Map<String, GlobalKey> globalKeys = {};
 
   final WeakValueMap<int, Control> _controlsIndex =
@@ -83,14 +83,14 @@ class FletBackend extends ChangeNotifier {
       this.showAppStartupScreen,
       this.appStartupScreenMessage,
       this.controlId,
-      required this.extensions,
+      required extensions,
       FletBackend? parentFletBackend})
       : _parentFletBackend =
             parentFletBackend != null ? WeakReference(parentFletBackend) : null,
         _reconnectTimeoutMs = reconnectTimeoutMs,
         _reconnectIntervalMs = reconnectIntervalMs {
     // add Flet extension with core controls and services
-    extensions.add(FletCoreExtension());
+    this.extensions = [...extensions, FletCoreExtension()];
 
     // initial "empty" page
     _page = Control.fromMap({

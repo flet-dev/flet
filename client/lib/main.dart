@@ -53,7 +53,7 @@ void main([List<String>? args]) async {
   //debugPrint("Uri.base: ${Uri.base}");
 
   if (kDebugMode) {
-    pageUrl = "http://localhost:8550";
+    pageUrl = "tcp://localhost:8550";
   }
 
   if (kIsWeb) {
@@ -103,7 +103,9 @@ void main([List<String>? args]) async {
     pageUrl: pageUrl,
     assetsDir: assetsDir,
     errorsHandler: errorsHandler,
-    createControlFactories: const [
+    showAppStartupScreen: true,
+    appStartupScreenMessage: "Working...",
+    extensions: const [
 // // --FAT_CLIENT_START--
 //       flet_audio.createControl,
 //       flet_video.createControl,
