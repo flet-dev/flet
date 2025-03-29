@@ -18,6 +18,7 @@ class Control extends ChangeNotifier {
   final int id;
   final String type;
   final Map<String, dynamic> properties;
+  bool notifyParent = false;
   WeakReference<Control>? _parent;
   Completer<void>? _listenerAddedCompleter;
   final List<InvokeControlMethodCallback> _invokeMethodListeners = [];
@@ -49,6 +50,10 @@ class Control extends ChangeNotifier {
             ? properties[propertyName].toDouble()
             : properties[propertyName]
         : defValue;
+  }
+
+  bool? getBool(String propertyName, [bool? defValue]) {
+    return get<bool>(propertyName, defValue);
   }
 
   String? getString(String propertyName, [String? defValue]) {
@@ -90,7 +95,7 @@ class Control extends ChangeNotifier {
   }
 
   /// Creates a ControlNode from MessagePack–decoded data.
-  factory Control.fromMap(Map<String, dynamic> data,
+  factory Control.fromMap(Map<dynamic, dynamic> data,
       {Control? parent, WeakValueMap<int, Control>? controlsIndex}) {
     if (!data.containsKey("_c")) {
       throw Exception("Missing _c field in data: $data");
@@ -112,8 +117,8 @@ class Control extends ChangeNotifier {
   /// Applies a patch (in MessagePack–decoded form) to this ControlNode.
   /// It updates nested ControlNodes or plain data structures accordingly.
   ///
-  void applyPatch(Map<String, dynamic> patch,
-      {WeakValueMap<int, Control>? controlsIndex, bool notify = true}) {
+  void applyPatch(Map<dynamic, dynamic> patch,
+      {WeakValueMap<int, Control>? controlsIndex, bool shouldNotify = true}) {
     debugPrint("Control($id).applyPatch: $patch");
     bool changed = false;
     patch.forEach((key, patchValue) {
@@ -121,17 +126,18 @@ class Control extends ChangeNotifier {
         if (properties.containsKey(key)) {
           var current = properties[key];
           if (current is Control) {
-            current.applyPatch(patchValue.cast<String, dynamic>(),
-                controlsIndex: controlsIndex, notify: notify);
+            current.applyPatch(patchValue,
+                controlsIndex: controlsIndex, shouldNotify: shouldNotify);
           } else if (current is List) {
-            var merged = mergeList(current, patchValue, controlsIndex, notify);
+            var merged =
+                mergeList(current, patchValue, controlsIndex, shouldNotify);
             if (merged != current) {
               properties[key] = merged;
               changed = true;
             }
           } else if (current is Map) {
-            var merged = mergeMap(current.cast<String, dynamic>(),
-                patchValue.cast<String, dynamic>(), controlsIndex, notify);
+            var merged =
+                mergeMap(current, patchValue, controlsIndex, shouldNotify);
             if (merged != current) {
               properties[key] = merged;
               changed = true;
@@ -156,17 +162,25 @@ class Control extends ChangeNotifier {
         changed = true;
       }
     });
-    if (changed && notify) {
-      //debugPrint("Control($id) changed.");
-      notifyListeners();
+    if (changed && shouldNotify) {
+      if (notifyParent) {
+        _parent?.target?.notify();
+      } else {
+        notify();
+      }
     }
+  }
+
+  void notify() {
+    //debugPrint("Control($id) changed.");
+    notifyListeners();
   }
 
   static dynamic _transformIfControl(dynamic value, Control? parent,
       WeakValueMap<int, Control>? controlsIndex) {
     //debugPrint("_transformIfControl: $value");
     if (value is Map && value.containsKey("_c")) {
-      return Control.fromMap(value.cast<String, dynamic>(),
+      return Control.fromMap(value,
           parent: parent, controlsIndex: controlsIndex);
     } else if (value is List &&
         value.isNotEmpty &&
@@ -174,7 +188,7 @@ class Control extends ChangeNotifier {
         (value.first as Map).containsKey("_c")) {
       return value.map((e) {
         if (e is Map) {
-          return Control.fromMap(e.cast<String, dynamic>(),
+          return Control.fromMap(e,
               parent: parent, controlsIndex: controlsIndex);
         }
         return e;
@@ -184,14 +198,14 @@ class Control extends ChangeNotifier {
   }
 
   /// Helper: recursively merge a patch Map into a plain Map.
-  Map<String, dynamic> mergeMap(
-      Map<String, dynamic> oldMap,
-      Map<String, dynamic> patch,
+  Map<dynamic, dynamic> mergeMap(
+      Map<dynamic, dynamic> oldMap,
+      Map<dynamic, dynamic> patch,
       WeakValueMap<int, Control>? controlsIndex,
       bool notify) {
     //debugPrint("Merge map: $oldMap, $patch");
     bool changed = false;
-    Map<String, dynamic> newMap = Map<String, dynamic>.from(oldMap);
+    Map<dynamic, dynamic> newMap = Map<String, dynamic>.from(oldMap);
     patch.forEach((k, v) {
       if (k == "\$d" && v is List) {
         for (var deleteKey in v) {
@@ -199,8 +213,7 @@ class Control extends ChangeNotifier {
         }
       } else {
         if (newMap.containsKey(k) && newMap[k] is Map && v is Map) {
-          var merged = mergeMap(
-              newMap[k], v.cast<String, dynamic>(), controlsIndex, notify);
+          var merged = mergeMap(newMap[k], v, controlsIndex, notify);
           if (merged != newMap[k]) {
             newMap[k] = merged;
             changed = true;
@@ -253,8 +266,7 @@ class Control extends ChangeNotifier {
             throw Exception(("Index is out of range: $patch"));
           }
           if (newList[index] is Map) {
-            var merged = mergeMap(newList[index], v.cast<String, dynamic>(),
-                controlsIndex, notify);
+            var merged = mergeMap(newList[index], v, controlsIndex, notify);
             if (merged != newList[index]) {
               newList[index] = merged;
               changed = true;
@@ -266,8 +278,8 @@ class Control extends ChangeNotifier {
               changed = true;
             }
           } else if (newList[index] is Control) {
-            newList[index].applyPatch(v.cast<String, dynamic>(),
-                controlsIndex: controlsIndex, notify: notify);
+            (newList[index] as Control).applyPatch(v,
+                controlsIndex: controlsIndex, shouldNotify: notify);
           } else {
             newList[index] = _transformIfControl(v, this, controlsIndex);
             changed = true;

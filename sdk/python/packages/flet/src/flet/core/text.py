@@ -1,36 +1,21 @@
 import json
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, List, Optional, Union
+from typing import List, Optional, Union
 from warnings import warn
 
-from flet.core.animation import AnimationValue
-from flet.core.badge import BadgeValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber, control
 from flet.core.control_event import ControlEvent
-from flet.core.event_handler import EventHandler
-from flet.core.ref import Ref
 from flet.core.text_span import TextSpan
 from flet.core.text_style import TextOverflow, TextStyle, TextThemeStyle
-from flet.core.tooltip import TooltipValue
 from flet.core.types import (
-    ColorEnums,
     ColorValue,
     FontWeight,
-    OffsetValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
     TextAlign,
 )
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
 
 
 class TextAffinity(Enum):
@@ -64,26 +49,11 @@ class TextSelectionChangeCause(Enum):
     SCRIBBLE = "scribble"
 
 
+@dataclass
 class TextSelectionChangeEvent(ControlEvent):
-    def __init__(self, e: ControlEvent):
-        super().__init__(e.target, e.name, e.data, e.control, e.page)
-        d = json.loads(e.data)
-        self.text: str = d.get("text")
-        self.cause = TextSelectionChangeCause(d.get("cause"))
-        start = d.get("start")
-        end = d.get("end")
-        self.selection = TextSelection(
-            start=start,
-            end=end,
-            selection=self.text[start:end] if (start != -1 and end != -1) else "",
-            base_offset=d.get("base_offset"),
-            extent_offset=d.get("extent_offset"),
-            affinity=d.get("affinity"),
-            directional=d.get("directional"),
-            collapsed=d.get("collapsed"),
-            valid=d.get("valid"),
-            normalized=d.get("normalized"),
-        )
+    text: str
+    cause: TextSelectionChangeCause
+    selection: TextSelection
 
 
 @control("Text")

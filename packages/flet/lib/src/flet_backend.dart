@@ -201,7 +201,7 @@ class FletBackend extends ChangeNotifier {
 
         // update page details
         page.applyPatch({"route": newRoute, "platform": platform},
-            notify: false);
+            shouldNotify: false);
 
         // connect to the server
         connect();
@@ -223,6 +223,7 @@ class FletBackend extends ChangeNotifier {
   void triggerControlEvent(Control control, String eventName,
       [dynamic eventData]) {
     if (!isLoading && control.get<bool>("on_$eventName", false)!) {
+      debugPrint("${control.type}(${control.id}).on_$eventName($eventData)");
       triggerControlEventById(control.id, eventName, eventData);
     }
   }
@@ -292,7 +293,7 @@ class FletBackend extends ChangeNotifier {
     if (control != null) {
       if (dart) {
         control.applyPatch(props,
-            controlsIndex: _controlsIndex, notify: notify);
+            controlsIndex: _controlsIndex, shouldNotify: notify);
       }
       if (python && !isLoading) {
         _send(Message(

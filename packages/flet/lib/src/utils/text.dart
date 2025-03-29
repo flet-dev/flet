@@ -5,7 +5,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
-import '../models/control_tree_view_model.dart';
 import '../utils/box.dart';
 import '../utils/drawing.dart';
 import '../utils/numbers.dart';
@@ -79,63 +78,61 @@ FontWeight? getFontWeight(String? weightName, [FontWeight? defaultWeight]) {
   }
 }
 
-List<InlineSpan> parseTextSpans(ThemeData theme, ControlTreeViewModel viewModel,
-    bool parentDisabled, void Function(int, String, String)? sendControlEvent) {
-  return viewModel.children
-      .map((c) => parseInlineSpan(theme, c, parentDisabled, sendControlEvent))
+List<InlineSpan> parseTextSpans(
+    ThemeData theme,
+    List<Control> spans,
+    bool parentDisabled,
+    void Function(Control, String, String)? sendControlEvent) {
+  return spans
+      .map((span) =>
+          parseInlineSpan(theme, span, parentDisabled, sendControlEvent))
       .nonNulls
       .toList();
 }
 
-InlineSpan? parseInlineSpan(ThemeData theme, ControlTreeViewModel spanViewModel,
-    bool parentDisabled, void Function(int, String, String)? sendControlEvent) {
-  if (spanViewModel.control.type == "textspan") {
-    bool disabled = spanViewModel.control.disabled || parentDisabled;
-    var onClick = spanViewModel.control.get<bool>("onClick", false)!;
-    String url = spanViewModel.control.get<String>("url", "")!;
-    String? urlTarget = spanViewModel.control.get<String>("urlTarget");
-    return TextSpan(
-      text: spanViewModel.control.get<String>("text"),
-      style: parseTextStyle(theme, spanViewModel.control, "style"),
-      spellOut: spanViewModel.control.get<bool>("spellOut"),
-      semanticsLabel: spanViewModel.control.get<String>("semanticsLabel"),
-      children: parseTextSpans(
-          theme, spanViewModel, parentDisabled, sendControlEvent),
-      mouseCursor: onClick && !disabled && sendControlEvent != null
-          ? SystemMouseCursors.click
-          : null,
-      recognizer:
-          (onClick || url != "") && !disabled && sendControlEvent != null
-              ? (TapGestureRecognizer()
-                ..onTap = () {
-                  debugPrint("TextSpan ${spanViewModel.control.id} clicked!");
-                  if (url != "") {
-                    openWebBrowser(url, webWindowName: urlTarget);
-                  }
-                  if (onClick) {
-                    sendControlEvent(spanViewModel.control.id, "click", "");
-                  }
-                })
-              : null,
-      onEnter: spanViewModel.control.get<bool>("onEnter", false)! &&
-              !disabled &&
-              sendControlEvent != null
-          ? (event) {
-              debugPrint("TextSpan ${spanViewModel.control.id} entered!");
-              sendControlEvent(spanViewModel.control.id, "enter", "");
+InlineSpan? parseInlineSpan(ThemeData theme, Control span, bool parentDisabled,
+    void Function(Control, String, String)? sendControlEvent) {
+  span.notifyParent = true;
+  bool disabled = span.disabled || parentDisabled;
+  var onClick = span.get<bool>("on_click", false)!;
+  String url = span.get<String>("url", "")!;
+  String? urlTarget = span.get<String>("url_target");
+  return TextSpan(
+    text: span.get<String>("text"),
+    style: parseTextStyle(theme, span, "style"),
+    spellOut: span.get<bool>("spell_out"),
+    semanticsLabel: span.get<String>("semantics_label"),
+    children: parseTextSpans(
+        theme, span.children("spans"), parentDisabled, sendControlEvent),
+    mouseCursor: onClick && !disabled && sendControlEvent != null
+        ? SystemMouseCursors.click
+        : null,
+    recognizer: (onClick || url != "") && !disabled && sendControlEvent != null
+        ? (TapGestureRecognizer()
+          ..onTap = () {
+            if (url != "") {
+              openWebBrowser(url, webWindowName: urlTarget);
             }
-          : null,
-      onExit: spanViewModel.control.get<bool>("onExit", false)! &&
-              !disabled &&
-              sendControlEvent != null
-          ? (event) {
-              debugPrint("TextSpan ${spanViewModel.control.id} exited!");
-              sendControlEvent(spanViewModel.control.id, "exit", "");
+            if (onClick) {
+              sendControlEvent(span, "click", "");
             }
-          : null,
-    );
-  }
-  return null;
+          })
+        : null,
+    onEnter: span.get<bool>("on_enter", false)! &&
+            !disabled &&
+            sendControlEvent != null
+        ? (event) {
+            sendControlEvent(span, "enter", "");
+          }
+        : null,
+    onExit: span.get<bool>("on_exit", false)! &&
+            !disabled &&
+            sendControlEvent != null
+        ? (event) {
+            sendControlEvent(span, "exit", "");
+          }
+        : null,
+  );
 }
 
 TextAlign? parseTextAlign(String? value, [TextAlign? defaultValue]) {
@@ -176,13 +173,11 @@ TextBaseline? parseTextBaseline(String? value, [TextBaseline? defaultValue]) {
 }
 
 TextStyle? parseTextStyle(ThemeData theme, Control control, String propName) {
-  dynamic j;
-  var v = control.get<String>(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
-  j = json.decode(v);
-  return textStyleFromJson(theme, j);
+  return textStyleFromJson(theme, Map<String, dynamic>.from(v));
 }
 
 TextStyle? textStyleFromJson(ThemeData theme, Map<String, dynamic>? json) {

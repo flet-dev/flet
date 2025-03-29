@@ -1,7 +1,7 @@
 import dataclasses
 import inspect
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Optional, get_args, get_type_hints
 
 if TYPE_CHECKING:
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 class ControlEvent:
     name: str
     data: Optional[Any]
-    control: "Control"
+    control: "Control" = field(repr=False)
 
     @property
     def page(self) -> Optional["Page"]:
