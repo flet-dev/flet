@@ -502,6 +502,14 @@ class DiffBuilder(object):
     def _compare_dataclasses(self, path, src, dst):
         # print("\n_compare_dataclasses:", path, src, dst)
 
+        if (
+            self.control_cls
+            and isinstance(self.parent_control, self.control_cls)
+            and self.parent_control.is_isolated()
+            and self.parent_control != self.dst_doc
+        ):
+            return  # do not update isolated control's children
+
         self.parent_control = dst
 
         if self.control_cls and isinstance(dst, self.control_cls):

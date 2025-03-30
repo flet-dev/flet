@@ -230,6 +230,9 @@ class Page(AdaptiveControl):
         assert len(self.views) > 0, "views list is empty."
         return self.views[0]
 
+    def is_isolated(self):
+        return True
+
     def before_update(self):
         super().before_update()
         self._page_services.services = [

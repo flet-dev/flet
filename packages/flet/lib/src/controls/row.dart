@@ -23,7 +23,7 @@ class RowControl extends StatelessWidget {
 
     return Row(
       mainAxisAlignment: mainAxisAlignment,
-      spacing: 10,
+      spacing: control.getDouble("spacing", 10)!,
       children: control
           .children("controls")
           .map(

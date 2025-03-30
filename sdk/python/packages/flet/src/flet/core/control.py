@@ -113,6 +113,9 @@ class BaseControl:
             parent = parent.parent
         return None
 
+    def is_isolated(self):
+        return False
+
     def build(self):
         pass
 
@@ -193,9 +196,6 @@ class Control(BaseControl):
         assert (
             self.opacity is None or 0.0 <= self.opacity <= 1.0
         ), "opacity must be between 0.0 and 1.0"
-
-    def is_isolated(self) -> bool:
-        return False
 
     def clean(self) -> None:
         raise Exception("Deprecated!")
