@@ -34,6 +34,7 @@ class FilePickerFileType(Enum):
 class FilePickerUploadFile:
     name: str
     upload_url: str
+    id: int = None
     method: str = field(default="PUT")
 
 
@@ -42,6 +43,7 @@ class FilePickerFile:
     name: str
     path: str
     size: int
+    id: int
 
 
 class FilePickerResultEvent(ControlEvent):
