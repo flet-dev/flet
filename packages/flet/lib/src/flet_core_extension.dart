@@ -19,24 +19,24 @@ import 'services/url_launcher.dart';
 
 class FletCoreExtension extends FletExtension {
   @override
-  Widget? createWidget(Control control) {
+  Widget? createWidget(Key? key, Control control) {
     switch (control.type) {
       case "Page":
-        return PageControl(control: control);
+        return PageControl(key: key, control: control);
       case "View":
-        return ViewControl(control: control);
+        return ViewControl(key: key, control: control);
       case "Window":
-        return WindowControl(control: control);
+        return WindowControl(key: key, control: control);
       case "Center":
-        return CenterControl(control: control);
+        return CenterControl(key: key, control: control);
       case "Row":
-        return RowControl(control: control);
+        return RowControl(key: key, control: control);
       case "Text":
-        return TextControl(control: control);
+        return TextControl(key: key, control: control);
       case "Container":
-        return ContainerControl(control: control);
+        return ContainerControl(key: key, control: control);
       case "LineChart":
-        return LineChartControl(control: control);
+        return LineChartControl(key: key, control: control);
       default:
         return null;
     }

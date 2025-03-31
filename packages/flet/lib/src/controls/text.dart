@@ -4,6 +4,7 @@ import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
+import 'base_controls.dart';
 
 class TextControl extends StatelessWidget {
   final Control control;
@@ -114,7 +115,7 @@ class TextControl extends StatelessWidget {
       );
     }
 
-    return control.getBool("selectable", false)!
+    var textWidget = control.getBool("selectable", false)!
         ? (spans.isNotEmpty)
             ? SelectableText.rich(
                 TextSpan(text: text, style: style, children: spans),
@@ -162,6 +163,6 @@ class TextControl extends StatelessWidget {
                 overflow: overflow,
               );
 
-    //return constrainedControl(context, result, parent, control);
+    return ConstrainedControl(control: control, child: textWidget);
   }
 }

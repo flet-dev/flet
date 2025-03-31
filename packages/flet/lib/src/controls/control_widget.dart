@@ -1,7 +1,9 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/theme.dart';
 import '../widgets/control_inherited_notifier.dart';
 import '../widgets/error.dart';
 
@@ -11,27 +13,75 @@ class ControlWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Key? controlKey;
+    var key = control.getString("key", "")!;
+    if (key != "") {
+      if (key.startsWith("test:")) {
+        controlKey = Key(key.substring(5));
+      } else {
+        var globalKey = controlKey = GlobalKey();
+        FletBackend.of(context).globalKeys[key] = globalKey;
+      }
+    }
+
+    Widget? widget;
     if (control.type == "LineChart") {
       for (var extension in FletBackend.of(context).extensions) {
-        var cw = extension.createWidget(control);
-        if (cw != null) return cw;
+        widget = extension.createWidget(controlKey, control);
+        if (widget != null) break;
       }
-      return ErrorControl("Unknown control: ${control.type}");
+      widget = ErrorControl("Unknown control: ${control.type}");
     } else {
-      return ControlInheritedNotifier(
+      widget = ControlInheritedNotifier(
         notifier: control,
         child: Builder(builder: (context) {
           ControlInheritedNotifier.of(context);
 
           Widget? cw;
           for (var extension in FletBackend.of(context).extensions) {
-            cw = extension.createWidget(control);
+            cw = extension.createWidget(controlKey, control);
             if (cw != null) return cw;
           }
 
           return ErrorControl("Unknown control: ${control.type}");
         }),
       );
+    }
+
+    // Return original widget if no theme is defined
+    final isRootControl = control == FletBackend.of(context).page;
+    final hasNoThemes = control.getString("theme") == null &&
+        control.getString("dark_theme") == null;
+    final themeMode = parseThemeMode(control.getString("theme_mode"));
+
+    if (isRootControl || (hasNoThemes && themeMode == null)) {
+      return widget;
+    }
+
+    // Wrap in Theme widget
+    final ThemeData? parentTheme =
+        (themeMode == null) ? Theme.of(context) : null;
+
+    Widget buildTheme(Brightness? brightness) {
+      final themeProp = brightness == Brightness.dark ? "dark_theme" : "theme";
+      final themeData =
+          parseTheme(control, themeProp, brightness, parentTheme: parentTheme);
+      return Theme(data: themeData, child: widget!);
+    }
+
+    if (themeMode == ThemeMode.system) {
+      final brightness = context.select<FletBackend, Brightness>(
+        (backend) => backend.platformBrightness,
+      );
+      return buildTheme(brightness);
+    }
+
+    if (themeMode == ThemeMode.light) {
+      return buildTheme(Brightness.light);
+    } else if (themeMode == ThemeMode.dark) {
+      return buildTheme(Brightness.dark);
+    } else {
+      return buildTheme(parentTheme?.brightness);
     }
   }
 }

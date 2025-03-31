@@ -64,7 +64,6 @@ from flet.core.types import (
     PagePlatform,
     ScrollMode,
     ThemeMode,
-    WindowEventType,
     Wrapper,
 )
 from flet.core.url_launcher import UrlLauncher
@@ -181,7 +180,7 @@ class Page(AdaptiveControl):
     scroll_event_interval: OptionalNumber = None
 
     on_close: OptionalControlEventCallable = None
-    on_resized: OptionalEventCallable["WindowResizeEvent"] = None
+    on_resized: OptionalEventCallable["PageResizeEvent"] = None
     on_platform_brightness_change: OptionalControlEventCallable = None
     on_app_lifecycle_state_change: OptionalEventCallable[
         "AppLifecycleStateChangeEvent"
@@ -999,7 +998,7 @@ class Page(AdaptiveControl):
 
     # auto_scroll
     @property
-    def auto_scroll(self) -> bool:
+    def auto_scroll(self):
         return self.__default_view().auto_scroll
 
     @auto_scroll.setter
@@ -1066,6 +1065,6 @@ class AppLifecycleStateChangeEvent(ControlEvent):
 
 
 @dataclass
-class WindowResizeEvent(ControlEvent):
+class PageResizeEvent(ControlEvent):
     width: float
     height: float

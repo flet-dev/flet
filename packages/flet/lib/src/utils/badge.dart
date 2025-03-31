@@ -1,16 +1,13 @@
-import 'dart:convert';
-
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
 Badge? parseBadge(
     Control control, String propName, Widget widget, ThemeData theme) {
-  var v = control.getString(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
-  final j = json.decode(v);
-  return badgeFromJSON(j, widget, theme);
+  return badgeFromJSON(v, widget, theme);
 }
 
 Badge? badgeFromJSON(dynamic j, Widget widget, ThemeData theme) {

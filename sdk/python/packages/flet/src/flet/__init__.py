@@ -263,9 +263,9 @@ from flet.core.page import (
     Page,
     PageDisconnectedException,
     PageMediaData,
+    PageResizeEvent,
     RouteChangeEvent,
     ViewPopEvent,
-    WindowResizeEvent,
     context,
 )
 from flet.core.pagelet import Pagelet
