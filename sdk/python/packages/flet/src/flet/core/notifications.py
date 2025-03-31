@@ -1,12 +1,13 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Optional, List, Union
+from typing import Any, List, Optional, Union
 
 from flet.core.badge import BadgeValue
 from flet.core.control import Control, OptionalNumber
+from flet.core.exceptions import FletUnsupportedPlatformException
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
-from flet.core.types import ColorValue, DurationValue
+from flet.core.types import ColorValue, DurationValue, PagePlatform
 
 
 class NotificationActionType(Enum):
@@ -232,6 +233,14 @@ class Notifications(Control):
 
     def before_update(self):
         super().before_update()
+        assert self.page is not None, "Notifications must be added to page first."
+        if self.page.web or self.page.platform not in [
+            PagePlatform.ANDROID,
+            PagePlatform.IOS,
+        ]:
+            raise FletUnsupportedPlatformException(
+                "This control is supported on Android and iOS platforms only."
+            )
         self._set_attr_json("channels", self.__channels)
 
     def show(
