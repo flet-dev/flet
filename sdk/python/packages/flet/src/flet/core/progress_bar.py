@@ -16,6 +16,7 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet.utils.deprecated import deprecated_property
 
 
 class ProgressBar(ConstrainedControl):
@@ -63,6 +64,10 @@ class ProgressBar(ConstrainedControl):
         border_radius: Optional[BorderRadiusValue] = None,
         semantics_label: Optional[str] = None,
         semantics_value: OptionalNumber = None,
+        stop_indicator_color: Optional[ColorValue] = None,
+        stop_indicator_radius: OptionalNumber = None,
+        track_gap: OptionalNumber = None,
+        year_2023: Optional[bool] = None,
         #
         # ConstrainedControl
         #
@@ -133,6 +138,10 @@ class ProgressBar(ConstrainedControl):
         self.border_radius = border_radius
         self.semantics_label = semantics_label
         self.semantics_value = semantics_value
+        self.stop_indicator_color = stop_indicator_color
+        self.stop_indicator_radius = stop_indicator_radius
+        self.track_gap = track_gap
+        self.year_2023 = year_2023
 
     def _get_control_name(self):
         return "progressbar"
@@ -208,3 +217,53 @@ class ProgressBar(ConstrainedControl):
     @border_radius.setter
     def border_radius(self, value: Optional[BorderRadiusValue]):
         self.__border_radius = value
+
+    # track_gap
+    @property
+    def track_gap(self) -> OptionalNumber:
+        return self._get_attr("trackGap", data_type="float")
+
+    @track_gap.setter
+    def track_gap(self, value: OptionalNumber):
+        self._set_attr("trackGap", value)
+
+    # year_2023
+    @property
+    def year_2023(self) -> Optional[bool]:
+        deprecated_property(
+            name="year_2023",
+            version="0.27.0",
+            delete_version=None,  # not known for now
+            reason="Set this flag to False to opt into the 2024 Slider appearance. In the future, this flag will default to False.",
+        )
+        return self._get_attr("year2023", data_type="bool", def_value=True)
+
+    @year_2023.setter
+    def year_2023(self, value: Optional[bool]):
+        self._set_attr("year2023", value)
+        if value is not None:
+            deprecated_property(
+                name="year_2023",
+                version="0.27.0",
+                delete_version=None,  # not known for now
+                reason="Set this flag to False to opt into the 2024 Slider appearance. In the future, this flag will default to False.",
+            )
+
+    # stop_indicator_color
+    @property
+    def stop_indicator_color(self) -> Optional[ColorValue]:
+        return self.__stop_indicator_color
+
+    @stop_indicator_color.setter
+    def stop_indicator_color(self, value: Optional[ColorValue]):
+        self.__stop_indicator_color = value
+        self._set_enum_attr("stopIndicatorColor", value, ColorEnums)
+
+    # stop_indicator_radius
+    @property
+    def stop_indicator_radius(self) -> OptionalNumber:
+        return self._get_attr("stopIndicatorRadius", data_type="float")
+
+    @stop_indicator_radius.setter
+    def stop_indicator_radius(self, value: OptionalNumber):
+        self._set_attr("stopIndicatorRadius", value)

@@ -18,7 +18,9 @@ from flet.core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    PaddingValue,
 )
+from flet.utils.deprecated import deprecated_property
 
 
 class SliderInteraction(Enum):
@@ -70,6 +72,8 @@ class Slider(ConstrainedControl, AdaptiveControl):
         overlay_color: ControlStateValue[ColorValue] = None,
         secondary_track_value: OptionalNumber = None,
         mouse_cursor: Optional[MouseCursor] = None,
+        padding: Optional[PaddingValue] = None,
+        year_2023: Optional[bool] = None,
         on_change: OptionalControlEventCallable = None,
         on_change_start: OptionalControlEventCallable = None,
         on_change_end: OptionalControlEventCallable = None,
@@ -162,6 +166,8 @@ class Slider(ConstrainedControl, AdaptiveControl):
         self.secondary_active_color = secondary_active_color
         self.secondary_track_value = secondary_track_value
         self.mouse_cursor = mouse_cursor
+        self.padding = padding
+        self.year_2023 = year_2023
 
     def _get_control_name(self):
         return "slider"
@@ -178,6 +184,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
             self.max is None or self.value is None or (self.value <= self.max)
         ), "value must be less than or equal to max"
         self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)
+        self._set_attr_json("padding", self.__padding)
 
     # value
     @property
@@ -196,6 +203,31 @@ class Slider(ConstrainedControl, AdaptiveControl):
     @label.setter
     def label(self, value: Optional[str]):
         self._set_attr("label", value)
+
+    # year_2023
+    @property
+    def year_2023(self) -> Optional[bool]:
+        return self._get_attr("year2023", data_type="bool", def_value=True)
+
+    @year_2023.setter
+    def year_2023(self, value: Optional[bool]):
+        self._set_attr("year2023", value)
+        if value is not None:
+            deprecated_property(
+                name="year_2023",
+                version="0.27.0",
+                delete_version=None,  # not known for now
+                reason="Set this flag to False to opt into the 2024 Slider appearance. In the future, this flag will default to False.",
+            )
+
+    # padding
+    @property
+    def padding(self) -> Optional[PaddingValue]:
+        return self.__padding
+
+    @padding.setter
+    def padding(self, value: Optional[PaddingValue]):
+        self.__padding = value
 
     # interaction
     @property

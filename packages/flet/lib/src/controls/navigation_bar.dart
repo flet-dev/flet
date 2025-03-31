@@ -6,6 +6,7 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/others.dart';
 import '../utils/time.dart';
@@ -81,6 +82,7 @@ class _NavigationBarControlState extends State<NavigationBarControl>
             animationDuration:
                 parseDuration(widget.control, "animationDuration"),
             elevation: widget.control.attrDouble("elevation"),
+            labelPadding: parseEdgeInsets(widget.control, "labelPadding"),
             shadowColor: widget.control.attrColor("shadowColor", context),
             surfaceTintColor:
                 widget.control.attrColor("surfaceTintColor", context),

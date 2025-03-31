@@ -168,7 +168,8 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       pressedOpacity: pressedOpacity,
       alignment: alignment,
       minSize: minSize,
-      child: content,
+      autofocus: widget.control.attrBool("autofocus", false)!,
+      focusColor: widget.control.attrColor("focusColor", context),
       onLongPress: !disabled
           ? () {
               widget.backend
@@ -179,6 +180,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
         widget.backend
             .triggerControlEvent(widget.control.id, focused ? "focus" : "blur");
       },
+      child: content,
     );
 
     return constrainedControl(context, button, widget.parent, widget.control);

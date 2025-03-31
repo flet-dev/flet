@@ -18,6 +18,7 @@ from flet.core.types import (
     OffsetValue,
     OptionalControlEventCallable,
     OptionalNumber,
+    PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -239,6 +240,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         border: Optional[Border] = None,
         animation_duration: Optional[int] = None,
         overlay_color: ControlStateValue[ColorValue] = None,
+        label_padding: Optional[PaddingValue] = None,
         on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
@@ -314,6 +316,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         self.on_change = on_change
         self.animation_duration = animation_duration
         self.overlay_color = overlay_color
+        self.label_padding = label_padding
 
     def _get_control_name(self):
         return "navigationbar"
@@ -323,6 +326,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("indicatorShape", self.__indicator_shape)
         self._set_attr_json("border", self.__border)
         self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)
+        self._set_attr_json("labelPadding", self.__label_padding)
 
     def _get_children(self):
         return self.__destinations
@@ -335,6 +339,15 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     @destinations.setter
     def destinations(self, value: Optional[List[NavigationBarDestination]]):
         self.__destinations = value if value else []
+
+    # label_padding
+    @property
+    def label_padding(self) -> Optional[PaddingValue]:
+        return self.__label_padding
+
+    @label_padding.setter
+    def label_padding(self, value: Optional[PaddingValue]):
+        self.__label_padding = value
 
     # selected_index
     @property

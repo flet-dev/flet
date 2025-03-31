@@ -7,6 +7,7 @@ from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
+    MouseCursor,
     OffsetValue,
     OptionalControlEventCallable,
     ResponsiveNumber,
@@ -30,6 +31,7 @@ class CupertinoActionSheetAction(ConstrainedControl):
         content: Optional[Control] = None,
         is_default_action: Optional[bool] = None,
         is_destructive_action: Optional[bool] = None,
+        mouse_cursor: Optional[MouseCursor] = None,
         on_click: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
@@ -99,6 +101,7 @@ class CupertinoActionSheetAction(ConstrainedControl):
         self.content = content
         self.is_default_action = is_default_action
         self.is_destructive_action = is_destructive_action
+        self.mouse_cursor = mouse_cursor
         self.on_click = on_click
 
     def _get_control_name(self):
@@ -151,6 +154,16 @@ class CupertinoActionSheetAction(ConstrainedControl):
     @content.setter
     def content(self, value: Optional[Control]):
         self.__content = value
+
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self.__mouse_cursor
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # on_click
     @property

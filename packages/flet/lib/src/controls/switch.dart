@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -18,6 +19,7 @@ class SwitchControl extends StatefulWidget {
   final Control control;
   final bool parentDisabled;
   final bool? parentAdaptive;
+  final List<Control> children;
   final FletControlBackend backend;
 
   const SwitchControl(
@@ -26,6 +28,7 @@ class SwitchControl extends StatefulWidget {
       required this.control,
       required this.parentDisabled,
       required this.parentAdaptive,
+      required this.children,
       required this.backend});
 
   @override
@@ -81,7 +84,8 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
             backend: widget.backend);
       }
 
-      String label = widget.control.attrString("label", "")!;
+      var label = widget.children.firstWhereOrNull((c) => c.isVisible);
+      String labelStr = widget.control.attrString("label", "")!;
       LabelPosition labelPosition = parseLabelPosition(
           widget.control.attrString("labelPosition"), LabelPosition.right)!;
       double? width = widget.control.attrDouble("width");
@@ -139,22 +143,17 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
       });
 
       Widget result = s;
-      if (width != null || height != null) {
-        result = SizedBox(
-          width: width,
-          height: height,
-          child: FittedBox(
-            fit: BoxFit.fill,
-            child: result,
-          ),
-        );
-      }
-      if (label != "") {
-        var labelWidget = disabled
-            ? Text(label, style: labelStyle)
-            : MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: Text(label, style: labelStyle));
+      if (label != null || (labelStr != "")) {
+        Widget? labelWidget;
+        if (label != null) {
+          labelWidget = createControl(widget.control, label.id, disabled);
+        } else {
+          labelWidget = disabled
+              ? Text(labelStr, style: labelStyle)
+              : MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: Text(labelStr, style: labelStyle));
+        }
 
         result = MergeSemantics(
           child: GestureDetector(
@@ -165,13 +164,23 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
                 : null,
             child: labelPosition == LabelPosition.right
                 ? Row(
-                    mainAxisSize: MainAxisSize.min,
+                    // mainAxisSize: MainAxisSize.min,
                     children: [result, labelWidget],
                   )
                 : Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [labelWidget, result],
                   ),
+          ),
+        );
+      }
+      if (width != null || height != null) {
+        result = SizedBox(
+          width: width,
+          height: height,
+          child: FittedBox(
+            fit: BoxFit.fill,
+            child: result,
           ),
         );
       }
