@@ -13,78 +13,80 @@ import flet_cli.commands.doctor # Adding the doctor command
 
 
 # Source https://stackoverflow.com/a/26379693
-def set_default_subparser(self, name, args=None, positional_args=0):
-    """default subparser selection. Call after setup, just before parse_args()
-    name: is the name of the subparser to call by default
-    args: if set is the argument list handed to parse_args()
-
-    , tested with 2.7, 3.2, 3.3, 3.4
-    it works with 2.6 assuming argparse is installed
+def set_default_subparser(
+    parser: argparse.ArgumentParser, name: str, args: list = None, index: int = 0
+):
     """
-    subparser_found = False
-    existing_default = False  # check if default parser previously defined
-    for arg in sys.argv[1:]:
-        if arg in ["-h", "--help", "--version"]:  # global help if no subparser
-            break
+    Set a default subparser when no subparser is provided.
+    This should be called after setting up the argument parser but before `parse_args()`.
+
+    Parameters:
+    - name (str): The name of the default subparser to use.
+    - args (list, optional): A list of arguments passed to `parse_args()`. Defaults to None.
+    - index (int): Position in `sys.argv` where the default subparser should be inserted. Defaults to 0.
+    """
+
+    # exit if help or version flags are present
+    if any(flag in sys.argv[1:] for flag in {"-h", "--help", "-V", "--version"}):
+        return
+
+    # all subparser actions
+    subparser_actions = [
+        action
+        for action in parser._subparsers._actions
+        if isinstance(action, argparse._SubParsersAction)
+    ]
+
+    # all subparser names
+    subparser_names = [
+        sp_name
+        for action in subparser_actions
+        for sp_name in action._name_parser_map.keys()
+    ]
+
+    # if an existing subparser is provided, skip setting a default
+    if any(arg in subparser_names for arg in sys.argv[1:]):
+        return
+
+    # if the default subparser doesn't exist, register it in the first subparser action
+    if (name not in subparser_names) and subparser_actions:
+        subparser_actions[0].add_parser(name)
+
+    # insert the default subparser into the appropriate argument list
+    if args is None:
+        if len(sys.argv) > 1:
+            sys.argv.insert(index, name)
     else:
-        for x in self._subparsers._actions:
-            if not isinstance(x, argparse._SubParsersAction):
-                continue
-            for sp_name in x._name_parser_map.keys():
-                if sp_name in sys.argv[1:]:
-                    subparser_found = True
-                if sp_name == name:  # check existance of default parser
-                    existing_default = True
-        if not subparser_found:
-            # If the default subparser is not among the existing ones,
-            # create a new parser.
-            # As this is called just before 'parse_args', the default
-            # parser created here will not pollute the help output.
-
-            if not existing_default:
-                for x in self._subparsers._actions:
-                    if not isinstance(x, argparse._SubParsersAction):
-                        continue
-                    x.add_parser(name)
-                    break  # this works OK, but should I check further?
-
-            # insert default in last position before global positional
-            # arguments, this implies no global options are specified after
-            # first positional argument
-            if args is None and len(sys.argv) > 1:
-                sys.argv.insert(positional_args, name)
-            elif args is not None:
-                args.insert(positional_args, name)
-            # print(sys.argv)
-
-
-argparse.ArgumentParser.set_default_subparser = set_default_subparser
+        args.insert(index, name)
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--version",
+        "-V",
         action="version",
         version=flet.version.version if flet.version.version else update_version(),
     )
+
     sp = parser.add_subparsers(dest="command")
-    # sp.default = "run"
 
     flet_cli.commands.create.Command.register_to(sp, "create")
     flet_cli.commands.run.Command.register_to(sp, "run")
+    flet_cli.commands.build.Command.register_to(sp, "build")
     flet_cli.commands.pack.Command.register_to(sp, "pack")
     flet_cli.commands.publish.Command.register_to(sp, "publish")
-    flet_cli.commands.build.Command.register_to(sp, "build")
     flet_cli.commands.doctor.Command.register_to(sp, "doctor") # Register the doctor command
-    parser.set_default_subparser("run", positional_args=1)
 
-    # print usage if called without args
+    # set "run" as the default subparser
+    set_default_subparser(parser, name="run", index=1)
+
+    # print usage/help if called without arguments
     if len(sys.argv) == 1:
         parser.print_help(sys.stdout)
         sys.exit(1)
 
-    # parse args
+    # parse arguments
     args = parser.parse_args()
 
     # execute command
