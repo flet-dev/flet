@@ -40,15 +40,12 @@ class ScrollableControl(Control):
 
 
 class OnScrollEvent(ControlEvent):
-    def __init__(self, e: ControlEvent):
-        super().__init__(e.target, e.name, e.data, e.control, e.page)
-        d = json.loads(e.data)
-        self.event_type: str = d.get("t")
-        self.pixels: float = d.get("p")
-        self.min_scroll_extent: float = d.get("minse")
-        self.max_scroll_extent: float = d.get("maxse")
-        self.viewport_dimension: float = d.get("vd")
-        self.scroll_delta: Optional[float] = d.get("sd")
-        self.direction: Optional[str] = d.get("dir")
-        self.overscroll: Optional[float] = d.get("os")
-        self.velocity: Optional[float] = d.get("v")
+    event_type: str
+    pixels: float
+    min_scroll_extent: float
+    max_scroll_extent: float
+    viewport_dimension: float
+    scroll_delta: Optional[float]
+    direction: Optional[str]
+    overscroll: Optional[float]
+    velocity: Optional[float]

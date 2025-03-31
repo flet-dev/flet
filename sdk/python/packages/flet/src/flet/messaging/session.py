@@ -93,28 +93,31 @@ class Session:
     async def dispatch_event(self, control_id: int, event_name: str, event_data: Any):
         if control := self.__index.get(control_id):
             field_name = f"on_{event_name}"
-            event_type = ControlEvent.get_event_field_type(control, field_name)
-            if event_type is not None:
-                if event_type == ControlEvent or not isinstance(event_data, dict):
-                    # simple event
-                    e = ControlEvent(control=control, name=event_name, data=event_data)
-                else:
-                    # custom event
-                    args = dict(event_data)
-                    args["control"] = control
-                    args["name"] = event_name
-                    args["data"] = event_data
-                    e = from_dict(event_type, args)
-                if hasattr(control, field_name):
-                    event_handler = getattr(control, field_name)
-                    try:
+            try:
+                print(control.__class__, field_name)
+                event_type = ControlEvent.get_event_field_type(control, field_name)
+                if event_type is not None:
+                    if event_type == ControlEvent or not isinstance(event_data, dict):
+                        # simple event
+                        e = ControlEvent(
+                            control=control, name=event_name, data=event_data
+                        )
+                    else:
+                        # custom event
+                        args = dict(event_data)
+                        args["control"] = control
+                        args["name"] = event_name
+                        args["data"] = event_data
+                        e = from_dict(event_type, args)
+                    if hasattr(control, field_name):
+                        event_handler = getattr(control, field_name)
                         if asyncio.iscoroutinefunction(event_handler):
                             await event_handler(e)
                         elif callable(event_handler):
                             event_handler(e)
-                    except Exception as ex:
-                        tb = traceback.format_exc()
-                        self.error(f"Exception in '{field_name}': {ex}\n{tb}")
+            except Exception as ex:
+                tb = traceback.format_exc()
+                self.error(f"Exception in '{field_name}': {ex}\n{tb}")
 
     def error(self, message: str):
         self.connection.send_message(

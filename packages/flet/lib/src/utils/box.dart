@@ -19,13 +19,11 @@ import 'others.dart';
 import 'transforms.dart';
 
 BoxConstraints? parseBoxConstraints(Control control, String propName) {
-  var v = control.get<String>(propName);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
-
-  final j1 = json.decode(v);
-  return boxConstraintsFromJSON(j1);
+  return boxConstraintsFromJSON(v);
 }
 
 BoxConstraints? boxConstraintsFromJSON(dynamic json,

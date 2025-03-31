@@ -75,7 +75,11 @@ Widget _directionality(Widget widget, Control control) {
 Widget _expandable(Widget widget, Control control) {
   var parent = control.parent;
   if (parent != null && ["View", "Column", "Row"].contains(parent.type)) {
-    int? expand = control.getInt("expand");
+    int? expand = control.properties.containsKey("expand")
+        ? control.get("expand") is bool
+            ? 1
+            : control.getInt("expand")
+        : null;
     var expandLoose = control.getBool("expand_loose");
     return expand != null
         ? (expandLoose == true)

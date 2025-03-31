@@ -39,31 +39,31 @@ class _ScrollNotificationControlState extends State<ScrollNotificationControl> {
         _lastEventTimestamps[eventType] = now;
 
         Map<String, Object?> data = {
-          "p": notification.metrics.pixels,
-          "minse": notification.metrics.minScrollExtent,
-          "maxse": notification.metrics.maxScrollExtent,
-          "vd": notification.metrics.viewportDimension
+          "pixels": notification.metrics.pixels,
+          "min_scroll_extent": notification.metrics.minScrollExtent,
+          "max_scroll_extent": notification.metrics.maxScrollExtent,
+          "viewport_dimension": notification.metrics.viewportDimension
         };
         if (notification is ScrollStartNotification) {
-          data["t"] = "start";
+          data["event_type"] = "start";
         } else if (notification is ScrollUpdateNotification) {
-          data["t"] = "update";
-          data["sd"] = notification.scrollDelta;
+          data["event_type"] = "update";
+          data["scroll_delta"] = notification.scrollDelta;
         } else if (notification is ScrollEndNotification) {
-          data["t"] = "end";
+          data["event_type"] = "end";
         } else if (notification is UserScrollNotification) {
-          data["t"] = "user";
-          data["dir"] = notification.direction.name;
+          data["event_type"] = "user";
+          data["direction"] = notification.direction.name;
         } else if (notification is OverscrollNotification) {
-          data["t"] = "over";
-          data["os"] = notification.overscroll;
-          data["v"] = notification.velocity;
+          data["event_type"] = "over";
+          data["overscroll"] = notification.overscroll;
+          data["velocity"] = notification.velocity;
         }
 
-        if (data["t"] != null) {
+        if (data["event_type"] != null) {
           debugPrint("ScrollNotification ${widget.control.id} event");
           FletBackend.of(context)
-              .triggerControlEvent(widget.control, "on_scroll", data);
+              .triggerControlEvent(widget.control, "scroll", data);
         }
       }
     }

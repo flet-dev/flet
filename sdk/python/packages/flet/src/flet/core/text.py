@@ -86,7 +86,7 @@ class Text(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/text
     """
 
-    value: Optional[str] = None
+    value: str
     spans: Optional[List[TextSpan]] = None
     text_align: Optional[TextAlign] = None
     font_family: Optional[str] = None

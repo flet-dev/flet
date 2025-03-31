@@ -309,7 +309,7 @@ class FletBackend extends ChangeNotifier {
 
   _onMessage(Message message) {
     debugPrint("Received message: ${message.toJson()}");
-    //debugPrint("message.payload: ${message.payload}");
+    debugPrint("message.payload: ${message.payload}");
     switch (message.action) {
       case MessageAction.registerClient:
         _onClientRegistered(
