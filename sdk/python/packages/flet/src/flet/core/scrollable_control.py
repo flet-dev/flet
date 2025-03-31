@@ -1,5 +1,6 @@
 import json
 import time
+from dataclasses import dataclass, field
 from typing import Optional
 
 from flet.core.animation import AnimationCurve
@@ -39,13 +40,14 @@ class ScrollableControl(Control):
         self.update()
 
 
+@dataclass
 class OnScrollEvent(ControlEvent):
-    event_type: str
-    pixels: float
-    min_scroll_extent: float
-    max_scroll_extent: float
-    viewport_dimension: float
-    scroll_delta: Optional[float]
-    direction: Optional[str]
-    overscroll: Optional[float]
-    velocity: Optional[float]
+    event_type: str = field(metadata={"data_field": "t"})
+    pixels: float = field(metadata={"data_field": "p"})
+    min_scroll_extent: float = field(metadata={"data_field": "minse"})
+    max_scroll_extent: float = field(metadata={"data_field": "maxse"})
+    viewport_dimension: float = field(metadata={"data_field": "vd"})
+    scroll_delta: Optional[float] = field(metadata={"data_field": "sd"}, default=None)
+    direction: Optional[str] = field(metadata={"data_field": "dir"}, default=None)
+    overscroll: Optional[float] = field(metadata={"data_field": "os"}, default=None)
+    velocity: Optional[float] = field(metadata={"data_field": "v"}, default=None)

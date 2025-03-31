@@ -94,7 +94,6 @@ class Session:
         if control := self.__index.get(control_id):
             field_name = f"on_{event_name}"
             try:
-                print(control.__class__, field_name)
                 event_type = ControlEvent.get_event_field_type(control, field_name)
                 if event_type is not None:
                     if event_type == ControlEvent or not isinstance(event_data, dict):

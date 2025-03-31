@@ -21,9 +21,14 @@ def from_dict(cls: Type[T], data: Any) -> T:
         for field in dataclasses.fields(cls):
             field_name = field.name
             field_type = type_hints.get(field_name, field.type)
+            data_field_name = (
+                field.metadata["data_field"]
+                if "data_field" in field.metadata
+                else field_name
+            )
 
-            if field_name in data:
-                value = data[field_name]
+            if data_field_name in data:
+                value = data[data_field_name]
                 converted = convert_value(field_type, value)
                 init_values[field_name] = converted
 

@@ -29,11 +29,20 @@ class ControlEvent:
         globalns = sys.modules[control.__class__.__module__].__dict__
         localns = frame.f_globals.copy()
         localns.update(frame.f_locals)
-        hints = get_type_hints(control, globalns=globalns, localns=localns)
-        if field_name in hints:
-            callable_type = get_args(hints[field_name])[
+
+        # Merge type hints from all classes in the MRO
+        merged_hints = {}
+        for cls in control.__class__.__mro__:
+            try:
+                hints = get_type_hints(cls, globalns=globalns, localns=localns)
+                merged_hints.update(hints)
+            except Exception:
+                continue  # skip if class has unresolved forward refs etc.
+
+        if field_name in merged_hints:
+            callable_type = get_args(merged_hints[field_name])[
                 0
-            ]  # Get `Callable[[EventType], None]`
-            return get_args(callable_type)[0][0]  # Get `EventType`
+            ]  # Callable[[EventType], None]
+            return get_args(callable_type)[0][0]  # EventType
         else:
             return None
