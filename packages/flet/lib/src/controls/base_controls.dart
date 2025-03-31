@@ -59,7 +59,7 @@ Widget _badge(Widget widget, ThemeData theme, Control control) {
 }
 
 Widget _aspectRatio(Widget widget, Control control) {
-  var aspectRatio = control.getDouble("aspectRatio");
+  var aspectRatio = control.getDouble("aspect_ratio");
   return aspectRatio != null
       ? AspectRatio(aspectRatio: aspectRatio, child: widget)
       : widget;
@@ -74,9 +74,9 @@ Widget _directionality(Widget widget, Control control) {
 
 Widget _expandable(Widget widget, Control control) {
   var parent = control.parent;
-  if (parent != null && ["view", "column", "row"].contains(parent.type)) {
+  if (parent != null && ["View", "Column", "Row"].contains(parent.type)) {
     int? expand = control.getInt("expand");
-    var expandLoose = control.getBool("expandLoose");
+    var expandLoose = control.getBool("expand_loose");
     return expand != null
         ? (expandLoose == true)
             ? Flexible(flex: expand, child: widget)
@@ -88,7 +88,7 @@ Widget _expandable(Widget widget, Control control) {
 
 Widget _opacity(BuildContext context, Widget widget, Control control) {
   var opacity = control.getDouble("opacity");
-  var animation = parseAnimation(control, "animateOpacity");
+  var animation = parseAnimation(control, "animate_opacity");
   if (animation != null) {
     return AnimatedOpacity(
       duration: animation.duration,
@@ -113,7 +113,7 @@ Widget _opacity(BuildContext context, Widget widget, Control control) {
 
 Widget _rotatedControl(BuildContext context, Widget widget, Control control) {
   var rotationDetails = parseRotate(control, "rotate");
-  var animation = parseAnimation(control, "animateRotation");
+  var animation = parseAnimation(control, "animate_rotation");
   if (animation != null) {
     return AnimatedRotation(
       turns: rotationDetails != null ? rotationDetails.angle / (2 * pi) : 0,
@@ -140,7 +140,7 @@ Widget _rotatedControl(BuildContext context, Widget widget, Control control) {
 
 Widget _scaledControl(BuildContext context, Widget widget, Control control) {
   var scaleDetails = parseScale(control, "scale");
-  var animation = parseAnimation(control, "animateScale");
+  var animation = parseAnimation(control, "animate_scale");
   if (animation != null) {
     return AnimatedScale(
       scale: scaleDetails?.scale ?? 1.0,
@@ -169,7 +169,7 @@ Widget _scaledControl(BuildContext context, Widget widget, Control control) {
 
 Widget _offsetControl(BuildContext context, Widget widget, Control control) {
   var offset = parseOffset(control, "offset");
-  var animation = parseAnimation(control, "animateOffset");
+  var animation = parseAnimation(control, "animate_offset");
   if (offset != null && animation != null) {
     return AnimatedSlide(
       offset: offset,
@@ -196,7 +196,7 @@ Widget _positionedControl(
   var right = control.getDouble("right", null);
   var bottom = control.getDouble("bottom", null);
 
-  var animation = parseAnimation(control, "animatePosition");
+  var animation = parseAnimation(control, "animate_position");
   if (animation != null) {
     if (left == null && top == null && right == null && bottom == null) {
       left = 0;
@@ -220,7 +220,7 @@ Widget _positionedControl(
     );
   } else if (left != null || top != null || right != null || bottom != null) {
     var parent = control.parent;
-    if (parent?.type != "stack" && parent?.type != "page") {
+    if (parent?.type != "Stack" && parent?.type != "Page") {
       return ErrorControl("Error displaying ${control.type}",
           description:
               "Control can be positioned absolutely with \"left\", \"top\", \"right\" and \"bottom\" properties inside Stack control only.");
@@ -246,7 +246,7 @@ Widget _sizedControl(Widget widget, Control control) {
       child: widget,
     );
   }
-  var animation = parseAnimation(control, "animateSize");
+  var animation = parseAnimation(control, "animate_size");
   if (animation != null) {
     return AnimatedSize(
         duration: animation.duration, curve: animation.curve, child: widget);
