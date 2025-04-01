@@ -82,24 +82,24 @@ class DatePicker(Control):
 
     open: bool = False
     value: Optional[DateTimeValue] = None
-    first_date: DateTimeValue = datetime(year=1900, month=1, day=1)
-    last_date: DateTimeValue = datetime(year=2050, month=1, day=1)
-    current_date: DateTimeValue = datetime.now()
+    first_date: DateTimeValue = field(default=datetime(year=1900, month=1, day=1))
+    last_date: DateTimeValue = field(default=datetime(year=2050, month=1, day=1))
+    current_date: DateTimeValue = field(default=datetime.now())
     keyboard_type: Optional[KeyboardType] = field(default=KeyboardType.DATETIME)
     date_picker_mode: Optional[DatePickerMode] = field(default=DatePickerMode.DAY)
     date_picker_entry_mode: Optional[DatePickerEntryMode] = field(
         default=DatePickerEntryMode.CALENDAR
     )
     help_text: Optional[str] = None
-    cancel_text: Optional[str] = field(default="Cancel")
-    confirm_text: Optional[str] = field(default="OK")
-    error_format_text: Optional[str] = field(default="Invalid format")
-    error_invalid_text: Optional[str] = field(default="Out of range")
+    cancel_text: Optional[str] = None
+    confirm_text: Optional[str] = None
+    error_format_text: Optional[str] = None
+    error_invalid_text: Optional[str] = None
     field_hint_text: Optional[str] = None
-    field_label_text: Optional[str] = field(default="Enter Date")
+    field_label_text: Optional[str] = None
     switch_to_calendar_icon: Optional[IconValue] = None
     switch_to_input_icon: Optional[IconValue] = None
-    barrier_color: Optional[ColorValue] = field(default=Colors.BLACK54)
+    barrier_color: Optional[ColorValue] = None
     on_change: OptionalControlEventCallable = None
     on_dismiss: OptionalControlEventCallable = None
     on_entry_mode_change: OptionalEventCallable["DatePickerEntryModeChangeEvent"] = None

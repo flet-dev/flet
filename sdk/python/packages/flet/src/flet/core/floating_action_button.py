@@ -1,10 +1,11 @@
+from dataclasses import field
 from typing import Any, Optional, Union
 
 from flet.core.animation import AnimationValue
 from flet.core.badge import BadgeValue
 from flet.core.buttons import OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, OptionalNumber
+from flet.core.control import Control, OptionalNumber, control
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
@@ -23,6 +24,7 @@ from flet.core.types import (
 )
 
 
+@control("FloatingActionButton")
 class FloatingActionButton(ConstrainedControl):
     """
     A floating action button is a circular icon button that hovers over content to promote a primary action in the application. Floating action button is usually set to `page.floating_action_button`, but can also be added as a regular control at any place on a page.
@@ -72,317 +74,44 @@ class FloatingActionButton(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/floatingactionbutton
     """
 
-    def __init__(
-        self,
-        text: Optional[str] = None,
-        icon: Optional[IconValue] = None,
-        bgcolor: Optional[ColorValue] = None,
-        content: Optional[Control] = None,
-        shape: Optional[OutlinedBorder] = None,
-        autofocus: Optional[bool] = None,
-        mini: Optional[bool] = None,
-        foreground_color: Optional[ColorValue] = None,
-        focus_color: Optional[ColorValue] = None,
-        clip_behavior: Optional[ClipBehavior] = None,
-        elevation: OptionalNumber = None,
-        disabled_elevation: OptionalNumber = None,
-        focus_elevation: OptionalNumber = None,
-        highlight_elevation: OptionalNumber = None,
-        hover_elevation: OptionalNumber = None,
-        enable_feedback: Optional[bool] = None,
-        url: Optional[str] = None,
-        url_target: Optional[UrlTarget] = None,
-        mouse_cursor: Optional[MouseCursor] = None,
-        on_click: OptionalControlEventCallable = None,
-        #
-        # ConstrainedControl
-        #
-        ref: Optional[Ref] = None,
-        key: Optional[str] = None,
-        width: OptionalNumber = None,
-        height: OptionalNumber = None,
-        left: OptionalNumber = None,
-        top: OptionalNumber = None,
-        right: OptionalNumber = None,
-        bottom: OptionalNumber = None,
-        expand: Union[None, bool, int] = None,
-        expand_loose: Optional[bool] = None,
-        col: Optional[ResponsiveNumber] = None,
-        opacity: OptionalNumber = None,
-        rotate: Optional[RotateValue] = None,
-        scale: Optional[ScaleValue] = None,
-        offset: Optional[OffsetValue] = None,
-        aspect_ratio: OptionalNumber = None,
-        animate_opacity: Optional[AnimationValue] = None,
-        animate_size: Optional[AnimationValue] = None,
-        animate_position: Optional[AnimationValue] = None,
-        animate_rotation: Optional[AnimationValue] = None,
-        animate_scale: Optional[AnimationValue] = None,
-        animate_offset: Optional[AnimationValue] = None,
-        on_animation_end: OptionalControlEventCallable = None,
-        tooltip: Optional[TooltipValue] = None,
-        badge: Optional[BadgeValue] = None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
-    ):
-        ConstrainedControl.__init__(
-            self,
-            ref=ref,
-            key=key,
-            width=width,
-            height=height,
-            left=left,
-            top=top,
-            right=right,
-            bottom=bottom,
-            expand=expand,
-            expand_loose=expand_loose,
-            col=col,
-            opacity=opacity,
-            rotate=rotate,
-            scale=scale,
-            offset=offset,
-            aspect_ratio=aspect_ratio,
-            animate_opacity=animate_opacity,
-            animate_size=animate_size,
-            animate_position=animate_position,
-            animate_rotation=animate_rotation,
-            animate_scale=animate_scale,
-            animate_offset=animate_offset,
-            on_animation_end=on_animation_end,
-            tooltip=tooltip,
-            badge=badge,
-            visible=visible,
-            disabled=disabled,
-            data=data,
-        )
-
-        self.text = text
-        self.icon = icon
-        self.bgcolor = bgcolor
-        self.content = content
-        self.autofocus = autofocus
-        self.shape = shape
-        self.mini = mini
-        self.url = url
-        self.url_target = url_target
-        self.on_click = on_click
-        self.foreground_color = foreground_color
-        self.focus_color = focus_color
-        self.clip_behavior = clip_behavior
-        self.elevation = elevation
-        self.disabled_elevation = disabled_elevation
-        self.focus_elevation = focus_elevation
-        self.highlight_elevation = highlight_elevation
-        self.hover_elevation = hover_elevation
-        self.enable_feedback = enable_feedback
-        self.mouse_cursor = mouse_cursor
-
-    def _get_control_name(self):
-        return "floatingactionbutton"
+    text: Optional[str] = None
+    icon: Optional[IconValue] = None
+    bgcolor: Optional[ColorValue] = None
+    content: Optional[Control] = None
+    shape: Optional[OutlinedBorder] = None
+    autofocus: Optional[bool] = field(default=False)
+    mini: Optional[bool] = field(default=False)
+    foreground_color: Optional[ColorValue] = None
+    focus_color: Optional[ColorValue] = None
+    clip_behavior: Optional[ClipBehavior] = None
+    elevation: OptionalNumber = None
+    disabled_elevation: OptionalNumber = None
+    focus_elevation: OptionalNumber = None
+    highlight_elevation: OptionalNumber = None
+    hover_elevation: OptionalNumber = None
+    enable_feedback: Optional[bool] = field(default=True)
+    url: Optional[str] = None
+    url_target: Optional[UrlTarget] = None
+    mouse_cursor: Optional[MouseCursor] = None
+    on_click: OptionalControlEventCallable = None
 
     def before_update(self):
         super().before_update()
         assert (
-            self.text or self.icon or (self.__content and self.__content.visible)
+            self.text or self.icon or (self.content and self.content.visible)
         ), "at minimum, text, icon or a visible content must be provided"
-        self._set_attr_json("shape", self.__shape)
-
-    def _get_children(self):
-        if self.__content is None:
-            return []
-        self.__content._set_attr_internal("n", "content")
-        return [self.__content]
-
-    # text
-    @property
-    def text(self) -> Optional[str]:
-        return self._get_attr("text")
-
-    @text.setter
-    def text(self, value: Optional[str]):
-        self._set_attr("text", value)
-
-    # icon
-    @property
-    def icon(self) -> Optional[IconValue]:
-        return self.__icon
-
-    @icon.setter
-    def icon(self, value: Optional[IconValue]):
-        self.__icon = value
-        self._set_enum_attr("icon", value, IconEnums)
-
-    # bgcolor
-    @property
-    def bgcolor(self) -> Optional[ColorValue]:
-        return self.__bgcolor
-
-    @bgcolor.setter
-    def bgcolor(self, value: Optional[ColorValue]):
-        self.__bgcolor = value
-        self._set_enum_attr("bgcolor", value, ColorEnums)
-
-    # url
-    @property
-    def url(self) -> Optional[str]:
-        return self._get_attr("url")
-
-    @url.setter
-    def url(self, value: Optional[str]):
-        self._set_attr("url", value)
-
-    # url_target
-    @property
-    def url_target(self) -> Optional[UrlTarget]:
-        return self.__url_target
-
-    @url_target.setter
-    def url_target(self, value: Optional[UrlTarget]):
-        self.__url_target = value
-        self._set_enum_attr("urlTarget", value, UrlTarget)
-
-    # mouse_cursor
-    @property
-    def mouse_cursor(self) -> Optional[MouseCursor]:
-        return self.__mouse_cursor
-
-    @mouse_cursor.setter
-    def mouse_cursor(self, value: Optional[MouseCursor]):
-        self.__mouse_cursor = value
-        self._set_enum_attr("mouseCursor", value, MouseCursor)
-
-    # on_click
-    @property
-    def on_click(self) -> OptionalControlEventCallable:
-        return self._get_event_handler("click")
-
-    @on_click.setter
-    def on_click(self, handler: OptionalControlEventCallable):
-        self._add_event_handler("click", handler)
-
-    # content
-    @property
-    def content(self) -> Optional[Control]:
-        return self.__content
-
-    @content.setter
-    def content(self, value: Optional[Control]):
-        self.__content = value
-
-    # autofocus
-    @property
-    def autofocus(self) -> bool:
-        return self._get_attr("autofocus", data_type="bool", def_value=False)
-
-    @autofocus.setter
-    def autofocus(self, value: Optional[bool]):
-        self._set_attr("autofocus", value)
-
-    # shape
-    @property
-    def shape(self) -> Optional[OutlinedBorder]:
-        return self.__shape
-
-    @shape.setter
-    def shape(self, value: Optional[OutlinedBorder]):
-        self.__shape = value
-
-    # mini
-    @property
-    def mini(self) -> bool:
-        return self._get_attr("mini", data_type="bool", def_value=False)
-
-    @mini.setter
-    def mini(self, value: Optional[bool]):
-        self._set_attr("mini", value)
-
-    # elevation
-    @property
-    def elevation(self) -> OptionalNumber:
-        return self._get_attr("elevation", data_type="float")
-
-    @elevation.setter
-    def elevation(self, value: OptionalNumber):
-        assert value is None or value >= 0, "elevation cannot be negative"
-        self._set_attr("elevation", value)
-
-    # disabled_elevation
-    @property
-    def disabled_elevation(self) -> OptionalNumber:
-        return self._get_attr("disabledElevation", data_type="float")
-
-    @disabled_elevation.setter
-    def disabled_elevation(self, value: OptionalNumber):
-        assert value is None or value >= 0, "disabled_elevation cannot be negative"
-        self._set_attr("disabledElevation", value)
-
-    # enable_feedback
-    @property
-    def enable_feedback(self) -> bool:
-        return self._get_attr("enableFeedback", data_type="bool", def_value=True)
-
-    @enable_feedback.setter
-    def enable_feedback(self, value: Optional[bool]):
-        self._set_attr("enableFeedback", value)
-
-    # focus_color
-    @property
-    def focus_color(self) -> Optional[ColorValue]:
-        return self.__focus_color
-
-    @focus_color.setter
-    def focus_color(self, value: Optional[ColorValue]):
-        self.__focus_color = value
-        self._set_enum_attr("focusColor", value, ColorEnums)
-
-    # focus_elevation
-    @property
-    def focus_elevation(self) -> OptionalNumber:
-        return self._get_attr("focusElevation", data_type="float")
-
-    @focus_elevation.setter
-    def focus_elevation(self, value: OptionalNumber):
-        assert value is None or value >= 0, "focus_elevation cannot be negative"
-        self._set_attr("focusElevation", value)
-
-    # foreground_color
-    @property
-    def foreground_color(self) -> Optional[ColorValue]:
-        return self.__foreground_color
-
-    @foreground_color.setter
-    def foreground_color(self, value: Optional[ColorValue]):
-        self.__foreground_color = value
-        self._set_enum_attr("foregroundColor", value, ColorEnums)
-
-    # highlight_elevation
-    @property
-    def highlight_elevation(self) -> OptionalNumber:
-        return self._get_attr("highlightElevation", data_type="float")
-
-    @highlight_elevation.setter
-    def highlight_elevation(self, value: OptionalNumber):
-        assert value is None or value >= 0, "highlight_elevation cannot be negative"
-        self._set_attr("highlightElevation", value)
-
-    # hover_elevation
-    @property
-    def hover_elevation(self) -> OptionalNumber:
-        return self._get_attr("hoverElevation", data_type="float")
-
-    @hover_elevation.setter
-    def hover_elevation(self, value: OptionalNumber):
-        assert value is None or value >= 0, "hover_elevation cannot be negative"
-        self._set_attr("hoverElevation", value)
-
-    # clip_behavior
-    @property
-    def clip_behavior(self) -> Optional[ClipBehavior]:
-        return self.__clip_behavior
-
-    @clip_behavior.setter
-    def clip_behavior(self, value: Optional[ClipBehavior]):
-        self.__clip_behavior = value
-        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+        assert (
+            self.elevation is None or self.elevation >= 0
+        ), "elevation cannot be negative"
+        assert (
+            self.disabled_elevation is None or self.disabled_elevation >= 0
+        ), "disabled_elevation cannot be negative"
+        assert (
+            self.focus_elevation is None or self.focus_elevation >= 0
+        ), "focus_elevation cannot be negative"
+        assert (
+            self.highlight_elevation is None or self.highlight_elevation >= 0
+        ), "highlight_elevation cannot be negative"
+        assert (
+            self.hover_elevation is None or self.hover_elevation >= 0
+        ), "hover_elevation cannot be negative"

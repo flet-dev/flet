@@ -1,8 +1,7 @@
 from enum import Enum
-from typing import Any, Optional
+from typing import Optional
 
-from flet.core.control import Control
-from flet.core.ref import Ref
+from flet.core.control import Control, control
 
 
 class AutofillHint(Enum):
@@ -79,6 +78,7 @@ class AutofillGroupDisposeAction(Enum):
     CANCEL = "cancel"
 
 
+@control("AutofillGroup")
 class AutofillGroup(Control):
     """
     This control is used to group autofill controls together.
@@ -88,52 +88,9 @@ class AutofillGroup(Control):
     Online docs: https://flet.dev/docs/controls/autofillgroup
     """
 
-    def __init__(
-        self,
-        content: Control = None,
-        dispose_action: Optional[AutofillGroupDisposeAction] = None,
-        #
-        # Control
-        #
-        ref: Optional[Ref] = None,
-        data: Any = None,
-    ):
-
-        Control.__init__(
-            self,
-            ref=ref,
-            data=data,
-        )
-
-        self.content = content
-        self.dispose_action = dispose_action
-
-    def _get_control_name(self):
-        return "autofillgroup"
-
-    def _get_children(self):
-        self.__content._set_attr_internal("n", "content")
-        return [self.__content]
+    content: Control
+    dispose_action: Optional[AutofillGroupDisposeAction] = None
 
     def before_update(self):
         super().before_update()
-        assert self.__content.visible, "content must be visible"
-
-    # content
-    @property
-    def content(self) -> Control:
-        return self.__content
-
-    @content.setter
-    def content(self, value: Control):
-        self.__content = value
-
-    # dispose_action
-    @property
-    def dispose_action(self) -> Optional[AutofillGroupDisposeAction]:
-        return self.__dispose_action
-
-    @dispose_action.setter
-    def dispose_action(self, value: Optional[AutofillGroupDisposeAction]):
-        self.__dispose_action = value
-        self._set_enum_attr("disposeAction", value, AutofillGroupDisposeAction)
+        assert self.content.visible, "content must be visible"

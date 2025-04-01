@@ -1,4 +1,3 @@
-import json
 from dataclasses import dataclass
 from typing import List, Optional, Tuple, Union
 
@@ -31,7 +30,6 @@ from flet.core.types import (
     ThemeMode,
     UrlTarget,
 )
-from flet.utils.deprecated import deprecated_property
 
 
 @dataclass
@@ -42,7 +40,7 @@ class ContainerTapEvent(ControlEvent):
     global_y: float
 
 
-@control("container")
+@control("Container")
 class Container(ConstrainedControl, AdaptiveControl):
     """
     Container allows to decorate a control with background color and border and position it with padding, margin and alignment.
@@ -85,10 +83,10 @@ class Container(ConstrainedControl, AdaptiveControl):
     image: Optional[DecorationImage] = None
     ink_color: Optional[ColorValue] = None
     animate: Optional[AnimationValue] = None
-    blur: Union[None, float, int, Tuple[Union[float, int], Union[float, int]], Blur] = (
-        None
-    )
-    shadow: Union[None, BoxShadow, List[BoxShadow]] = None
+    blur: Optional[
+        Union[float, int, Tuple[Union[float, int], Union[float, int]], Blur]
+    ] = None
+    shadow: Optional[Union[BoxShadow, List[BoxShadow]]] = None
     url: Optional[str] = None
     url_target: Optional[UrlTarget] = None
     theme: Optional[Theme] = None

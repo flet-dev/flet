@@ -1,6 +1,8 @@
+from flet.core.control import control
 from flet.core.elevated_button import ElevatedButton
 
 
+@control("FilledTonalButton")
 class FilledTonalButton(ElevatedButton):
     """
     A filled tonal button is an alternative middle ground between FilledButton and OutlinedButton buttons. They’re useful in contexts where a lower-priority button requires slightly more emphasis than an outline would give, such as "Next" in an onboarding flow. Tonal buttons use the secondary color mapping.
@@ -25,6 +27,3 @@ class FilledTonalButton(ElevatedButton):
 
     Online docs: https://flet.dev/docs/controls/filledtonalbutton
     """
-
-    def _get_control_name(self):
-        return "filledtonalbutton"
