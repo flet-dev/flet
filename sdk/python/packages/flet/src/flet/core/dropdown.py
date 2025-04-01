@@ -34,33 +34,6 @@ class Option(Control):
             self.key is not None or self.text is not None
         ), "key or text must be specified"
 
-    # key
-    @property
-    def key(self) -> Optional[str]:
-        return self._get_attr("key")
-
-    @key.setter
-    def key(self, value: Optional[str]):
-        self._set_attr("key", value)
-
-    # text
-    @property
-    def text(self) -> Optional[str]:
-        return self._get_attr("text")
-
-    @text.setter
-    def text(self, value: Optional[str]):
-        self._set_attr("text", value)
-
-    # content
-    @property
-    def content(self) -> Optional[Control]:
-        return self.__content
-
-    @content.setter
-    def content(self, value: Optional[Control]):
-        self.__content = value
-
 
 @dataclass
 class DropdownOption(Option):

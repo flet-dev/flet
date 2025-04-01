@@ -1,4 +1,5 @@
 import json
+from dataclasses import dataclass, field
 from typing import Any, List, Optional, Union
 
 from flet.core.animation import AnimationValue
@@ -29,6 +30,7 @@ from flet.core.types import (
 )
 
 
+@dataclass
 class DataColumnSortEvent(ControlEvent):
     def __init__(self, e: ControlEvent):
         super().__init__(e.target, e.name, e.data, e.control, e.page)
