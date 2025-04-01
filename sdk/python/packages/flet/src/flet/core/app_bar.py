@@ -1,10 +1,11 @@
+from dataclasses import field
 from typing import List, Optional
 
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.buttons import OutlinedBorder
 from flet.core.control import Control, control
 from flet.core.text_style import TextStyle
-from flet.core.types import ClipBehavior, ColorValue, OptionalNumber
+from flet.core.types import ClipBehavior, ColorValue, Number, OptionalNumber
 
 
 @control("AppBar")
@@ -54,9 +55,9 @@ class AppBar(AdaptiveControl):
 
     leading: Optional[Control] = None
     leading_width: OptionalNumber = None
-    automatically_imply_leading: Optional[bool] = None
+    automatically_imply_leading: bool = field(default=True)
     title: Optional[Control] = None
-    center_title: Optional[bool] = None
+    center_title: bool = field(default=False)
     toolbar_height: OptionalNumber = None
     color: Optional[ColorValue] = None
     bgcolor: Optional[ColorValue] = None
@@ -65,12 +66,12 @@ class AppBar(AdaptiveControl):
     shadow_color: Optional[ColorValue] = None
     surface_tint_color: Optional[ColorValue] = None
     clip_behavior: Optional[ClipBehavior] = None
-    force_material_transparency: Optional[bool] = None
-    is_secondary: Optional[bool] = None
+    force_material_transparency: bool = field(default=False)
+    is_secondary: bool = field(default=False)
     title_spacing: OptionalNumber = None
-    exclude_header_semantics: Optional[bool] = None
+    exclude_header_semantics: bool = field(default=False)
     actions: Optional[List[Control]] = None
-    toolbar_opacity: OptionalNumber = None
+    toolbar_opacity: Number = field(default=1)
     title_text_style: Optional[TextStyle] = None
     toolbar_text_style: Optional[TextStyle] = None
     shape: Optional[OutlinedBorder] = None
