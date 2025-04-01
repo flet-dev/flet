@@ -3,7 +3,7 @@ import dataclasses
 from flet.core.container import Container, ContainerTapEvent
 from flet.core.control_event import ControlEvent
 from flet.core.elevated_button import ElevatedButton
-from flet.core.page import Page, WindowResizeEvent
+from flet.core.page import Page, PageResizeEvent
 from flet.messaging.connection import Connection
 from flet.messaging.session import Session
 from flet.utils.from_dict import from_dict
@@ -48,7 +48,7 @@ def test_create_event_typed_data():
 def test_page_events():
     p = Page(sess=Session(Connection()))
     on_resized_type = ControlEvent.get_event_field_type(p, "on_resized")
-    assert on_resized_type == WindowResizeEvent
+    assert on_resized_type == PageResizeEvent
     evt = from_dict(
         on_resized_type,
         {
@@ -60,4 +60,4 @@ def test_page_events():
         },
     )
 
-    assert isinstance(evt, WindowResizeEvent)
+    assert isinstance(evt, PageResizeEvent)

@@ -23,29 +23,29 @@ class Window(Control):
     max_height: OptionalNumber = None
     min_width: OptionalNumber = None
     min_height: OptionalNumber = None
-    opacity: OptionalNumber = None
-    maximized: Optional[bool] = None
-    minimized: Optional[bool] = None
-    minimizable: Optional[bool] = None
-    maximizable: Optional[bool] = None
-    resizable: Optional[bool] = None
-    movable: Optional[bool] = None
-    full_screen: Optional[bool] = None
-    always_on_top: Optional[bool] = None
-    always_on_bottom: Optional[bool] = None
-    prevent_close: Optional[bool] = None
-    skip_task_bar: Optional[bool] = None
-    title_bar_hidden: Optional[bool] = None
-    title_bar_buttons_hidden: Optional[bool] = None
-    frameless: Optional[bool] = None
+    opacity: OptionalNumber = field(default=1.0)
+    maximized: Optional[bool] = field(default=False)
+    minimized: Optional[bool] = field(default=False)
+    minimizable: Optional[bool] = field(default=True)
+    maximizable: Optional[bool] = field(default=True)
+    resizable: Optional[bool] = field(default=True)
+    movable: Optional[bool] = field(default=True)
+    full_screen: Optional[bool] = field(default=False)
+    always_on_top: Optional[bool] = field(default=False)
+    always_on_bottom: Optional[bool] = field(default=False)
+    prevent_close: Optional[bool] = field(default=False)
+    skip_task_bar: Optional[bool] = field(default=False)
+    title_bar_hidden: Optional[bool] = field(default=False)
+    title_bar_buttons_hidden: Optional[bool] = field(default=False)
+    frameless: Optional[bool] = field(default=False)
     progress_bar: OptionalNumber = None
-    focused: Optional[bool] = None
-    visible: Optional[bool] = None
-    shadow: Optional[bool] = None
+    focused: Optional[bool] = field(default=True)
+    visible: Optional[bool] = field(default=True)
+    shadow: Optional[bool] = field(default=False)
     alignment: Optional[Alignment] = None
     badge_label: Optional[str] = None
     icon: Optional[str] = None
-    ignore_mouse_events: Optional[bool] = None
+    ignore_mouse_events: Optional[bool] = field(default=False)
     on_event: OptionalEventCallable["WindowEvent"] = None
 
     def __post_init__(self, ref) -> None:

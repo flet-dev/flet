@@ -23,7 +23,7 @@ def encode_object_for_msgpack(obj):
                 v = v is not None
                 if v:
                     r[field.name] = v
-            elif v is not None:
+            elif v != field.default:
                 r[field.name] = v
             setattr(obj, f"_prev_{field.name}", v)
         return r

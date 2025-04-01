@@ -58,10 +58,12 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     """
 
     controls: List[Control] = field(default_factory=list)
-    alignment: Optional[MainAxisAlignment] = None
-    horizontal_alignment: Optional[CrossAxisAlignment] = None
-    spacing: OptionalNumber = None
-    tight: Optional[bool] = None
-    wrap: Optional[bool] = None
-    run_spacing: OptionalNumber = None
-    run_alignment: Optional[MainAxisAlignment] = None
+    alignment: Optional[MainAxisAlignment] = field(default=MainAxisAlignment.START)
+    horizontal_alignment: Optional[CrossAxisAlignment] = field(
+        default=CrossAxisAlignment.START
+    )
+    spacing: OptionalNumber = field(default=10)
+    tight: Optional[bool] = field(default=False)
+    wrap: Optional[bool] = field(default=False)
+    run_spacing: OptionalNumber = field(default=0)
+    run_alignment: Optional[MainAxisAlignment] = field(default=MainAxisAlignment.START)
