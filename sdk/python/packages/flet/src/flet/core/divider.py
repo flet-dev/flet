@@ -1,12 +1,11 @@
-from typing import Any, Optional
+from dataclasses import field
+from typing import Optional
 
-from flet.core.badge import BadgeValue
-from flet.core.control import Control, OptionalNumber
-from flet.core.ref import Ref
-from flet.core.tooltip import TooltipValue
-from flet.core.types import ColorEnums, ColorValue
+from flet.core.control import Control, OptionalNumber, control
+from flet.core.types import ColorValue
 
 
+@control("Divider")
 class Divider(Control):
     """
     A thin horizontal line, with padding on either side.
@@ -48,89 +47,21 @@ class Divider(Control):
     Online docs: https://flet.dev/docs/controls/divider
     """
 
-    def __init__(
-        self,
-        height: OptionalNumber = None,
-        thickness: OptionalNumber = None,
-        color: Optional[ColorValue] = None,
-        leading_indent: OptionalNumber = None,
-        trailing_indent: OptionalNumber = None,
-        #
-        # Control
-        #
-        ref: Optional[Ref] = None,
-        opacity: OptionalNumber = None,
-        tooltip: Optional[TooltipValue] = None,
-        badge: Optional[BadgeValue] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-    ):
+    height: OptionalNumber = field(default=16.0)
+    thickness: OptionalNumber = field(default=0.0)
+    color: Optional[ColorValue] = None
+    leading_indent: OptionalNumber = field(default=0.0)
+    trailing_indent: OptionalNumber = field(default=0.0)
 
-        Control.__init__(
-            self,
-            ref=ref,
-            opacity=opacity,
-            tooltip=tooltip,
-            badge=badge,
-            visible=visible,
-            data=data,
-        )
-
-        self.height = height
-        self.thickness = thickness
-        self.color = color
-        self.leading_indent = leading_indent
-        self.trailing_indent = trailing_indent
-
-    def _get_control_name(self):
-        return "divider"
-
-    # height
-    @property
-    def height(self) -> OptionalNumber:
-        return self._get_attr("height", data_type="float")
-
-    @height.setter
-    def height(self, value: OptionalNumber):
-        assert value is None or value >= 0, "height cannot be negative"
-        self._set_attr("height", value)
-
-    # thickness
-    @property
-    def thickness(self) -> OptionalNumber:
-        return self._get_attr("thickness", data_type="float")
-
-    @thickness.setter
-    def thickness(self, value: OptionalNumber):
-        assert value is None or value >= 0, "thickness cannot be negative"
-        self._set_attr("thickness", value)
-
-    # color
-    @property
-    def color(self) -> Optional[ColorValue]:
-        return self.__color
-
-    @color.setter
-    def color(self, value: Optional[ColorValue]):
-        self.__color = value
-        self._set_enum_attr("color", value, ColorEnums)
-
-    # leading_indent
-    @property
-    def leading_indent(self) -> OptionalNumber:
-        return self._get_attr("leadingIndent", data_type="float")
-
-    @leading_indent.setter
-    def leading_indent(self, value: OptionalNumber):
-        assert value is None or value >= 0, "leading_indent cannot be negative"
-        self._set_attr("leadingIndent", value)
-
-    # trailing_indent
-    @property
-    def trailing_indent(self) -> OptionalNumber:
-        return self._get_attr("trailingIndent", data_type="float")
-
-    @trailing_indent.setter
-    def trailing_indent(self, value: OptionalNumber):
-        assert value is None or value >= 0, "trailing_indent cannot be negative"
-        self._set_attr("trailingIndent", value)
+    def before_update(self):
+        super().before_update()
+        assert self.height is None or self.height >= 0, "height cannot be negative"
+        assert (
+            self.thickness is None or self.thickness >= 0
+        ), "thickness cannot be negative"
+        assert (
+            self.leading_indent is None or self.leading_indent >= 0
+        ), "leading_indent cannot be negative"
+        assert (
+            self.trailing_indent is None or self.trailing_indent >= 0
+        ), "trailing_indent cannot be negative"
