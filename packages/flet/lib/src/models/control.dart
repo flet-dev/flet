@@ -73,25 +73,41 @@ class Control extends ChangeNotifier {
         get<String>(name), defValue);
   }
 
-  Control? child(String propertyName) {
-    if (properties.containsKey(propertyName)) {
-      if (properties[propertyName] is! Control) {
-        throw Exception("$propertyName is not a Control.");
-      }
-      return properties[propertyName] as Control;
+  /// Returns a single [Control] from the specified [propertyName].
+  ///
+  /// If [visibleOnly] is `true` (default), only returns the child if it is visible.
+  ///
+  /// Throws a [FormatException] if the property exists but is not a [Control].
+  ///
+  /// Returns `null` if the property is missing, or if [visibleOnly] is `true` and
+  /// the child is not visible.
+  Control? child(String propertyName, {bool visibleOnly = true}) {
+    final child = properties[propertyName];
+    if (child == null) return null;
+
+    if (child is! Control) {
+      throw FormatException("Expected a Control for '$propertyName'", child);
     }
-    return null;
+
+    return (visibleOnly && !child.visible) ? null : child;
   }
 
-  List<Control> children(String propertyName) {
-    if (properties.containsKey(propertyName)) {
-      if (properties[propertyName] is! List) {
-        throw Exception("$propertyName is not a List.");
-      }
-      return List<Control>.from(properties[propertyName]);
-    } else {
-      return [];
+  /// Returns a list of [Control]s from the specified [propertyName].
+  ///
+  /// If [visibleOnly] is `true` (default), only includes controls that are visible.
+  ///
+  /// Throws a [FormatException] if the property exists but is not a `List<Control>`.
+  ///
+  /// Returns an empty list if the property is missing.
+  List<Control> children(String propertyName, {bool visibleOnly = true}) {
+    var children = properties[propertyName];
+    if (children == null) return [];
+
+    if (children is! List<Control>) {
+      throw FormatException("Expected a List for '$propertyName'", children);
     }
+
+    return visibleOnly ? children.where((c) => c.visible).toList() : children;
   }
 
   /// Creates a ControlNode from MessagePack–decoded data.

@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
 import '../utils/alignment.dart';
+import '../extensions/control.dart';
 import 'base_controls.dart';
-import 'control_widget.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
 
@@ -25,11 +25,7 @@ class ColumnControl extends StatelessWidget {
     var wrap = control.getBool("wrap", false)!;
     var horizontalAlignment = control.getString("horizontal_alignment");
 
-    List<Widget> controls = control
-        .children("controls")
-        .where((child) => child.visible)
-        .map((child) => ControlWidget(control: child))
-        .toList();
+    List<Widget> controls = control.getWidgets("controls");
 
     Widget child = wrap
         ? Wrap(
