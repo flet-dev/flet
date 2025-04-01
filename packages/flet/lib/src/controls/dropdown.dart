@@ -59,7 +59,7 @@ class _DropdownControlState extends State<DropdownControl> {
     bool disabled = widget.control.disabled || widget.control.parent!.disabled;
     bool editable = widget.control.getBool("editable", false)!;
     bool autofocus = widget.control.getBool("autofocus", false)!;
-    var textSize = widget.control.getDouble("textSize");
+    var textSize = widget.control.getDouble("text_size");
     var label = widget.control.get("label");
     var trailingIcon = widget.control.get("trailing_icon");
     var leadingIcon = widget.control.get("leading_icon");
@@ -68,18 +68,18 @@ class _DropdownControlState extends State<DropdownControl> {
     var prefixIcon = widget.control.get("prefix_icon");
     var color = widget.control.getColor("color", context);
 
-    TextAlign textAlign =
-        parseTextAlign(widget.control.getString("textAlign"), TextAlign.start)!;
+    TextAlign textAlign = parseTextAlign(
+        widget.control.getString("text_align"), TextAlign.start)!;
 
-    var fillColor = widget.control.getColor("fillColor", context);
-    var borderColor = widget.control.getColor("borderColor", context);
+    var fillColor = widget.control.getColor("fill_color", context);
+    var borderColor = widget.control.getColor("border_color", context);
 
-    var borderRadius = parseBorderRadius(widget.control, "borderRadius");
+    var borderRadius = parseBorderRadius(widget.control, "border_radius");
     var focusedBorderColor =
-        widget.control.getColor("focusedBorderColor", context);
-    var borderWidth = widget.control.getDouble("borderWidth");
-    var focusedBorderWidth = widget.control.getDouble("focusedBorderWidth");
-    var menuWidth = widget.control.getDouble("menuWidth") ?? double.infinity;
+        widget.control.getColor("focused_border_color", context);
+    var borderWidth = widget.control.getDouble("border_width");
+    var focusedBorderWidth = widget.control.getDouble("focused_border_width");
+    var menuWidth = widget.control.getDouble("menu_width") ?? double.infinity;
 
     FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
       widget.control.getString("border"),
@@ -139,20 +139,21 @@ class _DropdownControlState extends State<DropdownControl> {
     InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
       filled: widget.control.getBool("filled", false)!,
       fillColor: fillColor,
-      hintStyle: parseTextStyle(Theme.of(context), widget.control, "hintStyle"),
+      hintStyle:
+          parseTextStyle(Theme.of(context), widget.control, "hint_style"),
       errorStyle:
-          parseTextStyle(Theme.of(context), widget.control, "errorStyle"),
+          parseTextStyle(Theme.of(context), widget.control, "error_style"),
       helperStyle:
-          parseTextStyle(Theme.of(context), widget.control, "helperStyle"),
+          parseTextStyle(Theme.of(context), widget.control, "helper_style"),
       border: border,
       enabledBorder: border,
       focusedBorder: focusedBorder,
       isDense: widget.control.getBool("dense") ?? false,
-      contentPadding: parseEdgeInsets(widget.control, "contentPadding"),
+      contentPadding: parseEdgeInsets(widget.control, "content_padding"),
     );
 
     TextStyle? textStyle =
-        parseTextStyle(Theme.of(context), widget.control, "textStyle");
+        parseTextStyle(Theme.of(context), widget.control, "text_style");
     if (textSize != null || color != null) {
       textStyle = (textStyle ?? const TextStyle()).copyWith(
           fontSize: textSize,
@@ -216,7 +217,6 @@ class _DropdownControlState extends State<DropdownControl> {
         parseInputFilter(widget.control, "input_filter");
 
     List<TextInputFormatter>? inputFormatters = [];
-    // add non-null input formatters
     if (inputFilter != null) {
       inputFormatters.add(inputFilter);
     }
@@ -230,17 +230,15 @@ class _DropdownControlState extends State<DropdownControl> {
       enabled: !disabled,
       focusNode: _focusNode,
       initialSelection: _value,
-      //controller: controller,
-      //requestFocusOnTap: editable,
-      enableFilter: widget.control.getBool("enableFilter", false)!,
-      enableSearch: widget.control.getBool("enableSearch", true)!,
-      menuHeight: widget.control.getDouble("menuHeight"),
+      enableFilter: widget.control.getBool("enable_filter", false)!,
+      enableSearch: widget.control.getBool("enable_search", true)!,
+      menuHeight: widget.control.getDouble("menu_height"),
       label: label is Control
           ? ControlWidget(control: label)
           : label is String
               ? Text(label,
                   style: parseTextStyle(
-                      Theme.of(context), widget.control, "labelStyle"))
+                      Theme.of(context), widget.control, "label_style"))
               : null,
       leadingIcon: leadingIcon is Control
           ? ControlWidget(control: leadingIcon)
@@ -268,18 +266,15 @@ class _DropdownControlState extends State<DropdownControl> {
       textStyle: textStyle,
       textAlign: textAlign,
       width: widget.control.getDouble("width"),
-      errorText: widget.control.getString("errorText"),
-      hintText: widget.control.getString("hintText"),
-      helperText: widget.control.getString("helperText"),
-      //inputFormatters: inputFormatters,
-      //expandedInsets: parseEdgeInsets(widget.control, "expandedInsets"),
+      errorText: widget.control.getString("error_text"),
+      hintText: widget.control.getString("hint_text"),
+      helperText: widget.control.getString("helper_text"),
       menuStyle: MenuStyle(
         backgroundColor:
             parseWidgetStateColor(Theme.of(context), widget.control, "bgcolor"),
         elevation: parseWidgetStateDouble(widget.control, "elevation"),
         fixedSize: WidgetStateProperty.all(Size.fromWidth(menuWidth)),
       ),
-
       inputDecorationTheme: inputDecorationTheme,
       onSelected: disabled
           ? null
