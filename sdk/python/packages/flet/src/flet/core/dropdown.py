@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from typing import List, Optional, Union
 
 from flet.core.buttons import ButtonStyle
+from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber, control
 from flet.core.form_field_control import FormFieldControl, InputBorder
 from flet.core.icons import Icons
@@ -41,7 +42,7 @@ class DropdownOption(Option):
 
 
 @control("Dropdown")
-class Dropdown(FormFieldControl):
+class Dropdown(ConstrainedControl):
     """
     A dropdown control that allows users to select a single option from a list of options.
     -----
@@ -49,17 +50,16 @@ class Dropdown(FormFieldControl):
     """
 
     value: Optional[str] = None
+    options: Optional[List[Option]] = None
     autofocus: Optional[bool] = field(default=False)
     text_align: Optional[TextAlign] = field(default=TextAlign.START)
     elevation: ControlStateValue[OptionalNumber] = field(default=8)
-    options: Optional[List[Option]] = None
-    label_content: Optional[str] = None
     enable_filter: Optional[bool] = field(default=False)
     enable_search: Optional[bool] = field(default=True)
     editable: Optional[bool] = field(default=False)
     menu_height: OptionalNumber = None
     menu_width: OptionalNumber = None
-    expanded_insets: PaddingValue = None
+    expanded_insets: Optional[PaddingValue] = None
     selected_suffix: Optional[Control] = None
     input_filter: Optional[InputFilter] = None
     capitalization: Optional[TextCapitalization] = None
@@ -102,7 +102,7 @@ class Dropdown(FormFieldControl):
         self.expand_loose = self.expand  # to fix a display issue
 
     def __contains__(self, item):
-        return item in self.__options
+        return item in self.options
 
     def focus(self):
         # TODO
