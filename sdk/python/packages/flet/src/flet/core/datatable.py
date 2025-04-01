@@ -31,19 +31,6 @@ from flet.core.types import (
 
 
 @dataclass
-class OnScrollEvent(ControlEvent):
-    event_type: str = field(metadata={"data_field": "t"})
-    pixels: float = field(metadata={"data_field": "p"})
-    min_scroll_extent: float = field(metadata={"data_field": "minse"})
-    max_scroll_extent: float = field(metadata={"data_field": "maxse"})
-    viewport_dimension: float = field(metadata={"data_field": "vd"})
-    scroll_delta: Optional[float] = field(metadata={"data_field": "sd"}, default=None)
-    direction: Optional[str] = field(metadata={"data_field": "dir"}, default=None)
-    overscroll: Optional[float] = field(metadata={"data_field": "os"}, default=None)
-    velocity: Optional[float] = field(metadata={"data_field": "v"}, default=None)
-
-
-@dataclass
 class DataColumnSortEvent(ControlEvent):
     column_index: int = field(metadata={"data_field": "i"})
     ascending: bool = field(metadata={"data_field": "a"}, default=False)
