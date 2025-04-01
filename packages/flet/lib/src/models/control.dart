@@ -100,14 +100,9 @@ class Control extends ChangeNotifier {
   ///
   /// Returns an empty list if the property is missing.
   List<Control> children(String propertyName, {bool visibleOnly = true}) {
-    var children = properties[propertyName];
-    if (children == null) return [];
-
-    if (children is! List<Control>) {
-      throw FormatException("Expected a List for '$propertyName'", children);
-    }
-
-    return visibleOnly ? children.where((c) => c.visible).toList() : children;
+    return List<Control>.from(properties[propertyName] ?? [])
+        .where((c) => !visibleOnly || c.visible)
+        .toList();
   }
 
   /// Creates a ControlNode from MessagePack–decoded data.
