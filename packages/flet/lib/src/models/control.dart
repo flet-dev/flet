@@ -100,10 +100,7 @@ class Control extends ChangeNotifier {
   ///
   /// Returns an empty list if the property is missing.
   List<Control> children(String propertyName, {bool visibleOnly = true}) {
-    var children = properties[propertyName];
-    if (children == null) return [];
-
-    return List<Control>.from(children)
+    return List<Control>.from(properties[propertyName] ?? [])
         .where((c) => !visibleOnly || c.visible)
         .toList();
   }
