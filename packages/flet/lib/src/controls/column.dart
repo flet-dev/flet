@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
-import '../extensions/control.dart';
 import 'base_controls.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
