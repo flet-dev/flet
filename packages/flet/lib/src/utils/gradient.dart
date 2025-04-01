@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
@@ -10,13 +9,12 @@ import 'colors.dart';
 import 'numbers.dart';
 
 Gradient? parseGradient(ThemeData theme, Control control, String propName) {
-  var v = control.get<String>(propName);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
 
-  final j1 = json.decode(v);
-  return gradientFromJSON(theme, j1);
+  return gradientFromJSON(theme, v);
 }
 
 Gradient? gradientFromJSON(ThemeData? theme, Map<String, dynamic>? json) {
@@ -67,7 +65,7 @@ List<double>? parseStops(dynamic jv) {
   if (list.isEmpty) {
     return null;
   }
-  return list.map((v) => parseDouble(v)).whereNotNull().toList();
+  return list.map((v) => parseDouble(v)).nonNulls.toList();
 }
 
 TileMode? parseTileMode(dynamic jv, [TileMode? defValue]) {

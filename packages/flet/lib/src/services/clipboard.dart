@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 import '../flet_service.dart';
-import '../utils/clipboard.dart';
 
 class ClipboardService extends FletService {
   ClipboardService(super.control, super.backend);
@@ -22,9 +22,10 @@ class ClipboardService extends FletService {
     debugPrint("ClipboardService.$name($args)");
     switch (name) {
       case "set":
-        setClipboard(args["data"]);
+        Clipboard.setData(ClipboardData(text: args["data"]));
       case "get":
-        return getClipboard();
+        var data = await Clipboard.getData(Clipboard.kTextPlain);
+        return data?.text;
       default:
         throw Exception("Unknown Clipboard method: $name");
     }

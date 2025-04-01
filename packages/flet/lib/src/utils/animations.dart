@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -8,13 +6,11 @@ import 'time.dart';
 
 ImplicitAnimationDetails? parseAnimation(Control control, String propName,
     [ImplicitAnimationDetails? defaultValue]) {
-  var v = control.getString(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return defaultValue;
   }
-
-  final j1 = json.decode(v);
-  return animationFromJSON(j1);
+  return animationFromJSON(v);
 }
 
 ImplicitAnimationDetails animationFromJSON(dynamic json) {
@@ -134,13 +130,11 @@ Curve? parseCurve(String? value, [Curve? defValue]) {
 
 AnimationStyle? parseAnimationStyle(Control control, String propName,
     [AnimationStyle? defaultValue]) {
-  var v = control.getString(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return defaultValue;
   }
-
-  final j1 = json.decode(v);
-  return animationStyleFromJSON(j1);
+  return animationStyleFromJSON(v);
 }
 
 AnimationStyle animationStyleFromJSON(dynamic json,

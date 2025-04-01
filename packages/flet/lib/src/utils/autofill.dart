@@ -1,17 +1,13 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 
 List<String>? parseAutofillHints(Control control, String propName) {
-  var v = control.getString(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
-
-  final j1 = json.decode(v);
-  return autofillHintsFromJson(j1);
+  return autofillHintsFromJson(v);
 }
 
 List<String> autofillHintsFromJson(dynamic json) {

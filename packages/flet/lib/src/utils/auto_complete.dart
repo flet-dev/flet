@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -44,13 +42,11 @@ class AutoCompleteSuggestion {
 
 List<AutoCompleteSuggestion> parseAutoCompleteSuggestions(
     Control control, String propName) {
-  var v = control.getString(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return [];
   }
-
-  final j1 = json.decode(v);
-  return autoCompleteSuggestionsFromJSON(j1);
+  return autoCompleteSuggestionsFromJSON(v);
 }
 
 List<AutoCompleteSuggestion> autoCompleteSuggestionsFromJSON(dynamic json) {

@@ -42,13 +42,11 @@ BoxConstraints? boxConstraintsFromJSON(dynamic json,
 List<BoxShadow>? parseBoxShadow(
     ThemeData theme, Control control, String propName,
     [List<BoxShadow>? defValue]) {
-  var v = control.get<String>(propName);
+  var v = control.get(propName);
   if (v == null) {
     return defValue;
   }
-
-  final j1 = json.decode(v);
-  return boxShadowsFromJSON(theme, j1);
+  return boxShadowsFromJSON(theme, v);
 }
 
 List<BoxShadow>? boxShadowsFromJSON(ThemeData theme, dynamic json,
@@ -147,13 +145,11 @@ BoxDecoration? boxDecorationFromDetails({
 
 DecorationImage? parseDecorationImage(ThemeData theme, Control control,
     String propName, PageArgsModel? pageArgs) {
-  var v = control.get<String>(propName);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
-
-  final j1 = json.decode(v);
-  return decorationImageFromJSON(theme, j1, pageArgs);
+  return decorationImageFromJSON(theme, v, pageArgs);
 }
 
 DecorationImage? decorationImageFromJSON(

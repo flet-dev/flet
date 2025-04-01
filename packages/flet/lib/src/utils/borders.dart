@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
@@ -10,13 +9,11 @@ import 'numbers.dart';
 
 BorderRadius? parseBorderRadius(Control control, String propName,
     [BorderRadius? defaultValue]) {
-  var v = control.get<String>(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return defaultValue;
   }
-
-  final j1 = json.decode(v);
-  return borderRadiusFromJSON(j1);
+  return borderRadiusFromJSON(v);
 }
 
 Radius? parseRadius(Control control, String propName, [Radius? defaultValue]) {
@@ -30,34 +27,30 @@ Radius? parseRadius(Control control, String propName, [Radius? defaultValue]) {
 
 Border? parseBorder(ThemeData theme, Control control, String propName,
     [Color? defaultSideColor]) {
-  var v = control.get<String>(propName, null);
+  var v = control.get(
+    propName,
+  );
   if (v == null) {
     return null;
   }
-
-  final j1 = json.decode(v);
-  return borderFromJSON(theme, j1, defaultSideColor);
+  return borderFromJSON(theme, v, defaultSideColor);
 }
 
 BorderSide? parseBorderSide(ThemeData theme, Control control, String propName,
     {Color? defaultSideColor}) {
-  var v = control.get<String>(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
-
-  final j1 = json.decode(v);
-  return borderSideFromJSON(theme, j1, defaultSideColor);
+  return borderSideFromJSON(theme, v, defaultSideColor);
 }
 
 OutlinedBorder? parseOutlinedBorder(Control control, String propName) {
-  var v = control.get<String>(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
-
-  final j1 = json.decode(v);
-  return outlinedBorderFromJSON(j1);
+  return outlinedBorderFromJSON(v);
 }
 
 BorderRadius? borderRadiusFromJSON(dynamic json, [BorderRadius? defaultValue]) {
@@ -68,10 +61,10 @@ BorderRadius? borderRadiusFromJSON(dynamic json, [BorderRadius? defaultValue]) {
     return BorderRadius.all(Radius.circular(parseDouble(json, 0)!));
   }
   return BorderRadius.only(
-    topLeft: Radius.circular(parseDouble(json['tl'], 0)!),
-    topRight: Radius.circular(parseDouble(json['tr'], 0)!),
-    bottomLeft: Radius.circular(parseDouble(json['bl'], 0)!),
-    bottomRight: Radius.circular(parseDouble(json['br'], 0)!),
+    topLeft: Radius.circular(parseDouble(json['top_left'], 0)!),
+    topRight: Radius.circular(parseDouble(json['top_right'], 0)!),
+    bottomLeft: Radius.circular(parseDouble(json['bottom_left'], 0)!),
+    bottomRight: Radius.circular(parseDouble(json['bottom_right'], 0)!),
   );
 }
 
@@ -81,13 +74,13 @@ Border? borderFromJSON(ThemeData? theme, Map<String, dynamic>? json,
     return defaultBorder;
   }
   return Border(
-      top: borderSideFromJSON(theme, json['t'], defaultSideColor) ??
+      top: borderSideFromJSON(theme, json['top'], defaultSideColor) ??
           BorderSide.none,
-      right: borderSideFromJSON(theme, json['r'], defaultSideColor) ??
+      right: borderSideFromJSON(theme, json['right'], defaultSideColor) ??
           BorderSide.none,
-      bottom: borderSideFromJSON(theme, json['b'], defaultSideColor) ??
+      bottom: borderSideFromJSON(theme, json['bottom'], defaultSideColor) ??
           BorderSide.none,
-      left: borderSideFromJSON(theme, json['l'], defaultSideColor) ??
+      left: borderSideFromJSON(theme, json['left'], defaultSideColor) ??
           BorderSide.none);
 }
 
@@ -95,10 +88,11 @@ BorderSide? borderSideFromJSON(ThemeData? theme, dynamic json,
     [Color? defaultSideColor]) {
   return json != null
       ? BorderSide(
-          color:
-              parseColor(theme, json['c'], defaultSideColor ?? Colors.black)!,
-          width: parseDouble(json['w'], 1)!,
-          strokeAlign: parseDouble(json['sa'], BorderSide.strokeAlignInside)!,
+          color: parseColor(
+              theme, json['color'], defaultSideColor ?? Colors.black)!,
+          width: parseDouble(json['width'], 1)!,
+          strokeAlign:
+              parseDouble(json['stroke_align'], BorderSide.strokeAlignInside)!,
           style: BorderStyle.solid)
       : null;
 }
@@ -128,18 +122,17 @@ OutlinedBorder? outlinedBorderFromJSON(Map<String, dynamic>? json) {
 
 WidgetStateBorderSide? parseWidgetStateBorderSide(
     ThemeData theme, Control control, String propName) {
-  var v = control.get<String>(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
-
-  var j = json.decode(v);
-  if (j is Map<String, dynamic> && (j.containsKey("w") || j.containsKey("c"))) {
-    j = {"default": j};
+  if (v is Map<String, dynamic> &&
+      (v.containsKey("width") || v.containsKey("color"))) {
+    v = {"default": v};
   }
 
   return WidgetStateBorderSideFromJSON(
-      j, (jv) => borderSideFromJSON(theme, jv), BorderSide.none);
+      v, (jv) => borderSideFromJSON(theme, jv), BorderSide.none);
 }
 
 class WidgetStateBorderSideFromJSON extends WidgetStateBorderSide {
@@ -187,5 +180,5 @@ WidgetStateProperty<OutlinedBorder?>? parseWidgetStateOutlinedBorder(
   }
 
   return getWidgetStateProperty<OutlinedBorder?>(
-      jsonDecode(v), (jv) => outlinedBorderFromJSON(jv), null);
+      v, (jv) => outlinedBorderFromJSON(jv), null);
 }
