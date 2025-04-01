@@ -160,16 +160,14 @@ class BaseControl:
     def invoke_method_async(
         self,
         method_name: str,
-        arguments: Optional[Dict[str, str]] = None,
+        arguments: Optional[Dict[str, Any]] = None,
         wait_for_result: bool = True,
         timeout: Optional[float] = 10,
     ) -> Any:
-        # assert (
-        #     self.__page
-        # ), f"{self.__class__.__qualname__} Control must be added to the page first"
-        # if arguments:
-        #     # remove items with None values and convert other values to string
-        #     arguments = {k: str(v) for k, v in arguments.items() if v is not None}
+        assert (
+            self.page
+        ), f"{self.__class__.__qualname__} Control must be added to the page first"
+
         # return self.__page._invoke_method_async(
         #     control_id=self.uid,
         #     method_name=method_name,

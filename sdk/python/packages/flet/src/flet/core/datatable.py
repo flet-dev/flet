@@ -1,32 +1,21 @@
-import json
 from dataclasses import dataclass, field
-from typing import Any, List, Optional, Union
+from typing import List, Optional
 
-from flet.core.animation import AnimationValue
-from flet.core.badge import BadgeValue
 from flet.core.border import Border, BorderSide
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber, control
 from flet.core.control_event import ControlEvent
-from flet.core.event_handler import EventHandler
 from flet.core.gesture_detector import TapEvent
 from flet.core.gradients import Gradient
-from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
-from flet.core.tooltip import TooltipValue
 from flet.core.types import (
     BorderRadiusValue,
     ClipBehavior,
-    ColorEnums,
     ColorValue,
     ControlStateValue,
     MainAxisAlignment,
-    OffsetValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
-    ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
 )
 
 
@@ -36,7 +25,7 @@ class DataColumnSortEvent(ControlEvent):
     ascending: bool = field(metadata={"data_field": "a"}, default=False)
 
 
-@control("DataColumn")
+@control("DataColumn", kw_only=True)
 class DataColumn(Control):
     label: Control
     numeric: Optional[bool] = field(default=False)
@@ -46,10 +35,10 @@ class DataColumn(Control):
 
     def before_update(self):
         super().before_update()
-        assert self.__label.visible, "label must be visible"
+        assert self.label.visible, "label must be visible"
 
 
-@control("DataCell")
+@control("DataCell", kw_only=True)
 class DataCell(Control):
     content: Control
     placeholder: Optional[bool] = field(default=False)
@@ -62,39 +51,38 @@ class DataCell(Control):
 
     def before_update(self):
         super().before_update()
-        assert self.__content.visible, "content must be visible"
+        assert self.content.visible, "content must be visible"
 
 
 @control("DataRow")
 class DataRow(Control):
-
-    cells: List[DataCell]
+    cells: List[DataCell] = field(default_factory=list)
     color: ControlStateValue[ColorValue] = None
     selected: Optional[bool] = field(default=False)
     on_long_press: OptionalControlEventCallable = None
     on_select_changed: OptionalControlEventCallable = None
 
     def __contains__(self, item):
-        return item in self.__cells
+        return item in self.cells
 
     def before_update(self):
         super().before_update()
         assert any(
-            cell.visible for cell in self.__cells
+            cell.visible for cell in self.cells
         ), "cells must contain at minimum one visible DataCell"
         assert all(
-            isinstance(cell, DataCell) for cell in self.__cells
+            isinstance(cell, DataCell) for cell in self.cells
         ), "cells must contain only DataCell instances"
 
 
 @control("DataTable")
 class DataTable(ConstrainedControl):
 
-    columns: List[DataColumn]
-    rows: Optional[List[DataRow]] = None
+    columns: List[DataColumn] = field(default_factory=list)
+    rows: List[DataRow] = field(default_factory=list)
     sort_ascending: Optional[bool] = field(default=False)
     show_checkbox_column: Optional[bool] = field(default=False)
-    sort_column_index: Optional[int] = (None,)
+    sort_column_index: Optional[int] = None
     show_bottom_border: Optional[bool] = field(default=False)
     border: Optional[Border] = None
     border_radius: Optional[BorderRadiusValue] = None
@@ -117,12 +105,12 @@ class DataTable(ConstrainedControl):
     on_select_all: OptionalControlEventCallable = None
 
     def __contains__(self, item):
-        return item in self.__columns or item in self.__rows
+        return item in self.columns or item in self.rows
 
     def before_update(self):
         super().before_update()
-        visible_columns = list(filter(lambda column: column.visible, self.__columns))
-        visible_rows = list(filter(lambda row: row.visible, self.__rows))
+        visible_columns = list(filter(lambda column: column.visible, self.columns))
+        visible_rows = list(filter(lambda row: row.visible, self.rows))
         assert (
             len(visible_columns) > 0
         ), "columns must contain at minimum one visible DataColumn"
@@ -142,8 +130,8 @@ class DataTable(ConstrainedControl):
             0 <= self.sort_column_index < len(visible_columns)
         ), f"sort_column_index must be greater than or equal to 0 and less than the number of columns ({len(visible_columns)})"
         assert all(
-            isinstance(column, DataColumn) for column in self.__columns
+            isinstance(column, DataColumn) for column in self.columns
         ), "columns must contain only DataColumn instances"
         assert all(
-            isinstance(row, DataRow) for row in self.__rows
+            isinstance(row, DataRow) for row in self.rows
         ), "rows must contain only DataRow instances"

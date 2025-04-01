@@ -16,11 +16,11 @@ from typing import (
 from warnings import warn
 
 from flet.core.border_radius import BorderRadius
-from flet.core.colors import Colors, colors
+from flet.core.colors import Colors
 from flet.core.control_event import ControlEvent
 from flet.core.cupertino_colors import CupertinoColors
 from flet.core.cupertino_icons import CupertinoIcons
-from flet.core.icons import Icons, icons
+from flet.core.icons import Icons
 from flet.core.margin import Margin
 from flet.core.padding import Padding
 from flet.core.transform import Offset, Rotate, Scale
@@ -393,12 +393,12 @@ class OnFocusEvent(ControlEvent):
 
 
 # Colors
-ColorEnums = (colors, Colors, CupertinoColors)
-ColorValue = Union[str, colors, Colors, CupertinoColors]
+ColorEnums = (Colors, CupertinoColors)
+ColorValue = Union[str, Colors, CupertinoColors]
 
 # Icons
-IconEnums = (icons, Icons, CupertinoIcons)
-IconValue = Union[str, icons, Icons, CupertinoIcons]
+IconEnums = (Icons, CupertinoIcons)
+IconValue = Union[str, Icons, CupertinoIcons]
 IconValueOrControl = Union[IconValue, "Control"]
 
 # ControlState
@@ -414,5 +414,4 @@ Wrapper = Callable[..., Any]
 
 # Protocols
 class SupportsStr(Protocol):
-    def __str__(self) -> str:
-        ...
+    def __str__(self) -> str: ...
