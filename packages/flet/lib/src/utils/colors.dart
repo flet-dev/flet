@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -247,8 +245,8 @@ WidgetStateProperty<Color?>? parseWidgetStateColor(
     return null;
   }
 
-  return getWidgetStateProperty<Color?>(jsonDecode(v),
-      (jv) => HexColor.fromString(theme, jv as String), defaultValue);
+  return getWidgetStateProperty<Color?>(
+      v, (jv) => HexColor.fromString(theme, jv as String), defaultValue);
 }
 
 Color? parseColor(ThemeData? theme, String? colorString,

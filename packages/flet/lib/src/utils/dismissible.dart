@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
@@ -18,13 +16,11 @@ DismissDirection? parseDismissDirection(String? value,
 
 Map<DismissDirection, double>? parseDismissThresholds(
     Control control, String propName) {
-  var v = control.get<String>(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
-
-  final j1 = json.decode(v);
-  return getDismissThresholds(j1, (jv) => parseDouble(jv, 0)!);
+  return getDismissThresholds(v, (jv) => parseDouble(jv, 0)!);
 }
 
 Map<DismissDirection, double>? getDismissThresholds<T>(

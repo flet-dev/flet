@@ -13,7 +13,6 @@ Gradient? parseGradient(ThemeData theme, Control control, String propName) {
   if (v == null) {
     return null;
   }
-
   return gradientFromJSON(theme, v);
 }
 

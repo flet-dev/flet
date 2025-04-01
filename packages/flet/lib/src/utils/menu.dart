@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -21,15 +19,13 @@ MenuStyle? parseMenuStyle(ThemeData theme, Control control, String propName,
     EdgeInsets? defaultPadding,
     BorderSide? defaultBorderSide,
     OutlinedBorder? defaultShape}) {
-  var v = control.get<String>(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
-
-  final j1 = json.decode(v);
   return menuStyleFromJSON(
       theme,
-      j1,
+      v,
       defaultBackgroundColor,
       defaultShadowColor,
       defaultSurfaceTintColor,

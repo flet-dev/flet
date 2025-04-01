@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:collection/collection.dart';
@@ -12,14 +11,11 @@ import 'images.dart';
 import 'others.dart';
 
 Paint parsePaint(ThemeData theme, Control control, String propName) {
-  var v = control.get<String>(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return Paint();
   }
-
-  final j1 = json.decode(v);
-
-  return paintFromJSON(theme, j1);
+  return paintFromJSON(theme, v);
 }
 
 PaintingStyle? parsePaintingStyle(String? value, [PaintingStyle? defValue]) {
@@ -32,17 +28,15 @@ PaintingStyle? parsePaintingStyle(String? value, [PaintingStyle? defValue]) {
 }
 
 List<double>? parsePaintStrokeDashPattern(Control control, String propName) {
-  var v = control.get<String>(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
 
-  final j1 = json.decode(v);
-
-  return j1["stroke_dash_pattern"] != null
-      ? (j1["stroke_dash_pattern"] as List)
+  return v["stroke_dash_pattern"] != null
+      ? (v["stroke_dash_pattern"] as List)
           .map((e) => parseDouble(e))
-          .whereNotNull()
+          .nonNulls
           .toList()
       : null;
 }

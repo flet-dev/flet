@@ -4,11 +4,10 @@ import '../models/control.dart';
 
 Map<String, dynamic>? parseLocaleConfiguration(
     Control control, String propName) {
-  var v = control.get<String>(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
-
   return localeConfigurationFromJSON(v);
 }
 

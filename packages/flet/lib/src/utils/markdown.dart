@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_highlight/theme_map.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -35,14 +33,13 @@ Map<String, TextStyle> parseMarkdownCodeTheme(
   String propName,
   ThemeData theme,
 ) {
-  final v = control.getString(propName);
+  final v = control.get(propName);
   if (v == null) {
     return {};
   }
-  dynamic j = json.decode(v);
-  if (j is String) {
-    return themeMap[j.toLowerCase()] ?? {};
-  } else if (j is Map<String, dynamic>) {
+  if (v is String) {
+    return themeMap[v.toLowerCase()] ?? {};
+  } else if (v is Map<String, dynamic>) {
     String transformKey(String key) {
       switch (key) {
         case 'class_name':
@@ -55,7 +52,7 @@ Map<String, TextStyle> parseMarkdownCodeTheme(
     }
 
     final resultMap =
-        j.map((key, value) => MapEntry(key, textStyleFromJson(theme, value)));
+        v.map((key, value) => MapEntry(key, textStyleFromJson(theme, value)));
     resultMap.removeWhere(
         (key, value) => value == null); // remove entries with null values
     return resultMap.map((key, value) => MapEntry(transformKey(key), value!));
@@ -65,16 +62,15 @@ Map<String, TextStyle> parseMarkdownCodeTheme(
 
 MarkdownStyleSheet? parseMarkdownStyleSheet(Control control, String propName,
     ThemeData theme, PageArgsModel? pageArgs) {
-  var v = control.getString(propName);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
-  dynamic j = json.decode(v);
-  return markdownStyleSheetFromJson(theme, j, pageArgs);
+  return markdownStyleSheetFromJson(theme, v, pageArgs);
 }
 
 MarkdownStyleSheet markdownStyleSheetFromJson(
-    ThemeData theme, Map<String, dynamic> j, PageArgsModel? pageArgs) {
+    ThemeData theme, Map<dynamic, dynamic> j, PageArgsModel? pageArgs) {
   TextStyle? parseTextStyle(String propName) {
     return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
   }

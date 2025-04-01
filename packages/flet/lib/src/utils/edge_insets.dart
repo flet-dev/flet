@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/widgets.dart';
 
 import '../models/control.dart';
@@ -8,13 +6,11 @@ import 'numbers.dart';
 
 EdgeInsets? parseEdgeInsets(Control control, String propName,
     [EdgeInsets? defaultValue]) {
-  var v = control.get<String>(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return defaultValue;
   }
-
-  final j1 = json.decode(v);
-  return edgeInsetsFromJson(j1, defaultValue);
+  return edgeInsetsFromJson(v, defaultValue);
 }
 
 EdgeInsets? edgeInsetsFromJson(dynamic json, [EdgeInsets? defaultValue]) {
@@ -24,22 +20,20 @@ EdgeInsets? edgeInsetsFromJson(dynamic json, [EdgeInsets? defaultValue]) {
     return EdgeInsets.all(parseDouble(json, 0)!);
   }
   return EdgeInsets.fromLTRB(
-      parseDouble(json['l'], 0)!,
-      parseDouble(json['t'], 0)!,
-      parseDouble(json['r'], 0)!,
-      parseDouble(json['b'], 0)!);
+      parseDouble(json['left'], 0)!,
+      parseDouble(json['top'], 0)!,
+      parseDouble(json['right'], 0)!,
+      parseDouble(json['bottom'], 0)!);
 }
 
 EdgeInsetsDirectional? parseEdgeInsetsDirectional(
     Control control, String propName,
     [EdgeInsetsDirectional? defaultValue]) {
-  var v = control.get<String>(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return defaultValue;
   }
-
-  final j1 = json.decode(v);
-  return edgeInsetsDirectionalFromJson(j1, defaultValue);
+  return edgeInsetsDirectionalFromJson(v, defaultValue);
 }
 
 EdgeInsetsDirectional? edgeInsetsDirectionalFromJson(dynamic json,
@@ -50,10 +44,10 @@ EdgeInsetsDirectional? edgeInsetsDirectionalFromJson(dynamic json,
     return EdgeInsetsDirectional.all(parseDouble(json, 0)!);
   }
   return EdgeInsetsDirectional.fromSTEB(
-      parseDouble(json['l'], 0)!,
-      parseDouble(json['t'], 0)!,
-      parseDouble(json['r'], 0)!,
-      parseDouble(json['b'], 0)!);
+      parseDouble(json['left'], 0)!,
+      parseDouble(json['top'], 0)!,
+      parseDouble(json['right'], 0)!,
+      parseDouble(json['bottom'], 0)!);
 }
 
 WidgetStateProperty<EdgeInsets?>? parseWidgetStateEdgeInsets(
@@ -65,5 +59,5 @@ WidgetStateProperty<EdgeInsets?>? parseWidgetStateEdgeInsets(
   }
 
   return getWidgetStateProperty<EdgeInsets?>(
-      jsonDecode(v), (jv) => edgeInsetsFromJson(jv), defaultValue);
+      v, (jv) => edgeInsetsFromJson(jv), defaultValue);
 }
