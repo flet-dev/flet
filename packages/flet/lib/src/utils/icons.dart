@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -17,13 +15,10 @@ IconData? parseIcon(String? iconName, [IconData? defaultIcon]) {
 
 WidgetStateProperty<Icon?>? parseWidgetStateIcon(
     ThemeData theme, Control control, String propName) {
-  var v = control.get<String>(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
-
-  final j1 = json.decode(v);
-
   return getWidgetStateProperty<Icon?>(
-      j1, (jv) => Icon(parseIcon(jv as String)));
+      v, (jv) => Icon(parseIcon(jv as String)));
 }
