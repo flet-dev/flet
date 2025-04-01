@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -25,7 +23,7 @@ WidgetStateProperty<double?>? parseWidgetStateDouble(
     return null;
   }
   return getWidgetStateProperty<double?>(
-      jsonDecode(v), (jv) => parseDouble(jv), defaultValue);
+      v, (jv) => parseDouble(jv), defaultValue);
 }
 
 int? parseInt(dynamic v, [int? defValue]) {
@@ -44,8 +42,7 @@ WidgetStateProperty<int?>? parseWidgetStateInt(Control control, String propName,
   if (v == null) {
     return null;
   }
-  return getWidgetStateProperty<int?>(
-      jsonDecode(v), (jv) => parseInt(jv), defaultValue);
+  return getWidgetStateProperty<int?>(v, (jv) => parseInt(jv), defaultValue);
 }
 
 bool? parseBool(dynamic v, [bool? defValue]) {
@@ -65,6 +62,5 @@ WidgetStateProperty<bool?>? parseWidgetStateBool(
   if (v == null) {
     return null;
   }
-  return getWidgetStateProperty<bool?>(
-      jsonDecode(v), (jv) => parseBool(jv), defaultValue);
+  return getWidgetStateProperty<bool?>(v, (jv) => parseBool(jv), defaultValue);
 }

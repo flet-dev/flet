@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -9,13 +6,11 @@ import 'numbers.dart';
 
 RotationDetails? parseRotate(Control control, String propName,
     [RotationDetails? defaultValue]) {
-  var v = control.get<String>(propName);
+  var v = control.get(propName);
   if (v == null) {
     return defaultValue;
   }
-
-  final j1 = json.decode(v);
-  return rotateFromJSON(j1, defaultValue);
+  return rotateFromJSON(v, defaultValue);
 }
 
 RotationDetails rotateFromJSON(dynamic json, [RotationDetails? defaultValue]) {
@@ -32,13 +27,11 @@ RotationDetails rotateFromJSON(dynamic json, [RotationDetails? defaultValue]) {
 
 ScaleDetails? parseScale(Control control, String propName,
     [ScaleDetails? defaultValue]) {
-  var v = control.get<String>(propName);
+  var v = control.get(propName);
   if (v == null) {
     return defaultValue;
   }
-
-  final j1 = json.decode(v);
-  return scaleFromJSON(j1, defaultValue);
+  return scaleFromJSON(v, defaultValue);
 }
 
 ScaleDetails? scaleFromJSON(dynamic json, [ScaleDetails? defaultValue]) {
@@ -57,13 +50,11 @@ ScaleDetails? scaleFromJSON(dynamic json, [ScaleDetails? defaultValue]) {
 }
 
 Offset? parseOffset(Control control, String propName, [Offset? defaultValue]) {
-  var v = control.get<String>(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return defaultValue;
   }
-
-  final j1 = json.decode(v);
-  return offsetFromJSON(j1, defaultValue);
+  return offsetFromJSON(v, defaultValue);
 }
 
 Offset? offsetFromJSON(dynamic json, [Offset? defaultValue]) {
@@ -76,13 +67,11 @@ Offset? offsetFromJSON(dynamic json, [Offset? defaultValue]) {
 
 List<Offset>? parseOffsetList(Control control, String propName,
     [List<Offset>? defaultValue]) {
-  var v = control.get<String>(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return defaultValue;
   }
-
-  final j1 = json.decode(v);
-  return (j1 as List).map((e) => offsetFromJSON(e)).whereNotNull().toList();
+  return (v as List).map((e) => offsetFromJSON(e)).nonNulls.toList();
 }
 
 OffsetDetails offsetDetailsFromJSON(dynamic json) {

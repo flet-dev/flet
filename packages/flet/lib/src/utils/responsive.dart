@@ -1,18 +1,15 @@
-import 'dart:convert';
-
 import '../models/control.dart';
 import '../utils/numbers.dart';
 
 Map<String, double> parseResponsiveNumber(
     Control control, String propName, double defaultValue) {
-  var v = control.getString(propName, null);
+  var v = control.get(propName);
   Map<String, double> result = {};
   if (v != null) {
-    var j = json.decode(v);
-    if (j is! Map<String, dynamic>) {
-      j = {"": j};
+    if (v is! Map<String, dynamic>) {
+      v = {"": v};
     }
-    result = responsiveNumberFromJson(j);
+    result = responsiveNumberFromJson(v);
   }
   if (result[""] == null) {
     result[""] = defaultValue;

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
@@ -27,12 +25,11 @@ TooltipTriggerMode? parseTooltipTriggerMode(String? value,
 
 Tooltip? parseTooltip(
     Control control, String propName, Widget widget, ThemeData theme) {
-  var v = control.get<String>(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
-  final j = json.decode(v);
-  return tooltipFromJSON(j, widget, theme);
+  return tooltipFromJSON(v, widget, theme);
 }
 
 Tooltip? tooltipFromJSON(dynamic j, Widget widget, ThemeData theme) {

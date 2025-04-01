@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
@@ -78,13 +77,11 @@ SliderInteraction? parseSliderInteraction(String? value,
 }
 
 Size? parseSize(Control control, String propName, [Size? defValue]) {
-  var v = control.get<String>(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return defValue;
   }
-
-  final j1 = json.decode(v);
-  return sizeFromJson(j1, defValue);
+  return sizeFromJson(v, defValue);
 }
 
 Size? sizeFromJson(Map<String, dynamic>? json, [Size? defValue]) {

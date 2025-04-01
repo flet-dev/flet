@@ -68,7 +68,7 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
           }
           break;
         case "reset":
-          var duration = durationFromString(args["duration"]);
+          var duration = durationFromJSON(args["duration"]);
           if (duration == null) {
             _transformationController.value = Matrix4.identity();
           } else {

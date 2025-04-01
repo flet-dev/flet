@@ -1,17 +1,13 @@
-import 'dart:convert';
-
 import '../models/control.dart';
 import 'numbers.dart';
 
 Duration? parseDuration(Control control, String propName,
     [Duration? defaultValue]) {
-  var v = control.get<String>(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return defaultValue;
   }
-
-  final j1 = json.decode(v);
-  return durationFromJSON(j1);
+  return durationFromJSON(v);
 }
 
 Duration? durationFromJSON(dynamic json, [Duration? defaultValue]) {
@@ -28,10 +24,4 @@ Duration? durationFromJSON(dynamic json, [Duration? defaultValue]) {
       seconds: parseInt(json["seconds"], 0)!,
       milliseconds: parseInt(json["milliseconds"], 0)!,
       microseconds: parseInt(json["microseconds"], 0)!);
-}
-
-Duration? durationFromString(String? duration, [Duration? defaultValue]) {
-  return duration != null
-      ? durationFromJSON(json.decode(duration), defaultValue)
-      : defaultValue;
 }

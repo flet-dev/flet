@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/services.dart';
 
 import '../models/control.dart';
@@ -7,13 +5,11 @@ import '../utils/numbers.dart';
 
 FilteringTextInputFormatter? parseInputFilter(
     Control control, String propName) {
-  var v = control.getString(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
-
-  final j1 = json.decode(v);
-  return inputFilterFromJSON(j1);
+  return inputFilterFromJSON(v);
 }
 
 FilteringTextInputFormatter? inputFilterFromJSON(dynamic json) {
