@@ -110,7 +110,7 @@ from flet.core.cupertino_app_bar import CupertinoAppBar
 from flet.core.cupertino_bottom_sheet import CupertinoBottomSheet
 from flet.core.cupertino_button import CupertinoButton
 from flet.core.cupertino_checkbox import CupertinoCheckbox
-from flet.core.cupertino_colors import CupertinoColors, cupertino_colors
+from flet.core.cupertino_colors import CupertinoColors
 from flet.core.cupertino_context_menu import CupertinoContextMenu
 from flet.core.cupertino_context_menu_action import CupertinoContextMenuAction
 from flet.core.cupertino_date_picker import (
@@ -120,7 +120,7 @@ from flet.core.cupertino_date_picker import (
 )
 from flet.core.cupertino_dialog_action import CupertinoDialogAction
 from flet.core.cupertino_filled_button import CupertinoFilledButton
-from flet.core.cupertino_icons import CupertinoIcons, cupertino_icons
+from flet.core.cupertino_icons import CupertinoIcons
 from flet.core.cupertino_list_tile import CupertinoListTile
 from flet.core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.core.cupertino_picker import CupertinoPicker
