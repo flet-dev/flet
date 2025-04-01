@@ -1,11 +1,11 @@
-from typing import Any, Optional
+from typing import Optional
 
 from flet.core.alignment import Axis
-from flet.core.control import Control
-from flet.core.ref import Ref
+from flet.core.control import Control, control
 from flet.core.types import OptionalControlEventCallable
 
 
+@control("Draggable")
 class Draggable(Control):
     """
     A control that can be dragged from to a `DragTarget`.
@@ -113,143 +113,16 @@ class Draggable(Control):
     Online docs: https://flet.dev/docs/controls/draggable
     """
 
-    def __init__(
-        self,
-        content: Control,
-        group: Optional[str] = None,
-        content_when_dragging: Optional[Control] = None,
-        content_feedback: Optional[Control] = None,
-        axis: Optional[Axis] = None,
-        affinity: Optional[Axis] = None,
-        max_simultaneous_drags: Optional[int] = None,
-        on_drag_start: OptionalControlEventCallable = None,
-        on_drag_complete: OptionalControlEventCallable = None,
-        #
-        # Control
-        #
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-    ):
-
-        Control.__init__(
-            self,
-            ref=ref,
-            disabled=disabled,
-            visible=visible,
-            data=data,
-        )
-
-        self.group = group
-        self.content = content
-        self.content_when_dragging = content_when_dragging
-        self.content_feedback = content_feedback
-        self.on_drag_start = on_drag_start
-        self.on_drag_complete = on_drag_complete
-        self.axis = axis
-        self.affinity = affinity
-        self.max_simultaneous_drags = max_simultaneous_drags
-
-    def _get_control_name(self):
-        return "draggable"
-
-    def _get_children(self):
-        self.__content._set_attr_internal("n", "content")
-        children = [self.__content]
-        if self.__content_when_dragging:
-            self.__content_when_dragging._set_attr_internal(
-                "n", "content_when_dragging"
-            )
-            children.append(self.__content_when_dragging)
-        if self.__content_feedback:
-            self.__content_feedback._set_attr_internal("n", "content_feedback")
-            children.append(self.__content_feedback)
-        return children
+    content: Control
+    group: Optional[str] = None
+    content_when_dragging: Optional[Control] = None
+    content_feedback: Optional[Control] = None
+    axis: Optional[Axis] = None
+    affinity: Optional[Axis] = None
+    max_simultaneous_drags: Optional[int] = None
+    on_drag_start: OptionalControlEventCallable = None
+    on_drag_complete: OptionalControlEventCallable = None
 
     def before_update(self):
         super().before_update()
-        assert self.__content.visible, "content must be visible"
-
-    # group
-    @property
-    def group(self) -> Optional[str]:
-        return self._get_attr("group")
-
-    @group.setter
-    def group(self, value: Optional[str]):
-        self._set_attr("group", value)
-
-    # content
-    @property
-    def content(self) -> Control:
-        return self.__content
-
-    @content.setter
-    def content(self, value: Control):
-        self.__content = value
-
-    # content_when_dragging
-    @property
-    def content_when_dragging(self) -> Optional[Control]:
-        return self.__content_when_dragging
-
-    @content_when_dragging.setter
-    def content_when_dragging(self, value: Optional[Control]):
-        self.__content_when_dragging = value
-
-    # content_feedback
-    @property
-    def content_feedback(self) -> Optional[Control]:
-        return self.__content_feedback
-
-    @content_feedback.setter
-    def content_feedback(self, value: Optional[Control]):
-        self.__content_feedback = value
-
-    # max_simultaneous_drags
-    @property
-    def max_simultaneous_drags(self) -> Optional[int]:
-        return self._get_attr("maxSimultaneousDrags")
-
-    @max_simultaneous_drags.setter
-    def max_simultaneous_drags(self, value: Optional[int]):
-        self._set_attr("maxSimultaneousDrags", value)
-
-    # axis
-    @property
-    def axis(self) -> Optional[Axis]:
-        return self.__axis
-
-    @axis.setter
-    def axis(self, value: Optional[Axis]):
-        self.__axis = value
-        self._set_enum_attr("axis", value, Axis)
-
-    # affinity
-    @property
-    def affinity(self) -> Optional[Axis]:
-        return self.__affinity
-
-    @affinity.setter
-    def affinity(self, value: Optional[Axis]):
-        self.__affinity = value
-        self._set_enum_attr("affinity", value, Axis)
-
-    # on_drag_start
-    @property
-    def on_drag_start(self) -> OptionalControlEventCallable:
-        return self._get_event_handler("dragStart")
-
-    @on_drag_start.setter
-    def on_drag_start(self, handler: OptionalControlEventCallable):
-        self._add_event_handler("dragStart", handler)
-
-    # on_drag_complete
-    @property
-    def on_drag_complete(self) -> OptionalControlEventCallable:
-        return self._get_event_handler("dragComplete")
-
-    @on_drag_complete.setter
-    def on_drag_complete(self, handler: OptionalControlEventCallable):
-        self._add_event_handler("dragComplete", handler)
+        assert self.content.visible, "content must be visible"
