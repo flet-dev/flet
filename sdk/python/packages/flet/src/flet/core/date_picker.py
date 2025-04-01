@@ -100,7 +100,6 @@ class DatePicker(Control):
     switch_to_calendar_icon: Optional[IconValue] = None
     switch_to_input_icon: Optional[IconValue] = None
     barrier_color: Optional[ColorValue] = None
-    barrier_color: Optional[ColorValue] = field(default=Colors.BLACK54)
     on_change: OptionalControlEventCallable = None
     on_dismiss: OptionalControlEventCallable = None
     on_entry_mode_change: OptionalEventCallable["DatePickerEntryModeChangeEvent"] = None

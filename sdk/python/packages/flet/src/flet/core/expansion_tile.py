@@ -44,7 +44,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     affinity: Optional[TileAffinity] = None
     expanded_alignment: Optional[Alignment] = None
     expanded_cross_axis_alignment: CrossAxisAlignment = field(
-        default=CrossAxisAlignment.CENTER
+        default_factory=lambda: CrossAxisAlignment.CENTER
     )
     clip_behavior: Optional[ClipBehavior] = None
     initially_expanded: Optional[bool] = field(default=False)
@@ -66,4 +66,4 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert self.__title.visible, "title must be visible"
+        assert self.title.visible, "title must be visible"
