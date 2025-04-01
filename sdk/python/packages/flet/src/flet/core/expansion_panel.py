@@ -5,7 +5,12 @@ from flet.core import padding
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber, control
-from flet.core.types import ColorValue, OptionalControlEventCallable, PaddingValue
+from flet.core.types import (
+    ColorValue,
+    Number,
+    OptionalControlEventCallable,
+    PaddingValue,
+)
 
 
 @control("ExpansionPanel")
@@ -21,8 +26,8 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
     header: Optional[Control] = None
     content: Optional[Control] = None
     bgcolor: Optional[ColorValue] = None
-    expanded: Optional[bool] = field(default=False)
-    can_tap_header: Optional[bool] = field(default=False)
+    expanded: bool = field(default=False)
+    can_tap_header: bool = field(default=False)
 
     def before_update(self):
         super().before_update()
@@ -40,8 +45,8 @@ class ExpansionPanelList(ConstrainedControl):
 
     controls: Optional[List[ExpansionPanel]] = None
     divider_color: Optional[ColorValue] = None
-    elevation: OptionalNumber = field(default=2)
-    expanded_header_padding: Optional[PaddingValue] = field(
+    elevation: Number = field(default=2)
+    expanded_header_padding: PaddingValue = field(
         default_factory=lambda: padding.symmetric(vertical=16.0)
     )
     expand_icon_color: Optional[ColorValue] = None

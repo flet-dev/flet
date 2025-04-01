@@ -1,11 +1,11 @@
-from typing import Any, List, Optional
+from typing import List, Optional
 
 from flet.core.animation import Animation
-from flet.core.control import Control
-from flet.core.ref import Ref
+from flet.core.control import Control, control
 from flet.core.types import OptionalControlEventCallable
 
 
+@control("CupertinoAlertDialog")
 class CupertinoAlertDialog(Control):
     """
     An iOS-style alert dialog.
@@ -86,129 +86,10 @@ class CupertinoAlertDialog(Control):
     Online docs: https://flet.dev/docs/controls/cupertinoalertdialog
     """
 
-    def __init__(
-        self,
-        open: bool = False,
-        modal: bool = False,
-        title: Optional[Control] = None,
-        content: Optional[Control] = None,
-        actions: Optional[List[Control]] = None,
-        inset_animation: Optional[Animation] = None,
-        on_dismiss: OptionalControlEventCallable = None,
-        #
-        # Control
-        #
-        ref: Optional[Ref] = None,
-        disabled: Optional[bool] = None,
-        visible: Optional[bool] = None,
-        data: Any = None,
-        barrier_color: Optional[str] = None,
-    ):
-        Control.__init__(
-            self,
-            ref=ref,
-            disabled=disabled,
-            visible=visible,
-            data=data,
-        )
-
-        self.open = open
-        self.modal = modal
-        self.title = title
-        self.content = content
-        self.actions = actions
-        self.on_dismiss = on_dismiss
-        self.barrier_color = barrier_color
-        self.inset_animation = inset_animation
-
-    def _get_control_name(self):
-        return "cupertinoalertdialog"
-
-    def before_update(self):
-        super().before_update()
-        self._set_attr_json("insetAnimation", self.__inset_animation)
-
-    def _get_children(self):
-        children = []
-        if self.__title:
-            self.__title._set_attr_internal("n", "title")
-            children.append(self.__title)
-        if self.__content:
-            self.__content._set_attr_internal("n", "content")
-            children.append(self.__content)
-        for action in self.__actions:
-            action._set_attr_internal("n", "action")
-            children.append(action)
-        return children
-
-    # open
-    @property
-    def open(self) -> bool:
-        return self._get_attr("open", data_type="bool", def_value=False)
-
-    @open.setter
-    def open(self, value: Optional[bool]):
-        self._set_attr("open", value)
-
-    # modal
-    @property
-    def modal(self) -> bool:
-        return self._get_attr("modal", data_type="bool", def_value=False)
-
-    @modal.setter
-    def modal(self, value: Optional[bool]):
-        self._set_attr("modal", value)
-
-    # title
-    @property
-    def title(self) -> Optional[Control]:
-        return self.__title
-
-    @title.setter
-    def title(self, value: Optional[Control]):
-        self.__title = value
-
-    # inset_animation
-    @property
-    def inset_animation(self) -> Optional[Animation]:
-        return self.__inset_animation
-
-    @inset_animation.setter
-    def inset_animation(self, value: Optional[Animation]):
-        self.__inset_animation = value
-
-    # content
-    @property
-    def content(self) -> Optional[Control]:
-        return self.__content
-
-    @content.setter
-    def content(self, value: Optional[Control]):
-        self.__content = value
-
-    # barrier_color
-    @property
-    def barrier_color(self) -> Optional[str]:
-        return self._get_attr("barrierColor")
-
-    @barrier_color.setter
-    def barrier_color(self, value: Optional[str]):
-        self._set_attr("barrierColor", value)
-
-    # actions
-    @property
-    def actions(self) -> List[Control]:
-        return self.__actions
-
-    @actions.setter
-    def actions(self, value: Optional[List[Control]]):
-        self.__actions = value if value is not None else []
-
-    # on_dismiss
-    @property
-    def on_dismiss(self) -> OptionalControlEventCallable:
-        return self._get_event_handler("dismiss")
-
-    @on_dismiss.setter
-    def on_dismiss(self, handler: OptionalControlEventCallable):
-        self._add_event_handler("dismiss", handler)
+    open: bool = (False,)
+    modal: bool = (False,)
+    title: Optional[Control] = (None,)
+    content: Optional[Control] = (None,)
+    actions: Optional[List[Control]] = (None,)
+    inset_animation: Optional[Animation] = (None,)
+    on_dismiss: OptionalControlEventCallable = (None,)
