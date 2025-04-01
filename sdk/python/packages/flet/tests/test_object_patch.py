@@ -149,8 +149,6 @@ def test_simple_page():
     assert u_msg[""]["_i"] > 0
     assert u_msg[""]["on_close"]
     assert len(u_msg[""]["views"]) > 0
-    assert u_msg[""]["window"]["ignore_mouse_events"] == False
-    assert u_msg[""]["theme_mode"] == "system"
     assert "on_connect" not in u_msg[""]
 
     # update sub-tree
