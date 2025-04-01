@@ -38,8 +38,7 @@ class Control extends ChangeNotifier {
   bool get disabled =>
       properties.containsKey("disabled") && properties["disabled"];
 
-  bool? get adaptive =>
-      properties.containsKey("adaptive") ? properties["adaptive"] : null;
+  bool? get adaptive => properties["adaptive"];
 
   bool get visible =>
       !properties.containsKey("visible") || properties["visible"];
@@ -96,9 +95,7 @@ class Control extends ChangeNotifier {
   ///
   /// If [visibleOnly] is `true` (default), only includes controls that are visible.
   ///
-  /// Throws a [FormatException] if the property exists but is not a `List<Control>`.
-  ///
-  /// Returns an empty list if the property is missing.
+  /// Returns an empty list if the property is missing or null.
   List<Control> children(String propertyName, {bool visibleOnly = true}) {
     return List<Control>.from(properties[propertyName] ?? [])
         .where((c) => !visibleOnly || c.visible)

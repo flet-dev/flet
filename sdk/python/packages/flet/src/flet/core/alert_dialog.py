@@ -14,6 +14,8 @@ from flet.core.types import (
     PaddingValue,
 )
 
+__all__ = ["AlertDialog"]
+
 
 @control("AlertDialog")
 class AlertDialog(AdaptiveControl):

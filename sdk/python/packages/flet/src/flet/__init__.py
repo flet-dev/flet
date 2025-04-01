@@ -49,7 +49,7 @@ from flet.core.autofill_group import (
 )
 from flet.core.badge import Badge
 from flet.core.banner import Banner
-from flet.core.blur import Blur, BlurTileMode
+from flet.core.blur import Blur, BlurTileMode, BlurValue
 from flet.core.border import Border, BorderSide, BorderSideStrokeAlign
 from flet.core.border_radius import BorderRadius
 from flet.core.bottom_app_bar import BottomAppBar
@@ -232,8 +232,6 @@ from flet.core.markdown import (
     MarkdownCodeTheme,
     MarkdownCustomCodeTheme,
     MarkdownExtensionSet,
-    MarkdownSelectionChangeCause,
-    MarkdownSelectionChangeEvent,
     MarkdownStyleSheet,
 )
 from flet.core.menu_bar import MenuBar, MenuStyle
