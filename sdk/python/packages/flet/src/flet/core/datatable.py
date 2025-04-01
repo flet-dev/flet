@@ -33,9 +33,9 @@ class DataColumn(Control):
     heading_row_alignment: Optional[MainAxisAlignment] = None
     on_sort: OptionalEventCallable[DataColumnSortEvent] = None
 
-    def before_update(self):
-        super().before_update()
-        assert self.label.visible, "label must be visible"
+    # def before_update(self):
+    #     super().before_update()
+    #     assert self.label.visible, "label must be visible"
 
 
 @control("DataCell")

@@ -1,8 +1,15 @@
-import dataclasses
 import inspect
 import sys
-from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Optional, get_args, get_type_hints
+from dataclasses import InitVar, dataclass, field
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    ForwardRef,
+    Optional,
+    _eval_type,
+    get_args,
+    get_origin,
+)
 
 if TYPE_CHECKING:
     from .control import Control
@@ -30,19 +37,34 @@ class ControlEvent:
         localns = frame.f_globals.copy()
         localns.update(frame.f_locals)
 
-        # Merge type hints from all classes in the MRO
-        merged_hints = {}
-        for cls in control.__class__.__mro__:
-            try:
-                hints = get_type_hints(cls, globalns=globalns, localns=localns)
-                merged_hints.update(hints)
-            except Exception:
-                continue  # skip if class has unresolved forward refs etc.
+        merged_annotations = {}
 
-        if field_name in merged_hints:
-            callable_type = get_args(merged_hints[field_name])[
-                0
-            ]  # Callable[[EventType], None]
-            return get_args(callable_type)[0][0]  # EventType
-        else:
+        for cls in control.__class__.__mro__:
+            annotations = getattr(cls, "__annotations__", {})
+            for name, annotation in annotations.items():
+                if get_origin(annotation) is InitVar or str(annotation).startswith(
+                    "dataclasses.InitVar"
+                ):
+                    continue  # Skip InitVar
+                if name not in merged_annotations:
+                    merged_annotations[name] = annotation
+
+        if field_name not in merged_annotations:
             return None
+
+        annotation = merged_annotations[field_name]
+
+        try:
+            # Resolve forward refs manually
+            if isinstance(annotation, ForwardRef):
+                annotation = _eval_type(annotation, globalns, localns)
+
+            callable = get_args(annotation)  # callable
+            event_type = get_args(callable[0])[0][0]
+
+            if isinstance(event_type, ForwardRef):
+                event_type = _eval_type(event_type, globalns, localns)
+
+            return event_type
+        except Exception as e:
+            raise Exception(f"[resolve error] {field_name}: {e}")
