@@ -97,7 +97,7 @@ from flet.core.charts.pie_chart_section import PieChartSection
 from flet.core.checkbox import Checkbox
 from flet.core.chip import Chip
 from flet.core.circle_avatar import CircleAvatar
-from flet.core.colors import Colors, colors
+from flet.core.colors import Colors
 from flet.core.column import Column
 from flet.core.container import Container, ContainerTapEvent
 from flet.core.control import Control, Service, control
@@ -215,7 +215,7 @@ from flet.core.grid_view import GridView
 from flet.core.haptic_feedback import HapticFeedback
 from flet.core.icon import Icon
 from flet.core.icon_button import IconButton
-from flet.core.icons import Icons, icons
+from flet.core.icons import Icons
 from flet.core.image import Image
 from flet.core.interactive_viewer import (
     InteractiveViewer,
