@@ -4,7 +4,7 @@ from typing import List, Optional, Union
 from flet.core.buttons import ButtonStyle
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, OptionalNumber, control
-from flet.core.form_field_control import FormFieldControl, InputBorder
+from flet.core.form_field_control import InputBorder
 from flet.core.icons import Icons
 from flet.core.text_style import TextStyle
 from flet.core.textfield import InputFilter, TextCapitalization
