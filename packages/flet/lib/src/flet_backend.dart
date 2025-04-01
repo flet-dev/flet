@@ -244,10 +244,12 @@ class FletBackend extends ChangeNotifier {
 
   void onWindowEvent(String eventName, WindowState windowState) {
     debugPrint("Window event - $eventName: $windowState");
-    var window = page.child("window")!;
-    updateControl(window.id, windowState.toJson());
-    triggerControlEvent(window, "event", {"type": eventName});
-    notifyListeners();
+    var window = page.child("window");
+    if (window != null) {
+      updateControl(window.id, windowState.toJson());
+      triggerControlEvent(window, "event", {"type": eventName});
+      notifyListeners();
+    }
   }
 
   void updatePageSize(Size newSize) async {

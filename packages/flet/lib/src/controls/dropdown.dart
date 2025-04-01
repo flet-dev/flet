@@ -29,7 +29,6 @@ class DropdownControl extends StatefulWidget {
 }
 
 class _DropdownControlState extends State<DropdownControl> {
-  String? _value;
   late final FocusNode _focusNode;
   String? _lastFocusValue;
 
@@ -196,12 +195,8 @@ class _DropdownControlState extends State<DropdownControl> {
     }).toList();
 
     String? value = widget.control.getString("value");
-    if (_value != value) {
-      _value = value;
-    }
-
     if (items.where((item) => item.value == value).isEmpty) {
-      _value = null;
+      value = null;
     }
 
     var focusValue = widget.control.getString("focus");
@@ -229,7 +224,7 @@ class _DropdownControlState extends State<DropdownControl> {
     Widget dropDown = DropdownMenu<String>(
       enabled: !disabled,
       focusNode: _focusNode,
-      initialSelection: _value,
+      initialSelection: value,
       enableFilter: widget.control.getBool("enable_filter", false)!,
       enableSearch: widget.control.getBool("enable_search", true)!,
       menuHeight: widget.control.getDouble("menu_height"),
@@ -279,8 +274,6 @@ class _DropdownControlState extends State<DropdownControl> {
       onSelected: disabled
           ? null
           : (String? value) {
-              debugPrint("DropdownMenu selected value: $value");
-              _value = value!;
               FletBackend.of(context)
                   .updateControl(widget.control.id, {"value": value});
               FletBackend.of(context)
