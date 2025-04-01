@@ -103,11 +103,9 @@ class Control extends ChangeNotifier {
     var children = properties[propertyName];
     if (children == null) return [];
 
-    if (children is! List<Control>) {
-      throw FormatException("Expected a List for '$propertyName'", children);
-    }
-
-    return visibleOnly ? children.where((c) => c.visible).toList() : children;
+    return List<Control>.from(children)
+        .where((c) => !visibleOnly || c.visible)
+        .toList();
   }
 
   /// Creates a ControlNode from MessagePack–decoded data.
