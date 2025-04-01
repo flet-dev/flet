@@ -81,7 +81,7 @@ class DatePicker(Control):
     """
 
     open: bool = False
-    value: Optional[DateTimeValue] = (None,)
+    value: Optional[DateTimeValue] = None
     first_date: DateTimeValue = datetime(year=1900, month=1, day=1)
     last_date: DateTimeValue = datetime(year=2050, month=1, day=1)
     current_date: DateTimeValue = datetime.now()
