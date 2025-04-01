@@ -1,6 +1,8 @@
+from flet.core.control import control
 from flet.core.elevated_button import ElevatedButton
 
 
+@control("FilledButton")
 class FilledButton(ElevatedButton):
     """
     Filled buttons have the most visual impact after the FloatingActionButton (https://flet.dev/docs/controls/floatingactionbutton), and should be used for important, final actions that complete a flow, like Save, Join now, or Confirm.
@@ -25,6 +27,3 @@ class FilledButton(ElevatedButton):
 
     Online docs: https://flet.dev/docs/controls/filledbutton
     """
-
-    def _get_control_name(self):
-        return "filledbutton"
