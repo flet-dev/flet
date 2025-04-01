@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -11,66 +8,61 @@ import 'numbers.dart';
 
 FlGridData parseChartGridData(ThemeData theme, Control control,
     String horizPropName, String vertPropName) {
-  var hv = control.getString(horizPropName, null);
-  var vv = control.getString(vertPropName, null);
+  var hv = control.get(horizPropName);
+  var vv = control.get(vertPropName);
   if (hv == null && vv == null) {
     return const FlGridData(show: false);
   }
 
-  var hj = hv != null ? json.decode(hv) : null;
-  var vj = vv != null ? json.decode(vv) : null;
-  var hLine = flineFromJSON(theme, hj);
-  var vLine = flineFromJSON(theme, vj);
+  var hLine = flineFromJSON(theme, hv);
+  var vLine = flineFromJSON(theme, vv);
 
   return FlGridData(
     show: true,
     drawHorizontalLine: hv != null,
-    horizontalInterval: hj != null && hj["interval"] != null
-        ? parseDouble(hj["interval"])
+    horizontalInterval: hv != null && hv["interval"] != null
+        ? parseDouble(hv["interval"])
         : null,
     getDrawingHorizontalLine:
         hLine == null ? defaultGridLine : (value) => hLine,
     drawVerticalLine: vv != null,
-    verticalInterval: vj != null && vj["interval"] != null
-        ? parseDouble(vj["interval"])
+    verticalInterval: vv != null && vv["interval"] != null
+        ? parseDouble(vv["interval"])
         : null,
     getDrawingVerticalLine: vLine == null ? defaultGridLine : (value) => vLine,
   );
 }
 
 FlLine? parseFlLine(ThemeData theme, Control control, String propName) {
-  var v = control.getString(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
-
-  final j = json.decode(v);
-  return flineFromJSON(theme, j);
+  return flineFromJSON(theme, v);
 }
 
 FlLine? parseSelectedFlLine(ThemeData theme, Control control, String propName,
     Color? color, Gradient? gradient) {
-  var v = control.getString(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
 
-  final j = json.decode(v);
-  if (j == false) {
+  if (v == false) {
     return getInvisibleLine();
-  } else if (j == true) {
+  } else if (v == true) {
     return FlLine(
         color: defaultGetPointColor(color, gradient, 0), strokeWidth: 3);
   }
   return FlLine(
-      color: j['color'] != null
-          ? parseColor(theme, j['color'] as String, Colors.black)!
+      color: v['color'] != null
+          ? parseColor(theme, v['color'] as String, Colors.black)!
           : defaultGetPointColor(color, gradient, 0),
-      strokeWidth: parseDouble(j['width'], 2)!,
-      dashArray: j['dash_pattern'] != null
-          ? (j['dash_pattern'] as List)
+      strokeWidth: parseDouble(v['width'], 2)!,
+      dashArray: v['dash_pattern'] != null
+          ? (v['dash_pattern'] as List)
               .map((e) => parseInt(e))
-              .whereNotNull()
+              .nonNulls
               .toList()
           : null);
 }
@@ -88,7 +80,7 @@ FlLine? flineFromJSON(theme, j) {
       dashArray: j['dash_pattern'] != null
           ? (j['dash_pattern'] as List)
               .map((e) => parseInt(e))
-              .whereNotNull()
+              .nonNulls
               .toList()
           : null);
 }
@@ -100,18 +92,17 @@ FlDotPainter? parseChartDotPainter(
     Color? barColor,
     Gradient? barGradient,
     double percentage) {
-  var v = control.getString(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
 
-  final j = json.decode(v);
-  if (j == false) {
+  if (v == false) {
     return getInvisiblePainter();
-  } else if (j == true) {
+  } else if (v == true) {
     return getDefaultPainter(barColor, barGradient, percentage);
   }
-  return chartDotPainterFromJSON(theme, j, barColor, barGradient, percentage);
+  return chartDotPainterFromJSON(theme, v, barColor, barGradient, percentage);
 }
 
 FlDotPainter? parseChartSelectedDotPainter(
@@ -121,18 +112,17 @@ FlDotPainter? parseChartSelectedDotPainter(
     Color? barColor,
     Gradient? barGradient,
     double percentage) {
-  var v = control.getString(propName, null);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }
 
-  final j = json.decode(v);
-  if (j == false) {
+  if (v == false) {
     return getInvisiblePainter();
-  } else if (j == true) {
+  } else if (v == true) {
     return getDefaultSelectedPainter(barColor, barGradient, percentage);
   }
-  return chartDotPainterFromJSON(theme, j, barColor, barGradient, percentage);
+  return chartDotPainterFromJSON(theme, v, barColor, barGradient, percentage);
 }
 
 FlDotPainter? chartDotPainterFromJSON(
