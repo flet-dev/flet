@@ -25,11 +25,11 @@ class DataColumnSortEvent(ControlEvent):
     ascending: bool = field(metadata={"data_field": "a"}, default=False)
 
 
-@control("DataColumn", kw_only=True)
+@control("DataColumn")
 class DataColumn(Control):
     label: Control
     numeric: Optional[bool] = field(default=False)
-    tooltip: Optional[str] = None
+    # tooltip: Optional[str] = None
     heading_row_alignment: Optional[MainAxisAlignment] = None
     on_sort: OptionalEventCallable[DataColumnSortEvent] = None
 
@@ -38,7 +38,7 @@ class DataColumn(Control):
         assert self.label.visible, "label must be visible"
 
 
-@control("DataCell", kw_only=True)
+@control("DataCell")
 class DataCell(Control):
     content: Control
     placeholder: Optional[bool] = field(default=False)

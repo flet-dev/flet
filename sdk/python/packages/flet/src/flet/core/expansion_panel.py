@@ -42,7 +42,7 @@ class ExpansionPanelList(ConstrainedControl):
     divider_color: Optional[ColorValue] = None
     elevation: OptionalNumber = field(default=2)
     expanded_header_padding: Optional[PaddingValue] = field(
-        default=padding.symmetric(vertical=16.0)
+        default_factory=lambda: padding.symmetric(vertical=16.0)
     )
     expand_icon_color: Optional[ColorValue] = None
     spacing: OptionalNumber = None
