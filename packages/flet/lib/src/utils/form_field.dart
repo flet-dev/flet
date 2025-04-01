@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../controls/create_control.dart';
+import '../controls/control_widget.dart';
 import '../models/control.dart';
 import 'borders.dart';
 import 'box.dart';
@@ -78,13 +78,11 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
   var iconStr = parseIcon(control.getString("icon"));
   var prefixIconData = parseIcon(control.getString("prefixIcon"));
   var prefixIconWidget = prefixIcon != null
-      ? createControl(control, prefixIcon.id, control.disabled,
-          parentAdaptive: adaptive)
+      ? ControlWidget(control: prefixIcon)
       : (prefixIconData != null ? Icon(prefixIconData) : null);
   var suffixIconData = parseIcon(control.getString("suffixIcon"));
   var suffixIconWidget = suffixIcon != null
-      ? createControl(control, suffixIcon.id, control.disabled,
-          parentAdaptive: adaptive)
+      ? ControlWidget(control: suffixIcon)
       : (suffixIconData != null ? Icon(suffixIconData) : null);
   var prefixText = control.getString("prefixText");
   var suffixText = control.getString("suffixText");
@@ -111,7 +109,7 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
   if (inputBorder == FormFieldInputBorder.underline) {
     border = UnderlineInputBorder(
         borderSide: BorderSide(
-            color: borderColor ?? Color(0xFF000000),
+            color: borderColor ?? const Color(0xFF000000),
             width: borderWidth ?? 1.0));
   } else if (inputBorder == FormFieldInputBorder.none) {
     border = InputBorder.none;
@@ -121,7 +119,7 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       borderWidth != null) {
     border = OutlineInputBorder(
         borderSide: BorderSide(
-            color: borderColor ?? Color(0xFF000000),
+            color: borderColor ?? const Color(0xFF000000),
             width: borderWidth ?? 1.0));
     if (borderRadius != null) {
       border =
@@ -133,7 +131,10 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
               ? BorderSide.none
               : BorderSide(
                   color: borderColor ??
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.38),
+                      Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withAlpha((255.0 * 0.38).round()),
                   width: borderWidth ?? 1.0));
     }
   }
@@ -158,8 +159,7 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       contentPadding: parseEdgeInsets(control, "contentPadding"),
       isDense: control.getBool("dense"),
       label: label != null
-          ? createControl(control, label.id, control.disabled,
-              parentAdaptive: adaptive)
+          ? ControlWidget(control: label)
           : control.getString("label") != null
               ? Text(control.getString("label")!)
               : null,
@@ -169,8 +169,7 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       focusedBorder: focusedBorder,
       hoverColor: hoverColor,
       icon: icon != null
-          ? createControl(control, icon.id, control.disabled,
-              parentAdaptive: adaptive)
+          ? ControlWidget(control: icon)
           : iconStr != null
               ? Icon(iconStr)
               : null,
@@ -182,18 +181,9 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       helperStyle: parseTextStyle(Theme.of(context), control, "helperStyle"),
       counterText: counterText,
       counterStyle: parseTextStyle(Theme.of(context), control, "counterStyle"),
-      counter: counter != null
-          ? createControl(control, counter.id, control.disabled,
-              parentAdaptive: adaptive)
-          : null,
-      error: error != null
-          ? createControl(control, error.id, control.disabled,
-              parentAdaptive: adaptive)
-          : null,
-      helper: helper != null
-          ? createControl(control, helper.id, control.disabled,
-              parentAdaptive: adaptive)
-          : null,
+      counter: counter != null ? ControlWidget(control: counter) : null,
+      error: error != null ? ControlWidget(control: error) : null,
+      helper: helper != null ? ControlWidget(control: helper) : null,
       constraints: parseBoxConstraints(control, "sizeConstraints"),
       isCollapsed: control.getBool("collapsed"),
       prefixIconConstraints:
@@ -212,14 +202,8 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       hintMaxLines: control.getInt("hintMaxLines"),
       helperMaxLines: control.getInt("helperMaxLines"),
       prefixStyle: parseTextStyle(Theme.of(context), control, "prefixStyle"),
-      prefix: prefix != null
-          ? createControl(control, prefix.id, control.disabled,
-              parentAdaptive: adaptive)
-          : null,
-      suffix: suffix != null
-          ? createControl(control, suffix.id, control.disabled,
-              parentAdaptive: adaptive)
-          : null,
+      prefix: prefix != null ? ControlWidget(control: prefix) : null,
+      suffix: suffix != null ? ControlWidget(control: suffix) : null,
       suffixIcon: suffixIconWidget ?? customSuffix,
       suffixText:
           suffix == null ? suffixText : null, // ignored if suffix is set
