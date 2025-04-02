@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 import msgpack
+
 from flet.core.control import BaseControl
 from flet.core.object_patch import ObjectPatch
 from flet.core.padding import Padding
@@ -9,6 +10,7 @@ from flet.core.types import Brightness, PagePlatform
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import encode_object_for_msgpack
 from flet.messaging.session import Session
+from flet.pubsub.pubsub_hub import PubSubHub
 from flet.utils import patch_dataclass
 
 
@@ -35,7 +37,9 @@ def test_simple_patch_dataclass():
 
 
 def test_page_patch_dataclass():
-    page = Page(sess=Session(conn=Connection()))
+    conn = Connection()
+    conn.pubsubhub = PubSubHub()
+    page = Page(sess=Session(conn))
 
     assert page.window.width is None
     assert page.window.height is None

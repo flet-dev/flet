@@ -1,11 +1,10 @@
-import copy
 import datetime
 import weakref
 from dataclasses import field
-from enum import Enum
 from typing import Any, List, Optional
 
 import msgpack
+
 from flet.core.buttons import ButtonStyle
 from flet.core.colors import Colors
 from flet.core.control import BaseControl, Control, Service, control
@@ -16,6 +15,7 @@ from flet.core.ref import Ref
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import encode_object_for_msgpack
 from flet.messaging.session import Session
+from flet.pubsub.pubsub_hub import PubSubHub
 
 controls_index = weakref.WeakValueDictionary()
 
@@ -117,14 +117,17 @@ def test_inherited_control_with_overridden_type():
 
 def test_control_ref():
     page_ref = Ref[Page]()
-
-    page = Page(sess=Session(Connection()), ref=page_ref)
+    conn = Connection()
+    conn.pubsubhub = PubSubHub()
+    page = Page(sess=Session(conn), ref=page_ref)
 
     assert page_ref.current == page
 
 
 def test_simple_page():
-    page = Page(sess=Session(Connection()))
+    conn = Connection()
+    conn.pubsubhub = PubSubHub()
+    page = Page(sess=Session(conn))
     page.controls = [Div(cls="div_1", some_value="Text")]
     page.data = 100000
     page.bgcolor = Colors.GREEN
@@ -141,6 +144,9 @@ def test_simple_page():
 
     assert page.parent is None
     assert page.controls[0].parent == page.views[0]
+    assert page.clipboard
+    assert page.clipboard.parent
+    assert page.clipboard.page
 
     print(u_msg)
 

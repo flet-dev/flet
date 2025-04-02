@@ -1,3 +1,4 @@
+import asyncio
 from typing import Optional
 
 from flet.core.control import Service, control
@@ -11,13 +12,19 @@ class BrowserContextMenu(Service):
         Service.__post_init__(self, ref)
         self.__disabled = False
 
-    def enable(self, wait_timeout: Optional[float] = 10):
-        self.invoke_method("enable_menu", timeout=wait_timeout)
+    async def enable_async(self, wait_timeout: Optional[float] = None):
+        await self._invoke_method_async("enable_menu", timeout=wait_timeout)
         self.__disabled = False
 
-    def disable(self, wait_timeout: Optional[float] = 10):
-        self.invoke_method("disable_menu", timeout=wait_timeout)
+    def enable(self, wait_timeout: Optional[float] = None):
+        asyncio.create_task(self.enable_async(wait_timeout))
+
+    async def disable_async(self, wait_timeout: Optional[float] = None):
+        await self._invoke_method_async("disable_menu", timeout=wait_timeout)
         self.__disabled = True
+
+    def disable(self, wait_timeout: Optional[float] = None):
+        asyncio.create_task(self.disable_async(wait_timeout))
 
     @property
     def disabled(self):

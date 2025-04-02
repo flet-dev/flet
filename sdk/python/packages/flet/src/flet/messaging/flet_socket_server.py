@@ -1,21 +1,21 @@
 import asyncio
-import json
 import logging
 import os
-import struct
 import sys
 import tempfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import Any, Optional
+
+import msgpack
 
 import flet
-import msgpack
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,
     ClientMessage,
     ControlEventBody,
+    InvokeMethodResponseBody,
     RegisterClientRequestBody,
     RegisterClientResponseBody,
     UpdateControlPropsBody,
@@ -44,10 +44,10 @@ class FletSocketServer(Connection):
         self.__uds_path = uds_path
         self.__on_session_created = on_session_created
         self.__blocking = blocking
-        self.__loop = loop
-        self.__executor = executor
-        self.pubsubhub = PubSubHub(loop=loop, executor=executor)
         self.__running_tasks = set()
+        self.loop = loop
+        self.executor = executor
+        self.pubsubhub = PubSubHub(loop=loop, executor=executor)
 
     async def start(self):
         self.__connected = False
@@ -157,6 +157,13 @@ class FletSocketServer(Connection):
         elif action == ClientAction.UPDATE_CONTROL_PROPS:
             req = UpdateControlPropsBody(**body)
             self.session.apply_patch(req.id, req.props)
+
+        elif action == ClientAction.INVOKE_METHOD:
+            req = InvokeMethodResponseBody(**body)
+            self.session.handle_invoke_method_results(
+                req.control_id, req.call_id, req.result, req.error
+            )
+
         else:
             # it's something else
             raise Exception(f'Unknown message "{action}": {body}')
@@ -170,7 +177,7 @@ class FletSocketServer(Connection):
         m = msgpack.packb(
             [message.action, message.body], default=encode_object_for_msgpack
         )
-        self.__loop.call_soon_threadsafe(self.__send_queue.put_nowait, m)
+        self.loop.call_soon_threadsafe(self.__send_queue.put_nowait, m)
 
     async def close(self):
         logger.debug("Closing connection...")
@@ -179,12 +186,12 @@ class FletSocketServer(Connection):
         if self.session:
             await self.session.disconnect(0)
 
-        if self.__executor:
+        if self.executor:
             logger.debug("Shutting down thread pool...")
             if sys.version_info >= (3, 9):
-                self.__executor.shutdown(wait=False, cancel_futures=True)
+                self.executor.shutdown(wait=False, cancel_futures=True)
             else:
-                self.__executor.shutdown(wait=False)
+                self.executor.shutdown(wait=False)
 
         # close socket
         if self.__receive_loop_task:
