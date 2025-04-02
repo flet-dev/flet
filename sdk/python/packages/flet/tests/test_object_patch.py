@@ -1,11 +1,10 @@
-import copy
 import datetime
 import weakref
 from dataclasses import field
-from enum import Enum
 from typing import Any, List, Optional
 
 import msgpack
+
 from flet.core.buttons import ButtonStyle
 from flet.core.colors import Colors
 from flet.core.control import BaseControl, Control, Service, control

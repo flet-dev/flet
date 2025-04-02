@@ -6,11 +6,10 @@ from typing import TYPE_CHECKING, Any, Callable, Dict, Optional, Type, TypeVar, 
 from flet.core.badge import BadgeValue
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
-from flet.core.types import OptionalNumber, ResponsiveNumber
+from flet.core.types import Number, ResponsiveNumber
 from flet.utils.strings import random_string
 
 # Try importing `dataclass_transform()` for Python 3.11+, else use a no-op function
-
 if sys.version_info >= (3, 11):  # Only use it for Python 3.11+
     from typing import dataclass_transform
 else:
@@ -21,6 +20,8 @@ else:
 
 if TYPE_CHECKING:
     from .page import Page
+
+__all__ = ["BaseControl", "Control", "Service", "control", "skip_field"]
 
 
 def skip_field():
@@ -194,17 +195,15 @@ class Control(BaseControl):
     expand: Union[None, bool, int] = None
     expand_loose: Optional[bool] = None
     col: Optional[ResponsiveNumber] = None
-    opacity: OptionalNumber = None
+    opacity: Number = field(default=1.0)
     tooltip: Optional[TooltipValue] = None
     badge: Optional[BadgeValue] = None
-    visible: Optional[bool] = None
-    disabled: Optional[bool] = None
-    rtl: Optional[bool] = None
+    visible: bool = field(default=True)
+    disabled: bool = field(default=False)
+    rtl: bool = field(default=False)
 
     def before_update(self):
-        assert (
-            self.opacity is None or 0.0 <= self.opacity <= 1.0
-        ), "opacity must be between 0.0 and 1.0"
+        assert 0.0 <= self.opacity <= 1.0, "opacity must be between 0.0 and 1.0"
 
     def clean(self) -> None:
         raise Exception("Deprecated!")

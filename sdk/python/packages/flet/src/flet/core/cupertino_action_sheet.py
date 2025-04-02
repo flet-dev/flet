@@ -4,6 +4,8 @@ from typing import List, Optional
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
 
+__all__ = ["CupertinoActionSheet"]
+
 
 @control("CupertinoActionSheet")
 class CupertinoActionSheet(ConstrainedControl):

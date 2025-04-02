@@ -1,8 +1,8 @@
 from typing import Any, Optional
 
 from flet.core.canvas.shape import Shape
-from flet.core.control import OptionalNumber
 from flet.core.painting import Paint
+from flet.core.types import OptionalNumber
 
 
 class Oval(Shape):

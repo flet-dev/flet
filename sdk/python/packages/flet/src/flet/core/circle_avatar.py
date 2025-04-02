@@ -1,8 +1,10 @@
 from typing import Optional
 
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, OptionalNumber, control
-from flet.core.types import ColorValue, OptionalControlEventCallable
+from flet.core.control import Control, control
+from flet.core.types import ColorValue, OptionalControlEventCallable, OptionalNumber
+
+__all__ = ["CircleAvatar"]
 
 
 @control("CircleAvatar")

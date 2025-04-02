@@ -1,8 +1,16 @@
 from typing import Optional
 
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, OptionalNumber, control
-from flet.core.types import ClipBehavior, ColorValue, NotchShape, PaddingValue
+from flet.core.control import Control, control
+from flet.core.types import (
+    ClipBehavior,
+    ColorValue,
+    NotchShape,
+    OptionalNumber,
+    PaddingValue,
+)
+
+__all__ = ["BottomAppBar"]
 
 
 @control("BottomAppBar")

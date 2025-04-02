@@ -15,6 +15,8 @@ from flet.core.types import (
     PaddingValue,
 )
 
+__all__ = ["MenuBar", "MenuStyle"]
+
 
 @dataclass
 class MenuStyle:

@@ -3,11 +3,17 @@ from typing import Any, List, Optional
 from flet.core.badge import BadgeValue
 from flet.core.border import BorderSide
 from flet.core.charts.bar_chart_rod_stack_item import BarChartRodStackItem
-from flet.core.control import Control, OptionalNumber
+from flet.core.control import Control
 from flet.core.gradients import Gradient
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
-from flet.core.types import BorderRadiusValue, ColorEnums, ColorValue, TextAlign
+from flet.core.types import (
+    BorderRadiusValue,
+    ColorEnums,
+    ColorValue,
+    OptionalNumber,
+    TextAlign,
+)
 
 
 class BarChartRod(Control):

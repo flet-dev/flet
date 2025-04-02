@@ -3,10 +3,11 @@ from typing import Optional
 
 from flet.core.control import Service, control
 
+__all__ = ["UrlLauncher"]
+
 
 @control("UrlLauncher")
 class UrlLauncher(Service):
-
     async def launch_url_async(
         self,
         url: str,

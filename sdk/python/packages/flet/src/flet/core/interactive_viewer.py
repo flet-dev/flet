@@ -4,7 +4,7 @@ from typing import Callable, Optional
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.alignment import Alignment
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, OptionalNumber, control
+from flet.core.control import Control, control
 from flet.core.control_event import ControlEvent
 from flet.core.types import (
     ClipBehavior,
@@ -12,7 +12,15 @@ from flet.core.types import (
     MarginValue,
     Number,
     Offset,
+    OptionalNumber,
 )
+
+__all__ = [
+    "InteractiveViewer",
+    "InteractiveViewerInteractionStartEvent",
+    "InteractiveViewerInteractionUpdateEvent",
+    "InteractiveViewerInteractionEndEvent",
+]
 
 
 class InteractiveViewerInteractionStartEvent(ControlEvent):

@@ -1,10 +1,10 @@
 from typing import Any, List, Optional, Union
 
-from flet.core.control import Control, OptionalNumber
+from flet.core.control import Control
 from flet.core.map.map import MapLatitudeLongitude
 from flet.core.map.map_layer import MapLayer
 from flet.core.ref import Ref
-from flet.core.types import ColorEnums, ColorValue
+from flet.core.types import ColorEnums, ColorValue, OptionalNumber
 
 
 class CircleMarker(Control):

@@ -15,6 +15,8 @@ from flet.core.types import (
     OptionalNumber,
 )
 
+__all__ = ["NavigationBar", "NavigationBarDestination", "NavigationBarLabelBehavior"]
+
 
 class NavigationBarLabelBehavior(Enum):
     """Defines how the destinations' labels will be laid out and when they'll be displayed."""

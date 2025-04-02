@@ -7,7 +7,6 @@ from flet.core.animation import AnimationValue
 from flet.core.badge import BadgeValue
 from flet.core.box import FilterQuality
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
@@ -18,6 +17,7 @@ from flet.core.types import (
     OffsetValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
@@ -25,6 +25,14 @@ from flet.core.types import (
     TextAlign,
 )
 from flet.utils import deprecated
+
+__all__ = [
+    "Video",
+    "VideoMedia",
+    "VideoConfiguration",
+    "VideoSubtitleConfiguration",
+    "PlaylistMode",
+]
 
 
 class PlaylistMode(Enum):

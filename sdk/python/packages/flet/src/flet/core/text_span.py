@@ -1,8 +1,10 @@
-from typing import Any, List, Optional
+from typing import List, Optional
 
 from flet.core.control import Control, control
 from flet.core.text_style import TextStyle
 from flet.core.types import OptionalControlEventCallable, UrlTarget
+
+__all__ = ["TextSpan"]
 
 
 @control("TextSpan")

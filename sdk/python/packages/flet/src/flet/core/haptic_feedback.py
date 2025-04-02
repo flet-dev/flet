@@ -3,6 +3,8 @@ from typing import Any, Optional
 from flet.core.control import Control
 from flet.core.ref import Ref
 
+__all__ = ["HapticFeedback"]
+
 
 class HapticFeedback(Control):
     """

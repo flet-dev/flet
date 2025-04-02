@@ -27,6 +27,8 @@ from flet.core.types import (
     ScaleValue,
 )
 
+__all__ = ["SearchBar"]
+
 
 class SearchBar(ConstrainedControl):
     """

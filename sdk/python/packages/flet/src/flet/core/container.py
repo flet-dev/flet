@@ -31,6 +31,8 @@ from flet.core.types import (
     UrlTarget,
 )
 
+__all__ = ["Container", "ContainerTapEvent"]
+
 
 @dataclass
 class ContainerTapEvent(ControlEvent):

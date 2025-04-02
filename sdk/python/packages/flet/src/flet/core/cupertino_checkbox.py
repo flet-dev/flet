@@ -11,6 +11,8 @@ from flet.core.types import (
     OptionalControlEventCallable,
 )
 
+__all__ = ["CupertinoCheckbox"]
+
 
 class CupertinoCheckbox(ConstrainedControl):
     """

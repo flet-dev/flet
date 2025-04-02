@@ -4,6 +4,8 @@ from typing import List, Optional
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.control import Control, control
 
+__all__ = ["CupertinoContextMenu"]
+
 
 @control("CupertinoContextMenu")
 class CupertinoContextMenu(AdaptiveControl):

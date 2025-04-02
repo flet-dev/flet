@@ -1,4 +1,3 @@
-import json
 from dataclasses import dataclass, fields, is_dataclass
 from enum import Enum
 from typing import Any, Dict

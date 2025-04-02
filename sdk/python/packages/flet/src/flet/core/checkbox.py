@@ -4,7 +4,7 @@ from flet.core.adaptive_control import AdaptiveControl
 from flet.core.border import BorderSide
 from flet.core.buttons import OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import OptionalNumber, control
+from flet.core.control import control
 from flet.core.text_style import TextStyle
 from flet.core.types import (
     ColorValue,
@@ -12,8 +12,11 @@ from flet.core.types import (
     LabelPosition,
     MouseCursor,
     OptionalControlEventCallable,
+    OptionalNumber,
     VisualDensity,
 )
+
+__all__ = ["Checkbox"]
 
 
 @control("Checkbox")

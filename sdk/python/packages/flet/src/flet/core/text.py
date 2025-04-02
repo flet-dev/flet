@@ -1,11 +1,9 @@
-import json
 from dataclasses import dataclass
 from enum import Enum
 from typing import List, Optional, Union
-from warnings import warn
 
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import OptionalNumber, control
+from flet.core.control import control
 from flet.core.control_event import ControlEvent
 from flet.core.text_span import TextSpan
 from flet.core.text_style import TextOverflow, TextStyle, TextThemeStyle
@@ -14,8 +12,17 @@ from flet.core.types import (
     FontWeight,
     OptionalControlEventCallable,
     OptionalEventCallable,
+    OptionalNumber,
     TextAlign,
 )
+
+__all__ = [
+    "Text",
+    "TextSelection",
+    "TextSelectionChangeEvent",
+    "TextSelectionChangeCause",
+    "TextAffinity",
+]
 
 
 class TextAffinity(Enum):

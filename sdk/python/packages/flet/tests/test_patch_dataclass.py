@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 import msgpack
+
 from flet.core.control import BaseControl
 from flet.core.object_patch import ObjectPatch
 from flet.core.padding import Padding

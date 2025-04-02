@@ -2,8 +2,7 @@ from typing import Any, List, Optional
 
 from flet.core.canvas.path import Path
 from flet.core.canvas.shape import Shape
-from flet.core.control import OptionalNumber
-from flet.core.types import ColorEnums, ColorValue
+from flet.core.types import ColorEnums, ColorValue, OptionalNumber
 
 
 class Shadow(Shape):

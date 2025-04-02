@@ -1,16 +1,15 @@
 import asyncio
-import json
 import logging
 import os
-import struct
 import sys
 import tempfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import Any, Optional
+
+import msgpack
 
 import flet
-import msgpack
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,

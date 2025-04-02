@@ -5,6 +5,8 @@ from flet.core.control import Control, control
 from flet.core.control_event import ControlEvent
 from flet.core.types import OptionalControlEventCallable, OptionalEventCallable
 
+__all__ = ["DragTarget", "DragTargetEvent"]
+
 
 @control("DragTarget")
 class DragTarget(Control):

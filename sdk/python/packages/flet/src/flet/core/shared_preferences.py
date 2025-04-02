@@ -1,9 +1,9 @@
 import asyncio
-import json
 from typing import Any, List
 
 from flet.core.control import Service, control
-from flet.utils.json_utils import to_json
+
+__all__ = ["SharedPreferences"]
 
 
 @control("SharedPreferences")

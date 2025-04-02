@@ -7,7 +7,6 @@ from warnings import warn
 from flet.core.animation import AnimationCurve, AnimationValue
 from flet.core.badge import BadgeValue
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import OptionalNumber
 from flet.core.event_handler import EventHandler
 from flet.core.map.map_layer import MapLayer
 from flet.core.ref import Ref
@@ -22,6 +21,7 @@ from flet.core.types import (
     OffsetValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,

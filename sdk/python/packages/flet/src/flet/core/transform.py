@@ -3,6 +3,8 @@ from typing import Optional
 
 from flet.core.alignment import Alignment
 
+__all__ = ["Scale", "Rotate", "Offset"]
+
 
 @dataclass
 class Scale:
@@ -22,3 +24,8 @@ class Rotate:
 class Offset:
     x: float
     y: float
+
+
+# RotateValue = Union[Number, Rotate]
+# ScaleValue = Union[Number, Scale]
+# OffsetValue = Union[Offset, Tuple[Number, Number]]

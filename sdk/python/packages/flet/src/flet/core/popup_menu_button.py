@@ -6,13 +6,14 @@ from flet.core.animation import AnimationStyle
 from flet.core.box import BoxConstraints
 from flet.core.buttons import ButtonStyle, OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, OptionalNumber, control
+from flet.core.control import Control, control
 from flet.core.types import (
     ClipBehavior,
     ColorValue,
     IconValue,
     MouseCursor,
     OptionalControlEventCallable,
+    OptionalNumber,
     PaddingValue,
 )
 

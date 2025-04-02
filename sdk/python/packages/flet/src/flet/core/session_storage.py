@@ -1,5 +1,7 @@
 from typing import Any, Dict, List
 
+__all__ = ["SessionStorage"]
+
 
 class SessionStorage:
     def __init__(self):

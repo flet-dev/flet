@@ -1,5 +1,3 @@
-import dataclasses
-
 from flet.core.container import Container, ContainerTapEvent
 from flet.core.control_event import ControlEvent
 from flet.core.elevated_button import ElevatedButton

@@ -2,6 +2,8 @@ import re
 
 import repath
 
+__all__ = ["TemplateRoute"]
+
 
 class TemplateRoute:
     def __init__(self, route: str) -> None:

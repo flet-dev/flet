@@ -3,8 +3,13 @@ from typing import Optional
 from flet.core.animation import AnimationStyle
 from flet.core.box import BoxConstraints
 from flet.core.buttons import OutlinedBorder
-from flet.core.control import Control, OptionalNumber, control
-from flet.core.types import ClipBehavior, ColorValue, OptionalControlEventCallable
+from flet.core.control import Control, control
+from flet.core.types import (
+    ClipBehavior,
+    ColorValue,
+    OptionalControlEventCallable,
+    OptionalNumber,
+)
 
 
 @control("BottomSheet")

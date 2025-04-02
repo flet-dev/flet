@@ -27,9 +27,9 @@ class Session:
         self.__conn: weakref.ReferenceType = weakref.ref(conn)
         self.__id = random_string(16)
         self.__expires_at = None
-        self.__index: weakref.WeakValueDictionary[int, Control] = (
-            weakref.WeakValueDictionary()
-        )
+        self.__index: weakref.WeakValueDictionary[
+            int, Control
+        ] = weakref.WeakValueDictionary()
         self.__page = Page(self)
         self.__index[self.__page._i] = self.__page
         self.__pubsub_client = PubSubClient(conn.pubsubhub, self.__id)

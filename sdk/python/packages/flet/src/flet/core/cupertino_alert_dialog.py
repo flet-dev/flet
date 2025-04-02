@@ -4,6 +4,8 @@ from flet.core.animation import Animation
 from flet.core.control import Control, control
 from flet.core.types import OptionalControlEventCallable
 
+__all__ = ["CupertinoAlertDialog"]
+
 
 @control("CupertinoAlertDialog")
 class CupertinoAlertDialog(Control):

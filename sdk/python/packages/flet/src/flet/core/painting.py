@@ -8,17 +8,21 @@ from flet.core.gradients import GradientTileMode
 from flet.core.types import (
     BlendMode,
     ColorValue,
-    OffsetValue,
-    StrokeCap,
     Number,
+    OffsetValue,
     OptionalNumber,
+    StrokeCap,
+    StrokeJoin,
 )
 
-
-class StrokeJoin(Enum):
-    MITER = "miter"
-    ROUND = "round"
-    BEVEL = "bevel"
+__all__ = [
+    "Paint",
+    "PaintGradient",
+    "PaintLinearGradient",
+    "PaintRadialGradient",
+    "PaintSweepGradient",
+    "PaintingStyle",
+]
 
 
 class PaintingStyle(Enum):

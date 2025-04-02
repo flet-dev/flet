@@ -4,13 +4,16 @@ from typing import List, Optional
 from flet.core import padding
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, OptionalNumber, control
+from flet.core.control import Control, control
 from flet.core.types import (
     ColorValue,
     Number,
     OptionalControlEventCallable,
+    OptionalNumber,
     PaddingValue,
 )
+
+__all__ = ["ExpansionPanel", "ExpansionPanelList"]
 
 
 @control("ExpansionPanel")

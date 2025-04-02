@@ -8,6 +8,8 @@ from flet.core.box import BoxConstraints
 from flet.core.margin import Margin
 from flet.core.padding import Padding
 
+__all__ = ["EmbedJsonEncoder"]
+
 
 class EmbedJsonEncoder(json.JSONEncoder):
     def default(self, obj):

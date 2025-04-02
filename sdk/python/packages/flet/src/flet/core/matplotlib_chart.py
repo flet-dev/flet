@@ -7,7 +7,6 @@ from flet.core import alignment
 from flet.core.animation import AnimationValue
 from flet.core.badge import BadgeValue
 from flet.core.container import Container
-from flet.core.control import OptionalNumber
 from flet.core.image import Image
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
@@ -15,6 +14,7 @@ from flet.core.types import (
     ImageFit,
     OffsetValue,
     OptionalControlEventCallable,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -26,6 +26,7 @@ except ImportError:
     raise Exception(
         'Install "matplotlib" Python package to use MatplotlibChart control.'
     )
+__all__ = ["MatplotlibChart"]
 
 
 class MatplotlibChart(Container):

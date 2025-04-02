@@ -3,8 +3,9 @@ import json
 import logging
 from typing import List
 
-import flet
 import flet_js
+
+import flet
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,

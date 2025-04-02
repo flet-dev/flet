@@ -4,6 +4,8 @@ from typing import Optional, Union
 
 from flet.core.types import ColorValue, OptionalNumber
 
+__all__ = ["Border", "BorderSide", "BorderSideStrokeAlign", "all", "symmetric", "only"]
+
 
 class BorderSideStrokeAlign(float, Enum):
     INSIDE = -1.0

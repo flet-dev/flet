@@ -4,6 +4,8 @@ from flet.core.adaptive_control import AdaptiveControl
 from flet.core.control import Control, control
 from flet.core.types import IconValue, OptionalControlEventCallable
 
+__all__ = ["CupertinoContextMenuAction"]
+
 
 @control("CupertinoContextMenuAction")
 class CupertinoContextMenuAction(AdaptiveControl):

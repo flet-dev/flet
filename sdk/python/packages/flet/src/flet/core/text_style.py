@@ -6,6 +6,16 @@ from flet.core.box import BoxShadow
 from flet.core.painting import Paint
 from flet.core.types import ColorValue, FontWeight, OptionalNumber
 
+__all__ = [
+    "TextOverflow",
+    "TextBaseline",
+    "TextThemeStyle",
+    "TextDecoration",
+    "TextDecorationStyle",
+    "TextStyle",
+    "StrutStyle",
+]
+
 
 class TextOverflow(Enum):
     CLIP = "clip"

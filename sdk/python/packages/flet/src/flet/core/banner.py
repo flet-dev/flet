@@ -1,16 +1,20 @@
 from dataclasses import field
 from typing import List, Optional
 
-from flet.core.control import Control, OptionalNumber
+from flet.core.control import Control, control
 from flet.core.text_style import TextStyle
 from flet.core.types import (
     ColorValue,
     MarginValue,
     OptionalControlEventCallable,
+    OptionalNumber,
     PaddingValue,
 )
 
+__all__ = ["Banner"]
 
+
+@control("Banner")
 class Banner(Control):
     """
     A banner displays an important, succinct message, and provides actions for users to address (or dismiss the banner). A user action is required for it to be dismissed.

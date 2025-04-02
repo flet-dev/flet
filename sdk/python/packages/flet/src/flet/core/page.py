@@ -1,8 +1,6 @@
 import asyncio
 import json
 import logging
-import threading
-import uuid
 import warnings
 import weakref
 from concurrent.futures import CancelledError, Future, ThreadPoolExecutor
@@ -68,7 +66,6 @@ from flet.core.url_launcher import UrlLauncher
 from flet.core.view import View
 from flet.core.window import Window
 from flet.utils import classproperty, is_pyodide
-from flet.utils.locks import NopeLock
 
 if TYPE_CHECKING:
     from flet.messaging.session import Session
@@ -100,7 +97,8 @@ try:
     from flet.auth.oauth_provider import OAuthProvider
 except ImportError as e:
 
-    class OAuthProvider: ...
+    class OAuthProvider:
+        ...
 
     class Authorization:
         def __init__(
@@ -109,7 +107,8 @@ except ImportError as e:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ): ...
+        ):
+            ...
 
 
 AT = TypeVar("AT", bound=Authorization)

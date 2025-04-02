@@ -1,6 +1,8 @@
 import dataclasses
 from typing import Union
 
+__all__ = ["BorderRadius", "all", "horizontal", "vertical", "only"]
+
 
 @dataclasses.dataclass
 class BorderRadius:

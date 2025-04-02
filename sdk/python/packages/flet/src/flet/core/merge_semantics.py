@@ -2,6 +2,8 @@ from typing import Optional
 
 from flet.core.control import Control, control
 
+__all__ = ["MergeSemantics"]
+
 
 @control("MergeSemantics")
 class MergeSemantics(Control):

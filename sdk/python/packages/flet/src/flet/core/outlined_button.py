@@ -14,6 +14,8 @@ from flet.core.types import (
     UrlTarget,
 )
 
+__all__ = ["OutlinedButton"]
+
 
 @control("OutlinedButton")
 class OutlinedButton(ConstrainedControl, AdaptiveControl):

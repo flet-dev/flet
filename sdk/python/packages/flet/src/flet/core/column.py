@@ -7,6 +7,8 @@ from flet.core.control import Control, control
 from flet.core.scrollable_control import ScrollableControl
 from flet.core.types import CrossAxisAlignment, MainAxisAlignment, OptionalNumber
 
+__all__ = ["Column"]
+
 
 @control("Column")
 class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):

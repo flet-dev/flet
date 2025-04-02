@@ -5,7 +5,7 @@ from flet.core.adaptive_control import AdaptiveControl
 from flet.core.app_bar import AppBar
 from flet.core.bottom_app_bar import BottomAppBar
 from flet.core.box import BoxDecoration
-from flet.core.control import Control, OptionalNumber, control
+from flet.core.control import Control, control
 from flet.core.cupertino_app_bar import CupertinoAppBar
 from flet.core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.core.floating_action_button import FloatingActionButton
@@ -18,8 +18,11 @@ from flet.core.types import (
     FloatingActionButtonLocation,
     MainAxisAlignment,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
 )
+
+__all__ = ["View"]
 
 
 @control("View")

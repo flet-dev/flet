@@ -6,16 +6,19 @@ from flet.core.alignment import Alignment
 from flet.core.box import BoxConstraints
 from flet.core.buttons import ButtonStyle
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, OptionalNumber, control
+from flet.core.control import Control, control
 from flet.core.types import (
     ColorValue,
     IconValue,
     MouseCursor,
     OptionalControlEventCallable,
+    OptionalNumber,
     PaddingValue,
     UrlTarget,
     VisualDensity,
 )
+
+__all__ = ["IconButton"]
 
 
 @control("IconButton")

@@ -10,6 +10,8 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
+__all__ = ["Animation", "AnimationCurve", "AnimationStyle", "AnimationValue"]
+
 
 class AnimationCurve(Enum):
     BOUNCE_IN = "bounceIn"

@@ -14,6 +14,7 @@ from typing import (
 if TYPE_CHECKING:
     from .control import Control
     from .page import Page
+__all__ = ["ControlEvent"]
 
 
 @dataclass

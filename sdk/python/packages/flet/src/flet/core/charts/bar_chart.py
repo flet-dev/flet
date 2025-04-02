@@ -9,7 +9,6 @@ from flet.core.charts.bar_chart_group import BarChartGroup
 from flet.core.charts.chart_axis import ChartAxis
 from flet.core.charts.chart_grid_lines import ChartGridLines
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import OptionalNumber
 from flet.core.control_event import ControlEvent
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
@@ -20,6 +19,7 @@ from flet.core.types import (
     OffsetValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,

@@ -4,6 +4,8 @@ from flet.core.alignment import Axis
 from flet.core.control import Control, control
 from flet.core.types import OptionalControlEventCallable
 
+__all__ = ["Draggable"]
+
 
 @control("Draggable")
 class Draggable(Control):
