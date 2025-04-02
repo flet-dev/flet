@@ -6,6 +6,7 @@ from flet.core.elevated_button import ElevatedButton
 from flet.core.page import Page, PageResizeEvent
 from flet.messaging.connection import Connection
 from flet.messaging.session import Session
+from flet.pubsub.pubsub_hub import PubSubHub
 from flet.utils.from_dict import from_dict
 
 
@@ -46,7 +47,9 @@ def test_create_event_typed_data():
 
 
 def test_page_events():
-    p = Page(sess=Session(Connection()))
+    conn = Connection()
+    conn.pubsubhub = PubSubHub()
+    p = Page(sess=Session(conn))
     on_resized_type = ControlEvent.get_event_field_type(p, "on_resized")
     assert on_resized_type == PageResizeEvent
     evt = from_dict(
