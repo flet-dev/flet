@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'controls/center.dart';
 import 'controls/column.dart';
 import 'controls/container.dart';
+import 'controls/divider.dart';
 import 'controls/dropdown.dart';
 import 'controls/line_chart.dart';
 import 'controls/page.dart';
@@ -41,6 +42,8 @@ class FletCoreExtension extends FletExtension {
         return ContainerControl(key: key, control: control);
       case "Dropdown":
         return DropdownControl(key: key, control: control);
+      case "Divider":
+        return DividerControl(key: key, control: control);
       case "LineChart":
         return LineChartControl(key: key, control: control);
       default:

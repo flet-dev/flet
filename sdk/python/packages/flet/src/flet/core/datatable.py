@@ -30,7 +30,7 @@ class DataColumnSortEvent(ControlEvent):
 class DataColumn(Control):
     label: Control
     numeric: Optional[bool] = field(default=False)
-    # tooltip: Optional[str] = None
+    column_tooltip: Optional[str] = None
     heading_row_alignment: Optional[MainAxisAlignment] = None
     on_sort: OptionalEventCallable[DataColumnSortEvent] = None
 
