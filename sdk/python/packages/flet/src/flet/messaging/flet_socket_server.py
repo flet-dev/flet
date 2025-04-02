@@ -34,7 +34,6 @@ class FletSocketServer(Connection):
         loop: asyncio.AbstractEventLoop,
         port: int = 0,
         uds_path: Optional[str] = None,
-        on_event=None,
         on_session_created=None,
         blocking=False,
         executor: Optional[ThreadPoolExecutor] = None,
@@ -43,7 +42,6 @@ class FletSocketServer(Connection):
         self.__send_queue = asyncio.Queue()
         self.__port = port
         self.__uds_path = uds_path
-        self.__on_event = on_event
         self.__on_session_created = on_session_created
         self.__blocking = blocking
         self.__loop = loop
@@ -124,27 +122,31 @@ class FletSocketServer(Connection):
         if action == ClientAction.REGISTER_CLIENT:
             req = RegisterClientRequestBody(**body)
 
-            # create new session
-            self.session = Session(self)
+            try:
+                # create new session
+                self.session = Session(self)
 
-            # apply page patch
-            self.session.apply_page_patch(req.page)
+                # apply page patch
+                if not req.session_id:
+                    self.session.apply_page_patch(req.page)
 
-            # register response
-            self.send_message(
-                ClientMessage(
-                    ClientAction.REGISTER_CLIENT,
-                    RegisterClientResponseBody(
-                        session_id=self.session.id,
-                        page_patch=self.session.get_page_patch(),
-                        error="",
-                    ),
+                # register response
+                self.send_message(
+                    ClientMessage(
+                        ClientAction.REGISTER_CLIENT,
+                        RegisterClientResponseBody(
+                            session_id=self.session.id,
+                            page_patch=self.session.get_page_patch(),
+                            error="",
+                        ),
+                    )
                 )
-            )
 
-            # start session
-            if self.__on_session_created is not None:
-                task = asyncio.create_task(self.__on_session_created(self.session))
+                # start session
+                if self.__on_session_created is not None:
+                    task = asyncio.create_task(self.__on_session_created(self.session))
+            except Exception as ex:
+                logger.debug(f"Error creating session: {ex}", exc_info=True)
 
         elif action == ClientAction.CONTROL_EVENT:
             req = ControlEventBody(**body)

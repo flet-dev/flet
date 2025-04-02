@@ -50,7 +50,7 @@ class Dropdown(ConstrainedControl):
     """
 
     value: Optional[str] = None
-    options: Optional[List[Option]] = None
+    options: List[Option] = field(default_factory=list)
     autofocus: Optional[bool] = field(default=False)
     text_align: Optional[TextAlign] = field(default=TextAlign.START)
     elevation: ControlStateValue[OptionalNumber] = field(default=8)

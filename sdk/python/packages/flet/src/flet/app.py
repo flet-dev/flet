@@ -217,17 +217,6 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
 
     executor = concurrent.futures.ThreadPoolExecutor()
 
-    async def on_event(e):
-        if e.sessionID in conn.sessions:
-            await conn.sessions[e.sessionID].on_event_async(
-                ControlEvent(e.eventTarget, e.eventName, e.eventData)
-            )
-            if e.eventTarget == "page" and e.eventName == "close":
-                logger.info(f"Session closed: {e.sessionID}")
-                page = conn.sessions.pop(e.sessionID)
-                page._close()
-                del page
-
     async def on_session_created(session: Session):
         # page = Page(
         #     conn,
@@ -257,7 +246,6 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
         loop=asyncio.get_running_loop(),
         port=port,
         uds_path=uds_path,
-        on_event=on_event,
         on_session_created=on_session_created,
         blocking=blocking,
         executor=executor,
