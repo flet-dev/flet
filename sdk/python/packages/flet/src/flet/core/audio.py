@@ -156,7 +156,7 @@ class Audio(Control):
     async def get_duration_async(
         self, wait_timeout: Optional[float] = 5
     ) -> Optional[int]:
-        sr = await self.invoke_method_async(
+        sr = await self._invoke_method_async(
             "get_duration",
             wait_for_result=True,
             timeout=wait_timeout,
@@ -174,7 +174,7 @@ class Audio(Control):
     async def get_current_position_async(
         self, wait_timeout: Optional[float] = 5
     ) -> Optional[int]:
-        sr = await self.invoke_method_async(
+        sr = await self._invoke_method_async(
             "get_current_position",
             wait_for_result=True,
             timeout=wait_timeout,

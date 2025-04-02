@@ -12,6 +12,7 @@ from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,
     ClientMessage,
+    InvokeMethodRequestBody,
     PatchControlBody,
     SessionCrashedBody,
 )
@@ -117,6 +118,24 @@ class Session:
             except Exception as ex:
                 tb = traceback.format_exc()
                 self.error(f"Exception in '{field_name}': {ex}\n{tb}")
+
+    def invoke_method(self, control_id: int, call_id: str, method_name: str, args: Any):
+        self.connection.send_message(
+            ClientMessage(
+                ClientAction.INVOKE_METHOD,
+                InvokeMethodRequestBody(
+                    control_id=control_id, call_id=call_id, name=method_name, args=args
+                ),
+            )
+        )
+
+    def handle_invoke_method_results(
+        self, control_id: int, call_id: str, result: Any, error: Optional[str]
+    ):
+        if control := self.__index.get(control_id):
+            control._handle_invoke_method_results(
+                call_id=call_id, result=result, error=error
+            )
 
     def error(self, message: str):
         self.connection.send_message(

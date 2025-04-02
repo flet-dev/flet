@@ -340,7 +340,7 @@ class FletBackend extends ChangeNotifier {
   }
 
   _onInvokeMethod(InvokeMethodRequestBody req) async {
-    var control = _controlsIndex.get(req.id);
+    var control = _controlsIndex.get(req.controlId);
     dynamic result;
     String? error;
     if (control != null) {
@@ -350,13 +350,17 @@ class FletBackend extends ChangeNotifier {
         error = e.toString();
       }
     } else {
-      error = "Calling ${req.name} method of inexistent control: ${req.id}";
+      error =
+          "Calling ${req.name} method of inexistent control: ${req.controlId}";
     }
 
     _send(Message(
         action: MessageAction.invokeControlMethod,
         payload: InvokeMethodResponseBody(
-                id: req.id, name: req.name, result: result, error: error)
+                controlId: req.controlId,
+                callId: req.callId,
+                result: result,
+                error: error)
             .toJson()));
   }
 

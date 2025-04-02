@@ -103,7 +103,7 @@ class PermissionHandler(Control):
     async def check_permission_async(
         self, of: PermissionType, wait_timeout: Optional[float] = 25
     ) -> Optional[PermissionStatus]:
-        out = await self.invoke_method_async(
+        out = await self._invoke_method_async(
             "check_permission",
             {"of": of.value if isinstance(of, PermissionType) else of},
             wait_for_result=True,
@@ -125,7 +125,7 @@ class PermissionHandler(Control):
     async def request_permission_async(
         self, of: PermissionType, wait_timeout: Optional[float] = 25
     ) -> Optional[PermissionStatus]:
-        out = await self.invoke_method_async(
+        out = await self._invoke_method_async(
             "request_permission",
             {"of": of.value if isinstance(of, PermissionType) else of},
             wait_for_result=True,
@@ -142,7 +142,7 @@ class PermissionHandler(Control):
         return opened == "true"
 
     async def open_app_settings_async(self, wait_timeout: Optional[float] = 10) -> bool:
-        opened = await self.invoke_method_async(
+        opened = await self._invoke_method_async(
             "open_app_settings",
             wait_for_result=True,
             timeout=wait_timeout,

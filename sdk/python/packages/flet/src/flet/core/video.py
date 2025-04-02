@@ -256,7 +256,7 @@ class Video(ConstrainedControl):
         return playing == "true"
 
     async def is_playing_async(self, wait_timeout: Optional[float] = 5) -> bool:
-        playing = await self.invoke_method_async(
+        playing = await self._invoke_method_async(
             "is_playing",
             wait_for_result=True,
             timeout=wait_timeout,
@@ -272,7 +272,7 @@ class Video(ConstrainedControl):
         return completed == "true"
 
     async def is_completed_async(self, wait_timeout: Optional[float] = 5) -> bool:
-        completed = await self.invoke_method_async(
+        completed = await self._invoke_method_async(
             "is_completed",
             wait_for_result=True,
             timeout=wait_timeout,
@@ -290,7 +290,7 @@ class Video(ConstrainedControl):
     async def get_duration_async(
         self, wait_timeout: Optional[float] = 5
     ) -> Optional[int]:
-        sr = await self.invoke_method_async(
+        sr = await self._invoke_method_async(
             "get_duration",
             wait_for_result=True,
             timeout=wait_timeout,
@@ -308,7 +308,7 @@ class Video(ConstrainedControl):
     async def get_current_position_async(
         self, wait_timeout: Optional[float] = 5
     ) -> Optional[int]:
-        sr = await self.invoke_method_async(
+        sr = await self._invoke_method_async(
             "get_current_position",
             wait_for_result=True,
             timeout=wait_timeout,

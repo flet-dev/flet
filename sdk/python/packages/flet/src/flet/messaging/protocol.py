@@ -92,8 +92,16 @@ class SessionCrashedBody:
 
 
 @dataclass
-class InvokeMethodPayload:
-    methodId: str
-    methodName: str
-    controlId: str
-    arguments: Dict[str, str]
+class InvokeMethodRequestBody:
+    control_id: int
+    call_id: str
+    name: str
+    args: Dict[str, Any]
+
+
+@dataclass
+class InvokeMethodResponseBody:
+    control_id: int
+    call_id: str
+    result: Any
+    error: str

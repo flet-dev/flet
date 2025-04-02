@@ -1,3 +1,4 @@
+import asyncio
 import sys
 from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING, Any, Callable, Dict, Optional, Type, TypeVar, Union
@@ -6,6 +7,7 @@ from flet.core.badge import BadgeValue
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import OptionalNumber, ResponsiveNumber
+from flet.utils.strings import random_string
 
 # Try importing `dataclass_transform()` for Python 3.11+, else use a no-op function
 
@@ -94,6 +96,9 @@ class BaseControl:
         if ref is not None:
             ref.current = self
 
+        self.__method_calls: Dict[str, asyncio.Event] = {}
+        self.__method_call_results: Dict[asyncio.Event, tuple[Any, Optional[str]]] = {}
+
     def __hash__(self) -> int:
         return object.__hash__(self)
 
@@ -135,47 +140,49 @@ class BaseControl:
         ), f"{self.__class__.__qualname__} Control must be added to the page first"
         self.page.update(self)
 
-    def invoke_method(
-        self,
-        method_name: str,
-        arguments: Optional[Dict[str, str]] = None,
-        wait_for_result: bool = True,
-        timeout: Optional[float] = 10,
-    ) -> Any:
-        # assert (
-        #     self.__page
-        # ), f"{self.__class__.__qualname__} Control must be added to the page first"
-        # if arguments:
-        #     # remove items with None values and convert other values to string
-        #     arguments = {k: str(v) for k, v in arguments.items() if v is not None}
-        # return self.__page._invoke_method(
-        #     control_id=self.uid,
-        #     method_name=method_name,
-        #     arguments=arguments,
-        #     wait_for_result=wait_for_result,
-        #     wait_timeout=wait_timeout,
-        # )
-        return None
-
-    def invoke_method_async(
+    async def _invoke_method_async(
         self,
         method_name: str,
         arguments: Optional[Dict[str, Any]] = None,
-        wait_for_result: bool = True,
         timeout: Optional[float] = 10,
     ) -> Any:
         assert (
             self.page
         ), f"{self.__class__.__qualname__} Control must be added to the page first"
 
-        # return self.__page._invoke_method_async(
-        #     control_id=self.uid,
-        #     method_name=method_name,
-        #     arguments=arguments,
-        #     wait_for_result=wait_for_result,
-        #     wait_timeout=wait_timeout,
-        # )
-        return None
+        call_id = random_string(10)
+
+        # register callback
+        evt = asyncio.Event()
+        self.__method_calls[call_id] = evt
+
+        # call method
+        result = self.page.get_session().invoke_method(
+            self._i, call_id, method_name, arguments
+        )
+
+        try:
+            await asyncio.wait_for(evt.wait(), timeout=timeout)
+        except TimeoutError:
+            if call_id in self.__method_calls:
+                del self.__method_calls[call_id]
+            raise TimeoutError(
+                f"Timeout waiting for invokeMethod {method_name}({arguments}) call"
+            )
+
+        result, err = self.__method_call_results.pop(evt)
+        if err:
+            raise Exception(err)
+        return result
+
+    def _handle_invoke_method_results(
+        self, call_id: str, result: Any, error: Optional[str]
+    ) -> None:
+        evt = self.__method_calls.pop(call_id, None)
+        if evt is None:
+            return
+        self.__method_call_results[evt] = (result, error)
+        evt.set()
 
 
 @dataclass(kw_only=True)

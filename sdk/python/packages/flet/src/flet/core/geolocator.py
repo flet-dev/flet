@@ -185,7 +185,7 @@ class Geolocator(Control):
             or self.location_settings
             or GeolocatorSettings(accuracy=accuracy)
         )
-        output = await self.invoke_method_async(
+        output = await self._invoke_method_async(
             "get_current_position",
             {"location_settings": self._convert_attr_json(ls)},
             wait_for_result=True,
@@ -218,7 +218,7 @@ class Geolocator(Control):
         wait_timeout: Optional[float] = 25,
     ) -> GeolocatorPosition:
         assert not self.page.web, "get_last_known_position is not supported on web"
-        output = await self.invoke_method_async(
+        output = await self._invoke_method_async(
             "get_last_known_position",
             wait_for_result=True,
             timeout=wait_timeout,
@@ -242,7 +242,7 @@ class Geolocator(Control):
     async def get_permission_status_async(
         self, wait_timeout: Optional[float] = 25
     ) -> GeolocatorPermissionStatus:
-        p = await self.invoke_method_async(
+        p = await self._invoke_method_async(
             "get_permission_status",
             wait_for_result=True,
             timeout=wait_timeout,
@@ -262,7 +262,7 @@ class Geolocator(Control):
     async def request_permission_async(
         self, wait_timeout: Optional[float] = 25
     ) -> GeolocatorPermissionStatus:
-        p = await self.invoke_method_async(
+        p = await self._invoke_method_async(
             "request_permission",
             wait_for_result=True,
             timeout=wait_timeout,
@@ -280,7 +280,7 @@ class Geolocator(Control):
     async def is_location_service_enabled_async(
         self, wait_timeout: Optional[float] = 10
     ) -> bool:
-        enabled = await self.invoke_method_async(
+        enabled = await self._invoke_method_async(
             "is_location_service_enabled",
             wait_for_result=True,
             timeout=wait_timeout,
@@ -298,7 +298,7 @@ class Geolocator(Control):
 
     async def open_app_settings_async(self, wait_timeout: Optional[float] = 10) -> bool:
         assert not self.page.web, "open_app_settings is not supported on web"
-        opened = await self.invoke_method_async(
+        opened = await self._invoke_method_async(
             "open_app_settings",
             wait_for_result=True,
             timeout=wait_timeout,
@@ -318,7 +318,7 @@ class Geolocator(Control):
         self, wait_timeout: Optional[float] = 10
     ) -> bool:
         assert not self.page.web, "open_location_settings is not supported on web"
-        opened = await self.invoke_method_async(
+        opened = await self._invoke_method_async(
             "open_location_settings",
             wait_for_result=True,
             timeout=wait_timeout,

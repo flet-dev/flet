@@ -107,7 +107,7 @@ class AudioRecorder(Control):
         assert (
             self.page.web or output_path
         ), "output_path must be provided when not on web"
-        started = await self.invoke_method_async(
+        started = await self._invoke_method_async(
             "start_recording",
             {"outputPath": output_path},
             wait_for_result=True,
@@ -124,7 +124,7 @@ class AudioRecorder(Control):
         return recording == "true"
 
     async def is_recording_async(self, wait_timeout: Optional[float] = 5) -> bool:
-        recording = await self.invoke_method_async(
+        recording = await self._invoke_method_async(
             "is_recording",
             wait_for_result=True,
             timeout=wait_timeout,
@@ -141,7 +141,7 @@ class AudioRecorder(Control):
     async def stop_recording_async(
         self, wait_timeout: Optional[float] = 10
     ) -> Optional[str]:
-        return await self.invoke_method_async(
+        return await self._invoke_method_async(
             "stop_recording",
             wait_for_result=True,
             timeout=wait_timeout,
@@ -169,7 +169,7 @@ class AudioRecorder(Control):
         return paused == "true"
 
     async def is_paused_async(self, wait_timeout: Optional[float] = 5) -> bool:
-        supported = await self.invoke_method_async(
+        supported = await self._invoke_method_async(
             "is_paused",
             wait_for_result=True,
             timeout=wait_timeout,
@@ -194,7 +194,7 @@ class AudioRecorder(Control):
     async def is_supported_encoder_async(
         self, encoder: AudioEncoder, wait_timeout: Optional[float] = 5
     ) -> bool:
-        supported = await self.invoke_method_async(
+        supported = await self._invoke_method_async(
             "is_supported_encoder",
             {
                 "encoder": (
@@ -215,7 +215,7 @@ class AudioRecorder(Control):
         return json.loads(devices)
 
     async def get_input_devices_async(self, wait_timeout: Optional[float] = 5) -> dict:
-        devices = await self.invoke_method_async(
+        devices = await self._invoke_method_async(
             "get_input_devices",
             wait_for_result=True,
             timeout=wait_timeout,
@@ -231,7 +231,7 @@ class AudioRecorder(Control):
         return p == "true"
 
     async def has_permission_async(self, wait_timeout: Optional[float] = 10) -> bool:
-        p = await self.invoke_method_async(
+        p = await self._invoke_method_async(
             "has_permission",
             wait_for_result=True,
             timeout=wait_timeout,

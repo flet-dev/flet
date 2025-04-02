@@ -141,6 +141,9 @@ def test_simple_page():
 
     assert page.parent is None
     assert page.controls[0].parent == page.views[0]
+    assert page.clipboard
+    assert page.clipboard.parent
+    assert page.clipboard.page
 
     print(u_msg)
 

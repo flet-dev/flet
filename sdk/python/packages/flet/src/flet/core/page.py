@@ -154,6 +154,14 @@ class Page(AdaptiveControl):
     views: List[View] = field(default_factory=lambda: [View()])
     offstage: "Offstage" = field(default_factory=lambda: Offstage())
     window: Window = field(default_factory=lambda: Window())
+    browser_context_menu: BrowserContextMenu = field(
+        default_factory=lambda: BrowserContextMenu()
+    )
+    shared_preferences: SharedPreferences = field(
+        default_factory=lambda: SharedPreferences()
+    )
+    clipboard: Clipboard = field(default_factory=lambda: Clipboard())
+    url_launcher: UrlLauncher = field(default_factory=lambda: UrlLauncher())
     _user_services: "ServiceRegistry" = field(default_factory=lambda: ServiceRegistry())
     _page_services: "ServiceRegistry" = field(default_factory=lambda: ServiceRegistry())
 
@@ -204,24 +212,14 @@ class Page(AdaptiveControl):
         self.__session = weakref.ref(sess)
 
         # page services
-        self.__browser_context_menu = BrowserContextMenu()
-        self.__shared_preferences = SharedPreferences()
-        self.__clipboard = Clipboard()
-        self.__url_launcher = UrlLauncher()
-
         self.__query: QueryString = QueryString(self)
         self.__session_storage: SessionStorage = SessionStorage()
         self.__authorization: Optional[Authorization] = None
 
         self.__last_route = None
 
-        self.__method_calls: Dict[str, Union[threading.Event, asyncio.Event]] = {}
-        self.__method_call_results: Dict[
-            Union[threading.Event, asyncio.Event], tuple[Optional[str], Optional[str]]
-        ] = {}
-
     def get_control(self, id: int) -> Optional[Control]:
-        return self.__get_session().index.get(id)
+        return self.get_session().index.get(id)
 
     def __default_view(self) -> View:
         assert len(self.views) > 0, "views list is empty."
@@ -233,10 +231,10 @@ class Page(AdaptiveControl):
     def before_update(self):
         super().before_update()
         self._page_services.services = [
-            self.__browser_context_menu,
-            self.__shared_preferences,
-            self.__clipboard,
-            self.__url_launcher,
+            self.browser_context_menu,
+            self.shared_preferences,
+            self.clipboard,
+            self.url_launcher,
         ]
 
     def update(self, *controls) -> None:
@@ -301,7 +299,7 @@ class Page(AdaptiveControl):
         # self.__conn = None
         pass
 
-    def __get_session(self):
+    def get_session(self):
         if sess := self.__session():
             return sess
         raise Exception("An attempt to fetch destroyed session.")
@@ -313,7 +311,7 @@ class Page(AdaptiveControl):
         # self.__validate_controls_page(added_controls)
         # results = self.__conn.send_commands(self._session_id, commands).results
         for control in controls:
-            self.__get_session().patch_control(control)
+            self.get_session().patch_control(control)
         return [], []  # added_controls, removed_controls
 
     def __validate_controls_page(self, added_controls: List[Control]) -> None:
@@ -333,7 +331,7 @@ class Page(AdaptiveControl):
         pass
 
     def error(self, message: str) -> None:
-        self.__get_session().error(message)
+        self.get_session().error(message)
 
     def run_task(
         self,
@@ -344,7 +342,7 @@ class Page(AdaptiveControl):
         _session_page.set(self)
         assert asyncio.iscoroutinefunction(handler)
 
-        future = asyncio.run_coroutine_threadsafe(handler(*args, **kwargs), self.__loop)
+        future = asyncio.run_coroutine_threadsafe(handler(*args, **kwargs), self.loop)
 
         def _on_completion(f):
             try:
@@ -375,10 +373,9 @@ class Page(AdaptiveControl):
         if is_pyodide():
             handler_with_context(*args, **kwargs)
         else:
-            assert self.__loop
-            self.__loop.call_soon_threadsafe(
-                self.__loop.run_in_executor,
-                self.__executor,
+            self.loop.call_soon_threadsafe(
+                self.loop.run_in_executor,
+                self.executor,
                 partial(handler_with_context, *args, **kwargs),
             )
 
@@ -402,12 +399,7 @@ class Page(AdaptiveControl):
         self.query()  # Update query url (required when using go)
 
     def get_upload_url(self, file_name: str, expires: int) -> str:
-        r = self._send_command(
-            "getUploadUrl", attrs={"file": file_name, "expires": str(expires)}
-        )
-        if r.error:
-            raise Exception(r.error)
-        return r.result
+        return self.get_session().connection.get_upload_url(file_name, expires)
 
     def login(
         self,
@@ -611,14 +603,30 @@ class Page(AdaptiveControl):
             window_height=window_height,
         )
 
-    def can_launch_url(self, url: str) -> bool:
-        return self.url_launcher.can_launch_url(url)
+    async def launch_url_async(
+        self,
+        url: str,
+        web_window_name: Optional[str] = None,
+        web_popup_window: Optional[bool] = False,
+        window_width: Optional[int] = None,
+        window_height: Optional[int] = None,
+    ) -> None:
+        await self.url_launcher.launch_url_async(
+            url,
+            web_window_name=web_window_name,
+            web_popup_window=web_popup_window,
+            window_width=window_width,
+            window_height=window_height,
+        )
 
-    async def can_launch_url_async(self, url: str) -> bool:
-        return await self.url_launcher.can_launch_url_async(url)
+    def can_launch_url_async(self, url: str):
+        return self.url_launcher.can_launch_url_async(url)
 
     def close_in_app_web_view(self) -> None:
         self.url_launcher.close_in_app_web_view()
+
+    async def close_in_app_web_view_async(self) -> None:
+        await self.url_launcher.close_in_app_web_view_async()
 
     def scroll_to(
         self,
@@ -631,101 +639,6 @@ class Page(AdaptiveControl):
         self.__default_view().scroll_to(
             offset=offset, delta=delta, key=key, duration=duration, curve=curve
         )
-
-    def _invoke_method(
-        self,
-        method_name: str,
-        arguments: Optional[Dict[str, str]] = None,
-        control_id: Optional[str] = "",
-        wait_for_result: Optional[bool] = False,
-        wait_timeout: Optional[float] = 5,
-    ) -> Optional[str]:
-        method_id = uuid.uuid4().hex
-
-        # register callback
-        evt: Optional[threading.Event] = None
-        if wait_for_result:
-            evt = threading.Event()
-            self.__method_calls[method_id] = evt
-
-        # call method
-        result = self._send_command(
-            "invokeMethod", values=[method_id, method_name, control_id], attrs=arguments
-        )
-
-        if result.error != "":
-            if wait_for_result:
-                del self.__method_calls[method_id]
-            raise Exception(result.error)
-        if not wait_for_result:
-            return
-        assert evt is not None
-
-        if not evt.wait(wait_timeout):
-            del self.__method_calls[method_id]
-            raise TimeoutError(
-                f"Timeout waiting for invokeMethod {method_name}({arguments}) call"
-            )
-
-        result, err = self.__method_call_results.pop(evt)
-        if err:
-            raise Exception(err)
-        if result is None or result == "null":
-            return None
-        return result
-
-    async def _invoke_method_async(
-        self,
-        method_name: str,
-        arguments: Optional[Dict[str, str]] = None,
-        control_id: Optional[str] = "",
-        wait_for_result: Optional[bool] = False,
-        wait_timeout: Optional[float] = 5,
-    ) -> Optional[str]:
-        method_id = uuid.uuid4().hex
-
-        # register callback
-        evt: Optional[asyncio.Event] = None
-        if wait_for_result:
-            evt = asyncio.Event()
-            self.__method_calls[method_id] = evt
-
-        # call method
-        result = self._send_command(
-            "invokeMethod", values=[method_id, method_name, control_id], attrs=arguments
-        )
-
-        if result.error != "":
-            if wait_for_result:
-                del self.__method_calls[method_id]
-            raise Exception(result.error)
-        if not wait_for_result:
-            return
-        assert evt is not None
-
-        try:
-            await asyncio.wait_for(evt.wait(), timeout=wait_timeout)
-        except TimeoutError:
-            del self.__method_calls[method_id]
-            raise TimeoutError(
-                f"Timeout waiting for invokeMethod {method_name}({arguments}) call"
-            )
-
-        result, err = self.__method_call_results.pop(evt)
-        if err:
-            raise Exception(err)
-        if result == "null":
-            return None
-        return result
-
-    def __on_invoke_method_result(self, e) -> None:
-        d = json.loads(e.data)
-        result = InvokeMethodResults(**d)
-        evt = self.__method_calls.pop(result.method_id, None)
-        if evt is None:
-            return
-        self.__method_call_results[evt] = (result.result, result.error)
-        evt.set()
 
     def open(self, control: Control) -> None:
         if not hasattr(control, "open"):
@@ -765,22 +678,22 @@ class Page(AdaptiveControl):
     # url
     @property
     def url(self) -> Optional[str]:
-        return self.__get_session().connection.page_url
+        return self.get_session().connection.page_url
 
     # name
     @property
     def name(self) -> str:
-        return self.__get_session().connection.page_name
+        return self.get_session().connection.page_name
 
     # loop
     @property
     def loop(self) -> asyncio.AbstractEventLoop:
-        return self.__loop
+        return self.get_session().connection.loop
 
     # executor
     @property
     def executor(self) -> Optional[ThreadPoolExecutor]:
-        return self.__executor
+        return self.get_session().connection.executor
 
     # auth
     @property
@@ -790,17 +703,12 @@ class Page(AdaptiveControl):
     # pubsub
     @property
     def pubsub(self) -> "PubSubClient":
-        return self.__get_session().pubsub_client
+        return self.get_session().pubsub_client
 
     # overlay
     @property
     def overlay(self) -> List[Control]:
         return self.offstage.controls
-
-    # browser_context_menu
-    @property
-    def browser_context_menu(self) -> BrowserContextMenu:
-        return self.__browser_context_menu
 
     # client_storage
     @property
@@ -812,22 +720,7 @@ class Page(AdaptiveControl):
             category=DeprecationWarning,
             stacklevel=2,
         )
-        return self.__shared_preferences
-
-    # shared_preferences
-    @property
-    def shared_preferences(self) -> SharedPreferences:
-        return self.__shared_preferences
-
-    # clipboard
-    @property
-    def clipboard(self) -> Clipboard:
-        return self.__clipboard
-
-    # url_launcher
-    @property
-    def url_launcher(self) -> UrlLauncher:
-        return self.__url_launcher
+        return self.shared_preferences
 
     # session_storage
     @property
