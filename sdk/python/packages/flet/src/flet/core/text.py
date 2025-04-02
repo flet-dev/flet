@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import List, Optional, Union
 
@@ -93,7 +93,7 @@ class Text(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/text
     """
 
-    value: str
+    value: str = field(default="")
     spans: Optional[List[TextSpan]] = None
     text_align: Optional[TextAlign] = None
     font_family: Optional[str] = None
