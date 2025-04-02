@@ -16,6 +16,16 @@ from flet.core.types import (
     OptionalNumber,
 )
 
+__all__ = [
+    "BoxDecoration",
+    "BoxShadow",
+    "DecorationImage",
+    "ColorFilter",
+    "FilterQuality",
+    "ShadowBlurStyle",
+    "BoxShape",
+]
+
 
 @dataclass
 class ColorFilter:

@@ -3,6 +3,8 @@ import asyncio
 from flet.core.control_event import ControlEvent
 from flet.core.types import OptionalControlEventCallable
 
+__all__ = ["EventHandler"]
+
 
 class EventHandler:
     def __init__(self, result_converter=None) -> None:

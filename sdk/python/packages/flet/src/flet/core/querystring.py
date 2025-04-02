@@ -2,6 +2,8 @@ import re
 import urllib.parse
 import weakref
 
+__all__ = ["QueryString", "UrlComponents"]
+
 
 class UrlComponents:
     """

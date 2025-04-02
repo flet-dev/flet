@@ -5,10 +5,9 @@ from flet.core.alignment import Axis
 from flet.core.buttons import ButtonStyle
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
-from flet.core.types import (
-    ClipBehavior,
-    OptionalControlEventCallable,
-)
+from flet.core.types import ClipBehavior, OptionalControlEventCallable
+
+__all__ = ["MenuItemButton"]
 
 
 @control("MenuItemButton")

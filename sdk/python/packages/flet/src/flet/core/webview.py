@@ -6,7 +6,6 @@ from typing import Any, Optional, Union
 from flet.core.animation import AnimationValue
 from flet.core.badge import BadgeValue
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import OptionalNumber
 from flet.core.control_event import ControlEvent
 from flet.core.event_handler import EventHandler
 from flet.core.exceptions import FletUnsupportedPlatformException
@@ -18,12 +17,22 @@ from flet.core.types import (
     OffsetValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
+    OptionalNumber,
     PagePlatform,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
 )
 from flet.utils import deprecated
+
+__all__ = [
+    "WebView",
+    "WebviewRequestMethod",
+    "WebviewLogLevelSeverity",
+    "WebviewScrollEvent",
+    "WebviewConsoleMessageEvent",
+    "WebviewJavaScriptEvent",
+]
 
 
 class WebviewRequestMethod(Enum):

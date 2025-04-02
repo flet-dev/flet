@@ -1,10 +1,10 @@
 from typing import Any, Optional
 
 from flet.core.border import BorderSide
-from flet.core.control import Control, OptionalNumber
+from flet.core.control import Control
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
-from flet.core.types import ColorEnums, ColorValue
+from flet.core.types import ColorEnums, ColorValue, OptionalNumber
 
 
 class PieChartSection(Control):

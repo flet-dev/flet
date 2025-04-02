@@ -4,6 +4,8 @@ from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
 from flet.core.types import OptionalControlEventCallable
 
+__all__ = ["CupertinoActionSheetAction"]
+
 
 @control("CupertinoActionSheetAction")
 class CupertinoActionSheetAction(ConstrainedControl):

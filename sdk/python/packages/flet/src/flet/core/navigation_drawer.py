@@ -12,6 +12,12 @@ from flet.core.types import (
     PaddingValue,
 )
 
+__all__ = [
+    "NavigationDrawer",
+    "NavigationDrawerDestination",
+    "NavigationDrawerPosition",
+]
+
 
 @control("NavigationDrawerDestination")
 class NavigationDrawerDestination(Control):

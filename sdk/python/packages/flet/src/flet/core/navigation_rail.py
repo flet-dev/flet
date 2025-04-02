@@ -14,6 +14,8 @@ from flet.core.types import (
     PaddingValue,
 )
 
+__all__ = ["NavigationRail", "NavigationRailDestination", "NavigationRailLabelType"]
+
 
 class NavigationRailLabelType(Enum):
     NONE = "none"

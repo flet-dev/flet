@@ -13,6 +13,15 @@ try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
+__all__ = [
+    "FilePicker",
+    "FilePickerResultEvent",
+    "FilePickerUploadEvent",
+    "FilePickerState",
+    "FilePickerFileType",
+    "FilePickerUploadFile",
+    "FilePickerFile",
+]
 
 
 class FilePickerState(Enum):

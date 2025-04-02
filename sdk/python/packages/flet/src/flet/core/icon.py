@@ -2,8 +2,10 @@ from typing import List, Optional, Union
 
 from flet.core.box import BoxShadow
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import OptionalNumber, control
-from flet.core.types import ColorValue, IconValue
+from flet.core.control import control
+from flet.core.types import ColorValue, IconValue, OptionalNumber
+
+__all__ = ["Icon"]
 
 
 @control("Icon")

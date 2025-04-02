@@ -1,21 +1,23 @@
 from dataclasses import field
 from enum import Enum
-from typing import Any, List, Optional
+from typing import List, Optional
 
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.alignment import Alignment
 from flet.core.buttons import OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, OptionalNumber, control
-from flet.core.ref import Ref
+from flet.core.control import Control, control
 from flet.core.types import (
     ClipBehavior,
     ColorValue,
     CrossAxisAlignment,
     OptionalControlEventCallable,
+    OptionalNumber,
     PaddingValue,
     VisualDensity,
 )
+
+__all__ = ["ExpansionTile", "TileAffinity"]
 
 
 class TileAffinity(Enum):

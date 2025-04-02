@@ -3,10 +3,16 @@ from typing import Dict, Optional
 
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, OptionalNumber, control
+from flet.core.control import Control, control
 from flet.core.control_event import ControlEvent
 from flet.core.snack_bar import DismissDirection
-from flet.core.types import OptionalControlEventCallable, OptionalEventCallable
+from flet.core.types import (
+    OptionalControlEventCallable,
+    OptionalEventCallable,
+    OptionalNumber,
+)
+
+__all__ = ["Dismissible", "DismissibleDismissEvent", "DismissibleUpdateEvent"]
 
 
 @control("Dismissible")

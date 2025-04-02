@@ -5,6 +5,8 @@ from flet.core.alignment import Alignment
 from flet.core.text_style import TextStyle
 from flet.core.types import ColorValue, OffsetValue, OptionalNumber, PaddingValue
 
+__all__ = ["Badge", "BadgeValue"]
+
 
 @dataclass
 class Badge:

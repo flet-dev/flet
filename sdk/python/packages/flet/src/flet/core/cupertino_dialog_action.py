@@ -1,9 +1,11 @@
 from typing import Any, Optional
 
-from flet.core.control import Control, OptionalNumber
+from flet.core.control import Control
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
-from flet.core.types import OptionalControlEventCallable
+from flet.core.types import OptionalControlEventCallable, OptionalNumber
+
+__all__ = ["CupertinoDialogAction"]
 
 
 class CupertinoDialogAction(Control):

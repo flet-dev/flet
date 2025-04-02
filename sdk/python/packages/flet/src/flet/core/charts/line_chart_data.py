@@ -4,10 +4,10 @@ from flet.core.box import BoxShadow
 from flet.core.charts.chart_point_line import ChartPointLine
 from flet.core.charts.chart_point_shape import ChartPointShape
 from flet.core.charts.line_chart_data_point import LineChartDataPoint
-from flet.core.control import Control, OptionalNumber
+from flet.core.control import Control
 from flet.core.gradients import Gradient
 from flet.core.ref import Ref
-from flet.core.types import ColorEnums, ColorValue
+from flet.core.types import ColorEnums, ColorValue, OptionalNumber
 
 
 class LineChartData(Control):

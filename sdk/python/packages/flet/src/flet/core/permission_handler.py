@@ -5,6 +5,8 @@ from flet.core.control import Control
 from flet.core.ref import Ref
 from flet.utils import deprecated
 
+__all__ = ["PermissionHandler", "PermissionStatus", "PermissionType"]
+
 
 class PermissionStatus(Enum):
     GRANTED = "granted"

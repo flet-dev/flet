@@ -1,10 +1,12 @@
-from typing import Any, Optional
+from typing import Optional
 
-from flet.core.control import Control, OptionalNumber
-from flet.core.ref import Ref
+from flet.core.control import Control, control
 from flet.core.types import OptionalControlEventCallable
 
+__all__ = ["RadioGroup"]
 
+
+@control("RadioGroup")
 class RadioGroup(Control):
     """
     Radio buttons let people select a single option from two or more choices.
@@ -35,68 +37,10 @@ class RadioGroup(Control):
     Online docs: https://flet.dev/docs/controls/radio
     """
 
-    def __init__(
-        self,
-        content: Control,
-        value: Optional[str] = None,
-        on_change: OptionalControlEventCallable = None,
-        #
-        # Control
-        #
-        ref: Optional[Ref] = None,
-        opacity: OptionalNumber = None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
-    ):
-
-        Control.__init__(
-            self,
-            ref=ref,
-            opacity=opacity,
-            visible=visible,
-            disabled=disabled,
-            data=data,
-        )
-
-        self.content = content
-        self.value = value
-        self.on_change = on_change
-
-    def _get_control_name(self):
-        return "radiogroup"
-
-    def _get_children(self):
-        self.__content._set_attr_internal("n", "content")
-        return [self.__content]
+    content: Control
+    value: Optional[str] = None
+    on_change: OptionalControlEventCallable = None
 
     def before_update(self):
         super().before_update()
-        assert self.__content.visible, "content must be visible"
-
-    # value
-    @property
-    def value(self) -> Optional[str]:
-        return self._get_attr("value")
-
-    @value.setter
-    def value(self, value: Optional[str]):
-        self._set_attr("value", value)
-
-    # content
-    @property
-    def content(self) -> Control:
-        return self.__content
-
-    @content.setter
-    def content(self, value: Control):
-        self.__content = value
-
-    # on_change
-    @property
-    def on_change(self) -> OptionalControlEventCallable:
-        return self._get_event_handler("change")
-
-    @on_change.setter
-    def on_change(self, handler: OptionalControlEventCallable):
-        self._add_event_handler("change", handler)
+        assert self.content.visible, "content must be visible"

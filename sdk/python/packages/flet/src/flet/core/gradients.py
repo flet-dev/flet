@@ -7,6 +7,14 @@ from typing import List, Optional, Union
 from flet.core import alignment
 from flet.core.alignment import Alignment
 
+__all__ = [
+    "Gradient",
+    "LinearGradient",
+    "RadialGradient",
+    "SweepGradient",
+    "GradientTileMode",
+]
+
 
 class GradientTileMode(Enum):
     CLAMP = "clamp"

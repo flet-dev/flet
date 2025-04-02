@@ -1,12 +1,13 @@
-import json
 import time
 from dataclasses import dataclass, field
 from typing import Optional
 
 from flet.core.animation import AnimationCurve
-from flet.core.control import Control, OptionalNumber, control
+from flet.core.control import Control, control
 from flet.core.control_event import ControlEvent
-from flet.core.types import OptionalEventCallable, ScrollMode
+from flet.core.types import OptionalEventCallable, OptionalNumber, ScrollMode
+
+__all__ = ["ScrollableControl", "OnScrollEvent"]
 
 
 @control(kw_only=True)

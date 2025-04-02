@@ -2,10 +2,11 @@ from typing import Optional
 
 from flet.core.control import Service, control
 
+__all__ = ["Clipboard"]
+
 
 @control("Clipboard")
 class Clipboard(Service):
-
     def set(self, value: str, timeout: Optional[float] = 10) -> None:
         self.invoke_method("set", {"data": value}, timeout=timeout)
 

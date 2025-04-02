@@ -4,6 +4,8 @@ from flet.core.control import Control
 from flet.core.ref import Ref
 from flet.utils import deprecated
 
+__all__ = ["Flashlight"]
+
 
 @deprecated(
     reason="Flashlight control has been moved to a separate Python package: https://pypi.org/project/flet-flashlight. "

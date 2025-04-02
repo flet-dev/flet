@@ -2,7 +2,7 @@ from typing import Any, Optional, Union
 
 from flet.core.alignment import Alignment
 from flet.core.badge import BadgeValue
-from flet.core.control import Control, OptionalNumber
+from flet.core.control import Control
 from flet.core.cupertino_button import CupertinoButton
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
@@ -11,10 +11,13 @@ from flet.core.types import (
     ColorValue,
     IconValue,
     OptionalControlEventCallable,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     UrlTarget,
 )
+
+__all__ = ["CupertinoFilledButton"]
 
 
 class CupertinoFilledButton(CupertinoButton):

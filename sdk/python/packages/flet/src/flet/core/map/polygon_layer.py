@@ -1,11 +1,17 @@
 from typing import Any, List, Optional
 
-from flet.core.control import Control, OptionalNumber
+from flet.core.control import Control
 from flet.core.map.map import MapLatitudeLongitude
 from flet.core.map.map_layer import MapLayer
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
-from flet.core.types import ColorEnums, ColorValue, StrokeCap, StrokeJoin
+from flet.core.types import (
+    ColorEnums,
+    ColorValue,
+    OptionalNumber,
+    StrokeCap,
+    StrokeJoin,
+)
 
 
 class PolygonMarker(Control):

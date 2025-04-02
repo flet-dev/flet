@@ -4,35 +4,7 @@ from flet.core.border import Border
 from flet.core.control import Control, control
 from flet.core.types import Brightness, ColorValue, PaddingValue
 
-
-@control("CupertinoAppBar")
-class CupertinoAppBar(Control):
-    """
-    An iOS-styled application bar.
-
-    Example:
-    ```
-    import flet as ft
-
-    def main(page: ft.Page):
-        page.theme_mode = ft.ThemeMode.LIGHT
-
-        page.appbar = ft.CupertinoAppBar(
-            leading=ft.Icon(ft.icons.PALETTE),
-            bgcolor=ft.colors.SURFACE_VARIANT,
-            trailing=ft.Icon(ft.icons.WB_SUNNY_OUTLINED),
-            middle=ft.Text("AppBar Example"),
-        )
-        page.add(ft.Text("Body!"))
-
-
-    ft.app(target=main)
-    ```
-
-    -----
-
-    Online docs: https://flet.dev/docs/controls/cupertinoappbar
-    """
+__all__ = ["CupertinoAppBar"]
 
 
 @control("CupertinoAppBar")

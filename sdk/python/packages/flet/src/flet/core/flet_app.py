@@ -5,6 +5,8 @@ from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import control
 from flet.core.types import OptionalControlEventCallable
 
+__all__ = ["FletApp"]
+
 
 @control("FletApp")
 class FletApp(ConstrainedControl):

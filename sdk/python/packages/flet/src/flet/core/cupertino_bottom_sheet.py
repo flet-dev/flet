@@ -1,7 +1,14 @@
 from typing import Optional
 
-from flet.core.control import Control, OptionalNumber, control
-from flet.core.types import ColorValue, OptionalControlEventCallable, PaddingValue
+from flet.core.control import Control, control
+from flet.core.types import (
+    ColorValue,
+    OptionalControlEventCallable,
+    OptionalNumber,
+    PaddingValue,
+)
+
+__all__ = ["CupertinoBottomSheet"]
 
 
 @control("CupertinoBottomSheet")

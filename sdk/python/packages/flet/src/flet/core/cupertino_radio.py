@@ -3,7 +3,6 @@ from typing import Any, Optional, Union
 from flet.core.animation import AnimationValue
 from flet.core.badge import BadgeValue
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
@@ -13,6 +12,7 @@ from flet.core.types import (
     MouseCursor,
     OffsetValue,
     OptionalControlEventCallable,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
@@ -22,6 +22,8 @@ try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
+
+__all__ = ["CupertinoRadio"]
 
 
 class CupertinoRadio(ConstrainedControl):

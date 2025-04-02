@@ -11,6 +11,8 @@ from flet.core.types import (
     ImageRepeat,
 )
 
+__all__ = ["Image"]
+
 
 @control("Image")
 class Image(ConstrainedControl):

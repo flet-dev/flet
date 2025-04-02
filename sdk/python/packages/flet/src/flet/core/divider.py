@@ -1,8 +1,10 @@
 from dataclasses import field
 from typing import Optional
 
-from flet.core.control import Control, OptionalNumber, control
-from flet.core.types import ColorValue
+from flet.core.control import Control, control
+from flet.core.types import ColorValue, OptionalNumber
+
+__all__ = ["Divider"]
 
 
 @control("Divider")

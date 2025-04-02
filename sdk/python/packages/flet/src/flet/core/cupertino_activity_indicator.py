@@ -1,8 +1,10 @@
 from typing import Optional
 
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import OptionalNumber, control
-from flet.core.types import ColorValue
+from flet.core.control import control
+from flet.core.types import ColorValue, OptionalNumber
+
+__all__ = ["CupertinoActivityIndicator"]
 
 
 @control("CupertinoActivityIndicator")

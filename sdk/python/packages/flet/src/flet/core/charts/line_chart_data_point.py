@@ -3,10 +3,10 @@ from typing import Any, Optional, Union
 from flet.core.badge import BadgeValue
 from flet.core.charts.chart_point_line import ChartPointLine
 from flet.core.charts.chart_point_shape import ChartPointShape
-from flet.core.control import Control, OptionalNumber
+from flet.core.control import Control
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
-from flet.core.types import TextAlign
+from flet.core.types import OptionalNumber, TextAlign
 
 
 class LineChartDataPoint(Control):

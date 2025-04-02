@@ -2,6 +2,7 @@ import weakref
 from typing import Generic, Optional, TypeVar
 
 T = TypeVar("T")
+__all__ = ["Ref"]
 
 
 class Ref(Generic[T]):

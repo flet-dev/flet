@@ -10,6 +10,8 @@ import random
 from enum import Enum
 from typing import Dict, List, Optional
 
+__all__ = ["CupertinoIcons"]
+
 
 class CupertinoIcons(str, Enum):
     @staticmethod

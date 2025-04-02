@@ -1,13 +1,16 @@
 from typing import Optional
 
 from flet.core.animation import AnimationValue
-from flet.core.control import Control, OptionalNumber, control
+from flet.core.control import Control, control
 from flet.core.types import (
     OffsetValue,
     OptionalControlEventCallable,
+    OptionalNumber,
     RotateValue,
     ScaleValue,
 )
+
+__all__ = ["ConstrainedControl"]
 
 
 @control(kw_only=True)

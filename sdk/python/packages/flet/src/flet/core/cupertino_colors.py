@@ -21,6 +21,8 @@ from typing import TYPE_CHECKING, Dict, List, Optional, Union
 if TYPE_CHECKING:
     from flet.core.types import ColorValue
 
+__all__ = ["CupertinoColors"]
+
 
 class CupertinoColors(str, Enum):
     @staticmethod

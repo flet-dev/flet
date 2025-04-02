@@ -2,12 +2,19 @@ import json
 from enum import Enum
 from typing import Any, Optional
 
-from flet.core.control import Control, OptionalNumber
+from flet.core.control import Control
 from flet.core.control_event import ControlEvent
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
-from flet.core.types import OptionalEventCallable
+from flet.core.types import OptionalEventCallable, OptionalNumber
 from flet.utils import deprecated
+
+__all__ = [
+    "AudioRecorder",
+    "AudioRecorderState",
+    "AudioEncoder",
+    "AudioRecorderStateChangeEvent",
+]
 
 
 class AudioRecorderState(Enum):

@@ -6,7 +6,7 @@ from flet.core.autofill_group import AutofillHint
 from flet.core.badge import BadgeValue
 from flet.core.border import Border
 from flet.core.box import BoxShadow, DecorationImage
-from flet.core.control import Control, OptionalNumber
+from flet.core.control import Control
 from flet.core.gradients import Gradient
 from flet.core.ref import Ref
 from flet.core.text_style import StrutStyle, TextStyle
@@ -20,12 +20,15 @@ from flet.core.types import (
     ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
+    OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
     TextAlign,
 )
+
+__all__ = ["CupertinoTextField", "VisibilityMode"]
 
 
 class VisibilityMode(Enum):

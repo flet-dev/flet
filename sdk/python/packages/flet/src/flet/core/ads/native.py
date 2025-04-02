@@ -4,9 +4,14 @@ from typing import Any, Optional, Union
 
 from flet.core.ads.base_ad import BaseAd
 from flet.core.animation import AnimationValue
-from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
-from flet.core.types import OffsetValue, ResponsiveNumber, RotateValue, ScaleValue
+from flet.core.types import (
+    OffsetValue,
+    OptionalNumber,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
+)
 
 
 class NativeAdTemplateType(Enum):

@@ -4,13 +4,14 @@ from typing import List, Optional
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.alignment import Alignment
 from flet.core.buttons import OutlinedBorder
-from flet.core.control import Control, OptionalNumber, control
+from flet.core.control import Control, control
 from flet.core.text_style import TextStyle
 from flet.core.types import (
     ClipBehavior,
     ColorValue,
     MainAxisAlignment,
     OptionalControlEventCallable,
+    OptionalNumber,
     PaddingValue,
 )
 
@@ -70,7 +71,7 @@ class AlertDialog(AdaptiveControl):
     modal: bool = field(default=False)
     title: Optional[Control] = None
     content: Optional[Control] = None
-    actions: Optional[List[Control]] = field(default_factory=list)
+    actions: List[Control] = field(default_factory=list)
     bgcolor: Optional[ColorValue] = None
     elevation: OptionalNumber = None
     icon: Optional[Control] = None

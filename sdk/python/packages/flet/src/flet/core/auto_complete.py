@@ -1,9 +1,11 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from flet.core.control import Control, OptionalNumber
+from flet.core.control import Control, control
 from flet.core.control_event import ControlEvent
-from flet.core.types import OptionalEventCallable
+from flet.core.types import OptionalEventCallable, OptionalNumber
+
+__all__ = ["AutoComplete", "AutoCompleteSuggestion", "AutoCompleteSelectEvent"]
 
 
 @dataclass
@@ -17,6 +19,7 @@ class AutoCompleteSelectEvent(ControlEvent):
     selection: AutoCompleteSuggestion
 
 
+@control("AutoComplete")
 class AutoComplete(Control):
     """
     Helps the user make a selection by entering some text and choosing from among a list of displayed options.

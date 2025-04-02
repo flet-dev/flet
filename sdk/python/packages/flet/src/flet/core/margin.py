@@ -1,6 +1,8 @@
 import dataclasses
 from typing import Union
 
+__all__ = ["Margin", "all", "symmetric", "only"]
+
 
 @dataclasses.dataclass
 class Margin:
@@ -19,6 +21,6 @@ def symmetric(vertical: float = 0, horizontal: float = 0) -> Margin:
 
 
 def only(
-        left: float = 0, top: float = 0, right: float = 0, bottom: float = 0
+    left: float = 0, top: float = 0, right: float = 0, bottom: float = 0
 ) -> Margin:
     return Margin(left=left, top=top, right=right, bottom=bottom)

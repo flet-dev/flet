@@ -1,5 +1,7 @@
 from flet.core.elevated_button import ElevatedButton
 
+__all__ = ["Button"]
+
 
 class Button(ElevatedButton):
     """

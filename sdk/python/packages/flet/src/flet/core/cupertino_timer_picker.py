@@ -5,7 +5,6 @@ from flet.core.alignment import Alignment
 from flet.core.animation import AnimationValue
 from flet.core.badge import BadgeValue
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
@@ -13,10 +12,13 @@ from flet.core.types import (
     ColorValue,
     OffsetValue,
     OptionalControlEventCallable,
+    OptionalNumber,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
 )
+
+__all__ = ["CupertinoTimerPicker", "CupertinoTimerPickerMode"]
 
 
 class CupertinoTimerPickerMode(Enum):

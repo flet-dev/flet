@@ -1,7 +1,8 @@
 from typing import Any, Optional
 
-from flet.core.control import Control, OptionalNumber
+from flet.core.control import Control
 from flet.core.ref import Ref
+from flet.core.types import OptionalNumber
 
 
 class ChartAxisLabel(Control):
