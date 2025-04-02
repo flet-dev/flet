@@ -5,6 +5,7 @@ import 'controls/column.dart';
 import 'controls/container.dart';
 import 'controls/divider.dart';
 import 'controls/dropdown.dart';
+import 'controls/elevated_button.dart';
 import 'controls/line_chart.dart';
 import 'controls/page.dart';
 import 'controls/row.dart';
@@ -40,6 +41,8 @@ class FletCoreExtension extends FletExtension {
         return TextControl(key: key, control: control);
       case "Container":
         return ContainerControl(key: key, control: control);
+      case "ElevatedButton":
+        return ElevatedButtonControl(key: key, control: control);
       case "Dropdown":
         return DropdownControl(key: key, control: control);
       case "Divider":
