@@ -3,7 +3,8 @@ from typing import Optional, Union
 
 from flet.core.alignment import Alignment
 from flet.core.text_style import TextStyle
-from flet.core.types import ColorValue, OffsetValue, OptionalNumber, PaddingValue
+from flet.core.transform import OffsetValue
+from flet.core.types import ColorValue, OptionalNumber, PaddingValue
 
 __all__ = ["Badge", "BadgeValue"]
 

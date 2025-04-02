@@ -11,20 +11,17 @@ from flet.core.event_handler import EventHandler
 from flet.core.map.map_layer import MapLayer
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
-from flet.core.transform import Offset
+from flet.core.transform import Offset, OffsetValue, RotateValue, ScaleValue
 from flet.core.types import (
     ColorEnums,
     ColorValue,
     ControlEvent,
     DurationValue,
     Number,
-    OffsetValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,
     ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
 )
 from flet.utils import deprecated
 

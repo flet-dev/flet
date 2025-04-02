@@ -1,17 +1,17 @@
 from dataclasses import dataclass
-from typing import List, Optional, Tuple, Union
+from typing import Optional
 
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.alignment import Alignment
 from flet.core.animation import AnimationValue
-from flet.core.blur import Blur
+from flet.core.blur import BlurValue
 from flet.core.border import Border
 from flet.core.box import (
     BoxDecoration,
-    BoxShadow,
     BoxShape,
     ColorFilter,
     DecorationImage,
+    ShadowValue,
 )
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
@@ -85,10 +85,8 @@ class Container(ConstrainedControl, AdaptiveControl):
     image: Optional[DecorationImage] = None
     ink_color: Optional[ColorValue] = None
     animate: Optional[AnimationValue] = None
-    blur: Optional[
-        Union[float, int, Tuple[Union[float, int], Union[float, int]], Blur]
-    ] = None
-    shadow: Optional[Union[BoxShadow, List[BoxShadow]]] = None
+    blur: Optional[BlurValue] = None
+    shadow: Optional[ShadowValue] = None
     url: Optional[str] = None
     url_target: Optional[UrlTarget] = None
     theme: Optional[Theme] = None

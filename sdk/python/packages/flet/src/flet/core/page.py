@@ -44,6 +44,7 @@ from flet.core.scrollable_control import OnScrollEvent
 from flet.core.session_storage import SessionStorage
 from flet.core.shared_preferences import SharedPreferences
 from flet.core.theme import Theme
+from flet.core.transform import OffsetValue
 from flet.core.types import (
     AppLifecycleState,
     Brightness,
@@ -52,7 +53,6 @@ from flet.core.types import (
     FloatingActionButtonLocation,
     LocaleConfiguration,
     MainAxisAlignment,
-    OffsetValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,

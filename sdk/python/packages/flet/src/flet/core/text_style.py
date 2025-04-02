@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from enum import Enum, IntFlag
-from typing import List, Optional, Union
+from typing import Optional
 
-from flet.core.box import BoxShadow
+from flet.core.box import ShadowValue
 from flet.core.painting import Paint
 from flet.core.types import ColorValue, FontWeight, OptionalNumber
 
@@ -75,7 +75,7 @@ class TextStyle:
     font_family: Optional[str] = None
     color: Optional[ColorValue] = None
     bgcolor: Optional[ColorValue] = None
-    shadow: Union[None, BoxShadow, List[BoxShadow]] = None
+    shadow: Optional[ShadowValue] = None
     foreground: Optional[Paint] = None
     letter_spacing: OptionalNumber = None
     word_spacing: OptionalNumber = None

@@ -9,14 +9,12 @@ from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
+from flet.core.transform import OffsetValue, RotateValue, ScaleValue
 from flet.core.types import (
-    OffsetValue,
     OptionalControlEventCallable,
     OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
 )
 
 __all__ = ["SegmentedButton", "Segment"]

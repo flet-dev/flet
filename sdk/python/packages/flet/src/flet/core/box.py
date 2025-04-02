@@ -5,6 +5,7 @@ from typing import List, Optional, Union
 from flet.core.alignment import Alignment
 from flet.core.border import Border
 from flet.core.gradients import Gradient
+from flet.core.transform import OffsetValue
 from flet.core.types import (
     BlendMode,
     BorderRadiusValue,
@@ -12,7 +13,6 @@ from flet.core.types import (
     ImageFit,
     ImageRepeat,
     Number,
-    OffsetValue,
     OptionalNumber,
 )
 
@@ -24,6 +24,8 @@ __all__ = [
     "FilterQuality",
     "ShadowBlurStyle",
     "BoxShape",
+    "BoxConstraints",
+    "ShadowValue",
 ]
 
 
@@ -56,6 +58,9 @@ class BoxShadow:
     blur_style: ShadowBlurStyle = field(default=ShadowBlurStyle.NORMAL)
 
 
+ShadowValue = Union[BoxShadow, List[BoxShadow]]
+
+
 class BoxShape(Enum):
     RECTANGLE = "rectangle"
     CIRCLE = "circle"
@@ -83,7 +88,7 @@ class BoxDecoration:
     image: Optional[DecorationImage] = None
     border: Optional[Border] = None
     border_radius: Optional[BorderRadiusValue] = None
-    shadow: Union[None, BoxShadow, List[BoxShadow]] = None
+    shadow: Optional[ShadowValue] = None
     gradient: Optional[Gradient] = None
     shape: Optional[BoxShape] = None
     blend_mode: Optional[BlendMode] = None

@@ -3,14 +3,12 @@ from typing import Any, Optional, Union
 from flet.core.animation import AnimationValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.ref import Ref
+from flet.core.transform import OffsetValue, RotateValue, ScaleValue
 from flet.core.types import (
-    OffsetValue,
     OptionalControlEventCallable,
     OptionalNumber,
     PagePlatform,
     ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
 )
 
 

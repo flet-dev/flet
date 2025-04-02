@@ -5,11 +5,6 @@ from typing import Optional, Union
 from flet.core.types import DurationValue
 from flet.utils import deprecated
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-
 __all__ = ["Animation", "AnimationCurve", "AnimationStyle", "AnimationValue"]
 
 

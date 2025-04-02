@@ -23,6 +23,6 @@ class CupertinoContextMenu(AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        assert (
-            len(self.actions) > 0
-        ), "actions must be provided and at least one must be visible"
+        assert any(
+            a.visible for a in self.actions
+        ), "at least one action Control must be provided and visible"

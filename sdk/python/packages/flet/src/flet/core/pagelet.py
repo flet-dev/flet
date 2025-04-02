@@ -10,7 +10,8 @@ from flet.core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.core.floating_action_button import FloatingActionButton
 from flet.core.navigation_bar import NavigationBar
 from flet.core.navigation_drawer import NavigationDrawer
-from flet.core.types import ColorValue, FloatingActionButtonLocation, OffsetValue
+from flet.core.transform import OffsetValue
+from flet.core.types import ColorValue, FloatingActionButtonLocation
 
 # todo: deprecate show_* in favor of a open/close methods, or page.open/close
 __all__ = ["Pagelet"]

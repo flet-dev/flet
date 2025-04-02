@@ -21,11 +21,7 @@ def from_dict(cls: Type[T], data: Any) -> T:
         for field in dataclasses.fields(cls):
             field_name = field.name
             field_type = type_hints.get(field_name, field.type)
-            data_field_name = (
-                field.metadata["data_field"]
-                if "data_field" in field.metadata
-                else field_name
-            )
+            data_field_name = field.metadata.get("data_field", field_name)
 
             if data_field_name in data:
                 value = data[data_field_name]
@@ -49,6 +45,17 @@ def from_dict(cls: Type[T], data: Any) -> T:
 
 
 def convert_value(field_type: Type, value: Any) -> Any:
+    """
+    Converts a value to its appropriate type based on the field_type.
+    Handles nested dataclasses, enums, lists, dicts, and optionals.
+
+    Args:
+        field_type: The type to convert the value to.
+        value: The value to convert.
+
+    Returns:
+        The converted value.
+    """
     origin = get_origin(field_type)
     args = get_args(field_type)
 
@@ -84,4 +91,13 @@ def convert_value(field_type: Type, value: Any) -> Any:
 
 
 def is_literal(value: Any) -> bool:
+    """
+    Checks if a value is a basic literal (int, float, str, bool, or None).
+
+    Args:
+        value: The value to check.
+
+    Returns:
+        True if the value is a literal type; False otherwise.
+    """
     return isinstance(value, (int, float, str, bool, type(None)))

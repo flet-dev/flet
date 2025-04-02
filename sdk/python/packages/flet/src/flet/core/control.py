@@ -203,6 +203,7 @@ class Control(BaseControl):
     rtl: bool = field(default=False)
 
     def before_update(self):
+        super().before_update()
         assert 0.0 <= self.opacity <= 1.0, "opacity must be between 0.0 and 1.0"
 
     def clean(self) -> None:

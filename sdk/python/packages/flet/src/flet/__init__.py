@@ -63,6 +63,7 @@ from flet.core.box import (
     DecorationImage,
     FilterQuality,
     ShadowBlurStyle,
+    ShadowValue,
 )
 from flet.core.button import Button
 from flet.core.buttons import (

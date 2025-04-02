@@ -5,11 +5,11 @@ from typing import List, Optional
 
 from flet.core.blur import BlurValue
 from flet.core.gradients import GradientTileMode
+from flet.core.transform import OffsetValue
 from flet.core.types import (
     BlendMode,
     ColorValue,
     Number,
-    OffsetValue,
     OptionalNumber,
     StrokeCap,
     StrokeJoin,

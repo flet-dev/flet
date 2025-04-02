@@ -1,3 +1,4 @@
+from dataclasses import field
 from typing import Optional
 
 from flet.core.control import Control, control
@@ -21,10 +22,10 @@ class CupertinoBottomSheet(Control):
     Online docs: https://flet.dev/docs/controls/cupertinobottomsheet
     """
 
-    content: Optional[Control] = (None,)
-    open: bool = (False,)
-    modal: bool = (False,)
-    bgcolor: Optional[ColorValue] = (None,)
-    height: OptionalNumber = (None,)
-    padding: Optional[PaddingValue] = (None,)
-    on_dismiss: OptionalControlEventCallable = (None,)
+    content: Optional[Control] = None
+    open: bool = field(default=False)
+    modal: bool = field(default=False)
+    bgcolor: Optional[ColorValue] = None
+    height: OptionalNumber = None
+    padding: Optional[PaddingValue] = None
+    on_dismiss: OptionalControlEventCallable = None

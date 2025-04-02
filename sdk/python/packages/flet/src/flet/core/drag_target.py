@@ -112,7 +112,7 @@ class DragTarget(Control):
 
     def before_update(self):
         super().before_update()
-        assert self.__content.visible, "content must be visible"
+        assert self.content.visible, "content must be visible"
 
 
 @dataclass
