@@ -53,8 +53,8 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
     bool disabled = widget.control.disabled || widget.control.parent!.disabled;
 
     return withPagePlatform((context, platform) {
-      // bool? adaptive =
-      //     widget.control.getBool("adaptive") ?? widget.parentAdaptive;
+      bool? adaptive =
+          widget.control.adaptive ?? widget.control.parent?.adaptive;
       // if (adaptive == true &&
       //     (platform == TargetPlatform.iOS ||
       //         platform == TargetPlatform.macOS)) {
