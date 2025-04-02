@@ -43,9 +43,9 @@ class CupertinoDialogActionControl extends StatelessWidget {
     }
 
     var cupertinoDialogAction = CupertinoDialogAction(
-      isDefaultAction: control.getBool("isDefaultAction", false)!,
-      isDestructiveAction: control.getBool("isDestructiveAction", false)!,
-      textStyle: parseTextStyle(Theme.of(context), control, "textStyle"),
+      isDefaultAction: control.getBool("is_default_action", false)!,
+      isDestructiveAction: control.getBool("is_destructive_action", false)!,
+      textStyle: parseTextStyle(Theme.of(context), control, "text_style"),
       onPressed: !disabled
           ? () {
               debugPrint("CupertinoDialogAction ${control.id} clicked!");
