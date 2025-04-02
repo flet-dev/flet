@@ -54,6 +54,7 @@ class _ScrollableControlState extends State<ScrollableControl>
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("ScrollableControl build: ${widget.control.id}");
     return withPagePlatform((context, platform) {
       ScrollMode scrollMode = parseScrollMode(
           widget.control.get<String>("scroll"), ScrollMode.none)!;

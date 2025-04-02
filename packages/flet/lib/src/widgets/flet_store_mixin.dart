@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -25,11 +24,7 @@ mixin FletStoreMixin {
 
   Widget withPagePlatform(Widget Function(BuildContext, TargetPlatform) build) {
     return Selector<FletBackend, TargetPlatform>(
-      selector: (_, backend) => TargetPlatform.values.firstWhere(
-          (a) =>
-              a.name.toLowerCase() ==
-              backend.page.get<String>("platform", "")!.toLowerCase(),
-          orElse: () => defaultTargetPlatform),
+      selector: (_, backend) => backend.platform,
       builder: (context, platform, _) => build(context, platform),
     );
   }

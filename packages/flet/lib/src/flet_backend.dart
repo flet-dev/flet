@@ -71,6 +71,7 @@ class FletBackend extends ChangeNotifier {
       padding: PaddingData(EdgeInsets.zero),
       viewPadding: PaddingData(EdgeInsets.zero),
       viewInsets: PaddingData(EdgeInsets.zero));
+  TargetPlatform platform = defaultTargetPlatform;
 
   late Control _page;
 
@@ -105,6 +106,9 @@ class FletBackend extends ChangeNotifier {
       }
     }, controlsIndex: _controlsIndex);
 
+    _page.addListener(_onPageUpdated);
+    _onPageUpdated();
+
     if (errorsHandler != null) {
       if (controlId == null) {
         // root error handler
@@ -126,6 +130,28 @@ class FletBackend extends ChangeNotifier {
   }
 
   Control get page => _page;
+
+  void _onPageUpdated() {
+    var newPlatform = TargetPlatform.values.firstWhere(
+        (a) =>
+            a.name.toLowerCase() ==
+            _page.get<String>("platform", "")!.toLowerCase(),
+        orElse: () => defaultTargetPlatform);
+    if (newPlatform != platform) {
+      platform = newPlatform;
+      notifyListeners();
+    }
+  }
+
+  @override
+  void dispose() {
+    debugPrint("Disposing Flet backend.");
+    _disposed = true;
+    _page.removeListener(_onPageUpdated);
+    _page.dispose();
+    _backendChannel?.disconnect();
+    super.dispose();
+  }
 
   Future<void> connect() async {
     debugPrint("Connecting to Flet backend $pageUri...");
@@ -411,11 +437,5 @@ class FletBackend extends ChangeNotifier {
 
   _send(Message message) {
     _backendChannel?.send(message);
-  }
-
-  void disconnect() {
-    debugPrint("Disconnecting from Flet backend.");
-    _disposed = true;
-    _backendChannel?.disconnect();
   }
 }

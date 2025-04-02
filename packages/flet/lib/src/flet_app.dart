@@ -42,7 +42,7 @@ class _FletAppState extends State<FletApp> {
 
   @override
   void deactivate() {
-    backend?.disconnect();
+    backend?.dispose();
     super.deactivate();
   }
 
