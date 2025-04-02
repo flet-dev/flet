@@ -1,6 +1,6 @@
-from typing import List, Optional, Union
+from typing import Optional
 
-from flet.core.box import BoxShadow
+from flet.core.box import ShadowValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import control
 from flet.core.types import ColorValue, IconValue, OptionalNumber
@@ -44,7 +44,7 @@ class Icon(ConstrainedControl):
     color: Optional[ColorValue] = None
     size: OptionalNumber = None
     semantics_label: Optional[str] = None
-    shadows: Union[BoxShadow, List[BoxShadow], None] = None
+    shadows: Optional[ShadowValue] = None
     fill: OptionalNumber = None
     apply_text_scaling: Optional[bool] = None
     grade: OptionalNumber = None

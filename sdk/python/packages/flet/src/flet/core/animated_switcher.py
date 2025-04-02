@@ -5,10 +5,6 @@ from flet.core.animation import AnimationCurve
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
 
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
 __all__ = ["AnimatedSwitcher", "AnimatedSwitcherTransition"]
 
 

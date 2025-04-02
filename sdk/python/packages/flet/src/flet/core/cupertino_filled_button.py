@@ -1,11 +1,10 @@
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from flet.core.alignment import Alignment
-from flet.core.badge import BadgeValue
+from flet.core.colors import Colors
 from flet.core.control import Control
 from flet.core.cupertino_button import CupertinoButton
 from flet.core.ref import Ref
-from flet.core.tooltip import TooltipValue
 from flet.core.types import (
     BorderRadiusValue,
     ColorValue,
@@ -13,7 +12,6 @@ from flet.core.types import (
     OptionalControlEventCallable,
     OptionalNumber,
     PaddingValue,
-    ResponsiveNumber,
     UrlTarget,
 )
 
@@ -41,75 +39,24 @@ class CupertinoFilledButton(CupertinoButton):
     Online docs: https://flet.dev/docs/controls/cupertinofilledbutton
     """
 
-    def __init__(
-        self,
-        text: Optional[str] = None,
-        icon: Optional[IconValue] = None,
-        icon_color: Optional[ColorValue] = None,
-        content: Optional[Control] = None,
-        disabled_bgcolor: Optional[ColorValue] = None,
-        opacity_on_click: OptionalNumber = None,
-        min_size: OptionalNumber = None,
-        padding: Optional[PaddingValue] = None,
-        alignment: Optional[Alignment] = None,
-        border_radius: Optional[BorderRadiusValue] = None,
-        url: Optional[str] = None,
-        url_target: Optional[UrlTarget] = None,
-        on_click: OptionalControlEventCallable = None,
-        on_long_press: OptionalControlEventCallable = None,
-        on_focus: OptionalControlEventCallable = None,
-        on_blur: OptionalControlEventCallable = None,
-        #
-        # ConstrainedControl
-        #
-        ref: Optional[Ref] = None,
-        key: Optional[str] = None,
-        width: OptionalNumber = None,
-        height: OptionalNumber = None,
-        expand: Union[None, bool, int] = None,
-        expand_loose: Optional[bool] = None,
-        col: Optional[ResponsiveNumber] = None,
-        opacity: OptionalNumber = None,
-        tooltip: Optional[TooltipValue] = None,
-        badge: Optional[BadgeValue] = None,
-        visible: Optional[bool] = None,
-        disabled: Optional[bool] = None,
-        data: Any = None,
-    ):
-        CupertinoButton.__init__(
-            self,
-            ref=ref,
-            key=key,
-            width=width,
-            height=height,
-            expand=expand,
-            expand_loose=expand_loose,
-            col=col,
-            opacity=opacity,
-            tooltip=tooltip,
-            badge=badge,
-            visible=visible,
-            disabled=disabled,
-            data=data,
-            #
-            # Specific
-            #
-            color="onPrimary",
-            bgcolor="primary",
-            disabled_bgcolor=disabled_bgcolor,
-            text=text,
-            icon=icon,
-            icon_color=icon_color,
-            content=content,
-            url=url,
-            url_target=url_target,
-            on_click=on_click,
-            border_radius=border_radius,
-            min_size=min_size,
-            opacity_on_click=opacity_on_click,
-            padding=padding,
-            alignment=alignment,
-            on_long_press=on_long_press,
-            on_focus=on_focus,
-            on_blur=on_blur,
-        )
+    text: Optional[str] = None
+    icon: Optional[IconValue] = None
+    icon_color: Optional[ColorValue] = None
+    content: Optional[Control] = None
+    disabled_bgcolor: Optional[ColorValue] = None
+    opacity_on_click: OptionalNumber = None
+    min_size: OptionalNumber = None
+    padding: Optional[PaddingValue] = None
+    alignment: Optional[Alignment] = None
+    border_radius: Optional[BorderRadiusValue] = None
+    url: Optional[str] = None
+    url_target: Optional[UrlTarget] = None
+    on_click: OptionalControlEventCallable = None
+    on_long_press: OptionalControlEventCallable = None
+    on_focus: OptionalControlEventCallable = None
+    on_blur: OptionalControlEventCallable = None
+
+    def __post_init__(self, ref: Optional[Ref[Any]]):
+        super().__post_init__(ref)
+        self.color = Colors.ON_PRIMARY
+        self.bgcolor = Colors.PRIMARY

@@ -73,7 +73,7 @@ class DataRow(Control):
         ), "cells must contain at minimum one visible DataCell"
         assert all(
             isinstance(cell, DataCell) for cell in self.cells
-        ), "cells must contain only DataCell instances"
+        ), "cells must contain only DataCell instances"  # todo: is this needed?
 
 
 @control("DataTable")
@@ -135,4 +135,4 @@ class DataTable(ConstrainedControl):
         ), "columns must contain only DataColumn instances"
         assert all(
             isinstance(row, DataRow) for row in self.rows
-        ), "rows must contain only DataRow instances"
+        ), "rows must contain only DataRow instances"  # todo: is this needed?
