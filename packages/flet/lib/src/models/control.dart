@@ -19,6 +19,7 @@ class Control extends ChangeNotifier {
   final String type;
   final Map<String, dynamic> properties;
   bool notifyParent = false;
+  final List<String> _notifyParentProperties = ["visible"];
   WeakReference<Control>? _parent;
   Completer<void>? _listenerAddedCompleter;
   final List<InvokeControlMethodCallback> _invokeMethodListeners = [];
@@ -129,6 +130,7 @@ class Control extends ChangeNotifier {
       {WeakValueMap<int, Control>? controlsIndex, bool shouldNotify = true}) {
     debugPrint("Control($id).applyPatch: $patch");
     bool changed = false;
+    bool notifyParentPropertyChanged = false;
     patch.forEach((key, patchValue) {
       if (patchValue is Map) {
         if (properties.containsKey(key)) {
@@ -168,19 +170,27 @@ class Control extends ChangeNotifier {
       } else {
         properties[key] = patchValue;
         changed = true;
+        if (_notifyParentProperties.contains(key)) {
+          notifyParentPropertyChanged = true;
+        }
       }
     });
-    if (changed && shouldNotify) {
-      if (notifyParent) {
+    if (changed) {
+      if (shouldNotify) {
+        if (notifyParent) {
+          _parent?.target?.notify();
+        } else {
+          notify();
+        }
+      }
+      if (notifyParentPropertyChanged) {
         _parent?.target?.notify();
-      } else {
-        notify();
       }
     }
   }
 
   void notify() {
-    //debugPrint("Control($id) changed.");
+    debugPrint("$type($id) changed.");
     notifyListeners();
   }
 
