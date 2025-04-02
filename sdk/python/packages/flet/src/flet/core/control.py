@@ -122,6 +122,10 @@ class BaseControl:
         return False
 
     def build(self):
+        # this one is deprecated
+        pass
+
+    def init(self):
         pass
 
     def before_update(self):

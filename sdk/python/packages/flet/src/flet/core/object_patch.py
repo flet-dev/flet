@@ -31,6 +31,7 @@
 #
 
 import dataclasses
+import warnings
 import weakref
 from collections.abc import MutableMapping
 from typing import Any, Optional
@@ -569,7 +570,14 @@ class DiffBuilder(object):
                 setattr(item, "_parent", weakref.ref(parent))
 
             # call Control.build()
-            item.build()
+            if hasattr(item, "build") and "build" in item.__class__.__dict__:
+                warnings.warn(
+                    "'Control.build()' is deprecated. Use 'Control.init()' instead.",
+                    DeprecationWarning,
+                )
+                item.build()
+            else:
+                item.init()
 
             # add control to the index
             if self.controls_index is not None:
