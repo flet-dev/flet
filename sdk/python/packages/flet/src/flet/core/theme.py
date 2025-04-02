@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from flet.core.alignment import Alignment
 from flet.core.border import BorderSide
@@ -17,6 +17,7 @@ from flet.core.snack_bar import DismissDirection, SnackBarBehavior
 from flet.core.text_style import TextStyle
 from flet.core.textfield import TextCapitalization
 from flet.core.tooltip import TooltipTriggerMode
+from flet.core.transform import OffsetValue
 from flet.core.types import (
     Brightness,
     ClipBehavior,
@@ -30,7 +31,6 @@ from flet.core.types import (
     MarginValue,
     MouseCursor,
     NotchShape,
-    OffsetValue,
     OptionalNumber,
     PaddingValue,
     StrokeCap,

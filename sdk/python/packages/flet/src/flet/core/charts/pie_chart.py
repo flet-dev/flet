@@ -10,16 +10,14 @@ from flet.core.control_event import ControlEvent
 from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
+from flet.core.transform import OffsetValue, RotateValue, ScaleValue
 from flet.core.types import (
     ColorEnums,
     ColorValue,
-    OffsetValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,
     ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
 )
 
 

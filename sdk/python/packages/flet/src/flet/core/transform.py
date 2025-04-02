@@ -1,9 +1,10 @@
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, Tuple, Union
 
 from flet.core.alignment import Alignment
+from flet.core.types import Number
 
-__all__ = ["Scale", "Rotate", "Offset"]
+__all__ = ["Scale", "Rotate", "Offset", "ScaleValue", "RotateValue", "OffsetValue"]
 
 
 @dataclass
@@ -26,6 +27,6 @@ class Offset:
     y: float
 
 
-# RotateValue = Union[Number, Rotate]
-# ScaleValue = Union[Number, Scale]
-# OffsetValue = Union[Offset, Tuple[Number, Number]]
+RotateValue = Union[Number, Rotate]
+ScaleValue = Union[Number, Scale]
+OffsetValue = Union[Offset, Tuple[Number, Number]]

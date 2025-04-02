@@ -10,18 +10,16 @@ from flet.core.constrained_control import ConstrainedControl
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
+from flet.core.transform import OffsetValue, RotateValue, ScaleValue
 from flet.core.types import (
     ColorEnums,
     ColorValue,
     ImageFit,
-    OffsetValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
     TextAlign,
 )
 from flet.utils import deprecated

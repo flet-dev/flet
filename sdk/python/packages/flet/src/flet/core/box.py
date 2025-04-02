@@ -5,6 +5,7 @@ from typing import List, Optional, Union
 from flet.core.alignment import Alignment
 from flet.core.border import Border
 from flet.core.gradients import Gradient
+from flet.core.transform import OffsetValue
 from flet.core.types import (
     BlendMode,
     BorderRadiusValue,
@@ -12,7 +13,6 @@ from flet.core.types import (
     ImageFit,
     ImageRepeat,
     Number,
-    OffsetValue,
     OptionalNumber,
 )
 

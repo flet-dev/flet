@@ -3,7 +3,7 @@ from typing import Any, List, Optional
 
 from flet.core.canvas.shape import Shape
 from flet.core.painting import Paint
-from flet.core.types import OffsetValue
+from flet.core.transform import OffsetValue
 
 
 class PointMode(Enum):

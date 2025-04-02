@@ -9,6 +9,7 @@ from flet.core.control import Control
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
+from flet.core.transform import OffsetValue, RotateValue, ScaleValue
 from flet.core.types import (
     BorderRadiusValue,
     ColorEnums,
@@ -16,13 +17,10 @@ from flet.core.types import (
     DurationValue,
     IconEnums,
     IconValueOrControl,
-    OffsetValue,
     OptionalControlEventCallable,
     OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
     VerticalAlignment,
 )
 

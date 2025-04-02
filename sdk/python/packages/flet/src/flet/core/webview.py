@@ -11,17 +11,15 @@ from flet.core.event_handler import EventHandler
 from flet.core.exceptions import FletUnsupportedPlatformException
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
+from flet.core.transform import OffsetValue, RotateValue, ScaleValue
 from flet.core.types import (
     ColorEnums,
     ColorValue,
-    OffsetValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,
     PagePlatform,
     ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
 )
 from flet.utils import deprecated
 

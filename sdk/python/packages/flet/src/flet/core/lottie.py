@@ -6,14 +6,12 @@ from flet.core.box import FilterQuality
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
+from flet.core.transform import OffsetValue, RotateValue, ScaleValue
 from flet.core.types import (
     ImageFit,
-    OffsetValue,
     OptionalControlEventCallable,
     OptionalNumber,
     ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
 )
 from flet.utils import deprecated
 

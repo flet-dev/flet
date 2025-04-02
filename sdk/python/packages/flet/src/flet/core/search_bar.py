@@ -12,19 +12,17 @@ from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.textfield import KeyboardType, TextCapitalization
 from flet.core.tooltip import TooltipValue
+from flet.core.transform import OffsetValue, RotateValue, ScaleValue
 from flet.core.types import (
     ColorEnums,
     ColorValue,
     ControlState,
     ControlStateValue,
     Number,
-    OffsetValue,
     OptionalControlEventCallable,
     OptionalNumber,
     PaddingValue,
     ResponsiveNumber,
-    RotateValue,
-    ScaleValue,
 )
 
 __all__ = ["SearchBar"]

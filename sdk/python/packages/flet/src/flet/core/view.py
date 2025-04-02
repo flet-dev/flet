@@ -12,12 +12,12 @@ from flet.core.floating_action_button import FloatingActionButton
 from flet.core.navigation_bar import NavigationBar
 from flet.core.navigation_drawer import NavigationDrawer
 from flet.core.scrollable_control import ScrollableControl
+from flet.core.transform import OffsetValue
 from flet.core.types import (
     ColorValue,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     MainAxisAlignment,
-    OffsetValue,
     OptionalNumber,
     PaddingValue,
 )
