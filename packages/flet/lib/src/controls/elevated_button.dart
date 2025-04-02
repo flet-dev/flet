@@ -59,8 +59,8 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
       //     (platform == TargetPlatform.iOS ||
       //         platform == TargetPlatform.macOS)) {
       //   return widget.control.name == "action" &&
-      //           (widget.parent?.type == "alertdialog" ||
-      //               widget.parent?.type == "cupertinoalertdialog")
+      //           (widget.parent?.type == "AlertDialog" ||
+      //               widget.parent?.type == "CupertinoAlertDialog")
       //       ? CupertinoDialogActionControl(
       //           control: widget.control,
       //           parentDisabled: widget.parentDisabled,
@@ -81,7 +81,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
       String url = widget.control.getString("url", "")!;
       IconData? icon = parseIcon(widget.control.getString("icon"));
       Color? iconColor = widget.control.getColor("iconColor", context);
-      var content = widget.control.get("content");
+      Control? content = widget.control.child("content");
 
       var clipBehavior =
           parseClip(widget.control.getString("clipBehavior"), Clip.none)!;
