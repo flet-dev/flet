@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import 'controls/banner.dart';
 import 'controls/center.dart';
 import 'controls/column.dart';
 import 'controls/container.dart';
@@ -35,6 +36,8 @@ class FletCoreExtension extends FletExtension {
         return RowControl(key: key, control: control);
       case "Column":
         return ColumnControl(key: key, control: control);
+      case "Banner":
+        return BannerControl(key: key, control: control);
       case "Text":
         return TextControl(key: key, control: control);
       case "Container":

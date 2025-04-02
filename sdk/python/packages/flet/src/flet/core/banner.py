@@ -6,6 +6,7 @@ from flet.core.text_style import TextStyle
 from flet.core.types import (
     ColorValue,
     MarginValue,
+    Number,
     OptionalControlEventCallable,
     OptionalNumber,
     PaddingValue,
@@ -65,7 +66,7 @@ class Banner(Control):
     leading: Optional[Control] = None
     leading_padding: Optional[PaddingValue] = None
     content_padding: Optional[PaddingValue] = None
-    force_actions_below: Optional[bool] = None
+    force_actions_below: bool = field(default=False)
     bgcolor: Optional[ColorValue] = None
     surface_tint_color: Optional[ColorValue] = None
     shadow_color: Optional[ColorValue] = None
@@ -73,15 +74,15 @@ class Banner(Control):
     elevation: OptionalNumber = None
     margin: Optional[MarginValue] = None
     content_text_style: Optional[TextStyle] = None
-    min_action_bar_height: OptionalNumber = None
+    min_action_bar_height: Number = field(default=52.0)
     on_visible: OptionalControlEventCallable = None
 
     def before_update(self):
         super().before_update()
-        assert self.content.visible, "content must be visible"
         assert (
             self.elevation is None or self.elevation >= 0
         ), "elevation cannot be negative"
+        assert self.content.visible, "content must be visible"
         assert any(
             a.visible for a in self.actions
         ), "actions must contain at minimum one visible action Control"
