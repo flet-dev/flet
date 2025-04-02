@@ -6,12 +6,12 @@ from flet.core.alignment import Alignment
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
 from flet.core.control_event import ControlEvent
+from flet.core.transform import Offset
 from flet.core.types import (
     ClipBehavior,
     DurationValue,
     MarginValue,
     Number,
-    Offset,
     OptionalNumber,
 )
 
