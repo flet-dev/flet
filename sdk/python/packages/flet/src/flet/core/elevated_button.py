@@ -44,16 +44,6 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         Online docs: https://flet.dev/docs/controls/elevatedbutton
     """
 
-    def __post_init__(self, ref: Ref[Any] | None):
-        super().__post_init__(ref)
-        if "text" in self.__dict__:
-            self.content = self.__dict__.pop("text")
-            warnings.warn(
-                "'text' is deprecated. Use 'content' instead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-
     def __setattr__(self, name, value):
         if name == "text":
             warnings.warn(
@@ -61,13 +51,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
                 DeprecationWarning,
                 stacklevel=2,
             )
-            name = "content"
         super().__setattr__(name, value)
-
-    def __getattribute__(self, name):
-        if name == "text":
-            name = "content"
-        return super().__getattribute__(name)
 
     text: Optional[str] = None  # deprecated
     icon: Optional[IconValue] = None
