@@ -80,13 +80,13 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
       String text = widget.control.getString("text", "")!;
       String url = widget.control.getString("url", "")!;
       IconData? icon = parseIcon(widget.control.getString("icon"));
-      Color? iconColor = widget.control.getColor("iconColor", context);
+      Color? iconColor = widget.control.getColor("icon_color", context);
       Control? content = widget.control.child("content");
 
       var clipBehavior =
-          parseClip(widget.control.getString("clipBehavior"), Clip.none)!;
-      bool onHover = widget.control.getBool("onHover", false)!;
-      bool onLongPress = widget.control.getBool("onLongPress", false)!;
+          parseClip(widget.control.getString("clip_behavior"), Clip.none)!;
+      //bool onHover = widget.control.getBool("onHover", false)!;
+      //bool onLongPress = widget.control.getBool("onLongPress", false)!;
       bool autofocus = widget.control.getBool("autofocus", false)!;
 
       Function()? onPressed = !disabled
@@ -101,7 +101,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             }
           : null;
 
-      Function()? onLongPressHandler = onLongPress && !disabled
+      Function()? onLongPressHandler = !disabled
           ? () {
               debugPrint("Button ${widget.control.id} long pressed!");
               FletBackend.of(context)
@@ -109,7 +109,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             }
           : null;
 
-      Function(bool)? onHoverHandler = onHover && !disabled
+      Function(bool)? onHoverHandler = !disabled
           ? (state) {
               debugPrint("Button ${widget.control.id} hovered!");
               FletBackend.of(context).triggerControlEvent(
