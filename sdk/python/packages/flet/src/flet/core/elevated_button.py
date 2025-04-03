@@ -10,6 +10,7 @@ from flet.core.types import (
     IconValue,
     OptionalControlEventCallable,
     OptionalNumber,
+    StrOrControl,
     UrlTarget,
 )
 
@@ -45,7 +46,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     icon_color: Optional[ColorValue] = None
     color: Optional[ColorValue] = None
     bgcolor: Optional[ColorValue] = None
-    content: Optional[Control] = None
+    content: Optional[StrOrControl] = None
     elevation: OptionalNumber = None
     style: Optional[ButtonStyle] = None
     autofocus: Optional[bool] = None

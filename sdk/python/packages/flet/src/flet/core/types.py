@@ -382,6 +382,9 @@ IconEnums = (Icons, CupertinoIcons)
 IconValue = Union[str, Icons, CupertinoIcons]
 IconValueOrControl = Union[IconValue, "Control"]
 
+# Content
+StrOrControl = Union[str, "Control"]
+
 # ControlState
 T = TypeVar("T")
 ControlStateValue = Union[None, T, Dict[ControlState, T]]
@@ -395,5 +398,4 @@ Wrapper = Callable[..., Any]
 
 # Protocols
 class SupportsStr(Protocol):
-    def __str__(self) -> str:
-        ...
+    def __str__(self) -> str: ...
