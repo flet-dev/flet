@@ -2,6 +2,8 @@ import functools
 import warnings
 from typing import Optional
 
+__all__ = ["deprecated", "deprecated_class", "deprecated_warning"]
+
 
 def deprecated(
     reason: str,
@@ -58,11 +60,24 @@ def deprecated_class(reason: str, version: str, delete_version: str):
     return decorator
 
 
-def deprecated_property(
-    name: str, reason: str, version: str, delete_version: Optional[str] = None
+def deprecated_warning(
+    name: str,
+    reason: str,
+    version: str,
+    delete_version: Optional[str] = None,
+    type: str = "property",
 ):
+    """
+    Helper function to issue a standardized deprecation warning message.
+
+    :param name: The name of the deprecated object.
+    :param reason: A short explanation of why the object is deprecated and/or what to use instead.
+    :param version: The version in which the object was marked as deprecated.
+    :param delete_version: Optional; the version in which the object is scheduled to be removed.
+    :param type: The type of the object being deprecated (e.g., "property"). Defaults to "property".
+    """
     warnings.warn(
-        f"{name} property is deprecated since version {version}"
+        f"{name} {type} is deprecated since version {version}"
         f"{' and will be removed in version ' + delete_version if delete_version else ''}. {reason}",
         category=DeprecationWarning,
         stacklevel=2,
