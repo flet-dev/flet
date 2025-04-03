@@ -46,7 +46,7 @@ class ExpansionPanelList(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/expansionpanellist
     """
 
-    controls: Optional[List[ExpansionPanel]] = None
+    controls: List[ExpansionPanel] = field(default_factory=list)
     divider_color: Optional[ColorValue] = None
     elevation: Number = field(default=2)
     expanded_header_padding: PaddingValue = field(
