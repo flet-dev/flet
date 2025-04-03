@@ -29,8 +29,8 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
     header: Optional[Control] = None
     content: Optional[Control] = None
     bgcolor: Optional[ColorValue] = None
-    expanded: bool = field(default=False)
-    can_tap_header: bool = field(default=False)
+    expanded: bool = False
+    can_tap_header: bool = False
 
     def before_update(self):
         super().before_update()
@@ -48,7 +48,7 @@ class ExpansionPanelList(ConstrainedControl):
 
     controls: List[ExpansionPanel] = field(default_factory=list)
     divider_color: Optional[ColorValue] = None
-    elevation: Number = field(default=2)
+    elevation: Number = 2
     expanded_header_padding: PaddingValue = field(
         default_factory=lambda: padding.symmetric(vertical=16.0)
     )
