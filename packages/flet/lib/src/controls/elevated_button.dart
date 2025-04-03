@@ -1,3 +1,4 @@
+import 'package:flet/src/extensions/control.dart';
 import 'package:flet/src/flet_backend.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,6 @@ import '../utils/others.dart';
 import '../widgets/error.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';
-import 'control_widget.dart';
 import 'cupertino_button.dart';
 import 'cupertino_dialog_action.dart';
 
@@ -76,7 +76,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
       String url = widget.control.getString("url", "")!;
       IconData? icon = parseIcon(widget.control.getString("icon"));
       Color? iconColor = widget.control.getColor("icon_color", context);
-      Control? content = widget.control.child("content");
+      Widget content = widget.control.getWidget("content") ?? Text(text);
 
       var clipBehavior =
           parseClip(widget.control.getString("clip_behavior"), Clip.none)!;
@@ -179,13 +179,6 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
               label: Text(text));
         }
       } else {
-        Widget? child;
-        if (content is Control) {
-          child = ControlWidget(control: content);
-        } else {
-          child = Text(text);
-        }
-
         if (isFilledButton) {
           button = FilledButton(
               style: style,
@@ -195,7 +188,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
               onLongPress: onLongPressHandler,
               onHover: onHoverHandler,
               clipBehavior: clipBehavior,
-              child: child);
+              child: content);
         } else if (isFilledTonalButton) {
           button = FilledButton.tonal(
               style: style,
@@ -205,7 +198,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
               onLongPress: onLongPressHandler,
               onHover: onHoverHandler,
               clipBehavior: clipBehavior,
-              child: child);
+              child: content);
         } else {
           button = ElevatedButton(
               style: style,
@@ -215,7 +208,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
               onLongPress: onLongPressHandler,
               onHover: onHoverHandler,
               clipBehavior: clipBehavior,
-              child: child);
+              child: content);
         }
       }
 
