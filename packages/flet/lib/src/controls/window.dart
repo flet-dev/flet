@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
@@ -48,20 +50,55 @@ class _WindowControlState extends State<WindowControl> with WindowListener {
   bool? _skipTaskBar;
   double? _progressBar;
   bool? _ignoreMouseEvents;
+  final Completer<void> _initWindowStateCompleter = Completer<void>();
 
   @override
   void initState() {
     debugPrint("Window.initState()");
     super.initState();
+    _initWindowState();
+  }
+
+  Future<void> _initWindowState() async {
+    final windowState = await getWindowState();
+    _width = windowState.width;
+    _height = windowState.height;
+    _top = windowState.top;
+    _left = windowState.left;
+    _opacity = windowState.opacity;
+    _minimizable = windowState.minimizable;
+    _maximizable = windowState.maximizable;
+    _fullScreen = windowState.fullScreen;
+    _resizable = windowState.resizable;
+    _alwaysOnTop = windowState.alwaysOnTop;
+    _preventClose = windowState.preventClose;
+    _minimized = windowState.minimized;
+    _maximized = windowState.maximized;
+    _visible = windowState.visible;
+    _focused = windowState.focused;
+    _skipTaskBar = windowState.skipTaskBar;
+
+    // bind listeners
     windowManager.addListener(this);
     widget.control.addInvokeMethodListener(_invokeMethod);
+
+    if (!_initWindowStateCompleter.isCompleted) {
+      _initWindowStateCompleter.complete();
+    }
   }
 
   @override
   void didChangeDependencies() {
     debugPrint("Window.didChangeDependencies: ${widget.control.id}");
     super.didChangeDependencies();
-    _updateWindow(FletBackend.of(context));
+    var backend = FletBackend.of(context);
+    if (_initWindowStateCompleter.isCompleted) {
+      _updateWindow(backend);
+    } else {
+      _initWindowStateCompleter.future.then((_) {
+        _updateWindow(backend);
+      });
+    }
   }
 
   @override
