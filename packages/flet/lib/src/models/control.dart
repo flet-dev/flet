@@ -128,7 +128,7 @@ class Control extends ChangeNotifier {
   ///
   void applyPatch(Map<dynamic, dynamic> patch,
       {WeakValueMap<int, Control>? controlsIndex, bool shouldNotify = true}) {
-    debugPrint("Control($id).applyPatch: $patch");
+    debugPrint("Control($id).applyPatch: $patch, shouldNotify = $shouldNotify");
     bool changed = false;
     bool notifyParentPropertyChanged = false;
     patch.forEach((key, patchValue) {
@@ -168,10 +168,12 @@ class Control extends ChangeNotifier {
             .toList();
         changed = true;
       } else {
-        properties[key] = patchValue;
-        changed = true;
-        if (_notifyParentProperties.contains(key)) {
-          notifyParentPropertyChanged = true;
+        if (properties[key] != patchValue) {
+          properties[key] = patchValue;
+          changed = true;
+          if (_notifyParentProperties.contains(key)) {
+            notifyParentPropertyChanged = true;
+          }
         }
       }
     });

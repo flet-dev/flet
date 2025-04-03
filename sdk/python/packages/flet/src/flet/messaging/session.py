@@ -27,9 +27,9 @@ class Session:
         self.__conn: weakref.ReferenceType = weakref.ref(conn)
         self.__id = random_string(16)
         self.__expires_at = None
-        self.__index: weakref.WeakValueDictionary[
-            int, Control
-        ] = weakref.WeakValueDictionary()
+        self.__index: weakref.WeakValueDictionary[int, Control] = (
+            weakref.WeakValueDictionary()
+        )
         self.__page = Page(self)
         self.__index[self.__page._i] = self.__page
         self.__pubsub_client = PubSubClient(conn.pubsubhub, self.__id)
@@ -74,11 +74,12 @@ class Session:
 
     def patch_control(self, control: BaseControl):
         patch = self.__get_update_control_patch(control=control, prev_control=control)
-        self.connection.send_message(
-            ClientMessage(
-                ClientAction.PATCH_CONTROL, PatchControlBody(control._i, patch)
+        if patch:
+            self.connection.send_message(
+                ClientMessage(
+                    ClientAction.PATCH_CONTROL, PatchControlBody(control._i, patch)
+                )
             )
-        )
 
     def apply_patch(self, control_id: int, patch: dict[str, Any]):
         if control := self.__index.get(control_id):

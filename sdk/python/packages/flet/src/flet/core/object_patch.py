@@ -567,6 +567,13 @@ class DiffBuilder(object):
         if self.control_cls and isinstance(item, self.control_cls):
             # set parent
             if parent:
+                # print(
+                #     f"\n*** _configure_control: ***\n\nitem: {item._c}({item._i})\nparent: {parent._c}({parent._i})"
+                # )
+                # if hasattr(item, "_parent"):
+                #     raise Exception(
+                #         f"Control {item._c}({item._i}) is already a part of {item.parent._c}({item.parent._i})."
+                #     )
                 setattr(item, "_parent", weakref.ref(parent))
 
             # call Control.build()

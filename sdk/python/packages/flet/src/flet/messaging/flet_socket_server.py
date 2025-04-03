@@ -7,9 +7,8 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Optional
 
-import msgpack
-
 import flet
+import msgpack
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,
@@ -177,7 +176,7 @@ class FletSocketServer(Connection):
         m = msgpack.packb(
             [message.action, message.body], default=encode_object_for_msgpack
         )
-        self.loop.call_soon_threadsafe(self.__send_queue.put_nowait, m)
+        self.__send_queue.put_nowait(m)
 
     async def close(self):
         logger.debug("Closing connection...")

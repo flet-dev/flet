@@ -147,6 +147,7 @@ from flet.core.date_picker import (
     DatePickerEntryModeChangeEvent,
     DatePickerMode,
 )
+from flet.core.dialog_control import DialogControl
 from flet.core.dismissible import (
     Dismissible,
     DismissibleDismissEvent,

@@ -27,7 +27,8 @@ class ViewControl extends StatefulWidget {
 
 class _ViewControlState extends State<ViewControl> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  Control? _offstage;
+  Control? _overlay;
+  Control? _dialogs;
   bool? _drawerOpened;
   bool? _endDrawerOpened;
 
@@ -35,8 +36,10 @@ class _ViewControlState extends State<ViewControl> {
   void initState() {
     debugPrint("View.initState: ${widget.control.id}");
     super.initState();
-    _offstage = widget.control.parent?.child("offstage");
-    _offstage?.addListener(_onOffstageChanged);
+    _overlay = widget.control.parent?.child("_overlay");
+    _overlay?.addListener(_overlayOrDialogsChanged);
+    _dialogs = widget.control.parent?.child("_dialogs");
+    _dialogs?.addListener(_overlayOrDialogsChanged);
   }
 
   @override
@@ -48,11 +51,11 @@ class _ViewControlState extends State<ViewControl> {
   @override
   void dispose() {
     debugPrint("View.dispose: ${widget.control.id}");
-    _offstage?.removeListener(_onOffstageChanged);
+    _overlay?.removeListener(_overlayOrDialogsChanged);
     super.dispose();
   }
 
-  void _onOffstageChanged() {
+  void _overlayOrDialogsChanged() {
     setState(() {});
   }
 
@@ -180,18 +183,23 @@ class _ViewControlState extends State<ViewControl> {
 
     List<Widget> overlayWidgets = [];
     var pageViews = control.parent!.children("views");
-    var offstageControls = _offstage?.children("controls");
+    var overlayControls = _overlay?.children("controls");
+    var dialogControls = _dialogs?.children("controls");
 
-    if (offstageControls != null) {
+    if (overlayControls != null && dialogControls != null) {
       if (control.id == pageViews.last.id) {
         overlayWidgets
-            .addAll(offstageControls.map((c) => ControlWidget(control: c)));
+            .addAll(overlayControls.map((c) => ControlWidget(control: c)));
+        overlayWidgets
+            .addAll(dialogControls.map((c) => ControlWidget(control: c)));
         overlayWidgets.add(const PageMedia());
       }
 
-      if (control.id == pageViews.first.id && isDesktopPlatform()) {
-        overlayWidgets
-            .add(ControlWidget(control: control.parent!.child("window")!));
+      var windowControl = control.parent?.child("window");
+      if (windowControl != null &&
+          control.id == pageViews.first.id &&
+          isDesktopPlatform()) {
+        overlayWidgets.add(ControlWidget(control: windowControl));
       }
     }
 

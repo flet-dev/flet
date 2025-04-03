@@ -35,6 +35,7 @@ from flet.core.control import Control, Service, control
 from flet.core.control_event import ControlEvent
 from flet.core.cupertino_app_bar import CupertinoAppBar
 from flet.core.cupertino_navigation_bar import CupertinoNavigationBar
+from flet.core.dialog_control import DialogControl
 from flet.core.floating_action_button import FloatingActionButton
 from flet.core.navigation_bar import NavigationBar
 from flet.core.navigation_drawer import NavigationDrawer, NavigationDrawerPosition
@@ -97,8 +98,7 @@ try:
     from flet.auth.oauth_provider import OAuthProvider
 except ImportError as e:
 
-    class OAuthProvider:
-        ...
+    class OAuthProvider: ...
 
     class Authorization:
         def __init__(
@@ -107,8 +107,7 @@ except ImportError as e:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ):
-            ...
+        ): ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -151,7 +150,6 @@ class Page(AdaptiveControl):
     sess: InitVar["Session"]
 
     views: List[View] = field(default_factory=lambda: [View()])
-    offstage: "Offstage" = field(default_factory=lambda: Offstage())
     window: Window = field(default_factory=lambda: Window())
     browser_context_menu: BrowserContextMenu = field(
         default_factory=lambda: BrowserContextMenu()
@@ -163,6 +161,8 @@ class Page(AdaptiveControl):
     url_launcher: UrlLauncher = field(default_factory=lambda: UrlLauncher())
     _user_services: "ServiceRegistry" = field(default_factory=lambda: ServiceRegistry())
     _page_services: "ServiceRegistry" = field(default_factory=lambda: ServiceRegistry())
+    _overlay: "Overlay" = field(default_factory=lambda: Overlay())
+    _dialogs: "Dialogs" = field(default_factory=lambda: Dialogs())
 
     theme_mode: Optional[ThemeMode] = field(default=ThemeMode.SYSTEM)
     theme: Optional[Theme] = None
@@ -639,35 +639,50 @@ class Page(AdaptiveControl):
             offset=offset, delta=delta, key=key, duration=duration, curve=curve
         )
 
-    def open(self, control: Control) -> None:
-        if not hasattr(control, "open"):
-            raise ValueError(f"{control.__class__.__qualname__} has no open attribute")
+    def open_dialog(self, dialog: DialogControl) -> None:
 
-        control.open = True
+        original_on_dismiss = dialog.on_dismiss
 
-        if isinstance(control, NavigationDrawer):
-            if control.position == NavigationDrawerPosition.END:
-                if self.end_drawer != control:
-                    self.end_drawer = control
+        def wrapped_on_dismiss(*args, **kwargs):
+            if dialog in self._dialogs.controls:
+                self._dialogs.controls.remove(dialog)
+                self._dialogs.update()
+            if original_on_dismiss:
+                original_on_dismiss(*args, **kwargs)
+            dialog.on_dismiss = original_on_dismiss
+
+        dialog.open = True
+        dialog.on_dismiss = wrapped_on_dismiss
+        setattr(dialog, "_original_on_dismiss", original_on_dismiss)
+
+        if isinstance(dialog, NavigationDrawer):
+            if dialog.position == NavigationDrawerPosition.END:
+                if self.end_drawer != dialog:
+                    self.end_drawer = dialog
                     self.update()
             else:
-                if self.drawer != control:
-                    self.drawer = control
+                if self.drawer != dialog:
+                    self.drawer = dialog
                     self.update()
         else:
-            if control not in self.offstage.controls:
-                self.offstage.controls.append(control)
-                self.offstage.update()
+            if dialog not in self._dialogs.controls:
+                self._dialogs.controls.append(dialog)
+                self._dialogs.update()
 
-        control.update()
+        dialog.update()
 
-    @staticmethod
-    def close(control: Control) -> None:
-        if hasattr(control, "open"):
-            control.open = False
-            control.update()
-        else:
-            raise ValueError(f"{control.__class__.__qualname__} has no open attribute")
+    def close_dialog(self):
+        dialog = self._dialogs.controls[-1] if len(self._dialogs.controls) > 0 else None
+        assert isinstance(dialog, DialogControl), "No dialog to close"
+        if dialog:
+            # dialog.open = False
+            if dialog in self._dialogs.controls:
+                self._dialogs.controls.remove(dialog)
+                self._dialogs.update()
+            if hasattr(dialog, "_original_on_dismiss"):
+                dialog.on_dismiss = dialog._original_on_dismiss
+                del dialog._original_on_dismiss
+        return len(self._dialogs.controls) > 0
 
     # query
     @property
@@ -707,7 +722,7 @@ class Page(AdaptiveControl):
     # overlay
     @property
     def overlay(self) -> List[Control]:
-        return self.offstage.controls
+        return self._overlay.controls
 
     # client_storage
     @property
@@ -900,8 +915,13 @@ class Page(AdaptiveControl):
         return item in self.controls
 
 
-@control("Offstage")
-class Offstage(Control):
+@control("Overlay")
+class Overlay(Control):
+    controls: List[Control] = field(default_factory=list)
+
+
+@control("Dialogs")
+class Dialogs(Control):
     controls: List[Control] = field(default_factory=list)
 
 

@@ -68,14 +68,14 @@ class AlertDialog(AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/alertdialog
     """
 
-    modal: bool = field(default=False)
+    modal: bool = False
     title: Optional[Control] = None
     content: Optional[Control] = None
     actions: List[Control] = field(default_factory=list)
     bgcolor: Optional[ColorValue] = None
     elevation: OptionalNumber = None
     icon: Optional[Control] = None
-    open: bool = field(default=False)
+    open: bool = False
     title_padding: Optional[PaddingValue] = None
     content_padding: Optional[PaddingValue] = None
     actions_padding: Optional[PaddingValue] = None
@@ -87,7 +87,7 @@ class AlertDialog(AdaptiveControl):
     surface_tint_color: Optional[ColorValue] = None
     shadow_color: Optional[ColorValue] = None
     icon_color: Optional[ColorValue] = None
-    scrollable: bool = field(default=False)
+    scrollable: bool = False
     actions_overflow_button_spacing: OptionalNumber = None
     alignment: Optional[Alignment] = None
     content_text_style: Optional[TextStyle] = None

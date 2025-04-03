@@ -1,14 +1,15 @@
+from dataclasses import field
 from typing import List, Optional
 
 from flet.core.animation import Animation
 from flet.core.control import Control, control
-from flet.core.types import OptionalControlEventCallable
+from flet.core.dialog_control import DialogControl
 
 __all__ = ["CupertinoAlertDialog"]
 
 
 @control("CupertinoAlertDialog")
-class CupertinoAlertDialog(Control):
+class CupertinoAlertDialog(DialogControl):
     """
     An iOS-style alert dialog.
     An alert dialog informs the user about situations that require acknowledgement. An alert dialog has an optional title and an optional list of actions. The title is displayed above the content and the actions are displayed below the content.
@@ -88,10 +89,8 @@ class CupertinoAlertDialog(Control):
     Online docs: https://flet.dev/docs/controls/cupertinoalertdialog
     """
 
-    open: bool = (False,)
-    modal: bool = (False,)
-    title: Optional[Control] = (None,)
-    content: Optional[Control] = (None,)
-    actions: Optional[List[Control]] = (None,)
-    inset_animation: Optional[Animation] = (None,)
-    on_dismiss: OptionalControlEventCallable = (None,)
+    modal: bool = False
+    title: Optional[Control] = None
+    content: Optional[Control] = None
+    actions: List[Control] = field(default_factory=list)
+    inset_animation: Optional[Animation] = None

@@ -8,6 +8,7 @@ class WeakValueMap<K, V extends Object> {
 
   WeakValueMap() {
     _finalizer = Finalizer((key) {
+      debugPrint("WeakValueMap.finalizer: $key");
       _map.remove(key);
     });
   }

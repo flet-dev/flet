@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'controls/center.dart';
 import 'controls/column.dart';
 import 'controls/container.dart';
+import 'controls/cupertino_alert_dialog.dart';
 import 'controls/cupertino_dialog_action.dart';
 import 'controls/divider.dart';
 import 'controls/dropdown.dart';
@@ -44,6 +45,10 @@ class FletCoreExtension extends FletExtension {
         return ContainerControl(key: key, control: control);
       case "CupertinoDialogAction":
         return CupertinoDialogActionControl(key: key, control: control);
+      // case "AlertDialog":
+      //   return AlertDialogControl(key: key, control: control);
+      case "CupertinoAlertDialog":
+        return CupertinoAlertDialogControl(key: key, control: control);
       case "ElevatedButton":
         return ElevatedButtonControl(key: key, control: control);
       case "Dropdown":
