@@ -1,16 +1,17 @@
-from dataclasses import field
+import warnings
 from typing import Optional
 
 from flet.core.buttons import OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
+from flet.core.control import control
 from flet.core.types import (
     ClipBehavior,
     ColorValue,
-    IconValue,
+    IconValueOrControl,
     MouseCursor,
     OptionalControlEventCallable,
     OptionalNumber,
+    StrOrControl,
     UrlTarget,
 )
 
@@ -67,13 +68,22 @@ class FloatingActionButton(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/floatingactionbutton
     """
 
-    text: Optional[str] = None
-    icon: Optional[IconValue] = None
+    def __setattr__(self, name, value):
+        if name == "text":
+            warnings.warn(
+                "'text' is deprecated since version 0.70.0 and will be removed in 0.70.3. Use 'content' instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+        super().__setattr__(name, value)
+
+    text: Optional[str] = None  # deprecated
+    icon: Optional[IconValueOrControl] = None
     bgcolor: Optional[ColorValue] = None
-    content: Optional[Control] = None
+    content: Optional[StrOrControl] = None
     shape: Optional[OutlinedBorder] = None
-    autofocus: Optional[bool] = field(default=False)
-    mini: Optional[bool] = field(default=False)
+    autofocus: Optional[bool] = False
+    mini: Optional[bool] = False
     foreground_color: Optional[ColorValue] = None
     focus_color: Optional[ColorValue] = None
     clip_behavior: Optional[ClipBehavior] = None
@@ -82,7 +92,7 @@ class FloatingActionButton(ConstrainedControl):
     focus_elevation: OptionalNumber = None
     highlight_elevation: OptionalNumber = None
     hover_elevation: OptionalNumber = None
-    enable_feedback: Optional[bool] = field(default=True)
+    enable_feedback: Optional[bool] = True
     url: Optional[str] = None
     url_target: Optional[UrlTarget] = None
     mouse_cursor: Optional[MouseCursor] = None
@@ -91,7 +101,9 @@ class FloatingActionButton(ConstrainedControl):
     def before_update(self):
         super().before_update()
         assert (
-            self.text or self.icon or (self.content and self.content.visible)
+            self.text
+            or self.icon
+            or (self.content and self.content.visible)  # text to be removed in 0.70.3
         ), "at minimum, text, icon or a visible content must be provided"
         assert (
             self.elevation is None or self.elevation >= 0
