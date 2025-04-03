@@ -59,6 +59,10 @@ class FletCoreExtension extends FletExtension {
         return CupertinoButtonControl(key: key, control: control);
       case "ElevatedButton":
         return ElevatedButtonControl(key: key, control: control);
+      case "FilledButton":
+        return ElevatedButtonControl(key: key, control: control);
+      case "FilledTonalButton":
+        return ElevatedButtonControl(key: key, control: control);
       case "ExpansionTile":
         return ExpansionTileControl(key: key, control: control);
       case "ExpansionPanelList":
