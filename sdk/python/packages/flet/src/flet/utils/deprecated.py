@@ -7,7 +7,7 @@ def deprecated(
     reason: str,
     version: Optional[str] = None,
     delete_version: Optional[str] = None,
-    show_parentheses: bool = True,
+    show_parentheses: bool = False,
 ):
     """
     A decorator that marks a function, method, or class as deprecated.
