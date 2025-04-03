@@ -116,6 +116,7 @@ class Session:
                             await event_handler(e)
                         elif callable(event_handler):
                             event_handler(e)
+                        self.auto_update(control)
             except Exception as ex:
                 tb = traceback.format_exc()
                 self.error(f"Exception in '{field_name}': {ex}\n{tb}")
@@ -137,6 +138,13 @@ class Session:
             control._handle_invoke_method_results(
                 call_id=call_id, result=result, error=error
             )
+
+    def auto_update(self, control: BaseControl):
+        while control:
+            if control.is_isolated():
+                control.update()
+                break
+            control = control.parent
 
     def error(self, message: str):
         self.connection.send_message(

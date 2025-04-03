@@ -241,10 +241,9 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
             if asyncio.iscoroutinefunction(session_handler):
                 await session_handler(session.page)
             else:
-                # run in thread pool
-                await asyncio.get_running_loop().run_in_executor(
-                    executor, session_handler, session.page
-                )
+                # run synchronously
+                session_handler(session.page)
+            session.auto_update(session.page)
 
         except Exception as e:
             print(
