@@ -13,25 +13,13 @@ import '../utils/launch_url.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
-//import 'create_control.dart';
-//import 'error.dart';
 
 class CupertinoButtonControl extends StatefulWidget {
-  //final Control? parent;
   final Control control;
-  //final List<Control> children;
-  //final bool parentDisabled;
-  //final bool? parentAdaptive;
-  //final FletControlBackend backend;
 
   const CupertinoButtonControl({
     super.key,
-    //this.parent,
     required this.control,
-    //required this.children,
-    //required this.parentDisabled,
-    //required this.parentAdaptive,
-    //required this.backend,
   });
 
   @override
@@ -42,12 +30,9 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoButton build: ${widget.control.id}");
-    //bool disabled = widget.control.disabled || widget.parentDisabled;
     bool disabled = widget.control.disabled || widget.control.parent!.disabled;
     var theme = Theme.of(context);
 
-    // var contentCtrls =
-    //     widget.children.where((c) => c.name == "content" && c.visible);
     Control? content = widget.control.child("content");
 
     String? text = widget.control.getString("text");
