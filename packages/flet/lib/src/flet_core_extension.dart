@@ -13,6 +13,7 @@ import 'controls/dropdown.dart';
 import 'controls/elevated_button.dart';
 import 'controls/expansion_panel.dart';
 import 'controls/expansion_tile.dart';
+import 'controls/flet_app_control.dart';
 import 'controls/floating_action_button.dart';
 import 'controls/image.dart';
 import 'controls/line_chart.dart';
@@ -65,6 +66,8 @@ class FletCoreExtension extends FletExtension {
         return ElevatedButtonControl(key: key, control: control);
       case "FilledTonalButton":
         return ElevatedButtonControl(key: key, control: control);
+      case "FletApp":
+        return FletAppControl(key: key, control: control);
       case "FloatingActionButton":
         return FloatingActionButtonControl(key: key, control: control);
       case "Image":

@@ -37,10 +37,10 @@ def test_create_event_typed_data():
             "control": c,
             "name": "some_event",
             "data": None,
-            "local_x": 1,
-            "local_y": 2,
-            "global_x": 4,
-            "global_y": 5,
+            "lx": 1,
+            "ly": 2,
+            "gx": 4,
+            "gy": 5,
         },
     )
 
