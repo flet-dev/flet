@@ -36,24 +36,14 @@ class ExpansionTileControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("ExpansionTile build: ${control.id}");
 
-    //var ctrls = children.where((c) => c.name == "controls" && c.visible);
     var controls = control
         .children("controls")
         .map((child) => ControlWidget(control: child, key: ValueKey(child.id)))
         .toList();
 
-    //var leadingCtrls = children.where((c) => c.name == "leading" && c.visible);
     var leading = control.child("leading");
-
-    //var titleCtrls = children.where((c) => c.name == "title" && c.visible);
     var title = control.child("title");
-
-    // var subtitleCtrls =
-    //     children.where((c) => c.name == "subtitle" && c.visible);
     var subtitle = control.child("subtitle");
-
-    // var trailingCtrls =
-    //     children.where((c) => c.name == "trailing" && c.visible);
     var trailing = control.child("trailing");
 
     if (title == null) {
@@ -61,10 +51,7 @@ class ExpansionTileControl extends StatelessWidget {
           "ExpansionTile.title must be provided and visible");
     }
 
-    //bool disabled = control.disabled || parentDisabled;
     bool disabled = control.disabled || control.parent!.disabled;
-    bool? adaptive = control.adaptive ?? control.parent?.adaptive;
-    //bool onchange = control.getBool("onchange", false)!;
     bool maintainState = control.getBool("maintain_state", false)!;
     bool initiallyExpanded = control.getBool("initially_expanded", false)!;
 
@@ -125,28 +112,10 @@ class ExpansionTileControl extends StatelessWidget {
       enabled: !disabled,
       minTileHeight: control.getDouble("min_tile_height"),
       dense: control.getBool("dense"),
-      // leading: leadingCtrls.isNotEmpty
-      //     ? createControl(control, leadingCtrls.first.id, disabled,
-      //         parentAdaptive: adaptive)
-      //     : null,
       leading: leading is Control ? ControlWidget(control: leading) : null,
-      // title: createControl(control, titleCtrls.first.id, disabled,
-      //     parentAdaptive: adaptive),
       title: ControlWidget(control: title),
-      // subtitle: subtitleCtrls.isNotEmpty
-      //     ? createControl(control, subtitleCtrls.first.id, disabled,
-      //         parentAdaptive: adaptive)
-      //     : null,
       subtitle: subtitle is Control ? ControlWidget(control: subtitle) : null,
-      // trailing: trailingCtrls.isNotEmpty
-      //     ? createControl(control, trailingCtrls.first.id, disabled,
-      //         parentAdaptive: adaptive)
-      //     : null,
       trailing: trailing is Control ? ControlWidget(control: trailing) : null,
-      // children: ctrls
-      //     .map((c) =>
-      //         createControl(control, c.id, disabled, parentAdaptive: adaptive))
-      //     .toList(),
       children: controls,
     );
 
