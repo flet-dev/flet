@@ -3,42 +3,49 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/edge_insets.dart';
+import 'control_widget.dart';
 import 'create_control.dart';
 import 'flet_store_mixin.dart';
 
 class ExpansionPanelListControl extends StatefulWidget {
-  final Control? parent;
+  //final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
+  //final List<Control> children;
+  //final bool parentDisabled;
+  //final bool? parentAdaptive;
+  //final FletControlBackend backend;
 
-  const ExpansionPanelListControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  const ExpansionPanelListControl({
+    super.key,
+    //this.parent,
+    required this.control,
+    //required this.children,
+    //required this.parentDisabled,
+    //required this.parentAdaptive,
+    //required this.backend,
+  });
 
   @override
   State<ExpansionPanelListControl> createState() =>
       _ExpansionPanelListControlState();
 }
 
-class _ExpansionPanelListControlState extends State<ExpansionPanelListControl>
-    with FletStoreMixin {
+class _ExpansionPanelListControlState extends State<ExpansionPanelListControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("ExpansionPanelList build: ${widget.control.id}");
-    bool disabled = widget.control.disabled || widget.parentDisabled;
-    bool? adaptive =
-        widget.control.getBool("adaptive") ?? widget.parentAdaptive;
+    //bool disabled = widget.control.disabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.control.parent!.disabled;
+    // bool? adaptive =
+    //     widget.control.getBool("adaptive") ?? widget.parentAdaptive;
+    bool? adaptive = widget.control.adaptive ?? widget.control.parent?.adaptive;
+    // var panels = widget.children
+    //     .where((c) => c.name == "expansionpanel" && c.visible)
+    //     .toList();
 
-    var panels = widget.children
-        .where((c) => c.name == "expansionpanel" && c.visible)
+    var panels = widget.control
+        .children("controls")
+        .map((child) => ControlWidget(control: child, key: ValueKey(child.id)))
         .toList();
 
     void onChange(int index, bool isExpanded) {
