@@ -671,11 +671,11 @@ class Page(AdaptiveControl):
 
         dialog.update()
 
-    def close_dialog(self):
+    def pop_dialog(self):
         dialog = self._dialogs.controls[-1] if len(self._dialogs.controls) > 0 else None
         assert isinstance(dialog, DialogControl), "No dialog to close"
         if dialog:
-            # dialog.open = False
+            dialog.open = False
             if dialog in self._dialogs.controls:
                 self._dialogs.controls.remove(dialog)
                 self._dialogs.update()
