@@ -37,12 +37,6 @@ from flet.core.types import (
     TextAlign,
     VisualDensity,
 )
-from flet.utils.deprecated import deprecated_class, deprecated_property
-
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
 
 
 class PageTransitionTheme(Enum):
@@ -52,6 +46,7 @@ class PageTransitionTheme(Enum):
     ZOOM = "zoom"
     CUPERTINO = "cupertino"
     PREDICTIVE = "predictive"
+    FORWARDS = "forwards"
 
 
 @dataclass
@@ -740,13 +735,6 @@ class SliderTheme:
             self.mouse_cursor = {ControlState.DEFAULT: self.mouse_cursor}
         if not isinstance(self.thumb_size, dict):
             self.thumb_size = {ControlState.DEFAULT: self.thumb_size}
-        if self.year_2023 is not None:
-            deprecated_property(
-                name="year_2023",
-                version="0.27.0",
-                delete_version=None,  # not known for now
-                reason="Set this flag to False to opt into the 2024 Slider appearance. In the future, this flag will default to False.",
-            )
 
 
 @dataclass
@@ -767,15 +755,6 @@ class ProgressIndicatorTheme:
     stroke_width: OptionalNumber = None
     year_2023: Optional[bool] = None
 
-    def __post_init__(self):
-        if self.year_2023 is not None:
-            deprecated_property(
-                name="year_2023",
-                version="0.27.0",
-                delete_version=None,  # not known for now
-                reason="Set this flag to False to opt into the 2024 ProgressIndicator appearance. In the future, this flag will default to False.",
-            )
-
 
 @dataclass
 class PopupMenuTheme:
@@ -792,19 +771,6 @@ class PopupMenuTheme:
     menu_position: Optional[PopupMenuPosition] = None
     mouse_cursor: ControlStateValue[MouseCursor] = None
     menu_padding: Optional[PaddingValue] = None
-
-    def __post_init__(self):
-        if not isinstance(self.mouse_cursor, dict):
-            self.mouse_cursor = {ControlState.DEFAULT: self.mouse_cursor}
-        if not isinstance(self.thumb_size, dict):
-            self.thumb_size = {ControlState.DEFAULT: self.thumb_size}
-        if self.year_2023 is not None:
-            deprecated_property(
-                name="year_2023",
-                version="0.27.0",
-                delete_version=None,  # not known for now
-                reason="Set this flag to False to opt into the 2024 Slider appearance. In the future, this flag will default to False.",
-            )
 
 
 @dataclass
@@ -936,27 +902,6 @@ class DataTableTheme:
     heading_cell_cursor: ControlStateValue[MouseCursor] = None
 
 
-@deprecated_class(
-    "Use ElevatedButtonTheme, OutlinedButtonTheme, TextButtonTheme, FilledButtonTheme or IconButtonTheme instead.",
-    version="0.27.0",
-    delete_version="0.30.0",
-)
-@dataclass
-class ButtonTheme:
-    button_color: Optional[ColorValue] = None
-    disabled_color: Optional[ColorValue] = None
-    hover_color: Optional[ColorValue] = None
-    focus_color: Optional[ColorValue] = None
-    highlight_color: Optional[ColorValue] = None
-    splash_color: Optional[ColorValue] = None
-    color_scheme: Optional[ColorScheme] = None
-    aligned_dropdown: Optional[bool] = None
-    height: OptionalNumber = None
-    min_width: OptionalNumber = None
-    shape: Optional[OutlinedBorder] = None
-    padding: Optional[PaddingValue] = None
-
-
 @dataclass
 class Theme:
     color_scheme_seed: Optional[ColorValue] = None
@@ -968,7 +913,6 @@ class Theme:
     banner_theme: Optional[BannerTheme] = None
     bottom_appbar_theme: Optional[BottomAppBarTheme] = None
     bottom_sheet_theme: Optional[BottomSheetTheme] = None
-    button_theme: Optional[ButtonTheme] = None
     card_theme: Optional[CardTheme] = None
     checkbox_theme: Optional[CheckboxTheme] = None
     chip_theme: Optional[ChipTheme] = None
@@ -1002,7 +946,6 @@ class Theme:
     scaffold_bgcolor: Optional[ColorValue] = None
     card_color: Optional[ColorValue] = None
     divider_color: Optional[ColorValue] = None
-    dialog_bgcolor: Optional[ColorValue] = None
     indicator_color: Optional[ColorValue] = None
     hint_color: Optional[ColorValue] = None
     shadow_color: Optional[ColorValue] = None
@@ -1026,19 +969,3 @@ class Theme:
     time_picker_theme: Optional[TimePickerTheme] = None
     tooltip_theme: Optional[TooltipTheme] = None
     visual_density: Optional[VisualDensity] = None
-
-    def __post_init__(self):
-        if self.button_theme:
-            deprecated_property(
-                "button_theme",
-                "Use elevated_button_theme, outlined_button_theme, text_button_theme, filled_button_theme or icon_button_theme instead.",
-                version="0.27.0",
-                delete_version="0.30.0",
-            )
-        if self.dialog_bgcolor:
-            deprecated_property(
-                "dialog_bgcolor",
-                "Use dialog_theme.bgcolor instead.",
-                version="0.27.0",
-                delete_version="0.30.0",
-            )

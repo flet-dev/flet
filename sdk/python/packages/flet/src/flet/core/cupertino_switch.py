@@ -10,7 +10,7 @@ from flet.core.types import (
     OptionalControlEventCallable,
     OptionalNumber,
 )
-from flet.utils.deprecated import deprecated_property
+from flet.utils.deprecated import deprecated_warning
 
 __all__ = ["CupertinoSwitch"]
 
@@ -74,14 +74,14 @@ class CupertinoSwitch(ConstrainedControl):
         # )
         # self._set_attr_json("thumbIcon", self.__thumb_icon, wrap_attr_dict=True)
         if self.active_color is not None:
-            deprecated_property(
+            deprecated_warning(
                 name="active_color",
                 reason="Use active_track_color instead.",
                 version="0.26.0",
                 delete_version="0.29.0",
             )
         if self.track_color is not None:
-            deprecated_property(
+            deprecated_warning(
                 name="track_color",
                 reason="Use inactive_track_color instead.",
                 version="0.26.0",
