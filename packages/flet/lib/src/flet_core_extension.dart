@@ -10,6 +10,7 @@ import 'controls/cupertino_dialog_action.dart';
 import 'controls/divider.dart';
 import 'controls/dropdown.dart';
 import 'controls/elevated_button.dart';
+import 'controls/expansion_tile.dart';
 import 'controls/line_chart.dart';
 import 'controls/page.dart';
 import 'controls/row.dart';
@@ -57,6 +58,8 @@ class FletCoreExtension extends FletExtension {
         return CupertinoButtonControl(key: key, control: control);
       case "ElevatedButton":
         return ElevatedButtonControl(key: key, control: control);
+      case "ExpansionTile":
+        return ExpansionTileControl(key: key, control: control);
       case "Dropdown":
         return DropdownControl(key: key, control: control);
       case "Divider":

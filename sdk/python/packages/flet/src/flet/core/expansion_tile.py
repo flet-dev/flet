@@ -49,8 +49,8 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         default_factory=lambda: CrossAxisAlignment.CENTER
     )
     clip_behavior: Optional[ClipBehavior] = None
-    initially_expanded: Optional[bool] = field(default=False)
-    maintain_state: Optional[bool] = field(default=False)
+    initially_expanded: Optional[bool] = False
+    maintain_state: Optional[bool] = False
     text_color: Optional[ColorValue] = None
     icon_color: Optional[ColorValue] = None
     shape: Optional[OutlinedBorder] = None
@@ -60,8 +60,8 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     collapsed_text_color: Optional[ColorValue] = None
     collapsed_shape: Optional[OutlinedBorder] = None
     dense: Optional[bool] = None
-    enable_feedback: Optional[bool] = field(default=True)
-    show_trailing_icon: Optional[bool] = field(default=True)
+    enable_feedback: Optional[bool] = True
+    show_trailing_icon: Optional[bool] = True
     min_tile_height: OptionalNumber = None
     visual_density: Optional[VisualDensity] = None
     on_change: OptionalControlEventCallable = None
