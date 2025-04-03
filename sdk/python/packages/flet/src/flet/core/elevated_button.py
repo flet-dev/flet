@@ -73,9 +73,9 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
-        # assert self.icon or (
-        #     self.content and self.content.visible
-        # ), "at minimum, icon or a visible content must be provided"
+        assert (
+            self.text or self.icon or (self.content and self.content.visible)
+        ), "at minimum, text, icon or a visible content must be provided"  # text to be removed in 0.70.3
 
     # def before_update(self):
     #     super().before_update()

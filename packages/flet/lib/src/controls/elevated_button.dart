@@ -72,7 +72,8 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
 
       bool isFilledButton = widget.control.type == "FilledButton";
       bool isFilledTonalButton = widget.control.type == "FilledTonalButton";
-      //String text = widget.control.getString("text", "")!;
+      String text =
+          widget.control.getString("text", "")!; // to be removed in 0.70.3
       String url = widget.control.getString("url", "")!;
       IconData? icon = parseIcon(widget.control.getString("icon"));
       Color? iconColor = widget.control.getColor("icon_color", context);
@@ -81,7 +82,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
           ? ControlWidget(control: content)
           : content is String
               ? Text(content)
-              : const Text("");
+              : Text(text); // to be changed to Text("") in 0.70.3
 
       var clipBehavior =
           parseClip(widget.control.getString("clip_behavior"), Clip.none)!;
