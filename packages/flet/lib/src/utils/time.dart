@@ -1,27 +1,15 @@
-import '../models/control.dart';
 import 'numbers.dart';
 
-Duration? parseDuration(Control control, String propName,
-    [Duration? defaultValue]) {
-  var v = control.get(propName);
-  if (v == null) {
-    return defaultValue;
-  }
-  return durationFromJSON(v);
-}
-
-Duration? durationFromJSON(dynamic json, [Duration? defaultValue]) {
-  if (json == null) {
-    return defaultValue;
-  }
-  if (json is int || json is double) {
-    return Duration(milliseconds: parseInt(json, 0)!);
+Duration? parseDuration(dynamic value, [Duration? defaultValue]) {
+  if (value == null) return defaultValue;
+  if (value is int || value is double) {
+    return Duration(milliseconds: parseInt(value, 0)!);
   }
   return Duration(
-      days: parseInt(json["days"], 0)!,
-      hours: parseInt(json["hours"], 0)!,
-      minutes: parseInt(json["minutes"], 0)!,
-      seconds: parseInt(json["seconds"], 0)!,
-      milliseconds: parseInt(json["milliseconds"], 0)!,
-      microseconds: parseInt(json["microseconds"], 0)!);
+      days: parseInt(value["days"], 0)!,
+      hours: parseInt(value["hours"], 0)!,
+      minutes: parseInt(value["minutes"], 0)!,
+      seconds: parseInt(value["seconds"], 0)!,
+      milliseconds: parseInt(value["milliseconds"], 0)!,
+      microseconds: parseInt(value["microseconds"], 0)!);
 }

@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-import '../models/control.dart';
 import 'borders.dart';
 import 'box.dart';
 import 'colors.dart';
@@ -24,20 +23,12 @@ TooltipTriggerMode? parseTooltipTriggerMode(String? value,
 }
 
 Tooltip? parseTooltip(
-    BuildContext context, Control control, String propName, Widget widget) {
-  var v = control.get(propName);
-  if (v == null) {
+    BuildContext context, dynamic value, Widget widget, ThemeData theme) {
+  if (value == null) {
     return null;
-  }
-  return tooltipFromJSON(context, v, widget);
-}
-
-Tooltip? tooltipFromJSON(BuildContext context, dynamic j, Widget widget) {
-  if (j == null) {
-    return null;
-  } else if (j is String) {
+  } else if (value is String) {
     return Tooltip(
-      message: j,
+      message: value,
       padding: const EdgeInsets.all(4.0),
       waitDuration: const Duration(milliseconds: 800),
       child: widget,
@@ -49,37 +40,34 @@ Tooltip? tooltipFromJSON(BuildContext context, dynamic j, Widget widget) {
   /// The tooltip shape defaults to a rounded rectangle with a border radius of
   /// 4.0. Tooltips will also default to an opacity of 90%
   var decoration = boxDecorationFromDetails(
-      gradient: gradientFromJSON(theme, j["gradient"]),
-      border: borderFromJSON(theme, j["border"]),
-      borderRadius:
-          borderRadiusFromJSON(j["border_radius"], BorderRadius.circular(4.0)),
-      shape: parseBoxShape(j["shape"]),
-      color: parseColor(
-          theme,
-          j["bgcolor"],
-          theme.brightness == Brightness.light
-              ? Colors.grey[700]
-              : Colors.white),
-      blendMode: parseBlendMode(j["blend_mode"]),
-      boxShadow: boxShadowsFromJSON(theme, j["box_shadow"]),
-      image: decorationImageFromJSON(context, j["image"]));
+    gradient: gradientFromJSON(theme, value["gradient"]),
+    border: borderFromJSON(theme, value["border"]),
+    borderRadius: borderRadiusFromJSON(
+        value["border_radius"], BorderRadius.circular(4.0)),
+    shape: parseBoxShape(value["shape"]),
+    color: parseColor(theme, value["bgcolor"],
+        theme.brightness == Brightness.light ? Colors.grey[700] : Colors.white),
+    blendMode: parseBlendMode(value["blend_mode"]),
+    boxShadow: boxShadowsFromJSON(theme, value["box_shadow"]),
+    image: decorationImageFromJSON(context, value["image"]),
+  );
   return Tooltip(
-    message: j["message"],
-    enableFeedback: parseBool(j["enable_feedback"]),
-    enableTapToDismiss: parseBool(j["enable_tap_to_dismiss"], true)!,
-    excludeFromSemantics: parseBool(j["exclude_from_semantics"]),
-    height: parseDouble(j["height"]),
-    exitDuration: durationFromJSON(j["exit_duration"]),
-    preferBelow: parseBool(j["prefer_below"]),
-    padding: edgeInsetsFromJson(j["padding"]),
+    message: value["message"],
+    enableFeedback: parseBool(value["enable_feedback"]),
+    enableTapToDismiss: parseBool(value["enable_tap_to_dismiss"], true)!,
+    excludeFromSemantics: parseBool(value["exclude_from_semantics"]),
+    height: parseDouble(value["height"]),
+    exitDuration: parseDuration(value["exit_duration"]),
+    preferBelow: parseBool(value["prefer_below"]),
+    padding: edgeInsetsFromJson(value["padding"]),
     decoration: decoration,
-    textStyle: textStyleFromJson(theme, j["text_style"]),
-    verticalOffset: parseDouble(j["vertical_offset"]),
-    margin: edgeInsetsFromJson(j["margin"]),
-    textAlign: parseTextAlign(j["text_align"]),
-    showDuration: durationFromJSON(j["show_duration"]),
-    waitDuration: durationFromJSON(j["wait_duration"]),
-    triggerMode: parseTooltipTriggerMode(j["trigger_mode"]),
+    textStyle: textStyleFromJson(theme, value["text_style"]),
+    verticalOffset: parseDouble(value["vertical_offset"]),
+    margin: edgeInsetsFromJson(value["margin"]),
+    textAlign: parseTextAlign(value["text_align"]),
+    showDuration: parseDuration(value["show_duration"]),
+    waitDuration: parseDuration(value["wait_duration"]),
+    triggerMode: parseTooltipTriggerMode(value["trigger_mode"]),
     child: widget,
   );
 }
