@@ -59,6 +59,12 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
 
+    def before_update(self):
+        super().before_update()
+        assert self.icon or (
+            self.content and self.content.visible
+        ), "at minimum, icon or a visible content must be provided"
+
     # def before_update(self):
     #     super().before_update()
     #     assert (
