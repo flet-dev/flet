@@ -1,4 +1,8 @@
 """
+
+Code to generate colors:
+
+```
 $lines = Get-Content "colors.dart"
 
 $section = ''
@@ -33,6 +37,8 @@ foreach($line in $lines) {
         }
     }
 }
+```
+
 """
 
 import random

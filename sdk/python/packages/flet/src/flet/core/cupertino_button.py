@@ -28,6 +28,7 @@ class CupertinoButton(ConstrainedControl):
     """
 
     text: Optional[str] = None
+    """Blah blah"""
     icon: Optional[IconValue] = None
     icon_color: Optional[ColorValue] = None
     content: Optional[Control] = None
