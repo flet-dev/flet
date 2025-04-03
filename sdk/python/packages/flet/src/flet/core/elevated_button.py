@@ -1,9 +1,11 @@
-from typing import Optional
+import warnings
+from typing import Any, Optional
 
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.buttons import ButtonStyle
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
+from flet.core.ref import Ref
 from flet.core.types import (
     ClipBehavior,
     ColorValue,
@@ -20,28 +22,44 @@ __all__ = ["ElevatedButton"]
 @control("ElevatedButton")
 class ElevatedButton(ConstrainedControl, AdaptiveControl):
     """
-    Elevated buttons are essentially filled tonal buttons with a shadow. To prevent shadow creep, only use them when absolutely necessary, such as when the button requires visual separation from a patterned background.
+        Elevated buttons are essentially filled tonal buttons with a shadow. To prevent shadow creep, only use them when absolutely necessary, such as when the button requires visual separation from a patterned background.
 
-    Example:
-    ```
-    import flet as ft
+        Example:
+        ```
+        import flet as ft
+    import warnings
 
-    def main(page: ft.Page):
-        page.title = "Basic elevated buttons"
-        page.add(
-            ft.ElevatedButton(text="Elevated button"),
-            ft.ElevatedButton("Disabled button", disabled=True),
-        )
+        def main(page: ft.Page):
+            page.title = "Basic elevated buttons"
+            page.add(
+                ft.ElevatedButton(text="Elevated button"),
+                ft.ElevatedButton("Disabled button", disabled=True),
+            )
 
-    ft.app(target=main)
-    ```
+        ft.app(target=main)
+        ```
 
-    -----
+        -----
 
-    Online docs: https://flet.dev/docs/controls/elevatedbutton
+        Online docs: https://flet.dev/docs/controls/elevatedbutton
     """
 
-    text: Optional[str] = None
+    def __setattr__(self, name, value):
+        if name == "text":
+            warnings.warn(
+                "'text' is deprecated. Use 'content' instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            name = "content"
+        super().__setattr__(name, value)
+
+    def __getattribute__(self, name):
+        if name == "text":
+            name = "content"
+        return super().__getattribute__(name)
+
+    text: Optional[str] = None  # deprecated
     icon: Optional[IconValue] = None
     icon_color: Optional[ColorValue] = None
     color: Optional[ColorValue] = None
