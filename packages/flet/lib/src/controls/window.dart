@@ -119,7 +119,7 @@ class _WindowControlState extends State<WindowControl> with WindowListener {
   void _updateWindow(FletBackend backend) async {
     try {
       var title = widget.control.parent!.get<String>("title");
-      var bgColor = widget.control.getColor("bg_color", context);
+      var bgColor = widget.control.getColor("bgcolor", context);
       var width = widget.control.get<double>("width");
       var height = widget.control.get<double>("height");
       var minWidth = widget.control.get<double>("min_width");

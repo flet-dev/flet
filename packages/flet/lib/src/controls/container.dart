@@ -47,16 +47,16 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
   Widget build(BuildContext context) {
     debugPrint("Container build: ${control.id}");
 
-    var bgColor = control.getColor("bgColor", context);
+    var bgColor = control.getColor("bgcolor", context);
     var contentCtrl = control.child("content");
     bool ink = control.getBool("ink", false)!;
-    bool onClick = control.getBool("onclick", false)!;
-    bool onTapDown = control.getBool("onTapDown", false)!;
+    bool onClick = control.getBool("on_click", false)!;
+    bool onTapDown = control.getBool("on_tap_down", false)!;
     String url = control.getString("url", "")!;
-    String? urlTarget = control.getString("urlTarget");
-    bool onLongPress = control.getBool("onLongPress", false)!;
-    bool onHover = control.getBool("onHover", false)!;
-    bool ignoreInteractions = control.getBool("ignoreInteractions", false)!;
+    String? urlTarget = control.getString("url_target");
+    bool onLongPress = control.getBool("on_long_press", false)!;
+    bool onHover = control.getBool("on_hover", false)!;
+    bool ignoreInteractions = control.getBool("ignore_interactions", false)!;
     bool disabled = control.disabled || control.parent!.disabled;
     Widget? child = contentCtrl != null
         ? ControlWidget(
@@ -67,15 +67,15 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     var animation = parseAnimation(control, "animate");
     var blur = parseBlur(control, "blur");
     var colorFilter =
-        parseColorFilter(control, "colorFilter", Theme.of(context));
+        parseColorFilter(control, "color_filter", Theme.of(context));
     var width = control.getDouble("width");
     var height = control.getDouble("height");
     var padding = parseEdgeInsets(control, "padding");
     var margin = parseEdgeInsets(control, "margin");
     var alignment = parseAlignment(control, "alignment");
 
-    var borderRadius = parseBorderRadius(control, "borderRadius");
-    var clipBehavior = parseClip(control.getString("clipBehavior"),
+    var borderRadius = parseBorderRadius(control, "border_radius");
+    var clipBehavior = parseClip(control.getString("clip_behavior"),
         borderRadius != null ? Clip.antiAlias : Clip.none)!;
     var decorationImage = parseDecorationImage(context, control, "image");
     var boxDecoration = boxDecorationFromDetails(
@@ -86,14 +86,14 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
       border: parseBorder(Theme.of(context), control, "border",
           Theme.of(context).colorScheme.primary),
       boxShadow: parseBoxShadow(Theme.of(context), control, "shadow"),
-      blendMode: parseBlendMode(control.getString("blendMode")),
+      blendMode: parseBlendMode(control.getString("blend_mode")),
       image: decorationImage,
     );
     var boxForegroundDecoration =
-        parseBoxDecoration(context, control, "foregroundDecoration");
+        parseBoxDecoration(context, control, "foreground_decoration");
     Widget? container;
 
-    var onAnimationEnd = control.getBool("onAnimationEnd", false)!
+    var onAnimationEnd = control.getBool("on_animation_end", false)!
         ? () {
             FletBackend.of(context)
                 .triggerControlEvent(control, "animation_end", "container");
