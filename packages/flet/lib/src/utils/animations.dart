@@ -146,6 +146,6 @@ AnimationStyle animationStyleFromJSON(dynamic json,
   return AnimationStyle(
       curve: parseCurve(json["curve"]),
       reverseCurve: parseCurve(json["reverse_curve"]),
-      duration: durationFromJSON(json["duration"]),
-      reverseDuration: durationFromJSON(json["reverse_duration"]));
+      duration: parseDuration(json["duration"]),
+      reverseDuration: parseDuration(json["reverse_duration"]));
 }

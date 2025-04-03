@@ -49,7 +49,7 @@ class ConstrainedControl extends StatelessWidget {
 }
 
 Widget _tooltip(Widget widget, ThemeData theme, Control control) {
-  var tooltip = parseTooltip(control, "tooltip", widget, theme);
+  var tooltip = parseTooltip(control.get("tooltip"), widget, theme);
   return tooltip ?? widget;
 }
 
