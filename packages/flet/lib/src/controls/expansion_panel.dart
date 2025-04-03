@@ -25,8 +25,9 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl> {
 
     void onChange(int index, bool isExpanded) {
       FletBackend.of(context).updateControl(
-          widget.control.children("panels")[index].id,
-          {"expanded": isExpanded});
+          widget.control.children("controls")[index].id,
+          {"expanded": isExpanded},
+          notify: true);
       FletBackend.of(context)
           .triggerControlEvent(widget.control, "change", index);
     }
@@ -44,6 +45,8 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl> {
               }
             : null,
         children: widget.control.children("controls").map((panelControl) {
+          panelControl.notifyParent = true;
+
           var headerCtrl = panelControl.child("header");
           var bodyCtrl = panelControl.child("content");
 
