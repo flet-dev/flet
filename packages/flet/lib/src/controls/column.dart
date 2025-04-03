@@ -25,7 +25,7 @@ class ColumnControl extends StatelessWidget {
     var wrap = control.getBool("wrap", false)!;
     var horizontalAlignment = control.getString("horizontal_alignment");
 
-    List<Widget> controls = control.getWidgets("controls");
+    List<Widget> controls = control.buildWidgets("controls");
 
     Widget child = wrap
         ? Wrap(

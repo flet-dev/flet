@@ -17,9 +17,9 @@ class _BannerControlState extends State<BannerControl> {
   bool _open = false;
 
   Widget _createBanner() {
-    var leading = widget.control.getWidget("leading");
-    var content = widget.control.getWidget("content");
-    var actions = widget.control.getWidgets("actions");
+    var leading = widget.control.buildWidget("leading");
+    var content = widget.control.buildWidget("content");
+    var actions = widget.control.buildWidgets("actions");
 
     if (content == null) {
       return const ErrorControl("Banner.content must be provided and visible");

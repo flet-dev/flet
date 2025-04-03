@@ -12,7 +12,7 @@ extension WidgetFromControl on Control {
   /// If [visibleOnly] is `true` (default), only includes children that are visible.
   ///
   /// If [notifyParent] is `true`, sets `notifyParent` on each child control.
-  List<Widget> getWidgets(String propertyName,
+  List<Widget> buildWidgets(String propertyName,
       {bool visibleOnly = true, bool notifyParent = false}) {
     return children(propertyName, visibleOnly: visibleOnly).map((child) {
       child.notifyParent = notifyParent;
@@ -28,7 +28,7 @@ extension WidgetFromControl on Control {
   /// If [notifyParent] is `true`, sets `notifyParent` on the child control.
   ///
   /// If [key] is provided, applies it to the returned [ControlWidget].
-  Widget? getWidget(String propertyName,
+  Widget? buildWidget(String propertyName,
       {bool visibleOnly = true, bool notifyParent = false, Key? key}) {
     final c = child(propertyName, visibleOnly: visibleOnly);
     if (c == null) return null;

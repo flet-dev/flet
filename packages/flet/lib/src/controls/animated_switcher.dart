@@ -20,7 +20,7 @@ class AnimatedSwitcherControl extends StatelessWidget {
     debugPrint("AnimatedSwitcher build: ${control.id}");
 
     var content =
-        control.getWidget("content", notifyParent: true, key: UniqueKey());
+        control.buildWidget("content", notifyParent: true, key: UniqueKey());
 
     if (content == null) {
       return const ErrorControl(
