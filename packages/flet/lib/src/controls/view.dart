@@ -195,7 +195,7 @@ class _ViewControlState extends State<ViewControl> {
         overlayWidgets.add(const PageMedia());
       }
 
-      var windowControl = control.parent?.child("window");
+      var windowControl = control.parent?.get("window");
       if (windowControl != null &&
           control.id == pageViews.first.id &&
           isDesktopPlatform()) {

@@ -58,6 +58,13 @@ class _WindowControlState extends State<WindowControl> with WindowListener {
   }
 
   @override
+  void didChangeDependencies() {
+    debugPrint("Window.didChangeDependencies: ${widget.control.id}");
+    super.didChangeDependencies();
+    _updateWindow(FletBackend.of(context));
+  }
+
+  @override
   void dispose() {
     debugPrint("Window.dispose()");
     windowManager.removeListener(this);

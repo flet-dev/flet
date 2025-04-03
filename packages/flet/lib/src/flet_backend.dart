@@ -271,8 +271,8 @@ class FletBackend extends ChangeNotifier {
 
   void onWindowEvent(String eventName, WindowState windowState) {
     debugPrint("Window event - $eventName: $windowState");
-    var window = page.child("window");
-    if (window != null) {
+    var window = page.get("window");
+    if (window != null && window is Control) {
       updateControl(window.id, windowState.toJson());
       triggerControlEvent(window, "event", {"type": eventName});
       notifyListeners();

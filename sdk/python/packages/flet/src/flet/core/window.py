@@ -1,8 +1,9 @@
+import asyncio
 from dataclasses import dataclass, field
 from typing import Optional
 
 from flet.core.alignment import Alignment
-from flet.core.control import Control, control
+from flet.core.control import BaseControl, control
 from flet.core.control_event import ControlEvent
 from flet.core.types import (
     ColorValue,
@@ -16,7 +17,7 @@ __all__ = ["Window", "WindowEvent"]
 
 
 @control("Window")
-class Window(Control):
+class Window(BaseControl):
     bgcolor: Optional[ColorValue] = None
     width: OptionalNumber = None
     height: OptionalNumber = None
@@ -52,22 +53,38 @@ class Window(Control):
     on_event: OptionalEventCallable["WindowEvent"] = None
 
     def __post_init__(self, ref) -> None:
+        super().__post_init__(ref)
         self._i = 2
 
+    async def wait_until_ready_to_show_async(self):
+        await self._invoke_method_async("wait_until_ready_to_show")
+
     def wait_until_ready_to_show(self):
-        self.invoke_method("wait_until_ready_to_show")
+        asyncio.create_task(self.wait_until_ready_to_show_async())
+
+    async def destroy_async(self):
+        await self._invoke_method_async("destroy")
 
     def destroy(self):
-        self.invoke_method("destroy")
+        asyncio.create_task(self.destroy_async())
+
+    async def center_async(self):
+        await self._invoke_method_async("center")
 
     def center(self):
-        self.invoke_method("center")
+        asyncio.create_task(self.center_async())
+
+    async def close_async(self):
+        await self._invoke_method_async("close")
 
     def close(self):
-        self.invoke_method("close")
+        asyncio.create_task(self.close_async())
+
+    async def to_front_async(self):
+        await self._invoke_method_async("to_front")
 
     def to_front(self):
-        self.invoke_method("to_front")
+        asyncio.create_task(self.to_front_async())
 
 
 @dataclass

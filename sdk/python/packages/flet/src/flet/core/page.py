@@ -31,7 +31,7 @@ from flet.core.bottom_app_bar import BottomAppBar
 from flet.core.box import BoxDecoration
 from flet.core.browser_context_menu import BrowserContextMenu
 from flet.core.clipboard import Clipboard
-from flet.core.control import Control, Service, control
+from flet.core.control import BaseControl, Control, Service, control
 from flet.core.control_event import ControlEvent
 from flet.core.cupertino_app_bar import CupertinoAppBar
 from flet.core.cupertino_navigation_bar import CupertinoNavigationBar
@@ -916,12 +916,12 @@ class Page(AdaptiveControl):
 
 
 @control("Overlay")
-class Overlay(Control):
+class Overlay(BaseControl):
     controls: List[Control] = field(default_factory=list)
 
 
 @control("Dialogs")
-class Dialogs(Control):
+class Dialogs(BaseControl):
     controls: List[Control] = field(default_factory=list)
 
 
