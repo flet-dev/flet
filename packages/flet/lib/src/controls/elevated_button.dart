@@ -1,4 +1,3 @@
-import 'package:flet/src/extensions/control.dart';
 import 'package:flet/src/flet_backend.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +9,7 @@ import '../utils/others.dart';
 import '../widgets/error.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';
+import 'control_widget.dart';
 import 'cupertino_button.dart';
 import 'cupertino_dialog_action.dart';
 
@@ -72,11 +72,16 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
 
       bool isFilledButton = widget.control.type == "FilledButton";
       bool isFilledTonalButton = widget.control.type == "FilledTonalButton";
-      String text = widget.control.getString("text", "")!;
+      //String text = widget.control.getString("text", "")!;
       String url = widget.control.getString("url", "")!;
       IconData? icon = parseIcon(widget.control.getString("icon"));
       Color? iconColor = widget.control.getColor("icon_color", context);
-      Widget content = widget.control.getWidget("content") ?? Text(text);
+      var content = widget.control.get("content");
+      Widget child = content is Control
+          ? ControlWidget(control: content)
+          : content is String
+              ? Text(content)
+              : const Text("");
 
       var clipBehavior =
           parseClip(widget.control.getString("clip_behavior"), Clip.none)!;
@@ -130,10 +135,10 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
               : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
       if (icon != null) {
-        if (text == "") {
+        if (child == const Text("")) {
           return const ErrorControl("Error displaying ElevatedButton",
               description:
-                  "\"icon\" must be specified together with \"text\".");
+                  "\"icon\" must be specified together with \"content\".");
         }
         if (isFilledButton) {
           button = FilledButton.icon(
@@ -148,7 +153,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
                 icon,
                 color: iconColor,
               ),
-              label: Text(text));
+              label: child);
         } else if (isFilledTonalButton) {
           button = FilledButton.tonalIcon(
               style: style,
@@ -162,7 +167,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
                 icon,
                 color: iconColor,
               ),
-              label: Text(text));
+              label: child);
         } else {
           button = ElevatedButton.icon(
               style: style,
@@ -176,7 +181,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
                 icon,
                 color: iconColor,
               ),
-              label: Text(text));
+              label: child);
         }
       } else {
         if (isFilledButton) {
@@ -188,7 +193,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
               onLongPress: onLongPressHandler,
               onHover: onHoverHandler,
               clipBehavior: clipBehavior,
-              child: content);
+              child: child);
         } else if (isFilledTonalButton) {
           button = FilledButton.tonal(
               style: style,
@@ -198,7 +203,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
               onLongPress: onLongPressHandler,
               onHover: onHoverHandler,
               clipBehavior: clipBehavior,
-              child: content);
+              child: child);
         } else {
           button = ElevatedButton(
               style: style,
@@ -208,7 +213,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
               onLongPress: onLongPressHandler,
               onHover: onHoverHandler,
               clipBehavior: clipBehavior,
-              child: content);
+              child: child);
         }
       }
 

@@ -47,7 +47,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     def __setattr__(self, name, value):
         if name == "text":
             warnings.warn(
-                "'text' is deprecated. Use 'content' instead.",
+                "'text' is deprecated since version 0.70.0 and will be removed in 0.70.3. Use 'content' instead.",
                 DeprecationWarning,
                 stacklevel=2,
             )
@@ -76,6 +76,12 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     on_hover: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
+
+    def before_update(self):
+        super().before_update()
+        # assert self.icon or (
+        #     self.content and self.content.visible
+        # ), "at minimum, icon or a visible content must be provided"
 
     # def before_update(self):
     #     super().before_update()
