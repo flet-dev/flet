@@ -1,9 +1,10 @@
+from dataclasses import field
 from enum import Enum
-from typing import Optional
 
 from flet.core.animation import AnimationCurve
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
+from flet.core.types import Duration, DurationValue
 
 __all__ = ["AnimatedSwitcher", "AnimatedSwitcherTransition"]
 
@@ -66,11 +67,11 @@ class AnimatedSwitcher(ConstrainedControl):
     """
 
     content: Control
-    duration: Optional[int] = None
-    reverse_duration: Optional[int] = None
-    switch_in_curve: Optional[AnimationCurve] = None
-    switch_out_curve: Optional[AnimationCurve] = None
-    transition: Optional[AnimatedSwitcherTransition] = None
+    duration: DurationValue = field(default_factory=lambda: Duration(seconds=1))
+    reverse_duration: DurationValue = field(default_factory=lambda: Duration(seconds=1))
+    switch_in_curve: AnimationCurve = AnimationCurve.LINEAR
+    switch_out_curve: AnimationCurve = AnimationCurve.LINEAR
+    transition: AnimatedSwitcherTransition = AnimatedSwitcherTransition.FADE
 
     def before_update(self):
         super().before_update()

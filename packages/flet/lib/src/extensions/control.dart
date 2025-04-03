@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+
 import '../controls/control_widget.dart';
 import '../models/control.dart';
 
@@ -10,11 +11,13 @@ extension WidgetFromControl on Control {
   ///
   /// If [visibleOnly] is `true` (default), only includes children that are visible.
   ///
-  /// Each child [Control] is wrapped in a [ControlWidget].
-  List<Widget> getWidgets(String propertyName, {bool visibleOnly = true}) {
-    return children(propertyName, visibleOnly: visibleOnly)
-        .map((child) => ControlWidget(control: child))
-        .toList();
+  /// If [notifyParent] is `true`, sets `notifyParent` on each child control.
+  List<Widget> getWidgets(String propertyName,
+      {bool visibleOnly = true, bool notifyParent = false}) {
+    return children(propertyName, visibleOnly: visibleOnly).map((child) {
+      child.notifyParent = notifyParent;
+      return ControlWidget(control: child);
+    }).toList();
   }
 
   /// Returns a single [Widget] built from the child of this control
@@ -22,9 +25,14 @@ extension WidgetFromControl on Control {
   ///
   /// If [visibleOnly] is `true` (default), returns `null` for an invisible child.
   ///
-  /// The child [Control], if found, is wrapped in a [ControlWidget].
-  Widget? getWidget(String propertyName, {bool visibleOnly = true}) {
+  /// If [notifyParent] is `true`, sets `notifyParent` on the child control.
+  ///
+  /// If [key] is provided, applies it to the returned [ControlWidget].
+  Widget? getWidget(String propertyName,
+      {bool visibleOnly = true, bool notifyParent = false, Key? key}) {
     final c = child(propertyName, visibleOnly: visibleOnly);
-    return c != null ? ControlWidget(control: c) : null;
+    if (c == null) return null;
+    c.notifyParent = notifyParent;
+    return ControlWidget(key: key, control: c);
   }
 }

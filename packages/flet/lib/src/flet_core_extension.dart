@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import 'controls/animated_switcher.dart';
 import 'controls/banner.dart';
 import 'controls/card.dart';
 import 'controls/center.dart';
@@ -36,6 +37,8 @@ class FletCoreExtension extends FletExtension {
   @override
   Widget? createWidget(Key? key, Control control) {
     switch (control.type) {
+      case "AnimatedSwitcher":
+        return AnimatedSwitcherControl(key: key, control: control);
       case "Banner":
         return BannerControl(key: key, control: control);
       case "Card":

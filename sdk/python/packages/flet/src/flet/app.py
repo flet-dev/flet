@@ -31,12 +31,12 @@ from flet.utils.pip import (
 logger = logging.getLogger(flet.__name__)
 
 
-@deprecated("Use run() instead.", show_parentheses=True)
+@deprecated("Use run() instead.", version="0.70.0", show_parentheses=True)
 def app(*args, **kwargs):
     return run(*args, **kwargs)
 
 
-@deprecated("Use run() instead.", show_parentheses=True)
+@deprecated("Use run() instead.", version="0.70.0", show_parentheses=True)
 async def app_async(*args, **kwargs):
     return await run_async(*args, **kwargs)
 
