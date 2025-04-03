@@ -14,6 +14,7 @@ import 'controls/elevated_button.dart';
 import 'controls/expansion_panel.dart';
 import 'controls/expansion_tile.dart';
 import 'controls/floating_action_button.dart';
+import 'controls/image.dart';
 import 'controls/line_chart.dart';
 import 'controls/list_tile.dart';
 import 'controls/page.dart';
@@ -34,54 +35,54 @@ class FletCoreExtension extends FletExtension {
   @override
   Widget? createWidget(Key? key, Control control) {
     switch (control.type) {
-      case "Page":
-        return PageControl(key: key, control: control);
-      case "View":
-        return ViewControl(key: key, control: control);
-      case "Window":
-        return WindowControl(key: key, control: control);
-      case "Center":
-        return CenterControl(key: key, control: control);
-      case "Row":
-        return RowControl(key: key, control: control);
-      case "Column":
-        return ColumnControl(key: key, control: control);
       case "Banner":
         return BannerControl(key: key, control: control);
-      case "Text":
-        return TextControl(key: key, control: control);
-      case "Container":
-        return ContainerControl(key: key, control: control);
-      case "CupertinoDialogAction":
-        return CupertinoDialogActionControl(key: key, control: control);
-      // case "AlertDialog":
-      //   return AlertDialogControl(key: key, control: control);
       case "Card":
         return CardControl(key: key, control: control);
-      case "ListTile":
-        return ListTileControl(key: key, control: control);
+      case "Center":
+        return CenterControl(key: key, control: control);
+      case "Column":
+        return ColumnControl(key: key, control: control);
+      case "Container":
+        return ContainerControl(key: key, control: control);
       case "CupertinoAlertDialog":
         return CupertinoAlertDialogControl(key: key, control: control);
       case "CupertinoButton":
         return CupertinoButtonControl(key: key, control: control);
+      case "CupertinoDialogAction":
+        return CupertinoDialogActionControl(key: key, control: control);
+      case "Divider":
+        return DividerControl(key: key, control: control);
+      case "Dropdown":
+        return DropdownControl(key: key, control: control);
       case "ElevatedButton":
         return ElevatedButtonControl(key: key, control: control);
+      case "ExpansionPanelList":
+        return ExpansionPanelListControl(key: key, control: control);
+      case "ExpansionTile":
+        return ExpansionTileControl(key: key, control: control);
       case "FilledButton":
         return ElevatedButtonControl(key: key, control: control);
       case "FilledTonalButton":
         return ElevatedButtonControl(key: key, control: control);
       case "FloatingActionButton":
         return FloatingActionButtonControl(key: key, control: control);
-      case "ExpansionTile":
-        return ExpansionTileControl(key: key, control: control);
-      case "ExpansionPanelList":
-        return ExpansionPanelListControl(key: key, control: control);
-      case "Dropdown":
-        return DropdownControl(key: key, control: control);
-      case "Divider":
-        return DividerControl(key: key, control: control);
+      case "Image":
+        return ImageControl(key: key, control: control);
       case "LineChart":
         return LineChartControl(key: key, control: control);
+      case "ListTile":
+        return ListTileControl(key: key, control: control);
+      case "Page":
+        return PageControl(key: key, control: control);
+      case "Row":
+        return RowControl(key: key, control: control);
+      case "Text":
+        return TextControl(key: key, control: control);
+      case "View":
+        return ViewControl(key: key, control: control);
+      case "Window":
+        return WindowControl(key: key, control: control);
       default:
         return null;
     }

@@ -7,7 +7,6 @@ import 'package:flutter_svg/svg.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
-import '../models/page_args_model.dart';
 import '../widgets/error.dart';
 import 'alignment.dart';
 import 'borders.dart';
@@ -222,7 +221,6 @@ Widget buildImage({
   bool excludeFromSemantics = false,
   FilterQuality filterQuality = FilterQuality.low,
   bool disabled = false,
-  required PageArgsModel pageArgs,
 }) {
   Widget? image;
   const String svgTag = " xmlns=\"http://www.w3.org/2000/svg\"";
@@ -269,7 +267,7 @@ Widget buildImage({
               : null,
           semanticsLabel: semanticsLabel);
     } else {
-      var assetSrc = getAssetSrc(src, pageArgs.pageUri!, pageArgs.assetsDir);
+      var assetSrc = FletBackend.of(context).getAssetSource(src);
 
       if (assetSrc.isFile) {
         // from File
