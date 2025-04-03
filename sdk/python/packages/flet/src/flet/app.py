@@ -4,6 +4,7 @@ import logging
 import os
 import signal
 import traceback
+import warnings
 from pathlib import Path
 from typing import Optional
 
@@ -30,7 +31,25 @@ from flet.utils.pip import (
 logger = logging.getLogger(flet.__name__)
 
 
-def app(
+def app(*args, **kwargs):
+    warnings.warn(
+        "app() is deprecated and will be removed in a future release. Use run() instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return run(*args, **kwargs)
+
+
+async def app_async(*args, **kwargs):
+    warnings.warn(
+        "app_async() is deprecated and will be removed in a future release. Use run_async() instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return await run_async(*args, **kwargs)
+
+
+def run(
     target,
     name="",
     host=None,
@@ -62,7 +81,7 @@ def app(
         )
 
     return asyncio.run(
-        app_async(
+        run_async(
             target=target,
             name=name,
             host=host,
@@ -77,7 +96,7 @@ def app(
     )
 
 
-async def app_async(
+async def run_async(
     target,
     name="",
     host=None,

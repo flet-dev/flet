@@ -1,7 +1,9 @@
+from flet.core.column import Column
 from flet.core.container import Container, ContainerTapEvent
 from flet.core.control_event import ControlEvent
 from flet.core.elevated_button import ElevatedButton
 from flet.core.page import Page, PageResizeEvent
+from flet.core.scrollable_control import OnScrollEvent
 from flet.messaging.connection import Connection
 from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
@@ -17,6 +19,11 @@ def test_get_event_field_type():
     on_tap_down_type = ControlEvent.get_event_field_type(c, "on_tap_down")
     assert on_tap_down_type == ContainerTapEvent
     assert on_tap_down_type != ControlEvent
+
+    col = Column()
+    on_scroll_type = ControlEvent.get_event_field_type(col, "on_scroll")
+    assert on_scroll_type == OnScrollEvent
+    assert on_scroll_type != ControlEvent
 
 
 def test_create_event_typed_data():

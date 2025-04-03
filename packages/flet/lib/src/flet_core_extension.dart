@@ -4,7 +4,11 @@ import 'controls/banner.dart';
 import 'controls/center.dart';
 import 'controls/column.dart';
 import 'controls/container.dart';
+import 'controls/cupertino_button.dart';
+import 'controls/cupertino_dialog_action.dart';
+import 'controls/divider.dart';
 import 'controls/dropdown.dart';
+import 'controls/elevated_button.dart';
 import 'controls/line_chart.dart';
 import 'controls/page.dart';
 import 'controls/row.dart';
@@ -42,8 +46,16 @@ class FletCoreExtension extends FletExtension {
         return TextControl(key: key, control: control);
       case "Container":
         return ContainerControl(key: key, control: control);
+      case "CupertinoDialogAction":
+        return CupertinoDialogActionControl(key: key, control: control);
+      case "CupertinoButton":
+        return CupertinoButtonControl(key: key, control: control);
+      case "ElevatedButton":
+        return ElevatedButtonControl(key: key, control: control);
       case "Dropdown":
         return DropdownControl(key: key, control: control);
+      case "Divider":
+        return DividerControl(key: key, control: control);
       case "LineChart":
         return LineChartControl(key: key, control: control);
       default:

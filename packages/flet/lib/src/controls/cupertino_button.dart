@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
+//import '../flet_control_backend.dart';
+import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
@@ -9,25 +10,17 @@ import '../utils/buttons.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
-import 'create_control.dart';
-import 'error.dart';
+import '../widgets/error.dart';
+import 'base_controls.dart';
+import 'control_widget.dart';
 
 class CupertinoButtonControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const CupertinoButtonControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  const CupertinoButtonControl({
+    super.key,
+    required this.control,
+  });
 
   @override
   State<CupertinoButtonControl> createState() => _CupertinoButtonControlState();
@@ -37,25 +30,24 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoButton build: ${widget.control.id}");
-    bool disabled = widget.control.disabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.control.parent!.disabled;
     var theme = Theme.of(context);
 
-    var contentCtrls =
-        widget.children.where((c) => c.name == "content" && c.visible);
+    Control? content = widget.control.child("content");
 
     String? text = widget.control.getString("text");
     IconData? icon = parseIcon(widget.control.getString("icon"));
-    Color? iconColor = widget.control.getColor("iconColor", context);
+    Color? iconColor = widget.control.getColor("icon_color", context);
 
     // IconButton props below
-    double? iconSize = widget.control.getDouble("iconSize");
+    double? iconSize = widget.control.getDouble("icon_size");
     bool selected = widget.control.getBool("selected", false)!;
     IconData? selectedIcon =
-        parseIcon(widget.control.getString("selectedIcon"));
+        parseIcon(widget.control.getString("selected_icon"));
     Color? selectedIconColor =
-        widget.control.getColor("selectedIconColor", context);
+        widget.control.getColor("selected_icon_color", context);
 
-    Widget? content;
+    Widget? child;
     List<Widget> children = [];
     if (icon != null) {
       children.add(Icon(
@@ -72,33 +64,33 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       children.add(Text(text));
     }
 
-    if (contentCtrls.isNotEmpty) {
-      content = createControl(widget.control, contentCtrls.first.id, disabled,
-          parentAdaptive: widget.parentAdaptive);
+    if (content is Control) {
+      child = ControlWidget(control: content);
     } else if (children.isNotEmpty) {
       if (children.length == 2) {
         children.insert(1, const SizedBox(width: 8));
-        content = Row(
+        child = Row(
           mainAxisSize: MainAxisSize.min,
           children: children,
         );
       } else {
-        content = children.first;
+        child = children.first;
       }
     }
 
-    if (content == null) {
+    if (child == null) {
       return const ErrorControl(
         "CupertinoButton has nothing to display",
         description: "Provide at minimum text or (visible) content",
       );
     }
 
-    double pressedOpacity = widget.control.getDouble("opacityOnClick", 0.4)!;
-    double minSize = widget.control.getDouble("minSize", 44.0)!;
+    double pressedOpacity = widget.control.getDouble("opacity_on_click")!;
+    double minSize = widget.control.getDouble("min_size", 44.0)!;
     String url = widget.control.getString("url", "")!;
-    Color disabledColor = widget.control.getColor("disabledBgcolor", context) ??
-        CupertinoColors.quaternarySystemFill;
+    Color disabledColor =
+        widget.control.getColor("disabled_bgcolor", context) ??
+            CupertinoColors.quaternarySystemFill;
     Color? bgColor = widget.control.getColor("bgColor", context);
     Color? color = widget.control.getColor("color", context);
     AlignmentGeometry alignment =
@@ -139,12 +131,12 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     }
 
     if (color != null) {
-      content = DefaultTextStyle(
+      child = DefaultTextStyle(
           style: CupertinoTheme.of(context)
               .textTheme
               .textStyle
               .copyWith(color: color),
-          child: content);
+          child: child);
     }
 
     Function()? onPressed = !disabled
@@ -152,9 +144,10 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
             debugPrint("CupertinoButton ${widget.control.id} clicked!");
             if (url != "") {
               openWebBrowser(url,
-                  webWindowName: widget.control.getString("urlTarget"));
+                  webWindowName: widget.control.getString("url_target"));
             }
-            widget.backend.triggerControlEvent(widget.control.id, "click");
+            FletBackend.of(context)
+                .triggerControlEvent(widget.control, "click");
           }
         : null;
 
@@ -167,19 +160,19 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       pressedOpacity: pressedOpacity,
       alignment: alignment,
       minSize: minSize,
-      child: content,
       onLongPress: !disabled
           ? () {
-              widget.backend
-                  .triggerControlEvent(widget.control.id, "longPress");
+              FletBackend.of(context)
+                  .triggerControlEvent(widget.control, "long_press");
             }
           : null,
       onFocusChange: (focused) {
-        widget.backend
-            .triggerControlEvent(widget.control.id, focused ? "focus" : "blur");
+        FletBackend.of(context)
+            .triggerControlEvent(widget.control, focused ? "focus" : "blur");
       },
+      child: child,
     );
 
-    return constrainedControl(context, button, widget.parent, widget.control);
+    return ConstrainedControl(control: widget.control, child: button);
   }
 }

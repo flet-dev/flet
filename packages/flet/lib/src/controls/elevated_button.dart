@@ -1,33 +1,25 @@
+import 'package:flet/src/flet_backend.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import '../utils/others.dart';
-import 'create_control.dart';
+import '../widgets/error.dart';
+import '../widgets/flet_store_mixin.dart';
+import 'base_controls.dart';
+import 'control_widget.dart';
 import 'cupertino_button.dart';
 import 'cupertino_dialog_action.dart';
-import 'error.dart';
-import 'flet_store_mixin.dart';
 
 class ElevatedButtonControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const ElevatedButtonControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  const ElevatedButtonControl({
+    super.key,
+    required this.control,
+  });
 
   @override
   State<ElevatedButtonControl> createState() => _ElevatedButtonControlState();
@@ -53,50 +45,43 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
   }
 
   void _onFocusChange() {
-    widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
+    FletBackend.of(context).triggerControlEvent(
+        widget.control, _focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("Button build: ${widget.control.id}");
-    bool disabled = widget.control.disabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.control.parent!.disabled;
 
     return withPagePlatform((context, platform) {
       bool? adaptive =
-          widget.control.getBool("adaptive") ?? widget.parentAdaptive;
+          widget.control.adaptive ?? widget.control.parent?.adaptive;
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
-        return widget.control.name == "action" &&
-                (widget.parent?.type == "alertdialog" ||
-                    widget.parent?.type == "cupertinoalertdialog")
+        return (widget.control.parent?.type == "AlertDialog" ||
+                widget.control.parent?.type == "CupertinoAlertDialog")
             ? CupertinoDialogActionControl(
                 control: widget.control,
-                parentDisabled: widget.parentDisabled,
-                parentAdaptive: adaptive,
-                children: widget.children,
-                backend: widget.backend)
+              )
             : CupertinoButtonControl(
                 control: widget.control,
-                parentDisabled: widget.parentDisabled,
-                parentAdaptive: adaptive,
-                children: widget.children,
-                backend: widget.backend);
+              );
       }
 
-      bool isFilledButton = widget.control.type == "filledbutton";
-      bool isFilledTonalButton = widget.control.type == "filledtonalbutton";
+      bool isFilledButton = widget.control.type == "FilledButton";
+      bool isFilledTonalButton = widget.control.type == "FilledTonalButton";
       String text = widget.control.getString("text", "")!;
       String url = widget.control.getString("url", "")!;
       IconData? icon = parseIcon(widget.control.getString("icon"));
-      Color? iconColor = widget.control.getColor("iconColor", context);
-      var contentCtrls =
-          widget.children.where((c) => c.name == "content" && c.visible);
+      Color? iconColor = widget.control.getColor("icon_color", context);
+      Control? content = widget.control.child("content");
+
       var clipBehavior =
-          parseClip(widget.control.getString("clipBehavior"), Clip.none)!;
-      bool onHover = widget.control.getBool("onHover", false)!;
-      bool onLongPress = widget.control.getBool("onLongPress", false)!;
+          parseClip(widget.control.getString("clip_behavior"), Clip.none)!;
+      //bool onHover = widget.control.getBool("onHover", false)!;
+      //bool onLongPress = widget.control.getBool("onLongPress", false)!;
       bool autofocus = widget.control.getBool("autofocus", false)!;
 
       Function()? onPressed = !disabled
@@ -104,25 +89,26 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
               debugPrint("Button ${widget.control.id} clicked!");
               if (url != "") {
                 openWebBrowser(url,
-                    webWindowName: widget.control.getString("urlTarget"));
+                    webWindowName: widget.control.getString("url_target"));
               }
-              widget.backend.triggerControlEvent(widget.control.id, "click");
+              FletBackend.of(context)
+                  .triggerControlEvent(widget.control, "click");
             }
           : null;
 
-      Function()? onLongPressHandler = onLongPress && !disabled
+      Function()? onLongPressHandler = !disabled
           ? () {
               debugPrint("Button ${widget.control.id} long pressed!");
-              widget.backend
-                  .triggerControlEvent(widget.control.id, "long_press");
+              FletBackend.of(context)
+                  .triggerControlEvent(widget.control, "long_press");
             }
           : null;
 
-      Function(bool)? onHoverHandler = onHover && !disabled
+      Function(bool)? onHoverHandler = !disabled
           ? (state) {
               debugPrint("Button ${widget.control.id} hovered!");
-              widget.backend.triggerControlEvent(
-                  widget.control.id, "hover", state.toString());
+              FletBackend.of(context).triggerControlEvent(
+                  widget.control, "hover", state.toString());
             }
           : null;
 
@@ -194,9 +180,8 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
         }
       } else {
         Widget? child;
-        if (contentCtrls.isNotEmpty) {
-          child = createControl(widget.control, contentCtrls.first.id, disabled,
-              parentAdaptive: adaptive);
+        if (content is Control) {
+          child = ControlWidget(control: content);
         } else {
           child = Text(text);
         }
@@ -239,7 +224,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
         _lastFocusValue = focusValue;
         _focusNode.requestFocus();
       }
-      return constrainedControl(context, button, widget.parent, widget.control);
+      return ConstrainedControl(control: widget.control, child: button);
     });
   }
 }

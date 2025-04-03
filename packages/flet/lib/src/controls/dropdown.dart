@@ -37,6 +37,7 @@ class _DropdownControlState extends State<DropdownControl> {
     super.initState();
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
+    widget.control.addInvokeMethodListener(_invokeMethod);
   }
 
   void _onFocusChange() {
@@ -48,7 +49,18 @@ class _DropdownControlState extends State<DropdownControl> {
   void dispose() {
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
+    widget.control.removeInvokeMethodListener(_invokeMethod);
     super.dispose();
+  }
+
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    debugPrint("Dropdown.$name($args)");
+    switch (name) {
+      case "focus":
+        _focusNode.requestFocus();
+      default:
+        throw Exception("Unknown Dropdown method: $name");
+    }
   }
 
   @override
@@ -197,12 +209,6 @@ class _DropdownControlState extends State<DropdownControl> {
     String? value = widget.control.getString("value");
     if (items.where((item) => item.value == value).isEmpty) {
       value = null;
-    }
-
-    var focusValue = widget.control.getString("focus");
-    if (focusValue != null && focusValue != _lastFocusValue) {
-      _lastFocusValue = focusValue;
-      _focusNode.requestFocus();
     }
 
     TextCapitalization textCapitalization = parseTextCapitalization(

@@ -137,6 +137,7 @@ class FletBackend extends ChangeNotifier {
             a.name.toLowerCase() ==
             _page.get<String>("platform", "")!.toLowerCase(),
         orElse: () => defaultTargetPlatform);
+    debugPrint("Page updated: $newPlatform $platform");
     if (newPlatform != platform) {
       platform = newPlatform;
       notifyListeners();

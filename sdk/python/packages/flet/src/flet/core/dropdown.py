@@ -1,3 +1,4 @@
+import asyncio
 from dataclasses import dataclass, field
 from typing import List, Optional, Union
 
@@ -107,6 +108,8 @@ class Dropdown(ConstrainedControl):
     def __contains__(self, item):
         return item in self.options
 
+    async def focus_async(self):
+        await self._invoke_method_async("focus")
+
     def focus(self):
-        # TODO
-        pass
+        asyncio.create_task(self.focus_async())

@@ -34,8 +34,8 @@ class CupertinoButton(ConstrainedControl):
     bgcolor: Optional[ColorValue] = None
     color: Optional[ColorValue] = None
     disabled_bgcolor: Optional[ColorValue] = None
-    opacity_on_click: Number = field(default=0.4)
-    min_size: Number = field(default=44.0)
+    opacity_on_click: Number = 0.4
+    min_size: Number = 44.0
     padding: Optional[PaddingValue] = None
     alignment: Optional[Alignment] = None
     border_radius: Optional[BorderRadiusValue] = None
