@@ -24,15 +24,15 @@ TooltipTriggerMode? parseTooltipTriggerMode(String? value,
 }
 
 Tooltip? parseTooltip(
-    Control control, String propName, Widget widget, ThemeData theme) {
+    BuildContext context, Control control, String propName, Widget widget) {
   var v = control.get(propName);
   if (v == null) {
     return null;
   }
-  return tooltipFromJSON(v, widget, theme);
+  return tooltipFromJSON(context, v, widget);
 }
 
-Tooltip? tooltipFromJSON(dynamic j, Widget widget, ThemeData theme) {
+Tooltip? tooltipFromJSON(BuildContext context, dynamic j, Widget widget) {
   if (j == null) {
     return null;
   } else if (j is String) {
@@ -44,21 +44,25 @@ Tooltip? tooltipFromJSON(dynamic j, Widget widget, ThemeData theme) {
     );
   }
 
+  var theme = Theme.of(context);
+
   /// The tooltip shape defaults to a rounded rectangle with a border radius of
   /// 4.0. Tooltips will also default to an opacity of 90%
   var decoration = boxDecorationFromDetails(
-    gradient: gradientFromJSON(theme, j["gradient"]),
-    border: borderFromJSON(theme, j["border"]),
-    borderRadius:
-        borderRadiusFromJSON(j["border_radius"], BorderRadius.circular(4.0)),
-    shape: parseBoxShape(j["shape"]),
-    color: parseColor(theme, j["bgcolor"],
-        theme.brightness == Brightness.light ? Colors.grey[700] : Colors.white),
-    blendMode: parseBlendMode(j["blend_mode"]),
-    boxShadow: boxShadowsFromJSON(theme, j["box_shadow"]),
-    image: decorationImageFromJSON(
-        theme, j["image"], null), // TODO: replace null with PageArgsModel
-  );
+      gradient: gradientFromJSON(theme, j["gradient"]),
+      border: borderFromJSON(theme, j["border"]),
+      borderRadius:
+          borderRadiusFromJSON(j["border_radius"], BorderRadius.circular(4.0)),
+      shape: parseBoxShape(j["shape"]),
+      color: parseColor(
+          theme,
+          j["bgcolor"],
+          theme.brightness == Brightness.light
+              ? Colors.grey[700]
+              : Colors.white),
+      blendMode: parseBlendMode(j["blend_mode"]),
+      boxShadow: boxShadowsFromJSON(theme, j["box_shadow"]),
+      image: decorationImageFromJSON(context, j["image"]));
   return Tooltip(
     message: j["message"],
     enableFeedback: parseBool(j["enable_feedback"]),

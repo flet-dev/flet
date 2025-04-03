@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import 'controls/banner.dart';
+import 'controls/card.dart';
 import 'controls/center.dart';
 import 'controls/column.dart';
 import 'controls/container.dart';
@@ -13,6 +14,7 @@ import 'controls/elevated_button.dart';
 import 'controls/expansion_panel.dart';
 import 'controls/expansion_tile.dart';
 import 'controls/line_chart.dart';
+import 'controls/list_tile.dart';
 import 'controls/page.dart';
 import 'controls/row.dart';
 import 'controls/text.dart';
@@ -53,6 +55,10 @@ class FletCoreExtension extends FletExtension {
         return CupertinoDialogActionControl(key: key, control: control);
       // case "AlertDialog":
       //   return AlertDialogControl(key: key, control: control);
+      case "Card":
+        return CardControl(key: key, control: control);
+      case "ListTile":
+        return ListTileControl(key: key, control: control);
       case "CupertinoAlertDialog":
         return CupertinoAlertDialogControl(key: key, control: control);
       case "CupertinoButton":

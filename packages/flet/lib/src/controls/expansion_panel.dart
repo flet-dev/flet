@@ -35,10 +35,13 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl> {
     var panelList = ExpansionPanelList(
         elevation: widget.control.getDouble("elevation", 2)!,
         materialGapSize: widget.control.getDouble("spacing", 16)!,
-        dividerColor: widget.control.getColor("dividerColor", context),
-        expandIconColor: widget.control.getColor("expandedIconColor", context),
-        expandedHeaderPadding: parseEdgeInsets(widget.control,
-            "expandedHeaderPadding", const EdgeInsets.symmetric(vertical: 16))!,
+        dividerColor: widget.control.getColor("divider_color", context),
+        expandIconColor:
+            widget.control.getColor("expanded_icon_color", context),
+        expandedHeaderPadding: parseEdgeInsets(
+            widget.control,
+            "expanded_header_padding",
+            const EdgeInsets.symmetric(vertical: 16))!,
         expansionCallback: !disabled
             ? (int index, bool isExpanded) {
                 onChange(index, isExpanded);
@@ -53,7 +56,7 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl> {
           return ExpansionPanel(
             backgroundColor: panelControl.getColor("bgColor", context),
             isExpanded: panelControl.getBool("expanded", false)!,
-            canTapOnHeader: panelControl.getBool("canTapHeader", false)!,
+            canTapOnHeader: panelControl.getBool("can_tap_header", false)!,
             headerBuilder: (BuildContext context, bool isExpanded) {
               return headerCtrl != null
                   ? ControlWidget(

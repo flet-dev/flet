@@ -247,10 +247,11 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
 
     var windowTitle = widget.control.get<String>("title", "")!;
 
-    var lightTheme = parseTheme(widget.control, "theme", Brightness.light);
+    var lightTheme =
+        parseTheme(context, widget.control, "theme", Brightness.light);
     var darkTheme = widget.control.get<String>("dark_theme") == null
-        ? parseTheme(widget.control, "theme", Brightness.dark)
-        : parseTheme(widget.control, "dark_theme", Brightness.dark);
+        ? parseTheme(context, widget.control, "theme", Brightness.dark)
+        : parseTheme(context, widget.control, "dark_theme", Brightness.dark);
 
     if (_lightTheme == null || !themesEqual(_lightTheme!, lightTheme)) {
       _lightTheme = lightTheme;
@@ -274,12 +275,12 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                                 _themeMode == ThemeMode.system) &&
                             _brightness == Brightness.light)
                     ? parseCupertinoTheme(
-                        widget.control, "theme", Brightness.light)
+                        context, widget.control, "theme", Brightness.light)
                     : widget.control.get<String>("dark_theme") != null
-                        ? parseCupertinoTheme(
-                            widget.control, "dark_theme", Brightness.dark)
+                        ? parseCupertinoTheme(context, widget.control,
+                            "dark_theme", Brightness.dark)
                         : parseCupertinoTheme(
-                            widget.control, "theme", Brightness.dark),
+                            context, widget.control, "theme", Brightness.dark),
                 localizationsDelegates: const [
                   GlobalMaterialLocalizations.delegate,
                   GlobalWidgetsLocalizations.delegate,

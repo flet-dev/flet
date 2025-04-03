@@ -54,10 +54,10 @@ class SystemUiOverlayStyleTheme
   int get hashCode => systemUiOverlayStyle.hashCode;
 }
 
-CupertinoThemeData parseCupertinoTheme(
-    Control control, String propName, Brightness? brightness,
+CupertinoThemeData parseCupertinoTheme(BuildContext context, Control control,
+    String propName, Brightness? brightness,
     {ThemeData? parentTheme}) {
-  var theme = parseTheme(control, propName, brightness);
+  var theme = parseTheme(context, control, propName, brightness);
   var cupertinoTheme = MaterialBasedCupertinoThemeData(materialTheme: theme);
   return fixCupertinoTheme(cupertinoTheme, theme);
 }
@@ -82,14 +82,15 @@ ThemeMode? parseThemeMode(String? value, [ThemeMode? defValue]) {
       defValue;
 }
 
-ThemeData parseTheme(Control control, String propName, Brightness? brightness,
+ThemeData parseTheme(BuildContext context, Control control, String propName,
+    Brightness? brightness,
     {ThemeData? parentTheme}) {
   var v = control.get(propName);
-  return themeFromJson(v, brightness, parentTheme);
+  return themeFromJson(context, v, brightness, parentTheme);
 }
 
-ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
-    ThemeData? parentTheme) {
+ThemeData themeFromJson(BuildContext context, Map<String, dynamic>? json,
+    Brightness? brightness, ThemeData? parentTheme) {
   ThemeData? theme = parentTheme;
 
   var primarySwatch = parseColor(theme, json?["primary_swatch"]);
@@ -169,7 +170,7 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
     dropdownMenuTheme:
         parseDropdownMenuTheme(theme, json?["dropdown_menu_theme"]),
     listTileTheme: parseListTileTheme(theme, json?["list_tile_theme"]),
-    tooltipTheme: parseTooltipTheme(theme, json?["tooltip_theme"]),
+    tooltipTheme: parseTooltipTheme(context, json?["tooltip_theme"]),
     expansionTileTheme:
         parseExpansionTileTheme(theme, json?["expansion_tile_theme"]),
     sliderTheme: parseSliderTheme(theme, json?["slider_theme"]),
@@ -184,7 +185,7 @@ ThemeData themeFromJson(Map<String, dynamic>? json, Brightness? brightness,
       theme,
       json?["navigation_bar_theme"],
     ),
-    dataTableTheme: parseDataTableTheme(theme, json?["data_table_theme"]),
+    dataTableTheme: parseDataTableTheme(context, json?["data_table_theme"]),
     buttonTheme: parseButtonTheme(theme, json?["button_theme"]),
     elevatedButtonTheme:
         parseElevatedButtonTheme(theme, json?["elevated_button_theme"]),
@@ -506,10 +507,11 @@ IconButtonThemeData? parseIconButtonTheme(
 }
 
 DataTableThemeData? parseDataTableTheme(
-    ThemeData theme, Map<String, dynamic>? j) {
+    BuildContext context, Map<String, dynamic>? j) {
   if (j == null) {
     return null;
   }
+  var theme = Theme.of(context);
   TextStyle? parseTextStyle(String propName) {
     return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
   }
@@ -530,8 +532,7 @@ DataTableThemeData? parseDataTableTheme(
     headingRowHeight: parseDouble(j["heading_row_height"]),
     dataRowCursor: getWidgetStateProperty<MouseCursor?>(
         j["data_row_cursor"], (jv) => parseMouseCursor(jv)),
-    decoration: boxDecorationFromJSON(theme, j["decoration"], null),
-    // TODO: replace null with a proper PageArgsModel
+    decoration: boxDecorationFromJSON(context, j["decoration"]),
     headingRowAlignment: parseMainAxisAlignment(j["heading_row_alignment"]),
     headingCellCursor: getWidgetStateProperty<MouseCursor?>(
         j["heading_cell_cursor"], (jv) => parseMouseCursor(jv)),
@@ -1179,10 +1180,13 @@ ListTileThemeData? parseListTileTheme(
   );
 }
 
-TooltipThemeData? parseTooltipTheme(ThemeData theme, Map<String, dynamic>? j) {
+TooltipThemeData? parseTooltipTheme(
+    BuildContext context, Map<String, dynamic>? j) {
   if (j == null) {
     return null;
   }
+
+  var theme = Theme.of(context);
 
   TextStyle? parseTextStyle(String propName) {
     return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
@@ -1201,8 +1205,7 @@ TooltipThemeData? parseTooltipTheme(ThemeData theme, Map<String, dynamic>? j) {
     showDuration: durationFromJSON(j["show_duration"]),
     margin: edgeInsetsFromJson(j["margin"]),
     triggerMode: parseTooltipTriggerMode(j["trigger_mode"]),
-    // TODO: replace null with PageArgsModel
-    decoration: boxDecorationFromJSON(theme, j["decoration"], null),
+    decoration: boxDecorationFromJSON(context, j["decoration"]),
   );
 }
 
