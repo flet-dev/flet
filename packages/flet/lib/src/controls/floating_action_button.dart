@@ -1,7 +1,6 @@
 import 'package:flet/src/flet_backend.dart';
 import 'package:flutter/material.dart';
 
-//import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/icons.dart';
@@ -11,16 +10,9 @@ import '../utils/others.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
-//import 'create_control.dart';
-//import 'error.dart';
 
 class FloatingActionButtonControl extends StatelessWidget {
-  //final Control? parent;
   final Control control;
-  //final List<Control> children;
-  //final bool parentDisabled;
-  //final bool? parentAdaptive;
-  //final FletControlBackend backend;
 
   const FloatingActionButtonControl({
     super.key,
