@@ -22,8 +22,7 @@ TooltipTriggerMode? parseTooltipTriggerMode(String? value,
       defaultValue;
 }
 
-Tooltip? parseTooltip(
-    BuildContext context, dynamic value, Widget widget, ThemeData theme) {
+Tooltip? parseTooltip(BuildContext context, dynamic value, Widget widget) {
   if (value == null) {
     return null;
   } else if (value is String) {
