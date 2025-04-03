@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../controls/control_widget.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
-import '../models/page_args_model.dart';
 import '../models/page_design.dart';
 import '../utils/alignment.dart';
 import '../utils/box.dart';
@@ -216,10 +215,11 @@ class _ViewControlState extends State<ViewControl> {
             ((pageData?.themeMode == null ||
                     pageData?.themeMode == ThemeMode.system) &&
                 pageData?.brightness == Brightness.light)
-        ? parseTheme(control.parent!, "theme", Brightness.light)
+        ? parseTheme(context, control.parent!, "theme", Brightness.light)
         : control.parent!.get<String>("dark_theme") != null
-            ? parseTheme(control.parent!, "dark_theme", Brightness.dark)
-            : parseTheme(control.parent!, "theme", Brightness.dark);
+            ? parseTheme(
+                context, control.parent!, "dark_theme", Brightness.dark)
+            : parseTheme(context, control.parent!, "theme", Brightness.dark);
 
     Widget scaffold = Scaffold(
       key: scaffoldKey,
@@ -295,12 +295,13 @@ class _ViewControlState extends State<ViewControl> {
                 ((pageData?.themeMode == null ||
                         pageData?.themeMode == ThemeMode.system) &&
                     pageData?.brightness == Brightness.light)
-            ? parseCupertinoTheme(control.parent!, "theme", Brightness.light)
+            ? parseCupertinoTheme(
+                context, control.parent!, "theme", Brightness.light)
             : control.parent!.get<String>("dark_theme") != null
                 ? parseCupertinoTheme(
-                    control.parent!, "dark_theme", Brightness.dark)
+                    context, control.parent!, "dark_theme", Brightness.dark)
                 : parseCupertinoTheme(
-                    control.parent!, "theme", Brightness.dark),
+                    context, control.parent!, "theme", Brightness.dark),
         child: scaffold,
       );
     } else if (pageData?.widgetsDesign == PageDesign.cupertino) {
@@ -337,13 +338,10 @@ class _ViewControlState extends State<ViewControl> {
               )
             : scaffold);
 
-    var pageArgs = PageArgsModel(
-        pageUri: FletBackend.of(context).pageUri,
-        assetsDir: FletBackend.of(context).assetsDir);
     var backgroundDecoration =
-        parseBoxDecoration(Theme.of(context), control, "decoration", pageArgs);
-    var foregroundDecoration = parseBoxDecoration(
-        Theme.of(context), control, "foreground_decoration", pageArgs);
+        parseBoxDecoration(context, control, "decoration");
+    var foregroundDecoration =
+        parseBoxDecoration(context, control, "foreground_decoration");
     if (backgroundDecoration != null || foregroundDecoration != null) {
       return Container(
         decoration: backgroundDecoration,

@@ -81,7 +81,7 @@ class ListTile(ConstrainedControl, AdaptiveControl):
     is_three_line: bool = field(default=False)
     leading: Optional[Control] = None
     trailing: Optional[Control] = None
-    content_padding: PaddingValue = None
+    content_padding: Optional[PaddingValue] = None
     bgcolor: Optional[ColorValue] = None
     bgcolor_activated: Optional[str] = None
     hover_color: Optional[ColorValue] = None

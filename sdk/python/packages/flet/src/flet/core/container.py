@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 from flet.core.adaptive_control import AdaptiveControl
@@ -36,10 +36,10 @@ __all__ = ["Container", "ContainerTapEvent"]
 
 @dataclass
 class ContainerTapEvent(ControlEvent):
-    local_x: float
-    local_y: float
-    global_x: float
-    global_y: float
+    local_x: float = field(metadata={"data_field": "lx"})
+    local_y: float = field(metadata={"data_field": "ly"})
+    global_x: float = field(metadata={"data_field": "gx"})
+    global_y: float = field(metadata={"data_field": "gy"})
 
 
 @control("Container")

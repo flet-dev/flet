@@ -4,44 +4,37 @@ import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/edge_insets.dart';
 import '../utils/others.dart';
-import 'create_control.dart';
+import 'base_controls.dart';
+import 'control_widget.dart';
 
 class CardControl extends StatelessWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
 
-  const CardControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive});
+  const CardControl({
+    super.key,
+    required this.control,
+  });
 
   @override
   Widget build(BuildContext context) {
     debugPrint("Card build: ${control.id}");
-    bool disabled = control.disabled || parentDisabled;
-    bool? adaptive = control.getBool("adaptive") ?? parentAdaptive;
 
-    var contentCtrls = children.where((c) => c.name == "content" && c.visible);
-    var content = contentCtrls.isNotEmpty
-        ? createControl(control, contentCtrls.first.id, disabled,
-            parentAdaptive: adaptive)
+    var contentCtrl = control.child("content");
+    var contentWidget = contentCtrl != null
+        ? ControlWidget(
+            control: contentCtrl,
+          )
         : null;
-    var clipBehavior = parseClip(control.getString("clipBehavior"));
+    var clipBehavior = parseClip(control.getString("clip_behavior"));
     var elevation = control.getDouble("elevation");
     var shape = parseOutlinedBorder(control, "shape");
     var margin = parseEdgeInsets(control, "margin");
-    var isSemanticContainer = control.getBool("isSemanticContainer", true)!;
+    var isSemanticContainer = control.getBool("is_semantic_container", true)!;
     var showBorderOnForeground =
-        control.getBool("showBorderOnForeground", true)!;
+        control.getBool("show_border_on_foreground", true)!;
     var color = control.getColor("color", context);
-    var shadowColor = control.getColor("shadowColor", context);
-    var surfaceTintColor = control.getColor("surfaceTintColor", context);
+    var shadowColor = control.getColor("shadow_color", context);
+    var surfaceTintColor = control.getColor("surface_tint_color", context);
 
     Widget? card;
 
@@ -59,7 +52,7 @@ class CardControl extends StatelessWidget {
           color: color,
           shadowColor: shadowColor,
           surfaceTintColor: surfaceTintColor,
-          child: content);
+          child: contentWidget);
     } else if (variant == CardVariant.filled) {
       card = Card.filled(
           elevation: elevation,
@@ -71,7 +64,7 @@ class CardControl extends StatelessWidget {
           color: color,
           shadowColor: shadowColor,
           surfaceTintColor: surfaceTintColor,
-          child: content);
+          child: contentWidget);
     } else {
       card = Card(
           elevation: elevation,
@@ -83,9 +76,12 @@ class CardControl extends StatelessWidget {
           color: color,
           shadowColor: shadowColor,
           surfaceTintColor: surfaceTintColor,
-          child: content);
+          child: contentWidget);
     }
 
-    return constrainedControl(context, card, parent, control);
+    return ConstrainedControl(
+      control: control,
+      child: card,
+    );
   }
 }

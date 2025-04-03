@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../flet_backend.dart';
 import '../models/control.dart';
 import '../models/page_args_model.dart';
 import '../widgets/error.dart';
@@ -75,21 +76,21 @@ BoxShadow boxShadowFromJSON(ThemeData theme, dynamic json) {
       spreadRadius: parseDouble(json["spread_radius"], 0)!);
 }
 
-BoxDecoration? parseBoxDecoration(ThemeData theme, Control control,
-    String propName, PageArgsModel? pageArgs) {
+BoxDecoration? parseBoxDecoration(
+    BuildContext context, Control control, String propName) {
   var v = control.get(propName);
   if (v == null) {
     return null;
   }
 
-  return boxDecorationFromJSON(theme, v, pageArgs);
+  return boxDecorationFromJSON(context, v);
 }
 
-BoxDecoration? boxDecorationFromJSON(
-    ThemeData theme, dynamic json, PageArgsModel? pageArgs) {
+BoxDecoration? boxDecorationFromJSON(BuildContext context, dynamic json) {
   if (json == null) {
     return null;
   }
+  var theme = Theme.of(context);
   var shape = parseBoxShape(json["shape"], BoxShape.rectangle)!;
   var borderRadius = borderRadiusFromJSON(json["border_radius"]);
   var color = parseColor(theme, json["color"]);
@@ -104,7 +105,7 @@ BoxDecoration? boxDecorationFromJSON(
     backgroundBlendMode: color != null || gradient != null ? blendMode : null,
     boxShadow: boxShadowsFromJSON(theme, json["shadow"]),
     gradient: gradient,
-    image: decorationImageFromJSON(theme, json["image"], pageArgs),
+    image: decorationImageFromJSON(context, json["image"]),
   );
 }
 
@@ -143,29 +144,28 @@ BoxDecoration? boxDecorationFromDetails({
   );
 }
 
-DecorationImage? parseDecorationImage(ThemeData theme, Control control,
-    String propName, PageArgsModel? pageArgs) {
+DecorationImage? parseDecorationImage(
+    BuildContext context, Control control, String propName) {
   var v = control.get(propName);
   if (v == null) {
     return null;
   }
-  return decorationImageFromJSON(theme, v, pageArgs);
+  return decorationImageFromJSON(context, v);
 }
 
-DecorationImage? decorationImageFromJSON(
-    ThemeData theme, dynamic json, PageArgsModel? pageArgs) {
+DecorationImage? decorationImageFromJSON(BuildContext context, dynamic json) {
   if (json == null) {
     return null;
   }
   var src = json["src"];
   var srcBase64 = json["src_base64"];
-  ImageProvider? image = getImageProvider(src, srcBase64, pageArgs);
+  ImageProvider? image = getImageProvider(context, src, srcBase64);
   if (image == null) {
     return null;
   }
   return DecorationImage(
     image: image,
-    colorFilter: colorFilterFromJSON(json["color_filter"], theme),
+    colorFilter: colorFilterFromJSON(json["color_filter"], Theme.of(context)),
     fit: parseBoxFit(json["fit"]),
     alignment: alignmentFromJson(json["alignment"], Alignment.center)!,
     repeat: parseImageRepeat(json["repeat"], ImageRepeat.noRepeat)!,
@@ -180,7 +180,7 @@ DecorationImage? decorationImageFromJSON(
 }
 
 ImageProvider? getImageProvider(
-    String? src, String? srcBase64, PageArgsModel? pageArgs) {
+    BuildContext context, String? src, String? srcBase64) {
   src = src?.trim();
   srcBase64 = srcBase64?.trim();
 
@@ -193,10 +193,7 @@ ImageProvider? getImageProvider(
     }
   }
   if (src != null && src != "") {
-    if (pageArgs == null) {
-      return null;
-    }
-    var assetSrc = getAssetSrc(src, pageArgs.pageUri!, pageArgs.assetsDir);
+    var assetSrc = FletBackend.of(context).getAssetSource(src);
 
     return assetSrc.isFile
         ? getFileImageProvider(assetSrc.path)

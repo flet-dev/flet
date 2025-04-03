@@ -25,8 +25,9 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl> {
 
     void onChange(int index, bool isExpanded) {
       FletBackend.of(context).updateControl(
-          widget.control.children("panels")[index].id,
-          {"expanded": isExpanded});
+          widget.control.children("controls")[index].id,
+          {"expanded": isExpanded},
+          notify: true);
       FletBackend.of(context)
           .triggerControlEvent(widget.control, "change", index);
     }
@@ -34,23 +35,28 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl> {
     var panelList = ExpansionPanelList(
         elevation: widget.control.getDouble("elevation", 2)!,
         materialGapSize: widget.control.getDouble("spacing", 16)!,
-        dividerColor: widget.control.getColor("dividerColor", context),
-        expandIconColor: widget.control.getColor("expandedIconColor", context),
-        expandedHeaderPadding: parseEdgeInsets(widget.control,
-            "expandedHeaderPadding", const EdgeInsets.symmetric(vertical: 16))!,
+        dividerColor: widget.control.getColor("divider_color", context),
+        expandIconColor:
+            widget.control.getColor("expanded_icon_color", context),
+        expandedHeaderPadding: parseEdgeInsets(
+            widget.control,
+            "expanded_header_padding",
+            const EdgeInsets.symmetric(vertical: 16))!,
         expansionCallback: !disabled
             ? (int index, bool isExpanded) {
                 onChange(index, isExpanded);
               }
             : null,
         children: widget.control.children("controls").map((panelControl) {
+          panelControl.notifyParent = true;
+
           var headerCtrl = panelControl.child("header");
           var bodyCtrl = panelControl.child("content");
 
           return ExpansionPanel(
             backgroundColor: panelControl.getColor("bgColor", context),
             isExpanded: panelControl.getBool("expanded", false)!,
-            canTapOnHeader: panelControl.getBool("canTapHeader", false)!,
+            canTapOnHeader: panelControl.getBool("can_tap_header", false)!,
             headerBuilder: (BuildContext context, bool isExpanded) {
               return headerCtrl != null
                   ? ControlWidget(

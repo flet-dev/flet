@@ -19,7 +19,7 @@ class BaseControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget w = _opacity(context, child, control);
-    w = _tooltip(w, Theme.of(context), control);
+    w = _tooltip(context, w, control);
     w = _directionality(w, control);
     return _expandable(w, control);
   }
@@ -35,7 +35,7 @@ class ConstrainedControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget w = _opacity(context, child, control);
-    w = _tooltip(w, Theme.of(context), control);
+    w = _tooltip(context, w, control);
     w = _directionality(w, control);
     w = _sizedControl(w, control);
     w = _rotatedControl(context, w, control);
@@ -48,8 +48,8 @@ class ConstrainedControl extends StatelessWidget {
   }
 }
 
-Widget _tooltip(Widget widget, ThemeData theme, Control control) {
-  var tooltip = parseTooltip(control, "tooltip", widget, theme);
+Widget _tooltip(BuildContext context, Widget widget, Control control) {
+  var tooltip = parseTooltip(context, control.get("tooltip"), widget);
   return tooltip ?? widget;
 }
 
