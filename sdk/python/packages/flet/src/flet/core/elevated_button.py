@@ -47,7 +47,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     def __setattr__(self, name, value):
         if name == "text":
             warnings.warn(
-                "'text' is deprecated. Use 'content' instead.",
+                "'text' is deprecated since version 0.70.0 and will be removed in 0.70.3. Use 'content' instead.",
                 DeprecationWarning,
                 stacklevel=2,
             )
