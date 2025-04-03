@@ -192,7 +192,7 @@ class BaseControl:
 
 @dataclass(kw_only=True)
 class Control(BaseControl):
-    expand: Union[None, bool, int] = None
+    expand: Optional[Union[bool, int]] = None
     expand_loose: Optional[bool] = None
     col: Optional[ResponsiveNumber] = None
     opacity: Number = field(default=1.0)

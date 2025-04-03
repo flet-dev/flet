@@ -10,6 +10,8 @@ import '../widgets/error.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
+import 'cupertino_button.dart';
+import 'cupertino_dialog_action.dart';
 
 class ElevatedButtonControl extends StatefulWidget {
   final Control control;
@@ -55,38 +57,31 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
     return withPagePlatform((context, platform) {
       bool? adaptive =
           widget.control.adaptive ?? widget.control.parent?.adaptive;
-      // if (adaptive == true &&
-      //     (platform == TargetPlatform.iOS ||
-      //         platform == TargetPlatform.macOS)) {
-      //   return widget.control.name == "action" &&
-      //           (widget.parent?.type == "AlertDialog" ||
-      //               widget.parent?.type == "CupertinoAlertDialog")
-      //       ? CupertinoDialogActionControl(
-      //           control: widget.control,
-      //           parentDisabled: widget.parentDisabled,
-      //           parentAdaptive: adaptive,
-      //           children: widget.children,
-      //           backend: widget.backend)
-      //       : CupertinoButtonControl(
-      //           control: widget.control,
-      //           parentDisabled: widget.parentDisabled,
-      //           parentAdaptive: adaptive,
-      //           children: widget.children,
-      //           backend: widget.backend);
-      // }
+      if (adaptive == true &&
+          (platform == TargetPlatform.iOS ||
+              platform == TargetPlatform.macOS)) {
+        return (widget.control.parent?.type == "AlertDialog" ||
+                widget.control.parent?.type == "CupertinoAlertDialog")
+            ? CupertinoDialogActionControl(
+                control: widget.control,
+              )
+            : CupertinoButtonControl(
+                control: widget.control,
+              );
+      }
 
-      bool isFilledButton = widget.control.type == "filledbutton";
-      bool isFilledTonalButton = widget.control.type == "filledtonalbutton";
+      bool isFilledButton = widget.control.type == "FilledButton";
+      bool isFilledTonalButton = widget.control.type == "FilledTonalButton";
       String text = widget.control.getString("text", "")!;
       String url = widget.control.getString("url", "")!;
       IconData? icon = parseIcon(widget.control.getString("icon"));
-      Color? iconColor = widget.control.getColor("iconColor", context);
+      Color? iconColor = widget.control.getColor("icon_color", context);
       Control? content = widget.control.child("content");
 
       var clipBehavior =
-          parseClip(widget.control.getString("clipBehavior"), Clip.none)!;
-      bool onHover = widget.control.getBool("onHover", false)!;
-      bool onLongPress = widget.control.getBool("onLongPress", false)!;
+          parseClip(widget.control.getString("clip_behavior"), Clip.none)!;
+      //bool onHover = widget.control.getBool("onHover", false)!;
+      //bool onLongPress = widget.control.getBool("onLongPress", false)!;
       bool autofocus = widget.control.getBool("autofocus", false)!;
 
       Function()? onPressed = !disabled
@@ -94,14 +89,14 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
               debugPrint("Button ${widget.control.id} clicked!");
               if (url != "") {
                 openWebBrowser(url,
-                    webWindowName: widget.control.getString("urlTarget"));
+                    webWindowName: widget.control.getString("url_target"));
               }
               FletBackend.of(context)
                   .triggerControlEvent(widget.control, "click");
             }
           : null;
 
-      Function()? onLongPressHandler = onLongPress && !disabled
+      Function()? onLongPressHandler = !disabled
           ? () {
               debugPrint("Button ${widget.control.id} long pressed!");
               FletBackend.of(context)
@@ -109,7 +104,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             }
           : null;
 
-      Function(bool)? onHoverHandler = onHover && !disabled
+      Function(bool)? onHoverHandler = !disabled
           ? (state) {
               debugPrint("Button ${widget.control.id} hovered!");
               FletBackend.of(context).triggerControlEvent(
