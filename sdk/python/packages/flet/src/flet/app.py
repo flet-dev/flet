@@ -4,7 +4,6 @@ import logging
 import os
 import signal
 import traceback
-import warnings
 from pathlib import Path
 from typing import Optional
 
@@ -23,6 +22,7 @@ from flet.utils import (
     is_pyodide,
     open_in_browser,
 )
+from flet.utils.deprecated import deprecated
 from flet.utils.pip import (
     ensure_flet_desktop_package_installed,
     ensure_flet_web_package_installed,
@@ -31,21 +31,13 @@ from flet.utils.pip import (
 logger = logging.getLogger(flet.__name__)
 
 
+@deprecated("Use run() instead.", show_parentheses=True)
 def app(*args, **kwargs):
-    warnings.warn(
-        "app() is deprecated and will be removed in a future release. Use run() instead.",
-        DeprecationWarning,
-        stacklevel=2,
-    )
     return run(*args, **kwargs)
 
 
+@deprecated("Use run() instead.", show_parentheses=True)
 async def app_async(*args, **kwargs):
-    warnings.warn(
-        "app_async() is deprecated and will be removed in a future release. Use run_async() instead.",
-        DeprecationWarning,
-        stacklevel=2,
-    )
     return await run_async(*args, **kwargs)
 
 
@@ -318,7 +310,6 @@ async def __run_web_server(
 
 
 def __run_pyodide(target):
-    import flet_js
     from flet.pyodide_connection import PyodideConnection
 
     async def on_event(e):

@@ -3,28 +3,39 @@ import warnings
 from typing import Optional
 
 
-def deprecated(reason: str, version: str, delete_version: str, is_method=True):
+def deprecated(
+    reason: str,
+    version: Optional[str] = None,
+    delete_version: Optional[str] = None,
+    show_parentheses: bool = True,
+):
     """
-    A decorator function that marks a function/method/property/event as deprecated.
+    A decorator that marks a function, method, or class as deprecated.
 
     :param reason: The reason for deprecation.
-    :param version: The version from which the function was deprecated.
-    :param delete_version: The version in which the function will be removed from the API.
-    :param is_method: if the deprecated item is a method (True) or property/function/event (False)
+    :param version: (Optional) The version from which the function was deprecated.
+    :param delete_version: (Optional) The version in which the function will be removed.
+    :param show_parentheses: Whether to show parentheses after the function/class name in the warning.
     """
 
     def decorator(func):
         @functools.wraps(func)
-        def new_func(*args, **kwargs):
+        def wrapper(*args, **kwargs):
+            msg = f"{func.__name__}{'()' if show_parentheses else ''} is deprecated"
+            if version:
+                msg += f" since version {version}"
+            if delete_version:
+                msg += f" and will be removed in version {delete_version}"
+            msg += f". {reason}"
+
             warnings.warn(
-                f"{func.__name__}{'()' if is_method else ''} is deprecated since version {version} "
-                f"and will be removed in version {delete_version}. {reason}",
+                msg,
                 category=DeprecationWarning,
                 stacklevel=2,
             )
             return func(*args, **kwargs)
 
-        return new_func
+        return wrapper
 
     return decorator
 
