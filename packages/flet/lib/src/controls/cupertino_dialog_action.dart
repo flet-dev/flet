@@ -15,13 +15,12 @@ class CupertinoDialogActionControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoDialogAction build: ${control.id}");
-    bool disabled = control.disabled || control.parent!.disabled;
 
     var cupertinoDialogAction = CupertinoDialogAction(
       isDefaultAction: control.getBool("is_default_action", false)!,
       isDestructiveAction: control.getBool("is_destructive_action", false)!,
       textStyle: parseTextStyle(Theme.of(context), control, "text_style"),
-      onPressed: !disabled
+      onPressed: !control.disabled
           ? () {
               debugPrint("CupertinoDialogAction ${control.id} clicked!");
               FletBackend.of(context).triggerControlEvent(control, "click");

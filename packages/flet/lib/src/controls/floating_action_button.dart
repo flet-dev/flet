@@ -1,6 +1,6 @@
-import 'package:flet/src/flet_backend.dart';
 import 'package:flutter/material.dart';
 
+import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/icons.dart';
@@ -61,9 +61,8 @@ class FloatingActionButtonControl extends StatelessWidget {
     bool mini = control.getBool("mini", false)!;
     bool? enableFeedback = control.getBool("enable_feedback");
     var mouseCursor = parseMouseCursor(control.getString("mouse_cursor"));
-    bool disabled = control.disabled || control.parent!.disabled;
 
-    Function()? onPressed = disabled
+    Function()? onPressed = control.disabled
         ? null
         : () {
             debugPrint("FloatingActionButtonControl ${control.id} clicked!");

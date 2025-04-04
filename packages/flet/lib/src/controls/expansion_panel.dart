@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
 
-class ExpansionPanelListControl extends StatefulWidget {
+class ExpansionPanelListControl extends StatelessWidget {
   final Control control;
 
   const ExpansionPanelListControl({
@@ -13,41 +13,31 @@ class ExpansionPanelListControl extends StatefulWidget {
   });
 
   @override
-  State<ExpansionPanelListControl> createState() =>
-      _ExpansionPanelListControlState();
-}
-
-class _ExpansionPanelListControlState extends State<ExpansionPanelListControl> {
-  @override
   Widget build(BuildContext context) {
-    debugPrint("ExpansionPanelList build: ${widget.control.id}");
-    bool disabled = widget.control.disabled || widget.control.parent!.disabled;
+    debugPrint("ExpansionPanelList build: ${control.id}");
 
     void onChange(int index, bool isExpanded) {
       FletBackend.of(context).updateControl(
-          widget.control.children("controls")[index].id,
-          {"expanded": isExpanded},
+          control.children("controls")[index].id, {"expanded": isExpanded},
           notify: true);
-      FletBackend.of(context)
-          .triggerControlEvent(widget.control, "change", index);
+      FletBackend.of(context).triggerControlEvent(control, "change", index);
     }
 
     var panelList = ExpansionPanelList(
-        elevation: widget.control.getDouble("elevation", 2)!,
-        materialGapSize: widget.control.getDouble("spacing", 16)!,
-        dividerColor: widget.control.getColor("divider_color", context),
-        expandIconColor:
-            widget.control.getColor("expanded_icon_color", context),
+        elevation: control.getDouble("elevation", 2)!,
+        materialGapSize: control.getDouble("spacing", 16)!,
+        dividerColor: control.getColor("divider_color", context),
+        expandIconColor: control.getColor("expanded_icon_color", context),
         expandedHeaderPadding: parseEdgeInsets(
-            widget.control,
+            control,
             "expanded_header_padding",
             const EdgeInsets.symmetric(vertical: 16))!,
-        expansionCallback: !disabled
+        expansionCallback: !control.disabled
             ? (int index, bool isExpanded) {
                 onChange(index, isExpanded);
               }
             : null,
-        children: widget.control.children("controls").map((panelControl) {
+        children: control.children("controls").map((panelControl) {
           panelControl.notifyParent = true;
 
           var headerCtrl = panelControl.child("header");
@@ -72,6 +62,6 @@ class _ExpansionPanelListControlState extends State<ExpansionPanelListControl> {
           );
         }).toList());
 
-    return ConstrainedControl(control: widget.control, child: panelList);
+    return ConstrainedControl(control: control, child: panelList);
   }
 }
