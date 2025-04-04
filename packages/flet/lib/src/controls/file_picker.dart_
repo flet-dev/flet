@@ -10,6 +10,7 @@ import '../flet_app_services.dart';
 import '../flet_control_backend.dart';
 import '../flet_server.dart';
 import '../models/control.dart';
+import '../utils/numbers.dart';
 import '../utils/platform.dart';
 import '../utils/strings.dart';
 import 'flet_store_mixin.dart';
@@ -27,23 +28,32 @@ class FilePickerResultEvent {
 }
 
 class FilePickerFile {
+  final int id;
   final String name;
   final String? path;
   final int size;
 
-  FilePickerFile({required this.name, required this.path, required this.size});
+  FilePickerFile(
+      {required this.id,
+      required this.name,
+      required this.path,
+      required this.size});
 
   Map<String, dynamic> toJson() =>
-      <String, dynamic>{'name': name, 'path': path, 'size': size};
+      <String, dynamic>{'id': id, 'name': name, 'path': path, 'size': size};
 }
 
 class FilePickerUploadFile {
+  final int id;
   final String name;
   final String uploadUrl;
   final String method;
 
   FilePickerUploadFile(
-      {required this.name, required this.uploadUrl, required this.method});
+      {required this.id,
+      required this.name,
+      required this.uploadUrl,
+      required this.method});
 }
 
 class FilePickerUploadProgressEvent {
@@ -119,17 +129,23 @@ class _FilePickerControlState extends State<FilePickerControl>
             !isDesktopPlatform()) {
           resetDialogState();
         }
+
         widget.backend.triggerControlEvent(
-            widget.control.id,
-            "result",
-            json.encode(FilePickerResultEvent(
-                path: _path,
-                files: _files
-                    ?.map((f) => FilePickerFile(
-                        name: f.name,
-                        path: kIsWeb ? null : f.path,
-                        size: f.size))
-                    .toList())));
+          widget.control.id,
+          "result",
+          json.encode(FilePickerResultEvent(
+            path: _path,
+            files: _files?.asMap().entries.map((entry) {
+              PlatformFile f = entry.value;
+              return FilePickerFile(
+                id: entry.key, // use entry's index as id
+                name: f.name,
+                path: kIsWeb ? null : f.path,
+                size: f.size,
+              );
+            }).toList(),
+          )),
+        );
       }
 
       if (_state != state) {
@@ -154,7 +170,7 @@ class _FilePickerControlState extends State<FilePickerControl>
                   allowMultiple: allowMultiple,
                   withData: false,
                   withReadStream: true)
-              .then((result) {
+              .then((FilePickerResult? result) {
             debugPrint("pickFiles() completed");
             _files = result?.files;
             sendEvent();
@@ -177,7 +193,7 @@ class _FilePickerControlState extends State<FilePickerControl>
             sendEvent();
           });
         }
-        // saveFile
+        // getDirectoryPath
         else if (state?.toLowerCase() == "getdirectorypath" && !kIsWeb) {
           FilePicker.platform
               .getDirectoryPath(
@@ -207,17 +223,28 @@ class _FilePickerControlState extends State<FilePickerControl>
   Future uploadFiles(String filesJson, FletServer server, Uri pageUri) async {
     var uj = json.decode(filesJson);
     var uploadFiles = (uj as List).map((u) => FilePickerUploadFile(
-        name: u["name"], uploadUrl: u["upload_url"], method: u["method"]));
+        id: parseInt(u["id"], -1)!, // -1 = invalid
+        name: u["name"],
+        uploadUrl: u["upload_url"],
+        method: u["method"]));
+
     for (var uf in uploadFiles) {
-      var file = _files!.firstWhereOrNull((f) => f.name == uf.name);
+      var file = ((uf.id >= 0 && uf.id < _files!.length)
+              ? _files![uf.id]
+              : null) // by id
+          ??
+          _files!.firstWhereOrNull((f) => f.name == uf.name); // by name
+
       if (file != null) {
         try {
           await uploadFile(
               file, server, getFullUploadUrl(pageUri, uf.uploadUrl), uf.method);
-          _files!.remove(file);
+          _files!.remove(file); // Remove the uploaded file
         } catch (e) {
           sendProgress(server, file.name, null, e.toString());
         }
+      } else {
+        debugPrint("Error: File '${uf.name}' (id: ${uf.id}) not found.");
       }
     }
   }

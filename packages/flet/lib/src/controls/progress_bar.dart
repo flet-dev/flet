@@ -30,6 +30,10 @@ class ProgressBarControl extends StatelessWidget {
         semanticsValue: control.getDouble("semantics_value")?.toString(),
         borderRadius:
             parseBorderRadius(control, "borderRadius", BorderRadius.zero)!,
+        stopIndicatorColor: control.getColor("stopIndicatorColor", context),
+        stopIndicatorRadius: control.getDouble("stopIndicatorRadius"),
+        trackGap: control.getDouble("trackGap"),
+        year2023: control.getBool("year2023"),
       ),
     );
   }

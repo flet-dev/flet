@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/icons.dart';
+import '../utils/images.dart';
 import 'base_controls.dart';
 
 class IconControl extends StatelessWidget {
@@ -21,6 +22,7 @@ class IconControl extends StatelessWidget {
           parseIcon(control.getString("name", "")!),
           size: control.getDouble("size"),
           color: control.getColor("color", context),
+          blendMode: parseBlendMode(control.getString("blend_mode")),
           semanticLabel: control.getString("semantics_label"),
           applyTextScaling: control.getBool("apply_text_scaling"),
           fill: control.getDouble("fill"),
