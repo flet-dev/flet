@@ -23,6 +23,7 @@ import 'controls/list_tile.dart';
 import 'controls/list_view.dart';
 import 'controls/page.dart';
 import 'controls/row.dart';
+import 'controls/stack.dart';
 import 'controls/text.dart';
 import 'controls/vertical_divider.dart';
 import 'controls/view.dart';
@@ -90,6 +91,8 @@ class FletCoreExtension extends FletExtension {
         return PageControl(key: key, control: control);
       case "Row":
         return RowControl(key: key, control: control);
+      case "Stack":
+        return StackControl(key: key, control: control);
       case "Text":
         return TextControl(key: key, control: control);
       case "VerticalDivider":

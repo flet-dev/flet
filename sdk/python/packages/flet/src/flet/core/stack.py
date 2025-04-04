@@ -6,9 +6,7 @@ from flet.core.adaptive_control import AdaptiveControl
 from flet.core.alignment import Alignment
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
-from flet.core.types import (
-    ClipBehavior,
-)
+from flet.core.types import ClipBehavior
 
 __all__ = ["Stack", "StackFit"]
 
@@ -70,6 +68,6 @@ class Stack(ConstrainedControl, AdaptiveControl):
     """
 
     controls: List[Control] = field(default_factory=list)
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     alignment: Optional[Alignment] = None
-    fit: Optional[StackFit] = None
+    fit: StackFit = StackFit.LOOSE
