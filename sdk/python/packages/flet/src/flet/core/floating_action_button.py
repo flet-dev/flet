@@ -79,10 +79,9 @@ class FloatingActionButton(ConstrainedControl):
             )
         super().__setattr__(name, value)
 
-    text: Optional[str] = None  # deprecated
+    content: Optional[StrOrControl] = None
     icon: Optional[IconValueOrControl] = None
     bgcolor: OptionalColorValue = None
-    content: Optional[StrOrControl] = None
     shape: Optional[OutlinedBorder] = None
     autofocus: bool = False
     mini: bool = False
@@ -99,6 +98,7 @@ class FloatingActionButton(ConstrainedControl):
     url_target: Optional[UrlTarget] = None
     mouse_cursor: Optional[MouseCursor] = None
     on_click: OptionalControlEventCallable = None
+    text: Optional[str] = None  # deprecated
 
     def before_update(self):
         super().before_update()

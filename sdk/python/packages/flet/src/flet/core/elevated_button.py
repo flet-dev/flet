@@ -55,12 +55,11 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
             )
         super().__setattr__(name, value)
 
-    text: Optional[str] = None  # deprecated
+    content: Optional[StrOrControl] = None
     icon: Optional[IconValue] = None
     icon_color: OptionalColorValue = None
     color: OptionalColorValue = None
     bgcolor: OptionalColorValue = None
-    content: Optional[StrOrControl] = None
     elevation: OptionalNumber = None
     style: Optional[ButtonStyle] = None
     autofocus: Optional[bool] = None
@@ -72,6 +71,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     on_hover: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
+    text: Optional[str] = None  # deprecated
 
     def before_update(self):
         super().before_update()

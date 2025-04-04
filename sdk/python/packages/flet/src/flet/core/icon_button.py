@@ -82,7 +82,6 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     bgcolor: OptionalColorValue = None
     highlight_color: OptionalColorValue = None
     style: Optional[ButtonStyle] = None
-    content: Optional[Control] = None  # deprecated
     autofocus: bool = False
     disabled_color: OptionalColorValue = None
     hover_color: OptionalColorValue = None
@@ -100,6 +99,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     on_click: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
+    content: Optional[Control] = None  # deprecated
 
     # def before_update(self):
     #     super().before_update()
