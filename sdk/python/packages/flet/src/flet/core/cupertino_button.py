@@ -1,16 +1,15 @@
-from dataclasses import field
 from typing import Optional
 
 from flet.core.alignment import Alignment
+from flet.core.border_radius import OptionalBorderRadiusValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
+from flet.core.padding import OptionalPaddingValue
 from flet.core.types import (
-    BorderRadiusValue,
-    ColorValue,
     IconValue,
     Number,
+    OptionalColorValue,
     OptionalControlEventCallable,
-    PaddingValue,
     UrlTarget,
 )
 
@@ -30,16 +29,16 @@ class CupertinoButton(ConstrainedControl):
     text: Optional[str] = None
     """Blah blah"""
     icon: Optional[IconValue] = None
-    icon_color: Optional[ColorValue] = None
+    icon_color: OptionalColorValue = None
     content: Optional[Control] = None
-    bgcolor: Optional[ColorValue] = None
-    color: Optional[ColorValue] = None
-    disabled_bgcolor: Optional[ColorValue] = None
+    bgcolor: OptionalColorValue = None
+    color: OptionalColorValue = None
+    disabled_bgcolor: OptionalColorValue = None
     opacity_on_click: Number = 0.4
     min_size: Number = 44.0
-    padding: Optional[PaddingValue] = None
+    padding: OptionalPaddingValue = None
     alignment: Optional[Alignment] = None
-    border_radius: Optional[BorderRadiusValue] = None
+    border_radius: OptionalBorderRadiusValue = None
     url: Optional[str] = None
     url_target: Optional[UrlTarget] = None
     on_click: OptionalControlEventCallable = None

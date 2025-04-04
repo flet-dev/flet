@@ -5,7 +5,11 @@ from flet.core.border import Border
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import control
 from flet.core.navigation_bar import NavigationBarDestination
-from flet.core.types import ColorValue, OptionalControlEventCallable, OptionalNumber
+from flet.core.types import (
+    OptionalColorValue,
+    OptionalControlEventCallable,
+    OptionalNumber,
+)
 
 __all__ = ["CupertinoNavigationBar"]
 
@@ -51,10 +55,10 @@ class CupertinoNavigationBar(ConstrainedControl):
     """
 
     destinations: List[NavigationBarDestination] = field(default_factory=list)
-    selected_index: int = field(default=0)
-    bgcolor: Optional[ColorValue] = None
-    active_color: Optional[ColorValue] = None
-    inactive_color: Optional[ColorValue] = None
+    selected_index: int = 0
+    bgcolor: OptionalColorValue = None
+    active_color: OptionalColorValue = None
+    inactive_color: OptionalColorValue = None
     border: Optional[Border] = None
     icon_size: OptionalNumber = None
     on_change: OptionalControlEventCallable = None

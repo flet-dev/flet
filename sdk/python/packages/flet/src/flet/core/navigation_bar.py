@@ -11,6 +11,7 @@ from flet.core.types import (
     ColorValue,
     ControlStateValue,
     IconValueOrControl,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
 )
@@ -35,7 +36,7 @@ class NavigationBarDestination(AdaptiveControl):
     label: Optional[str] = None
     icon: Optional[IconValueOrControl] = None
     selected_icon: Optional[IconValueOrControl] = None
-    bgcolor: Optional[ColorValue] = None
+    bgcolor: OptionalColorValue = None
 
 
 @control("NavigationBar")
@@ -74,14 +75,14 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     """
 
     destinations: List[NavigationBarDestination] = field(default_factory=list)
-    selected_index: int = field(default=0)
-    bgcolor: Optional[ColorValue] = None
+    selected_index: int = 0
+    bgcolor: OptionalColorValue = None
     label_behavior: Optional[NavigationBarLabelBehavior] = None
     elevation: OptionalNumber = None
-    shadow_color: Optional[ColorValue] = None
-    indicator_color: Optional[ColorValue] = None
+    shadow_color: OptionalColorValue = None
+    indicator_color: OptionalColorValue = None
     indicator_shape: Optional[OutlinedBorder] = None
-    surface_tint_color: Optional[ColorValue] = None
+    surface_tint_color: OptionalColorValue = None
     border: Optional[Border] = None
     animation_duration: Optional[int] = None
     overlay_color: ControlStateValue[ColorValue] = None

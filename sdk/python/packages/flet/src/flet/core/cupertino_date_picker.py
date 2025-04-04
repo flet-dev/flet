@@ -5,9 +5,9 @@ from typing import Optional
 
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.types import (
-    ColorValue,
     DateTimeValue,
     Number,
+    OptionalColorValue,
     OptionalControlEventCallable,
 )
 
@@ -41,15 +41,15 @@ class CupertinoDatePicker(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/cupertinodatepicker
     """
 
-    value: DateTimeValue = datetime.now()
+    value: DateTimeValue = field(default_factory=lambda: datetime.now())
     first_date: Optional[DateTimeValue] = None
     last_date: Optional[DateTimeValue] = None
-    bgcolor: Optional[ColorValue] = None
-    minute_interval: int = field(default=1)
-    minimum_year: int = field(default=1)
+    bgcolor: OptionalColorValue = None
+    minute_interval: int = 1
+    minimum_year: int = 1
     maximum_year: Optional[int] = None
-    item_extent: Number = field(default=32.0)
-    use_24h_format: bool = field(default=False)
+    item_extent: Number = 32.0
+    use_24h_format: bool = False
     date_picker_mode: Optional[CupertinoDatePickerMode] = None
     date_order: Optional[CupertinoDatePickerDateOrder] = None
     on_change: OptionalControlEventCallable = None

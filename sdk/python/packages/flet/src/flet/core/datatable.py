@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from typing import List, Optional
 
 from flet.core.border import Border, BorderSide
+from flet.core.border_radius import OptionalBorderRadiusValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
 from flet.core.control_event import ControlEvent
@@ -9,11 +10,12 @@ from flet.core.gesture_detector import TapEvent
 from flet.core.gradients import Gradient
 from flet.core.text_style import TextStyle
 from flet.core.types import (
-    BorderRadiusValue,
     ClipBehavior,
     ColorValue,
     ControlStateValue,
     MainAxisAlignment,
+    Number,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,
@@ -81,12 +83,12 @@ class DataTable(ConstrainedControl):
 
     columns: List[DataColumn] = field(default_factory=list)
     rows: List[DataRow] = field(default_factory=list)
-    sort_ascending: Optional[bool] = field(default=False)
-    show_checkbox_column: Optional[bool] = field(default=False)
+    sort_ascending: bool = False
+    show_checkbox_column: bool = False
     sort_column_index: Optional[int] = None
-    show_bottom_border: Optional[bool] = field(default=False)
+    show_bottom_border: bool = False
     border: Optional[Border] = None
-    border_radius: Optional[BorderRadiusValue] = None
+    border_radius: OptionalBorderRadiusValue = None
     horizontal_lines: Optional[BorderSide] = None
     vertical_lines: Optional[BorderSide] = None
     checkbox_horizontal_margin: OptionalNumber = None
@@ -95,9 +97,9 @@ class DataTable(ConstrainedControl):
     data_row_min_height: OptionalNumber = None
     data_row_max_height: OptionalNumber = None
     data_text_style: Optional[TextStyle] = None
-    bgcolor: Optional[ColorValue] = None
+    bgcolor: OptionalColorValue = None
     gradient: Optional[Gradient] = None
-    divider_thickness: OptionalNumber = field(default=1.0)
+    divider_thickness: Number = 1.0
     heading_row_color: ControlStateValue[ColorValue] = None
     heading_row_height: OptionalNumber = None
     heading_text_style: Optional[TextStyle] = None

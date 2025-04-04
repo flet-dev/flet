@@ -1,15 +1,10 @@
 from typing import Optional
 
+from flet.core.border_radius import OptionalBorderRadiusValue
 from flet.core.box import FilterQuality
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
-from flet.core.types import (
-    BlendMode,
-    BorderRadiusValue,
-    ColorValue,
-    ImageFit,
-    ImageRepeat,
-)
+from flet.core.types import BlendMode, ImageFit, ImageRepeat, OptionalColorValue
 
 __all__ = ["Image"]
 
@@ -48,8 +43,8 @@ class Image(ConstrainedControl):
     error_content: Optional[Control] = None
     repeat: Optional[ImageRepeat] = None
     fit: Optional[ImageFit] = None
-    border_radius: Optional[BorderRadiusValue] = None
-    color: Optional[ColorValue] = None
+    border_radius: OptionalBorderRadiusValue = None
+    color: OptionalColorValue = None
     color_blend_mode: Optional[BlendMode] = None
     gapless_playback: Optional[bool] = None
     semantics_label: Optional[str] = None

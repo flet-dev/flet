@@ -2,21 +2,23 @@ import asyncio
 from dataclasses import dataclass, field
 from typing import List, Optional, Union
 
+from flet.core.border_radius import OptionalBorderRadiusValue
 from flet.core.buttons import ButtonStyle
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
 from flet.core.form_field_control import InputBorder
 from flet.core.icons import Icons
+from flet.core.padding import OptionalPaddingValue
 from flet.core.text_style import TextStyle
 from flet.core.textfield import InputFilter, TextCapitalization
 from flet.core.types import (
-    BorderRadiusValue,
     ColorValue,
     ControlStateValue,
     IconValueOrControl,
+    Number,
+    OptionalColorValue,
     OptionalEventCallable,
     OptionalNumber,
-    PaddingValue,
     TextAlign,
 )
 
@@ -55,23 +57,21 @@ class Dropdown(ConstrainedControl):
 
     value: Optional[str] = None
     options: List[Option] = field(default_factory=list)
-    autofocus: Optional[bool] = field(default=False)
-    text_align: Optional[TextAlign] = field(default=TextAlign.START)
-    elevation: ControlStateValue[OptionalNumber] = field(default=8)
-    enable_filter: Optional[bool] = field(default=False)
-    enable_search: Optional[bool] = field(default=True)
-    editable: Optional[bool] = field(default=False)
+    autofocus: bool = False
+    text_align: TextAlign = TextAlign.START
+    elevation: ControlStateValue[OptionalNumber] = 8
+    enable_filter: bool = False
+    enable_search: bool = True
+    editable: bool = False
     menu_height: OptionalNumber = None
     menu_width: OptionalNumber = None
-    expanded_insets: Optional[PaddingValue] = None
+    expanded_insets: OptionalPaddingValue = None
     selected_suffix: Optional[Control] = None
     input_filter: Optional[InputFilter] = None
     capitalization: Optional[TextCapitalization] = None
-    trailing_icon: Optional[IconValueOrControl] = field(default=Icons.ARROW_DROP_DOWN)
+    trailing_icon: IconValueOrControl = Icons.ARROW_DROP_DOWN
     leading_icon: Optional[IconValueOrControl] = None
-    selected_trailing_icon: Optional[IconValueOrControl] = field(
-        default=Icons.ARROW_DROP_UP
-    )
+    selected_trailing_icon: IconValueOrControl = Icons.ARROW_DROP_UP
     bgcolor: ControlStateValue[ColorValue] = None
     on_change: OptionalEventCallable = None
     on_focus: OptionalEventCallable = None
@@ -85,17 +85,17 @@ class Dropdown(ConstrainedControl):
     label: Optional[Union[str, Control]] = None
     label_style: Optional[TextStyle] = None
     border: Optional[InputBorder] = None
-    color: Optional[ColorValue] = None
-    border_width: OptionalNumber = field(default=1)
-    border_color: Optional[ColorValue] = None
-    border_radius: Optional[BorderRadiusValue] = None
+    color: OptionalColorValue = None
+    border_width: Number = 1
+    border_color: OptionalColorValue = None
+    border_radius: OptionalBorderRadiusValue = None
     focused_border_width: OptionalNumber = None
-    focused_border_color: Optional[ColorValue] = None
-    content_padding: Optional[PaddingValue] = None
-    dense: Optional[bool] = field(default=False)
-    filled: Optional[bool] = field(default=False)
-    fill_color: Optional[ColorValue] = None
-    hover_color: Optional[ColorValue] = None
+    focused_border_color: OptionalColorValue = None
+    content_padding: OptionalPaddingValue = None
+    dense: bool = False
+    filled: bool = False
+    fill_color: OptionalColorValue = None
+    hover_color: OptionalColorValue = None
     hint_text: Optional[str] = None
     hint_style: Optional[TextStyle] = None
     helper_text: Optional[str] = None

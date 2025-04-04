@@ -4,8 +4,9 @@ from typing import List, Optional
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
+from flet.core.padding import OptionalPaddingValue
 from flet.core.scrollable_control import ScrollableControl
-from flet.core.types import ClipBehavior, OptionalNumber, PaddingValue
+from flet.core.types import ClipBehavior, OptionalNumber
 
 __all__ = ["ListView"]
 
@@ -51,13 +52,13 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     """
 
     controls: List[Control] = field(default_factory=list)
-    horizontal: bool = field(default=False)
+    horizontal: bool = False
     spacing: OptionalNumber = None
     item_extent: OptionalNumber = None
-    first_item_prototype: bool = field(default=False)
+    first_item_prototype: bool = False
     divider_thickness: OptionalNumber = None
-    padding: Optional[PaddingValue] = None
+    padding: OptionalPaddingValue = None
     clip_behavior: Optional[ClipBehavior] = None
     semantic_child_count: Optional[int] = None
     cache_extent: OptionalNumber = None
-    build_controls_on_demand: bool = field(default=True)
+    build_controls_on_demand: bool = True

@@ -5,9 +5,10 @@ from typing import Optional
 from flet.core.box import DecorationImage, ShadowValue
 from flet.core.control import control
 from flet.core.gradients import Gradient
+from flet.core.padding import OptionalPaddingValue
 from flet.core.text_style import TextStyle
 from flet.core.textfield import TextField
-from flet.core.types import BlendMode, PaddingValue
+from flet.core.types import BlendMode
 
 __all__ = ["CupertinoTextField", "VisibilityMode"]
 
@@ -40,4 +41,4 @@ class CupertinoTextField(TextField):
     clear_button_visibility_mode: Optional[VisibilityMode] = None
     clear_button_semantics_label: Optional[str] = None
     image: Optional[DecorationImage] = None
-    padding: Optional[PaddingValue] = None
+    padding: OptionalPaddingValue = None

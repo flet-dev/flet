@@ -3,7 +3,7 @@ from typing import Any, Optional
 from flet.core.border import BorderSide
 from flet.core.control import Control
 from flet.core.ref import Ref
-from flet.core.types import ColorEnums, ColorValue, OptionalNumber
+from flet.core.types import ColorEnums, OptionalColorValue, OptionalNumber
 
 
 class BarChartRodStackItem(Control):
@@ -11,7 +11,7 @@ class BarChartRodStackItem(Control):
         self,
         from_y: OptionalNumber = None,
         to_y: OptionalNumber = None,
-        color: Optional[ColorValue] = None,
+        color: OptionalColorValue = None,
         border_side: Optional[BorderSide] = None,
         #
         # Control
@@ -62,11 +62,11 @@ class BarChartRodStackItem(Control):
 
     # color
     @property
-    def color(self) -> Optional[ColorValue]:
+    def color(self) -> OptionalColorValue:
         return self.__color
 
     @color.setter
-    def color(self, value: Optional[ColorValue]):
+    def color(self, value: OptionalColorValue):
         self.__color = value
         self._set_enum_attr("color", value, ColorEnums)
 

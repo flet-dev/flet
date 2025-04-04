@@ -3,14 +3,11 @@ from datetime import date, datetime
 from enum import Enum
 from typing import Any, Callable, Dict, List, Optional, Protocol, TypeVar, Union
 
-from flet.core.border_radius import BorderRadius
 from flet.core.colors import Colors
 from flet.core.control_event import ControlEvent
 from flet.core.cupertino_colors import CupertinoColors
 from flet.core.cupertino_icons import CupertinoIcons
 from flet.core.icons import Icons
-from flet.core.margin import Margin
-from flet.core.padding import Padding
 
 WEB_BROWSER = "web_browser"
 FLET_APP = "flet_app"
@@ -54,13 +51,6 @@ class UrlTarget(Enum):
     SELF = "_self"
     PARENT = "_parent"
     TOP = "_top"
-
-
-PaddingValue = Union[int, float, Padding]
-
-MarginValue = Union[int, float, Margin]
-
-BorderRadiusValue = Union[int, float, BorderRadius]
 
 
 @dataclass

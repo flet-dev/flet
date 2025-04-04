@@ -34,9 +34,13 @@ from flet.core.autofill_group import (
 )
 from flet.core.badge import Badge
 from flet.core.banner import Banner
-from flet.core.blur import Blur, BlurTileMode, BlurValue
+from flet.core.blur import Blur, BlurTileMode, BlurValue, OptionalBlurValue
 from flet.core.border import Border, BorderSide, BorderSideStrokeAlign
-from flet.core.border_radius import BorderRadius
+from flet.core.border_radius import (
+    BorderRadius,
+    BorderRadiusValue,
+    OptionalBorderRadiusValue,
+)
 from flet.core.bottom_app_bar import BottomAppBar
 from flet.core.bottom_sheet import BottomSheet
 from flet.core.box import (
@@ -165,18 +169,6 @@ from flet.core.filled_tonal_button import FilledTonalButton
 from flet.core.flet_app import FletApp
 from flet.core.floating_action_button import FloatingActionButton
 from flet.core.form_field_control import InputBorder
-from flet.core.geolocator import (
-    Geolocator,
-    GeolocatorActivityType,
-    GeolocatorAndroidSettings,
-    GeolocatorAppleSettings,
-    GeolocatorPermissionStatus,
-    GeolocatorPosition,
-    GeolocatorPositionAccuracy,
-    GeolocatorPositionChangeEvent,
-    GeolocatorSettings,
-    GeolocatorWebSettings,
-)
 from flet.core.gesture_detector import (
     DragEndEvent,
     DragStartEvent,
@@ -212,7 +204,7 @@ from flet.core.interactive_viewer import (
 )
 from flet.core.list_tile import ListTile, ListTileStyle, ListTileTitleAlignment
 from flet.core.list_view import ListView
-from flet.core.margin import Margin
+from flet.core.margin import Margin, MarginValue, OptionalMarginValue
 from flet.core.markdown import (
     Markdown,
     MarkdownCodeTheme,
@@ -238,7 +230,7 @@ from flet.core.navigation_rail import (
     NavigationRailLabelType,
 )
 from flet.core.outlined_button import OutlinedButton
-from flet.core.padding import Padding
+from flet.core.padding import OptionalPaddingValue, Padding, PaddingValue
 from flet.core.page import (
     AppLifecycleStateChangeEvent,
     BrowserContextMenu,
@@ -380,11 +372,20 @@ from flet.core.types import (
     BlendMode,
     Brightness,
     ClipBehavior,
+    ColorEnums,
+    ColorValue,
     ControlState,
+    ControlStateValue,
     CrossAxisAlignment,
+    DateTimeValue,
     Duration,
+    DurationValue,
+    EventType,
     FloatingActionButtonLocation,
     FontWeight,
+    IconEnums,
+    IconValue,
+    IconValueOrControl,
     ImageFit,
     ImageRepeat,
     LabelPosition,
@@ -395,14 +396,19 @@ from flet.core.types import (
     NotchShape,
     Number,
     OnFocusEvent,
+    OptionalColorValue,
+    OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,
+    OptionalString,
     Orientation,
-    PaddingValue,
     PagePlatform,
+    PointerDeviceType,
+    ResponsiveNumber,
     ScrollMode,
     StrokeCap,
     StrokeJoin,
+    StrOrControl,
     SupportsStr,
     TabAlignment,
     TextAlign,

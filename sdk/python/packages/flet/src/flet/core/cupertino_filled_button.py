@@ -1,17 +1,17 @@
 from typing import Any, Optional
 
 from flet.core.alignment import Alignment
+from flet.core.border_radius import OptionalBorderRadiusValue
 from flet.core.colors import Colors
 from flet.core.control import Control
 from flet.core.cupertino_button import CupertinoButton
+from flet.core.padding import OptionalPaddingValue
 from flet.core.ref import Ref
 from flet.core.types import (
-    BorderRadiusValue,
-    ColorValue,
     IconValue,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
-    PaddingValue,
     UrlTarget,
 )
 
@@ -41,14 +41,14 @@ class CupertinoFilledButton(CupertinoButton):
 
     text: Optional[str] = None
     icon: Optional[IconValue] = None
-    icon_color: Optional[ColorValue] = None
+    icon_color: OptionalColorValue = None
     content: Optional[Control] = None
-    disabled_bgcolor: Optional[ColorValue] = None
+    disabled_bgcolor: OptionalColorValue = None
     opacity_on_click: OptionalNumber = None
     min_size: OptionalNumber = None
-    padding: Optional[PaddingValue] = None
+    padding: OptionalPaddingValue = None
     alignment: Optional[Alignment] = None
-    border_radius: Optional[BorderRadiusValue] = None
+    border_radius: OptionalBorderRadiusValue = None
     url: Optional[str] = None
     url_target: Optional[UrlTarget] = None
     on_click: OptionalControlEventCallable = None

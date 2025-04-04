@@ -1,12 +1,10 @@
 from typing import Optional
 
+from flet.core.border_radius import OptionalBorderRadiusValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
 from flet.core.gradients import Gradient
-from flet.core.types import (
-    BlendMode,
-    BorderRadiusValue,
-)
+from flet.core.types import BlendMode
 
 __all__ = ["ShaderMask"]
 
@@ -52,4 +50,4 @@ class ShaderMask(ConstrainedControl):
     shader: Gradient
     content: Optional[Control] = None
     blend_mode: Optional[BlendMode] = None
-    border_radius: Optional[BorderRadiusValue] = None
+    border_radius: OptionalBorderRadiusValue = None

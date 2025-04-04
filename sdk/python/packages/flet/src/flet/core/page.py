@@ -39,7 +39,7 @@ from flet.core.dialog_control import DialogControl
 from flet.core.floating_action_button import FloatingActionButton
 from flet.core.navigation_bar import NavigationBar
 from flet.core.navigation_drawer import NavigationDrawer, NavigationDrawerPosition
-from flet.core.padding import Padding
+from flet.core.padding import OptionalPaddingValue, Padding
 from flet.core.querystring import QueryString
 from flet.core.scrollable_control import OnScrollEvent
 from flet.core.session_storage import SessionStorage
@@ -49,15 +49,14 @@ from flet.core.transform import OffsetValue
 from flet.core.types import (
     AppLifecycleState,
     Brightness,
-    ColorValue,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     LocaleConfiguration,
     MainAxisAlignment,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,
-    PaddingValue,
     PagePlatform,
     ScrollMode,
     ThemeMode,
@@ -98,7 +97,8 @@ try:
     from flet.auth.oauth_provider import OAuthProvider
 except ImportError as e:
 
-    class OAuthProvider: ...
+    class OAuthProvider:
+        ...
 
     class Authorization:
         def __init__(
@@ -107,7 +107,8 @@ except ImportError as e:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ): ...
+        ):
+            ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -876,20 +877,20 @@ class Page(AdaptiveControl):
 
     # padding
     @property
-    def padding(self) -> Optional[PaddingValue]:
+    def padding(self) -> OptionalPaddingValue:
         return self.__default_view().padding
 
     @padding.setter
-    def padding(self, value: Optional[PaddingValue]):
+    def padding(self, value: OptionalPaddingValue):
         self.__default_view().padding = value
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[ColorValue]:
+    def bgcolor(self) -> OptionalColorValue:
         return self.__default_view().bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[ColorValue]):
+    def bgcolor(self, value: OptionalColorValue):
         self.__default_view().bgcolor = value
 
     # scroll

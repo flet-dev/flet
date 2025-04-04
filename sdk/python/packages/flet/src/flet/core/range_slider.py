@@ -7,6 +7,7 @@ from flet.core.types import (
     ControlStateValue,
     MouseCursor,
     Number,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
 )
@@ -82,8 +83,8 @@ class RangeSlider(ConstrainedControl):
     max: OptionalNumber = None
     divisions: Optional[int] = None
     round: Optional[int] = None
-    active_color: Optional[ColorValue] = None
-    inactive_color: Optional[ColorValue] = None
+    active_color: OptionalColorValue = None
+    inactive_color: OptionalColorValue = None
     overlay_color: ControlStateValue[ColorValue] = None
     mouse_cursor: ControlStateValue[MouseCursor] = None
     on_change: OptionalControlEventCallable = None

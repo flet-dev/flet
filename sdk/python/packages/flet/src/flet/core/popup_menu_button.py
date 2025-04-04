@@ -7,14 +7,14 @@ from flet.core.box import BoxConstraints
 from flet.core.buttons import ButtonStyle, OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
+from flet.core.padding import OptionalPaddingValue
 from flet.core.types import (
     ClipBehavior,
-    ColorValue,
     IconValue,
     MouseCursor,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
-    PaddingValue,
 )
 
 
@@ -30,7 +30,7 @@ class PopupMenuItem(Control):
     checked: Optional[bool] = None
     content: Optional[Control] = None
     height: OptionalNumber = None
-    padding: Optional[PaddingValue] = None
+    padding: OptionalPaddingValue = None
     mouse_cursor: Optional[MouseCursor] = None
     on_click: OptionalControlEventCallable = None
 
@@ -81,10 +81,10 @@ class PopupMenuButton(ConstrainedControl):
     content: Optional[Control] = None
     items: List[PopupMenuItem] = field(default_factory=list)
     icon: Optional[IconValue] = None
-    bgcolor: Optional[ColorValue] = None
-    icon_color: Optional[ColorValue] = None
-    shadow_color: Optional[ColorValue] = None
-    surface_tint_color: Optional[ColorValue] = None
+    bgcolor: OptionalColorValue = None
+    icon_color: OptionalColorValue = None
+    shadow_color: OptionalColorValue = None
+    surface_tint_color: OptionalColorValue = None
     icon_size: OptionalNumber = None
     splash_radius: OptionalNumber = None
     elevation: OptionalNumber = None
@@ -92,8 +92,8 @@ class PopupMenuButton(ConstrainedControl):
     clip_behavior: Optional[ClipBehavior] = None
     enable_feedback: Optional[bool] = None
     shape: Optional[OutlinedBorder] = None
-    padding: Optional[PaddingValue] = None
-    menu_padding: Optional[PaddingValue] = None
+    padding: OptionalPaddingValue = None
+    menu_padding: OptionalPaddingValue = None
     style: Optional[ButtonStyle] = None
     popup_animation_style: Optional[AnimationStyle] = None
     size_constraints: Optional[BoxConstraints] = None

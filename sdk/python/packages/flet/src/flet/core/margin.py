@@ -1,26 +1,32 @@
-import dataclasses
-from typing import Union
+from dataclasses import dataclass
+from typing import Optional, Union
 
-__all__ = ["Margin", "all", "symmetric", "only"]
+__all__ = ["Margin", "all", "symmetric", "only", "MarginValue", "OptionalMarginValue"]
+
+from flet.core.types import Number
 
 
-@dataclasses.dataclass
+@dataclass
 class Margin:
-    left: Union[float, int]
-    top: Union[float, int]
-    right: Union[float, int]
-    bottom: Union[float, int]
+    left: Number
+    top: Number
+    right: Number
+    bottom: Number
 
 
-def all(value: float) -> Margin:
+def all(value: Number) -> Margin:
     return Margin(left=value, top=value, right=value, bottom=value)
 
 
-def symmetric(vertical: float = 0, horizontal: float = 0) -> Margin:
+def symmetric(vertical: Number = 0, horizontal: Number = 0) -> Margin:
     return Margin(left=horizontal, top=vertical, right=horizontal, bottom=vertical)
 
 
 def only(
-    left: float = 0, top: float = 0, right: float = 0, bottom: float = 0
+    left: Number = 0, top: Number = 0, right: Number = 0, bottom: Number = 0
 ) -> Margin:
     return Margin(left=left, top=top, right=right, bottom=bottom)
+
+
+MarginValue = Union[Number, Margin]
+OptionalMarginValue = Optional[MarginValue]

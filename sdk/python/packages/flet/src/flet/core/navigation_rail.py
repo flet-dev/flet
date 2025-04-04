@@ -5,13 +5,13 @@ from typing import List, Optional
 from flet.core.buttons import OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
+from flet.core.padding import OptionalPaddingValue
 from flet.core.text_style import TextStyle
 from flet.core.types import (
-    ColorValue,
     IconValueOrControl,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
-    PaddingValue,
 )
 
 __all__ = ["NavigationRail", "NavigationRailDestination", "NavigationRailLabelType"]
@@ -29,8 +29,8 @@ class NavigationRailDestination(Control):
     selected_icon: Optional[IconValueOrControl] = None
     label: Optional[str] = None
     label_content: Optional[Control] = None
-    padding: Optional[PaddingValue] = None
-    indicator_color: Optional[ColorValue] = None
+    padding: OptionalPaddingValue = None
+    indicator_color: OptionalColorValue = None
     indicator_shape: Optional[OutlinedBorder] = None
 
 
@@ -92,11 +92,11 @@ class NavigationRail(ConstrainedControl):
 
     destinations: List[NavigationRailDestination] = field(default_factory=list)
     elevation: OptionalNumber = None
-    selected_index: int = field(default=0)
-    extended: bool = field(default=False)
+    selected_index: int = 0
+    extended: bool = False
     label_type: Optional[NavigationRailLabelType] = None
-    bgcolor: Optional[ColorValue] = None
-    indicator_color: Optional[ColorValue] = None
+    bgcolor: OptionalColorValue = None
+    indicator_color: OptionalColorValue = None
     indicator_shape: Optional[OutlinedBorder] = None
     leading: Optional[Control] = None
     trailing: Optional[Control] = None

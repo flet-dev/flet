@@ -6,7 +6,7 @@ from typing import Optional
 from flet.core.control import Control, control
 from flet.core.control_event import ControlEvent
 from flet.core.types import (
-    ColorValue,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
     Orientation,
@@ -81,7 +81,7 @@ class TimePicker(Control):
     """
 
     value: Optional[time] = field(default_factory=lambda: datetime.now().time())
-    open: bool = field(default=False)
+    open: bool = False
     time_picker_entry_mode: Optional[TimePickerEntryMode] = None
     hour_label_text: Optional[str] = None
     minute_label_text: Optional[str] = None
@@ -90,7 +90,7 @@ class TimePicker(Control):
     confirm_text: Optional[str] = None
     error_invalid_text: Optional[str] = None
     orientation: Optional[Orientation] = None
-    barrier_color: Optional[ColorValue] = None
+    barrier_color: OptionalColorValue = None
     on_change: OptionalControlEventCallable = None
     on_dismiss: OptionalControlEventCallable = None
     on_entry_mode_change: OptionalEventCallable[TimePickerEntryModeChangeEvent] = None

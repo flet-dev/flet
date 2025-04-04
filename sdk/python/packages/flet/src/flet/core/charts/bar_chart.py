@@ -11,16 +11,16 @@ from flet.core.charts.chart_grid_lines import ChartGridLines
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control_event import ControlEvent
 from flet.core.event_handler import EventHandler
+from flet.core.padding import OptionalPaddingValue
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.transform import OffsetValue, RotateValue, ScaleValue
 from flet.core.types import (
     ColorEnums,
-    ColorValue,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,
-    PaddingValue,
     ResponsiveNumber,
 )
 
@@ -38,8 +38,8 @@ class BarChart(ConstrainedControl):
         groups_space: OptionalNumber = None,
         animate: Optional[AnimationValue] = None,
         interactive: Optional[bool] = None,
-        bgcolor: Optional[ColorValue] = None,
-        tooltip_bgcolor: Optional[ColorValue] = None,
+        bgcolor: OptionalColorValue = None,
+        tooltip_bgcolor: OptionalColorValue = None,
         border: Optional[Border] = None,
         horizontal_grid_lines: Optional[ChartGridLines] = None,
         vertical_grid_lines: Optional[ChartGridLines] = None,
@@ -52,7 +52,7 @@ class BarChart(ConstrainedControl):
         max_y: OptionalNumber = None,
         tooltip_rounded_radius: OptionalNumber = None,
         tooltip_margin: OptionalNumber = None,
-        tooltip_padding: Optional[PaddingValue] = None,
+        tooltip_padding: OptionalPaddingValue = None,
         tooltip_max_content_width: OptionalNumber = None,
         tooltip_rotate_angle: OptionalNumber = None,
         tooltip_tooltip_horizontal_offset: OptionalNumber = None,
@@ -213,11 +213,11 @@ class BarChart(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[ColorValue]:
+    def bgcolor(self) -> OptionalColorValue:
         return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[ColorValue]):
+    def bgcolor(self, value: OptionalColorValue):
         self.__bgcolor = value
         self._set_enum_attr("bgcolor", value, ColorEnums)
 
@@ -350,11 +350,11 @@ class BarChart(ConstrainedControl):
 
     # tooltip_padding
     @property
-    def tooltip_padding(self) -> Optional[PaddingValue]:
+    def tooltip_padding(self) -> OptionalPaddingValue:
         return self.__tooltip_padding
 
     @tooltip_padding.setter
-    def tooltip_padding(self, value: Optional[PaddingValue]):
+    def tooltip_padding(self, value: OptionalPaddingValue):
         self.__tooltip_padding = value
 
     # tooltip_max_content_width

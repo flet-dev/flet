@@ -1,4 +1,3 @@
-from dataclasses import field
 from typing import Optional
 
 from flet.core.colors import Colors
@@ -20,7 +19,7 @@ class Placeholder(ConstrainedControl):
     """
 
     content: Optional[Control] = None
-    color: ColorValue = field(default=Colors.BLUE_GREY_700)
-    fallback_height: Number = field(default=400.0)
-    fallback_width: Number = field(default=400.0)
-    stroke_width: OptionalNumber = field(default=2.0)
+    color: ColorValue = Colors.BLUE_GREY_700
+    fallback_height: Number = 400.0
+    fallback_width: Number = 400.0
+    stroke_width: OptionalNumber = 2.0

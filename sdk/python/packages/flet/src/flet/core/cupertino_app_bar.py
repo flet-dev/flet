@@ -2,7 +2,8 @@ from typing import Optional
 
 from flet.core.border import Border
 from flet.core.control import Control, control
-from flet.core.types import Brightness, ColorValue, PaddingValue
+from flet.core.padding import OptionalPaddingValue
+from flet.core.types import Brightness, OptionalColorValue
 
 __all__ = ["CupertinoAppBar"]
 
@@ -39,11 +40,11 @@ class CupertinoAppBar(Control):
     leading: Optional[Control] = None
     middle: Optional[Control] = None
     trailing: Optional[Control] = None
-    bgcolor: Optional[ColorValue] = None
+    bgcolor: OptionalColorValue = None
     automatically_imply_leading: Optional[bool] = None
     automatically_imply_middle: Optional[bool] = None
     border: Optional[Border] = None
-    padding: Optional[PaddingValue] = None
+    padding: OptionalPaddingValue = None
     transition_between_routes: Optional[bool] = None
     previous_page_title: Optional[str] = None
     brightness: Optional[Brightness] = None

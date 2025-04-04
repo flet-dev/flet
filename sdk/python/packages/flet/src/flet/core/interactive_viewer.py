@@ -1,17 +1,17 @@
-from dataclasses import field
-from typing import Callable, Optional
+from typing import Optional
 
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.alignment import Alignment
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
 from flet.core.control_event import ControlEvent
+from flet.core.margin import OptionalMarginValue
 from flet.core.transform import Offset
 from flet.core.types import (
     ClipBehavior,
     DurationValue,
-    MarginValue,
     Number,
+    OptionalEventCallable,
     OptionalNumber,
 )
 
@@ -59,22 +59,22 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     scale_enabled: Optional[bool] = None
     trackpad_scroll_causes_scale: Optional[bool] = None
     constrained: Optional[bool] = None
-    max_scale: Number = field(default=2.5)
-    min_scale: Number = field(default=0.8)
+    max_scale: Number = 2.5
+    min_scale: Number = 0.8
     interaction_end_friction_coefficient: OptionalNumber = None
     scale_factor: OptionalNumber = None
     clip_behavior: Optional[ClipBehavior] = None
     alignment: Optional[Alignment] = None
-    boundary_margin: Optional[MarginValue] = None
-    interaction_update_interval: int = field(default=200)
-    on_interaction_start: Optional[
-        Callable[[InteractiveViewerInteractionStartEvent], None]
+    boundary_margin: OptionalMarginValue = None
+    interaction_update_interval: int = 200
+    on_interaction_start: OptionalEventCallable[
+        InteractiveViewerInteractionStartEvent
     ] = None
-    on_interaction_update: Optional[
-        Callable[[InteractiveViewerInteractionUpdateEvent], None]
-    ] = (None,)
-    on_interaction_end: Optional[
-        Callable[[InteractiveViewerInteractionEndEvent], None]
+    on_interaction_update: OptionalEventCallable[
+        InteractiveViewerInteractionUpdateEvent
+    ] = None
+    on_interaction_end: OptionalEventCallable[
+        InteractiveViewerInteractionEndEvent
     ] = None
 
     def before_update(self):

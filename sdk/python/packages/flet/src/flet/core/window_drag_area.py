@@ -1,5 +1,3 @@
-from dataclasses import field
-
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
 
@@ -39,7 +37,7 @@ class WindowDragArea(ConstrainedControl):
     """
 
     content: Control
-    maximizable: bool = field(default=True)
+    maximizable: bool = True
 
     def before_update(self):
         super().before_update()

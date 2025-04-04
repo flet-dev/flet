@@ -4,7 +4,7 @@ from typing import Optional
 
 from flet.core.box import ShadowValue
 from flet.core.painting import Paint
-from flet.core.types import ColorValue, FontWeight, OptionalNumber
+from flet.core.types import FontWeight, OptionalColorValue, OptionalNumber
 
 __all__ = [
     "TextOverflow",
@@ -69,12 +69,12 @@ class TextStyle:
     weight: Optional[FontWeight] = None
     italic: Optional[bool] = None
     decoration: Optional[TextDecoration] = None
-    decoration_color: Optional[ColorValue] = None
+    decoration_color: OptionalColorValue = None
     decoration_thickness: OptionalNumber = None
     decoration_style: Optional[TextDecorationStyle] = None
     font_family: Optional[str] = None
-    color: Optional[ColorValue] = None
-    bgcolor: Optional[ColorValue] = None
+    color: OptionalColorValue = None
+    bgcolor: OptionalColorValue = None
     shadow: Optional[ShadowValue] = None
     foreground: Optional[Paint] = None
     letter_spacing: OptionalNumber = None

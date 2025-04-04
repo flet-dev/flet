@@ -1,11 +1,10 @@
-from dataclasses import field
 from typing import List, Optional
 
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.buttons import OutlinedBorder
 from flet.core.control import Control, control
 from flet.core.text_style import TextStyle
-from flet.core.types import ClipBehavior, ColorValue, Number, OptionalNumber
+from flet.core.types import ClipBehavior, Number, OptionalColorValue, OptionalNumber
 
 
 @control("AppBar")
@@ -59,12 +58,12 @@ class AppBar(AdaptiveControl):
     title: Optional[Control] = None
     center_title: bool = False
     toolbar_height: OptionalNumber = None
-    color: Optional[ColorValue] = None
-    bgcolor: Optional[ColorValue] = None
+    color: OptionalColorValue = None
+    bgcolor: OptionalColorValue = None
     elevation: OptionalNumber = None
     elevation_on_scroll: OptionalNumber = None
-    shadow_color: Optional[ColorValue] = None
-    surface_tint_color: Optional[ColorValue] = None
+    shadow_color: OptionalColorValue = None
+    surface_tint_color: OptionalColorValue = None
     clip_behavior: Optional[ClipBehavior] = None
     force_material_transparency: bool = False
     is_secondary: bool = False

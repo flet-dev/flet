@@ -7,13 +7,13 @@ from flet.core.box import BoxConstraints
 from flet.core.buttons import ButtonStyle
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
+from flet.core.padding import OptionalPaddingValue
 from flet.core.types import (
-    ColorValue,
     IconValue,
     MouseCursor,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
-    PaddingValue,
     UrlTarget,
     VisualDensity,
 )
@@ -62,23 +62,23 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     """
 
     icon: Optional[IconValue] = None
-    icon_color: Optional[ColorValue] = None
+    icon_color: OptionalColorValue = None
     icon_size: OptionalNumber = None
     selected: bool = False
     selected_icon: Optional[IconValue] = None
-    selected_icon_color: Optional[ColorValue] = None
-    bgcolor: Optional[ColorValue] = None
-    highlight_color: Optional[ColorValue] = None
+    selected_icon_color: OptionalColorValue = None
+    bgcolor: OptionalColorValue = None
+    highlight_color: OptionalColorValue = None
     style: Optional[ButtonStyle] = None
     content: Optional[Control] = None
     autofocus: bool = False
-    disabled_color: Optional[ColorValue] = None
-    hover_color: Optional[ColorValue] = None
-    focus_color: Optional[ColorValue] = None
-    splash_color: Optional[ColorValue] = None
+    disabled_color: OptionalColorValue = None
+    hover_color: OptionalColorValue = None
+    focus_color: OptionalColorValue = None
+    splash_color: OptionalColorValue = None
     splash_radius: OptionalNumber = None
     alignment: Optional[Alignment] = None
-    padding: Optional[PaddingValue] = None
+    padding: OptionalPaddingValue = None
     enable_feedback: Optional[bool] = None
     url: Optional[str] = None
     url_target: Optional[UrlTarget] = None

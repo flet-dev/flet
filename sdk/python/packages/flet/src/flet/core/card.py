@@ -5,7 +5,8 @@ from flet.core.adaptive_control import AdaptiveControl
 from flet.core.buttons import OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
-from flet.core.types import ClipBehavior, ColorValue, MarginValue, OptionalNumber
+from flet.core.margin import OptionalMarginValue
+from flet.core.types import ClipBehavior, OptionalColorValue, OptionalNumber
 
 __all__ = ["Card", "CardVariant"]
 
@@ -61,11 +62,11 @@ class Card(ConstrainedControl, AdaptiveControl):
     """
 
     content: Optional[Control] = None
-    margin: Optional[MarginValue] = None
+    margin: OptionalMarginValue = None
     elevation: OptionalNumber = None
-    color: Optional[ColorValue] = None
-    shadow_color: Optional[ColorValue] = None
-    surface_tint_color: Optional[ColorValue] = None
+    color: OptionalColorValue = None
+    shadow_color: OptionalColorValue = None
+    surface_tint_color: OptionalColorValue = None
     shape: Optional[OutlinedBorder] = None
     clip_behavior: Optional[ClipBehavior] = None
     is_semantic_container: Optional[bool] = None

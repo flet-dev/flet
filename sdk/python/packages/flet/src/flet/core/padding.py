@@ -1,26 +1,39 @@
-import dataclasses
-from typing import Union
+from dataclasses import dataclass
+from typing import Optional, Union
 
-__all__ = ["Padding", "all", "symmetric", "only"]
+__all__ = [
+    "Padding",
+    "all",
+    "symmetric",
+    "only",
+    "PaddingValue",
+    "OptionalPaddingValue",
+]
+
+from flet.core.types import Number
 
 
-@dataclasses.dataclass
+@dataclass
 class Padding:
-    left: Union[float, int]
-    top: Union[float, int]
-    right: Union[float, int]
-    bottom: Union[float, int]
+    left: Number
+    top: Number
+    right: Number
+    bottom: Number
 
 
-def all(value: float) -> Padding:
+def all(value: Number) -> Padding:
     return Padding(left=value, top=value, right=value, bottom=value)
 
 
-def symmetric(vertical: float = 0, horizontal: float = 0) -> Padding:
+def symmetric(vertical: Number = 0, horizontal: Number = 0) -> Padding:
     return Padding(left=horizontal, top=vertical, right=horizontal, bottom=vertical)
 
 
 def only(
-    left: float = 0, top: float = 0, right: float = 0, bottom: float = 0
+    left: Number = 0, top: Number = 0, right: Number = 0, bottom: Number = 0
 ) -> Padding:
     return Padding(left=left, top=top, right=right, bottom=bottom)
+
+
+PaddingValue = Union[Number, Padding]
+OptionalPaddingValue = Optional[PaddingValue]

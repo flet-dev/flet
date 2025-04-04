@@ -1,15 +1,14 @@
 import warnings
-from typing import Any, Optional
+from typing import Optional
 
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.buttons import ButtonStyle
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
-from flet.core.ref import Ref
+from flet.core.control import control
 from flet.core.types import (
     ClipBehavior,
-    ColorValue,
     IconValue,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
     StrOrControl,
@@ -55,9 +54,9 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
 
     text: Optional[str] = None  # deprecated
     icon: Optional[IconValue] = None
-    icon_color: Optional[ColorValue] = None
-    color: Optional[ColorValue] = None
-    bgcolor: Optional[ColorValue] = None
+    icon_color: OptionalColorValue = None
+    color: OptionalColorValue = None
+    bgcolor: OptionalColorValue = None
     content: Optional[StrOrControl] = None
     elevation: OptionalNumber = None
     style: Optional[ButtonStyle] = None

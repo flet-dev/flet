@@ -2,14 +2,14 @@ from dataclasses import field
 from typing import List, Optional
 
 from flet.core.control import Control, control
+from flet.core.margin import OptionalMarginValue
+from flet.core.padding import OptionalPaddingValue
 from flet.core.text_style import TextStyle
 from flet.core.types import (
-    ColorValue,
-    MarginValue,
     Number,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
-    PaddingValue,
 )
 
 __all__ = ["Banner"]
@@ -64,15 +64,15 @@ class Banner(Control):
     actions: List[Control] = field(default_factory=list)
     open: bool = False
     leading: Optional[Control] = None
-    leading_padding: Optional[PaddingValue] = None
-    content_padding: Optional[PaddingValue] = None
+    leading_padding: OptionalPaddingValue = None
+    content_padding: OptionalPaddingValue = None
     force_actions_below: bool = field(default=False)
-    bgcolor: Optional[ColorValue] = None
-    surface_tint_color: Optional[ColorValue] = None
-    shadow_color: Optional[ColorValue] = None
-    divider_color: Optional[ColorValue] = None
+    bgcolor: OptionalColorValue = None
+    surface_tint_color: OptionalColorValue = None
+    shadow_color: OptionalColorValue = None
+    divider_color: OptionalColorValue = None
     elevation: OptionalNumber = None
-    margin: Optional[MarginValue] = None
+    margin: OptionalMarginValue = None
     content_text_style: Optional[TextStyle] = None
     min_action_bar_height: Number = field(default=52.0)
     on_visible: OptionalControlEventCallable = None

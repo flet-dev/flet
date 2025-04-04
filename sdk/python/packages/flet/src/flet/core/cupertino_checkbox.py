@@ -8,6 +8,7 @@ from flet.core.types import (
     ControlStateValue,
     LabelPosition,
     MouseCursor,
+    OptionalColorValue,
     OptionalControlEventCallable,
 )
 
@@ -43,9 +44,9 @@ class CupertinoCheckbox(ConstrainedControl):
     value: Optional[bool] = None
     tristate: Optional[bool] = None
     autofocus: Optional[bool] = None
-    check_color: Optional[ColorValue] = None
-    active_color: Optional[ColorValue] = None
-    focus_color: Optional[ColorValue] = None
+    check_color: OptionalColorValue = None
+    active_color: OptionalColorValue = None
+    focus_color: OptionalColorValue = None
     fill_color: ControlStateValue[ColorValue] = None
     shape: Optional[OutlinedBorder] = None
     mouse_cursor: Optional[MouseCursor] = None

@@ -5,6 +5,7 @@ from flet.core.alignment import Alignment
 from flet.core.border import BorderSide
 from flet.core.buttons import OutlinedBorder
 from flet.core.control import Control, control
+from flet.core.padding import PaddingValue
 from flet.core.types import (
     ClipBehavior,
     ColorValue,
@@ -12,7 +13,6 @@ from flet.core.types import (
     ControlStateValue,
     MouseCursor,
     OptionalNumber,
-    PaddingValue,
 )
 
 __all__ = ["MenuBar", "MenuStyle"]

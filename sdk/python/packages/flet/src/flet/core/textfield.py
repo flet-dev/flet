@@ -1,5 +1,5 @@
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from typing import List, Optional, Union
 
@@ -7,15 +7,15 @@ from flet.core.adaptive_control import AdaptiveControl
 from flet.core.autofill_group import AutofillHint
 from flet.core.control import control
 from flet.core.form_field_control import FormFieldControl
+from flet.core.padding import OptionalPaddingValue
 from flet.core.text_style import StrutStyle
 from flet.core.types import (
     Brightness,
     ClipBehavior,
-    ColorValue,
     MouseCursor,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
-    PaddingValue,
     TextAlign,
 )
 
@@ -101,40 +101,40 @@ class TextField(FormFieldControl, AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/textfield
     """
 
-    value: str = field(default="")
-    keyboard_type: KeyboardType = field(default=KeyboardType.TEXT)
-    multiline: bool = field(default=False)
+    value: str = ""
+    keyboard_type: KeyboardType = KeyboardType.TEXT
+    multiline: bool = False
     min_lines: Optional[int] = None
     max_lines: Optional[int] = None
     max_length: Optional[int] = None
-    password: bool = field(default=False)
-    can_reveal_password: bool = field(default=False)
-    read_only: bool = field(default=False)
-    shift_enter: bool = field(default=False)
+    password: bool = False
+    can_reveal_password: bool = False
+    read_only: bool = False
+    shift_enter: bool = False
     text_align: Optional[TextAlign] = None
-    autofocus: bool = field(default=False)
+    autofocus: bool = False
     capitalization: Optional[TextCapitalization] = None
-    autocorrect: bool = field(default=True)
-    enable_suggestions: bool = field(default=True)
-    smart_dashes_type: bool = field(default=True)
-    smart_quotes_type: bool = field(default=True)
-    show_cursor: bool = field(default=True)
-    cursor_color: Optional[ColorValue] = None
-    cursor_error_color: Optional[ColorValue] = None
+    autocorrect: bool = True
+    enable_suggestions: bool = True
+    smart_dashes_type: bool = True
+    smart_quotes_type: bool = True
+    show_cursor: bool = True
+    cursor_color: OptionalColorValue = None
+    cursor_error_color: OptionalColorValue = None
     cursor_width: OptionalNumber = None
     cursor_height: OptionalNumber = None
     cursor_radius: OptionalNumber = None
-    selection_color: Optional[ColorValue] = None
+    selection_color: OptionalColorValue = None
     input_filter: Optional[InputFilter] = None
-    obscuring_character: str = field(default="•")
-    enable_interactive_selection: bool = field(default=True)
-    enable_ime_personalized_learning: bool = field(default=True)
-    can_request_focus: bool = field(default=True)
-    ignore_pointers: bool = field(default=False)
-    enable_scribble: bool = field(default=True)
+    obscuring_character: str = "•"
+    enable_interactive_selection: bool = True
+    enable_ime_personalized_learning: bool = True
+    can_request_focus: bool = True
+    ignore_pointers: bool = False
+    enable_scribble: bool = True
     animate_cursor_opacity: Optional[bool] = None
-    always_call_on_tap: bool = field(default=False)
-    scroll_padding: Optional[PaddingValue] = None
+    always_call_on_tap: bool = False
+    scroll_padding: OptionalPaddingValue = None
     clip_behavior: Optional[ClipBehavior] = None
     keyboard_brightness: Optional[Brightness] = None
     mouse_cursor: Optional[MouseCursor] = None

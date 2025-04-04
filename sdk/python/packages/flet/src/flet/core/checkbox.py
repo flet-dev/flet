@@ -11,6 +11,7 @@ from flet.core.types import (
     ControlStateValue,
     LabelPosition,
     MouseCursor,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
     VisualDensity,
@@ -62,10 +63,10 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     autofocus: Optional[bool] = None
     fill_color: ControlStateValue[ColorValue] = None
     overlay_color: ControlStateValue[ColorValue] = None
-    check_color: Optional[ColorValue] = None
-    active_color: Optional[ColorValue] = None
-    hover_color: Optional[ColorValue] = None
-    focus_color: Optional[ColorValue] = None
+    check_color: OptionalColorValue = None
+    active_color: OptionalColorValue = None
+    hover_color: OptionalColorValue = None
+    focus_color: OptionalColorValue = None
     semantics_label: Optional[str] = None
     shape: Optional[OutlinedBorder] = None
     splash_radius: OptionalNumber = None

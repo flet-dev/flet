@@ -1,8 +1,5 @@
-from dataclasses import field
-from typing import Optional
-
 from flet.core.control import Control, control
-from flet.core.types import ColorValue, OptionalNumber
+from flet.core.types import OptionalColorValue, OptionalNumber
 
 __all__ = ["Divider"]
 
@@ -56,10 +53,10 @@ class Divider(Control):
     Online docs: https://flet.dev/docs/controls/divider
     """
 
-    color: Optional[ColorValue] = None
+    color: OptionalColorValue = None
     """The color to use when painting the line."""
 
-    height: OptionalNumber = field(default=16.0)
+    height: OptionalNumber = 16.0
     """
     The divider's height extent. The divider itself is always drawn as a horizontal line that is centered
     within the height specified by this value.
@@ -67,14 +64,14 @@ class Divider(Control):
     Defaults to `16.0`.
     """
 
-    leading_indent: OptionalNumber = field(default=0.0)
+    leading_indent: OptionalNumber = 0.0
     """
     The amount of empty space to the leading edge of the divider.
 
     Defaults to `0.0`.
     """
 
-    thickness: OptionalNumber = field(default=0.0)
+    thickness: OptionalNumber = 0.0
     """
     The thickness of the line drawn within the divider. A divider with a thickness of `0.0` is always drawn
     as a line with a height of exactly one device pixel.
@@ -82,7 +79,7 @@ class Divider(Control):
     Defaults to `0.0`.
     """
 
-    trailing_indent: OptionalNumber = field(default=0.0)
+    trailing_indent: OptionalNumber = 0.0
     """
     The amount of empty space to the trailing edge of the divider.
 

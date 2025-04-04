@@ -1,11 +1,10 @@
-from dataclasses import field
 from enum import Enum
 from typing import Optional
 
 from flet.core.alignment import Alignment
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import control
-from flet.core.types import ColorValue, Number, OptionalControlEventCallable
+from flet.core.types import Number, OptionalColorValue, OptionalControlEventCallable
 
 __all__ = ["CupertinoTimerPicker", "CupertinoTimerPickerMode"]
 
@@ -28,11 +27,11 @@ class CupertinoTimerPicker(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/cupertinotimerpicker
     """
 
-    value: int = field(default=0)
+    value: int = 0
     alignment: Optional[Alignment] = None
-    second_interval: int = field(default=1)
-    minute_interval: int = field(default=1)
+    second_interval: int = 1
+    minute_interval: int = 1
     mode: Optional[CupertinoTimerPickerMode] = None
-    bgcolor: Optional[ColorValue] = None
-    item_extent: Number = field(default=32.0)
+    bgcolor: OptionalColorValue = None
+    item_extent: Number = 32.0
     on_change: OptionalControlEventCallable = None

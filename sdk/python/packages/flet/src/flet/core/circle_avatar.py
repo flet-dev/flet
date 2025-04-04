@@ -2,7 +2,11 @@ from typing import Optional
 
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
-from flet.core.types import ColorValue, OptionalControlEventCallable, OptionalNumber
+from flet.core.types import (
+    OptionalColorValue,
+    OptionalControlEventCallable,
+    OptionalNumber,
+)
 
 __all__ = ["CircleAvatar"]
 
@@ -68,8 +72,8 @@ class CircleAvatar(ConstrainedControl):
     content: Optional[Control] = None
     foreground_image_src: Optional[str] = None
     background_image_src: Optional[str] = None
-    color: Optional[ColorValue] = None
-    bgcolor: Optional[ColorValue] = None
+    color: OptionalColorValue = None
+    bgcolor: OptionalColorValue = None
     radius: OptionalNumber = None
     min_radius: OptionalNumber = None
     max_radius: OptionalNumber = None

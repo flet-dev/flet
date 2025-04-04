@@ -1,9 +1,10 @@
 from dataclasses import field
-from typing import List, Optional
+from typing import List
 
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
-from flet.core.types import ColorValue, OptionalControlEventCallable, PaddingValue
+from flet.core.padding import OptionalPaddingValue
+from flet.core.types import OptionalColorValue, OptionalControlEventCallable
 
 __all__ = ["CupertinoSlidingSegmentedButton"]
 
@@ -20,9 +21,9 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
 
     controls: List[Control] = field(default_factory=list)
     selected_index: int = field(default=0)
-    bgcolor: Optional[ColorValue] = None
-    thumb_color: Optional[ColorValue] = None
-    padding: Optional[PaddingValue] = None
+    bgcolor: OptionalColorValue = None
+    thumb_color: OptionalColorValue = None
+    padding: OptionalPaddingValue = None
     on_change: OptionalControlEventCallable = None
 
     def before_update(self):

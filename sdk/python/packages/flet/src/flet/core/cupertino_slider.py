@@ -1,11 +1,10 @@
-from dataclasses import field
 from typing import Optional
 
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import control
 from flet.core.types import (
-    ColorValue,
     Number,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
 )
@@ -28,12 +27,12 @@ class CupertinoSlider(ConstrainedControl):
     """
 
     value: OptionalNumber = None
-    min: Number = field(default=0.0)
-    max: Number = field(default=1.0)
+    min: Number = 0.0
+    max: Number = 1.0
     divisions: Optional[int] = None
-    round: int = field(default=0)
-    active_color: Optional[ColorValue] = None
-    thumb_color: Optional[ColorValue] = None
+    round: int = 0
+    active_color: OptionalColorValue = None
+    thumb_color: OptionalColorValue = None
     on_change: OptionalControlEventCallable = None
     on_change_start: OptionalControlEventCallable = None
     on_change_end: OptionalControlEventCallable = None

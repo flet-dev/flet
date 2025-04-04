@@ -1,5 +1,5 @@
 import math
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from typing import List, Optional
 
@@ -8,8 +8,8 @@ from flet.core.gradients import GradientTileMode
 from flet.core.transform import OffsetValue
 from flet.core.types import (
     BlendMode,
-    ColorValue,
     Number,
+    OptionalColorValue,
     OptionalNumber,
     StrokeCap,
     StrokeJoin,
@@ -41,7 +41,7 @@ class PaintLinearGradient(PaintGradient):
     end: Optional[OffsetValue]
     colors: List[str]
     color_stops: Optional[List[Number]] = None
-    tile_mode: GradientTileMode = field(default=GradientTileMode.CLAMP)
+    tile_mode: GradientTileMode = GradientTileMode.CLAMP
 
     def __post_init__(self):
         self.type = "linear"
@@ -53,9 +53,9 @@ class PaintRadialGradient(PaintGradient):
     radius: Number
     colors: List[str]
     color_stops: Optional[List[float]] = None
-    tile_mode: GradientTileMode = field(default=GradientTileMode.CLAMP)
+    tile_mode: GradientTileMode = GradientTileMode.CLAMP
     focal: Optional[OffsetValue] = None
-    focal_radius: Number = field(default=0.0)
+    focal_radius: Number = 0.0
 
     def __post_init__(self):
         self.type = "radial"
@@ -66,9 +66,9 @@ class PaintSweepGradient(PaintGradient):
     center: Optional[OffsetValue]
     colors: List[str]
     color_stops: Optional[List[Number]] = None
-    tile_mode: GradientTileMode = field(default=GradientTileMode.CLAMP)
-    start_angle: Number = field(default=0.0)
-    end_angle: Number = field(default=math.pi * 2)
+    tile_mode: GradientTileMode = GradientTileMode.CLAMP
+    start_angle: Number = 0.0
+    end_angle: Number = math.pi * 2
     rotation: OptionalNumber = None
 
     def __post_init__(self):
@@ -77,7 +77,7 @@ class PaintSweepGradient(PaintGradient):
 
 @dataclass
 class Paint:
-    color: Optional[ColorValue] = None
+    color: OptionalColorValue = None
     blend_mode: Optional[BlendMode] = None
     blur_image: Optional[BlurValue] = None
     anti_alias: Optional[bool] = None

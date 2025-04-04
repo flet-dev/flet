@@ -5,6 +5,7 @@ from typing import Optional, Union
 from flet.core.box import BoxDecoration
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
+from flet.core.padding import OptionalPaddingValue
 from flet.core.text import TextSelectionChangeEvent
 from flet.core.text_style import TextStyle
 from flet.core.types import (
@@ -12,7 +13,6 @@ from flet.core.types import (
     OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,
-    PaddingValue,
     TextAlign,
 )
 
@@ -36,20 +36,20 @@ class MarkdownExtensionSet(Enum):
 class MarkdownStyleSheet:
     a_text_style: Optional[TextStyle] = None
     p_text_style: Optional[TextStyle] = None
-    p_padding: Optional[PaddingValue] = None
+    p_padding: OptionalPaddingValue = None
     code_text_style: Optional[TextStyle] = None
     h1_text_style: Optional[TextStyle] = None
-    h1_padding: Optional[PaddingValue] = None
+    h1_padding: OptionalPaddingValue = None
     h2_text_style: Optional[TextStyle] = None
-    h2_padding: Optional[PaddingValue] = None
+    h2_padding: OptionalPaddingValue = None
     h3_text_style: Optional[TextStyle] = None
-    h3_padding: Optional[PaddingValue] = None
+    h3_padding: OptionalPaddingValue = None
     h4_text_style: Optional[TextStyle] = None
-    h4_padding: Optional[PaddingValue] = None
+    h4_padding: OptionalPaddingValue = None
     h5_text_style: Optional[TextStyle] = None
-    h5_padding: Optional[PaddingValue] = None
+    h5_padding: OptionalPaddingValue = None
     h6_text_style: Optional[TextStyle] = None
-    h6_padding: Optional[PaddingValue] = None
+    h6_padding: OptionalPaddingValue = None
     em_text_style: Optional[TextStyle] = None
     strong_text_style: Optional[TextStyle] = None
     del_text_style: Optional[TextStyle] = None
@@ -59,16 +59,16 @@ class MarkdownStyleSheet:
     block_spacing: OptionalNumber = None
     list_indent: OptionalNumber = None
     list_bullet_text_style: Optional[TextStyle] = None
-    list_bullet_padding: Optional[PaddingValue] = None
+    list_bullet_padding: OptionalPaddingValue = None
     table_head_text_style: Optional[TextStyle] = None
     table_body_text_style: Optional[TextStyle] = None
     table_head_text_align: Optional[TextAlign] = None
-    table_padding: Optional[PaddingValue] = None
-    table_cells_padding: Optional[PaddingValue] = None
-    blockquote_padding: Optional[PaddingValue] = None
+    table_padding: OptionalPaddingValue = None
+    table_cells_padding: OptionalPaddingValue = None
+    blockquote_padding: OptionalPaddingValue = None
     table_cells_decoration: Optional[BoxDecoration] = None
     blockquote_decoration: Optional[BoxDecoration] = None
-    codeblock_padding: Optional[PaddingValue] = None
+    codeblock_padding: OptionalPaddingValue = None
     codeblock_decoration: Optional[BoxDecoration] = None
     horizontal_rule_decoration: Optional[BoxDecoration] = None
     blockquote_alignment: Optional[MainAxisAlignment] = None

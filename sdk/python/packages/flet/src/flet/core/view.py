@@ -11,15 +11,15 @@ from flet.core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.core.floating_action_button import FloatingActionButton
 from flet.core.navigation_bar import NavigationBar
 from flet.core.navigation_drawer import NavigationDrawer
+from flet.core.padding import OptionalPaddingValue
 from flet.core.scrollable_control import ScrollableControl
 from flet.core.transform import OffsetValue
 from flet.core.types import (
-    ColorValue,
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     MainAxisAlignment,
+    OptionalColorValue,
     OptionalNumber,
-    PaddingValue,
 )
 
 __all__ = ["View"]
@@ -51,8 +51,8 @@ class View(ScrollableControl, AdaptiveControl):
     vertical_alignment: Optional[MainAxisAlignment] = None
     horizontal_alignment: Optional[CrossAxisAlignment] = None
     spacing: OptionalNumber = None
-    padding: Optional[PaddingValue] = None
-    bgcolor: Optional[ColorValue] = None
+    padding: OptionalPaddingValue = None
+    bgcolor: OptionalColorValue = None
     decoration: Optional[BoxDecoration] = None
     foreground_decoration: Optional[BoxDecoration] = None
 

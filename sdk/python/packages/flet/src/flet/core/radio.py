@@ -10,6 +10,7 @@ from flet.core.types import (
     ControlStateValue,
     LabelPosition,
     MouseCursor,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
     VisualDensity,
@@ -53,14 +54,14 @@ class Radio(ConstrainedControl, AdaptiveControl):
     label_position: Optional[LabelPosition] = None
     label_style: Optional[TextStyle] = None
     value: Optional[str] = None
-    autofocus: bool = field(default=False)
+    autofocus: bool = False
     fill_color: ControlStateValue[ColorValue] = None
-    active_color: Optional[ColorValue] = None
+    active_color: OptionalColorValue = None
     overlay_color: ControlStateValue[ColorValue] = None
-    hover_color: Optional[ColorValue] = None
-    focus_color: Optional[ColorValue] = None
+    hover_color: OptionalColorValue = None
+    focus_color: OptionalColorValue = None
     splash_radius: OptionalNumber = None
-    toggleable: bool = field(default=False)
+    toggleable: bool = False
     visual_density: Optional[VisualDensity] = None
     mouse_cursor: Optional[MouseCursor] = None
     on_focus: OptionalControlEventCallable = None

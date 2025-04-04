@@ -1,5 +1,4 @@
 import time
-from dataclasses import field
 from typing import Optional
 
 from flet.core.adaptive_control import AdaptiveControl
@@ -8,8 +7,8 @@ from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
 from flet.core.types import (
     ClipBehavior,
-    ColorValue,
     IconValue,
+    OptionalColorValue,
     OptionalControlEventCallable,
     UrlTarget,
 )
@@ -43,10 +42,10 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
 
     text: Optional[str] = None
     icon: Optional[IconValue] = None
-    icon_color: Optional[ColorValue] = None
+    icon_color: OptionalColorValue = None
     content: Optional[Control] = None
     style: Optional[ButtonStyle] = None
-    autofocus: bool = field(default=False)
+    autofocus: bool = False
     clip_behavior: Optional[ClipBehavior] = None
     url: Optional[str] = None
     url_target: Optional[UrlTarget] = None

@@ -2,11 +2,11 @@ from dataclasses import field
 from typing import Optional
 
 from flet.core.control import Control, control
+from flet.core.padding import OptionalPaddingValue
 from flet.core.types import (
-    ColorValue,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
-    PaddingValue,
 )
 
 __all__ = ["CupertinoBottomSheet"]
@@ -25,7 +25,7 @@ class CupertinoBottomSheet(Control):
     content: Optional[Control] = None
     open: bool = field(default=False)
     modal: bool = field(default=False)
-    bgcolor: Optional[ColorValue] = None
+    bgcolor: OptionalColorValue = None
     height: OptionalNumber = None
-    padding: Optional[PaddingValue] = None
+    padding: OptionalPaddingValue = None
     on_dismiss: OptionalControlEventCallable = None

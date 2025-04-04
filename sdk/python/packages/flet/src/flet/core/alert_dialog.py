@@ -5,14 +5,14 @@ from flet.core.adaptive_control import AdaptiveControl
 from flet.core.alignment import Alignment
 from flet.core.buttons import OutlinedBorder
 from flet.core.control import Control, control
+from flet.core.padding import OptionalPaddingValue
 from flet.core.text_style import TextStyle
 from flet.core.types import (
     ClipBehavior,
-    ColorValue,
     MainAxisAlignment,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
-    PaddingValue,
 )
 
 __all__ = ["AlertDialog"]
@@ -72,21 +72,21 @@ class AlertDialog(AdaptiveControl):
     title: Optional[Control] = None
     content: Optional[Control] = None
     actions: List[Control] = field(default_factory=list)
-    bgcolor: Optional[ColorValue] = None
+    bgcolor: OptionalColorValue = None
     elevation: OptionalNumber = None
     icon: Optional[Control] = None
     open: bool = False
-    title_padding: Optional[PaddingValue] = None
-    content_padding: Optional[PaddingValue] = None
-    actions_padding: Optional[PaddingValue] = None
+    title_padding: OptionalPaddingValue = None
+    content_padding: OptionalPaddingValue = None
+    actions_padding: OptionalPaddingValue = None
     actions_alignment: Optional[MainAxisAlignment] = None
     shape: Optional[OutlinedBorder] = None
-    inset_padding: Optional[PaddingValue] = None
-    icon_padding: Optional[PaddingValue] = None
-    action_button_padding: Optional[PaddingValue] = None
-    surface_tint_color: Optional[ColorValue] = None
-    shadow_color: Optional[ColorValue] = None
-    icon_color: Optional[ColorValue] = None
+    inset_padding: OptionalPaddingValue = None
+    icon_padding: OptionalPaddingValue = None
+    action_button_padding: OptionalPaddingValue = None
+    surface_tint_color: OptionalColorValue = None
+    shadow_color: OptionalColorValue = None
+    icon_color: OptionalColorValue = None
     scrollable: bool = False
     actions_overflow_button_spacing: OptionalNumber = None
     alignment: Optional[Alignment] = None
@@ -94,7 +94,7 @@ class AlertDialog(AdaptiveControl):
     title_text_style: Optional[TextStyle] = None
     clip_behavior: Optional[ClipBehavior] = None
     semantics_label: Optional[str] = None
-    barrier_color: Optional[ColorValue] = None
+    barrier_color: OptionalColorValue = None
     on_dismiss: OptionalControlEventCallable = None
 
     def before_update(self):

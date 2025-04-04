@@ -19,5 +19,5 @@ class CupertinoActionSheet(ConstrainedControl):
 
     title: Optional[Control] = None
     message: Optional[Control] = None
-    actions: Optional[List[Control]] = field(default_factory=list)
+    actions: List[Control] = field(default_factory=list)
     cancel: Optional[Control] = None

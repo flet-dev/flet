@@ -3,23 +3,23 @@ from typing import Any, Optional, Union
 
 from flet.core.animation import AnimationValue
 from flet.core.badge import BadgeValue
+from flet.core.border_radius import OptionalBorderRadiusValue
 from flet.core.box import BoxConstraints
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control
+from flet.core.padding import OptionalPaddingValue
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
 from flet.core.transform import OffsetValue, RotateValue, ScaleValue
 from flet.core.types import (
-    BorderRadiusValue,
     ColorEnums,
-    ColorValue,
     DurationValue,
     IconEnums,
     IconValueOrControl,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
-    PaddingValue,
     ResponsiveNumber,
     VerticalAlignment,
 )
@@ -46,22 +46,22 @@ class FormFieldControl(ConstrainedControl):
         label_style: Optional[TextStyle] = None,
         icon: Optional[IconValueOrControl] = None,
         border: Optional[InputBorder] = None,
-        color: Optional[ColorValue] = None,
-        bgcolor: Optional[ColorValue] = None,
-        border_radius: Optional[BorderRadiusValue] = None,
+        color: OptionalColorValue = None,
+        bgcolor: OptionalColorValue = None,
+        border_radius: OptionalBorderRadiusValue = None,
         border_width: OptionalNumber = None,
-        border_color: Optional[ColorValue] = None,
-        focused_color: Optional[ColorValue] = None,
-        focused_bgcolor: Optional[ColorValue] = None,
+        border_color: OptionalColorValue = None,
+        focused_color: OptionalColorValue = None,
+        focused_bgcolor: OptionalColorValue = None,
         focused_border_width: OptionalNumber = None,
-        focused_border_color: Optional[ColorValue] = None,
-        content_padding: Optional[PaddingValue] = None,
+        focused_border_color: OptionalColorValue = None,
+        content_padding: OptionalPaddingValue = None,
         dense: Optional[bool] = None,
         filled: Optional[bool] = None,
-        fill_color: Optional[ColorValue] = None,
-        focus_color: Optional[ColorValue] = None,
+        fill_color: OptionalColorValue = None,
+        focus_color: OptionalColorValue = None,
         align_label_with_hint: Optional[bool] = None,
-        hover_color: Optional[ColorValue] = None,
+        hover_color: OptionalColorValue = None,
         hint_text: Optional[str] = None,
         hint_style: Optional[TextStyle] = None,
         hint_fade_duration: Optional[DurationValue] = None,
@@ -314,11 +314,11 @@ class FormFieldControl(ConstrainedControl):
 
     # color
     @property
-    def color(self) -> Optional[ColorValue]:
+    def color(self) -> OptionalColorValue:
         return self.__color
 
     @color.setter
-    def color(self, value: Optional[ColorValue]):
+    def color(self, value: OptionalColorValue):
         self.__color = value
         self._set_enum_attr("color", value, ColorEnums)
 
@@ -423,21 +423,21 @@ class FormFieldControl(ConstrainedControl):
 
     # bgcolor
     @property
-    def bgcolor(self) -> Optional[ColorValue]:
+    def bgcolor(self) -> OptionalColorValue:
         return self.__bgcolor
 
     @bgcolor.setter
-    def bgcolor(self, value: Optional[ColorValue]):
+    def bgcolor(self, value: OptionalColorValue):
         self.__bgcolor = value
         self._set_enum_attr("bgcolor", value, ColorEnums)
 
     # border_radius
     @property
-    def border_radius(self) -> Optional[BorderRadiusValue]:
+    def border_radius(self) -> OptionalBorderRadiusValue:
         return self.__border_radius
 
     @border_radius.setter
-    def border_radius(self, value: Optional[BorderRadiusValue]):
+    def border_radius(self, value: OptionalBorderRadiusValue):
         self.__border_radius = value
 
     # border_width
@@ -451,11 +451,11 @@ class FormFieldControl(ConstrainedControl):
 
     # border_color
     @property
-    def border_color(self) -> Optional[ColorValue]:
+    def border_color(self) -> OptionalColorValue:
         return self.__border_color
 
     @border_color.setter
-    def border_color(self, value: Optional[ColorValue]):
+    def border_color(self, value: OptionalColorValue):
         self.__border_color = value
         self._set_enum_attr("borderColor", value, ColorEnums)
 
@@ -473,11 +473,11 @@ class FormFieldControl(ConstrainedControl):
 
     # focused_color
     @property
-    def focused_color(self) -> Optional[ColorValue]:
+    def focused_color(self) -> OptionalColorValue:
         return self.__focused_color
 
     @focused_color.setter
-    def focused_color(self, value: Optional[ColorValue]):
+    def focused_color(self, value: OptionalColorValue):
         self.__focused_color = value
         self._set_enum_attr("focusedColor", value, ColorEnums)
 
@@ -502,21 +502,21 @@ class FormFieldControl(ConstrainedControl):
 
     # focused_border_color
     @property
-    def focused_border_color(self) -> Optional[ColorValue]:
+    def focused_border_color(self) -> OptionalColorValue:
         return self.__focused_border_color
 
     @focused_border_color.setter
-    def focused_border_color(self, value: Optional[ColorValue]):
+    def focused_border_color(self, value: OptionalColorValue):
         self.__focused_border_color = value
         self._set_enum_attr("focusedBorderColor", value, ColorEnums)
 
     # content_padding
     @property
-    def content_padding(self) -> Optional[PaddingValue]:
+    def content_padding(self) -> OptionalPaddingValue:
         return self.__content_padding
 
     @content_padding.setter
-    def content_padding(self, value: Optional[PaddingValue]):
+    def content_padding(self, value: OptionalPaddingValue):
         self.__content_padding = value
 
     # dense
@@ -714,20 +714,20 @@ class FormFieldControl(ConstrainedControl):
 
     # fill_color
     @property
-    def fill_color(self) -> Optional[ColorValue]:
+    def fill_color(self) -> OptionalColorValue:
         return self.__fill_color
 
     @fill_color.setter
-    def fill_color(self, value: Optional[ColorValue]):
+    def fill_color(self, value: OptionalColorValue):
         self.__fill_color = value
         self._set_enum_attr("fillColor", value, ColorEnums)
 
     # hover_color
     @property
-    def hover_color(self) -> Optional[ColorValue]:
+    def hover_color(self) -> OptionalColorValue:
         return self.__hover_color
 
     @hover_color.setter
-    def hover_color(self, value: Optional[ColorValue]):
+    def hover_color(self, value: OptionalColorValue):
         self.__hover_color = value
         self._set_enum_attr("hoverColor", value, ColorEnums)

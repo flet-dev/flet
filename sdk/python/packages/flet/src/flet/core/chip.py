@@ -6,14 +6,15 @@ from flet.core.box import BoxConstraints
 from flet.core.buttons import OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
+from flet.core.padding import OptionalPaddingValue
 from flet.core.text_style import TextStyle
 from flet.core.types import (
     ClipBehavior,
     ColorValue,
     ControlStateValue,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
-    PaddingValue,
     VisualDensity,
 )
 
@@ -70,23 +71,23 @@ class Chip(ConstrainedControl):
     label: Control
     leading: Optional[Control] = None
     selected: Optional[bool] = False
-    selected_color: Optional[ColorValue] = None
+    selected_color: OptionalColorValue = None
     elevation: OptionalNumber = None
-    bgcolor: Optional[ColorValue] = None
+    bgcolor: OptionalColorValue = None
     show_checkmark: Optional[bool] = None
-    check_color: Optional[ColorValue] = None
-    shadow_color: Optional[ColorValue] = None
+    check_color: OptionalColorValue = None
+    shadow_color: OptionalColorValue = None
     shape: Optional[OutlinedBorder] = None
-    padding: Optional[PaddingValue] = None
+    padding: OptionalPaddingValue = None
     delete_icon: Optional[Control] = None
     delete_icon_tooltip: Optional[str] = None
-    delete_icon_color: Optional[ColorValue] = None
-    disabled_color: Optional[ColorValue] = None
-    label_padding: Optional[PaddingValue] = None
+    delete_icon_color: OptionalColorValue = None
+    disabled_color: OptionalColorValue = None
+    label_padding: OptionalPaddingValue = None
     label_style: Optional[TextStyle] = None
-    selected_shadow_color: Optional[ColorValue] = None
+    selected_shadow_color: OptionalColorValue = None
     autofocus: Optional[bool] = None
-    surface_tint_color: Optional[ColorValue] = None
+    surface_tint_color: OptionalColorValue = None
     color: ControlStateValue[ColorValue] = None
     click_elevation: OptionalNumber = None
     clip_behavior: Optional[ClipBehavior] = None

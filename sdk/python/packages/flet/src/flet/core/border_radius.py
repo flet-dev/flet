@@ -1,40 +1,50 @@
 import dataclasses
-from typing import Union
+from typing import Optional, Union
 
-__all__ = ["BorderRadius", "all", "horizontal", "vertical", "only"]
+__all__ = [
+    "BorderRadius",
+    "all",
+    "horizontal",
+    "vertical",
+    "only",
+    "BorderRadiusValue",
+    "OptionalBorderRadiusValue",
+]
+
+from flet.core.types import Number
 
 
 @dataclasses.dataclass
 class BorderRadius:
-    top_left: Union[float, int]
-    top_right: Union[float, int]
-    bottom_left: Union[float, int]
-    bottom_right: Union[float, int]
+    top_left: Number
+    top_right: Number
+    bottom_left: Number
+    bottom_right: Number
 
 
-def all(value: float) -> BorderRadius:
+def all(value: Number) -> BorderRadius:
     return BorderRadius(
         top_left=value, top_right=value, bottom_left=value, bottom_right=value
     )
 
 
-def horizontal(left: float = 0, right: float = 0) -> BorderRadius:
+def horizontal(left: Number = 0, right: Number = 0) -> BorderRadius:
     return BorderRadius(
         top_left=left, top_right=right, bottom_left=left, bottom_right=right
     )
 
 
-def vertical(top: float = 0, bottom: float = 0) -> BorderRadius:
+def vertical(top: Number = 0, bottom: Number = 0) -> BorderRadius:
     return BorderRadius(
         top_left=top, top_right=top, bottom_left=bottom, bottom_right=bottom
     )
 
 
 def only(
-    top_left: float = 0,
-    top_right: float = 0,
-    bottom_left: float = 0,
-    bottom_right: float = 0,
+    top_left: Number = 0,
+    top_right: Number = 0,
+    bottom_left: Number = 0,
+    bottom_right: Number = 0,
 ) -> BorderRadius:
     return BorderRadius(
         top_left=top_left,
@@ -42,3 +52,7 @@ def only(
         bottom_left=bottom_left,
         bottom_right=bottom_right,
     )
+
+
+BorderRadiusValue = Union[Number, BorderRadius]
+OptionalBorderRadiusValue = Optional[BorderRadiusValue]

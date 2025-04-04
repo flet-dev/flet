@@ -3,15 +3,15 @@ from typing import Optional
 
 from flet.core.alignment import Alignment
 from flet.core.border import BorderSide
+from flet.core.border_radius import OptionalBorderRadiusValue
+from flet.core.padding import PaddingValue
 from flet.core.text_style import TextStyle
 from flet.core.types import (
-    BorderRadiusValue,
     ColorValue,
     ControlState,
     ControlStateValue,
     MouseCursor,
     OptionalNumber,
-    PaddingValue,
     VisualDensity,
 )
 
@@ -39,7 +39,7 @@ class StadiumBorder(OutlinedBorder):
 
 @dataclass
 class RoundedRectangleBorder(OutlinedBorder):
-    radius: Optional[BorderRadiusValue] = None
+    radius: OptionalBorderRadiusValue = None
 
     def __post_init__(self):
         self.type = "roundedRectangle"
@@ -53,7 +53,7 @@ class CircleBorder(OutlinedBorder):
 
 @dataclass
 class BeveledRectangleBorder(OutlinedBorder):
-    radius: Optional[BorderRadiusValue] = None
+    radius: OptionalBorderRadiusValue = None
 
     def __post_init__(self):
         self.type = "beveledRectangle"
@@ -61,7 +61,7 @@ class BeveledRectangleBorder(OutlinedBorder):
 
 @dataclass
 class ContinuousRectangleBorder(OutlinedBorder):
-    radius: Optional[BorderRadiusValue] = None
+    radius: OptionalBorderRadiusValue = None
 
     def __post_init__(self):
         self.type = "continuousRectangle"

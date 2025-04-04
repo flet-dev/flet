@@ -2,18 +2,13 @@ from typing import Any, List, Optional
 
 from flet.core.badge import BadgeValue
 from flet.core.border import BorderSide
+from flet.core.border_radius import OptionalBorderRadiusValue
 from flet.core.charts.bar_chart_rod_stack_item import BarChartRodStackItem
 from flet.core.control import Control
 from flet.core.gradients import Gradient
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
-from flet.core.types import (
-    BorderRadiusValue,
-    ColorEnums,
-    ColorValue,
-    OptionalNumber,
-    TextAlign,
-)
+from flet.core.types import ColorEnums, OptionalColorValue, OptionalNumber, TextAlign
 
 
 class BarChartRod(Control):
@@ -23,13 +18,13 @@ class BarChartRod(Control):
         from_y: OptionalNumber = None,
         to_y: OptionalNumber = None,
         width: OptionalNumber = None,
-        color: Optional[ColorValue] = None,
+        color: OptionalColorValue = None,
         gradient: Optional[Gradient] = None,
-        border_radius: Optional[BorderRadiusValue] = None,
+        border_radius: OptionalBorderRadiusValue = None,
         border_side: Optional[BorderSide] = None,
         bg_from_y: OptionalNumber = None,
         bg_to_y: OptionalNumber = None,
-        bg_color: Optional[ColorValue] = None,
+        bg_color: OptionalColorValue = None,
         bg_gradient: Optional[Gradient] = None,
         selected: Optional[bool] = None,
         show_tooltip: Optional[bool] = None,
@@ -124,11 +119,11 @@ class BarChartRod(Control):
 
     # color
     @property
-    def color(self) -> Optional[ColorValue]:
+    def color(self) -> OptionalColorValue:
         return self.__color
 
     @color.setter
-    def color(self, value: Optional[ColorValue]):
+    def color(self, value: OptionalColorValue):
         self.__color = value
         self._set_enum_attr("color", value, ColorEnums)
 
@@ -143,11 +138,11 @@ class BarChartRod(Control):
 
     # border_radius
     @property
-    def border_radius(self) -> Optional[BorderRadiusValue]:
+    def border_radius(self) -> OptionalBorderRadiusValue:
         return self.__border_radius
 
     @border_radius.setter
-    def border_radius(self, value: Optional[BorderRadiusValue]):
+    def border_radius(self, value: OptionalBorderRadiusValue):
         self.__border_radius = value
 
     # gradient
@@ -179,11 +174,11 @@ class BarChartRod(Control):
 
     # bg_color
     @property
-    def bg_color(self) -> Optional[ColorValue]:
+    def bg_color(self) -> OptionalColorValue:
         return self.__bgcolor
 
     @bg_color.setter
-    def bg_color(self, value: Optional[ColorValue]):
+    def bg_color(self, value: OptionalColorValue):
         self.__bgcolor = value
         self._set_enum_attr("bgColor", value, ColorEnums)
 

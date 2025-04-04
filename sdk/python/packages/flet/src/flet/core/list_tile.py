@@ -6,14 +6,14 @@ from flet.core.adaptive_control import AdaptiveControl
 from flet.core.buttons import OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
+from flet.core.padding import OptionalPaddingValue
 from flet.core.text_style import TextStyle
 from flet.core.types import (
-    ColorValue,
     MouseCursor,
     Number,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
-    PaddingValue,
     UrlTarget,
     VisualDensity,
 )
@@ -78,29 +78,29 @@ class ListTile(ConstrainedControl, AdaptiveControl):
 
     title: Optional[Control] = None
     subtitle: Optional[Control] = None
-    is_three_line: bool = field(default=False)
+    is_three_line: bool = False
     leading: Optional[Control] = None
     trailing: Optional[Control] = None
-    content_padding: Optional[PaddingValue] = None
-    bgcolor: Optional[ColorValue] = None
+    content_padding: OptionalPaddingValue = None
+    bgcolor: OptionalColorValue = None
     bgcolor_activated: Optional[str] = None
-    hover_color: Optional[ColorValue] = None
-    selected: bool = field(default=False)
-    dense: bool = field(default=False)
-    autofocus: bool = field(default=False)
-    toggle_inputs: bool = field(default=False)
-    selected_color: Optional[ColorValue] = None
-    selected_tile_color: Optional[ColorValue] = None
+    hover_color: OptionalColorValue = None
+    selected: bool = False
+    dense: bool = False
+    autofocus: bool = False
+    toggle_inputs: bool = False
+    selected_color: OptionalColorValue = None
+    selected_tile_color: OptionalColorValue = None
     style: Optional[ListTileStyle] = None
     enable_feedback: bool = field(default=True)
-    horizontal_spacing: Number = field(default=16.0)
-    min_leading_width: Number = field(default=40.0)
-    min_vertical_padding: Number = field(default=4.0)
+    horizontal_spacing: Number = 16.0
+    min_leading_width: Number = 40.0
+    min_vertical_padding: Number = 4.0
     url: Optional[str] = None
     url_target: Optional[UrlTarget] = None
     title_alignment: Optional[ListTileTitleAlignment] = None
-    icon_color: Optional[ColorValue] = None
-    text_color: Optional[ColorValue] = None
+    icon_color: OptionalColorValue = None
+    text_color: OptionalColorValue = None
     shape: Optional[OutlinedBorder] = None
     visual_density: Optional[VisualDensity] = None
     mouse_cursor: Optional[MouseCursor] = None

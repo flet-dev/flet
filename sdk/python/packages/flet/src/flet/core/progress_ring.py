@@ -1,9 +1,8 @@
-from dataclasses import field
 from typing import Optional
 
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import control
-from flet.core.types import ColorValue, Number, OptionalNumber, StrokeCap
+from flet.core.types import Number, OptionalColorValue, OptionalNumber, StrokeCap
 
 __all__ = ["ProgressRing"]
 
@@ -48,10 +47,10 @@ class ProgressRing(ConstrainedControl):
     """
 
     value: OptionalNumber = None
-    stroke_width: Number = field(default=4.0)
-    color: Optional[ColorValue] = None
-    bgcolor: Optional[ColorValue] = None
-    stroke_align: Number = field(default=0.0)
+    stroke_width: Number = 4.0
+    color: OptionalColorValue = None
+    bgcolor: OptionalColorValue = None
+    stroke_align: Number = 0.0
     stroke_cap: Optional[StrokeCap] = None
     semantics_label: Optional[str] = None
     semantics_value: OptionalNumber = None

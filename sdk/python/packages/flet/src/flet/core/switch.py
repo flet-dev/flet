@@ -1,4 +1,3 @@
-from dataclasses import field
 from typing import Optional
 
 from flet.core.adaptive_control import AdaptiveControl
@@ -12,6 +11,7 @@ from flet.core.types import (
     LabelPosition,
     MouseCursor,
     OnFocusEvent,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,
@@ -58,18 +58,18 @@ class Switch(ConstrainedControl, AdaptiveControl):
     label: Optional[str] = None
     label_position: Optional[LabelPosition] = None
     label_style: Optional[TextStyle] = None
-    value: bool = field(default=False)
-    autofocus: bool = field(default=False)
-    active_color: Optional[ColorValue] = None
-    active_track_color: Optional[ColorValue] = None
-    focus_color: Optional[ColorValue] = None
-    inactive_thumb_color: Optional[ColorValue] = None
-    inactive_track_color: Optional[ColorValue] = None
+    value: bool = False
+    autofocus: bool = False
+    active_color: OptionalColorValue = None
+    active_track_color: OptionalColorValue = None
+    focus_color: OptionalColorValue = None
+    inactive_thumb_color: OptionalColorValue = None
+    inactive_track_color: OptionalColorValue = None
     thumb_color: ControlStateValue[ColorValue] = None
     thumb_icon: ControlStateValue[IconValue] = None
     track_color: ControlStateValue[ColorValue] = None
     adaptive: Optional[bool] = None
-    hover_color: Optional[ColorValue] = None
+    hover_color: OptionalColorValue = None
     splash_radius: OptionalNumber = None
     overlay_color: ControlStateValue[ColorValue] = None
     track_outline_color: ControlStateValue[ColorValue] = None

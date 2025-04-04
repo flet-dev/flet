@@ -7,7 +7,7 @@ from flet.core.charts.line_chart_data_point import LineChartDataPoint
 from flet.core.control import Control
 from flet.core.gradients import Gradient
 from flet.core.ref import Ref
-from flet.core.types import ColorEnums, ColorValue, OptionalNumber
+from flet.core.types import ColorEnums, OptionalColorValue, OptionalNumber
 
 
 class LineChartData(Control):
@@ -15,7 +15,7 @@ class LineChartData(Control):
         self,
         data_points: Optional[List[LineChartDataPoint]] = None,
         curved: Optional[bool] = None,
-        color: Optional[ColorValue] = None,
+        color: OptionalColorValue = None,
         gradient: Optional[Gradient] = None,
         stroke_width: OptionalNumber = None,
         stroke_cap_round: Optional[bool] = None,
@@ -23,11 +23,11 @@ class LineChartData(Control):
         prevent_curve_over_shooting_threshold: OptionalNumber = None,
         dash_pattern: Optional[List[int]] = None,
         shadow: Optional[BoxShadow] = None,
-        above_line_bgcolor: Optional[ColorValue] = None,
+        above_line_bgcolor: OptionalColorValue = None,
         above_line_gradient: Optional[Gradient] = None,
         above_line_cutoff_y: OptionalNumber = None,
         above_line: Optional[ChartPointLine] = None,
-        below_line_bgcolor: Optional[ColorValue] = None,
+        below_line_bgcolor: OptionalColorValue = None,
         below_line_gradient: Optional[Gradient] = None,
         below_line_cutoff_y: OptionalNumber = None,
         below_line: Optional[ChartPointLine] = None,
@@ -123,11 +123,11 @@ class LineChartData(Control):
 
     # color
     @property
-    def color(self) -> Optional[ColorValue]:
+    def color(self) -> OptionalColorValue:
         return self.__color
 
     @color.setter
-    def color(self, value: Optional[ColorValue]):
+    def color(self, value: OptionalColorValue):
         self.__color = value
         self._set_enum_attr("color", value, ColorEnums)
 

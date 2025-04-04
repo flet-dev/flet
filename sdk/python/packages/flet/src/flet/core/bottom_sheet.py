@@ -6,7 +6,7 @@ from flet.core.buttons import OutlinedBorder
 from flet.core.control import Control, control
 from flet.core.types import (
     ClipBehavior,
-    ColorValue,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
 )
@@ -54,7 +54,7 @@ class BottomSheet(Control):
     content: Control
     open: bool = False
     elevation: OptionalNumber = None
-    bgcolor: Optional[ColorValue] = None
+    bgcolor: OptionalColorValue = None
     dismissible: Optional[bool] = None
     enable_drag: Optional[bool] = None
     show_drag_handle: Optional[bool] = None

@@ -1,4 +1,3 @@
-from dataclasses import field
 from typing import Optional
 
 from flet.core.constrained_control import ConstrainedControl
@@ -7,10 +6,10 @@ from flet.core.types import (
     ControlStateValue,
     IconValue,
     LabelPosition,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
 )
-from flet.utils.deprecated import deprecated_warning
 
 __all__ = ["CupertinoSwitch"]
 
@@ -42,18 +41,18 @@ class CupertinoSwitch(ConstrainedControl):
     """
 
     label: Optional[str] = None
-    value: bool = field(default=False)
-    label_position: LabelPosition = field(default=LabelPosition.RIGHT)
-    thumb_color: Optional[ColorValue] = None
-    focus_color: Optional[ColorValue] = None
-    autofocus: bool = field(default=False)
-    on_label_color: Optional[ColorValue] = None
-    off_label_color: Optional[ColorValue] = None
+    value: bool = False
+    label_position: LabelPosition = LabelPosition.RIGHT
+    thumb_color: OptionalColorValue = None
+    focus_color: OptionalColorValue = None
+    autofocus: bool = False
+    on_label_color: OptionalColorValue = None
+    off_label_color: OptionalColorValue = None
     active_thumb_image: Optional[str] = None
     inactive_thumb_image: Optional[str] = None
-    active_track_color: Optional[ColorValue] = None
-    inactive_thumb_color: Optional[ColorValue] = None
-    inactive_track_color: Optional[ColorValue] = None
+    active_track_color: OptionalColorValue = None
+    inactive_thumb_color: OptionalColorValue = None
+    inactive_track_color: OptionalColorValue = None
     track_outline_color: ControlStateValue[ColorValue] = None
     track_outline_width: ControlStateValue[OptionalNumber] = None
     thumb_icon: ControlStateValue[IconValue] = None

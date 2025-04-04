@@ -6,6 +6,7 @@ from flet.core.alignment import Alignment
 from flet.core.animation import AnimationValue
 from flet.core.blur import BlurValue
 from flet.core.border import Border
+from flet.core.border_radius import OptionalBorderRadiusValue
 from flet.core.box import (
     BoxDecoration,
     BoxShape,
@@ -17,16 +18,16 @@ from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
 from flet.core.control_event import ControlEvent
 from flet.core.gradients import Gradient
+from flet.core.margin import OptionalMarginValue
+from flet.core.padding import OptionalPaddingValue
 from flet.core.theme import Theme
 from flet.core.types import (
     BlendMode,
-    BorderRadiusValue,
     ClipBehavior,
-    ColorValue,
-    MarginValue,
+    Number,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
-    PaddingValue,
     ThemeMode,
     UrlTarget,
 )
@@ -36,10 +37,10 @@ __all__ = ["Container", "ContainerTapEvent"]
 
 @dataclass
 class ContainerTapEvent(ControlEvent):
-    local_x: float = field(metadata={"data_field": "lx"})
-    local_y: float = field(metadata={"data_field": "ly"})
-    global_x: float = field(metadata={"data_field": "gx"})
-    global_y: float = field(metadata={"data_field": "gy"})
+    local_x: Number = field(metadata={"data_field": "lx"})
+    local_y: Number = field(metadata={"data_field": "ly"})
+    global_x: Number = field(metadata={"data_field": "gx"})
+    global_y: Number = field(metadata={"data_field": "gy"})
 
 
 @control("Container")
@@ -71,19 +72,19 @@ class Container(ConstrainedControl, AdaptiveControl):
     """
 
     content: Optional[Control] = None
-    padding: Optional[PaddingValue] = None
-    margin: Optional[MarginValue] = None
+    padding: OptionalPaddingValue = None
+    margin: OptionalMarginValue = None
     alignment: Optional[Alignment] = None
-    bgcolor: Optional[ColorValue] = None
+    bgcolor: OptionalColorValue = None
     gradient: Optional[Gradient] = None
     blend_mode: Optional[BlendMode] = None
     border: Optional[Border] = None
-    border_radius: Optional[BorderRadiusValue] = None
+    border_radius: OptionalBorderRadiusValue = None
     shape: Optional[BoxShape] = None
     clip_behavior: Optional[ClipBehavior] = None
     ink: Optional[bool] = None
     image: Optional[DecorationImage] = None
-    ink_color: Optional[ColorValue] = None
+    ink_color: OptionalColorValue = None
     animate: Optional[AnimationValue] = None
     blur: Optional[BlurValue] = None
     shadow: Optional[ShadowValue] = None

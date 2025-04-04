@@ -7,9 +7,9 @@ from flet.core.control import Control, control
 from flet.core.control_event import ControlEvent
 from flet.core.textfield import KeyboardType
 from flet.core.types import (
-    ColorValue,
     DateTimeValue,
     IconValue,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
 )
@@ -87,14 +87,12 @@ class DatePicker(Control):
 
     open: bool = False
     value: Optional[DateTimeValue] = None
-    first_date: DateTimeValue = field(default=datetime(year=1900, month=1, day=1))
-    last_date: DateTimeValue = field(default=datetime(year=2050, month=1, day=1))
-    current_date: DateTimeValue = field(default=datetime.now())
-    keyboard_type: Optional[KeyboardType] = field(default=KeyboardType.DATETIME)
-    date_picker_mode: Optional[DatePickerMode] = field(default=DatePickerMode.DAY)
-    date_picker_entry_mode: Optional[DatePickerEntryMode] = field(
-        default=DatePickerEntryMode.CALENDAR
-    )
+    first_date: DateTimeValue = datetime(year=1900, month=1, day=1)
+    last_date: DateTimeValue = datetime(year=2050, month=1, day=1)
+    current_date: DateTimeValue = field(default_factory=lambda: datetime.now())
+    keyboard_type: KeyboardType = KeyboardType.DATETIME
+    date_picker_mode: DatePickerMode = DatePickerMode.DAY
+    date_picker_entry_mode: DatePickerEntryMode = DatePickerEntryMode.CALENDAR
     help_text: Optional[str] = None
     cancel_text: Optional[str] = None
     confirm_text: Optional[str] = None
@@ -104,7 +102,7 @@ class DatePicker(Control):
     field_label_text: Optional[str] = None
     switch_to_calendar_icon: Optional[IconValue] = None
     switch_to_input_icon: Optional[IconValue] = None
-    barrier_color: Optional[ColorValue] = None
+    barrier_color: OptionalColorValue = None
     on_change: OptionalControlEventCallable = None
     on_dismiss: OptionalControlEventCallable = None
-    on_entry_mode_change: OptionalEventCallable["DatePickerEntryModeChangeEvent"] = None
+    on_entry_mode_change: OptionalEventCallable[DatePickerEntryModeChangeEvent] = None

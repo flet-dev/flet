@@ -1,4 +1,3 @@
-from dataclasses import field
 from enum import Enum
 from typing import List, Optional
 
@@ -7,13 +6,13 @@ from flet.core.alignment import Alignment
 from flet.core.buttons import OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
+from flet.core.padding import OptionalPaddingValue
 from flet.core.types import (
     ClipBehavior,
-    ColorValue,
     CrossAxisAlignment,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
-    PaddingValue,
     VisualDensity,
 )
 
@@ -41,27 +40,25 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     subtitle: Optional[Control] = None
     leading: Optional[Control] = None
     trailing: Optional[Control] = None
-    controls_padding: Optional[PaddingValue] = None
-    tile_padding: Optional[PaddingValue] = None
+    controls_padding: OptionalPaddingValue = None
+    tile_padding: OptionalPaddingValue = None
     affinity: Optional[TileAffinity] = None
     expanded_alignment: Optional[Alignment] = None
-    expanded_cross_axis_alignment: CrossAxisAlignment = field(
-        default_factory=lambda: CrossAxisAlignment.CENTER
-    )
+    expanded_cross_axis_alignment: CrossAxisAlignment = CrossAxisAlignment.CENTER
     clip_behavior: Optional[ClipBehavior] = None
-    initially_expanded: Optional[bool] = False
-    maintain_state: Optional[bool] = False
-    text_color: Optional[ColorValue] = None
-    icon_color: Optional[ColorValue] = None
+    initially_expanded: bool = False
+    maintain_state: bool = False
+    text_color: OptionalColorValue = None
+    icon_color: OptionalColorValue = None
     shape: Optional[OutlinedBorder] = None
-    bgcolor: Optional[ColorValue] = None
-    collapsed_bgcolor: Optional[ColorValue] = None
-    collapsed_icon_color: Optional[ColorValue] = None
-    collapsed_text_color: Optional[ColorValue] = None
+    bgcolor: OptionalColorValue = None
+    collapsed_bgcolor: OptionalColorValue = None
+    collapsed_icon_color: OptionalColorValue = None
+    collapsed_text_color: OptionalColorValue = None
     collapsed_shape: Optional[OutlinedBorder] = None
-    dense: Optional[bool] = None
-    enable_feedback: Optional[bool] = True
-    show_trailing_icon: Optional[bool] = True
+    dense: bool = None
+    enable_feedback: bool = True
+    show_trailing_icon: bool = True
     min_tile_height: OptionalNumber = None
     visual_density: Optional[VisualDensity] = None
     on_change: OptionalControlEventCallable = None

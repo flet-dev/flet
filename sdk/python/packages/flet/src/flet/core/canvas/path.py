@@ -3,7 +3,6 @@ from typing import Any, List, Optional
 
 from flet.core.canvas.shape import Shape
 from flet.core.painting import Paint
-from flet.core.types import BorderRadiusValue
 
 
 class Path(Shape):
@@ -83,7 +82,7 @@ class Path(Shape):
         y: float
         width: float
         height: float
-        border_radius: Optional[BorderRadiusValue] = None
+        border_radius: OptionalBorderRadiusValue = None
         type: str = dataclasses.field(default="rect")
 
     @dataclasses.dataclass

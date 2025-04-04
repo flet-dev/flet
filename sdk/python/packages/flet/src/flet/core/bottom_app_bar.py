@@ -2,13 +2,8 @@ from typing import Optional
 
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
-from flet.core.types import (
-    ClipBehavior,
-    ColorValue,
-    NotchShape,
-    OptionalNumber,
-    PaddingValue,
-)
+from flet.core.padding import OptionalPaddingValue
+from flet.core.types import ClipBehavior, NotchShape, OptionalColorValue, OptionalNumber
 
 __all__ = ["BottomAppBar"]
 
@@ -24,10 +19,10 @@ class BottomAppBar(ConstrainedControl):
     """
 
     content: Optional[Control] = None
-    surface_tint_color: Optional[ColorValue] = None
-    bgcolor: Optional[ColorValue] = None
-    shadow_color: Optional[ColorValue] = None
-    padding: Optional[PaddingValue] = None
+    surface_tint_color: OptionalColorValue = None
+    bgcolor: OptionalColorValue = None
+    shadow_color: OptionalColorValue = None
+    padding: OptionalPaddingValue = None
     clip_behavior: Optional[ClipBehavior] = None
     shape: Optional[NotchShape] = None
     notch_margin: OptionalNumber = None

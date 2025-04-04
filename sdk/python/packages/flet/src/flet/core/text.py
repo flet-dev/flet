@@ -1,6 +1,6 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import control
@@ -8,8 +8,8 @@ from flet.core.control_event import ControlEvent
 from flet.core.text_span import TextSpan
 from flet.core.text_style import TextOverflow, TextStyle, TextThemeStyle
 from flet.core.types import (
-    ColorValue,
     FontWeight,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,
@@ -93,26 +93,26 @@ class Text(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/text
     """
 
-    value: str = field(default="")
+    value: str = ""
     spans: Optional[List[TextSpan]] = None
     text_align: Optional[TextAlign] = None
     font_family: Optional[str] = None
     size: OptionalNumber = None
     weight: Optional[FontWeight] = None
     italic: Optional[bool] = None
-    style: Union[TextThemeStyle, TextStyle, None] = None
+    style: Optional[TextStyle] = None
     theme_style: Optional[TextThemeStyle] = None
     max_lines: Optional[int] = None
     overflow: Optional[TextOverflow] = None
     selectable: Optional[bool] = None
     no_wrap: Optional[bool] = None
-    color: Optional[ColorValue] = None
-    bgcolor: Optional[ColorValue] = None
+    color: OptionalColorValue = None
+    bgcolor: OptionalColorValue = None
     semantics_label: Optional[str] = None
     show_selection_cursor: Optional[bool] = None
     enable_interactive_selection: Optional[bool] = None
     selection_cursor_width: OptionalNumber = None
     selection_cursor_height: OptionalNumber = None
-    selection_cursor_color: Optional[ColorValue] = None
+    selection_cursor_color: OptionalColorValue = None
     on_tap: OptionalControlEventCallable = None
     on_selection_change: OptionalEventCallable[TextSelectionChangeEvent] = None

@@ -3,13 +3,13 @@ from typing import List, Optional
 from flet.core.alignment import Alignment
 from flet.core.control import Control, control
 from flet.core.form_field_control import FormFieldControl
+from flet.core.padding import OptionalPaddingValue
 from flet.core.text_style import TextStyle
 from flet.core.types import (
-    ColorValue,
     IconValueOrControl,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
-    PaddingValue,
 )
 
 __all__ = ["DropdownM2", "Option"]
@@ -76,9 +76,9 @@ class DropdownM2(FormFieldControl):
     max_menu_height: OptionalNumber = None
     select_icon_size: OptionalNumber = None
     enable_feedback: Optional[bool] = None
-    padding: Optional[PaddingValue] = None
-    select_icon_enabled_color: Optional[ColorValue] = None
-    select_icon_disabled_color: Optional[ColorValue] = None
+    padding: OptionalPaddingValue = None
+    select_icon_enabled_color: OptionalColorValue = None
+    select_icon_disabled_color: OptionalColorValue = None
     options_fill_horizontally: Optional[bool] = None
     disabled_hint_content: Optional[Control] = None
     on_change: OptionalControlEventCallable = None

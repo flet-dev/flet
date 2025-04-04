@@ -4,12 +4,12 @@ from typing import List, Optional
 
 from flet.core.buttons import OutlinedBorder
 from flet.core.control import Control, control
+from flet.core.padding import OptionalPaddingValue
 from flet.core.types import (
-    ColorValue,
     IconValueOrControl,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
-    PaddingValue,
 )
 
 __all__ = [
@@ -26,7 +26,7 @@ class NavigationDrawerDestination(Control):
     label: Optional[str] = None
     icon: Optional[IconValueOrControl] = None
     selected_icon: Optional[IconValueOrControl] = None
-    bgcolor: Optional[ColorValue] = None
+    bgcolor: OptionalColorValue = None
 
 
 class NavigationDrawerPosition(Enum):
@@ -93,15 +93,15 @@ class NavigationDrawer(Control):
     """
 
     controls: List[Control] = field(default_factory=list)
-    open: bool = field(default=False)
-    selected_index: int = field(default=0)
-    bgcolor: Optional[ColorValue] = None
+    open: bool = False
+    selected_index: int = 0
+    bgcolor: OptionalColorValue = None
     elevation: OptionalNumber = None
-    indicator_color: Optional[ColorValue] = None
+    indicator_color: OptionalColorValue = None
     indicator_shape: Optional[OutlinedBorder] = None
-    shadow_color: Optional[ColorValue] = None
-    surface_tint_color: Optional[ColorValue] = None
-    tile_padding: Optional[PaddingValue] = None
-    position: NavigationDrawerPosition = field(default=NavigationDrawerPosition.START)
+    shadow_color: OptionalColorValue = None
+    surface_tint_color: OptionalColorValue = None
+    tile_padding: OptionalPaddingValue = None
+    position: NavigationDrawerPosition = NavigationDrawerPosition.START
     on_change: OptionalControlEventCallable = None
     on_dismiss: OptionalControlEventCallable = None

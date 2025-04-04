@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from flet.core.canvas.shape import Shape
 from flet.core.painting import Paint
-from flet.core.types import BorderRadiusValue, OptionalNumber
+from flet.core.types import OptionalNumber
 
 
 class Rect(Shape):
@@ -12,7 +12,7 @@ class Rect(Shape):
         y: OptionalNumber = None,
         width: OptionalNumber = None,
         height: OptionalNumber = None,
-        border_radius: Optional[BorderRadiusValue] = None,
+        border_radius: OptionalBorderRadiusValue = None,
         paint: Optional[Paint] = None,
         # base
         ref=None,
@@ -75,11 +75,11 @@ class Rect(Shape):
 
     # border_radius
     @property
-    def border_radius(self) -> Optional[BorderRadiusValue]:
+    def border_radius(self) -> OptionalBorderRadiusValue:
         return self.__border_radius
 
     @border_radius.setter
-    def border_radius(self, value: Optional[BorderRadiusValue]):
+    def border_radius(self, value: OptionalBorderRadiusValue):
         self.__border_radius = value
 
     # paint

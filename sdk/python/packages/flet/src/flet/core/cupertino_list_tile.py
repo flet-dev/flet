@@ -1,13 +1,12 @@
-from dataclasses import field
 from typing import Optional
 
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
+from flet.core.padding import OptionalPaddingValue
 from flet.core.types import (
-    ColorValue,
     Number,
+    OptionalColorValue,
     OptionalControlEventCallable,
-    PaddingValue,
     UrlTarget,
 )
 
@@ -55,14 +54,14 @@ class CupertinoListTile(ConstrainedControl):
     subtitle: Optional[Control] = None
     leading: Optional[Control] = None
     trailing: Optional[Control] = None
-    bgcolor: Optional[ColorValue] = None
+    bgcolor: OptionalColorValue = None
     bgcolor_activated: Optional[str] = None
-    padding: Optional[PaddingValue] = None
+    padding: OptionalPaddingValue = None
     url: Optional[str] = None
     url_target: Optional[UrlTarget] = None
-    toggle_inputs: bool = field(default=False)
+    toggle_inputs: bool = False
     additional_info: Optional[Control] = None
-    leading_size: Number = field(default=30.0)
-    leading_to_title: Number = field(default=12.0)
-    notched: bool = field(default=False)
+    leading_size: Number = 30.0
+    leading_to_title: Number = 12.0
+    notched: bool = False
     on_click: OptionalControlEventCallable = None

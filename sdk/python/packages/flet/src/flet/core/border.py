@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, Union
 
-from flet.core.types import ColorValue, OptionalNumber
+from flet.core.types import OptionalColorValue, OptionalNumber
 
 __all__ = ["Border", "BorderSide", "BorderSideStrokeAlign", "all", "symmetric", "only"]
 
@@ -16,7 +16,7 @@ class BorderSideStrokeAlign(float, Enum):
 @dataclass
 class BorderSide:
     width: OptionalNumber
-    color: Optional[ColorValue] = None
+    color: OptionalColorValue = None
     stroke_align: Union[BorderSideStrokeAlign, OptionalNumber] = None
 
 
@@ -28,7 +28,7 @@ class Border:
     left: Optional[BorderSide] = None
 
 
-def all(width: Optional[float] = None, color: Optional[ColorValue] = None) -> Border:
+def all(width: OptionalNumber = None, color: OptionalColorValue = None) -> Border:
     bs = BorderSide(width, color)
     return Border(left=bs, top=bs, right=bs, bottom=bs)
 

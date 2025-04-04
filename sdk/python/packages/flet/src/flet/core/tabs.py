@@ -3,21 +3,22 @@ from typing import List, Optional
 
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.border import BorderSide
+from flet.core.border_radius import OptionalBorderRadiusValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
 from flet.core.form_field_control import IconValueOrControl
+from flet.core.margin import OptionalMarginValue
+from flet.core.padding import OptionalPaddingValue
 from flet.core.text_style import TextStyle
 from flet.core.types import (
-    BorderRadiusValue,
     ClipBehavior,
     ColorValue,
     ControlStateValue,
-    MarginValue,
     MouseCursor,
     Number,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
-    PaddingValue,
     TabAlignment,
 )
 
@@ -31,7 +32,7 @@ class Tab(AdaptiveControl):
     tab_content: Optional[Control] = None
     icon: Optional[IconValueOrControl] = None
     height: OptionalNumber = None
-    icon_margin: Optional[MarginValue] = None
+    icon_margin: OptionalMarginValue = None
 
 
 @control("Tabs")
@@ -82,29 +83,29 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     """
 
     tabs: List[Tab] = field(default_factory=list)
-    selected_index: int = field(default=0)
-    scrollable: bool = field(default=True)
+    selected_index: int = 0
+    scrollable: bool = True
     tab_alignment: Optional[TabAlignment] = None
     animation_duration: Optional[int] = None
-    divider_color: Optional[ColorValue] = None
-    indicator_color: Optional[ColorValue] = None
-    indicator_border_radius: Optional[BorderRadiusValue] = None
+    divider_color: OptionalColorValue = None
+    indicator_color: OptionalColorValue = None
+    indicator_border_radius: OptionalBorderRadiusValue = None
     indicator_border_side: Optional[BorderSide] = None
-    indicator_padding: Optional[PaddingValue] = None
+    indicator_padding: OptionalPaddingValue = None
     indicator_tab_size: Optional[bool] = None
     is_secondary: Optional[bool] = None
-    label_color: bool = field(default=False)
-    label_padding: Optional[PaddingValue] = None
+    label_color: bool = False
+    label_padding: OptionalPaddingValue = None
     label_text_style: Optional[TextStyle] = None
-    unselected_label_color: Optional[ColorValue] = None
+    unselected_label_color: OptionalColorValue = None
     unselected_label_text_style: Optional[TextStyle] = None
     overlay_color: ControlStateValue[ColorValue] = None
-    divider_height: Number = field(default=1.0)
-    indicator_thickness: Number = field(default=2.0)
+    divider_height: Number = 1.0
+    indicator_thickness: Number = 2.0
     enable_feedback: Optional[str] = None
     mouse_cursor: Optional[MouseCursor] = None
-    padding: Optional[PaddingValue] = None
-    splash_border_radius: Optional[BorderRadiusValue] = None
+    padding: OptionalPaddingValue = None
+    splash_border_radius: OptionalBorderRadiusValue = None
     clip_behavior: Optional[ClipBehavior] = None
     on_click: OptionalControlEventCallable = None
     on_change: OptionalControlEventCallable = None

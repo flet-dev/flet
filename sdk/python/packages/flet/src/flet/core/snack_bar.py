@@ -1,17 +1,16 @@
-from dataclasses import field
 from enum import Enum
 from typing import Optional
 
 from flet.core.buttons import OutlinedBorder
 from flet.core.control import Control, control
+from flet.core.margin import OptionalMarginValue
+from flet.core.padding import OptionalPaddingValue
 from flet.core.types import (
     ClipBehavior,
-    ColorValue,
-    MarginValue,
     Number,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
-    PaddingValue,
 )
 
 __all__ = ["SnackBar", "SnackBarBehavior", "DismissDirection"]
@@ -72,22 +71,22 @@ class SnackBar(Control):
     """
 
     content: Control
-    open: bool = field(default=False)
+    open: bool = False
     behavior: Optional[SnackBarBehavior] = None
     dismiss_direction: Optional[DismissDirection] = None
-    show_close_icon: bool = field(default=False)
+    show_close_icon: bool = False
     action: Optional[str] = None
-    action_color: Optional[ColorValue] = None
-    close_icon_color: Optional[ColorValue] = None
-    bgcolor: Optional[ColorValue] = None
+    action_color: OptionalColorValue = None
+    close_icon_color: OptionalColorValue = None
+    bgcolor: OptionalColorValue = None
     duration: Optional[int] = None
-    margin: Optional[MarginValue] = None
-    padding: Optional[PaddingValue] = None
+    margin: OptionalMarginValue = None
+    padding: OptionalPaddingValue = None
     width: OptionalNumber = None
     elevation: OptionalNumber = None
     shape: Optional[OutlinedBorder] = None
     clip_behavior: Optional[ClipBehavior] = None
-    action_overflow_threshold: Number = field(default=0.25)
+    action_overflow_threshold: Number = 0.25
     on_action: OptionalControlEventCallable = None
     on_visible: OptionalControlEventCallable = None
 

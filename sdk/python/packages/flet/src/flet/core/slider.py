@@ -1,4 +1,3 @@
-from dataclasses import field
 from enum import Enum
 from typing import Optional
 
@@ -10,6 +9,7 @@ from flet.core.types import (
     ControlStateValue,
     MouseCursor,
     Number,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
 )
@@ -50,18 +50,18 @@ class Slider(ConstrainedControl, AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/slider
     """
 
-    value: Number = field(default=0.0)
+    value: Number = 0.0
     label: Optional[str] = None
-    min: Number = field(default=0.0)
-    max: Number = field(default=1.0)
+    min: Number = 0.0
+    max: Number = 1.0
     divisions: Optional[int] = None
-    round: int = field(default=0)
-    autofocus: bool = field(default=False)
-    active_color: Optional[ColorValue] = None
-    inactive_color: Optional[ColorValue] = None
-    thumb_color: Optional[ColorValue] = None
+    round: int = 0
+    autofocus: bool = False
+    active_color: OptionalColorValue = None
+    inactive_color: OptionalColorValue = None
+    thumb_color: OptionalColorValue = None
     interaction: Optional[SliderInteraction] = None
-    secondary_active_color: Optional[ColorValue] = None
+    secondary_active_color: OptionalColorValue = None
     overlay_color: ControlStateValue[ColorValue] = None
     secondary_track_value: OptionalNumber = None
     mouse_cursor: Optional[MouseCursor] = None

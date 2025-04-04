@@ -11,7 +11,7 @@ from flet.core.floating_action_button import FloatingActionButton
 from flet.core.navigation_bar import NavigationBar
 from flet.core.navigation_drawer import NavigationDrawer
 from flet.core.transform import OffsetValue
-from flet.core.types import ColorValue, FloatingActionButtonLocation
+from flet.core.types import FloatingActionButtonLocation, OptionalColorValue
 
 # todo: deprecate show_* in favor of a open/close methods, or page.open/close
 __all__ = ["Pagelet"]
@@ -57,7 +57,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     floating_action_button_location: Optional[
         Union[FloatingActionButtonLocation, OffsetValue]
     ] = None
-    bgcolor: Optional[ColorValue] = None
+    bgcolor: OptionalColorValue = None
 
     def before_update(self):
         super().before_update()

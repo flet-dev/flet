@@ -1,4 +1,3 @@
-import warnings
 from typing import Optional
 
 from flet.core.buttons import OutlinedBorder
@@ -6,9 +5,9 @@ from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import control
 from flet.core.types import (
     ClipBehavior,
-    ColorValue,
     IconValueOrControl,
     MouseCursor,
+    OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
     StrOrControl,
@@ -16,6 +15,8 @@ from flet.core.types import (
 )
 
 __all__ = ["FloatingActionButton"]
+
+from flet.utils import deprecated_warning
 
 
 @control("FloatingActionButton")
@@ -70,29 +71,30 @@ class FloatingActionButton(ConstrainedControl):
 
     def __setattr__(self, name, value):
         if name == "text":
-            warnings.warn(
-                "'text' is deprecated since version 0.70.0 and will be removed in 0.70.3. Use 'content' instead.",
-                DeprecationWarning,
-                stacklevel=2,
+            deprecated_warning(
+                name="text",
+                reason="Use 'content' instead.",
+                version="0.70.0",
+                delete_version="0.70.3",
             )
         super().__setattr__(name, value)
 
     text: Optional[str] = None  # deprecated
     icon: Optional[IconValueOrControl] = None
-    bgcolor: Optional[ColorValue] = None
+    bgcolor: OptionalColorValue = None
     content: Optional[StrOrControl] = None
     shape: Optional[OutlinedBorder] = None
-    autofocus: Optional[bool] = False
-    mini: Optional[bool] = False
-    foreground_color: Optional[ColorValue] = None
-    focus_color: Optional[ColorValue] = None
+    autofocus: bool = False
+    mini: bool = False
+    foreground_color: OptionalColorValue = None
+    focus_color: OptionalColorValue = None
     clip_behavior: Optional[ClipBehavior] = None
     elevation: OptionalNumber = None
     disabled_elevation: OptionalNumber = None
     focus_elevation: OptionalNumber = None
     highlight_elevation: OptionalNumber = None
     hover_elevation: OptionalNumber = None
-    enable_feedback: Optional[bool] = True
+    enable_feedback: bool = True
     url: Optional[str] = None
     url_target: Optional[UrlTarget] = None
     mouse_cursor: Optional[MouseCursor] = None

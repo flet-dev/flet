@@ -2,14 +2,14 @@ from typing import Any, List, Optional
 
 from flet.core.canvas.path import Path
 from flet.core.canvas.shape import Shape
-from flet.core.types import ColorEnums, ColorValue, OptionalNumber
+from flet.core.types import ColorEnums, OptionalNumber
 
 
 class Shadow(Shape):
     def __init__(
         self,
         path: Optional[List[Path.PathElement]] = None,
-        color: Optional[ColorValue] = None,
+        color: OptionalColorValue = None,
         elevation: OptionalNumber = None,
         transparent_occluder: Optional[bool] = None,
         #
@@ -45,11 +45,11 @@ class Shadow(Shape):
 
     # color
     @property
-    def color(self) -> Optional[ColorValue]:
+    def color(self) -> OptionalColorValue:
         return self.__color
 
     @color.setter
-    def color(self, value: Optional[ColorValue]):
+    def color(self, value: OptionalColorValue):
         self.__color = value
         self._set_enum_attr("color", value, ColorEnums)
 
