@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import 'controls/adaptive_alert_dialog.dart';
 import 'controls/animated_switcher.dart';
 import 'controls/banner.dart';
 import 'controls/card.dart';
@@ -43,6 +44,8 @@ class FletCoreExtension extends FletExtension {
   @override
   Widget? createWidget(Key? key, Control control) {
     switch (control.type) {
+      case "AlertDialog":
+        return AdaptiveAlertDialogControl(key: key, control: control);
       case "AnimatedSwitcher":
         return AnimatedSwitcherControl(key: key, control: control);
       case "Banner":
