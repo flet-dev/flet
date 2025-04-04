@@ -1,7 +1,7 @@
 import 'package:flet/flet.dart';
-import 'package:flet/src/extensions/control.dart';
 import 'package:flutter/material.dart';
 
+import '../extensions/control.dart';
 import '../widgets/error.dart';
 
 class BannerControl extends StatefulWidget {

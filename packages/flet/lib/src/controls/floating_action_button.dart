@@ -1,6 +1,6 @@
-import 'package:flet/src/flet_backend.dart';
 import 'package:flutter/material.dart';
 
+import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/icons.dart';

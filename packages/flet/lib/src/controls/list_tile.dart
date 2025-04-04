@@ -1,4 +1,3 @@
-import 'package:flet/src/controls/control_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_backend.dart';
@@ -12,6 +11,7 @@ import '../utils/text.dart';
 import '../utils/theme.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';
+import 'control_widget.dart';
 
 class ListTileClicks extends InheritedWidget {
   const ListTileClicks({
