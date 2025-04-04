@@ -26,6 +26,7 @@ import 'controls/line_chart.dart';
 import 'controls/list_tile.dart';
 import 'controls/list_view.dart';
 import 'controls/page.dart';
+import 'controls/progress_bar.dart';
 import 'controls/row.dart';
 import 'controls/stack.dart';
 import 'controls/text.dart';
@@ -53,6 +54,8 @@ class FletCoreExtension extends FletExtension {
         return AnimatedSwitcherControl(key: key, control: control);
       case "Banner":
         return BannerControl(key: key, control: control);
+      case "ProgressBar":
+        return ProgressBarControl(key: key, control: control);
       case "Card":
         return CardControl(key: key, control: control);
       case "Center":
