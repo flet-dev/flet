@@ -6,7 +6,7 @@ from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
 from flet.core.padding import OptionalPaddingValue
 from flet.core.scrollable_control import ScrollableControl
-from flet.core.types import ClipBehavior, OptionalNumber
+from flet.core.types import ClipBehavior, Number, OptionalNumber
 
 __all__ = ["ListView"]
 
@@ -53,12 +53,12 @@ class ListView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     controls: List[Control] = field(default_factory=list)
     horizontal: bool = False
-    spacing: OptionalNumber = None
+    spacing: Number = 0
     item_extent: OptionalNumber = None
     first_item_prototype: bool = False
-    divider_thickness: OptionalNumber = None
+    divider_thickness: Number = 0
     padding: OptionalPaddingValue = None
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     semantic_child_count: Optional[int] = None
     cache_extent: OptionalNumber = None
     build_controls_on_demand: bool = True

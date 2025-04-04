@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-import '../models/control.dart';
 import '../flet_backend.dart';
+import '../models/control.dart';
 import '../utils/debouncer.dart';
 import '../utils/platform.dart';
 import 'base_controls.dart';
@@ -43,8 +43,8 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
 
     bool disabled = widget.control.disabled || widget.control.parent!.disabled;
 
-    double min = widget.control.getDouble("min", 0)!;
-    double max = widget.control.getDouble("max", 1)!;
+    double min = widget.control.getDouble("min", 0.0)!;
+    double max = widget.control.getDouble("max", 1.0)!;
 
     double value = widget.control.getDouble("value", min)!;
     if (_value != value) {
@@ -70,13 +70,13 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
         onChangeStart: !disabled
             ? (double value) {
                 backend.triggerControlEvent(
-                    widget.control, "change_start", value.toString());
+                    widget.control, "change_start", value);
               }
             : null,
         onChangeEnd: !disabled
             ? (double value) {
                 backend.triggerControlEvent(
-                    widget.control, "change_end", value.toString());
+                    widget.control, "change_end", value);
               }
             : null);
 

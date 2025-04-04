@@ -20,6 +20,7 @@ import 'controls/floating_action_button.dart';
 import 'controls/image.dart';
 import 'controls/line_chart.dart';
 import 'controls/list_tile.dart';
+import 'controls/list_view.dart';
 import 'controls/page.dart';
 import 'controls/row.dart';
 import 'controls/text.dart';
@@ -83,6 +84,8 @@ class FletCoreExtension extends FletExtension {
         return LineChartControl(key: key, control: control);
       case "ListTile":
         return ListTileControl(key: key, control: control);
+      case "ListView":
+        return ListViewControl(key: key, control: control);
       case "Page":
         return PageControl(key: key, control: control);
       case "Row":
