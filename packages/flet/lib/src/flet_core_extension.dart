@@ -19,6 +19,7 @@ import 'controls/expansion_panel.dart';
 import 'controls/expansion_tile.dart';
 import 'controls/flet_app_control.dart';
 import 'controls/floating_action_button.dart';
+import 'controls/icon.dart';
 import 'controls/icon_button.dart';
 import 'controls/image.dart';
 import 'controls/line_chart.dart';
@@ -88,6 +89,8 @@ class FletCoreExtension extends FletExtension {
         return FletAppControl(key: key, control: control);
       case "FloatingActionButton":
         return FloatingActionButtonControl(key: key, control: control);
+      case "Icon":
+        return IconControl(key: key, control: control);
       case "Image":
         return ImageControl(key: key, control: control);
       case "LineChart":
