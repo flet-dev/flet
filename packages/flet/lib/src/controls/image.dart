@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/box.dart';

@@ -1,6 +1,7 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
+import '../extensions/control.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
 

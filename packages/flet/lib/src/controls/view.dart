@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../controls/control_widget.dart';
+import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../models/page_design.dart';

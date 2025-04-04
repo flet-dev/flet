@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
+import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/debouncer.dart';

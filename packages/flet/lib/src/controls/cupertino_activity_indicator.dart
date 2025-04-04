@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
+import '../extensions/control.dart';
 import '../models/control.dart';
 import 'base_controls.dart';
 

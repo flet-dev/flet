@@ -1,8 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
-import '../utils/colors.dart';
 import '../utils/weak_value_map.dart';
 
 typedef InvokeControlMethodCallback = Future<dynamic> Function(
@@ -66,11 +65,6 @@ class Control extends ChangeNotifier {
 
   double? getDouble(String propertyName, [double? defValue]) {
     return get<double>(propertyName, defValue);
-  }
-
-  Color? getColor(String name, BuildContext? context, [Color? defValue]) {
-    return parseColor(context != null ? Theme.of(context) : null,
-        get<String>(name), defValue);
   }
 
   /// Returns a single [Control] from the specified [propertyName].
