@@ -18,6 +18,7 @@ import 'controls/expansion_panel.dart';
 import 'controls/expansion_tile.dart';
 import 'controls/flet_app_control.dart';
 import 'controls/floating_action_button.dart';
+import 'controls/icon_button.dart';
 import 'controls/image.dart';
 import 'controls/line_chart.dart';
 import 'controls/list_tile.dart';
@@ -54,6 +55,8 @@ class FletCoreExtension extends FletExtension {
         return ColumnControl(key: key, control: control);
       case "Container":
         return ContainerControl(key: key, control: control);
+      case "IconButton":
+        return IconButtonControl(key: key, control: control);
       case "CupertinoActivityIndicator":
         return CupertinoActivityIndicatorControl(key: key, control: control);
       case "CupertinoAlertDialog":
