@@ -29,6 +29,7 @@ import 'controls/page.dart';
 import 'controls/row.dart';
 import 'controls/stack.dart';
 import 'controls/text.dart';
+import 'controls/text_button.dart';
 import 'controls/vertical_divider.dart';
 import 'controls/view.dart';
 import 'controls/window.dart';
@@ -58,6 +59,8 @@ class FletCoreExtension extends FletExtension {
         return CenterControl(key: key, control: control);
       case "Column":
         return ColumnControl(key: key, control: control);
+      case "TextButton":
+        return TextButtonControl(key: key, control: control);
       case "Container":
         return ContainerControl(key: key, control: control);
       case "IconButton":

@@ -29,7 +29,7 @@ class _IconButtonControlState extends State<IconButtonControl>
     super.initState();
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
-    widget.control.removeInvokeMethodListener(_invokeMethod);
+    widget.control.addInvokeMethodListener(_invokeMethod);
   }
 
   @override
