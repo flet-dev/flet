@@ -23,25 +23,36 @@ class IconButtonControl extends StatefulWidget {
 class _IconButtonControlState extends State<IconButtonControl>
     with FletStoreMixin {
   late final FocusNode _focusNode;
-  String? _lastFocusValue;
 
   @override
   void initState() {
     super.initState();
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
+    widget.control.removeInvokeMethodListener(_invokeMethod);
   }
 
   @override
   void dispose() {
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
+    widget.control.removeInvokeMethodListener(_invokeMethod);
     super.dispose();
   }
 
   void _onFocusChange() {
     FletBackend.of(context).triggerControlEvent(
         widget.control, _focusNode.hasFocus ? "focus" : "blur");
+  }
+
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    debugPrint("IconButton.$name($args)");
+    switch (name) {
+      case "focus":
+        _focusNode.requestFocus();
+      default:
+        throw Exception("Unknown IconButton method: $name");
+    }
   }
 
   @override
@@ -170,12 +181,6 @@ class _IconButtonControlState extends State<IconButtonControl>
               ShapeDecoration(color: bgColor, shape: const CircleBorder()),
           child: button,
         );
-      }
-
-      var focusValue = widget.control.getString("focus");
-      if (focusValue != null && focusValue != _lastFocusValue) {
-        _lastFocusValue = focusValue;
-        _focusNode.requestFocus();
       }
 
       return ConstrainedControl(control: widget.control, child: button);
