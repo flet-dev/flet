@@ -6,6 +6,7 @@ import '../utils/launch_url.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 //import 'create_control.dart';
+import 'control_widget.dart';
 import 'cupertino_button.dart';
 //import 'error.dart';
 //import 'flet_store_mixin.dart';
@@ -75,29 +76,29 @@ class _IconButtonControlState extends State<IconButtonControl>
         );
       }
 
-      // IconData? icon = parseIcon(widget.control.getString("icon"));
-      // IconData? selectedIcon =
-      //     parseIcon(widget.control.getString("selectedIcon"));
-      Color? iconColor = widget.control.getColor("iconColor", context);
+      var icon = widget.control.get("icon");
+      var selectedIcon = widget.control.get("selected_icon");
+      var content = widget.control.child("content");
+      Color? iconColor = widget.control.getColor("icon_color", context);
       Color? highlightColor =
-          widget.control.getColor("highlightColor", context);
+          widget.control.getColor("highlight_color", context);
       Color? selectedIconColor =
-          widget.control.getColor("selectedIconColor", context);
-      Color? bgColor = widget.control.getColor("bgColor", context);
-      Color? disabledColor = widget.control.getColor("disabledColor", context);
-      Color? hoverColor = widget.control.getColor("hoverColor", context);
-      Color? splashColor = widget.control.getColor("splashColor", context);
-      Color? focusColor = widget.control.getColor("focusColor", context);
-      double? iconSize = widget.control.getDouble("iconSize");
-      double? splashRadius = widget.control.getDouble("splashRadius");
+          widget.control.getColor("selected_icon_color", context);
+      Color? bgColor = widget.control.getColor("bgcolor", context);
+      Color? disabledColor = widget.control.getColor("disabled_color", context);
+      Color? hoverColor = widget.control.getColor("hover_color", context);
+      Color? splashColor = widget.control.getColor("splash_color", context);
+      Color? focusColor = widget.control.getColor("focus_color", context);
+      double? iconSize = widget.control.getDouble("icon_size");
+      double? splashRadius = widget.control.getDouble("splash_radius");
       var padding = parseEdgeInsets(widget.control, "padding");
       var alignment = parseAlignment(widget.control, "alignment");
       var sizeConstraints =
-          parseBoxConstraints(widget.control, "sizeConstraints");
+          parseBoxConstraints(widget.control, "size_constraints");
       // var contentCtrls =
       //     widget.children.where((c) => c.name == "content" && c.visible);
       bool autofocus = widget.control.getBool("autofocus", false)!;
-      bool enableFeedback = widget.control.getBool("enableFeedback", true)!;
+      bool enableFeedback = widget.control.getBool("enable_feedback", true)!;
       bool selected = widget.control.getBool("selected", false)!;
       String url = widget.control.getString("url", "")!;
       String? urlTarget = widget.control.getString("urlTarget");
@@ -136,7 +137,30 @@ class _IconButtonControlState extends State<IconButtonControl>
               ? const StadiumBorder()
               : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
-      if (icon != null) {
+      Widget? iconWidget;
+      if (icon is Control) {
+        iconWidget = ControlWidget(control: icon);
+      } else if (icon is String) {
+        iconWidget = Icon(
+          parseIcon(widget.control.getString("icon")),
+          color: iconColor,
+        );
+      } else if (content != null) {
+        iconWidget = ControlWidget(control: content);
+      }
+
+      Widget? selectedIconWidget;
+
+      if (selectedIcon is Control) {
+        selectedIconWidget = ControlWidget(control: selectedIcon);
+      } else if (selectedIcon is String) {
+        selectedIconWidget = Icon(
+          parseIcon(widget.control.getString("selected_icon")),
+          color: selectedIconColor,
+        );
+      }
+
+      if (iconWidget != null) {
         button = IconButton(
             autofocus: autofocus,
             focusNode: _focusNode,
@@ -149,19 +173,14 @@ class _IconButtonControlState extends State<IconButtonControl>
             focusColor: focusColor,
             splashColor: splashColor,
             splashRadius: splashRadius,
-            icon: Icon(
-              icon,
-              color: iconColor,
-            ),
+            icon: iconWidget,
             iconSize: iconSize,
             mouseCursor: mouseCursor,
             visualDensity: visualDensity,
             style: style,
             isSelected: selected,
             constraints: sizeConstraints,
-            selectedIcon: selectedIcon != null
-                ? Icon(selectedIcon, color: selectedIconColor)
-                : null,
+            selectedIcon: selectedIconWidget,
             onPressed: onPressed);
         // } else if (contentCtrls.isNotEmpty) {
         //   button = IconButton(
