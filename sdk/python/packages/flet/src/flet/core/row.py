@@ -1,16 +1,11 @@
 from dataclasses import field
-from typing import List, Optional
+from typing import List
 
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
 from flet.core.scrollable_control import ScrollableControl
-from flet.core.types import (
-    CrossAxisAlignment,
-    MainAxisAlignment,
-    Number,
-    OptionalNumber,
-)
+from flet.core.types import CrossAxisAlignment, MainAxisAlignment, Number
 
 __all__ = ["Row"]
 
