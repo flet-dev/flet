@@ -44,9 +44,7 @@ class CupertinoSwitch(ConstrainedControl):
     label: Optional[str] = None
     value: bool = field(default=False)
     label_position: LabelPosition = field(default=LabelPosition.RIGHT)
-    active_color: Optional[ColorValue] = None
     thumb_color: Optional[ColorValue] = None
-    track_color: Optional[ColorValue] = None
     focus_color: Optional[ColorValue] = None
     autofocus: bool = field(default=False)
     on_label_color: Optional[ColorValue] = None
@@ -73,17 +71,3 @@ class CupertinoSwitch(ConstrainedControl):
         #     "trackOutlineWidth", self.__track_outline_width, wrap_attr_dict=True
         # )
         # self._set_attr_json("thumbIcon", self.__thumb_icon, wrap_attr_dict=True)
-        if self.active_color is not None:
-            deprecated_warning(
-                name="active_color",
-                reason="Use active_track_color instead.",
-                version="0.26.0",
-                delete_version="0.29.0",
-            )
-        if self.track_color is not None:
-            deprecated_warning(
-                name="track_color",
-                reason="Use inactive_track_color instead.",
-                version="0.26.0",
-                delete_version="0.29.0",
-            )

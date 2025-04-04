@@ -39,7 +39,7 @@ class View(ScrollableControl, AdaptiveControl):
 
     route: Optional[str] = None
     controls: List[Control] = field(default_factory=list)
-    appbar: Union[AppBar, CupertinoAppBar, None] = None
+    appbar: Optional[Union[AppBar, CupertinoAppBar]] = None
     bottom_appbar: Optional[BottomAppBar] = None
     floating_action_button: Optional[FloatingActionButton] = None
     floating_action_button_location: Optional[

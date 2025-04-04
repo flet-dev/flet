@@ -2,7 +2,6 @@ from flet.app import app, app_async, run, run_async
 from flet.core import (
     alignment,
     animation,
-    audio,
     border,
     border_radius,
     colors,
@@ -23,19 +22,6 @@ from flet.core.alignment import Alignment, Axis
 from flet.core.animated_switcher import AnimatedSwitcher, AnimatedSwitcherTransition
 from flet.core.animation import Animation, AnimationCurve
 from flet.core.app_bar import AppBar
-from flet.core.audio import (
-    Audio,
-    AudioDurationChangeEvent,
-    AudioPositionChangeEvent,
-    AudioState,
-    AudioStateChangeEvent,
-)
-from flet.core.audio_recorder import (
-    AudioEncoder,
-    AudioRecorder,
-    AudioRecorderState,
-    AudioRecorderStateChangeEvent,
-)
 from flet.core.auto_complete import (
     AutoComplete,
     AutoCompleteSelectEvent,
@@ -175,7 +161,6 @@ from flet.core.file_picker import (
 )
 from flet.core.filled_button import FilledButton
 from flet.core.filled_tonal_button import FilledTonalButton
-from flet.core.flashlight import Flashlight
 from flet.core.flet_app import FletApp
 from flet.core.floating_action_button import FloatingActionButton
 from flet.core.form_field_control import InputBorder
@@ -226,7 +211,6 @@ from flet.core.interactive_viewer import (
 )
 from flet.core.list_tile import ListTile, ListTileStyle, ListTileTitleAlignment
 from flet.core.list_view import ListView
-from flet.core.lottie import Lottie
 from flet.core.margin import Margin
 from flet.core.markdown import (
     Markdown,
@@ -275,11 +259,6 @@ from flet.core.painting import (
     PaintRadialGradient,
     PaintSweepGradient,
 )
-from flet.core.permission_handler import (
-    PermissionHandler,
-    PermissionStatus,
-    PermissionType,
-)
 from flet.core.placeholder import Placeholder
 from flet.core.popup_menu_button import (
     PopupMenuButton,
@@ -295,7 +274,6 @@ from flet.core.range_slider import RangeSlider
 from flet.core.ref import Ref
 from flet.core.reorderable_list_view import OnReorderEvent, ReorderableListView
 from flet.core.responsive_row import ResponsiveRow
-from flet.core.rive import Rive
 from flet.core.row import Row
 from flet.core.safe_area import SafeArea
 from flet.core.scrollable_control import OnScrollEvent
@@ -339,7 +317,6 @@ from flet.core.theme import (
     BannerTheme,
     BottomAppBarTheme,
     BottomSheetTheme,
-    ButtonTheme,
     CardTheme,
     CheckboxTheme,
     ChipTheme,
@@ -431,22 +408,7 @@ from flet.core.types import (
     WindowEventType,
 )
 from flet.core.vertical_divider import VerticalDivider
-from flet.core.video import (
-    PlaylistMode,
-    Video,
-    VideoConfiguration,
-    VideoMedia,
-    VideoSubtitleConfiguration,
-)
 from flet.core.view import View
-from flet.core.webview import (
-    WebView,
-    WebviewConsoleMessageEvent,
-    WebviewJavaScriptEvent,
-    WebviewLogLevelSeverity,
-    WebviewRequestMethod,
-    WebviewScrollEvent,
-)
 from flet.core.window import Window, WindowEvent
 from flet.core.window_drag_area import WindowDragArea
 from flet.pubsub.pubsub_client import PubSubClient

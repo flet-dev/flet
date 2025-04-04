@@ -55,9 +55,9 @@ class AppBar(AdaptiveControl):
 
     leading: Optional[Control] = None
     leading_width: OptionalNumber = None
-    automatically_imply_leading: bool = field(default=True)
+    automatically_imply_leading: bool = True
     title: Optional[Control] = None
-    center_title: bool = field(default=False)
+    center_title: bool = False
     toolbar_height: OptionalNumber = None
     color: Optional[ColorValue] = None
     bgcolor: Optional[ColorValue] = None
@@ -66,12 +66,12 @@ class AppBar(AdaptiveControl):
     shadow_color: Optional[ColorValue] = None
     surface_tint_color: Optional[ColorValue] = None
     clip_behavior: Optional[ClipBehavior] = None
-    force_material_transparency: bool = field(default=False)
-    is_secondary: bool = field(default=False)
+    force_material_transparency: bool = False
+    is_secondary: bool = False
     title_spacing: OptionalNumber = None
-    exclude_header_semantics: bool = field(default=False)
+    exclude_header_semantics: bool = False
     actions: Optional[List[Control]] = None
-    toolbar_opacity: Number = field(default=1)
+    toolbar_opacity: Number = 1.0
     title_text_style: Optional[TextStyle] = None
     toolbar_text_style: Optional[TextStyle] = None
     shape: Optional[OutlinedBorder] = None

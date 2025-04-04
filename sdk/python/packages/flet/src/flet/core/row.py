@@ -8,6 +8,7 @@ from flet.core.scrollable_control import ScrollableControl
 from flet.core.types import (
     CrossAxisAlignment,
     MainAxisAlignment,
+    Number,
     OptionalNumber,
 )
 
@@ -55,10 +56,10 @@ class Row(ConstrainedControl, ScrollableControl, AdaptiveControl):
     """
 
     controls: List[Control] = field(default_factory=list)
-    alignment: Optional[MainAxisAlignment] = None
-    vertical_alignment: Optional[CrossAxisAlignment] = None
-    spacing: OptionalNumber = None
-    tight: Optional[bool] = None
-    wrap: Optional[bool] = None
-    run_spacing: OptionalNumber = None
-    run_alignment: Optional[MainAxisAlignment] = None
+    alignment: MainAxisAlignment = MainAxisAlignment.START
+    vertical_alignment: CrossAxisAlignment = CrossAxisAlignment.CENTER
+    spacing: Number = 10
+    tight: bool = False
+    wrap: bool = False
+    run_spacing: Number = 10
+    run_alignment: MainAxisAlignment = MainAxisAlignment.START

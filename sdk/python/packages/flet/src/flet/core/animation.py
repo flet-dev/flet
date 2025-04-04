@@ -67,11 +67,4 @@ class AnimationStyle:
     reverse_curve: Optional[AnimationCurve] = None
 
 
-@deprecated(
-    reason="Use Animation class instead.", version="0.26.0", delete_version="0.29.0"
-)
-def implicit(duration: DurationValue, curve: Optional[AnimationCurve] = None):
-    return Animation(duration=duration, curve=curve)
-
-
 AnimationValue = Union[bool, int, Animation]
