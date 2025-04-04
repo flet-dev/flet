@@ -5,7 +5,7 @@ import '../flet_service.dart';
 import '../utils/launch_url.dart';
 
 class UrlLauncherService extends FletService {
-  UrlLauncherService(super.control, super.backend);
+  UrlLauncherService({required super.control, required super.backend});
 
   @override
   void init() {

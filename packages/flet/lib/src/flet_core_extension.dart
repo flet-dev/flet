@@ -123,15 +123,15 @@ class FletCoreExtension extends FletExtension {
   FletService? createService(Control control, FletBackend backend) {
     switch (control.type) {
       case "BrowserContextMenu":
-        return BrowserContextMenuService(control, backend);
+        return BrowserContextMenuService(control: control, backend: backend);
       case "Clipboard":
-        return ClipboardService(control, backend);
+        return ClipboardService(control: control, backend: backend);
       case "HapticFeedback":
-        return HapticFeedbackService(control, backend);
+        return HapticFeedbackService(control: control, backend: backend);
       case "SharedPreferences":
-        return SharedPreferencesService(control, backend);
+        return SharedPreferencesService(control: control, backend: backend);
       case "UrlLauncher":
-        return UrlLauncherService(control, backend);
+        return UrlLauncherService(control: control, backend: backend);
       default:
         return null;
     }

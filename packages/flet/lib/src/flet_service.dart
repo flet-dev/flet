@@ -6,7 +6,7 @@ import 'models/control.dart';
 abstract class FletService {
   Control control;
   FletBackend backend;
-  FletService(this.control, this.backend);
+  FletService({required this.control, required this.backend});
 
   @mustCallSuper
   void init() {}

@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../flet_service.dart';
 
 class SharedPreferencesService extends FletService {
-  SharedPreferencesService(super.control, super.backend);
+  SharedPreferencesService({required super.control, required super.backend});
 
   @override
   void init() {
