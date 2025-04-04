@@ -31,7 +31,6 @@ class DropdownControl extends StatefulWidget {
 
 class _DropdownControlState extends State<DropdownControl> {
   late final FocusNode _focusNode;
-  String? _lastFocusValue;
 
   @override
   void initState() {
