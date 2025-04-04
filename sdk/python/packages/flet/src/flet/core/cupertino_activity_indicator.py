@@ -1,8 +1,6 @@
-from typing import Optional
-
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import control
-from flet.core.types import OptionalColorValue, OptionalNumber
+from flet.core.types import Number, OptionalColorValue
 
 __all__ = ["CupertinoActivityIndicator"]
 
@@ -17,6 +15,6 @@ class CupertinoActivityIndicator(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/cupertinoactivityindicator
     """
 
-    radius: OptionalNumber = None
+    radius: Number = 10
     color: OptionalColorValue = None
-    animating: Optional[bool] = None
+    animating: bool = True

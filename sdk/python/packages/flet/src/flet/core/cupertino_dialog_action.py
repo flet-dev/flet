@@ -1,4 +1,3 @@
-from dataclasses import field
 from typing import Optional
 
 from flet.core.control import Control, control
@@ -64,7 +63,7 @@ class CupertinoDialogAction(Control):
 
     text: Optional[str] = None
     content: Optional[Control] = None
-    is_default_action: bool = field(default=False)
-    is_destructive_action: bool = field(default=False)
+    is_default_action: bool = False
+    is_destructive_action: bool = False
     text_style: Optional[TextStyle] = None
     on_click: OptionalControlEventCallable = None

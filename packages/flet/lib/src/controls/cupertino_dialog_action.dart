@@ -1,46 +1,21 @@
-import 'package:flet/src/flet_backend.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-//import '../flet_control_backend.dart';
+import '../extensions/control.dart';
+import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/text.dart';
 import 'base_controls.dart';
-import 'control_widget.dart';
-//import 'create_control.dart';
 
 class CupertinoDialogActionControl extends StatelessWidget {
-  //final Control? parent;
   final Control control;
-  //final List<Control> children;
-  //final bool parentDisabled;
-  //final bool? parentAdaptive;
-  //final FletControlBackend backend;
 
-  const CupertinoDialogActionControl({
-    super.key,
-    //this.parent,
-    required this.control,
-    //required this.children,
-    //required this.parentDisabled,
-    //required this.parentAdaptive,
-    //required this.backend,
-  });
+  const CupertinoDialogActionControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoDialogAction build: ${control.id}");
-    //bool disabled = control.disabled || parentDisabled;
     bool disabled = control.disabled || control.parent!.disabled;
-    //var contentCtrls = children.where((c) => c.name == "content" && c.visible);
-    var content = control.child("content");
-
-    Widget child;
-    if (content is Control) {
-      child = ControlWidget(control: content);
-    } else {
-      child = Text(control.getString("text", "")!);
-    }
 
     var cupertinoDialogAction = CupertinoDialogAction(
       isDefaultAction: control.getBool("is_default_action", false)!,
@@ -52,7 +27,8 @@ class CupertinoDialogActionControl extends StatelessWidget {
               FletBackend.of(context).triggerControlEvent(control, "click");
             }
           : null,
-      child: child,
+      child: control.buildWidget("content") ??
+          Text(control.getString("text", "")!),
     );
 
     return BaseControl(control: control, child: cupertinoDialogAction);
