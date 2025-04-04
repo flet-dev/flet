@@ -38,6 +38,7 @@ import 'flet_service.dart';
 import 'models/control.dart';
 import 'services/browser_context_menu.dart';
 import 'services/clipboard.dart';
+import 'services/haptic_feedback.dart';
 import 'services/shared_preferences.dart';
 import 'services/url_launcher.dart';
 
@@ -125,10 +126,12 @@ class FletCoreExtension extends FletExtension {
         return BrowserContextMenuService(control, backend);
       case "Clipboard":
         return ClipboardService(control, backend);
-      case "UrlLauncher":
-        return UrlLauncherService(control, backend);
+      case "HapticFeedback":
+        return HapticFeedbackService(control, backend);
       case "SharedPreferences":
         return SharedPreferencesService(control, backend);
+      case "UrlLauncher":
+        return UrlLauncherService(control, backend);
       default:
         return null;
     }

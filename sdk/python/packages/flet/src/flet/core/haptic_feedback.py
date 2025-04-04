@@ -1,12 +1,14 @@
+import asyncio
 from typing import Any, Optional
 
-from flet.core.control import Control
+from flet.core.control import Service, control
 from flet.core.ref import Ref
 
 __all__ = ["HapticFeedback"]
 
 
-class HapticFeedback(Control):
+@control("HapticFeedback")
+class HapticFeedback(Service):
     """
     Allows access to the haptic feedback interface on the device.
 
@@ -18,7 +20,7 @@ class HapticFeedback(Control):
 
     def main(page: ft.Page):
         hf = ft.HapticFeedback()
-        page.overlay.append(hf)
+        page.services.append(hf)
 
         page.add(
             ft.ElevatedButton("Heavy impact", on_click=lambda _: hf.heavy_impact()),
@@ -27,7 +29,7 @@ class HapticFeedback(Control):
             ft.ElevatedButton("Vibrate", on_click=lambda _: hf.vibrate()),
         )
 
-    ft.app(target=main)
+    ft.run(main)
     ```
 
     -----
@@ -35,31 +37,32 @@ class HapticFeedback(Control):
     Online docs: https://flet.dev/docs/controls/hapticfeedback
     """
 
-    def __init__(
-        self,
-        ref: Optional[Ref] = None,
-        data: Any = None,
-    ):
-        Control.__init__(
-            self,
-            ref=ref,
-            data=data,
-        )
-
-    def _get_control_name(self):
-        return "hapticfeedback"
-
-    def is_isolated(self):
-        return True
+    async def heavy_impact_async(self):
+        await self._invoke_method_async("heavy_impact")
 
     def heavy_impact(self):
-        self.invoke_method("heavy_impact")
+        asyncio.create_task(self.heavy_impact_async())
+
+    async def light_impact_async(self):
+        await self._invoke_method_async("light_impact")
 
     def light_impact(self):
-        self.invoke_method("light_impact")
+        asyncio.create_task(self.light_impact_async())
+
+    async def medium_impact_async(self):
+        await self._invoke_method_async("medium_impact")
 
     def medium_impact(self):
-        self.invoke_method("medium_impact")
+        asyncio.create_task(self.medium_impact_async())
+
+    async def vibrate_async(self):
+        await self._invoke_method_async("vibrate")
 
     def vibrate(self):
-        self.invoke_method("vibrate")
+        asyncio.create_task(self.vibrate_async())
+
+    async def selection_click_async(self):
+        await self._invoke_method_async("selection_click")
+
+    def selection_click(self):
+        asyncio.create_task(self.selection_click_async())
