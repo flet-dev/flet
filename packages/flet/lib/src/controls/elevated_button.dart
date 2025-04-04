@@ -29,25 +29,36 @@ class ElevatedButtonControl extends StatefulWidget {
 class _ElevatedButtonControlState extends State<ElevatedButtonControl>
     with FletStoreMixin {
   late final FocusNode _focusNode;
-  String? _lastFocusValue;
 
   @override
   void initState() {
     super.initState();
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
+    widget.control.addInvokeMethodListener(_invokeMethod);
   }
 
   @override
   void dispose() {
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
+    widget.control.removeInvokeMethodListener(_invokeMethod);
     super.dispose();
   }
 
   void _onFocusChange() {
     FletBackend.of(context).triggerControlEvent(
         widget.control, _focusNode.hasFocus ? "focus" : "blur");
+  }
+
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    debugPrint("ElevatedButton.$name($args)");
+    switch (name) {
+      case "focus":
+        _focusNode.requestFocus();
+      default:
+        throw Exception("Unknown ElevatedButton method: $name");
+    }
   }
 
   @override
@@ -216,11 +227,6 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
         }
       }
 
-      var focusValue = widget.control.getString("focus");
-      if (focusValue != null && focusValue != _lastFocusValue) {
-        _lastFocusValue = focusValue;
-        _focusNode.requestFocus();
-      }
       return ConstrainedControl(control: widget.control, child: button);
     });
   }
