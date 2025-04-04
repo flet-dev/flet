@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import 'controls/adaptive_alert_dialog.dart';
 import 'controls/animated_switcher.dart';
 import 'controls/banner.dart';
 import 'controls/card.dart';
@@ -18,6 +19,7 @@ import 'controls/expansion_panel.dart';
 import 'controls/expansion_tile.dart';
 import 'controls/flet_app_control.dart';
 import 'controls/floating_action_button.dart';
+import 'controls/icon.dart';
 import 'controls/icon_button.dart';
 import 'controls/image.dart';
 import 'controls/line_chart.dart';
@@ -43,6 +45,8 @@ class FletCoreExtension extends FletExtension {
   @override
   Widget? createWidget(Key? key, Control control) {
     switch (control.type) {
+      case "AlertDialog":
+        return AdaptiveAlertDialogControl(key: key, control: control);
       case "AnimatedSwitcher":
         return AnimatedSwitcherControl(key: key, control: control);
       case "Banner":
@@ -85,6 +89,8 @@ class FletCoreExtension extends FletExtension {
         return FletAppControl(key: key, control: control);
       case "FloatingActionButton":
         return FloatingActionButtonControl(key: key, control: control);
+      case "Icon":
+        return IconControl(key: key, control: control);
       case "Image":
         return ImageControl(key: key, control: control);
       case "LineChart":

@@ -5,6 +5,7 @@ from flet.core.adaptive_control import AdaptiveControl
 from flet.core.alignment import Alignment
 from flet.core.buttons import OutlinedBorder
 from flet.core.control import Control, control
+from flet.core.dialog_control import DialogControl
 from flet.core.padding import OptionalPaddingValue
 from flet.core.text_style import TextStyle
 from flet.core.types import (
@@ -19,7 +20,7 @@ __all__ = ["AlertDialog"]
 
 
 @control("AlertDialog")
-class AlertDialog(AdaptiveControl):
+class AlertDialog(DialogControl):
     """
     An alert dialog informs the user about situations that require acknowledgement. An alert dialog has an optional title and an optional list of actions. The title is displayed above the content and the actions are displayed below the content.
 
@@ -68,14 +69,13 @@ class AlertDialog(AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/alertdialog
     """
 
+    content: Optional[Control] = None
     modal: bool = False
     title: Optional[Control] = None
-    content: Optional[Control] = None
     actions: List[Control] = field(default_factory=list)
     bgcolor: OptionalColorValue = None
     elevation: OptionalNumber = None
     icon: Optional[Control] = None
-    open: bool = False
     title_padding: OptionalPaddingValue = None
     content_padding: OptionalPaddingValue = None
     actions_padding: OptionalPaddingValue = None
@@ -95,7 +95,6 @@ class AlertDialog(AdaptiveControl):
     clip_behavior: Optional[ClipBehavior] = None
     semantics_label: Optional[str] = None
     barrier_color: OptionalColorValue = None
-    on_dismiss: OptionalControlEventCallable = None
 
     def before_update(self):
         super().before_update()
