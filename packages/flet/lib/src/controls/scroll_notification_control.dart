@@ -55,7 +55,7 @@ class _ScrollNotificationControlState extends State<ScrollNotificationControl> {
           data["t"] = "user";
           data["dir"] = notification.direction.name;
         } else if (notification is OverscrollNotification) {
-          data["t"] = "over";
+          data["t"] = "overscroll";
           data["os"] = notification.overscroll;
           data["v"] = notification.velocity;
         }

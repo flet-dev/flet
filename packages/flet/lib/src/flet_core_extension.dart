@@ -22,6 +22,7 @@ import 'controls/list_tile.dart';
 import 'controls/page.dart';
 import 'controls/row.dart';
 import 'controls/text.dart';
+import 'controls/vertical_divider.dart';
 import 'controls/view.dart';
 import 'controls/window.dart';
 import 'flet_backend.dart';
@@ -85,6 +86,8 @@ class FletCoreExtension extends FletExtension {
         return RowControl(key: key, control: control);
       case "Text":
         return TextControl(key: key, control: control);
+      case "VerticalDivider":
+        return VerticalDividerControl(key: key, control: control);
       case "View":
         return ViewControl(key: key, control: control);
       case "Window":

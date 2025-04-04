@@ -27,259 +27,264 @@ Orientation? parseOrientation(String? value,
       defaultOrientation;
 }
 
-StrokeCap? parseStrokeCap(String? value, [StrokeCap? defValue]) {
+StrokeCap? parseStrokeCap(String? value, [StrokeCap? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return StrokeCap.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
-StrokeJoin? parseStrokeJoin(String? value, [StrokeJoin? defValue]) {
+StrokeJoin? parseStrokeJoin(String? value, [StrokeJoin? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return StrokeJoin.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
-BoxShape? parseBoxShape(String? value, [BoxShape? defValue]) {
+BoxShape? parseBoxShape(String? value, [BoxShape? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return BoxShape.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
-NotchedShape? parseNotchedShape(String? value, [NotchedShape? defValue]) {
+NotchedShape? parseNotchedShape(String? value, [NotchedShape? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   } else if (value == "circular") {
     return const CircularNotchedRectangle();
   } else if (value == "auto") {
     return const AutomaticNotchedShape(ContinuousRectangleBorder());
   } else {
-    return defValue;
+    return defaultValue;
   }
 }
 
 SliderInteraction? parseSliderInteraction(String? value,
-    [SliderInteraction? defValue]) {
+    [SliderInteraction? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return SliderInteraction.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
-Size? parseSize(Control control, String propName, [Size? defValue]) {
+Size? parseSize(Control control, String propName, [Size? defaultValue]) {
   var v = control.get(propName);
   if (v == null) {
-    return defValue;
+    return defaultValue;
   }
-  return sizeFromJson(v, defValue);
+  return sizeFromJson(v, defaultValue);
 }
 
-Size? sizeFromJson(Map<String, dynamic>? json, [Size? defValue]) {
-  if (json == null) return defValue;
+Size? sizeFromJson(Map<String, dynamic>? json, [Size? defaultValue]) {
+  if (json == null) return defaultValue;
 
   final width = parseDouble(json['width']);
   final height = parseDouble(json['height']);
 
-  if (width == null || height == null) return defValue;
+  if (width == null || height == null) return defaultValue;
 
   return Size(width, height);
 }
 
 SnackBarBehavior? parseSnackBarBehavior(String? value,
-    [SnackBarBehavior? defValue]) {
+    [SnackBarBehavior? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return SnackBarBehavior.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
-StackFit? parseStackFit(String? value, [StackFit? defValue]) {
+StackFit? parseStackFit(String? value, [StackFit? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return StackFit.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
-DatePickerMode? parseDatePickerMode(String? value, [DatePickerMode? defValue]) {
+DatePickerMode? parseDatePickerMode(String? value,
+    [DatePickerMode? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return DatePickerMode.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
 DatePickerEntryMode? parseDatePickerEntryMode(String? value,
-    [DatePickerEntryMode? defValue]) {
+    [DatePickerEntryMode? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return DatePickerEntryMode.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
 enum CardVariant { elevated, filled, outlined }
 
-CardVariant? parseCardVariant(String? value, [CardVariant? defValue]) {
+CardVariant? parseCardVariant(String? value, [CardVariant? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return CardVariant.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
 enum ScrollMode { none, auto, adaptive, always, hidden }
 
-ScrollMode? parseScrollMode(String? value, [ScrollMode? defValue]) {
+ScrollMode? parseScrollMode(String? value,
+    [ScrollMode? defaultValue = ScrollMode.none]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return ScrollMode.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
 enum LabelPosition { right, left }
 
-LabelPosition? parseLabelPosition(String? value, [LabelPosition? defValue]) {
+LabelPosition? parseLabelPosition(String? value,
+    [LabelPosition? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return LabelPosition.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
 CupertinoTimerPickerMode? parseCupertinoTimerPickerMode(String? value,
-    [CupertinoTimerPickerMode? defValue]) {
+    [CupertinoTimerPickerMode? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return CupertinoTimerPickerMode.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
 ListTileControlAffinity? parseListTileControlAffinity(String? value,
-    [ListTileControlAffinity? defValue]) {
+    [ListTileControlAffinity? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return ListTileControlAffinity.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
-ListTileStyle? parseListTileStyle(String? value, [ListTileStyle? defValue]) {
+ListTileStyle? parseListTileStyle(String? value,
+    [ListTileStyle? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return ListTileStyle.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
 NavigationDestinationLabelBehavior? parseNavigationDestinationLabelBehavior(
     String? value,
-    [NavigationDestinationLabelBehavior? defValue]) {
+    [NavigationDestinationLabelBehavior? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return NavigationDestinationLabelBehavior.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
 PopupMenuPosition? parsePopupMenuPosition(String? value,
-    [PopupMenuPosition? defValue]) {
+    [PopupMenuPosition? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return PopupMenuPosition.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
-Assertiveness? parseAssertiveness(String? value, [Assertiveness? defValue]) {
+Assertiveness? parseAssertiveness(String? value,
+    [Assertiveness? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return Assertiveness.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
 DatePickerDateOrder? parseDatePickerDateOrder(String? value,
-    [DatePickerDateOrder? defValue]) {
+    [DatePickerDateOrder? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return DatePickerDateOrder.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
 CupertinoDatePickerMode? parseCupertinoDatePickerMode(String? value,
-    [CupertinoDatePickerMode? defValue]) {
+    [CupertinoDatePickerMode? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return CupertinoDatePickerMode.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
 ListTileTitleAlignment? parseListTileTitleAlignment(String? value,
-    [ListTileTitleAlignment? defValue]) {
+    [ListTileTitleAlignment? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return ListTileTitleAlignment.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
 TimePickerEntryMode? parseTimePickerEntryMode(String? value,
-    [TimePickerEntryMode? defValue]) {
+    [TimePickerEntryMode? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return TimePickerEntryMode.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
-Axis? parseAxis(String? value, [Axis? defValue]) {
+Axis? parseAxis(String? value, [Axis? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return Axis.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
 PointerDeviceKind? parsePointerDeviceKind(String? value,
-    [PointerDeviceKind? defValue]) {
+    [PointerDeviceKind? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return PointerDeviceKind.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }

@@ -56,12 +56,12 @@ class _ScrollableControlState extends State<ScrollableControl>
   Widget build(BuildContext context) {
     debugPrint("ScrollableControl build: ${widget.control.id}");
     return withPagePlatform((context, platform) {
-      ScrollMode scrollMode = parseScrollMode(
-          widget.control.get<String>("scroll"), ScrollMode.none)!;
+      ScrollMode scrollMode =
+          parseScrollMode(widget.control.getString("scroll"), ScrollMode.none)!;
 
-      var method = widget.control.get<String>("method");
+      var method = widget.control.getString("method");
 
-      if (widget.control.get<bool>("autoScroll", false)!) {
+      if (widget.control.getBool("auto_scroll", false)!) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _controller.animateTo(
             _controller.position.maxScrollExtent,

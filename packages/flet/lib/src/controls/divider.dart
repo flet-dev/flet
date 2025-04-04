@@ -19,6 +19,7 @@ class DividerControl extends StatelessWidget {
       indent: control.getDouble("leading_indent"),
       endIndent: control.getDouble("trailing_indent"),
     );
+
     return BaseControl(control: control, child: divider);
   }
 }

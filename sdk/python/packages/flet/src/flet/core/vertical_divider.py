@@ -1,7 +1,5 @@
-from typing import Optional
-
 from flet.core.control import Control, control
-from flet.core.types import ColorValue, OptionalNumber
+from flet.core.types import OptionalColorValue, OptionalNumber
 
 __all__ = ["VerticalDivider"]
 
@@ -50,7 +48,7 @@ class VerticalDivider(Control):
 
     width: OptionalNumber = None
     thickness: OptionalNumber = None
-    color: Optional[ColorValue] = None
+    color: OptionalColorValue = None
     leading_indent: OptionalNumber = None
     trailing_indent: OptionalNumber = None
 

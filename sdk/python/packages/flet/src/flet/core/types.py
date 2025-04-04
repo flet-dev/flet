@@ -376,6 +376,7 @@ class OnFocusEvent(ControlEvent):
 # Colors
 ColorEnums = (Colors, CupertinoColors)
 ColorValue = Union[str, Colors, CupertinoColors]
+OptionalColorValue = Optional[ColorValue]
 
 # Icons
 IconEnums = (Icons, CupertinoIcons)
@@ -398,4 +399,5 @@ Wrapper = Callable[..., Any]
 
 # Protocols
 class SupportsStr(Protocol):
-    def __str__(self) -> str: ...
+    def __str__(self) -> str:
+        ...

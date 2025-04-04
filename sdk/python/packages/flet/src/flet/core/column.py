@@ -1,11 +1,11 @@
 from dataclasses import field
-from typing import List, Optional
+from typing import List
 
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
 from flet.core.scrollable_control import ScrollableControl
-from flet.core.types import CrossAxisAlignment, MainAxisAlignment, OptionalNumber
+from flet.core.types import CrossAxisAlignment, MainAxisAlignment, Number
 
 __all__ = ["Column"]
 
@@ -48,12 +48,10 @@ class Column(ConstrainedControl, ScrollableControl, AdaptiveControl):
     """
 
     controls: List[Control] = field(default_factory=list)
-    alignment: Optional[MainAxisAlignment] = field(default=MainAxisAlignment.START)
-    horizontal_alignment: Optional[CrossAxisAlignment] = field(
-        default=CrossAxisAlignment.START
-    )
-    spacing: OptionalNumber = field(default=10)
-    tight: Optional[bool] = field(default=False)
-    wrap: Optional[bool] = field(default=False)
-    run_spacing: OptionalNumber = field(default=0)
-    run_alignment: Optional[MainAxisAlignment] = field(default=MainAxisAlignment.START)
+    alignment: MainAxisAlignment = MainAxisAlignment.START
+    horizontal_alignment: CrossAxisAlignment = CrossAxisAlignment.START
+    spacing: Number = 10
+    tight: bool = False
+    wrap: bool = False
+    run_spacing: Number = 0
+    run_alignment: MainAxisAlignment = MainAxisAlignment.START

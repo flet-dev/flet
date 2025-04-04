@@ -85,6 +85,7 @@ from flet.core.chip import Chip
 from flet.core.circle_avatar import CircleAvatar
 from flet.core.colors import Colors
 from flet.core.column import Column
+from flet.core.constrained_control import ConstrainedControl
 from flet.core.container import Container, ContainerTapEvent
 from flet.core.control import Control, Service, control
 from flet.core.control_event import ControlEvent
@@ -276,7 +277,12 @@ from flet.core.reorderable_list_view import OnReorderEvent, ReorderableListView
 from flet.core.responsive_row import ResponsiveRow
 from flet.core.row import Row
 from flet.core.safe_area import SafeArea
-from flet.core.scrollable_control import OnScrollEvent
+from flet.core.scrollable_control import (
+    OnScrollEvent,
+    ScrollableControl,
+    ScrollDirection,
+    ScrollType,
+)
 from flet.core.search_bar import SearchBar
 from flet.core.segmented_button import Segment, SegmentedButton
 from flet.core.selection_area import SelectionArea
