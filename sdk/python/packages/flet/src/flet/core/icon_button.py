@@ -9,7 +9,7 @@ from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
 from flet.core.padding import OptionalPaddingValue
 from flet.core.types import (
-    IconValue,
+    IconValueOrControl,
     MouseCursor,
     OptionalColorValue,
     OptionalControlEventCallable,
@@ -17,6 +17,7 @@ from flet.core.types import (
     UrlTarget,
     VisualDensity,
 )
+from flet.utils.deprecated import deprecated_warning
 
 __all__ = ["IconButton"]
 
@@ -61,16 +62,26 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/iconbutton
     """
 
-    icon: Optional[IconValue] = None
+    def __setattr__(self, name, value):
+        if name == "content":
+            deprecated_warning(
+                name="content",
+                reason="Use 'icon' instead.",
+                version="0.70.0",
+                delete_version="0.70.3",
+            )
+        super().__setattr__(name, value)
+
+    icon: Optional[IconValueOrControl] = None
     icon_color: OptionalColorValue = None
     icon_size: OptionalNumber = None
     selected: bool = False
-    selected_icon: Optional[IconValue] = None
+    selected_icon: Optional[IconValueOrControl] = None
     selected_icon_color: OptionalColorValue = None
     bgcolor: OptionalColorValue = None
     highlight_color: OptionalColorValue = None
     style: Optional[ButtonStyle] = None
-    content: Optional[Control] = None
+    content: Optional[Control] = None  # deprecated
     autofocus: bool = False
     disabled_color: OptionalColorValue = None
     hover_color: OptionalColorValue = None
@@ -79,7 +90,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     splash_radius: OptionalNumber = None
     alignment: Optional[Alignment] = None
     padding: OptionalPaddingValue = None
-    enable_feedback: Optional[bool] = None
+    enable_feedback: Optional[bool] = True
     url: Optional[str] = None
     url_target: Optional[UrlTarget] = None
     mouse_cursor: Optional[MouseCursor] = None
