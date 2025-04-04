@@ -136,4 +136,7 @@ class FletCoreExtension extends FletExtension {
         return null;
     }
   }
+
+  @override
+  void ensureInitialized() {}
 }

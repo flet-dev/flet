@@ -7,4 +7,5 @@ import 'models/control.dart';
 abstract class FletExtension {
   Widget? createWidget(Key? key, Control control);
   FletService? createService(Control control, FletBackend backend);
+  void ensureInitialized();
 }
