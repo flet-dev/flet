@@ -15,6 +15,7 @@ from flet.core.types import (
     StrOrControl,
     UrlTarget,
 )
+from flet.utils.deprecated import deprecated_warning
 
 __all__ = ["ElevatedButton"]
 
@@ -45,11 +46,12 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     """
 
     def __setattr__(self, name, value):
-        if name == "text":
-            warnings.warn(
-                "'text' is deprecated since version 0.70.0 and will be removed in 0.70.3. Use 'content' instead.",
-                DeprecationWarning,
-                stacklevel=2,
+        if name == "text" and value != None:
+            deprecated_warning(
+                name="text",
+                reason="Use 'content' instead.",
+                version="0.70.0",
+                delete_version="0.70.3",
             )
         super().__setattr__(name, value)
 

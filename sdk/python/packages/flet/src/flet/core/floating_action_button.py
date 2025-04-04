@@ -70,7 +70,7 @@ class FloatingActionButton(ConstrainedControl):
     """
 
     def __setattr__(self, name, value):
-        if name == "text":
+        if name == "text" and value != None:
             deprecated_warning(
                 name="text",
                 reason="Use 'content' instead.",

@@ -1,4 +1,5 @@
-import time
+import asyncio
+import warnings
 from typing import Optional
 
 from flet.core.adaptive_control import AdaptiveControl
@@ -63,7 +64,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     """
 
     def __setattr__(self, name, value):
-        if name == "content":
+        if name == "content" and value != None:
             deprecated_warning(
                 name="content",
                 reason="Use 'icon' instead.",
@@ -107,6 +108,8 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     #         self.__style.shape = self._wrap_attr_dict(self.__style.shape)
     #         self.__style.padding = self._wrap_attr_dict(self.__style.padding)
 
+    async def focus_async(self):
+        await self._invoke_method_async("focus")
+
     def focus(self):
-        self._set_attr_json("focus", str(time.time()))
-        self.update()
+        asyncio.create_task(self.focus_async())
