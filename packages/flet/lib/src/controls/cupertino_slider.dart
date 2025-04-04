@@ -1,23 +1,18 @@
 import 'package:flutter/cupertino.dart';
 
-import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../flet_backend.dart';
 import '../utils/debouncer.dart';
 import '../utils/platform.dart';
-import 'create_control.dart';
+import 'base_controls.dart';
 
 class CupertinoSliderControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final bool parentDisabled;
-  final FletControlBackend backend;
 
-  const CupertinoSliderControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.parentDisabled,
-      required this.backend});
+  const CupertinoSliderControl({
+    super.key,
+    required this.control,
+  });
 
   @override
   State<CupertinoSliderControl> createState() => _CupertinoSliderControlState();
@@ -26,7 +21,7 @@ class CupertinoSliderControl extends StatefulWidget {
 class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
   double _value = 0;
   final _debouncer = Debouncer(milliseconds: isDesktopPlatform() ? 10 : 100);
-
+  late FletBackend backend;
   @override
   void dispose() {
     _debouncer.dispose();
@@ -34,14 +29,11 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
   }
 
   void onChange(double value) {
-    var svalue = value.toString();
-    debugPrint(svalue);
     _value = value;
-    var props = {"value": svalue};
-    widget.backend.updateControlState(widget.control.id, props, server: false);
+    backend = FletBackend.of(context);
     _debouncer.run(() {
-      widget.backend.updateControlState(widget.control.id, props);
-      widget.backend.triggerControlEvent(widget.control.id, "change");
+      backend.updateControl(widget.control.id, {"value": value}, notify: true);
+      backend.triggerControlEvent(widget.control, "change", value);
     });
   }
 
@@ -49,11 +41,10 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
   Widget build(BuildContext context) {
     debugPrint("CupertinoSliderControl build: ${widget.control.id}");
 
-    bool disabled = widget.control.disabled || widget.parentDisabled;
+    bool disabled = widget.control.disabled || widget.control.parent!.disabled;
 
     double min = widget.control.getDouble("min", 0)!;
     double max = widget.control.getDouble("max", 1)!;
-    int? divisions = widget.control.getInt("divisions");
 
     double value = widget.control.getDouble("value", min)!;
     if (_value != value) {
@@ -71,29 +62,24 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
         value: _value,
         min: min,
         max: max,
-        divisions: divisions,
-        activeColor: widget.control.getColor("activeColor", context),
-        thumbColor: widget.control.getColor("thumbColor", context) ??
-            CupertinoColors.white,
-        onChanged: !disabled
-            ? (double value) {
-                onChange(value);
-              }
-            : null,
+        divisions: widget.control.getInt("divisions"),
+        activeColor: widget.control.getColor("active_color", context),
+        thumbColor: widget.control
+            .getColor("thumb_color", context, CupertinoColors.white)!,
+        onChanged: !disabled ? (double value) => onChange(value) : null,
         onChangeStart: !disabled
             ? (double value) {
-                widget.backend.triggerControlEvent(
-                    widget.control.id, "change_start", value.toString());
+                backend.triggerControlEvent(
+                    widget.control, "change_start", value.toString());
               }
             : null,
         onChangeEnd: !disabled
             ? (double value) {
-                widget.backend.triggerControlEvent(
-                    widget.control.id, "change_end", value.toString());
+                backend.triggerControlEvent(
+                    widget.control, "change_end", value.toString());
               }
             : null);
 
-    return constrainedControl(
-        context, cupertinoSlider, widget.parent, widget.control);
+    return ConstrainedControl(control: widget.control, child: cupertinoSlider);
   }
 }

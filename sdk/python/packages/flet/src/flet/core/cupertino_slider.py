@@ -41,16 +41,11 @@ class CupertinoSlider(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.min is None or self.max is None or self.min <= self.max
-        ), "min must be less than or equal to max"
-        assert (
-            self.min is None or self.value is None or (self.value >= self.min)
+        self.value = self.value if self.value is not None else self.min
+        assert self.min <= self.max, "min must be less than or equal to max"
+        assert self.value is None or (
+            self.value >= self.min
         ), "value must be greater than or equal to min"
-        assert (
-            self.max is None or self.value is None or (self.value <= self.max)
+        assert self.value is None or (
+            self.value <= self.max
         ), "value must be less than or equal to max"
-
-    # @property
-    # def value(self) -> float:
-    #     return self._get_attr("value", data_type="float", def_value=self.min or 0.0)

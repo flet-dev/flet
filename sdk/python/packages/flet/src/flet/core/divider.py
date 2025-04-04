@@ -54,47 +54,53 @@ class Divider(Control):
     """
 
     color: OptionalColorValue = None
-    """The color to use when painting the line."""
+    """
+    The color to use when painting the line.
+    
+    If this is `None`, then the `DividerTheme.color` is used. If that is also `None`, then the `Theme.divider_color` is used.
+    """
 
-    height: OptionalNumber = 16.0
+    height: OptionalNumber = None
     """
     The divider's height extent. The divider itself is always drawn as a horizontal line that is centered
     within the height specified by this value.
 
-    Defaults to `16.0`.
+    If this is `None`, then the `DividerTheme.space` is used. If that is also `None`, then `16.0` is used.
     """
 
-    leading_indent: OptionalNumber = 0.0
+    leading_indent: OptionalNumber = None
     """
     The amount of empty space to the leading edge of the divider.
 
-    Defaults to `0.0`.
+    If this is `None`, then the `DividerTheme.leading_indent` is used. If that is also `None`, then `0.0` is used.
     """
 
-    thickness: OptionalNumber = 0.0
+    thickness: OptionalNumber = None
     """
     The thickness of the line drawn within the divider. A divider with a thickness of `0.0` is always drawn
     as a line with a height of exactly one device pixel.
-
-    Defaults to `0.0`.
+    
+    If this is `None`, then the `DividerTheme.thickness` is used. If that is also `None`, then `0.0` is used.
     """
 
-    trailing_indent: OptionalNumber = 0.0
+    trailing_indent: OptionalNumber = None
     """
     The amount of empty space to the trailing edge of the divider.
-
-    Defaults to `0.0`.
+    
+    If this is `None`, then the `DividerTheme.trailing_indent` is used. If that is also `None`, then `0.0` is used.
     """
 
     def before_update(self):
         super().before_update()
-        assert self.height is None or self.height >= 0, "height cannot be negative"
+        assert (
+            self.height is None or self.height >= 0
+        ), "height must be greater than or equal to 0"
         assert (
             self.thickness is None or self.thickness >= 0
-        ), "thickness cannot be negative"
+        ), "thickness must be greater than or equal to 0"
         assert (
             self.leading_indent is None or self.leading_indent >= 0
-        ), "leading_indent cannot be negative"
+        ), "leading_indent must be greater than or equal to 0"
         assert (
             self.trailing_indent is None or self.trailing_indent >= 0
-        ), "trailing_indent cannot be negative"
+        ), "trailing_indent must be greater than or equal to 0"
