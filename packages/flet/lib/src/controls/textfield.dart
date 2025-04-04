@@ -47,6 +47,7 @@ class _TextFieldControlState extends State<TextFieldControl>
   late final FocusNode _focusNode;
   late final FocusNode _shiftEnterfocusNode;
   String? _lastFocusValue;
+  String? _lastBlurValue;
 
   @override
   void initState() {
@@ -207,10 +208,16 @@ class _TextFieldControlState extends State<TextFieldControl>
       FocusNode focusNode = shiftEnter ? _shiftEnterfocusNode : _focusNode;
 
       var focusValue = widget.control.attrString("focus");
+      var blurValue = widget.control.attrString("blur");
       if (focusValue != null && focusValue != _lastFocusValue) {
         _lastFocusValue = focusValue;
         focusNode.requestFocus();
       }
+      if (blurValue != null && blurValue != _lastBlurValue) {
+        _lastBlurValue = blurValue;
+        _focusNode.unfocus();
+      }
+
       var fitParentSize = widget.control.attrBool("fitParentSize", false)!;
 
       var maxLength = widget.control.attrInt("maxLength");
@@ -306,6 +313,12 @@ class _TextFieldControlState extends State<TextFieldControl>
           onTap: () {
             widget.backend.triggerControlEvent(widget.control.id, "click");
           },
+          onTapOutside: widget.control.attrBool("onTapOutside", false)!
+              ? (PointerDownEvent? event) {
+                  widget.backend
+                      .triggerControlEvent(widget.control.id, "tapOutside");
+                }
+              : null,
           onChanged: (String value) {
             _value = value;
             widget.backend

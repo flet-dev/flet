@@ -93,6 +93,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
         : null;
     var autoScrollerVelocityScalar =
         widget.control.attrDouble("autoScrollerVelocityScalar");
+    var mouseCursor = parseMouseCursor(widget.control.attrString("mouseCursor"));
 
     void onReorder(int oldIndex, int newIndex) {
       debugPrint("onReorder: $oldIndex -> $newIndex");
@@ -141,6 +142,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
                 footer: footer,
                 prototypeItem: prototypeItem,
                 autoScrollerVelocityScalar: autoScrollerVelocityScalar,
+                mouseCursor: mouseCursor,
                 onReorder: onReorder,
                 onReorderEnd: onReorderEnd,
                 onReorderStart: onReorderStart,
@@ -166,6 +168,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
                 mouseCursor: mouseCursor,
                 prototypeItem: prototypeItem,
                 autoScrollerVelocityScalar: autoScrollerVelocityScalar,
+                mouseCursor: mouseCursor,
                 onReorder: onReorder,
                 onReorderEnd: onReorderEnd,
                 onReorderStart: onReorderStart,

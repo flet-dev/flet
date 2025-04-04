@@ -4,6 +4,7 @@ from flet.core.border import Border
 from flet.core.control import Control
 from flet.core.ref import Ref
 from flet.core.types import Brightness, ColorEnums, ColorValue, PaddingValue
+from flet.utils.deprecated import deprecated_property
 
 
 class CupertinoAppBar(Control):
@@ -38,10 +39,12 @@ class CupertinoAppBar(Control):
         self,
         leading: Optional[Control] = None,
         middle: Optional[Control] = None,
+        title: Optional[Control] = None,
         trailing: Optional[Control] = None,
         bgcolor: Optional[ColorValue] = None,
         automatically_imply_leading: Optional[bool] = None,
         automatically_imply_middle: Optional[bool] = None,
+        automatically_imply_title: Optional[bool] = None,
         border: Optional[Border] = None,
         padding: Optional[PaddingValue] = None,
         transition_between_routes: Optional[bool] = None,
@@ -49,6 +52,7 @@ class CupertinoAppBar(Control):
         brightness: Optional[Brightness] = None,
         automatic_background_visibility: Optional[bool] = None,
         enable_background_filter_blur: Optional[bool] = None,
+        large: Optional[bool] = None,
         #
         # Control
         #
@@ -64,8 +68,10 @@ class CupertinoAppBar(Control):
 
         self.leading = leading
         self.middle = middle
+        self.title = title
         self.automatically_imply_leading = automatically_imply_leading
         self.automatically_imply_middle = automatically_imply_middle
+        self.automatically_imply_title = automatically_imply_title
         self.border = border
         self.padding = padding
         self.trailing = trailing
@@ -75,6 +81,7 @@ class CupertinoAppBar(Control):
         self.brightness = brightness
         self.automatic_background_visibility = automatic_background_visibility
         self.enable_background_filter_blur = enable_background_filter_blur
+        self.large = large
 
     def _get_control_name(self):
         return "cupertinoappbar"
@@ -89,9 +96,10 @@ class CupertinoAppBar(Control):
         if self.__leading:
             self.__leading._set_attr_internal("n", "leading")
             children.append(self.__leading)
-        if self.__middle:
-            self.__middle._set_attr_internal("n", "middle")
-            children.append(self.__middle)
+        if self.__title or self.__middle:
+            t = self.__title or self.__middle
+            t._set_attr_internal("n", "title")
+            children.append(t)
         if self.__trailing:
             self.__trailing._set_attr_internal("n", "trailing")
             children.append(self.__trailing)
@@ -114,11 +122,33 @@ class CupertinoAppBar(Control):
     # middle
     @property
     def middle(self) -> Optional[Control]:
+        deprecated_property(
+            name="middle",
+            version="0.27.0",
+            delete_version="0.30.0",
+            reason="Use title instead.",
+        )
         return self.__middle
 
     @middle.setter
     def middle(self, value: Optional[Control]):
         self.__middle = value
+        if value is not None:
+            deprecated_property(
+                name="middle",
+                version="0.27.0",
+                delete_version="0.30.0",
+                reason="Use title instead.",
+            )
+
+    # title
+    @property
+    def title(self) -> Optional[Control]:
+        return self.__title
+
+    @title.setter
+    def title(self, value: Optional[Control]):
+        self.__title = value
 
     # padding
     @property
@@ -143,6 +173,12 @@ class CupertinoAppBar(Control):
     # automatically_imply_middle
     @property
     def automatically_imply_middle(self) -> bool:
+        deprecated_property(
+            name="automatically_imply_middle",
+            version="0.27.0",
+            delete_version="0.30.0",
+            reason="Use automatically_imply_title instead.",
+        )
         return self._get_attr(
             "automaticallyImplyMiddle", data_type="bool", def_value=True
         )
@@ -150,6 +186,33 @@ class CupertinoAppBar(Control):
     @automatically_imply_middle.setter
     def automatically_imply_middle(self, value: Optional[bool]):
         self._set_attr("automaticallyImplyMiddle", value)
+        if value is not None:
+            deprecated_property(
+                name="automatically_imply_middle",
+                version="0.27.0",
+                delete_version="0.30.0",
+                reason="Use automatically_imply_title instead.",
+            )
+
+    # automatically_imply_title
+    @property
+    def automatically_imply_title(self) -> bool:
+        return self._get_attr(
+            "automaticallyImplyTitle", data_type="bool", def_value=True
+        )
+
+    @automatically_imply_title.setter
+    def automatically_imply_title(self, value: Optional[bool]):
+        self._set_attr("automaticallyImplyTitle", value)
+
+    # large
+    @property
+    def large(self) -> bool:
+        return self._get_attr("large", data_type="bool", def_value=False)
+
+    @large.setter
+    def large(self, value: Optional[bool]):
+        self._set_attr("large", value)
 
     # border
     @property

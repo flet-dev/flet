@@ -33,6 +33,8 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
         bgcolor: Optional[ColorValue] = None,
         expanded: Optional[bool] = None,
         can_tap_header: Optional[bool] = None,
+        splash_color: Optional[ColorValue] = None,
+        highlight_color: Optional[ColorValue] = None,
         #
         # ConstrainedControl
         #
@@ -104,6 +106,8 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
         self.bgcolor = bgcolor
         self.expanded = expanded
         self.can_tap_header = can_tap_header
+        self.splash_color = splash_color
+        self.highlight_color = highlight_color
 
     def _get_control_name(self):
         return "expansionpanel"
@@ -130,6 +134,27 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
     def bgcolor(self, value: Optional[ColorValue]):
         self.__bgcolor = value
         self._set_enum_attr("bgColor", value, ColorEnums)
+
+    # splash_color
+    @property
+    def splash_color(self) -> Optional[ColorValue]:
+
+        return self.__splash_color
+
+    @splash_color.setter
+    def splash_color(self, value: Optional[ColorValue]):
+        self.__splash_color = value
+        self._set_enum_attr("splashColor", value, ColorEnums)
+
+    # highlight_color
+    @property
+    def highlight_color(self) -> Optional[ColorValue]:
+        return self.__highlight_color
+
+    @highlight_color.setter
+    def highlight_color(self, value: Optional[ColorValue]):
+        self.__highlight_color = value
+        self._set_enum_attr("highlightColor", value, ColorEnums)
 
     # expanded
     @property

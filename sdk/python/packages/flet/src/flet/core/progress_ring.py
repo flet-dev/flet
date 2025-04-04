@@ -2,6 +2,7 @@ from typing import Any, Optional, Union
 
 from flet.core.animation import AnimationValue
 from flet.core.badge import BadgeValue
+from flet.core.box import BoxConstraints
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
@@ -15,7 +16,9 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
     StrokeCap,
+    PaddingValue,
 )
+from flet.utils.deprecated import deprecated_property
 
 
 class ProgressRing(ConstrainedControl):
@@ -66,6 +69,10 @@ class ProgressRing(ConstrainedControl):
         stroke_cap: Optional[StrokeCap] = None,
         semantics_label: Optional[str] = None,
         semantics_value: OptionalNumber = None,
+        track_gap: OptionalNumber = None,
+        size_constraints: Optional[BoxConstraints] = None,
+        padding: Optional[PaddingValue] = None,
+        year_2023: Optional[bool] = None,
         #
         # ConstrainedControl
         #
@@ -137,9 +144,18 @@ class ProgressRing(ConstrainedControl):
         self.semantics_value = semantics_value
         self.stroke_align = stroke_align
         self.stroke_cap = stroke_cap
+        self.track_gap = track_gap
+        self.size_constraints = size_constraints
+        self.padding = padding
+        self.year_2023 = year_2023
 
     def _get_control_name(self):
         return "progressring"
+
+    def before_update(self):
+        super().before_update()
+        self._set_attr_json("padding", self.__padding)
+        self._set_attr_json("sizeConstraints", self.__size_constraints)
 
     # value
     @property
@@ -149,6 +165,64 @@ class ProgressRing(ConstrainedControl):
     @value.setter
     def value(self, value: OptionalNumber):
         self._set_attr("value", value)
+
+    # semantics_label
+    @property
+    def semantics_label(self) -> Optional[str]:
+        return self._get_attr("semanticsLabel")
+
+    @semantics_label.setter
+    def semantics_label(self, value: Optional[str]):
+        self._set_attr("semanticsLabel", value)
+
+    # track_gap
+    @property
+    def track_gap(self) -> OptionalNumber:
+        return self._get_attr("trackGap", data_type="float")
+
+    @track_gap.setter
+    def track_gap(self, value: OptionalNumber):
+        self._set_attr("trackGap", value)
+
+    # padding
+    @property
+    def padding(self) -> Optional[PaddingValue]:
+        return self.__padding
+
+    @padding.setter
+    def padding(self, value: Optional[PaddingValue]):
+        self.__padding = value
+
+    # size_constraints
+    @property
+    def size_constraints(self) -> Optional[BoxConstraints]:
+        return self.__size_constraints
+
+    @size_constraints.setter
+    def size_constraints(self, value: Optional[BoxConstraints]):
+        self.__size_constraints = value
+
+    # year_2023
+    @property
+    def year_2023(self) -> Optional[bool]:
+        deprecated_property(
+            name="year_2023",
+            version="0.27.0",
+            delete_version=None,  # not known for now
+            reason="Set this flag to False to opt into the 2024 Slider appearance. In the future, this flag will default to False.",
+        )
+        return self._get_attr("year2023", data_type="bool", def_value=True)
+
+    @year_2023.setter
+    def year_2023(self, value: Optional[bool]):
+        self._set_attr("year2023", value)
+        if value is not None:
+            deprecated_property(
+                name="year_2023",
+                version="0.27.0",
+                delete_version=None,  # not known for now
+                reason="Set this flag to False to opt into the 2024 Slider appearance. In the future, this flag will default to False.",
+            )
 
     # stroke_width
     @property

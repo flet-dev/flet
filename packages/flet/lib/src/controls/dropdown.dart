@@ -68,7 +68,6 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
     debugPrint("DropdownMenu build: ${widget.control.id}");
     return withControls(widget.control.childIds, (context, itemsView) {
       debugPrint("DropdownMenuFletControlState build: ${widget.control.id}");
-
       bool disabled = widget.control.isDisabled || widget.parentDisabled;
       bool editable = widget.control.attrBool("editable", false)!;
       bool autofocus = widget.control.attrBool("autofocus", false)!;
@@ -317,6 +316,8 @@ class _DropdownControlState extends State<DropdownControl> with FletStoreMixin {
         helperText: widget.control.attrString("helperText"),
         //inputFormatters: inputFormatters,
         //expandedInsets: parseEdgeInsets(widget.control, "expandedInsets"),
+        expandedInsets:
+            widget.control.attrInt("expand") != null ? EdgeInsets.zero : null,
         menuStyle: MenuStyle(
           backgroundColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "bgcolor"),

@@ -10,6 +10,7 @@ from flet.core.ref import Ref
 from flet.core.scrollable_control import OnScrollEvent
 from flet.core.types import (
     ClipBehavior,
+    MouseCursor,
     OffsetValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
@@ -152,6 +153,7 @@ class ReorderableListView(ListView):
         self.mouse_cursor = mouse_cursor
         self.on_reorder_start = on_reorder_start
         self.on_reorder_end = on_reorder_end
+        self.mouse_cursor = mouse_cursor
 
     def _get_control_name(self):
         return "reorderablelistview"
@@ -186,6 +188,16 @@ class ReorderableListView(ListView):
     @auto_scroller_velocity_scalar.setter
     def auto_scroller_velocity_scalar(self, value: OptionalNumber):
         self._set_attr("autoScrollerVelocityScalar", value)
+
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self.__mouse_cursor
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # header
     @property

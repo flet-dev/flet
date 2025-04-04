@@ -155,6 +155,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         on_submit: OptionalControlEventCallable = None,
         on_focus: OptionalControlEventCallable = None,
         on_blur: OptionalControlEventCallable = None,
+        on_tap_outside: OptionalControlEventCallable = None,
         #
         # FormField
         #
@@ -369,6 +370,7 @@ class TextField(FormFieldControl, AdaptiveControl):
         self.animate_cursor_opacity = animate_cursor_opacity
         self.always_call_on_tap = always_call_on_tap
         self.clip_behavior = clip_behavior
+        self.on_tap_outside = on_tap_outside
 
     def _get_control_name(self):
         return "textfield"
@@ -396,6 +398,10 @@ class TextField(FormFieldControl, AdaptiveControl):
 
     def focus(self):
         self._set_attr_json("focus", str(time.time()))
+        self.update()
+
+    def blur(self):
+        self._set_attr_json("blur", str(time.time()))
         self.update()
 
     # value
@@ -821,3 +827,13 @@ class TextField(FormFieldControl, AdaptiveControl):
     @on_click.setter
     def on_click(self, handler: OptionalControlEventCallable):
         self._add_event_handler("click", handler)
+
+    # on_tap_outside
+    @property
+    def on_tap_outside(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("tapOutside")
+
+    @on_tap_outside.setter
+    def on_tap_outside(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("tapOutside", handler)
+        self._set_attr("onTapOutside", True if handler is not None else None)

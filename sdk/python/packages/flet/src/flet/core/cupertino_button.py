@@ -49,6 +49,8 @@ class CupertinoButton(ConstrainedControl):
         border_radius: Optional[BorderRadiusValue] = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
+        autofocus: Optional[bool] = None,
+        focus_color: Optional[bool] = None,
         on_click: OptionalControlEventCallable = None,
         on_long_press: OptionalControlEventCallable = None,
         on_focus: OptionalControlEventCallable = None,
@@ -135,6 +137,8 @@ class CupertinoButton(ConstrainedControl):
         self.on_long_press = on_long_press
         self.on_focus = on_focus
         self.on_blur = on_blur
+        self.autofocus = autofocus
+        self.focus_color = focus_color
 
     def _get_control_name(self):
         return "cupertinobutton"
@@ -162,6 +166,25 @@ class CupertinoButton(ConstrainedControl):
     @text.setter
     def text(self, value):
         self._set_attr("text", value)
+
+    # focus_color
+    @property
+    def focus_color(self):
+        return self.__focus_color
+
+    @focus_color.setter
+    def focus_color(self, value):
+        self.__focus_color = value
+        self._set_enum_attr("focusColor", value, ColorEnums)
+
+    # autofocus
+    @property
+    def autofocus(self):
+        return self._get_attr("autofocus", data_type="bool", def_value=False)
+
+    @autofocus.setter
+    def autofocus(self, value):
+        self._set_attr("autofocus", value)
 
     # icon
     @property
