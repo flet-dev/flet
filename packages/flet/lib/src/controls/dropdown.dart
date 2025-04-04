@@ -67,7 +67,6 @@ class _DropdownControlState extends State<DropdownControl> {
   Widget build(BuildContext context) {
     debugPrint("DropdownMenu build: ${widget.control.id}");
 
-    bool disabled = widget.control.disabled || widget.control.parent!.disabled;
     bool editable = widget.control.getBool("editable", false)!;
     bool autofocus = widget.control.getBool("autofocus", false)!;
     var textSize = widget.control.getDouble("text_size");
@@ -174,7 +173,7 @@ class _DropdownControlState extends State<DropdownControl> {
     var items = widget.control
         .children("options")
         .map<DropdownMenuEntry<String>>((Control itemCtrl) {
-      bool itemDisabled = disabled || itemCtrl.disabled;
+      bool itemDisabled = widget.control.disabled || itemCtrl.disabled;
       ButtonStyle? style =
           parseButtonStyle(Theme.of(context), itemCtrl, "style");
 
@@ -228,7 +227,7 @@ class _DropdownControlState extends State<DropdownControl> {
     _focusNode.canRequestFocus = editable;
 
     Widget dropDown = DropdownMenu<String>(
-      enabled: !disabled,
+      enabled: !widget.control.disabled,
       focusNode: _focusNode,
       initialSelection: value,
       enableFilter: widget.control.getBool("enable_filter", false)!,
@@ -277,7 +276,7 @@ class _DropdownControlState extends State<DropdownControl> {
         fixedSize: WidgetStateProperty.all(Size.fromWidth(menuWidth)),
       ),
       inputDecorationTheme: inputDecorationTheme,
-      onSelected: disabled
+      onSelected: widget.control.disabled
           ? null
           : (String? value) {
               FletBackend.of(context)

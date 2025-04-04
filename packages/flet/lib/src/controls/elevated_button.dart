@@ -52,12 +52,9 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
   @override
   Widget build(BuildContext context) {
     debugPrint("Button build: ${widget.control.id}");
-    bool disabled = widget.control.disabled || widget.control.parent!.disabled;
 
     return withPagePlatform((context, platform) {
-      bool? adaptive =
-          widget.control.adaptive ?? widget.control.parent?.adaptive;
-      if (adaptive == true &&
+      if (widget.control.adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
         return (widget.control.parent?.type == "AlertDialog" ||
@@ -90,7 +87,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
       //bool onLongPress = widget.control.getBool("onLongPress", false)!;
       bool autofocus = widget.control.getBool("autofocus", false)!;
 
-      Function()? onPressed = !disabled
+      Function()? onPressed = !widget.control.disabled
           ? () {
               debugPrint("Button ${widget.control.id} clicked!");
               if (url != "") {
@@ -102,7 +99,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             }
           : null;
 
-      Function()? onLongPressHandler = !disabled
+      Function()? onLongPressHandler = !widget.control.disabled
           ? () {
               debugPrint("Button ${widget.control.id} long pressed!");
               FletBackend.of(context)
@@ -110,7 +107,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             }
           : null;
 
-      Function(bool)? onHoverHandler = !disabled
+      Function(bool)? onHoverHandler = !widget.control.disabled
           ? (state) {
               debugPrint("Button ${widget.control.id} hovered!");
               FletBackend.of(context).triggerControlEvent(

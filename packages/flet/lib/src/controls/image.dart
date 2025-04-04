@@ -21,7 +21,6 @@ class ImageControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("Image build: ${control.id}");
-    bool disabled = control.disabled || control.parent!.disabled;
 
     var src = control.getString("src", "")!;
     var srcBase64 = control.getString("srcBase64", "")!;
@@ -51,7 +50,7 @@ class ImageControl extends StatelessWidget {
       excludeFromSemantics: control.getBool("excludeFromSemantics", false)!,
       filterQuality: parseFilterQuality(
           control.getString("filterQuality"), FilterQuality.medium)!,
-      disabled: disabled,
+      disabled: control.disabled,
       errorCtrl: errorContentCtrl != null
           ? ControlWidget(control: errorContentCtrl)
           : null,

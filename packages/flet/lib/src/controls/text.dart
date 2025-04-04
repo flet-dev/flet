@@ -15,8 +15,6 @@ class TextControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("Text build: ${control.id}");
 
-    bool disabled = control.disabled || control.parent!.disabled;
-
     String text = control.getString("value", "")!;
     var selectionCursorColor =
         control.getColor("selection_cursor_color", context);
@@ -30,7 +28,7 @@ class TextControl extends StatelessWidget {
     List<InlineSpan>? spans = parseTextSpans(
       Theme.of(context),
       control.children("spans"),
-      disabled,
+      control.disabled,
       (Control control, String eventName, String eventData) {
         FletBackend.of(context)
             .triggerControlEvent(control, eventName, eventData);

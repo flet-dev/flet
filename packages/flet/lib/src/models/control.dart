@@ -37,9 +37,9 @@ class Control extends ChangeNotifier {
   Control? get parent => _parent?.target;
 
   bool get disabled =>
-      properties.containsKey("disabled") && properties["disabled"];
+      properties["disabled"] == true || (parent?.disabled ?? false);
 
-  bool? get adaptive => properties["adaptive"];
+  bool? get adaptive => properties["adaptive"] ?? parent?.adaptive;
 
   bool get visible =>
       !properties.containsKey("visible") || properties["visible"];

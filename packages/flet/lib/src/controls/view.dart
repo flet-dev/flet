@@ -63,7 +63,6 @@ class _ViewControlState extends State<ViewControl> {
     debugPrint("View.build: ${widget.control.id}");
 
     var control = widget.control;
-    var adaptive = control.adaptive ?? control.parent!.adaptive;
 
     final mainAlignment = parseMainAxisAlignment(
         control.get<String>("vertical_alignment"), MainAxisAlignment.start)!;

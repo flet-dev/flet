@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../flet_backend.dart';
-//import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
@@ -11,25 +10,13 @@ import '../utils/theme.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
-// import 'create_control.dart';
-// import 'error.dart';
 
 class ExpansionTileControl extends StatelessWidget {
-  //final Control? parent;
   final Control control;
-  //final List<Control> children;
-  //final bool parentDisabled;
-  //final bool? parentAdaptive;
-  //final FletControlBackend backend;
 
   const ExpansionTileControl({
     super.key,
-    //this.parent,
     required this.control,
-    //required this.children,
-    //required this.parentDisabled,
-    //required this.parentAdaptive,
-    //required this.backend,
   });
 
   @override
@@ -51,7 +38,6 @@ class ExpansionTileControl extends StatelessWidget {
           "ExpansionTile.title must be provided and visible");
     }
 
-    bool disabled = control.disabled || control.parent!.disabled;
     bool maintainState = control.getBool("maintain_state", false)!;
     bool initiallyExpanded = control.getBool("initially_expanded", false)!;
 
@@ -78,7 +64,7 @@ class ExpansionTileControl extends StatelessWidget {
           'Try aligning the controls differently.');
     }
 
-    Function(bool)? onChange = !disabled
+    Function(bool)? onChange = !control.disabled
         ? (expanded) {
             debugPrint(
                 "ExpansionTile ${control.id} was ${expanded ? "expanded" : "collapsed"}");
@@ -109,7 +95,7 @@ class ExpansionTileControl extends StatelessWidget {
       visualDensity: parseVisualDensity(control.getString("visual_density")),
       enableFeedback: control.getBool("enable_feedback"),
       showTrailingIcon: control.getBool("show_trailing_icon", true)!,
-      enabled: !disabled,
+      enabled: !control.disabled,
       minTileHeight: control.getDouble("min_tile_height"),
       dense: control.getBool("dense"),
       leading: leading is Control ? ControlWidget(control: leading) : null,

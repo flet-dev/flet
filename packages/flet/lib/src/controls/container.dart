@@ -57,7 +57,6 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     bool onLongPress = control.getBool("on_long_press", false)!;
     bool onHover = control.getBool("on_hover", false)!;
     bool ignoreInteractions = control.getBool("ignore_interactions", false)!;
-    bool disabled = control.disabled || control.parent!.disabled;
     Widget? child = contentCtrl != null
         ? ControlWidget(
             control: contentCtrl,
@@ -101,7 +100,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
         : null;
     if ((onClick || url != "" || onLongPress || onHover || onTapDown) &&
         ink &&
-        !disabled) {
+        !control.disabled) {
       var ink = Material(
           color: Colors.transparent,
           borderRadius: boxDecoration!.borderRadius,
@@ -206,7 +205,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
               child: child);
 
       if ((onClick || onLongPress || onHover || onTapDown || url != "") &&
-          !disabled) {
+          !control.disabled) {
         container = MouseRegion(
           cursor: onClick || onTapDown || url != ""
               ? SystemMouseCursors.click

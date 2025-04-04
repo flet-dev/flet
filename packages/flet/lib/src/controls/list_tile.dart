@@ -41,19 +41,6 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
   Widget build(BuildContext context) {
     debugPrint("ListTile build: ${control.id}");
     return withPagePlatform((context, platform) {
-      bool? adaptive = control.adaptive ?? control.parent?.adaptive;
-      // if (adaptive == true &&
-      //     (platform == TargetPlatform.iOS ||
-      //         platform == TargetPlatform.macOS)) {
-      //   return CupertinoListTileControl(
-      //       control: control,
-      //       parent: parent,
-      //       parentDisabled: parentDisabled,
-      //       parentAdaptive: adaptive,
-      //       children: children,
-      //       backend: backend);
-      // }
-
       var leadingCtrl = control.child("leading");
       var titleCtrl = control.child("title");
       var subtitleCtrl = control.child("subtitle");
@@ -64,10 +51,9 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
       bool onLongPressDefined = control.getBool("on_long_press", false)!;
       String url = control.getString("url", "")!;
       String? urlTarget = control.getString("url_target");
-      bool disabled = control.disabled || control.parent!.disabled;
 
       Function()? onPressed = (onclick || toggleInputs || url != "") &&
-              !disabled
+              !control.disabled
           ? () {
               debugPrint("ListTile ${control.id} clicked!");
               if (toggleInputs) {
@@ -82,7 +68,7 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
             }
           : null;
 
-      Function()? onLongPress = onLongPressDefined && !disabled
+      Function()? onLongPress = onLongPressDefined && !control.disabled
           ? () {
               debugPrint("Button ${control.id} clicked!");
               FletBackend.of(context)
@@ -98,7 +84,7 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
         dense: control.getBool("dense", false)!,
         onTap: onPressed,
         onLongPress: onLongPress,
-        enabled: !disabled,
+        enabled: !control.disabled,
         horizontalTitleGap: control.getDouble("horizontal_spacing"),
         enableFeedback: control.getBool("enable_feedback"),
         minLeadingWidth: control.getDouble("min_leading_width"),

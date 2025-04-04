@@ -61,9 +61,8 @@ class FloatingActionButtonControl extends StatelessWidget {
     bool mini = control.getBool("mini", false)!;
     bool? enableFeedback = control.getBool("enable_feedback");
     var mouseCursor = parseMouseCursor(control.getString("mouse_cursor"));
-    bool disabled = control.disabled || control.parent!.disabled;
 
-    Function()? onPressed = disabled
+    Function()? onPressed = control.disabled
         ? null
         : () {
             debugPrint("FloatingActionButtonControl ${control.id} clicked!");
