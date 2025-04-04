@@ -1,4 +1,4 @@
-import time
+import asyncio
 from typing import Optional
 
 from flet.core.adaptive_control import AdaptiveControl
@@ -8,10 +8,13 @@ from flet.core.control import Control, control
 from flet.core.types import (
     ClipBehavior,
     IconValue,
+    IconValueOrControl,
     OptionalColorValue,
     OptionalControlEventCallable,
+    StrOrControl,
     UrlTarget,
 )
+from flet.utils.deprecated import deprecated_warning
 
 __all__ = ["TextButton"]
 
@@ -40,10 +43,19 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/textbutton
     """
 
-    text: Optional[str] = None
-    icon: Optional[IconValue] = None
+    def __setattr__(self, name, value):
+        if name == "text" and value != None:
+            deprecated_warning(
+                name="text",
+                reason="Use 'content' instead.",
+                version="0.70.0",
+                delete_version="0.70.3",
+            )
+        super().__setattr__(name, value)
+
+    content: Optional[StrOrControl] = None
+    icon: Optional[IconValueOrControl] = None
     icon_color: OptionalColorValue = None
-    content: Optional[Control] = None
     style: Optional[ButtonStyle] = None
     autofocus: bool = False
     url: Optional[str] = None
@@ -54,6 +66,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     on_hover: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
+    text: Optional[str] = None  # deprecated
 
     # def before_update(self):
     #     super().before_update()
@@ -63,6 +76,8 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     #         self.__style.padding = self._wrap_attr_dict(self.__style.padding)
     #     self._set_attr_json("style", self.__style)
 
+    async def focus_async(self):
+        await self._invoke_method_async("focus")
+
     def focus(self):
-        self._set_attr_json("focus", str(time.time()))
-        self.update()
+        asyncio.create_task(self.focus_async())
