@@ -46,7 +46,11 @@ def update_version():
         if err:
             msg = "Unknown error while fetching the version: {err}"
             raise RepositoryError(msg)
-        version = git_p.stdout.strip()[1:]
+        version = (
+            git_p.stdout.strip()[1:]
+            if git_p.stdout.startswith("v")
+            else git_p.stdout.strip()
+        )
 
     else:
         version = "0.2.0"
