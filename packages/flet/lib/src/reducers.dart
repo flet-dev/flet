@@ -5,8 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
-
-
 import 'actions.dart';
 import 'flet_control_backend.dart';
 import 'models/app_state.dart';
@@ -97,7 +95,8 @@ AppState appReducer(AppState state, dynamic action) {
             try {
               DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
               AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-              if (androidInfo.systemFeatures.contains('android.software.leanback')) {
+              if (androidInfo.systemFeatures
+                  .contains('android.software.leanback')) {
                 platformValue = "android_tv";
               }
             } on Exception catch (e) {
@@ -323,6 +322,9 @@ AppState appReducer(AppState state, dynamic action) {
           break;
         case "windowToFront":
           windowToFront();
+          break;
+        case "windowStartDragging":
+          windowStartDragging();
           break;
       }
       var clientStoragePrefix = "clientStorage:";
