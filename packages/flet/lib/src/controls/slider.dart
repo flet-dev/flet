@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../flet_backend.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
@@ -8,24 +9,26 @@ import '../utils/edge_insets.dart';
 import '../utils/mouse.dart';
 import '../utils/others.dart';
 import '../utils/platform.dart';
+import '../widgets/flet_store_mixin.dart';
 import 'create_control.dart';
 import 'cupertino_slider.dart';
 import 'flet_store_mixin.dart';
 
 class SliderControl extends StatefulWidget {
-  final Control? parent;
+  //final Control? parent;
   final Control control;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
+  //final bool parentDisabled;
+  //final bool? parentAdaptive;
+  //final FletControlBackend backend;
 
-  const SliderControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  const SliderControl({
+    super.key,
+    //this.parent,
+    required this.control,
+    //required this.parentDisabled,
+    //required this.parentAdaptive,
+    //required this.backend,
+  });
 
   @override
   State<SliderControl> createState() => _SliderControlState();
@@ -41,6 +44,7 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
     super.initState();
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
+    widget.control.addInvokeMethodListener(_invokeMethod);
   }
 
   @override
@@ -48,12 +52,23 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
     _debouncer.dispose();
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
+    widget.control.removeInvokeMethodListener(_invokeMethod);
     super.dispose();
   }
 
   void _onFocusChange() {
-    widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
+    FletBackend.of(context).triggerControlEvent(
+        widget.control, _focusNode.hasFocus ? "focus" : "blur");
+  }
+
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    debugPrint("ElevatedButton.$name($args)");
+    switch (name) {
+      case "focus":
+        _focusNode.requestFocus();
+      default:
+        throw Exception("Unknown ElevatedButton method: $name");
+    }
   }
 
   void onChange(double value) {
@@ -61,7 +76,8 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
     debugPrint(svalue);
     _value = value;
     var props = {"value": svalue};
-    widget.backend.updateControlState(widget.control.id, props, server: false);
+    FletBackend.of(context)
+        .updateControl(widget.control.id, props, server: false);
     _debouncer.run(() {
       widget.backend.updateControlState(widget.control.id, props);
       widget.backend.triggerControlEvent(widget.control.id, "change");
@@ -110,7 +126,7 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
           max: max,
           year2023: widget.control.attrBool("year2023"),
           divisions: widget.control.attrInt("divisions"),
-          label: label?.replaceAll("{value}", _value.toStringAsFixed(round)),
+          label: label.replaceAll("{value}", _value.toStringAsFixed(round)),
           activeColor: widget.control.attrColor("activeColor", context),
           inactiveColor: widget.control.attrColor("inactiveColor", context),
           overlayColor: parseWidgetStateColor(
