@@ -3,11 +3,11 @@ from datetime import date, datetime
 from enum import Enum
 from typing import Any, Callable, Dict, List, Optional, Protocol, TypeVar, Union
 
+from flet.controls.cupertino.cupertino_colors import CupertinoColors
+from flet.controls.cupertino.cupertino_icons import CupertinoIcons
+from flet.controls.material.icons import Icons
 from flet.core.colors import Colors
 from flet.core.control_event import ControlEvent
-from flet.core.cupertino_colors import CupertinoColors
-from flet.core.cupertino_icons import CupertinoIcons
-from flet.core.icons import Icons
 
 WEB_BROWSER = "web_browser"
 FLET_APP = "flet_app"
@@ -389,5 +389,4 @@ Wrapper = Callable[..., Any]
 
 # Protocols
 class SupportsStr(Protocol):
-    def __str__(self) -> str:
-        ...
+    def __str__(self) -> str: ...

@@ -3,9 +3,9 @@ import sys
 from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING, Any, Callable, Dict, Optional, Type, TypeVar, Union
 
-from flet.core.badge import BadgeValue
+from flet.controls.material.badge import BadgeValue
+from flet.controls.material.tooltip import TooltipValue
 from flet.core.ref import Ref
-from flet.core.tooltip import TooltipValue
 from flet.core.types import Number, ResponsiveNumber
 from flet.utils.strings import random_string
 

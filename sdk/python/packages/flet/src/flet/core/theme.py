@@ -2,23 +2,23 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import List, Optional
 
+from flet.controls.material.menu_bar import MenuStyle
+from flet.controls.material.navigation_bar import NavigationBarLabelBehavior
+from flet.controls.material.navigation_rail import NavigationRailLabelType
+from flet.controls.material.popup_menu_button import PopupMenuPosition
+from flet.controls.material.slider import SliderInteraction
+from flet.controls.material.snack_bar import DismissDirection, SnackBarBehavior
+from flet.controls.material.textfield import TextCapitalization
+from flet.controls.material.tooltip import TooltipTriggerMode
 from flet.core.alignment import Alignment
 from flet.core.border import BorderSide
 from flet.core.border_radius import BorderRadius
 from flet.core.box import BoxConstraints, BoxDecoration, BoxShadow
 from flet.core.buttons import ButtonStyle, OutlinedBorder
 from flet.core.margin import OptionalMarginValue
-from flet.core.menu_bar import MenuStyle
-from flet.core.navigation_bar import NavigationBarLabelBehavior
-from flet.core.navigation_rail import NavigationRailLabelType
 from flet.core.padding import OptionalPaddingValue, PaddingValue
-from flet.core.popup_menu_button import PopupMenuPosition
 from flet.core.size import Size
-from flet.core.slider import SliderInteraction
-from flet.core.snack_bar import DismissDirection, SnackBarBehavior
 from flet.core.text_style import TextStyle
-from flet.core.textfield import TextCapitalization
-from flet.core.tooltip import TooltipTriggerMode
 from flet.core.transform import OffsetValue
 from flet.core.types import (
     Brightness,

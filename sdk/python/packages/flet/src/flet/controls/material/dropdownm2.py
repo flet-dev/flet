@@ -1,8 +1,8 @@
 from typing import List, Optional
 
+from flet.controls.material.form_field_control import FormFieldControl
 from flet.core.alignment import Alignment
 from flet.core.control import Control, control
-from flet.core.form_field_control import FormFieldControl
 from flet.core.padding import OptionalPaddingValue
 from flet.core.text_style import TextStyle
 from flet.core.types import (

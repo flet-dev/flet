@@ -24,26 +24,32 @@ from typing import (
 from urllib.parse import urlparse
 
 import flet.core
+from flet.controls.core.browser_context_menu import BrowserContextMenu
+from flet.controls.core.clipboard import Clipboard
+from flet.controls.core.shared_preferences import SharedPreferences
+from flet.controls.core.url_launcher import UrlLauncher
+from flet.controls.core.view import View
+from flet.controls.core.window import Window
+from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
+from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
+from flet.controls.material.app_bar import AppBar
+from flet.controls.material.bottom_app_bar import BottomAppBar
+from flet.controls.material.floating_action_button import FloatingActionButton
+from flet.controls.material.navigation_bar import NavigationBar
+from flet.controls.material.navigation_drawer import (
+    NavigationDrawer,
+    NavigationDrawerPosition,
+)
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.animation import AnimationCurve
-from flet.core.app_bar import AppBar
-from flet.core.bottom_app_bar import BottomAppBar
 from flet.core.box import BoxDecoration
-from flet.core.browser_context_menu import BrowserContextMenu
-from flet.core.clipboard import Clipboard
 from flet.core.control import BaseControl, Control, Service, control
 from flet.core.control_event import ControlEvent
-from flet.core.cupertino_app_bar import CupertinoAppBar
-from flet.core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.core.dialog_control import DialogControl
-from flet.core.floating_action_button import FloatingActionButton
-from flet.core.navigation_bar import NavigationBar
-from flet.core.navigation_drawer import NavigationDrawer, NavigationDrawerPosition
 from flet.core.padding import OptionalPaddingValue, Padding
 from flet.core.querystring import QueryString
 from flet.core.scrollable_control import OnScrollEvent
 from flet.core.session_storage import SessionStorage
-from flet.core.shared_preferences import SharedPreferences
 from flet.core.theme import Theme
 from flet.core.transform import OffsetValue
 from flet.core.types import (
@@ -62,9 +68,6 @@ from flet.core.types import (
     ThemeMode,
     Wrapper,
 )
-from flet.core.url_launcher import UrlLauncher
-from flet.core.view import View
-from flet.core.window import Window
 from flet.utils import classproperty, is_pyodide
 
 if TYPE_CHECKING:

@@ -1,10 +1,10 @@
 from dataclasses import field
 from typing import List, Optional
 
+from flet.controls.material.navigation_bar import NavigationBarDestination
 from flet.core.border import Border
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import control
-from flet.core.navigation_bar import NavigationBarDestination
 from flet.core.types import (
     OptionalColorValue,
     OptionalControlEventCallable,

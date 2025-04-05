@@ -3,10 +3,10 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import List, Optional, Union
 
+from flet.controls.core.autofill_group import AutofillHint
+from flet.controls.material.form_field_control import FormFieldControl
 from flet.core.adaptive_control import AdaptiveControl
-from flet.core.autofill_group import AutofillHint
 from flet.core.control import control
-from flet.core.form_field_control import FormFieldControl
 from flet.core.padding import OptionalPaddingValue
 from flet.core.text_style import StrutStyle
 from flet.core.types import (

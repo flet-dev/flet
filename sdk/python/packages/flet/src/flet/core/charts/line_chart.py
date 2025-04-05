@@ -1,18 +1,17 @@
 import json
 from typing import Any, List, Optional, Union
 
+from flet.controls.material.badge import BadgeValue
+from flet.controls.material.tooltip import TooltipValue
 from flet.core.animation import AnimationValue
-from flet.core.badge import BadgeValue
 from flet.core.border import Border, BorderSide
 from flet.core.charts.chart_axis import ChartAxis
 from flet.core.charts.chart_grid_lines import ChartGridLines
 from flet.core.charts.line_chart_data import LineChartData
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control_event import ControlEvent
-from flet.core.event_handler import EventHandler
 from flet.core.padding import OptionalPaddingValue
 from flet.core.ref import Ref
-from flet.core.tooltip import TooltipValue
 from flet.core.transform import OffsetValue, RotateValue, ScaleValue
 from flet.core.types import (
     ColorEnums,

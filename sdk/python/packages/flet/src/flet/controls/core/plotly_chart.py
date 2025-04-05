@@ -1,15 +1,14 @@
-import io
 import re
 import xml.etree.ElementTree as ET
 from typing import Any, Optional, Union
 
+from flet.controls.core.container import Container
+from flet.controls.core.image import Image
+from flet.controls.material.badge import BadgeValue
+from flet.controls.material.tooltip import TooltipValue
 from flet.core import alignment
 from flet.core.animation import AnimationValue
-from flet.core.badge import BadgeValue
-from flet.core.container import Container
-from flet.core.image import Image
 from flet.core.ref import Ref
-from flet.core.tooltip import TooltipValue
 from flet.core.transform import OffsetValue, RotateValue, ScaleValue
 from flet.core.types import (
     ImageFit,
@@ -19,53 +18,37 @@ from flet.core.types import (
 )
 
 try:
-    from matplotlib.figure import Figure
+    from plotly.graph_objects import Figure
 except ImportError:
-    raise Exception(
-        'Install "matplotlib" Python package to use MatplotlibChart control.'
-    )
-__all__ = ["MatplotlibChart"]
+    raise Exception('Install "plotly" Python package to use PlotlyChart control.')
+
+__all__ = ["PlotlyChart"]
 
 
-class MatplotlibChart(Container):
+class PlotlyChart(Container):
     """
-    Displays Matplotlib(https://matplotlib.org/) chart.
+    Displays Plotly(https://plotly.com/python/) chart.
 
     Example:
     ```
-    import matplotlib
-    import matplotlib.pyplot as plt
+    import plotly.express as px
 
     import flet as ft
-    from flet.core.matplotlib_chart import MatplotlibChart
-
-    matplotlib.use("svg")
-
+    from flet.core.plotly_chart import PlotlyChart
 
     def main(page: ft.Page):
 
-        fig, ax = plt.subplots()
+        df = px.data.gapminder().query("continent=='Oceania'")
+        fig = px.line(df, x="year", y="lifeExp", color="country")
 
-        fruits = ["apple", "blueberry", "cherry", "orange"]
-        counts = [40, 100, 30, 55]
-        bar_labels = ["red", "blue", "_red", "orange"]
-        bar_colors = ["tab:red", "tab:blue", "tab:red", "tab:orange"]
-
-        ax.bar(fruits, counts, label=bar_labels, color=bar_colors)
-
-        ax.set_ylabel("fruit supply")
-        ax.set_title("Fruit supply by kind and color")
-        ax.legend(title="Fruit color")
-
-        page.add(MatplotlibChart(fig, expand=True))
-
+        page.add(PlotlyChart(fig, expand=True))
 
     ft.app(target=main)
     ```
 
     -----
 
-    Online docs: https://flet.dev/docs/controls/matplotlibchart
+    Online docs: https://flet.dev/docs/controls/plotlychart
     """
 
     def __init__(
@@ -73,7 +56,6 @@ class MatplotlibChart(Container):
         figure: Optional[Figure] = None,
         isolated: bool = False,
         original_size: bool = False,
-        transparent: bool = False,
         #
         # ConstrainedControl
         #
@@ -129,7 +111,6 @@ class MatplotlibChart(Container):
         self.figure = figure
         self.isolated = isolated
         self.original_size = original_size
-        self.transparent = transparent
 
     def is_isolated(self):
         return self.__isolated
@@ -142,9 +123,7 @@ class MatplotlibChart(Container):
     def before_update(self):
         super().before_update()
         if self.__figure is not None:
-            s = io.StringIO()
-            self.__figure.savefig(s, format="svg", transparent=self.__transparent)
-            svg = s.getvalue()
+            svg = self.__figure.to_image(format="svg").decode("utf-8")
 
             if not self.__original_size:
                 root = ET.fromstring(svg)
@@ -155,36 +134,27 @@ class MatplotlibChart(Container):
 
     # original_size
     @property
-    def original_size(self):
+    def original_size(self) -> bool:
         return self.__original_size
 
     @original_size.setter
-    def original_size(self, value):
+    def original_size(self, value: bool):
         self.__original_size = value
 
     # isolated
     @property
-    def isolated(self):
+    def isolated(self) -> bool:
         return self.__isolated
 
     @isolated.setter
-    def isolated(self, value):
+    def isolated(self, value: bool):
         self.__isolated = value
 
     # figure
     @property
-    def figure(self):
+    def figure(self) -> Optional[Figure]:
         return self.__figure
 
     @figure.setter
-    def figure(self, value):
+    def figure(self, value: Optional[Figure]):
         self.__figure = value
-
-    # transparent
-    @property
-    def transparent(self) -> bool:
-        return self.__transparent
-
-    @transparent.setter
-    def transparent(self, value: bool):
-        self.__transparent = value

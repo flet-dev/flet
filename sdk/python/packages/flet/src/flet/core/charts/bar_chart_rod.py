@@ -1,6 +1,6 @@
 from typing import Any, List, Optional
 
-from flet.core.badge import BadgeValue
+from flet.controls.material.badge import BadgeValue
 from flet.core.border import BorderSide
 from flet.core.border_radius import OptionalBorderRadiusValue
 from flet.core.charts.bar_chart_rod_stack_item import BarChartRodStackItem

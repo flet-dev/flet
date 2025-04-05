@@ -1,6 +1,6 @@
 from typing import Optional
 
-from flet.core.badge import BadgeValue
+from flet.controls.material.badge import BadgeValue
 from flet.core.control import Control, control
 from flet.core.types import OptionalControlEventCallable, OptionalNumber
 

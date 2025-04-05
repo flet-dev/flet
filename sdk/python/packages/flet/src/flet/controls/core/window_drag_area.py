@@ -1,7 +1,11 @@
 from typing import Any
 
+from flet.controls.core.gesture_detector import (
+    DragStartEvent,
+    GestureDetector,
+    TapEvent,
+)
 from flet.core.control import Control
-from flet.core.gesture_detector import DragStartEvent, GestureDetector, TapEvent
 from flet.core.types import OptionalEventCallable
 
 

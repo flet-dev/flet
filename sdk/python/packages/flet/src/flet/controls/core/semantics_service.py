@@ -1,8 +1,6 @@
 from enum import Enum
-from typing import Any, Optional
 
-from flet.core.control import Control
-from flet.core.ref import Ref
+from flet.core.control import Service, control
 
 __all__ = ["SemanticsService", "Assertiveness"]
 
@@ -12,21 +10,8 @@ class Assertiveness(Enum):
     ASSERTIVE = "assertive"
 
 
-class SemanticsService(Control):
-    def __init__(
-        self,
-        ref: Optional[Ref] = None,
-        data: Any = None,
-    ):
-        Control.__init__(
-            self,
-            ref=ref,
-            data=data,
-        )
-
-    def _get_control_name(self):
-        return "semanticsservice"
-
+@control("SemanticsService")
+class SemanticsService(Service):
     def announce_message(
         self,
         message: str,
@@ -38,9 +23,11 @@ class SemanticsService(Control):
             arguments={
                 "message": message,
                 "rtl": str(rtl),
-                "assertiveness": assertiveness.value
-                if isinstance(assertiveness, Assertiveness)
-                else str(assertiveness),
+                "assertiveness": (
+                    assertiveness.value
+                    if isinstance(assertiveness, Assertiveness)
+                    else str(assertiveness)
+                ),
             },
         )
 

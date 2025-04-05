@@ -1,6 +1,6 @@
 from typing import Any, Optional, Union
 
-from flet.core.badge import BadgeValue
+from flet.controls.material.badge import BadgeValue
 from flet.core.charts.chart_point_line import ChartPointLine
 from flet.core.charts.chart_point_shape import ChartPointShape
 from flet.core.control import Control

@@ -1,10 +1,10 @@
 from typing import Any, Optional
 
+from flet.controls.cupertino.cupertino_button import CupertinoButton
 from flet.core.alignment import Alignment
 from flet.core.border_radius import OptionalBorderRadiusValue
 from flet.core.colors import Colors
 from flet.core.control import Control
-from flet.core.cupertino_button import CupertinoButton
 from flet.core.padding import OptionalPaddingValue
 from flet.core.ref import Ref
 from flet.core.types import (

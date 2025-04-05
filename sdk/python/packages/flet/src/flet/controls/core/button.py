@@ -1,4 +1,4 @@
-from flet.core.elevated_button import ElevatedButton
+from flet.controls.material.elevated_button import ElevatedButton
 
 __all__ = ["Button"]
 

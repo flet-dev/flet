@@ -1,12 +1,12 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
+from flet.controls.core.gesture_detector import TapEvent
 from flet.core.border import Border, BorderSide
 from flet.core.border_radius import OptionalBorderRadiusValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
 from flet.core.control_event import ControlEvent
-from flet.core.gesture_detector import TapEvent
 from flet.core.gradients import Gradient
 from flet.core.text_style import TextStyle
 from flet.core.types import (

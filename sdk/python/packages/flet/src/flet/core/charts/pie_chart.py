@@ -2,14 +2,13 @@ import json
 from enum import Enum
 from typing import Any, List, Optional, Union
 
+from flet.controls.material.badge import BadgeValue
+from flet.controls.material.tooltip import TooltipValue
 from flet.core.animation import AnimationValue
-from flet.core.badge import BadgeValue
 from flet.core.charts.pie_chart_section import PieChartSection
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control_event import ControlEvent
-from flet.core.event_handler import EventHandler
 from flet.core.ref import Ref
-from flet.core.tooltip import TooltipValue
 from flet.core.transform import OffsetValue, RotateValue, ScaleValue
 from flet.core.types import (
     ColorEnums,

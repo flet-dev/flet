@@ -1,7 +1,7 @@
-from flet.core.column import Column
-from flet.core.container import Container, ContainerTapEvent
+from flet.controls.core.column import Column
+from flet.controls.core.container import Container, ContainerTapEvent
+from flet.controls.material.elevated_button import ElevatedButton
 from flet.core.control_event import ControlEvent
-from flet.core.elevated_button import ElevatedButton
 from flet.core.page import Page, PageResizeEvent
 from flet.core.scrollable_control import OnScrollEvent
 from flet.messaging.connection import Connection
