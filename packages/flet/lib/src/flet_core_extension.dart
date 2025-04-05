@@ -41,6 +41,7 @@ import 'controls/reorderable_draggable.dart';
 import 'controls/row.dart';
 import 'controls/safe_area.dart';
 import 'controls/selection_area.dart';
+import 'controls/slider.dart';
 import 'controls/stack.dart';
 import 'controls/text.dart';
 import 'controls/text_button.dart';
@@ -144,6 +145,8 @@ class FletCoreExtension extends FletExtension {
         return ReorderableDraggableControl(key: key, control: control);
       case "Row":
         return RowControl(key: key, control: control);
+      case "Slider":
+        return SliderControl(key: key, control: control);
       case "Stack":
         return StackControl(key: key, control: control);
       case "Text":
