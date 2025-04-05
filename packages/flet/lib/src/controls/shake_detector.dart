@@ -1,30 +1,16 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
-import '../flet_control_backend.dart';
+import '../flet_backend.dart';
+import '../flet_service.dart';
 import '../models/control.dart';
 
-class ShakeDetectorControl extends StatefulWidget {
-  final Control? parent;
-  final Control control;
-  final Widget? nextChild;
-  final FletControlBackend backend;
+class ShakeDetectorService extends FletService {
+  ShakeDetectorService({required super.control, required super.backend});
 
-  const ShakeDetectorControl(
-      {super.key,
-      required this.parent,
-      required this.control,
-      required this.nextChild,
-      required this.backend});
-
-  @override
-  State<ShakeDetectorControl> createState() => _ShakeDetectorControlState();
-}
-
-class _ShakeDetectorControlState extends State<ShakeDetectorControl> {
   ShakeDetector? _shakeDetector;
   int? _minimumShakeCount;
   int? _shakeSlopTimeMs;
@@ -32,21 +18,15 @@ class _ShakeDetectorControlState extends State<ShakeDetectorControl> {
   double? _shakeThresholdGravity;
 
   @override
-  void dispose() {
-    _shakeDetector?.stopListening();
-    super.dispose();
-  }
+  void init() {
+    super.init();
 
-  @override
-  Widget build(BuildContext context) {
-    debugPrint("ShakeDetector build: ${widget.control.id}");
-
-    var minimumShakeCount = widget.control.getInt("minimumShakeCount", 1)!;
-    var shakeSlopTimeMs = widget.control.getInt("shakeSlopTimeMs", 500)!;
+    var minimumShakeCount = control.getInt("minimum_shake_count", 1)!;
+    var shakeSlopTimeMs = control.getInt("shake_slop_time_ms", 500)!;
     var shakeCountResetTimeMs =
-        widget.control.getInt("shakeCountResetTimeMs", 3000)!;
+        control.getInt("shake_count_reset_time_ms", 3000)!;
     var shakeThresholdGravity =
-        widget.control.getDouble("shakeThresholdGravity", 2.7)!;
+        control.getDouble("shake_threshold_gravity", 2.7)!;
 
     if (minimumShakeCount != _minimumShakeCount ||
         shakeSlopTimeMs != _shakeSlopTimeMs ||
@@ -60,7 +40,7 @@ class _ShakeDetectorControlState extends State<ShakeDetectorControl> {
       _shakeDetector?.stopListening();
       _shakeDetector = ShakeDetector.autoStart(
         onPhoneShake: () {
-          widget.backend.triggerControlEvent(widget.control.id, "shake");
+          backend.triggerControlEvent(control, "shake");
         },
         minimumShakeCount: minimumShakeCount,
         shakeSlopTimeMS: shakeSlopTimeMs,
@@ -68,8 +48,13 @@ class _ShakeDetectorControlState extends State<ShakeDetectorControl> {
         shakeThresholdGravity: shakeThresholdGravity,
       );
     }
+  }
 
-    return widget.nextChild ?? const SizedBox.shrink();
+  @override
+  void dispose() {
+    debugPrint("ShakeDetectorService(${control.id}).dispose()");
+    _shakeDetector?.stopListening();
+    super.dispose();
   }
 }
 

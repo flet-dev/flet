@@ -35,6 +35,7 @@ import 'controls/page.dart';
 import 'controls/progress_bar.dart';
 import 'controls/reorderable_draggable.dart';
 import 'controls/row.dart';
+import 'controls/shake_detector.dart';
 import 'controls/stack.dart';
 import 'controls/text.dart';
 import 'controls/text_button.dart';
@@ -155,6 +156,8 @@ class FletCoreExtension extends FletExtension {
         return ClipboardService(control: control, backend: backend);
       case "HapticFeedback":
         return HapticFeedbackService(control: control, backend: backend);
+      case "ShakeDetector":
+        return ShakeDetectorService(control: control, backend: backend);
       case "SharedPreferences":
         return SharedPreferencesService(control: control, backend: backend);
       case "UrlLauncher":
