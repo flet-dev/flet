@@ -17,6 +17,7 @@ import 'controls/cupertino_button.dart';
 import 'controls/cupertino_context_menu.dart';
 import 'controls/cupertino_context_menu_action.dart';
 import 'controls/cupertino_dialog_action.dart';
+import 'controls/cupertino_list_tile.dart';
 import 'controls/cupertino_slider.dart';
 import 'controls/divider.dart';
 import 'controls/dropdown.dart';
@@ -101,6 +102,8 @@ class FletCoreExtension extends FletExtension {
         return CupertinoDialogActionControl(key: key, control: control);
       case "CupertinoSlider":
         return CupertinoSliderControl(key: key, control: control);
+      case "CupertinoListTile":
+        return CupertinoListTileControl(key: key, control: control);
       case "Divider":
         return DividerControl(key: key, control: control);
       case "Dropdown":
