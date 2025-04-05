@@ -5,7 +5,13 @@ from flet.core.control import Control, control
 from flet.core.control_event import ControlEvent
 from flet.core.list_view import ListView
 from flet.core.padding import OptionalPaddingValue
-from flet.core.types import ClipBehavior, Number, OptionalEventCallable, OptionalNumber
+from flet.core.types import (
+    ClipBehavior,
+    MouseCursor,
+    Number,
+    OptionalEventCallable,
+    OptionalNumber,
+)
 
 __all__ = ["ReorderableListView", "OnReorderEvent"]
 
@@ -37,6 +43,8 @@ class ReorderableListView(ListView):
     header: Optional[Control] = None
     footer: Optional[Control] = None
     build_controls_on_demand: bool = True
+    show_default_drag_handles: Optional[bool] = None
+    mouse_cursor: Optional[MouseCursor] = None
     on_reorder: OptionalEventCallable[OnReorderEvent] = None
     on_reorder_start: OptionalEventCallable[OnReorderEvent] = None
     on_reorder_end: OptionalEventCallable[OnReorderEvent] = None
