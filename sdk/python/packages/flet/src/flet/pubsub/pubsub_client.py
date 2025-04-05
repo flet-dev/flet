@@ -1,10 +1,9 @@
 import logging
 from typing import Any, Callable
 
-import flet.core
 from flet.pubsub.pubsub_hub import PubSubHub
 
-logger = logging.getLogger(flet.__name__)
+logger = logging.getLogger("flet")
 
 
 class PubSubClient:

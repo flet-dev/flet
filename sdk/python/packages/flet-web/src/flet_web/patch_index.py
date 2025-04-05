@@ -3,7 +3,7 @@ import re
 from pathlib import Path
 from typing import Optional
 
-from flet.core.types import WebRenderer
+from flet.controls.types import WebRenderer
 
 
 def patch_index_html(

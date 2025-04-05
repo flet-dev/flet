@@ -7,9 +7,8 @@ import tarfile
 import tempfile
 from pathlib import Path
 
-from flet.core.types import WebRenderer
+from flet.controls.types import WebRenderer
 from flet.utils import copy_tree, is_within_directory, random_string
-
 from flet_cli.commands.base import BaseCommand
 from flet_cli.utils.project_dependencies import (
     get_poetry_dependencies,

@@ -1,1 +1,1 @@
-from flet.core.plotly_chart import PlotlyChart
+from flet.controls.core.plotly_chart import PlotlyChart

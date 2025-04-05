@@ -4,13 +4,13 @@ from dataclasses import field
 from typing import Any, List, Optional
 
 import msgpack
-from flet.core.buttons import ButtonStyle
-from flet.core.colors import Colors
-from flet.core.control import BaseControl, Control, Service, control
-from flet.core.elevated_button import ElevatedButton
-from flet.core.object_patch import ObjectPatch
-from flet.core.page import Page
-from flet.core.ref import Ref
+from flet.controls.buttons import ButtonStyle
+from flet.controls.colors import Colors
+from flet.controls.control import BaseControl, Control, Service, control
+from flet.controls.material.elevated_button import ElevatedButton
+from flet.controls.object_patch import ObjectPatch
+from flet.controls.page import Page
+from flet.controls.ref import Ref
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import encode_object_for_msgpack
 from flet.messaging.session import Session

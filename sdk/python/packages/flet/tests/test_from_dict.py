@@ -3,8 +3,8 @@ from enum import Enum
 from typing import Dict, List, Optional
 
 import pytest
-from flet.core.padding import Padding
-from flet.core.page import PageMediaData
+from flet.controls.padding import Padding
+from flet.controls.page import PageMediaData
 from flet.utils import from_dict
 
 

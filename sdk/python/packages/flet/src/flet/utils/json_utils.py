@@ -1,7 +1,7 @@
 import json
 from typing import Optional
 
-from flet.core.embed_json_encoder import EmbedJsonEncoder
+from flet.controls.embed_json_encoder import EmbedJsonEncoder
 
 
 def to_json(value) -> Optional[str]:
