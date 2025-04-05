@@ -9,11 +9,15 @@ import '../flet_service.dart';
 class ShakeDetectorService extends FletService {
   ShakeDetectorService({required super.control, required super.backend});
 
-  ShakeDetector? _shakeDetector;
-  int? _minimumShakeCount;
-  int? _shakeSlopTimeMs;
-  int? _shakeCountResetTimeMs;
-  double? _shakeThresholdGravity;
+  StreamSubscription<AccelerometerEvent>? _subscription;
+
+  int _mShakeTimestamp = DateTime.now().millisecondsSinceEpoch;
+  int _mShakeCount = 0;
+
+  int _minimumShakeCount = 1;
+  int _shakeSlopTimeMs = 500;
+  int _shakeCountResetTimeMs = 3000;
+  double _shakeThresholdGravity = 2.7;
 
   @override
   void init() {
@@ -26,6 +30,7 @@ class ShakeDetectorService extends FletService {
   void update() {
     debugPrint(
         "ShakeDetectorService(${control.id}).update: ${control.properties}");
+
     var minimumShakeCount = control.getInt("minimum_shake_count", 1)!;
     var shakeSlopTimeMs = control.getInt("shake_slop_time_ms", 500)!;
     var shakeCountResetTimeMs =
@@ -33,6 +38,7 @@ class ShakeDetectorService extends FletService {
     var shakeThresholdGravity =
         control.getDouble("shake_threshold_gravity", 2.7)!;
 
+    // Update config if changed
     if (minimumShakeCount != _minimumShakeCount ||
         shakeSlopTimeMs != _shakeSlopTimeMs ||
         shakeCountResetTimeMs != _shakeCountResetTimeMs ||
@@ -42,23 +48,49 @@ class ShakeDetectorService extends FletService {
       _shakeCountResetTimeMs = shakeCountResetTimeMs;
       _shakeThresholdGravity = shakeThresholdGravity;
 
-      _shakeDetector?.stopListening();
-      _shakeDetector = ShakeDetector.autoStart(
-        onPhoneShake: () {
-          backend.triggerControlEvent(control, "shake");
-        },
-        minimumShakeCount: minimumShakeCount,
-        shakeSlopTimeMS: shakeSlopTimeMs,
-        shakeCountResetTime: shakeCountResetTimeMs,
-        shakeThresholdGravity: shakeThresholdGravity,
-      );
+      _stopListening();
+      _startListening();
     }
+  }
+
+  void _startListening() {
+    _subscription = accelerometerEventStream().listen((event) {
+      final gX = event.x / 9.80665;
+      final gY = event.y / 9.80665;
+      final gZ = event.z / 9.80665;
+
+      final gForce = sqrt(gX * gX + gY * gY + gZ * gZ);
+
+      if (gForce > _shakeThresholdGravity) {
+        final now = DateTime.now().millisecondsSinceEpoch;
+
+        if (_mShakeTimestamp + _shakeSlopTimeMs > now) {
+          return;
+        }
+
+        if (_mShakeTimestamp + _shakeCountResetTimeMs < now) {
+          _mShakeCount = 0;
+        }
+
+        _mShakeTimestamp = now;
+        _mShakeCount++;
+
+        if (_mShakeCount >= _minimumShakeCount) {
+          backend.triggerControlEvent(control, "shake");
+        }
+      }
+    });
+  }
+
+  void _stopListening() {
+    _subscription?.cancel();
+    _subscription = null;
   }
 
   @override
   void dispose() {
     debugPrint("ShakeDetectorService(${control.id}).dispose()");
-    _shakeDetector?.stopListening();
+    _stopListening();
     super.dispose();
   }
 }
@@ -89,93 +121,3 @@ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
-/// Callback for phone shakes
-typedef PhoneShakeCallback = void Function();
-
-/// ShakeDetector class for phone shake functionality
-class ShakeDetector {
-  /// User callback for phone shake
-  final PhoneShakeCallback onPhoneShake;
-
-  /// Shake detection threshold
-  final double shakeThresholdGravity;
-
-  /// Minimum time between shake
-  final int shakeSlopTimeMS;
-
-  /// Time before shake count resets
-  final int shakeCountResetTime;
-
-  /// Number of shakes required before shake is triggered
-  final int minimumShakeCount;
-
-  int mShakeTimestamp = DateTime.now().millisecondsSinceEpoch;
-  int mShakeCount = 0;
-
-  /// StreamSubscription for Accelerometer events
-  StreamSubscription? streamSubscription;
-
-  /// This constructor waits until [startListening] is called
-  ShakeDetector.waitForStart({
-    required this.onPhoneShake,
-    this.shakeThresholdGravity = 2.7,
-    this.shakeSlopTimeMS = 500,
-    this.shakeCountResetTime = 3000,
-    this.minimumShakeCount = 1,
-  });
-
-  /// This constructor automatically calls [startListening] and starts detection and callbacks.
-  ShakeDetector.autoStart({
-    required this.onPhoneShake,
-    this.shakeThresholdGravity = 2.7,
-    this.shakeSlopTimeMS = 500,
-    this.shakeCountResetTime = 3000,
-    this.minimumShakeCount = 1,
-  }) {
-    startListening();
-  }
-
-  /// Starts listening to accelerometer events
-  void startListening() {
-    streamSubscription = accelerometerEventStream().listen(
-      (AccelerometerEvent event) {
-        double x = event.x;
-        double y = event.y;
-        double z = event.z;
-
-        double gX = x / 9.80665;
-        double gY = y / 9.80665;
-        double gZ = z / 9.80665;
-
-        // gForce will be close to 1 when there is no movement.
-        double gForce = sqrt(gX * gX + gY * gY + gZ * gZ);
-
-        if (gForce > shakeThresholdGravity) {
-          var now = DateTime.now().millisecondsSinceEpoch;
-          // ignore shake events too close to each other (500ms)
-          if (mShakeTimestamp + shakeSlopTimeMS > now) {
-            return;
-          }
-
-          // reset the shake count after 3 seconds of no shakes
-          if (mShakeTimestamp + shakeCountResetTime < now) {
-            mShakeCount = 0;
-          }
-
-          mShakeTimestamp = now;
-          mShakeCount++;
-
-          if (mShakeCount >= minimumShakeCount) {
-            onPhoneShake();
-          }
-        }
-      },
-    );
-  }
-
-  /// Stops listening to accelerometer events
-  void stopListening() {
-    streamSubscription?.cancel();
-  }
-}
