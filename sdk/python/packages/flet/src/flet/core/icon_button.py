@@ -1,5 +1,4 @@
 import asyncio
-import warnings
 from typing import Optional
 
 from flet.core.adaptive_control import AdaptiveControl
@@ -64,7 +63,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     """
 
     def __setattr__(self, name, value):
-        if name == "content" and value != None:
+        if name == "content" and value is not None:
             deprecated_warning(
                 name="content",
                 reason="Use 'icon' instead.",
@@ -99,7 +98,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     on_click: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
-    content: Optional[Control] = None  # deprecated
+    content: Optional[Control] = None  # todo(0.70.3): remove in favor of icon
 
     # def before_update(self):
     #     super().before_update()

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import 'base_controls.dart';
-import 'control_widget.dart';
 
 class ExpansionPanelListControl extends StatelessWidget {
   final Control control;
@@ -40,28 +39,18 @@ class ExpansionPanelListControl extends StatelessWidget {
             : null,
         children: control.children("controls").map((panelControl) {
           panelControl.notifyParent = true;
-
-          var headerCtrl = panelControl.child("header");
-          var bodyCtrl = panelControl.child("content");
-
           return ExpansionPanel(
-            backgroundColor: panelControl.getColor("bgColor", context),
+            backgroundColor: panelControl.getColor("bgcolor", context),
             isExpanded: panelControl.getBool("expanded", false)!,
             highlightColor: panelControl.getColor("highlight_color", context),
             splashColor: panelControl.getColor("splash_color", context),
             canTapOnHeader: panelControl.getBool("can_tap_header", false)!,
             headerBuilder: (BuildContext context, bool isExpanded) {
-              return headerCtrl != null
-                  ? ControlWidget(
-                      control: headerCtrl,
-                    )
-                  : const ListTile(title: Text("Header Placeholder"));
+              return panelControl.buildWidget("header") ??
+                  const ListTile(title: Text("Header Placeholder"));
             },
-            body: bodyCtrl != null
-                ? ControlWidget(
-                    control: bodyCtrl,
-                  )
-                : const ListTile(title: Text("Body Placeholder")),
+            body: panelControl.buildWidget("content") ??
+                const ListTile(title: Text("Body Placeholder")),
           );
         }).toList());
 

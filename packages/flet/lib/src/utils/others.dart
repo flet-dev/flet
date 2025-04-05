@@ -288,3 +288,13 @@ PointerDeviceKind? parsePointerDeviceKind(String? value,
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
       defaultValue;
 }
+
+NavigationRailLabelType? parseNavigationRailLabelType(String? value,
+    [NavigationRailLabelType? defaultValue]) {
+  if (value == null) {
+    return defaultValue;
+  }
+  return NavigationRailLabelType.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defaultValue;
+}

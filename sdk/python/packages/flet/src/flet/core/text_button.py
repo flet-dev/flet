@@ -4,10 +4,9 @@ from typing import Optional
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.buttons import ButtonStyle
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
+from flet.core.control import control
 from flet.core.types import (
     ClipBehavior,
-    IconValue,
     IconValueOrControl,
     OptionalColorValue,
     OptionalControlEventCallable,
@@ -44,10 +43,10 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     """
 
     def __setattr__(self, name, value):
-        if name == "text" and value != None:
+        if name == "text" and value is not None:
             deprecated_warning(
                 name="text",
-                reason="Use 'content' instead.",
+                reason="Use content instead.",
                 version="0.70.0",
                 delete_version="0.70.3",
             )
@@ -66,7 +65,7 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     on_hover: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
-    text: Optional[str] = None  # deprecated
+    text: Optional[str] = None  # todo(0.70.3): remove in favor of content
 
     # def before_update(self):
     #     super().before_update()
