@@ -31,3 +31,7 @@ class SelectionArea(Control):
 
     content: Control
     on_change: OptionalControlEventCallable = None
+
+    def before_update(self):
+        super().before_update()
+        assert self.content.visible, "content must be visible"

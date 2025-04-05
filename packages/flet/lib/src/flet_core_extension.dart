@@ -36,6 +36,8 @@ import 'controls/placeholder.dart';
 import 'controls/progress_bar.dart';
 import 'controls/reorderable_draggable.dart';
 import 'controls/row.dart';
+import 'controls/safe_area.dart';
+import 'controls/selection_area.dart';
 import 'controls/shake_detector.dart';
 import 'controls/stack.dart';
 import 'controls/text.dart';
@@ -143,6 +145,10 @@ class FletCoreExtension extends FletExtension {
         return VerticalDividerControl(key: key, control: control);
       case "View":
         return ViewControl(key: key, control: control);
+      case "SafeArea":
+        return SafeAreaControl(key: key, control: control);
+      case "SelectionArea":
+        return SelectionAreaControl(key: key, control: control);
       case "Window":
         return WindowControl(key: key, control: control);
       default:
