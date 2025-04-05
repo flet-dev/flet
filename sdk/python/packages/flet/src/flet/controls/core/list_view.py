@@ -1,12 +1,12 @@
 from dataclasses import field
 from typing import List, Optional
 
-from flet.core.adaptive_control import AdaptiveControl
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
-from flet.core.padding import OptionalPaddingValue
-from flet.core.scrollable_control import ScrollableControl
-from flet.core.types import ClipBehavior, Number, OptionalNumber
+from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control, control
+from flet.controls.padding import OptionalPaddingValue
+from flet.controls.scrollable_control import ScrollableControl
+from flet.controls.types import ClipBehavior, Number, OptionalNumber
 
 __all__ = ["ListView"]
 

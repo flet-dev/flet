@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from typing import Optional, Union
 
-from flet.core.alignment import Alignment
-from flet.core.padding import OptionalPaddingValue
-from flet.core.text_style import TextStyle
-from flet.core.transform import OffsetValue
-from flet.core.types import OptionalColorValue, OptionalNumber
+from flet.controls.alignment import Alignment
+from flet.controls.padding import OptionalPaddingValue
+from flet.controls.text_style import TextStyle
+from flet.controls.transform import OffsetValue
+from flet.controls.types import OptionalColorValue, OptionalNumber
 
 __all__ = ["Badge", "BadgeValue"]
 

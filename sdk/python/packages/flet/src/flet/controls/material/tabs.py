@@ -1,16 +1,16 @@
 from dataclasses import field
 from typing import List, Optional
 
+from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.border import BorderSide
+from flet.controls.border_radius import OptionalBorderRadiusValue
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control, control
+from flet.controls.margin import OptionalMarginValue
 from flet.controls.material.form_field_control import IconValueOrControl
-from flet.core.adaptive_control import AdaptiveControl
-from flet.core.border import BorderSide
-from flet.core.border_radius import OptionalBorderRadiusValue
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
-from flet.core.margin import OptionalMarginValue
-from flet.core.padding import OptionalPaddingValue
-from flet.core.text_style import TextStyle
-from flet.core.types import (
+from flet.controls.padding import OptionalPaddingValue
+from flet.controls.text_style import TextStyle
+from flet.controls.types import (
     ClipBehavior,
     ColorValue,
     ControlStateValue,

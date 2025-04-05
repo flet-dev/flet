@@ -3,15 +3,15 @@ import re
 import xml.etree.ElementTree as ET
 from typing import Any, Optional, Union
 
+from flet.controls import alignment
+from flet.controls.animation import AnimationValue
 from flet.controls.core.container import Container
 from flet.controls.core.image import Image
 from flet.controls.material.badge import BadgeValue
 from flet.controls.material.tooltip import TooltipValue
-from flet.core import alignment
-from flet.core.animation import AnimationValue
-from flet.core.ref import Ref
-from flet.core.transform import OffsetValue, RotateValue, ScaleValue
-from flet.core.types import (
+from flet.controls.ref import Ref
+from flet.controls.transform import OffsetValue, RotateValue, ScaleValue
+from flet.controls.types import (
     ImageFit,
     OptionalControlEventCallable,
     OptionalNumber,

@@ -1,12 +1,12 @@
 from typing import Any
 
+from flet.controls.control import Control
 from flet.controls.core.gesture_detector import (
     DragStartEvent,
     GestureDetector,
     TapEvent,
 )
-from flet.core.control import Control
-from flet.core.types import OptionalEventCallable
+from flet.controls.types import OptionalEventCallable
 
 
 class WindowDragArea(GestureDetector):

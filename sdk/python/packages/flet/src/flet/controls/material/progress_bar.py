@@ -1,9 +1,9 @@
 from typing import Optional
 
-from flet.core.border_radius import OptionalBorderRadiusValue
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import control
-from flet.core.types import OptionalColorValue, OptionalNumber
+from flet.controls.border_radius import OptionalBorderRadiusValue
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import control
+from flet.controls.types import OptionalColorValue, OptionalNumber
 
 __all__ = ["ProgressBar"]
 

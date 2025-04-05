@@ -1,12 +1,11 @@
 from dataclasses import dataclass
 
 import msgpack
-
-from flet.core.control import BaseControl
-from flet.core.object_patch import ObjectPatch
-from flet.core.padding import Padding
-from flet.core.page import Page, PageMediaData
-from flet.core.types import Brightness, PagePlatform
+from flet.controls.control import BaseControl
+from flet.controls.object_patch import ObjectPatch
+from flet.controls.padding import Padding
+from flet.controls.page import Page, PageMediaData
+from flet.controls.types import Brightness, PagePlatform
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import encode_object_for_msgpack
 from flet.messaging.session import Session

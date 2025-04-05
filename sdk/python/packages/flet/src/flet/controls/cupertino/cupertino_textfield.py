@@ -2,13 +2,13 @@ from dataclasses import field
 from enum import Enum
 from typing import Optional
 
+from flet.controls.box import DecorationImage, ShadowValue
+from flet.controls.control import control
+from flet.controls.gradients import Gradient
 from flet.controls.material.textfield import TextField
-from flet.core.box import DecorationImage, ShadowValue
-from flet.core.control import control
-from flet.core.gradients import Gradient
-from flet.core.padding import OptionalPaddingValue
-from flet.core.text_style import TextStyle
-from flet.core.types import BlendMode, OptionalControlEventCallable
+from flet.controls.padding import OptionalPaddingValue
+from flet.controls.text_style import TextStyle
+from flet.controls.types import BlendMode, OptionalControlEventCallable
 
 __all__ = ["CupertinoTextField", "VisibilityMode"]
 

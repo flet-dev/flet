@@ -1,9 +1,9 @@
 from typing import Optional
 
-from flet.core.colors import Colors
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
-from flet.core.types import ColorValue, Number, OptionalNumber
+from flet.controls.colors import Colors
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control, control
+from flet.controls.types import ColorValue, Number, OptionalNumber
 
 __all__ = ["Placeholder"]
 

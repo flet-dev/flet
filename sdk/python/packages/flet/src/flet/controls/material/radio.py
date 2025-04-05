@@ -1,11 +1,11 @@
 from dataclasses import field
 from typing import Optional
 
-from flet.core.adaptive_control import AdaptiveControl
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import control
-from flet.core.text_style import TextStyle
-from flet.core.types import (
+from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import control
+from flet.controls.text_style import TextStyle
+from flet.controls.types import (
     ColorValue,
     ControlStateValue,
     LabelPosition,

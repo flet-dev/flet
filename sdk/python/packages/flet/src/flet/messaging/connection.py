@@ -3,11 +3,10 @@ from asyncio import AbstractEventLoop
 from concurrent.futures import ThreadPoolExecutor
 from typing import Optional
 
-import flet.core
 from flet.messaging.protocol import ClientMessage
 from flet.pubsub.pubsub_hub import PubSubHub
 
-logger = logging.getLogger(flet.__name__)
+logger = logging.getLogger("flet")
 
 
 class Connection:

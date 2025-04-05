@@ -1,12 +1,12 @@
 from dataclasses import field
 from typing import List, Optional
 
+from flet.controls.buttons import ButtonStyle
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control, control
 from flet.controls.material.menu_bar import MenuStyle
-from flet.core.buttons import ButtonStyle
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
-from flet.core.transform import OffsetValue
-from flet.core.types import ClipBehavior, OptionalControlEventCallable
+from flet.controls.transform import OffsetValue
+from flet.controls.types import ClipBehavior, OptionalControlEventCallable
 
 __all__ = ["SubmenuButton"]
 

@@ -1,4 +1,50 @@
 from flet.app import app, app_async, run, run_async
+from flet.controls import (
+    alignment,
+    animation,
+    border,
+    border_radius,
+    colors,
+    margin,
+    padding,
+    painting,
+    size,
+    transform,
+)
+from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.alignment import Alignment, Axis
+from flet.controls.animation import Animation, AnimationCurve
+from flet.controls.blur import Blur, BlurTileMode, BlurValue, OptionalBlurValue
+from flet.controls.border import Border, BorderSide, BorderSideStrokeAlign
+from flet.controls.border_radius import (
+    BorderRadius,
+    BorderRadiusValue,
+    OptionalBorderRadiusValue,
+)
+from flet.controls.box import (
+    BoxConstraints,
+    BoxDecoration,
+    BoxShadow,
+    BoxShape,
+    ColorFilter,
+    DecorationImage,
+    FilterQuality,
+    ShadowBlurStyle,
+    ShadowValue,
+)
+from flet.controls.buttons import (
+    BeveledRectangleBorder,
+    ButtonStyle,
+    CircleBorder,
+    ContinuousRectangleBorder,
+    OutlinedBorder,
+    RoundedRectangleBorder,
+    StadiumBorder,
+)
+from flet.controls.colors import Colors
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control, Service, control
+from flet.controls.control_event import ControlEvent
 from flet.controls.core.animated_switcher import (
     AnimatedSwitcher,
     AnimatedSwitcherTransition,
@@ -9,6 +55,29 @@ from flet.controls.core.autofill_group import (
     AutofillHint,
 )
 from flet.controls.core.button import Button
+from flet.controls.core.charts.bar_chart import BarChart, BarChartEvent
+from flet.controls.core.charts.bar_chart_group import BarChartGroup
+from flet.controls.core.charts.bar_chart_rod import BarChartRod
+from flet.controls.core.charts.bar_chart_rod_stack_item import BarChartRodStackItem
+from flet.controls.core.charts.chart_axis import ChartAxis
+from flet.controls.core.charts.chart_axis_label import ChartAxisLabel
+from flet.controls.core.charts.chart_grid_lines import ChartGridLines
+from flet.controls.core.charts.chart_point_line import ChartPointLine
+from flet.controls.core.charts.chart_point_shape import (
+    ChartCirclePoint,
+    ChartCrossPoint,
+    ChartPointShape,
+    ChartSquarePoint,
+)
+from flet.controls.core.charts.line_chart import (
+    LineChart,
+    LineChartEvent,
+    LineChartEventSpot,
+)
+from flet.controls.core.charts.line_chart_data import LineChartData
+from flet.controls.core.charts.line_chart_data_point import LineChartDataPoint
+from flet.controls.core.charts.pie_chart import PieChart, PieChartEvent
+from flet.controls.core.charts.pie_chart_section import PieChartSection
 from flet.controls.core.column import Column
 from flet.controls.core.container import Container, ContainerTapEvent
 from flet.controls.core.dismissible import (
@@ -119,6 +188,19 @@ from flet.controls.cupertino.cupertino_timer_picker import (
     CupertinoTimerPicker,
     CupertinoTimerPickerMode,
 )
+from flet.controls.dialog_control import DialogControl
+from flet.controls.exceptions import (
+    FletException,
+    FletUnimplementedPlatformEception,
+    FletUnsupportedPlatformException,
+)
+from flet.controls.gradients import (
+    GradientTileMode,
+    LinearGradient,
+    RadialGradient,
+    SweepGradient,
+)
+from flet.controls.margin import Margin, MarginValue, OptionalMarginValue
 from flet.controls.material import dropdown, dropdownm2, icons
 from flet.controls.material.alert_dialog import AlertDialog
 from flet.controls.material.app_bar import AppBar
@@ -225,86 +307,8 @@ from flet.controls.material.time_picker import (
 )
 from flet.controls.material.tooltip import Tooltip, TooltipTriggerMode
 from flet.controls.material.vertical_divider import VerticalDivider
-from flet.core import (
-    alignment,
-    animation,
-    border,
-    border_radius,
-    colors,
-    margin,
-    padding,
-    painting,
-    size,
-    transform,
-)
-from flet.core.adaptive_control import AdaptiveControl
-from flet.core.alignment import Alignment, Axis
-from flet.core.animation import Animation, AnimationCurve
-from flet.core.blur import Blur, BlurTileMode, BlurValue, OptionalBlurValue
-from flet.core.border import Border, BorderSide, BorderSideStrokeAlign
-from flet.core.border_radius import (
-    BorderRadius,
-    BorderRadiusValue,
-    OptionalBorderRadiusValue,
-)
-from flet.core.box import (
-    BoxConstraints,
-    BoxDecoration,
-    BoxShadow,
-    BoxShape,
-    ColorFilter,
-    DecorationImage,
-    FilterQuality,
-    ShadowBlurStyle,
-    ShadowValue,
-)
-from flet.core.buttons import (
-    BeveledRectangleBorder,
-    ButtonStyle,
-    CircleBorder,
-    ContinuousRectangleBorder,
-    OutlinedBorder,
-    RoundedRectangleBorder,
-    StadiumBorder,
-)
-from flet.core.charts.bar_chart import BarChart, BarChartEvent
-from flet.core.charts.bar_chart_group import BarChartGroup
-from flet.core.charts.bar_chart_rod import BarChartRod
-from flet.core.charts.bar_chart_rod_stack_item import BarChartRodStackItem
-from flet.core.charts.chart_axis import ChartAxis
-from flet.core.charts.chart_axis_label import ChartAxisLabel
-from flet.core.charts.chart_grid_lines import ChartGridLines
-from flet.core.charts.chart_point_line import ChartPointLine
-from flet.core.charts.chart_point_shape import (
-    ChartCirclePoint,
-    ChartCrossPoint,
-    ChartPointShape,
-    ChartSquarePoint,
-)
-from flet.core.charts.line_chart import LineChart, LineChartEvent, LineChartEventSpot
-from flet.core.charts.line_chart_data import LineChartData
-from flet.core.charts.line_chart_data_point import LineChartDataPoint
-from flet.core.charts.pie_chart import PieChart, PieChartEvent
-from flet.core.charts.pie_chart_section import PieChartSection
-from flet.core.colors import Colors
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, Service, control
-from flet.core.control_event import ControlEvent
-from flet.core.dialog_control import DialogControl
-from flet.core.exceptions import (
-    FletException,
-    FletUnimplementedPlatformEception,
-    FletUnsupportedPlatformException,
-)
-from flet.core.gradients import (
-    GradientTileMode,
-    LinearGradient,
-    RadialGradient,
-    SweepGradient,
-)
-from flet.core.margin import Margin, MarginValue, OptionalMarginValue
-from flet.core.padding import OptionalPaddingValue, Padding, PaddingValue
-from flet.core.page import (
+from flet.controls.padding import OptionalPaddingValue, Padding, PaddingValue
+from flet.controls.page import (
     AppLifecycleStateChangeEvent,
     BrowserContextMenu,
     KeyboardEvent,
@@ -317,25 +321,25 @@ from flet.core.page import (
     ViewPopEvent,
     context,
 )
-from flet.core.painting import (
+from flet.controls.painting import (
     Paint,
     PaintingStyle,
     PaintLinearGradient,
     PaintRadialGradient,
     PaintSweepGradient,
 )
-from flet.core.querystring import QueryString
-from flet.core.ref import Ref
-from flet.core.scrollable_control import (
+from flet.controls.querystring import QueryString
+from flet.controls.ref import Ref
+from flet.controls.scrollable_control import (
     OnScrollEvent,
     ScrollableControl,
     ScrollDirection,
     ScrollType,
 )
-from flet.core.shader_mask import ShaderMask
-from flet.core.size import Size
-from flet.core.template_route import TemplateRoute
-from flet.core.text_style import (
+from flet.controls.shader_mask import ShaderMask
+from flet.controls.size import Size
+from flet.controls.template_route import TemplateRoute
+from flet.controls.text_style import (
     TextBaseline,
     TextDecoration,
     TextDecorationStyle,
@@ -343,7 +347,7 @@ from flet.core.text_style import (
     TextStyle,
     TextThemeStyle,
 )
-from flet.core.theme import (
+from flet.controls.theme import (
     AppBarTheme,
     BadgeTheme,
     BannerTheme,
@@ -388,8 +392,8 @@ from flet.core.theme import (
     TimePickerTheme,
     TooltipTheme,
 )
-from flet.core.transform import Offset, Rotate, Scale
-from flet.core.types import (
+from flet.controls.transform import Offset, Rotate, Scale
+from flet.controls.types import (
     FLET_APP,
     FLET_APP_HIDDEN,
     FLET_APP_WEB,

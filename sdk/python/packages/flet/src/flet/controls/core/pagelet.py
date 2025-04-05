@@ -1,5 +1,8 @@
 from typing import Optional, Union
 
+from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control, control
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
 from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.controls.material.app_bar import AppBar
@@ -7,11 +10,8 @@ from flet.controls.material.bottom_app_bar import BottomAppBar
 from flet.controls.material.floating_action_button import FloatingActionButton
 from flet.controls.material.navigation_bar import NavigationBar
 from flet.controls.material.navigation_drawer import NavigationDrawer
-from flet.core.adaptive_control import AdaptiveControl
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
-from flet.core.transform import OffsetValue
-from flet.core.types import FloatingActionButtonLocation, OptionalColorValue
+from flet.controls.transform import OffsetValue
+from flet.controls.types import FloatingActionButtonLocation, OptionalColorValue
 
 # todo: deprecate show_* in favor of a open/close methods, or page.open/close
 __all__ = ["Pagelet"]

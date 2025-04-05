@@ -1,11 +1,11 @@
 import asyncio
 from typing import Optional
 
-from flet.core.control import Service, control
+from flet.controls.control import Service, control
 
 __all__ = ["Clipboard"]
 
-from flet.core.types import OptionalNumber
+from flet.controls.types import OptionalNumber
 
 
 @control("Clipboard")

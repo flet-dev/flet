@@ -1,11 +1,11 @@
 from typing import List, Optional, Set
 
-from flet.core.alignment import Axis
-from flet.core.buttons import ButtonStyle
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
-from flet.core.padding import OptionalPaddingValue
-from flet.core.types import OptionalControlEventCallable
+from flet.controls.alignment import Axis
+from flet.controls.buttons import ButtonStyle
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control, control
+from flet.controls.padding import OptionalPaddingValue
+from flet.controls.types import OptionalControlEventCallable
 
 __all__ = ["SegmentedButton", "Segment"]
 

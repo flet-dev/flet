@@ -1,7 +1,7 @@
 import asyncio
 from typing import Any, List
 
-from flet.core.control import Service, control
+from flet.controls.control import Service, control
 
 __all__ = ["SharedPreferences"]
 

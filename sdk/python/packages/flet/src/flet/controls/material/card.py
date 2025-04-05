@@ -1,12 +1,12 @@
 from enum import Enum
 from typing import Optional
 
-from flet.core.adaptive_control import AdaptiveControl
-from flet.core.buttons import OutlinedBorder
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
-from flet.core.margin import OptionalMarginValue
-from flet.core.types import ClipBehavior, OptionalColorValue, OptionalNumber
+from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.buttons import OutlinedBorder
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control, control
+from flet.controls.margin import OptionalMarginValue
+from flet.controls.types import ClipBehavior, OptionalColorValue, OptionalNumber
 
 __all__ = ["Card", "CardVariant"]
 

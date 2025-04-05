@@ -1,7 +1,7 @@
 from typing import Optional
 
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.types import (
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.types import (
     ColorValue,
     ControlStateValue,
     IconValue,

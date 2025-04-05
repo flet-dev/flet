@@ -1,5 +1,5 @@
-from flet.core.control import Control, control
-from flet.core.types import OptionalControlEventCallable
+from flet.controls.control import Control, control
+from flet.controls.types import OptionalControlEventCallable
 
 __all__ = ["SelectionArea"]
 

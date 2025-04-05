@@ -1,8 +1,8 @@
 from typing import Optional
 
-from flet.core.alignment import Axis
-from flet.core.control import Control, control
-from flet.core.types import OptionalControlEventCallable
+from flet.controls.alignment import Axis
+from flet.controls.control import Control, control
+from flet.controls.types import OptionalControlEventCallable
 
 __all__ = ["Draggable"]
 

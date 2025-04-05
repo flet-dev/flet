@@ -3,10 +3,10 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
+from flet.controls.control import Control, control
+from flet.controls.control_event import ControlEvent
 from flet.controls.material.textfield import KeyboardType
-from flet.core.control import Control, control
-from flet.core.control_event import ControlEvent
-from flet.core.types import (
+from flet.controls.types import (
     DateTimeValue,
     IconValue,
     OptionalColorValue,

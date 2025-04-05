@@ -1,10 +1,10 @@
 from dataclasses import field
 from enum import Enum
 
-from flet.core.animation import AnimationCurve
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
-from flet.core.types import Duration, DurationValue
+from flet.controls.animation import AnimationCurve
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control, control
+from flet.controls.types import Duration, DurationValue
 
 __all__ = ["AnimatedSwitcher", "AnimatedSwitcherTransition"]
 

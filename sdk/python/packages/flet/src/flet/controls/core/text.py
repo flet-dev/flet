@@ -2,12 +2,12 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import List, Optional
 
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import control
+from flet.controls.control_event import ControlEvent
 from flet.controls.core.text_span import TextSpan
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import control
-from flet.core.control_event import ControlEvent
-from flet.core.text_style import TextOverflow, TextStyle, TextThemeStyle
-from flet.core.types import (
+from flet.controls.text_style import TextOverflow, TextStyle, TextThemeStyle
+from flet.controls.types import (
     FontWeight,
     OptionalColorValue,
     OptionalControlEventCallable,

@@ -9,8 +9,8 @@ from typing import Any, Dict, List, Optional
 
 import flet_web.fastapi as flet_fastapi
 from fastapi import WebSocket, WebSocketDisconnect
-from flet.core.control_event import ControlEvent
-from flet.core.page import Page, PageDisconnectedException
+from flet.controls.control_event import ControlEvent
+from flet.controls.page import Page, PageDisconnectedException
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,

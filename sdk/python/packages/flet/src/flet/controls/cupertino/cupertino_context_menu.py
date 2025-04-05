@@ -1,8 +1,8 @@
 from dataclasses import field
 from typing import List
 
-from flet.core.adaptive_control import AdaptiveControl
-from flet.core.control import Control, control
+from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.control import Control, control
 
 __all__ = ["CupertinoContextMenu"]
 

@@ -1,10 +1,10 @@
 from dataclasses import field
 
-from flet.core import padding
-from flet.core.adaptive_control import AdaptiveControl
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
-from flet.core.padding import OptionalPaddingValue
+from flet.controls import padding
+from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control, control
+from flet.controls.padding import OptionalPaddingValue
 
 __all__ = ["SafeArea"]
 

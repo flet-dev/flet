@@ -1,14 +1,14 @@
 import json
 from typing import Any, Optional, Set, Union
 
-from flet.core.adaptive_control import AdaptiveControl
-from flet.core.animation import AnimationValue
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control
-from flet.core.control_event import ControlEvent
-from flet.core.ref import Ref
-from flet.core.transform import OffsetValue, RotateValue, ScaleValue
-from flet.core.types import (
+from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.animation import AnimationValue
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control
+from flet.controls.control_event import ControlEvent
+from flet.controls.ref import Ref
+from flet.controls.transform import OffsetValue, RotateValue, ScaleValue
+from flet.controls.types import (
     MouseCursor,
     OptionalControlEventCallable,
     OptionalEventCallable,

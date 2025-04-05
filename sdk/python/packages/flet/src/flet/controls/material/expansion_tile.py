@@ -1,13 +1,13 @@
 from enum import Enum
 from typing import List, Optional
 
-from flet.core.adaptive_control import AdaptiveControl
-from flet.core.alignment import Alignment
-from flet.core.buttons import OutlinedBorder
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
-from flet.core.padding import OptionalPaddingValue
-from flet.core.types import (
+from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.alignment import Alignment
+from flet.controls.buttons import OutlinedBorder
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control, control
+from flet.controls.padding import OptionalPaddingValue
+from flet.controls.types import (
     ClipBehavior,
     CrossAxisAlignment,
     OptionalColorValue,

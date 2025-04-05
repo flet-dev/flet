@@ -1,12 +1,12 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from flet.core.alignment import Alignment
-from flet.core.border import BorderSide
-from flet.core.buttons import OutlinedBorder
-from flet.core.control import Control, control
-from flet.core.padding import PaddingValue
-from flet.core.types import (
+from flet.controls.alignment import Alignment
+from flet.controls.border import BorderSide
+from flet.controls.buttons import OutlinedBorder
+from flet.controls.control import Control, control
+from flet.controls.padding import PaddingValue
+from flet.controls.types import (
     ClipBehavior,
     ColorValue,
     ControlState,

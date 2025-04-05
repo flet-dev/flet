@@ -1,5 +1,5 @@
+from flet.controls.control import control
 from flet.controls.material.elevated_button import ElevatedButton
-from flet.core.control import control
 
 
 @control("FilledTonalButton")

@@ -1,8 +1,8 @@
 from typing import Optional
 
-from flet.core.adaptive_control import AdaptiveControl
-from flet.core.control import control
-from flet.core.types import IconValue, OptionalControlEventCallable, StrOrControl
+from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.control import control
+from flet.controls.types import IconValue, OptionalControlEventCallable, StrOrControl
 
 __all__ = ["CupertinoContextMenuAction"]
 

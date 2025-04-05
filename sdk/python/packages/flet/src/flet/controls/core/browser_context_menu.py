@@ -1,7 +1,7 @@
 import asyncio
 from typing import Optional
 
-from flet.core.control import Service, control
+from flet.controls.control import Service, control
 
 __all__ = ["BrowserContextMenu"]
 

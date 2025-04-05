@@ -1,18 +1,18 @@
 from enum import Enum
 from typing import Any, Optional, Union
 
+from flet.controls.animation import AnimationValue
+from flet.controls.border_radius import OptionalBorderRadiusValue
+from flet.controls.box import BoxConstraints
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control
 from flet.controls.material.badge import BadgeValue
 from flet.controls.material.tooltip import TooltipValue
-from flet.core.animation import AnimationValue
-from flet.core.border_radius import OptionalBorderRadiusValue
-from flet.core.box import BoxConstraints
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control
-from flet.core.padding import OptionalPaddingValue
-from flet.core.ref import Ref
-from flet.core.text_style import TextStyle
-from flet.core.transform import OffsetValue, RotateValue, ScaleValue
-from flet.core.types import (
+from flet.controls.padding import OptionalPaddingValue
+from flet.controls.ref import Ref
+from flet.controls.text_style import TextStyle
+from flet.controls.transform import OffsetValue, RotateValue, ScaleValue
+from flet.controls.types import (
     ColorEnums,
     DurationValue,
     IconEnums,

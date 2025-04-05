@@ -3,10 +3,10 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Callable, List, Optional
 
-from flet.core.control import Control
-from flet.core.control_event import ControlEvent
-from flet.core.ref import Ref
-from flet.core.types import OptionalEventCallable
+from flet.controls.control import Control
+from flet.controls.control_event import ControlEvent
+from flet.controls.ref import Ref
+from flet.controls.types import OptionalEventCallable
 
 try:
     from typing import Literal

@@ -1,14 +1,14 @@
 from dataclasses import dataclass
 from typing import List, Optional, Union
 
-from flet.core.border import Border
-from flet.core.border_radius import OptionalBorderRadiusValue
-from flet.core.box import BoxShadow, BoxShape, DecorationImage
-from flet.core.gradients import Gradient
-from flet.core.margin import OptionalMarginValue
-from flet.core.padding import OptionalPaddingValue
-from flet.core.text_style import TextStyle
-from flet.core.types import (
+from flet.controls.border import Border
+from flet.controls.border_radius import OptionalBorderRadiusValue
+from flet.controls.box import BoxShadow, BoxShape, DecorationImage
+from flet.controls.gradients import Gradient
+from flet.controls.margin import OptionalMarginValue
+from flet.controls.padding import OptionalPaddingValue
+from flet.controls.text_style import TextStyle
+from flet.controls.types import (
     BlendMode,
     DurationValue,
     OptionalColorValue,

@@ -2,15 +2,15 @@ import time
 from dataclasses import field
 from typing import List, Optional
 
+from flet.controls.border import BorderSide
+from flet.controls.box import BoxConstraints
+from flet.controls.buttons import OutlinedBorder
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control, control
 from flet.controls.material.textfield import KeyboardType, TextCapitalization
-from flet.core.border import BorderSide
-from flet.core.box import BoxConstraints
-from flet.core.buttons import OutlinedBorder
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
-from flet.core.padding import OptionalPaddingValue, PaddingValue
-from flet.core.text_style import TextStyle
-from flet.core.types import (
+from flet.controls.padding import OptionalPaddingValue, PaddingValue
+from flet.controls.text_style import TextStyle
+from flet.controls.types import (
     ColorValue,
     ControlStateValue,
     OptionalColorValue,

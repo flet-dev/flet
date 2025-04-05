@@ -2,13 +2,13 @@ from dataclasses import field
 from enum import Enum
 from typing import List, Optional
 
-from flet.core.animation import AnimationStyle
-from flet.core.box import BoxConstraints
-from flet.core.buttons import ButtonStyle, OutlinedBorder
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
-from flet.core.padding import OptionalPaddingValue
-from flet.core.types import (
+from flet.controls.animation import AnimationStyle
+from flet.controls.box import BoxConstraints
+from flet.controls.buttons import ButtonStyle, OutlinedBorder
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control, control
+from flet.controls.padding import OptionalPaddingValue
+from flet.controls.types import (
     ClipBehavior,
     IconValue,
     MouseCursor,

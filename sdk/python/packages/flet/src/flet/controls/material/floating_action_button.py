@@ -1,9 +1,9 @@
 from typing import Optional
 
-from flet.core.buttons import OutlinedBorder
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import control
-from flet.core.types import (
+from flet.controls.buttons import OutlinedBorder
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import control
+from flet.controls.types import (
     ClipBehavior,
     IconValueOrControl,
     MouseCursor,

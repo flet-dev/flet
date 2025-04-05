@@ -1,6 +1,6 @@
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import control
-from flet.core.types import Number, OptionalColorValue
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import control
+from flet.controls.types import Number, OptionalColorValue
 
 __all__ = ["CupertinoActivityIndicator"]
 

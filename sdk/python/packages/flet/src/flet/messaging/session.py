@@ -4,10 +4,10 @@ import weakref
 from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
-from flet.core.control import BaseControl, Control
-from flet.core.control_event import ControlEvent
-from flet.core.object_patch import ObjectPatch
-from flet.core.page import Page, _session_page
+from flet.controls.control import BaseControl, Control
+from flet.controls.control_event import ControlEvent
+from flet.controls.object_patch import ObjectPatch
+from flet.controls.page import Page, _session_page
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,

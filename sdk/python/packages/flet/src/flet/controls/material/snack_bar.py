@@ -1,11 +1,11 @@
 from enum import Enum
 from typing import Optional
 
-from flet.core.buttons import OutlinedBorder
-from flet.core.control import Control, control
-from flet.core.margin import OptionalMarginValue
-from flet.core.padding import OptionalPaddingValue
-from flet.core.types import (
+from flet.controls.buttons import OutlinedBorder
+from flet.controls.control import Control, control
+from flet.controls.margin import OptionalMarginValue
+from flet.controls.padding import OptionalPaddingValue
+from flet.controls.types import (
     ClipBehavior,
     Number,
     OptionalColorValue,

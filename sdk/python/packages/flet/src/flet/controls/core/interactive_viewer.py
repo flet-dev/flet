@@ -1,13 +1,13 @@
 from typing import Optional
 
-from flet.core.adaptive_control import AdaptiveControl
-from flet.core.alignment import Alignment
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
-from flet.core.control_event import ControlEvent
-from flet.core.margin import OptionalMarginValue
-from flet.core.transform import Offset
-from flet.core.types import (
+from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.alignment import Alignment
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control, control
+from flet.controls.control_event import ControlEvent
+from flet.controls.margin import OptionalMarginValue
+from flet.controls.transform import Offset
+from flet.controls.types import (
     ClipBehavior,
     DurationValue,
     Number,
@@ -73,9 +73,9 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     on_interaction_update: OptionalEventCallable[
         InteractiveViewerInteractionUpdateEvent
     ] = None
-    on_interaction_end: OptionalEventCallable[
-        InteractiveViewerInteractionEndEvent
-    ] = None
+    on_interaction_end: OptionalEventCallable[InteractiveViewerInteractionEndEvent] = (
+        None
+    )
 
     def before_update(self):
         super().before_update()

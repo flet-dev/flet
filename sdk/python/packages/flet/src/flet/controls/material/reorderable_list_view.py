@@ -1,11 +1,11 @@
 from dataclasses import field
 from typing import List, Optional
 
+from flet.controls.control import Control, control
+from flet.controls.control_event import ControlEvent
 from flet.controls.core.list_view import ListView
-from flet.core.control import Control, control
-from flet.core.control_event import ControlEvent
-from flet.core.padding import OptionalPaddingValue
-from flet.core.types import (
+from flet.controls.padding import OptionalPaddingValue
+from flet.controls.types import (
     ClipBehavior,
     MouseCursor,
     Number,

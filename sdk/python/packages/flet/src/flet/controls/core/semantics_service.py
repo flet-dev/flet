@@ -1,6 +1,6 @@
 from enum import Enum
 
-from flet.core.control import Service, control
+from flet.controls.control import Service, control
 
 __all__ = ["SemanticsService", "Assertiveness"]
 

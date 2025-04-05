@@ -2,11 +2,10 @@ import asyncio
 import logging
 from typing import Optional
 
-import uvicorn
-from flet.core.types import WebRenderer
-
 import flet_web.fastapi
 import flet_web.fastapi as flet_fastapi
+import uvicorn
+from flet.controls.types import WebRenderer
 
 logger = logging.getLogger(flet_fastapi.__name__)
 

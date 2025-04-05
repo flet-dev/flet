@@ -1,5 +1,5 @@
-from flet.core.control import Control, control
-from flet.core.types import OptionalColorValue, OptionalNumber
+from flet.controls.control import Control, control
+from flet.controls.types import OptionalColorValue, OptionalNumber
 
 __all__ = ["VerticalDivider"]
 

@@ -1,9 +1,9 @@
 from dataclasses import field
 from typing import Optional
 
-from flet.core.control import Control, control
-from flet.core.padding import OptionalPaddingValue
-from flet.core.types import (
+from flet.controls.control import Control, control
+from flet.controls.padding import OptionalPaddingValue
+from flet.controls.types import (
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,

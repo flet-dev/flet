@@ -1,11 +1,11 @@
 import asyncio
 from typing import Optional
 
-from flet.core.adaptive_control import AdaptiveControl
-from flet.core.buttons import ButtonStyle
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import control
-from flet.core.types import (
+from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.buttons import ButtonStyle
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import control
+from flet.controls.types import (
     ClipBehavior,
     IconValueOrControl,
     OptionalColorValue,

@@ -1,10 +1,10 @@
 from typing import Optional
 
-from flet.core.border_radius import OptionalBorderRadiusValue
-from flet.core.box import FilterQuality
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
-from flet.core.types import BlendMode, ImageFit, ImageRepeat, OptionalColorValue
+from flet.controls.border_radius import OptionalBorderRadiusValue
+from flet.controls.box import FilterQuality
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control, control
+from flet.controls.types import BlendMode, ImageFit, ImageRepeat, OptionalColorValue
 
 __all__ = ["Image"]
 

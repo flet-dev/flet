@@ -1,8 +1,8 @@
 from typing import Optional
 
+from flet.controls.control import Control, control
 from flet.controls.material.badge import BadgeValue
-from flet.core.control import Control, control
-from flet.core.types import OptionalControlEventCallable, OptionalNumber
+from flet.controls.types import OptionalControlEventCallable, OptionalNumber
 
 __all__ = ["Semantics"]
 

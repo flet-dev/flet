@@ -1,9 +1,9 @@
 from dataclasses import field
 from typing import List, Optional
 
-from flet.core.animation import Animation
-from flet.core.control import Control, control
-from flet.core.dialog_control import DialogControl
+from flet.controls.animation import Animation
+from flet.controls.control import Control, control
+from flet.controls.dialog_control import DialogControl
 
 __all__ = ["CupertinoAlertDialog"]
 

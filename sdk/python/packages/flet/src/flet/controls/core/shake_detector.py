@@ -1,5 +1,5 @@
-from flet.core.control import Service, control
-from flet.core.types import Number, OptionalControlEventCallable
+from flet.controls.control import Service, control
+from flet.controls.types import Number, OptionalControlEventCallable
 
 __all__ = ["ShakeDetector"]
 

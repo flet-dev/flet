@@ -2,11 +2,11 @@ from dataclasses import field
 from enum import Enum
 from typing import List, Optional
 
-from flet.core.adaptive_control import AdaptiveControl
-from flet.core.alignment import Alignment
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
-from flet.core.types import ClipBehavior
+from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.alignment import Alignment
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control, control
+from flet.controls.types import ClipBehavior
 
 __all__ = ["Stack", "StackFit"]
 

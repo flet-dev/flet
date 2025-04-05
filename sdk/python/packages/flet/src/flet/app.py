@@ -7,11 +7,10 @@ import traceback
 from pathlib import Path
 from typing import Optional
 
-import flet
 import flet.version
-from flet.core.control_event import ControlEvent
-from flet.core.page import Page
-from flet.core.types import AppView, WebRenderer
+from flet.controls.control_event import ControlEvent
+from flet.controls.page import Page
+from flet.controls.types import AppView, WebRenderer
 from flet.messaging.session import Session
 from flet.utils import (
     get_bool_env_var,
@@ -28,7 +27,7 @@ from flet.utils.pip import (
     ensure_flet_web_package_installed,
 )
 
-logger = logging.getLogger(flet.__name__)
+logger = logging.getLogger("flet")
 
 
 @deprecated("Use run() instead.", version="0.70.0", show_parentheses=True)
@@ -287,7 +286,7 @@ async def __run_web_server(
 
     logger.info(f"Starting Flet web server on port {port}...")
 
-    log_level = logging.getLogger(flet.__name__).getEffectiveLevel()
+    log_level = logging.getLogger("flet").getEffectiveLevel()
     if log_level == logging.CRITICAL or log_level == logging.NOTSET:
         log_level = logging.FATAL
 

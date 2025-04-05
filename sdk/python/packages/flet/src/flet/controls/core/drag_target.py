@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
 from typing import Optional
 
-from flet.core.control import Control, control
-from flet.core.control_event import ControlEvent
-from flet.core.types import OptionalControlEventCallable, OptionalEventCallable
+from flet.controls.control import Control, control
+from flet.controls.control_event import ControlEvent
+from flet.controls.types import OptionalControlEventCallable, OptionalEventCallable
 
 __all__ = ["DragTarget", "DragTargetEvent"]
 

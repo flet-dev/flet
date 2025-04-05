@@ -19,7 +19,7 @@ from enum import Enum
 from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
 if TYPE_CHECKING:
-    from flet.core.types import ColorValue
+    from flet.controls.types import ColorValue
 
 __all__ = ["CupertinoColors"]
 

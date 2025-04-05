@@ -2,13 +2,13 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional, Union
 
+from flet.controls.box import BoxDecoration
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control, control
 from flet.controls.core.text import TextSelectionChangeEvent
-from flet.core.box import BoxDecoration
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
-from flet.core.padding import OptionalPaddingValue
-from flet.core.text_style import TextStyle
-from flet.core.types import (
+from flet.controls.padding import OptionalPaddingValue
+from flet.controls.text_style import TextStyle
+from flet.controls.types import (
     MainAxisAlignment,
     OptionalControlEventCallable,
     OptionalEventCallable,

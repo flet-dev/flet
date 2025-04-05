@@ -1,14 +1,14 @@
 import asyncio
 from typing import Optional
 
-from flet.core.adaptive_control import AdaptiveControl
-from flet.core.alignment import Alignment
-from flet.core.box import BoxConstraints
-from flet.core.buttons import ButtonStyle
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import Control, control
-from flet.core.padding import OptionalPaddingValue
-from flet.core.types import (
+from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.alignment import Alignment
+from flet.controls.box import BoxConstraints
+from flet.controls.buttons import ButtonStyle
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import Control, control
+from flet.controls.padding import OptionalPaddingValue
+from flet.controls.types import (
     IconValueOrControl,
     MouseCursor,
     OptionalColorValue,

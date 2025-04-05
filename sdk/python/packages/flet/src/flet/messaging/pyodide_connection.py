@@ -4,8 +4,6 @@ import logging
 from typing import List
 
 import flet_js
-
-import flet
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,
@@ -13,7 +11,7 @@ from flet.messaging.protocol import (
     RegisterClientRequestBody,
 )
 
-logger = logging.getLogger(flet.__name__)
+logger = logging.getLogger("flet")
 
 
 class PyodideConnection(Connection):

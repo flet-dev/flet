@@ -7,7 +7,6 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Optional
 
-import flet
 import msgpack
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
@@ -24,7 +23,7 @@ from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
 from flet.utils import get_free_tcp_port, is_windows, random_string
 
-logger = logging.getLogger(flet.__name__)
+logger = logging.getLogger("flet")
 
 
 class FletSocketServer(Connection):

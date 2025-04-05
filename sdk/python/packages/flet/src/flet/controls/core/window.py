@@ -2,10 +2,10 @@ import asyncio
 from dataclasses import dataclass
 from typing import Optional
 
-from flet.core.alignment import Alignment
-from flet.core.control import BaseControl, control
-from flet.core.control_event import ControlEvent
-from flet.core.types import (
+from flet.controls.alignment import Alignment
+from flet.controls.control import BaseControl, control
+from flet.controls.control_event import ControlEvent
+from flet.controls.types import (
     Number,
     OptionalColorValue,
     OptionalEventCallable,

@@ -3,9 +3,8 @@ import os
 from typing import Awaitable, Callable, Optional, Union
 
 from fastapi import Request, WebSocket
-from flet.core.page import Page
-from flet.core.types import WebRenderer
-
+from flet.controls.page import Page
+from flet.controls.types import WebRenderer
 from flet_web.fastapi.flet_app import (
     DEFAULT_FLET_OAUTH_STATE_TIMEOUT,
     DEFAULT_FLET_SESSION_TIMEOUT,

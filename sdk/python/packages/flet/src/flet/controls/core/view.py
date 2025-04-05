@@ -1,6 +1,9 @@
 from dataclasses import field
 from typing import List, Optional, Union
 
+from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.box import BoxDecoration
+from flet.controls.control import Control, control
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
 from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.controls.material.app_bar import AppBar
@@ -8,13 +11,10 @@ from flet.controls.material.bottom_app_bar import BottomAppBar
 from flet.controls.material.floating_action_button import FloatingActionButton
 from flet.controls.material.navigation_bar import NavigationBar
 from flet.controls.material.navigation_drawer import NavigationDrawer
-from flet.core.adaptive_control import AdaptiveControl
-from flet.core.box import BoxDecoration
-from flet.core.control import Control, control
-from flet.core.padding import OptionalPaddingValue
-from flet.core.scrollable_control import ScrollableControl
-from flet.core.transform import OffsetValue
-from flet.core.types import (
+from flet.controls.padding import OptionalPaddingValue
+from flet.controls.scrollable_control import ScrollableControl
+from flet.controls.transform import OffsetValue
+from flet.controls.types import (
     CrossAxisAlignment,
     FloatingActionButtonLocation,
     MainAxisAlignment,

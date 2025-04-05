@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from flet.core.control import Control, control
-from flet.core.control_event import ControlEvent
-from flet.core.types import OptionalEventCallable, OptionalNumber
+from flet.controls.control import Control, control
+from flet.controls.control_event import ControlEvent
+from flet.controls.types import OptionalEventCallable, OptionalNumber
 
 __all__ = ["AutoComplete", "AutoCompleteSuggestion", "AutoCompleteSelectEvent"]
 

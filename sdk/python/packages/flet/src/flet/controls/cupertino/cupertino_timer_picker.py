@@ -1,10 +1,10 @@
 from enum import Enum
 from typing import Optional
 
-from flet.core.alignment import Alignment
-from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import control
-from flet.core.types import Number, OptionalColorValue, OptionalControlEventCallable
+from flet.controls.alignment import Alignment
+from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import control
+from flet.controls.types import Number, OptionalColorValue, OptionalControlEventCallable
 
 __all__ = ["CupertinoTimerPicker", "CupertinoTimerPickerMode"]
 
