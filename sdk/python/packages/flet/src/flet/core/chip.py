@@ -70,11 +70,11 @@ class Chip(ConstrainedControl):
 
     label: Control
     leading: Optional[Control] = None
-    selected: Optional[bool] = False
+    selected: bool = False
     selected_color: OptionalColorValue = None
     elevation: OptionalNumber = None
     bgcolor: OptionalColorValue = None
-    show_checkmark: Optional[bool] = None
+    show_checkmark: bool = True
     check_color: OptionalColorValue = None
     shadow_color: OptionalColorValue = None
     shape: Optional[OutlinedBorder] = None
@@ -86,7 +86,7 @@ class Chip(ConstrainedControl):
     label_padding: OptionalPaddingValue = None
     label_style: Optional[TextStyle] = None
     selected_shadow_color: OptionalColorValue = None
-    autofocus: Optional[bool] = None
+    autofocus: bool = False
     surface_tint_color: OptionalColorValue = None
     color: ControlStateValue[ColorValue] = None
     click_elevation: OptionalNumber = None
@@ -104,3 +104,15 @@ class Chip(ConstrainedControl):
     on_select: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
+
+    def before_update(self):
+        super().before_update()
+        assert (
+            self.on_select is None or self.on_click is None
+        ), "on_select and on_click cannot be used together"
+        assert (
+            self.elevation is None or self.elevation >= 0.0
+        ), "elevation must be greater than or equal to 0"
+        assert (
+            self.click_elevation is None or self.click_elevation >= 0.0
+        ), "click_elevation must be greater than or equal to 0"

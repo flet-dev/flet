@@ -7,3 +7,7 @@ from flet.core.control import Control, control
 class ReorderableDraggable(ConstrainedControl, AdaptiveControl):
     index: int
     content: Control
+
+    def before_update(self):
+        super().before_update()
+        assert self.content.visible, "content must be visible"

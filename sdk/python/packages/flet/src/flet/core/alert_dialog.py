@@ -1,7 +1,6 @@
 from dataclasses import field
 from typing import List, Optional
 
-from flet.core.adaptive_control import AdaptiveControl
 from flet.core.alignment import Alignment
 from flet.core.buttons import OutlinedBorder
 from flet.core.control import Control, control
@@ -12,7 +11,6 @@ from flet.core.types import (
     ClipBehavior,
     MainAxisAlignment,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalNumber,
     StrOrControl,
 )

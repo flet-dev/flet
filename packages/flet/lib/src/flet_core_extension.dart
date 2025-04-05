@@ -5,6 +5,7 @@ import 'controls/animated_switcher.dart';
 import 'controls/banner.dart';
 import 'controls/card.dart';
 import 'controls/center.dart';
+import 'controls/chip.dart';
 import 'controls/circle_avatar.dart';
 import 'controls/column.dart';
 import 'controls/container.dart';
@@ -32,6 +33,7 @@ import 'controls/list_tile.dart';
 import 'controls/list_view.dart';
 import 'controls/page.dart';
 import 'controls/progress_bar.dart';
+import 'controls/reorderable_draggable.dart';
 import 'controls/row.dart';
 import 'controls/stack.dart';
 import 'controls/text.dart';
@@ -75,6 +77,8 @@ class FletCoreExtension extends FletExtension {
         return TextButtonControl(key: key, control: control);
       case "Container":
         return ContainerControl(key: key, control: control);
+      case "Chip":
+        return ChipControl(key: key, control: control);
       case "CircleAvatar":
         return CircleAvatarControl(key: key, control: control);
       case "IconButton":
@@ -123,6 +127,8 @@ class FletCoreExtension extends FletExtension {
         return ListViewControl(key: key, control: control);
       case "Page":
         return PageControl(key: key, control: control);
+      case "ReorderableDraggable":
+        return ReorderableDraggableControl(key: key, control: control);
       case "Row":
         return RowControl(key: key, control: control);
       case "Stack":
