@@ -247,6 +247,14 @@ class FletBackend extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Triggers a control event for the specified [control].
+  ///
+  /// This method checks if the control has an event handler for the given
+  /// [eventName] and triggers the event if the application is not in a loading state.
+  ///
+  /// - [control]: The control for which the event is triggered.
+  /// - [eventName]: The name of the event to trigger.
+  /// - [eventData]: Optional data to pass along with the event.
   void triggerControlEvent(Control control, String eventName,
       [dynamic eventData]) {
     if (!isLoading && control.get<bool>("on_$eventName", false)!) {
@@ -346,6 +354,14 @@ class FletBackend extends ChangeNotifier {
     }
   }
 
+  /// Retrieves the asset source for a given [src].
+  ///
+  /// This method determines the source of an asset based on the provided [src],
+  /// the current page URI, and the assets directory. It returns an [AssetSource]
+  /// object that represents the resolved asset source.
+  ///
+  /// - [src]: The relative or absolute path to the asset.
+  /// - Returns: An [AssetSource] object representing the resolved asset source.
   AssetSource getAssetSource(String src) {
     return getAssetSrc(src, pageUri, assetsDir);
   }

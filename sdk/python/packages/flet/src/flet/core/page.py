@@ -120,7 +120,7 @@ class PageDisconnectedException(Exception):
         super().__init__(message)
 
 
-@control("Page", post_init_args=2)
+@control("Page", isolated=True, post_init_args=2)
 class Page(AdaptiveControl):
     """
     Page is a container for `View` (https://flet.dev/docs/controls/view) controls.
@@ -222,9 +222,6 @@ class Page(AdaptiveControl):
     def __default_view(self) -> View:
         assert len(self.views) > 0, "views list is empty."
         return self.views[0]
-
-    def is_isolated(self):
-        return True
 
     def before_update(self):
         super().before_update()

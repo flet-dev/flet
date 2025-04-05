@@ -8,6 +8,7 @@ from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import Number, ResponsiveNumber
 from flet.utils.strings import random_string
+
 from ..utils import deprecated
 
 # Try importing `dataclass_transform()` for Python 3.11+, else use a no-op function
@@ -36,31 +37,38 @@ T = TypeVar("T", bound="Control")
 def control(
     cls_or_type_name: Optional[Union[Type[T], str]] = None,
     *,
+    isolated: Optional[bool] = None,
     post_init_args: int = 1,
     **dataclass_kwargs,
 ) -> Union[Type[T], Callable[[Type[T]], Type[T]]]:
-    """Decorator to optionally set 'type' while behaving like @dataclass.
+    """Decorator to optionally set 'type' and 'isolated' while behaving like @dataclass.
 
     - Supports `@control` (without parentheses)
     - Supports `@control("custom_type")` (with optional arguments)
-    - Supports `@control("custom_type", post_init_args=1)` to specify the number of `InitVar` arguments
+    - Supports `@control("custom_type", post_init_args=1, isolated=True)` to specify the number of `InitVar` arguments and isolation
     """
 
     # Case 1: If used as `@control` (without parentheses)
     if isinstance(cls_or_type_name, type):
         return _apply_control(
-            cls_or_type_name, None, post_init_args, **dataclass_kwargs
+            cls_or_type_name, None, isolated, post_init_args, **dataclass_kwargs
         )
 
-    # Case 2: If used as `@control("custom_type", post_init_args=N)`
+    # Case 2: If used as `@control("custom_type", post_init_args=N, isolated=True)`
     def wrapper(cls: Type[T]) -> Type[T]:
-        return _apply_control(cls, cls_or_type_name, post_init_args, **dataclass_kwargs)
+        return _apply_control(
+            cls, cls_or_type_name, isolated, post_init_args, **dataclass_kwargs
+        )
 
     return wrapper
 
 
 def _apply_control(
-    cls: Type[T], type_name: Optional[str], post_init_args: int, **dataclass_kwargs
+    cls: Type[T],
+    type_name: Optional[str],
+    isolated: Optional[bool],
+    post_init_args: int,
+    **dataclass_kwargs,
 ) -> Type[T]:
     """Applies @control logic, ensuring compatibility with @dataclass."""
     cls = dataclass(**dataclass_kwargs)(cls)  # Apply @dataclass first
@@ -68,9 +76,12 @@ def _apply_control(
     orig_post_init = getattr(cls, "__post_init__", lambda self, *args: None)
 
     def new_post_init(self: T, *args):
-        """Set the type only if a type_name is explicitly provided and type is not overridden."""
+        """Set the type and isolation only if explicitly provided."""
         if type_name is not None and (not hasattr(self, "_c") or self._c is None):
             self._c = type_name  # Only set type if explicitly provided
+
+        if isolated is not None:
+            self._isolated = isolated  # Set the _isolated field if provided
 
         # Pass only the correct number of arguments to `__post_init__`
         orig_post_init(self, *args[:post_init_args])
@@ -121,7 +132,7 @@ class BaseControl:
         return None
 
     def is_isolated(self):
-        return False
+        return hasattr(self, "_isolated") and self._isolated
 
     @deprecated(
         reason="Use init() instead.",
