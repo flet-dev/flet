@@ -70,7 +70,7 @@ class FloatingActionButton(ConstrainedControl):
     """
 
     def __setattr__(self, name, value):
-        if name == "text" and value != None:
+        if name == "text" and value is not None:
             deprecated_warning(
                 name="text",
                 reason="Use 'content' instead.",
@@ -98,7 +98,7 @@ class FloatingActionButton(ConstrainedControl):
     url_target: Optional[UrlTarget] = None
     mouse_cursor: Optional[MouseCursor] = None
     on_click: OptionalControlEventCallable = None
-    text: Optional[str] = None  # deprecated
+    text: Optional[str] = None  # todo(0.70.3): remove in favor of content
 
     def before_update(self):
         super().before_update()

@@ -803,10 +803,7 @@ NavigationRailThemeData? parseNavigationRailTheme(
     unselectedLabelTextStyle: parseTextStyle("unselected_label_text_style"),
     selectedLabelTextStyle: parseTextStyle("selected_label_text_style"),
     minWidth: parseDouble(j["min_width"]),
-    labelType: j["label_type"] != null
-        ? NavigationRailLabelType.values
-            .firstWhereOrNull((c) => c.name == j["label_type"])
-        : null,
+    labelType: parseNavigationRailLabelType(j["label_type"]),
     groupAlignment: parseDouble(j["group_alignment"]),
     indicatorShape: j["indicator_shape"] != null
         ? outlinedBorderFromJSON(j["indicator_shape"])

@@ -32,6 +32,7 @@ import 'controls/image.dart';
 import 'controls/line_chart.dart';
 import 'controls/list_tile.dart';
 import 'controls/list_view.dart';
+import 'controls/navigation_rail.dart';
 import 'controls/page.dart';
 import 'controls/placeholder.dart';
 import 'controls/progress_bar.dart';
@@ -134,6 +135,8 @@ class FletCoreExtension extends FletExtension {
         return ListViewControl(key: key, control: control);
       case "Page":
         return PageControl(key: key, control: control);
+      case "NavigationRail":
+        return NavigationRailControl(key: key, control: control);
       case "ReorderableDraggable":
         return ReorderableDraggableControl(key: key, control: control);
       case "Row":
