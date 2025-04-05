@@ -8,6 +8,8 @@ import 'controls/center.dart';
 import 'controls/circle_avatar.dart';
 import 'controls/column.dart';
 import 'controls/container.dart';
+import 'controls/cupertino_action_sheet.dart';
+import 'controls/cupertino_action_sheet_action.dart';
 import 'controls/cupertino_activity_indicator.dart';
 import 'controls/cupertino_alert_dialog.dart';
 import 'controls/cupertino_button.dart';
@@ -65,6 +67,10 @@ class FletCoreExtension extends FletExtension {
         return CenterControl(key: key, control: control);
       case "Column":
         return ColumnControl(key: key, control: control);
+      case "CupertinoActionSheet":
+        return CupertinoActionSheetControl(key: key, control: control);
+      case "CupertinoActionSheetAction":
+        return CupertinoActionSheetActionControl(key: key, control: control);
       case "TextButton":
         return TextButtonControl(key: key, control: control);
       case "Container":

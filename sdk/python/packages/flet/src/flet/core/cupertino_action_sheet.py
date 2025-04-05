@@ -1,4 +1,3 @@
-from dataclasses import field
 from typing import List, Optional
 
 from flet.core.constrained_control import ConstrainedControl
@@ -19,5 +18,5 @@ class CupertinoActionSheet(ConstrainedControl):
 
     title: Optional[Control] = None
     message: Optional[Control] = None
-    actions: List[Control] = field(default_factory=list)
+    actions: Optional[List[Control]] = None
     cancel: Optional[Control] = None
