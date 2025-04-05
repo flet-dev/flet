@@ -67,28 +67,17 @@ class Control extends ChangeNotifier {
     return get<double>(propertyName, defValue);
   }
 
-  /// Returns a single [Control] from the specified [propertyName].
-  ///
-  /// If [visibleOnly] is `true` (default), only returns the child if it is visible.
-  ///
-  /// Throws a [FormatException] if the property exists but is not a [Control].
-  ///
-  /// Returns `null` if the property is missing, or if [visibleOnly] is `true` and
-  /// the child is not visible.
+  /// Returns the [Control] for the given [propertyName], or `null` if not found, not a [Control],
+  /// or not visible when [visibleOnly] is `true` (default).
   Control? child(String propertyName, {bool visibleOnly = true}) {
     final child = properties[propertyName];
-    if (child == null) return null;
-
-    if (child is! Control) {
-      throw FormatException("Expected a Control for '$propertyName'", child);
-    }
-
+    if (child is! Control) return null;
     return (visibleOnly && !child.visible) ? null : child;
   }
 
   /// Returns a list of [Control]s from the specified [propertyName].
   ///
-  /// If [visibleOnly] is `true` (default), only includes controls that are visible.
+  /// If [visibleOnly] is `true` (default), only includes visible controls.
   ///
   /// Returns an empty list if the property is missing or null.
   List<Control> children(String propertyName, {bool visibleOnly = true}) {
