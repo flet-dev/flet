@@ -46,7 +46,7 @@ class ProgressBar(ConstrainedControl):
     """
 
     value: OptionalNumber = None
-    bar_height: OptionalNumber = 4
+    bar_height: OptionalNumber = 4.0
     color: OptionalColorValue = None
     bgcolor: OptionalColorValue = None
     border_radius: OptionalBorderRadiusValue = None
