@@ -49,7 +49,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("ListViewControl build: ${widget.control.id}");
+    debugPrint("ReorderableDraggableControl build: ${widget.control.id}");
 
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
     bool? adaptive =
@@ -64,7 +64,11 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
         widget.control.attrBool("firstItemPrototype", false)!;
     var padding = parseEdgeInsets(widget.control, "padding");
     var reverse = widget.control.attrBool("reverse", false)!;
+    var showDefaultDragHandles =
+        widget.control.attrBool("showDefaultDragHandles", true)!;
     var anchor = widget.control.attrDouble("anchor", 0.0)!;
+    var mouseCursor =
+        parseMouseCursor(widget.control.attrString("mouseCursor"));
     var clipBehavior =
         parseClip(widget.control.attrString("clipBehavior"), Clip.hardEdge)!;
     List<Control> ctrls = widget.children
@@ -126,11 +130,13 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
                 clipBehavior: clipBehavior,
                 reverse: reverse,
                 cacheExtent: cacheExtent,
+                buildDefaultDragHandles: showDefaultDragHandles,
                 scrollDirection: scrollDirection,
                 shrinkWrap: shrinkWrap,
                 padding: padding,
                 itemCount: ctrls.length,
                 itemExtent: itemExtent,
+                mouseCursor: mouseCursor,
                 anchor: anchor,
                 header: header,
                 footer: footer,
@@ -151,6 +157,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
                 cacheExtent: cacheExtent,
                 reverse: reverse,
                 clipBehavior: clipBehavior,
+                buildDefaultDragHandles: showDefaultDragHandles,
                 scrollDirection: scrollDirection,
                 shrinkWrap: shrinkWrap,
                 padding: padding,
@@ -158,6 +165,7 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
                 header: header,
                 footer: footer,
                 itemExtent: itemExtent,
+                mouseCursor: mouseCursor,
                 prototypeItem: prototypeItem,
                 autoScrollerVelocityScalar: autoScrollerVelocityScalar,
                 mouseCursor: mouseCursor,

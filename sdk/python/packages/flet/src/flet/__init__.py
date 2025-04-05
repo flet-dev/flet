@@ -265,6 +265,7 @@ from flet.core.radio import Radio
 from flet.core.radio_group import RadioGroup
 from flet.core.range_slider import RangeSlider
 from flet.core.ref import Ref
+from flet.core.reorderable_draggable import ReorderableDraggable
 from flet.core.reorderable_list_view import OnReorderEvent, ReorderableListView
 from flet.core.responsive_row import ResponsiveRow
 from flet.core.row import Row
