@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -19,6 +20,7 @@ class CheckboxControl extends StatefulWidget {
   final bool parentDisabled;
   final bool? parentAdaptive;
   final FletControlBackend backend;
+  final List<Control> children;
 
   const CheckboxControl(
       {super.key,
@@ -26,6 +28,7 @@ class CheckboxControl extends StatefulWidget {
       required this.control,
       required this.parentDisabled,
       required this.parentAdaptive,
+      required this.children,
       required this.backend});
 
   @override
@@ -81,7 +84,10 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
 
     return withPagePlatform((context, platform) {
       bool? adaptive =
-          widget.control.getBool("adaptive") ?? widget.parentAdaptive;
+          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
+      bool disabled = widget.control.isDisabled || widget.parentDisabled;
+      double? width = widget.control.attrDouble("width");
+      double? height = widget.control.attrDouble("height");
 
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
@@ -91,18 +97,13 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
             parentDisabled: widget.parentDisabled,
             backend: widget.backend);
       }
-
-      String label = widget.control.getString("label", "")!;
+      var label = widget.children.firstWhereOrNull((c) => c.isVisible);
+      String labelStr = widget.control.attrString("label", "")!;
       LabelPosition labelPosition = parseLabelPosition(
-          widget.control.getString("labelPosition"), LabelPosition.right)!;
-      _tristate = widget.control.getBool("tristate", false)!;
-      bool autofocus = widget.control.getBool("autofocus", false)!;
-
-      bool disabled = widget.control.disabled || widget.parentDisabled;
-
-      debugPrint("Checkbox build: ${widget.control.id}");
-
-      bool? value = widget.control.getBool("value", _tristate ? null : false);
+          widget.control.attrString("labelPosition"), LabelPosition.right)!;
+      _tristate = widget.control.attrBool("tristate", false)!;
+      bool autofocus = widget.control.attrBool("autofocus", false)!;
+      bool? value = widget.control.attrBool("value", _tristate ? null : false);
       if (_value != value) {
         _value = value;
       }
@@ -117,25 +118,25 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
           autofocus: autofocus,
           focusNode: _focusNode,
           value: _value,
-          isError: widget.control.getBool("isError", false)!,
-          semanticLabel: widget.control.getString("semanticsLabel"),
+          isError: widget.control.attrBool("isError", false)!,
+          semanticLabel: widget.control.attrString("semanticsLabel"),
           shape: parseOutlinedBorder(widget.control, "shape"),
           side: parseWidgetStateBorderSide(
               Theme.of(context), widget.control, "borderSide"),
-          splashRadius: widget.control.getDouble("splashRadius"),
-          activeColor: widget.control.getColor("activeColor", context),
-          focusColor: widget.control.getColor("focusColor", context),
-          hoverColor: widget.control.getColor("hoverColor", context),
+          splashRadius: widget.control.attrDouble("splashRadius"),
+          activeColor: widget.control.attrColor("activeColor", context),
+          focusColor: widget.control.attrColor("focusColor", context),
+          hoverColor: widget.control.attrColor("hoverColor", context),
           overlayColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "overlayColor"),
-          checkColor: widget.control.getColor("checkColor", context),
+          checkColor: widget.control.attrColor("checkColor", context),
           fillColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "fillColor"),
           tristate: _tristate,
           visualDensity:
-              parseVisualDensity(widget.control.getString("visualDensity")),
+              parseVisualDensity(widget.control.attrString("visualDensity")),
           mouseCursor:
-              parseMouseCursor(widget.control.getString("mouseCursor")),
+              parseMouseCursor(widget.control.attrString("mouseCursor")),
           onChanged: !disabled
               ? (bool? value) {
                   _onChange(value);
@@ -147,18 +148,35 @@ class _CheckboxControlState extends State<CheckboxControl> with FletStoreMixin {
       });
 
       Widget result = checkbox;
-      if (label != "") {
-        var labelWidget = disabled
-            ? Text(label, style: labelStyle)
-            : MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: Text(label, style: labelStyle));
+      if (label != null || (labelStr != "")) {
+        Widget? labelWidget;
+        if (label != null) {
+          labelWidget =
+              createControl(widget.control, label.id, disabled);
+        } else {
+          labelWidget = disabled
+              ? Text(labelStr, style: labelStyle)
+              : MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: Text(labelStr, style: labelStyle));
+        }
+
         result = MergeSemantics(
             child: GestureDetector(
                 onTap: !disabled ? _toggleValue : null,
                 child: labelPosition == LabelPosition.right
                     ? Row(children: [checkbox, labelWidget])
                     : Row(children: [labelWidget, checkbox])));
+      }
+      if (width != null || height != null) {
+        result = SizedBox(
+          width: width,
+          height: height,
+          child: FittedBox(
+            fit: BoxFit.fill,
+            child: result,
+          ),
+        );
       }
 
       return constrainedControl(context, result, widget.parent, widget.control);

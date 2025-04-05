@@ -2,7 +2,7 @@ from typing import Optional
 
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import Control, control
-from flet.core.types import OptionalControlEventCallable
+from flet.core.types import MouseCursor, OptionalControlEventCallable
 
 __all__ = ["CupertinoActionSheetAction"]
 
@@ -21,6 +21,7 @@ class CupertinoActionSheetAction(ConstrainedControl):
     content: Optional[Control] = None
     is_default_action: Optional[bool] = None
     is_destructive_action: Optional[bool] = None
+    mouse_cursor: Optional[MouseCursor] = None
     on_click: OptionalControlEventCallable = None
 
     def before_update(self):

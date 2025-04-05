@@ -26,6 +26,8 @@ class CupertinoSegmentedButton(ConstrainedControl):
     border_color: OptionalColorValue = None
     padding: OptionalPaddingValue = None
     click_color: OptionalColorValue = None
+    disabled_color: OptionalColorValue = None
+    disabled_text_color: OptionalColorValue = None
     on_change: OptionalControlEventCallable = None
 
     def before_update(self):

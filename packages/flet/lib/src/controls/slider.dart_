@@ -4,6 +4,7 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
+import '../utils/edge_insets.dart';
 import '../utils/mouse.dart';
 import '../utils/others.dart';
 import '../utils/platform.dart';
@@ -70,10 +71,10 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
   @override
   Widget build(BuildContext context) {
     debugPrint("SliderControl build: ${widget.control.id}");
-    bool disabled = widget.control.disabled || widget.parentDisabled;
+    bool disabled = widget.control.isDisabled || widget.parentDisabled;
     return withPagePlatform((context, platform) {
       bool? adaptive =
-          widget.control.getBool("adaptive") ?? widget.parentAdaptive;
+          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
@@ -83,13 +84,13 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
             backend: widget.backend);
       }
 
-      String? label = widget.control.getString("label");
+      String? label = widget.control.attrString("label");
 
-      double min = widget.control.getDouble("min", 0)!;
-      double max = widget.control.getDouble("max", 1)!;
-      int round = widget.control.getInt("round", 0)!;
+      double min = widget.control.attrDouble("min", 0)!;
+      double max = widget.control.attrDouble("max", 1)!;
+      int round = widget.control.attrInt("round", 0)!;
 
-      double value = widget.control.getDouble("value", min)!;
+      double value = widget.control.attrDouble("value", min)!;
       if (_value != value) {
         // verify limits
         if (value < min) {
@@ -102,30 +103,32 @@ class _SliderControlState extends State<SliderControl> with FletStoreMixin {
       }
 
       var slider = Slider(
-          autofocus: widget.control.getBool("autofocus", false)!,
+          autofocus: widget.control.attrBool("autofocus", false)!,
           focusNode: _focusNode,
           value: _value,
           min: min,
           max: max,
-          divisions: widget.control.getInt("divisions"),
+          year2023: widget.control.attrBool("year2023"),
+          divisions: widget.control.attrInt("divisions"),
           label: label?.replaceAll("{value}", _value.toStringAsFixed(round)),
-          activeColor: widget.control.getColor("activeColor", context),
-          inactiveColor: widget.control.getColor("inactiveColor", context),
+          activeColor: widget.control.attrColor("activeColor", context),
+          inactiveColor: widget.control.attrColor("inactiveColor", context),
           overlayColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "overlayColor"),
           allowedInteraction:
-              parseSliderInteraction(widget.control.getString("interaction")),
-          thumbColor: widget.control.getColor("thumbColor", context),
+              parseSliderInteraction(widget.control.attrString("interaction")),
+          thumbColor: widget.control.attrColor("thumbColor", context),
+          padding: parseEdgeInsets(widget.control, "padding"),
           onChanged: !disabled
               ? (double value) {
                   onChange(value);
                 }
               : null,
           mouseCursor:
-              parseMouseCursor(widget.control.getString("mouseCursor")),
+              parseMouseCursor(widget.control.attrString("mouseCursor")),
           secondaryActiveColor:
-              widget.control.getColor("secondaryActiveColor", context),
-          secondaryTrackValue: widget.control.getDouble("secondaryTrackValue"),
+              widget.control.attrColor("secondaryActiveColor", context),
+          secondaryTrackValue: widget.control.attrDouble("secondaryTrackValue"),
           onChangeStart: !disabled
               ? (double value) {
                   widget.backend.triggerControlEvent(

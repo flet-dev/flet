@@ -9,6 +9,7 @@ import '../utils/edge_insets.dart';
 import '../utils/others.dart';
 import '../utils/text.dart';
 import '../widgets/error.dart';
+import 'control_widget.dart';
 
 class AlertDialogControl extends StatefulWidget {
   final Control control;
@@ -47,12 +48,12 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
   }
 
   Widget _createAlertDialog() {
-    var titleControl = widget.control.buildWidget("title");
-    var contentControl = widget.control.buildWidget("content");
-    var actionControls = widget.control.buildWidgets("actions");
+    var titleControl = widget.control.get("title");
+    var contentWidget = widget.control.buildWidget("content");
+    var actionWidgets = widget.control.buildWidgets("actions");
     if (titleControl == null &&
-        contentControl == null &&
-        actionControls.isEmpty) {
+        contentWidget == null &&
+        actionWidgets.isEmpty) {
       return const ErrorControl(
           "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions");
     }
@@ -63,12 +64,16 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
         parseClip(widget.control.getString("clipBehavior"), Clip.none)!;
 
     return AlertDialog(
-      title: titleControl,
+      title: titleControl is Control
+          ? ControlWidget(control: titleControl)
+          : titleControl is String
+              ? Text(titleControl)
+              : null,
       titlePadding: parseEdgeInsets(widget.control, "title_padding"),
-      content: contentControl,
+      content: contentWidget,
       contentPadding: parseEdgeInsets(widget.control, "content_padding",
           const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0))!,
-      actions: actionControls,
+      actions: actionWidgets,
       actionsPadding: parseEdgeInsets(widget.control, "actions_padding"),
       actionsAlignment: actionsAlignment,
       shape: parseOutlinedBorder(widget.control, "shape"),

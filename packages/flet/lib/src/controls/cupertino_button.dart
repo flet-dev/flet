@@ -150,6 +150,8 @@ class CupertinoButtonControl extends StatelessWidget {
       pressedOpacity: pressedOpacity,
       alignment: alignment,
       minSize: minSize,
+      autofocus: control.getBool("autofocus", false)!,
+      focusColor: control.getColor("focus_color", context),
       onLongPress: !control.disabled
           ? () {
               FletBackend.of(context)

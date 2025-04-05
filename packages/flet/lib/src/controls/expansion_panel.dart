@@ -47,6 +47,8 @@ class ExpansionPanelListControl extends StatelessWidget {
           return ExpansionPanel(
             backgroundColor: panelControl.getColor("bgColor", context),
             isExpanded: panelControl.getBool("expanded", false)!,
+            highlightColor: panelControl.getColor("highlight_color", context),
+            splashColor: panelControl.getColor("splash_color", context),
             canTapOnHeader: panelControl.getBool("can_tap_header", false)!,
             headerBuilder: (BuildContext context, bool isExpanded) {
               return headerCtrl != null

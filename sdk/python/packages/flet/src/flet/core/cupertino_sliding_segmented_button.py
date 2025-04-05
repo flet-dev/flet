@@ -24,6 +24,7 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
     bgcolor: OptionalColorValue = None
     thumb_color: OptionalColorValue = None
     padding: OptionalPaddingValue = None
+    proportional_width: bool = False
     on_change: OptionalControlEventCallable = None
 
     def before_update(self):

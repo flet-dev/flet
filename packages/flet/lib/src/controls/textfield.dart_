@@ -47,6 +47,7 @@ class _TextFieldControlState extends State<TextFieldControl>
   late final FocusNode _focusNode;
   late final FocusNode _shiftEnterfocusNode;
   String? _lastFocusValue;
+  String? _lastBlurValue;
 
   @override
   void initState() {
@@ -101,11 +102,11 @@ class _TextFieldControlState extends State<TextFieldControl>
     debugPrint("TextField build: ${widget.control.id}");
 
     return withPagePlatform((context, platform) {
-      bool autofocus = widget.control.getBool("autofocus", false)!;
-      bool disabled = widget.control.disabled || widget.parentDisabled;
+      bool autofocus = widget.control.attrBool("autofocus", false)!;
+      bool disabled = widget.control.isDisabled || widget.parentDisabled;
 
       bool? adaptive =
-          widget.control.getBool("adaptive") ?? widget.parentAdaptive;
+          widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
       if (adaptive == true &&
           (platform == TargetPlatform.iOS ||
               platform == TargetPlatform.macOS)) {
@@ -123,42 +124,46 @@ class _TextFieldControlState extends State<TextFieldControl>
       String value = widget.control.attrs["value"] ?? "";
       if (_value != value) {
         _value = value;
-        _controller.text = value;
+        _controller.value = TextEditingValue(
+          text: value,
+          selection: TextSelection.collapsed(
+              offset: value.length), // preserve cursor position at the end
+        );
       }
 
       var prefixControls =
-          widget.children.where((c) => c.name == "prefix" && c.visible);
+          widget.children.where((c) => c.name == "prefix" && c.isVisible);
       var prefixIconControls =
-          widget.children.where((c) => c.name == "prefix_icon" && c.visible);
+          widget.children.where((c) => c.name == "prefix_icon" && c.isVisible);
       var suffixControls =
-          widget.children.where((c) => c.name == "suffix" && c.visible);
+          widget.children.where((c) => c.name == "suffix" && c.isVisible);
       var suffixIconControls =
-          widget.children.where((c) => c.name == "suffix_icon" && c.visible);
+          widget.children.where((c) => c.name == "suffix_icon" && c.isVisible);
       var iconControls =
-          widget.children.where((c) => c.name == "icon" && c.visible);
+          widget.children.where((c) => c.name == "icon" && c.isVisible);
       var counterControls =
-          widget.children.where((c) => c.name == "counter" && c.visible);
+          widget.children.where((c) => c.name == "counter" && c.isVisible);
       var errorCtrl =
-          widget.children.where((c) => c.name == "error" && c.visible);
+          widget.children.where((c) => c.name == "error" && c.isVisible);
       var helperCtrl =
-          widget.children.where((c) => c.name == "helper" && c.visible);
+          widget.children.where((c) => c.name == "helper" && c.isVisible);
       var labelCtrl =
-          widget.children.where((c) => c.name == "label" && c.visible);
+          widget.children.where((c) => c.name == "label" && c.isVisible);
 
-      bool shiftEnter = widget.control.getBool("shiftEnter", false)!;
+      bool shiftEnter = widget.control.attrBool("shiftEnter", false)!;
       bool multiline =
-          widget.control.getBool("multiline", false)! || shiftEnter;
-      int minLines = widget.control.getInt("minLines", 1)!;
-      int? maxLines = widget.control.getInt("maxLines", multiline ? null : 1);
+          widget.control.attrBool("multiline", false)! || shiftEnter;
+      int minLines = widget.control.attrInt("minLines", 1)!;
+      int? maxLines = widget.control.attrInt("maxLines", multiline ? null : 1);
 
-      bool password = widget.control.getBool("password", false)!;
+      bool password = widget.control.attrBool("password", false)!;
       bool canRevealPassword =
-          widget.control.getBool("canRevealPassword", false)!;
-      var cursorColor = widget.control.getColor("cursorColor", context);
-      var selectionColor = widget.control.getColor("selectionColor", context);
-      var textSize = widget.control.getDouble("textSize");
-      var color = widget.control.getColor("color", context);
-      var focusedColor = widget.control.getColor("focusedColor", context);
+          widget.control.attrBool("canRevealPassword", false)!;
+      var cursorColor = widget.control.attrColor("cursorColor", context);
+      var selectionColor = widget.control.attrColor("selectionColor", context);
+      var textSize = widget.control.attrDouble("textSize");
+      var color = widget.control.attrColor("color", context);
+      var focusedColor = widget.control.attrColor("focusedColor", context);
 
       TextStyle? textStyle =
           parseTextStyle(Theme.of(context), widget.control, "textStyle");
@@ -169,7 +174,8 @@ class _TextFieldControlState extends State<TextFieldControl>
       }
 
       TextCapitalization textCapitalization = parseTextCapitalization(
-          widget.control.getString("capitalization"), TextCapitalization.none)!;
+          widget.control.attrString("capitalization"),
+          TextCapitalization.none)!;
 
       FilteringTextInputFormatter? inputFilter =
           parseInputFilter(widget.control, "inputFilter");
@@ -196,18 +202,25 @@ class _TextFieldControlState extends State<TextFieldControl>
             });
       }
 
-      double? textVerticalAlign = widget.control.getDouble("textVerticalAlign");
+      double? textVerticalAlign =
+          widget.control.attrDouble("textVerticalAlign");
 
       FocusNode focusNode = shiftEnter ? _shiftEnterfocusNode : _focusNode;
 
-      var focusValue = widget.control.getString("focus");
+      var focusValue = widget.control.attrString("focus");
+      var blurValue = widget.control.attrString("blur");
       if (focusValue != null && focusValue != _lastFocusValue) {
         _lastFocusValue = focusValue;
         focusNode.requestFocus();
       }
-      var fitParentSize = widget.control.getBool("fitParentSize", false)!;
+      if (blurValue != null && blurValue != _lastBlurValue) {
+        _lastBlurValue = blurValue;
+        _focusNode.unfocus();
+      }
 
-      var maxLength = widget.control.getInt("maxLength");
+      var fitParentSize = widget.control.attrBool("fitParentSize", false)!;
+
+      var maxLength = widget.control.attrInt("maxLength");
 
       Widget textField = TextFormField(
           style: textStyle,
@@ -240,31 +253,32 @@ class _TextFieldControlState extends State<TextFieldControl>
               focused: _focused,
               disabled: disabled,
               adaptive: adaptive),
-          showCursor: widget.control.getBool("showCursor"),
+          showCursor: widget.control.attrBool("showCursor"),
           textAlignVertical: textVerticalAlign != null
               ? TextAlignVertical(y: textVerticalAlign)
               : null,
-          cursorHeight: widget.control.getDouble("cursorHeight"),
-          cursorWidth: widget.control.getDouble("cursorWidth", 2.0)!,
+          cursorHeight: widget.control.attrDouble("cursorHeight"),
+          cursorWidth: widget.control.attrDouble("cursorWidth", 2.0)!,
           cursorRadius: parseRadius(widget.control, "cursorRadius"),
           keyboardType: multiline
               ? TextInputType.multiline
-              : parseTextInputType(widget.control.getString("keyboardType"),
+              : parseTextInputType(widget.control.attrString("keyboardType"),
                   TextInputType.text)!,
-          autocorrect: widget.control.getBool("autocorrect", true)!,
-          enableSuggestions: widget.control.getBool("enableSuggestions", true)!,
-          smartDashesType: widget.control.getBool("smartDashesType", true)!
+          autocorrect: widget.control.attrBool("autocorrect", true)!,
+          enableSuggestions:
+              widget.control.attrBool("enableSuggestions", true)!,
+          smartDashesType: widget.control.attrBool("smartDashesType", true)!
               ? SmartDashesType.enabled
               : SmartDashesType.disabled,
-          smartQuotesType: widget.control.getBool("smartQuotesType", true)!
+          smartQuotesType: widget.control.attrBool("smartQuotesType", true)!
               ? SmartQuotesType.enabled
               : SmartQuotesType.disabled,
           textAlign: parseTextAlign(
-              widget.control.getString("textAlign"), TextAlign.start)!,
+              widget.control.attrString("textAlign"), TextAlign.start)!,
           minLines: fitParentSize ? null : minLines,
           maxLines: fitParentSize ? null : maxLines,
           maxLength: maxLength,
-          readOnly: widget.control.getBool("readOnly", false)!,
+          readOnly: widget.control.attrBool("readOnly", false)!,
           inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
           obscureText: password && !_revealPassword,
           controller: _controller,
@@ -272,38 +286,44 @@ class _TextFieldControlState extends State<TextFieldControl>
           autofillHints: parseAutofillHints(widget.control, "autofillHints"),
           expands: fitParentSize,
           enableInteractiveSelection:
-              widget.control.getBool("enableInteractiveSelection"),
-          canRequestFocus: widget.control.getBool("canRequestFocus", true)!,
+              widget.control.attrBool("enableInteractiveSelection"),
+          canRequestFocus: widget.control.attrBool("canRequestFocus", true)!,
           clipBehavior: parseClip(
-              widget.control.getString("clipBehavior"), Clip.hardEdge)!,
+              widget.control.attrString("clipBehavior"), Clip.hardEdge)!,
           cursorColor: cursorColor,
-          ignorePointers: widget.control.getBool("ignorePointers"),
+          ignorePointers: widget.control.attrBool("ignorePointers"),
           cursorErrorColor:
-              widget.control.getColor("cursorErrorColor", context),
-          scribbleEnabled: widget.control.getBool("enableScribble", true)!,
+              widget.control.attrColor("cursorErrorColor", context),
+          scribbleEnabled: widget.control.attrBool("enableScribble", true)!,
           scrollPadding: parseEdgeInsets(
               widget.control, "scrollPadding", const EdgeInsets.all(20.0))!,
           keyboardAppearance:
-              parseBrightness(widget.control.getString("keyboardBrightness")),
+              parseBrightness(widget.control.attrString("keyboardBrightness")),
           enableIMEPersonalizedLearning:
-              widget.control.getBool("enableIMEPersonalizedLearning", true)!,
+              widget.control.attrBool("enableIMEPersonalizedLearning", true)!,
           obscuringCharacter:
-              widget.control.getString("obscuringCharacter", '•')!,
+              widget.control.attrString("obscuringCharacter", '•')!,
           mouseCursor:
-              parseMouseCursor(widget.control.getString("mouseCursor")),
-          cursorOpacityAnimates: widget.control.getBool("animateCursorOpacity",
+              parseMouseCursor(widget.control.attrString("mouseCursor")),
+          cursorOpacityAnimates: widget.control.attrBool("animateCursorOpacity",
               Theme.of(context).platform == TargetPlatform.iOS)!,
           onTapAlwaysCalled:
-              widget.control.getBool("animateCursorOpacity", false)!,
+              widget.control.attrBool("animateCursorOpacity", false)!,
           strutStyle: parseStrutStyle(widget.control, "strutStyle"),
           onTap: () {
             widget.backend.triggerControlEvent(widget.control.id, "click");
           },
+          onTapOutside: widget.control.attrBool("onTapOutside", false)!
+              ? (PointerDownEvent? event) {
+                  widget.backend
+                      .triggerControlEvent(widget.control.id, "tapOutside");
+                }
+              : null,
           onChanged: (String value) {
             _value = value;
             widget.backend
                 .updateControlState(widget.control.id, {"value": value});
-            if (widget.control.getBool("onChange", false)!) {
+            if (widget.control.attrBool("onChange", false)!) {
               widget.backend
                   .triggerControlEvent(widget.control.id, "change", value);
             }
@@ -320,14 +340,14 @@ class _TextFieldControlState extends State<TextFieldControl>
       textField =
           isLinuxDesktop() ? ExcludeSemantics(child: textField) : textField;
 
-      if (widget.control.getInt("expand", 0)! > 0) {
+      if (widget.control.attrInt("expand", 0)! > 0) {
         return constrainedControl(
             context, textField, widget.parent, widget.control);
       } else {
         return LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
             if (constraints.maxWidth == double.infinity &&
-                widget.control.getDouble("width") == null) {
+                widget.control.attrDouble("width") == null) {
               textField = ConstrainedBox(
                 constraints: const BoxConstraints.tightFor(width: 300),
                 child: textField,
@@ -340,5 +360,85 @@ class _TextFieldControlState extends State<TextFieldControl>
         );
       }
     });
+  }
+}
+
+class TextCapitalizationFormatter extends TextInputFormatter {
+  final TextCapitalization capitalization;
+
+  TextCapitalizationFormatter(this.capitalization);
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    String text = '';
+
+    switch (capitalization) {
+      case TextCapitalization.words:
+        text = capitalizeFirstofEach(newValue.text);
+        break;
+      case TextCapitalization.sentences:
+        List<String> sentences = newValue.text.split('.');
+        for (int i = 0; i < sentences.length; i++) {
+          sentences[i] = inCaps(sentences[i]);
+        }
+        text = sentences.join('.');
+        break;
+      case TextCapitalization.characters:
+        text = allInCaps(newValue.text);
+        break;
+      case TextCapitalization.none:
+        text = newValue.text;
+        break;
+    }
+
+    return TextEditingValue(
+      text: text,
+      selection: newValue.selection,
+    );
+  }
+
+  /// 'Hello world'
+  static String inCaps(String text) {
+    if (text.isEmpty) {
+      return text;
+    }
+    String result = '';
+    for (int i = 0; i < text.length; i++) {
+      if (text[i] != ' ') {
+        result += '${text[i].toUpperCase()}${text.substring(i + 1)}';
+        break;
+      } else {
+        result += text[i];
+      }
+    }
+    return result;
+  }
+
+  /// 'HELLO WORLD'
+  static String allInCaps(String text) => text.toUpperCase();
+
+  /// 'Hello World'
+  static String capitalizeFirstofEach(String text) => text
+      .replaceAll(RegExp(' +'), ' ')
+      .split(" ")
+      .map((str) => inCaps(str))
+      .join(" ");
+}
+
+class CustomNumberFormatter extends TextInputFormatter {
+  final String pattern;
+
+  CustomNumberFormatter(this.pattern);
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final regExp = RegExp(pattern);
+    if (regExp.hasMatch(newValue.text)) {
+      return newValue;
+    }
+    // If newValue is invalid, keep the old value
+    return oldValue;
   }
 }

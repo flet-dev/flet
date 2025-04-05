@@ -52,6 +52,10 @@ class ProgressBar(ConstrainedControl):
     border_radius: OptionalBorderRadiusValue = None
     semantics_label: Optional[str] = None
     semantics_value: OptionalNumber = None
+    stop_indicator_color: OptionalColorValue = None
+    stop_indicator_radius: OptionalNumber = None
+    track_gap: OptionalNumber = None
+    year_2023: Optional[bool] = None
 
     def before_update(self):
         super().before_update()

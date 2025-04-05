@@ -145,6 +145,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     on_submit: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
+    on_tap_outside: OptionalControlEventCallable = None
 
     def before_update(self):
         super().before_update()

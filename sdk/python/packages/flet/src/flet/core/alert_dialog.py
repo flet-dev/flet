@@ -14,6 +14,7 @@ from flet.core.types import (
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
+    StrOrControl,
 )
 
 __all__ = ["AlertDialog"]
@@ -71,7 +72,7 @@ class AlertDialog(DialogControl):
 
     content: Optional[Control] = None
     modal: bool = False
-    title: Optional[Control] = None
+    title: Optional[StrOrControl] = None
     actions: List[Control] = field(default_factory=list)
     bgcolor: OptionalColorValue = None
     elevation: OptionalNumber = None

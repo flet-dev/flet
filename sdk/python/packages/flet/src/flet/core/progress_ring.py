@@ -1,7 +1,9 @@
 from typing import Optional
 
+from flet.core.box import BoxConstraints
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import control
+from flet.core.padding import PaddingValue
 from flet.core.types import Number, OptionalColorValue, OptionalNumber, StrokeCap
 
 __all__ = ["ProgressRing"]
@@ -54,3 +56,7 @@ class ProgressRing(ConstrainedControl):
     stroke_cap: Optional[StrokeCap] = None
     semantics_label: Optional[str] = None
     semantics_value: OptionalNumber = None
+    track_gap: OptionalNumber = None
+    size_constraints: Optional[BoxConstraints] = None
+    padding: Optional[PaddingValue] = None
+    year_2023: Optional[bool] = None

@@ -90,23 +90,41 @@ class _GridViewControlState extends State<GridViewControl> {
                 crossAxisSpacing: runSpacing,
                 childAspectRatio: childAspectRatio);
 
-        Widget child = GridView.builder(
-          scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
-          controller: _controller,
-          clipBehavior: clipBehavior,
-          reverse: reverse,
-          cacheExtent: cacheExtent,
-          semanticChildCount: semanticChildCount,
-          shrinkWrap: shrinkWrap,
-          padding: padding,
-          gridDelegate: gridDelegate,
-          itemCount: visibleControls.length,
-          itemBuilder: (context, index) {
-            return createControl(
-                widget.control, visibleControls[index].id, disabled,
-                parentAdaptive: adaptive);
-          },
-        );
+        var buildControlsOnDemand =
+            widget.control.attrBool("buildControlsOnDemand", true)!;
+        Widget child = !buildControlsOnDemand
+            ? GridView(
+                scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
+                controller: _controller,
+                clipBehavior: clipBehavior,
+                reverse: reverse,
+                cacheExtent: cacheExtent,
+                semanticChildCount: semanticChildCount,
+                shrinkWrap: shrinkWrap,
+                padding: padding,
+                gridDelegate: gridDelegate,
+                children: visibleControls
+                    .map((c) => createControl(widget.control, c.id, disabled,
+                        parentAdaptive: adaptive))
+                    .toList(),
+              )
+            : GridView.builder(
+                scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
+                controller: _controller,
+                clipBehavior: clipBehavior,
+                reverse: reverse,
+                cacheExtent: cacheExtent,
+                semanticChildCount: semanticChildCount,
+                shrinkWrap: shrinkWrap,
+                padding: padding,
+                gridDelegate: gridDelegate,
+                itemCount: visibleControls.length,
+                itemBuilder: (context, index) {
+                  return createControl(
+                      widget.control, visibleControls[index].id, disabled,
+                      parentAdaptive: adaptive);
+                },
+              );
 
         child = ScrollableControl(
             control: widget.control,

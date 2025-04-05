@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/edge_insets.dart';
 import '../utils/others.dart';
 import '../utils/text.dart';
 import '../utils/theme.dart';
@@ -90,6 +91,7 @@ class AppBarControl extends StatelessWidget
         toolbarOpacity: control.getDouble("toolbarOpacity", 1)!,
         toolbarTextStyle:
             parseTextStyle(Theme.of(context), control, "toolbarTextStyle"),
+        actionsPadding: parseEdgeInsets(control, "actionsPadding"),
       );
       return baseControl(context, appBar, parent, control);
     });

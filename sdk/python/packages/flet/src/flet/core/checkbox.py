@@ -14,6 +14,7 @@ from flet.core.types import (
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
+    StrOrControl,
     VisualDensity,
 )
 
@@ -55,7 +56,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/checkbox
     """
 
-    label: Optional[str] = None
+    label: Optional[StrOrControl] = None
     value: Optional[bool] = None
     label_position: Optional[LabelPosition] = None
     label_style: Optional[TextStyle] = None

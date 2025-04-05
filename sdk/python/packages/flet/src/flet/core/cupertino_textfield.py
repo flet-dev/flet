@@ -8,7 +8,7 @@ from flet.core.gradients import Gradient
 from flet.core.padding import OptionalPaddingValue
 from flet.core.text_style import TextStyle
 from flet.core.textfield import TextField
-from flet.core.types import BlendMode
+from flet.core.types import BlendMode, OptionalControlEventCallable
 
 __all__ = ["CupertinoTextField", "VisibilityMode"]
 
@@ -35,7 +35,7 @@ class CupertinoTextField(TextField):
     placeholder_style: Optional[TextStyle] = None
     gradient: Optional[Gradient] = None
     blend_mode: Optional[BlendMode] = None
-    shadow: Optional[ShadowValue] = field(default=list)
+    shadow: Optional[ShadowValue] = None
     prefix_visibility_mode: Optional[VisibilityMode] = None
     suffix_visibility_mode: Optional[VisibilityMode] = None
     clear_button_visibility_mode: Optional[VisibilityMode] = None
