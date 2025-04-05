@@ -93,6 +93,7 @@ import 'progress_ring.dart';
 import 'radio.dart';
 import 'radio_group.dart';
 import 'range_slider.dart';
+import 'reorderable_draggable.dart';
 import 'reorderable_list_view.dart';
 import 'responsive_row.dart';
 import 'row.dart';
@@ -716,6 +717,15 @@ Widget createWidget(
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           backend: backend);
+    case "reorderabledraggable":
+      return ReorderableDraggableControl(
+        key: key,
+        parent: parent,
+        control: controlView.control,
+        children: controlView.children,
+        parentDisabled: parentDisabled,
+        parentAdaptive: parentAdaptive,
+      );
     case "gridview":
       return GridViewControl(
           key: key,

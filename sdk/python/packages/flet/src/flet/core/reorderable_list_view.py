@@ -18,6 +18,7 @@ from flet.core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
+    MouseCursor,
 )
 
 
@@ -52,6 +53,7 @@ class ReorderableListView(ListView):
         header: Optional[Control] = None,
         footer: Optional[Control] = None,
         build_controls_on_demand: Optional[bool] = None,
+        show_default_drag_handles: Optional[bool] = None,
         mouse_cursor: Optional[MouseCursor] = None,
         on_reorder: OptionalEventCallable[OnReorderEvent] = None,
         on_reorder_start: OptionalEventCallable[OnReorderEvent] = None,
@@ -147,6 +149,8 @@ class ReorderableListView(ListView):
         self.on_reorder = on_reorder
         self.anchor = anchor
         self.auto_scroller_velocity_scalar = auto_scroller_velocity_scalar
+        self.show_default_drag_handles = show_default_drag_handles
+        self.mouse_cursor = mouse_cursor
         self.on_reorder_start = on_reorder_start
         self.on_reorder_end = on_reorder_end
         self.mouse_cursor = mouse_cursor
@@ -212,6 +216,27 @@ class ReorderableListView(ListView):
     @footer.setter
     def footer(self, value: Optional[Control]):
         self.__footer = value
+
+    # show_default_drag_handles
+    @property
+    def show_default_drag_handles(self) -> Optional[bool]:
+        return self._get_attr(
+            "showDefaultDragHandles", data_type="bool", def_value=True
+        )
+
+    @show_default_drag_handles.setter
+    def show_default_drag_handles(self, value: Optional[bool]):
+        self._set_attr("showDefaultDragHandles", value)
+
+    # mouse_cursor
+    @property
+    def mouse_cursor(self) -> Optional[MouseCursor]:
+        return self.__mouse_cursor
+
+    @mouse_cursor.setter
+    def mouse_cursor(self, value: Optional[MouseCursor]):
+        self.__mouse_cursor = value
+        self._set_enum_attr("mouseCursor", value, MouseCursor)
 
     # on_reorder
     @property
