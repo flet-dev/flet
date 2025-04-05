@@ -36,6 +36,7 @@ import 'controls/navigation_rail.dart';
 import 'controls/page.dart';
 import 'controls/placeholder.dart';
 import 'controls/progress_bar.dart';
+import 'controls/progress_ring.dart';
 import 'controls/reorderable_draggable.dart';
 import 'controls/row.dart';
 import 'controls/safe_area.dart';
@@ -67,8 +68,6 @@ class FletCoreExtension extends FletExtension {
         return AnimatedSwitcherControl(key: key, control: control);
       case "Banner":
         return BannerControl(key: key, control: control);
-      case "ProgressBar":
-        return ProgressBarControl(key: key, control: control);
       case "Card":
         return CardControl(key: key, control: control);
       case "Center":
@@ -133,10 +132,14 @@ class FletCoreExtension extends FletExtension {
         return ListTileControl(key: key, control: control);
       case "ListView":
         return ListViewControl(key: key, control: control);
-      case "Page":
-        return PageControl(key: key, control: control);
       case "NavigationRail":
         return NavigationRailControl(key: key, control: control);
+      case "Page":
+        return PageControl(key: key, control: control);
+      case "ProgressBar":
+        return ProgressBarControl(key: key, control: control);
+      case "ProgressRing":
+        return ProgressRingControl(key: key, control: control);
       case "ReorderableDraggable":
         return ReorderableDraggableControl(key: key, control: control);
       case "Row":
