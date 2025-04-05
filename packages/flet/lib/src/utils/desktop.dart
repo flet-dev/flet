@@ -235,6 +235,12 @@ Future windowToFront() async {
   }
 }
 
+Future windowStartDragging() async {
+  if (isDesktopPlatform()) {
+    await windowManager.startDragging();
+  }
+}
+
 Future blurWindow() async {
   if (isDesktopPlatform() &&
       (defaultTargetPlatform == TargetPlatform.windows ||
