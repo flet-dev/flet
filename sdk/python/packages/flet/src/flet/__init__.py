@@ -136,6 +136,7 @@ from flet.controls.core.row import Row
 from flet.controls.core.safe_area import SafeArea
 from flet.controls.core.semantics import Semantics
 from flet.controls.core.semantics_service import Assertiveness, SemanticsService
+from flet.controls.core.shader_mask import ShaderMask
 from flet.controls.core.shake_detector import ShakeDetector
 from flet.controls.core.stack import Stack, StackFit
 from flet.controls.core.text import Text, TextAffinity, TextSelection
@@ -336,7 +337,6 @@ from flet.controls.scrollable_control import (
     ScrollDirection,
     ScrollType,
 )
-from flet.controls.shader_mask import ShaderMask
 from flet.controls.size import Size
 from flet.controls.template_route import TemplateRoute
 from flet.controls.text_style import (
