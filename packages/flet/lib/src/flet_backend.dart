@@ -316,6 +316,20 @@ class FletBackend extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Updates the properties of a control with the given [id].
+  ///
+  /// This method takes a control's unique identifier [id] and a map of
+  /// properties [props] to update the control's state. The [props] map
+  /// contains key-value pairs where the key is the property name and the
+  /// value is the new value for that property.
+  ///
+  /// - [id]: The unique identifier of the control to be updated.
+  /// - [props]: A map of property names and their corresponding new values.
+  /// - [dart]: A boolean indicating whether to apply the patch in Dart. Defaults to `true`.
+  /// - [python]: A boolean indicating whether to send the update to the Python backend. Defaults to `true`.
+  /// - [notify]: A boolean indicating whether to notify listeners after applying the patch. Defaults to `false`.
+  ///
+  /// This method is typically used to modify the state of a control dynamically.
   void updateControl(int id, Map<String, dynamic> props,
       {bool dart = true, bool python = true, bool notify = false}) {
     var control = _controlsIndex.get(id);
