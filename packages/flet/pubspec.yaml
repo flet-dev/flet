@@ -39,6 +39,7 @@ dependencies:
   flutter_markdown: 0.7.6+2
   flutter_highlight: 0.7.0
   markdown: 7.3.0
+  sensors_plus: ^6.1.1
 
 dev_dependencies:
   flutter_test:
