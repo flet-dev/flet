@@ -1,5 +1,5 @@
 from dataclasses import field
-from typing import List, Optional
+from typing import List
 
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.control import Control, control
@@ -19,10 +19,11 @@ class CupertinoContextMenu(AdaptiveControl):
 
     content: Control
     actions: List[Control] = field(default_factory=list)
-    enable_haptic_feedback: Optional[bool] = None
+    enable_haptic_feedback: bool = True
 
     def before_update(self):
         super().before_update()
+        assert self.content.visible, "content must be visible"
         assert any(
             a.visible for a in self.actions
-        ), "at least one action Control must be provided and visible"
+        ), "at least one action must be visible"

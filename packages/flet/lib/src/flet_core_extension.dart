@@ -10,6 +10,8 @@ import 'controls/container.dart';
 import 'controls/cupertino_activity_indicator.dart';
 import 'controls/cupertino_alert_dialog.dart';
 import 'controls/cupertino_button.dart';
+import 'controls/cupertino_context_menu.dart';
+import 'controls/cupertino_context_menu_action.dart';
 import 'controls/cupertino_dialog_action.dart';
 import 'controls/cupertino_slider.dart';
 import 'controls/divider.dart';
@@ -74,6 +76,10 @@ class FletCoreExtension extends FletExtension {
         return CupertinoAlertDialogControl(key: key, control: control);
       case "CupertinoButton":
         return CupertinoButtonControl(key: key, control: control);
+      case "CupertinoContextMenu":
+        return CupertinoContextMenuControl(key: key, control: control);
+      case "CupertinoContextMenuAction":
+        return CupertinoContextMenuActionControl(key: key, control: control);
       case "CupertinoDialogAction":
         return CupertinoDialogActionControl(key: key, control: control);
       case "CupertinoSlider":

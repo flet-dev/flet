@@ -1,5 +1,4 @@
 import asyncio
-import warnings
 from typing import Optional
 
 from flet.core.adaptive_control import AdaptiveControl
@@ -46,10 +45,10 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     """
 
     def __setattr__(self, name, value):
-        if name == "text" and value != None:
+        if name == "text" and value is not None:
             deprecated_warning(
                 name="text",
-                reason="Use 'content' instead.",
+                reason="Use content instead.",
                 version="0.70.0",
                 delete_version="0.70.3",
             )
