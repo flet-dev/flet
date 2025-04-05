@@ -4,7 +4,6 @@ from dataclasses import field
 from typing import Any, List, Optional
 
 import msgpack
-
 from flet.core.buttons import ButtonStyle
 from flet.core.colors import Colors
 from flet.core.control import BaseControl, Control, Service, control
@@ -64,8 +63,8 @@ def update_page(new: Any, old: Any = None, show_details=True):
 class SuperElevatedButton(ElevatedButton):
     prop_2: Optional[str] = None
 
-    def build(self):
-        print("SuperElevatedButton.build()")
+    def init(self):
+        print("SuperElevatedButton.init()")
         assert self.page
 
 
@@ -162,7 +161,7 @@ def test_simple_page():
     page.controls[0].some_value = "Another text"
     page.controls[0].controls = [
         SuperElevatedButton(
-            text="Button 😬",
+            "Button 😬",
             style=ButtonStyle(color=Colors.RED),
             on_click=lambda e: print(e),
             opacity=1,
