@@ -16,9 +16,7 @@ class ShakeDetectorService extends FletService {
   double? _shakeThresholdGravity;
 
   @override
-  void init() {
-    super.init();
-
+  void update() {
     var minimumShakeCount = control.getInt("minimum_shake_count", 1)!;
     var shakeSlopTimeMs = control.getInt("shake_slop_time_ms", 500)!;
     var shakeCountResetTimeMs =

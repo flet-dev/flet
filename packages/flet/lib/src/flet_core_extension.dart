@@ -38,7 +38,6 @@ import 'controls/reorderable_draggable.dart';
 import 'controls/row.dart';
 import 'controls/safe_area.dart';
 import 'controls/selection_area.dart';
-import 'controls/shake_detector.dart';
 import 'controls/stack.dart';
 import 'controls/text.dart';
 import 'controls/text_button.dart';
@@ -52,6 +51,7 @@ import 'models/control.dart';
 import 'services/browser_context_menu.dart';
 import 'services/clipboard.dart';
 import 'services/haptic_feedback.dart';
+import 'services/shake_detector.dart';
 import 'services/shared_preferences.dart';
 import 'services/url_launcher.dart';
 
