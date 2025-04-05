@@ -32,6 +32,7 @@ import 'controls/line_chart.dart';
 import 'controls/list_tile.dart';
 import 'controls/list_view.dart';
 import 'controls/page.dart';
+import 'controls/placeholder.dart';
 import 'controls/progress_bar.dart';
 import 'controls/reorderable_draggable.dart';
 import 'controls/row.dart';
@@ -136,6 +137,8 @@ class FletCoreExtension extends FletExtension {
         return StackControl(key: key, control: control);
       case "Text":
         return TextControl(key: key, control: control);
+      case "Placeholder":
+        return PlaceholderControl(key: key, control: control);
       case "VerticalDivider":
         return VerticalDividerControl(key: key, control: control);
       case "View":
