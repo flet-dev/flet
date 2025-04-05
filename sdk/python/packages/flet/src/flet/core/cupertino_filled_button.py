@@ -51,6 +51,8 @@ class CupertinoFilledButton(CupertinoButton):
     border_radius: OptionalBorderRadiusValue = None
     url: Optional[str] = None
     url_target: Optional[UrlTarget] = None
+    autofocus: bool = False
+    focus_color: OptionalColorValue = None
     on_click: OptionalControlEventCallable = None
     on_long_press: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None

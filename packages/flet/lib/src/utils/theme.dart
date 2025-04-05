@@ -1499,7 +1499,7 @@ PageTransitionsBuilder parseTransitionsBuilder(
       return const NoPageTransitionsBuilder();
     case "predictive":
       return const PredictiveBackPageTransitionsBuilder();
-    case "forwards":
+    case "fadeforwards":
       return const FadeForwardsPageTransitionsBuilder();
     default:
       return defaultBuilder;

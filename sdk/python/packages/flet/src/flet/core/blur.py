@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Tuple, Union
+from typing import Optional, Tuple, Union
 
 from flet.core.types import Number
 
@@ -18,7 +18,7 @@ class BlurTileMode(Enum):
 class Blur:
     sigma_x: Number
     sigma_y: Number
-    tile_mode: BlurTileMode = BlurTileMode.CLAMP
+    tile_mode: Optional[BlurTileMode] = None
 
 
 BlurValue = Union[Number, Tuple[Number, Number], Blur]

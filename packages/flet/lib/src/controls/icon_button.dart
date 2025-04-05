@@ -97,16 +97,26 @@ class _IconButtonControlState extends State<IconButtonControl>
       var visualDensity =
           parseVisualDensity(widget.control.getString("visualDensity"));
 
-      Function()? onPressed = widget.control.disabled
-          ? null
-          : () {
+      Function()? onPressed = !widget.control.disabled
+          ? () {
               debugPrint("Button ${widget.control.id} clicked!");
               if (url != "") {
                 openWebBrowser(url, webWindowName: urlTarget);
               }
               FletBackend.of(context)
                   .triggerControlEvent(widget.control, "click");
-            };
+            }
+          : null;
+
+      Function()? onLongPressHandler = !widget.control.disabled
+          ? () => FletBackend.of(context)
+              .triggerControlEvent(widget.control, "longPress")
+          : null;
+
+      Function(bool)? onHoverHandler = !widget.control.disabled
+          ? (bool hovered) => FletBackend.of(context)
+              .triggerControlEvent(widget.control, "hover", hovered.toString())
+          : null;
 
       Widget? button;
 
@@ -168,6 +178,8 @@ class _IconButtonControlState extends State<IconButtonControl>
             style: style,
             isSelected: selected,
             constraints: sizeConstraints,
+            onLongPress: onLongPressHandler,
+            onHover: onHoverHandler,
             selectedIcon: selectedIconWidget,
             onPressed: onPressed);
       } else {

@@ -39,10 +39,12 @@ class CupertinoAppBar(Control):
 
     leading: Optional[Control] = None
     middle: Optional[Control] = None
+    title: Optional[Control] = None
     trailing: Optional[Control] = None
     bgcolor: OptionalColorValue = None
     automatically_imply_leading: Optional[bool] = None
     automatically_imply_middle: Optional[bool] = None
+    automatically_imply_title: Optional[bool] = None
     border: Optional[Border] = None
     padding: OptionalPaddingValue = None
     transition_between_routes: Optional[bool] = None
@@ -50,3 +52,4 @@ class CupertinoAppBar(Control):
     brightness: Optional[Brightness] = None
     automatic_background_visibility: Optional[bool] = None
     enable_background_filter_blur: Optional[bool] = None
+    large: Optional[bool] = None

@@ -47,7 +47,7 @@ class PageTransitionTheme(Enum):
     ZOOM = "zoom"
     CUPERTINO = "cupertino"
     PREDICTIVE = "predictive"
-    FORWARDS = "forwards"
+    FADE_FORWARDS = "fadeForwards"
 
 
 @dataclass

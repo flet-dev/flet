@@ -15,6 +15,7 @@ from flet.core.types import (
     OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,
+    StrOrControl,
 )
 
 __all__ = ["Switch"]
@@ -55,7 +56,7 @@ class Switch(ConstrainedControl, AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/switch
     """
 
-    label: Optional[str] = None
+    label: Optional[StrOrControl] = None
     label_position: Optional[LabelPosition] = None
     label_style: Optional[TextStyle] = None
     value: bool = False

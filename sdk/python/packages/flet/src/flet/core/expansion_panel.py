@@ -31,9 +31,8 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
     bgcolor: OptionalColorValue = None
     expanded: bool = False
     can_tap_header: bool = False
-
-    def before_update(self):
-        super().before_update()
+    splash_color: OptionalColorValue = None
+    highlight_color: OptionalColorValue = None
 
 
 @control("ExpansionPanelList")

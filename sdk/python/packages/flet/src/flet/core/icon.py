@@ -3,7 +3,7 @@ from typing import Optional
 from flet.core.box import ShadowValue
 from flet.core.constrained_control import ConstrainedControl
 from flet.core.control import control
-from flet.core.types import IconValue, OptionalColorValue, OptionalNumber
+from flet.core.types import BlendMode, IconValue, OptionalColorValue, OptionalNumber
 
 __all__ = ["Icon"]
 
@@ -50,3 +50,4 @@ class Icon(ConstrainedControl):
     grade: OptionalNumber = None
     weight: OptionalNumber = None
     optical_size: OptionalNumber = None
+    blend_mode: Optional[BlendMode] = None
