@@ -5,6 +5,7 @@ import 'controls/animated_switcher.dart';
 import 'controls/banner.dart';
 import 'controls/card.dart';
 import 'controls/center.dart';
+import 'controls/circle_avatar.dart';
 import 'controls/column.dart';
 import 'controls/container.dart';
 import 'controls/cupertino_activity_indicator.dart';
@@ -68,6 +69,8 @@ class FletCoreExtension extends FletExtension {
         return TextButtonControl(key: key, control: control);
       case "Container":
         return ContainerControl(key: key, control: control);
+      case "CircleAvatar":
+        return CircleAvatarControl(key: key, control: control);
       case "IconButton":
         return IconButtonControl(key: key, control: control);
       case "CupertinoActivityIndicator":

@@ -1,36 +1,28 @@
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
+import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/images.dart';
-import 'create_control.dart';
-import 'flet_store_mixin.dart';
+import '../widgets/flet_store_mixin.dart';
+import 'base_controls.dart';
 
 class CircleAvatarControl extends StatelessWidget with FletStoreMixin {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final FletControlBackend backend;
 
-  const CircleAvatarControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.backend});
+  const CircleAvatarControl({
+    super.key,
+    required this.control,
+  });
 
   @override
   Widget build(BuildContext context) {
     debugPrint("CircleAvatar build: ${control.id}");
-    bool disabled = control.disabled || parentDisabled;
 
     return withPageArgs((context, pageArgs) {
-      var foregroundImageSrc = control.getString("foregroundImageSrc");
-      var backgroundImageSrc = control.getString("backgroundImageSrc");
-      var contentCtrls =
-          children.where((c) => c.name == "content" && c.visible);
+      var foregroundImageSrc = control.getString("foreground_image_src");
+      var backgroundImageSrc = control.getString("background_image_src");
+      var content = control.buildWidget("content");
 
       ImageProvider<Object>? backgroundImage;
       ImageProvider<Object>? foregroundImage;
@@ -65,28 +57,26 @@ class CircleAvatarControl extends StatelessWidget with FletStoreMixin {
       var avatar = CircleAvatar(
           foregroundImage: foregroundImage,
           backgroundImage: backgroundImage,
-          backgroundColor: control.getColor("bgColor", context),
+          backgroundColor: control.getColor("bgcolor", context),
           foregroundColor: control.getColor("color", context),
           radius: control.getDouble("radius"),
-          minRadius: control.getDouble("minRadius"),
-          maxRadius: control.getDouble("maxRadius"),
+          minRadius: control.getDouble("min_radius"),
+          maxRadius: control.getDouble("max_radius"),
           onBackgroundImageError: backgroundImage != null
               ? (object, trace) {
-                  backend.triggerControlEvent(
-                      control.id, "imageError", "background");
+                  FletBackend.of(context).triggerControlEvent(
+                      control, "image_error", "background");
                 }
               : null,
           onForegroundImageError: foregroundImage != null
               ? (object, trace) {
-                  backend.triggerControlEvent(
-                      control.id, "imageError", "foreground");
+                  FletBackend.of(context).triggerControlEvent(
+                      control, "image_error", "foreground");
                 }
               : null,
-          child: contentCtrls.isNotEmpty
-              ? createControl(control, contentCtrls.first.id, disabled)
-              : null);
+          child: content);
 
-      return constrainedControl(context, avatar, parent, control);
+      return ConstrainedControl(control: control, child: avatar);
     });
   }
 }

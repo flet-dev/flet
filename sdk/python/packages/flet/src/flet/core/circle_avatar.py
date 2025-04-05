@@ -6,6 +6,7 @@ from flet.core.types import (
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
+    OptionalString,
 )
 
 __all__ = ["CircleAvatar"]
@@ -70,8 +71,8 @@ class CircleAvatar(ConstrainedControl):
     """
 
     content: Optional[Control] = None
-    foreground_image_src: Optional[str] = None
-    background_image_src: Optional[str] = None
+    foreground_image_src: OptionalString = None
+    background_image_src: OptionalString = None
     color: OptionalColorValue = None
     bgcolor: OptionalColorValue = None
     radius: OptionalNumber = None
@@ -81,9 +82,13 @@ class CircleAvatar(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
+        assert self.radius is None or self.radius >= 0, "radius cannot be negative"
         assert (
             self.min_radius is None or self.min_radius >= 0
         ), "min_radius cannot be negative"
         assert (
             self.max_radius is None or self.max_radius >= 0
         ), "max_radius cannot be negative"
+        assert self.radius is None or (
+            self.min_radius is None and self.max_radius is None
+        ), "If radius is set, min_radius and max_radius must be None"
