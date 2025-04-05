@@ -8,6 +8,7 @@ from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import Number, ResponsiveNumber
 from flet.utils.strings import random_string
+from ..utils import deprecated
 
 # Try importing `dataclass_transform()` for Python 3.11+, else use a no-op function
 if sys.version_info >= (3, 11):  # Only use it for Python 3.11+
@@ -122,8 +123,13 @@ class BaseControl:
     def is_isolated(self):
         return False
 
+    @deprecated(
+        reason="Use init() instead.",
+        version="0.70.0",
+        delete_version="0.73.0",
+        show_parentheses=True,
+    )
     def build(self):
-        # this one is deprecated
         pass
 
     def init(self):
@@ -195,12 +201,12 @@ class Control(BaseControl):
     expand: Optional[Union[bool, int]] = None
     expand_loose: Optional[bool] = None
     col: Optional[ResponsiveNumber] = None
-    opacity: Number = field(default=1.0)
+    opacity: Number = 1.0
     tooltip: Optional[TooltipValue] = None
     badge: Optional[BadgeValue] = None
-    visible: bool = field(default=True)
-    disabled: bool = field(default=False)
-    rtl: bool = field(default=False)
+    visible: bool = True
+    disabled: bool = False
+    rtl: bool = False
 
     def before_update(self):
         super().before_update()
