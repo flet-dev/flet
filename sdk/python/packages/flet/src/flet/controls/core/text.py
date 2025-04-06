@@ -63,7 +63,7 @@ class TextSelectionChangeEvent(ControlEvent):
     selection: TextSelection
 
 
-@control("Text", kw_only=True)
+@control("Text")
 class Text(ConstrainedControl):
     """
     Text is a control for displaying text.
@@ -93,7 +93,7 @@ class Text(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/text
     """
 
-    value: str
+    value: Optional[str] = ""
     spans: Optional[List[TextSpan]] = None
     text_align: Optional[TextAlign] = None
     font_family: Optional[str] = None
