@@ -329,7 +329,7 @@ from flet.controls.painting import (
     PaintRadialGradient,
     PaintSweepGradient,
 )
-from flet.controls.querystring import QueryString
+from flet.controls.query_string import QueryString
 from flet.controls.ref import Ref
 from flet.controls.scrollable_control import (
     OnScrollEvent,

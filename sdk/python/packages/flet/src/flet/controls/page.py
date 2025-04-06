@@ -46,7 +46,7 @@ from flet.controls.material.navigation_drawer import (
     NavigationDrawerPosition,
 )
 from flet.controls.padding import OptionalPaddingValue, Padding
-from flet.controls.querystring import QueryString
+from flet.controls.query_string import QueryString
 from flet.controls.scrollable_control import OnScrollEvent
 from flet.controls.session_storage import SessionStorage
 from flet.controls.theme import Theme
