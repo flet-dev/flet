@@ -64,7 +64,7 @@ class ControlWidget extends StatelessWidget {
 
     Widget buildTheme(Brightness? brightness) {
       final themeProp = brightness == Brightness.dark ? "dark_theme" : "theme";
-      final themeData = parseTheme(context, control, themeProp, brightness,
+      final themeData = parseTheme(control.get(themeProp), context, brightness,
           parentTheme: parentTheme);
       return Theme(data: themeData, child: widget!);
     }

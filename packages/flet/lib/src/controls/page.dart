@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -172,7 +171,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
   }
 
   void _attachKeyboardListenerIfNeeded() {
-    var onKeyboardEvent = widget.control.get<bool>("on_keyboard_event", false);
+    var onKeyboardEvent = widget.control.getBool("on_keyboard_event", false);
     if (onKeyboardEvent != _prevOnKeyboardEvent) {
       if (onKeyboardEvent == true && !_keyboardHandlerSubscribed) {
         HardwareKeyboard.instance.addHandler(_handleKeyDown);
@@ -186,7 +185,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
   }
 
   Future<void> _loadFontsIfNeeded(FletBackend backend) async {
-    final fonts = parseFonts(widget.control, "fonts");
+    final fonts = parseFonts(widget.control.get("fonts"), {})!;
     for (final entry in fonts.entries) {
       final fontFamily = entry.key;
       final fontUrl = entry.value;
@@ -211,7 +210,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     FletBackend.of(context).globalKeys.clear();
 
     // page route
-    var route = widget.control.get<String>("route");
+    var route = widget.control.getString("route");
     if (route != null && _routeState.route != route) {
       // update route
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -222,10 +221,10 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     _platform = TargetPlatform.values.firstWhere(
         (a) =>
             a.name.toLowerCase() ==
-            widget.control.get<String>("platform", "")!.toLowerCase(),
+            widget.control.getString("platform", "")!.toLowerCase(),
         orElse: () => defaultTargetPlatform);
 
-    _adaptive = widget.control.get<bool>("adaptive");
+    _adaptive = widget.control.adaptive;
 
     _widgetsDesign = _adaptive == true &&
             (_platform == TargetPlatform.iOS ||
@@ -234,24 +233,23 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
         : PageDesign.material;
 
     // theme
-    _themeMode = ThemeMode.values.firstWhereOrNull((t) =>
-            t.name.toLowerCase() ==
-            widget.control.get<String>("theme_mode", "")!.toLowerCase()) ??
+    _themeMode = parseThemeMode(widget.control.getString("theme_mode")) ??
         FletAppContext.of(context)?.themeMode;
 
     _localeConfiguration =
-        parseLocaleConfiguration(widget.control, "locale_configuration");
+        parseLocaleConfiguration(widget.control.get("locale_configuration"));
 
     _brightness = context.select<FletBackend, Brightness>(
         (backend) => backend.platformBrightness);
 
-    var windowTitle = widget.control.get<String>("title", "")!;
+    var windowTitle = widget.control.getString("title", "")!;
 
     var lightTheme =
-        parseTheme(context, widget.control, "theme", Brightness.light);
-    var darkTheme = widget.control.get<String>("dark_theme") == null
-        ? parseTheme(context, widget.control, "theme", Brightness.dark)
-        : parseTheme(context, widget.control, "dark_theme", Brightness.dark);
+        parseTheme(widget.control.get("theme"), context, Brightness.light);
+    var darkTheme = widget.control.getString("dark_theme") == null
+        ? parseTheme(widget.control.get("theme"), context, Brightness.dark)
+        : parseTheme(
+            widget.control.get("dark_theme"), context, Brightness.dark);
 
     if (_lightTheme == null || !themesEqual(_lightTheme!, lightTheme)) {
       _lightTheme = lightTheme;
@@ -266,7 +264,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
             ? CupertinoApp.router(
                 debugShowCheckedModeBanner: false,
                 showSemanticsDebugger:
-                    widget.control.get<bool>("show_semantics_debugger", false)!,
+                    widget.control.getBool("show_semantics_debugger", false)!,
                 routerDelegate: _routerDelegate,
                 routeInformationParser: _routeParser,
                 title: windowTitle,
@@ -275,12 +273,12 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                                 _themeMode == ThemeMode.system) &&
                             _brightness == Brightness.light)
                     ? parseCupertinoTheme(
-                        context, widget.control, "theme", Brightness.light)
-                    : widget.control.get<String>("dark_theme") != null
-                        ? parseCupertinoTheme(context, widget.control,
-                            "dark_theme", Brightness.dark)
-                        : parseCupertinoTheme(
-                            context, widget.control, "theme", Brightness.dark),
+                        widget.control.get("theme"), context, Brightness.light)
+                    : widget.control.getString("dark_theme") != null
+                        ? parseCupertinoTheme(widget.control.get("dark_theme"),
+                            context, Brightness.dark)
+                        : parseCupertinoTheme(widget.control.get("theme"),
+                            context, Brightness.dark),
                 localizationsDelegates: const [
                   GlobalMaterialLocalizations.delegate,
                   GlobalWidgetsLocalizations.delegate,
@@ -296,7 +294,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
             : MaterialApp.router(
                 debugShowCheckedModeBanner: false,
                 showSemanticsDebugger:
-                    widget.control.get<bool>("show_semantics_debugger", false)!,
+                    widget.control.getBool("show_semantics_debugger", false)!,
                 routerDelegate: _routerDelegate,
                 routeInformationParser: _routeParser,
                 title: windowTitle,
@@ -352,10 +350,10 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                 )));
     } else {
       String viewRoutes =
-          views.map((v) => v.get<String>("route", v.id.toString())).join();
+          views.map((v) => v.getString("route", v.id.toString())).join();
 
       pages = views.map((view) {
-        var key = ValueKey(view.get<String>("route", view.id.toString()));
+        var key = ValueKey(view.getString("route", view.id.toString()));
         var child = ControlWidget(control: view);
 
         //debugPrint("ROUTES: $_prevViewRoutes $viewRoutes");
@@ -370,7 +368,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
             : AnimatedTransitionPage(
                 key: key,
                 child: child,
-                fullscreenDialog: view.get<bool>("fullscreen_dialog", false)!);
+                fullscreenDialog: view.getBool("fullscreen_dialog", false)!);
       }).toList();
 
       _prevViewRoutes = viewRoutes;

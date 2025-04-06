@@ -11,7 +11,7 @@ void main() {
       }''';
 
     final j1 = json.decode(t1);
-    var fonts = fontsFromJson(j1);
+    var fonts = parseFonts(j1, {})!;
 
     expect(fonts.length, 2);
     expect(fonts["font1"], "https://fonts.com/font1.ttf");

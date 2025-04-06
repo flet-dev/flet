@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -95,14 +93,14 @@ InlineSpan? parseInlineSpan(ThemeData theme, Control span, bool parentDisabled,
     void Function(Control, String, String)? sendControlEvent) {
   span.notifyParent = true;
   bool disabled = span.disabled || parentDisabled;
-  var onClick = span.get<bool>("on_click", false)!;
-  String url = span.get<String>("url", "")!;
-  String? urlTarget = span.get<String>("url_target");
+  var onClick = span.getBool("on_click", false)!;
+  String url = span.getString("url", "")!;
+  String? urlTarget = span.getString("url_target");
   return TextSpan(
-    text: span.get<String>("text"),
-    style: parseTextStyle(theme, span, "style"),
-    spellOut: span.get<bool>("spell_out"),
-    semanticsLabel: span.get<String>("semantics_label"),
+    text: span.getString("text"),
+    style: parseTextStyle(span.get("style"), theme),
+    spellOut: span.getBool("spell_out"),
+    semanticsLabel: span.getString("semantics_label"),
     children: parseTextSpans(
         theme, span.children("spans"), parentDisabled, sendControlEvent),
     mouseCursor: onClick && !disabled && sendControlEvent != null
@@ -119,74 +117,63 @@ InlineSpan? parseInlineSpan(ThemeData theme, Control span, bool parentDisabled,
             }
           })
         : null,
-    onEnter: span.get<bool>("on_enter", false)! &&
+    onEnter: span.getBool("on_enter", false)! &&
             !disabled &&
             sendControlEvent != null
         ? (event) {
             sendControlEvent(span, "enter", "");
           }
         : null,
-    onExit: span.get<bool>("on_exit", false)! &&
-            !disabled &&
-            sendControlEvent != null
-        ? (event) {
-            sendControlEvent(span, "exit", "");
-          }
-        : null,
+    onExit:
+        span.getBool("on_exit", false)! && !disabled && sendControlEvent != null
+            ? (event) {
+                sendControlEvent(span, "exit", "");
+              }
+            : null,
   );
 }
 
 TextAlign? parseTextAlign(String? value, [TextAlign? defaultValue]) {
-  if (value == null) {
-    return defaultValue;
-  }
+  if (value == null) return defaultValue;
   return TextAlign.values.firstWhereOrNull(
           (a) => a.name.toLowerCase() == value.toLowerCase()) ??
       defaultValue;
 }
 
 TextOverflow? parseTextOverflow(String? value, [TextOverflow? defaultValue]) {
-  if (value == null) {
-    return defaultValue;
-  }
+  if (value == null) return defaultValue;
   return TextOverflow.values.firstWhereOrNull(
           (a) => a.name.toLowerCase() == value.toLowerCase()) ??
       defaultValue;
 }
 
+TextDecorationStyle? parseTextDecorationStyle(String? value,
+    [TextDecorationStyle? defaultValue]) {
+  if (value == null) return defaultValue;
+  return TextDecorationStyle.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defaultValue;
+}
+
 TextCapitalization? parseTextCapitalization(String? value,
     [TextCapitalization? defaultValue]) {
-  if (value == null) {
-    return defaultValue;
-  }
+  if (value == null) return defaultValue;
   return TextCapitalization.values.firstWhereOrNull(
           (a) => a.name.toLowerCase() == value.toLowerCase()) ??
       defaultValue;
 }
 
 TextBaseline? parseTextBaseline(String? value, [TextBaseline? defaultValue]) {
-  if (value == null) {
-    return defaultValue;
-  }
+  if (value == null) return defaultValue;
   return TextBaseline.values.firstWhereOrNull(
           (a) => a.name.toLowerCase() == value.toLowerCase()) ??
       defaultValue;
 }
 
-TextStyle? parseTextStyle(ThemeData theme, Control control, String propName) {
-  var v = control.get(propName);
-  if (v == null) {
-    return null;
-  }
-  return textStyleFromJson(theme, Map<String, dynamic>.from(v));
-}
-
-TextStyle? textStyleFromJson(ThemeData theme, Map<String, dynamic>? json) {
-  if (json == null) {
-    return null;
-  }
-
-  var fontWeight = json["weight"];
+TextStyle? parseTextStyle(dynamic value, ThemeData theme,
+    [TextStyle? defaultValue]) {
+  if (value == null) return defaultValue;
+  var fontWeight = value["weight"];
 
   List<FontVariation>? variations;
   if (fontWeight != null && fontWeight.startsWith("w")) {
@@ -196,7 +183,7 @@ TextStyle? textStyleFromJson(ThemeData theme, Map<String, dynamic>? json) {
   }
 
   List<TextDecoration> decorations = [];
-  var decor = parseInt(json["decoration"], 0)!;
+  var decor = parseInt(value["decoration"], 0)!;
   if (decor & 0x1 > 0) {
     decorations.add(TextDecoration.underline);
   }
@@ -208,43 +195,35 @@ TextStyle? textStyleFromJson(ThemeData theme, Map<String, dynamic>? json) {
   }
 
   return TextStyle(
-    fontSize: parseDouble(json["size"]),
+    fontSize: parseDouble(value["size"]),
     fontWeight: getFontWeight(fontWeight),
-    fontStyle: parseBool(json["italic"], false)! ? FontStyle.italic : null,
-    fontFamily: json["font_family"],
+    fontStyle: parseBool(value["italic"], false)! ? FontStyle.italic : null,
+    fontFamily: value["font_family"],
     fontVariations: variations,
-    height: parseDouble(json["height"]),
+    height: parseDouble(value["height"]),
     decoration:
         decorations.isNotEmpty ? TextDecoration.combine(decorations) : null,
-    decorationStyle: json["decoration_style"] != null
-        ? TextDecorationStyle.values.firstWhereOrNull((v) =>
-            v.name.toLowerCase() == json["decoration_style"].toLowerCase())
-        : null,
-    decorationColor: parseColor(theme, json["decoration_color"]),
-    decorationThickness: parseDouble(json["decoration_thickness"]),
-    color: parseColor(theme, json["color"]),
-    backgroundColor: parseColor(theme, json["bgcolor"]),
-    shadows: json["shadow"] != null
-        ? boxShadowsFromJSON(theme, json["shadow"])
-        : null,
-    foreground: json["foreground"] != null
-        ? paintFromJSON(theme, json["foreground"])
-        : null,
-    letterSpacing: parseDouble(json['letter_spacing']),
-    overflow: parseTextOverflow(json['overflow']),
-    wordSpacing: parseDouble(json['word_spacing']),
-    textBaseline: parseTextBaseline(json['text_baseline']),
+    decorationStyle: parseTextDecorationStyle(value["decoration_style"]),
+    decorationColor: parseColor(value["decoration_color"], theme),
+    decorationThickness: parseDouble(value["decoration_thickness"]),
+    color: parseColor(value["color"], theme),
+    backgroundColor: parseColor(value["bgcolor"], theme),
+    shadows: parseBoxShadows(value["shadow"], theme),
+    foreground: parsePaint(value["foreground"], theme),
+    letterSpacing: parseDouble(value['letter_spacing']),
+    overflow: parseTextOverflow(value['overflow']),
+    wordSpacing: parseDouble(value['word_spacing']),
+    textBaseline: parseTextBaseline(value['text_baseline']),
   );
 }
 
-WidgetStateProperty<TextStyle?>? parseWidgetStateTextStyle(
-    ThemeData theme, Control control, String propName) {
-  var v = control.get<String>(propName);
-  if (v == null) {
-    return null;
-  }
+WidgetStateProperty<TextStyle?>? parseWidgetStateTextStyle(dynamic value,
+    ThemeData theme,
+    {TextStyle? defaultTextStyle,
+      WidgetStateProperty<TextStyle?>? defaultValue}) {
+  if (value == null) return defaultValue;
   return getWidgetStateProperty<TextStyle?>(
-      jsonDecode(v), (jv) => textStyleFromJson(theme, jv), null);
+      value, (jv) => parseTextStyle(theme, jv), defaultTextStyle);
 }
 
 class TextCapitalizationFormatter extends TextInputFormatter {

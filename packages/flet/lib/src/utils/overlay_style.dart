@@ -5,8 +5,10 @@ import 'package:flutter/services.dart';
 import '../utils/numbers.dart';
 import 'colors.dart';
 
-SystemUiOverlayStyle overlayStyleFromJson(
-    ThemeData? theme, Map<String, dynamic> json, Brightness? brightness) {
+SystemUiOverlayStyle? parseSystemUiOverlayStyle(
+    dynamic value, ThemeData? theme, Brightness? brightness,
+    [SystemUiOverlayStyle? defaultValue]) {
+  if (value == null) return defaultValue;
   Brightness? invertedBrightness = brightness != null
       ? brightness == Brightness.light
           ? Brightness.dark
@@ -14,28 +16,26 @@ SystemUiOverlayStyle overlayStyleFromJson(
       : null;
 
   return SystemUiOverlayStyle(
-      statusBarColor: parseColor(theme, json["status_bar_color"]),
+      statusBarColor: parseColor(value["status_bar_color"], theme),
       systemNavigationBarColor:
-          parseColor(theme, json["system_navigation_bar_color"]),
+          parseColor(value["system_navigation_bar_color"], theme),
       systemNavigationBarDividerColor:
-          parseColor(theme, json["system_navigation_bar_divider_color"]),
+          parseColor(value["system_navigation_bar_divider_color"], theme),
       systemStatusBarContrastEnforced:
-          parseBool(json["enforce_system_status_bar_contrast"]),
+          parseBool(value["enforce_system_status_bar_contrast"]),
       systemNavigationBarContrastEnforced:
-          parseBool(json["enforce_system_navigation_bar_contrast"]),
+          parseBool(value["enforce_system_navigation_bar_contrast"]),
       systemNavigationBarIconBrightness: parseBrightness(
-          json["system_navigation_bar_icon_brightness"], invertedBrightness),
+          value["system_navigation_bar_icon_brightness"], invertedBrightness),
       statusBarBrightness:
-          parseBrightness(json["status_bar_brightness"], brightness),
+          parseBrightness(value["status_bar_brightness"], brightness),
       statusBarIconBrightness: parseBrightness(
-          json["status_bar_icon_brightness"], invertedBrightness));
+          value["status_bar_icon_brightness"], invertedBrightness));
 }
 
-Brightness? parseBrightness(String? value, [Brightness? defValue]) {
-  if (value == null) {
-    return defValue;
-  }
+Brightness? parseBrightness(String? value, [Brightness? defaultValue]) {
+  if (value == null) return defaultValue;
   return Brightness.values
           .firstWhereOrNull((e) => e.toString() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }

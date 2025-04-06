@@ -1,7 +1,7 @@
-import 'package:flet/src/controls/base_controls.dart';
-import 'package:flet/src/extensions/control.dart';
 import 'package:flutter/material.dart';
 
+import '../controls/base_controls.dart';
+import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
@@ -132,7 +132,8 @@ class _TextButtonControlState extends State<TextButtonControl>
 
       var theme = Theme.of(context);
 
-      var style = parseButtonStyle(Theme.of(context), widget.control, "style",
+      var style = parseButtonStyle(
+          widget.control.get("style"), Theme.of(context),
           defaultForegroundColor: theme.colorScheme.primary,
           defaultBackgroundColor: Colors.transparent,
           defaultOverlayColor: Colors.transparent,

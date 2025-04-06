@@ -64,33 +64,33 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
           )
         : null;
 
-    var animation = parseAnimation(control, "animate");
-    var blur = parseBlur(control, "blur");
+    var animation = parseAnimation(control.get("animate"));
+    var blur = parseBlur(control.get("blur"));
     var colorFilter =
-        parseColorFilter(control, "color_filter", Theme.of(context));
+        parseColorFilter(control.get("color_filter"), Theme.of(context));
     var width = control.getDouble("width");
     var height = control.getDouble("height");
-    var padding = parseEdgeInsets(control, "padding");
-    var margin = parseEdgeInsets(control, "margin");
-    var alignment = parseAlignment(control, "alignment");
+    var padding = parsePadding(control.get("padding"));
+    var margin = parseMargin(control.get("margin"));
+    var alignment = parseAlignment(control.get("alignment"));
 
-    var borderRadius = parseBorderRadius(control, "border_radius");
+    var borderRadius = parseBorderRadius(control.get("border_radius"));
     var clipBehavior = parseClip(control.getString("clip_behavior"),
         borderRadius != null ? Clip.antiAlias : Clip.none)!;
-    var decorationImage = parseDecorationImage(context, control, "image");
+    var decorationImage = parseDecorationImage(control.get("image"), context);
     var boxDecoration = boxDecorationFromDetails(
       shape: parseBoxShape(control.getString("shape"), BoxShape.rectangle)!,
       color: bgColor,
-      gradient: parseGradient(Theme.of(context), control, "gradient"),
+      gradient: parseGradient(Theme.of(context), control.get("gradient")),
       borderRadius: borderRadius,
-      border: parseBorder(Theme.of(context), control, "border",
-          Theme.of(context).colorScheme.primary),
-      boxShadow: parseBoxShadow(Theme.of(context), control, "shadow"),
+      border: parseBorder(control.get("border"), Theme.of(context),
+          defaultSideColor: Theme.of(context).colorScheme.primary),
+      boxShadow: parseBoxShadows(control.get("shadow"), Theme.of(context)),
       blendMode: parseBlendMode(control.getString("blend_mode")),
       image: decorationImage,
     );
     var boxForegroundDecoration =
-        parseBoxDecoration(context, control, "foreground_decoration");
+        parseBoxDecoration(context, control.get("foreground_decoration"));
     Widget? container;
 
     var onAnimationEnd = control.getBool("on_animation_end", false)!

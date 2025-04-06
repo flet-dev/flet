@@ -44,28 +44,28 @@ class Control extends ChangeNotifier {
   bool get visible =>
       !properties.containsKey("visible") || properties["visible"];
 
-  T? get<T>(String propertyName, [T? defValue]) {
+  T? get<T>(String propertyName, [T? defaultValue]) {
     return properties.containsKey(propertyName)
         ? T == double && properties[propertyName] is int
             ? properties[propertyName].toDouble()
             : properties[propertyName]
-        : defValue;
+        : defaultValue;
   }
 
-  bool? getBool(String propertyName, [bool? defValue]) {
-    return get<bool>(propertyName, defValue);
+  bool? getBool(String propertyName, [bool? defaultValue]) {
+    return get<bool>(propertyName, defaultValue);
   }
 
-  String? getString(String propertyName, [String? defValue]) {
-    return get<String>(propertyName, defValue);
+  String? getString(String propertyName, [String? defaultValue]) {
+    return get<String>(propertyName, defaultValue);
   }
 
-  int? getInt(String propertyName, [int? defValue]) {
-    return get<int>(propertyName, defValue);
+  int? getInt(String propertyName, [int? defaultValue]) {
+    return get<int>(propertyName, defaultValue);
   }
 
-  double? getDouble(String propertyName, [double? defValue]) {
-    return get<double>(propertyName, defValue);
+  double? getDouble(String propertyName, [double? defaultValue]) {
+    return get<double>(propertyName, defaultValue);
   }
 
   /// Returns the [Control] for the given [propertyName], or `null` if not found, not a [Control],

@@ -123,41 +123,41 @@ class _WindowControlState extends State<WindowControl> with WindowListener {
 
   void _updateWindow(FletBackend backend) async {
     try {
-      var title = widget.control.parent!.get<String>("title");
+      var title = widget.control.parent!.getString("title");
       var bgColor = widget.control.getColor("bgcolor", context);
-      var width = widget.control.get<double>("width");
-      var height = widget.control.get<double>("height");
-      var minWidth = widget.control.get<double>("min_width");
-      var minHeight = widget.control.get<double>("min_height");
-      var maxWidth = widget.control.get<double>("max_width");
-      var maxHeight = widget.control.get<double>("max_height");
-      var top = widget.control.get<double>("top");
-      var left = widget.control.get<double>("left");
-      var center = widget.control.get<String>("center");
-      var fullScreen = widget.control.get<bool>("full_screen");
-      var minimized = widget.control.get<bool>("minimized");
-      var maximized = widget.control.get<bool>("maximized");
-      var alignment = parseAlignment(widget.control, "alignment");
-      var badgeLabel = widget.control.get<String>("badge_label");
-      var icon = widget.control.get<String>("icon");
-      var hasShadow = widget.control.get<bool>("shadow");
-      var opacity = widget.control.get<double>("opacity");
-      var minimizable = widget.control.get<bool>("minimizable");
-      var maximizable = widget.control.get<bool>("maximizable");
-      var alwaysOnTop = widget.control.get<bool>("always_on_top");
-      var alwaysOnBottom = widget.control.get<bool>("always_on_bottom");
-      var resizable = widget.control.get<bool>("resizable");
-      var movable = widget.control.get<bool>("movable");
-      var preventClose = widget.control.get<bool>("prevent_close");
-      var titleBarHidden = widget.control.get<bool>("title_bar_hidden");
+      var width = widget.control.getDouble("width");
+      var height = widget.control.getDouble("height");
+      var minWidth = widget.control.getDouble("min_width");
+      var minHeight = widget.control.getDouble("min_height");
+      var maxWidth = widget.control.getDouble("max_width");
+      var maxHeight = widget.control.getDouble("max_height");
+      var top = widget.control.getDouble("top");
+      var left = widget.control.getDouble("left");
+      var center = widget.control.getString("center");
+      var fullScreen = widget.control.getBool("full_screen");
+      var minimized = widget.control.getBool("minimized");
+      var maximized = widget.control.getBool("maximized");
+      var alignment = parseAlignment(widget.control.get("alignment"));
+      var badgeLabel = widget.control.getString("badge_label");
+      var icon = widget.control.getString("icon");
+      var hasShadow = widget.control.getBool("shadow");
+      var opacity = widget.control.getDouble("opacity");
+      var minimizable = widget.control.getBool("minimizable");
+      var maximizable = widget.control.getBool("maximizable");
+      var alwaysOnTop = widget.control.getBool("always_on_top");
+      var alwaysOnBottom = widget.control.getBool("always_on_bottom");
+      var resizable = widget.control.getBool("resizable");
+      var movable = widget.control.getBool("movable");
+      var preventClose = widget.control.getBool("prevent_close");
+      var titleBarHidden = widget.control.getBool("title_bar_hidden");
       var titleBarButtonsHidden =
-          widget.control.get<bool>("title_bar_buttons_hidden", false)!;
-      var visible = widget.control.get<bool>("visible");
-      var focused = widget.control.get<bool>("focused");
-      var skipTaskBar = widget.control.get<bool>("skip_task_bar");
-      var frameless = widget.control.get<bool>("frameless");
-      var progressBar = widget.control.get<double>("progress_bar");
-      var ignoreMouseEvents = widget.control.get<bool>("ignore_mouse_events");
+          widget.control.getBool("title_bar_buttons_hidden", false)!;
+      var visible = widget.control.getBool("visible");
+      var focused = widget.control.getBool("focused");
+      var skipTaskBar = widget.control.getBool("skip_task_bar");
+      var frameless = widget.control.getBool("frameless");
+      var progressBar = widget.control.getDouble("progress_bar");
+      var ignoreMouseEvents = widget.control.getBool("ignore_mouse_events");
 
       // title
       if (title != null && title != _title) {
@@ -177,8 +177,8 @@ class _WindowControlState extends State<WindowControl> with WindowListener {
           fullScreen != true &&
           (defaultTargetPlatform != TargetPlatform.macOS ||
               (defaultTargetPlatform == TargetPlatform.macOS &&
-                  widget.control.get<bool>("maximized") != true &&
-                  widget.control.get<bool>("minimized") != true))) {
+                  widget.control.getBool("maximized") != true &&
+                  widget.control.getBool("minimized") != true))) {
         await setWindowSize(width, height);
         _width = width;
         _height = height;
@@ -207,8 +207,8 @@ class _WindowControlState extends State<WindowControl> with WindowListener {
           (center == null || center == "") &&
           (defaultTargetPlatform != TargetPlatform.macOS ||
               (defaultTargetPlatform == TargetPlatform.macOS &&
-                  widget.control.get<bool>("maximized") != true &&
-                  widget.control.get<bool>("minimized") != true))) {
+                  widget.control.getBool("maximized") != true &&
+                  widget.control.getBool("minimized") != true))) {
         await setWindowPosition(top, left);
         _top = top;
         _left = left;

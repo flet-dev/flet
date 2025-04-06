@@ -46,14 +46,14 @@ class TextControl extends StatelessWidget {
     }
     if (style == null && styleNameOrData != null) {
       try {
-        style = parseTextStyle(Theme.of(context), control, "style");
+        style = parseTextStyle(control.get("style"), Theme.of(context));
       } on FormatException catch (_) {
         style = null;
       }
     }
 
     TextStyle? themeStyle;
-    var styleName = control.getString("theme_style", null);
+    var styleName = control.getString("theme_style");
     if (styleName != null) {
       themeStyle = getTextStyle(context, styleName);
     }

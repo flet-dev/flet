@@ -12,7 +12,6 @@ import '../utils/text.dart';
 import '../utils/theme.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';
-import 'control_widget.dart';
 
 class ListTileClicks extends InheritedWidget {
   const ListTileClicks({
@@ -42,10 +41,10 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
   Widget build(BuildContext context) {
     debugPrint("ListTile build: ${control.id}");
     return withPagePlatform((context, platform) {
-      var leadingCtrl = control.child("leading");
-      var titleCtrl = control.child("title");
-      var subtitleCtrl = control.child("subtitle");
-      var trailingCtrl = control.child("trailing");
+      var leading = control.buildWidget("leading");
+      var title = control.buildWidget("title");
+      var subtitle = control.buildWidget("subtitle");
+      var trailing = control.buildWidget("trailing");
 
       bool onclick = control.getBool("onclick", false)!;
       bool toggleInputs = control.getBool("toggle_inputs", false)!;
@@ -77,7 +76,7 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
 
       Widget tile = ListTile(
         autofocus: control.getBool("autofocus", false)!,
-        contentPadding: parseEdgeInsets(control, "content_padding"),
+        contentPadding: parseEdgeInsets(control.get("content_padding")),
         isThreeLine: control.getBool("is_three_line", false)!,
         selected: control.getBool("selected", false)!,
         dense: control.getBool("dense", false)!,
@@ -99,13 +98,13 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
         textColor: control.getColor("text_color", context),
         mouseCursor: parseMouseCursor(control.getString("mouse_cursor")),
         visualDensity: parseVisualDensity(control.getString("visual_density")),
-        shape: parseOutlinedBorder(control, "shape"),
+        shape: parseOutlinedBorder(control.get("shape")),
         titleTextStyle:
-            parseTextStyle(Theme.of(context), control, "title_text_style"),
+            parseTextStyle(control.get("title_text_style"), Theme.of(context)),
         leadingAndTrailingTextStyle: parseTextStyle(
-            Theme.of(context), control, "leading_and_trailing_text_style"),
-        subtitleTextStyle:
-            parseTextStyle(Theme.of(context), control, "subtitle_text_style"),
+            control.get("leading_and_trailing_text_style"), Theme.of(context)),
+        subtitleTextStyle: parseTextStyle(
+            control.get("subtitle_text_style"), Theme.of(context)),
         titleAlignment:
             parseListTileTitleAlignment(control.getString("title_alignment")),
         style: parseListTileStyle(control.getString("style")),
@@ -113,13 +112,10 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
           FletBackend.of(context)
               .triggerControlEvent(control, hasFocus ? "focus" : "blur");
         },
-        leading:
-            leadingCtrl != null ? ControlWidget(control: leadingCtrl) : null,
-        title: titleCtrl != null ? ControlWidget(control: titleCtrl) : null,
-        subtitle:
-            subtitleCtrl != null ? ControlWidget(control: subtitleCtrl) : null,
-        trailing:
-            trailingCtrl != null ? ControlWidget(control: trailingCtrl) : null,
+        leading: leading,
+        title: title,
+        subtitle: subtitle,
+        trailing: trailing,
       );
 
       if (toggleInputs) {

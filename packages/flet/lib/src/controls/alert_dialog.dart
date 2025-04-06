@@ -48,12 +48,10 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
   }
 
   Widget _createAlertDialog() {
-    var titleControl = widget.control.get("title");
-    var contentWidget = widget.control.buildWidget("content");
-    var actionWidgets = widget.control.buildWidgets("actions");
-    if (titleControl == null &&
-        contentWidget == null &&
-        actionWidgets.isEmpty) {
+    var title = widget.control.get("title");
+    var content = widget.control.buildWidget("content");
+    var actions = widget.control.buildWidgets("actions");
+    if (title == null && content == null && actions.isEmpty) {
       return const ErrorControl(
           "AlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions");
     }
@@ -64,25 +62,26 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
         parseClip(widget.control.getString("clipBehavior"), Clip.none)!;
 
     return AlertDialog(
-      title: titleControl is Control
-          ? ControlWidget(control: titleControl)
-          : titleControl is String
-              ? Text(titleControl)
+      title: title is Control
+          ? ControlWidget(control: title)
+          : title is String
+              ? Text(title)
               : null,
-      titlePadding: parseEdgeInsets(widget.control, "title_padding"),
-      content: contentWidget,
-      contentPadding: parseEdgeInsets(widget.control, "content_padding",
+      titlePadding: parseEdgeInsets(widget.control.get("title_padding")),
+      content: content,
+      contentPadding: parseEdgeInsets(widget.control.get("content_padding"),
           const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0))!,
-      actions: actionWidgets,
-      actionsPadding: parseEdgeInsets(widget.control, "actions_padding"),
+      actions: actions,
+      actionsPadding: parseEdgeInsets(widget.control.get("actions_padding")),
       actionsAlignment: actionsAlignment,
-      shape: parseOutlinedBorder(widget.control, "shape"),
+      shape: parseOutlinedBorder(widget.control.get("shape")),
       semanticLabel: widget.control.getString("semantics_label"),
-      insetPadding: parseEdgeInsets(widget.control, "inset_padding",
+      insetPadding: parseEdgeInsets(widget.control.get("inset_padding"),
           const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0))!,
-      iconPadding: parseEdgeInsets(widget.control, "icon_padding"),
+      iconPadding: parseEdgeInsets(widget.control.get("icon_padding")),
       backgroundColor: widget.control.getColor("bgcolor", context),
-      buttonPadding: parseEdgeInsets(widget.control, "action_button_padding"),
+      buttonPadding:
+          parseEdgeInsets(widget.control.get("action_button_padding")),
       surfaceTintColor: widget.control.getColor("surface_tint_color", context),
       shadowColor: widget.control.getColor("shadow_color", context),
       elevation: widget.control.getDouble("elevation"),
@@ -92,11 +91,11 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
       scrollable: widget.control.getBool("scrollable", false)!,
       actionsOverflowButtonSpacing:
           widget.control.getDouble("actions_overflow_button_spacing"),
-      alignment: parseAlignment(widget.control, "alignment"),
+      alignment: parseAlignment(widget.control.get("alignment")),
       contentTextStyle: parseTextStyle(
-          Theme.of(context), widget.control, "content_text_style"),
-      titleTextStyle:
-          parseTextStyle(Theme.of(context), widget.control, "title_text_style"),
+          Theme.of(context), widget.control.get("content_text_style")),
+      titleTextStyle: parseTextStyle(
+          Theme.of(context), widget.control.get("title_text_style")),
     );
   }
 

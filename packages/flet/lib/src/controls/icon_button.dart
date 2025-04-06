@@ -71,31 +71,30 @@ class _IconButtonControlState extends State<IconButtonControl>
       var icon = widget.control.get("icon");
       var selectedIcon = widget.control.get("selected_icon");
       var content = widget.control.child("content");
-      Color? iconColor = widget.control.getColor("icon_color", context);
-      Color? highlightColor =
-          widget.control.getColor("highlight_color", context);
-      Color? selectedIconColor =
+      var iconColor = widget.control.getColor("icon_color", context);
+      var highlightColor = widget.control.getColor("highlight_color", context);
+      var selectedIconColor =
           widget.control.getColor("selected_icon_color", context);
-      Color? bgColor = widget.control.getColor("bgcolor", context);
-      Color? disabledColor = widget.control.getColor("disabled_color", context);
-      Color? hoverColor = widget.control.getColor("hover_color", context);
-      Color? splashColor = widget.control.getColor("splash_color", context);
-      Color? focusColor = widget.control.getColor("focus_color", context);
-      double? iconSize = widget.control.getDouble("icon_size");
-      double? splashRadius = widget.control.getDouble("splash_radius");
-      var padding = parseEdgeInsets(widget.control, "padding");
-      var alignment = parseAlignment(widget.control, "alignment");
+      var bgcolor = widget.control.getColor("bgcolor", context);
+      var disabledColor = widget.control.getColor("disabled_color", context);
+      var hoverColor = widget.control.getColor("hover_color", context);
+      var splashColor = widget.control.getColor("splash_color", context);
+      var focusColor = widget.control.getColor("focus_color", context);
+      var iconSize = widget.control.getDouble("icon_size");
+      var splashRadius = widget.control.getDouble("splash_radius");
+      var padding = parseEdgeInsets(widget.control.get("padding"));
+      var alignment = parseAlignment(widget.control.get("alignment"));
       var sizeConstraints =
-          parseBoxConstraints(widget.control, "size_constraints");
-      bool autofocus = widget.control.getBool("autofocus", false)!;
-      bool enableFeedback = widget.control.getBool("enable_feedback", true)!;
-      bool selected = widget.control.getBool("selected", false)!;
-      String url = widget.control.getString("url", "")!;
-      String? urlTarget = widget.control.getString("urlTarget");
+          parseBoxConstraints(widget.control.get("size_constraints"));
+      var autofocus = widget.control.getBool("autofocus", false)!;
+      var enableFeedback = widget.control.getBool("enable_feedback", true)!;
+      var selected = widget.control.getBool("selected", false)!;
+      var url = widget.control.getString("url", "")!;
+      var urlTarget = widget.control.getString("url_target");
       var mouseCursor =
-          parseMouseCursor(widget.control.getString("mouseCursor"));
+          parseMouseCursor(widget.control.getString("mouse_cursor"));
       var visualDensity =
-          parseVisualDensity(widget.control.getString("visualDensity"));
+          parseVisualDensity(widget.control.getString("visual_density"));
 
       Function()? onPressed = !widget.control.disabled
           ? () {
@@ -120,8 +119,8 @@ class _IconButtonControlState extends State<IconButtonControl>
       Widget? button;
 
       var theme = Theme.of(context);
-
-      var style = parseButtonStyle(Theme.of(context), widget.control, "style",
+      var style = parseButtonStyle(
+          widget.control.get("style"), Theme.of(context),
           defaultForegroundColor: theme.colorScheme.primary,
           defaultBackgroundColor: Colors.transparent,
           defaultOverlayColor: Colors.transparent,
@@ -186,10 +185,10 @@ class _IconButtonControlState extends State<IconButtonControl>
             "IconButton must have either icon or a visible content specified.");
       }
 
-      if (bgColor != null) {
+      if (bgcolor != null) {
         button = Container(
           decoration:
-              ShapeDecoration(color: bgColor, shape: const CircleBorder()),
+              ShapeDecoration(color: bgcolor, shape: const CircleBorder()),
           child: button,
         );
       }

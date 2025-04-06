@@ -20,13 +20,13 @@ import 'charts.dart';
 import 'create_control.dart';
 
 TooltipDirection? parseTooltipDirection(String? value,
-    [TooltipDirection? defValue]) {
+    [TooltipDirection? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return TooltipDirection.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
 class BarChartEventData extends Equatable {

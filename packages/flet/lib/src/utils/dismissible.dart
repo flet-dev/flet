@@ -1,59 +1,34 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-import '../models/control.dart';
 import '../utils/numbers.dart';
 
 DismissDirection? parseDismissDirection(String? value,
-    [DismissDirection? defValue]) {
+    [DismissDirection? defaultValue]) {
   if (value == null) {
-    return defValue;
+    return defaultValue;
   }
   return DismissDirection.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
-Map<DismissDirection, double>? parseDismissThresholds(
-    Control control, String propName) {
-  var v = control.get(propName);
-  if (v == null) {
-    return null;
-  }
-  return getDismissThresholds(v, (jv) => parseDouble(jv, 0)!);
-}
-
-Map<DismissDirection, double>? getDismissThresholds<T>(
-    dynamic jsonDictValue, T Function(dynamic) converterFromJson) {
-  if (jsonDictValue == null) {
-    return null;
-  }
-  var j = jsonDictValue;
-  if (j is! Map<String, dynamic>) {
-    j = {"": j};
+Map<DismissDirection, double>? parseDismissThresholds(dynamic value,
+    [Map<DismissDirection, double>? defaultValue]) {
+  if (value == null) return defaultValue;
+  if (value is! Map<String, dynamic>) {
+    value = {"": value};
   }
 
-  return getDismissThresholdsFromJSON(j, converterFromJson);
-}
-
-Map<DismissDirection, double> getDismissThresholdsFromJSON(
-    Map<String, dynamic>? jsonDictValue, Function(dynamic) converterFromJson) {
   Map<DismissDirection, double> dismissDirectionMap = {};
-
-  if (jsonDictValue != null) {
-    jsonDictValue.forEach((directionStr, jv) {
-      directionStr
-          .split(",")
-          .map((s) => s.trim().toLowerCase())
-          .forEach((state) {
-        DismissDirection d =
-            parseDismissDirection(state, DismissDirection.none)!;
-        if (d != DismissDirection.none) {
-          dismissDirectionMap[d] = converterFromJson(jv);
-        }
-      });
+  value.forEach((directionStr, jv) {
+    directionStr.split(",").map((s) => s.trim().toLowerCase()).forEach((state) {
+      DismissDirection d = parseDismissDirection(state, DismissDirection.none)!;
+      if (d != DismissDirection.none) {
+        dismissDirectionMap[d] = parseDouble(jv, 0)!;
+      }
     });
-  }
+  });
 
   return dismissDirectionMap;
 }

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 /// Checks if the current platform is a desktop platform.
@@ -33,4 +34,12 @@ bool isLinuxDesktop() {
 /// Checks if the current platform is a web platform.
 bool isWebPlatform() {
   return kIsWeb == true;
+}
+
+TargetPlatform? parseTargetPlatform(String? value,
+    [TargetPlatform? defaultValue]) {
+  if (value == null) return defaultValue;
+  return TargetPlatform.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defaultValue;
 }

@@ -29,8 +29,7 @@ class ExpansionPanelListControl extends StatelessWidget {
         dividerColor: control.getColor("divider_color", context),
         expandIconColor: control.getColor("expanded_icon_color", context),
         expandedHeaderPadding: parseEdgeInsets(
-            control,
-            "expanded_header_padding",
+            control.get("expanded_header_padding"),
             const EdgeInsets.symmetric(vertical: 16))!,
         expansionCallback: !control.disabled
             ? (int index, bool isExpanded) {

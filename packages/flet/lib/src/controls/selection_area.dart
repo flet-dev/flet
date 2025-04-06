@@ -1,7 +1,7 @@
-import 'package:flet/src/extensions/control.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../widgets/error.dart';

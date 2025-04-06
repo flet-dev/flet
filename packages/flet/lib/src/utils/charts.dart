@@ -33,34 +33,29 @@ FlGridData parseChartGridData(ThemeData theme, Control control,
   );
 }
 
-FlLine? parseFlLine(ThemeData theme, Control control, String propName) {
-  var v = control.get(propName);
-  if (v == null) {
-    return null;
-  }
-  return flineFromJSON(theme, v);
+FlLine? parseFlLine(dynamic value, ThemeData theme, [FlLine? defaultValue]) {
+  if (value == null) return defaultValue;
+  return flineFromJSON(theme, value);
 }
 
-FlLine? parseSelectedFlLine(ThemeData theme, Control control, String propName,
-    Color? color, Gradient? gradient) {
-  var v = control.get(propName);
-  if (v == null) {
-    return null;
-  }
+FlLine? parseSelectedFlLine(
+    dynamic value, ThemeData theme, Color? color, Gradient? gradient,
+    [FlLine? defaultValue]) {
+  if (value == null) return defaultValue;
 
-  if (v == false) {
+  if (value == false) {
     return getInvisibleLine();
-  } else if (v == true) {
+  } else if (value == true) {
     return FlLine(
         color: defaultGetPointColor(color, gradient, 0), strokeWidth: 3);
   }
   return FlLine(
-      color: v['color'] != null
-          ? parseColor(theme, v['color'] as String, Colors.black)!
+      color: value['color'] != null
+          ? parseColor(value['color'] as String, theme, Colors.black)!
           : defaultGetPointColor(color, gradient, 0),
-      strokeWidth: parseDouble(v['width'], 2)!,
-      dashArray: v['dash_pattern'] != null
-          ? (v['dash_pattern'] as List)
+      strokeWidth: parseDouble(value['width'], 2)!,
+      dashArray: value['dash_pattern'] != null
+          ? (value['dash_pattern'] as List)
               .map((e) => parseInt(e))
               .nonNulls
               .toList()
@@ -73,9 +68,7 @@ FlLine? flineFromJSON(theme, j) {
     return null;
   }
   return FlLine(
-      color: j['color'] != null
-          ? parseColor(theme, j['color'] as String) ?? Colors.black
-          : Colors.black,
+      color: parseColor(j['color'] as String?, theme, Colors.black)!,
       strokeWidth: parseDouble(j['width'], 2)!,
       dashArray: j['dash_pattern'] != null
           ? (j['dash_pattern'] as List)
@@ -85,44 +78,32 @@ FlLine? flineFromJSON(theme, j) {
           : null);
 }
 
-FlDotPainter? parseChartDotPainter(
-    ThemeData theme,
-    Control control,
-    String propName,
-    Color? barColor,
-    Gradient? barGradient,
-    double percentage) {
-  var v = control.get(propName);
-  if (v == null) {
-    return null;
-  }
+FlDotPainter? parseChartDotPainter(dynamic value, ThemeData theme,
+    Color? barColor, Gradient? barGradient, double percentage,
+    [FlDotPainter? defaultValue]) {
+  if (value == null) return defaultValue;
 
-  if (v == false) {
+  if (value == false) {
     return getInvisiblePainter();
-  } else if (v == true) {
+  } else if (value == true) {
     return getDefaultPainter(barColor, barGradient, percentage);
   }
-  return chartDotPainterFromJSON(theme, v, barColor, barGradient, percentage);
+  return chartDotPainterFromJSON(
+      theme, value, barColor, barGradient, percentage, defaultValue);
 }
 
-FlDotPainter? parseChartSelectedDotPainter(
-    ThemeData theme,
-    Control control,
-    String propName,
-    Color? barColor,
-    Gradient? barGradient,
-    double percentage) {
-  var v = control.get(propName);
-  if (v == null) {
-    return null;
-  }
+FlDotPainter? parseChartSelectedDotPainter(dynamic value, ThemeData theme,
+    Color? barColor, Gradient? barGradient, double percentage,
+    [FlDotPainter? defaultValue]) {
+  if (value == null) return defaultValue;
 
-  if (v == false) {
+  if (value == false) {
     return getInvisiblePainter();
-  } else if (v == true) {
+  } else if (value == true) {
     return getDefaultSelectedPainter(barColor, barGradient, percentage);
   }
-  return chartDotPainterFromJSON(theme, v, barColor, barGradient, percentage);
+  return chartDotPainterFromJSON(
+      theme, value, barColor, barGradient, percentage);
 }
 
 FlDotPainter? chartDotPainterFromJSON(
@@ -130,40 +111,41 @@ FlDotPainter? chartDotPainterFromJSON(
     Map<String, dynamic> json,
     Color? barColor,
     Gradient? barGradient,
-    double percentage) {
+    double percentage,
+    [FlDotPainter? defaultValue]) {
   String type = json["type"];
   if (type == "circle") {
     return FlDotCirclePainter(
         color: json['color'] != null
-            ? parseColor(theme, json['color'] as String) ?? Colors.green
+            ? parseColor(json['color'] as String, theme) ?? Colors.green
             : defaultGetPointColor(barColor, barGradient, percentage),
         radius: parseDouble(json["radius"]),
         strokeColor: json['stroke_color'] != null
-            ? parseColor(theme, json['color'] as String) ??
+            ? parseColor(json['color'] as String, theme) ??
                 const Color.fromRGBO(76, 175, 80, 1)
             : defaultGetDotStrokeColor(barColor, barGradient, percentage),
         strokeWidth: parseDouble(json["stroke_width"], 1.0)!);
   } else if (type == "square") {
     return FlDotSquarePainter(
         color: json['color'] != null
-            ? parseColor(theme, json['color'] as String) ?? Colors.green
+            ? parseColor(json['color'] as String, theme) ?? Colors.green
             : defaultGetPointColor(barColor, barGradient, percentage),
         size: parseDouble(json["size"], 4.0)!,
         strokeColor: json['stroke_color'] != null
-            ? parseColor(theme, json['color'] as String) ??
+            ? parseColor(json['color'] as String, theme) ??
                 const Color.fromRGBO(76, 175, 80, 1)
             : defaultGetDotStrokeColor(barColor, barGradient, percentage),
         strokeWidth: parseDouble(json["stroke_width"], 1.0)!);
   } else if (type == "cross") {
     return FlDotCrossPainter(
       color: json['color'] != null
-          ? parseColor(theme, json['color'] as String) ?? Colors.green
+          ? parseColor(json['color'] as String, theme) ?? Colors.green
           : defaultGetDotStrokeColor(barColor, barGradient, percentage),
       size: parseDouble(json["size"], 8.0)!,
       width: parseDouble(json["width"], 2.0)!,
     );
   }
-  return null;
+  return defaultValue;
 }
 
 FlDotPainter getInvisiblePainter() {

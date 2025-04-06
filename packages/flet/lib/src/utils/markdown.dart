@@ -3,7 +3,6 @@ import 'package:flutter_highlight/theme_map.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
-import '../models/control.dart';
 import 'alignment.dart';
 import 'box.dart';
 import 'edge_insets.dart';
@@ -11,10 +10,8 @@ import 'numbers.dart';
 import 'text.dart';
 
 md.ExtensionSet? parseMarkdownExtensionSet(String? value,
-    [md.ExtensionSet? defValue]) {
-  if (value == null) {
-    return defValue;
-  }
+    [md.ExtensionSet? defaultValue]) {
+  if (value == null) return defaultValue;
   switch (value.toLowerCase()) {
     case "commonmark":
       return md.ExtensionSet.commonMark;
@@ -23,22 +20,14 @@ md.ExtensionSet? parseMarkdownExtensionSet(String? value,
     case "githubflavored":
       return md.ExtensionSet.gitHubFlavored;
     default:
-      return defValue;
+      return defaultValue;
   }
 }
 
-Map<String, TextStyle> parseMarkdownCodeTheme(
-  Control control,
-  String propName,
-  ThemeData theme,
-) {
-  final v = control.get(propName);
-  if (v == null) {
-    return {};
-  }
-  if (v is String) {
-    return themeMap[v.toLowerCase()] ?? {};
-  } else if (v is Map<String, dynamic>) {
+Map<String, TextStyle> parseMarkdownCodeTheme(dynamic value, ThemeData theme) {
+  if (value == null) return {};
+  if (value is String) return themeMap[value.toLowerCase()] ?? {};
+  if (value is Map<String, dynamic>) {
     String transformKey(String key) {
       switch (key) {
         case 'class_name':
@@ -51,7 +40,7 @@ Map<String, TextStyle> parseMarkdownCodeTheme(
     }
 
     final resultMap =
-        v.map((key, value) => MapEntry(key, textStyleFromJson(theme, value)));
+        value.map((key, value) => MapEntry(key, parseTextStyle(value, theme)));
     resultMap.removeWhere(
         (key, value) => value == null); // remove entries with null values
     return resultMap.map((key, value) => MapEntry(transformKey(key), value!));
@@ -59,117 +48,117 @@ Map<String, TextStyle> parseMarkdownCodeTheme(
   return {};
 }
 
-MarkdownStyleSheet? parseMarkdownStyleSheet(
-    Control control, String propName, BuildContext context) {
-  var v = control.get(propName);
-  if (v == null) {
-    return null;
-  }
-  return markdownStyleSheetFromJson(context, v);
-}
-
-MarkdownStyleSheet markdownStyleSheetFromJson(
-    BuildContext context, Map<dynamic, dynamic> j) {
+MarkdownStyleSheet? parseMarkdownStyleSheet(dynamic value, BuildContext context,
+    [MarkdownStyleSheet? defaultValue]) {
+  if (value == null) return null;
   var theme = Theme.of(context);
-
-  TextStyle? parseTextStyle(String propName) {
-    return j[propName] != null ? textStyleFromJson(theme, j[propName]) : null;
-  }
-
   return MarkdownStyleSheet.fromTheme(theme).copyWith(
-    a: parseTextStyle("a_text_style") ?? const TextStyle(color: Colors.blue),
-    p: parseTextStyle("p_text_style") ?? theme.textTheme.bodyMedium,
-    pPadding: edgeInsetsFromJson(j["p_padding"], EdgeInsets.zero)!,
-    code: parseTextStyle("code_text_style") ??
-        theme.textTheme.bodyMedium!.copyWith(fontFamily: "monospace"),
-    h1: parseTextStyle("h1_text_style") ?? theme.textTheme.headlineSmall,
-    h1Padding: edgeInsetsFromJson(j["h1_padding"], EdgeInsets.zero)!,
-    h2: parseTextStyle("h2_text_style") ?? theme.textTheme.titleLarge,
-    h2Padding: edgeInsetsFromJson(j["h2_padding"], EdgeInsets.zero)!,
-    h3: parseTextStyle("h3_text_style") ?? theme.textTheme.titleMedium,
-    h3Padding: edgeInsetsFromJson(j["h3_padding"], EdgeInsets.zero)!,
-    h4: parseTextStyle("h4_text_style") ?? theme.textTheme.bodyLarge,
-    h4Padding: edgeInsetsFromJson(j["h4_padding"], EdgeInsets.zero)!,
-    h5: parseTextStyle("h5_text_style") ?? theme.textTheme.bodyLarge,
-    h5Padding: edgeInsetsFromJson(j["h5_padding"], EdgeInsets.zero)!,
-    h6: parseTextStyle("h6_text_style") ?? theme.textTheme.bodyLarge,
-    h6Padding: edgeInsetsFromJson(j["h6_padding"], EdgeInsets.zero)!,
-    em: parseTextStyle("em_text_style") ??
-        const TextStyle(fontStyle: FontStyle.italic),
-    strong: parseTextStyle("strong_text_style") ??
-        const TextStyle(fontWeight: FontWeight.bold),
-    del: parseTextStyle("del_text_style") ??
-        const TextStyle(decoration: TextDecoration.lineThrough),
-    blockquote:
-        parseTextStyle("blockquote_text_style") ?? theme.textTheme.bodyMedium,
-    img: parseTextStyle("img_text_style") ?? theme.textTheme.bodyMedium,
-    checkbox: parseTextStyle("checkbox_text_style") ??
+    a: parseTextStyle(
+        value["a_text_style"], theme, const TextStyle(color: Colors.blue))!,
+    p: parseTextStyle(value["p_text_style"], theme, theme.textTheme.bodyMedium),
+    pPadding: parseEdgeInsets(value["p_padding"], EdgeInsets.zero)!,
+    code: parseTextStyle(value["code_text_style"], theme,
+        theme.textTheme.bodyMedium!.copyWith(fontFamily: "monospace")),
+    h1: parseTextStyle(value["h1_text_style"], theme) ??
+        theme.textTheme.headlineSmall,
+    h1Padding: parseEdgeInsets(value["h1_padding"], EdgeInsets.zero)!,
+    h2: parseTextStyle(
+        value["h2_text_style"], theme, theme.textTheme.titleLarge),
+    h2Padding: parseEdgeInsets(value["h2_padding"], EdgeInsets.zero)!,
+    h3: parseTextStyle(
+        value["h3_text_style"], theme, theme.textTheme.titleMedium),
+    h3Padding: parseEdgeInsets(value["h3_padding"], EdgeInsets.zero)!,
+    h4: parseTextStyle(
+        value["h4_text_style"], theme, theme.textTheme.bodyLarge),
+    h4Padding: parseEdgeInsets(value["h4_padding"], EdgeInsets.zero)!,
+    h5: parseTextStyle(
+        value["h5_text_style"], theme, theme.textTheme.bodyLarge),
+    h5Padding: parseEdgeInsets(value["h5_padding"], EdgeInsets.zero)!,
+    h6: parseTextStyle(
+        value["h6_text_style"], theme, theme.textTheme.bodyLarge),
+    h6Padding: parseEdgeInsets(value["h6_padding"], EdgeInsets.zero)!,
+    em: parseTextStyle(value["em_text_style"], theme,
+        const TextStyle(fontStyle: FontStyle.italic))!,
+    strong: parseTextStyle(value["strong_text_style"], theme,
+        const TextStyle(fontWeight: FontWeight.bold))!,
+    del: parseTextStyle(value["del_text_style"], theme,
+        const TextStyle(decoration: TextDecoration.lineThrough)),
+    blockquote: parseTextStyle(
+        value["blockquote_text_style"], theme, theme.textTheme.bodyMedium),
+    img: parseTextStyle(
+        value["img_text_style"], theme, theme.textTheme.bodyMedium),
+    checkbox: parseTextStyle(
+        value["checkbox_text_style"],
+        theme,
         theme.textTheme.bodyMedium!.copyWith(
           color: theme.primaryColor,
-        ),
-    blockSpacing: parseDouble(j["block_spacing"], 8.0)!,
-    listIndent: parseDouble(j["list_indent"], 24.0)!,
-    listBullet:
-        parseTextStyle("list_bullet_text_style") ?? theme.textTheme.bodyMedium,
-    listBulletPadding: edgeInsetsFromJson(
-        j["list_bullet_padding"], const EdgeInsets.only(right: 4))!,
-    tableHead: parseTextStyle("table_head_text_style") ??
-        const TextStyle(fontWeight: FontWeight.w600),
-    tableBody:
-        parseTextStyle("table_body_text_style") ?? theme.textTheme.bodyMedium,
+        )),
+    blockSpacing: parseDouble(value["block_spacing"], 8.0)!,
+    listIndent: parseDouble(value["list_indent"], 24.0)!,
+    listBullet: parseTextStyle(
+        value["list_bullet_text_style"], theme, theme.textTheme.bodyMedium),
+    listBulletPadding: parseEdgeInsets(
+        value["list_bullet_padding"], const EdgeInsets.only(right: 4))!,
+    tableHead: parseTextStyle(value["table_head_text_style"], theme,
+        const TextStyle(fontWeight: FontWeight.w600))!,
+    tableBody: parseTextStyle(
+        value["table_body_text_style"], theme, theme.textTheme.bodyMedium),
     tableHeadAlign:
-        parseTextAlign(j["table_head_text_align"], TextAlign.center)!,
-    tablePadding: edgeInsetsFromJson(
-        j["table_padding"], const EdgeInsets.only(bottom: 4.0))!,
+        parseTextAlign(value["table_head_text_align"], TextAlign.center)!,
+    tablePadding: parseEdgeInsets(
+        value["table_padding"], const EdgeInsets.only(bottom: 4.0))!,
     tableBorder: TableBorder.all(
       color: theme.dividerColor,
     ),
     tableColumnWidth: const FlexColumnWidth(),
-    tableCellsPadding: edgeInsetsFromJson(
-        j["table_cells_padding"], const EdgeInsets.fromLTRB(16, 8, 16, 8))!,
-    tableCellsDecoration:
-        boxDecorationFromJSON(context, j["table_cells_decoration"]) ??
-            const BoxDecoration(),
-    blockquotePadding: edgeInsetsFromJson(j["blockquote_padding"]) ??
-        const EdgeInsets.all(8.0),
-    blockquoteDecoration:
-        boxDecorationFromJSON(context, j["blockquote_decoration"]) ??
-            BoxDecoration(
-              color: Colors.blue.shade100,
-              borderRadius: BorderRadius.circular(2.0),
-            ),
+    tableCellsPadding: parseEdgeInsets(
+        value["table_cells_padding"], const EdgeInsets.fromLTRB(16, 8, 16, 8))!,
+    tableCellsDecoration: parseBoxDecoration(
+        value["table_cells_decoration"], context, const BoxDecoration()),
+    blockquotePadding: parseEdgeInsets(
+        value["blockquote_padding"], const EdgeInsets.all(8.0))!,
+    blockquoteDecoration: parseBoxDecoration(
+        value["blockquote_decoration"],
+        context,
+        BoxDecoration(
+          color: Colors.blue.shade100,
+          borderRadius: BorderRadius.circular(2.0),
+        ))!,
     codeblockPadding:
-        edgeInsetsFromJson(j["codeblock_padding"], const EdgeInsets.all(8.0))!,
-    codeblockDecoration:
-        boxDecorationFromJSON(context, j["codeblock_decoration"]) ??
-            BoxDecoration(
-              color: theme.cardTheme.color ?? theme.cardColor,
-              borderRadius: BorderRadius.circular(2.0),
+        parseEdgeInsets(value["codeblock_padding"], const EdgeInsets.all(8.0))!,
+    codeblockDecoration: parseBoxDecoration(
+        value["codeblock_decoration"],
+        context,
+        BoxDecoration(
+          color: theme.cardTheme.color ?? theme.cardColor,
+          borderRadius: BorderRadius.circular(2.0),
+        ))!,
+    horizontalRuleDecoration: parseBoxDecoration(
+        value["horizontal_rule_decoration"],
+        context,
+        BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              width: 5.0,
+              color: theme.dividerColor,
             ),
-    horizontalRuleDecoration:
-        boxDecorationFromJSON(context, j["horizontal_rule_decoration"]) ??
-            BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  width: 5.0,
-                  color: theme.dividerColor,
-                ),
-              ),
-            ),
+          ),
+        ))!,
     blockquoteAlign:
-        parseWrapAlignment(j["blockquote_alignment"], WrapAlignment.start)!,
+        parseWrapAlignment(value["blockquote_alignment"], WrapAlignment.start)!,
     codeblockAlign:
-        parseWrapAlignment(j["codeblock_alignment"], WrapAlignment.start)!,
-    h1Align: parseWrapAlignment(j["h1_alignment"], WrapAlignment.start)!,
-    h2Align: parseWrapAlignment(j["h2_alignment"], WrapAlignment.start)!,
-    h3Align: parseWrapAlignment(j["h3_alignment"], WrapAlignment.start)!,
-    h4Align: parseWrapAlignment(j["h4_alignment"], WrapAlignment.start)!,
-    h5Align: parseWrapAlignment(j["h5_alignment"], WrapAlignment.start)!,
-    h6Align: parseWrapAlignment(j["h6_alignment"], WrapAlignment.start)!,
-    textAlign: parseWrapAlignment(j["text_alignment"], WrapAlignment.start)!,
-    orderedListAlign:
-        parseWrapAlignment(j["ordered_list_alignment"], WrapAlignment.start)!,
-    unorderedListAlign:
-        parseWrapAlignment(j["unordered_list_alignment"], WrapAlignment.start)!,
+        parseWrapAlignment(value["codeblock_alignment"], WrapAlignment.start)!,
+    h1Align: parseWrapAlignment(value["h1_alignment"], WrapAlignment.start)!,
+    h2Align: parseWrapAlignment(value["h2_alignment"], WrapAlignment.start)!,
+    h3Align: parseWrapAlignment(value["h3_alignment"], WrapAlignment.start)!,
+    h4Align: parseWrapAlignment(value["h4_alignment"], WrapAlignment.start)!,
+    h5Align: parseWrapAlignment(value["h5_alignment"], WrapAlignment.start)!,
+    h6Align: parseWrapAlignment(value["h6_alignment"], WrapAlignment.start)!,
+    textAlign:
+        parseWrapAlignment(value["text_alignment"], WrapAlignment.start)!,
+    orderedListAlign: parseWrapAlignment(
+        value["ordered_list_alignment"], WrapAlignment.start)!,
+    unorderedListAlign: parseWrapAlignment(
+        value["unordered_list_alignment"], WrapAlignment.start)!,
   );
 }

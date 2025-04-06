@@ -1,6 +1,6 @@
-import 'package:flet/src/controls/alert_dialog.dart';
 import 'package:flutter/material.dart';
 
+import '../controls/alert_dialog.dart';
 import '../models/control.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'cupertino_alert_dialog.dart';

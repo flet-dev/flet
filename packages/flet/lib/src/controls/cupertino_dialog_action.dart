@@ -19,7 +19,7 @@ class CupertinoDialogActionControl extends StatelessWidget {
     var cupertinoDialogAction = CupertinoDialogAction(
       isDefaultAction: control.getBool("is_default_action", false)!,
       isDestructiveAction: control.getBool("is_destructive_action", false)!,
-      textStyle: parseTextStyle(Theme.of(context), control, "text_style"),
+      textStyle: parseTextStyle(control.get("text_style"), Theme.of(context)),
       onPressed: !control.disabled
           ? () {
               FletBackend.of(context).triggerControlEvent(control, "click");

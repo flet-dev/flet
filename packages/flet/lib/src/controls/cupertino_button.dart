@@ -26,18 +26,16 @@ class CupertinoButtonControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("CupertinoButton build: ${control.id}");
     var theme = Theme.of(context);
-
-    Control? content = control.child("content");
-
-    String? text = control.getString("text");
-    IconData? icon = parseIcon(control.getString("icon"));
-    Color? iconColor = control.getColor("icon_color", context);
+    var content = control.child("content");
+    var text = control.getString("text");
+    var icon = parseIcon(control.getString("icon"));
+    var iconColor = control.getColor("icon_color", context);
 
     // IconButton props below
-    double? iconSize = control.getDouble("icon_size");
-    bool selected = control.getBool("selected", false)!;
-    IconData? selectedIcon = parseIcon(control.getString("selected_icon"));
-    Color? selectedIconColor = control.getColor("selected_icon_color", context);
+    var iconSize = control.getDouble("icon_size");
+    var selected = control.getBool("selected", false)!;
+    var selectedIcon = parseIcon(control.getString("selected_icon"));
+    var selectedIconColor = control.getColor("selected_icon_color", context);
 
     Widget? child;
     List<Widget> children = [];
@@ -77,21 +75,20 @@ class CupertinoButtonControl extends StatelessWidget {
       );
     }
 
-    double pressedOpacity = control.getDouble("opacity_on_click")!;
-    double minSize = control.getDouble("min_size", 44.0)!;
-    String url = control.getString("url", "")!;
-    Color disabledColor = control.getColor("disabled_bgcolor", context) ??
-        CupertinoColors.quaternarySystemFill;
-    Color? bgColor = control.getColor("bgColor", context);
-    Color? color = control.getColor("color", context);
-    AlignmentGeometry alignment =
-        parseAlignment(control, "alignment", Alignment.center)!;
-    BorderRadius borderRadius = parseBorderRadius(
-        control, "borderRadius", const BorderRadius.all(Radius.circular(8.0)))!;
+    var pressedOpacity = control.getDouble("opacity_on_click")!;
+    var minSize = control.getDouble("min_size", 44.0)!;
+    var url = control.getString("url", "")!;
+    var disabledColor = control.getColor(
+        "disabled_bgcolor", context, CupertinoColors.quaternarySystemFill)!;
+    var bgColor = control.getColor("bgColor", context);
+    var color = control.getColor("color", context);
+    var alignment = parseAlignment(control.get("alignment"), Alignment.center)!;
+    var borderRadius = parseBorderRadius(control.get("borderRadius"),
+        const BorderRadius.all(Radius.circular(8.0)))!;
 
-    EdgeInsets? padding = parseEdgeInsets(control, "padding");
+    var padding = parsePadding(control.get("padding"));
 
-    var style = parseButtonStyle(Theme.of(context), control, "style",
+    var style = parseButtonStyle(control.get("style"), Theme.of(context),
         defaultForegroundColor: theme.colorScheme.primary,
         defaultBackgroundColor: Colors.transparent,
         defaultOverlayColor: Colors.transparent,

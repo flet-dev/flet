@@ -1,6 +1,6 @@
-import 'package:flet/src/extensions/control.dart';
 import 'package:flutter/material.dart';
 
+import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
@@ -23,24 +23,24 @@ class DataTableControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("DataTableControl build: ${control.id}");
 
-    var bgColor = control.getString("bgcolor");
-    var border = parseBorder(Theme.of(context), control, "border");
-    var borderRadius = parseBorderRadius(control, "border_radius");
-    var gradient = parseGradient(Theme.of(context), control, "gradient");
+    var theme = Theme.of(context);
+    var bgcolor = control.getString("bgcolor");
+    var border = parseBorder(control.get("border"), theme);
+    var borderRadius = parseBorderRadius(control.get("border_radius"));
+    var gradient = parseGradient(control.get("gradient"), theme);
     var horizontalLines =
-        parseBorderSide(Theme.of(context), control, "horizontal_lLines");
-    var verticalLines =
-        parseBorderSide(Theme.of(context), control, "vertical_lines");
+        parseBorderSide(control.get("horizontal_lLines"), theme);
+    var verticalLines = parseBorderSide(control.get("vertical_lines"), theme);
     var defaultDecoration =
-        Theme.of(context).dataTableTheme.decoration ?? const BoxDecoration();
+        theme.dataTableTheme.decoration ?? const BoxDecoration();
 
     BoxDecoration? decoration;
-    if (bgColor != null ||
+    if (bgcolor != null ||
         border != null ||
         borderRadius != null ||
         gradient != null) {
       decoration = (defaultDecoration as BoxDecoration).copyWith(
-          color: parseColor(Theme.of(context), bgColor),
+          color: parseColor(bgcolor, theme),
           border: border,
           borderRadius: borderRadius,
           gradient: gradient);
@@ -64,17 +64,15 @@ class DataTableControl extends StatelessWidget {
       clipBehavior: clipBehavior,
       checkboxHorizontalMargin: control.getDouble("checkbox_horizontal_margin"),
       columnSpacing: control.getDouble("column_spacing"),
-      dataRowColor:
-          parseWidgetStateColor(Theme.of(context), control, "data_row_color"),
+      dataRowColor: parseWidgetStateColor(control.get("data_row_color"), theme),
       dataRowMinHeight: control.getDouble("data_row_min_height"),
       dataRowMaxHeight: control.getDouble("data_row_max_height"),
-      dataTextStyle:
-          parseTextStyle(Theme.of(context), control, "data_text_style"),
-      headingRowColor: parseWidgetStateColor(
-          Theme.of(context), control, "heading_row_color"),
+      dataTextStyle: parseTextStyle(control.get("data_text_style"), theme),
+      headingRowColor:
+          parseWidgetStateColor(control.get("heading_row_color"), theme),
       headingRowHeight: control.getDouble("heading_row_height"),
       headingTextStyle:
-          parseTextStyle(Theme.of(context), control, "heading_text_style"),
+          parseTextStyle(control.get("heading_text_style"), theme),
       dividerThickness: control.getDouble("divider_thickness"),
       horizontalMargin: control.getDouble("horizontal_margin"),
       showBottomBorder: control.getBool("show_bottom_border", false)!,
@@ -108,7 +106,7 @@ class DataTableControl extends StatelessWidget {
         return DataRow(
           key: ValueKey(row.id),
           selected: row.getBool("selected", false)!,
-          color: parseWidgetStateColor(Theme.of(context), row, "color"),
+          color: parseWidgetStateColor(row.get("color"), theme),
           onSelectChanged: row.getBool("on_select_changed", false)!
               ? (selected) {
                   backend.triggerControlEvent(row, "select_changed", selected);

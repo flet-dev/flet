@@ -30,7 +30,7 @@ class CupertinoListTileControl extends StatelessWidget {
     var trailing = control.buildWidget("trailing");
     var backgroundColor = control.getColor("bgcolor", context);
     var bgcolorActivated = control.getColor("bgcolor_activated", context);
-    var padding = parseEdgeInsets(control, "content_padding");
+    var padding = parseEdgeInsets(control.get("content_padding"));
     var leadingSize = control.getDouble("leading_size");
     var leadingToTitle = control.getDouble("leading_to_title");
     var notched = control.getBool("notched", false)!;

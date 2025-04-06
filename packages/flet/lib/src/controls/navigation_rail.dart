@@ -69,11 +69,13 @@ class _NavigationRailControlState extends State<NavigationRailControl>
           extended: extended,
           elevation: widget.control.getDouble("elevation"),
           selectedLabelTextStyle: parseTextStyle(
-              Theme.of(context), widget.control, "selected_label_text_style"),
+              widget.control.get("selected_label_text_style"),
+              Theme.of(context)),
           unselectedLabelTextStyle: parseTextStyle(
-              Theme.of(context), widget.control, "unselected_label_text_style"),
+              widget.control.get("unselected_label_text_style"),
+              Theme.of(context)),
           indicatorShape:
-              parseOutlinedBorder(widget.control, "indicator_shape"),
+              parseOutlinedBorder(widget.control.get("indicator_shape")),
           minWidth: widget.control.getDouble("min_width"),
           minExtendedWidth: widget.control.getDouble("min_extended_width"),
           groupAlignment: widget.control.getDouble("group_alignment"),
@@ -94,11 +96,11 @@ class _NavigationRailControlState extends State<NavigationRailControl>
                 Icon(parseIcon(destinationControl.getString("selected_icon")));
             return NavigationRailDestination(
               disabled: disabled || destinationControl.disabled,
-              padding: parseEdgeInsets(destinationControl, "padding"),
+              padding: parseEdgeInsets(destinationControl.get("padding")),
               indicatorColor:
                   destinationControl.getColor("indicator_color", context),
-              indicatorShape:
-                  parseOutlinedBorder(destinationControl, "indicator_shape"),
+              indicatorShape: parseOutlinedBorder(
+                  destinationControl.get("indicator_shape")),
               icon: icon,
               selectedIcon: selectedIcon,
               label: destinationControl.buildWidget("label") ??

@@ -28,8 +28,8 @@ class CardControl extends StatelessWidget {
         : null;
     var clipBehavior = parseClip(control.getString("clip_behavior"));
     var elevation = control.getDouble("elevation");
-    var shape = parseOutlinedBorder(control, "shape");
-    var margin = parseEdgeInsets(control, "margin");
+    var shape = parseOutlinedBorder(control.get("shape"));
+    var margin = parseMargin(control.get("margin"));
     var isSemanticContainer = control.getBool("is_semantic_container", true)!;
     var showBorderOnForeground =
         control.getBool("show_border_on_foreground", true)!;

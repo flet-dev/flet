@@ -39,16 +39,16 @@ Tooltip? parseTooltip(BuildContext context, dynamic value, Widget widget) {
   /// The tooltip shape defaults to a rounded rectangle with a border radius of
   /// 4.0. Tooltips will also default to an opacity of 90%
   var decoration = boxDecorationFromDetails(
-    gradient: gradientFromJSON(theme, value["gradient"]),
-    border: borderFromJSON(theme, value["border"]),
-    borderRadius: borderRadiusFromJSON(
-        value["border_radius"], BorderRadius.circular(4.0)),
+    gradient: parseGradient(value["gradient"], theme),
+    border: parseBorder(value["border"], theme),
+    borderRadius:
+        parseBorderRadius(value["border_radius"], BorderRadius.circular(4.0)),
     shape: parseBoxShape(value["shape"]),
-    color: parseColor(theme, value["bgcolor"],
+    color: parseColor(value["bgcolor"], theme,
         theme.brightness == Brightness.light ? Colors.grey[700] : Colors.white),
     blendMode: parseBlendMode(value["blend_mode"]),
-    boxShadow: boxShadowsFromJSON(theme, value["box_shadow"]),
-    image: decorationImageFromJSON(context, value["image"]),
+    boxShadow: parseBoxShadows(value["box_shadow"], theme),
+    image: parseDecorationImage(value["image"], context),
   );
   return Tooltip(
     message: value["message"],
@@ -58,11 +58,11 @@ Tooltip? parseTooltip(BuildContext context, dynamic value, Widget widget) {
     height: parseDouble(value["height"]),
     exitDuration: parseDuration(value["exit_duration"]),
     preferBelow: parseBool(value["prefer_below"]),
-    padding: edgeInsetsFromJson(value["padding"]),
+    padding: parseEdgeInsets(value["padding"]),
     decoration: decoration,
-    textStyle: textStyleFromJson(theme, value["text_style"]),
+    textStyle: parseTextStyle(value["text_style"], theme),
     verticalOffset: parseDouble(value["vertical_offset"]),
-    margin: edgeInsetsFromJson(value["margin"]),
+    margin: parseEdgeInsets(value["margin"]),
     textAlign: parseTextAlign(value["text_align"]),
     showDuration: parseDuration(value["show_duration"]),
     waitDuration: parseDuration(value["wait_duration"]),

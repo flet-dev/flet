@@ -1,24 +1,17 @@
-import '../models/control.dart';
 import '../utils/numbers.dart';
 
-Map<String, double> parseResponsiveNumber(
-    Control control, String propName, double defaultValue) {
-  var v = control.get(propName);
+Map<String, double> parseResponsiveNumber(dynamic value, double defaultValue) {
   Map<String, double> result = {};
-  if (v != null) {
-    if (v is! Map<String, dynamic>) {
-      v = {"": v};
+  if (value != null) {
+    if (value is! Map<String, dynamic>) {
+      value = {"": value};
     }
-    result = responsiveNumberFromJson(v);
+    result = value.map((key, value) => MapEntry(key, parseDouble(value, 0)!));
   }
   if (result[""] == null) {
     result[""] = defaultValue;
   }
   return result;
-}
-
-Map<String, double> responsiveNumberFromJson(Map<String, dynamic> json) {
-  return json.map((key, value) => MapEntry(key, parseDouble(value, 0)!));
 }
 
 double getBreakpointNumber(Map<String, double> responsiveNumber, double width,

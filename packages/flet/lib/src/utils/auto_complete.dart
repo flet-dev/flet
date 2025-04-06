@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../models/control.dart';
-
 @immutable
 class AutoCompleteSuggestion {
   const AutoCompleteSuggestion({
@@ -40,42 +38,33 @@ class AutoCompleteSuggestion {
   int get hashCode => Object.hash(key, value);
 }
 
-List<AutoCompleteSuggestion> parseAutoCompleteSuggestions(
-    Control control, String propName) {
-  var v = control.get(propName);
-  if (v == null) {
-    return [];
-  }
-  return autoCompleteSuggestionsFromJSON(v);
-}
+List<AutoCompleteSuggestion>? parseAutoCompleteSuggestions(
+  dynamic value, [
+  List<AutoCompleteSuggestion>? defaultValue,
+]) {
+  if (value == null) return defaultValue;
 
-List<AutoCompleteSuggestion> autoCompleteSuggestionsFromJSON(dynamic json) {
   List<AutoCompleteSuggestion> m = [];
-  if (json is List) {
-    json.map((e) => autoCompleteSuggestionFromJSON(e)).toList().forEach((e) {
-      if (e != null) {
-        m.add(e);
-      }
-    });
-  }
-  return m;
-}
 
-AutoCompleteSuggestion? autoCompleteSuggestionFromJSON(dynamic json) {
-  var key = json["key"];
-  var value = json["value"];
-  if ((key == null || key.toString().isEmpty) &&
-      (value == null || value.toString().isEmpty)) {
-    return null;
+  if (value is List) {
+    for (var json in value) {
+      var key = json["key"];
+      var val = json["value"];
+
+      if ((key == null || key.toString().isEmpty) &&
+          (val == null || val.toString().isEmpty)) {
+        continue;
+      }
+
+      key ??= val;
+      val ??= key;
+
+      m.add(AutoCompleteSuggestion(
+        key: key.toString(),
+        value: val.toString(),
+      ));
+    }
   }
-  if (key == null && value != null) {
-    key = value;
-  }
-  if (value == null && key != null) {
-    value = key;
-  }
-  return AutoCompleteSuggestion(
-    key: key.toString(),
-    value: value.toString(),
-  );
+
+  return m;
 }

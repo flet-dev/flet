@@ -18,93 +18,61 @@ import 'numbers.dart';
 import 'others.dart';
 import 'transforms.dart';
 
-BoxConstraints? parseBoxConstraints(Control control, String propName) {
-  var v = control.get(propName);
-  if (v == null) {
-    return null;
-  }
-  return boxConstraintsFromJSON(v);
-}
+BoxConstraints? parseBoxConstraints(dynamic value,
+    [BoxConstraints? defaultValue]) {
+  if (value == null) return defaultValue;
 
-BoxConstraints? boxConstraintsFromJSON(dynamic json,
-    [BoxConstraints? defValue]) {
-  if (json == null) {
-    return null;
-  }
   return BoxConstraints(
-    minHeight: parseDouble(json["min_height"], 0.0)!,
-    minWidth: parseDouble(json["min_width"], 0.0)!,
-    maxHeight: parseDouble(json["max_height"], double.infinity)!,
-    maxWidth: parseDouble(json["max_width"], double.infinity)!,
+    minHeight: parseDouble(value["min_height"], 0.0)!,
+    minWidth: parseDouble(value["min_width"], 0.0)!,
+    maxHeight: parseDouble(value["max_height"], double.infinity)!,
+    maxWidth: parseDouble(value["max_width"], double.infinity)!,
   );
 }
 
-List<BoxShadow>? parseBoxShadow(
-    ThemeData theme, Control control, String propName,
-    [List<BoxShadow>? defValue]) {
-  var v = control.get(propName);
-  if (v == null) {
-    return defValue;
-  }
-  return boxShadowsFromJSON(theme, v);
-}
-
-List<BoxShadow>? boxShadowsFromJSON(ThemeData theme, dynamic json,
-    [List<BoxShadow>? defValue]) {
-  if (json == null) {
-    return defValue;
-  }
-  if (json is List) {
-    return json.map((e) => boxShadowFromJSON(theme, e)).toList();
+List<BoxShadow>? parseBoxShadows(dynamic value, ThemeData theme,
+    [List<BoxShadow>? defaultValue]) {
+  if (value == null) return defaultValue;
+  if (value is List) {
+    return value.map((e) => parseBoxShadow(e, theme)).toList();
   } else {
-    return [boxShadowFromJSON(theme, json)];
+    return [parseBoxShadow(json, theme)];
   }
 }
 
-BoxShadow boxShadowFromJSON(ThemeData theme, dynamic json) {
-  var offset =
-      json["offset"] != null ? offsetDetailsFromJSON(json["offset"]) : null;
+BoxShadow parseBoxShadow(dynamic value, ThemeData theme) {
+  var offset = parseOffset(value["offset"]);
   return BoxShadow(
-      color: parseColor(theme, json["color"], const Color(0xFF000000))!,
-      offset: offset != null ? Offset(offset.x, offset.y) : Offset.zero,
-      blurStyle: json["blur_style"] != null
+      color: parseColor(value["color"], theme, const Color(0xFF000000))!,
+      offset: offset != null ? Offset(offset.dx, offset.dy) : Offset.zero,
+      blurStyle: value["blur_style"] != null
           ? BlurStyle.values
-              .firstWhere((e) => e.name.toLowerCase() == json["blur_style"])
+              .firstWhere((e) => e.name.toLowerCase() == value["blur_style"])
           : BlurStyle.normal,
-      blurRadius: parseDouble(json["blur_radius"], 0)!,
-      spreadRadius: parseDouble(json["spread_radius"], 0)!);
+      blurRadius: parseDouble(value["blur_radius"], 0)!,
+      spreadRadius: parseDouble(value["spread_radius"], 0)!);
 }
 
-BoxDecoration? parseBoxDecoration(
-    BuildContext context, Control control, String propName) {
-  var v = control.get(propName);
-  if (v == null) {
-    return null;
-  }
-
-  return boxDecorationFromJSON(context, v);
-}
-
-BoxDecoration? boxDecorationFromJSON(BuildContext context, dynamic json) {
-  if (json == null) {
-    return null;
-  }
+BoxDecoration? parseBoxDecoration(dynamic value, BuildContext context,
+    [BoxDecoration? defaultValue]) {
+  if (value == null) return defaultValue;
   var theme = Theme.of(context);
-  var shape = parseBoxShape(json["shape"], BoxShape.rectangle)!;
-  var borderRadius = borderRadiusFromJSON(json["border_radius"]);
-  var color = parseColor(theme, json["color"]);
-  var gradient = gradientFromJSON(theme, json["gradient"]);
-  var blendMode = parseBlendMode(json["blend_mode"]);
+
+  var shape = parseBoxShape(value["shape"], BoxShape.rectangle)!;
+  var borderRadius = parseBorderRadius(value["border_radius"]);
+  var color = parseColor(value["color"], theme);
+  var gradient = parseGradient(value["gradient"], theme);
+  var blendMode = parseBlendMode(value["blend_mode"]);
 
   return BoxDecoration(
     color: color,
-    border: borderFromJSON(theme, json["border"]),
+    border: parseBorder(value["border"], theme),
     shape: shape,
     borderRadius: shape == BoxShape.circle ? null : borderRadius,
     backgroundBlendMode: color != null || gradient != null ? blendMode : null,
-    boxShadow: boxShadowsFromJSON(theme, json["shadow"]),
+    boxShadow: parseBoxShadows(value["shadow"], theme),
     gradient: gradient,
-    image: decorationImageFromJSON(context, json["image"]),
+    image: parseDecorationImage(value["image"], context),
   );
 }
 
@@ -143,38 +111,29 @@ BoxDecoration? boxDecorationFromDetails({
   );
 }
 
-DecorationImage? parseDecorationImage(
-    BuildContext context, Control control, String propName) {
-  var v = control.get(propName);
-  if (v == null) {
-    return null;
-  }
-  return decorationImageFromJSON(context, v);
-}
+DecorationImage? parseDecorationImage(dynamic value, BuildContext context,
+    [DecorationImage? defaultValue]) {
+  if (value == null) return defaultValue;
 
-DecorationImage? decorationImageFromJSON(BuildContext context, dynamic json) {
-  if (json == null) {
-    return null;
-  }
-  var src = json["src"];
-  var srcBase64 = json["src_base64"];
+  var src = value["src"];
+  var srcBase64 = value["src_base64"];
   ImageProvider? image = getImageProvider(context, src, srcBase64);
   if (image == null) {
-    return null;
+    return defaultValue;
   }
   return DecorationImage(
     image: image,
-    colorFilter: colorFilterFromJSON(json["color_filter"], Theme.of(context)),
-    fit: parseBoxFit(json["fit"]),
-    alignment: alignmentFromJson(json["alignment"], Alignment.center)!,
-    repeat: parseImageRepeat(json["repeat"], ImageRepeat.noRepeat)!,
-    matchTextDirection: parseBool(json["match_text_direction"], false)!,
-    scale: parseDouble(json["scale"], 1.0)!,
-    opacity: parseDouble(json["opacity"], 1.0)!,
+    colorFilter: parseColorFilter(value["color_filter"], Theme.of(context)),
+    fit: parseBoxFit(value["fit"]),
+    alignment: parseAlignment(value["alignment"], Alignment.center)!,
+    repeat: parseImageRepeat(value["repeat"], ImageRepeat.noRepeat)!,
+    matchTextDirection: parseBool(value["match_text_direction"], false)!,
+    scale: parseDouble(value["scale"], 1.0)!,
+    opacity: parseDouble(value["opacity"], 1.0)!,
     filterQuality:
-        parseFilterQuality(json["filter_quality"], FilterQuality.medium)!,
-    invertColors: parseBool(json["invert_colors"], false)!,
-    isAntiAlias: parseBool(json["anti_alias"], false)!,
+        parseFilterQuality(value["filter_quality"], FilterQuality.medium)!,
+    invertColors: parseBool(value["invert_colors"], false)!,
+    isAntiAlias: parseBool(value["anti_alias"], false)!,
   );
 }
 

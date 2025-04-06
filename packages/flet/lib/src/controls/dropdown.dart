@@ -67,6 +67,7 @@ class _DropdownControlState extends State<DropdownControl> {
   Widget build(BuildContext context) {
     debugPrint("DropdownMenu build: ${widget.control.id}");
 
+    var theme = Theme.of(context);
     bool editable = widget.control.getBool("editable", false)!;
     bool autofocus = widget.control.getBool("autofocus", false)!;
     var textSize = widget.control.getDouble("text_size");
@@ -84,12 +85,12 @@ class _DropdownControlState extends State<DropdownControl> {
     var fillColor = widget.control.getColor("fill_color", context);
     var borderColor = widget.control.getColor("border_color", context);
 
-    var borderRadius = parseBorderRadius(widget.control, "border_radius");
+    var borderRadius = parseBorderRadius(widget.control.get("border_radius"));
     var focusedBorderColor =
         widget.control.getColor("focused_border_color", context);
     var borderWidth = widget.control.getDouble("border_width");
     var focusedBorderWidth = widget.control.getDouble("focused_border_width");
-    var menuWidth = widget.control.getDouble("menu_width") ?? double.infinity;
+    var menuWidth = widget.control.getDouble("menu_width", double.infinity)!;
 
     FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
       widget.control.getString("border"),
@@ -123,10 +124,7 @@ class _DropdownControlState extends State<DropdownControl> {
                 ? BorderSide.none
                 : BorderSide(
                     color: borderColor ??
-                        Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withOpacity(0.38),
+                        theme.colorScheme.onSurface.withOpacity(0.38),
                     width: borderWidth ?? 1.0));
       }
     }
@@ -142,40 +140,35 @@ class _DropdownControlState extends State<DropdownControl> {
               : BorderSide(
                   color: focusedBorderColor ??
                       borderColor ??
-                      Theme.of(context).colorScheme.primary,
+                      theme.colorScheme.primary,
                   width: focusedBorderWidth ?? borderWidth ?? 2.0));
     }
 
     InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
       filled: widget.control.getBool("filled", false)!,
       fillColor: fillColor,
-      hintStyle:
-          parseTextStyle(Theme.of(context), widget.control, "hint_style"),
-      errorStyle:
-          parseTextStyle(Theme.of(context), widget.control, "error_style"),
-      helperStyle:
-          parseTextStyle(Theme.of(context), widget.control, "helper_style"),
+      hintStyle: parseTextStyle(widget.control.get("hint_style"), theme),
+      errorStyle: parseTextStyle(widget.control.get("error_style"), theme),
+      helperStyle: parseTextStyle(widget.control.get("helper_style"), theme),
       border: border,
       enabledBorder: border,
       focusedBorder: focusedBorder,
-      isDense: widget.control.getBool("dense") ?? false,
-      contentPadding: parseEdgeInsets(widget.control, "content_padding"),
+      isDense: widget.control.getBool("dense", false)!,
+      contentPadding: parseEdgeInsets(widget.control.get("content_padding")),
     );
 
     TextStyle? textStyle =
-        parseTextStyle(Theme.of(context), widget.control, "text_style");
+        parseTextStyle(widget.control.get("text_style"), theme);
     if (textSize != null || color != null) {
       textStyle = (textStyle ?? const TextStyle()).copyWith(
-          fontSize: textSize,
-          color: color ?? Theme.of(context).colorScheme.onSurface);
+          fontSize: textSize, color: color ?? theme.colorScheme.onSurface);
     }
 
     var items = widget.control
         .children("options")
         .map<DropdownMenuEntry<String>>((Control itemCtrl) {
       bool itemDisabled = widget.control.disabled || itemCtrl.disabled;
-      ButtonStyle? style =
-          parseButtonStyle(Theme.of(context), itemCtrl, "style");
+      ButtonStyle? style = parseButtonStyle(itemCtrl.get("style"), theme);
 
       var contentCtrl = itemCtrl.child("content");
       var leadingIcon = itemCtrl.get("leading_icon");
@@ -214,7 +207,7 @@ class _DropdownControlState extends State<DropdownControl> {
         widget.control.getString("capitalization"), TextCapitalization.none)!;
 
     FilteringTextInputFormatter? inputFilter =
-        parseInputFilter(widget.control, "input_filter");
+        parseInputFilter(widget.control.get("input_filter"));
 
     List<TextInputFormatter>? inputFormatters = [];
     if (inputFilter != null) {
@@ -237,8 +230,8 @@ class _DropdownControlState extends State<DropdownControl> {
           ? ControlWidget(control: label)
           : label is String
               ? Text(label,
-                  style: parseTextStyle(
-                      Theme.of(context), widget.control, "label_style"))
+                  style:
+                      parseTextStyle(widget.control.get("label_style"), theme))
               : null,
       leadingIcon: leadingIcon is Control
           ? ControlWidget(control: leadingIcon)
@@ -271,8 +264,8 @@ class _DropdownControlState extends State<DropdownControl> {
       helperText: widget.control.getString("helper_text"),
       menuStyle: MenuStyle(
         backgroundColor:
-            parseWidgetStateColor(Theme.of(context), widget.control, "bgcolor"),
-        elevation: parseWidgetStateDouble(widget.control, "elevation"),
+            parseWidgetStateColor(widget.control.get("bgcolor"), theme),
+        elevation: parseWidgetStateDouble(widget.control.get("elevation")),
         fixedSize: WidgetStateProperty.all(Size.fromWidth(menuWidth)),
       ),
       inputDecorationTheme: inputDecorationTheme,

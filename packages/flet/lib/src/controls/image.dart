@@ -7,7 +7,6 @@ import '../utils/box.dart';
 import '../utils/images.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
-import 'control_widget.dart';
 
 class ImageControl extends StatelessWidget {
   final Control control;
@@ -29,7 +28,7 @@ class ImageControl extends StatelessWidget {
       return const ErrorControl(
           "Image must have either \"src\" or \"src_base64\" specified.");
     }
-    var errorContentCtrl = control.child("error_content");
+    var errorContent = control.buildWidget("error_content");
 
     Widget? image = buildImage(
       context: context,
@@ -38,30 +37,29 @@ class ImageControl extends StatelessWidget {
       srcBase64: srcBase64,
       width: control.getDouble("width"),
       height: control.getDouble("height"),
-      cacheWidth: control.getInt("cacheWidth"),
-      cacheHeight: control.getInt("cacheHeight"),
-      antiAlias: control.getBool("antiAlias", false)!,
+      cacheWidth: control.getInt("cache_width"),
+      cacheHeight: control.getInt("cache_height"),
+      antiAlias: control.getBool("anti_alias", false)!,
       repeat:
           parseImageRepeat(control.getString("repeat"), ImageRepeat.noRepeat)!,
       fit: parseBoxFit(control.getString("fit")),
-      colorBlendMode: parseBlendMode(control.getString("colorBlendMode")),
+      colorBlendMode: parseBlendMode(control.getString("color_blend_mode")),
       color: control.getColor("color", context),
-      semanticsLabel: control.getString("semanticsLabel"),
-      gaplessPlayback: control.getBool("gaplessPlayback"),
-      excludeFromSemantics: control.getBool("excludeFromSemantics", false)!,
+      semanticsLabel: control.getString("semantics_label"),
+      gaplessPlayback: control.getBool("gapless_playback"),
+      excludeFromSemantics: control.getBool("exclude_from_semantics", false)!,
       filterQuality: parseFilterQuality(
-          control.getString("filterQuality"), FilterQuality.medium)!,
+          control.getString("filter_quality"), FilterQuality.medium)!,
       disabled: control.disabled,
-      errorCtrl: errorContentCtrl != null
-          ? ControlWidget(control: errorContentCtrl)
-          : null,
+      errorCtrl: errorContent,
     );
     return ConstrainedControl(
-        control: control, child: _clipCorners(image, control));
+        control: control,
+        child: _clipCorners(
+            image, parseBorderRadius(control.get("border_radius"))));
   }
 
-  Widget _clipCorners(Widget image, Control control) {
-    var borderRadius = parseBorderRadius(control, "borderRadius");
+  Widget _clipCorners(Widget image, BorderRadius? borderRadius) {
     return borderRadius != null
         ? ClipRRect(
             borderRadius: borderRadius,

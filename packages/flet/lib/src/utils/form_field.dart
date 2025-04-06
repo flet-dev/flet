@@ -16,16 +16,15 @@ import 'time.dart';
 enum FormFieldInputBorder { outline, underline, none }
 
 FormFieldInputBorder? parseFormFieldInputBorder(String? value,
-    [FormFieldInputBorder? defValue]) {
-  if (value == null) {
-    return defValue;
-  }
+    [FormFieldInputBorder? defaultValue]) {
+  if (value == null) return defaultValue;
   return FormFieldInputBorder.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defValue;
+      defaultValue;
 }
 
-TextInputType? parseTextInputType(String? value, [TextInputType? defValue]) {
+TextInputType? parseTextInputType(String? value,
+    [TextInputType? defaultValue]) {
   switch (value?.toLowerCase()) {
     case "datetime":
       return TextInputType.datetime;
@@ -50,7 +49,7 @@ TextInputType? parseTextInputType(String? value, [TextInputType? defValue]) {
     case "visiblepassword":
       return TextInputType.visiblePassword;
     default:
-      return defValue;
+      return defaultValue;
   }
 }
 
@@ -92,7 +91,7 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
   var hoverColor = control.getColor("hover_color", context);
   var borderColor = control.getColor("border_color", context);
 
-  var borderRadius = parseBorderRadius(control, "border_radius");
+  var borderRadius = parseBorderRadius(control.get("border_radius"));
   var focusedBorderColor = control.getColor("focused_border_color", context);
   var borderWidth = control.getDouble("border_width");
   var focusedBorderWidth = control.getDouble("focused_border_width");
@@ -155,14 +154,14 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
 
   return InputDecoration(
       enabled: !disabled,
-      contentPadding: parseEdgeInsets(control, "content_padding"),
+      contentPadding: parseEdgeInsets(control.get("content_padding")),
       isDense: control.getBool("dense"),
       label: label != null
           ? ControlWidget(control: label)
           : control.getString("label") != null
               ? Text(control.getString("label")!)
               : null,
-      labelStyle: parseTextStyle(Theme.of(context), control, "label_style"),
+      labelStyle: parseTextStyle(control.get("label_style"), Theme.of(context)),
       border: border,
       enabledBorder: border,
       focusedBorder: focusedBorder,
@@ -175,40 +174,44 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       filled: control.getBool("filled", false)!,
       fillColor: fillColor ?? (focused ? focusedBgcolor ?? bgcolor : bgcolor),
       hintText: control.getString("hint_text"),
-      hintStyle: parseTextStyle(Theme.of(context), control, "hint_style"),
+      hintStyle: parseTextStyle(control.get("hint_style"), Theme.of(context)),
       helperText: control.getString("helper_text"),
-      helperStyle: parseTextStyle(Theme.of(context), control, "helper_style"),
+      helperStyle:
+          parseTextStyle(control.get("helper_style"), Theme.of(context)),
       counterText: counterText,
-      counterStyle: parseTextStyle(Theme.of(context), control, "counter_style"),
+      counterStyle:
+          parseTextStyle(control.get("counter_style"), Theme.of(context)),
       counter: counter != null ? ControlWidget(control: counter) : null,
       error: error != null ? ControlWidget(control: error) : null,
       helper: helper != null ? ControlWidget(control: helper) : null,
-      constraints: parseBoxConstraints(control, "size_constraints"),
+      constraints: parseBoxConstraints(control.get("size_constraints")),
       isCollapsed: control.getBool("collapsed"),
       prefixIconConstraints:
-          parseBoxConstraints(control, "prefix_icon_constraints"),
+          parseBoxConstraints(control.get("prefix_icon_constraints")),
       suffixIconConstraints:
-          parseBoxConstraints(control, "suffix_icon_constraints"),
+          parseBoxConstraints(control.get("suffix_icon_constraints")),
       focusColor: control.getColor("focus_color", context),
       errorMaxLines: control.getInt("error_max_lines"),
       alignLabelWithHint: control.getBool("align_label_with_hint"),
       errorText: control.getString("error_text"),
-      errorStyle: parseTextStyle(Theme.of(context), control, "error_style"),
+      errorStyle: parseTextStyle(control.get("error_style"), Theme.of(context)),
       prefixIcon: prefixIconWidget,
       prefixText: prefix == null ? prefixText : null,
       hintFadeDuration: parseDuration(control.get("hint_fade_duration")),
       hintMaxLines: control.getInt("hint_max_lines"),
       helperMaxLines: control.getInt("helper_max_lines"),
-      prefixStyle: parseTextStyle(Theme.of(context), control, "prefix_style"),
+      prefixStyle:
+          parseTextStyle(control.get("prefix_style"), Theme.of(context)),
       prefix: prefix != null ? ControlWidget(control: prefix) : null,
       suffix: suffix != null ? ControlWidget(control: suffix) : null,
       suffixIcon: suffixIconWidget ?? customSuffix,
       suffixText: suffix == null ? suffixText : null,
-      suffixStyle: parseTextStyle(Theme.of(context), control, "suffix_style"));
+      suffixStyle:
+          parseTextStyle(control.get("suffix_style"), Theme.of(context)));
 }
 
 OverlayVisibilityMode? parseVisibilityMode(String? value,
-    [OverlayVisibilityMode? defValue]) {
+    [OverlayVisibilityMode? defaultValue]) {
   switch (value?.toLowerCase()) {
     case "never":
       return OverlayVisibilityMode.never;
@@ -219,29 +222,19 @@ OverlayVisibilityMode? parseVisibilityMode(String? value,
     case "always":
       return OverlayVisibilityMode.always;
   }
-  return defValue;
+  return defaultValue;
 }
 
-StrutStyle? parseStrutStyle(Control control, String propName) {
-  var v = control.get(propName);
-  if (v == null) {
-    return null;
-  }
-  return strutStyleFromJson(v);
-}
-
-StrutStyle? strutStyleFromJson(Map<String, dynamic>? json) {
-  if (json == null) {
-    return null;
-  }
+StrutStyle? parseStrutStyle(dynamic value, [StrutStyle? defaultValue]) {
+  if (value == null) return defaultValue;
 
   return StrutStyle(
-    fontSize: parseDouble(json["size"]),
-    fontWeight: getFontWeight(json["weight"]),
-    fontStyle: parseBool(json["italic"], false)! ? FontStyle.italic : null,
-    fontFamily: json["font_family"],
-    height: parseDouble(json["height"]),
-    leading: parseDouble(json["leading"]),
-    forceStrutHeight: parseBool(json["force_strut_height"]),
+    fontSize: parseDouble(value["size"]),
+    fontWeight: getFontWeight(value["weight"]),
+    fontStyle: parseBool(value["italic"], false)! ? FontStyle.italic : null,
+    fontFamily: value["font_family"],
+    height: parseDouble(value["height"]),
+    leading: parseDouble(value["leading"]),
+    forceStrutHeight: parseBool(value["force_strut_height"]),
   );
 }

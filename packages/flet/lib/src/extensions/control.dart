@@ -39,8 +39,9 @@ extension WidgetFromControl on Control {
 }
 
 extension MaterialProperties on Control {
-  Color? getColor(String propertyName, BuildContext? context, [Color? defValue]) {
-    return parseColor(context != null ? Theme.of(context) : null,
-        get<String>(propertyName), defValue);
+  Color? getColor(String propertyName, BuildContext? context,
+      [Color? defaultValue]) {
+    return parseColor(getString(propertyName),
+        context != null ? Theme.of(context) : null, defaultValue);
   }
 }

@@ -29,10 +29,10 @@ class ExpansionTileControl extends StatelessWidget {
         .map((child) => ControlWidget(control: child, key: ValueKey(child.id)))
         .toList();
 
-    var leading = control.child("leading");
-    var title = control.child("title");
-    var subtitle = control.child("subtitle");
-    var trailing = control.child("trailing");
+    var leading = control.buildWidget("leading");
+    var title = control.buildWidget("title");
+    var subtitle = control.buildWidget("subtitle");
+    var trailing = control.buildWidget("trailing");
 
     if (title == null) {
       return const ErrorControl(
@@ -76,9 +76,9 @@ class ExpansionTileControl extends StatelessWidget {
 
     Widget tile = ExpansionTile(
       controlAffinity: affinity,
-      childrenPadding: parseEdgeInsets(control, "controls_padding"),
-      tilePadding: parseEdgeInsets(control, "tile_padding"),
-      expandedAlignment: parseAlignment(control, "expanded_alignment"),
+      childrenPadding: parseEdgeInsets(control.get("controls_padding")),
+      tilePadding: parseEdgeInsets(control.get("tile_padding")),
+      expandedAlignment: parseAlignment(control.get("expanded_alignment")),
       expandedCrossAxisAlignment: parseCrossAxisAlignment(
           control.getString("expanded_cross_axis_alignment")),
       backgroundColor: bgColor,
@@ -90,8 +90,8 @@ class ExpansionTileControl extends StatelessWidget {
       maintainState: maintainState,
       initiallyExpanded: initiallyExpanded,
       clipBehavior: clipBehavior,
-      shape: parseOutlinedBorder(control, "shape"),
-      collapsedShape: parseOutlinedBorder(control, "collapsed_shape"),
+      shape: parseOutlinedBorder(control.get("shape")),
+      collapsedShape: parseOutlinedBorder(control.get("collapsed_shape")),
       onExpansionChanged: onChange,
       visualDensity: parseVisualDensity(control.getString("visual_density")),
       enableFeedback: control.getBool("enable_feedback"),
@@ -99,10 +99,10 @@ class ExpansionTileControl extends StatelessWidget {
       enabled: !control.disabled,
       minTileHeight: control.getDouble("min_tile_height"),
       dense: control.getBool("dense"),
-      leading: leading is Control ? ControlWidget(control: leading) : null,
-      title: ControlWidget(control: title),
-      subtitle: subtitle is Control ? ControlWidget(control: subtitle) : null,
-      trailing: trailing is Control ? ControlWidget(control: trailing) : null,
+      leading: leading,
+      title: title,
+      subtitle: subtitle,
+      trailing: trailing,
       children: controls,
     );
 

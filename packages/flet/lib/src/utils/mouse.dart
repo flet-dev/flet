@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
-import '../models/control.dart';
 import 'material_state.dart';
 
 MouseCursor? parseMouseCursor(String? cursor,
@@ -85,14 +82,11 @@ MouseCursor? parseMouseCursor(String? cursor,
   }
 }
 
-WidgetStateProperty<MouseCursor?>? parseWidgetStateMouseCursor(
-    Control control, String propName,
-    [MouseCursor? defaultValue]) {
-  var v = control.get<String>(propName);
-  if (v == null) {
-    return null;
-  }
+WidgetStateProperty<MouseCursor?>? parseWidgetStateMouseCursor(dynamic value,
+    {MouseCursor? defaultMouseCursor,
+    WidgetStateProperty<MouseCursor?>? defaultValue}) {
+  if (value == null) return defaultValue;
 
   return getWidgetStateProperty<MouseCursor?>(
-      jsonDecode(v), (jv) => parseMouseCursor(jv as String), defaultValue);
+      value, (jv) => parseMouseCursor(jv as String), defaultMouseCursor);
 }

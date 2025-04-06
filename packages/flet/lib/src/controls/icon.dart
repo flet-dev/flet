@@ -1,8 +1,8 @@
-import 'package:flet/src/utils/box.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/box.dart';
 import '../utils/icons.dart';
 import '../utils/images.dart';
 import 'base_controls.dart';
@@ -29,7 +29,7 @@ class IconControl extends StatelessWidget {
           grade: control.getDouble("grade"),
           weight: control.getDouble("weight"),
           opticalSize: control.getDouble("optical_size"),
-          shadows: parseBoxShadow(Theme.of(context), control, "shadows"),
+          shadows: parseBoxShadows(control.get("shadows"), Theme.of(context)),
         ));
   }
 }

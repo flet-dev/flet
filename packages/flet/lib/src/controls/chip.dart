@@ -87,36 +87,38 @@ class _ChipControlState extends State<ChipControl> {
       disabledColor: widget.control.getColor("disabled_color", context),
       elevation: widget.control.getDouble("elevation"),
       isEnabled: !disabled,
-      padding: parseEdgeInsets(widget.control, "padding"),
-      labelPadding: parseEdgeInsets(widget.control, "label_padding"),
+      padding: parseEdgeInsets(widget.control.get("padding")),
+      labelPadding: parseEdgeInsets(widget.control.get("label_padding")),
       labelStyle:
-          parseTextStyle(Theme.of(context), widget.control, "label_style"),
+          parseTextStyle(widget.control.get("label_style"), Theme.of(context)),
       selectedColor: widget.control.getColor("selected_color", context),
       selectedShadowColor:
           widget.control.getColor("selected_shadow_color", context),
       shadowColor: widget.control.getColor("shadow_color", context),
-      shape: parseOutlinedBorder(widget.control, "shape"),
-      color: parseWidgetStateColor(Theme.of(context), widget.control, "color"),
+      shape: parseOutlinedBorder(widget.control.get("shape")),
+      color:
+          parseWidgetStateColor(widget.control.get("color"), Theme.of(context)),
       surfaceTintColor: widget.control.getColor("surface_tint_color", context),
       pressElevation: widget.control.getDouble("click_elevation"),
-      side: parseBorderSide(Theme.of(context), widget.control, "border_side"),
+      side:
+          parseBorderSide(widget.control.get("border_side"), Theme.of(context)),
       clipBehavior:
           parseClip(widget.control.getString("clip_behavior"), Clip.none)!,
       visualDensity:
           parseVisualDensity(widget.control.getString("visual_density")),
       avatarBoxConstraints:
-          parseBoxConstraints(widget.control, "leading_size_constraints"),
-      deleteIconBoxConstraints:
-          parseBoxConstraints(widget.control, "delete_icon_size_constraints"),
+          parseBoxConstraints(widget.control.get("leading_size_constraints")),
+      deleteIconBoxConstraints: parseBoxConstraints(
+          widget.control.get("delete_icon_size_constraints")),
       chipAnimationStyle: ChipAnimationStyle(
         enableAnimation:
-            parseAnimationStyle(widget.control, "enable_animation_style"),
+            parseAnimationStyle(widget.control.get("enable_animation_style")),
         selectAnimation:
-            parseAnimationStyle(widget.control, "select_animation_style"),
+            parseAnimationStyle(widget.control.get("select_animation_style")),
         avatarDrawerAnimation: parseAnimationStyle(
-            widget.control, "leading_drawer_animation_style"),
+            widget.control.get("leading_drawer_animation_style")),
         deleteDrawerAnimation: parseAnimationStyle(
-            widget.control, "delete_drawer_animation_style"),
+            widget.control.get("delete_drawer_animation_style")),
       ),
       onPressed: onClick && !disabled
           ? () {

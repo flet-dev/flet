@@ -30,21 +30,21 @@ class _BannerControlState extends State<BannerControl> {
 
     return MaterialBanner(
       leading: leading,
-      leadingPadding: parseEdgeInsets(widget.control, "leading_padding"),
+      leadingPadding: parsePadding(widget.control.get("leading_padding")),
       content: content,
-      padding: parseEdgeInsets(widget.control, "content_padding"),
+      padding: parsePadding(widget.control.get("content_padding")),
       actions: actions,
       forceActionsBelow: widget.control.getBool("force_actions_below", false)!,
       backgroundColor: widget.control.getColor("bgcolor", context),
       contentTextStyle: parseTextStyle(
-          Theme.of(context), widget.control, "content_text_style"),
+          Theme.of(context), widget.control.get("content_text_style")),
       surfaceTintColor: widget.control.getColor("surface_tint_color", context),
       shadowColor: widget.control.getColor("shadow_color", context),
       dividerColor: widget.control.getColor("divider_color", context),
       elevation: widget.control.getDouble("elevation"),
       minActionBarHeight:
           widget.control.getDouble("min_action_bar_height", 52.0)!,
-      margin: parseEdgeInsets(widget.control, "margin"),
+      margin: parseMargin(widget.control.get("margin")),
       onVisible: () {
         FletBackend.of(context).triggerControlEvent(widget.control, "visible");
       },

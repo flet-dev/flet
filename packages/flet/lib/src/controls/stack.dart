@@ -17,19 +17,14 @@ class StackControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("Stack build: ${control.id}");
-    var clipBehavior =
-        parseClip(control.getString("clipBehavior"), Clip.hardEdge)!;
-    var fit = parseStackFit(control.getString("fit"), StackFit.loose)!;
-    var controls = control.buildWidgets("controls");
-
-    return ConstrainedControl(
-        control: control,
-        child: Stack(
-          clipBehavior: clipBehavior,
-          fit: fit,
-          alignment: parseAlignment(control, "alignment") ??
-              AlignmentDirectional.topStart,
-          children: controls,
-        ));
+    final stack = Stack(
+      clipBehavior:
+          parseClip(control.getString("clipBehavior"), Clip.hardEdge)!,
+      fit: parseStackFit(control.getString("fit"), StackFit.loose)!,
+      alignment: parseAlignment(control.get("alignment")) ??
+          AlignmentDirectional.topStart,
+      children: control.buildWidgets("controls"),
+    );
+    return ConstrainedControl(control: control, child: stack);
   }
 }

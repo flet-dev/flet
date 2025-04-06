@@ -1,25 +1,14 @@
 import 'package:flutter/services.dart';
 
-import '../models/control.dart';
 import '../utils/numbers.dart';
 
-FilteringTextInputFormatter? parseInputFilter(
-    Control control, String propName) {
-  var v = control.get(propName);
-  if (v == null) {
-    return null;
-  }
-  return inputFilterFromJSON(v);
+FilteringTextInputFormatter? parseInputFilter(dynamic value,
+    [FilteringTextInputFormatter? defaultValue]) {
+  if (value == null) return defaultValue;
+  var regexString = value["regex_string"]?.toString();
+  if (regexString == null) return defaultValue;
+  return CustomFilteringTextInputFormatter.fromJSON(value);
 }
-
-FilteringTextInputFormatter? inputFilterFromJSON(dynamic json) {
-  var regexString = json["regex_string"]?.toString();
-  if (json == null || regexString == null) {
-    return null;
-  }
-  return CustomFilteringTextInputFormatter.fromJSON(json);
-}
-
 class CustomFilteringTextInputFormatter extends FilteringTextInputFormatter {
   final RegExp _pattern;
 

@@ -58,8 +58,7 @@ class _CupertinoAlertDialogControlState
           "CupertinoAlertDialog has nothing to display. Provide at minimum one of the following: title, content, actions");
     }
     var insetAnimation = parseAnimation(
-        widget.control,
-        "inset_animation",
+        widget.control.get("inset_animation"),
         ImplicitAnimationDetails(
             duration: const Duration(milliseconds: 100),
             curve: Curves.decelerate))!;

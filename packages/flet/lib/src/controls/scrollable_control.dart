@@ -8,6 +8,7 @@ import '../models/control.dart';
 import '../utils/animations.dart';
 import '../utils/numbers.dart';
 import '../utils/others.dart';
+import '../utils/time.dart';
 import '../widgets/flet_store_mixin.dart';
 
 class ScrollableControl extends StatefulWidget {
@@ -80,7 +81,7 @@ class _ScrollableControlState extends State<ScrollableControl>
         var params = Map<String, dynamic>.from(mj["p"] as Map);
 
         if (name == "scroll_to") {
-          var duration = parseInt(params["duration"], 0)!;
+          var duration = parseDuration(params["duration"], Duration.zero)!;
           var curve = parseCurve(params["curve"], Curves.ease)!;
           if (params["key"] != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -89,10 +90,7 @@ class _ScrollableControlState extends State<ScrollableControl>
                 var ctx = key.currentContext;
                 if (ctx != null) {
                   Scrollable.ensureVisible(ctx,
-                      duration: duration > 0
-                          ? Duration(milliseconds: duration)
-                          : Duration.zero,
-                      curve: curve);
+                      duration: duration, curve: curve);
                 }
               }
             });
@@ -102,28 +100,20 @@ class _ScrollableControlState extends State<ScrollableControl>
               if (offset < 0) {
                 offset = _controller.position.maxScrollExtent + offset + 1;
               }
-              if (duration < 1) {
+              if (duration.inMilliseconds < 1) {
                 _controller.jumpTo(offset);
               } else {
-                _controller.animateTo(
-                  offset,
-                  duration: Duration(milliseconds: duration),
-                  curve: curve,
-                );
+                _controller.animateTo(offset, duration: duration, curve: curve);
               }
             });
           } else if (params["delta"] != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               var delta = parseDouble(params["delta"], 0)!;
               var offset = _controller.position.pixels + delta;
-              if (duration < 1) {
+              if (duration.inMilliseconds < 1) {
                 _controller.jumpTo(offset);
               } else {
-                _controller.animateTo(
-                  offset,
-                  duration: Duration(milliseconds: duration),
-                  curve: curve,
-                );
+                _controller.animateTo(offset, duration: duration, curve: curve);
               }
             });
           }

@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/control.dart';
 import 'user_fonts_io.dart' if (dart.library.js) "user_fonts_web.dart";
 
 class UserFonts {
@@ -43,14 +42,8 @@ class UserFonts {
   }
 }
 
-Map<String, String> parseFonts(Control control, String propName) {
-  var v = control.get<dynamic>(propName);
-  if (v == null) {
-    return {};
-  }
-  return fontsFromJson(v);
-}
-
-Map<String, String> fontsFromJson(Map<String, dynamic> json) {
-  return json.map((key, value) => MapEntry(key, value));
+Map<String, String>? parseFonts(dynamic value,
+    [Map<String, String>? defaultValue]) {
+  if (value == null) return {};
+  return value.map((key, value) => MapEntry(key, value));
 }

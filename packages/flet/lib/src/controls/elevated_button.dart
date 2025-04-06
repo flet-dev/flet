@@ -126,7 +126,8 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
 
       var theme = Theme.of(context);
 
-      var style = parseButtonStyle(Theme.of(context), widget.control, "style",
+      var style = parseButtonStyle(
+          widget.control.get("style"), Theme.of(context),
           defaultForegroundColor: theme.colorScheme.primary,
           defaultBackgroundColor: theme.colorScheme.surface,
           defaultOverlayColor: theme.colorScheme.primary.withOpacity(0.08),

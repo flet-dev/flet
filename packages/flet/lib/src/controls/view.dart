@@ -66,15 +66,14 @@ class _ViewControlState extends State<ViewControl> {
     var control = widget.control;
 
     final mainAlignment = parseMainAxisAlignment(
-        control.get<String>("vertical_alignment"), MainAxisAlignment.start)!;
+        control.getString("vertical_alignment"), MainAxisAlignment.start)!;
     final crossAlignment = parseCrossAxisAlignment(
-        control.get<String>("horizontal_alignment"), CrossAxisAlignment.start)!;
+        control.getString("horizontal_alignment"), CrossAxisAlignment.start)!;
     final fabLocation = parseFloatingActionButtonLocation(
-        control,
-        "floating_action_button_location",
+        control.get("floating_action_button_location"),
         FloatingActionButtonLocation.endFloat);
 
-    final textDirection = control.parent!.get<bool>("rtl", false)!
+    final textDirection = control.parent!.getBool("rtl", false)!
         ? TextDirection.rtl
         : TextDirection.ltr;
 
@@ -85,7 +84,7 @@ class _ViewControlState extends State<ViewControl> {
     var column = Column(
         mainAxisAlignment: mainAlignment,
         crossAxisAlignment: crossAlignment,
-        spacing: control.get<double>("spacing", 10)!,
+        spacing: control.getDouble("spacing", 10)!,
         children: control
             .children("controls")
             .where((c) => c.visible)
@@ -98,7 +97,7 @@ class _ViewControlState extends State<ViewControl> {
     // Widget child = ScrollableControl(
     //     control: control, scrollDirection: Axis.vertical, child: column);
 
-    // if (control.get<bool>("on_scroll", false)!) {
+    // if (control.getBool("on_scroll", false)!) {
     //   child = ScrollNotificationControl(control: control, child: child);
     // }
 
@@ -115,7 +114,7 @@ class _ViewControlState extends State<ViewControl> {
     //       _drawerOpened = false;
     //       dismissDrawer(drawer.id);
     //     }
-    //     if (drawer.get<bool>("open", false)! && _drawerOpened != true) {
+    //     if (drawer.getBool("open", false)! && _drawerOpened != true) {
     //       if (scaffoldKey.currentState?.isEndDrawerOpen == true) {
     //         scaffoldKey.currentState?.closeEndDrawer();
     //       }
@@ -123,7 +122,7 @@ class _ViewControlState extends State<ViewControl> {
     //         scaffoldKey.currentState?.openDrawer();
     //         _drawerOpened = true;
     //       });
-    //     } else if (!drawer.get<bool>("open", false)! && _drawerOpened == true) {
+    //     } else if (!drawer.getBool("open", false)! && _drawerOpened == true) {
     //       scaffoldKey.currentState?.closeDrawer();
     //       _drawerOpened = false;
     //     }
@@ -134,7 +133,7 @@ class _ViewControlState extends State<ViewControl> {
     //       _endDrawerOpened = false;
     //       dismissDrawer(endDrawer.id);
     //     }
-    //     if (endDrawer.get<bool>("open", false)! && _endDrawerOpened != true) {
+    //     if (endDrawer.getBool("open", false)! && _endDrawerOpened != true) {
     //       if (scaffoldKey.currentState?.isDrawerOpen == true) {
     //         scaffoldKey.currentState?.closeDrawer();
     //       }
@@ -142,7 +141,7 @@ class _ViewControlState extends State<ViewControl> {
     //         scaffoldKey.currentState?.openEndDrawer();
     //         _endDrawerOpened = true;
     //       });
-    //     } else if (!endDrawer.get<bool>("open", false)! &&
+    //     } else if (!endDrawer.getBool("open", false)! &&
     //         _endDrawerOpened == true) {
     //       scaffoldKey.currentState?.closeEndDrawer();
     //       _endDrawerOpened = false;
@@ -205,8 +204,8 @@ class _ViewControlState extends State<ViewControl> {
     Widget body = Stack(children: [
       SizedBox.expand(
           child: Container(
-              padding: parseEdgeInsets(
-                  control, "padding", const EdgeInsets.all(10))!,
+              padding: parsePadding(
+                  control.get("padding"), const EdgeInsets.all(10))!,
               child: child)),
       ...overlayWidgets
     ]);
@@ -215,11 +214,12 @@ class _ViewControlState extends State<ViewControl> {
             ((pageData?.themeMode == null ||
                     pageData?.themeMode == ThemeMode.system) &&
                 pageData?.brightness == Brightness.light)
-        ? parseTheme(context, control.parent!, "theme", Brightness.light)
-        : control.parent!.get<String>("dark_theme") != null
+        ? parseTheme(control.parent!.get("theme"), context, Brightness.light)
+        : control.parent!.getString("dark_theme") != null
             ? parseTheme(
-                context, control.parent!, "dark_theme", Brightness.dark)
-            : parseTheme(context, control.parent!, "theme", Brightness.dark);
+                control.parent!.get("dark_theme"), context, Brightness.dark)
+            : parseTheme(
+                control.parent!.get("theme"), context, Brightness.dark);
 
     Widget scaffold = Scaffold(
       key: scaffoldKey,
@@ -296,12 +296,12 @@ class _ViewControlState extends State<ViewControl> {
                         pageData?.themeMode == ThemeMode.system) &&
                     pageData?.brightness == Brightness.light)
             ? parseCupertinoTheme(
-                context, control.parent!, "theme", Brightness.light)
-            : control.parent!.get<String>("dark_theme") != null
+                control.parent!.get("theme"), context, Brightness.light)
+            : control.parent!.getString("dark_theme") != null
                 ? parseCupertinoTheme(
-                    context, control.parent!, "dark_theme", Brightness.dark)
+                    control.parent!.get("dark_theme"), context, Brightness.dark)
                 : parseCupertinoTheme(
-                    context, control.parent!, "theme", Brightness.dark),
+                    control.parent!.get("theme"), context, Brightness.dark),
         child: scaffold,
       );
     } else if (pageData?.widgetsDesign == PageDesign.cupertino) {
@@ -339,9 +339,9 @@ class _ViewControlState extends State<ViewControl> {
             : scaffold);
 
     var backgroundDecoration =
-        parseBoxDecoration(context, control, "decoration");
+        parseBoxDecoration(control.get("decoration"), context);
     var foregroundDecoration =
-        parseBoxDecoration(context, control, "foreground_decoration");
+        parseBoxDecoration(control.get("foreground_decoration"), context);
     if (backgroundDecoration != null || foregroundDecoration != null) {
       return Container(
         decoration: backgroundDecoration,

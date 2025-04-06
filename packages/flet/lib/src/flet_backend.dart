@@ -132,11 +132,8 @@ class FletBackend extends ChangeNotifier {
   Control get page => _page;
 
   void _onPageUpdated() {
-    var newPlatform = TargetPlatform.values.firstWhere(
-        (a) =>
-            a.name.toLowerCase() ==
-            _page.get<String>("platform", "")!.toLowerCase(),
-        orElse: () => defaultTargetPlatform);
+    var newPlatform = parseTargetPlatform(
+        _page.getString("platform"), defaultTargetPlatform)!;
     debugPrint("Page updated: $newPlatform $platform");
     if (newPlatform != platform) {
       platform = newPlatform;
@@ -257,7 +254,7 @@ class FletBackend extends ChangeNotifier {
   /// - [eventData]: Optional data to pass along with the event.
   void triggerControlEvent(Control control, String eventName,
       [dynamic eventData]) {
-    if (!isLoading && control.get<bool>("on_$eventName", false)!) {
+    if (!isLoading && control.getBool("on_$eventName", false)!) {
       debugPrint("${control.type}(${control.id}).on_$eventName($eventData)");
       triggerControlEventById(control.id, eventName, eventData);
     }
