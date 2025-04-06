@@ -1,25 +1,21 @@
+import 'package:flet/src/extensions/control.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
+import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
 import '../utils/mouse.dart';
 import '../utils/platform.dart';
-import 'create_control.dart';
+import 'base_controls.dart';
 
 class RangeSliderControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final bool parentDisabled;
-  final FletControlBackend backend;
 
-  const RangeSliderControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.parentDisabled,
-      required this.backend});
+  const RangeSliderControl({
+    super.key,
+    required this.control,
+  });
 
   @override
   State<RangeSliderControl> createState() => _SliderControlState();
@@ -44,10 +40,12 @@ class _SliderControlState extends State<RangeSliderControl> {
       "startvalue": startValue.toString(),
       "endvalue": endValue.toString()
     };
-    widget.backend.updateControlState(widget.control.id, props, server: false);
+    FletBackend.of(context)
+        .updateControl(widget.control.id, props, python: false, notify: true);
     _debouncer.run(() {
-      widget.backend.updateControlState(widget.control.id, props);
-      widget.backend.triggerControlEvent(widget.control.id, "change");
+      FletBackend.of(context)
+          .updateControl(widget.control.id, props, notify: true);
+      FletBackend.of(context).triggerControlEvent(widget.control, "change");
     });
   }
 
@@ -58,7 +56,6 @@ class _SliderControlState extends State<RangeSliderControl> {
     double startValue = widget.control.getDouble("startValue", 0)!;
     double endValue = widget.control.getDouble("endValue", 0)!;
     String label = widget.control.getString("label", "")!;
-    bool disabled = widget.control.disabled || widget.parentDisabled;
 
     double min = widget.control.getDouble("min", 0)!;
     double max = widget.control.getDouble("max", 1)!;
@@ -75,30 +72,30 @@ class _SliderControlState extends State<RangeSliderControl> {
         min: min,
         max: max,
         divisions: widget.control.getInt("divisions"),
-        activeColor: widget.control.getColor("activeColor", context),
-        inactiveColor: widget.control.getColor("inactiveColor", context),
-        mouseCursor: parseWidgetStateMouseCursor(widget.control, "mouseCursor"),
+        activeColor: widget.control.getColor("active_color", context),
+        inactiveColor: widget.control.getColor("inactive_color", context),
+        mouseCursor:
+            parseWidgetStateMouseCursor(widget.control.get("mouse_cursor")),
         overlayColor: parseWidgetStateColor(
-            Theme.of(context), widget.control, "overlayColor"),
-        onChanged: !disabled
-            ? (RangeValues newValues) {
+            widget.control.get("overlay_color"), Theme.of(context)),
+        onChanged: widget.control.disabled
+            ? null
+            : (RangeValues newValues) {
                 onChange(newValues.start, newValues.end);
-              }
-            : null,
-        onChangeStart: !disabled
-            ? (RangeValues newValues) {
-                widget.backend
-                    .triggerControlEvent(widget.control.id, "change_start");
-              }
-            : null,
-        onChangeEnd: !disabled
-            ? (RangeValues newValues) {
-                widget.backend
-                    .triggerControlEvent(widget.control.id, "change_end");
-              }
-            : null);
+              },
+        onChangeStart: widget.control.disabled
+            ? null
+            : (RangeValues newValues) {
+                FletBackend.of(context)
+                    .triggerControlEvent(widget.control, "change_start");
+              },
+        onChangeEnd: widget.control.disabled
+            ? null
+            : (RangeValues newValues) {
+                FletBackend.of(context)
+                    .triggerControlEvent(widget.control, "change_end");
+              });
 
-    return constrainedControl(
-        context, rangeSlider, widget.parent, widget.control);
+    return ConstrainedControl(control: widget.control, child: rangeSlider);
   }
 }
