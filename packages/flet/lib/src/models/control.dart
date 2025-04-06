@@ -7,12 +7,13 @@ import '../utils/weak_value_map.dart';
 typedef InvokeControlMethodCallback = Future<dynamic> Function(
     String name, dynamic args);
 
+/// Represents a node or control in the UI tree.
 ///
-/// ControlNode represents a node/control in the UI tree.
-/// It extends ChangeNotifier so that when any part of its data changes, listeners are notified.
-/// All nested data is stored in a unified properties map. Any value (or list element) that is a Map
-/// with a "_c" key is automatically transformed into a ControlNode.
-///
+/// This class extends `ChangeNotifier`, allowing it to notify listeners
+/// whenever any part of its data changes. It uses a unified properties
+/// map to store all nested data. Any value (or list element) in the
+/// properties map that is a `Map` containing a "_c" key is automatically
+/// transformed into a `Control`.
 class Control extends ChangeNotifier {
   final int id;
   final String type;
@@ -162,11 +163,7 @@ class Control extends ChangeNotifier {
     });
     if (changed) {
       if (shouldNotify) {
-        if (notifyParent) {
-          _parent?.target?.notify();
-        } else {
-          notify();
-        }
+        notify();
       }
       if (notifyParentPropertyChanged) {
         _parent?.target?.notify();
@@ -176,7 +173,11 @@ class Control extends ChangeNotifier {
 
   void notify() {
     debugPrint("$type($id) changed.");
-    notifyListeners();
+    if (notifyParent) {
+      _parent?.target?.notify();
+    } else {
+      notifyListeners();
+    }
   }
 
   static dynamic _transformIfControl(dynamic value, Control? parent,

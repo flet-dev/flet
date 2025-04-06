@@ -28,7 +28,7 @@ class DataColumnSortEvent(ControlEvent):
     ascending: bool = field(metadata={"data_field": "a"}, default=False)
 
 
-@control("DataColumn")
+@control("column")
 class DataColumn(Control):
     label: Control
     numeric: Optional[bool] = field(default=False)
@@ -41,7 +41,7 @@ class DataColumn(Control):
     #     assert self.label.visible, "label must be visible"
 
 
-@control("DataCell")
+@control("cell")
 class DataCell(Control):
     content: Control
     placeholder: Optional[bool] = field(default=False)
@@ -57,7 +57,7 @@ class DataCell(Control):
         assert self.content.visible, "content must be visible"
 
 
-@control("DataRow")
+@control("row")
 class DataRow(Control):
     cells: List[DataCell] = field(default_factory=list)
     color: ControlStateValue[ColorValue] = None
@@ -80,7 +80,6 @@ class DataRow(Control):
 
 @control("DataTable")
 class DataTable(ConstrainedControl):
-
     columns: List[DataColumn] = field(default_factory=list)
     rows: List[DataRow] = field(default_factory=list)
     sort_ascending: bool = False
