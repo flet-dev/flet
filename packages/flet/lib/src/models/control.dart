@@ -172,10 +172,10 @@ class Control extends ChangeNotifier {
   }
 
   void notify() {
-    debugPrint("$type($id) changed.");
     if (notifyParent) {
       _parent?.target?.notify();
     } else {
+      debugPrint("$type($id) changed.");
       notifyListeners();
     }
   }

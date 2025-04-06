@@ -240,7 +240,7 @@ extension ColorExtension on Color {
 WidgetStateProperty<Color?>? parseWidgetStateColor(
     ThemeData theme, Control control, String propName,
     [Color? defaultValue]) {
-  var v = control.get<String>(propName);
+  var v = control.get(propName);
   if (v == null) {
     return null;
   }

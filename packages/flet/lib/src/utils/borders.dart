@@ -68,7 +68,7 @@ BorderRadius? borderRadiusFromJSON(dynamic json, [BorderRadius? defaultValue]) {
   );
 }
 
-Border? borderFromJSON(ThemeData? theme, Map<String, dynamic>? json,
+Border? borderFromJSON(ThemeData? theme, Map<dynamic, dynamic>? json,
     [Color? defaultSideColor, Border? defaultBorder]) {
   if (json == null) {
     return defaultBorder;
@@ -97,7 +97,7 @@ BorderSide? borderSideFromJSON(ThemeData? theme, dynamic json,
       : null;
 }
 
-OutlinedBorder? outlinedBorderFromJSON(Map<String, dynamic>? json) {
+OutlinedBorder? outlinedBorderFromJSON(Map<dynamic, dynamic>? json) {
   if (json == null) {
     return null;
   }

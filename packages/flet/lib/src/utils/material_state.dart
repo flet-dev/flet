@@ -1,4 +1,5 @@
 import 'dart:collection';
+
 import 'package:flutter/material.dart';
 
 WidgetStateProperty<T?>? getWidgetStateProperty<T>(
@@ -8,7 +9,7 @@ WidgetStateProperty<T?>? getWidgetStateProperty<T>(
     return null;
   }
   var j = jsonDictValue;
-  if (j is! Map<String, dynamic>) {
+  if (j is! Map<dynamic, dynamic>) {
     j = {"default": j};
   }
   return WidgetStateFromJSON(j, converterFromJson, defaultValue);
@@ -18,7 +19,7 @@ class WidgetStateFromJSON<T> extends WidgetStateProperty<T?> {
   late final LinkedHashMap<String, T> _states;
   late final T? _defaultValue;
 
-  WidgetStateFromJSON(Map<String, dynamic>? jsonDictValue,
+  WidgetStateFromJSON(Map<dynamic, dynamic>? jsonDictValue,
       T Function(dynamic) converterFromJson, T? defaultValue) {
     _defaultValue = defaultValue;
 

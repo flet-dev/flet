@@ -511,9 +511,8 @@ class DiffBuilder(object):
         ):
             return  # do not update isolated control's children
 
-        self.parent_control = dst
-
         if self.control_cls and isinstance(dst, self.control_cls):
+            self.parent_control = dst
             dst.before_update()
 
         for field in dataclasses.fields(dst):
