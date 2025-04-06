@@ -2,8 +2,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, Union
 
-from flet.controls.types import DurationValue
-from flet.utils import deprecated
+from flet.controls.duration import OptionalDurationValue
 
 __all__ = ["Animation", "AnimationCurve", "AnimationStyle", "AnimationValue"]
 
@@ -55,14 +54,14 @@ class AnimationCurve(Enum):
 
 @dataclass
 class Animation:
-    duration: DurationValue = None
+    duration: OptionalDurationValue = None
     curve: Optional[AnimationCurve] = None
 
 
 @dataclass
 class AnimationStyle:
-    duration: Optional[DurationValue] = None
-    reverse_duration: Optional[DurationValue] = None
+    duration: OptionalDurationValue = None
+    reverse_duration: OptionalDurationValue = None
     curve: Optional[AnimationCurve] = None
     reverse_curve: Optional[AnimationCurve] = None
 

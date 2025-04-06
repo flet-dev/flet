@@ -5,11 +5,11 @@ from flet.controls.alignment import Alignment
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, control
 from flet.controls.control_event import ControlEvent
+from flet.controls.duration import OptionalDurationValue
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.transform import Offset
 from flet.controls.types import (
     ClipBehavior,
-    DurationValue,
     Number,
     OptionalEventCallable,
     OptionalNumber,
@@ -73,9 +73,9 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     on_interaction_update: OptionalEventCallable[
         InteractiveViewerInteractionUpdateEvent
     ] = None
-    on_interaction_end: OptionalEventCallable[InteractiveViewerInteractionEndEvent] = (
-        None
-    )
+    on_interaction_end: OptionalEventCallable[
+        InteractiveViewerInteractionEndEvent
+    ] = None
 
     def before_update(self):
         super().before_update()
@@ -90,7 +90,7 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
             or self.interaction_end_friction_coefficient > 0
         ), "interaction_end_friction_coefficient must be greater than 0"
 
-    def reset(self, animation_duration: Optional[DurationValue] = None):
+    def reset(self, animation_duration: OptionalDurationValue = None):
         self.invoke_method(
             "reset", arguments={"duration": self._convert_attr_json(animation_duration)}
         )

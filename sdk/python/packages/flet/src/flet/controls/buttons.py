@@ -4,6 +4,7 @@ from typing import Optional
 from flet.controls.alignment import Alignment
 from flet.controls.border import BorderSide
 from flet.controls.border_radius import OptionalBorderRadiusValue
+from flet.controls.duration import OptionalDurationValue
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
@@ -75,7 +76,7 @@ class ButtonStyle:
     shadow_color: ControlStateValue[ColorValue] = None
     surface_tint_color: ControlStateValue[ColorValue] = None
     elevation: ControlStateValue[OptionalNumber] = None
-    animation_duration: Optional[int] = None
+    animation_duration: OptionalDurationValue = None
     padding: ControlStateValue[PaddingValue] = None
     side: ControlStateValue[BorderSide] = None
     shape: ControlStateValue[OutlinedBorder] = None

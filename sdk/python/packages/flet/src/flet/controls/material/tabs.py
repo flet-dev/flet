@@ -6,6 +6,7 @@ from flet.controls.border import BorderSide
 from flet.controls.border_radius import OptionalBorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, control
+from flet.controls.duration import OptionalDurationValue
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.material.form_field_control import IconValueOrControl
 from flet.controls.padding import OptionalPaddingValue
@@ -86,7 +87,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     selected_index: int = 0
     scrollable: bool = True
     tab_alignment: Optional[TabAlignment] = None
-    animation_duration: Optional[int] = None
+    animation_duration: OptionalDurationValue = None
     divider_color: OptionalColorValue = None
     indicator_color: OptionalColorValue = None
     indicator_border_radius: OptionalBorderRadiusValue = None

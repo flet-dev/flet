@@ -3,6 +3,7 @@ from typing import Optional
 
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control, control
+from flet.controls.duration import OptionalDurationValue
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
@@ -79,7 +80,7 @@ class SnackBar(Control):
     action_color: OptionalColorValue = None
     close_icon_color: OptionalColorValue = None
     bgcolor: OptionalColorValue = None
-    duration: Optional[int] = None
+    duration: OptionalDurationValue = None
     margin: OptionalMarginValue = None
     padding: OptionalPaddingValue = None
     width: OptionalNumber = None

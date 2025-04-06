@@ -53,19 +53,6 @@ class UrlTarget(Enum):
     TOP = "_top"
 
 
-@dataclass
-class Duration:
-    microseconds: int = 0
-    milliseconds: int = 0
-    seconds: int = 0
-    minutes: int = 0
-    hours: int = 0
-    days: int = 0
-
-
-DurationValue = Union[int, Duration]
-
-
 class FontWeight(Enum):
     NORMAL = "normal"
     BOLD = "bold"
@@ -389,4 +376,5 @@ Wrapper = Callable[..., Any]
 
 # Protocols
 class SupportsStr(Protocol):
-    def __str__(self) -> str: ...
+    def __str__(self) -> str:
+        ...

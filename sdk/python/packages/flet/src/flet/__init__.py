@@ -190,6 +190,7 @@ from flet.controls.cupertino.cupertino_timer_picker import (
     CupertinoTimerPickerMode,
 )
 from flet.controls.dialog_control import DialogControl
+from flet.controls.duration import Duration, DurationValue, OptionalDurationValue
 from flet.controls.exceptions import (
     FletException,
     FletUnimplementedPlatformEception,
@@ -392,7 +393,17 @@ from flet.controls.theme import (
     TimePickerTheme,
     TooltipTheme,
 )
-from flet.controls.transform import Offset, Rotate, Scale
+from flet.controls.transform import (
+    Offset,
+    OffsetValue,
+    OptionalOffsetValue,
+    OptionalRotateValue,
+    OptionalScaleValue,
+    Rotate,
+    RotateValue,
+    Scale,
+    ScaleValue,
+)
 from flet.controls.types import (
     FLET_APP,
     FLET_APP_HIDDEN,
@@ -409,8 +420,6 @@ from flet.controls.types import (
     ControlStateValue,
     CrossAxisAlignment,
     DateTimeValue,
-    Duration,
-    DurationValue,
     EventType,
     FloatingActionButtonLocation,
     FontWeight,

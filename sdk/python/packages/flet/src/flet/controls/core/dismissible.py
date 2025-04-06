@@ -5,6 +5,7 @@ from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, control
 from flet.controls.control_event import ControlEvent
+from flet.controls.duration import OptionalDurationValue
 from flet.controls.material.snack_bar import DismissDirection
 from flet.controls.types import (
     OptionalControlEventCallable,
@@ -35,8 +36,8 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     secondary_background: Optional[Control] = None
     dismiss_direction: Optional[DismissDirection] = None
     dismiss_thresholds: Optional[Dict[DismissDirection, OptionalNumber]] = None
-    movement_duration: Optional[int] = None
-    resize_duration: Optional[int] = None
+    movement_duration: OptionalDurationValue = None
+    resize_duration: OptionalDurationValue = None
     cross_axis_end_offset: OptionalNumber = None
     on_update: OptionalEventCallable["DismissibleUpdateEvent"] = None
     on_dismiss: OptionalEventCallable["DismissibleDismissEvent"] = None

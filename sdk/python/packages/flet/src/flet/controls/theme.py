@@ -7,6 +7,7 @@ from flet.controls.border import BorderSide
 from flet.controls.border_radius import BorderRadius
 from flet.controls.box import BoxConstraints, BoxDecoration, BoxShadow
 from flet.controls.buttons import ButtonStyle, OutlinedBorder
+from flet.controls.duration import OptionalDurationValue
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.material.menu_bar import MenuStyle
 from flet.controls.material.navigation_bar import NavigationBarLabelBehavior
@@ -26,7 +27,6 @@ from flet.controls.types import (
     ColorValue,
     ControlState,
     ControlStateValue,
-    DurationValue,
     IconValue,
     Locale,
     MainAxisAlignment,
@@ -231,7 +231,7 @@ class ElevatedButtonTheme:
     text_style: Optional[TextStyle] = None
     visual_density: Optional[VisualDensity] = None
     border_side: Optional[BorderSide] = None
-    animation_duration: Optional[DurationValue] = None
+    animation_duration: OptionalDurationValue = None
     alignment: Optional[Alignment] = None
     icon_size: OptionalNumber = None
     fixed_size: Optional[Size] = None
@@ -272,7 +272,7 @@ class IconButtonTheme:
     shape: Optional[OutlinedBorder] = None
     visual_density: Optional[VisualDensity] = None
     border_side: Optional[BorderSide] = None
-    animation_duration: Optional[DurationValue] = None
+    animation_duration: OptionalDurationValue = None
     alignment: Optional[Alignment] = None
     icon_size: OptionalNumber = None
     fixed_size: Optional[Size] = None
@@ -680,9 +680,9 @@ class TooltipTheme:
     prefer_below: Optional[bool] = None
     vertical_offset: OptionalNumber = None
     padding: OptionalPaddingValue = None
-    wait_duration: Optional[DurationValue] = None
-    exit_duration: Optional[DurationValue] = None
-    show_duration: Optional[DurationValue] = None
+    wait_duration: OptionalDurationValue = None
+    exit_duration: OptionalDurationValue = None
+    show_duration: OptionalDurationValue = None
     margin: OptionalMarginValue = None
     trigger_mode: Optional[TooltipTriggerMode] = None
     decoration: Optional[BoxDecoration] = None

@@ -4,7 +4,7 @@ from enum import Enum
 from flet.controls.animation import AnimationCurve
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, control
-from flet.controls.types import Duration, DurationValue
+from flet.controls.duration import Duration, DurationValue
 
 __all__ = ["AnimatedSwitcher", "AnimatedSwitcherTransition"]
 

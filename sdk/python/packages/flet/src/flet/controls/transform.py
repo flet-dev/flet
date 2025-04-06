@@ -1,32 +1,45 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional, Tuple, Union
 
 from flet.controls.alignment import Alignment
-from flet.controls.types import Number
+from flet.controls.types import Number, OptionalNumber
 
-__all__ = ["Scale", "Rotate", "Offset", "ScaleValue", "RotateValue", "OffsetValue"]
+__all__ = [
+    "Scale",
+    "Rotate",
+    "Offset",
+    "ScaleValue",
+    "RotateValue",
+    "OffsetValue",
+    "OptionalScaleValue",
+    "OptionalRotateValue",
+    "OptionalOffsetValue",
+]
 
 
 @dataclass
 class Scale:
-    scale: Optional[float] = field(default=None)
-    scale_x: Optional[float] = field(default=None)
-    scale_y: Optional[float] = field(default=None)
-    alignment: Optional[Alignment] = field(default=None)
+    scale: OptionalNumber = None
+    scale_x: OptionalNumber = None
+    scale_y: OptionalNumber = None
+    alignment: Optional[Alignment] = None
 
 
 @dataclass
 class Rotate:
-    angle: float
-    alignment: Optional[Alignment] = field(default=None)
+    angle: Number
+    alignment: Optional[Alignment] = None
 
 
 @dataclass
 class Offset:
-    x: float
-    y: float
+    x: Number
+    y: Number
 
 
 RotateValue = Union[Number, Rotate]
+OptionalRotateValue = Optional[RotateValue]
 ScaleValue = Union[Number, Scale]
+OptionalScaleValue = Optional[ScaleValue]
 OffsetValue = Union[Offset, Tuple[Number, Number]]
+OptionalOffsetValue = Optional[OffsetValue]

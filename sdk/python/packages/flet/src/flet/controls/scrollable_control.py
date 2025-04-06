@@ -6,6 +6,7 @@ from typing import Optional
 from flet.controls.animation import AnimationCurve
 from flet.controls.control import Control, control
 from flet.controls.control_event import ControlEvent
+from flet.controls.duration import OptionalDurationValue
 from flet.controls.types import Number, OptionalEventCallable, ScrollMode
 
 __all__ = ["ScrollableControl", "OnScrollEvent", "ScrollType", "ScrollDirection"]
@@ -53,7 +54,7 @@ class ScrollableControl(Control):
         offset: Optional[float] = None,
         delta: Optional[float] = None,
         key: Optional[str] = None,
-        duration: Optional[int] = None,
+        duration: OptionalDurationValue = None,
         curve: Optional[AnimationCurve] = None,
     ):
         m = {

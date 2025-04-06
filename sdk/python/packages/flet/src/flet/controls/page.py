@@ -37,6 +37,7 @@ from flet.controls.core.window import Window
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
 from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.controls.dialog_control import DialogControl
+from flet.controls.duration import OptionalDurationValue
 from flet.controls.material.app_bar import AppBar
 from flet.controls.material.bottom_app_bar import BottomAppBar
 from flet.controls.material.floating_action_button import FloatingActionButton
@@ -99,7 +100,8 @@ try:
     from flet.auth.oauth_provider import OAuthProvider
 except ImportError as e:
 
-    class OAuthProvider: ...
+    class OAuthProvider:
+        ...
 
     class Authorization:
         def __init__(
@@ -108,7 +110,8 @@ except ImportError as e:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ): ...
+        ):
+            ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -630,7 +633,7 @@ class Page(AdaptiveControl):
         offset: Optional[float] = None,
         delta: Optional[float] = None,
         key: Optional[str] = None,
-        duration: Optional[int] = None,
+        duration: OptionalDurationValue = None,
         curve: Optional[AnimationCurve] = None,
     ) -> None:
         self.__default_view().scroll_to(
