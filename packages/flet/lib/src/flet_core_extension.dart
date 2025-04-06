@@ -42,6 +42,7 @@ import 'controls/reorderable_draggable.dart';
 import 'controls/row.dart';
 import 'controls/safe_area.dart';
 import 'controls/selection_area.dart';
+import 'controls/shader_mask.dart';
 import 'controls/slider.dart';
 import 'controls/stack.dart';
 import 'controls/text.dart';
@@ -144,6 +145,8 @@ class FletCoreExtension extends FletExtension {
         return ProgressBarControl(key: key, control: control);
       case "ProgressRing":
         return ProgressRingControl(key: key, control: control);
+      case "ShaderMask":
+        return ShaderMaskControl(key: key, control: control);
       case "ReorderableDraggable":
         return ReorderableDraggableControl(key: key, control: control);
       case "Row":
