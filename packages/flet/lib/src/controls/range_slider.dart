@@ -36,10 +36,7 @@ class _SliderControlState extends State<RangeSliderControl> {
   }
 
   void onChange(double startValue, double endValue) {
-    var props = {
-      "startvalue": startValue.toString(),
-      "endvalue": endValue.toString()
-    };
+    var props = {"start_value": startValue, "end_value": endValue};
     FletBackend.of(context)
         .updateControl(widget.control.id, props, python: false, notify: true);
     _debouncer.run(() {
@@ -53,8 +50,8 @@ class _SliderControlState extends State<RangeSliderControl> {
   Widget build(BuildContext context) {
     debugPrint("RangeSliderControl build: ${widget.control.id}");
 
-    double startValue = widget.control.getDouble("startValue", 0)!;
-    double endValue = widget.control.getDouble("endValue", 0)!;
+    double startValue = widget.control.getDouble("start_value", 0)!;
+    double endValue = widget.control.getDouble("end_value", 0)!;
     String label = widget.control.getString("label", "")!;
 
     double min = widget.control.getDouble("min", 0)!;
@@ -78,23 +75,23 @@ class _SliderControlState extends State<RangeSliderControl> {
             parseWidgetStateMouseCursor(widget.control.get("mouse_cursor")),
         overlayColor: parseWidgetStateColor(
             widget.control.get("overlay_color"), Theme.of(context)),
-        onChanged: widget.control.disabled
-            ? null
-            : (RangeValues newValues) {
+        onChanged: !widget.control.disabled
+            ? (RangeValues newValues) {
                 onChange(newValues.start, newValues.end);
-              },
-        onChangeStart: widget.control.disabled
-            ? null
-            : (RangeValues newValues) {
+              }
+            : null,
+        onChangeStart: !widget.control.disabled
+            ? (RangeValues newValues) {
                 FletBackend.of(context)
                     .triggerControlEvent(widget.control, "change_start");
-              },
-        onChangeEnd: widget.control.disabled
-            ? null
-            : (RangeValues newValues) {
+              }
+            : null,
+        onChangeEnd: !widget.control.disabled
+            ? (RangeValues newValues) {
                 FletBackend.of(context)
                     .triggerControlEvent(widget.control, "change_end");
-              });
+              }
+            : null);
 
     return ConstrainedControl(control: widget.control, child: rangeSlider);
   }
