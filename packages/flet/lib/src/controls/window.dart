@@ -92,14 +92,7 @@ class _WindowControlState extends State<WindowControl> with WindowListener {
   void didChangeDependencies() {
     debugPrint("Window.didChangeDependencies: ${widget.control.id}");
     super.didChangeDependencies();
-    var backend = FletBackend.of(context);
-    if (_initWindowStateCompleter.isCompleted) {
-      _updateWindow(backend);
-    } else {
-      _initWindowStateCompleter.future.then((_) {
-        _updateWindow(backend);
-      });
-    }
+    _updateWindowAfterInit();
   }
 
   @override
@@ -114,7 +107,18 @@ class _WindowControlState extends State<WindowControl> with WindowListener {
   void didUpdateWidget(covariant WindowControl oldWidget) {
     debugPrint("Window.didUpdateWidget: ${widget.control.id}");
     super.didUpdateWidget(oldWidget);
-    _updateWindow(FletBackend.of(context));
+    _updateWindowAfterInit();
+  }
+
+  void _updateWindowAfterInit() {
+    var backend = FletBackend.of(context);
+    if (_initWindowStateCompleter.isCompleted) {
+      _updateWindow(backend);
+    } else {
+      _initWindowStateCompleter.future.then((_) {
+        _updateWindow(backend);
+      });
+    }
   }
 
   void _updateWindow(FletBackend backend) async {
