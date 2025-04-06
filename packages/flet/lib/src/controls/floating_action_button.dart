@@ -66,7 +66,6 @@ class FloatingActionButtonControl extends StatelessWidget {
     Function()? onPressed = control.disabled
         ? null
         : () {
-            debugPrint("FloatingActionButtonControl ${control.id} clicked!");
             if (url != "") {
               openWebBrowser(url, webWindowName: urlTarget);
             }

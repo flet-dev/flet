@@ -75,7 +75,6 @@ class _OutlinedButtonControlState extends State<OutlinedButtonControl>
         parseClip(widget.control.getString("clipBehavior"), Clip.none)!;
     Function()? onPressed = !disabled
         ? () {
-            debugPrint("Button ${widget.control.id} clicked!");
             if (url != "") {
               openWebBrowser(url, webWindowName: urlTarget);
             }
@@ -85,14 +84,12 @@ class _OutlinedButtonControlState extends State<OutlinedButtonControl>
 
     Function()? onLongPressHandler = onLongPress && !disabled
         ? () {
-            debugPrint("Button ${widget.control.id} long pressed!");
             widget.backend.triggerControlEvent(widget.control.id, "long_press");
           }
         : null;
 
     Function(bool)? onHoverHandler = onHover && !disabled
         ? (state) {
-            debugPrint("Button ${widget.control.id} hovered!");
             widget.backend.triggerControlEvent(
                 widget.control.id, "hover", state.toString());
           }

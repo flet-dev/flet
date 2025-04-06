@@ -99,7 +99,6 @@ class _IconButtonControlState extends State<IconButtonControl>
 
       Function()? onPressed = !widget.control.disabled
           ? () {
-              debugPrint("Button ${widget.control.id} clicked!");
               if (url != "") {
                 openWebBrowser(url, webWindowName: urlTarget);
               }

@@ -42,7 +42,6 @@ class CupertinoListTileControl extends StatelessWidget {
     Function()? onPressed =
         (onclick || toggleInputs || url != "") && !control.disabled
             ? () {
-                debugPrint("CupertinoListTile ${control.id} clicked!");
                 if (toggleInputs) {
                   _clickNotifier.onClick();
                 }

@@ -51,7 +51,6 @@ class _SnackBarControlState extends State<SnackBarControl> {
             label: actionName,
             textColor: widget.control.getColor("actionColor", context),
             onPressed: () {
-              debugPrint("SnackBar ${widget.control.id} clicked!");
               widget.backend.triggerControlEvent(widget.control.id, "action");
             })
         : null;

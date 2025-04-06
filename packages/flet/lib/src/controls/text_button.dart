@@ -107,7 +107,6 @@ class _TextButtonControlState extends State<TextButtonControl>
       Function()? onPressed = widget.control.disabled
           ? null
           : () {
-              debugPrint("Button ${widget.control.id} clicked!");
               if (url != "") {
                 openWebBrowser(url, webWindowName: urlTarget);
               }
@@ -118,7 +117,6 @@ class _TextButtonControlState extends State<TextButtonControl>
       Function()? onLongPressHandler = widget.control.disabled
           ? null
           : () {
-              debugPrint("Button ${widget.control.id} long pressed!");
               FletBackend.of(context)
                   .triggerControlEvent(widget.control, "long_press");
             };
@@ -126,7 +124,6 @@ class _TextButtonControlState extends State<TextButtonControl>
       Function(bool)? onHoverHandler = widget.control.disabled
           ? null
           : (state) {
-              debugPrint("Button ${widget.control.id} hovered!");
               FletBackend.of(context).triggerControlEvent(
                   widget.control, "hover", state.toString());
             };

@@ -132,7 +132,6 @@ class CupertinoButtonControl extends StatelessWidget {
 
     Function()? onPressed = !control.disabled
         ? () {
-            debugPrint("CupertinoButton ${control.id} clicked!");
             if (url != "") {
               openWebBrowser(url,
                   webWindowName: control.getString("url_target"));

@@ -111,7 +111,6 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
             // and https://github.com/flutter/flutter/blob/eed80afe2c641fb14b82a22279d2d78c19661787/packages/flutter/lib/src/material/ink_well.dart#L1125-L1129
             onTap: onClick || url != "" || onTapDown
                 ? () {
-                    debugPrint("Container ${control.id} clicked!");
                     if (url != "") {
                       openWebBrowser(url, webWindowName: urlTarget);
                     }
@@ -136,14 +135,12 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 : null,
             onLongPress: onLongPress
                 ? () {
-                    debugPrint("Container ${control.id} long pressed!");
                     FletBackend.of(context)
                         .triggerControlEvent(control, "long_press");
                   }
                 : null,
             onHover: onHover
                 ? (value) {
-                    debugPrint("Container ${control.id} hovered!");
                     FletBackend.of(context)
                         .triggerControlEvent(control, "hover", value);
                   }
@@ -213,14 +210,12 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
               : MouseCursor.defer,
           onEnter: onHover
               ? (value) {
-                  debugPrint("Container's mouse region ${control.id} entered!");
                   FletBackend.of(context)
                       .triggerControlEvent(control, "hover", true);
                 }
               : null,
           onExit: onHover
               ? (value) {
-                  debugPrint("Container's mouse region ${control.id} exited!");
                   FletBackend.of(context)
                       .triggerControlEvent(control, "hover", false);
                 }
@@ -228,7 +223,6 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
           child: GestureDetector(
             onTap: onClick || url != ""
                 ? () {
-                    debugPrint("Container ${control.id} clicked!");
                     if (url != "") {
                       openWebBrowser(url, webWindowName: urlTarget);
                     }
@@ -253,7 +247,6 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 : null,
             onLongPress: onLongPress
                 ? () {
-                    debugPrint("Container ${control.id} clicked!");
                     FletBackend.of(context)
                         .triggerControlEvent(control, "long_press");
                   }

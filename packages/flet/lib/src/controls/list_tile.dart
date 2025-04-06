@@ -56,7 +56,6 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
       Function()? onPressed = (onclick || toggleInputs || url != "") &&
               !control.disabled
           ? () {
-              debugPrint("ListTile ${control.id} clicked!");
               if (toggleInputs) {
                 _clickNotifier.onClick();
               }
@@ -71,7 +70,6 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
 
       Function()? onLongPress = onLongPressDefined && !control.disabled
           ? () {
-              debugPrint("Button ${control.id} clicked!");
               FletBackend.of(context)
                   .triggerControlEvent(control, "long_press");
             }

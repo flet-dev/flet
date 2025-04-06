@@ -95,13 +95,10 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
 
       var clipBehavior =
           parseClip(widget.control.getString("clip_behavior"), Clip.none)!;
-      //bool onHover = widget.control.getBool("onHover", false)!;
-      //bool onLongPress = widget.control.getBool("onLongPress", false)!;
       bool autofocus = widget.control.getBool("autofocus", false)!;
 
       Function()? onPressed = !widget.control.disabled
           ? () {
-              debugPrint("Button ${widget.control.id} clicked!");
               if (url != "") {
                 openWebBrowser(url,
                     webWindowName: widget.control.getString("url_target"));
@@ -113,7 +110,6 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
 
       Function()? onLongPressHandler = !widget.control.disabled
           ? () {
-              debugPrint("Button ${widget.control.id} long pressed!");
               FletBackend.of(context)
                   .triggerControlEvent(widget.control, "long_press");
             }
@@ -121,7 +117,6 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
 
       Function(bool)? onHoverHandler = !widget.control.disabled
           ? (state) {
-              debugPrint("Button ${widget.control.id} hovered!");
               FletBackend.of(context).triggerControlEvent(
                   widget.control, "hover", state.toString());
             }
