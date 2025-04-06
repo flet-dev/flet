@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
-import '../utils/borders.dart';
 import '../utils/box.dart';
 import '../utils/images.dart';
 import '../widgets/error.dart';
@@ -55,8 +54,7 @@ class ImageControl extends StatelessWidget {
     );
     return ConstrainedControl(
         control: control,
-        child: _clipCorners(
-            image, parseBorderRadius(control.get("border_radius"))));
+        child: _clipCorners(image, control.getBorderRadius("border_radius")));
   }
 
   Widget _clipCorners(Widget image, BorderRadius? borderRadius) {

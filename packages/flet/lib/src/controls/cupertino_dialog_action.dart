@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
-import '../utils/text.dart';
 import 'base_controls.dart';
 
 class CupertinoDialogActionControl extends StatelessWidget {
@@ -19,7 +18,7 @@ class CupertinoDialogActionControl extends StatelessWidget {
     var cupertinoDialogAction = CupertinoDialogAction(
       isDefaultAction: control.getBool("is_default_action", false)!,
       isDestructiveAction: control.getBool("is_destructive_action", false)!,
-      textStyle: parseTextStyle(control.get("text_style"), Theme.of(context)),
+      textStyle: control.getTextStyle("text_style", Theme.of(context)),
       onPressed: !control.disabled
           ? () {
               FletBackend.of(context).triggerControlEvent(control, "click");

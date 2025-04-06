@@ -27,8 +27,7 @@ class AnimatedSwitcherControl extends StatelessWidget {
           "AnimatedSwitcher.content must be provided and visible");
     }
     final animatedSwitcher = AnimatedSwitcher(
-      duration:
-          parseDuration(control.get("duration"), const Duration(seconds: 1))!,
+      duration: control.getDuration("duration", const Duration(seconds: 1))!,
       reverseDuration: parseDuration(
           control.get("reverse_duration"), const Duration(seconds: 1))!,
       switchInCurve:

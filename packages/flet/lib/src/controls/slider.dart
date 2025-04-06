@@ -5,7 +5,6 @@ import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
-import '../utils/edge_insets.dart';
 import '../utils/mouse.dart';
 import '../utils/others.dart';
 import '../utils/platform.dart';
@@ -108,7 +107,7 @@ class _SliderControlState extends State<SliderControl> {
         allowedInteraction:
             parseSliderInteraction(widget.control.getString("interaction")),
         thumbColor: widget.control.getColor("thumb_color", context),
-        padding: parseEdgeInsets(widget.control.get("padding")),
+        padding: widget.control.getEdgeInsets("padding"),
         onChanged: !widget.control.disabled
             ? (double value) {
                 onChange(value);

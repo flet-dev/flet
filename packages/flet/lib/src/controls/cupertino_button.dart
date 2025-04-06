@@ -4,10 +4,6 @@ import 'package:flutter/material.dart';
 import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
-import '../utils/alignment.dart';
-import '../utils/borders.dart';
-import '../utils/buttons.dart';
-import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import '../widgets/error.dart';
@@ -82,13 +78,13 @@ class CupertinoButtonControl extends StatelessWidget {
         "disabled_bgcolor", context, CupertinoColors.quaternarySystemFill)!;
     var bgColor = control.getColor("bgColor", context);
     var color = control.getColor("color", context);
-    var alignment = parseAlignment(control.get("alignment"), Alignment.center)!;
-    var borderRadius = parseBorderRadius(control.get("borderRadius"),
-        const BorderRadius.all(Radius.circular(8.0)))!;
+    var alignment = control.getAlignment("alignment", Alignment.center)!;
+    var borderRadius = control.getBorderRadius(
+        "borderRadius", const BorderRadius.all(Radius.circular(8.0)))!;
 
-    var padding = parsePadding(control.get("padding"));
+    var padding = control.getPadding("padding");
 
-    var style = parseButtonStyle(control.get("style"), Theme.of(context),
+    var style = control.getButtonStyle("style", Theme.of(context),
         defaultForegroundColor: theme.colorScheme.primary,
         defaultBackgroundColor: Colors.transparent,
         defaultOverlayColor: Colors.transparent,

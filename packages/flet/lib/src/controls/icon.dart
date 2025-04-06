@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
-import '../utils/box.dart';
 import '../utils/icons.dart';
 import '../utils/images.dart';
 import 'base_controls.dart';
@@ -29,7 +28,7 @@ class IconControl extends StatelessWidget {
           grade: control.getDouble("grade"),
           weight: control.getDouble("weight"),
           opticalSize: control.getDouble("optical_size"),
-          shadows: parseBoxShadows(control.get("shadows"), Theme.of(context)),
+          shadows: control.getBoxShadows("shadows", Theme.of(context)),
         ));
   }
 }

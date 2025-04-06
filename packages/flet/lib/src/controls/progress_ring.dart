@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
-import '../utils/box.dart';
-import '../utils/edge_insets.dart';
 import '../utils/others.dart';
 import 'base_controls.dart';
 
@@ -28,8 +26,8 @@ class ProgressRingControl extends StatelessWidget {
       semanticsValue: control.getDouble("semantics_value")?.toString(),
       strokeAlign: control.getDouble("stroke_align", 0)!,
       trackGap: control.getDouble("track_gap"),
-      constraints: parseBoxConstraints(control.get("size_constraints")),
-      padding: parseEdgeInsets(control.get("padding")),
+      constraints: control.getBoxConstraints("size_constraints"),
+      padding: control.getEdgeInsets("padding"),
       year2023: control.getBool(
           "year2023"), // todo: deprecated and to be removed in future versions
     );

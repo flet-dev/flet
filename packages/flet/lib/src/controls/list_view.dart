@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
-import '../utils/edge_insets.dart';
 import '../utils/others.dart';
 import 'base_controls.dart';
 import 'scroll_notification_control.dart';
@@ -44,7 +43,7 @@ class _ListViewControlState extends State<ListViewControl> {
     var itemExtent = widget.control.getDouble("item_extent");
     var cacheExtent = widget.control.getDouble("cache_extent");
     var semanticChildCount = widget.control.getInt("semantic_child_count");
-    var padding = parseEdgeInsets(widget.control.get("padding"));
+    var padding = widget.control.getEdgeInsets("padding");
     var reverse = widget.control.getBool("reverse", false)!;
     var clipBehavior =
         parseClip(widget.control.getString("clip_behavior"), Clip.hardEdge)!;

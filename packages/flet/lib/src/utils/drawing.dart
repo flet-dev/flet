@@ -18,7 +18,7 @@ Paint? parsePaint(dynamic value, ThemeData theme, [Paint? defaultValue]) {
   paint.blendMode = parseBlendMode(value["blend_mode"], BlendMode.srcOver)!;
   paint.isAntiAlias = parseBool(value["anti_alias"], true)!;
   paint.imageFilter = parseBlur(value["blur_image"]);
-  paint.shader = paintGradientFromvalue(value["gradient"], theme);
+  paint.shader = parsePaintGradient(value["gradient"], theme);
   paint.strokeMiterLimit = parseDouble(value["stroke_miter_limit"], 4)!;
   paint.strokeWidth = parseDouble(value["stroke_width"], 0)!;
   paint.strokeCap = parseStrokeCap(value["stroke_cap"], StrokeCap.butt)!;
@@ -47,13 +47,12 @@ List<double>? parsePaintStrokeDashPattern(dynamic value,
       : null;
 }
 
-ui.Gradient? paintGradientFromvalue(
-    Map<String, dynamic>? value, ThemeData? theme,
+ui.Gradient? parsePaintGradient(Map<String, dynamic>? value, ThemeData? theme,
     [ui.Gradient? defaultValue]) {
   if (value == null) return defaultValue;
 
   String type = value["type"];
-  var colorStops = parseStops(value["color_stops"]);
+  var colorStops = parseGradientStops(value["color_stops"]);
   var colors = parseColors(theme, value["colors"]);
   var tileMode = parseTileMode(value["tile_mode"], TileMode.clamp)!;
   if (type == "linear") {

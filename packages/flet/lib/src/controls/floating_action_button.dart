@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
-import '../utils/borders.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import '../utils/mouse.dart';
@@ -54,7 +53,7 @@ class FloatingActionButtonControl extends StatelessWidget {
     Color? splashColor = control.getColor("splash_color", context);
     Color? hoverColor = control.getColor("hover_color", context);
     Color? focusColor = control.getColor("focus_color", context);
-    OutlinedBorder? shape = parseOutlinedBorder(control.get("shape"));
+    OutlinedBorder? shape = control.getOutlinedBorder("shape");
     var clipBehavior =
         parseClip(control.getString("clip_behavior"), Clip.none)!;
 

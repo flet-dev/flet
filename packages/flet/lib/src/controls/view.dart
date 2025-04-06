@@ -8,7 +8,6 @@ import '../flet_backend.dart';
 import '../models/control.dart';
 import '../models/page_design.dart';
 import '../utils/alignment.dart';
-import '../utils/box.dart';
 import '../utils/buttons.dart';
 import '../utils/edge_insets.dart';
 import '../utils/platform.dart';
@@ -338,10 +337,9 @@ class _ViewControlState extends State<ViewControl> {
               )
             : scaffold);
 
-    var backgroundDecoration =
-        parseBoxDecoration(control.get("decoration"), context);
+    var backgroundDecoration = control.getBoxDecoration("decoration", context);
     var foregroundDecoration =
-        parseBoxDecoration(control.get("foreground_decoration"), context);
+        control.getBoxDecoration("foreground_decoration", context);
     if (backgroundDecoration != null || foregroundDecoration != null) {
       return Container(
         decoration: backgroundDecoration,

@@ -2,11 +2,11 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 
-WidgetStateProperty<T?>? getWidgetStateProperty<T>(
-    dynamic jsonDictValue, T Function(dynamic) converterFromJson,
+WidgetStateProperty<T?>? getWidgetStateProperty<T>(dynamic value,
+    T Function(dynamic) converterFromJson,
     [T? defaultValue]) {
-  if (jsonDictValue == null) return null;
-  var j = jsonDictValue;
+  if (value == null) return null;
+  var j = value;
   if (j is! Map<dynamic, dynamic>) {
     j = {"default": j};
   }

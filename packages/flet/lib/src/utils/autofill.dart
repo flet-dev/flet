@@ -5,17 +5,17 @@ List<String>? parseAutofillHints(dynamic value, [List<String>? defaultValue]) {
   List<String> hints = [];
   if (value is List) {
     hints = value
-        .map((e) => autofillHintFromString(e.toString()))
+        .map((e) => parseAutofillHint(e.toString()))
         .whereType<String>()
         .toList();
   } else if (value is String) {
-    hints = [autofillHintFromString(value)].whereType<String>().toList();
+    hints = [parseAutofillHint(value)].whereType<String>().toList();
   }
 
   return hints;
 }
 
-String? autofillHintFromString(String? value, [String? defaultValue]) {
+String? parseAutofillHint(String? value, [String? defaultValue]) {
   switch (value?.toLowerCase()) {
     case 'addresscity':
       return AutofillHints.addressCity;

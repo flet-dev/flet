@@ -3,11 +3,7 @@ import 'package:flutter/material.dart';
 import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
-import '../utils/alignment.dart';
-import '../utils/animations.dart';
-import '../utils/borders.dart';
 import '../utils/box.dart';
-import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
 import '../utils/launch_url.dart';
@@ -64,28 +60,27 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
           )
         : null;
 
-    var animation = parseAnimation(control.get("animate"));
-    var blur = parseBlur(control.get("blur"));
-    var colorFilter =
-        parseColorFilter(control.get("color_filter"), Theme.of(context));
+    var animation = control.getAnimation("animate");
+    var blur = control.getBlur("blur");
+    var colorFilter = control.getColorFilter("color_filter", Theme.of(context));
     var width = control.getDouble("width");
     var height = control.getDouble("height");
-    var padding = parsePadding(control.get("padding"));
-    var margin = parseMargin(control.get("margin"));
-    var alignment = parseAlignment(control.get("alignment"));
+    var padding = control.getPadding("padding");
+    var margin = control.getMargin("margin");
+    var alignment = control.getAlignment("alignment");
 
-    var borderRadius = parseBorderRadius(control.get("border_radius"));
+    var borderRadius = control.getBorderRadius("border_radius");
     var clipBehavior = parseClip(control.getString("clip_behavior"),
         borderRadius != null ? Clip.antiAlias : Clip.none)!;
-    var decorationImage = parseDecorationImage(control.get("image"), context);
+    var decorationImage = control.getDecorationImage("image", context);
     var boxDecoration = boxDecorationFromDetails(
       shape: parseBoxShape(control.getString("shape"), BoxShape.rectangle)!,
       color: bgColor,
       gradient: parseGradient(Theme.of(context), control.get("gradient")),
       borderRadius: borderRadius,
-      border: parseBorder(control.get("border"), Theme.of(context),
+      border: control.getBorder("border", Theme.of(context),
           defaultSideColor: Theme.of(context).colorScheme.primary),
-      boxShadow: parseBoxShadows(control.get("shadow"), Theme.of(context)),
+      boxShadow: control.getBoxShadows("shadow", Theme.of(context)),
       blendMode: parseBlendMode(control.getString("blend_mode")),
       image: decorationImage,
     );

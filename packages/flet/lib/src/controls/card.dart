@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
-import '../utils/borders.dart';
-import '../utils/edge_insets.dart';
 import '../utils/others.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
@@ -28,8 +26,8 @@ class CardControl extends StatelessWidget {
         : null;
     var clipBehavior = parseClip(control.getString("clip_behavior"));
     var elevation = control.getDouble("elevation");
-    var shape = parseOutlinedBorder(control.get("shape"));
-    var margin = parseMargin(control.get("margin"));
+    var shape = control.getOutlinedBorder("shape");
+    var margin = control.getMargin("margin");
     var isSemanticContainer = control.getBool("is_semantic_container", true)!;
     var showBorderOnForeground =
         control.getBool("show_border_on_foreground", true)!;

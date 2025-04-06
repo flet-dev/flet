@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
-import '../utils/edge_insets.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 
@@ -22,8 +21,7 @@ class SafeAreaControl extends StatelessWidget {
         bottom: control.getBool("bottom", true)!,
         maintainBottomViewPadding:
             control.getBool("maintain_bottom_view_padding", false)!,
-        minimum:
-            parseEdgeInsets(control.get("minimum_padding"), EdgeInsets.zero)!,
+        minimum: control.getEdgeInsets("minimum_padding", EdgeInsets.zero)!,
         child: control.buildWidget("content") ??
             const ErrorControl(
                 "SafeArea.content must be provided and visible"));

@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
-import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
@@ -30,7 +29,7 @@ class CupertinoListTileControl extends StatelessWidget {
     var trailing = control.buildWidget("trailing");
     var backgroundColor = control.getColor("bgcolor", context);
     var bgcolorActivated = control.getColor("bgcolor_activated", context);
-    var padding = parseEdgeInsets(control.get("content_padding"));
+    var padding = control.getEdgeInsets("content_padding");
     var leadingSize = control.getDouble("leading_size");
     var leadingToTitle = control.getDouble("leading_to_title");
     var notched = control.getBool("notched", false)!;

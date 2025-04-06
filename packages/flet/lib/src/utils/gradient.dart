@@ -12,7 +12,7 @@ Gradient? parseGradient(dynamic value, ThemeData theme) {
 
   String type = value["type"];
   var colors = parseColors(theme, value["colors"]);
-  var stops = parseStops(value["stops"]);
+  var stops = parseGradientStops(value["stops"]);
   var rotation = parseRotation(value["rotation"]);
   if (type == "linear") {
     return LinearGradient(
@@ -49,7 +49,7 @@ List<Color> parseColors(dynamic value, ThemeData? theme) {
   return (value as List).map((c) => parseColor(c as String, theme)!).toList();
 }
 
-List<double>? parseStops(dynamic value, [List<double>? defaultValue]) {
+List<double>? parseGradientStops(dynamic value, [List<double>? defaultValue]) {
   if (value == null) return defaultValue;
   List? valueAsList = value as List;
   if (valueAsList.isEmpty) return defaultValue;

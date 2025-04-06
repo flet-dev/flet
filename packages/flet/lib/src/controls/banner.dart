@@ -1,7 +1,6 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
-import '../extensions/control.dart';
 import '../widgets/error.dart';
 
 class BannerControl extends StatefulWidget {
@@ -30,9 +29,9 @@ class _BannerControlState extends State<BannerControl> {
 
     return MaterialBanner(
       leading: leading,
-      leadingPadding: parsePadding(widget.control.get("leading_padding")),
+      leadingPadding: widget.control.getPadding("leading_padding"),
       content: content,
-      padding: parsePadding(widget.control.get("content_padding")),
+      padding: widget.control.getPadding("content_padding"),
       actions: actions,
       forceActionsBelow: widget.control.getBool("force_actions_below", false)!,
       backgroundColor: widget.control.getColor("bgcolor", context),
@@ -44,7 +43,7 @@ class _BannerControlState extends State<BannerControl> {
       elevation: widget.control.getDouble("elevation"),
       minActionBarHeight:
           widget.control.getDouble("min_action_bar_height", 52.0)!,
-      margin: parseMargin(widget.control.get("margin")),
+      margin: widget.control.getMargin("margin"),
       onVisible: () {
         FletBackend.of(context).triggerControlEvent(widget.control, "visible");
       },

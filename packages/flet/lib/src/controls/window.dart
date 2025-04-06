@@ -7,7 +7,6 @@ import 'package:window_manager/window_manager.dart';
 import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
-import '../utils/alignment.dart';
 import '../utils/desktop.dart';
 
 class WindowControl extends StatefulWidget {
@@ -137,7 +136,7 @@ class _WindowControlState extends State<WindowControl> with WindowListener {
       var fullScreen = widget.control.getBool("full_screen");
       var minimized = widget.control.getBool("minimized");
       var maximized = widget.control.getBool("maximized");
-      var alignment = parseAlignment(widget.control.get("alignment"));
+      var alignment = widget.control.getAlignment("alignment");
       var badgeLabel = widget.control.getString("badge_label");
       var icon = widget.control.getString("icon");
       var hasShadow = widget.control.getBool("shadow");

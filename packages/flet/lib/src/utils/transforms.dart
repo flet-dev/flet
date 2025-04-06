@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'alignment.dart';
 import 'numbers.dart';
 
-RotationDetails? parseRotate(dynamic value, [RotationDetails? defaultValue]) {
+RotationDetails? parseRotationDetails(dynamic value,
+    [RotationDetails? defaultValue]) {
   if (value == null) return defaultValue;
   if (value is int || value is double) {
     return RotationDetails(

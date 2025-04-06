@@ -4,12 +4,8 @@ import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
-import '../utils/borders.dart';
 import '../utils/box.dart';
-import '../utils/colors.dart';
-import '../utils/edge_insets.dart';
 import '../utils/others.dart';
-import '../utils/text.dart';
 import '../utils/theme.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
@@ -87,34 +83,31 @@ class _ChipControlState extends State<ChipControl> {
       disabledColor: widget.control.getColor("disabled_color", context),
       elevation: widget.control.getDouble("elevation"),
       isEnabled: !disabled,
-      padding: parseEdgeInsets(widget.control.get("padding")),
-      labelPadding: parseEdgeInsets(widget.control.get("label_padding")),
-      labelStyle:
-          parseTextStyle(widget.control.get("label_style"), Theme.of(context)),
+      padding: widget.control.getEdgeInsets("padding"),
+      labelPadding: widget.control.getEdgeInsets("label_padding"),
+      labelStyle: widget.control.getTextStyle("label_style", Theme.of(context)),
       selectedColor: widget.control.getColor("selected_color", context),
       selectedShadowColor:
           widget.control.getColor("selected_shadow_color", context),
       shadowColor: widget.control.getColor("shadow_color", context),
-      shape: parseOutlinedBorder(widget.control.get("shape")),
-      color:
-          parseWidgetStateColor(widget.control.get("color"), Theme.of(context)),
+      shape: widget.control.getOutlinedBorder("shape"),
+      color: widget.control.getWidgetStateColor("color", Theme.of(context)),
       surfaceTintColor: widget.control.getColor("surface_tint_color", context),
       pressElevation: widget.control.getDouble("click_elevation"),
-      side:
-          parseBorderSide(widget.control.get("border_side"), Theme.of(context)),
+      side: widget.control.getBorderSide("border_side", Theme.of(context)),
       clipBehavior:
           parseClip(widget.control.getString("clip_behavior"), Clip.none)!,
       visualDensity:
           parseVisualDensity(widget.control.getString("visual_density")),
       avatarBoxConstraints:
-          parseBoxConstraints(widget.control.get("leading_size_constraints")),
+          widget.control.getBoxConstraints("leading_size_constraints"),
       deleteIconBoxConstraints: parseBoxConstraints(
           widget.control.get("delete_icon_size_constraints")),
       chipAnimationStyle: ChipAnimationStyle(
         enableAnimation:
-            parseAnimationStyle(widget.control.get("enable_animation_style")),
+            widget.control.getAnimationStyle("enable_animation_style"),
         selectAnimation:
-            parseAnimationStyle(widget.control.get("select_animation_style")),
+            widget.control.getAnimationStyle("select_animation_style"),
         avatarDrawerAnimation: parseAnimationStyle(
             widget.control.get("leading_drawer_animation_style")),
         deleteDrawerAnimation: parseAnimationStyle(

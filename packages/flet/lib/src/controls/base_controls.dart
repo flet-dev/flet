@@ -1,13 +1,11 @@
 import 'dart:math';
 
+import '../extensions/control.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
-import '../utils/animations.dart';
-import '../utils/badge.dart';
 import '../utils/tooltip.dart';
-import '../utils/transforms.dart';
 import '../widgets/error.dart';
 
 class BaseControl extends StatelessWidget {
@@ -54,7 +52,7 @@ Widget _tooltip(BuildContext context, Widget widget, Control control) {
 }
 
 Widget _badge(Widget widget, ThemeData theme, Control control) {
-  var badge = parseBadge(control.get("badge"), widget, theme);
+  var badge = control.getBadge("badge", widget, theme);
   return badge ?? widget;
 }
 
@@ -92,7 +90,7 @@ Widget _expandable(Widget widget, Control control) {
 
 Widget _opacity(BuildContext context, Widget widget, Control control) {
   var opacity = control.getDouble("opacity");
-  var animation = parseAnimation(control.get("animate_opacity"));
+  var animation = control.getAnimation("animate_opacity");
   if (animation != null) {
     return AnimatedOpacity(
       duration: animation.duration,
@@ -116,8 +114,8 @@ Widget _opacity(BuildContext context, Widget widget, Control control) {
 }
 
 Widget _rotatedControl(BuildContext context, Widget widget, Control control) {
-  var rotationDetails = parseRotate(control.get("rotate"));
-  var animation = parseAnimation(control.get("animate_rotation"));
+  var rotationDetails = control.getRotationDetails("rotate");
+  var animation = control.getAnimation("animate_rotation");
   if (animation != null) {
     return AnimatedRotation(
       turns: rotationDetails != null ? rotationDetails.angle / (2 * pi) : 0,
@@ -143,8 +141,8 @@ Widget _rotatedControl(BuildContext context, Widget widget, Control control) {
 }
 
 Widget _scaledControl(BuildContext context, Widget widget, Control control) {
-  var scaleDetails = parseScale(control.get("scale"));
-  var animation = parseAnimation(control.get("animate_scale"));
+  var scaleDetails = control.getScale("scale");
+  var animation = control.getAnimation("animate_scale");
   if (animation != null) {
     return AnimatedScale(
       scale: scaleDetails?.scale ?? 1.0,
@@ -172,8 +170,8 @@ Widget _scaledControl(BuildContext context, Widget widget, Control control) {
 }
 
 Widget _offsetControl(BuildContext context, Widget widget, Control control) {
-  var offset = parseOffset(control.get("offset"));
-  var animation = parseAnimation(control.get("animate_offset"));
+  var offset = control.getOffset("offset");
+  var animation = control.getAnimation("animate_offset");
   if (offset != null && animation != null) {
     return AnimatedSlide(
       offset: offset,
@@ -200,7 +198,7 @@ Widget _positionedControl(
   var right = control.getDouble("right", null);
   var bottom = control.getDouble("bottom", null);
 
-  var animation = parseAnimation(control.get("animate_position"));
+  var animation = control.getAnimation("animate_position");
   if (animation != null) {
     if (left == null && top == null && right == null && bottom == null) {
       left = 0;
@@ -250,7 +248,7 @@ Widget _sizedControl(Widget widget, Control control) {
       child: widget,
     );
   }
-  var animation = parseAnimation(control.get("animate_size"));
+  var animation = control.getAnimation("animate_size");
   if (animation != null) {
     return AnimatedSize(
         duration: animation.duration, curve: animation.curve, child: widget);

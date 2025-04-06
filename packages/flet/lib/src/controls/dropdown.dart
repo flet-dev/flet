@@ -5,15 +5,10 @@ import 'package:flutter/services.dart';
 import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
-import '../utils/borders.dart';
 import '../utils/buttons.dart';
-import '../utils/colors.dart';
-import '../utils/edge_insets.dart';
 import '../utils/form_field.dart';
 import '../utils/icons.dart';
-import '../utils/numbers.dart';
 import '../utils/text.dart';
-import '../utils/textfield.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
 
@@ -85,7 +80,7 @@ class _DropdownControlState extends State<DropdownControl> {
     var fillColor = widget.control.getColor("fill_color", context);
     var borderColor = widget.control.getColor("border_color", context);
 
-    var borderRadius = parseBorderRadius(widget.control.get("border_radius"));
+    var borderRadius = widget.control.getBorderRadius("border_radius");
     var focusedBorderColor =
         widget.control.getColor("focused_border_color", context);
     var borderWidth = widget.control.getDouble("border_width");
@@ -147,18 +142,17 @@ class _DropdownControlState extends State<DropdownControl> {
     InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
       filled: widget.control.getBool("filled", false)!,
       fillColor: fillColor,
-      hintStyle: parseTextStyle(widget.control.get("hint_style"), theme),
-      errorStyle: parseTextStyle(widget.control.get("error_style"), theme),
-      helperStyle: parseTextStyle(widget.control.get("helper_style"), theme),
+      hintStyle: widget.control.getTextStyle("hint_style", theme),
+      errorStyle: widget.control.getTextStyle("error_style", theme),
+      helperStyle: widget.control.getTextStyle("helper_style", theme),
       border: border,
       enabledBorder: border,
       focusedBorder: focusedBorder,
       isDense: widget.control.getBool("dense", false)!,
-      contentPadding: parseEdgeInsets(widget.control.get("content_padding")),
+      contentPadding: widget.control.getEdgeInsets("content_padding"),
     );
 
-    TextStyle? textStyle =
-        parseTextStyle(widget.control.get("text_style"), theme);
+    TextStyle? textStyle = widget.control.getTextStyle("text_style", theme);
     if (textSize != null || color != null) {
       textStyle = (textStyle ?? const TextStyle()).copyWith(
           fontSize: textSize, color: color ?? theme.colorScheme.onSurface);
@@ -207,7 +201,7 @@ class _DropdownControlState extends State<DropdownControl> {
         widget.control.getString("capitalization"), TextCapitalization.none)!;
 
     FilteringTextInputFormatter? inputFilter =
-        parseInputFilter(widget.control.get("input_filter"));
+        widget.control.getInputFilter("input_filter");
 
     List<TextInputFormatter>? inputFormatters = [];
     if (inputFilter != null) {
@@ -230,8 +224,7 @@ class _DropdownControlState extends State<DropdownControl> {
           ? ControlWidget(control: label)
           : label is String
               ? Text(label,
-                  style:
-                      parseTextStyle(widget.control.get("label_style"), theme))
+                  style: widget.control.getTextStyle("label_style", theme))
               : null,
       leadingIcon: leadingIcon is Control
           ? ControlWidget(control: leadingIcon)
@@ -263,9 +256,8 @@ class _DropdownControlState extends State<DropdownControl> {
       hintText: widget.control.getString("hint_text"),
       helperText: widget.control.getString("helper_text"),
       menuStyle: MenuStyle(
-        backgroundColor:
-            parseWidgetStateColor(widget.control.get("bgcolor"), theme),
-        elevation: parseWidgetStateDouble(widget.control.get("elevation")),
+        backgroundColor: widget.control.getWidgetStateColor("bgcolor", theme),
+        elevation: widget.control.getWidgetStateDouble("elevation"),
         fixedSize: WidgetStateProperty.all(Size.fromWidth(menuWidth)),
       ),
       inputDecorationTheme: inputDecorationTheme,

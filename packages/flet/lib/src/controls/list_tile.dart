@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
-import '../utils/borders.dart';
-import '../utils/edge_insets.dart';
 import '../utils/launch_url.dart';
 import '../utils/mouse.dart';
 import '../utils/others.dart';
@@ -76,7 +74,7 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
 
       Widget tile = ListTile(
         autofocus: control.getBool("autofocus", false)!,
-        contentPadding: parseEdgeInsets(control.get("content_padding")),
+        contentPadding: control.getEdgeInsets("content_padding"),
         isThreeLine: control.getBool("is_three_line", false)!,
         selected: control.getBool("selected", false)!,
         dense: control.getBool("dense", false)!,
@@ -98,9 +96,9 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
         textColor: control.getColor("text_color", context),
         mouseCursor: parseMouseCursor(control.getString("mouse_cursor")),
         visualDensity: parseVisualDensity(control.getString("visual_density")),
-        shape: parseOutlinedBorder(control.get("shape")),
+        shape: control.getOutlinedBorder("shape"),
         titleTextStyle:
-            parseTextStyle(control.get("title_text_style"), Theme.of(context)),
+            control.getTextStyle("title_text_style", Theme.of(context)),
         leadingAndTrailingTextStyle: parseTextStyle(
             control.get("leading_and_trailing_text_style"), Theme.of(context)),
         subtitleTextStyle: parseTextStyle(

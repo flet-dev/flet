@@ -1,3 +1,4 @@
+import '../extensions/control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,6 @@ import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
 import '../services/service_registry.dart';
-import '../utils/locale.dart';
 import '../utils/theme.dart';
 import '../utils/user_fonts.dart';
 import '../widgets/animated_transition_page.dart';
@@ -185,7 +185,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
   }
 
   Future<void> _loadFontsIfNeeded(FletBackend backend) async {
-    final fonts = parseFonts(widget.control.get("fonts"), {})!;
+    final fonts = widget.control.getFonts("fonts", {})!;
     for (final entry in fonts.entries) {
       final fontFamily = entry.key;
       final fontUrl = entry.value;
@@ -237,7 +237,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
         FletAppContext.of(context)?.themeMode;
 
     _localeConfiguration =
-        parseLocaleConfiguration(widget.control.get("locale_configuration"));
+        widget.control.getLocaleConfiguration("locale_configuration");
 
     _brightness = context.select<FletBackend, Brightness>(
         (backend) => backend.platformBrightness);
@@ -245,9 +245,9 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
     var windowTitle = widget.control.getString("title", "")!;
 
     var lightTheme =
-        parseTheme(widget.control.get("theme"), context, Brightness.light);
+        widget.control.getTheme("theme", context, Brightness.light);
     var darkTheme = widget.control.getString("dark_theme") == null
-        ? parseTheme(widget.control.get("theme"), context, Brightness.dark)
+        ? widget.control.getTheme("theme", context, Brightness.dark)
         : parseTheme(
             widget.control.get("dark_theme"), context, Brightness.dark);
 
@@ -275,10 +275,10 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                     ? parseCupertinoTheme(
                         widget.control.get("theme"), context, Brightness.light)
                     : widget.control.getString("dark_theme") != null
-                        ? parseCupertinoTheme(widget.control.get("dark_theme"),
-                            context, Brightness.dark)
-                        : parseCupertinoTheme(widget.control.get("theme"),
-                            context, Brightness.dark),
+                        ? widget.control.getCupertinoTheme(
+                            "dark_theme", context, Brightness.dark)
+                        : widget.control.getCupertinoTheme(
+                            "theme", context, Brightness.dark),
                 localizationsDelegates: const [
                   GlobalMaterialLocalizations.delegate,
                   GlobalWidgetsLocalizations.delegate,

@@ -4,8 +4,6 @@ import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
-import '../utils/borders.dart';
-import '../utils/edge_insets.dart';
 import '../utils/others.dart';
 import '../utils/theme.dart';
 import '../widgets/error.dart';
@@ -76,9 +74,9 @@ class ExpansionTileControl extends StatelessWidget {
 
     Widget tile = ExpansionTile(
       controlAffinity: affinity,
-      childrenPadding: parseEdgeInsets(control.get("controls_padding")),
-      tilePadding: parseEdgeInsets(control.get("tile_padding")),
-      expandedAlignment: parseAlignment(control.get("expanded_alignment")),
+      childrenPadding: control.getEdgeInsets("controls_padding"),
+      tilePadding: control.getEdgeInsets("tile_padding"),
+      expandedAlignment: control.getAlignment("expanded_alignment"),
       expandedCrossAxisAlignment: parseCrossAxisAlignment(
           control.getString("expanded_cross_axis_alignment")),
       backgroundColor: bgColor,
@@ -90,8 +88,8 @@ class ExpansionTileControl extends StatelessWidget {
       maintainState: maintainState,
       initiallyExpanded: initiallyExpanded,
       clipBehavior: clipBehavior,
-      shape: parseOutlinedBorder(control.get("shape")),
-      collapsedShape: parseOutlinedBorder(control.get("collapsed_shape")),
+      shape: control.getOutlinedBorder("shape"),
+      collapsedShape: control.getOutlinedBorder("collapsed_shape"),
       onExpansionChanged: onChange,
       visualDensity: parseVisualDensity(control.getString("visual_density")),
       enableFeedback: control.getBool("enable_feedback"),

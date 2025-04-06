@@ -4,11 +4,8 @@ import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
-import '../utils/borders.dart';
 import '../utils/colors.dart';
-import '../utils/gradient.dart';
 import '../utils/others.dart';
-import '../utils/text.dart';
 import 'base_controls.dart';
 
 class DataTableControl extends StatelessWidget {
@@ -25,12 +22,11 @@ class DataTableControl extends StatelessWidget {
 
     var theme = Theme.of(context);
     var bgcolor = control.getString("bgcolor");
-    var border = parseBorder(control.get("border"), theme);
-    var borderRadius = parseBorderRadius(control.get("border_radius"));
-    var gradient = parseGradient(control.get("gradient"), theme);
-    var horizontalLines =
-        parseBorderSide(control.get("horizontal_lLines"), theme);
-    var verticalLines = parseBorderSide(control.get("vertical_lines"), theme);
+    var border = control.getBorder("border", theme);
+    var borderRadius = control.getBorderRadius("border_radius");
+    var gradient = control.getGradient("gradient", theme);
+    var horizontalLines = control.getBorderSide("horizontal_lLines", theme);
+    var verticalLines = control.getBorderSide("vertical_lines", theme);
     var defaultDecoration =
         theme.dataTableTheme.decoration ?? const BoxDecoration();
 
@@ -64,15 +60,13 @@ class DataTableControl extends StatelessWidget {
       clipBehavior: clipBehavior,
       checkboxHorizontalMargin: control.getDouble("checkbox_horizontal_margin"),
       columnSpacing: control.getDouble("column_spacing"),
-      dataRowColor: parseWidgetStateColor(control.get("data_row_color"), theme),
+      dataRowColor: control.getWidgetStateColor("data_row_color", theme),
       dataRowMinHeight: control.getDouble("data_row_min_height"),
       dataRowMaxHeight: control.getDouble("data_row_max_height"),
-      dataTextStyle: parseTextStyle(control.get("data_text_style"), theme),
-      headingRowColor:
-          parseWidgetStateColor(control.get("heading_row_color"), theme),
+      dataTextStyle: control.getTextStyle("data_text_style", theme),
+      headingRowColor: control.getWidgetStateColor("heading_row_color", theme),
       headingRowHeight: control.getDouble("heading_row_height"),
-      headingTextStyle:
-          parseTextStyle(control.get("heading_text_style"), theme),
+      headingTextStyle: control.getTextStyle("heading_text_style", theme),
       dividerThickness: control.getDouble("divider_thickness"),
       horizontalMargin: control.getDouble("horizontal_margin"),
       showBottomBorder: control.getBool("show_bottom_border", false)!,

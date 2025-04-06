@@ -29,8 +29,7 @@ class _CupertinoContextMenuControlState
           "at least one action in CupertinoContextMenu.actions must be visible");
     }
     if (content == null) {
-      return const ErrorControl(
-          "CupertinoContextMenu.content must be visible");
+      return const ErrorControl("CupertinoContextMenu.content must be visible");
     }
 
     return CupertinoContextMenu(

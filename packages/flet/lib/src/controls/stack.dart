@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
-import '../utils/alignment.dart';
 import '../utils/others.dart';
 import 'base_controls.dart';
 
@@ -21,8 +20,8 @@ class StackControl extends StatelessWidget {
       clipBehavior:
           parseClip(control.getString("clipBehavior"), Clip.hardEdge)!,
       fit: parseStackFit(control.getString("fit"), StackFit.loose)!,
-      alignment: parseAlignment(control.get("alignment")) ??
-          AlignmentDirectional.topStart,
+      alignment:
+          control.getAlignment("alignment") ?? AlignmentDirectional.topStart,
       children: control.buildWidgets("controls"),
     );
     return ConstrainedControl(control: control, child: stack);

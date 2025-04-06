@@ -74,8 +74,7 @@ class _NavigationRailControlState extends State<NavigationRailControl>
           unselectedLabelTextStyle: parseTextStyle(
               widget.control.get("unselected_label_text_style"),
               Theme.of(context)),
-          indicatorShape:
-              parseOutlinedBorder(widget.control.get("indicator_shape")),
+          indicatorShape: widget.control.getOutlinedBorder("indicator_shape"),
           minWidth: widget.control.getDouble("min_width"),
           minExtendedWidth: widget.control.getDouble("min_extended_width"),
           groupAlignment: widget.control.getDouble("group_alignment"),

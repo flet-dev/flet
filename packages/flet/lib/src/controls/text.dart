@@ -46,7 +46,7 @@ class TextControl extends StatelessWidget {
     }
     if (style == null && styleNameOrData != null) {
       try {
-        style = parseTextStyle(control.get("style"), Theme.of(context));
+        style = control.getTextStyle("style", Theme.of(context));
       } on FormatException catch (_) {
         style = null;
       }

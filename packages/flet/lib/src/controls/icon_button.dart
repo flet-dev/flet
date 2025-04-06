@@ -1,8 +1,6 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
-import '../extensions/control.dart';
-import '../utils/launch_url.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
@@ -82,10 +80,10 @@ class _IconButtonControlState extends State<IconButtonControl>
       var focusColor = widget.control.getColor("focus_color", context);
       var iconSize = widget.control.getDouble("icon_size");
       var splashRadius = widget.control.getDouble("splash_radius");
-      var padding = parseEdgeInsets(widget.control.get("padding"));
-      var alignment = parseAlignment(widget.control.get("alignment"));
+      var padding = widget.control.getEdgeInsets("padding");
+      var alignment = widget.control.getAlignment("alignment");
       var sizeConstraints =
-          parseBoxConstraints(widget.control.get("size_constraints"));
+          widget.control.getBoxConstraints("size_constraints");
       var autofocus = widget.control.getBool("autofocus", false)!;
       var enableFeedback = widget.control.getBool("enable_feedback", true)!;
       var selected = widget.control.getBool("selected", false)!;
