@@ -4,6 +4,7 @@ from typing import List, Optional
 
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control, control
+from flet.controls.dialog_control import DialogControl
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
     IconValueOrControl,
@@ -35,7 +36,7 @@ class NavigationDrawerPosition(Enum):
 
 
 @control("NavigationDrawer")
-class NavigationDrawer(Control):
+class NavigationDrawer(DialogControl):
     """
     Material Design Navigation Drawer component.
 
@@ -93,7 +94,6 @@ class NavigationDrawer(Control):
     """
 
     controls: List[Control] = field(default_factory=list)
-    open: bool = False
     selected_index: int = 0
     bgcolor: OptionalColorValue = None
     elevation: OptionalNumber = None
@@ -104,4 +104,3 @@ class NavigationDrawer(Control):
     tile_padding: OptionalPaddingValue = None
     position: NavigationDrawerPosition = NavigationDrawerPosition.START
     on_change: OptionalControlEventCallable = None
-    on_dismiss: OptionalControlEventCallable = None

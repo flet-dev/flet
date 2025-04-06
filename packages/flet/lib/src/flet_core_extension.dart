@@ -33,6 +33,7 @@ import 'controls/image.dart';
 import 'controls/line_chart.dart';
 import 'controls/list_tile.dart';
 import 'controls/list_view.dart';
+import 'controls/navigation_drawer.dart';
 import 'controls/navigation_rail.dart';
 import 'controls/page.dart';
 import 'controls/placeholder.dart';
@@ -137,6 +138,8 @@ class FletCoreExtension extends FletExtension {
         return ListTileControl(key: key, control: control);
       case "ListView":
         return ListViewControl(key: key, control: control);
+      case "NavigationDrawer":
+        return NavigationDrawerControl(key: key, control: control);
       case "NavigationRail":
         return NavigationRailControl(key: key, control: control);
       case "Page":

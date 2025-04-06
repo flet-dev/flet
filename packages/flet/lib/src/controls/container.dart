@@ -76,7 +76,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     var boxDecoration = boxDecorationFromDetails(
       shape: parseBoxShape(control.getString("shape"), BoxShape.rectangle)!,
       color: bgColor,
-      gradient: parseGradient(Theme.of(context), control.get("gradient")),
+      gradient: parseGradient(control.get("gradient"), Theme.of(context)),
       borderRadius: borderRadius,
       border: control.getBorder("border", Theme.of(context),
           defaultSideColor: Theme.of(context).colorScheme.primary),
@@ -85,7 +85,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
       image: decorationImage,
     );
     var boxForegroundDecoration =
-        parseBoxDecoration(context, control.get("foreground_decoration"));
+        parseBoxDecoration(control.get("foreground_decoration"), context);
     Widget? container;
 
     var onAnimationEnd = control.getBool("on_animation_end", false)!
