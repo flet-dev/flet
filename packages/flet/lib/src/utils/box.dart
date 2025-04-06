@@ -15,7 +15,7 @@ import 'colors.dart';
 import 'gradient.dart';
 import 'images.dart';
 import 'numbers.dart';
-import 'others.dart';
+import 'misc.dart';
 import 'transforms.dart';
 
 BoxConstraints? parseBoxConstraints(dynamic value,

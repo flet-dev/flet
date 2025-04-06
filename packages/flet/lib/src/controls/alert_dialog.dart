@@ -4,7 +4,7 @@ import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
-import '../utils/others.dart';
+import '../utils/misc.dart';
 import '../utils/text.dart';
 import '../widgets/error.dart';
 import 'control_widget.dart';

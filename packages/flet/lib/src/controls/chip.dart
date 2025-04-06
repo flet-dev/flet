@@ -5,7 +5,7 @@ import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
 import '../utils/box.dart';
-import '../utils/others.dart';
+import '../utils/misc.dart';
 import '../utils/theme.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';

@@ -8,7 +8,7 @@ import 'edge_insets.dart';
 import 'gradient.dart';
 import 'images.dart';
 import 'numbers.dart';
-import 'others.dart';
+import 'misc.dart';
 import 'text.dart';
 import 'time.dart';
 

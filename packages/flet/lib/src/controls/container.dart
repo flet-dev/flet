@@ -7,7 +7,7 @@ import '../utils/box.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
 import '../utils/launch_url.dart';
-import '../utils/others.dart';
+import '../utils/misc.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';

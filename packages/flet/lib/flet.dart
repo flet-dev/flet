@@ -41,7 +41,7 @@ export 'src/utils/menu.dart';
 export 'src/utils/mouse.dart';
 export 'src/utils/networking.dart';
 export 'src/utils/numbers.dart';
-export 'src/utils/others.dart';
+export 'src/utils/misc.dart';
 export 'src/utils/overlay_style.dart';
 export 'src/utils/platform.dart';
 export 'src/utils/platform_utils_non_web.dart'

@@ -6,7 +6,7 @@ import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
 import '../utils/mouse.dart';
-import '../utils/others.dart';
+import '../utils/misc.dart';
 import '../utils/platform.dart';
 import 'base_controls.dart';
 

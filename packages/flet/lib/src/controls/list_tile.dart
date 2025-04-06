@@ -5,7 +5,7 @@ import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/launch_url.dart';
 import '../utils/mouse.dart';
-import '../utils/others.dart';
+import '../utils/misc.dart';
 import '../utils/text.dart';
 import '../utils/theme.dart';
 import '../widgets/flet_store_mixin.dart';

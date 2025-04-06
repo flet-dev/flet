@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
-import '../utils/others.dart';
+import '../utils/misc.dart';
 import 'base_controls.dart';
 
 class ProgressRingControl extends StatelessWidget {

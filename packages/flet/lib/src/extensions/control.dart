@@ -27,7 +27,7 @@ import '../utils/markdown.dart';
 import '../utils/menu.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
-import '../utils/others.dart';
+import '../utils/misc.dart';
 import '../utils/overlay_style.dart';
 import '../utils/platform.dart';
 import '../utils/responsive.dart';

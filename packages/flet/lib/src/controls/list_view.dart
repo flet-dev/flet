@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
-import '../utils/others.dart';
+import '../utils/misc.dart';
 import 'base_controls.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';

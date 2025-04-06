@@ -7,7 +7,7 @@ import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
-import '../utils/others.dart';
+import '../utils/misc.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'control_widget.dart';
 import 'cupertino_button.dart';

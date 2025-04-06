@@ -6,7 +6,7 @@ import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
-import '../utils/others.dart';
+import '../utils/misc.dart';
 import '../widgets/error.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';

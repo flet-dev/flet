@@ -8,7 +8,7 @@ import '../utils/transforms.dart';
 import 'colors.dart';
 import 'gradient.dart';
 import 'images.dart';
-import 'others.dart';
+import 'misc.dart';
 
 Paint? parsePaint(dynamic value, ThemeData theme, [Paint? defaultValue]) {
   if (value == null) return defaultValue;
