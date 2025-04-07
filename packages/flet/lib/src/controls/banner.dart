@@ -36,7 +36,9 @@ class _BannerControlState extends State<BannerControl> {
       forceActionsBelow: widget.control.getBool("force_actions_below", false)!,
       backgroundColor: widget.control.getColor("bgcolor", context),
       contentTextStyle: parseTextStyle(
-          Theme.of(context), widget.control.get("content_text_style")),
+        widget.control.get("content_text_style"),
+        Theme.of(context),
+      ),
       surfaceTintColor: widget.control.getColor("surface_tint_color", context),
       shadowColor: widget.control.getColor("shadow_color", context),
       dividerColor: widget.control.getColor("divider_color", context),
@@ -70,7 +72,7 @@ class _BannerControlState extends State<BannerControl> {
       });
     } else if (open != _open && _open) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
+        ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
       });
     }
 

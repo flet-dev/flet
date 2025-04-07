@@ -22,18 +22,19 @@ class NavigationDrawerControl extends StatefulWidget {
 class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
   int _selectedIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    debugPrint("NavigationDrawerControl initState: ${widget.control.id}");
-    widget.control.notifyParent = true;
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   debugPrint("NavigationDrawerControl initState: ${widget.control.id}");
+  //   widget.control.notifyParent = true;
+  // }
 
   void _destinationChanged(int index) {
     _selectedIndex = index;
     debugPrint("Selected index: $_selectedIndex");
-    FletBackend.of(context)
-        .updateControl(widget.control.id, {"selected_index": _selectedIndex});
+    FletBackend.of(context).updateControl(
+        widget.control.id, {"selected_index": _selectedIndex},
+        notify: true);
     FletBackend.of(context)
         .triggerControlEvent(widget.control, "change", _selectedIndex);
   }
