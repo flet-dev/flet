@@ -3,6 +3,7 @@ from typing import Optional
 
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control, control
+from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.padding import OptionalPaddingValue
@@ -33,7 +34,7 @@ class DismissDirection(Enum):
 
 
 @control("SnackBar")
-class SnackBar(Control):
+class SnackBar(DialogControl):
     """
     A lightweight message with an optional action which briefly displays at the bottom of the screen.
 
@@ -72,7 +73,6 @@ class SnackBar(Control):
     """
 
     content: Control
-    open: bool = False
     behavior: Optional[SnackBarBehavior] = None
     dismiss_direction: Optional[DismissDirection] = None
     show_close_icon: bool = False

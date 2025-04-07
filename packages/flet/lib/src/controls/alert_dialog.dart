@@ -125,7 +125,7 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
             barrierColor: widget.control.getColor("barrierColor", context),
             useRootNavigator: false,
             context: context,
-            builder: (context) => _createAlertDialog()).then((value) {
+            builder: (context) => _dialog!).then((value) {
           debugPrint("Dismissing AlertDialog(${widget.control.id})");
           _open = false;
           backend.updateControl(widget.control.id, {"open": false});
