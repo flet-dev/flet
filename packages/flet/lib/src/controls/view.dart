@@ -70,45 +70,15 @@ class _ViewControlState extends State<ViewControl> {
     backend.triggerControlEvent(drawer, "dismiss");
   }
 
-  void _toggleDrawers(Control? drawer, Control? endDrawer) {
-    if (drawer != null) {
-      // if (_scaffoldKey.currentState?.isDrawerOpen == false &&
-      //     _drawerOpened == true) {
-      //   _drawerOpened = false;
-      //   _dismissDrawer(drawer, FletBackend.of(context));
-      // }
-      if (drawer.getBool("open", false)! && _drawerOpened != true) {
-        if (_scaffoldKey.currentState?.isEndDrawerOpen == true) {
-          _scaffoldKey.currentState?.closeEndDrawer();
-        }
-        Future.delayed(const Duration(milliseconds: 1)).then((value) {
-          _scaffoldKey.currentState?.openDrawer();
-          _drawerOpened = true;
-        });
-      } else if (!drawer.getBool("open", false)! && _drawerOpened == true) {
-        _scaffoldKey.currentState?.closeDrawer();
-        _drawerOpened = false;
-      }
-    }
-    if (endDrawer != null) {
-      // if (_scaffoldKey.currentState?.isEndDrawerOpen == false &&
-      //     _endDrawerOpened == true) {
-      //   _endDrawerOpened = false;
-      //   _dismissDrawer(endDrawer, FletBackend.of(context));
-      // }
-      if (endDrawer.getBool("open", false)! && _endDrawerOpened != true) {
-        if (_scaffoldKey.currentState?.isDrawerOpen == true) {
-          _scaffoldKey.currentState?.closeDrawer();
-        }
-        Future.delayed(const Duration(milliseconds: 1)).then((value) {
-          _scaffoldKey.currentState?.openEndDrawer();
-          _endDrawerOpened = true;
-        });
-      } else if (!endDrawer.getBool("open", false)! &&
-          _endDrawerOpened == true) {
-        _scaffoldKey.currentState?.closeEndDrawer();
-        _endDrawerOpened = false;
-      }
+  void _openDrawers(Control? drawer, Control? endDrawer) {
+    if (drawer != null &&
+        drawer.getBool("open", false) == true &&
+        _scaffoldKey.currentState?.isDrawerOpen == false) {
+      _scaffoldKey.currentState?.openDrawer();
+    } else if (endDrawer != null &&
+        endDrawer.getBool("open", false) == true &&
+        _scaffoldKey.currentState?.isEndDrawerOpen == false) {
+      _scaffoldKey.currentState?.openEndDrawer();
     }
   }
 
@@ -209,7 +179,7 @@ class _ViewControlState extends State<ViewControl> {
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _toggleDrawers(drawer, endDrawer);
+      _openDrawers(drawer, endDrawer);
     });
 
     Widget body = Stack(children: [

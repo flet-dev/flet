@@ -7,6 +7,7 @@ import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/numbers.dart';
+import '../widgets/scaffold_key_provider.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
 
@@ -23,13 +24,6 @@ class NavigationDrawerControl extends StatefulWidget {
 class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
   int _selectedIndex = 0;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   debugPrint("NavigationDrawerControl initState: ${widget.control.id}");
-  //   widget.control.notifyParent = true;
-  // }
-
   void _destinationChanged(int index) {
     _selectedIndex = index;
     debugPrint("Selected index: $_selectedIndex");
@@ -45,6 +39,7 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
     debugPrint("NavigationDrawerControl build: ${widget.control.id}");
 
     var selectedIndex = widget.control.getInt("selected_index", 0)!;
+    var endDrawer = widget.control.get("position") == "end";
 
     if (_selectedIndex != selectedIndex) {
       _selectedIndex = selectedIndex;
@@ -89,6 +84,21 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
         }
       }).toList(),
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.control.getBool("open", false) == false) {
+        if (endDrawer &&
+            ScaffoldKeyProvider.of(context)?.currentState?.isEndDrawerOpen ==
+                true) {
+          ScaffoldKeyProvider.of(context)?.currentState?.closeEndDrawer();
+        } else if (ScaffoldKeyProvider.of(context)
+                ?.currentState
+                ?.isDrawerOpen ==
+            true) {
+          ScaffoldKeyProvider.of(context)?.currentState?.closeDrawer();
+        }
+      }
+    });
 
     return BaseControl(control: widget.control, child: drawer);
   }
