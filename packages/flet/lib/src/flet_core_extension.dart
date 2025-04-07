@@ -49,6 +49,7 @@ import 'controls/row.dart';
 import 'controls/safe_area.dart';
 import 'controls/selection_area.dart';
 import 'controls/shader_mask.dart';
+import 'controls/snack_bar.dart';
 import 'controls/stack.dart';
 import 'controls/text.dart';
 import 'controls/text_button.dart';
@@ -164,6 +165,8 @@ class FletCoreExtension extends FletExtension {
         return RowControl(key: key, control: control);
       case "Slider":
         return AdaptiveSliderControl(key: key, control: control);
+      case "SnackBar":
+        return SnackBarControl(key: key, control: control);
       case "Stack":
         return StackControl(key: key, control: control);
       case "Switch":
