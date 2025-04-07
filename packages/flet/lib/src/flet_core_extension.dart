@@ -85,8 +85,6 @@ class FletCoreExtension extends FletExtension {
         return CupertinoActionSheetControl(key: key, control: control);
       case "CupertinoActionSheetAction":
         return CupertinoActionSheetActionControl(key: key, control: control);
-      case "CupertinoSwitchAction":
-        return CupertinoSwitchControl(key: key, control: control);
       case "TextButton":
         return TextButtonControl(key: key, control: control);
       case "Container":
@@ -111,6 +109,8 @@ class FletCoreExtension extends FletExtension {
         return CupertinoDialogActionControl(key: key, control: control);
       case "CupertinoSlider":
         return CupertinoSliderControl(key: key, control: control);
+      case "CupertinoSwitch":
+        return CupertinoSwitchControl(key: key, control: control);
       case "CupertinoListTile":
         return CupertinoListTileControl(key: key, control: control);
       case "DataTable":
