@@ -43,6 +43,7 @@ import 'controls/page.dart';
 import 'controls/placeholder.dart';
 import 'controls/progress_bar.dart';
 import 'controls/progress_ring.dart';
+import 'controls/radio_group.dart';
 import 'controls/range_slider.dart';
 import 'controls/reorderable_draggable.dart';
 import 'controls/row.dart';
@@ -183,6 +184,8 @@ class FletCoreExtension extends FletExtension {
         return SafeAreaControl(key: key, control: control);
       case "SelectionArea":
         return SelectionAreaControl(key: key, control: control);
+      case "RadioGroup":
+        return RadioGroupControl(key: key, control: control);
       case "Window":
         return WindowControl(key: key, control: control);
       default:
