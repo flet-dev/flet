@@ -1,6 +1,9 @@
+import 'package:flet/src/utils/borders.dart';
+import 'package:flet/src/utils/colors.dart';
+import 'package:flet/src/utils/edge_insets.dart';
+import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
-import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/misc.dart';
 import 'base_controls.dart';
@@ -24,9 +27,9 @@ class CardControl extends StatelessWidget {
             control: contentCtrl,
           )
         : null;
-    var clipBehavior = parseClip(control.getString("clip_behavior"));
+    var clipBehavior = control.getClipBehavior("clip_behavior");
     var elevation = control.getDouble("elevation");
-    var shape = control.getOutlinedBorder("shape");
+    var shape = control.getShape("shape");
     var margin = control.getMargin("margin");
     var isSemanticContainer = control.getBool("is_semantic_container", true)!;
     var showBorderOnForeground =

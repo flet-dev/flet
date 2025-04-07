@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
+
+import '../models/control.dart';
 import '../utils/text.dart';
 import '../utils/theme.dart';
 import '../utils/time.dart';
 import '../utils/transforms.dart';
-import 'package:flutter/material.dart';
-
 import 'alignment.dart';
 import 'borders.dart';
 import 'colors.dart';
@@ -118,4 +119,35 @@ class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
 
   @override
   String toString() => 'CustomFloatingActionButtonLocation(dx: $dx, dy: $dy)';
+}
+extension ButtonParsers on Control {
+  ButtonStyle? getButtonStyle(String propertyName, ThemeData theme,
+      {Color? defaultForegroundColor,
+      Color? defaultBackgroundColor,
+      Color? defaultOverlayColor,
+      Color? defaultShadowColor,
+      Color? defaultSurfaceTintColor,
+      double? defaultElevation,
+      EdgeInsets? defaultPadding,
+      BorderSide? defaultBorderSide,
+      OutlinedBorder? defaultShape,
+      ButtonStyle? defaultValue}) {
+    return parseButtonStyle(get(propertyName), theme,
+        defaultForegroundColor: defaultForegroundColor,
+        defaultBackgroundColor: defaultBackgroundColor,
+        defaultOverlayColor: defaultOverlayColor,
+        defaultShadowColor: defaultShadowColor,
+        defaultSurfaceTintColor: defaultSurfaceTintColor,
+        defaultElevation: defaultElevation,
+        defaultPadding: defaultPadding,
+        defaultBorderSide: defaultBorderSide,
+        defaultShape: defaultShape,
+        defaultValue: defaultValue);
+  }
+
+  FloatingActionButtonLocation? getFloatingActionButtonLocation(
+      String propertyName,
+      [FloatingActionButtonLocation? defaultValue]) {
+    return parseFloatingActionButtonLocation(get(propertyName), defaultValue);
+  }
 }

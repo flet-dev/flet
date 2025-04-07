@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../models/control.dart';
+
 Map<String, dynamic>? parseLocaleConfiguration(dynamic value,
     [Map<String, dynamic>? defaultValue]) {
   if (value == null) return defaultValue;
@@ -33,4 +35,14 @@ Locale? parseLocale(dynamic value, [Locale? defaultValue]) {
           (countryCode != null && countryCode.isNotEmpty) ? countryCode : null,
       scriptCode:
           (scriptCode != null && scriptCode.isNotEmpty) ? scriptCode : null);
+}
+extension LocaleParsers on Control {
+  Map<String, dynamic>? getLocaleConfiguration(String propertyName,
+      [Map<String, dynamic>? defaultValue]) {
+    return parseLocaleConfiguration(get(propertyName), defaultValue);
+  }
+
+  Locale? getLocale(String propertyName, [Locale? defaultValue]) {
+    return parseLocale(get(propertyName), defaultValue);
+  }
 }

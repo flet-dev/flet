@@ -1,3 +1,5 @@
+import 'package:flet/src/utils/edge_insets.dart';
+import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
@@ -43,7 +45,7 @@ class _ListViewControlState extends State<ListViewControl> {
     var itemExtent = widget.control.getDouble("item_extent");
     var cacheExtent = widget.control.getDouble("cache_extent");
     var semanticChildCount = widget.control.getInt("semantic_child_count");
-    var padding = widget.control.getEdgeInsets("padding");
+    var padding = widget.control.getPadding("padding");
     var reverse = widget.control.getBool("reverse", false)!;
     var clipBehavior =
         parseClip(widget.control.getString("clip_behavior"), Clip.hardEdge)!;

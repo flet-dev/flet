@@ -1,3 +1,4 @@
+import '../models/control.dart';
 import 'numbers.dart';
 
 Duration? parseDuration(dynamic value, [Duration? defaultValue]) {
@@ -12,4 +13,9 @@ Duration? parseDuration(dynamic value, [Duration? defaultValue]) {
       seconds: parseInt(value["seconds"], 0)!,
       milliseconds: parseInt(value["milliseconds"], 0)!,
       microseconds: parseInt(value["microseconds"], 0)!);
+}
+extension DurationParsers on Control {
+  Duration? getDuration(String propertyName, [Duration? defaultValue]) {
+    return parseDuration(get(propertyName), defaultValue);
+  }
 }

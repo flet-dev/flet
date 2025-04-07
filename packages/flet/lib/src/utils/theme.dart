@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../models/control.dart';
 import '../utils/transforms.dart';
 import 'alignment.dart';
 import 'borders.dart';
@@ -70,6 +71,13 @@ CupertinoThemeData fixCupertinoTheme(
           navTitleTextStyle: cupertinoTheme.textTheme.navTitleTextStyle
               .copyWith(color: theme.colorScheme.onSurface)));
   return r;
+}
+
+Brightness? parseBrightness(String? value, [Brightness? defaultValue]) {
+  if (value == null) return defaultValue;
+  return Brightness.values
+          .firstWhereOrNull((e) => e.toString() == value.toLowerCase()) ??
+      defaultValue;
 }
 
 ThemeMode? parseThemeMode(String? value, [ThemeMode? defaultValue]) {
@@ -255,8 +263,8 @@ ColorScheme? parseColorScheme(Map<String, dynamic>? value, ThemeData theme,
   );
 }
 
-TextTheme? parseTextTheme(Map<String, dynamic>? value, ThemeData theme,
-    TextTheme textTheme,
+TextTheme? parseTextTheme(
+    Map<String, dynamic>? value, ThemeData theme, TextTheme textTheme,
     [TextTheme? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -299,8 +307,8 @@ ButtonThemeData? parseButtonTheme(Map<String, dynamic>? value, ThemeData theme,
   );
 }
 
-ElevatedButtonThemeData? parseElevatedButtonTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+ElevatedButtonThemeData? parseElevatedButtonTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [ElevatedButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -334,8 +342,8 @@ ElevatedButtonThemeData? parseElevatedButtonTheme(Map<String, dynamic>? value,
   ));
 }
 
-OutlinedButtonThemeData? parseOutlinedButtonTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+OutlinedButtonThemeData? parseOutlinedButtonTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [OutlinedButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -369,8 +377,8 @@ OutlinedButtonThemeData? parseOutlinedButtonTheme(Map<String, dynamic>? value,
   ));
 }
 
-TextButtonThemeData? parseTextButtonTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+TextButtonThemeData? parseTextButtonTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [TextButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -404,8 +412,8 @@ TextButtonThemeData? parseTextButtonTheme(Map<String, dynamic>? value,
   ));
 }
 
-FilledButtonThemeData? parseFilledButtonTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+FilledButtonThemeData? parseFilledButtonTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [FilledButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -439,8 +447,8 @@ FilledButtonThemeData? parseFilledButtonTheme(Map<String, dynamic>? value,
   ));
 }
 
-IconButtonThemeData? parseIconButtonTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+IconButtonThemeData? parseIconButtonTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [IconButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -474,8 +482,8 @@ IconButtonThemeData? parseIconButtonTheme(Map<String, dynamic>? value,
   ));
 }
 
-DataTableThemeData? parseDataTableTheme(Map<String, dynamic>? value,
-    BuildContext context,
+DataTableThemeData? parseDataTableTheme(
+    Map<String, dynamic>? value, BuildContext context,
     [DataTableThemeData? defaultValue]) {
   if (value == null) return defaultValue;
   var theme = Theme.of(context);
@@ -503,8 +511,8 @@ DataTableThemeData? parseDataTableTheme(Map<String, dynamic>? value,
   );
 }
 
-ScrollbarThemeData? parseScrollBarTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+ScrollbarThemeData? parseScrollBarTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [ScrollbarThemeData? defaultValue]) {
   if (value == null) return defaultValue;
   return theme.scrollbarTheme.copyWith(
@@ -628,8 +636,8 @@ DialogThemeData? parseDialogTheme(Map<String, dynamic>? value, ThemeData theme,
   );
 }
 
-BottomSheetThemeData? parseBottomSheetTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+BottomSheetThemeData? parseBottomSheetTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [BottomSheetThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -733,8 +741,8 @@ FloatingActionButtonThemeData? parseFloatingActionButtonTheme(
   );
 }
 
-NavigationRailThemeData? parseNavigationRailTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+NavigationRailThemeData? parseNavigationRailTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [NavigationRailThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -779,8 +787,8 @@ AppBarTheme? parseAppBarTheme(Map<String, dynamic>? value, ThemeData theme,
   );
 }
 
-BottomAppBarTheme? parseBottomAppBarTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+BottomAppBarTheme? parseBottomAppBarTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [BottomAppBarTheme? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -811,8 +819,8 @@ RadioThemeData? parseRadioTheme(Map<String, dynamic>? value, ThemeData theme,
   );
 }
 
-CheckboxThemeData? parseCheckboxTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+CheckboxThemeData? parseCheckboxTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [CheckboxThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -885,8 +893,8 @@ DividerThemeData? parseDividerTheme(
   );
 }
 
-SnackBarThemeData? parseSnackBarTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+SnackBarThemeData? parseSnackBarTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [SnackBarThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -911,8 +919,8 @@ SnackBarThemeData? parseSnackBarTheme(Map<String, dynamic>? value,
   );
 }
 
-MaterialBannerThemeData? parseBannerTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+MaterialBannerThemeData? parseBannerTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [MaterialBannerThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -928,8 +936,8 @@ MaterialBannerThemeData? parseBannerTheme(Map<String, dynamic>? value,
   );
 }
 
-DatePickerThemeData? parseDatePickerTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+DatePickerThemeData? parseDatePickerTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [DatePickerThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1000,8 +1008,8 @@ DatePickerThemeData? parseDatePickerTheme(Map<String, dynamic>? value,
   );
 }
 
-TimePickerThemeData? parseTimePickerTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+TimePickerThemeData? parseTimePickerTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [TimePickerThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1044,8 +1052,8 @@ TimePickerThemeData? parseTimePickerTheme(Map<String, dynamic>? value,
   );
 }
 
-DropdownMenuThemeData? parseDropdownMenuTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+DropdownMenuThemeData? parseDropdownMenuTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [DropdownMenuThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1055,8 +1063,8 @@ DropdownMenuThemeData? parseDropdownMenuTheme(Map<String, dynamic>? value,
   );
 }
 
-ListTileThemeData? parseListTileTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+ListTileThemeData? parseListTileTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [ListTileThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1085,8 +1093,8 @@ ListTileThemeData? parseListTileTheme(Map<String, dynamic>? value,
   );
 }
 
-TooltipThemeData? parseTooltipTheme(Map<String, dynamic>? value,
-    BuildContext context,
+TooltipThemeData? parseTooltipTheme(
+    Map<String, dynamic>? value, BuildContext context,
     [TooltipThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1110,8 +1118,8 @@ TooltipThemeData? parseTooltipTheme(Map<String, dynamic>? value,
   );
 }
 
-ExpansionTileThemeData? parseExpansionTileTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+ExpansionTileThemeData? parseExpansionTileTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [ExpansionTileThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1198,8 +1206,8 @@ ProgressIndicatorThemeData? parseProgressIndicatorTheme(
   );
 }
 
-PopupMenuThemeData? parsePopupMenuTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+PopupMenuThemeData? parsePopupMenuTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [PopupMenuThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1225,8 +1233,8 @@ PopupMenuThemeData? parsePopupMenuTheme(Map<String, dynamic>? value,
   );
 }
 
-SearchBarThemeData? parseSearchBarTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+SearchBarThemeData? parseSearchBarTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [SearchBarThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1259,8 +1267,8 @@ SearchBarThemeData? parseSearchBarTheme(Map<String, dynamic>? value,
   );
 }
 
-SearchViewThemeData? parseSearchViewTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+SearchViewThemeData? parseSearchViewTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [SearchViewThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1302,8 +1310,8 @@ NavigationDrawerThemeData? parseNavigationDrawerTheme(
   );
 }
 
-NavigationBarThemeData? parseNavigationBarTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+NavigationBarThemeData? parseNavigationBarTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [NavigationBarThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
@@ -1329,8 +1337,8 @@ NavigationBarThemeData? parseNavigationBarTheme(Map<String, dynamic>? value,
   );
 }
 
-SegmentedButtonThemeData? parseSegmentedButtonTheme(Map<String, dynamic>? value,
-    ThemeData theme,
+SegmentedButtonThemeData? parseSegmentedButtonTheme(
+    Map<String, dynamic>? value, ThemeData theme,
     [SegmentedButtonThemeData? defaultValue]) {
   if (value == null) return defaultValue;
   var selectedIcon = parseIcon(value["selected_icon"]);
@@ -1484,4 +1492,267 @@ bool themesEqual(ThemeData a, ThemeData b) {
       a.timePickerTheme == b.timePickerTheme &&
       a.toggleButtonsTheme == b.toggleButtonsTheme &&
       a.tooltipTheme == b.tooltipTheme;
+}
+
+extension ThemeParsers on Control {
+  Brightness? getBrightness(String propertyName, [Brightness? defaultValue]) {
+    return parseBrightness(get(propertyName), defaultValue);
+  }
+
+  ThemeData getTheme(
+      String propertyName, BuildContext context, Brightness? brightness,
+      {ThemeData? parentTheme}) {
+    return parseTheme(get(propertyName), context, brightness,
+        parentTheme: parentTheme);
+  }
+
+  ThemeMode? getThemeMode(String propertyName, [ThemeMode? defaultValue]) {
+    return parseThemeMode(get(propertyName), defaultValue);
+  }
+
+  CupertinoThemeData? getCupertinoTheme(
+      String propertyName, BuildContext context, Brightness? brightness,
+      {ThemeData? parentTheme}) {
+    return parseCupertinoTheme(get(propertyName), context, brightness,
+        parentTheme: parentTheme);
+  }
+
+  ColorScheme? getColorScheme(String propertyName, ThemeData theme,
+      [ColorScheme? defaultValue]) {
+    return parseColorScheme(get(propertyName), theme, defaultValue);
+  }
+
+  TextTheme? getTextTheme(
+      String propertyName, ThemeData theme, TextTheme textTheme,
+      [TextTheme? defaultValue]) {
+    return parseTextTheme(get(propertyName), theme, textTheme, defaultValue);
+  }
+
+  VisualDensity? getVisualDensity(String propertyName,
+      [VisualDensity? defaultValue]) {
+    return parseVisualDensity(get(propertyName), defaultValue);
+  }
+
+  PageTransitionsTheme? getPageTransitionsTheme(String propertyName,
+      [PageTransitionsTheme? defaultValue]) {
+    return parsePageTransitions(get(propertyName), defaultValue);
+  }
+
+  SystemUiOverlayStyleTheme getSystemUiOverlayStyleTheme(
+      String propertyName, ThemeData theme, Brightness? brightness) {
+    return SystemUiOverlayStyleTheme(
+      get(propertyName) != null
+          ? parseSystemUiOverlayStyle(get(propertyName), theme, brightness)
+          : null,
+    );
+  }
+
+  ButtonThemeData? getButtonTheme(String propertyName, ThemeData theme,
+      [ButtonThemeData? defaultValue]) {
+    return parseButtonTheme(get(propertyName), theme, defaultValue);
+  }
+
+  ElevatedButtonThemeData? getElevatedButtonTheme(
+      String propertyName, ThemeData theme,
+      [ElevatedButtonThemeData? defaultValue]) {
+    return parseElevatedButtonTheme(get(propertyName), theme, defaultValue);
+  }
+
+  OutlinedButtonThemeData? getOutlinedButtonTheme(
+      String propertyName, ThemeData theme,
+      [OutlinedButtonThemeData? defaultValue]) {
+    return parseOutlinedButtonTheme(get(propertyName), theme, defaultValue);
+  }
+
+  TextButtonThemeData? getTextButtonTheme(String propertyName, ThemeData theme,
+      [TextButtonThemeData? defaultValue]) {
+    return parseTextButtonTheme(get(propertyName), theme, defaultValue);
+  }
+
+  FilledButtonThemeData? getFilledButtonTheme(
+      String propertyName, ThemeData theme,
+      [FilledButtonThemeData? defaultValue]) {
+    return parseFilledButtonTheme(get(propertyName), theme, defaultValue);
+  }
+
+  IconButtonThemeData? getIconButtonTheme(String propertyName, ThemeData theme,
+      [IconButtonThemeData? defaultValue]) {
+    return parseIconButtonTheme(get(propertyName), theme, defaultValue);
+  }
+
+  DataTableThemeData? getDataTableTheme(
+      String propertyName, BuildContext context,
+      [DataTableThemeData? defaultValue]) {
+    return parseDataTableTheme(get(propertyName), context, defaultValue);
+  }
+
+  ScrollbarThemeData? getScrollbarTheme(String propertyName, ThemeData theme,
+      [ScrollbarThemeData? defaultValue]) {
+    return parseScrollBarTheme(get(propertyName), theme, defaultValue);
+  }
+
+  TabBarThemeData? getTabBarTheme(String propertyName, ThemeData theme,
+      [TabBarThemeData? defaultValue]) {
+    return parseTabBarTheme(get(propertyName), theme, defaultValue);
+  }
+
+  DialogThemeData? getDialogTheme(String propertyName, ThemeData theme,
+      [DialogThemeData? defaultValue]) {
+    return parseDialogTheme(get(propertyName), theme, defaultValue);
+  }
+
+  BottomSheetThemeData? getBottomSheetTheme(
+      String propertyName, ThemeData theme,
+      [BottomSheetThemeData? defaultValue]) {
+    return parseBottomSheetTheme(get(propertyName), theme, defaultValue);
+  }
+
+  CardThemeData? getCardTheme(String propertyName, ThemeData theme,
+      [CardThemeData? defaultValue]) {
+    return parseCardTheme(get(propertyName), theme, defaultValue);
+  }
+
+  ChipThemeData? getChipTheme(String propertyName, ThemeData theme,
+      [ChipThemeData? defaultValue]) {
+    return parseChipTheme(get(propertyName), theme, defaultValue);
+  }
+
+  FloatingActionButtonThemeData? getFloatingActionButtonTheme(
+      String propertyName, ThemeData theme,
+      [FloatingActionButtonThemeData? defaultValue]) {
+    return parseFloatingActionButtonTheme(
+        get(propertyName), theme, defaultValue);
+  }
+
+  NavigationRailThemeData? getNavigationRailTheme(
+      String propertyName, ThemeData theme,
+      [NavigationRailThemeData? defaultValue]) {
+    return parseNavigationRailTheme(get(propertyName), theme, defaultValue);
+  }
+
+  AppBarTheme? getAppBarTheme(String propertyName, ThemeData theme,
+      [AppBarTheme? defaultValue]) {
+    return parseAppBarTheme(get(propertyName), theme, defaultValue);
+  }
+
+  BottomAppBarTheme? getBottomAppBarTheme(String propertyName, ThemeData theme,
+      [BottomAppBarTheme? defaultValue]) {
+    return parseBottomAppBarTheme(get(propertyName), theme, defaultValue);
+  }
+
+  RadioThemeData? getRadioTheme(String propertyName, ThemeData theme,
+      [RadioThemeData? defaultValue]) {
+    return parseRadioTheme(get(propertyName), theme, defaultValue);
+  }
+
+  CheckboxThemeData? getCheckboxTheme(String propertyName, ThemeData theme,
+      [CheckboxThemeData? defaultValue]) {
+    return parseCheckboxTheme(get(propertyName), theme, defaultValue);
+  }
+
+  BadgeThemeData? getBadgeTheme(String propertyName, ThemeData theme,
+      [BadgeThemeData? defaultValue]) {
+    return parseBadgeTheme(get(propertyName), theme, defaultValue);
+  }
+
+  SwitchThemeData? getSwitchTheme(String propertyName, ThemeData theme,
+      [SwitchThemeData? defaultValue]) {
+    return parseSwitchTheme(get(propertyName), theme, defaultValue);
+  }
+
+  DividerThemeData? getDividerTheme(String propertyName, ThemeData theme,
+      [DividerThemeData? defaultValue]) {
+    return parseDividerTheme(get(propertyName), theme, defaultValue);
+  }
+
+  SnackBarThemeData? getSnackBarTheme(String propertyName, ThemeData theme,
+      [SnackBarThemeData? defaultValue]) {
+    return parseSnackBarTheme(get(propertyName), theme, defaultValue);
+  }
+
+  MaterialBannerThemeData? getBannerTheme(String propertyName, ThemeData theme,
+      [MaterialBannerThemeData? defaultValue]) {
+    return parseBannerTheme(get(propertyName), theme, defaultValue);
+  }
+
+  DatePickerThemeData? getDatePickerTheme(String propertyName, ThemeData theme,
+      [DatePickerThemeData? defaultValue]) {
+    return parseDatePickerTheme(get(propertyName), theme, defaultValue);
+  }
+
+  TimePickerThemeData? getTimePickerTheme(String propertyName, ThemeData theme,
+      [TimePickerThemeData? defaultValue]) {
+    return parseTimePickerTheme(get(propertyName), theme, defaultValue);
+  }
+
+  DropdownMenuThemeData? getDropdownMenuTheme(
+      String propertyName, ThemeData theme,
+      [DropdownMenuThemeData? defaultValue]) {
+    return parseDropdownMenuTheme(get(propertyName), theme, defaultValue);
+  }
+
+  ListTileThemeData? getListTileTheme(String propertyName, ThemeData theme,
+      [ListTileThemeData? defaultValue]) {
+    return parseListTileTheme(get(propertyName), theme, defaultValue);
+  }
+
+  TooltipThemeData? getTooltipTheme(String propertyName, BuildContext context,
+      [TooltipThemeData? defaultValue]) {
+    return parseTooltipTheme(get(propertyName), context, defaultValue);
+  }
+
+  ExpansionTileThemeData? getExpansionTileTheme(
+      String propertyName, ThemeData theme,
+      [ExpansionTileThemeData? defaultValue]) {
+    return parseExpansionTileTheme(get(propertyName), theme, defaultValue);
+  }
+
+  SliderThemeData? getSliderTheme(String propertyName, ThemeData theme,
+      [SliderThemeData? defaultValue]) {
+    return parseSliderTheme(get(propertyName), theme, defaultValue);
+  }
+
+  ProgressIndicatorThemeData? getProgressIndicatorTheme(
+      String propertyName, ThemeData theme,
+      [ProgressIndicatorThemeData? defaultValue]) {
+    return parseProgressIndicatorTheme(get(propertyName), theme, defaultValue);
+  }
+
+  PopupMenuThemeData? getPopupMenuTheme(String propertyName, ThemeData theme,
+      [PopupMenuThemeData? defaultValue]) {
+    return parsePopupMenuTheme(get(propertyName), theme, defaultValue);
+  }
+
+  SearchBarThemeData? getSearchBarTheme(String propertyName, ThemeData theme,
+      [SearchBarThemeData? defaultValue]) {
+    return parseSearchBarTheme(get(propertyName), theme, defaultValue);
+  }
+
+  SearchViewThemeData? getSearchViewTheme(String propertyName, ThemeData theme,
+      [SearchViewThemeData? defaultValue]) {
+    return parseSearchViewTheme(get(propertyName), theme, defaultValue);
+  }
+
+  NavigationDrawerThemeData? getNavigationDrawerTheme(
+      String propertyName, ThemeData theme,
+      [NavigationDrawerThemeData? defaultValue]) {
+    return parseNavigationDrawerTheme(get(propertyName), theme, defaultValue);
+  }
+
+  NavigationBarThemeData? getNavigationBarTheme(
+      String propertyName, ThemeData theme,
+      [NavigationBarThemeData? defaultValue]) {
+    return parseNavigationBarTheme(get(propertyName), theme, defaultValue);
+  }
+
+  SegmentedButtonThemeData? getSegmentedButtonTheme(
+      String propertyName, ThemeData theme,
+      [SegmentedButtonThemeData? defaultValue]) {
+    return parseSegmentedButtonTheme(get(propertyName), theme, defaultValue);
+  }
+
+  IconThemeData? getIconTheme(String propertyName, ThemeData theme,
+      [IconThemeData? defaultValue]) {
+    return parseIconTheme(get(propertyName), theme, defaultValue);
+  }
 }

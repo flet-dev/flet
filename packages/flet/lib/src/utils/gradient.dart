@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
+import '../models/control.dart';
 import 'alignment.dart';
 import 'colors.dart';
 import 'numbers.dart';
@@ -121,4 +122,27 @@ Color lerpGradient(List<Color> colors, List<double> stops, double t) {
     }
   }
   return colors.last;
+}
+extension GradientParsers on Control {
+  Gradient? getGradient(String propertyName, ThemeData theme) {
+    return parseGradient(get(propertyName), theme);
+  }
+
+  List<Color> getColors(String propertyName, ThemeData theme) {
+    return parseColors(get(propertyName), theme);
+  }
+
+  List<double>? getGradientStops(String propertyName,
+      [List<double>? defaultValue]) {
+    return parseGradientStops(get(propertyName), defaultValue);
+  }
+
+  TileMode? getTileMode(String propertyName, [TileMode? defaultValue]) {
+    return parseTileMode(get(propertyName), defaultValue);
+  }
+
+  GradientRotation? getGradientRotation(String propertyName,
+      [GradientRotation? defaultValue]) {
+    return parseRotation(get(propertyName), defaultValue);
+  }
 }

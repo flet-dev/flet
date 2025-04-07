@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -52,7 +53,7 @@ class ControlWidget extends StatelessWidget {
     final isRootControl = control == FletBackend.of(context).page;
     final hasNoThemes = control.getString("theme") == null &&
         control.getString("dark_theme") == null;
-    final themeMode = parseThemeMode(control.getString("theme_mode"));
+    final themeMode = control.getThemeMode("theme_mode");
 
     if (isRootControl || (hasNoThemes && themeMode == null)) {
       return widget;

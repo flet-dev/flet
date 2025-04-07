@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/control.dart';
 import 'user_fonts_io.dart' if (dart.library.js) "user_fonts_web.dart";
 
 class UserFonts {
@@ -46,4 +47,11 @@ Map<String, String>? parseFonts(dynamic value,
     [Map<String, String>? defaultValue]) {
   if (value == null) return {};
   return value.map((key, value) => MapEntry(key, value));
+}
+
+extension UserFontParsers on Control {
+  Map<String, String>? getFonts(String propertyName,
+      [Map<String, String>? defaultValue]) {
+    return parseFonts(get(propertyName), defaultValue);
+  }
 }

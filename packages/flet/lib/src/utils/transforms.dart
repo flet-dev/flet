@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../models/control.dart';
 import 'alignment.dart';
 import 'numbers.dart';
 
@@ -86,5 +87,24 @@ class OffsetDetails {
       return OffsetDetails(
           x: parseDouble(value["x"], 0)!, y: parseDouble(value["y"], 0)!);
     }
+  }
+}
+extension TransformParsers on Control {
+  RotationDetails? getRotationDetails(String propertyName,
+      [RotationDetails? defaultValue]) {
+    return parseRotationDetails(get(propertyName), defaultValue);
+  }
+
+  ScaleDetails? getScale(String propertyName, [ScaleDetails? defaultValue]) {
+    return parseScale(get(propertyName), defaultValue);
+  }
+
+  Offset? getOffset(String propertyName, [Offset? defaultValue]) {
+    return parseOffset(get(propertyName), defaultValue);
+  }
+
+  List<Offset>? getOffsetList(String propertyName,
+      [List<Offset>? defaultValue]) {
+    return parseOffsetList(get(propertyName), defaultValue);
   }
 }

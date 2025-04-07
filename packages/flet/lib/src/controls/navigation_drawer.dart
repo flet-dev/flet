@@ -8,6 +8,8 @@ import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
+import 'package:flet/src/utils/colors.dart';
+import 'package:flet/src/utils/numbers.dart';
 
 class NavigationDrawerControl extends StatefulWidget {
   final Control control;
@@ -51,8 +53,7 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
     var drawer = NavigationDrawer(
       elevation: widget.control.getDouble("elevation"),
       indicatorColor: widget.control.getColor("indicator_color", context),
-      indicatorShape:
-          parseOutlinedBorder(widget.control.get("indicator_shape")),
+      indicatorShape: widget.control.getOutlinedBorder("indicator_shape"),
       backgroundColor: widget.control.getColor("bgcolor", context),
       selectedIndex: _selectedIndex,
       shadowColor: widget.control.getColor("shadow_color", context),

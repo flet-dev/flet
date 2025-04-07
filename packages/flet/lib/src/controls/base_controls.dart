@@ -1,8 +1,11 @@
 import 'dart:math';
 
-import '../extensions/control.dart';
+import 'package:flet/src/utils/animations.dart';
+import 'package:flet/src/utils/numbers.dart';
+import 'package:flet/src/utils/transforms.dart';
 import 'package:flutter/material.dart';
 
+import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/tooltip.dart';

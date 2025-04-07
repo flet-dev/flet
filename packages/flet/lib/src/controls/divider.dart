@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../extensions/control.dart';
 import '../models/control.dart';
 import 'base_controls.dart';
+import 'package:flet/src/utils/colors.dart';
+import 'package:flet/src/utils/numbers.dart';
 
 class DividerControl extends StatelessWidget {
   final Control control;

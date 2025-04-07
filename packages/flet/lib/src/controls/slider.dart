@@ -1,12 +1,13 @@
+import 'package:flet/src/utils/edge_insets.dart';
+import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
-import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
-import '../utils/mouse.dart';
 import '../utils/misc.dart';
+import '../utils/mouse.dart';
 import '../utils/platform.dart';
 import 'base_controls.dart';
 
@@ -104,16 +105,15 @@ class _SliderControlState extends State<SliderControl> {
         inactiveColor: widget.control.getColor("inactive_color", context),
         overlayColor: parseWidgetStateColor(
             widget.control.get("overlay_color"), Theme.of(context)),
-        allowedInteraction:
-            parseSliderInteraction(widget.control.getString("interaction")),
+        allowedInteraction: widget.control.getSliderInteraction("interaction"),
         thumbColor: widget.control.getColor("thumb_color", context),
-        padding: widget.control.getEdgeInsets("padding"),
+        padding: widget.control.getPadding("padding"),
         onChanged: !widget.control.disabled
             ? (double value) {
                 onChange(value);
               }
             : null,
-        mouseCursor: parseMouseCursor(widget.control.getString("mouse_cursor")),
+        mouseCursor: widget.control.getMouseCursor("mouse_cursor"),
         secondaryActiveColor:
             widget.control.getColor("secondary_active_color", context),
         secondaryTrackValue: widget.control.getDouble("secondary_track_value"),

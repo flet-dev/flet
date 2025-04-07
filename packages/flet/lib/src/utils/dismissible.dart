@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
+import '../models/control.dart';
 import '../utils/numbers.dart';
 
 DismissDirection? parseDismissDirection(String? value,
@@ -31,4 +32,15 @@ Map<DismissDirection, double>? parseDismissThresholds(dynamic value,
   });
 
   return dismissDirectionMap;
+}
+extension DismissibleParsers on Control {
+  DismissDirection? getDismissDirection(String propertyName,
+      [DismissDirection? defaultValue]) {
+    return parseDismissDirection(get(propertyName), defaultValue);
+  }
+
+  Map<DismissDirection, double>? getDismissThresholds(String propertyName,
+      [Map<DismissDirection, double>? defaultValue]) {
+    return parseDismissThresholds(get(propertyName), defaultValue);
+  }
 }

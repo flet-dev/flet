@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../models/control.dart';
 import 'material_state.dart';
 import 'numbers.dart';
 
@@ -43,4 +44,30 @@ WidgetStateProperty<EdgeInsets?>? parseWidgetStateEdgeInsets(dynamic value,
 
   return getWidgetStateProperty<EdgeInsets?>(
       value, (jv) => parseEdgeInsets(jv), defaultEdgeInsets);
+}
+extension EdgeInsetsParsers on Control {
+  EdgeInsets? getEdgeInsets(String propertyName, [EdgeInsets? defaultValue]) {
+    return parseEdgeInsets(get(propertyName), defaultValue);
+  }
+
+  EdgeInsets? getMargin(String propertyName, [EdgeInsets? defaultValue]) {
+    return parseMargin(get(propertyName), defaultValue);
+  }
+
+  EdgeInsets? getPadding(String propertyName, [EdgeInsets? defaultValue]) {
+    return parsePadding(get(propertyName), defaultValue);
+  }
+
+  EdgeInsetsDirectional? getEdgeInsetsDirectional(String propertyName,
+      [EdgeInsetsDirectional? defaultValue]) {
+    return parseEdgeInsetsDirectional(get(propertyName), defaultValue);
+  }
+
+  WidgetStateProperty<EdgeInsets?>? getWidgetStateEdgeInsets(
+      String propertyName,
+      {EdgeInsets? defaultEdgeInsets,
+      WidgetStateProperty<EdgeInsets?>? defaultValue}) {
+    return parseWidgetStateEdgeInsets(get(propertyName),
+        defaultEdgeInsets: defaultEdgeInsets, defaultValue: defaultValue);
+  }
 }

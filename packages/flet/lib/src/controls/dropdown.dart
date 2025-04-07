@@ -1,3 +1,6 @@
+import 'package:flet/src/utils/borders.dart';
+import 'package:flet/src/utils/edge_insets.dart';
+import 'package:flet/src/utils/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +14,8 @@ import '../utils/icons.dart';
 import '../utils/text.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
+import 'package:flet/src/utils/colors.dart';
+import 'package:flet/src/utils/numbers.dart';
 
 class DropdownControl extends StatefulWidget {
   final Control control;
@@ -149,7 +154,7 @@ class _DropdownControlState extends State<DropdownControl> {
       enabledBorder: border,
       focusedBorder: focusedBorder,
       isDense: widget.control.getBool("dense", false)!,
-      contentPadding: widget.control.getEdgeInsets("content_padding"),
+      contentPadding: widget.control.getPadding("content_padding"),
     );
 
     TextStyle? textStyle = widget.control.getTextStyle("text_style", theme);
@@ -201,7 +206,7 @@ class _DropdownControlState extends State<DropdownControl> {
         widget.control.getString("capitalization"), TextCapitalization.none)!;
 
     FilteringTextInputFormatter? inputFilter =
-        widget.control.getInputFilter("input_filter");
+        widget.control.getTextInputFormatter("input_filter");
 
     List<TextInputFormatter>? inputFormatters = [];
     if (inputFilter != null) {

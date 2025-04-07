@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../models/control.dart';
 import 'cupertino_colors.dart';
 import 'material_state.dart';
 import 'numbers.dart';
@@ -247,3 +248,18 @@ WidgetStateProperty<Color?>? parseWidgetStateColor(dynamic value,
 
 Color? parseColor(String? value, ThemeData? theme, [Color? defaultColor]) =>
     HexColor.fromString(theme, value, defaultColor);
+
+extension ColorParsers on Control {
+  Color? getColor(String propertyName, BuildContext? context,
+      [Color? defaultValue]) {
+    return parseColor(getString(propertyName),
+        context != null ? Theme.of(context) : null, defaultValue);
+  }
+
+  WidgetStateProperty<Color?>? getWidgetStateColor(
+      String propertyName, ThemeData theme,
+      {Color? defaultColor, WidgetStateProperty<Color?>? defaultValue}) {
+    return parseWidgetStateColor(get(propertyName), theme,
+        defaultColor: defaultColor, defaultValue: defaultValue);
+  }
+}

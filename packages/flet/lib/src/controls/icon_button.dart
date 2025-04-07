@@ -89,10 +89,8 @@ class _IconButtonControlState extends State<IconButtonControl>
       var selected = widget.control.getBool("selected", false)!;
       var url = widget.control.getString("url", "")!;
       var urlTarget = widget.control.getString("url_target");
-      var mouseCursor =
-          parseMouseCursor(widget.control.getString("mouse_cursor"));
-      var visualDensity =
-          parseVisualDensity(widget.control.getString("visual_density"));
+      var mouseCursor = widget.control.getMouseCursor("mouse_cursor");
+      var visualDensity = widget.control.getVisualDensity("visual_density");
 
       Function()? onPressed = !widget.control.disabled
           ? () {
@@ -136,7 +134,7 @@ class _IconButtonControlState extends State<IconButtonControl>
         iconWidget = ControlWidget(control: icon);
       } else if (icon is String) {
         iconWidget = Icon(
-          parseIcon(widget.control.getString("icon")),
+          widget.control.getIcon("icon"),
           color: iconColor,
         );
       } else if (content != null) {
@@ -149,7 +147,7 @@ class _IconButtonControlState extends State<IconButtonControl>
         selectedIconWidget = ControlWidget(control: selectedIcon);
       } else if (selectedIcon is String) {
         selectedIconWidget = Icon(
-          parseIcon(widget.control.getString("selected_icon")),
+          widget.control.getIcon("selected_icon"),
           color: selectedIconColor,
         );
       }

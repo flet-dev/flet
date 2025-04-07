@@ -13,6 +13,8 @@ import 'base_controls.dart';
 import 'control_widget.dart';
 import 'cupertino_button.dart';
 import 'cupertino_dialog_action.dart';
+import 'package:flet/src/utils/colors.dart';
+import 'package:flet/src/utils/numbers.dart';
 
 class ElevatedButtonControl extends StatefulWidget {
   final Control control;
@@ -84,7 +86,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
       String text =
           widget.control.getString("text", "")!; // to be removed in 0.70.3
       String url = widget.control.getString("url", "")!;
-      IconData? icon = parseIcon(widget.control.getString("icon"));
+      IconData? icon = widget.control.getIcon("icon");
       Color? iconColor = widget.control.getColor("icon_color", context);
       var content = widget.control.get("content");
       Widget child = content is Control

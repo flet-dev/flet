@@ -1,14 +1,15 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
+import '../models/control.dart';
 import 'borders.dart';
 import 'box.dart';
 import 'colors.dart';
 import 'edge_insets.dart';
 import 'gradient.dart';
 import 'images.dart';
-import 'numbers.dart';
 import 'misc.dart';
+import 'numbers.dart';
 import 'text.dart';
 import 'time.dart';
 
@@ -69,4 +70,10 @@ Tooltip? parseTooltip(BuildContext context, dynamic value, Widget widget) {
     triggerMode: parseTooltipTriggerMode(value["trigger_mode"]),
     child: widget,
   );
+}
+extension TooltipParsers on Control {
+  TooltipTriggerMode? getTooltipTriggerMode(String propertyName,
+      [TooltipTriggerMode? defaultValue]) {
+    return parseTooltipTriggerMode(get(propertyName), defaultValue);
+  }
 }

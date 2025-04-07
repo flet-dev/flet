@@ -1,6 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
+import '../models/control.dart';
+
 /// Checks if the current platform is a desktop platform.
 bool isDesktopPlatform() {
   return !kIsWeb &&
@@ -42,4 +44,11 @@ TargetPlatform? parseTargetPlatform(String? value,
   return TargetPlatform.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
       defaultValue;
+}
+
+extension PlatformParsers on Control {
+  TargetPlatform? getTargetPlatform(String propertyName,
+      [TargetPlatform? defaultValue]) {
+    return parseTargetPlatform(get(propertyName), defaultValue);
+  }
 }

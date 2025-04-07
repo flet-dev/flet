@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../extensions/control.dart';
@@ -32,7 +33,7 @@ class CupertinoActionSheetActionControl extends StatelessWidget {
           FletBackend.of(context).triggerControlEvent(control, "click");
         }
       },
-      mouseCursor: parseMouseCursor(control.getString("mouse_cursor")),
+      mouseCursor: control.getMouseCursor("mouse_cursor"),
       child: content ?? Text(contentStr!),
     );
 

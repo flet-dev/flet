@@ -11,6 +11,8 @@ import '../utils/text.dart';
 import '../widgets/error.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';
+import 'package:flet/src/utils/colors.dart';
+import 'package:flet/src/utils/numbers.dart';
 
 class NavigationRailControl extends StatefulWidget {
   final Control control;

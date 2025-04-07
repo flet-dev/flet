@@ -1,4 +1,5 @@
-import '../extensions/control.dart';
+import 'package:flet/src/utils/locale.dart';
+import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -233,7 +234,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
         : PageDesign.material;
 
     // theme
-    _themeMode = parseThemeMode(widget.control.getString("theme_mode")) ??
+    _themeMode = widget.control.getThemeMode("theme_mode") ??
         FletAppContext.of(context)?.themeMode;
 
     _localeConfiguration =

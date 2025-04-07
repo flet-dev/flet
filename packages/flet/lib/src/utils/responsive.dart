@@ -1,3 +1,4 @@
+import '../models/control.dart';
 import '../utils/numbers.dart';
 
 Map<String, double> parseResponsiveNumber(dynamic value, double defaultValue) {
@@ -39,4 +40,11 @@ double getBreakpointNumber(Map<String, double> responsiveNumber, double width,
         "Responsive number not found for width=$width: $responsiveNumber");
   }
   return result!;
+}
+
+extension ResponsiveParsers on Control {
+  Map<String, double> getResponsiveNumber(
+      String propertyName, double defaultValue) {
+    return parseResponsiveNumber(get(propertyName), defaultValue);
+  }
 }

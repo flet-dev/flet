@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../models/control.dart';
 import 'alignment.dart';
 import 'borders.dart';
 import 'colors.dart';
@@ -43,4 +44,29 @@ MenuStyle? parseMenuStyle(dynamic value, ThemeData theme,
     mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"],
         defaultMouseCursor: defaultMouseCursor),
   );
+}
+extension MenuParsers on Control {
+  MenuStyle? getMenuStyle(String propertyName, ThemeData theme,
+      {Color? defaultBackgroundColor,
+      Color? defaultShadowColor,
+      Color? defaultSurfaceTintColor,
+      double? defaultElevation,
+      Alignment? defaultAlignment,
+      MouseCursor? defaultMouseCursor,
+      EdgeInsets? defaultPadding,
+      BorderSide? defaultBorderSide,
+      OutlinedBorder? defaultShape,
+      MenuStyle? defaultValue}) {
+    return parseMenuStyle(get(propertyName), theme,
+        defaultBackgroundColor: defaultBackgroundColor,
+        defaultShadowColor: defaultShadowColor,
+        defaultSurfaceTintColor: defaultSurfaceTintColor,
+        defaultElevation: defaultElevation,
+        defaultAlignment: defaultAlignment,
+        defaultMouseCursor: defaultMouseCursor,
+        defaultPadding: defaultPadding,
+        defaultBorderSide: defaultBorderSide,
+        defaultShape: defaultShape,
+        defaultValue: defaultValue);
+  }
 }

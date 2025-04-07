@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../controls/control_widget.dart';
-import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/colors.dart';
 import 'borders.dart';
 import 'box.dart';
 import 'edge_insets.dart';
@@ -237,4 +237,25 @@ StrutStyle? parseStrutStyle(dynamic value, [StrutStyle? defaultValue]) {
     leading: parseDouble(value["leading"]),
     forceStrutHeight: parseBool(value["force_strut_height"]),
   );
+}
+
+extension FormFieldParsers on Control {
+  FormFieldInputBorder? getFormFieldInputBorder(String propertyName,
+      [FormFieldInputBorder? defaultValue]) {
+    return parseFormFieldInputBorder(get(propertyName), defaultValue);
+  }
+
+  TextInputType? getTextInputType(String propertyName,
+      [TextInputType? defaultValue]) {
+    return parseTextInputType(get(propertyName), defaultValue);
+  }
+
+  OverlayVisibilityMode? getOverlayVisibilityMode(String propertyName,
+      [OverlayVisibilityMode? defaultValue]) {
+    return parseVisibilityMode(get(propertyName), defaultValue);
+  }
+
+  StrutStyle? getStrutStyle(String propertyName, [StrutStyle? defaultValue]) {
+    return parseStrutStyle(get(propertyName), defaultValue);
+  }
 }
