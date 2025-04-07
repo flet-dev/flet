@@ -54,6 +54,7 @@ import 'controls/selection_area.dart';
 import 'controls/shader_mask.dart';
 import 'controls/snack_bar.dart';
 import 'controls/stack.dart';
+import 'controls/submenu_button.dart';
 import 'controls/text.dart';
 import 'controls/text_button.dart';
 import 'controls/vertical_divider.dart';
@@ -136,6 +137,8 @@ class FletCoreExtension extends FletExtension {
         return ElevatedButtonControl(key: key, control: control);
       case "FletApp":
         return FletAppControl(key: key, control: control);
+      case "SubmenuButton":
+        return SubmenuButtonControl(key: key, control: control);
       case "FloatingActionButton":
         return FloatingActionButtonControl(key: key, control: control);
       case "Icon":
