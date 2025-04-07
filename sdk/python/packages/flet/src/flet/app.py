@@ -385,3 +385,27 @@ def __get_upload_dir_path(upload_dir: Optional[str], relative_to_cwd=False):
                 .resolve()
             )
     return upload_dir
+
+
+def assets_dir_path(
+    *files, assets_dir: Optional[str] = "assets", relative_to_cwd: bool = False
+) -> str:
+    if assets_dir:
+        if not Path(assets_dir).is_absolute():
+            if "_MEI" in __file__:
+                # support for "onefile" PyInstaller
+                assets_dir = str(
+                    Path(__file__).parent.parent.joinpath(assets_dir).resolve()
+                )
+            else:
+                assets_dir = str(
+                    Path(os.getcwd() if relative_to_cwd else get_current_script_dir())
+                    .joinpath(assets_dir)
+                    .resolve()
+                )
+
+    env_assets_dir = os.getenv("FLET_ASSETS_DIR")
+    if env_assets_dir:
+        assets_dir = env_assets_dir
+    return os.path.join(assets_dir, *files)
+
