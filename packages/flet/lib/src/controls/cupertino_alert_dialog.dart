@@ -111,12 +111,10 @@ class _CupertinoAlertDialogControlState
             useRootNavigator: false,
             context: context,
             builder: (context) => _dialog!).then((value) {
-          if (_open) {
-            debugPrint("Dismissing CupertinoAlertDialog(${widget.control.id})");
-            _open = false;
-            backend.updateControl(widget.control.id, {"open": false});
-            backend.triggerControlEvent(widget.control, "dismiss");
-          }
+          debugPrint("Dismissing CupertinoAlertDialog(${widget.control.id})");
+          _open = false;
+          backend.updateControl(widget.control.id, {"open": false});
+          backend.triggerControlEvent(widget.control, "dismiss");
         });
       });
     } else if (!open && _open) {
