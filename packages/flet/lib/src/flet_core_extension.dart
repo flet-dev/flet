@@ -48,6 +48,7 @@ import 'controls/progress_ring.dart';
 import 'controls/radio_group.dart';
 import 'controls/range_slider.dart';
 import 'controls/reorderable_draggable.dart';
+import 'controls/responsive_row.dart';
 import 'controls/row.dart';
 import 'controls/safe_area.dart';
 import 'controls/selection_area.dart';
@@ -154,6 +155,8 @@ class FletCoreExtension extends FletExtension {
         return ListViewControl(key: key, control: control);
       case "TransparentPointer":
         return TransparentPointerControl(key: key, control: control);
+      case "ResponsiveRow":
+        return ResponsiveRowControl(key: key, control: control);
       case "NavigationDrawer":
         return NavigationDrawerControl(key: key, control: control);
       case "NavigationRail":
