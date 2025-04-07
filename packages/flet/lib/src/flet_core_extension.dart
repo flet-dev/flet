@@ -17,6 +17,7 @@ import 'controls/cupertino_action_sheet_action.dart';
 import 'controls/cupertino_activity_indicator.dart';
 import 'controls/cupertino_alert_dialog.dart';
 import 'controls/cupertino_button.dart';
+import 'controls/cupertino_checkbox.dart';
 import 'controls/cupertino_context_menu.dart';
 import 'controls/cupertino_context_menu_action.dart';
 import 'controls/cupertino_dialog_action.dart';
@@ -186,6 +187,8 @@ class FletCoreExtension extends FletExtension {
         return SelectionAreaControl(key: key, control: control);
       case "RadioGroup":
         return RadioGroupControl(key: key, control: control);
+      case "CupertinoCheckbox":
+        return CupertinoCheckboxControl(key: key, control: control);
       case "Window":
         return WindowControl(key: key, control: control);
       default:

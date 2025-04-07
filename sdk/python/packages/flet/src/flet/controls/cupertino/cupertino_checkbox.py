@@ -3,6 +3,7 @@ from typing import Optional
 from flet.controls.border import BorderSide
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
+from flet.controls.control import control
 from flet.controls.types import (
     ColorValue,
     ControlStateValue,
@@ -15,6 +16,7 @@ from flet.controls.types import (
 __all__ = ["CupertinoCheckbox"]
 
 
+@control("CupertinoCheckbox")
 class CupertinoCheckbox(ConstrainedControl):
     """
     A macOS style checkbox. Checkbox allows to select one or more items from a group, or switch between two mutually exclusive options (checked or unchecked, on or off).
@@ -40,10 +42,10 @@ class CupertinoCheckbox(ConstrainedControl):
     """
 
     label: Optional[str] = None
-    label_position: Optional[LabelPosition] = None
+    label_position: LabelPosition = LabelPosition.RIGHT
     value: Optional[bool] = None
-    tristate: Optional[bool] = None
-    autofocus: Optional[bool] = None
+    tristate: bool = True
+    autofocus: bool = False
     check_color: OptionalColorValue = None
     active_color: OptionalColorValue = None
     focus_color: OptionalColorValue = None
