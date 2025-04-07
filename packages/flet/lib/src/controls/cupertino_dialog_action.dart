@@ -23,7 +23,7 @@ class CupertinoDialogActionControl extends StatelessWidget {
       textStyle: control.getTextStyle("text_style", Theme.of(context)),
       onPressed: !control.disabled
           ? () {
-              FletBackend.of(context).triggerControlEvent(control, "click");
+              control.triggerEvent("click", context);
             }
           : null,
       child: control.buildWidget("content") ??

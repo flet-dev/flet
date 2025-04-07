@@ -1,8 +1,8 @@
-import 'package:flet/src/utils/colors.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/colors.dart';
 import '../utils/launch_url.dart';
 import '../utils/numbers.dart';
 import 'base_controls.dart';
@@ -132,7 +132,7 @@ class CupertinoButtonControl extends StatelessWidget {
               openWebBrowser(url,
                   webWindowName: control.getString("url_target"));
             }
-            FletBackend.of(context).triggerControlEvent(control, "click");
+            control.triggerEvent("click", context);
           }
         : null;
 

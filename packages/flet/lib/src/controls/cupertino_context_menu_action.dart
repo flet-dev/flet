@@ -23,7 +23,7 @@ class CupertinoContextMenuActionControl extends StatelessWidget {
       isDestructiveAction: control.getBool("is_destructive_action", false)!,
       onPressed: () {
         if (!control.disabled) {
-          FletBackend.of(context).triggerControlEvent(control, "click");
+          control.triggerEvent("click", context);
           Navigator.of(context).pop(); // Close the context menu
         }
       },

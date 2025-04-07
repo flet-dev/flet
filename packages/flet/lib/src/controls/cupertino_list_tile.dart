@@ -51,7 +51,7 @@ class CupertinoListTileControl extends StatelessWidget {
                   openWebBrowser(url, webWindowName: urlTarget);
                 }
                 if (onclick) {
-                  FletBackend.of(context).triggerControlEvent(control, "click");
+                  control.triggerEvent("click", context);
                 }
               }
             : null;

@@ -47,7 +47,7 @@ class _BannerControlState extends State<BannerControl> {
           widget.control.getDouble("min_action_bar_height", 52.0)!,
       margin: widget.control.getMargin("margin"),
       onVisible: () {
-        FletBackend.of(context).triggerControlEvent(widget.control, "visible");
+        widget.control.triggerEvent("visible", context);
       },
     );
   }
