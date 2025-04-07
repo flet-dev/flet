@@ -175,14 +175,6 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
                 cursor: SystemMouseCursors.click,
                 child: Text(label, style: labelStyle));
       }
-      // if (label is Control) {
-      //   labelWidget = ControlWidget(control: label);
-      // }
-      // else if (label is String) {
-      //   labelWidget = widget.control.disabled? Text(label, style: labelStyle)
-      //   : MouseRegion(cursor: SystemMouseCursors.click, child: Text(label, style: labelStyle));
-      // }
-      // else {labelWidget = const Text("");}
 
       result = MergeSemantics(
         child: GestureDetector(
