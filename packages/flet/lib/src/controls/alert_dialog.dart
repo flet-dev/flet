@@ -90,9 +90,9 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
           widget.control.getDouble("actions_overflow_button_spacing"),
       alignment: widget.control.getAlignment("alignment"),
       contentTextStyle: parseTextStyle(
-          Theme.of(context), widget.control.get("content_text_style")),
+          widget.control.get("content_text_style"), Theme.of(context)),
       titleTextStyle: parseTextStyle(
-          Theme.of(context), widget.control.get("title_text_style")),
+          widget.control.get("title_text_style"), Theme.of(context)),
     );
   }
 
@@ -122,12 +122,10 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
             useRootNavigator: false,
             context: context,
             builder: (context) => _createAlertDialog()).then((value) {
-          if (_open) {
-            debugPrint("Dismissing AlertDialog(${widget.control.id})");
-            _open = false;
-            backend.updateControl(widget.control.id, {"open": false});
-            backend.triggerControlEvent(widget.control, "dismiss");
-          }
+          debugPrint("Dismissing AlertDialog(${widget.control.id})");
+          _open = false;
+          backend.updateControl(widget.control.id, {"open": false});
+          backend.triggerControlEvent(widget.control, "dismiss");
         });
       });
     } else if (!open && _open) {

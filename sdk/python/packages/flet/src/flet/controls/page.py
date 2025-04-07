@@ -638,7 +638,9 @@ class Page(AdaptiveControl):
             offset=offset, delta=delta, key=key, duration=duration, curve=curve
         )
 
-    def open_dialog(self, dialog: DialogControl) -> None:
+    def show_dialog(self, dialog: DialogControl) -> None:
+        if dialog in self._dialogs.controls:
+            raise Exception("Dialog is already opened")
 
         original_on_dismiss = dialog.on_dismiss
 
@@ -646,43 +648,29 @@ class Page(AdaptiveControl):
             if dialog in self._dialogs.controls:
                 self._dialogs.controls.remove(dialog)
                 self._dialogs.update()
-            if original_on_dismiss:
+            if original_on_dismiss and not hasattr(dialog, "_force_close"):
                 original_on_dismiss(*args, **kwargs)
             dialog.on_dismiss = original_on_dismiss
+            if hasattr(dialog, "_force_close"):
+                del dialog._force_close
 
         dialog.open = True
         dialog.on_dismiss = wrapped_on_dismiss
-        setattr(dialog, "_original_on_dismiss", original_on_dismiss)
 
-        if isinstance(dialog, NavigationDrawer):
-            if dialog.position == NavigationDrawerPosition.END:
-                if self.end_drawer != dialog:
-                    self.end_drawer = dialog
-                    self.update()
-            else:
-                if self.drawer != dialog:
-                    self.drawer = dialog
-                    self.update()
-        else:
-            if dialog not in self._dialogs.controls:
-                self._dialogs.controls.append(dialog)
-                self._dialogs.update()
-
-        dialog.update()
+        self._dialogs.controls.append(dialog)
+        self._dialogs.update()
 
     def pop_dialog(self):
-        dialog = self._dialogs.controls[-1] if len(self._dialogs.controls) > 0 else None
+        # get the top most opened dialog
+        dialog = next(
+            (dlg for dlg in reversed(self._dialogs.controls) if dlg.open), None
+        )
         if not dialog:
             return
-        assert isinstance(dialog, DialogControl)
         dialog.open = False
-        if dialog in self._dialogs.controls:
-            self._dialogs.controls.remove(dialog)
-            self._dialogs.update()
-        if hasattr(dialog, "_original_on_dismiss"):
-            dialog.on_dismiss = dialog._original_on_dismiss
-            del dialog._original_on_dismiss
-        return len(self._dialogs.controls) > 0
+        setattr(dialog, "_force_close", True)
+        dialog.update()
+        return dialog
 
     # query
     @property
