@@ -57,6 +57,7 @@ import 'controls/stack.dart';
 import 'controls/submenu_button.dart';
 import 'controls/text.dart';
 import 'controls/text_button.dart';
+import 'controls/transparent_pointer.dart';
 import 'controls/vertical_divider.dart';
 import 'controls/view.dart';
 import 'controls/window.dart';
@@ -151,6 +152,8 @@ class FletCoreExtension extends FletExtension {
         return ListTileControl(key: key, control: control);
       case "ListView":
         return ListViewControl(key: key, control: control);
+      case "TransparentPointer":
+        return TransparentPointerControl(key: key, control: control);
       case "NavigationDrawer":
         return NavigationDrawerControl(key: key, control: control);
       case "NavigationRail":

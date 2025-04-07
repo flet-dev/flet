@@ -25,7 +25,7 @@ class SubmenuButton(ConstrainedControl):
     controls: List[Control] = field(default_factory=list)
     leading: Optional[Control] = None
     trailing: Optional[Control] = None
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     menu_style: Optional[MenuStyle] = None
     style: Optional[ButtonStyle] = None
     alignment_offset: Optional[OffsetValue] = None
