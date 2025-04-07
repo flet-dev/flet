@@ -1,18 +1,18 @@
-import 'package:flet/src/utils/alignment.dart';
-import 'package:flet/src/utils/animations.dart';
-import 'package:flet/src/utils/borders.dart';
-import 'package:flet/src/utils/colors.dart';
-import 'package:flet/src/utils/edge_insets.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/alignment.dart';
+import '../utils/animations.dart';
+import '../utils/borders.dart';
 import '../utils/box.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
 import '../utils/launch_url.dart';
 import '../utils/misc.dart';
+import '../utils/numbers.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';

@@ -1,14 +1,14 @@
 import 'dart:math';
 
-import 'package:flet/src/utils/animations.dart';
-import 'package:flet/src/utils/numbers.dart';
-import 'package:flet/src/utils/transforms.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/animations.dart';
+import '../utils/numbers.dart';
 import '../utils/tooltip.dart';
+import '../utils/transforms.dart';
 import '../widgets/error.dart';
 
 class BaseControl extends StatelessWidget {

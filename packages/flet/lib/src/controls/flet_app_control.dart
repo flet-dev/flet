@@ -1,10 +1,10 @@
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_app.dart';
 import '../flet_app_errors_handler.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/numbers.dart';
 import 'base_controls.dart';
 
 class FletAppControl extends StatefulWidget {

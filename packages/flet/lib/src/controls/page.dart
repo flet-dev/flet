@@ -1,5 +1,3 @@
-import 'package:flet/src/utils/locale.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +13,8 @@ import '../routing/route_parser.dart';
 import '../routing/route_state.dart';
 import '../routing/router_delegate.dart';
 import '../services/service_registry.dart';
+import '../utils/locale.dart';
+import '../utils/numbers.dart';
 import '../utils/theme.dart';
 import '../utils/user_fonts.dart';
 import '../widgets/animated_transition_page.dart';

@@ -1,9 +1,9 @@
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/numbers.dart';
 import '../utils/theme.dart';
 import '../widgets/control_inherited_notifier.dart';
 import '../widgets/error.dart';

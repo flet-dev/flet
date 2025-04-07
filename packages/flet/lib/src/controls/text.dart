@@ -1,8 +1,8 @@
-import 'package:flet/src/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/colors.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
 import 'base_controls.dart';

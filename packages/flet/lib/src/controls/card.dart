@@ -1,11 +1,11 @@
-import 'package:flet/src/utils/borders.dart';
-import 'package:flet/src/utils/colors.dart';
-import 'package:flet/src/utils/edge_insets.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/borders.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/misc.dart';
+import '../utils/numbers.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
 

@@ -1,15 +1,14 @@
-import 'package:flet/src/extensions/control.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
+import '../utils/numbers.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
-import 'package:flet/src/utils/colors.dart';
-import 'package:flet/src/utils/numbers.dart';
 
 class NavigationDrawerControl extends StatefulWidget {
   final Control control;

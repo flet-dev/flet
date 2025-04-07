@@ -1,11 +1,11 @@
-import 'package:flet/src/utils/box.dart';
-import 'package:flet/src/utils/colors.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/box.dart';
+import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/images.dart';
+import '../utils/numbers.dart';
 import 'base_controls.dart';
 
 class IconControl extends StatelessWidget {

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +24,7 @@ import 'protocol/update_control_body.dart';
 import 'transport/flet_backend_channel.dart';
 import 'utils/desktop.dart';
 import 'utils/images.dart';
+import 'utils/numbers.dart';
 import 'utils/platform.dart';
 import 'utils/platform_utils_non_web.dart'
     if (dart.library.js) "utils/platform_utils_web.dart";

@@ -1,12 +1,12 @@
-import 'package:flet/src/utils/borders.dart';
-import 'package:flet/src/utils/colors.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/borders.dart';
 import '../utils/box.dart';
+import '../utils/colors.dart';
 import '../utils/images.dart';
+import '../utils/numbers.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 

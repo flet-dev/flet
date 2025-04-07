@@ -1,11 +1,11 @@
-import 'package:flet/src/utils/colors.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/colors.dart';
 import '../utils/images.dart';
+import '../utils/numbers.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';
 

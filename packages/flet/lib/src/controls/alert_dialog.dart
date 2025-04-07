@@ -1,14 +1,14 @@
-import 'package:flet/src/utils/borders.dart';
-import 'package:flet/src/utils/colors.dart';
-import 'package:flet/src/utils/edge_insets.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
+import '../utils/borders.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/misc.dart';
+import '../utils/numbers.dart';
 import '../utils/text.dart';
 import '../widgets/error.dart';
 import 'control_widget.dart';

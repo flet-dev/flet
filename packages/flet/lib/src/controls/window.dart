@@ -1,15 +1,15 @@
 import 'dart:async';
 
-import 'package:flet/src/utils/alignment.dart';
-import 'package:flet/src/utils/colors.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/alignment.dart';
+import '../utils/colors.dart';
 import '../utils/desktop.dart';
+import '../utils/numbers.dart';
 
 class WindowControl extends StatefulWidget {
   final Control control;

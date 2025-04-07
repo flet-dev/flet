@@ -1,10 +1,10 @@
-import 'package:flet/src/utils/edge_insets.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/edge_insets.dart';
 import '../utils/misc.dart';
+import '../utils/numbers.dart';
 import 'base_controls.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';

@@ -1,16 +1,16 @@
-import 'package:flet/src/utils/alignment.dart';
-import 'package:flet/src/utils/borders.dart';
-import 'package:flet/src/utils/buttons.dart';
-import 'package:flet/src/utils/colors.dart';
-import 'package:flet/src/utils/edge_insets.dart';
-import 'package:flet/src/utils/icons.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/alignment.dart';
+import '../utils/borders.dart';
+import '../utils/buttons.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
+import '../utils/icons.dart';
 import '../utils/launch_url.dart';
+import '../utils/numbers.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';

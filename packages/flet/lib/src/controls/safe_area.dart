@@ -1,12 +1,11 @@
-import 'package:flet/src/utils/edge_insets.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/edge_insets.dart';
+import '../utils/numbers.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
-import 'package:flet/src/utils/colors.dart';
-import 'package:flet/src/utils/numbers.dart';
 
 class SafeAreaControl extends StatelessWidget {
   final Control control;

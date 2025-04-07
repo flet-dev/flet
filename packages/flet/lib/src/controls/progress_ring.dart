@@ -1,11 +1,11 @@
-import 'package:flet/src/utils/box.dart';
-import 'package:flet/src/utils/colors.dart';
-import 'package:flet/src/utils/edge_insets.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
+import '../utils/box.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/misc.dart';
+import '../utils/numbers.dart';
 import 'base_controls.dart';
 
 class ProgressRingControl extends StatelessWidget {

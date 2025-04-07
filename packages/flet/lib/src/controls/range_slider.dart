@@ -1,4 +1,3 @@
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_backend.dart';
@@ -6,6 +5,7 @@ import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
 import '../utils/mouse.dart';
+import '../utils/numbers.dart';
 import '../utils/platform.dart';
 import 'base_controls.dart';
 
