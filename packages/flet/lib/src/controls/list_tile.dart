@@ -103,10 +103,10 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
         shape: control.getShape("shape"),
         titleTextStyle:
             control.getTextStyle("title_text_style", Theme.of(context)),
-        leadingAndTrailingTextStyle: parseTextStyle(
-            control.get("leading_and_trailing_text_style"), Theme.of(context)),
-        subtitleTextStyle: parseTextStyle(
-            control.get("subtitle_text_style"), Theme.of(context)),
+        leadingAndTrailingTextStyle: control.getTextStyle(
+            "leading_and_trailing_text_style", Theme.of(context)),
+        subtitleTextStyle:
+            control.getTextStyle("subtitle_text_style", Theme.of(context)),
         titleAlignment: control.getListTileTitleAlignment("title_alignment"),
         style: control.getListTileStyle("style"),
         onFocusChange: (bool hasFocus) {

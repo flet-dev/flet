@@ -42,16 +42,15 @@ class ImageControl extends StatelessWidget {
       cacheWidth: control.getInt("cache_width"),
       cacheHeight: control.getInt("cache_height"),
       antiAlias: control.getBool("anti_alias", false)!,
-      repeat:
-          parseImageRepeat(control.getString("repeat"), ImageRepeat.noRepeat)!,
+      repeat: control.getImageRepeat("repeat", ImageRepeat.noRepeat)!,
       fit: control.getBoxFit("fit"),
       colorBlendMode: control.getBlendMode("color_blend_mode"),
       color: control.getColor("color", context),
       semanticsLabel: control.getString("semantics_label"),
       gaplessPlayback: control.getBool("gapless_playback"),
       excludeFromSemantics: control.getBool("exclude_from_semantics", false)!,
-      filterQuality: parseFilterQuality(
-          control.getString("filter_quality"), FilterQuality.medium)!,
+      filterQuality:
+          control.getFilterQuality("filter_quality", FilterQuality.medium)!,
       disabled: control.disabled,
       errorCtrl: errorContent,
     );

@@ -51,14 +51,13 @@ class ExpansionTileControl extends StatelessWidget {
     var collapsedIconColor = control.getColor("collapsed_icon_color", context);
     var collapsedTextColor = control.getColor("collapsed_text_color", context);
 
-    var affinity = parseListTileControlAffinity(
-        control.getString("affinity"), ListTileControlAffinity.platform)!;
+    var affinity = control.getListTileControlAffinity(
+        "affinity", ListTileControlAffinity.platform)!;
     var clipBehavior =
         parseClip(control.getString("clip_behavior"), Clip.none)!;
 
-    var expandedCrossAxisAlignment = parseCrossAxisAlignment(
-        control.getString("expanded_cross_axis_alignment"),
-        CrossAxisAlignment.center)!;
+    var expandedCrossAxisAlignment = control.getCrossAxisAlignment(
+        "expanded_cross_axis_alignment", CrossAxisAlignment.center)!;
 
     if (expandedCrossAxisAlignment == CrossAxisAlignment.baseline) {
       return const ErrorControl(
@@ -81,8 +80,8 @@ class ExpansionTileControl extends StatelessWidget {
       childrenPadding: control.getPadding("controls_padding"),
       tilePadding: control.getEdgeInsets("tile_padding"),
       expandedAlignment: control.getAlignment("expanded_alignment"),
-      expandedCrossAxisAlignment: parseCrossAxisAlignment(
-          control.getString("expanded_cross_axis_alignment")),
+      expandedCrossAxisAlignment:
+          control.getCrossAxisAlignment("expanded_cross_axis_alignment"),
       backgroundColor: bgColor,
       iconColor: iconColor,
       textColor: textColor,
