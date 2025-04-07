@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/borders.dart';
+import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
-import '../utils/mouse.dart';
 import '../utils/misc.dart';
+import '../utils/mouse.dart';
+import '../utils/numbers.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
@@ -35,32 +37,32 @@ class FloatingActionButtonControl extends StatelessWidget {
                 : null;
 
     var icon = control.get("icon");
-    Widget? iconWidget = icon is Control
+    var iconWidget = icon is Control
         ? ControlWidget(control: icon)
         : icon is String
             ? Icon(parseIcon(icon))
             : null;
 
-    String url = control.getString("url", "")!;
-    String? urlTarget = control.getString("url_target");
-    double? disabledElevation = control.getDouble("disabled_elevation");
-    double? elevation = control.getDouble("elevation");
-    double? hoverElevation = control.getDouble("hover_elevation");
-    double? highlightElevation = control.getDouble("highlight_elevation");
-    double? focusElevation = control.getDouble("focus_elevation");
-    Color? bgColor = control.getColor("bgcolor", context);
-    Color? foregroundColor = control.getColor("foreground_color", context);
-    Color? splashColor = control.getColor("splash_color", context);
-    Color? hoverColor = control.getColor("hover_color", context);
-    Color? focusColor = control.getColor("focus_color", context);
-    OutlinedBorder? shape = control.getOutlinedBorder("shape");
+    var url = control.getString("url", "")!;
+    var urlTarget = control.getString("url_target");
+    var disabledElevation = control.getDouble("disabled_elevation");
+    var elevation = control.getDouble("elevation");
+    var hoverElevation = control.getDouble("hover_elevation");
+    var highlightElevation = control.getDouble("highlight_elevation");
+    var focusElevation = control.getDouble("focus_elevation");
+    var bgColor = control.getColor("bgcolor", context);
+    var foregroundColor = control.getColor("foreground_color", context);
+    var splashColor = control.getColor("splash_color", context);
+    var hoverColor = control.getColor("hover_color", context);
+    var focusColor = control.getColor("focus_color", context);
+    var shape = control.getShape("shape");
     var clipBehavior =
         parseClip(control.getString("clip_behavior"), Clip.none)!;
 
     bool autofocus = control.getBool("autofocus", false)!;
     bool mini = control.getBool("mini", false)!;
     bool? enableFeedback = control.getBool("enable_feedback");
-    var mouseCursor = parseMouseCursor(control.getString("mouse_cursor"));
+    var mouseCursor = control.getMouseCursor("mouse_cursor");
 
     Function()? onPressed = control.disabled
         ? null

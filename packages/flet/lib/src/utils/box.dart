@@ -14,8 +14,8 @@ import 'collections.dart';
 import 'colors.dart';
 import 'gradient.dart';
 import 'images.dart';
-import 'numbers.dart';
 import 'misc.dart';
+import 'numbers.dart';
 import 'transforms.dart';
 
 BoxConstraints? parseBoxConstraints(dynamic value,
@@ -300,4 +300,26 @@ Widget buildImage({
     return image;
   }
   return const ErrorControl("A valid src or src_base64 must be specified.");
+}
+
+extension BoxParsers on Control {
+  BoxConstraints? getBoxConstraints(String propertyName,
+      [BoxConstraints? defaultValue]) {
+    return parseBoxConstraints(get(propertyName), defaultValue);
+  }
+
+  List<BoxShadow>? getBoxShadows(String propertyName, ThemeData theme,
+      [List<BoxShadow>? defaultValue]) {
+    return parseBoxShadows(get(propertyName), theme, defaultValue);
+  }
+
+  BoxDecoration? getBoxDecoration(String propertyName, BuildContext context,
+      [BoxDecoration? defaultValue]) {
+    return parseBoxDecoration(get(propertyName), context, defaultValue);
+  }
+
+  DecorationImage? getDecorationImage(String propertyName, BuildContext context,
+      [DecorationImage? defaultValue]) {
+    return parseDecorationImage(get(propertyName), context, defaultValue);
+  }
 }

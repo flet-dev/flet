@@ -52,22 +52,6 @@ class Control extends ChangeNotifier {
         : defaultValue;
   }
 
-  bool? getBool(String propertyName, [bool? defaultValue]) {
-    return get<bool>(propertyName, defaultValue);
-  }
-
-  String? getString(String propertyName, [String? defaultValue]) {
-    return get<String>(propertyName, defaultValue);
-  }
-
-  int? getInt(String propertyName, [int? defaultValue]) {
-    return get<int>(propertyName, defaultValue);
-  }
-
-  double? getDouble(String propertyName, [double? defaultValue]) {
-    return get<double>(propertyName, defaultValue);
-  }
-
   /// Returns the [Control] for the given [propertyName], or `null` if not found, not a [Control],
   /// or not visible when [visibleOnly] is `true` (default).
   Control? child(String propertyName, {bool visibleOnly = true}) {

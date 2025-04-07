@@ -24,6 +24,7 @@ import 'protocol/update_control_body.dart';
 import 'transport/flet_backend_channel.dart';
 import 'utils/desktop.dart';
 import 'utils/images.dart';
+import 'utils/numbers.dart';
 import 'utils/platform.dart';
 import 'utils/platform_utils_non_web.dart'
     if (dart.library.js) "utils/platform_utils_web.dart";
@@ -465,5 +466,39 @@ class FletBackend extends ChangeNotifier {
 
   _send(Message message) {
     _backendChannel?.send(message);
+  }
+}
+
+extension Events on Control {
+  /// Triggers a control event.
+  ///
+  /// This method checks if the control has an event handler for the given
+  /// [eventName] and triggers the event if the application is not in a loading state.
+  ///
+  /// - [eventName]: The name of the event to trigger.
+  /// - [context]: The BuildContext in which the event is triggered.
+  /// - [eventData]: Optional data to pass along with the event.
+  void triggerEvent(String eventName, BuildContext context,
+      [dynamic eventData]) {
+    return FletBackend.of(context)
+        .triggerControlEvent(this, eventName, eventData);
+  }
+
+  /// Updates the properties of this control.
+  ///
+  /// The [props] map contains key-value pairs where the key is the property
+  /// name and the value is the new value for that property.
+  ///
+  /// - [props]: A map of property names and their corresponding new values.
+  /// - [context]: The BuildContext in which the update is triggered.
+  /// - [dart]: A boolean indicating whether to apply the patch in Dart. Defaults to `true`.
+  /// - [python]: A boolean indicating whether to send the update to the Python backend. Defaults to `true`.
+  /// - [notify]: A boolean indicating whether to notify listeners after applying the patch. Defaults to `false`.
+  ///
+  /// This method is typically used to modify the state of a control dynamically.
+  void updateProperties(Map<String, dynamic> props, BuildContext context,
+      {bool dart = true, bool python = true, bool notify = false}) {
+    return FletBackend.of(context)
+        .updateControl(id, props, dart: dart, python: python, notify: notify);
   }
 }

@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/borders.dart';
 import '../utils/box.dart';
+import '../utils/colors.dart';
 import '../utils/images.dart';
+import '../utils/numbers.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 
@@ -41,8 +44,8 @@ class ImageControl extends StatelessWidget {
       antiAlias: control.getBool("anti_alias", false)!,
       repeat:
           parseImageRepeat(control.getString("repeat"), ImageRepeat.noRepeat)!,
-      fit: parseBoxFit(control.getString("fit")),
-      colorBlendMode: parseBlendMode(control.getString("color_blend_mode")),
+      fit: control.getBoxFit("fit"),
+      colorBlendMode: control.getBlendMode("color_blend_mode"),
       color: control.getColor("color", context),
       semanticsLabel: control.getString("semantics_label"),
       gaplessPlayback: control.getBool("gapless_playback"),

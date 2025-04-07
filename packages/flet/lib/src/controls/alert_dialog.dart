@@ -4,7 +4,11 @@ import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
+import '../utils/borders.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/misc.dart';
+import '../utils/numbers.dart';
 import '../utils/text.dart';
 import '../widgets/error.dart';
 import 'control_widget.dart';
@@ -55,7 +59,7 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
     }
 
     final actionsAlignment =
-        parseMainAxisAlignment(widget.control.getString("actionsAlignment"));
+        widget.control.getMainAxisAlignment("actionsAlignment");
     var clipBehavior =
         parseClip(widget.control.getString("clipBehavior"), Clip.none)!;
 
@@ -65,20 +69,20 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
           : title is String
               ? Text(title)
               : null,
-      titlePadding: widget.control.getEdgeInsets("title_padding"),
+      titlePadding: widget.control.getPadding("title_padding"),
       content: content,
       contentPadding: widget.control.getPadding("content_padding",
           const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0))!,
       actions: actions,
       actionsPadding: widget.control.getPadding("actions_padding"),
       actionsAlignment: actionsAlignment,
-      shape: widget.control.getOutlinedBorder("shape"),
+      shape: widget.control.getShape("shape"),
       semanticLabel: widget.control.getString("semantics_label"),
-      insetPadding: widget.control.getEdgeInsets("inset_padding",
+      insetPadding: widget.control.getPadding("inset_padding",
           const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0))!,
-      iconPadding: widget.control.getEdgeInsets("icon_padding"),
+      iconPadding: widget.control.getPadding("icon_padding"),
       backgroundColor: widget.control.getColor("bgcolor", context),
-      buttonPadding: widget.control.getEdgeInsets("action_button_padding"),
+      buttonPadding: widget.control.getPadding("action_button_padding"),
       surfaceTintColor: widget.control.getColor("surface_tint_color", context),
       shadowColor: widget.control.getColor("shadow_color", context),
       elevation: widget.control.getDouble("elevation"),
@@ -89,10 +93,10 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
       actionsOverflowButtonSpacing:
           widget.control.getDouble("actions_overflow_button_spacing"),
       alignment: widget.control.getAlignment("alignment"),
-      contentTextStyle: parseTextStyle(
-          widget.control.get("content_text_style"), Theme.of(context)),
-      titleTextStyle: parseTextStyle(
-          widget.control.get("title_text_style"), Theme.of(context)),
+      contentTextStyle:
+          widget.control.getTextStyle("content_text_style", Theme.of(context)),
+      titleTextStyle:
+          widget.control.getTextStyle("title_text_style", Theme.of(context)),
     );
   }
 

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import '../models/control.dart';
 import 'numbers.dart';
 
 Clip? parseClip(String? value, [Clip? defaultValue]) {
@@ -235,4 +236,141 @@ NavigationRailLabelType? parseNavigationRailLabelType(String? value,
   return NavigationRailLabelType.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
       defaultValue;
+}
+
+extension MiscParsers on Control {
+  Clip? getClipBehavior(String propertyName, [Clip? defaultValue]) {
+    return parseClip(get(propertyName), defaultValue);
+  }
+
+  Orientation? getOrientation(String propertyName,
+      [Orientation? defaultValue]) {
+    return parseOrientation(get(propertyName), defaultValue);
+  }
+
+  StrokeCap? getStrokeCap(String propertyName, [StrokeCap? defaultValue]) {
+    return parseStrokeCap(get(propertyName), defaultValue);
+  }
+
+  StrokeJoin? getStrokeJoin(String propertyName, [StrokeJoin? defaultValue]) {
+    return parseStrokeJoin(get(propertyName), defaultValue);
+  }
+
+  BoxShape? getBoxShape(String propertyName, [BoxShape? defaultValue]) {
+    return parseBoxShape(get(propertyName), defaultValue);
+  }
+
+  NotchedShape? getNotchedShape(String propertyName,
+      [NotchedShape? defaultValue]) {
+    return parseNotchedShape(get(propertyName), defaultValue);
+  }
+
+  SliderInteraction? getSliderInteraction(String propertyName,
+      [SliderInteraction? defaultValue]) {
+    return parseSliderInteraction(get(propertyName), defaultValue);
+  }
+
+  Size? getSize(String propertyName, [Size? defaultValue]) {
+    return parseSize(get(propertyName), defaultValue);
+  }
+
+  SnackBarBehavior? getSnackBarBehavior(String propertyName,
+      [SnackBarBehavior? defaultValue]) {
+    return parseSnackBarBehavior(get(propertyName), defaultValue);
+  }
+
+  StackFit? getStackFit(String propertyName, [StackFit? defaultValue]) {
+    return parseStackFit(get(propertyName), defaultValue);
+  }
+
+  DatePickerMode? getDatePickerMode(String propertyName,
+      [DatePickerMode? defaultValue]) {
+    return parseDatePickerMode(get(propertyName), defaultValue);
+  }
+
+  DatePickerEntryMode? getDatePickerEntryMode(String propertyName,
+      [DatePickerEntryMode? defaultValue]) {
+    return parseDatePickerEntryMode(get(propertyName), defaultValue);
+  }
+
+  CardVariant? getCardVariant(String propertyName,
+      [CardVariant? defaultValue]) {
+    return parseCardVariant(get(propertyName), defaultValue);
+  }
+
+  ScrollMode? getScrollMode(String propertyName,
+      [ScrollMode? defaultValue = ScrollMode.none]) {
+    return parseScrollMode(get(propertyName), defaultValue);
+  }
+
+  LabelPosition? getLabelPosition(String propertyName,
+      [LabelPosition? defaultValue]) {
+    return parseLabelPosition(get(propertyName), defaultValue);
+  }
+
+  CupertinoTimerPickerMode? getCupertinoTimerPickerMode(String propertyName,
+      [CupertinoTimerPickerMode? defaultValue]) {
+    return parseCupertinoTimerPickerMode(get(propertyName), defaultValue);
+  }
+
+  ListTileControlAffinity? getListTileControlAffinity(String propertyName,
+      [ListTileControlAffinity? defaultValue]) {
+    return parseListTileControlAffinity(get(propertyName), defaultValue);
+  }
+
+  ListTileStyle? getListTileStyle(String propertyName,
+      [ListTileStyle? defaultValue]) {
+    return parseListTileStyle(get(propertyName), defaultValue);
+  }
+
+  NavigationDestinationLabelBehavior? getNavigationDestinationLabelBehavior(
+      String propertyName,
+      [NavigationDestinationLabelBehavior? defaultValue]) {
+    return parseNavigationDestinationLabelBehavior(
+        get(propertyName), defaultValue);
+  }
+
+  PopupMenuPosition? getPopupMenuPosition(String propertyName,
+      [PopupMenuPosition? defaultValue]) {
+    return parsePopupMenuPosition(get(propertyName), defaultValue);
+  }
+
+  Assertiveness? getAssertiveness(String propertyName,
+      [Assertiveness? defaultValue]) {
+    return parseAssertiveness(get(propertyName), defaultValue);
+  }
+
+  DatePickerDateOrder? getDatePickerDateOrder(String propertyName,
+      [DatePickerDateOrder? defaultValue]) {
+    return parseDatePickerDateOrder(get(propertyName), defaultValue);
+  }
+
+  CupertinoDatePickerMode? getCupertinoDatePickerMode(String propertyName,
+      [CupertinoDatePickerMode? defaultValue]) {
+    return parseCupertinoDatePickerMode(get(propertyName), defaultValue);
+  }
+
+  ListTileTitleAlignment? getListTileTitleAlignment(String propertyName,
+      [ListTileTitleAlignment? defaultValue]) {
+    return parseListTileTitleAlignment(get(propertyName), defaultValue);
+  }
+
+  TimePickerEntryMode? getTimePickerEntryMode(String propertyName,
+      [TimePickerEntryMode? defaultValue]) {
+    return parseTimePickerEntryMode(get(propertyName), defaultValue);
+  }
+
+  Axis? getAxis(String propertyName, [Axis? defaultValue]) {
+    return parseAxis(get(propertyName), defaultValue);
+  }
+
+  PointerDeviceKind? getPointerDeviceKind(String propertyName,
+      [PointerDeviceKind? defaultValue]) {
+    return parsePointerDeviceKind(get(propertyName), defaultValue);
+  }
+
+  NavigationRailLabelType? getNavigationRailLabelType(String propertyName,
+      [NavigationRailLabelType? defaultValue]) {
+    return parseNavigationRailLabelType(get(propertyName), defaultValue);
+  }
 }

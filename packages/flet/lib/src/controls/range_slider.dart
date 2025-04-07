@@ -1,4 +1,3 @@
-import 'package:flet/src/extensions/control.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_backend.dart';
@@ -6,6 +5,7 @@ import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
 import '../utils/mouse.dart';
+import '../utils/numbers.dart';
 import '../utils/platform.dart';
 import 'base_controls.dart';
 
@@ -71,8 +71,7 @@ class _SliderControlState extends State<RangeSliderControl> {
         divisions: widget.control.getInt("divisions"),
         activeColor: widget.control.getColor("active_color", context),
         inactiveColor: widget.control.getColor("inactive_color", context),
-        mouseCursor:
-            parseWidgetStateMouseCursor(widget.control.get("mouse_cursor")),
+        mouseCursor: widget.control.getWidgetStateMouseCursor("mouse_cursor"),
         overlayColor: parseWidgetStateColor(
             widget.control.get("overlay_color"), Theme.of(context)),
         onChanged: !widget.control.disabled

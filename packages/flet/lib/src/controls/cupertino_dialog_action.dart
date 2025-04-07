@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/numbers.dart';
+import '../utils/text.dart';
 import 'base_controls.dart';
 
 class CupertinoDialogActionControl extends StatelessWidget {

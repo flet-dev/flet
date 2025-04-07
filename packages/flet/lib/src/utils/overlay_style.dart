@@ -1,8 +1,9 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../models/control.dart';
 import '../utils/numbers.dart';
+import '../utils/theme.dart';
 import 'colors.dart';
 
 SystemUiOverlayStyle? parseSystemUiOverlayStyle(
@@ -33,9 +34,11 @@ SystemUiOverlayStyle? parseSystemUiOverlayStyle(
           value["status_bar_icon_brightness"], invertedBrightness));
 }
 
-Brightness? parseBrightness(String? value, [Brightness? defaultValue]) {
-  if (value == null) return defaultValue;
-  return Brightness.values
-          .firstWhereOrNull((e) => e.toString() == value.toLowerCase()) ??
-      defaultValue;
+extension SystemUiParsers on Control {
+  SystemUiOverlayStyle? getSystemUiOverlayStyle(
+      String propertyName, ThemeData? theme, Brightness? brightness,
+      [SystemUiOverlayStyle? defaultValue]) {
+    return parseSystemUiOverlayStyle(
+        get(propertyName), theme, brightness, defaultValue);
+  }
 }

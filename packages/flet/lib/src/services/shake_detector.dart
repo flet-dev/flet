@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 import '../flet_service.dart';
+import '../utils/numbers.dart';
 
 class ShakeDetectorService extends FletService {
   ShakeDetectorService({required super.control, required super.backend});

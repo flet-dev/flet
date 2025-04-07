@@ -4,8 +4,12 @@ import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
+import '../utils/borders.dart';
 import '../utils/colors.dart';
+import '../utils/gradient.dart';
 import '../utils/misc.dart';
+import '../utils/numbers.dart';
+import '../utils/text.dart';
 import 'base_controls.dart';
 
 class DataTableControl extends StatelessWidget {

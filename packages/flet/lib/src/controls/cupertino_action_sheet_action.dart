@@ -4,6 +4,7 @@ import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/mouse.dart';
+import '../utils/numbers.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 
@@ -32,7 +33,7 @@ class CupertinoActionSheetActionControl extends StatelessWidget {
           FletBackend.of(context).triggerControlEvent(control, "click");
         }
       },
-      mouseCursor: parseMouseCursor(control.getString("mouse_cursor")),
+      mouseCursor: control.getMouseCursor("mouse_cursor"),
       child: content ?? Text(contentStr!),
     );
 

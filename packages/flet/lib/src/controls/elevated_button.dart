@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
+import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import '../utils/misc.dart';
+import '../utils/numbers.dart';
 import '../widgets/error.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';
@@ -84,7 +85,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
       String text =
           widget.control.getString("text", "")!; // to be removed in 0.70.3
       String url = widget.control.getString("url", "")!;
-      IconData? icon = parseIcon(widget.control.getString("icon"));
+      IconData? icon = widget.control.getIcon("icon");
       Color? iconColor = widget.control.getColor("icon_color", context);
       var content = widget.control.get("content");
       Widget child = content is Control

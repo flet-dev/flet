@@ -4,6 +4,7 @@ import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/icons.dart';
+import '../utils/numbers.dart';
 
 class CupertinoContextMenuActionControl extends StatelessWidget {
   final Control control;
@@ -26,7 +27,7 @@ class CupertinoContextMenuActionControl extends StatelessWidget {
           Navigator.of(context).pop(); // Close the context menu
         }
       },
-      trailingIcon: parseIcon(control.getString("trailing_icon")),
+      trailingIcon: control.getIcon("trailing_icon"),
       child: control.buildWidget("content") ??
           Text(contentStr, overflow: TextOverflow.ellipsis),
     );

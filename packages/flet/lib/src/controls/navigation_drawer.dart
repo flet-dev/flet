@@ -1,11 +1,12 @@
-import 'package:flet/src/extensions/control.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
+import '../utils/numbers.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
 
@@ -52,8 +53,7 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
     var drawer = NavigationDrawer(
       elevation: widget.control.getDouble("elevation"),
       indicatorColor: widget.control.getColor("indicator_color", context),
-      indicatorShape:
-          parseOutlinedBorder(widget.control.get("indicator_shape")),
+      indicatorShape: widget.control.getOutlinedBorder("indicator_shape"),
       backgroundColor: widget.control.getColor("bgcolor", context),
       selectedIndex: _selectedIndex,
       shadowColor: widget.control.getColor("shadow_color", context),

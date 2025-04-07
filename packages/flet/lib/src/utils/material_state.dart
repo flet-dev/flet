@@ -2,6 +2,8 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 
+import '../models/control.dart';
+
 WidgetStateProperty<T?>? getWidgetStateProperty<T>(dynamic value,
     T Function(dynamic) converterFromJson,
     [T? defaultValue]) {
@@ -45,5 +47,14 @@ class WidgetStateFromJSON<T> extends WidgetStateProperty<T?> {
 
     // Default state
     return _states["default"] ?? _defaultValue;
+  }
+}
+
+extension WidgetStatePropertyParsers on Control {
+  WidgetStateProperty<T?>? getWidgetStateProperty<T>(
+      String propertyName, T Function(dynamic) converterFromJson,
+      [T? defaultValue]) {
+    return getWidgetStateProperty<T>(
+        get(propertyName), converterFromJson, defaultValue);
   }
 }

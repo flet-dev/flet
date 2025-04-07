@@ -3,6 +3,7 @@ import 'package:flutter_highlight/theme_map.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
+import '../models/control.dart';
 import 'alignment.dart';
 import 'box.dart';
 import 'edge_insets.dart';
@@ -161,4 +162,23 @@ MarkdownStyleSheet? parseMarkdownStyleSheet(dynamic value, BuildContext context,
     unorderedListAlign: parseWrapAlignment(
         value["unordered_list_alignment"], WrapAlignment.start)!,
   );
+}
+extension MarkdownParsers on Control {
+  Map<String, TextStyle> getMarkdownCodeTheme(
+      String propertyName, ThemeData theme) {
+    return parseMarkdownCodeTheme(get(propertyName), theme);
+  }
+/*
+  md.ExtensionSet? getMarkdownExtensionSet(String propertyName,
+      [md.ExtensionSet? defaultValue]) {
+    return parseMarkdownExtensionSet(get(propertyName), defaultValue);
+  }
+
+
+  MarkdownStyleSheet? getMarkdownStyleSheet(
+      String propertyName, BuildContext context,
+      [MarkdownStyleSheet? defaultValue]) {
+    return parseMarkdownStyleSheet(get(propertyName), context, defaultValue);
+  }
+  */
 }

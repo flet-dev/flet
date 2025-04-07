@@ -47,6 +47,7 @@ import 'controls/selection_area.dart';
 import 'controls/shader_mask.dart';
 import 'controls/slider.dart';
 import 'controls/stack.dart';
+import 'controls/switch.dart';
 import 'controls/text.dart';
 import 'controls/text_button.dart';
 import 'controls/vertical_divider.dart';
@@ -161,6 +162,8 @@ class FletCoreExtension extends FletExtension {
         return SliderControl(key: key, control: control);
       case "Stack":
         return StackControl(key: key, control: control);
+      case "Switch":
+        return SwitchControl(key: key, control: control);
       case "Text":
         return TextControl(key: key, control: control);
       case "Placeholder":

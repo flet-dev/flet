@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 
+import '../models/control.dart';
 import '../utils/numbers.dart';
 
 FilteringTextInputFormatter? parseInputFilter(dynamic value,
@@ -40,5 +41,12 @@ class CustomFilteringTextInputFormatter extends FilteringTextInputFormatter {
       return newValue;
     }
     return oldValue;
+  }
+}
+
+extension InputFormatterParsers on Control {
+  FilteringTextInputFormatter? getTextInputFormatter(String propertyName,
+      [FilteringTextInputFormatter? defaultValue]) {
+    return parseInputFilter(get(propertyName), defaultValue);
   }
 }

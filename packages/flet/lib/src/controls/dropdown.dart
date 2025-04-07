@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
-import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/borders.dart';
 import '../utils/buttons.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/form_field.dart';
 import '../utils/icons.dart';
+import '../utils/numbers.dart';
 import '../utils/text.dart';
+import '../utils/textfield.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
 
@@ -149,7 +153,7 @@ class _DropdownControlState extends State<DropdownControl> {
       enabledBorder: border,
       focusedBorder: focusedBorder,
       isDense: widget.control.getBool("dense", false)!,
-      contentPadding: widget.control.getEdgeInsets("content_padding"),
+      contentPadding: widget.control.getPadding("content_padding"),
     );
 
     TextStyle? textStyle = widget.control.getTextStyle("text_style", theme);
@@ -201,7 +205,7 @@ class _DropdownControlState extends State<DropdownControl> {
         widget.control.getString("capitalization"), TextCapitalization.none)!;
 
     FilteringTextInputFormatter? inputFilter =
-        widget.control.getInputFilter("input_filter");
+        widget.control.getTextInputFormatter("input_filter");
 
     List<TextInputFormatter>? inputFormatters = [];
     if (inputFilter != null) {

@@ -4,7 +4,11 @@ import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
+import '../utils/borders.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/misc.dart';
+import '../utils/numbers.dart';
 import '../utils/theme.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
@@ -74,7 +78,7 @@ class ExpansionTileControl extends StatelessWidget {
 
     Widget tile = ExpansionTile(
       controlAffinity: affinity,
-      childrenPadding: control.getEdgeInsets("controls_padding"),
+      childrenPadding: control.getPadding("controls_padding"),
       tilePadding: control.getEdgeInsets("tile_padding"),
       expandedAlignment: control.getAlignment("expanded_alignment"),
       expandedCrossAxisAlignment: parseCrossAxisAlignment(
@@ -88,10 +92,10 @@ class ExpansionTileControl extends StatelessWidget {
       maintainState: maintainState,
       initiallyExpanded: initiallyExpanded,
       clipBehavior: clipBehavior,
-      shape: control.getOutlinedBorder("shape"),
-      collapsedShape: control.getOutlinedBorder("collapsed_shape"),
+      shape: control.getShape("shape"),
+      collapsedShape: control.getShape("collapsed_shape"),
       onExpansionChanged: onChange,
-      visualDensity: parseVisualDensity(control.getString("visual_density")),
+      visualDensity: control.getVisualDensity("visual_density"),
       enableFeedback: control.getBool("enable_feedback"),
       showTrailingIcon: control.getBool("show_trailing_icon", true)!,
       enabled: !control.disabled,

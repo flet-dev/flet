@@ -2,7 +2,9 @@ import 'package:flutter/widgets.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/alignment.dart';
 import '../utils/misc.dart';
+import '../utils/numbers.dart';
 import 'base_controls.dart';
 
 class StackControl extends StatelessWidget {

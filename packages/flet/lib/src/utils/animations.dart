@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../models/control.dart';
 import 'time.dart';
 
 ImplicitAnimationDetails? parseAnimation(dynamic value,
@@ -124,4 +125,20 @@ AnimationStyle? parseAnimationStyle(dynamic value,
       reverseCurve: parseCurve(value["reverse_curve"]),
       duration: parseDuration(value["duration"]),
       reverseDuration: parseDuration(value["reverse_duration"]));
+}
+
+extension AnimationParsers on Control {
+  ImplicitAnimationDetails? getAnimation(String propertyName,
+      [ImplicitAnimationDetails? defaultValue]) {
+    return parseAnimation(get(propertyName), defaultValue);
+  }
+
+  Curve? getCurve(String propertyName, [Curve? defaultValue]) {
+    return parseCurve(get(propertyName), defaultValue);
+  }
+
+  AnimationStyle? getAnimationStyle(String propertyName,
+      [AnimationStyle? defaultValue]) {
+    return parseAnimationStyle(get(propertyName), defaultValue);
+  }
 }

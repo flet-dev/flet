@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
+import '../models/control.dart';
 import '../utils/numbers.dart';
 import '../utils/transforms.dart';
 import 'colors.dart';
@@ -82,4 +83,20 @@ ui.Gradient? parsePaintGradient(Map<String, dynamic>? value, ThemeData? theme,
             value["rotation"], Rect.fromCircle(center: center, radius: 10)));
   }
   return defaultValue;
+}
+
+extension DrawingParsers on Control {
+  Paint? getPaint(String propertyName, ThemeData theme, [Paint? defaultValue]) {
+    return parsePaint(get(propertyName), theme, defaultValue);
+  }
+
+  PaintingStyle? getPaintingStyle(String propertyName,
+      [PaintingStyle? defaultValue]) {
+    return parsePaintingStyle(get(propertyName), defaultValue);
+  }
+
+  List<double>? getPaintStrokeDashPattern(String propertyName,
+      [List<double>? defaultValue]) {
+    return parsePaintStrokeDashPattern(get(propertyName), defaultValue);
+  }
 }

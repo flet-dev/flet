@@ -1,11 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/alignment.dart';
+import '../utils/borders.dart';
+import '../utils/buttons.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
+import '../utils/numbers.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
@@ -24,13 +29,13 @@ class CupertinoButtonControl extends StatelessWidget {
     var theme = Theme.of(context);
     var content = control.child("content");
     var text = control.getString("text");
-    var icon = parseIcon(control.getString("icon"));
+    var icon = control.getIcon("icon");
     var iconColor = control.getColor("icon_color", context);
 
     // IconButton props below
     var iconSize = control.getDouble("icon_size");
     var selected = control.getBool("selected", false)!;
-    var selectedIcon = parseIcon(control.getString("selected_icon"));
+    var selectedIcon = control.getIcon("selected_icon");
     var selectedIconColor = control.getColor("selected_icon_color", context);
 
     Widget? child;

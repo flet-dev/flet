@@ -305,3 +305,42 @@ class CustomNumberFormatter extends TextInputFormatter {
     return oldValue;
   }
 }
+
+extension TextParsers on Control {
+  TextStyle? getTextStyle(String propertyName, ThemeData theme,
+      [TextStyle? defaultValue]) {
+    return parseTextStyle(get(propertyName), theme, defaultValue);
+  }
+
+  TextAlign? getTextAlign(String propertyName, [TextAlign? defaultValue]) {
+    return parseTextAlign(get(propertyName), defaultValue);
+  }
+
+  TextOverflow? getTextOverflow(String propertyName,
+      [TextOverflow? defaultValue]) {
+    return parseTextOverflow(get(propertyName), defaultValue);
+  }
+
+  TextDecorationStyle? getTextDecorationStyle(String propertyName,
+      [TextDecorationStyle? defaultValue]) {
+    return parseTextDecorationStyle(get(propertyName), defaultValue);
+  }
+
+  TextCapitalization? getTextCapitalization(String propertyName,
+      [TextCapitalization? defaultValue]) {
+    return parseTextCapitalization(get(propertyName), defaultValue);
+  }
+
+  TextBaseline? getTextBaseline(String propertyName,
+      [TextBaseline? defaultValue]) {
+    return parseTextBaseline(get(propertyName), defaultValue);
+  }
+
+  WidgetStateProperty<TextStyle?>? getWidgetStateTextStyle(
+      String propertyName, ThemeData theme,
+      {TextStyle? defaultTextStyle,
+      WidgetStateProperty<TextStyle?>? defaultValue}) {
+    return parseWidgetStateTextStyle(get(propertyName), theme,
+        defaultTextStyle: defaultTextStyle, defaultValue: defaultValue);
+  }
+}

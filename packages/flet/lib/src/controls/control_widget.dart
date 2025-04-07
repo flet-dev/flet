@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/numbers.dart';
 import '../utils/theme.dart';
 import '../widgets/control_inherited_notifier.dart';
 import '../widgets/error.dart';
@@ -52,7 +53,7 @@ class ControlWidget extends StatelessWidget {
     final isRootControl = control == FletBackend.of(context).page;
     final hasNoThemes = control.getString("theme") == null &&
         control.getString("dark_theme") == null;
-    final themeMode = parseThemeMode(control.getString("theme_mode"));
+    final themeMode = control.getThemeMode("theme_mode");
 
     if (isRootControl || (hasNoThemes && themeMode == null)) {
       return widget;

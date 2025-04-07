@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../models/control.dart';
 import 'material_state.dart';
 
 double? parseDouble(dynamic value, [double? defaultValue]) {
@@ -52,4 +53,40 @@ WidgetStateProperty<bool?>? parseWidgetStateBool(dynamic value,
   if (value == null) return defaultValue;
   return getWidgetStateProperty<bool?>(
       value, (jv) => parseBool(jv), defaultBool);
+}
+
+extension LiteralParsers on Control {
+  bool? getBool(String propertyName, [bool? defaultValue]) {
+    return get<bool>(propertyName, defaultValue);
+  }
+
+  String? getString(String propertyName, [String? defaultValue]) {
+    return get<String>(propertyName, defaultValue);
+  }
+
+  int? getInt(String propertyName, [int? defaultValue]) {
+    return get<int>(propertyName, defaultValue);
+  }
+
+  double? getDouble(String propertyName, [double? defaultValue]) {
+    return get<double>(propertyName, defaultValue);
+  }
+
+  WidgetStateProperty<double?>? getWidgetStateDouble(String propertyName,
+      {double? defaultDouble, WidgetStateProperty<double?>? defaultValue}) {
+    return parseWidgetStateDouble(get(propertyName),
+        defaultDouble: defaultDouble, defaultValue: defaultValue);
+  }
+
+  WidgetStateProperty<int?>? getWidgetStateInt(String propertyName,
+      {int? defaultInt, WidgetStateProperty<int?>? defaultValue}) {
+    return parseWidgetStateInt(get(propertyName),
+        defaultInt: defaultInt, defaultValue: defaultValue);
+  }
+
+  WidgetStateProperty<bool?>? getWidgetStateBool(String propertyName,
+      {bool? defaultBool, WidgetStateProperty<bool?>? defaultValue}) {
+    return parseWidgetStateBool(get(propertyName),
+        defaultBool: defaultBool, defaultValue: defaultValue);
+  }
 }

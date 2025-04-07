@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../controls/base_controls.dart';
-import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
+import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import '../utils/misc.dart';
+import '../utils/numbers.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'control_widget.dart';
 import 'cupertino_button.dart';
@@ -82,7 +83,7 @@ class _TextButtonControlState extends State<TextButtonControl>
           widget.control.getString("text", "")!; //to be removed in 0.70.3
       var content = widget.control.get("content");
       var icon = widget.control.get("icon");
-      var clipBehavior = parseClip(widget.control.getString("clip_behavior"));
+      var clipBehavior = widget.control.getClipBehavior("clip_behavior");
       Color? iconColor = widget.control.getColor("icon_color", context);
       String url = widget.control.getString("url", "")!;
       String? urlTarget = widget.control.getString("url_target");
@@ -99,7 +100,7 @@ class _TextButtonControlState extends State<TextButtonControl>
         iconWidget = ControlWidget(control: icon);
       } else if (icon is String) {
         iconWidget = Icon(
-          parseIcon(widget.control.getString("icon")),
+          widget.control.getIcon("icon"),
           color: iconColor,
         );
       }

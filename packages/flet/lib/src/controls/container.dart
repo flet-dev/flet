@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/alignment.dart';
+import '../utils/animations.dart';
+import '../utils/borders.dart';
 import '../utils/box.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/gradient.dart';
 import '../utils/images.dart';
 import '../utils/launch_url.dart';
 import '../utils/misc.dart';
+import '../utils/numbers.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
@@ -70,18 +75,18 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     var alignment = control.getAlignment("alignment");
 
     var borderRadius = control.getBorderRadius("border_radius");
-    var clipBehavior = parseClip(control.getString("clip_behavior"),
-        borderRadius != null ? Clip.antiAlias : Clip.none)!;
+    var clipBehavior = control.getClipBehavior(
+        "clip_behavior", borderRadius != null ? Clip.antiAlias : Clip.none)!;
     var decorationImage = control.getDecorationImage("image", context);
     var boxDecoration = boxDecorationFromDetails(
-      shape: parseBoxShape(control.getString("shape"), BoxShape.rectangle)!,
+      shape: control.getBoxShape("shape", BoxShape.rectangle)!,
       color: bgColor,
       gradient: parseGradient(control.get("gradient"), Theme.of(context)),
       borderRadius: borderRadius,
       border: control.getBorder("border", Theme.of(context),
           defaultSideColor: Theme.of(context).colorScheme.primary),
       boxShadow: control.getBoxShadows("shadow", Theme.of(context)),
-      blendMode: parseBlendMode(control.getString("blend_mode")),
+      blendMode: control.getBlendMode("blend_mode"),
       image: decorationImage,
     );
     var boxForegroundDecoration =

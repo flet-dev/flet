@@ -4,8 +4,13 @@ import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
+import '../utils/borders.dart';
 import '../utils/box.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/misc.dart';
+import '../utils/numbers.dart';
+import '../utils/text.dart';
 import '../utils/theme.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
@@ -83,22 +88,21 @@ class _ChipControlState extends State<ChipControl> {
       disabledColor: widget.control.getColor("disabled_color", context),
       elevation: widget.control.getDouble("elevation"),
       isEnabled: !disabled,
-      padding: widget.control.getEdgeInsets("padding"),
-      labelPadding: widget.control.getEdgeInsets("label_padding"),
+      padding: widget.control.getPadding("padding"),
+      labelPadding: widget.control.getPadding("label_padding"),
       labelStyle: widget.control.getTextStyle("label_style", Theme.of(context)),
       selectedColor: widget.control.getColor("selected_color", context),
       selectedShadowColor:
           widget.control.getColor("selected_shadow_color", context),
       shadowColor: widget.control.getColor("shadow_color", context),
-      shape: widget.control.getOutlinedBorder("shape"),
+      shape: widget.control.getShape("shape"),
       color: widget.control.getWidgetStateColor("color", Theme.of(context)),
       surfaceTintColor: widget.control.getColor("surface_tint_color", context),
       pressElevation: widget.control.getDouble("click_elevation"),
       side: widget.control.getBorderSide("border_side", Theme.of(context)),
       clipBehavior:
           parseClip(widget.control.getString("clip_behavior"), Clip.none)!,
-      visualDensity:
-          parseVisualDensity(widget.control.getString("visual_density")),
+      visualDensity: widget.control.getVisualDensity("visual_density"),
       avatarBoxConstraints:
           widget.control.getBoxConstraints("leading_size_constraints"),
       deleteIconBoxConstraints: parseBoxConstraints(

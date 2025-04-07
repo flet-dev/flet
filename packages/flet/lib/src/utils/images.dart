@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
+import '../models/control.dart';
 import 'colors.dart';
 import 'gradient.dart';
 import 'numbers.dart';
@@ -102,4 +103,32 @@ bool isUrlOrPath(String value) {
   }
 
   return false;
+}
+extension ImageParsers on Control {
+  ImageRepeat? getImageRepeat(String propertyName,
+      [ImageRepeat? defaultValue]) {
+    return parseImageRepeat(get(propertyName), defaultValue);
+  }
+
+  BlendMode? getBlendMode(String propertyName, [BlendMode? defaultValue]) {
+    return parseBlendMode(get(propertyName), defaultValue);
+  }
+
+  BoxFit? getBoxFit(String propertyName, [BoxFit? defaultValue]) {
+    return parseBoxFit(get(propertyName), defaultValue);
+  }
+
+  ImageFilter? getBlur(String propertyName, [ImageFilter? defaultValue]) {
+    return parseBlur(get(propertyName), defaultValue);
+  }
+
+  ColorFilter? getColorFilter(String propertyName, ThemeData theme,
+      [ColorFilter? defaultValue]) {
+    return parseColorFilter(get(propertyName), theme, defaultValue);
+  }
+
+  FilterQuality? getFilterQuality(String propertyName,
+      [FilterQuality? defaultValue]) {
+    return parseFilterQuality(get(propertyName), defaultValue);
+  }
 }

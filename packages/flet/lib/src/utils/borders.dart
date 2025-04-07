@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 
+import '../models/control.dart';
 import 'colors.dart';
 import 'material_state.dart';
 import 'numbers.dart';
@@ -77,10 +78,17 @@ OutlinedBorder? parseOutlinedBorder(dynamic value,
   return defaultValue;
 }
 
-WidgetStateBorderSide? parseWidgetStateBorderSide(dynamic value,
-    ThemeData theme,
+OutlinedBorder? parseShape(dynamic value,
+    {BorderRadius? defaultBorderRadius = BorderRadius.zero,
+    OutlinedBorder? defaultValue}) {
+  return parseOutlinedBorder(value,
+      defaultBorderRadius: defaultBorderRadius, defaultValue: defaultValue);
+}
+
+WidgetStateBorderSide? parseWidgetStateBorderSide(
+    dynamic value, ThemeData theme,
     {BorderSide defaultBorderSide = BorderSide.none,
-      WidgetStateBorderSide? defaultValue}) {
+    WidgetStateBorderSide? defaultValue}) {
   if (value == null) return defaultValue;
   if (value is Map<String, dynamic> &&
       (value.containsKey("width") || value.containsKey("color"))) {
@@ -136,4 +144,62 @@ WidgetStateProperty<OutlinedBorder?>? parseWidgetStateOutlinedBorder(
 
   return getWidgetStateProperty<OutlinedBorder?>(
       value, (jv) => parseOutlinedBorder(jv), defaultOutlinedBorder);
+}
+
+extension BorderParsers on Control {
+  BorderRadius? getBorderRadius(String propertyName,
+      [BorderRadius? defaultValue]) {
+    return parseBorderRadius(get(propertyName), defaultValue);
+  }
+
+  Radius? getRadius(String propertyName, [Radius? defaultValue]) {
+    return parseRadius(get(propertyName), defaultValue);
+  }
+
+  Border? getBorder(String propertyName, ThemeData theme,
+      {Color? defaultSideColor,
+      BorderSide? defaultBorderSide,
+      Border? defaultValue}) {
+    return parseBorder(get(propertyName), theme,
+        defaultSideColor: defaultSideColor,
+        defaultBorderSide: defaultBorderSide,
+        defaultValue: defaultValue);
+  }
+
+  BorderSide? getBorderSide(String propertyName, ThemeData theme,
+      {Color? defaultSideColor = Colors.black, BorderSide? defaultValue}) {
+    return parseBorderSide(get(propertyName), theme,
+        defaultSideColor: defaultSideColor, defaultValue: defaultValue);
+  }
+
+  OutlinedBorder? getOutlinedBorder(String propertyName,
+      {BorderRadius? defaultBorderRadius = BorderRadius.zero,
+      OutlinedBorder? defaultValue}) {
+    return parseOutlinedBorder(get(propertyName),
+        defaultBorderRadius: defaultBorderRadius, defaultValue: defaultValue);
+  }
+
+  OutlinedBorder? getShape(String propertyName,
+      {BorderRadius? defaultBorderRadius = BorderRadius.zero,
+      OutlinedBorder? defaultValue}) {
+    return parseShape(get(propertyName),
+        defaultBorderRadius: defaultBorderRadius, defaultValue: defaultValue);
+  }
+
+  WidgetStateBorderSide? getWidgetStateBorderSide(
+      String propertyName, ThemeData theme,
+      {BorderSide defaultBorderSide = BorderSide.none,
+      WidgetStateBorderSide? defaultValue}) {
+    return parseWidgetStateBorderSide(get(propertyName), theme,
+        defaultBorderSide: defaultBorderSide, defaultValue: defaultValue);
+  }
+
+  WidgetStateProperty<OutlinedBorder?>? getWidgetStateOutlinedBorder(
+      String propertyName,
+      {OutlinedBorder? defaultOutlinedBorder,
+      WidgetStateProperty<OutlinedBorder?>? defaultValue}) {
+    return parseWidgetStateOutlinedBorder(get(propertyName),
+        defaultOutlinedBorder: defaultOutlinedBorder,
+        defaultValue: defaultValue);
+  }
 }
