@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ import '../utils/theme.dart';
 import '../widgets/loading_page.dart';
 import '../widgets/page_control_data.dart';
 import '../widgets/page_media.dart';
+import '../widgets/scaffold_key_provider.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
 
@@ -29,7 +31,7 @@ class ViewControl extends StatefulWidget {
 }
 
 class _ViewControlState extends State<ViewControl> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   Control? _overlay;
   Control? _dialogs;
   bool? _drawerOpened;
@@ -62,6 +64,54 @@ class _ViewControlState extends State<ViewControl> {
     setState(() {});
   }
 
+  Future<void> _dismissDrawer(Control drawer, FletBackend backend) async {
+    await Future.delayed(const Duration(milliseconds: 250));
+    backend.updateControl(drawer.id, {"open": false});
+    backend.triggerControlEvent(drawer, "dismiss");
+  }
+
+  void _toggleDrawers(Control? drawer, Control? endDrawer) {
+    if (drawer != null) {
+      // if (_scaffoldKey.currentState?.isDrawerOpen == false &&
+      //     _drawerOpened == true) {
+      //   _drawerOpened = false;
+      //   _dismissDrawer(drawer, FletBackend.of(context));
+      // }
+      if (drawer.getBool("open", false)! && _drawerOpened != true) {
+        if (_scaffoldKey.currentState?.isEndDrawerOpen == true) {
+          _scaffoldKey.currentState?.closeEndDrawer();
+        }
+        Future.delayed(const Duration(milliseconds: 1)).then((value) {
+          _scaffoldKey.currentState?.openDrawer();
+          _drawerOpened = true;
+        });
+      } else if (!drawer.getBool("open", false)! && _drawerOpened == true) {
+        _scaffoldKey.currentState?.closeDrawer();
+        _drawerOpened = false;
+      }
+    }
+    if (endDrawer != null) {
+      // if (_scaffoldKey.currentState?.isEndDrawerOpen == false &&
+      //     _endDrawerOpened == true) {
+      //   _endDrawerOpened = false;
+      //   _dismissDrawer(endDrawer, FletBackend.of(context));
+      // }
+      if (endDrawer.getBool("open", false)! && _endDrawerOpened != true) {
+        if (_scaffoldKey.currentState?.isDrawerOpen == true) {
+          _scaffoldKey.currentState?.closeDrawer();
+        }
+        Future.delayed(const Duration(milliseconds: 1)).then((value) {
+          _scaffoldKey.currentState?.openEndDrawer();
+          _endDrawerOpened = true;
+        });
+      } else if (!endDrawer.getBool("open", false)! &&
+          _endDrawerOpened == true) {
+        _scaffoldKey.currentState?.closeEndDrawer();
+        _endDrawerOpened = false;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint("View.build: ${widget.control.id}");
@@ -81,8 +131,6 @@ class _ViewControlState extends State<ViewControl> {
         : TextDirection.ltr;
 
     Control? appbar = control.child("appbar");
-    Control? drawer = control.child("drawer");
-    Control? endDrawer = control.child("end_drawer");
 
     var column = Column(
         mainAxisAlignment: mainAlignment,
@@ -101,54 +149,6 @@ class _ViewControlState extends State<ViewControl> {
     if (control.getBool("on_scroll", false)!) {
       child = ScrollNotificationControl(control: control, child: child);
     }
-
-    var backend = FletBackend.of(context);
-    void dismissDrawer(Control drawer) {
-      backend.updateControl(drawer.id, {"open": false});
-      backend.triggerControlEvent(drawer, "dismiss");
-    }
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (drawer != null) {
-        if (scaffoldKey.currentState?.isDrawerOpen == false &&
-            _drawerOpened == true) {
-          _drawerOpened = false;
-          dismissDrawer(drawer);
-        }
-        if (drawer.getBool("open", false)! && _drawerOpened != true) {
-          if (scaffoldKey.currentState?.isEndDrawerOpen == true) {
-            scaffoldKey.currentState?.closeEndDrawer();
-          }
-          Future.delayed(const Duration(milliseconds: 1)).then((value) {
-            scaffoldKey.currentState?.openDrawer();
-            _drawerOpened = true;
-          });
-        } else if (!drawer.getBool("open", false)! && _drawerOpened == true) {
-          scaffoldKey.currentState?.closeDrawer();
-          _drawerOpened = false;
-        }
-      }
-      if (endDrawer != null) {
-        if (scaffoldKey.currentState?.isEndDrawerOpen == false &&
-            _endDrawerOpened == true) {
-          _endDrawerOpened = false;
-          dismissDrawer(endDrawer);
-        }
-        if (endDrawer.getBool("open", false)! && _endDrawerOpened != true) {
-          if (scaffoldKey.currentState?.isDrawerOpen == true) {
-            scaffoldKey.currentState?.closeDrawer();
-          }
-          Future.delayed(const Duration(milliseconds: 1)).then((value) {
-            scaffoldKey.currentState?.openEndDrawer();
-            _endDrawerOpened = true;
-          });
-        } else if (!endDrawer.getBool("open", false)! &&
-            _endDrawerOpened == true) {
-          scaffoldKey.currentState?.closeEndDrawer();
-          _endDrawerOpened = false;
-        }
-      }
-    });
 
     // var bnb = control.child("navigation_bar") ?? control.child("bottom_appbar");
 
@@ -183,16 +183,20 @@ class _ViewControlState extends State<ViewControl> {
     List<Widget> overlayWidgets = [];
     var pageViews = control.parent!.children("views");
     var overlayControls = _overlay?.children("controls");
-    var dialogControls = _dialogs
-        ?.children("controls")
-        .where((dialog) => dialog.type != "NavigationDrawer");
+    var dialogControls = _dialogs?.children("controls");
+
+    Control? drawer = dialogControls?.firstWhereOrNull(
+        (c) => c.type == "NavigationDrawer" && c.get("position") != "end");
+    Control? endDrawer = dialogControls?.firstWhereOrNull(
+        (c) => c.type == "NavigationDrawer" && c.get("position") == "end");
 
     if (overlayControls != null && dialogControls != null) {
       if (control.id == pageViews.last.id) {
         overlayWidgets
             .addAll(overlayControls.map((c) => ControlWidget(control: c)));
-        overlayWidgets
-            .addAll(dialogControls.map((c) => ControlWidget(control: c)));
+        overlayWidgets.addAll(dialogControls
+            .where((dialog) => dialog.type != "NavigationDrawer")
+            .map((c) => ControlWidget(control: c)));
         overlayWidgets.add(const PageMedia());
       }
 
@@ -203,6 +207,10 @@ class _ViewControlState extends State<ViewControl> {
         overlayWidgets.add(ControlWidget(control: windowControl));
       }
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _toggleDrawers(drawer, endDrawer);
+    });
 
     Widget body = Stack(children: [
       SizedBox.expand(
@@ -224,38 +232,41 @@ class _ViewControlState extends State<ViewControl> {
             : parseTheme(
                 control.parent!.get("theme"), context, Brightness.dark);
 
-    Widget scaffold = Scaffold(
-      key: scaffoldKey,
-      //key: bar == null || bar is AppBarControl ? scaffoldKey : null,
-      backgroundColor: control.getColor("bgcolor", context) ??
-          ((pageData?.widgetsDesign == PageDesign.cupertino)
-              ? CupertinoTheme.of(context).scaffoldBackgroundColor
-              : Theme.of(context).scaffoldBackgroundColor),
-      //appBar: bar is AppBarControl ? bar : null,
-      drawer: drawer != null ? ControlWidget(control: drawer) : null,
-      onDrawerChanged: (opened) {
-        if (!opened) {
-          _drawerOpened = false;
-          dismissDrawer(drawer!);
-        }
-      },
-      endDrawer: endDrawer != null ? ControlWidget(control: endDrawer) : null,
-      onEndDrawerChanged: (opened) {
-        if (!opened) {
-          _endDrawerOpened = false;
-          dismissDrawer(endDrawer!);
-        }
-      },
-      body: body,
-      // bottomNavigationBar: bnb != null
-      //     ? createControl(control, bnb.id, control.isDisabled,
-      //         parentAdaptive: adaptive)
-      //     : null,
-      // floatingActionButton: fab != null
-      //     ? createControl(control, fab.id, control.isDisabled,
-      //         parentAdaptive: adaptive)
-      //     : null,
-      floatingActionButtonLocation: fabLocation,
+    Widget scaffold = ScaffoldKeyProvider(
+      scaffoldKey: _scaffoldKey,
+      child: Scaffold(
+        key: _scaffoldKey,
+        //key: bar == null || bar is AppBarControl ? scaffoldKey : null,
+        backgroundColor: control.getColor("bgcolor", context) ??
+            ((pageData?.widgetsDesign == PageDesign.cupertino)
+                ? CupertinoTheme.of(context).scaffoldBackgroundColor
+                : Theme.of(context).scaffoldBackgroundColor),
+        //appBar: bar is AppBarControl ? bar : null,
+        drawer: drawer != null ? ControlWidget(control: drawer) : null,
+        onDrawerChanged: (opened) {
+          if (!opened) {
+            _drawerOpened = false;
+            _dismissDrawer(drawer!, FletBackend.of(context));
+          }
+        },
+        endDrawer: endDrawer != null ? ControlWidget(control: endDrawer) : null,
+        onEndDrawerChanged: (opened) {
+          if (!opened) {
+            _endDrawerOpened = false;
+            _dismissDrawer(endDrawer!, FletBackend.of(context));
+          }
+        },
+        body: body,
+        // bottomNavigationBar: bnb != null
+        //     ? createControl(control, bnb.id, control.isDisabled,
+        //         parentAdaptive: adaptive)
+        //     : null,
+        // floatingActionButton: fab != null
+        //     ? createControl(control, fab.id, control.isDisabled,
+        //         parentAdaptive: adaptive)
+        //     : null,
+        floatingActionButtonLocation: fabLocation,
+      ),
     );
 
     // var systemOverlayStyle =
