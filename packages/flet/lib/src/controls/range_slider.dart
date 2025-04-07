@@ -72,8 +72,8 @@ class _SliderControlState extends State<RangeSliderControl> {
         activeColor: widget.control.getColor("active_color", context),
         inactiveColor: widget.control.getColor("inactive_color", context),
         mouseCursor: widget.control.getWidgetStateMouseCursor("mouse_cursor"),
-        overlayColor: parseWidgetStateColor(
-            widget.control.get("overlay_color"), Theme.of(context)),
+        overlayColor: widget.control
+            .getWidgetStateColor("overlay_color", Theme.of(context)),
         onChanged: !widget.control.disabled
             ? (RangeValues newValues) {
                 onChange(newValues.start, newValues.end);

@@ -1,6 +1,9 @@
 import 'package:flutter/widgets.dart';
 
 import 'controls/adaptive_alert_dialog.dart';
+import 'controls/adaptive_elevated_button.dart';
+import 'controls/adaptive_slider.dart';
+import 'controls/adaptive_switch.dart';
 import 'controls/animated_switcher.dart';
 import 'controls/banner.dart';
 import 'controls/card.dart';
@@ -19,6 +22,7 @@ import 'controls/cupertino_context_menu_action.dart';
 import 'controls/cupertino_dialog_action.dart';
 import 'controls/cupertino_list_tile.dart';
 import 'controls/cupertino_slider.dart';
+import 'controls/cupertino_switch.dart';
 import 'controls/datatable.dart';
 import 'controls/divider.dart';
 import 'controls/dropdown.dart';
@@ -45,10 +49,8 @@ import 'controls/row.dart';
 import 'controls/safe_area.dart';
 import 'controls/selection_area.dart';
 import 'controls/shader_mask.dart';
-import 'controls/slider.dart';
 import 'controls/snack_bar.dart';
 import 'controls/stack.dart';
-import 'controls/switch.dart';
 import 'controls/text.dart';
 import 'controls/text_button.dart';
 import 'controls/vertical_divider.dart';
@@ -109,6 +111,8 @@ class FletCoreExtension extends FletExtension {
         return CupertinoDialogActionControl(key: key, control: control);
       case "CupertinoSlider":
         return CupertinoSliderControl(key: key, control: control);
+      case "CupertinoSwitch":
+        return CupertinoSwitchControl(key: key, control: control);
       case "CupertinoListTile":
         return CupertinoListTileControl(key: key, control: control);
       case "DataTable":
@@ -118,7 +122,7 @@ class FletCoreExtension extends FletExtension {
       case "Dropdown":
         return DropdownControl(key: key, control: control);
       case "ElevatedButton":
-        return ElevatedButtonControl(key: key, control: control);
+        return AdaptiveElevatedButtonControl(key: key, control: control);
       case "ExpansionPanelList":
         return ExpansionPanelListControl(key: key, control: control);
       case "ExpansionTile":
@@ -160,13 +164,13 @@ class FletCoreExtension extends FletExtension {
       case "Row":
         return RowControl(key: key, control: control);
       case "Slider":
-        return SliderControl(key: key, control: control);
+        return AdaptiveSliderControl(key: key, control: control);
       case "SnackBar":
         return SnackBarControl(key: key, control: control);
       case "Stack":
         return StackControl(key: key, control: control);
       case "Switch":
-        return SwitchControl(key: key, control: control);
+        return AdaptiveSwitchControl(key: key, control: control);
       case "Text":
         return TextControl(key: key, control: control);
       case "Placeholder":

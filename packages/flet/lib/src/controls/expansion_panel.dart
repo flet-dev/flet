@@ -1,7 +1,6 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
-import '../extensions/control.dart';
 import 'base_controls.dart';
 
 class ExpansionPanelListControl extends StatelessWidget {
@@ -28,8 +27,7 @@ class ExpansionPanelListControl extends StatelessWidget {
         materialGapSize: control.getDouble("spacing", 16)!,
         dividerColor: control.getColor("divider_color", context),
         expandIconColor: control.getColor("expanded_icon_color", context),
-        expandedHeaderPadding: parseEdgeInsets(
-            control.get("expanded_header_padding"),
+        expandedHeaderPadding: control.getEdgeInsets("expanded_header_padding",
             const EdgeInsets.symmetric(vertical: 16))!,
         expansionCallback: !control.disabled
             ? (int index, bool isExpanded) {

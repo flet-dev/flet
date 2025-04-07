@@ -103,8 +103,8 @@ class _SliderControlState extends State<SliderControl> {
         label: label?.replaceAll("{value}", _value.toStringAsFixed(round)),
         activeColor: widget.control.getColor("active_color", context),
         inactiveColor: widget.control.getColor("inactive_color", context),
-        overlayColor: parseWidgetStateColor(
-            widget.control.get("overlay_color"), Theme.of(context)),
+        overlayColor: widget.control
+            .getWidgetStateColor("overlay_color", Theme.of(context)),
         allowedInteraction: widget.control.getSliderInteraction("interaction"),
         thumbColor: widget.control.getColor("thumb_color", context),
         padding: widget.control.getPadding("padding"),
