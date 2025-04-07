@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import 'controls/adaptive_alert_dialog.dart';
+import 'controls/adaptive_elevated_button.dart';
 import 'controls/adaptive_slider.dart';
 import 'controls/adaptive_switch.dart';
 import 'controls/animated_switcher.dart';
@@ -120,7 +121,7 @@ class FletCoreExtension extends FletExtension {
       case "Dropdown":
         return DropdownControl(key: key, control: control);
       case "ElevatedButton":
-        return ElevatedButtonControl(key: key, control: control);
+        return AdaptiveElevatedButtonControl(key: key, control: control);
       case "ExpansionPanelList":
         return ExpansionPanelListControl(key: key, control: control);
       case "ExpansionTile":

@@ -10,8 +10,10 @@ from flet.controls.types import (
     Number,
     OptionalColorValue,
     OptionalControlEventCallable,
+    StrOrControl,
     UrlTarget,
 )
+from flet.utils.deprecated import deprecated_warning
 
 __all__ = ["CupertinoButton"]
 
@@ -26,11 +28,19 @@ class CupertinoButton(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/cupertinobutton
     """
 
-    text: Optional[str] = None
-    """Blah blah"""
+    def __setattr__(self, name, value):
+        if name == "text" and value is not None:
+            deprecated_warning(
+                name="text",
+                reason="Use content instead.",
+                version="0.70.0",
+                delete_version="0.70.3",
+            )
+        super().__setattr__(name, value)
+
+    content: Optional[StrOrControl] = None
     icon: Optional[IconValue] = None
     icon_color: OptionalColorValue = None
-    content: Optional[Control] = None
     bgcolor: OptionalColorValue = None
     color: OptionalColorValue = None
     disabled_bgcolor: OptionalColorValue = None
@@ -47,6 +57,7 @@ class CupertinoButton(ConstrainedControl):
     on_long_press: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
+    text: Optional[str] = None  # deprecated
 
     def before_update(self):
         super().before_update()
