@@ -38,6 +38,7 @@ import 'controls/image.dart';
 import 'controls/line_chart.dart';
 import 'controls/list_tile.dart';
 import 'controls/list_view.dart';
+import 'controls/menu_item_button.dart';
 import 'controls/navigation_drawer.dart';
 import 'controls/navigation_rail.dart';
 import 'controls/page.dart';
@@ -179,6 +180,8 @@ class FletCoreExtension extends FletExtension {
         return PlaceholderControl(key: key, control: control);
       case "VerticalDivider":
         return VerticalDividerControl(key: key, control: control);
+      case "MenuItemButton":
+        return MenuItemButtonControl(key: key, control: control);
       case "View":
         return ViewControl(key: key, control: control);
       case "SafeArea":
