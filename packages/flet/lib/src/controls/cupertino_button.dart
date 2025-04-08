@@ -1,4 +1,5 @@
 import 'package:flet/src/utils/edge_insets.dart';
+import 'package:flet/src/utils/icons.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../models/control.dart';
@@ -8,7 +9,7 @@ import '../utils/numbers.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
 
-class CupertinoButtonControl extends StatelessWidget {
+class CupertinoButtonControl extends StatefulWidget {
   final Control control;
 
   const CupertinoButtonControl({
@@ -17,25 +18,50 @@ class CupertinoButtonControl extends StatelessWidget {
   });
 
   @override
+  State<CupertinoButtonControl> createState() => _CupertinoButtonControlState();
+}
+
+class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
+  @override
   Widget build(BuildContext context) {
-    debugPrint("CupertinoButton build: ${control.id}");
+    debugPrint("CupertinoButton build: ${widget.control.id}");
     // var theme = Theme.of(context);
-    String text = control.getString("text", "")!; // to be removed in 0.70.3
-    var content = control.get("content");
-    // var icon = control.getIcon("icon");
-    // var iconColor = control.getColor("icon_color", context);
+    String text =
+        widget.control.getString("text", "")!; //(todo 0.70.3) remove text
+    var content = widget.control.get("content");
+    Widget contentWidget = content is Control
+        ? ControlWidget(control: content)
+        : content is String
+            ? Text(content)
+            : Text(text); //(todo 0.70.3) change to Text("")
+
+    var icon = widget.control.get("icon");
+    Color? iconColor = widget.control.getColor("icon_color", context);
+
+    Widget? iconWidget = icon is Control
+        ? ControlWidget(control: icon)
+        : icon is String
+            ? Icon(widget.control.getIcon("icon"), color: iconColor)
+            : null;
+
+    Widget child;
+    if (iconWidget != null) {
+      if (contentWidget != const Text("")) {
+        child = Row(
+          children: [iconWidget, const SizedBox(width: 8), contentWidget],
+        );
+      } else {
+        child = iconWidget;
+      }
+    } else {
+      child = contentWidget;
+    }
 
     // // IconButton props below
     // var iconSize = control.getDouble("icon_size");
     // var selected = control.getBool("selected", false)!;
     // var selectedIcon = control.getIcon("selected_icon");
     // var selectedIconColor = control.getColor("selected_icon_color", context);
-
-    Widget contentWidget = content is Control
-        ? ControlWidget(control: content)
-        : content is String
-            ? Text(content)
-            : Text(text); // to be changed to Text("") in 0.70.3
 
     // Widget? child;
     // List<Widget> children = [];
@@ -76,16 +102,16 @@ class CupertinoButtonControl extends StatelessWidget {
 
     // var pressedOpacity = control.getDouble("opacity_on_click")!;
     // var minSize = control.getDouble("min_size", 44.0)!;
-    var url = control.getString("url", "")!;
-    var disabledColor = control.getColor(
+    var url = widget.control.getString("url", "")!;
+    var disabledColor = widget.control.getColor(
         "disabled_bgcolor", context, CupertinoColors.quaternarySystemFill)!;
-    var bgColor = control.getColor("bgcolor", context);
+    var bgColor = widget.control.getColor("bgcolor", context);
     // var color = control.getColor("color", context);
     // var alignment = control.getAlignment("alignment", Alignment.center)!;
     // var borderRadius = control.getBorderRadius(
     //     "borderRadius", const BorderRadius.all(Radius.circular(8.0)))!;
 
-    var padding = control.getPadding("padding");
+    var padding = widget.control.getPadding("padding");
 
     // var style = control.getButtonStyle("style", Theme.of(context),
     //     defaultForegroundColor: theme.colorScheme.primary,
@@ -126,13 +152,13 @@ class CupertinoButtonControl extends StatelessWidget {
     //       child: child);
     // }
 
-    Function()? onPressed = !control.disabled
+    Function()? onPressed = !widget.control.disabled
         ? () {
             if (url != "") {
               openWebBrowser(url,
-                  webWindowName: control.getString("url_target"));
+                  webWindowName: widget.control.getString("url_target"));
             }
-            control.triggerEvent("click");
+            widget.control.triggerEvent("click");
           }
         : null;
 
@@ -158,10 +184,10 @@ class CupertinoButtonControl extends StatelessWidget {
       //       .triggerControlEvent(control, focused ? "focus" : "blur");
       // },
       //child: child,
-      child: contentWidget,
+      child: child,
       //child: const Text("OK")
     );
 
-    return ConstrainedControl(control: control, child: button);
+    return ConstrainedControl(control: widget.control, child: button);
   }
 }
