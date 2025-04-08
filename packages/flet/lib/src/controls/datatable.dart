@@ -46,22 +46,14 @@ class DataTableControl extends StatelessWidget {
           gradient: gradient);
     }
 
-    TableBorder? tableBorder;
-    if (horizontalLines != null || verticalLines != null) {
-      tableBorder = TableBorder(
-          horizontalInside: horizontalLines ?? BorderSide.none,
-          verticalInside: verticalLines ?? BorderSide.none);
-    }
-
-    Clip clipBehavior =
-        parseClip(control.getString("clip_behavior"), Clip.none)!;
-
-    var backend = FletBackend.of(context);
-
     var datatable = DataTable(
       decoration: decoration,
-      border: tableBorder,
-      clipBehavior: clipBehavior,
+      border: (horizontalLines != null || verticalLines != null)
+          ? TableBorder(
+              horizontalInside: horizontalLines ?? BorderSide.none,
+              verticalInside: verticalLines ?? BorderSide.none)
+          : null,
+      clipBehavior: parseClip(control.getString("clip_behavior"), Clip.none)!,
       checkboxHorizontalMargin: control.getDouble("checkbox_horizontal_margin"),
       columnSpacing: control.getDouble("column_spacing"),
       dataRowColor: control.getWidgetStateColor("data_row_color", theme),
@@ -79,7 +71,7 @@ class DataTableControl extends StatelessWidget {
       sortColumnIndex: control.getInt("sort_column_index"),
       onSelectAll: control.getBool("on_select_all", false)!
           ? (bool? selected) {
-              backend.triggerControlEvent(control, "select_all", selected);
+              control.triggerEvent("select_all", selected);
             }
           : null,
       columns: control.children("columns").map((column) {
@@ -92,8 +84,8 @@ class DataTableControl extends StatelessWidget {
           mouseCursor: WidgetStateMouseCursor.clickable,
           onSort: column.getBool("on_sort", false)!
               ? (columnIndex, ascending) {
-                  backend.triggerControlEvent(
-                      column, "sort", {"i": columnIndex, "a": ascending});
+                  column
+                      .triggerEvent("sort", {"i": columnIndex, "a": ascending});
                 }
               : null,
           label: column.buildWidget("label")!,
@@ -107,12 +99,12 @@ class DataTableControl extends StatelessWidget {
           color: parseWidgetStateColor(row.get("color"), theme),
           onSelectChanged: row.getBool("on_select_changed", false)!
               ? (selected) {
-                  backend.triggerControlEvent(row, "select_changed", selected);
+                  row.triggerEvent("select_changed", selected);
                 }
               : null,
           onLongPress: row.getBool("on_long_press", false)!
               ? () {
-                  backend.triggerControlEvent(row, "long_press");
+                  row.triggerEvent("long_press");
                 }
               : null,
           cells: row.children("cells").map((cell) {
@@ -123,27 +115,27 @@ class DataTableControl extends StatelessWidget {
               showEditIcon: cell.getBool("show_edit_icon", false)!,
               onDoubleTap: cell.getBool("on_double_tap", false)!
                   ? () {
-                      backend.triggerControlEvent(cell, "double_tap");
+                      cell.triggerEvent("double_tap");
                     }
                   : null,
               onLongPress: cell.getBool("on_long_press", false)!
                   ? () {
-                      backend.triggerControlEvent(cell, "long_press");
+                      cell.triggerEvent("long_press");
                     }
                   : null,
               onTap: cell.getBool("on_tap", false)!
                   ? () {
-                      backend.triggerControlEvent(cell, "tap");
+                      cell.triggerEvent("tap");
                     }
                   : null,
               onTapCancel: cell.getBool("on_tap_cancel", false)!
                   ? () {
-                      backend.triggerControlEvent(cell, "tap_cancel");
+                      cell.triggerEvent("tap_cancel");
                     }
                   : null,
               onTapDown: cell.getBool("on_tap_down", false)!
                   ? (details) {
-                      backend.triggerControlEvent(cell, "tap_down", {
+                      cell.triggerEvent("tap_down", {
                         "kind": details.kind?.name,
                         "lx": details.localPosition.dx,
                         "ly": details.localPosition.dy,

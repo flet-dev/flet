@@ -16,10 +16,9 @@ class ExpansionPanelListControl extends StatelessWidget {
     debugPrint("ExpansionPanelList build: ${control.id}");
 
     void onChange(int index, bool isExpanded) {
-      FletBackend.of(context).updateControl(
-          control.children("controls")[index].id, {"expanded": isExpanded},
+      control.updateProperties({"expanded": isExpanded},
           notify: true);
-      FletBackend.of(context).triggerControlEvent(control, "change", index);
+      control.triggerEvent("change", index);
     }
 
     var panelList = ExpansionPanelList(

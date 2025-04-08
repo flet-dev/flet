@@ -102,8 +102,6 @@ class _CupertinoAlertDialogControlState
 
       _open = open;
 
-      var backend = FletBackend.of(context);
-
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             barrierDismissible: !modal,
@@ -113,8 +111,8 @@ class _CupertinoAlertDialogControlState
             builder: (context) => _dialog!).then((value) {
           debugPrint("Dismissing CupertinoAlertDialog(${widget.control.id})");
           _open = false;
-          backend.updateControl(widget.control.id, {"open": false});
-          backend.triggerControlEvent(widget.control, "dismiss");
+          widget.control.updateProperties({"open": false});
+          widget.control.triggerEvent("dismiss");
         });
       });
     } else if (!open && _open) {

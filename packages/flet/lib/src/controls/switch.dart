@@ -45,14 +45,12 @@ class _SwitchControlState extends State<SwitchControl> {
   void _onChange(bool value) {
     _value = value;
     var props = {"value": value};
-    FletBackend.of(context)
-        .updateControl(widget.control.id, props, notify: true);
-    FletBackend.of(context).triggerControlEvent(widget.control, "change");
+    widget.control.updateProperties(props, notify: true);
+    widget.control.triggerEvent( "change");
   }
 
   void _onFocusChange() {
-    FletBackend.of(context).triggerControlEvent(
-        widget.control, _focusNode.hasFocus ? "focus" : "blur");
+    widget.control.triggerEvent( _focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override

@@ -31,8 +31,7 @@ class TextControl extends StatelessWidget {
       control.children("spans"),
       control.disabled,
       (Control control, String eventName, String eventData) {
-        FletBackend.of(context)
-            .triggerControlEvent(control, eventName, eventData);
+        control.triggerEvent(eventName, eventData);
       },
     );
     String? semanticsLabel = control.getString("semantics_label");
@@ -90,7 +89,7 @@ class TextControl extends StatelessWidget {
         parseTextOverflow(control.getString("overflow"), TextOverflow.clip)!;
 
     onSelectionChanged(TextSelection selection, SelectionChangedCause? cause) {
-      FletBackend.of(context).triggerControlEvent(control, "selection_change", {
+      control.triggerEvent("selection_change", {
         "text": text,
         "cause": cause?.name ?? "unknown",
         "selection": {
@@ -108,9 +107,8 @@ class TextControl extends StatelessWidget {
     }
 
     onTap() {
-      FletBackend.of(context).triggerControlEvent(
-        control,
-        "tap",
+      control.triggerEvent(
+        "tap"
       );
     }
 

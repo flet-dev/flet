@@ -47,8 +47,7 @@ class _TextButtonControlState extends State<TextButtonControl>
   }
 
   void _onFocusChange() {
-    FletBackend.of(context).triggerControlEvent(
-        widget.control, _focusNode.hasFocus ? "focus" : "blur");
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
@@ -111,22 +110,19 @@ class _TextButtonControlState extends State<TextButtonControl>
               if (url != "") {
                 openWebBrowser(url, webWindowName: urlTarget);
               }
-              FletBackend.of(context)
-                  .triggerControlEvent(widget.control, "click");
+              widget.control.triggerEvent("click");
             };
 
       Function()? onLongPressHandler = widget.control.disabled
           ? null
           : () {
-              FletBackend.of(context)
-                  .triggerControlEvent(widget.control, "long_press");
+              widget.control.triggerEvent("long_press");
             };
 
       Function(bool)? onHoverHandler = widget.control.disabled
           ? null
           : (state) {
-              FletBackend.of(context).triggerControlEvent(
-                  widget.control, "hover", state.toString());
+              widget.control.triggerEvent("hover", state.toString());
             };
 
       TextButton? button;

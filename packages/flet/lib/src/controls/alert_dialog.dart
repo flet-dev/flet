@@ -117,8 +117,6 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
 
       _open = open;
 
-      var backend = FletBackend.of(context);
-
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
             barrierDismissible: !modal,
@@ -128,8 +126,8 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
             builder: (context) => _dialog!).then((value) {
           debugPrint("Dismissing AlertDialog(${widget.control.id})");
           _open = false;
-          backend.updateControl(widget.control.id, {"open": false});
-          backend.triggerControlEvent(widget.control, "dismiss");
+          widget.control.updateProperties({"open": false});
+          widget.control.triggerEvent("dismiss");
         });
       });
     } else if (!open && _open) {
