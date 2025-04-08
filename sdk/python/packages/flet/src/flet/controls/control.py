@@ -8,6 +8,7 @@ from flet.controls.material.tooltip import TooltipValue
 from flet.controls.ref import Ref
 from flet.controls.types import Number, ResponsiveNumber
 from flet.utils.strings import random_string
+
 from ..utils import deprecated
 
 # Try importing `dataclass_transform()` for Python 3.11+, else use a no-op function
@@ -223,6 +224,9 @@ class Control(BaseControl):
         assert (
             0.0 <= self.opacity <= 1.0
         ), "opacity must be between 0.0 and 1.0 inclusive"
+        assert self.expand is None or isinstance(
+            self.expand, (bool, int)
+        ), "expand must be of bool or int type"
 
     def clean(self) -> None:
         raise Exception("Deprecated!")

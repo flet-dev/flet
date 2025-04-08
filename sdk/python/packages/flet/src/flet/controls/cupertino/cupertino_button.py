@@ -1,9 +1,10 @@
+import asyncio
 from typing import Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.border_radius import OptionalBorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, control
+from flet.controls.control import control
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
     IconValue,
@@ -46,7 +47,7 @@ class CupertinoButton(ConstrainedControl):
     color: OptionalColorValue = None
     disabled_bgcolor: OptionalColorValue = None
     opacity_on_click: Number = 0.4
-    min_size: Number = 44.0
+    min_size: Number = None
     padding: OptionalPaddingValue = None
     alignment: Optional[Alignment] = None
     border_radius: OptionalBorderRadiusValue = 8.0
@@ -65,3 +66,9 @@ class CupertinoButton(ConstrainedControl):
         assert (
             0 <= self.opacity_on_click <= 1
         ), "opacity_on_click must be between 0 and 1 inclusive"
+
+    async def focus_async(self):
+        await self._invoke_method_async("focus")
+
+    def focus(self):
+        asyncio.create_task(self.focus_async())

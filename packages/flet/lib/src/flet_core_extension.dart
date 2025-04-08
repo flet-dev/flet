@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import 'controls/adaptive_alert_dialog.dart';
-import 'controls/adaptive_elevated_button.dart';
+import 'controls/adaptive_button.dart';
 import 'controls/adaptive_slider.dart';
 import 'controls/adaptive_switch.dart';
 import 'controls/animated_switcher.dart';
@@ -29,7 +29,6 @@ import 'controls/datatable.dart';
 import 'controls/date_picker.dart';
 import 'controls/divider.dart';
 import 'controls/dropdown.dart';
-import 'controls/elevated_button.dart';
 import 'controls/expansion_panel.dart';
 import 'controls/expansion_tile.dart';
 import 'controls/flet_app_control.dart';
@@ -138,6 +137,10 @@ class FletCoreExtension extends FletExtension {
         return CupertinoAlertDialogControl(key: key, control: control);
       case "CupertinoButton":
         return CupertinoButtonControl(key: key, control: control);
+      case "CupertinoFilledButton":
+        return CupertinoButtonControl(key: key, control: control);
+      case "CupertinoTintedButton":
+        return CupertinoButtonControl(key: key, control: control);
       case "CupertinoContextMenu":
         return CupertinoContextMenuControl(key: key, control: control);
       case "CupertinoContextMenuAction":
@@ -159,15 +162,15 @@ class FletCoreExtension extends FletExtension {
       case "Dropdown":
         return DropdownControl(key: key, control: control);
       case "ElevatedButton":
-        return AdaptiveElevatedButtonControl(key: key, control: control);
+        return AdaptiveButtonControl(key: key, control: control);
       case "ExpansionPanelList":
         return ExpansionPanelListControl(key: key, control: control);
       case "ExpansionTile":
         return ExpansionTileControl(key: key, control: control);
       case "FilledButton":
-        return ElevatedButtonControl(key: key, control: control);
+        return AdaptiveButtonControl(key: key, control: control);
       case "FilledTonalButton":
-        return ElevatedButtonControl(key: key, control: control);
+        return AdaptiveButtonControl(key: key, control: control);
       case "FletApp":
         return FletAppControl(key: key, control: control);
       case "SubmenuButton":

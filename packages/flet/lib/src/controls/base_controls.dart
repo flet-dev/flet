@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
 import '../utils/numbers.dart';
@@ -77,9 +76,11 @@ Widget _expandable(Widget widget, Control control) {
   var parent = control.parent;
   if (parent != null && ["View", "Column", "Row"].contains(parent.type)) {
     int? expand = control.properties.containsKey("expand")
-        ? control.get("expand") is bool
+        ? control.get("expand") == true
             ? 1
-            : control.getInt("expand")
+            : control.get("expand") == false
+                ? 0
+                : control.getInt("expand")
         : null;
     var expandLoose = control.getBool("expand_loose");
     return expand != null
@@ -101,7 +102,7 @@ Widget _opacity(BuildContext context, Widget widget, Control control) {
       opacity: opacity ?? 1.0,
       onEnd: control.getBool("on_animation_end", false)!
           ? () {
-              control.triggerEvent( "animation_end", "opacity");
+              control.triggerEvent("animation_end", "opacity");
             }
           : null,
       child: widget,
@@ -152,7 +153,7 @@ Widget _scaledControl(BuildContext context, Widget widget, Control control) {
       curve: animation.curve,
       onEnd: control.getBool("on_animation_end", false)!
           ? () {
-             control.triggerEvent("animation_end", "scale");
+              control.triggerEvent("animation_end", "scale");
             }
           : null,
       child: widget,

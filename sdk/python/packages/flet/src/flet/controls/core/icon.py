@@ -51,3 +51,15 @@ class Icon(ConstrainedControl):
     weight: OptionalNumber = None
     optical_size: OptionalNumber = None
     blend_mode: Optional[BlendMode] = None
+
+    def before_update(self):
+        super().before_update()
+        assert self.fill is None or (
+            0.0 <= self.fill <= 1.0
+        ), "fill must be between 0.0 and 1.0 inclusive"
+        assert self.weight is None or (
+            self.weight > 0.0
+        ), "weight must be strictly greater than 0.0"
+        assert self.optical_size is None or (
+            self.optical_size > 0.0
+        ), "optical_size must be strictly greater than 0.0"

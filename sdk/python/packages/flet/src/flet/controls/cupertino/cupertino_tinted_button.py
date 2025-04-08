@@ -3,11 +3,11 @@ from typing import Any, Optional
 from flet.controls.control import control
 from flet.controls.cupertino.cupertino_button import CupertinoButton
 
-__all__ = ["CupertinoFilledButton"]
+__all__ = ["CupertinoTintedButton"]
 
 
-@control("CupertinoFilledButton")
-class CupertinoFilledButton(CupertinoButton):
+@control("CupertinoTintedButton")
+class CupertinoTintedButton(CupertinoButton):
     """
     An iOS-style button filled with default background color.
 
@@ -18,7 +18,7 @@ class CupertinoFilledButton(CupertinoButton):
 
     def main(page: ft.Page):
         page.add(
-            ft.CupertinoFilledButton(text="OK"),
+            ft.CupertinoTintedButton(text="OK"),
         )
 
     ft.app(target=main)

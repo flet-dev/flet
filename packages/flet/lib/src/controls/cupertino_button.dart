@@ -1,10 +1,11 @@
+import 'package:flet/src/utils/alignment.dart';
+import 'package:flet/src/utils/borders.dart';
+import 'package:flet/src/utils/edge_insets.dart';
+import 'package:flet/src/utils/icons.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../models/control.dart';
 import '../utils/colors.dart';
-import '../utils/edge_insets.dart';
-import '../utils/icons.dart';
-import '../utils/borders.dart';
 import '../utils/launch_url.dart';
 import '../utils/numbers.dart';
 import 'base_controls.dart';
@@ -23,10 +24,41 @@ class CupertinoButtonControl extends StatefulWidget {
 }
 
 class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
+  late final FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+    _focusNode.addListener(_onFocusChange);
+    widget.control.addInvokeMethodListener(_invokeMethod);
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_onFocusChange);
+    _focusNode.dispose();
+    widget.control.removeInvokeMethodListener(_invokeMethod);
+    super.dispose();
+  }
+
+  void _onFocusChange() {
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
+  }
+
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    debugPrint("ElevatedButton.$name($args)");
+    switch (name) {
+      case "focus":
+        _focusNode.requestFocus();
+      default:
+        throw Exception("Unknown ElevatedButton method: $name");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoButton build: ${widget.control.id}");
-    // var theme = Theme.of(context);
     String text =
         widget.control.getString("text", "")!; //(todo 0.70.3) remove text
     var content = widget.control.get("content");
@@ -49,6 +81,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     if (iconWidget != null) {
       if (contentWidget != const Text("")) {
         child = Row(
+          mainAxisSize: MainAxisSize.min,
           children: [iconWidget, const SizedBox(width: 8), contentWidget],
         );
       } else {
@@ -58,63 +91,27 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       child = contentWidget;
     }
 
-    // // IconButton props below
-    // var iconSize = control.getDouble("icon_size");
-    // var selected = control.getBool("selected", false)!;
-    // var selectedIcon = control.getIcon("selected_icon");
-    // var selectedIconColor = control.getColor("selected_icon_color", context);
+    double pressedOpacity = widget.control.getDouble("opacity_on_click", 0.4)!;
+    double? minSize = widget.control.getDouble("min_size");
+    bool autofocus = widget.control.getBool("autofocus", false)!;
+    Color? bgColor = widget.control.getColor("bgcolor", context);
+    Color? focusColor = widget.control.getColor("focus_color", context);
 
-    // Widget? child;
-    // List<Widget> children = [];
-    // if (icon != null) {
-    //   children.add(Icon(
-    //     selected ? selectedIcon : icon,
-    //     color: selected
-    //         ? selectedIconColor
-    //         : control.disabled
-    //             ? theme.disabledColor
-    //             : iconColor,
-    //     size: iconSize,
-    //   ));
-    // }
-    // children.add(contentWidget);
-    // Widget? iconWidget = icon != null
-    //     ? Icon(
-    //         selected ? selectedIcon : icon,
-    //         color: selected
-    //             ? selectedIconColor
-    //             : control.disabled
-    //                 ? theme.disabledColor
-    //                 : iconColor,
-    //         size: iconSize,
-    //       )
-    //     : null;
-    // children.add(iconWidget);
-    // Widget child;
-    // if (children.length == 2) {
-    //   children.insert(1, const SizedBox(width: 8));
-    //   child = Row(
-    //     mainAxisSize: MainAxisSize.min,
-    //     children: children,
-    //   );
-    // } else {
-    //   child = children.first;
-    // }
-
-    var pressedOpacity = widget.control.getDouble("opacity_on_click", 0.4)!;
-    var minSize = widget.control.getDouble("min_size", 44.0)!;
-    var url = widget.control.getString("url", "")!;
-    var disabledColor = widget.control.getColor(
-        "disabled_bgcolor", context, CupertinoColors.quaternarySystemFill)!;
-    var bgColor = widget.control.getColor("bgcolor", context);
-    // var color = control.getColor("color", context);
-    // var alignment = control.getAlignment("alignment", Alignment.center)!;
+    var alignment = widget.control.getAlignment("alignment", Alignment.center)!;
     var borderRadius = widget.control.getBorderRadius(
         "border_radius", const BorderRadius.all(Radius.circular(8.0)))!;
 
     var padding = widget.control.getPadding("padding");
+    bool isFilledButton = {
+      "CupertinoFilledButton",
+      "FilledButton",
+    }.contains(widget.control.type);
+    bool isTintedButton = {
+      "CupertinoTintedButton",
+      "FilledTonalButton",
+    }.contains(widget.control.type);
 
-    // var style = control.getButtonStyle("style", Theme.of(context),
+    // var style = widget.control.getButtonStyle("style", Theme.of(context),
     //     defaultForegroundColor: theme.colorScheme.primary,
     //     defaultBackgroundColor: Colors.transparent,
     //     defaultOverlayColor: Colors.transparent,
@@ -143,16 +140,16 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     //   bgColor = style.backgroundColor?.resolve(widgetStates);
     //   padding = style.padding?.resolve({}) as EdgeInsets?;
     // }
-
-    // if (color != null) {
-    //   child = DefaultTextStyle(
-    //       style: CupertinoTheme.of(context)
-    //           .textTheme
-    //           .textStyle
-    //           .copyWith(color: color),
-    //       child: child);
-    // }
-
+    var color = widget.control.getColor("color", context);
+    if (color != null) {
+      child = DefaultTextStyle(
+          style: CupertinoTheme.of(context)
+              .textTheme
+              .textStyle
+              .copyWith(color: color),
+          child: child);
+    }
+    var url = widget.control.getString("url", "")!;
     Function()? onPressed = !widget.control.disabled
         ? () {
             if (url != "") {
@@ -162,32 +159,65 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
             widget.control.triggerEvent("click");
           }
         : null;
+    Function()? onLongPressed = !widget.control.disabled
+        ? () {
+            widget.control.triggerEvent("long_press");
+          }
+        : null;
 
-    CupertinoButton? button = CupertinoButton(
-      onPressed: onPressed,
-      disabledColor: disabledColor,
-      color: bgColor,
-      padding: padding,
-      borderRadius: borderRadius,
-      pressedOpacity: pressedOpacity,
-      //alignment: alignment,
-      minSize: minSize,
-      //autofocus: control.getBool("autofocus", false)!,
-      //focusColor: control.getColor("focus_color", context),
-      // onLongPress: !control.disabled
-      //     ? () {
-      //         FletBackend.of(context)
-      //             .triggerControlEvent(control, "long_press");
-      //       }
-      //     : null,
-      // onFocusChange: (focused) {
-      //   FletBackend.of(context)
-      //       .triggerControlEvent(control, focused ? "focus" : "blur");
-      // },
-      //child: child,
-      child: child,
-      //child: const Text("OK")
-    );
+    CupertinoButton? button;
+    if (isFilledButton) {
+      button = CupertinoButton.filled(
+        onPressed: onPressed,
+        disabledColor: widget.control.getColor(
+            "disabled_bgcolor", context, CupertinoColors.tertiarySystemFill)!,
+        //color: widget.control.getColor("bgcolor", context),
+        padding: padding,
+        borderRadius: borderRadius,
+        pressedOpacity: pressedOpacity,
+        alignment: alignment,
+        minSize: minSize,
+        autofocus: autofocus,
+        focusColor: focusColor,
+        onLongPress: onLongPressed,
+        focusNode: _focusNode,
+        child: child,
+      );
+    } else if (isTintedButton) {
+      button = CupertinoButton.tinted(
+        onPressed: onPressed,
+        disabledColor: widget.control.getColor(
+            "disabled_bgcolor", context, CupertinoColors.tertiarySystemFill)!,
+        color: bgColor,
+        padding: padding,
+        borderRadius: borderRadius,
+        pressedOpacity: pressedOpacity,
+        alignment: alignment,
+        minSize: minSize,
+        autofocus: autofocus,
+        focusColor: focusColor,
+        onLongPress: onLongPressed,
+        focusNode: _focusNode,
+        child: child,
+      );
+    } else {
+      button = CupertinoButton(
+        onPressed: onPressed,
+        disabledColor: widget.control.getColor(
+            "disabled_bgcolor", context, CupertinoColors.quaternarySystemFill)!,
+        color: bgColor,
+        padding: padding,
+        borderRadius: borderRadius,
+        pressedOpacity: pressedOpacity,
+        alignment: alignment,
+        minSize: minSize,
+        autofocus: autofocus,
+        focusColor: focusColor,
+        onLongPress: onLongPressed,
+        focusNode: _focusNode,
+        child: child,
+      );
+    }
 
     return ConstrainedControl(control: widget.control, child: button);
   }
