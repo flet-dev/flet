@@ -22,6 +22,7 @@ import 'controls/cupertino_context_menu.dart';
 import 'controls/cupertino_context_menu_action.dart';
 import 'controls/cupertino_dialog_action.dart';
 import 'controls/cupertino_list_tile.dart';
+import 'controls/cupertino_navigation_bar.dart';
 import 'controls/cupertino_segmented_button.dart';
 import 'controls/cupertino_slider.dart';
 import 'controls/cupertino_switch.dart';
@@ -43,6 +44,7 @@ import 'controls/list_view.dart';
 import 'controls/menu_bar.dart';
 import 'controls/menu_item_button.dart';
 import 'controls/merge_semantics.dart';
+import 'controls/navigation_bar.dart';
 import 'controls/navigation_drawer.dart';
 import 'controls/navigation_rail.dart';
 import 'controls/outlined_button.dart';
@@ -117,6 +119,10 @@ class FletCoreExtension extends FletExtension {
         return ColumnControl(key: key, control: control);
       case "GridView":
         return GridViewControl(key: key, control: control);
+      case "NavigationBar":
+        return NavigationBarControl(key: key, control: control);
+      case "CupertinoNavigationBar":
+        return CupertinoNavigationBarControl(key: key, control: control);
       case "CupertinoActionSheet":
         return CupertinoActionSheetControl(key: key, control: control);
       case "CupertinoActionSheetAction":
