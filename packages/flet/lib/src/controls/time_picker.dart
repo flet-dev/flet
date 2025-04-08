@@ -1,23 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
+import '../flet_backend.dart';
 import '../models/control.dart';
-import '../utils/others.dart';
+import '../utils/misc.dart';
+import '../utils/numbers.dart';
 
 class TimePickerControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final FletControlBackend backend;
 
-  const TimePickerControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.backend});
+  const TimePickerControl({super.key, required this.control});
 
   @override
   State<TimePickerControl> createState() => _TimePickerControlState();
@@ -48,10 +39,10 @@ class _TimePickerControlState extends State<TimePickerControl> {
         eventName = "change";
       }
       widget.control.state["open"] = false;
-      widget.backend.updateControlState(
+      FletBackend.of(context).updateControl(
           widget.control.id, {"value": stringValue, "open": "false"});
-      widget.backend
-          .triggerControlEvent(widget.control.id, eventName, stringValue);
+      FletBackend.of(context)
+          .triggerControlEvent(widget.control, eventName, stringValue);
     }
 
     Widget createSelectTimeDialog() {
@@ -63,13 +54,12 @@ class _TimePickerControlState extends State<TimePickerControl> {
         hourLabelText: widget.control.getString("hourLabelText"),
         minuteLabelText: widget.control.getString("minuteLabelText"),
         errorInvalidText: widget.control.getString("errorInvalidText"),
-        initialEntryMode: parseTimePickerEntryMode(
-            widget.control.getString("timePickerEntryMode"),
-            TimePickerEntryMode.dial)!,
+        initialEntryMode: widget.control.getTimePickerEntryMode(
+            "timePickerEntryMode", TimePickerEntryMode.dial)!,
         orientation: parseOrientation(widget.control.getString("orientation")),
         onEntryModeChanged: (TimePickerEntryMode mode) {
-          widget.backend.triggerControlEvent(
-              widget.control.id, "entryModeChange", mode.name);
+          FletBackend.of(context).triggerControlEvent(
+              widget.control, "entry_mode_change", mode.name);
         },
       );
 

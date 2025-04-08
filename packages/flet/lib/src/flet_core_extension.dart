@@ -40,6 +40,7 @@ import 'controls/list_tile.dart';
 import 'controls/list_view.dart';
 import 'controls/menu_bar.dart';
 import 'controls/menu_item_button.dart';
+import 'controls/merge_semantics.dart';
 import 'controls/navigation_drawer.dart';
 import 'controls/navigation_rail.dart';
 import 'controls/page.dart';
@@ -95,6 +96,8 @@ class FletCoreExtension extends FletExtension {
         return SegmentedButtonControl(key: key, control: control);
       case "Semantics":
         return SemanticsControl(key: key, control: control);
+      case "MergeSemantics":
+        return MergeSemanticsControl(key: key, control: control);
       case "Column":
         return ColumnControl(key: key, control: control);
       case "CupertinoActionSheet":
