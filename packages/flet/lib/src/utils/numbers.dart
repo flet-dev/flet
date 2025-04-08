@@ -72,6 +72,10 @@ extension LiteralParsers on Control {
     return get<double>(propertyName, defaultValue);
   }
 
+  DateTime? getDateTime(String propertyName, [DateTime? defaultValue]) {
+    return get<DateTime>(propertyName, defaultValue);
+  }
+
   WidgetStateProperty<double?>? getWidgetStateDouble(String propertyName,
       {double? defaultDouble, WidgetStateProperty<double?>? defaultValue}) {
     return parseWidgetStateDouble(get(propertyName),

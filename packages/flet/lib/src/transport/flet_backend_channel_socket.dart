@@ -6,6 +6,8 @@ import 'package:msgpack_dart/msgpack_dart.dart' as msgpack;
 import '../protocol/message.dart';
 import '../utils/networking.dart';
 import 'flet_backend_channel.dart';
+import 'flet_msgpack_decoder.dart';
+import 'flet_msgpack_encoder.dart';
 import 'streaming_msgpack_deserializer.dart';
 
 const int defaultLocalReconnectInterval = 200;
@@ -27,7 +29,8 @@ class FletSocketBackendChannel implements FletBackendChannel {
     required this.address,
     required this.onDisconnect,
     required this.onMessage,
-  }) : _streamingDeserializer = StreamingMsgpackDeserializer();
+  }) : _streamingDeserializer =
+            StreamingMsgpackDeserializer(extDecoder: FletMsgpackDecoder());
 
   @override
   connect() async {
@@ -53,7 +56,7 @@ class FletSocketBackendChannel implements FletBackendChannel {
     // Listen for incoming data.
     _socket!.listen(
       (Uint8List data) {
-        debugPrint("Received packet: ${data.length} bytes");
+        debugPrint("Received packet: ${data.length}");
         // Feed the incoming chunk into the streaming deserializer.
         _streamingDeserializer.addChunk(data);
         // Try to decode complete MessagePack messages from buffered data.
@@ -90,7 +93,8 @@ class FletSocketBackendChannel implements FletBackendChannel {
   @override
   void send(Message message) {
     // Serialize the message using MessagePack and send it.
-    _socket!.add(msgpack.serialize(message.toJson()));
+    _socket!.add(
+        msgpack.serialize(message.toJson(), extEncoder: FletMsgpackEncoder()));
   }
 
   @override

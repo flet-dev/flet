@@ -17,6 +17,7 @@ from flet.messaging.protocol import (
     RegisterClientRequestBody,
     RegisterClientResponseBody,
     UpdateControlPropsBody,
+    decode_ext_from_msgpack,
     encode_object_for_msgpack,
 )
 from flet.messaging.session import Session
@@ -88,7 +89,7 @@ class FletSocketServer(Connection):
             self.__send_loop_task = asyncio.create_task(self.__send_loop(writer))
 
     async def __receive_loop(self, reader: asyncio.StreamReader):
-        unpacker = msgpack.Unpacker()
+        unpacker = msgpack.Unpacker(ext_hook=decode_ext_from_msgpack)
         while True:
             try:
                 buf = await reader.read(1024**2)
