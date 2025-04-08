@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/launch_url.dart';
@@ -132,7 +131,7 @@ class CupertinoButtonControl extends StatelessWidget {
               openWebBrowser(url,
                   webWindowName: control.getString("url_target"));
             }
-            control.triggerEvent("click", context);
+            control.triggerEvent("click");
           }
         : null;
 

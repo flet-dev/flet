@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/menu.dart';
@@ -38,8 +37,7 @@ class _SubmenuButtonControlState extends State<SubmenuButtonControl> {
   }
 
   void _onFocusChange() {
-    widget.control
-        .triggerEvent(_focusNode.hasFocus ? "focus" : "blur", context);
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -72,13 +70,13 @@ class _SubmenuButtonControlState extends State<SubmenuButtonControl> {
       menuStyle: widget.control.getMenuStyle("menu_style", Theme.of(context)),
       alignmentOffset: widget.control.getOffset("alignment_offset"),
       onClose: onClose && !widget.control.disabled
-          ? () => widget.control.triggerEvent("close", context)
+          ? () => widget.control.triggerEvent("close")
           : null,
       onHover: onHover && !widget.control.disabled
-          ? (bool value) => widget.control.triggerEvent("hover", context, value)
+          ? (bool value) => widget.control.triggerEvent("hover", value)
           : null,
       onOpen: onOpen && !widget.control.disabled
-          ? () => widget.control.triggerEvent("open", context)
+          ? () => widget.control.triggerEvent("open")
           : null,
       leadingIcon: widget.control.buildWidget("leading"),
       trailingIcon: widget.control.buildWidget("trailing"),

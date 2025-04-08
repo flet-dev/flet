@@ -35,7 +35,7 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
 
   void _onFocusChange() {
     widget.control
-        .triggerEvent(_focusNode.hasFocus ? "focus" : "blur", context);
+        .triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -48,8 +48,8 @@ class _RadioControlState extends State<RadioControl> with FletStoreMixin {
   void _onChange(String ancestorId, String? value) {
     var svalue = value ?? "";
     debugPrint(svalue);
-    widget.control.updateProperties({"value": value}, context);
-    widget.control.triggerEvent("change", context, value);
+    widget.control.updateProperties({"value": value});
+    widget.control.triggerEvent("change", value);
   }
 
   @override

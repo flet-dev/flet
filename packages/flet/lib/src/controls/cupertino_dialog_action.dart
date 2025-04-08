@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
@@ -23,7 +22,7 @@ class CupertinoDialogActionControl extends StatelessWidget {
       textStyle: control.getTextStyle("text_style", Theme.of(context)),
       onPressed: !control.disabled
           ? () {
-              control.triggerEvent("click", context);
+              control.triggerEvent("click");
             }
           : null,
       child: control.buildWidget("content") ??

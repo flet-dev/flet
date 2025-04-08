@@ -46,8 +46,7 @@ class FletBackend extends ChangeNotifier {
   late final List<FletExtension> extensions;
   final Map<String, GlobalKey> globalKeys = {};
 
-  final WeakValueMap<int, Control> _controlsIndex =
-      WeakValueMap<int, Control>();
+  final WeakValueMap<int, Control> controlsIndex = WeakValueMap<int, Control>();
   final int? _reconnectIntervalMs;
   final int? _reconnectTimeoutMs;
   int _reconnectStarted = 0;
@@ -105,7 +104,7 @@ class FletBackend extends ChangeNotifier {
         "_c": "Window",
         "_i": 2,
       }
-    }, controlsIndex: _controlsIndex);
+    }, this);
 
     _page.addListener(_onPageUpdated);
     _onPageUpdated();
@@ -186,7 +185,7 @@ class FletBackend extends ChangeNotifier {
       _reconnectDelayMs = 0;
       error = "";
 
-      page.applyPatch(resp.patch, controlsIndex: _controlsIndex);
+      page.applyPatch(resp.patch, this);
 
       if (_deepLinkingRoute.isNotEmpty) {
         debugPrint("Sending buffered deep link route: $_deepLinkingRoute");
@@ -225,7 +224,7 @@ class FletBackend extends ChangeNotifier {
         }
 
         // update page details
-        page.applyPatch({"route": newRoute, "platform": platform},
+        page.applyPatch({"route": newRoute, "platform": platform}, this,
             shouldNotify: false);
 
         // connect to the server
@@ -338,11 +337,10 @@ class FletBackend extends ChangeNotifier {
   /// This method is typically used to modify the state of a control dynamically.
   void updateControl(int id, Map<String, dynamic> props,
       {bool dart = true, bool python = true, bool notify = false}) {
-    var control = _controlsIndex.get(id);
+    var control = controlsIndex.get(id);
     if (control != null) {
       if (dart) {
-        control.applyPatch(props,
-            controlsIndex: _controlsIndex, shouldNotify: notify);
+        control.applyPatch(props, this, shouldNotify: notify);
       }
       if (python && !isLoading) {
         _send(Message(
@@ -386,16 +384,16 @@ class FletBackend extends ChangeNotifier {
   }
 
   _onPatchControl(PatchControlRequestBody req) {
-    var control = _controlsIndex.get(req.id);
+    var control = controlsIndex.get(req.id);
     if (control != null) {
-      control.applyPatch(req.patch, controlsIndex: _controlsIndex);
+      control.applyPatch(req.patch, this);
       //debugPrint("patched control: $control");
       //debugPrint("_controlsIndex.length: ${_controlsIndex.length}");
     }
   }
 
   _onInvokeMethod(InvokeMethodRequestBody req) async {
-    var control = _controlsIndex.get(req.controlId);
+    var control = controlsIndex.get(req.controlId);
     dynamic result;
     String? error;
     if (control != null) {
@@ -466,39 +464,5 @@ class FletBackend extends ChangeNotifier {
 
   _send(Message message) {
     _backendChannel?.send(message);
-  }
-}
-
-extension Events on Control {
-  /// Triggers a control event.
-  ///
-  /// This method checks if the control has an event handler for the given
-  /// [eventName] and triggers the event if the application is not in a loading state.
-  ///
-  /// - [eventName]: The name of the event to trigger.
-  /// - [context]: The BuildContext in which the event is triggered.
-  /// - [eventData]: Optional data to pass along with the event.
-  void triggerEvent(String eventName, BuildContext context,
-      [dynamic eventData]) {
-    return FletBackend.of(context)
-        .triggerControlEvent(this, eventName, eventData);
-  }
-
-  /// Updates the properties of this control.
-  ///
-  /// The [props] map contains key-value pairs where the key is the property
-  /// name and the value is the new value for that property.
-  ///
-  /// - [props]: A map of property names and their corresponding new values.
-  /// - [context]: The BuildContext in which the update is triggered.
-  /// - [dart]: A boolean indicating whether to apply the patch in Dart. Defaults to `true`.
-  /// - [python]: A boolean indicating whether to send the update to the Python backend. Defaults to `true`.
-  /// - [notify]: A boolean indicating whether to notify listeners after applying the patch. Defaults to `false`.
-  ///
-  /// This method is typically used to modify the state of a control dynamically.
-  void updateProperties(Map<String, dynamic> props, BuildContext context,
-      {bool dart = true, bool python = true, bool notify = false}) {
-    return FletBackend.of(context)
-        .updateControl(id, props, dart: dart, python: python, notify: notify);
   }
 }

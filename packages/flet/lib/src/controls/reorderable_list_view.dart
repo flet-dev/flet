@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/edge_insets.dart';
 import '../utils/misc.dart';
@@ -72,17 +71,15 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
         controls.insert(newIndex, movedControl);
       });
       widget.control.triggerEvent(
-          "reorder", context, {"old_index": oldIndex, "new_index": newIndex});
+          "reorder", {"old_index": oldIndex, "new_index": newIndex});
     }
 
     void onReorderEnd(int newIndex) {
-      widget.control
-          .triggerEvent("reorder_end", context, {"new_index": newIndex});
+      widget.control.triggerEvent("reorder_end", {"new_index": newIndex});
     }
 
     void onReorderStart(int oldIndex) {
-      widget.control
-          .triggerEvent("reorder_start", context, {"old_index": oldIndex});
+      widget.control.triggerEvent("reorder_start", {"old_index": oldIndex});
     }
 
     Widget result = LayoutBuilder(

@@ -56,7 +56,7 @@ class _SliderControlState extends State<SliderControl> {
     _debouncer.run(() {
       FletBackend.of(context)
           .updateControl(widget.control.id, props, notify: true);
-      widget.control.triggerEvent("change", context);
+      widget.control.triggerEvent("change");
     });
   }
 

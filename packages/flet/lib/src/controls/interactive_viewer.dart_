@@ -115,7 +115,7 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
           widget.control.getMargin("boundary_margin", EdgeInsets.zero)!,
       onInteractionStart: !widget.control.disabled
           ? (ScaleStartDetails details) {
-              widget.control.triggerEvent("interaction_start", context, {
+              widget.control.triggerEvent("interaction_start", {
                 "pc": details.pointerCount,
                 "fp_x": details.focalPoint.dx,
                 "fp_y": details.focalPoint.dy,
@@ -128,7 +128,6 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
           ? (ScaleEndDetails details) {
               widget.control.triggerEvent(
                   "interaction_end",
-                  context,
                   jsonEncode({
                     "pc": details.pointerCount,
                     "sv": details.scaleVelocity,
@@ -143,7 +142,7 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
               if (now - _interactionUpdateTimestamp >
                   interactionUpdateInterval) {
                 _interactionUpdateTimestamp = now;
-                widget.control.triggerEvent("interaction_update", context, {
+                widget.control.triggerEvent("interaction_update", {
                   "pc": details.pointerCount,
                   "fp_x": details.focalPoint.dx,
                   "fp_y": details.focalPoint.dy,

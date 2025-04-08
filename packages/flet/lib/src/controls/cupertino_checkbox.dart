@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
@@ -33,8 +32,7 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
   }
 
   void _onFocusChange() {
-    widget.control
-        .triggerEvent(_focusNode.hasFocus ? "focus" : "blur", context);
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -58,8 +56,8 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
 
   void _onChange(bool? value) {
     _value = value;
-    widget.control.updateProperties({"value": value}, context);
-    widget.control.triggerEvent("change", context, value);
+    widget.control.updateProperties({"value": value});
+    widget.control.triggerEvent("change", value);
   }
 
   @override

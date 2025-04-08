@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
 import '../extensions/control.dart';
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
@@ -51,7 +50,7 @@ class CupertinoListTileControl extends StatelessWidget {
                   openWebBrowser(url, webWindowName: urlTarget);
                 }
                 if (onclick) {
-                  control.triggerEvent("click", context);
+                  control.triggerEvent("click");
                 }
               }
             : null;

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
 import '../extensions/control.dart';
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/icons.dart';
 import '../utils/numbers.dart';
@@ -23,7 +22,7 @@ class CupertinoContextMenuActionControl extends StatelessWidget {
       isDestructiveAction: control.getBool("is_destructive_action", false)!,
       onPressed: () {
         if (!control.disabled) {
-          control.triggerEvent("click", context);
+          control.triggerEvent("click");
           Navigator.of(context).pop(); // Close the context menu
         }
       },

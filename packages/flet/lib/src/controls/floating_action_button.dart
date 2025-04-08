@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
@@ -70,7 +69,7 @@ class FloatingActionButtonControl extends StatelessWidget {
             if (url != "") {
               openWebBrowser(url, webWindowName: urlTarget);
             }
-            control.triggerEvent("click", context);
+            control.triggerEvent("click");
           };
 
     if (iconWidget == null && contentWidget == null) {
