@@ -32,17 +32,29 @@ class _OutlinedButtonControlState extends State<OutlinedButtonControl>
     super.initState();
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
+    widget.control.addInvokeMethodListener(_invokeMethod);
   }
 
   @override
   void dispose() {
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
+    widget.control.removeInvokeMethodListener(_invokeMethod);
     super.dispose();
   }
 
   void _onFocusChange() {
     widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
+  }
+
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    debugPrint("OutlinedButton.$name($args)");
+    switch (name) {
+      case "focus":
+        _focusNode.requestFocus();
+      default:
+        throw Exception("Unknown OutlinedButton method: $name");
+    }
   }
 
   @override

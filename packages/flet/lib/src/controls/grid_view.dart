@@ -1,29 +1,18 @@
 import 'package:flutter/widgets.dart';
 
-import '../flet_control_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/edge_insets.dart';
-import '../utils/others.dart';
-import 'create_control.dart';
+import '../utils/misc.dart';
+import '../utils/numbers.dart';
+import 'base_controls.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
 
 class GridViewControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final List<Control> children;
-  final FletControlBackend backend;
 
-  const GridViewControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  const GridViewControl({super.key, required this.control});
 
   @override
   State<GridViewControl> createState() => _GridViewControlState();
@@ -48,31 +37,26 @@ class _GridViewControlState extends State<GridViewControl> {
   Widget build(BuildContext context) {
     debugPrint("GridViewControl build: ${widget.control.id}");
 
-    bool disabled = widget.control.disabled || widget.parentDisabled;
-    bool? adaptive =
-        widget.control.getBool("adaptive") ?? widget.parentAdaptive;
-
     final horizontal = widget.control.getBool("horizontal", false)!;
-    final runsCount = widget.control.getInt("runsCount", 1)!;
-    final maxExtent = widget.control.getDouble("maxExtent");
+    final runsCount = widget.control.getInt("runs_count", 1)!;
+    final maxExtent = widget.control.getDouble("max_extent");
     final spacing = widget.control.getDouble("spacing", 10)!;
-    final semanticChildCount = widget.control.getInt("semanticChildCount");
-    final runSpacing = widget.control.getDouble("runSpacing", 10)!;
-    final padding = parseEdgeInsets(widget.control, "padding");
-    final childAspectRatio = widget.control.getDouble("childAspectRatio", 1)!;
+    final semanticChildCount = widget.control.getInt("semantic_child_count");
+    final runSpacing = widget.control.getDouble("run_spacing", 10)!;
+    final padding = widget.control.getPadding("padding");
+    final childAspectRatio = widget.control.getDouble("child_aspect_ratio", 1)!;
     final reverse = widget.control.getBool("reverse", false)!;
-    final cacheExtent = widget.control.getDouble("cacheExtent");
+    final cacheExtent = widget.control.getDouble("cache_extent");
 
     var clipBehavior =
-        parseClip(widget.control.getString("clipBehavior"), Clip.hardEdge)!;
+        widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!;
 
-    List<Control> visibleControls =
-        widget.children.where((c) => c.visible).toList();
+    var controls = widget.control.buildWidgets("controls");
 
     var gridView = LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        debugPrint("GridView constraints.maxWidth: ${constraints.maxWidth}");
-        debugPrint("GridView constraints.maxHeight: ${constraints.maxHeight}");
+        // debugPrint("GridView constraints.maxWidth: ${constraints.maxWidth}");
+        // debugPrint("GridView constraints.maxHeight: ${constraints.maxHeight}");
 
         var shrinkWrap =
             (!horizontal && constraints.maxHeight == double.infinity) ||
@@ -91,7 +75,7 @@ class _GridViewControlState extends State<GridViewControl> {
                 childAspectRatio: childAspectRatio);
 
         var buildControlsOnDemand =
-            widget.control.attrBool("buildControlsOnDemand", true)!;
+            widget.control.getBool("build_controls_on_demand", true)!;
         Widget child = !buildControlsOnDemand
             ? GridView(
                 scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
@@ -103,10 +87,7 @@ class _GridViewControlState extends State<GridViewControl> {
                 shrinkWrap: shrinkWrap,
                 padding: padding,
                 gridDelegate: gridDelegate,
-                children: visibleControls
-                    .map((c) => createControl(widget.control, c.id, disabled,
-                        parentAdaptive: adaptive))
-                    .toList(),
+                children: controls,
               )
             : GridView.builder(
                 scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
@@ -118,11 +99,9 @@ class _GridViewControlState extends State<GridViewControl> {
                 shrinkWrap: shrinkWrap,
                 padding: padding,
                 gridDelegate: gridDelegate,
-                itemCount: visibleControls.length,
+                itemCount: controls.length,
                 itemBuilder: (context, index) {
-                  return createControl(
-                      widget.control, visibleControls[index].id, disabled,
-                      parentAdaptive: adaptive);
+                  return controls[index];
                 },
               );
 
@@ -130,19 +109,17 @@ class _GridViewControlState extends State<GridViewControl> {
             control: widget.control,
             scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
             scrollController: _controller,
-            backend: widget.backend,
-            parentAdaptive: adaptive,
             child: child);
 
-        if (widget.control.getBool("onScroll", false)!) {
-          child = ScrollNotificationControl(
-              control: widget.control, backend: widget.backend, child: child);
+        if (widget.control.getBool("on_scroll", false)!) {
+          child =
+              ScrollNotificationControl(control: widget.control, child: child);
         }
 
         return child;
       },
     );
 
-    return constrainedControl(context, gridView, widget.parent, widget.control);
+    return ConstrainedControl(control: widget.control, child: gridView);
   }
 }

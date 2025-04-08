@@ -27,12 +27,10 @@ class ChipControl extends StatefulWidget {
 class _ChipControlState extends State<ChipControl> {
   bool _selected = false;
   late final FocusNode _focusNode;
-  late final FletBackend backend;
 
   @override
   void initState() {
     super.initState();
-    backend = FletBackend.of(context);
     _focusNode = FocusNode();
     _focusNode.addListener(_onFocusChange);
   }
@@ -45,8 +43,7 @@ class _ChipControlState extends State<ChipControl> {
   }
 
   void _onFocusChange() {
-    backend.triggerControlEvent(
-        widget.control, _focusNode.hasFocus ? "focus" : "blur");
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -119,19 +116,19 @@ class _ChipControlState extends State<ChipControl> {
       ),
       onPressed: onClick && !disabled
           ? () {
-              backend.triggerControlEvent(widget.control, "click");
+              widget.control.triggerEvent("click");
             }
           : null,
       onDeleted: onDelete && !disabled
           ? () {
-              backend.triggerControlEvent(widget.control, "delete");
+              widget.control.triggerEvent("delete");
             }
           : null,
       onSelected: onSelect && !disabled
           ? (bool selected) {
               _selected = selected;
-              backend.updateControl(widget.control.id, {"selected": selected});
-              backend.triggerControlEvent(widget.control, "select", selected);
+              widget.control.updateProperties({"selected": selected});
+              widget.control.triggerEvent("select", selected);
             }
           : null,
     );

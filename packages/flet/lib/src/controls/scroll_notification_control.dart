@@ -63,8 +63,7 @@ class _ScrollNotificationControlState extends State<ScrollNotificationControl> {
 
         if (data["t"] != null) {
           debugPrint("ScrollNotification ${widget.control.id} event");
-          FletBackend.of(context)
-              .triggerControlEvent(widget.control, "scroll", data);
+           widget.control.triggerEvent("scroll", data);
         }
       }
     }

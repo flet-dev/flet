@@ -30,10 +30,8 @@ class _NavigationRailControlState extends State<NavigationRailControl>
   void _destinationChanged(int index) {
     _selectedIndex = index;
     debugPrint("NavigationRail selected_index: $_selectedIndex");
-    FletBackend.of(context)
-        .updateControl(widget.control.id, {"selected_index": _selectedIndex});
-    FletBackend.of(context)
-        .triggerControlEvent(widget.control, "change", _selectedIndex);
+    widget.control.updateProperties({"selected_index": _selectedIndex});
+   widget.control.triggerEvent("change", _selectedIndex);
   }
 
   @override

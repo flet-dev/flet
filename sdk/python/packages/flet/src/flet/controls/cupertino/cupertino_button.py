@@ -7,6 +7,7 @@ from flet.controls.control import Control, control
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
     IconValue,
+    IconValueOrControl,
     Number,
     OptionalColorValue,
     OptionalControlEventCallable,
@@ -39,7 +40,7 @@ class CupertinoButton(ConstrainedControl):
         super().__setattr__(name, value)
 
     content: Optional[StrOrControl] = None
-    icon: Optional[IconValue] = None
+    icon: Optional[IconValueOrControl] = None
     icon_color: OptionalColorValue = None
     bgcolor: OptionalColorValue = None
     color: OptionalColorValue = None
@@ -48,7 +49,7 @@ class CupertinoButton(ConstrainedControl):
     min_size: Number = 44.0
     padding: OptionalPaddingValue = None
     alignment: Optional[Alignment] = None
-    border_radius: OptionalBorderRadiusValue = None
+    border_radius: OptionalBorderRadiusValue = 8.0
     url: Optional[str] = None
     url_target: Optional[UrlTarget] = None
     autofocus: bool = False

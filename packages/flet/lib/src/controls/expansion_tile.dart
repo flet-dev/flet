@@ -68,10 +68,7 @@ class ExpansionTileControl extends StatelessWidget {
 
     Function(bool)? onChange = !control.disabled
         ? (expanded) {
-            debugPrint(
-                "ExpansionTile ${control.id} was ${expanded ? "expanded" : "collapsed"}");
-            FletBackend.of(context)
-                .triggerControlEvent(control, "change", "$expanded");
+           control.triggerEvent("change", "$expanded");
           }
         : null;
 

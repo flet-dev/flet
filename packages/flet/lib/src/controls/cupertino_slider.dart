@@ -32,10 +32,9 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
 
   void onChange(double value) {
     _value = value;
-    backend = FletBackend.of(context);
     _debouncer.run(() {
-      backend.updateControl(widget.control.id, {"value": value}, notify: true);
-      backend.triggerControlEvent(widget.control, "change", value);
+      widget.control.updateProperties({"value": value}, notify: true);
+      widget.control.triggerEvent("change", value);
     });
   }
 

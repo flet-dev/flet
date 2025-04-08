@@ -27,11 +27,9 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
   void _destinationChanged(int index) {
     _selectedIndex = index;
     debugPrint("Selected index: $_selectedIndex");
-    FletBackend.of(context).updateControl(
-        widget.control.id, {"selected_index": _selectedIndex},
+    widget.control.updateProperties({"selected_index": _selectedIndex},
         notify: true);
-    FletBackend.of(context)
-        .triggerControlEvent(widget.control, "change", _selectedIndex);
+   widget.control.triggerEvent("change", _selectedIndex);
   }
 
   @override

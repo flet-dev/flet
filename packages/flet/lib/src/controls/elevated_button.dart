@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
@@ -46,8 +45,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
   }
 
   void _onFocusChange() {
-    FletBackend.of(context).triggerControlEvent(
-        widget.control, _focusNode.hasFocus ? "focus" : "blur");
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
@@ -64,33 +62,26 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
   Widget build(BuildContext context) {
     debugPrint("Button build: ${widget.control.id}");
 
-    // return withPagePlatform((context, platform) {
-    //   if (widget.control.adaptive == true &&
-    //       (platform == TargetPlatform.iOS ||
-    //           platform == TargetPlatform.macOS)) {
-    //     return (widget.control.parent?.type == "AlertDialog" ||
-    //             widget.control.parent?.type == "CupertinoAlertDialog")
-    //         ? CupertinoDialogActionControl(
-    //             control: widget.control,
-    //           )
-    //         : CupertinoButtonControl(
-    //             control: widget.control,
-    //           );
-    //   }
-
     bool isFilledButton = widget.control.type == "FilledButton";
     bool isFilledTonalButton = widget.control.type == "FilledTonalButton";
     String text =
-        widget.control.getString("text", "")!; // to be removed in 0.70.3
+        widget.control.getString("text", "")!; //(todo 0.70.3) remove text
     String url = widget.control.getString("url", "")!;
-    IconData? icon = widget.control.getIcon("icon");
+    var icon = widget.control.get("icon");
     Color? iconColor = widget.control.getColor("icon_color", context);
+
+    Widget? iconWidget = icon is Control
+        ? ControlWidget(control: icon)
+        : icon is String
+            ? Icon(widget.control.getIcon("icon"), color: iconColor)
+            : null;
+
     var content = widget.control.get("content");
-    Widget child = content is Control
+    Widget contentWidget = content is Control
         ? ControlWidget(control: content)
         : content is String
             ? Text(content)
-            : Text(text); // to be changed to Text("") in 0.70.3
+            : Text(text); //(todo 0.70.3) change to Text("")
 
     var clipBehavior =
         parseClip(widget.control.getString("clip_behavior"), Clip.none)!;
@@ -102,22 +93,19 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
               openWebBrowser(url,
                   webWindowName: widget.control.getString("url_target"));
             }
-            FletBackend.of(context)
-                .triggerControlEvent(widget.control, "click");
+            widget.control.triggerEvent("click");
           }
         : null;
 
     Function()? onLongPressHandler = !widget.control.disabled
         ? () {
-            FletBackend.of(context)
-                .triggerControlEvent(widget.control, "long_press");
+            widget.control.triggerEvent("long_press");
           }
         : null;
 
     Function(bool)? onHoverHandler = !widget.control.disabled
         ? (state) {
-            FletBackend.of(context)
-                .triggerControlEvent(widget.control, "hover", state.toString());
+            widget.control.triggerEvent("hover", state);
           }
         : null;
 
@@ -125,13 +113,15 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
 
     var theme = Theme.of(context);
 
-    var style = parseButtonStyle(widget.control.get("style"), Theme.of(context),
-        defaultForegroundColor: theme.colorScheme.primary,
-        defaultBackgroundColor: theme.colorScheme.surface,
+    var style = widget.control.getButtonStyle("style", Theme.of(context),
+        defaultForegroundColor: widget.control
+            .getColor("color", context, theme.colorScheme.primary)!,
+        defaultBackgroundColor: widget.control
+            .getColor("bgcolor", context, theme.colorScheme.surface)!,
         defaultOverlayColor: theme.colorScheme.primary.withOpacity(0.08),
         defaultShadowColor: theme.colorScheme.shadow,
         defaultSurfaceTintColor: theme.colorScheme.surfaceTint,
-        defaultElevation: 1,
+        defaultElevation: widget.control.getDouble("elevation", 1)!,
         defaultPadding: const EdgeInsets.symmetric(horizontal: 8),
         defaultBorderSide: BorderSide.none,
         defaultShape: theme.useMaterial3
@@ -139,10 +129,10 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
     if (icon != null) {
-      if (child == const Text("")) {
+      if (contentWidget == const Text("")) {
         return const ErrorControl("Error displaying ElevatedButton",
             description:
-                "\"icon\" must be specified together with \"content\".");
+                "\"icon\" must be specified together with \"content\"");
       }
       if (isFilledButton) {
         button = FilledButton.icon(
@@ -153,11 +143,8 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            icon: Icon(
-              icon,
-              color: iconColor,
-            ),
-            label: child);
+            icon: iconWidget,
+            label: contentWidget);
       } else if (isFilledTonalButton) {
         button = FilledButton.tonalIcon(
             style: style,
@@ -167,11 +154,8 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            icon: Icon(
-              icon,
-              color: iconColor,
-            ),
-            label: child);
+            icon: iconWidget,
+            label: contentWidget);
       } else {
         button = ElevatedButton.icon(
             style: style,
@@ -181,11 +165,8 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            icon: Icon(
-              icon,
-              color: iconColor,
-            ),
-            label: child);
+            icon: iconWidget,
+            label: contentWidget);
       }
     } else {
       if (isFilledButton) {
@@ -197,7 +178,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: child);
+            child: contentWidget);
       } else if (isFilledTonalButton) {
         button = FilledButton.tonal(
             style: style,
@@ -207,7 +188,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: child);
+            child: contentWidget);
       } else {
         button = ElevatedButton(
             style: style,
@@ -217,7 +198,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: child);
+            child: contentWidget);
       }
     }
 

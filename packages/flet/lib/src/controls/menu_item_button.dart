@@ -36,8 +36,7 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
   }
 
   void _onFocusChange() {
-    FletBackend.of(context).triggerControlEvent(
-        widget.control, _focusNode.hasFocus ? "focus" : "blur");
+     widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
