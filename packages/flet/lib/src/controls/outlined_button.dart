@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
@@ -43,8 +42,7 @@ class _OutlinedButtonControlState extends State<OutlinedButtonControl>
   }
 
   void _onFocusChange() {
-    widget.control
-        .triggerEvent(_focusNode.hasFocus ? "focus" : "blur", context);
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -67,16 +65,16 @@ class _OutlinedButtonControlState extends State<OutlinedButtonControl>
             if (url != "") {
               openWebBrowser(url, webWindowName: urlTarget);
             }
-            widget.control.triggerEvent("click", context);
+            widget.control.triggerEvent("click");
           }
         : null;
 
     Function()? onLongPressHandler = onLongPress && !widget.control.disabled
-        ? () => widget.control.triggerEvent("long_press", context)
+        ? () => widget.control.triggerEvent("long_press")
         : null;
 
     Function(bool)? onHoverHandler = onHover && !widget.control.disabled
-        ? (state) => widget.control.triggerEvent("hover", context, state)
+        ? (state) => widget.control.triggerEvent("hover", state)
         : null;
 
     return withPagePlatform((context, platform) {

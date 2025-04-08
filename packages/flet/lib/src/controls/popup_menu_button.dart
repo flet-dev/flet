@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
 import '../utils/borders.dart';
@@ -52,9 +51,9 @@ class PopupMenuButtonControl extends StatelessWidget {
         menuPadding: control.getPadding("menu_padding"),
         position: control.getPopupMenuPosition("menu_position"),
         onSelected: (String selection) =>
-            control.triggerEvent("select", context, selection),
-        onCanceled: () => control.triggerEvent("cancel", context),
-        onOpened: () => control.triggerEvent("open", context),
+            control.triggerEvent("select", selection),
+        onCanceled: () => control.triggerEvent("cancel"),
+        onOpened: () => control.triggerEvent("open"),
         itemBuilder: (BuildContext context) => control
                 .children("items")
                 .where((i) => i.type == "PopupMenuItem")
@@ -90,8 +89,7 @@ class PopupMenuButtonControl extends StatelessWidget {
                       padding: padding,
                       enabled: !item.disabled,
                       mouseCursor: mouseCursor,
-                      onTap: () =>
-                          item.triggerEvent("click", context, !checked),
+                      onTap: () => item.triggerEvent("click", !checked),
                       child: child,
                     )
                   : PopupMenuItem<String>(
@@ -101,7 +99,7 @@ class PopupMenuButtonControl extends StatelessWidget {
                       enabled: !item.disabled,
                       mouseCursor: mouseCursor,
                       onTap: () {
-                        item.triggerEvent("click", context);
+                        item.triggerEvent("click");
                       },
                       child: child);
 

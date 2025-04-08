@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/edge_insets.dart';
@@ -24,8 +23,8 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
     with FletStoreMixin {
   void onChange(Set<String> selection) {
     var s = selection.toList();
-    widget.control.updateProperties({"selected": s}, context, notify: true);
-    widget.control.triggerEvent("change", context, s);
+    widget.control.updateProperties({"selected": s}, notify: true);
+    widget.control.triggerEvent("change", s);
   }
 
   @override

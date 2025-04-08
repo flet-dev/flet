@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/box.dart';
@@ -42,8 +41,7 @@ class _SearchBarControlState extends State<SearchBarControl> {
     setState(() {
       _focused = _focusNode.hasFocus;
     });
-    widget.control
-        .triggerEvent(_focusNode.hasFocus ? "focus" : "blur", context);
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -70,7 +68,7 @@ class _SearchBarControlState extends State<SearchBarControl> {
       );
     }
 
-    widget.control.updateProperties({"value": value}, context);
+    widget.control.updateProperties({"value": value});
   }
 
   String applyCapitalization(String text) {
@@ -184,13 +182,13 @@ class _SearchBarControlState extends State<SearchBarControl> {
         viewOnSubmitted: onSubmit
             ? (String value) {
                 _updateValue(value);
-                widget.control.triggerEvent("submit", context, value);
+                widget.control.triggerEvent("submit", value);
               }
             : null,
         viewOnChanged: onChange
             ? (String value) {
                 _updateValue(value);
-                widget.control.triggerEvent("change", context, value);
+                widget.control.triggerEvent("change", value);
               }
             : null,
         viewSurfaceTintColor:
@@ -228,24 +226,24 @@ class _SearchBarControlState extends State<SearchBarControl> {
             trailing: widget.control.buildWidgets("bar_trailing"),
             onTap: onTap
                 ? () {
-                    widget.control.triggerEvent("tap", context);
+                    widget.control.triggerEvent("tap");
                   }
                 : null,
             onTapOutside: widget.control.getBool("on_tap_outside_bar", false)!
                 ? (PointerDownEvent? event) {
-                    widget.control.triggerEvent("tap_outside_bar", context);
+                    widget.control.triggerEvent("tap_outside_bar");
                   }
                 : null,
             onSubmitted: onSubmit
                 ? (String value) {
                     _updateValue(value);
-                    widget.control.triggerEvent("submit", context);
+                    widget.control.triggerEvent("submit");
                   }
                 : null,
             onChanged: onChange
                 ? (String value) {
                     _updateValue(value);
-                    widget.control.triggerEvent("change", context);
+                    widget.control.triggerEvent("change");
                   }
                 : null,
           );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/numbers.dart';
 import 'base_controls.dart';
@@ -47,61 +46,61 @@ class SemanticsControl extends StatelessWidget {
       excludeSemantics: control.getBool("exclude_semantics", false)!,
       mixed: control.getBool("mixed"),
       onTap: control.getBool("on_click", false)!
-          ? () => control.triggerEvent("click", context)
+          ? () => control.triggerEvent("click")
           : null,
       onIncrease: control.getBool("on_increase", false)!
-          ? () => control.triggerEvent("increase", context)
+          ? () => control.triggerEvent("increase")
           : null,
       onDecrease: control.getBool("on_decrease", false)!
-          ? () => control.triggerEvent("decrease", context)
+          ? () => control.triggerEvent("decrease")
           : null,
       onDismiss: control.getBool("on_dismiss", false)!
-          ? () => control.triggerEvent("dismiss", context)
+          ? () => control.triggerEvent("dismiss")
           : null,
       onScrollLeft: control.getBool("on_scroll_left", false)!
-          ? () => control.triggerEvent("scroll_left", context)
+          ? () => control.triggerEvent("scroll_left")
           : null,
       onScrollRight: control.getBool("on_scroll_right", false)!
-          ? () => control.triggerEvent("scroll_right", context)
+          ? () => control.triggerEvent("scroll_right")
           : null,
       onScrollUp: control.getBool("on_scroll_up", false)!
-          ? () => control.triggerEvent("scroll_up", context)
+          ? () => control.triggerEvent("scroll_up")
           : null,
       onScrollDown: control.getBool("on_scroll_down", false)!
-          ? () => control.triggerEvent("scroll_down", context)
+          ? () => control.triggerEvent("scroll_down")
           : null,
       onCopy: control.getBool("on_copy", false)!
-          ? () => control.triggerEvent("copy", context)
+          ? () => control.triggerEvent("copy")
           : null,
       onCut: control.getBool("on_cut", false)!
-          ? () => control.triggerEvent("cut", context)
+          ? () => control.triggerEvent("cut")
           : null,
       onPaste: control.getBool("on_paste", false)!
-          ? () => control.triggerEvent("paste", context)
+          ? () => control.triggerEvent("paste")
           : null,
       onLongPress: control.getBool("on_dismiss", false)!
-          ? () => control.triggerEvent("dismiss", context)
+          ? () => control.triggerEvent("dismiss")
           : null,
-      onMoveCursorForwardByCharacter:
-          control.getBool("on_move_cursor_forward_by_character", false)!
-              ? (bool value) => control.triggerEvent(
-                  "move_cursor_forward_by_character", context, value)
+      onMoveCursorForwardByCharacter: control.getBool(
+              "on_move_cursor_forward_by_character", false)!
+          ? (bool value) =>
+              control.triggerEvent("move_cursor_forward_by_character", value)
+          : null,
+      onMoveCursorBackwardByCharacter: control.getBool(
+              "on_move_cursor_backward_by_character", false)!
+          ? (bool value) =>
+              control.triggerEvent("move_cursor_backward_by_character", value)
+          : null,
+      onDidGainAccessibilityFocus:
+          control.getBool("on_did_gain_accessibility_focus", false)!
+              ? () => control.triggerEvent("did_gain_accessibility_focus")
               : null,
-      onMoveCursorBackwardByCharacter:
-          control.getBool("on_move_cursor_backward_by_character", false)!
-              ? (bool value) => control.triggerEvent(
-                  "move_cursor_backward_by_character", context, value)
+      onDidLoseAccessibilityFocus:
+          control.getBool("on_did_lose_accessibility_focus", false)!
+              ? () => control.triggerEvent("did_lose_accessibility_focus")
               : null,
-      onDidGainAccessibilityFocus: control.getBool(
-              "on_did_gain_accessibility_focus", false)!
-          ? () => control.triggerEvent("did_gain_accessibility_focus", context)
-          : null,
-      onDidLoseAccessibilityFocus: control.getBool(
-              "on_did_lose_accessibility_focus", false)!
-          ? () => control.triggerEvent("did_lose_accessibility_focus", context)
-          : null,
       onSetText: control.getBool("on_set_text", false)!
-          ? (String text) => control.triggerEvent("set_text", context, text)
+          ? (String text) => control.triggerEvent("set_text", text)
           : null,
     );
 
