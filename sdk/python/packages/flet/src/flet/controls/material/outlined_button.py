@@ -46,7 +46,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     content: Optional[Control] = None
     style: Optional[ButtonStyle] = None
     autofocus: bool = False
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: ClipBehavior = ClipBehavior.NONE
     url: Optional[str] = None
     url_target: Optional[UrlTarget] = None
     on_click: OptionalControlEventCallable = None

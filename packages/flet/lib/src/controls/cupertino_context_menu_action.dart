@@ -13,9 +13,9 @@ class CupertinoContextMenuActionControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoContextMenuAction build ($hashCode): ${control.id}");
-    String contentStr = control.getString("content") ??
-        control.getString("text") ??
-        ""; // todo(0.70.3): remove "text"
+    var contentStr = control.getString("content") ??
+        control.getString("text") ?? // todo(0.70.3): remove "text"
+        "";
 
     return CupertinoContextMenuAction(
       isDefaultAction: control.getBool("is_default_action", false)!,

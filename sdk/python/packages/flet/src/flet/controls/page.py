@@ -42,10 +42,7 @@ from flet.controls.material.app_bar import AppBar
 from flet.controls.material.bottom_app_bar import BottomAppBar
 from flet.controls.material.floating_action_button import FloatingActionButton
 from flet.controls.material.navigation_bar import NavigationBar
-from flet.controls.material.navigation_drawer import (
-    NavigationDrawer,
-    NavigationDrawerPosition,
-)
+from flet.controls.material.navigation_drawer import NavigationDrawer
 from flet.controls.padding import OptionalPaddingValue, Padding
 from flet.controls.query_string import QueryString
 from flet.controls.scrollable_control import OnScrollEvent
@@ -68,7 +65,7 @@ from flet.controls.types import (
     ThemeMode,
     Wrapper,
 )
-from flet.utils import classproperty, is_pyodide
+from flet.utils import classproperty, deprecated, is_pyodide
 
 if TYPE_CHECKING:
     from flet.messaging.session import Session
@@ -100,7 +97,8 @@ try:
     from flet.auth.oauth_provider import OAuthProvider
 except ImportError as e:
 
-    class OAuthProvider: ...
+    class OAuthProvider:
+        ...
 
     class Authorization:
         def __init__(
@@ -109,7 +107,8 @@ except ImportError as e:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ): ...
+        ):
+            ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -660,17 +659,39 @@ class Page(AdaptiveControl):
         self._dialogs.controls.append(dialog)
         self._dialogs.update()
 
-    def pop_dialog(self):
+    @deprecated(
+        reason="Use page.show_dialog() instead.",
+        version="0.70.0",
+        delete_version="0.73.0",
+        show_parentheses=True,
+    )
+    def open(self, control: DialogControl) -> None:
+        self.show_dialog(control)
+
+    def pop_dialog(self) -> Optional[DialogControl]:
         # get the top most opened dialog
         dialog = next(
             (dlg for dlg in reversed(self._dialogs.controls) if dlg.open), None
         )
         if not dialog:
-            return
+            return None
         dialog.open = False
         setattr(dialog, "_force_close", True)
         dialog.update()
         return dialog
+
+    @deprecated(
+        reason="Use page.pop_dialog() instead.",
+        version="0.70.0",
+        delete_version="0.73.0",
+        show_parentheses=True,
+    )
+    def close(self, control: Control) -> None:
+        if hasattr(control, "open"):
+            control.open = False
+            control.update()
+        else:
+            raise ValueError(f"{control.__class__.__qualname__} has no open attribute")
 
     # query
     @property
@@ -910,7 +931,7 @@ class Overlay(BaseControl):
 
 @control("Dialogs")
 class Dialogs(BaseControl):
-    controls: List[Control] = field(default_factory=list)
+    controls: List[DialogControl] = field(default_factory=list)
 
 
 @control("ServiceRegistry")

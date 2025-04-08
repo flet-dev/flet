@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flet/src/models/page_args_model.dart';
-import 'package:flet/src/utils/locale.dart';
+import '../models/page_args_model.dart';
+import '../utils/locale.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

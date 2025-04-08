@@ -20,20 +20,43 @@ from flet.controls.types import (
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
+    StrOrControl,
     TabAlignment,
 )
 
 __all__ = ["Tab", "Tabs"]
 
+from flet.utils import deprecated_warning
+
 
 @control("Tab")
 class Tab(AdaptiveControl):
-    text: Optional[str] = None
+    label: Optional[StrOrControl] = None
     content: Optional[Control] = None
-    tab_content: Optional[Control] = None
+    text: Optional[str] = None  # todo(0.70.3): remove in favor of label
+    tab_content: Optional[Control] = None  # todo(0.70.3): remove in favor of content
     icon: Optional[IconValueOrControl] = None
     height: OptionalNumber = None
     icon_margin: OptionalMarginValue = None
+
+    def before_update(self):
+        super().before_update()
+        assert (
+            (self.label is not None)
+            or (self.icon is not None)
+            or (self.text is not None)  # todo(0.70.3): remove line
+            or (self.tab_content is not None)  # todo(0.70.3): remove line
+        ), "Tab must have at least label, text, icon or tab_content property set"
+
+    def __setattr__(self, name, value):
+        if name in ["text", "tab_content"] and value is not None:
+            deprecated_warning(
+                name=name,
+                reason="Use label instead.",
+                version="0.70.0",
+                delete_version="0.70.3",
+            )
+        super().__setattr__(name, value)
 
 
 @control("Tabs")
@@ -101,19 +124,15 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     unselected_label_color: OptionalColorValue = None
     unselected_label_text_style: Optional[TextStyle] = None
     overlay_color: ControlStateValue[ColorValue] = None
-    divider_height: Number = 1.0
+    divider_height: OptionalNumber = None
     indicator_thickness: Number = 2.0
     enable_feedback: Optional[str] = None
     mouse_cursor: Optional[MouseCursor] = None
     padding: OptionalPaddingValue = None
     splash_border_radius: OptionalBorderRadiusValue = None
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     on_click: OptionalControlEventCallable = None
     on_change: OptionalControlEventCallable = None
-
-    # def before_update(self):
-    #     super().before_update()
-    #     self._set_attr_json("overlayColor", self.__overlay_color, wrap_attr_dict=True)
 
     def __contains__(self, item):
         return item in self.tabs

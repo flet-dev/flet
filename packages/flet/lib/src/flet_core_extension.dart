@@ -40,10 +40,13 @@ import 'controls/list_tile.dart';
 import 'controls/list_view.dart';
 import 'controls/menu_bar.dart';
 import 'controls/menu_item_button.dart';
+import 'controls/merge_semantics.dart';
 import 'controls/navigation_drawer.dart';
 import 'controls/navigation_rail.dart';
+import 'controls/outlined_button.dart';
 import 'controls/page.dart';
 import 'controls/placeholder.dart';
+import 'controls/popup_menu_button.dart';
 import 'controls/progress_bar.dart';
 import 'controls/progress_ring.dart';
 import 'controls/radio_group.dart';
@@ -53,7 +56,10 @@ import 'controls/reorderable_list_view.dart';
 import 'controls/responsive_row.dart';
 import 'controls/row.dart';
 import 'controls/safe_area.dart';
+import 'controls/search_bar.dart';
+import 'controls/segmented_button.dart';
 import 'controls/selection_area.dart';
+import 'controls/semantics.dart';
 import 'controls/shader_mask.dart';
 import 'controls/snack_bar.dart';
 import 'controls/stack.dart';
@@ -71,6 +77,7 @@ import 'models/control.dart';
 import 'services/browser_context_menu.dart';
 import 'services/clipboard.dart';
 import 'services/haptic_feedback.dart';
+import 'services/semantics_service.dart';
 import 'services/shake_detector.dart';
 import 'services/shared_preferences.dart';
 import 'services/url_launcher.dart';
@@ -85,10 +92,22 @@ class FletCoreExtension extends FletExtension {
         return AnimatedSwitcherControl(key: key, control: control);
       case "Banner":
         return BannerControl(key: key, control: control);
+      case "OutlinedButton":
+        return OutlinedButtonControl(key: key, control: control);
+      case "SearchBar":
+        return SearchBarControl(key: key, control: control);
       case "Card":
         return CardControl(key: key, control: control);
+      case "PopupMenuButton":
+        return PopupMenuButtonControl(key: key, control: control);
       case "Center":
         return CenterControl(key: key, control: control);
+      case "SegmentedButton":
+        return SegmentedButtonControl(key: key, control: control);
+      case "Semantics":
+        return SemanticsControl(key: key, control: control);
+      case "MergeSemantics":
+        return MergeSemanticsControl(key: key, control: control);
       case "Column":
         return ColumnControl(key: key, control: control);
       case "CupertinoActionSheet":
@@ -229,6 +248,8 @@ class FletCoreExtension extends FletExtension {
         return SharedPreferencesService(control: control, backend: backend);
       case "UrlLauncher":
         return UrlLauncherService(control: control, backend: backend);
+      case "SemanticsService":
+        return SemanticsServiceControl(control: control, backend: backend);
       default:
         return null;
     }

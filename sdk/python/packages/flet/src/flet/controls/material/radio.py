@@ -1,4 +1,3 @@
-from dataclasses import field
 from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
@@ -50,8 +49,8 @@ class Radio(ConstrainedControl, AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/radio
     """
 
-    label: str = field(default="")
-    label_position: Optional[LabelPosition] = None
+    label: str = ""
+    label_position: LabelPosition = LabelPosition.RIGHT
     label_style: Optional[TextStyle] = None
     value: Optional[str] = None
     autofocus: bool = False

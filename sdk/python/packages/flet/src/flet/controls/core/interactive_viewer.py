@@ -6,14 +6,9 @@ from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, control
 from flet.controls.control_event import ControlEvent
 from flet.controls.duration import OptionalDurationValue
-from flet.controls.margin import OptionalMarginValue
+from flet.controls.margin import MarginValue
 from flet.controls.transform import Offset
-from flet.controls.types import (
-    ClipBehavior,
-    Number,
-    OptionalEventCallable,
-    OptionalNumber,
-)
+from flet.controls.types import ClipBehavior, Number, OptionalEventCallable
 
 __all__ = [
     "InteractiveViewer",
@@ -55,17 +50,17 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     """
 
     content: Control
-    pan_enabled: Optional[bool] = None
-    scale_enabled: Optional[bool] = None
-    trackpad_scroll_causes_scale: Optional[bool] = None
-    constrained: Optional[bool] = None
+    pan_enabled: bool = True
+    scale_enabled: bool = True
+    trackpad_scroll_causes_scale: bool = False
+    constrained: bool = True
     max_scale: Number = 2.5
     min_scale: Number = 0.8
-    interaction_end_friction_coefficient: OptionalNumber = None
-    scale_factor: OptionalNumber = None
-    clip_behavior: Optional[ClipBehavior] = None
+    interaction_end_friction_coefficient: Number = 0.0000135
+    scale_factor: Number = 200
+    clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     alignment: Optional[Alignment] = None
-    boundary_margin: OptionalMarginValue = None
+    boundary_margin: MarginValue = 0
     interaction_update_interval: int = 200
     on_interaction_start: OptionalEventCallable[
         InteractiveViewerInteractionStartEvent
