@@ -20,7 +20,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
     """
 
     controls: List[Control] = field(default_factory=list)
-    selected_index: int = field(default=0)
+    selected_index: int = 0
     selected_color: OptionalColorValue = None
     unselected_color: OptionalColorValue = None
     border_color: OptionalColorValue = None
@@ -34,7 +34,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
         super().before_update()
         assert (
             len(self.controls) >= 2
-        ), "CupertinoSegmentedButton must have at minimum two visible controls"
+        ), "controls must contain minimum two visible controls"
         if not (0 <= self.selected_index < len(self.controls)):
             raise IndexError(
                 f"selected_index {self.selected_index} is out of range. "
