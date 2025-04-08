@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 
 import '../flet_backend.dart';
 import '../models/control.dart';
+import '../utils/colors.dart';
 import '../utils/launch_url.dart';
 import '../utils/numbers.dart';
 import 'base_controls.dart';
+import 'control_widget.dart';
 
 class CupertinoButtonControl extends StatelessWidget {
   final Control control;
@@ -18,8 +20,8 @@ class CupertinoButtonControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("CupertinoButton build: ${control.id}");
     // var theme = Theme.of(context);
-    // String text = control.getString("text", "")!; // to be removed in 0.70.3
-    // var content = control.get("content");
+    String text = control.getString("text", "")!; // to be removed in 0.70.3
+    var content = control.get("content");
     // var icon = control.getIcon("icon");
     // var iconColor = control.getColor("icon_color", context);
 
@@ -29,11 +31,11 @@ class CupertinoButtonControl extends StatelessWidget {
     // var selectedIcon = control.getIcon("selected_icon");
     // var selectedIconColor = control.getColor("selected_icon_color", context);
 
-    // Widget contentWidget = content is Control
-    //     ? ControlWidget(control: content)
-    //     : content is String
-    //         ? Text(content)
-    //         : Text(text); // to be changed to Text("") in 0.70.3
+    Widget contentWidget = content is Control
+        ? ControlWidget(control: content)
+        : content is String
+            ? Text(content)
+            : Text(text); // to be changed to Text("") in 0.70.3
 
     // Widget? child;
     // List<Widget> children = [];
@@ -75,9 +77,9 @@ class CupertinoButtonControl extends StatelessWidget {
     // var pressedOpacity = control.getDouble("opacity_on_click")!;
     // var minSize = control.getDouble("min_size", 44.0)!;
     var url = control.getString("url", "")!;
-    // var disabledColor = control.getColor(
-    //     "disabled_bgcolor", context, CupertinoColors.quaternarySystemFill)!;
-    // var bgColor = control.getColor("bgColor", context);
+    var disabledColor = control.getColor(
+        "disabled_bgcolor", context, CupertinoColors.quaternarySystemFill)!;
+    var bgColor = control.getColor("bgcolor", context);
     // var color = control.getColor("color", context);
     // var alignment = control.getAlignment("alignment", Alignment.center)!;
     // var borderRadius = control.getBorderRadius(
@@ -130,34 +132,35 @@ class CupertinoButtonControl extends StatelessWidget {
               openWebBrowser(url,
                   webWindowName: control.getString("url_target"));
             }
-            FletBackend.of(context).triggerControlEvent(control, "click");
+            control.triggerEvent("click", context);
           }
         : null;
 
     CupertinoButton? button = CupertinoButton(
-        onPressed: onPressed,
-        //disabledColor: disabledColor,
-        //color: bgColor,
-        //padding: padding,
-        //borderRadius: borderRadius,
-        //pressedOpacity: pressedOpacity,
-        //alignment: alignment,
-        //minSize: minSize,
-        //autofocus: control.getBool("autofocus", false)!,
-        //focusColor: control.getColor("focus_color", context),
-        // onLongPress: !control.disabled
-        //     ? () {
-        //         FletBackend.of(context)
-        //             .triggerControlEvent(control, "long_press");
-        //       }
-        //     : null,
-        // onFocusChange: (focused) {
-        //   FletBackend.of(context)
-        //       .triggerControlEvent(control, focused ? "focus" : "blur");
-        // },
-        //child: child,
-        //child: contentWidget,
-        child: const Text("OK"));
+      onPressed: onPressed,
+      disabledColor: disabledColor,
+      color: bgColor,
+      //padding: padding,
+      //borderRadius: borderRadius,
+      //pressedOpacity: pressedOpacity,
+      //alignment: alignment,
+      //minSize: minSize,
+      //autofocus: control.getBool("autofocus", false)!,
+      //focusColor: control.getColor("focus_color", context),
+      // onLongPress: !control.disabled
+      //     ? () {
+      //         FletBackend.of(context)
+      //             .triggerControlEvent(control, "long_press");
+      //       }
+      //     : null,
+      // onFocusChange: (focused) {
+      //   FletBackend.of(context)
+      //       .triggerControlEvent(control, focused ? "focus" : "blur");
+      // },
+      //child: child,
+      child: contentWidget,
+      //child: const Text("OK")
+    );
 
     return ConstrainedControl(control: control, child: button);
   }

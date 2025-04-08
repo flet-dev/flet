@@ -1,57 +1,40 @@
 import 'package:flutter/widgets.dart';
 
-import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/responsive.dart';
-import 'create_control.dart';
-import 'error.dart';
-import 'flet_store_mixin.dart';
+import '../widgets/error.dart';
+import '../widgets/flet_store_mixin.dart';
+import 'base_controls.dart';
+import 'control_widget.dart';
 
 class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
-  final Control? parent;
   final Control control;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final List<Control> children;
-  final FletControlBackend backend;
 
-  const ResponsiveRowControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  const ResponsiveRowControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("ResponsiveRowControl build: ${control.id}");
 
-    final columns = parseResponsiveNumber(control, "columns", 12);
-    final spacing = parseResponsiveNumber(control, "spacing", 10);
-    final runSpacing = parseResponsiveNumber(control, "runSpacing", 10);
-    bool disabled = control.disabled || parentDisabled;
-    bool? adaptive = control.getBool("adaptive") ?? parentAdaptive;
+    final columns = control.getResponsiveNumber("columns", 12, {})!;
+    final spacing = control.getResponsiveNumber("spacing", 10, {})!;
+    final runSpacing = control.getResponsiveNumber("run_spacing", 10, {})!;
     return withPageSize((context, view) {
-      var w = LayoutBuilder(
+      var result = LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
         debugPrint(
-            "ResponsiveRow constraints.maxWidth: ${constraints.maxWidth}");
-        debugPrint(
-            "ResponsiveRow constraints.maxHeight: ${constraints.maxHeight}");
+            "ResponsiveRow constraints: maxWidth=${constraints.maxWidth}, maxHeight=${constraints.maxHeight}");
 
         var bpSpacing =
             getBreakpointNumber(spacing, view.size.width, view.breakpoints);
-
         var bpColumns =
             getBreakpointNumber(columns, view.size.width, view.breakpoints);
 
         double totalCols = 0;
         List<Widget> controls = [];
-        for (var ctrl in children.where((c) => c.visible)) {
-          final col = parseResponsiveNumber(ctrl, "col", 12);
+        for (var ctrl in control.children("controls")) {
+          final col = ctrl.getResponsiveNumber("col", 12, {})!;
           var bpCol =
               getBreakpointNumber(col, view.size.width, view.breakpoints);
           totalCols += bpCol;
@@ -66,8 +49,7 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
               minWidth: childWidth,
               maxWidth: childWidth,
             ),
-            child: createControl(control, ctrl.id, disabled,
-                parentAdaptive: adaptive),
+            child: ControlWidget(key: key, control: control),
           ));
         }
 
@@ -80,21 +62,19 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
                   spacing: bpSpacing - 0.1,
                   runSpacing: getBreakpointNumber(
                       runSpacing, view.size.width, view.breakpoints),
-                  alignment: parseWrapAlignment(
-                      control.getString("alignment"), WrapAlignment.start)!,
-                  crossAxisAlignment: parseWrapCrossAlignment(
-                      control.getString("verticalAlignment"),
-                      WrapCrossAlignment.start)!,
+                  alignment: control.getWrapAlignment(
+                      "alignment", WrapAlignment.start)!,
+                  crossAxisAlignment: control.getWrapCrossAlignment(
+                      "vertical_alignment", WrapCrossAlignment.start)!,
                   children: controls,
                 )
               : Row(
                   spacing: bpSpacing - 0.1,
-                  mainAxisAlignment: parseMainAxisAlignment(
-                      control.getString("alignment"), MainAxisAlignment.start)!,
+                  mainAxisAlignment: control.getMainAxisAlignment(
+                      "alignment", MainAxisAlignment.start)!,
                   mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: parseCrossAxisAlignment(
-                      control.getString("verticalAlignment"),
-                      CrossAxisAlignment.start)!,
+                  crossAxisAlignment: control.getCrossAxisAlignment(
+                      "vertical_alignment", CrossAxisAlignment.start)!,
                   children: controls,
                 );
         } catch (e) {
@@ -105,7 +85,7 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
         }
       });
 
-      return constrainedControl(context, w, parent, control);
+      return ConstrainedControl(control: control, child: result);
     });
   }
 }

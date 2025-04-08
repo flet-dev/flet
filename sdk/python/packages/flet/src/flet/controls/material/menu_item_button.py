@@ -1,4 +1,3 @@
-from dataclasses import field
 from typing import Optional
 
 from flet.controls.alignment import Axis
@@ -21,15 +20,15 @@ class MenuItemButton(ConstrainedControl):
     """
 
     content: Optional[Control] = None
-    close_on_click: bool = field(default=True)
-    focus_on_hover: bool = field(default=True)
+    close_on_click: bool = True
+    focus_on_hover: bool = True
     leading: Optional[Control] = None
     trailing: Optional[Control] = None
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: ClipBehavior = ClipBehavior.NONE
     style: Optional[ButtonStyle] = None
     semantic_label: Optional[str] = None
-    autofocus: bool = field(default=False)
-    overflow_axis: Optional[Axis] = None
+    autofocus: bool = False
+    overflow_axis: Axis = Axis.HORIZONTAL
     on_click: OptionalControlEventCallable = None
     on_hover: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None

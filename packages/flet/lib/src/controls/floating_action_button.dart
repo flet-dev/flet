@@ -70,7 +70,7 @@ class FloatingActionButtonControl extends StatelessWidget {
             if (url != "") {
               openWebBrowser(url, webWindowName: urlTarget);
             }
-            FletBackend.of(context).triggerControlEvent(control, "click");
+            control.triggerEvent("click", context);
           };
 
     if (iconWidget == null && contentWidget == null) {

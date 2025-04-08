@@ -30,7 +30,7 @@ class CupertinoActionSheetActionControl extends StatelessWidget {
       isDestructiveAction: control.getBool("is_destructive_action", false)!,
       onPressed: () {
         if (!control.disabled) {
-          FletBackend.of(context).triggerControlEvent(control, "click");
+          control.triggerEvent("click", context);
         }
       },
       mouseCursor: control.getMouseCursor("mouse_cursor"),

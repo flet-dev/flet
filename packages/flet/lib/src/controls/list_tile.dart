@@ -64,8 +64,8 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
                 openWebBrowser(url, webWindowName: urlTarget);
               }
               if (onclick) {
-                FletBackend.of(context).triggerControlEvent(control, "click");
-              }
+                    control.triggerEvent("click", context);
+                  }
             }
           : null;
 

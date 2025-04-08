@@ -8,7 +8,6 @@ from flet.controls.material.tooltip import TooltipValue
 from flet.controls.ref import Ref
 from flet.controls.types import Number, ResponsiveNumber
 from flet.utils.strings import random_string
-
 from ..utils import deprecated
 
 # Try importing `dataclass_transform()` for Python 3.11+, else use a no-op function
@@ -211,7 +210,7 @@ class BaseControl:
 class Control(BaseControl):
     expand: Optional[Union[bool, int]] = None
     expand_loose: Optional[bool] = None
-    col: Optional[ResponsiveNumber] = None
+    col: ResponsiveNumber = 12
     opacity: Number = 1.0
     tooltip: Optional[TooltipValue] = None
     badge: Optional[BadgeValue] = None
@@ -221,7 +220,9 @@ class Control(BaseControl):
 
     def before_update(self):
         super().before_update()
-        assert 0.0 <= self.opacity <= 1.0, "opacity must be between 0.0 and 1.0"
+        assert (
+            0.0 <= self.opacity <= 1.0
+        ), "opacity must be between 0.0 and 1.0 inclusive"
 
     def clean(self) -> None:
         raise Exception("Deprecated!")
