@@ -6,6 +6,7 @@ import 'controls/adaptive_slider.dart';
 import 'controls/adaptive_switch.dart';
 import 'controls/animated_switcher.dart';
 import 'controls/banner.dart';
+import 'controls/bottom_sheet.dart';
 import 'controls/card.dart';
 import 'controls/center.dart';
 import 'controls/chip.dart';
@@ -95,6 +96,8 @@ class FletCoreExtension extends FletExtension {
         return AnimatedSwitcherControl(key: key, control: control);
       case "Banner":
         return BannerControl(key: key, control: control);
+      case "BottomSheet":
+        return BottomSheetControl(key: key, control: control);
       case "OutlinedButton":
         return OutlinedButtonControl(key: key, control: control);
       case "SearchBar":

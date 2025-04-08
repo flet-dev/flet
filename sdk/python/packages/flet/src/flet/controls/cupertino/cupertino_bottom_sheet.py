@@ -2,6 +2,7 @@ from dataclasses import field
 from typing import Optional
 
 from flet.controls.control import Control, control
+from flet.controls.dialog_control import DialogControl
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
     OptionalColorValue,
@@ -13,7 +14,7 @@ __all__ = ["CupertinoBottomSheet"]
 
 
 @control("CupertinoBottomSheet")
-class CupertinoBottomSheet(Control):
+class CupertinoBottomSheet(DialogControl):
     """
     A Cupertino version of modal bottom sheet.
 
@@ -23,9 +24,7 @@ class CupertinoBottomSheet(Control):
     """
 
     content: Optional[Control] = None
-    open: bool = field(default=False)
     modal: bool = field(default=False)
     bgcolor: OptionalColorValue = None
     height: OptionalNumber = None
     padding: OptionalPaddingValue = None
-    on_dismiss: OptionalControlEventCallable = None
