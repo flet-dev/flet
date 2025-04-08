@@ -4,14 +4,13 @@ from typing import Optional
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import control
+from flet.controls.control import Control, control
 from flet.controls.types import (
     ClipBehavior,
-    IconValue,
     IconValueOrControl,
+    Number,
     OptionalColorValue,
     OptionalControlEventCallable,
-    OptionalNumber,
     StrOrControl,
     UrlTarget,
 )
@@ -60,7 +59,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     icon_color: OptionalColorValue = None
     color: OptionalColorValue = None
     bgcolor: OptionalColorValue = None
-    elevation: OptionalNumber = None
+    elevation: Number = 1
     style: Optional[ButtonStyle] = None
     autofocus: Optional[bool] = None
     clip_behavior: Optional[ClipBehavior] = None
@@ -71,32 +70,16 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     on_hover: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
-    text: Optional[str] = None  # deprecated
+    text: Optional[str] = None  # todo(0.70.3): remove in favor of content
 
     def before_update(self):
         super().before_update()
         assert (
-            self.text or self.icon or self.content
-        ), "at minimum, text, icon or a visible content must be provided"  # text to be removed in 0.70.3
-
-    # def before_update(self):
-    #     super().before_update()
-    #     assert (
-    #         self.text or self.icon or (self.__content and self.__content.visible)
-    #     ), "at minimum, text, icon or a visible content must be provided"
-    #     style = self.__style or ButtonStyle()
-    #     if self.__color is not None:
-    #         style.color = self.__color
-    #     if self.__bgcolor is not None:
-    #         style.bgcolor = self.__bgcolor
-    #     if self.__elevation is not None:
-    #         style.elevation = self.__elevation
-
-    #     style.side = self._wrap_attr_dict(style.side)
-    #     style.shape = self._wrap_attr_dict(style.shape)
-    #     style.padding = self._wrap_attr_dict(style.padding)
-    #     style.text_style = self._wrap_attr_dict(style.text_style)
-    #     self._set_attr_json("style", style)
+            self.icon
+            or self.text  # todo(0.70.3): remove line
+            or isinstance(self.content, str)
+            or (isinstance(self.content, Control) and self.content.visible)
+        ), "at least text, icon, or content (string or visible Control) must be provided"
 
     async def focus_async(self):
         await self._invoke_method_async("focus")
