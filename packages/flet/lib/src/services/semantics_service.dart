@@ -35,6 +35,5 @@ class SemanticsServiceControl extends FletService {
       default:
         throw Exception("Unknown SemanticsService method: $name");
     }
-    return null;
   }
 }

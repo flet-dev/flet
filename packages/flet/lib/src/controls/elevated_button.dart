@@ -78,13 +78,13 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
     //           );
     //   }
 
-    bool isFilledButton = widget.control.type == "FilledButton";
-    bool isFilledTonalButton = widget.control.type == "FilledTonalButton";
-    String text =
-        widget.control.getString("text", "")!; // to be removed in 0.70.3
-    String url = widget.control.getString("url", "")!;
-    IconData? icon = widget.control.getIcon("icon");
-    Color? iconColor = widget.control.getColor("icon_color", context);
+    var isFilledButton = widget.control.type == "FilledButton";
+    var isFilledTonalButton = widget.control.type == "FilledTonalButton";
+    var text = widget.control
+        .getString("text", "")!; // todo(0.73.0): removed in favor of content
+    var url = widget.control.getString("url", "")!;
+    var icon = widget.control.getIcon("icon");
+    var iconColor = widget.control.getColor("icon_color", context);
     var content = widget.control.get("content");
     Widget child = content is Control
         ? ControlWidget(control: content)
@@ -102,22 +102,19 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
               openWebBrowser(url,
                   webWindowName: widget.control.getString("url_target"));
             }
-            FletBackend.of(context)
-                .triggerControlEvent(widget.control, "click");
+            widget.control.triggerEvent("click");
           }
         : null;
 
     Function()? onLongPressHandler = !widget.control.disabled
         ? () {
-            FletBackend.of(context)
-                .triggerControlEvent(widget.control, "long_press");
+            widget.control.triggerEvent("long_press");
           }
         : null;
 
     Function(bool)? onHoverHandler = !widget.control.disabled
         ? (state) {
-            FletBackend.of(context)
-                .triggerControlEvent(widget.control, "hover", state.toString());
+            widget.control.triggerEvent("hover", state);
           }
         : null;
 
@@ -125,13 +122,15 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
 
     var theme = Theme.of(context);
 
-    var style = parseButtonStyle(widget.control.get("style"), Theme.of(context),
-        defaultForegroundColor: theme.colorScheme.primary,
-        defaultBackgroundColor: theme.colorScheme.surface,
+    var style = widget.control.getButtonStyle("style", Theme.of(context),
+        defaultForegroundColor: widget.control
+            .getColor("color", context, theme.colorScheme.primary)!,
+        defaultBackgroundColor: widget.control
+            .getColor("bgcolor", context, theme.colorScheme.surface)!,
         defaultOverlayColor: theme.colorScheme.primary.withOpacity(0.08),
         defaultShadowColor: theme.colorScheme.shadow,
         defaultSurfaceTintColor: theme.colorScheme.surfaceTint,
-        defaultElevation: 1,
+        defaultElevation: widget.control.getDouble("elevation", 1)!,
         defaultPadding: const EdgeInsets.symmetric(horizontal: 8),
         defaultBorderSide: BorderSide.none,
         defaultShape: theme.useMaterial3
@@ -142,7 +141,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
       if (child == const Text("")) {
         return const ErrorControl("Error displaying ElevatedButton",
             description:
-                "\"icon\" must be specified together with \"content\".");
+                "\"icon\" must be specified together with \"content\"");
       }
       if (isFilledButton) {
         button = FilledButton.icon(
@@ -153,10 +152,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            icon: Icon(
-              icon,
-              color: iconColor,
-            ),
+            icon: Icon(icon, color: iconColor),
             label: child);
       } else if (isFilledTonalButton) {
         button = FilledButton.tonalIcon(
@@ -167,10 +163,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            icon: Icon(
-              icon,
-              color: iconColor,
-            ),
+            icon: Icon(icon, color: iconColor),
             label: child);
       } else {
         button = ElevatedButton.icon(
@@ -181,10 +174,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            icon: Icon(
-              icon,
-              color: iconColor,
-            ),
+            icon: Icon(icon, color: iconColor),
             label: child);
       }
     } else {
