@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
 import '../extensions/control.dart';
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
@@ -30,7 +29,7 @@ class CupertinoActionSheetActionControl extends StatelessWidget {
       isDestructiveAction: control.getBool("is_destructive_action", false)!,
       onPressed: () {
         if (!control.disabled) {
-          FletBackend.of(context).triggerControlEvent(control, "click");
+          control.triggerEvent("click");
         }
       },
       mouseCursor: control.getMouseCursor("mouse_cursor"),

@@ -43,7 +43,7 @@ class Semantics(Control):
     on_tap_hint_text: Optional[str] = None
     current_value_length: Optional[int] = None
     heading_level: Optional[int] = None
-    exclude_semantics: Optional[bool] = None
+    exclude_semantics: bool = False
     mixed: Optional[bool] = None
     on_long_press_hint_text: Optional[str] = None
     container: Optional[bool] = None

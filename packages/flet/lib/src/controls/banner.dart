@@ -6,16 +6,37 @@ import '../widgets/error.dart';
 class BannerControl extends StatefulWidget {
   final Control control;
 
-  const BannerControl({super.key, required this.control});
+  BannerControl({Key? key, required this.control})
+      : super(key: ValueKey(control.id));
 
   @override
   State<BannerControl> createState() => _BannerControlState();
 }
 
 class _BannerControlState extends State<BannerControl> {
-  bool _open = false;
+  Widget? _dialog;
 
-  Widget _createBanner() {
+  @override
+  void initState() {
+    super.initState();
+    debugPrint("Banner.initState: ${widget.control.id}");
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    debugPrint("Banner.didChangeDependencies: ${widget.control.id}");
+    _toggleBanner();
+  }
+
+  @override
+  void didUpdateWidget(covariant BannerControl oldWidget) {
+    debugPrint("Banner.didUpdateWidget: ${widget.control.id}");
+    super.didUpdateWidget(oldWidget);
+    _toggleBanner();
+  }
+
+  Widget _createBanner(FletBackend backend) {
     var leading = widget.control.buildWidget("leading");
     var content = widget.control.buildWidget("content");
     var actions = widget.control.buildWidgets("actions");
@@ -47,37 +68,71 @@ class _BannerControlState extends State<BannerControl> {
           widget.control.getDouble("min_action_bar_height", 52.0)!,
       margin: widget.control.getMargin("margin"),
       onVisible: () {
-        FletBackend.of(context).triggerControlEvent(widget.control, "visible");
+        backend.triggerControlEvent(widget.control, "visible");
       },
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    debugPrint("Banner build: ${widget.control.id}");
+  void _toggleBanner() {
+    var dismissed = widget.control.get("_dismissed");
+    final lastOpen = widget.control.getBool("_open", false)!;
+
+    debugPrint("Banner build: ${widget.control.id}, _dismissed=$dismissed");
+    debugPrint("STATE: $hashCode");
+
+    if (dismissed == true) return;
 
     var open = widget.control.getBool("open", false)!;
 
-    if (open && (open != _open)) {
-      var banner = _createBanner();
-      if (banner is ErrorControl) {
-        return banner;
+    var backend = FletBackend.of(context);
+
+    if (open && (open != lastOpen)) {
+      _dialog = _createBanner(FletBackend.of(context));
+
+      if (_dialog is ErrorControl) {
+        debugPrint(
+            "Banner: ErrorControl, not showing dialog: ${(_dialog as ErrorControl).message}");
+        return;
       }
+
+      debugPrint(
+          "Banner build 2: ${widget.control.id}, _open=$lastOpen, open=$open");
+
+      backend.updateControl(widget.control.id, {"_open": open}, python: false);
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
-
         ScaffoldMessenger.of(context)
-            .showMaterialBanner(banner as MaterialBanner);
+            .showMaterialBanner(_dialog as MaterialBanner)
+            .closed
+            .then((reason) {
+          debugPrint(
+              "Closing Banner(${widget.control.id}) with reason: $reason");
+          debugPrint("STATE: $hashCode");
+          if (widget.control.get("_dismissed") != true) {
+            backend.updateControl(widget.control.id, {"_dismissed": true},
+                python: false);
+            debugPrint(
+                "Dismissing Banner(${widget.control.id}) with reason: $reason");
+            //_open = false;
+            backend.updateControl(widget.control.id, {"_open": false},
+                python: false);
+            backend.updateControl(widget.control.id, {"open": false});
+            backend.triggerControlEvent(widget.control, "dismiss");
+          }
+        });
       });
-    } else if (open != _open && _open) {
+    } else if (!open && lastOpen) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+        backend.updateControl(widget.control.id, {"_open": false},
+            python: false);
       });
     }
+  }
 
-    _open = open;
-
-    return const SizedBox.shrink();
+  @override
+  Widget build(BuildContext context) {
+    return _dialog is ErrorControl ? _dialog! : const SizedBox.shrink();
   }
 }

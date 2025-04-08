@@ -7,11 +7,12 @@ from flet.controls.box import BoxConstraints
 from flet.controls.buttons import ButtonStyle, OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, control
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.padding import OptionalPaddingValue, PaddingValue
 from flet.controls.types import (
     ClipBehavior,
     IconValue,
     MouseCursor,
+    Number,
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
@@ -29,7 +30,7 @@ class PopupMenuItem(Control):
     icon: Optional[IconValue] = None
     checked: Optional[bool] = None
     content: Optional[Control] = None
-    height: OptionalNumber = None
+    height: Number = 48.0
     padding: OptionalPaddingValue = None
     mouse_cursor: Optional[MouseCursor] = None
     on_click: OptionalControlEventCallable = None
@@ -89,10 +90,10 @@ class PopupMenuButton(ConstrainedControl):
     splash_radius: OptionalNumber = None
     elevation: OptionalNumber = None
     menu_position: Optional[PopupMenuPosition] = None
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: ClipBehavior = ClipBehavior.NONE
     enable_feedback: Optional[bool] = None
     shape: Optional[OutlinedBorder] = None
-    padding: OptionalPaddingValue = None
+    padding: PaddingValue = 8
     menu_padding: OptionalPaddingValue = None
     style: Optional[ButtonStyle] = None
     popup_animation_style: Optional[AnimationStyle] = None

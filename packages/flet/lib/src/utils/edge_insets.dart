@@ -45,6 +45,21 @@ WidgetStateProperty<EdgeInsets?>? parseWidgetStateEdgeInsets(dynamic value,
   return getWidgetStateProperty<EdgeInsets?>(
       value, (jv) => parseEdgeInsets(jv), defaultEdgeInsets);
 }
+
+WidgetStateProperty<EdgeInsets?>? parseWidgetStatePadding(dynamic value,
+    {EdgeInsets? defaultEdgeInsets,
+    WidgetStateProperty<EdgeInsets?>? defaultValue}) {
+  return parseWidgetStateEdgeInsets(value,
+      defaultEdgeInsets: defaultEdgeInsets, defaultValue: defaultValue);
+}
+
+WidgetStateProperty<EdgeInsets?>? parseWidgetStateMargin(dynamic value,
+    {EdgeInsets? defaultEdgeInsets,
+    WidgetStateProperty<EdgeInsets?>? defaultValue}) {
+  return parseWidgetStateEdgeInsets(value,
+      defaultEdgeInsets: defaultEdgeInsets, defaultValue: defaultValue);
+}
+
 extension EdgeInsetsParsers on Control {
   EdgeInsets? getEdgeInsets(String propertyName, [EdgeInsets? defaultValue]) {
     return parseEdgeInsets(get(propertyName), defaultValue);
@@ -68,6 +83,20 @@ extension EdgeInsetsParsers on Control {
       {EdgeInsets? defaultEdgeInsets,
       WidgetStateProperty<EdgeInsets?>? defaultValue}) {
     return parseWidgetStateEdgeInsets(get(propertyName),
+        defaultEdgeInsets: defaultEdgeInsets, defaultValue: defaultValue);
+  }
+
+  WidgetStateProperty<EdgeInsets?>? getWidgetStatePadding(String propertyName,
+      {EdgeInsets? defaultEdgeInsets,
+      WidgetStateProperty<EdgeInsets?>? defaultValue}) {
+    return parseWidgetStatePadding(get(propertyName),
+        defaultEdgeInsets: defaultEdgeInsets, defaultValue: defaultValue);
+  }
+
+  WidgetStateProperty<EdgeInsets?>? getWidgetStateMargin(String propertyName,
+      {EdgeInsets? defaultEdgeInsets,
+      WidgetStateProperty<EdgeInsets?>? defaultValue}) {
+    return parseWidgetStateMargin(get(propertyName),
         defaultEdgeInsets: defaultEdgeInsets, defaultValue: defaultValue);
   }
 }

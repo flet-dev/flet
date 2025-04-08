@@ -54,20 +54,20 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
       String url = control.getString("url", "")!;
       String? urlTarget = control.getString("url_target");
 
-      Function()? onPressed = (onclick || toggleInputs || url != "") &&
-              !control.disabled
-          ? () {
-              if (toggleInputs) {
-                _clickNotifier.onClick();
-              }
-              if (url != "") {
-                openWebBrowser(url, webWindowName: urlTarget);
-              }
-              if (onclick) {
-                FletBackend.of(context).triggerControlEvent(control, "click");
-              }
-            }
-          : null;
+      Function()? onPressed =
+          (onclick || toggleInputs || url != "") && !control.disabled
+              ? () {
+                  if (toggleInputs) {
+                    _clickNotifier.onClick();
+                  }
+                  if (url != "") {
+                    openWebBrowser(url, webWindowName: urlTarget);
+                  }
+                  if (onclick) {
+                    control.triggerEvent("click");
+                  }
+                }
+              : null;
 
       Function()? onLongPress = onLongPressDefined && !control.disabled
           ? () {

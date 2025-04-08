@@ -17,6 +17,7 @@ import 'controls/cupertino_action_sheet_action.dart';
 import 'controls/cupertino_activity_indicator.dart';
 import 'controls/cupertino_alert_dialog.dart';
 import 'controls/cupertino_button.dart';
+import 'controls/cupertino_checkbox.dart';
 import 'controls/cupertino_context_menu.dart';
 import 'controls/cupertino_context_menu_action.dart';
 import 'controls/cupertino_dialog_action.dart';
@@ -37,22 +38,35 @@ import 'controls/image.dart';
 import 'controls/line_chart.dart';
 import 'controls/list_tile.dart';
 import 'controls/list_view.dart';
+import 'controls/menu_bar.dart';
+import 'controls/menu_item_button.dart';
+import 'controls/merge_semantics.dart';
 import 'controls/navigation_drawer.dart';
 import 'controls/navigation_rail.dart';
+import 'controls/outlined_button.dart';
 import 'controls/page.dart';
 import 'controls/placeholder.dart';
+import 'controls/popup_menu_button.dart';
 import 'controls/progress_bar.dart';
 import 'controls/progress_ring.dart';
+import 'controls/radio_group.dart';
 import 'controls/range_slider.dart';
 import 'controls/reorderable_draggable.dart';
+import 'controls/reorderable_list_view.dart';
+import 'controls/responsive_row.dart';
 import 'controls/row.dart';
 import 'controls/safe_area.dart';
+import 'controls/search_bar.dart';
+import 'controls/segmented_button.dart';
 import 'controls/selection_area.dart';
+import 'controls/semantics.dart';
 import 'controls/shader_mask.dart';
 import 'controls/snack_bar.dart';
 import 'controls/stack.dart';
+import 'controls/submenu_button.dart';
 import 'controls/text.dart';
 import 'controls/text_button.dart';
+import 'controls/transparent_pointer.dart';
 import 'controls/vertical_divider.dart';
 import 'controls/view.dart';
 import 'controls/window.dart';
@@ -63,6 +77,7 @@ import 'models/control.dart';
 import 'services/browser_context_menu.dart';
 import 'services/clipboard.dart';
 import 'services/haptic_feedback.dart';
+import 'services/semantics_service.dart';
 import 'services/shake_detector.dart';
 import 'services/shared_preferences.dart';
 import 'services/url_launcher.dart';
@@ -77,10 +92,22 @@ class FletCoreExtension extends FletExtension {
         return AnimatedSwitcherControl(key: key, control: control);
       case "Banner":
         return BannerControl(key: key, control: control);
+      case "OutlinedButton":
+        return OutlinedButtonControl(key: key, control: control);
+      case "SearchBar":
+        return SearchBarControl(key: key, control: control);
       case "Card":
         return CardControl(key: key, control: control);
+      case "PopupMenuButton":
+        return PopupMenuButtonControl(key: key, control: control);
       case "Center":
         return CenterControl(key: key, control: control);
+      case "SegmentedButton":
+        return SegmentedButtonControl(key: key, control: control);
+      case "Semantics":
+        return SemanticsControl(key: key, control: control);
+      case "MergeSemantics":
+        return MergeSemanticsControl(key: key, control: control);
       case "Column":
         return ColumnControl(key: key, control: control);
       case "CupertinoActionSheet":
@@ -133,6 +160,8 @@ class FletCoreExtension extends FletExtension {
         return ElevatedButtonControl(key: key, control: control);
       case "FletApp":
         return FletAppControl(key: key, control: control);
+      case "SubmenuButton":
+        return SubmenuButtonControl(key: key, control: control);
       case "FloatingActionButton":
         return FloatingActionButtonControl(key: key, control: control);
       case "Icon":
@@ -145,10 +174,16 @@ class FletCoreExtension extends FletExtension {
         return ListTileControl(key: key, control: control);
       case "ListView":
         return ListViewControl(key: key, control: control);
+      case "TransparentPointer":
+        return TransparentPointerControl(key: key, control: control);
+      case "ResponsiveRow":
+        return ResponsiveRowControl(key: key, control: control);
       case "NavigationDrawer":
         return NavigationDrawerControl(key: key, control: control);
       case "NavigationRail":
         return NavigationRailControl(key: key, control: control);
+      case "ReorderableListView":
+        return ReorderableListViewControl(key: key, control: control);
       case "Page":
         return PageControl(key: key, control: control);
       case "ProgressBar":
@@ -175,14 +210,22 @@ class FletCoreExtension extends FletExtension {
         return TextControl(key: key, control: control);
       case "Placeholder":
         return PlaceholderControl(key: key, control: control);
+      case "MenuBar":
+        return MenuBarControl(key: key, control: control);
       case "VerticalDivider":
         return VerticalDividerControl(key: key, control: control);
+      case "MenuItemButton":
+        return MenuItemButtonControl(key: key, control: control);
       case "View":
         return ViewControl(key: key, control: control);
       case "SafeArea":
         return SafeAreaControl(key: key, control: control);
       case "SelectionArea":
         return SelectionAreaControl(key: key, control: control);
+      case "RadioGroup":
+        return RadioGroupControl(key: key, control: control);
+      case "CupertinoCheckbox":
+        return CupertinoCheckboxControl(key: key, control: control);
       case "Window":
         return WindowControl(key: key, control: control);
       default:
@@ -205,6 +248,8 @@ class FletCoreExtension extends FletExtension {
         return SharedPreferencesService(control: control, backend: backend);
       case "UrlLauncher":
         return UrlLauncherService(control: control, backend: backend);
+      case "SemanticsService":
+        return SemanticsServiceControl(control: control, backend: backend);
       default:
         return null;
     }
