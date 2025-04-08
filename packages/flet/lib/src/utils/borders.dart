@@ -22,9 +22,10 @@ BorderRadius? parseBorderRadius(dynamic value, [BorderRadius? defaultValue]) {
 }
 
 Radius? parseRadius(dynamic value, [Radius? defaultValue]) {
-  if (value == null) return defaultValue;
+  var radius = parseDouble(value);
+  if (radius == null) return null;
 
-  return Radius.circular(value);
+  return Radius.circular(radius);
 }
 
 Border? parseBorder(dynamic value, ThemeData? theme,

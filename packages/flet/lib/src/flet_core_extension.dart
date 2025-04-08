@@ -53,6 +53,7 @@ import 'controls/reorderable_list_view.dart';
 import 'controls/responsive_row.dart';
 import 'controls/row.dart';
 import 'controls/safe_area.dart';
+import 'controls/segmented_button.dart';
 import 'controls/selection_area.dart';
 import 'controls/shader_mask.dart';
 import 'controls/snack_bar.dart';
@@ -89,6 +90,8 @@ class FletCoreExtension extends FletExtension {
         return CardControl(key: key, control: control);
       case "Center":
         return CenterControl(key: key, control: control);
+      case "SegmentedButton":
+        return SegmentedButtonControl(key: key, control: control);
       case "Column":
         return ColumnControl(key: key, control: control);
       case "CupertinoActionSheet":
