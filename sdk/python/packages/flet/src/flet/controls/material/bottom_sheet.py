@@ -4,6 +4,7 @@ from flet.controls.animation import AnimationStyle
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control, control
+from flet.controls.dialog_control import DialogControl
 from flet.controls.types import (
     ClipBehavior,
     OptionalColorValue,
@@ -13,7 +14,7 @@ from flet.controls.types import (
 
 
 @control("BottomSheet")
-class BottomSheet(Control):
+class BottomSheet(DialogControl):
     """
     A modal bottom sheet is an alternative to a menu or a dialog and prevents the user from interacting with the rest of the app.
 
@@ -52,7 +53,6 @@ class BottomSheet(Control):
     """
 
     content: Control
-    open: bool = False
     elevation: OptionalNumber = None
     bgcolor: OptionalColorValue = None
     dismissible: Optional[bool] = None
@@ -65,7 +65,6 @@ class BottomSheet(Control):
     size_constraints: Optional[BoxConstraints] = None
     clip_behavior: Optional[ClipBehavior] = None
     shape: Optional[OutlinedBorder] = None
-    on_dismiss: OptionalControlEventCallable = None
 
     def before_update(
         self,
