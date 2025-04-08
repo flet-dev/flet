@@ -24,6 +24,38 @@ class CupertinoButtonControl extends StatefulWidget {
 }
 
 class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
+  late final FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+    _focusNode.addListener(_onFocusChange);
+    widget.control.addInvokeMethodListener(_invokeMethod);
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_onFocusChange);
+    _focusNode.dispose();
+    widget.control.removeInvokeMethodListener(_invokeMethod);
+    super.dispose();
+  }
+
+  void _onFocusChange() {
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
+  }
+
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    debugPrint("ElevatedButton.$name($args)");
+    switch (name) {
+      case "focus":
+        _focusNode.requestFocus();
+      default:
+        throw Exception("Unknown ElevatedButton method: $name");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoButton build: ${widget.control.id}");
@@ -59,49 +91,6 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     } else {
       child = contentWidget;
     }
-
-    // // IconButton props below
-    // var iconSize = control.getDouble("icon_size");
-    // var selected = control.getBool("selected", false)!;
-    // var selectedIcon = control.getIcon("selected_icon");
-    // var selectedIconColor = control.getColor("selected_icon_color", context);
-
-    // Widget? child;
-    // List<Widget> children = [];
-    // if (icon != null) {
-    //   children.add(Icon(
-    //     selected ? selectedIcon : icon,
-    //     color: selected
-    //         ? selectedIconColor
-    //         : control.disabled
-    //             ? theme.disabledColor
-    //             : iconColor,
-    //     size: iconSize,
-    //   ));
-    // }
-    // children.add(contentWidget);
-    // Widget? iconWidget = icon != null
-    //     ? Icon(
-    //         selected ? selectedIcon : icon,
-    //         color: selected
-    //             ? selectedIconColor
-    //             : control.disabled
-    //                 ? theme.disabledColor
-    //                 : iconColor,
-    //         size: iconSize,
-    //       )
-    //     : null;
-    // children.add(iconWidget);
-    // Widget child;
-    // if (children.length == 2) {
-    //   children.insert(1, const SizedBox(width: 8));
-    //   child = Row(
-    //     mainAxisSize: MainAxisSize.min,
-    //     children: children,
-    //   );
-    // } else {
-    //   child = children.first;
-    // }
 
     //var pressedOpacity = widget.control.getDouble("opacity_on_click", 0.4)!;
     //var minSize = widget.control.getDouble("min_size", 44.0)!;
@@ -180,13 +169,11 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       //             .triggerControlEvent(control, "long_press");
       //       }
       //     : null,
+      focusNode: _focusNode,
       // onFocusChange: (focused) {
-      //   FletBackend.of(context)
-      //       .triggerControlEvent(control, focused ? "focus" : "blur");
+      //   widget.control.triggerEvent(focused ? "focus" : "blur");
       // },
-      //child: child,
       child: child,
-      //child: const Text("OK")
     );
 
     return ConstrainedControl(control: widget.control, child: button);
