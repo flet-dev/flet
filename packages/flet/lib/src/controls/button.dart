@@ -48,12 +48,12 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
   }
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
-    debugPrint("ElevatedButton.$name($args)");
+    debugPrint("Button.$name($args)");
     switch (name) {
       case "focus":
         _focusNode.requestFocus();
       default:
-        throw Exception("Unknown ElevatedButton method: $name");
+        throw Exception("Unknown Button method: $name");
     }
   }
 

@@ -23,6 +23,7 @@ import 'controls/cupertino_context_menu.dart';
 import 'controls/cupertino_context_menu_action.dart';
 import 'controls/cupertino_dialog_action.dart';
 import 'controls/cupertino_list_tile.dart';
+import 'controls/cupertino_navigation_bar.dart';
 import 'controls/cupertino_segmented_button.dart';
 import 'controls/cupertino_slider.dart';
 import 'controls/cupertino_switch.dart';
@@ -44,6 +45,7 @@ import 'controls/list_view.dart';
 import 'controls/menu_bar.dart';
 import 'controls/menu_item_button.dart';
 import 'controls/merge_semantics.dart';
+import 'controls/navigation_bar.dart';
 import 'controls/navigation_drawer.dart';
 import 'controls/navigation_rail.dart';
 import 'controls/outlined_button.dart';
@@ -120,6 +122,10 @@ class FletCoreExtension extends FletExtension {
         return ColumnControl(key: key, control: control);
       case "GridView":
         return GridViewControl(key: key, control: control);
+      case "NavigationBar":
+        return NavigationBarControl(key: key, control: control);
+      case "CupertinoNavigationBar":
+        return CupertinoNavigationBarControl(key: key, control: control);
       case "CupertinoActionSheet":
         return CupertinoActionSheetControl(key: key, control: control);
       case "CupertinoActionSheetAction":
@@ -139,9 +145,7 @@ class FletCoreExtension extends FletExtension {
       case "CupertinoAlertDialog":
         return CupertinoAlertDialogControl(key: key, control: control);
       case "CupertinoButton":
-        return CupertinoButtonControl(key: key, control: control);
       case "CupertinoFilledButton":
-        return CupertinoButtonControl(key: key, control: control);
       case "CupertinoTintedButton":
         return CupertinoButtonControl(key: key, control: control);
       case "CupertinoContextMenu":
@@ -164,14 +168,12 @@ class FletCoreExtension extends FletExtension {
         return DividerControl(key: key, control: control);
       case "Dropdown":
         return DropdownControl(key: key, control: control);
-      case "ElevatedButton":
-        return AdaptiveButtonControl(key: key, control: control);
       case "ExpansionPanelList":
         return ExpansionPanelListControl(key: key, control: control);
       case "ExpansionTile":
         return ExpansionTileControl(key: key, control: control);
+      case "ElevatedButton":
       case "FilledButton":
-        return AdaptiveButtonControl(key: key, control: control);
       case "FilledTonalButton":
         return AdaptiveButtonControl(key: key, control: control);
       case "FletApp":

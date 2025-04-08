@@ -13,7 +13,7 @@ class AdaptiveButtonControl extends StatelessWidget with FletStoreMixin {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("AdaptiveElevatedButton build: ${control.id}");
+    debugPrint("AdaptiveButton build: ${control.id}");
 
     return withPagePlatform((context, platform) {
       if (control.adaptive == true &&

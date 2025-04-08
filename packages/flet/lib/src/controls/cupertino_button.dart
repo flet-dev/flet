@@ -47,12 +47,12 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
   }
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
-    debugPrint("ElevatedButton.$name($args)");
+    debugPrint("CupertinoButton.$name($args)");
     switch (name) {
       case "focus":
         _focusNode.requestFocus();
       default:
-        throw Exception("Unknown ElevatedButton method: $name");
+        throw Exception("Unknown CupertinoButton method: $name");
     }
   }
 
