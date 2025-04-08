@@ -2,6 +2,7 @@ from dataclasses import field
 from typing import List, Optional
 
 from flet.controls.control import Control, control
+from flet.controls.dialog_control import DialogControl
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.text_style import TextStyle
@@ -16,7 +17,7 @@ __all__ = ["Banner"]
 
 
 @control("Banner")
-class Banner(Control):
+class Banner(DialogControl):
     """
     A banner displays an important, succinct message, and provides actions for users to address (or dismiss the banner). A user action is required for it to be dismissed.
 
@@ -62,7 +63,6 @@ class Banner(Control):
 
     content: Control
     actions: List[Control] = field(default_factory=list)
-    open: bool = False
     leading: Optional[Control] = None
     leading_padding: OptionalPaddingValue = None
     content_padding: OptionalPaddingValue = None
