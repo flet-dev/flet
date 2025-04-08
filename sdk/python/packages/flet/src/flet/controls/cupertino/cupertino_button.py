@@ -1,3 +1,4 @@
+import asyncio
 from typing import Optional
 
 from flet.controls.alignment import Alignment
@@ -65,3 +66,9 @@ class CupertinoButton(ConstrainedControl):
         assert (
             0 <= self.opacity_on_click <= 1
         ), "opacity_on_click must be between 0 and 1 inclusive"
+
+    async def focus_async(self):
+        await self._invoke_method_async("focus")
+
+    def focus(self):
+        asyncio.create_task(self.focus_async())
