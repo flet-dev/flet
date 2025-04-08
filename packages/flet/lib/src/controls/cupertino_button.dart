@@ -1,9 +1,9 @@
-import 'package:flet/src/utils/edge_insets.dart';
-import 'package:flet/src/utils/icons.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../models/control.dart';
 import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
+import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import '../utils/numbers.dart';
 import 'base_controls.dart';

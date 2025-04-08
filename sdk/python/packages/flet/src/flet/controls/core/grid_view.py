@@ -6,7 +6,7 @@ from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.scrollable_control import ScrollableControl
-from flet.controls.types import ClipBehavior, OptionalNumber
+from flet.controls.types import ClipBehavior, Number, OptionalNumber
 
 __all__ = ["GridView"]
 
@@ -60,11 +60,11 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     controls: List[Control] = field(default_factory=list)
     horizontal: bool = False
-    runs_count: Optional[int] = None
+    runs_count: int = 1
     max_extent: Optional[int] = None
-    spacing: OptionalNumber = None
-    run_spacing: OptionalNumber = None
-    child_aspect_ratio: OptionalNumber = None
+    spacing: Number = 10
+    run_spacing: Number = 10
+    child_aspect_ratio: Number = 1.0
     padding: OptionalPaddingValue = None
     clip_behavior: Optional[ClipBehavior] = None
     semantic_child_count: Optional[int] = None

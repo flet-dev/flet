@@ -1,10 +1,9 @@
-import 'package:flet/src/utils/icons.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/colors.dart';
+import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
