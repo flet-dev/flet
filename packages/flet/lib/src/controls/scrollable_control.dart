@@ -73,8 +73,7 @@ class _ScrollableControlState extends State<ScrollableControl>
       } else if (method != null && method != _method) {
         _method = method;
         debugPrint("ScrollableControl JSON method: $method");
-        FletBackend.of(context)
-            .updateControl(widget.control.id, {"method": ""});
+        widget.control.updateProperties({"method": ""});
 
         var mj = json.decode(method);
         var name = mj["n"] as String;

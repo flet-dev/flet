@@ -37,11 +37,9 @@ class _SliderControlState extends State<RangeSliderControl> {
 
   void onChange(double startValue, double endValue) {
     var props = {"start_value": startValue, "end_value": endValue};
-    FletBackend.of(context)
-        .updateControl(widget.control.id, props, python: false, notify: true);
+    widget.control.updateProperties(props, python: false, notify: true);
     _debouncer.run(() {
-      FletBackend.of(context)
-          .updateControl(widget.control.id, props, notify: true);
+      widget.control.updateProperties(props, notify: true);
       widget.control.triggerEvent("change");
     });
   }
@@ -81,14 +79,12 @@ class _SliderControlState extends State<RangeSliderControl> {
             : null,
         onChangeStart: !widget.control.disabled
             ? (RangeValues newValues) {
-                FletBackend.of(context)
-                    .triggerControlEvent(widget.control, "change_start");
+                widget.control.triggerEvent("change_start");
               }
             : null,
         onChangeEnd: !widget.control.disabled
             ? (RangeValues newValues) {
-                FletBackend.of(context)
-                    .triggerControlEvent(widget.control, "change_end");
+                widget.control.triggerEvent("change_end");
               }
             : null);
 

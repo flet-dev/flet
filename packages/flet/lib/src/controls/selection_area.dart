@@ -24,8 +24,7 @@ class SelectionAreaControl extends StatelessWidget {
     var selectionArea = SelectionArea(
       child: content,
       onSelectionChanged: (SelectedContent? selection) {
-        FletBackend.of(context)
-            .triggerControlEvent(control, "change", selection?.plainText);
+        control.triggerEvent("change", selection?.plainText);
       },
     );
 

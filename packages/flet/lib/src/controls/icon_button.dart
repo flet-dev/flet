@@ -39,8 +39,7 @@ class _IconButtonControlState extends State<IconButtonControl>
   }
 
   void _onFocusChange() {
-    FletBackend.of(context).triggerControlEvent(
-        widget.control, _focusNode.hasFocus ? "focus" : "blur");
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
@@ -97,14 +96,12 @@ class _IconButtonControlState extends State<IconButtonControl>
               if (url != "") {
                 openWebBrowser(url, webWindowName: urlTarget);
               }
-              FletBackend.of(context)
-                  .triggerControlEvent(widget.control, "click");
+              widget.control.triggerEvent("click");
             }
           : null;
 
       Function()? onLongPressHandler = !widget.control.disabled
-          ? () => FletBackend.of(context)
-              .triggerControlEvent(widget.control, "longPress")
+          ? () => widget.control.triggerEvent("long_press")
           : null;
 
       Function(bool)? onHoverHandler = !widget.control.disabled

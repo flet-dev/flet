@@ -95,8 +95,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
 
     var onAnimationEnd = control.getBool("on_animation_end", false)!
         ? () {
-            FletBackend.of(context)
-                .triggerControlEvent(control, "animation_end", "container");
+            control.triggerEvent( "animation_end", "container");
           }
         : null;
     if ((onClick || url != "" || onLongPress || onHover || onTapDown) &&
@@ -115,15 +114,13 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                       openWebBrowser(url, webWindowName: urlTarget);
                     }
                     if (onClick) {
-                      FletBackend.of(context)
-                          .triggerControlEvent(control, "click");
+                     control.triggerEvent( "click");
                     }
                   }
                 : null,
             onTapDown: onTapDown
                 ? (details) {
-                    FletBackend.of(context).triggerControlEvent(
-                        control,
+                   control.triggerEvent(
                         "tap_down",
                         ContainerTapEvent(
                                 localX: details.localPosition.dx,
@@ -135,14 +132,12 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 : null,
             onLongPress: onLongPress
                 ? () {
-                    FletBackend.of(context)
-                        .triggerControlEvent(control, "long_press");
+                    control.triggerEvent("long_press");
                   }
                 : null,
             onHover: onHover
                 ? (value) {
-                    FletBackend.of(context)
-                        .triggerControlEvent(control, "hover", value);
+                   control.triggerEvent( "hover", value);
                   }
                 : null,
             borderRadius: borderRadius,
@@ -210,14 +205,12 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
               : MouseCursor.defer,
           onEnter: onHover
               ? (value) {
-                  FletBackend.of(context)
-                      .triggerControlEvent(control, "hover", true);
+                 control.triggerEvent("hover", true);
                 }
               : null,
           onExit: onHover
               ? (value) {
-                  FletBackend.of(context)
-                      .triggerControlEvent(control, "hover", false);
+                  control.triggerEvent("hover", false);
                 }
               : null,
           child: GestureDetector(
@@ -227,15 +220,13 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                       openWebBrowser(url, webWindowName: urlTarget);
                     }
                     if (onClick) {
-                      FletBackend.of(context)
-                          .triggerControlEvent(control, "click");
+                     control.triggerEvent( "click");
                     }
                   }
                 : null,
             onTapDown: onTapDown
                 ? (details) {
-                    FletBackend.of(context).triggerControlEvent(
-                        control,
+                    control.triggerEvent(
                         "tap_down",
                         ContainerTapEvent(
                                 localX: details.localPosition.dx,
@@ -247,8 +238,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 : null,
             onLongPress: onLongPress
                 ? () {
-                    FletBackend.of(context)
-                        .triggerControlEvent(control, "long_press");
+                   control.triggerEvent( "long_press");
                   }
                 : null,
             child: container,

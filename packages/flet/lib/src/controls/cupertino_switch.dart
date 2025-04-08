@@ -44,14 +44,12 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
   void _onChange(bool value) {
     _value = value;
     var props = {"value": value};
-    FletBackend.of(context)
-        .updateControl(widget.control.id, props, notify: true);
-    FletBackend.of(context).triggerControlEvent(widget.control, "change");
+    widget.control.updateProperties(props, notify: true);
+    widget.control.triggerEvent("change");
   }
 
   void _onFocusChange() {
-    FletBackend.of(context).triggerControlEvent(
-        widget.control, _focusNode.hasFocus ? "focus" : "blur");
+    widget.control.triggerEvent( _focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -99,14 +97,12 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
         onActiveThumbImageError: activeThumbImage == null
             ? null
             : (Object exception, StackTrace? stackTrace) {
-                FletBackend.of(context).triggerControlEvent(
-                    widget.control, "image_error", exception.toString());
+               widget.control.triggerEvent("image_error", exception.toString());
               },
         onInactiveThumbImageError: inactiveThumbImage == null
             ? null
             : (Object exception, StackTrace? stackTrace) {
-                FletBackend.of(context).triggerControlEvent(
-                    widget.control, "image_error", exception.toString());
+               widget.control.triggerEvent( "image_error", exception.toString());
               },
         value: _value,
         offLabelColor: widget.control.getColor("off_label_color", context),

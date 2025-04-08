@@ -115,8 +115,6 @@ class _SnackBarControlState extends State<SnackBarControl> {
 
       _open = open;
 
-      var backend = FletBackend.of(context);
-
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
         ScaffoldMessenger.of(context)
@@ -128,8 +126,8 @@ class _SnackBarControlState extends State<SnackBarControl> {
             debugPrint(
                 "Dismissing SnackBar(${widget.control.id}) with reason: $reason");
             _open = false;
-            backend.updateControl(widget.control.id, {"open": false});
-            backend.triggerControlEvent(widget.control, "dismiss");
+            widget.control.updateProperties({"open": false});
+            widget.control.triggerEvent("dismiss");
           }
         });
       });

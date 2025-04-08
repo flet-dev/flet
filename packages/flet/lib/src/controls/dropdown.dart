@@ -40,8 +40,7 @@ class _DropdownControlState extends State<DropdownControl> {
   }
 
   void _onFocusChange() {
-    FletBackend.of(context).triggerControlEvent(
-        widget.control, _focusNode.hasFocus ? "focus" : "blur");
+    widget.control.triggerEvent( _focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -268,10 +267,8 @@ class _DropdownControlState extends State<DropdownControl> {
       onSelected: widget.control.disabled
           ? null
           : (String? value) {
-              FletBackend.of(context)
-                  .updateControl(widget.control.id, {"value": value});
-              FletBackend.of(context)
-                  .triggerControlEvent(widget.control, "change", value);
+              widget.control.updateProperties({"value": value});
+              widget.control.triggerEvent("change", value);
             },
       dropdownMenuEntries: items,
     );

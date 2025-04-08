@@ -44,18 +44,15 @@ class _SliderControlState extends State<SliderControl> {
   }
 
   void _onFocusChange() {
-    FletBackend.of(context).triggerControlEvent(
-        widget.control, _focusNode.hasFocus ? "focus" : "blur");
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   void onChange(double value) {
     _value = value;
     var props = {"value": value};
-    FletBackend.of(context)
-        .updateControl(widget.control.id, props, python: false, notify: true);
+    widget.control.updateProperties(props, python: false, notify: true);
     _debouncer.run(() {
-      FletBackend.of(context)
-          .updateControl(widget.control.id, props, notify: true);
+      widget.control.updateProperties(props, notify: true);
       widget.control.triggerEvent("change");
     });
   }
@@ -119,14 +116,12 @@ class _SliderControlState extends State<SliderControl> {
         secondaryTrackValue: widget.control.getDouble("secondary_track_value"),
         onChangeStart: !widget.control.disabled
             ? (double value) {
-                FletBackend.of(context).triggerControlEvent(
-                    widget.control, "change_start", value.toString());
+                 widget.control.triggerEvent("change_start", value);
               }
             : null,
         onChangeEnd: !widget.control.disabled
             ? (double value) {
-                FletBackend.of(context).triggerControlEvent(
-                    widget.control, "change_end", value.toString());
+                widget.control.triggerEvent("change_end", value);
               }
             : null);
 
