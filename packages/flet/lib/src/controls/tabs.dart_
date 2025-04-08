@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flet/flet.dart';
-import 'package:flet/src/flet_backend.dart';
-import 'package:flet/src/utils/numbers.dart';
+import '../flet_backend.dart';
+import '../utils/numbers.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_backend.dart';

@@ -46,6 +46,7 @@ import 'controls/navigation_rail.dart';
 import 'controls/outlined_button.dart';
 import 'controls/page.dart';
 import 'controls/placeholder.dart';
+import 'controls/popup_menu_button.dart';
 import 'controls/progress_bar.dart';
 import 'controls/progress_ring.dart';
 import 'controls/radio_group.dart';
@@ -97,6 +98,8 @@ class FletCoreExtension extends FletExtension {
         return SearchBarControl(key: key, control: control);
       case "Card":
         return CardControl(key: key, control: control);
+      case "PopupMenuButton":
+        return PopupMenuButtonControl(key: key, control: control);
       case "Center":
         return CenterControl(key: key, control: control);
       case "SegmentedButton":
