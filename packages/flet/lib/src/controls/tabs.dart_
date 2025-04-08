@@ -1,12 +1,12 @@
 import 'dart:convert';
 
+import 'package:flet/flet.dart';
+import 'package:flet/src/flet_backend.dart';
+import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 
-import '../flet_control_backend.dart';
-import '../models/app_state.dart';
+import '../flet_backend.dart';
 import '../models/control.dart';
-import '../models/controls_view_model.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
@@ -14,26 +14,13 @@ import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/material_state.dart';
 import '../utils/mouse.dart';
-import '../utils/others.dart';
+import '../utils/misc.dart';
 import '../utils/text.dart';
-import 'create_control.dart';
+import 'base_controls.dart';
 
 class TabsControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
-
-  const TabsControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  const TabsControl({super.key, required this.control});
 
   @override
   State<TabsControl> createState() => _TabsControlState();
@@ -59,10 +46,8 @@ class _TabsControlState extends State<TabsControl>
     var index = _tabController!.index;
     if (_selectedIndex != index) {
       debugPrint("Selected index: $index");
-      widget.backend.updateControlState(
-          widget.control.id, {"selectedindex": index.toString()});
-      widget.backend
-          .triggerControlEvent(widget.control.id, "change", index.toString());
+      widget.control.updateProperties({"selected_index": index}, context);
+      widget.control.triggerEvent("change", context, index);
       _selectedIndex = index;
     }
   }
@@ -70,17 +55,11 @@ class _TabsControlState extends State<TabsControl>
   @override
   Widget build(BuildContext context) {
     debugPrint("TabsControl build: ${widget.control.id}");
-    bool disabled = widget.control.disabled || widget.parentDisabled;
-    bool? adaptive =
-        widget.control.getBool("adaptive") ?? widget.parentAdaptive;
-
-    // keep only visible tabs
-    widget.children.retainWhere((c) => c.visible);
 
     var tabs = StoreConnector<AppState, ControlsViewModel>(
         distinct: true,
         converter: (store) => ControlsViewModel.fromStore(
-            store, widget.children.map((c) => c.id)),
+            store, widget.control.children("tabs").map((c) => c.id)),
         builder: (content, viewModel) {
           var tabsSnapshot =
               viewModel.controlViews.map((c) => c.control.id).join();
@@ -93,14 +72,13 @@ class _TabsControlState extends State<TabsControl>
             }
             _tabController = TabController(
                 length: viewModel.controlViews.length,
-                animationDuration: Duration(
-                    milliseconds:
-                        widget.control.getInt("animationDuration", 50)!),
+                animationDuration: widget.control.getDuration(
+                    "animation_duration", const Duration(milliseconds: 50))!,
                 vsync: this);
             _tabController!.addListener(_tabChanged);
           }
 
-          var selectedIndex = widget.control.getInt("selectedIndex", 0)!;
+          var selectedIndex = widget.control.getInt("selected_index", 0)!;
 
           if (selectedIndex > -1 &&
               selectedIndex < _tabController!.length &&
@@ -113,64 +91,59 @@ class _TabsControlState extends State<TabsControl>
           bool emptyTabs = !viewModel.controlViews.any(
               (t) => t.children.any((c) => c.name == "content" && c.visible));
 
-          var overlayColorStr = widget.control.getString("overlayColor");
-          dynamic overlayColor;
-          if (overlayColorStr != null) {
-            overlayColor = getWidgetStateProperty<Color?>(
-                    json.decode(overlayColorStr),
-                    (jv) => parseColor(Theme.of(context), jv as String)) ??
-                TabBarTheme.of(context).overlayColor;
-          }
-
+          var overlayColor = widget.control.getWidgetStateColor(
+              "overlay_color", Theme.of(context),
+              defaultValue: TabBarTheme.of(context).overlayColor)!;
           var indicatorBorderRadius =
-              parseBorderRadius(widget.control, "indicatorBorderRadius");
-          var indicatorBorderSide = parseBorderSide(
-              Theme.of(context), widget.control, "indicatorBorderSide");
-          var indicatorPadding =
-              parseEdgeInsets(widget.control, "indicatorPadding");
-
-          var indicatorColor =
-              widget.control.getColor("indicatorColor", context) ??
-                  TabBarTheme.of(context).indicatorColor ??
-                  Theme.of(context).colorScheme.primary;
-          var labelColor = widget.control.getColor("labelColor", context) ??
+              widget.control.getBorderRadius("indicator_border_radius");
+          var indicatorBorderSide = widget.control
+              .getBorderSide("indicator_border_side", Theme.of(context));
+          var indicatorPadding = widget.control.getPadding("indicator_padding");
+          var indicatorColor = widget.control.getColor(
+              "indicator_color",
+              context,
+              TabBarTheme.of(context).indicatorColor ??
+                  Theme.of(context).colorScheme.primary)!;
+          var labelColor = widget.control.getColor(
+              "label_color",
+              context,
               TabBarTheme.of(context).labelColor ??
-              Theme.of(context).colorScheme.primary;
-          var unselectedLabelColor =
-              widget.control.getColor("unselectedLabelColor", context) ??
-                  TabBarTheme.of(context).unselectedLabelColor ??
-                  Theme.of(context).colorScheme.onSurface;
-          var dividerColor = widget.control.getColor("dividerColor", context) ??
-              TabBarTheme.of(context).dividerColor;
-
+                  Theme.of(context).colorScheme.primary);
+          var unselectedLabelColor = widget.control.getColor(
+              "unselected_label_color",
+              context,
+              TabBarTheme.of(context).unselectedLabelColor ??
+                  Theme.of(context).colorScheme.onSurface);
+          var dividerColor =
+              widget.control.getColor("divider_color", context) ??
+                  TabBarTheme.of(context).dividerColor;
           var themeIndicator =
               TabBarTheme.of(context).indicator as UnderlineTabIndicator?;
-          var indicatorTabSize = widget.control.getBool("indicatorTabSize");
+          var indicatorTabSize = widget.control.getBool("indicator_tab_size");
           var isScrollable = widget.control.getBool("scrollable", true)!;
-          var secondary = widget.control.getBool("isSecondary", false)!;
-          var dividerHeight = widget.control.getDouble("dividerHeight");
-          var enableFeedback = widget.control.getBool("enableFeedback");
+          var secondary = widget.control.getBool("is_secondary", false)!;
+          var dividerHeight = widget.control.getDouble("divider_height");
+          var enableFeedback = widget.control.getBool("enable_feedback");
           var indicatorWeight =
-              widget.control.getDouble("indicatorThickness", 2.0)!;
+              widget.control.getDouble("indicator_thickness", 2.0)!;
           var tabAlignment = parseTabAlignment(
-              widget.control.getString("tabAlignment"),
+              widget.control.getString("tab_alignment"),
               isScrollable ? TabAlignment.start : TabAlignment.fill)!;
           var mouseCursor =
-              parseMouseCursor(widget.control.getString("mouseCursor"));
-          var clipBehavior = parseClip(
-              widget.control.getString("clipBehavior"), Clip.hardEdge)!;
-          var padding = parseEdgeInsets(widget.control, "padding");
-          var labelPadding = parseEdgeInsets(widget.control, "labelPadding");
-          var labelStyle = parseTextStyle(
-              Theme.of(context), widget.control, "labelTextStyle");
-          var unselectedLabelStyle = parseTextStyle(
-              Theme.of(context), widget.control, "unselectedLabelTextStyle");
+              parseMouseCursor(widget.control.getString("mouse_cursor"));
+          var clipBehavior =
+              widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!;
+          var padding = parseEdgeInsets(widget.control.getPadding("padding"));
+          var labelPadding = widget.control.getPadding("label_padding");
+          var labelStyle = widget.control
+              .getTextStyle("label_text_style", Theme.of(context));
+          var unselectedLabelStyle = widget.control
+              .getTextStyle("unselected_label_text_style", Theme.of(context));
           var splashBorderRadius =
-              parseBorderRadius(widget.control, "splashBorderRadius");
+              widget.control.getBorderRadius("splash_border_radius");
 
           void onTap(int index) {
-            widget.backend.triggerControlEvent(
-                widget.control.id, "click", index.toString());
+            widget.control.triggerEvent("click", context, index);
           }
 
           var indicator = indicatorBorderRadius != null ||
@@ -199,33 +172,26 @@ class _TabsControlState extends State<TabsControl>
               : TabBarTheme.of(context).indicatorSize;
 
           var tabs = viewModel.controlViews.map((tabView) {
-            var iconString = parseIcon(tabView.control.getString("icon"));
-            var iconCtrls =
-                tabView.children.where((c) => c.name == "icon" && c.visible);
+            var iconStr = tabView.control.getIcon("icon");
+            var icon = tabView.control.buildWidget("icon") ??
+                (iconStr != null ? Icon(iconStr) : null);
+            var label = tabView.control.buildWidget("label") ??
+                tabView.control.buildWidget(
+                    "tab_content"); // todo(0.70.3): remove "tab_content"
+            var labelStr = tabView.control.getString("label") ??
+                tabView.control
+                    .getString("text") ?? // todo(0.70.3): remove "text"
+                (icon == null ? "" : null);
 
-            var icon = iconCtrls.isNotEmpty
-                ? createControl(widget.control, iconCtrls.first.id, disabled,
-                    parentAdaptive: adaptive)
-                : iconString != null
-                    ? Icon(iconString)
-                    : null;
-            var tabContentCtrls = tabView.children
-                .where((c) => c.name == "tab_content" && c.visible);
-
-            if (tabContentCtrls.isNotEmpty) {
-              return Tab(
-                  child: createControl(
-                      widget.control, tabContentCtrls.first.id, disabled,
-                      parentAdaptive: adaptive));
-            } else {
-              return Tab(
-                text:
-                    tabView.control.getString("text", icon == null ? "" : null),
-                icon: icon,
-                height: tabView.control.getDouble("height"),
-                iconMargin: parseEdgeInsets(tabView.control, "iconMargin"),
-              );
-            }
+            return Tab(
+              icon: icon,
+              height: tabView.control.getDouble("height"),
+              iconMargin: tabView.control.geMargin("icon_margin"),
+              text: label != null
+                  ? null // either one of text or child can be set; we give child priority as it's more specific
+                  : labelStr,
+              child: label,
+            );
           }).toList();
 
           TabBar? tabBar;
@@ -280,8 +246,6 @@ class _TabsControlState extends State<TabsControl>
                 onTap: onTap);
           }
 
-          debugPrint("tabs.length: ${tabBar.tabs.length}");
-
           if (emptyTabs) {
             return tabBar;
           }
@@ -295,19 +259,13 @@ class _TabsControlState extends State<TabsControl>
                       controller: _tabController,
                       clipBehavior: clipBehavior,
                       children: viewModel.controlViews.map((tabView) {
-                        var contentCtrls = tabView.children
-                            .where((c) => c.name == "content" && c.visible);
-                        if (contentCtrls.isEmpty) {
-                          return const SizedBox.shrink();
-                        }
-                        return createControl(
-                            widget.control, contentCtrls.first.id, disabled,
-                            parentAdaptive: adaptive);
+                        return tabView.buildWidget("content") ??
+                            const SizedBox.shrink();
                       }).toList()))
             ],
           );
         });
 
-    return constrainedControl(context, tabs, widget.parent, widget.control);
+    return ConstrainedControl(control: widget.control, child: tabs);
   }
 }
