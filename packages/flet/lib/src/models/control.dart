@@ -33,9 +33,9 @@ class Control extends ChangeNotifier {
     Control? parent,
   }) {
     if (parent != null) {
-      _backend = WeakReference(backend);
       _parent = WeakReference(parent);
     }
+    _backend = WeakReference(backend);
   }
 
   Control? get parent => _parent?.target;
@@ -51,7 +51,8 @@ class Control extends ChangeNotifier {
       !properties.containsKey("visible") || properties["visible"];
 
   T? get<T>(String propertyName, [T? defaultValue]) {
-    return properties.containsKey(propertyName)
+    return properties.containsKey(propertyName) &&
+            properties[propertyName] != null
         ? T == double && properties[propertyName] is int
             ? properties[propertyName].toDouble()
             : properties[propertyName]

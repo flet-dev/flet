@@ -97,8 +97,7 @@ try:
     from flet.auth.oauth_provider import OAuthProvider
 except ImportError as e:
 
-    class OAuthProvider:
-        ...
+    class OAuthProvider: ...
 
     class Authorization:
         def __init__(
@@ -107,8 +106,7 @@ except ImportError as e:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ):
-            ...
+        ): ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -647,7 +645,12 @@ class Page(AdaptiveControl):
             if dialog in self._dialogs.controls:
                 self._dialogs.controls.remove(dialog)
                 self._dialogs.update()
-            if original_on_dismiss and not hasattr(dialog, "_force_close"):
+            if (
+                original_on_dismiss
+                and not hasattr(dialog, "_force_close")
+                and args[0].data
+                != False  # e.data == False for TimePicker and DatePicker if they were dismissed without changing the value
+            ):
                 original_on_dismiss(*args, **kwargs)
             dialog.on_dismiss = original_on_dismiss
             if hasattr(dialog, "_force_close"):

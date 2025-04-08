@@ -69,6 +69,7 @@ import 'controls/stack.dart';
 import 'controls/submenu_button.dart';
 import 'controls/text.dart';
 import 'controls/text_button.dart';
+import 'controls/time_picker.dart';
 import 'controls/transparent_pointer.dart';
 import 'controls/vertical_divider.dart';
 import 'controls/view.dart';
@@ -183,6 +184,8 @@ class FletCoreExtension extends FletExtension {
         return ListTileControl(key: key, control: control);
       case "ListView":
         return ListViewControl(key: key, control: control);
+      case "TimePicker":
+        return TimePickerControl(key: key, control: control);
       case "TransparentPointer":
         return TransparentPointerControl(key: key, control: control);
       case "ResponsiveRow":

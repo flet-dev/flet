@@ -3,8 +3,9 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
-from flet.controls.control import Control, control
+from flet.controls.control import control
 from flet.controls.control_event import ControlEvent
+from flet.controls.dialog_control import DialogControl
 from flet.controls.material.textfield import KeyboardType
 from flet.controls.types import (
     DateTimeValue,
@@ -36,11 +37,11 @@ class DatePickerEntryMode(Enum):
 
 @dataclass
 class DatePickerEntryModeChangeEvent(ControlEvent):
-    entry_mode: Optional[DatePickerEntryMode] = None
+    entry_mode: Optional[DatePickerEntryMode]
 
 
 @control("DatePicker")
-class DatePicker(Control):
+class DatePicker(DialogControl):
     """
     A Material-style date picker dialog.
 
@@ -85,8 +86,8 @@ class DatePicker(Control):
     Online docs: https://flet.dev/docs/controls/datepicker
     """
 
-    open: bool = False
     value: Optional[DateTimeValue] = None
+    modal: bool = False
     first_date: DateTimeValue = datetime(year=1900, month=1, day=1)
     last_date: DateTimeValue = datetime(year=2050, month=1, day=1)
     current_date: DateTimeValue = field(default_factory=lambda: datetime.now())
@@ -104,5 +105,4 @@ class DatePicker(Control):
     switch_to_input_icon: Optional[IconValue] = None
     barrier_color: OptionalColorValue = None
     on_change: OptionalControlEventCallable = None
-    on_dismiss: OptionalControlEventCallable = None
     on_entry_mode_change: OptionalEventCallable[DatePickerEntryModeChangeEvent] = None
