@@ -163,16 +163,12 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       minSize: widget.control.getDouble("min_size"),
       autofocus: widget.control.getBool("autofocus", false)!,
       focusColor: widget.control.getColor("focus_color", context),
-      // onLongPress: !control.disabled
-      //     ? () {
-      //         FletBackend.of(context)
-      //             .triggerControlEvent(control, "long_press");
-      //       }
-      //     : null,
+      onLongPress: !widget.control.disabled
+          ? () {
+              widget.control.triggerEvent("long_press");
+            }
+          : null,
       focusNode: _focusNode,
-      // onFocusChange: (focused) {
-      //   widget.control.triggerEvent(focused ? "focus" : "blur");
-      // },
       child: child,
     );
 
