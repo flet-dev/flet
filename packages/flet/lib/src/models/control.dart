@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:flet/src/flet_backend.dart';
 import 'package:flutter/foundation.dart';
+
+import '../flet_backend.dart';
 
 typedef InvokeControlMethodCallback = Future<dynamic> Function(
     String name, dynamic args);

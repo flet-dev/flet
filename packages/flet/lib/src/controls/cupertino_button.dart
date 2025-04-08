@@ -50,6 +50,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     if (iconWidget != null) {
       if (contentWidget != const Text("")) {
         child = Row(
+          mainAxisSize: MainAxisSize.min,
           children: [iconWidget, const SizedBox(width: 8), contentWidget],
         );
       } else {
@@ -102,12 +103,9 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     //   child = children.first;
     // }
 
-    var pressedOpacity = widget.control.getDouble("opacity_on_click", 0.4)!;
-    var minSize = widget.control.getDouble("min_size", 44.0)!;
-    var url = widget.control.getString("url", "")!;
-    var disabledColor = widget.control.getColor(
-        "disabled_bgcolor", context, CupertinoColors.quaternarySystemFill)!;
-    var bgColor = widget.control.getColor("bgcolor", context);
+    //var pressedOpacity = widget.control.getDouble("opacity_on_click", 0.4)!;
+    //var minSize = widget.control.getDouble("min_size", 44.0)!;
+
     // var color = control.getColor("color", context);
     var alignment = widget.control.getAlignment("alignment", Alignment.center)!;
     var borderRadius = widget.control.getBorderRadius(
@@ -153,7 +151,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     //           .copyWith(color: color),
     //       child: child);
     // }
-
+    var url = widget.control.getString("url", "")!;
     Function()? onPressed = !widget.control.disabled
         ? () {
             if (url != "") {
@@ -166,15 +164,16 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
 
     CupertinoButton? button = CupertinoButton(
       onPressed: onPressed,
-      disabledColor: disabledColor,
-      color: bgColor,
+      disabledColor: widget.control.getColor(
+          "disabled_bgcolor", context, CupertinoColors.quaternarySystemFill)!,
+      color: widget.control.getColor("bgcolor", context),
       padding: padding,
       borderRadius: borderRadius,
-      pressedOpacity: pressedOpacity,
+      pressedOpacity: widget.control.getDouble("opacity_on_click", 0.4)!,
       alignment: alignment,
-      minSize: minSize,
-      //autofocus: control.getBool("autofocus", false)!,
-      //focusColor: control.getColor("focus_color", context),
+      minSize: widget.control.getDouble("min_size"),
+      autofocus: widget.control.getBool("autofocus", false)!,
+      focusColor: widget.control.getColor("focus_color", context),
       // onLongPress: !control.disabled
       //     ? () {
       //         FletBackend.of(context)
