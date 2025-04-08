@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/alignment.dart';
 import 'package:flet/src/utils/borders.dart';
 import 'package:flet/src/utils/edge_insets.dart';
 import 'package:flet/src/utils/icons.dart';
@@ -108,7 +109,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
         "disabled_bgcolor", context, CupertinoColors.quaternarySystemFill)!;
     var bgColor = widget.control.getColor("bgcolor", context);
     // var color = control.getColor("color", context);
-    // var alignment = control.getAlignment("alignment", Alignment.center)!;
+    var alignment = widget.control.getAlignment("alignment", Alignment.center)!;
     var borderRadius = widget.control.getBorderRadius(
         "border_radius", const BorderRadius.all(Radius.circular(8.0)))!;
 
@@ -170,7 +171,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       padding: padding,
       borderRadius: borderRadius,
       pressedOpacity: pressedOpacity,
-      //alignment: alignment,
+      alignment: alignment,
       minSize: minSize,
       //autofocus: control.getBool("autofocus", false)!,
       //focusColor: control.getColor("focus_color", context),
