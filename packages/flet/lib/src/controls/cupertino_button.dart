@@ -1,4 +1,5 @@
 import 'package:flet/src/utils/colors.dart';
+import 'package:flet/src/utils/edge_insets.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../flet_backend.dart';
@@ -85,7 +86,7 @@ class CupertinoButtonControl extends StatelessWidget {
     // var borderRadius = control.getBorderRadius(
     //     "borderRadius", const BorderRadius.all(Radius.circular(8.0)))!;
 
-    // var padding = control.getPadding("padding");
+    var padding = control.getPadding("padding");
 
     // var style = control.getButtonStyle("style", Theme.of(context),
     //     defaultForegroundColor: theme.colorScheme.primary,
@@ -140,7 +141,7 @@ class CupertinoButtonControl extends StatelessWidget {
       onPressed: onPressed,
       disabledColor: disabledColor,
       color: bgColor,
-      //padding: padding,
+      padding: padding,
       //borderRadius: borderRadius,
       //pressedOpacity: pressedOpacity,
       //alignment: alignment,

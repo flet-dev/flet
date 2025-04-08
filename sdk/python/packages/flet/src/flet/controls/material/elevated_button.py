@@ -8,6 +8,7 @@ from flet.controls.control import control
 from flet.controls.types import (
     ClipBehavior,
     IconValue,
+    IconValueOrControl,
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
@@ -55,7 +56,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         super().__setattr__(name, value)
 
     content: Optional[StrOrControl] = None
-    icon: Optional[IconValue] = None
+    icon: Optional[IconValueOrControl] = None
     icon_color: OptionalColorValue = None
     color: OptionalColorValue = None
     bgcolor: OptionalColorValue = None
