@@ -40,7 +40,7 @@ class Icon(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/icon
     """
 
-    name: Optional[IconValue] = None
+    name: IconValue
     color: OptionalColorValue = None
     size: OptionalNumber = None
     semantics_label: Optional[str] = None

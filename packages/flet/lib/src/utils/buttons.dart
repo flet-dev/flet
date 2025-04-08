@@ -53,7 +53,7 @@ ButtonStyle? parseButtonStyle(dynamic value, ThemeData theme,
     alignment: parseAlignment(value["alignment"]),
     enableFeedback: parseBool(value["enable_feedback"]),
     textStyle: getWidgetStateProperty<TextStyle?>(
-        value["text_style"], (jv) => parseTextStyle(theme, jv)),
+        value["text_style"], (jv) => parseTextStyle(jv, theme)),
     iconSize: parseWidgetStateDouble(value["icon_size"]),
     visualDensity: parseVisualDensity(value["visual_density"]),
     mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
@@ -120,6 +120,7 @@ class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
   @override
   String toString() => 'CustomFloatingActionButtonLocation(dx: $dx, dy: $dy)';
 }
+
 extension ButtonParsers on Control {
   ButtonStyle? getButtonStyle(String propertyName, ThemeData theme,
       {Color? defaultForegroundColor,
