@@ -49,7 +49,7 @@ class CupertinoButton(ConstrainedControl):
     min_size: Number = 44.0
     padding: OptionalPaddingValue = None
     alignment: Optional[Alignment] = None
-    border_radius: OptionalBorderRadiusValue = None
+    border_radius: OptionalBorderRadiusValue = 8.0
     url: Optional[str] = None
     url_target: Optional[UrlTarget] = None
     autofocus: bool = False
