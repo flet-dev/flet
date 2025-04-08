@@ -12,20 +12,19 @@ import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
 
-class ElevatedButtonControl extends StatefulWidget {
+class ButtonControl extends StatefulWidget {
   final Control control;
 
-  const ElevatedButtonControl({
+  const ButtonControl({
     super.key,
     required this.control,
   });
 
   @override
-  State<ElevatedButtonControl> createState() => _ElevatedButtonControlState();
+  State<ButtonControl> createState() => _ButtonControlState();
 }
 
-class _ElevatedButtonControlState extends State<ElevatedButtonControl>
-    with FletStoreMixin {
+class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
   late final FocusNode _focusNode;
 
   @override

@@ -91,14 +91,25 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       child = contentWidget;
     }
 
-    //var pressedOpacity = widget.control.getDouble("opacity_on_click", 0.4)!;
-    //var minSize = widget.control.getDouble("min_size", 44.0)!;
+    double pressedOpacity = widget.control.getDouble("opacity_on_click", 0.4)!;
+    double? minSize = widget.control.getDouble("min_size");
+    bool autofocus = widget.control.getBool("autofocus", false)!;
+    Color? bgColor = widget.control.getColor("bgcolor", context);
+    Color? focusColor = widget.control.getColor("focus_color", context);
 
     var alignment = widget.control.getAlignment("alignment", Alignment.center)!;
     var borderRadius = widget.control.getBorderRadius(
         "border_radius", const BorderRadius.all(Radius.circular(8.0)))!;
 
     var padding = widget.control.getPadding("padding");
+    bool isFilledButton = {
+      "CupertinoFilledButton",
+      "FilledButton",
+    }.contains(widget.control.type);
+    bool isTintedButton = {
+      "CupertinoTintedButton",
+      "FilledTonalButton",
+    }.contains(widget.control.type);
 
     // var style = widget.control.getButtonStyle("style", Theme.of(context),
     //     defaultForegroundColor: theme.colorScheme.primary,
@@ -148,27 +159,65 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
             widget.control.triggerEvent("click");
           }
         : null;
+    Function()? onLongPressed = !widget.control.disabled
+        ? () {
+            widget.control.triggerEvent("long_press");
+          }
+        : null;
 
-    CupertinoButton? button = CupertinoButton(
-      onPressed: onPressed,
-      disabledColor: widget.control.getColor(
-          "disabled_bgcolor", context, CupertinoColors.quaternarySystemFill)!,
-      color: widget.control.getColor("bgcolor", context),
-      padding: padding,
-      borderRadius: borderRadius,
-      pressedOpacity: widget.control.getDouble("opacity_on_click", 0.4)!,
-      alignment: alignment,
-      minSize: widget.control.getDouble("min_size"),
-      autofocus: widget.control.getBool("autofocus", false)!,
-      focusColor: widget.control.getColor("focus_color", context),
-      onLongPress: !widget.control.disabled
-          ? () {
-              widget.control.triggerEvent("long_press");
-            }
-          : null,
-      focusNode: _focusNode,
-      child: child,
-    );
+    CupertinoButton? button;
+    if (isFilledButton) {
+      button = CupertinoButton.filled(
+        onPressed: onPressed,
+        disabledColor: widget.control.getColor(
+            "disabled_bgcolor", context, CupertinoColors.tertiarySystemFill)!,
+        //color: widget.control.getColor("bgcolor", context),
+        padding: padding,
+        borderRadius: borderRadius,
+        pressedOpacity: pressedOpacity,
+        alignment: alignment,
+        minSize: minSize,
+        autofocus: autofocus,
+        focusColor: focusColor,
+        onLongPress: onLongPressed,
+        focusNode: _focusNode,
+        child: child,
+      );
+    } else if (isTintedButton) {
+      button = CupertinoButton.tinted(
+        onPressed: onPressed,
+        disabledColor: widget.control.getColor(
+            "disabled_bgcolor", context, CupertinoColors.tertiarySystemFill)!,
+        color: bgColor,
+        padding: padding,
+        borderRadius: borderRadius,
+        pressedOpacity: pressedOpacity,
+        alignment: alignment,
+        minSize: minSize,
+        autofocus: autofocus,
+        focusColor: focusColor,
+        onLongPress: onLongPressed,
+        focusNode: _focusNode,
+        child: child,
+      );
+    } else {
+      button = CupertinoButton(
+        onPressed: onPressed,
+        disabledColor: widget.control.getColor(
+            "disabled_bgcolor", context, CupertinoColors.quaternarySystemFill)!,
+        color: bgColor,
+        padding: padding,
+        borderRadius: borderRadius,
+        pressedOpacity: pressedOpacity,
+        alignment: alignment,
+        minSize: minSize,
+        autofocus: autofocus,
+        focusColor: focusColor,
+        onLongPress: onLongPressed,
+        focusNode: _focusNode,
+        child: child,
+      );
+    }
 
     return ConstrainedControl(control: widget.control, child: button);
   }

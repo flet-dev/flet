@@ -4,7 +4,7 @@ from typing import Optional
 from flet.controls.alignment import Alignment
 from flet.controls.border_radius import OptionalBorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, control
+from flet.controls.control import control
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
     IconValue,

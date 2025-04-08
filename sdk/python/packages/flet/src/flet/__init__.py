@@ -189,6 +189,7 @@ from flet.controls.cupertino.cupertino_timer_picker import (
     CupertinoTimerPicker,
     CupertinoTimerPickerMode,
 )
+from flet.controls.cupertino.cupertino_tinted_button import CupertinoTintedButton
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import Duration, DurationValue, OptionalDurationValue
 from flet.controls.exceptions import (
