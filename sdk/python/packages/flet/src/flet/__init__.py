@@ -54,7 +54,6 @@ from flet.controls.core.autofill_group import (
     AutofillGroupDisposeAction,
     AutofillHint,
 )
-from flet.controls.core.button import Button
 from flet.controls.core.charts.bar_chart import BarChart, BarChartEvent
 from flet.controls.core.charts.bar_chart_group import BarChartGroup
 from flet.controls.core.charts.bar_chart_rod import BarChartRod
@@ -216,6 +215,7 @@ from flet.controls.material.badge import Badge
 from flet.controls.material.banner import Banner
 from flet.controls.material.bottom_app_bar import BottomAppBar
 from flet.controls.material.bottom_sheet import BottomSheet
+from flet.controls.material.button import Button
 from flet.controls.material.card import Card, CardVariant
 from flet.controls.material.checkbox import Checkbox
 from flet.controls.material.chip import Chip

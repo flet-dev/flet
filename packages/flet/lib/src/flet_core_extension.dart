@@ -135,9 +135,7 @@ class FletCoreExtension extends FletExtension {
       case "CupertinoAlertDialog":
         return CupertinoAlertDialogControl(key: key, control: control);
       case "CupertinoButton":
-        return CupertinoButtonControl(key: key, control: control);
       case "CupertinoFilledButton":
-        return CupertinoButtonControl(key: key, control: control);
       case "CupertinoTintedButton":
         return CupertinoButtonControl(key: key, control: control);
       case "CupertinoContextMenu":
@@ -160,14 +158,12 @@ class FletCoreExtension extends FletExtension {
         return DividerControl(key: key, control: control);
       case "Dropdown":
         return DropdownControl(key: key, control: control);
-      case "ElevatedButton":
-        return AdaptiveButtonControl(key: key, control: control);
       case "ExpansionPanelList":
         return ExpansionPanelListControl(key: key, control: control);
       case "ExpansionTile":
         return ExpansionTileControl(key: key, control: control);
+      case "ElevatedButton":
       case "FilledButton":
-        return AdaptiveButtonControl(key: key, control: control);
       case "FilledTonalButton":
         return AdaptiveButtonControl(key: key, control: control);
       case "FletApp":
