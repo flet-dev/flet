@@ -33,17 +33,21 @@ def encode_object_for_msgpack(obj):
         return obj.value
     elif isinstance(obj, datetime.datetime):
         return msgpack.ExtType(
-            42,
+            1,
             (obj.astimezone() if obj.tzinfo is None else obj)
             .isoformat()
             .encode("utf-8"),
         )
+    elif isinstance(obj, datetime.time):
+        return msgpack.ExtType(2, obj.strftime("%H:%M").encode("utf-8"))
     return obj
 
 
 def decode_ext_from_msgpack(code, data):
-    if code == 42:
+    if code == 1:
         return datetime.datetime.fromisoformat(data.decode("utf-8"))
+    elif code == 2:
+        return datetime.time(*map(int, data.decode("utf-8").split(":")))
     return msgpack.ExtType(code, data)
 
 

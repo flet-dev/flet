@@ -38,8 +38,10 @@ class _DatePickerControlState extends State<DatePickerControl> {
       widget.control.updateProperties({"_open": false}, python: false);
       widget.control
           .updateProperties({"value": dateValue ?? value, "open": false});
-      widget.control.triggerEvent(
-          dateValue == null ? "dismiss" : "change", dateValue ?? value);
+      if (dateValue != null) {
+        widget.control.triggerEvent("change", dateValue);
+      }
+      widget.control.triggerEvent("dismiss", dateValue == null);
     }
 
     Widget createSelectDateDialog() {
@@ -80,6 +82,7 @@ class _DatePickerControlState extends State<DatePickerControl> {
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog<DateTime>(
+            barrierDismissible: !widget.control.getBool("modal", false)!,
             barrierColor: widget.control.getColor("barrier_color", context),
             useRootNavigator: false,
             context: context,

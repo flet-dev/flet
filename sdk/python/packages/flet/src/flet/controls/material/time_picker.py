@@ -3,8 +3,9 @@ from datetime import datetime, time
 from enum import Enum
 from typing import Optional
 
-from flet.controls.control import Control, control
+from flet.controls.control import control
 from flet.controls.control_event import ControlEvent
+from flet.controls.dialog_control import DialogControl
 from flet.controls.types import (
     OptionalColorValue,
     OptionalControlEventCallable,
@@ -23,13 +24,11 @@ class TimePickerEntryMode(Enum):
 
 
 class TimePickerEntryModeChangeEvent(ControlEvent):
-    def __init__(self, e: ControlEvent):
-        super().__init__(e.target, e.name, e.data, e.control, e.page)
-        self.entry_mode: Optional[TimePickerEntryMode] = TimePickerEntryMode(e.data)
+    entry_mode: Optional[TimePickerEntryMode]
 
 
 @control("TimePicker")
-class TimePicker(Control):
+class TimePicker(DialogControl):
     """
     A Material-style time picker dialog.
 
@@ -81,7 +80,7 @@ class TimePicker(Control):
     """
 
     value: Optional[time] = field(default_factory=lambda: datetime.now().time())
-    open: bool = False
+    modal: bool = False
     time_picker_entry_mode: Optional[TimePickerEntryMode] = None
     hour_label_text: Optional[str] = None
     minute_label_text: Optional[str] = None
@@ -92,5 +91,4 @@ class TimePicker(Control):
     orientation: Optional[Orientation] = None
     barrier_color: OptionalColorValue = None
     on_change: OptionalControlEventCallable = None
-    on_dismiss: OptionalControlEventCallable = None
     on_entry_mode_change: OptionalEventCallable[TimePickerEntryModeChangeEvent] = None
