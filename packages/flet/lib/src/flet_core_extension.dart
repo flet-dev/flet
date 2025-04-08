@@ -43,6 +43,7 @@ import 'controls/menu_item_button.dart';
 import 'controls/merge_semantics.dart';
 import 'controls/navigation_drawer.dart';
 import 'controls/navigation_rail.dart';
+import 'controls/outlined_button.dart';
 import 'controls/page.dart';
 import 'controls/placeholder.dart';
 import 'controls/progress_bar.dart';
@@ -54,6 +55,7 @@ import 'controls/reorderable_list_view.dart';
 import 'controls/responsive_row.dart';
 import 'controls/row.dart';
 import 'controls/safe_area.dart';
+import 'controls/search_bar.dart';
 import 'controls/segmented_button.dart';
 import 'controls/selection_area.dart';
 import 'controls/semantics.dart';
@@ -89,6 +91,10 @@ class FletCoreExtension extends FletExtension {
         return AnimatedSwitcherControl(key: key, control: control);
       case "Banner":
         return BannerControl(key: key, control: control);
+      case "OutlinedButton":
+        return OutlinedButtonControl(key: key, control: control);
+      case "SearchBar":
+        return SearchBarControl(key: key, control: control);
       case "Card":
         return CardControl(key: key, control: control);
       case "Center":

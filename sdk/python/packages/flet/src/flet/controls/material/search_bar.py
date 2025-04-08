@@ -8,7 +8,7 @@ from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, control
 from flet.controls.material.textfield import KeyboardType, TextCapitalization
-from flet.controls.padding import OptionalPaddingValue, PaddingValue
+from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
@@ -46,7 +46,7 @@ class SearchBar(ConstrainedControl):
     bar_text_style: ControlStateValue[TextStyle] = None
     bar_hint_text_style: ControlStateValue[TextStyle] = None
     bar_padding: ControlStateValue[PaddingValue] = None
-    bar_scroll_padding: OptionalPaddingValue = None
+    bar_scroll_padding: PaddingValue = 20
     view_leading: Optional[Control] = None
     view_trailing: Optional[List[Control]] = None
     view_elevation: OptionalNumber = None
@@ -60,10 +60,10 @@ class SearchBar(ConstrainedControl):
     view_header_height: OptionalNumber = None
     divider_color: OptionalColorValue = None
     capitalization: Optional[TextCapitalization] = None
-    full_screen: Optional[bool] = None
-    keyboard_type: Optional[KeyboardType] = None
+    full_screen: bool = False
+    keyboard_type: KeyboardType = KeyboardType.TEXT
     view_surface_tint_color: OptionalColorValue = None
-    autofocus: Optional[bool] = None
+    autofocus: bool = False
     on_tap: OptionalControlEventCallable = None
     on_tap_outside_bar: OptionalControlEventCallable = None
     on_submit: OptionalControlEventCallable = None
@@ -76,26 +76,6 @@ class SearchBar(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        # self._set_attr_json("barBgcolor", self.__bar_bgcolor, wrap_attr_dict=True)
-        # self._set_attr_json(
-        #     "barOverlayColor", self.__bar_overlay_color, wrap_attr_dict=True
-        # )
-        # self._set_attr_json(
-        #     "barHintTextStyle", self.__bar_hint_text_style, wrap_attr_dict=True
-        # )
-        # self._set_attr_json(
-        #     "barSurfaceTintColor", self.__bar_surface_tint_color, wrap_attr_dict=True
-        # )
-        # self._set_attr_json("barElevation", self.__bar_elevation, wrap_attr_dict=True)
-        # self._set_attr_json(
-        #     "barBorderSide", self.__bar_border_side, wrap_attr_dict=True
-        # )
-        # self._set_attr_json("barShape", self.__bar_shape, wrap_attr_dict=True)
-        # self._set_attr_json("barTextStyle", self.__bar_text_style, wrap_attr_dict=True)
-        # self._set_attr_json("barPadding", self.__bar_padding, wrap_attr_dict=True)
-        # self._set_attr_json(
-        #     "barShadowColor", self.__bar_shadow_color, wrap_attr_dict=True
-        # )
 
     # Public methods
     def focus(self):
