@@ -1,6 +1,9 @@
+import datetime
 from dataclasses import dataclass, fields, is_dataclass
 from enum import Enum
 from typing import Any, Dict
+
+import msgpack
 
 
 def encode_object_for_msgpack(obj):
@@ -28,7 +31,20 @@ def encode_object_for_msgpack(obj):
         return r
     elif isinstance(obj, Enum):
         return obj.value
+    elif isinstance(obj, datetime.datetime):
+        return msgpack.ExtType(
+            42,
+            (obj.astimezone() if obj.tzinfo is None else obj)
+            .isoformat()
+            .encode("utf-8"),
+        )
     return obj
+
+
+def decode_ext_from_msgpack(code, data):
+    if code == 42:
+        return datetime.datetime.fromisoformat(data.decode("utf-8"))
+    return msgpack.ExtType(code, data)
 
 
 class ClientAction(Enum):
