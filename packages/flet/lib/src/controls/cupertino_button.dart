@@ -59,7 +59,6 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoButton build: ${widget.control.id}");
-    // var theme = Theme.of(context);
     String text =
         widget.control.getString("text", "")!; //(todo 0.70.3) remove text
     var content = widget.control.get("content");
@@ -95,14 +94,13 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     //var pressedOpacity = widget.control.getDouble("opacity_on_click", 0.4)!;
     //var minSize = widget.control.getDouble("min_size", 44.0)!;
 
-    // var color = control.getColor("color", context);
     var alignment = widget.control.getAlignment("alignment", Alignment.center)!;
     var borderRadius = widget.control.getBorderRadius(
         "border_radius", const BorderRadius.all(Radius.circular(8.0)))!;
 
     var padding = widget.control.getPadding("padding");
 
-    // var style = control.getButtonStyle("style", Theme.of(context),
+    // var style = widget.control.getButtonStyle("style", Theme.of(context),
     //     defaultForegroundColor: theme.colorScheme.primary,
     //     defaultBackgroundColor: Colors.transparent,
     //     defaultOverlayColor: Colors.transparent,
@@ -131,15 +129,15 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     //   bgColor = style.backgroundColor?.resolve(widgetStates);
     //   padding = style.padding?.resolve({}) as EdgeInsets?;
     // }
-
-    // if (color != null) {
-    //   child = DefaultTextStyle(
-    //       style: CupertinoTheme.of(context)
-    //           .textTheme
-    //           .textStyle
-    //           .copyWith(color: color),
-    //       child: child);
-    // }
+    var color = widget.control.getColor("color", context);
+    if (color != null) {
+      child = DefaultTextStyle(
+          style: CupertinoTheme.of(context)
+              .textTheme
+              .textStyle
+              .copyWith(color: color),
+          child: child);
+    }
     var url = widget.control.getString("url", "")!;
     Function()? onPressed = !widget.control.disabled
         ? () {
