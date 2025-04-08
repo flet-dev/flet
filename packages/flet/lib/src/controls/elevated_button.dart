@@ -77,7 +77,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             : null;
 
     var content = widget.control.get("content");
-    Widget child = content is Control
+    Widget contentWidget = content is Control
         ? ControlWidget(control: content)
         : content is String
             ? Text(content)
@@ -129,7 +129,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
     if (icon != null) {
-      if (child == const Text("")) {
+      if (contentWidget == const Text("")) {
         return const ErrorControl("Error displaying ElevatedButton",
             description:
                 "\"icon\" must be specified together with \"content\"");
@@ -144,7 +144,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
             icon: iconWidget,
-            label: child);
+            label: contentWidget);
       } else if (isFilledTonalButton) {
         button = FilledButton.tonalIcon(
             style: style,
@@ -155,7 +155,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
             icon: iconWidget,
-            label: child);
+            label: contentWidget);
       } else {
         button = ElevatedButton.icon(
             style: style,
@@ -166,7 +166,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
             icon: iconWidget,
-            label: child);
+            label: contentWidget);
       }
     } else {
       if (isFilledButton) {
@@ -178,7 +178,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: child);
+            child: contentWidget);
       } else if (isFilledTonalButton) {
         button = FilledButton.tonal(
             style: style,
@@ -188,7 +188,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: child);
+            child: contentWidget);
       } else {
         button = ElevatedButton(
             style: style,
@@ -198,7 +198,7 @@ class _ElevatedButtonControlState extends State<ElevatedButtonControl>
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: child);
+            child: contentWidget);
       }
     }
 

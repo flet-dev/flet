@@ -4,6 +4,7 @@ import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
+import '../utils/borders.dart';
 import '../utils/launch_url.dart';
 import '../utils/numbers.dart';
 import 'base_controls.dart';
@@ -100,16 +101,16 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     //   child = children.first;
     // }
 
-    // var pressedOpacity = control.getDouble("opacity_on_click")!;
-    // var minSize = control.getDouble("min_size", 44.0)!;
+    var pressedOpacity = widget.control.getDouble("opacity_on_click", 0.4)!;
+    var minSize = widget.control.getDouble("min_size", 44.0)!;
     var url = widget.control.getString("url", "")!;
     var disabledColor = widget.control.getColor(
         "disabled_bgcolor", context, CupertinoColors.quaternarySystemFill)!;
     var bgColor = widget.control.getColor("bgcolor", context);
     // var color = control.getColor("color", context);
     // var alignment = control.getAlignment("alignment", Alignment.center)!;
-    // var borderRadius = control.getBorderRadius(
-    //     "borderRadius", const BorderRadius.all(Radius.circular(8.0)))!;
+    var borderRadius = widget.control.getBorderRadius(
+        "border_radius", const BorderRadius.all(Radius.circular(8.0)))!;
 
     var padding = widget.control.getPadding("padding");
 
@@ -167,10 +168,10 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       disabledColor: disabledColor,
       color: bgColor,
       padding: padding,
-      //borderRadius: borderRadius,
-      //pressedOpacity: pressedOpacity,
+      borderRadius: borderRadius,
+      pressedOpacity: pressedOpacity,
       //alignment: alignment,
-      //minSize: minSize,
+      minSize: minSize,
       //autofocus: control.getBool("autofocus", false)!,
       //focusColor: control.getColor("focus_color", context),
       // onLongPress: !control.disabled
