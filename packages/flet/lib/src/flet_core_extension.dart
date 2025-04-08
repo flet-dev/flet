@@ -74,6 +74,7 @@ import 'models/control.dart';
 import 'services/browser_context_menu.dart';
 import 'services/clipboard.dart';
 import 'services/haptic_feedback.dart';
+import 'services/semantics_service.dart';
 import 'services/shake_detector.dart';
 import 'services/shared_preferences.dart';
 import 'services/url_launcher.dart';
@@ -238,6 +239,8 @@ class FletCoreExtension extends FletExtension {
         return SharedPreferencesService(control: control, backend: backend);
       case "UrlLauncher":
         return UrlLauncherService(control: control, backend: backend);
+      case "SemanticsService":
+        return SemanticsServiceControl(control: control, backend: backend);
       default:
         return null;
     }

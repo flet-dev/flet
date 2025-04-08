@@ -20,6 +20,13 @@ class HapticFeedbackService extends FletService {
         "HapticFeedbackService(${control.id}).update: ${control.properties}");
   }
 
+  @override
+  void dispose() {
+    debugPrint("HapticFeedbackService(${control.id}).dispose()");
+    control.removeInvokeMethodListener(_invokeMethod);
+    super.dispose();
+  }
+
   Future<dynamic> _invokeMethod(String name, dynamic args) async {
     debugPrint("HapticFeedbackService.$name($args)");
     switch (name) {
@@ -41,12 +48,5 @@ class HapticFeedbackService extends FletService {
       default:
         throw Exception("Unknown HapticFeedback method: $name");
     }
-  }
-
-  @override
-  void dispose() {
-    debugPrint("HapticFeedbackService(${control.id}).dispose()");
-    control.removeInvokeMethodListener(_invokeMethod);
-    super.dispose();
   }
 }

@@ -1,3 +1,4 @@
+import asyncio
 from enum import Enum
 
 from flet.controls.control import Service, control
@@ -12,29 +13,33 @@ class Assertiveness(Enum):
 
 @control("SemanticsService")
 class SemanticsService(Service):
+    async def announce_tooltip_async(self, message: str):
+        await self._invoke_method_async(
+            "announce_tooltip", arguments={"message": message}
+        )
+
+    def announce_tooltip(self, message: str):
+        asyncio.create_task(self.announce_tooltip_async(message))
+
+    async def announce_message_async(
+        self,
+        message: str,
+        rtl: bool = False,
+        assertiveness: Assertiveness = Assertiveness.POLITE,
+    ):
+        await self._invoke_method_async(
+            "announce_message",
+            arguments={
+                "message": message,
+                "rtl": str(rtl),
+                "assertiveness": assertiveness,
+            },
+        )
+
     def announce_message(
         self,
         message: str,
         rtl: bool = False,
         assertiveness: Assertiveness = Assertiveness.POLITE,
     ):
-        self.invoke_method(
-            "announce_message",
-            arguments={
-                "message": message,
-                "rtl": str(rtl),
-                "assertiveness": (
-                    assertiveness.value
-                    if isinstance(assertiveness, Assertiveness)
-                    else str(assertiveness)
-                ),
-            },
-        )
-
-    def announce_tooltip(self, message: str):
-        self.invoke_method(
-            "announce_tooltip",
-            arguments={
-                "message": message,
-            },
-        )
+        asyncio.create_task(self.announce_message_async(message, rtl, assertiveness))
