@@ -16,7 +16,7 @@ class DraggableControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("DragTarget build: ${control.id}");
-    var group = control.getString("group");
+    var group = control.getString("group", "default")!;
     var content = control.buildWidget("content");
 
     if (content == null) {

@@ -116,7 +116,7 @@ class Draggable(Control):
     """
 
     content: Control
-    group: Optional[str] = None
+    group: str = "default"
     content_when_dragging: Optional[Control] = None
     content_feedback: Optional[Control] = None
     axis: Optional[Axis] = None

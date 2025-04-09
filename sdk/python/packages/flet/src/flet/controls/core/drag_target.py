@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Optional
 
 from flet.controls.control import Control, control
 from flet.controls.control_event import ControlEvent
@@ -105,7 +104,7 @@ class DragTarget(Control):
     """
 
     content: Control
-    group: Optional[str] = None
+    group: str = "default"
     on_will_accept: OptionalControlEventCallable = None
     on_accept: OptionalEventCallable["DragTargetEvent"] = None
     on_leave: OptionalControlEventCallable = None
@@ -118,7 +117,7 @@ class DragTarget(Control):
 
 @dataclass
 class DragTargetEvent(ControlEvent):
-    src_id: float
+    src_id: int
     x: float
     y: float
 

@@ -31,7 +31,7 @@ class DragTargetControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("DragTarget build: ${control.id}");
 
-    var group = control.getString("group");
+    var group = control.getString("group", "default")!;
     var content = control.buildWidget("content");
 
     if (content == null) {
@@ -55,12 +55,11 @@ class DragTargetControl extends StatelessWidget {
         });
       },
       onWillAcceptWithDetails: (DragTargetDetails<String> details) {
-        String? srcGroup;
         var data = json.decode(details.data);
-        srcGroup = data["group"] as String;
-        var sameGroup = srcGroup == group;
-        control.triggerEvent("will_accept", sameGroup);
-        return sameGroup;
+        var srcGroup = data["group"] as String;
+        var groupMatch = srcGroup == group;
+        control.triggerEvent("will_accept", groupMatch);
+        return groupMatch;
       },
       onAcceptWithDetails: (DragTargetDetails<String> details) {
         var data = json.decode(details.data);
