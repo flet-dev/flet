@@ -152,7 +152,7 @@ class _DropdownControlState extends State<DropdownControl> {
       bool itemDisabled = widget.control.disabled || itemCtrl.disabled;
       ButtonStyle? style = parseButtonStyle(itemCtrl.get("style"), theme);
 
-      var contentCtrl = itemCtrl.child("content");
+      //var contentCtrl = itemCtrl.child("content");
 
       return DropdownMenuEntry<String>(
         enabled: !itemDisabled,
@@ -162,8 +162,9 @@ class _DropdownControlState extends State<DropdownControl> {
         label: itemCtrl.getString("text") ??
             itemCtrl.getString("key") ??
             itemCtrl.id.toString(),
-        labelWidget:
-            contentCtrl is Control ? ControlWidget(control: contentCtrl) : null,
+        // labelWidget:
+        //     contentCtrl is Control ? ControlWidget(control: contentCtrl) : null,
+        labelWidget: itemCtrl.buildWidget("content"),
         leadingIcon: itemCtrl.buildIconOrWidget("leading_icon"),
         trailingIcon: itemCtrl.buildIconOrWidget("trailing_icon"),
         style: style,
