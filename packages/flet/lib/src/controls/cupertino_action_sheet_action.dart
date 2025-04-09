@@ -1,6 +1,6 @@
+import 'package:flet/src/controls/control_widget.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
@@ -16,10 +16,9 @@ class CupertinoActionSheetActionControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("CupertinoActionSheetActionControl build: ${control.id}");
 
-    var content = control.buildWidget("content");
-    var contentStr = control.getString("content") ??
-        control.getString("text"); // todo(0.70.3): remove "text"
-    if (content == null && contentStr == null) {
+    var content = control.get("content");
+    var text = control.getString("text"); // todo(0.70.3): remove "text"
+    if (content == null && text == null) {
       return const ErrorControl(
           "CupertinoActionSheetAction.content must be set and visible");
     }
@@ -33,7 +32,13 @@ class CupertinoActionSheetActionControl extends StatelessWidget {
         }
       },
       mouseCursor: control.getMouseCursor("mouse_cursor"),
-      child: content ?? Text(contentStr!),
+      child: content is Control
+          ? ControlWidget(control: content)
+          : content is String
+              ? Text(content)
+              : text is String
+                  ? Text(text)
+                  : const SizedBox.shrink(),
     );
 
     return ConstrainedControl(control: control, child: actionSheet);

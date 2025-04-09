@@ -17,6 +17,7 @@ import 'controls/cupertino_action_sheet.dart';
 import 'controls/cupertino_action_sheet_action.dart';
 import 'controls/cupertino_activity_indicator.dart';
 import 'controls/cupertino_alert_dialog.dart';
+import 'controls/cupertino_bottom_sheet.dart';
 import 'controls/cupertino_button.dart';
 import 'controls/cupertino_checkbox.dart';
 import 'controls/cupertino_context_menu.dart';
@@ -108,6 +109,8 @@ class FletCoreExtension extends FletExtension {
         return CardControl(key: key, control: control);
       case "CupertinoSegmentedButton":
         return CupertinoSegmentedButtonControl(key: key, control: control);
+      case "CupertinoBottomSheet":
+        return CupertinoBottomSheetControl(key: key, control: control);
       case "PopupMenuButton":
         return PopupMenuButtonControl(key: key, control: control);
       case "Center":

@@ -23,8 +23,8 @@ class CupertinoBottomSheet(DialogControl):
     Online docs: https://flet.dev/docs/controls/cupertinobottomsheet
     """
 
-    content: Optional[Control] = None
-    modal: bool = field(default=False)
+    content: Control
+    modal: bool = False
     bgcolor: OptionalColorValue = None
     height: OptionalNumber = None
     padding: OptionalPaddingValue = None
