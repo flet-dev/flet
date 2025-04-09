@@ -55,22 +55,11 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
 
     bool isFilledButton = widget.control.type == "FilledButton";
     bool isFilledTonalButton = widget.control.type == "FilledTonalButton";
-    // String text =
-    //     widget.control.getString("text", "")!; //(todo 0.70.3) remove text
     String url = widget.control.getString("url", "")!;
     Color? iconColor = widget.control.getColor("icon_color", context);
 
     Widget? iconWidget =
         widget.control.buildIconOrWidget("icon", color: iconColor);
-
-    //var content = widget.control.get("content");
-    // Widget contentWidget = content is Control
-    //     ? ControlWidget(control: content)
-    //     : content is String
-    //         ? Text(content)
-    //         : Text(text); //(todo 0.70.3) change to Text("")
-
-    //Widget? contentWidget = widget.control.buildTextOrWidget("content")!;
 
     var clipBehavior =
         parseClip(widget.control.getString("clip_behavior"), Clip.none)!;
@@ -121,11 +110,6 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
         description: "\"icon\" must be specified together with \"content\"");
 
     if (iconWidget != null) {
-      // if (contentWidget == const Text("")) {
-      //   return const ErrorControl("Error displaying ElevatedButton",
-      //       description:
-      //           "\"icon\" must be specified together with \"content\"");
-      // }
       if (isFilledButton) {
         button = FilledButton.icon(
             style: style,
@@ -136,7 +120,6 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
             icon: iconWidget,
-            //label: contentWidget
             label: widget.control.buildTextOrWidget("content",
                 textPropertyName: "text", required: true, error: error)!);
       } else if (isFilledTonalButton) {
@@ -202,6 +185,5 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
     }
 
     return ConstrainedControl(control: widget.control, child: button);
-    // });
   }
 }
