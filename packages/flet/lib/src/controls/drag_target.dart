@@ -18,7 +18,7 @@ class DragTargetEvent {
     required this.y,
   });
 
-  Map<String, dynamic> toJson() =>
+  Map<String, dynamic> toMap() =>
       <String, dynamic>{'src_id': srcId, 'x': x, 'y': y};
 }
 
@@ -48,11 +48,13 @@ class DragTargetControl extends StatelessWidget {
       },
       onMove: (DragTargetDetails<String> details) {
         var data = json.decode(details.data);
-        control.triggerEvent("move", {
-          "src_id": data["id"],
-          "x": details.offset.dx,
-          "y": details.offset.dy,
-        });
+        control.triggerEvent(
+            "move",
+            DragTargetEvent(
+                    srcId: data["id"],
+                    x: details.offset.dx,
+                    y: details.offset.dy)
+                .toMap());
       },
       onWillAcceptWithDetails: (DragTargetDetails<String> details) {
         var data = json.decode(details.data);
@@ -63,11 +65,13 @@ class DragTargetControl extends StatelessWidget {
       },
       onAcceptWithDetails: (DragTargetDetails<String> details) {
         var data = json.decode(details.data);
-        control.triggerEvent("accept", {
-          "src_id": data["id"],
-          "x": details.offset.dx,
-          "y": details.offset.dy,
-        });
+        control.triggerEvent(
+            "accept",
+            DragTargetEvent(
+                    srcId: data["id"],
+                    x: details.offset.dx,
+                    y: details.offset.dy)
+                .toMap());
       },
       onLeave: (String? data) {
         int? srcId;

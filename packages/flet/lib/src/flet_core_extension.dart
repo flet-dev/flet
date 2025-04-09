@@ -26,6 +26,7 @@ import 'controls/cupertino_context_menu_action.dart';
 import 'controls/cupertino_dialog_action.dart';
 import 'controls/cupertino_list_tile.dart';
 import 'controls/cupertino_navigation_bar.dart';
+import 'controls/cupertino_picker.dart';
 import 'controls/cupertino_segmented_button.dart';
 import 'controls/cupertino_slider.dart';
 import 'controls/cupertino_switch.dart';
@@ -176,6 +177,8 @@ class FletCoreExtension extends FletExtension {
         return CupertinoSwitchControl(key: key, control: control);
       case "CupertinoListTile":
         return CupertinoListTileControl(key: key, control: control);
+      case "CupertinoPicker":
+        return CupertinoPickerControl(key: key, control: control);
       case "DataTable":
         return DataTableControl(key: key, control: control);
       case "DatePicker":

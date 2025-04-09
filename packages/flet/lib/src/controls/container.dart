@@ -90,9 +90,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     Widget? container;
 
     var onAnimationEnd = control.getBool("on_animation_end", false)!
-        ? () {
-            control.triggerEvent("animation_end", "container");
-          }
+        ? () => control.triggerEvent("animation_end", "container")
         : null;
     if ((onClick || url != "" || onLongPress || onHover || onTapDown) &&
         ink &&
@@ -126,15 +124,10 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                             .toJson());
                   }
                 : null,
-            onLongPress: onLongPress
-                ? () {
-                    control.triggerEvent("long_press");
-                  }
-                : null,
+            onLongPress:
+                onLongPress ? () => control.triggerEvent("long_press") : null,
             onHover: onHover
-                ? (value) {
-                    control.triggerEvent("hover", value);
-                  }
+                ? (value) => control.triggerEvent("hover", value)
                 : null,
             borderRadius: borderRadius,
             splashColor: control.getColor("inkColor", context),
