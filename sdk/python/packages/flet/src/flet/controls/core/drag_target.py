@@ -1,8 +1,9 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional
 
 from flet.controls.control import Control, control
 from flet.controls.control_event import ControlEvent
+from flet.controls.transform import Offset
 from flet.controls.types import OptionalControlEventCallable, OptionalEventCallable
 
 __all__ = ["DragTarget", "DragTargetEvent"]
@@ -117,6 +118,10 @@ class DragTarget(Control):
 
 @dataclass
 class DragTargetEvent(ControlEvent):
-    src_id: float = field(metadata={"data_field": "src_id"})
-    x: float = field(metadata={"data_field": "x"})
-    y: float = field(metadata={"data_field": "y"})
+    src_id: float
+    x: float
+    y: float
+
+    @property
+    def offset(self) -> Offset:
+        return Offset(self.x, self.y)

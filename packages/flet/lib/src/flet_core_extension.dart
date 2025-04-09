@@ -32,6 +32,8 @@ import 'controls/cupertino_switch.dart';
 import 'controls/datatable.dart';
 import 'controls/date_picker.dart';
 import 'controls/divider.dart';
+import 'controls/drag_target.dart';
+import 'controls/draggable.dart';
 import 'controls/dropdown.dart';
 import 'controls/expansion_panel.dart';
 import 'controls/expansion_tile.dart';
@@ -102,6 +104,10 @@ class FletCoreExtension extends FletExtension {
         return AnimatedSwitcherControl(key: key, control: control);
       case "Banner":
         return BannerControl(key: key, control: control);
+      case "Draggable":
+        return DraggableControl(key: key, control: control);
+      case "DragTarget":
+        return DragTargetControl(key: key, control: control);
       case "BottomAppBar":
         return BottomAppBarControl(key: key, control: control);
       case "BottomSheet":
