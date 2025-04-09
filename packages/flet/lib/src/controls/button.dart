@@ -1,9 +1,7 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/error.dart';
 import 'base_controls.dart';
-import 'control_widget.dart';
 
 class ButtonControl extends StatefulWidget {
   final Control control;
@@ -56,20 +54,22 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
 
     bool isFilledButton = widget.control.type == "FilledButton";
     bool isFilledTonalButton = widget.control.type == "FilledTonalButton";
-    String text =
-        widget.control.getString("text", "")!; //(todo 0.70.3) remove text
+    // String text =
+    //     widget.control.getString("text", "")!; //(todo 0.70.3) remove text
     String url = widget.control.getString("url", "")!;
     Color? iconColor = widget.control.getColor("icon_color", context);
 
     Widget? iconWidget =
         widget.control.buildIconOrWidget("icon", color: iconColor);
 
-    var content = widget.control.get("content");
-    Widget contentWidget = content is Control
-        ? ControlWidget(control: content)
-        : content is String
-            ? Text(content)
-            : Text(text); //(todo 0.70.3) change to Text("")
+    //var content = widget.control.get("content");
+    // Widget contentWidget = content is Control
+    //     ? ControlWidget(control: content)
+    //     : content is String
+    //         ? Text(content)
+    //         : Text(text); //(todo 0.70.3) change to Text("")
+
+    //Widget? contentWidget = widget.control.buildTextOrWidget("content")!;
 
     var clipBehavior =
         parseClip(widget.control.getString("clip_behavior"), Clip.none)!;
@@ -117,11 +117,11 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
     if (iconWidget != null) {
-      if (contentWidget == const Text("")) {
-        return const ErrorControl("Error displaying ElevatedButton",
-            description:
-                "\"icon\" must be specified together with \"content\"");
-      }
+      // if (contentWidget == const Text("")) {
+      //   return const ErrorControl("Error displaying ElevatedButton",
+      //       description:
+      //           "\"icon\" must be specified together with \"content\"");
+      // }
       if (isFilledButton) {
         button = FilledButton.icon(
             style: style,
@@ -132,7 +132,9 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
             icon: iconWidget,
-            label: contentWidget);
+            //label: contentWidget
+            label:
+                widget.control.buildTextOrWidget("content", required: true)!);
       } else if (isFilledTonalButton) {
         button = FilledButton.tonalIcon(
             style: style,
@@ -143,7 +145,8 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
             icon: iconWidget,
-            label: contentWidget);
+            label:
+                widget.control.buildTextOrWidget("content", required: true)!);
       } else {
         button = ElevatedButton.icon(
             style: style,
@@ -154,7 +157,8 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
             icon: iconWidget,
-            label: contentWidget);
+            label:
+                widget.control.buildTextOrWidget("content", required: true)!);
       }
     } else {
       if (isFilledButton) {
@@ -166,7 +170,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: contentWidget);
+            child: widget.control.buildTextOrWidget("content"));
       } else if (isFilledTonalButton) {
         button = FilledButton.tonal(
             style: style,
@@ -176,7 +180,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: contentWidget);
+            child: widget.control.buildTextOrWidget("content"));
       } else {
         button = ElevatedButton(
             style: style,
@@ -186,7 +190,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: contentWidget);
+            child: widget.control.buildTextOrWidget("content"));
       }
     }
 
