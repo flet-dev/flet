@@ -1,4 +1,5 @@
 import 'package:flet/src/utils/icons.dart';
+import 'package:flet/src/utils/numbers.dart';
 import 'package:flet/src/widgets/error.dart';
 import 'package:flutter/material.dart';
 
@@ -58,14 +59,20 @@ extension WidgetFromControl on Control {
     return null;
   }
 
-  Widget? buildTextOrWidget(String propertyName,
-      {bool required = false,
-      Widget? error,
-      bool visibleOnly = true,
-      bool notifyParent = false,
-      Key? key,
-      String? textPropertyName}) {
+  Widget? buildTextOrWidget(
+    String propertyName, {
+    bool required = false,
+    Widget? error,
+    bool visibleOnly = true,
+    bool notifyParent = false,
+    Key? key,
+    String? textPropertyName, //(todo 0.70.3) remove textPropertyName
+  }) {
     var content = get(propertyName);
+    String text = "";
+    if (textPropertyName is String) {
+      text = getString(textPropertyName, "")!;
+    }
 
     if (content is Control) {
       Control? c;
@@ -74,22 +81,21 @@ extension WidgetFromControl on Control {
         c.notifyParent = notifyParent;
         return ControlWidget(key: key, control: c);
       }
-    } else if (content is String) {
+    }
+
+    if (content is String) {
       return Text(content);
-      //(todo 0.70.3) remove textPropertyName
-      // } else if (textPropertyName != null) {
-      //   var s = get(textPropertyName);
-      //   if (s is String) {
-      //     return Text(s);
-      //   }
-    } else if (required) {
+    }
+    //(todo 0.70.3) remove textPropertyName
+    if (text != "") {
+      return Text(text);
+    }
+    if (required) {
       return error ??
           ErrorControl("Error displaying $type",
               description: "$propertyName must be specified");
-      // const ErrorControl("Error displaying ElevatedButton",
-      //     description:
-      //         "\"icon\" must be specified together with \"content\"");
     }
+
     return null;
   }
 }
