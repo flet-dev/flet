@@ -64,7 +64,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
         widget.control.buildIconOrWidget("icon", color: iconColor);
 
     var clipBehavior =
-        parseClip(widget.control.getString("clip_behavior"), Clip.none)!;
+        widget.control.getClipBehavior("clip_behavior", Clip.none)!;
     bool autofocus = widget.control.getBool("autofocus", false)!;
 
     Function()? onPressed = !widget.control.disabled
