@@ -59,16 +59,11 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
     String text =
         widget.control.getString("text", "")!; //(todo 0.70.3) remove text
     String url = widget.control.getString("url", "")!;
-    //var icon = widget.control.get("icon");
     Color? iconColor = widget.control.getColor("icon_color", context);
 
-    // Widget? iconWidget = icon is Control
-    //     ? ControlWidget(control: icon)
-    //     : icon is String
-    //         ? Icon(widget.control.getIcon("icon"), color: iconColor)
-    //         : null;
     Widget? iconWidget =
         widget.control.buildIconOrWidget("icon", color: iconColor);
+
     var content = widget.control.get("content");
     Widget contentWidget = content is Control
         ? ControlWidget(control: content)
