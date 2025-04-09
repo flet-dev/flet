@@ -83,7 +83,6 @@ import 'controls/stack.dart';
 import 'controls/submenu_button.dart';
 import 'controls/tabs.dart';
 import 'controls/text.dart';
-import 'controls/text_button.dart';
 import 'controls/time_picker.dart';
 import 'controls/transparent_pointer.dart';
 import 'controls/vertical_divider.dart';
@@ -155,8 +154,8 @@ class FletCoreExtension extends FletExtension {
         return CupertinoActionSheetControl(key: key, control: control);
       case "CupertinoActionSheetAction":
         return CupertinoActionSheetActionControl(key: key, control: control);
-      case "TextButton":
-        return TextButtonControl(key: key, control: control);
+      // case "TextButton":
+      //   return TextButtonControl(key: key, control: control);
       case "Container":
         return ContainerControl(key: key, control: control);
       case "Chip":
@@ -208,6 +207,7 @@ class FletCoreExtension extends FletExtension {
       case "ElevatedButton":
       case "FilledButton":
       case "FilledTonalButton":
+      case "TextButton":
         return AdaptiveButtonControl(key: key, control: control);
       case "FletApp":
         return FletAppControl(key: key, control: control);

@@ -1,16 +1,7 @@
+import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
 import '../controls/base_controls.dart';
-import '../flet_backend.dart';
-import '../models/control.dart';
-import '../utils/buttons.dart';
-import '../utils/colors.dart';
-import '../utils/icons.dart';
-import '../utils/launch_url.dart';
-import '../utils/misc.dart';
-import '../utils/numbers.dart';
-import '../widgets/flet_store_mixin.dart';
-import 'control_widget.dart';
 import 'cupertino_button.dart';
 import 'cupertino_dialog_action.dart';
 
@@ -78,9 +69,9 @@ class _TextButtonControlState extends State<TextButtonControl>
               );
       }
 
-      String text =
-          widget.control.getString("text", "")!; //to be removed in 0.70.3
-      var content = widget.control.get("content");
+      // String text =
+      //     widget.control.getString("text", "")!; //to be removed in 0.70.3
+      // var content = widget.control.get("content");
       var icon = widget.control.get("icon");
       var clipBehavior = widget.control.getClipBehavior("clip_behavior");
       Color? iconColor = widget.control.getColor("icon_color", context);
@@ -88,21 +79,21 @@ class _TextButtonControlState extends State<TextButtonControl>
       String? urlTarget = widget.control.getString("url_target");
       bool autofocus = widget.control.getBool("autofocus", false)!;
 
-      Widget contentWidget = content is Control
-          ? ControlWidget(control: content)
-          : content is String
-              ? Text(content)
-              : Text(text); // to be changed to Text("") in 0.70.3
+      // Widget contentWidget = content is Control
+      //     ? ControlWidget(control: content)
+      //     : content is String
+      //         ? Text(content)
+      //         : Text(text); // to be changed to Text("") in 0.70.3
 
-      Widget? iconWidget;
-      if (icon is Control) {
-        iconWidget = ControlWidget(control: icon);
-      } else if (icon is String) {
-        iconWidget = Icon(
-          widget.control.getIcon("icon"),
-          color: iconColor,
-        );
-      }
+      // Widget? iconWidget;
+      // if (icon is Control) {
+      //   iconWidget = ControlWidget(control: icon);
+      // } else if (icon is String) {
+      //   iconWidget = Icon(
+      //     widget.control.getIcon("icon"),
+      //     color: iconColor,
+      //   );
+      // }
 
       Function()? onPressed = widget.control.disabled
           ? null
@@ -129,8 +120,7 @@ class _TextButtonControlState extends State<TextButtonControl>
 
       var theme = Theme.of(context);
 
-      var style = parseButtonStyle(
-          widget.control.get("style"), Theme.of(context),
+      var style = widget.control.getButtonStyle("style", Theme.of(context),
           defaultForegroundColor: theme.colorScheme.primary,
           defaultBackgroundColor: Colors.transparent,
           defaultOverlayColor: Colors.transparent,
@@ -145,15 +135,18 @@ class _TextButtonControlState extends State<TextButtonControl>
 
       if (icon != null) {
         button = TextButton.icon(
-            autofocus: autofocus,
-            focusNode: _focusNode,
-            onPressed: onPressed,
-            onLongPress: onLongPressHandler,
-            onHover: onHoverHandler,
-            style: style,
-            clipBehavior: clipBehavior,
-            icon: iconWidget,
-            label: contentWidget);
+          autofocus: autofocus,
+          focusNode: _focusNode,
+          onPressed: onPressed,
+          onLongPress: onLongPressHandler,
+          onHover: onHoverHandler,
+          style: style,
+          clipBehavior: clipBehavior,
+          icon: widget.control.buildIconOrWidget("icon", color: iconColor),
+          label: widget.control
+                  .buildTextOrWidget("content", textPropertyName: "text") ??
+              const Text(""),
+        );
       } else {
         button = TextButton(
             autofocus: autofocus,
@@ -163,7 +156,9 @@ class _TextButtonControlState extends State<TextButtonControl>
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: contentWidget);
+            child: widget.control
+                    .buildTextOrWidget("content", textPropertyName: "text") ??
+                const Text(""));
       }
 
       return ConstrainedControl(control: widget.control, child: button);

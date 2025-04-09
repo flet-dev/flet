@@ -1,5 +1,4 @@
 import 'package:flet/flet.dart';
-import 'package:flet/src/widgets/error.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'base_controls.dart';
@@ -70,9 +69,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
         child = iconWidget;
       }
     } else {
-      child = contentWidget ??
-          const ErrorControl("Error displaying CupertinoButton",
-              description: "\"icon\" or \"content\" must be specified");
+      child = contentWidget ?? const Text("");
     }
 
     double pressedOpacity = widget.control.getDouble("opacity_on_click", 0.4)!;

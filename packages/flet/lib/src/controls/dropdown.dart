@@ -60,8 +60,8 @@ class _DropdownControlState extends State<DropdownControl> {
     var textSize = widget.control.getDouble("text_size");
     var color = widget.control.getColor("color", context);
 
-    TextAlign textAlign = parseTextAlign(
-        widget.control.getString("text_align"), TextAlign.start)!;
+    TextAlign textAlign =
+        widget.control.getTextAlign("text_align", TextAlign.start)!;
 
     var fillColor = widget.control.getColor("fill_color", context);
     var borderColor = widget.control.getColor("border_color", context);
@@ -73,10 +73,8 @@ class _DropdownControlState extends State<DropdownControl> {
     var focusedBorderWidth = widget.control.getDouble("focused_border_width");
     var menuWidth = widget.control.getDouble("menu_width", double.infinity)!;
 
-    FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
-      widget.control.getString("border"),
-      FormFieldInputBorder.outline,
-    )!;
+    FormFieldInputBorder inputBorder = widget.control
+        .getFormFieldInputBorder("border", FormFieldInputBorder.outline)!;
 
     InputBorder? border;
 
@@ -148,7 +146,7 @@ class _DropdownControlState extends State<DropdownControl> {
         .children("options")
         .map<DropdownMenuEntry<String>>((Control itemCtrl) {
       bool itemDisabled = widget.control.disabled || itemCtrl.disabled;
-      ButtonStyle? style = parseButtonStyle(itemCtrl.get("style"), theme);
+      ButtonStyle? style = itemCtrl.getButtonStyle("style", theme);
 
       return DropdownMenuEntry<String>(
         enabled: !itemDisabled,
@@ -170,9 +168,8 @@ class _DropdownControlState extends State<DropdownControl> {
       value = null;
     }
 
-    TextCapitalization textCapitalization = parseTextCapitalization(
-        widget.control.getString("capitalization"), TextCapitalization.none)!;
-
+    TextCapitalization textCapitalization = widget.control
+        .getTextCapitalization("capitalization", TextCapitalization.none)!;
     FilteringTextInputFormatter? inputFilter =
         widget.control.getTextInputFormatter("input_filter");
 

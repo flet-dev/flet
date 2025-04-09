@@ -55,6 +55,8 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
 
     bool isFilledButton = widget.control.type == "FilledButton";
     bool isFilledTonalButton = widget.control.type == "FilledTonalButton";
+    bool isTextButton = widget.control.type == "TextButton";
+    bool isOutlinedButton = widget.control.type == "OutlinedButton";
     String url = widget.control.getString("url", "")!;
     Color? iconColor = widget.control.getColor("icon_color", context);
 
@@ -134,6 +136,20 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             icon: iconWidget,
             label: widget.control.buildTextOrWidget("content",
                 textPropertyName: "text", required: true, error: error)!);
+      } else if (isTextButton) {
+        button = TextButton.icon(
+          autofocus: autofocus,
+          focusNode: _focusNode,
+          onPressed: onPressed,
+          onLongPress: onLongPressHandler,
+          onHover: onHoverHandler,
+          style: style,
+          clipBehavior: clipBehavior,
+          icon: widget.control.buildIconOrWidget("icon", color: iconColor),
+          label: widget.control
+                  .buildTextOrWidget("content", textPropertyName: "text") ??
+              const Text(""),
+        );
       } else {
         button = ElevatedButton.icon(
             style: style,
@@ -170,6 +186,18 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             clipBehavior: clipBehavior,
             child: widget.control
                 .buildTextOrWidget("content", textPropertyName: "text"));
+      } else if (isTextButton) {
+        button = TextButton(
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            style: style,
+            onPressed: onPressed,
+            onLongPress: onLongPressHandler,
+            onHover: onHoverHandler,
+            clipBehavior: clipBehavior,
+            child: widget.control
+                    .buildTextOrWidget("content", textPropertyName: "text") ??
+                const Text(""));
       } else {
         button = ElevatedButton(
             style: style,
