@@ -1,4 +1,5 @@
 import 'package:flet/flet.dart';
+import 'package:flet/src/widgets/error.dart';
 import 'package:flutter/material.dart';
 
 import 'base_controls.dart';
@@ -116,6 +117,9 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             ? const StadiumBorder()
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
+    Widget error = const ErrorControl("Error displaying Button",
+        description: "\"icon\" must be specified together with \"content\"");
+
     if (iconWidget != null) {
       // if (contentWidget == const Text("")) {
       //   return const ErrorControl("Error displaying ElevatedButton",
@@ -134,7 +138,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             icon: iconWidget,
             //label: contentWidget
             label: widget.control.buildTextOrWidget("content",
-                textPropertyName: "text", required: true)!);
+                textPropertyName: "text", required: true, error: error)!);
       } else if (isFilledTonalButton) {
         button = FilledButton.tonalIcon(
             style: style,
@@ -146,7 +150,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             clipBehavior: clipBehavior,
             icon: iconWidget,
             label: widget.control.buildTextOrWidget("content",
-                textPropertyName: "text", required: true)!);
+                textPropertyName: "text", required: true, error: error)!);
       } else {
         button = ElevatedButton.icon(
             style: style,
@@ -158,7 +162,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             clipBehavior: clipBehavior,
             icon: iconWidget,
             label: widget.control.buildTextOrWidget("content",
-                textPropertyName: "text", required: true)!);
+                textPropertyName: "text", required: true, error: error)!);
       }
     } else {
       if (isFilledButton) {
