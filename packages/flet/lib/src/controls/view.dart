@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flet/src/extensions/control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../controls/control_widget.dart';
@@ -20,6 +21,8 @@ import '../widgets/loading_page.dart';
 import '../widgets/page_control_data.dart';
 import '../widgets/page_media.dart';
 import '../widgets/scaffold_key_provider.dart';
+import 'app_bar.dart';
+import 'cupertino_app_bar.dart';
 import 'scroll_notification_control.dart';
 import 'scrollable_control.dart';
 
@@ -96,8 +99,6 @@ class _ViewControlState extends State<ViewControl> {
         ? TextDirection.rtl
         : TextDirection.ltr;
 
-    Control? appbar = control.child("appbar");
-
     var column = Column(
         mainAxisAlignment: mainAlignment,
         crossAxisAlignment: crossAlignment,
@@ -116,35 +117,18 @@ class _ViewControlState extends State<ViewControl> {
       child = ScrollNotificationControl(control: control, child: child);
     }
 
-    // var bnb = control.child("navigation_bar") ?? control.child("bottom_appbar");
-
-    // var bar = appbar != null
-    //     ? widget.widgetsDesign == PageDesign.cupertino
-    //         ? CupertinoAppBarControl(
-    //             parent: control,
-    //             control: appBarView.control,
-    //             children: appBarView.children,
-    //             parentDisabled: control.isDisabled,
-    //             parentAdaptive: adaptive)
-    //         : AppBarControl(
-    //             parent: control,
-    //             control: appBarView.control,
-    //             children: appBarView.children,
-    //             parentDisabled: control.isDisabled,
-    //             parentAdaptive: adaptive,
-    //             height: appBarView.control
-    //                 .attrDouble("toolbar_height", kToolbarHeight)!)
-    //     : cupertinoAppBarView != null
-    //         ? CupertinoAppBarControl(
-    //             parent: control,
-    //             control: cupertinoAppBarView.control,
-    //             children: cupertinoAppBarView.children,
-    //             parentDisabled: control.isDisabled,
-    //             parentAdaptive: adaptive,
-    //           ) as ObstructingPreferredSizeWidget
-    //         : null;
-
     var pageData = PageControlData.of(context);
+
+    Control? appBar = control.child("appbar");
+    Widget? appBarWidget;
+    if (appBar != null) {
+      appBar.notifyParent = true;
+      appBarWidget = pageData?.widgetsDesign == PageDesign.cupertino ||
+              appBar.type == "CupertinoAppBar"
+          ? CupertinoAppBarControl(control: appBar)
+              as ObstructingPreferredSizeWidget
+          : AppBarControl(control: appBar);
+    }
 
     List<Widget> overlayWidgets = [];
     var pageViews = control.parent!.children("views");
@@ -201,13 +185,14 @@ class _ViewControlState extends State<ViewControl> {
     Widget scaffold = ScaffoldKeyProvider(
       scaffoldKey: _scaffoldKey,
       child: Scaffold(
-        key: _scaffoldKey,
-        //key: bar == null || bar is AppBarControl ? scaffoldKey : null,
+        key: appBarWidget == null || appBarWidget is AppBarControl
+            ? _scaffoldKey
+            : null,
         backgroundColor: control.getColor("bgcolor", context) ??
             ((pageData?.widgetsDesign == PageDesign.cupertino)
                 ? CupertinoTheme.of(context).scaffoldBackgroundColor
                 : Theme.of(context).scaffoldBackgroundColor),
-        //appBar: bar is AppBarControl ? bar : null,
+        appBar: appBarWidget is AppBarControl ? appBarWidget : null,
         drawer: drawer != null ? ControlWidget(control: drawer) : null,
         onDrawerChanged: (opened) {
           if (!opened) {
@@ -230,25 +215,25 @@ class _ViewControlState extends State<ViewControl> {
       ),
     );
 
-    // var systemOverlayStyle =
-    //     materialTheme.extension<SystemUiOverlayStyleTheme>();
+    var systemOverlayStyle =
+        materialTheme.extension<SystemUiOverlayStyleTheme>();
 
-    // if (systemOverlayStyle != null &&
-    //     systemOverlayStyle.systemUiOverlayStyle != null &&
-    //     bar == null) {
-    //   scaffold = AnnotatedRegion<SystemUiOverlayStyle>(
-    //     value: systemOverlayStyle.systemUiOverlayStyle!,
-    //     child: scaffold,
-    //   );
-    // }
+    if (systemOverlayStyle != null &&
+        systemOverlayStyle.systemUiOverlayStyle != null &&
+        appBarWidget == null) {
+      scaffold = AnnotatedRegion<SystemUiOverlayStyle>(
+        value: systemOverlayStyle.systemUiOverlayStyle!,
+        child: scaffold,
+      );
+    }
 
-    // if (bar is CupertinoAppBarControl) {
-    //   scaffold = CupertinoPageScaffold(
-    //       key: scaffoldKey,
-    //       backgroundColor: control.attrColor("bgcolor", context),
-    //       navigationBar: bar as ObstructingPreferredSizeWidget,
-    //       child: scaffold);
-    // }
+    if (appBarWidget is CupertinoAppBarControl) {
+      scaffold = CupertinoPageScaffold(
+          key: _scaffoldKey,
+          backgroundColor: control.getColor("bgcolor", context),
+          navigationBar: appBarWidget,
+          child: scaffold);
+    }
 
     if (pageData?.widgetsDesign == PageDesign.material) {
       scaffold = CupertinoTheme(

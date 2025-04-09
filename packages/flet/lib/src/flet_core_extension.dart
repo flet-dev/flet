@@ -5,6 +5,7 @@ import 'controls/adaptive_button.dart';
 import 'controls/adaptive_slider.dart';
 import 'controls/adaptive_switch.dart';
 import 'controls/animated_switcher.dart';
+import 'controls/app_bar.dart';
 import 'controls/banner.dart';
 import 'controls/bottom_app_bar.dart';
 import 'controls/bottom_sheet.dart';
@@ -100,6 +101,8 @@ class FletCoreExtension extends FletExtension {
         return AdaptiveAlertDialogControl(key: key, control: control);
       case "AnimatedSwitcher":
         return AnimatedSwitcherControl(key: key, control: control);
+      case "AppBar":
+        return AppBarControl(key: key, control: control);
       case "Banner":
         return BannerControl(key: key, control: control);
       case "BottomAppBar":
