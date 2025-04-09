@@ -1,3 +1,4 @@
+import 'package:flet/src/utils/icons.dart';
 import 'package:flutter/material.dart';
 
 import '../controls/control_widget.dart';
@@ -37,11 +38,25 @@ extension WidgetFromControl on Control {
     c.notifyParent = notifyParent;
     return ControlWidget(key: key, control: c);
   }
+
+  Widget? buildIconOrWidget(String propertyName,
+      {bool visibleOnly = true,
+      bool notifyParent = false,
+      Key? key,
+      Color? color}) {
+    var icon = get(propertyName);
+    if (icon is Control) {
+      Control? c;
+      c = child(propertyName, visibleOnly: visibleOnly);
+      if (c == null) return null;
+      c.notifyParent = notifyParent;
+      return ControlWidget(key: key, control: c);
+    } else if (icon is String) {
+      return Icon(getIcon(propertyName), color: color);
+    }
+    return null;
+  }
 }
-
-
-
-
 
 extension AutofillParsers on Control {
   List<String>? getAutofillHints(String propertyName,
@@ -64,42 +79,3 @@ extension BadgeParsers on Control {
     return parseBadge(get(propertyName), child, theme);
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
