@@ -7,7 +7,6 @@ import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
-import '../utils/icons.dart';
 import '../utils/time.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';
@@ -28,7 +27,8 @@ class _NavigationBarControlState extends State<NavigationBarControl>
 
   void _destinationChanged(int index) {
     _selectedIndex = index;
-    widget.control.updateProperties({"selectedIndex": _selectedIndex});
+    widget.control
+        .updateProperties({"selected_index": _selectedIndex}, notify: true);
     widget.control.triggerEvent("change", _selectedIndex);
   }
 
@@ -66,17 +66,7 @@ class _NavigationBarControlState extends State<NavigationBarControl>
           selectedIndex: _selectedIndex,
           onDestinationSelected:
               widget.control.disabled ? null : _destinationChanged,
-          destinations: widget.control.children("controls").map((dest) {
-            var icon = parseIcon(dest.getString("icon"));
-            var selectedIcon = parseIcon(dest.getString("selected_icon"));
-            return NavigationDestination(
-                enabled: !dest.disabled,
-                tooltip: !dest.disabled ? dest.getString("tooltip") : null,
-                icon: dest.buildWidget("icon") ?? Icon(icon),
-                selectedIcon: dest.buildWidget("selected_icon") ??
-                    (selectedIcon != null ? Icon(selectedIcon) : null),
-                label: dest.getString("label", "")!);
-          }).toList());
+          destinations: widget.control.buildWidgets("destinations"));
 
       return ConstrainedControl(control: widget.control, child: navBar);
     });

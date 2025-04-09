@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:flet/src/extensions/control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,8 +35,6 @@ class _ViewControlState extends State<ViewControl> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   Control? _overlay;
   Control? _dialogs;
-  bool? _drawerOpened;
-  bool? _endDrawerOpened;
 
   @override
   void initState() {
@@ -92,9 +91,6 @@ class _ViewControlState extends State<ViewControl> {
         control.getString("vertical_alignment"), MainAxisAlignment.start)!;
     final crossAlignment = parseCrossAxisAlignment(
         control.getString("horizontal_alignment"), CrossAxisAlignment.start)!;
-    final fabLocation = parseFloatingActionButtonLocation(
-        control.get("floating_action_button_location"),
-        FloatingActionButtonLocation.endFloat);
 
     final textDirection = control.parent!.getBool("rtl", false)!
         ? TextDirection.rtl
@@ -215,27 +211,22 @@ class _ViewControlState extends State<ViewControl> {
         drawer: drawer != null ? ControlWidget(control: drawer) : null,
         onDrawerChanged: (opened) {
           if (!opened) {
-            _drawerOpened = false;
             _dismissDrawer(drawer!, FletBackend.of(context));
           }
         },
         endDrawer: endDrawer != null ? ControlWidget(control: endDrawer) : null,
         onEndDrawerChanged: (opened) {
           if (!opened) {
-            _endDrawerOpened = false;
             _dismissDrawer(endDrawer!, FletBackend.of(context));
           }
         },
         body: body,
-        // bottomNavigationBar: bnb != null
-        //     ? createControl(control, bnb.id, control.isDisabled,
-        //         parentAdaptive: adaptive)
-        //     : null,
-        // floatingActionButton: fab != null
-        //     ? createControl(control, fab.id, control.isDisabled,
-        //         parentAdaptive: adaptive)
-        //     : null,
-        floatingActionButtonLocation: fabLocation,
+        bottomNavigationBar: control.buildWidget("navigation_bar") ??
+            control.buildWidget("bottom_appbar"),
+        floatingActionButton: control.buildWidget("floating_action_button"),
+        floatingActionButtonLocation: control.getFloatingActionButtonLocation(
+            "floating_action_button_location",
+            FloatingActionButtonLocation.endFloat),
       ),
     );
 

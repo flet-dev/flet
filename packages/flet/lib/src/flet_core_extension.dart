@@ -6,6 +6,7 @@ import 'controls/adaptive_slider.dart';
 import 'controls/adaptive_switch.dart';
 import 'controls/animated_switcher.dart';
 import 'controls/banner.dart';
+import 'controls/bottom_app_bar.dart';
 import 'controls/bottom_sheet.dart';
 import 'controls/card.dart';
 import 'controls/center.dart';
@@ -47,6 +48,7 @@ import 'controls/menu_bar.dart';
 import 'controls/menu_item_button.dart';
 import 'controls/merge_semantics.dart';
 import 'controls/navigation_bar.dart';
+import 'controls/navigation_bar_destination.dart';
 import 'controls/navigation_drawer.dart';
 import 'controls/navigation_rail.dart';
 import 'controls/outlined_button.dart';
@@ -100,6 +102,8 @@ class FletCoreExtension extends FletExtension {
         return AnimatedSwitcherControl(key: key, control: control);
       case "Banner":
         return BannerControl(key: key, control: control);
+      case "BottomAppBar":
+        return BottomAppBarControl(key: key, control: control);
       case "BottomSheet":
         return BottomSheetControl(key: key, control: control);
       case "OutlinedButton":
@@ -128,6 +132,8 @@ class FletCoreExtension extends FletExtension {
         return GridViewControl(key: key, control: control);
       case "NavigationBar":
         return NavigationBarControl(key: key, control: control);
+      case "NavigationBarDestination":
+        return NavigationBarDestinationControl(key: key, control: control);
       case "CupertinoNavigationBar":
         return CupertinoNavigationBarControl(key: key, control: control);
       case "CupertinoActionSheet":
