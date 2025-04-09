@@ -100,6 +100,7 @@ class FletBackend extends ChangeNotifier {
       "pwa": isProgressiveWebApp(),
       "web": kIsWeb,
       "debug": kDebugMode,
+      "wasm": const bool.fromEnvironment('dart.tool.dart2wasm'),
       "window": {
         "_c": "Window",
         "_i": 2,

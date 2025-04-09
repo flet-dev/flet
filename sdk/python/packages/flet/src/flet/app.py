@@ -48,7 +48,7 @@ def run(
     view: Optional[AppView] = AppView.FLET_APP,
     assets_dir="assets",
     upload_dir=None,
-    web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
+    web_renderer: WebRenderer = WebRenderer.AUTO,
     use_color_emoji=False,
     route_url_strategy="path",
     export_asgi_app=False,
@@ -95,7 +95,7 @@ async def run_async(
     view: Optional[AppView] = AppView.FLET_APP,
     assets_dir="assets",
     upload_dir=None,
-    web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
+    web_renderer: WebRenderer = WebRenderer.AUTO,
     use_color_emoji=False,
     route_url_strategy="path",
 ):

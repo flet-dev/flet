@@ -81,8 +81,8 @@ class Command(BaseCommand):
         parser.add_argument(
             "--web-renderer",
             dest="web_renderer",
-            choices=["canvaskit", "html"],
-            default="canvaskit",
+            choices=["auto", "canvaskit", "skwasm"],
+            default="auto",
             help="web renderer to use",
         )
         parser.add_argument(
@@ -90,7 +90,7 @@ class Command(BaseCommand):
             dest="use_color_emoji",
             action="store_true",
             default=False,
-            help="enables color emojis with CanvasKit renderer",
+            help="enables color emojis",
         )
         parser.add_argument(
             "--route-url-strategy",
@@ -284,7 +284,7 @@ class Command(BaseCommand):
                 (
                     options.web_renderer
                     or get_pyproject("tool.flet.web.renderer")
-                    or "canvaskit"
+                    or "auto"
                 )
             ),
             use_color_emoji=(

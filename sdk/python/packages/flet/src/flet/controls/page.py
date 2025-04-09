@@ -175,6 +175,7 @@ class Page(AdaptiveControl):
     web: Optional[bool] = field(default=False)
     pwa: Optional[bool] = field(default=False)
     debug: Optional[bool] = field(default=False)
+    wasm: Optional[bool] = field(default=False)
     platform: Optional[PagePlatform] = None
     platform_brightness: Optional[Brightness] = None
     media: Optional["PageMediaData"] = None

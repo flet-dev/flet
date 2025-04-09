@@ -9,10 +9,19 @@ from pathlib import Path
 from typing import Optional, cast
 
 import flet.version
+import flet_cli.utils.processes as processes
 import yaml
 from flet.utils import cleanup_path, copy_tree, is_windows, slugify
 from flet.utils.platform_utils import get_bool_env_var
 from flet.version import update_version
+from flet_cli.commands.base import BaseCommand
+from flet_cli.utils.hash_stamp import HashStamp
+from flet_cli.utils.merge import merge_dict
+from flet_cli.utils.project_dependencies import (
+    get_poetry_dependencies,
+    get_project_dependencies,
+)
+from flet_cli.utils.pyproject_toml import load_pyproject_toml
 from packaging import version
 from packaging.requirements import Requirement
 from rich.console import Console, Group
@@ -22,16 +31,6 @@ from rich.progress import Progress
 from rich.style import Style
 from rich.table import Column, Table
 from rich.theme import Theme
-
-import flet_cli.utils.processes as processes
-from flet_cli.commands.base import BaseCommand
-from flet_cli.utils.hash_stamp import HashStamp
-from flet_cli.utils.merge import merge_dict
-from flet_cli.utils.project_dependencies import (
-    get_poetry_dependencies,
-    get_project_dependencies,
-)
-from flet_cli.utils.pyproject_toml import load_pyproject_toml
 
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.2/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
@@ -385,14 +384,14 @@ class Command(BaseCommand):
         parser.add_argument(
             "--web-renderer",
             dest="web_renderer",
-            choices=["canvaskit", "html"],
+            choices=["auto", "canvaskit", "skwasm"],
             help="renderer to use (web only)",
         )
         parser.add_argument(
             "--use-color-emoji",
             dest="use_color_emoji",
             action="store_true",
-            help="enables color emojis with CanvasKit renderer (web only)",
+            help="enables color emojis (web only)",
         )
         parser.add_argument(
             "--route-url-strategy",
@@ -1096,7 +1095,7 @@ class Command(BaseCommand):
             "web_renderer": (
                 self.options.web_renderer
                 or self.get_pyproject("tool.flet.web.renderer")
-                or "canvaskit"
+                or "auto"
             ),
             "use_color_emoji": (
                 "true"
@@ -1144,9 +1143,7 @@ class Command(BaseCommand):
                 "target_arch": (
                     target_arch
                     if isinstance(target_arch, list)
-                    else [target_arch]
-                    if isinstance(target_arch, str)
-                    else []
+                    else [target_arch] if isinstance(target_arch, str) else []
                 ),
                 "info_plist": info_plist,
                 "macos_entitlements": macos_entitlements,

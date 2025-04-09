@@ -14,6 +14,7 @@ from flet_web.fastapi.flet_fastapi import FastAPI
 from flet_web.fastapi.flet_oauth import FletOAuth
 from flet_web.fastapi.flet_static_files import FletStaticFiles
 from flet_web.fastapi.flet_upload import FletUpload
+from starlette.middleware.base import BaseHTTPMiddleware
 
 
 def app(
@@ -23,7 +24,7 @@ def app(
     app_name: Optional[str] = None,
     app_short_name: Optional[str] = None,
     app_description: Optional[str] = None,
-    web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
+    web_renderer: WebRenderer = WebRenderer.AUTO,
     use_color_emoji: bool = False,
     route_url_strategy: str = "path",
     upload_dir: Optional[str] = None,
@@ -42,7 +43,7 @@ def app(
     * `app_name` (str, optional) - PWA application name.
     * `app_short_name` (str, optional) - PWA application short name.
     * `app_description` (str, optional) - PWA application description.
-    * `web_renderer` (WebRenderer) - web renderer defaulting to `WebRenderer.CANVAS_KIT`.
+    * `web_renderer` (WebRenderer) - web renderer defaulting to `WebRenderer.AUTO`.
     * `use_color_emoji` (bool) - whether to load a font with color emoji. Default is `False`.
     * `route_url_strategy` (str) - routing URL strategy: `path` (default) or `hash`.
     * `upload_dir` (str) - an absolute path to a directory with uploaded files.
@@ -116,5 +117,16 @@ def app(
             route_url_strategy=route_url_strategy,
         ),
     )
+
+    # Add middleware for custom headers
+    class CustomHeadersMiddleware(BaseHTTPMiddleware):
+        async def dispatch(self, request: Request, call_next):
+            response = await call_next(request)
+            response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
+            response.headers["Cross-Origin-Embedder-Policy"] = "require-corp"
+            response.headers["Access-Control-Allow-Origin"] = "*"
+            return response
+
+    fastapi_app.add_middleware(CustomHeadersMiddleware)
 
     return fastapi_app

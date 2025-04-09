@@ -42,8 +42,8 @@ class WindowEventType(Enum):
 
 class WebRenderer(Enum):
     AUTO = "auto"
-    HTML = "html"
     CANVAS_KIT = "canvaskit"
+    SKWASM = "skwasm"
 
 
 class UrlTarget(Enum):
@@ -376,5 +376,4 @@ Wrapper = Callable[..., Any]
 
 # Protocols
 class SupportsStr(Protocol):
-    def __str__(self) -> str:
-        ...
+    def __str__(self) -> str: ...

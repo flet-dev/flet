@@ -27,7 +27,7 @@ class FletStaticFiles(StaticFiles):
     * `app_name` (str, optional) - PWA application name.
     * `app_short_name` (str, optional) - PWA application short name.
     * `app_description` (str, optional) - PWA application description.
-    * `web_renderer` (WebRenderer) - web renderer defaulting to `WebRenderer.CANVAS_KIT`.
+    * `web_renderer` (WebRenderer) - web renderer defaulting to `WebRenderer.AUTO`.
     * `use_color_emoji` (bool) - whether to load a font with color emoji. Default is `False`.
     * `route_url_strategy` (str) - routing URL strategy: `path` (default) or `hash`.
     * `websocket_endpoint_path` (str, optional) - absolute URL of Flet app WebSocket handler. Default is `{app_mount_path}/ws`.
@@ -40,7 +40,7 @@ class FletStaticFiles(StaticFiles):
         app_name: Optional[str] = None,
         app_short_name: Optional[str] = None,
         app_description: Optional[str] = None,
-        web_renderer: WebRenderer = WebRenderer.CANVAS_KIT,
+        web_renderer: WebRenderer = WebRenderer.AUTO,
         use_color_emoji: bool = False,
         route_url_strategy: str = "path",
         websocket_endpoint_path: Optional[str] = None,
