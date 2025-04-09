@@ -70,6 +70,7 @@ import 'controls/shader_mask.dart';
 import 'controls/snack_bar.dart';
 import 'controls/stack.dart';
 import 'controls/submenu_button.dart';
+import 'controls/tabs.dart';
 import 'controls/text.dart';
 import 'controls/text_button.dart';
 import 'controls/time_picker.dart';
@@ -229,6 +230,8 @@ class FletCoreExtension extends FletExtension {
         return StackControl(key: key, control: control);
       case "Switch":
         return AdaptiveSwitchControl(key: key, control: control);
+      case "Tabs":
+        return TabsControl(key: key, control: control);
       case "Text":
         return TextControl(key: key, control: control);
       case "Placeholder":
