@@ -1,3 +1,4 @@
+import 'package:flet/src/widgets/radio_group_provider.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
@@ -13,7 +14,10 @@ class RadioGroupControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("RadioGroupControl build: ${control.id}");
 
-    return control.buildWidget("content") ??
-        const ErrorControl("RadioGroup.content must be provided and visible");
+    return RadioGroupProvider(
+        radioGroupControl: control,
+        child: control.buildWidget("content") ??
+            const ErrorControl(
+                "RadioGroup.content must be provided and visible"));
   }
 }

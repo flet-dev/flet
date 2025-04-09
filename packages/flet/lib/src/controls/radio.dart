@@ -1,28 +1,27 @@
-import 'package:flet/src/utils/numbers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/misc.dart';
 import '../utils/mouse.dart';
+import '../utils/numbers.dart';
+import '../utils/text.dart';
+import '../utils/theme.dart';
 import '../widgets/error.dart';
-import '../widgets/flet_store_mixin.dart';
 import '../widgets/radio_group_provider.dart';
 import 'base_controls.dart';
 import 'list_tile.dart';
 
-class CupertinoRadioControl extends StatefulWidget {
+class RadioControl extends StatefulWidget {
   final Control control;
 
-  const CupertinoRadioControl({super.key, required this.control});
+  const RadioControl({super.key, required this.control});
 
   @override
-  State<CupertinoRadioControl> createState() => _CupertinoRadioControlState();
+  State<RadioControl> createState() => _RadioControlState();
 }
 
-class _CupertinoRadioControlState extends State<CupertinoRadioControl>
-    with FletStoreMixin {
+class _RadioControlState extends State<RadioControl> {
   late final FocusNode _focusNode;
 
   @override
@@ -50,39 +49,47 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("CupertinoRadio build: ${widget.control.id}");
+    debugPrint("Radio build: ${widget.control.id}");
 
-    String label = widget.control.getString("label", "")!;
-    String value = widget.control.getString("value", "")!;
-    LabelPosition labelPosition = parseLabelPosition(
-        widget.control.getString("label_position"), LabelPosition.right)!;
+    var label = widget.control.getString("label", "")!;
+    var value = widget.control.getString("value", "")!;
+    var labelPosition =
+        widget.control.getLabelPosition("label_position", LabelPosition.right)!;
+    var visualDensity = widget.control.getVisualDensity("visual_density");
     bool autofocus = widget.control.getBool("autofocus", false)!;
 
-    debugPrint("CupertinoRadio build: ${widget.control.id}");
+    var labelStyle =
+        widget.control.getTextStyle("label_style", Theme.of(context));
+    if (widget.control.disabled && labelStyle != null) {
+      labelStyle = labelStyle.apply(color: Theme.of(context).disabledColor);
+    }
+
+    debugPrint("Radio StoreConnector build: ${widget.control.id}");
 
     var radioGroup = RadioGroupProvider.of(context);
 
     if (radioGroup == null) {
-      return const ErrorControl(
-          "CupertinoRadio must be enclosed within RadioGroup");
+      return const ErrorControl("Radio must be enclosed within RadioGroup");
     }
 
     String groupValue = radioGroup.getString("value", "")!;
 
-    var cupertinoRadio = CupertinoRadio<String>(
+    var radio = Radio<String>(
         autofocus: autofocus,
         focusNode: _focusNode,
         groupValue: groupValue,
+        mouseCursor: parseMouseCursor(widget.control.getString("mouseCursor")),
         value: value,
-        useCheckmarkStyle:
-            widget.control.getBool("use_checkmark_style", false)!,
-        fillColor: widget.control.getColor("fill_color", context),
+        activeColor: widget.control.getColor("active_color", context),
         focusColor: widget.control.getColor("focus_color", context),
+        hoverColor: widget.control.getColor("hover_color", context),
+        splashRadius: widget.control.getDouble("splash_radius"),
         toggleable: widget.control.getBool("toggleable", false)!,
-        mouseCursor: parseMouseCursor(widget.control.getString("mouse_cursor")),
-        activeColor: widget.control.getColor(
-            "active_color", context, Theme.of(context).colorScheme.primary)!,
-        inactiveColor: widget.control.getColor("inactive_color", context),
+        fillColor:
+            widget.control.getWidgetStateColor("fill_color", Theme.of(context)),
+        overlayColor: widget.control
+            .getWidgetStateColor("overlay_color", Theme.of(context)),
+        visualDensity: visualDensity,
         onChanged: !widget.control.disabled
             ? (String? value) => _onChange(radioGroup, value)
             : null);
@@ -91,22 +98,21 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
       _onChange(radioGroup, value);
     });
 
-    Widget result = cupertinoRadio;
+    Widget result = radio;
     if (label != "") {
       var labelWidget = widget.control.disabled
-          ? Text(label,
-              style: TextStyle(color: Theme.of(context).disabledColor))
-          : MouseRegion(cursor: SystemMouseCursors.click, child: Text(label));
+          ? Text(label, style: labelStyle)
+          : MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: Text(label, style: labelStyle));
       result = MergeSemantics(
           child: GestureDetector(
               onTap: !widget.control.disabled
-                  ? () {
-                      _onChange(radioGroup, value);
-                    }
+                  ? () => _onChange(radioGroup, value)
                   : null,
               child: labelPosition == LabelPosition.right
-                  ? Row(children: [cupertinoRadio, labelWidget])
-                  : Row(children: [labelWidget, cupertinoRadio])));
+                  ? Row(children: [radio, labelWidget])
+                  : Row(children: [labelWidget, radio])));
     }
 
     return ConstrainedControl(control: widget.control, child: result);

@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import 'controls/adaptive_alert_dialog.dart';
 import 'controls/adaptive_button.dart';
+import 'controls/adaptive_radio.dart';
 import 'controls/adaptive_slider.dart';
 import 'controls/adaptive_switch.dart';
 import 'controls/animated_switcher.dart';
@@ -19,6 +20,7 @@ import 'controls/cupertino_action_sheet.dart';
 import 'controls/cupertino_action_sheet_action.dart';
 import 'controls/cupertino_activity_indicator.dart';
 import 'controls/cupertino_alert_dialog.dart';
+import 'controls/cupertino_app_bar.dart';
 import 'controls/cupertino_bottom_sheet.dart';
 import 'controls/cupertino_button.dart';
 import 'controls/cupertino_checkbox.dart';
@@ -28,6 +30,7 @@ import 'controls/cupertino_dialog_action.dart';
 import 'controls/cupertino_list_tile.dart';
 import 'controls/cupertino_navigation_bar.dart';
 import 'controls/cupertino_picker.dart';
+import 'controls/cupertino_radio.dart';
 import 'controls/cupertino_segmented_button.dart';
 import 'controls/cupertino_slider.dart';
 import 'controls/cupertino_switch.dart';
@@ -168,6 +171,8 @@ class FletCoreExtension extends FletExtension {
         return CupertinoActivityIndicatorControl(key: key, control: control);
       case "CupertinoAlertDialog":
         return CupertinoAlertDialogControl(key: key, control: control);
+      case "CupertinoAppBar":
+        return CupertinoAppBarControl(key: key, control: control);
       case "CupertinoButton":
       case "CupertinoFilledButton":
       case "CupertinoTintedButton":
@@ -274,6 +279,10 @@ class FletCoreExtension extends FletExtension {
         return SelectionAreaControl(key: key, control: control);
       case "RadioGroup":
         return RadioGroupControl(key: key, control: control);
+      case "Radio":
+        return AdaptiveRadioControl(key: key, control: control);
+      case "CupertinoRadio":
+        return CupertinoRadioControl(key: key, control: control);
       case "CupertinoCheckbox":
         return CupertinoCheckboxControl(key: key, control: control);
       case "Window":
