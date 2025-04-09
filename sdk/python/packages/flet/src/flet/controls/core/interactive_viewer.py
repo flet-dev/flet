@@ -1,3 +1,4 @@
+from dataclasses import dataclass, field
 from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
@@ -18,25 +19,28 @@ __all__ = [
 ]
 
 
+@dataclass
 class InteractiveViewerInteractionStartEvent(ControlEvent):
-    pointer_count: int
+    pointer_count: int = field(metadata={"data_field": "pc"})
     global_focal_point: Offset
     local_focal_point: Offset
 
 
+@dataclass
 class InteractiveViewerInteractionUpdateEvent(ControlEvent):
-    pointer_count: int
+    pointer_count: int = field(metadata={"data_field": "pc"})
     global_focal_point: Offset
     local_focal_point: Offset
-    scale: float
-    horizontal_scale: float
-    vertical_scale: float
-    rotation: float
+    scale: float = field(metadata={"data_field": "s"})
+    horizontal_scale: float = field(metadata={"data_field": "hs"})
+    vertical_scale: float = field(metadata={"data_field": "vs"})
+    rotation: float = field(metadata={"data_field": "rot"})
 
 
+@dataclass
 class InteractiveViewerInteractionEndEvent(ControlEvent):
-    pointer_count: int
-    scale_velocity: float
+    pointer_count: int = field(metadata={"data_field": "pc"})
+    scale_velocity: float = field(metadata={"data_field": "sv"})
 
 
 @control("InteractiveViewer")
