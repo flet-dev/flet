@@ -145,11 +145,21 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
           onHover: onHoverHandler,
           style: style,
           clipBehavior: clipBehavior,
-          icon: widget.control.buildIconOrWidget("icon", color: iconColor),
-          label: widget.control
-                  .buildTextOrWidget("content", textPropertyName: "text") ??
-              const Text(""),
+          icon: iconWidget,
+          label: widget.control.buildTextOrWidget("content",
+              textPropertyName: "text", required: true, error: error)!,
         );
+      } else if (isOutlinedButton) {
+        button = OutlinedButton.icon(
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            onPressed: onPressed,
+            onLongPress: onLongPressHandler,
+            clipBehavior: clipBehavior,
+            style: style,
+            icon: iconWidget,
+            label: widget.control.buildTextOrWidget("content",
+                textPropertyName: "text", required: true, error: error)!);
       } else {
         button = ElevatedButton.icon(
             style: style,
@@ -198,6 +208,17 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             child: widget.control
                     .buildTextOrWidget("content", textPropertyName: "text") ??
                 const Text(""));
+      } else if (isOutlinedButton) {
+        button = OutlinedButton(
+            autofocus: autofocus,
+            focusNode: _focusNode,
+            onPressed: onPressed,
+            onLongPress: onLongPressHandler,
+            clipBehavior: clipBehavior,
+            onHover: onHoverHandler,
+            style: style,
+            child: widget.control
+                .buildTextOrWidget("content", textPropertyName: "text"));
       } else {
         button = ElevatedButton(
             style: style,

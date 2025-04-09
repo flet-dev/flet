@@ -4,12 +4,13 @@ from typing import Optional
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, control
+from flet.controls.control import control
 from flet.controls.types import (
     ClipBehavior,
-    IconValue,
+    IconValueOrControl,
     OptionalColorValue,
     OptionalControlEventCallable,
+    StrOrControl,
     UrlTarget,
 )
 
@@ -40,15 +41,15 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/outlinedbutton
     """
 
-    text: Optional[str] = None
-    icon: Optional[IconValue] = None
+    icon: Optional[IconValueOrControl] = None
     icon_color: OptionalColorValue = None
-    content: Optional[Control] = None
+    content: Optional[StrOrControl] = None
     style: Optional[ButtonStyle] = None
     autofocus: bool = False
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     url: Optional[str] = None
     url_target: Optional[UrlTarget] = None
+    text: Optional[str] = None  # todo(0.70.3): remove in favor of content
     on_click: OptionalControlEventCallable = None
     on_long_press: OptionalControlEventCallable = None
     on_hover: OptionalControlEventCallable = None
