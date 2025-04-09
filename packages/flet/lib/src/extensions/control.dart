@@ -66,6 +66,7 @@ extension WidgetFromControl on Control {
     bool visibleOnly = true,
     bool notifyParent = false,
     Key? key,
+    TextStyle? style,
     String? textPropertyName, //(todo 0.70.3) remove textPropertyName
   }) {
     var content = get(propertyName);
@@ -84,11 +85,11 @@ extension WidgetFromControl on Control {
     }
 
     if (content is String) {
-      return Text(content);
+      return Text(content, style: style);
     }
     //(todo 0.70.3) remove textPropertyName
     if (text != "") {
-      return Text(text);
+      return Text(text, style: style);
     }
     if (required) {
       return error ??

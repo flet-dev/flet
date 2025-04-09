@@ -4,7 +4,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
 import 'base_controls.dart';
-import 'control_widget.dart';
 
 class DropdownControl extends StatefulWidget {
   final Control control;
@@ -59,7 +58,6 @@ class _DropdownControlState extends State<DropdownControl> {
     bool editable = widget.control.getBool("editable", false)!;
     bool autofocus = widget.control.getBool("autofocus", false)!;
     var textSize = widget.control.getDouble("text_size");
-    var label = widget.control.get("label");
     var color = widget.control.getColor("color", context);
 
     TextAlign textAlign = parseTextAlign(
@@ -152,8 +150,6 @@ class _DropdownControlState extends State<DropdownControl> {
       bool itemDisabled = widget.control.disabled || itemCtrl.disabled;
       ButtonStyle? style = parseButtonStyle(itemCtrl.get("style"), theme);
 
-      //var contentCtrl = itemCtrl.child("content");
-
       return DropdownMenuEntry<String>(
         enabled: !itemDisabled,
         value: itemCtrl.getString("key") ??
@@ -162,8 +158,6 @@ class _DropdownControlState extends State<DropdownControl> {
         label: itemCtrl.getString("text") ??
             itemCtrl.getString("key") ??
             itemCtrl.id.toString(),
-        // labelWidget:
-        //     contentCtrl is Control ? ControlWidget(control: contentCtrl) : null,
         labelWidget: itemCtrl.buildWidget("content"),
         leadingIcon: itemCtrl.buildIconOrWidget("leading_icon"),
         trailingIcon: itemCtrl.buildIconOrWidget("trailing_icon"),
@@ -199,12 +193,8 @@ class _DropdownControlState extends State<DropdownControl> {
       enableFilter: widget.control.getBool("enable_filter", false)!,
       enableSearch: widget.control.getBool("enable_search", true)!,
       menuHeight: widget.control.getDouble("menu_height"),
-      label: label is Control
-          ? ControlWidget(control: label)
-          : label is String
-              ? Text(label,
-                  style: widget.control.getTextStyle("label_style", theme))
-              : null,
+      label: widget.control.buildTextOrWidget("label",
+          style: widget.control.getTextStyle("label_style", theme)),
       leadingIcon: widget.control.buildIconOrWidget("leading_icon"),
       trailingIcon: widget.control.buildIconOrWidget("trailing_icon"),
       selectedTrailingIcon:
