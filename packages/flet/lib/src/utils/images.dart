@@ -9,7 +9,7 @@ import 'colors.dart';
 import 'gradient.dart';
 import 'numbers.dart';
 
-export 'images_io.dart' if (dart.library.js) "images_web.dart";
+export "images_web.dart" if (dart.library.io) 'images_io.dart';
 
 ImageRepeat? parseImageRepeat(String? value, [ImageRepeat? defaultValue]) {
   if (value == null) return defaultValue;
@@ -104,6 +104,7 @@ bool isUrlOrPath(String value) {
 
   return false;
 }
+
 extension ImageParsers on Control {
   ImageRepeat? getImageRepeat(String propertyName,
       [ImageRepeat? defaultValue]) {

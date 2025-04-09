@@ -26,10 +26,10 @@ import 'utils/desktop.dart';
 import 'utils/images.dart';
 import 'utils/numbers.dart';
 import 'utils/platform.dart';
-import 'utils/platform_utils_non_web.dart'
-    if (dart.library.js) "utils/platform_utils_web.dart";
-import 'utils/session_store_non_web.dart'
-    if (dart.library.js) "utils/session_store_web.dart";
+import 'utils/platform_utils_web.dart'
+    if (dart.library.io) "utils/platform_utils_non_web.dart";
+import 'utils/session_store_web.dart'
+    if (dart.library.io) "utils/session_store_non_web.dart";
 import 'utils/uri.dart';
 import 'utils/weak_value_map.dart';
 

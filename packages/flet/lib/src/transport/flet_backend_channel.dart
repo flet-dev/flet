@@ -1,8 +1,8 @@
 import '../protocol/message.dart';
-import '../utils/platform_utils_non_web.dart'
-    if (dart.library.js) "utils/platform_utils_web.dart";
-import 'flet_backend_channel_javascript_io.dart'
-    if (dart.library.js) "flet_backend_channel_javascript_web.dart";
+import '../utils/platform_utils_web.dart'
+    if (dart.library.io) "../utils/platform_utils_non_web.dart";
+import 'flet_backend_channel_javascript_web.dart'
+    if (dart.library.io) "flet_backend_channel_javascript_io.dart";
 import 'flet_backend_channel_mock.dart';
 import 'flet_backend_channel_socket.dart';
 import 'flet_backend_channel_web_socket.dart';

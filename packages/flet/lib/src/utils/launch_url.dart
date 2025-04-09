@@ -1,7 +1,7 @@
 import 'package:url_launcher/url_launcher.dart';
 
-import 'platform_utils_non_web.dart'
-    if (dart.library.js) "platform_utils_web.dart";
+import 'platform_utils_web.dart'
+    if (dart.library.io) "platform_utils_non_web.dart";
 
 Future openWebBrowser(String url,
     {String? webWindowName,

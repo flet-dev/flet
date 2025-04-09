@@ -1,8 +1,4 @@
-@JS()
-library;
-
 import 'dart:js_interop';
-import 'dart:js_util';
 
 import 'package:flutter/foundation.dart';
 import 'package:msgpack_dart/msgpack_dart.dart' as msgpack;
@@ -10,15 +6,14 @@ import 'package:msgpack_dart/msgpack_dart.dart' as msgpack;
 import '../protocol/message.dart';
 import 'flet_backend_channel.dart';
 
+@JS()
+external JSPromise jsConnect(JSExportedDartFunction onMessage);
+
+@JS()
+external void jsSend(JSUint8Array data);
+
 typedef FletBackendJavascriptChannelOnMessageCallback = void Function(
-    Uint8List message);
-
-@JS()
-external dynamic jsConnect(
-    FletBackendJavascriptChannelOnMessageCallback onMessage);
-
-@JS()
-external dynamic jsSend(Uint8List data);
+    List<int> message);
 
 class FletJavaScriptBackendChannel implements FletBackendChannel {
   final String address;
@@ -33,11 +28,11 @@ class FletJavaScriptBackendChannel implements FletBackendChannel {
   @override
   connect() async {
     debugPrint("Connecting to Flet JavaScript channel $address...");
-    await promiseToFuture(jsConnect(allowInterop(_onMessage)));
+    await jsConnect(_onMessage.toJS).toDart;
   }
 
-  _onMessage(Uint8List data) {
-    onMessage(msgpack.deserialize(data));
+  void _onMessage(JSUint8Array data) {
+    onMessage(msgpack.deserialize(data.toDart));
   }
 
   @override
@@ -48,7 +43,7 @@ class FletJavaScriptBackendChannel implements FletBackendChannel {
 
   @override
   void send(Message message) {
-    jsSend(msgpack.serialize(message));
+    jsSend(msgpack.serialize(message).toJS);
   }
 
   @override

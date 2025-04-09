@@ -4,8 +4,8 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../protocol/message.dart';
 import '../utils/networking.dart';
-import '../utils/platform_utils_non_web.dart'
-    if (dart.library.js) "../utils/platform_utils_web.dart";
+import '../utils/platform_utils_web.dart'
+    if (dart.library.io) "../utils/platform_utils_non_web.dart";
 import '../utils/uri.dart';
 import 'flet_backend_channel.dart';
 

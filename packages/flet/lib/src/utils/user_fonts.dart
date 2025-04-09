@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/control.dart';
-import 'user_fonts_io.dart' if (dart.library.js) "user_fonts_web.dart";
+import 'user_fonts_web.dart' if (dart.library.io) "user_fonts_io.dart";
 
 class UserFonts {
   static Map<String, FontLoader> fontLoaders = {};
