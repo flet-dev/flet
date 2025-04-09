@@ -21,10 +21,10 @@ from flet.controls.gradients import Gradient
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.theme import Theme
+from flet.controls.transform import Offset
 from flet.controls.types import (
     BlendMode,
     ClipBehavior,
-    Number,
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
@@ -37,10 +37,18 @@ __all__ = ["Container", "ContainerTapEvent"]
 
 @dataclass
 class ContainerTapEvent(ControlEvent):
-    local_x: Number = field(metadata={"data_field": "lx"})
-    local_y: Number = field(metadata={"data_field": "ly"})
-    global_x: Number = field(metadata={"data_field": "gx"})
-    global_y: Number = field(metadata={"data_field": "gy"})
+    local_x: float = field(metadata={"data_field": "lx"})
+    local_y: float = field(metadata={"data_field": "ly"})
+    global_x: float = field(metadata={"data_field": "gx"})
+    global_y: float = field(metadata={"data_field": "gy"})
+
+    @property
+    def local_position(self) -> Offset:
+        return Offset(self.local_x, self.local_y)
+
+    @property
+    def global_position(self) -> Offset:
+        return Offset(self.global_x, self.global_y)
 
 
 @control("Container")

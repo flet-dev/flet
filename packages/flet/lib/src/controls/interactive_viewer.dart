@@ -1,13 +1,12 @@
 import 'dart:convert';
 
-import '../extensions/control.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_backend.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/edge_insets.dart';
-import '../utils/numbers.dart';
 import '../utils/misc.dart';
+import '../utils/numbers.dart';
 import '../utils/time.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
@@ -36,58 +35,61 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
     super.initState();
     _animationController =
         AnimationController(vsync: this, duration: Duration.zero);
+    widget.control.addInvokeMethodListener(_invokeMethod);
+  }
 
-    widget.control.subscribeMethods(widget.control.id,
-        (methodName, args) async {
-      switch (methodName) {
-        case "zoom":
-          var factor = parseDouble(args["factor"]);
-          if (factor != null) {
-            _transformationController.value =
-                _transformationController.value.scaled(factor, factor);
-          }
-          break;
-        case "pan":
-          var dx = parseDouble(args["dx"]);
-          var dy = parseDouble(args["dy"]);
-          if (dx != null && dy != null) {
-            _transformationController.value =
-                _transformationController.value.clone()..translate(dx, dy);
-          }
-          break;
-        case "reset":
-          var duration = parseDuration(args["duration"]);
-          if (duration == null) {
-            _transformationController.value = Matrix4.identity();
-          } else {
-            _animationController.duration = duration;
-            _animation = Matrix4Tween(
-              begin: _transformationController.value,
-              end: Matrix4.identity(),
-            ).animate(_animationController)
-              ..addListener(() {
-                _transformationController.value = _animation!.value;
-              });
-            _animationController.forward(from: 0);
-          }
-          break;
-        case "save_state":
-          _savedMatrix = _transformationController.value.clone();
-          break;
-        case "restore_state":
-          if (_savedMatrix != null) {
-            _transformationController.value = _savedMatrix!;
-          }
-          break;
-      }
-      return null;
-    });
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    debugPrint("OutlinedButton.$name($args)");
+    switch (name) {
+      case "zoom":
+        var factor = parseDouble(args["factor"]);
+        if (factor != null) {
+          _transformationController.value =
+              _transformationController.value.scaled(factor, factor);
+        }
+        break;
+      case "pan":
+        var dx = parseDouble(args["dx"]);
+        var dy = parseDouble(args["dy"]);
+        if (dx != null && dy != null) {
+          _transformationController.value =
+              _transformationController.value.clone()..translate(dx, dy);
+        }
+        break;
+      case "reset":
+        var duration = parseDuration(args["duration"]);
+        if (duration == null) {
+          _transformationController.value = Matrix4.identity();
+        } else {
+          _animationController.duration = duration;
+          _animation = Matrix4Tween(
+            begin: _transformationController.value,
+            end: Matrix4.identity(),
+          ).animate(_animationController)
+            ..addListener(() {
+              _transformationController.value = _animation!.value;
+            });
+          _animationController.forward(from: 0);
+        }
+        break;
+      case "save_state":
+        _savedMatrix = _transformationController.value.clone();
+        break;
+      case "restore_state":
+        if (_savedMatrix != null) {
+          _transformationController.value = _savedMatrix!;
+        }
+        break;
+      default:
+        throw Exception("Unknown InteractiveViewer method: $name");
+    }
   }
 
   @override
   void dispose() {
     _transformationController.dispose();
     _animationController.dispose();
+    widget.control.removeInvokeMethodListener(_invokeMethod);
     super.dispose();
   }
 

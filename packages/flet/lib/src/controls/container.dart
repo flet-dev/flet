@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/animations.dart';
@@ -59,11 +58,8 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     bool onLongPress = control.getBool("on_long_press", false)!;
     bool onHover = control.getBool("on_hover", false)!;
     bool ignoreInteractions = control.getBool("ignore_interactions", false)!;
-    Widget? child = contentCtrl != null
-        ? ControlWidget(
-            control: contentCtrl,
-          )
-        : null;
+    Widget? child =
+        contentCtrl != null ? ControlWidget(control: contentCtrl) : null;
 
     var animation = control.getAnimation("animate");
     var blur = control.getBlur("blur");
@@ -94,9 +90,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     Widget? container;
 
     var onAnimationEnd = control.getBool("on_animation_end", false)!
-        ? () {
-            control.triggerEvent( "animation_end", "container");
-          }
+        ? () => control.triggerEvent("animation_end", "container")
         : null;
     if ((onClick || url != "" || onLongPress || onHover || onTapDown) &&
         ink &&
@@ -114,13 +108,13 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                       openWebBrowser(url, webWindowName: urlTarget);
                     }
                     if (onClick) {
-                     control.triggerEvent( "click");
+                      control.triggerEvent("click");
                     }
                   }
                 : null,
             onTapDown: onTapDown
                 ? (details) {
-                   control.triggerEvent(
+                    control.triggerEvent(
                         "tap_down",
                         ContainerTapEvent(
                                 localX: details.localPosition.dx,
@@ -130,15 +124,10 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                             .toJson());
                   }
                 : null,
-            onLongPress: onLongPress
-                ? () {
-                    control.triggerEvent("long_press");
-                  }
-                : null,
+            onLongPress:
+                onLongPress ? () => control.triggerEvent("long_press") : null,
             onHover: onHover
-                ? (value) {
-                   control.triggerEvent( "hover", value);
-                  }
+                ? (value) => control.triggerEvent("hover", value)
                 : null,
             borderRadius: borderRadius,
             splashColor: control.getColor("inkColor", context),
@@ -205,7 +194,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
               : MouseCursor.defer,
           onEnter: onHover
               ? (value) {
-                 control.triggerEvent("hover", true);
+                  control.triggerEvent("hover", true);
                 }
               : null,
           onExit: onHover
@@ -220,7 +209,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                       openWebBrowser(url, webWindowName: urlTarget);
                     }
                     if (onClick) {
-                     control.triggerEvent( "click");
+                      control.triggerEvent("click");
                     }
                   }
                 : null,
@@ -238,7 +227,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 : null,
             onLongPress: onLongPress
                 ? () {
-                   control.triggerEvent( "long_press");
+                    control.triggerEvent("long_press");
                   }
                 : null,
             child: container,

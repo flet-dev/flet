@@ -31,7 +31,7 @@ class CupertinoTimerPicker(ConstrainedControl):
     alignment: Optional[Alignment] = None
     second_interval: int = 1
     minute_interval: int = 1
-    mode: Optional[CupertinoTimerPickerMode] = None
+    mode: CupertinoTimerPickerMode = CupertinoTimerPickerMode.HOUR_MINUTE_SECONDS
     bgcolor: OptionalColorValue = None
     item_extent: Number = 32.0
     on_change: OptionalControlEventCallable = None

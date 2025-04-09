@@ -27,12 +27,16 @@ import 'controls/cupertino_context_menu_action.dart';
 import 'controls/cupertino_dialog_action.dart';
 import 'controls/cupertino_list_tile.dart';
 import 'controls/cupertino_navigation_bar.dart';
+import 'controls/cupertino_picker.dart';
 import 'controls/cupertino_segmented_button.dart';
 import 'controls/cupertino_slider.dart';
 import 'controls/cupertino_switch.dart';
+import 'controls/cupertino_timer_picker.dart';
 import 'controls/datatable.dart';
 import 'controls/date_picker.dart';
 import 'controls/divider.dart';
+import 'controls/drag_target.dart';
+import 'controls/draggable.dart';
 import 'controls/dropdown.dart';
 import 'controls/expansion_panel.dart';
 import 'controls/expansion_tile.dart';
@@ -42,6 +46,7 @@ import 'controls/grid_view.dart';
 import 'controls/icon.dart';
 import 'controls/icon_button.dart';
 import 'controls/image.dart';
+import 'controls/interactive_viewer.dart';
 import 'controls/line_chart.dart';
 import 'controls/list_tile.dart';
 import 'controls/list_view.dart';
@@ -105,6 +110,10 @@ class FletCoreExtension extends FletExtension {
         return AppBarControl(key: key, control: control);
       case "Banner":
         return BannerControl(key: key, control: control);
+      case "Draggable":
+        return DraggableControl(key: key, control: control);
+      case "DragTarget":
+        return DragTargetControl(key: key, control: control);
       case "BottomAppBar":
         return BottomAppBarControl(key: key, control: control);
       case "BottomSheet":
@@ -151,6 +160,8 @@ class FletCoreExtension extends FletExtension {
         return ChipControl(key: key, control: control);
       case "CircleAvatar":
         return CircleAvatarControl(key: key, control: control);
+      case "InteractiveViewer":
+        return InteractiveViewerControl(key: key, control: control);
       case "IconButton":
         return IconButtonControl(key: key, control: control);
       case "CupertinoActivityIndicator":
@@ -173,6 +184,10 @@ class FletCoreExtension extends FletExtension {
         return CupertinoSwitchControl(key: key, control: control);
       case "CupertinoListTile":
         return CupertinoListTileControl(key: key, control: control);
+      case "CupertinoPicker":
+        return CupertinoPickerControl(key: key, control: control);
+      case "CupertinoTimerPicker":
+        return CupertinoTimerPickerControl(key: key, control: control);
       case "DataTable":
         return DataTableControl(key: key, control: control);
       case "DatePicker":

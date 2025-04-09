@@ -3,11 +3,12 @@ from typing import List, Optional
 
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, control
+from flet.controls.cupertino.cupertino_colors import CupertinoColors
 from flet.controls.types import (
+    ColorValue,
     Number,
     OptionalColorValue,
     OptionalControlEventCallable,
-    OptionalNumber,
 )
 
 __all__ = ["CupertinoPicker"]
@@ -24,7 +25,7 @@ class CupertinoPicker(ConstrainedControl):
     """
 
     controls: List[Control] = field(default_factory=list)
-    item_extent: OptionalNumber = None
+    item_extent: Number = 32.0
     selected_index: int = 0
     bgcolor: OptionalColorValue = None
     use_magnifier: bool = False
@@ -34,7 +35,7 @@ class CupertinoPicker(ConstrainedControl):
     diameter_ratio: Number = 1.07
     off_axis_fraction: Number = 0.0
     selection_overlay: Optional[Control] = None
-    default_selection_overlay_bgcolor: OptionalColorValue = None
+    default_selection_overlay_bgcolor: ColorValue = CupertinoColors.TERTIARY_SYSTEM_FILL
     on_change: OptionalControlEventCallable = None
 
     def before_update(self):

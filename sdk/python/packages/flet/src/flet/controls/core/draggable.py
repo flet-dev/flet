@@ -116,7 +116,7 @@ class Draggable(Control):
     """
 
     content: Control
-    group: Optional[str] = None
+    group: str = "default"
     content_when_dragging: Optional[Control] = None
     content_feedback: Optional[Control] = None
     axis: Optional[Axis] = None
@@ -128,3 +128,6 @@ class Draggable(Control):
     def before_update(self):
         super().before_update()
         assert self.content.visible, "content must be visible"
+        assert self.max_simultaneous_drags is None or (
+            self.max_simultaneous_drags >= 0
+        ), "max_simultaneous_drags must be greater than or equal to 0"
