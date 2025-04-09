@@ -133,8 +133,8 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             clipBehavior: clipBehavior,
             icon: iconWidget,
             //label: contentWidget
-            label:
-                widget.control.buildTextOrWidget("content", required: true)!);
+            label: widget.control.buildTextOrWidget("content",
+                textPropertyName: "text", required: true)!);
       } else if (isFilledTonalButton) {
         button = FilledButton.tonalIcon(
             style: style,
@@ -145,8 +145,8 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
             icon: iconWidget,
-            label:
-                widget.control.buildTextOrWidget("content", required: true)!);
+            label: widget.control.buildTextOrWidget("content",
+                textPropertyName: "text", required: true)!);
       } else {
         button = ElevatedButton.icon(
             style: style,
@@ -157,8 +157,8 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
             icon: iconWidget,
-            label:
-                widget.control.buildTextOrWidget("content", required: true)!);
+            label: widget.control.buildTextOrWidget("content",
+                textPropertyName: "text", required: true)!);
       }
     } else {
       if (isFilledButton) {
@@ -170,7 +170,8 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: widget.control.buildTextOrWidget("content"));
+            child: widget.control
+                .buildTextOrWidget("content", textPropertyName: "text"));
       } else if (isFilledTonalButton) {
         button = FilledButton.tonal(
             style: style,
@@ -180,7 +181,8 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: widget.control.buildTextOrWidget("content"));
+            child: widget.control
+                .buildTextOrWidget("content", textPropertyName: "text"));
       } else {
         button = ElevatedButton(
             style: style,
@@ -190,7 +192,8 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: widget.control.buildTextOrWidget("content"));
+            child: widget.control
+                .buildTextOrWidget("content", textPropertyName: "text"));
       }
     }
 

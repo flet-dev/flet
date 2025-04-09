@@ -77,12 +77,18 @@ extension WidgetFromControl on Control {
     } else if (content is String) {
       return Text(content);
       //(todo 0.70.3) remove textPropertyName
-    } else if (textPropertyName is String) {
-      return Text(get(textPropertyName));
+      // } else if (textPropertyName != null) {
+      //   var s = get(textPropertyName);
+      //   if (s is String) {
+      //     return Text(s);
+      //   }
     } else if (required) {
       return error ??
           ErrorControl("Error displaying $type",
               description: "$propertyName must be specified");
+      // const ErrorControl("Error displaying ElevatedButton",
+      //     description:
+      //         "\"icon\" must be specified together with \"content\"");
     }
     return null;
   }
