@@ -1,14 +1,7 @@
+import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
-import '../models/control.dart';
-import '../utils/buttons.dart';
-import '../utils/colors.dart';
-import '../utils/icons.dart';
-import '../utils/launch_url.dart';
-import '../utils/misc.dart';
-import '../utils/numbers.dart';
 import '../widgets/error.dart';
-import '../widgets/flet_store_mixin.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
 
@@ -66,15 +59,16 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
     String text =
         widget.control.getString("text", "")!; //(todo 0.70.3) remove text
     String url = widget.control.getString("url", "")!;
-    var icon = widget.control.get("icon");
+    //var icon = widget.control.get("icon");
     Color? iconColor = widget.control.getColor("icon_color", context);
 
-    Widget? iconWidget = icon is Control
-        ? ControlWidget(control: icon)
-        : icon is String
-            ? Icon(widget.control.getIcon("icon"), color: iconColor)
-            : null;
-
+    // Widget? iconWidget = icon is Control
+    //     ? ControlWidget(control: icon)
+    //     : icon is String
+    //         ? Icon(widget.control.getIcon("icon"), color: iconColor)
+    //         : null;
+    Widget? iconWidget =
+        widget.control.buildIconOrWidget("icon", color: iconColor);
     var content = widget.control.get("content");
     Widget contentWidget = content is Control
         ? ControlWidget(control: content)
@@ -127,7 +121,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             ? const StadiumBorder()
             : RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)));
 
-    if (icon != null) {
+    if (iconWidget != null) {
       if (contentWidget == const Text("")) {
         return const ErrorControl("Error displaying ElevatedButton",
             description:
