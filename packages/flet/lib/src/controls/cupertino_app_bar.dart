@@ -35,7 +35,7 @@ class CupertinoAppBarControl extends StatelessWidget
             control.getBool("automatically_imply_middle", true)!,
         transitionBetweenRoutes:
             control.getBool("transition_between_routes", true)!,
-        border: parseBorder(Theme.of(context), control.get("border")),
+        border: control.getBorder("border", Theme.of(context)),
         previousPageTitle: control.getString("previous_page_title"),
         padding: control.getEdgeInsetsDirectional("padding"),
         backgroundColor: control.getColor("bgcolor", context),
