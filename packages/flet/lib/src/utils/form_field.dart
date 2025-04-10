@@ -2,13 +2,13 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../controls/control_widget.dart';
+//import '../controls/control_widget.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import 'borders.dart';
 import 'box.dart';
 import 'edge_insets.dart';
-import 'icons.dart';
+//import 'icons.dart';
 import 'numbers.dart';
 import 'text.dart';
 import 'time.dart';
@@ -54,15 +54,26 @@ TextInputType? parseTextInputType(String? value,
 }
 
 InputDecoration buildInputDecoration(BuildContext context, Control control,
-    {Control? prefix,
-    Control? prefixIcon,
-    Control? suffix,
-    Control? suffixIcon,
-    Control? icon,
-    Control? counter,
-    Control? error,
-    Control? helper,
-    Control? label,
+    {
+    //Control? prefix,
+    Widget? prefix,
+    //Control? prefixIcon,
+    Widget? prefixIcon,
+    //Control? suffix,
+    Widget? suffix,
+    //Control? suffixIcon,
+    Widget? suffixIcon,
+    //Control? icon,
+    Widget? icon,
+    //Control? counter,
+    Widget? counter,
+    //Control? error,
+    Widget? error,
+    //Control? helper,
+    Widget? helper,
+    //Control? label,
+    Widget? label,
+    //Widget? customSuffix,
     Widget? customSuffix,
     int? valueLength,
     int? maxLength,
@@ -73,15 +84,15 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
     control.getString("border"),
     FormFieldInputBorder.outline,
   )!;
-  var iconStr = parseIcon(control.getString("icon"));
-  var prefixIconData = parseIcon(control.getString("prefix_icon"));
-  var prefixIconWidget = prefixIcon != null
-      ? ControlWidget(control: prefixIcon)
-      : (prefixIconData != null ? Icon(prefixIconData) : null);
-  var suffixIconData = parseIcon(control.getString("suffix_icon"));
-  var suffixIconWidget = suffixIcon != null
-      ? ControlWidget(control: suffixIcon)
-      : (suffixIconData != null ? Icon(suffixIconData) : null);
+  //var iconStr = parseIcon(control.getString("icon"));
+  //var prefixIconData = parseIcon(control.getString("prefix_icon"));
+  // var prefixIconWidget = prefixIcon != null
+  //     ? ControlWidget(control: prefixIcon)
+  //     : (prefixIconData != null ? Icon(prefixIconData) : null);
+  //var suffixIconData = parseIcon(control.getString("suffix_icon"));
+  // var suffixIconWidget = suffixIcon != null
+  //     ? ControlWidget(control: suffixIcon)
+  //     : (suffixIconData != null ? Icon(suffixIconData) : null);
   var prefixText = control.getString("prefix_text");
   var suffixText = control.getString("suffix_text");
 
@@ -91,7 +102,7 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
   var hoverColor = control.getColor("hover_color", context);
   var borderColor = control.getColor("border_color", context);
 
-  var borderRadius = parseBorderRadius(control.get("border_radius"));
+  var borderRadius = control.getBorderRadius("border_radius");
   var focusedBorderColor = control.getColor("focused_border_color", context);
   var borderWidth = control.getDouble("border_width");
   var focusedBorderWidth = control.getDouble("focused_border_width");
@@ -154,60 +165,64 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
 
   return InputDecoration(
       enabled: !disabled,
-      contentPadding: parseEdgeInsets(control.get("content_padding")),
+      contentPadding: control.getEdgeInsets("content_padding"),
       isDense: control.getBool("dense"),
-      label: label != null
-          ? ControlWidget(control: label)
-          : control.getString("label") != null
-              ? Text(control.getString("label")!)
-              : null,
-      labelStyle: parseTextStyle(control.get("label_style"), Theme.of(context)),
+      // label: label != null
+      //     ? ControlWidget(control: label)
+      //     : control.getString("label") != null
+      //         ? Text(control.getString("label")!)
+      //         : null,
+      label: label,
+      labelStyle: control.getTextStyle("label_style", Theme.of(context)),
       border: border,
       enabledBorder: border,
       focusedBorder: focusedBorder,
       hoverColor: hoverColor,
-      icon: icon != null
-          ? ControlWidget(control: icon)
-          : iconStr != null
-              ? Icon(iconStr)
-              : null,
+      // icon: icon != null
+      //     ? ControlWidget(control: icon)
+      //     : iconStr != null
+      //         ? Icon(iconStr)
+      //         : null,
+      icon: icon,
       filled: control.getBool("filled", false)!,
       fillColor: fillColor ?? (focused ? focusedBgcolor ?? bgcolor : bgcolor),
       hintText: control.getString("hint_text"),
-      hintStyle: parseTextStyle(control.get("hint_style"), Theme.of(context)),
+      hintStyle: control.getTextStyle("hint_style", Theme.of(context)),
       helperText: control.getString("helper_text"),
-      helperStyle:
-          parseTextStyle(control.get("helper_style"), Theme.of(context)),
+      helperStyle: control.getTextStyle("helper_style", Theme.of(context)),
       counterText: counterText,
-      counterStyle:
-          parseTextStyle(control.get("counter_style"), Theme.of(context)),
-      counter: counter != null ? ControlWidget(control: counter) : null,
-      error: error != null ? ControlWidget(control: error) : null,
-      helper: helper != null ? ControlWidget(control: helper) : null,
-      constraints: parseBoxConstraints(control.get("size_constraints")),
+      counterStyle: control.getTextStyle("counter_style", Theme.of(context)),
+      //counter: counter != null ? ControlWidget(control: counter) : null,
+      counter: counter,
+      //error: error != null ? ControlWidget(control: error) : null,
+      error: error,
+      //helper: helper != null ? ControlWidget(control: helper) : null,
+      helper: helper,
+      constraints: control.getBoxConstraints("size_constraints"),
       isCollapsed: control.getBool("collapsed"),
       prefixIconConstraints:
-          parseBoxConstraints(control.get("prefix_icon_constraints")),
+          control.getBoxConstraints("prefix_icon_constraints"),
       suffixIconConstraints:
-          parseBoxConstraints(control.get("suffix_icon_constraints")),
+          control.getBoxConstraints("suffix_icon_constraints"),
       focusColor: control.getColor("focus_color", context),
       errorMaxLines: control.getInt("error_max_lines"),
       alignLabelWithHint: control.getBool("align_label_with_hint"),
       errorText: control.getString("error_text"),
-      errorStyle: parseTextStyle(control.get("error_style"), Theme.of(context)),
-      prefixIcon: prefixIconWidget,
-      prefixText: prefix == null ? prefixText : null,
-      hintFadeDuration: parseDuration(control.get("hint_fade_duration")),
+      errorStyle: control.getTextStyle("error_style", Theme.of(context)),
+      prefixIcon: prefixIcon,
+      //prefixText: prefix == null ? prefixText : null,
+      prefixText: prefixText,
+      hintFadeDuration: control.getDuration("hint_fade_duration"),
       hintMaxLines: control.getInt("hint_max_lines"),
       helperMaxLines: control.getInt("helper_max_lines"),
-      prefixStyle:
-          parseTextStyle(control.get("prefix_style"), Theme.of(context)),
-      prefix: prefix != null ? ControlWidget(control: prefix) : null,
-      suffix: suffix != null ? ControlWidget(control: suffix) : null,
-      suffixIcon: suffixIconWidget ?? customSuffix,
+      prefixStyle: control.getTextStyle("prefix_style", Theme.of(context)),
+      //prefix: prefix != null ? ControlWidget(control: prefix) : null,
+      prefix: prefix,
+      //suffix: suffix != null ? ControlWidget(control: suffix) : null,
+      suffix: suffix,
+      suffixIcon: suffixIcon ?? customSuffix,
       suffixText: suffix == null ? suffixText : null,
-      suffixStyle:
-          parseTextStyle(control.get("suffix_style"), Theme.of(context)));
+      suffixStyle: control.getTextStyle("suffix_style", Theme.of(context)));
 }
 
 OverlayVisibilityMode? parseVisibilityMode(String? value,

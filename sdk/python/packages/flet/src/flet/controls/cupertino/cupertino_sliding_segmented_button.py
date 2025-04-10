@@ -1,10 +1,16 @@
 from dataclasses import field
 from typing import List
 
+from flet.controls import padding
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, control
-from flet.controls.padding import OptionalPaddingValue
-from flet.controls.types import OptionalColorValue, OptionalControlEventCallable
+from flet.controls.cupertino.cupertino_colors import CupertinoColors
+from flet.controls.padding import PaddingValue
+from flet.controls.types import (
+    ColorValue,
+    OptionalColorValue,
+    OptionalControlEventCallable,
+)
 
 __all__ = ["CupertinoSlidingSegmentedButton"]
 
@@ -20,15 +26,17 @@ class CupertinoSlidingSegmentedButton(ConstrainedControl):
     """
 
     controls: List[Control] = field(default_factory=list)
-    selected_index: int = field(default=0)
-    bgcolor: OptionalColorValue = None
+    selected_index: int = 0
+    bgcolor: ColorValue = CupertinoColors.TERTIARY_SYSTEM_FILL
     thumb_color: OptionalColorValue = None
-    padding: OptionalPaddingValue = None
+    padding: PaddingValue = field(
+        default_factory=lambda: padding.symmetric(vertical=2, horizontal=3)
+    )
     proportional_width: bool = False
     on_change: OptionalControlEventCallable = None
 
     def before_update(self):
         super().before_update()
-        assert len(self.controls) >= 2 and any(
-            c.visible for c in self.controls
+        assert (
+            sum(c.visible for c in self.controls) >= 2
         ), "controls must have at minimum two visible Controls"

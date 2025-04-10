@@ -22,15 +22,15 @@ __all__ = [
 @dataclass
 class InteractiveViewerInteractionStartEvent(ControlEvent):
     pointer_count: int = field(metadata={"data_field": "pc"})
-    global_focal_point: Offset
-    local_focal_point: Offset
+    global_focal_point: Offset = field(metadata={"data_field": "gfp"})
+    local_focal_point: Offset = field(metadata={"data_field": "lfp"})
 
 
 @dataclass
 class InteractiveViewerInteractionUpdateEvent(ControlEvent):
     pointer_count: int = field(metadata={"data_field": "pc"})
-    global_focal_point: Offset
-    local_focal_point: Offset
+    global_focal_point: Offset = field(metadata={"data_field": "gfp"})
+    local_focal_point: Offset = field(metadata={"data_field": "lfp"})
     scale: float = field(metadata={"data_field": "s"})
     horizontal_scale: float = field(metadata={"data_field": "hs"})
     vertical_scale: float = field(metadata={"data_field": "vs"})

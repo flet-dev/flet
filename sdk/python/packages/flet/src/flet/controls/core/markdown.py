@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from typing import Optional, Union
 
@@ -14,6 +14,7 @@ from flet.controls.types import (
     OptionalEventCallable,
     OptionalNumber,
     TextAlign,
+    UrlTarget,
 )
 
 __all__ = [
@@ -238,15 +239,15 @@ class Markdown(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/markdown
     """
 
-    value: Optional[str] = None
-    selectable: bool = field(default=False)
-    extension_set: Optional[MarkdownExtensionSet] = None
+    value: str = ""
+    selectable: bool = False
+    extension_set: MarkdownExtensionSet = MarkdownExtensionSet.NONE
     code_theme: Optional[Union[MarkdownCodeTheme, MarkdownCustomCodeTheme]] = None
-    auto_follow_links: bool = field(default=False)
-    shrink_wrap: bool = field(default=True)
-    fit_content: bool = field(default=True)
-    soft_line_break: bool = field(default=False)
-    auto_follow_links_target: Optional[str] = None
+    auto_follow_links: bool = False
+    shrink_wrap: bool = True
+    fit_content: bool = True
+    soft_line_break: bool = False
+    auto_follow_links_target: Optional[UrlTarget] = None
     img_error_content: Optional[Control] = None
     code_style_sheet: Optional[MarkdownStyleSheet] = None
     md_style_sheet: Optional[MarkdownStyleSheet] = None
