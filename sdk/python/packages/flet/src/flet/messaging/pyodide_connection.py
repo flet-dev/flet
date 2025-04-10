@@ -63,8 +63,7 @@ class PyodideConnection(Connection):
                 self.session = Session(self)
 
                 # apply page patch
-                if not req.session_id:
-                    self.session.apply_page_patch(req.page)
+                self.session.apply_page_patch(req.page)
 
                 # register response
                 self.send_message(
