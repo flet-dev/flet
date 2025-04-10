@@ -47,6 +47,7 @@ import 'controls/expansion_panel.dart';
 import 'controls/expansion_tile.dart';
 import 'controls/flet_app_control.dart';
 import 'controls/floating_action_button.dart';
+import 'controls/gesture_detector.dart';
 import 'controls/grid_view.dart';
 import 'controls/icon.dart';
 import 'controls/icon_button.dart';
@@ -152,6 +153,8 @@ class FletCoreExtension extends FletExtension {
         return MergeSemanticsControl(key: key, control: control);
       case "Column":
         return ColumnControl(key: key, control: control);
+      case "GestureDetector":
+        return GestureDetectorControl(key: key, control: control);
       case "GridView":
         return GridViewControl(key: key, control: control);
       case "NavigationBar":

@@ -1,32 +1,20 @@
 import 'dart:async';
-import 'dart:convert';
 
+import 'package:flet/src/extensions/control.dart';
+import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/misc.dart';
 import '../utils/mouse.dart';
-import '../utils/others.dart';
-import 'create_control.dart';
-import 'error.dart';
+import '../widgets/error.dart';
+import 'base_controls.dart';
 
 class GestureDetectorControl extends StatefulWidget {
-  final Control? parent;
   final Control control;
-  final List<Control> children;
-  final bool parentDisabled;
-  final bool? parentAdaptive;
-  final FletControlBackend backend;
 
-  const GestureDetectorControl(
-      {super.key,
-      this.parent,
-      required this.control,
-      required this.children,
-      required this.parentDisabled,
-      required this.parentAdaptive,
-      required this.backend});
+  const GestureDetectorControl({super.key, required this.control});
 
   @override
   State<GestureDetectorControl> createState() => _GestureDetectorControlState();
@@ -62,71 +50,59 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
   Widget build(BuildContext context) {
     debugPrint("GestureDetector build: ${widget.control.id}");
 
-    var contentCtrls =
-        widget.children.where((c) => c.name == "content" && c.visible);
-    bool disabled = widget.control.disabled || widget.parentDisabled;
+    var content = widget.control.buildWidget("content");
 
-    void sendEvent(String eventName, [dynamic eventData = ""]) {
-      var d = "";
-      if (eventData is String) {
-        d = eventData;
-      } else if (eventData is Map) {
-        d = json.encode(eventData);
-      }
-
-      debugPrint("GestureDetector ${widget.control.id} $eventName");
-      widget.backend.triggerControlEvent(widget.control.id, eventName, d);
+    void sendEvent(String name, [dynamic data]) {
+      widget.control.triggerEvent(name, data);
     }
 
-    var onHover = widget.control.getBool("onHover", false)!;
-    var onEnter = widget.control.getBool("onEnter", false)!;
-    var onExit = widget.control.getBool("onExit", false)!;
-    var onTap = widget.control.getBool("onTap", false)!;
-    var onTapDown = widget.control.getBool("onTapDown", false)!;
-    var onTapUp = widget.control.getBool("onTapUp", false)!;
-    var onSecondaryTap = widget.control.getBool("onSecondaryTap", false)!;
+    var onHover = widget.control.getBool("on_hover", false)!;
+    var onEnter = widget.control.getBool("on_enter", false)!;
+    var onExit = widget.control.getBool("on_exit", false)!;
+    var onTap = widget.control.getBool("on_tap", false)!;
+    var onTapDown = widget.control.getBool("on_tap_down", false)!;
+    var onTapUp = widget.control.getBool("on_tap_up", false)!;
+    var onSecondaryTap = widget.control.getBool("on_secondary_tap", false)!;
     var onSecondaryTapDown =
-        widget.control.getBool("onSecondaryTapDown", false)!;
-    var onSecondaryTapUp = widget.control.getBool("onSecondaryTapUp", false)!;
-    var onLongPressStart = widget.control.getBool("onLongPressStart", false)!;
-    var onLongPressEnd = widget.control.getBool("onLongPressEnd", false)!;
+        widget.control.getBool("on_secondary_tap_down", false)!;
+    var onSecondaryTapUp =
+        widget.control.getBool("on_secondary_tap_up", false)!;
+    var onLongPressStart =
+        widget.control.getBool("on_long_press_start", false)!;
+    var onLongPressEnd = widget.control.getBool("on_long_press_end", false)!;
     var onSecondaryLongPressStart =
-        widget.control.getBool("onSecondaryLongPressStart", false)!;
+        widget.control.getBool("on_secondary_long_press_start", false)!;
     var onSecondaryLongPressEnd =
-        widget.control.getBool("onSecondaryLongPressEnd", false)!;
-    var onDoubleTap = widget.control.getBool("onDoubleTap", false)!;
-    var onDoubleTapDown = widget.control.getBool("onDoubleTapDown", false)!;
+        widget.control.getBool("on_secondary_long_press_end", false)!;
+    var onDoubleTap = widget.control.getBool("on_double_tap", false)!;
+    var onDoubleTapDown = widget.control.getBool("on_double_tap_down", false)!;
     var onHorizontalDragStart =
-        widget.control.getBool("onHorizontalDragStart", false)!;
+        widget.control.getBool("on_horizontal_drag_start", false)!;
     var onHorizontalDragUpdate =
-        widget.control.getBool("onHorizontalDragUpdate", false)!;
+        widget.control.getBool("on_horizontal_drag_update", false)!;
     var onHorizontalDragEnd =
-        widget.control.getBool("onHorizontalDragEnd", false)!;
+        widget.control.getBool("on_horizontal_drag_end", false)!;
     var onVerticalDragStart =
-        widget.control.getBool("onVerticalDragStart", false)!;
+        widget.control.getBool("on_vertical_drag_start", false)!;
     var onVerticalDragUpdate =
-        widget.control.getBool("onVerticalDragUpdate", false)!;
-    var onVerticalDragEnd = widget.control.getBool("onVerticalDragEnd", false)!;
-    var onPanStart = widget.control.getBool("onPanStart", false)!;
-    var onPanUpdate = widget.control.getBool("onPanUpdate", false)!;
-    var onPanEnd = widget.control.getBool("onPanEnd", false)!;
-    var onScaleStart = widget.control.getBool("onScaleStart", false)!;
-    var onScaleUpdate = widget.control.getBool("onScaleUpdate", false)!;
-    var onScaleEnd = widget.control.getBool("onScaleEnd", false)!;
-    var onMultiTap = widget.control.getBool("onMultiTap", false)!;
-    var onMultiLongPress = widget.control.getBool("onMultiLongPress", false)!;
-    var multiTapTouches = widget.control.getInt("multiTapTouches", 0)!;
-    var onScroll = widget.control.getBool("onScroll", false)!;
-
-    var content = contentCtrls.isNotEmpty
-        ? createControl(widget.control, contentCtrls.first.id, disabled,
-            parentAdaptive:
-                widget.control.getBool("adaptive") ?? widget.parentAdaptive)
-        : null;
+        widget.control.getBool("on_vertical_drag_update", false)!;
+    var onVerticalDragEnd =
+        widget.control.getBool("on_vertical_drag_end", false)!;
+    var onPanStart = widget.control.getBool("on_pan_start", false)!;
+    var onPanUpdate = widget.control.getBool("on_pan_update", false)!;
+    var onPanEnd = widget.control.getBool("on_pan_end", false)!;
+    var onScaleStart = widget.control.getBool("on_scale_start", false)!;
+    var onScaleUpdate = widget.control.getBool("on_scale_update", false)!;
+    var onScaleEnd = widget.control.getBool("on_scale_end", false)!;
+    var onMultiTap = widget.control.getBool("on_multi_tap", false)!;
+    var onMultiLongPress =
+        widget.control.getBool("on_multi_long_press", false)!;
+    var multiTapTouches = widget.control.getInt("multi_tap_touches", 0)!;
+    var onScroll = widget.control.getBool("on_scroll", false)!;
 
     Widget? result = content;
 
-    var dragInterval = widget.control.getInt("dragInterval", 0)!;
+    var dragInterval = widget.control.getInt("drag_interval", 0)!;
 
     void handlePanStart(DragStartDetails details) {
       _panX = details.localPosition.dx;
@@ -236,7 +212,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
       }
     }
 
-    var hoverInterval = widget.control.getInt("hoverInterval", 0)!;
+    var hoverInterval = widget.control.getInt("hover_interval", 0)!;
 
     void handleEnter(PointerEnterEvent details) {
       _hoverX = details.localPosition.dx;
@@ -301,24 +277,16 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
         ? GestureDetector(
             behavior: HitTestBehavior.translucent,
             excludeFromSemantics:
-                widget.control.getBool("excludeFromSemantics", false)!,
+                widget.control.getBool("exclude_from_semantics", false)!,
             trackpadScrollCausesScale:
-                widget.control.getBool("trackpadScrollCausesScale", false)!,
+                widget.control.getBool("trackpad_scroll_causes_scale", false)!,
             supportedDevices: () {
-              var supportedDevicesString =
-                  widget.control.getString("allowedDevices");
-              var supportedDevicesJson = supportedDevicesString != null
-                  ? jsonDecode(supportedDevicesString)
-                  : null;
-              if (supportedDevicesJson != null &&
-                  (supportedDevicesJson is Iterable &&
-                      supportedDevicesJson is! Map)) {
-                return supportedDevicesJson
-                    .map((d) => parsePointerDeviceKind(d))
-                    .nonNulls
-                    .toSet();
-              }
-              return null;
+              var supportedDevices =
+                  widget.control.get<List<String?>>("allowed_devices");
+              return supportedDevices
+                  ?.map((d) => parsePointerDeviceKind(d))
+                  .nonNulls
+                  .toSet();
             }(),
             onTap: onTap
                 ? () {
@@ -535,7 +503,8 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                   instance.minNumberOfTouches = multiTapTouches;
                   instance.onMultiTap = (correctNumberOfTouches) {
                     if (onMultiTap) {
-                      sendEvent("multi_tap", correctNumberOfTouches.toString());
+                      sendEvent(
+                          "multi_tap", {"correct": correctNumberOfTouches});
                     }
                     if (onMultiLongPress) {
                       if (correctNumberOfTouches) {
@@ -574,7 +543,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
           )
         : result;
 
-    var mouseCursor = widget.control.getString("mouseCursor");
+    var mouseCursor = widget.control.getString("mouse_cursor");
     result = ((mouseCursor != null) || onHover || onEnter || onExit)
         ? MouseRegion(
             cursor: parseMouseCursor(mouseCursor, MouseCursor.defer)!,
@@ -605,7 +574,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
           "GestureDetector should have at least one event handler defined");
     }
 
-    return constrainedControl(context, result, widget.parent, widget.control);
+    return ConstrainedControl(control: widget.control, child: result);
   }
 }
 
