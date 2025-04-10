@@ -32,18 +32,18 @@ class FletJavaScriptBackendChannel implements FletBackendChannel {
   }
 
   void _onMessage(JSUint8Array data) {
-    onMessage(msgpack.deserialize(data.toDart));
+    onMessage(Message.fromJson(msgpack.deserialize(data.toDart)));
   }
 
   @override
   bool get isLocalConnection => true;
 
   @override
-  int get defaultReconnectIntervalMs => 10;
+  int get defaultReconnectIntervalMs => 10000;
 
   @override
   void send(Message message) {
-    jsSend(msgpack.serialize(message).toJS);
+    jsSend(msgpack.serialize(message.toJson()).toJS);
   }
 
   @override

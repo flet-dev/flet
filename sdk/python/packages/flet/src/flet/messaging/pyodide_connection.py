@@ -1,15 +1,23 @@
 import asyncio
-import json
 import logging
-from typing import List
+from typing import Any
 
 import flet_js
+import msgpack
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,
     ClientMessage,
+    ControlEventBody,
+    InvokeMethodResponseBody,
     RegisterClientRequestBody,
+    RegisterClientResponseBody,
+    UpdateControlPropsBody,
+    decode_ext_from_msgpack,
+    encode_object_for_msgpack,
 )
+from flet.messaging.session import Session
+from flet.pubsub.pubsub_hub import PubSubHub
 
 logger = logging.getLogger("flet")
 
@@ -17,14 +25,14 @@ logger = logging.getLogger("flet")
 class PyodideConnection(Connection):
     def __init__(
         self,
-        on_event,
         on_session_created,
     ):
         super().__init__()
         self.__receive_queue = asyncio.Queue()
-        self.__on_event = on_event
         self.__on_session_created = on_session_created
         flet_js.start_connection = self.connect
+        self.__running_tasks = set()
+        self.pubsubhub = PubSubHub()
 
     async def connect(self, send_callback):
         logger.info("Starting Pyodide connection...")
@@ -35,64 +43,74 @@ class PyodideConnection(Connection):
 
     async def receive_loop(self):
         while True:
-            message = await self.__receive_queue.get()
+            data = await self.__receive_queue.get()
+            message = msgpack.unpackb(data.to_py(), ext_hook=decode_ext_from_msgpack)
             await self.__on_message(message)
 
-    def send_from_js(self, message: str):
-        logger.debug(f"Sending data from JavaScript to Python: {message}")
+    def send_from_js(self, message: Any):
         self.__receive_queue.put_nowait(message)
 
-    async def __on_message(self, data: str):
-        logger.debug(f"_on_message: {data}")
-        msg_dict = json.loads(data)
-        msg = ClientMessage(**msg_dict)
-        if msg.action == ClientAction.REGISTER_CLIENT:
-            self._client_details = RegisterClientRequestBody(**msg.payload)
+    async def __on_message(self, data: Any):
+        action = ClientAction(data[0])
+        body = data[1]
+        print(f"_on_message: {action} {body}")
+        task = None
+        if action == ClientAction.REGISTER_CLIENT:
+            req = RegisterClientRequestBody(**body)
 
-            # register response
-            self.__send(self._create_register_web_client_response())
+            try:
+                # create new session
+                self.session = Session(self)
 
-            # start session
-            if self.__on_session_created is not None:
-                asyncio.create_task(
-                    self.__on_session_created(self._create_session_handler_arg())
+                # apply page patch
+                if not req.session_id:
+                    self.session.apply_page_patch(req.page)
+
+                # register response
+                self.send_message(
+                    ClientMessage(
+                        ClientAction.REGISTER_CLIENT,
+                        RegisterClientResponseBody(
+                            session_id=self.session.id,
+                            page_patch=self.session.get_page_patch(),
+                            error="",
+                        ),
+                    )
                 )
 
-        elif msg.action == ClientAction.CONTROL_EVENT:
-            if self.__on_event is not None:
-                asyncio.create_task(
-                    self.__on_event(self._create_page_event_handler_arg(msg))
-                )
+                # start session
+                if self.__on_session_created is not None:
+                    task = asyncio.create_task(self.__on_session_created(self.session))
+            except Exception as ex:
+                logger.debug(f"Error creating session: {ex}", exc_info=True)
 
-        elif msg.action == ClientAction.UPDATE_CONTROL_PROPS:
-            if self.__on_event is not None:
-                asyncio.create_task(
-                    self.__on_event(self._create_update_control_props_handler_arg(msg))
-                )
+        elif action == ClientAction.CONTROL_EVENT:
+            req = ControlEventBody(**body)
+            task = asyncio.create_task(
+                self.session.dispatch_event(req.target, req.name, req.data)
+            )
+
+        elif action == ClientAction.UPDATE_CONTROL_PROPS:
+            req = UpdateControlPropsBody(**body)
+            self.session.apply_patch(req.id, req.props)
+
+        elif action == ClientAction.INVOKE_METHOD:
+            req = InvokeMethodResponseBody(**body)
+            self.session.handle_invoke_method_results(
+                req.control_id, req.call_id, req.result, req.error
+            )
+
         else:
             # it's something else
-            raise Exception(f'Unknown message "{msg.action}": {msg.payload}')
+            raise Exception(f'Unknown message "{action}": {body}')
 
-    def send_command(self, session_id: str, command: Command):
-        result, message = self._process_command(command)
-        if message:
-            self.__send(message)
-        return PageCommandResponsePayload(result=result, error="")
+        if task:
+            self.__running_tasks.add(task)
+            task.add_done_callback(self.__running_tasks.discard)
 
-    def send_commands(self, session_id: str, commands: List[Command]):
-        results = []
-        messages = []
-        for command in commands:
-            result, message = self._process_command(command)
-            if command.name in ["add", "get"]:
-                results.append(result)
-            if message:
-                messages.append(message)
-        if len(messages) > 0:
-            self.__send(ClientMessage(ClientAction.PAGE_CONTROLS_BATCH, messages))
-        return PageCommandsBatchResponsePayload(results=results, error="")
-
-    def __send(self, message: ClientMessage):
-        j = json.dumps(message, cls=CommandEncoder, separators=(",", ":"))
-        logger.debug(f"__send: {j}")
-        self.send_callback(j)
+    def send_message(self, message: ClientMessage):
+        # print(f"Sending: {message}")
+        m = msgpack.packb(
+            [message.action, message.body], default=encode_object_for_msgpack
+        )
+        self.send_callback(m)

@@ -17,12 +17,12 @@ documentUrl = document.URL;
 // initialize worker
 pythonWorker.postMessage({ documentUrl, micropipIncludePre, pythonModuleName });
 
-async function jsConnect(receiveCallback) {
+globalThis.jsConnect = async function(receiveCallback) {
     _onReceivedCallback = receiveCallback;
     await pythonInitialized;
-    console.log("Python engine initialized!");
+    console.log("Pyodide engine initialized!");
 }
 
-async function jsSend(data) {
+globalThis.jsSend = async function(data) {
     pythonWorker.postMessage(data);
 }

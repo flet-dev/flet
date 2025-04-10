@@ -302,37 +302,24 @@ async def __run_web_server(
 
 
 def __run_pyodide(target):
-    from flet.pyodide_connection import PyodideConnection
+    from flet.messaging.pyodide_connection import PyodideConnection
 
-    async def on_event(e):
-        if e.sessionID in conn.sessions:
-            await conn.sessions[e.sessionID].on_event_async(
-                ControlEvent(e.eventTarget, e.eventName, e.eventData)
-            )
-            if e.eventTarget == "page" and e.eventName == "close":
-                logger.info(f"Session closed: {e.sessionID}")
-                del conn.sessions[e.sessionID]
-
-    async def on_session_created(session_data):
-        page = Page(conn, session_data.sessionID, loop=asyncio.get_running_loop())
-        await page.fetch_page_details_async()
-        conn.sessions[session_data.sessionID] = page
+    async def on_session_created(session: Session):
         logger.info("App session started")
         try:
             assert target is not None
             if asyncio.iscoroutinefunction(target):
-                await target(page)
+                await target(session.page)
             else:
-                target(page)
+                target(session.page)
         except Exception as e:
             print(
-                f"Unhandled error processing page session {page.session_id}:",
+                f"Unhandled error processing page session {session.id}:",
                 traceback.format_exc(),
             )
-            page.error(f"There was an error while processing your request: {e}")
+            session.error(f"There was an error while processing your request: {e}")
 
     conn = PyodideConnection(
-        on_event=on_event,
         on_session_created=on_session_created,
     )
 
