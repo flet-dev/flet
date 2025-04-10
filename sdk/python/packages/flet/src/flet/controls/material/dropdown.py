@@ -19,6 +19,7 @@ from flet.controls.types import (
     OptionalColorValue,
     OptionalEventCallable,
     OptionalNumber,
+    StrOrControl,
     TextAlign,
 )
 
@@ -82,7 +83,7 @@ class Dropdown(ConstrainedControl):
     error_text: Optional[str] = None
     text_size: OptionalNumber = None
     text_style: Optional[TextStyle] = None
-    label: Optional[Union[str, Control]] = None
+    label: Optional[StrOrControl] = None
     label_style: Optional[TextStyle] = None
     border: Optional[InputBorder] = None
     color: OptionalColorValue = None

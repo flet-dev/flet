@@ -1,4 +1,5 @@
 import 'package:flet/src/extensions/control.dart';
+import 'package:flet/src/utils/colors.dart';
 import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -145,47 +146,57 @@ class _TextFieldControlState extends State<TextFieldControl>
 
     // var prefixControls =
     //     widget.children.where((c) => c.name == "prefix" && c.isVisible);
-    var prefixControl = widget.control.child("prefix");
-    var prefixIconControls =
-        widget.children.where((c) => c.name == "prefix_icon" && c.isVisible);
-    var suffixControls =
-        widget.children.where((c) => c.name == "suffix" && c.isVisible);
-    var suffixIconControls =
-        widget.children.where((c) => c.name == "suffix_icon" && c.isVisible);
-    var iconControls =
-        widget.children.where((c) => c.name == "icon" && c.isVisible);
-    var counterControls =
-        widget.children.where((c) => c.name == "counter" && c.isVisible);
-    var errorCtrl =
-        widget.children.where((c) => c.name == "error" && c.isVisible);
-    var helperCtrl =
-        widget.children.where((c) => c.name == "helper" && c.isVisible);
-    var labelCtrl =
-        widget.children.where((c) => c.name == "label" && c.isVisible);
+    Widget? prefixWidget = widget.control.buildWidget("prefix");
+    // var prefixIconControls =
+    //     widget.children.where((c) => c.name == "prefix_icon" && c.isVisible);
+    Widget? prefixIconWidget = widget.control.buildIconOrWidget("prefix_icon");
+    // var suffixControls =
+    //     widget.children.where((c) => c.name == "suffix" && c.isVisible);
+    Widget? suffixWidget = widget.control.buildWidget("suffix");
+    // var suffixIconControls =
+    //     widget.children.where((c) => c.name == "suffix_icon" && c.isVisible);
+    Widget? suffixIconWidget = widget.control.buildIconOrWidget("suffix_icon");
+    // var iconControls =
+    //     widget.children.where((c) => c.name == "icon" && c.isVisible);
+    Widget? iconWidget = widget.control.buildIconOrWidget("icon");
+    // var counterControls =
+    //     widget.children.where((c) => c.name == "counter" && c.isVisible);
+    Widget? counterWidget = widget.control.buildWidget("counter");
+    // var errorCtrl =
+    //     widget.children.where((c) => c.name == "error" && c.isVisible);
+    Widget? errorWidget = widget.control.buildWidget("error");
+    // var helperCtrl =
+    //     widget.children.where((c) => c.name == "helper" && c.isVisible);
+    Widget? helperWidget = widget.control.buildWidget("helper");
+    // var labelCtrl =
+    //     widget.children.where((c) => c.name == "label" && c.isVisible);
+    Widget? labelWidget = widget.control.buildTextOrWidget("label");
 
-    bool shiftEnter = widget.control.attrBool("shiftEnter", false)!;
-    bool multiline = widget.control.attrBool("multiline", false)! || shiftEnter;
-    int minLines = widget.control.attrInt("minLines", 1)!;
-    int? maxLines = widget.control.attrInt("maxLines", multiline ? null : 1);
+    bool shiftEnter = widget.control.getBool("shift_enter", false)!;
+    bool multiline = widget.control.getBool("multiline", false)! || shiftEnter;
+    int minLines = widget.control.getInt("min_lines", 1)!;
+    int? maxLines = widget.control.getInt("max_lines", multiline ? null : 1);
 
-    bool password = widget.control.attrBool("password", false)!;
+    bool password = widget.control.getBool("password", false)!;
     bool canRevealPassword =
-        widget.control.attrBool("canRevealPassword", false)!;
-    var cursorColor = widget.control.attrColor("cursorColor", context);
-    var selectionColor = widget.control.attrColor("selectionColor", context);
-    var textSize = widget.control.attrDouble("textSize");
-    var color = widget.control.attrColor("color", context);
-    var focusedColor = widget.control.attrColor("focusedColor", context);
+        widget.control.getBool("can_reveal_password", false)!;
+    var cursorColor = widget.control.getColor("cursor_color", context);
+    var selectionColor = widget.control.getColor("selection_color", context);
+    var textSize = widget.control.getDouble("text_size");
+    var color = widget.control.getColor("color", context);
+    var focusedColor = widget.control.getColor("focused_color", context);
 
+    // TextStyle? textStyle =
+    //     getTextStyle(Theme.of(context), widget.control, "textStyle");
     TextStyle? textStyle =
-        parseTextStyle(Theme.of(context), widget.control, "textStyle");
+        widget.control.getTextStyle("text_style", Theme.of(context));
     if (textSize != null || color != null || focusedColor != null) {
       textStyle = (textStyle ?? const TextStyle()).copyWith(
           fontSize: textSize, color: _focused ? focusedColor ?? color : color);
     }
 
     TextCapitalization textCapitalization = parseTextCapitalization(
-        widget.control.attrString("capitalization"), TextCapitalization.none)!;
+        widget.control.getString("capitalization"), TextCapitalization.none)!;
 
     FilteringTextInputFormatter? inputFilter =
         parseInputFilter(widget.control, "inputFilter");
@@ -227,30 +238,34 @@ class _TextFieldControlState extends State<TextFieldControl>
       _focusNode.unfocus();
     }
 
-    var fitParentSize = widget.control.attrBool("fitParentSize", false)!;
+    var fitParentSize = widget.control.getBool("fit_parent_size", false)!;
 
-    var maxLength = widget.control.attrInt("maxLength");
+    var maxLength = widget.control.getInt("max_length");
 
     Widget textField = TextFormField(
         style: textStyle,
         autofocus: autofocus,
-        enabled: !disabled,
+        enabled: !widget.control.disabled,
         onFieldSubmitted: !multiline
             ? (value) {
-                widget.backend
-                    .triggerControlEvent(widget.control.id, "submit", value);
+                widget.control.backend
+                    .triggerControlEvent(widget.control, "submit", value);
               }
             : null,
         decoration: buildInputDecoration(context, widget.control,
             //prefix: prefixControls.isNotEmpty ? prefixControls.first : null,
-            prefix: prefixControl,
-            prefixIcon:
-                prefixIconControls.isNotEmpty ? prefixIconControls.first : null,
-            suffix: suffixControls.isNotEmpty ? suffixControls.first : null,
-            suffixIcon:
-                suffixIconControls.isNotEmpty ? suffixIconControls.first : null,
-            icon: iconControls.isNotEmpty ? iconControls.first : null,
-            counter: counterControls.isNotEmpty ? counterControls.first : null,
+            prefix: prefixWidget,
+            prefixIcon: prefixIconWidget,
+            //suffix: suffixControls.isNotEmpty ? suffixControls.first : null,
+            suffix: suffixWidget,
+            // suffixIcon:
+            //     suffixIconControls.isNotEmpty ? suffixIconControls.first : null,
+            suffixIcon: suffixIconWidget,
+            //icon: iconControls.isNotEmpty ? iconControls.first : null,
+
+            icon: iconWidget,
+            //counter: counterControls.isNotEmpty ? counterControls.first : null,
+            counter: counterWidget,
             error: errorCtrl.isNotEmpty ? errorCtrl.first : null,
             helper: helperCtrl.isNotEmpty ? helperCtrl.first : null,
             label: labelCtrl.isNotEmpty ? labelCtrl.first : null,
@@ -258,8 +273,8 @@ class _TextFieldControlState extends State<TextFieldControl>
             valueLength: _value.length,
             maxLength: maxLength,
             focused: _focused,
-            disabled: disabled,
-            adaptive: adaptive),
+            disabled: widget.control.disabled,
+            adaptive: widget.control.adaptive),
         showCursor: widget.control.attrBool("showCursor"),
         textAlignVertical: textVerticalAlign != null
             ? TextAlignVertical(y: textVerticalAlign)
