@@ -1,15 +1,7 @@
-import 'package:flet/src/utils/alignment.dart';
-import 'package:flet/src/utils/borders.dart';
-import 'package:flet/src/utils/edge_insets.dart';
-import 'package:flet/src/utils/icons.dart';
+import 'package:flet/flet.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../models/control.dart';
-import '../utils/colors.dart';
-import '../utils/launch_url.dart';
-import '../utils/numbers.dart';
 import 'base_controls.dart';
-import 'control_widget.dart';
 
 class CupertinoButtonControl extends StatefulWidget {
   final Control control;
@@ -59,27 +51,16 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoButton build: ${widget.control.id}");
-    String text =
-        widget.control.getString("text", "")!; //(todo 0.70.3) remove text
-    var content = widget.control.get("content");
-    Widget contentWidget = content is Control
-        ? ControlWidget(control: content)
-        : content is String
-            ? Text(content)
-            : Text(text); //(todo 0.70.3) change to Text("")
-
-    var icon = widget.control.get("icon");
     Color? iconColor = widget.control.getColor("icon_color", context);
 
-    Widget? iconWidget = icon is Control
-        ? ControlWidget(control: icon)
-        : icon is String
-            ? Icon(widget.control.getIcon("icon"), color: iconColor)
-            : null;
+    Widget? iconWidget =
+        widget.control.buildIconOrWidget("icon", color: iconColor);
+    Widget? contentWidget =
+        widget.control.buildTextOrWidget("content", textPropertyName: "text");
 
     Widget child;
     if (iconWidget != null) {
-      if (contentWidget != const Text("")) {
+      if (contentWidget != null) {
         child = Row(
           mainAxisSize: MainAxisSize.min,
           children: [iconWidget, const SizedBox(width: 8), contentWidget],
@@ -88,7 +69,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
         child = iconWidget;
       }
     } else {
-      child = contentWidget;
+      child = contentWidget ?? const Text("");
     }
 
     double pressedOpacity = widget.control.getDouble("opacity_on_click", 0.4)!;

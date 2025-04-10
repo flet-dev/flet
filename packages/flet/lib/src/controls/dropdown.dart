@@ -1,20 +1,9 @@
+import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
-import '../flet_backend.dart';
-import '../models/control.dart';
-import '../utils/borders.dart';
-import '../utils/buttons.dart';
-import '../utils/colors.dart';
-import '../utils/edge_insets.dart';
-import '../utils/form_field.dart';
-import '../utils/icons.dart';
-import '../utils/numbers.dart';
-import '../utils/text.dart';
-import '../utils/textfield.dart';
 import 'base_controls.dart';
-import 'control_widget.dart';
 
 class DropdownControl extends StatefulWidget {
   final Control control;
@@ -40,7 +29,7 @@ class _DropdownControlState extends State<DropdownControl> {
   }
 
   void _onFocusChange() {
-    widget.control.triggerEvent( _focusNode.hasFocus ? "focus" : "blur");
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -69,16 +58,10 @@ class _DropdownControlState extends State<DropdownControl> {
     bool editable = widget.control.getBool("editable", false)!;
     bool autofocus = widget.control.getBool("autofocus", false)!;
     var textSize = widget.control.getDouble("text_size");
-    var label = widget.control.get("label");
-    var trailingIcon = widget.control.get("trailing_icon");
-    var leadingIcon = widget.control.get("leading_icon");
-    var selectIcon = widget.control.get("select_icon");
-    var selectedTrailingIcon = widget.control.get("selected_trailing_icon");
-    var prefixIcon = widget.control.get("prefix_icon");
     var color = widget.control.getColor("color", context);
 
-    TextAlign textAlign = parseTextAlign(
-        widget.control.getString("text_align"), TextAlign.start)!;
+    TextAlign textAlign =
+        widget.control.getTextAlign("text_align", TextAlign.start)!;
 
     var fillColor = widget.control.getColor("fill_color", context);
     var borderColor = widget.control.getColor("border_color", context);
@@ -90,10 +73,8 @@ class _DropdownControlState extends State<DropdownControl> {
     var focusedBorderWidth = widget.control.getDouble("focused_border_width");
     var menuWidth = widget.control.getDouble("menu_width", double.infinity)!;
 
-    FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
-      widget.control.getString("border"),
-      FormFieldInputBorder.outline,
-    )!;
+    FormFieldInputBorder inputBorder = widget.control
+        .getFormFieldInputBorder("border", FormFieldInputBorder.outline)!;
 
     InputBorder? border;
 
@@ -165,11 +146,7 @@ class _DropdownControlState extends State<DropdownControl> {
         .children("options")
         .map<DropdownMenuEntry<String>>((Control itemCtrl) {
       bool itemDisabled = widget.control.disabled || itemCtrl.disabled;
-      ButtonStyle? style = parseButtonStyle(itemCtrl.get("style"), theme);
-
-      var contentCtrl = itemCtrl.child("content");
-      var leadingIcon = itemCtrl.get("leading_icon");
-      var trailingIcon = itemCtrl.get("trailing_icon");
+      ButtonStyle? style = itemCtrl.getButtonStyle("style", theme);
 
       return DropdownMenuEntry<String>(
         enabled: !itemDisabled,
@@ -179,18 +156,9 @@ class _DropdownControlState extends State<DropdownControl> {
         label: itemCtrl.getString("text") ??
             itemCtrl.getString("key") ??
             itemCtrl.id.toString(),
-        labelWidget:
-            contentCtrl is Control ? ControlWidget(control: contentCtrl) : null,
-        leadingIcon: leadingIcon is Control
-            ? ControlWidget(control: leadingIcon)
-            : leadingIcon is String
-                ? Icon(parseIcon(leadingIcon))
-                : null,
-        trailingIcon: trailingIcon is Control
-            ? ControlWidget(control: trailingIcon)
-            : trailingIcon is String
-                ? Icon(parseIcon(trailingIcon))
-                : null,
+        labelWidget: itemCtrl.buildWidget("content"),
+        leadingIcon: itemCtrl.buildIconOrWidget("leading_icon"),
+        trailingIcon: itemCtrl.buildIconOrWidget("trailing_icon"),
         style: style,
       );
     }).toList();
@@ -200,9 +168,8 @@ class _DropdownControlState extends State<DropdownControl> {
       value = null;
     }
 
-    TextCapitalization textCapitalization = parseTextCapitalization(
-        widget.control.getString("capitalization"), TextCapitalization.none)!;
-
+    TextCapitalization textCapitalization = widget.control
+        .getTextCapitalization("capitalization", TextCapitalization.none)!;
     FilteringTextInputFormatter? inputFilter =
         widget.control.getTextInputFormatter("input_filter");
 
@@ -223,35 +190,12 @@ class _DropdownControlState extends State<DropdownControl> {
       enableFilter: widget.control.getBool("enable_filter", false)!,
       enableSearch: widget.control.getBool("enable_search", true)!,
       menuHeight: widget.control.getDouble("menu_height"),
-      label: label is Control
-          ? ControlWidget(control: label)
-          : label is String
-              ? Text(label,
-                  style: widget.control.getTextStyle("label_style", theme))
-              : null,
-      leadingIcon: leadingIcon is Control
-          ? ControlWidget(control: leadingIcon)
-          : leadingIcon is String
-              ? Icon(parseIcon(leadingIcon))
-              : prefixIcon is Control
-                  ? ControlWidget(control: prefixIcon)
-                  : prefixIcon is String
-                      ? Icon(parseIcon(prefixIcon))
-                      : null,
-      trailingIcon: trailingIcon is Control
-          ? ControlWidget(control: trailingIcon)
-          : trailingIcon is String
-              ? Icon(parseIcon(trailingIcon))
-              : selectIcon is Control
-                  ? ControlWidget(control: selectIcon)
-                  : selectIcon is String
-                      ? Icon(parseIcon(selectIcon))
-                      : null,
-      selectedTrailingIcon: selectedTrailingIcon is Control
-          ? ControlWidget(control: selectedTrailingIcon)
-          : selectedTrailingIcon is String
-              ? Icon(parseIcon(selectedTrailingIcon))
-              : null,
+      label: widget.control.buildTextOrWidget("label",
+          style: widget.control.getTextStyle("label_style", theme)),
+      leadingIcon: widget.control.buildIconOrWidget("leading_icon"),
+      trailingIcon: widget.control.buildIconOrWidget("trailing_icon"),
+      selectedTrailingIcon:
+          widget.control.buildIconOrWidget("selected_trailing_icon"),
       textStyle: textStyle,
       textAlign: textAlign,
       width: widget.control.getDouble("width"),

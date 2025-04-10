@@ -60,7 +60,6 @@ import 'controls/navigation_bar.dart';
 import 'controls/navigation_bar_destination.dart';
 import 'controls/navigation_drawer.dart';
 import 'controls/navigation_rail.dart';
-import 'controls/outlined_button.dart';
 import 'controls/page.dart';
 import 'controls/placeholder.dart';
 import 'controls/popup_menu_button.dart';
@@ -83,7 +82,6 @@ import 'controls/stack.dart';
 import 'controls/submenu_button.dart';
 import 'controls/tabs.dart';
 import 'controls/text.dart';
-import 'controls/text_button.dart';
 import 'controls/time_picker.dart';
 import 'controls/transparent_pointer.dart';
 import 'controls/vertical_divider.dart';
@@ -121,8 +119,8 @@ class FletCoreExtension extends FletExtension {
         return BottomAppBarControl(key: key, control: control);
       case "BottomSheet":
         return BottomSheetControl(key: key, control: control);
-      case "OutlinedButton":
-        return OutlinedButtonControl(key: key, control: control);
+      // case "OutlinedButton":
+      //   return OutlinedButtonControl(key: key, control: control);
       case "SearchBar":
         return SearchBarControl(key: key, control: control);
       case "Card":
@@ -155,8 +153,8 @@ class FletCoreExtension extends FletExtension {
         return CupertinoActionSheetControl(key: key, control: control);
       case "CupertinoActionSheetAction":
         return CupertinoActionSheetActionControl(key: key, control: control);
-      case "TextButton":
-        return TextButtonControl(key: key, control: control);
+      // case "TextButton":
+      //   return TextButtonControl(key: key, control: control);
       case "Container":
         return ContainerControl(key: key, control: control);
       case "Chip":
@@ -208,6 +206,8 @@ class FletCoreExtension extends FletExtension {
       case "ElevatedButton":
       case "FilledButton":
       case "FilledTonalButton":
+      case "TextButton":
+      case "OutlinedButton":
         return AdaptiveButtonControl(key: key, control: control);
       case "FletApp":
         return FletAppControl(key: key, control: control);

@@ -1,4 +1,6 @@
 import 'package:flet/src/utils/icons.dart';
+import 'package:flet/src/utils/numbers.dart';
+import 'package:flet/src/widgets/error.dart';
 import 'package:flutter/material.dart';
 
 import '../controls/control_widget.dart';
@@ -54,6 +56,47 @@ extension WidgetFromControl on Control {
     } else if (icon is String) {
       return Icon(getIcon(propertyName), color: color);
     }
+    return null;
+  }
+
+  Widget? buildTextOrWidget(
+    String propertyName, {
+    bool required = false,
+    Widget? error,
+    bool visibleOnly = true,
+    bool notifyParent = false,
+    Key? key,
+    TextStyle? style,
+    String? textPropertyName, //(todo 0.70.3) remove textPropertyName
+  }) {
+    var content = get(propertyName);
+    String text = "";
+    if (textPropertyName is String) {
+      text = getString(textPropertyName, "")!;
+    }
+
+    if (content is Control) {
+      Control? c;
+      c = child(propertyName, visibleOnly: visibleOnly);
+      if (c != null) {
+        c.notifyParent = notifyParent;
+        return ControlWidget(key: key, control: c);
+      }
+    }
+
+    if (content is String) {
+      return Text(content, style: style);
+    }
+    //(todo 0.70.3) remove textPropertyName
+    if (text != "") {
+      return Text(text, style: style);
+    }
+    if (required) {
+      return error ??
+          ErrorControl("Error displaying $type",
+              description: "$propertyName must be specified");
+    }
+
     return null;
   }
 }
