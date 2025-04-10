@@ -55,7 +55,7 @@ class FletWebSocketBackendChannel implements FletBackendChannel {
   }
 
   _onMessage(message) {
-    onMessage(msgpack.deserialize(message));
+    onMessage(Message.fromJson(msgpack.deserialize(message)));
   }
 
   @override

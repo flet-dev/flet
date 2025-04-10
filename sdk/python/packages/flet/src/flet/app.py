@@ -228,12 +228,6 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
     executor = concurrent.futures.ThreadPoolExecutor()
 
     async def on_session_created(session: Session):
-        # page = Page(
-        #     conn,
-        #     session_data.sessionID,
-        #     executor=executor,
-        #     loop=asyncio.get_running_loop(),
-        # )
         logger.info("App session started")
         try:
             assert session_handler is not None

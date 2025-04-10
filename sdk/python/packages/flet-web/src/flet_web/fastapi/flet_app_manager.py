@@ -1,7 +1,6 @@
 import asyncio
 import logging
 import shutil
-import threading
 import traceback
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
@@ -10,9 +9,9 @@ from typing import Optional
 import flet_web.fastapi as flet_fastapi
 from flet.controls.page import Page
 from flet.messaging.connection import Connection
+from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
 from flet.utils import is_pyodide
-from flet.utils.locks import NopeLock
 from flet_web.fastapi.oauth_state import OAuthState
 
 logger = logging.getLogger(flet_fastapi.__name__)
@@ -24,15 +23,12 @@ class FletAppManager:
     """
 
     def __init__(self):
-        self.__sessions_lock = asyncio.Lock()
-        self.__sessions: dict[str, Page] = {}
+        self.__sessions: dict[str, Session] = {}
         self.__evict_sessions_task = None
         self.__states: dict[str, OAuthState] = {}
-        self.__states_lock = threading.Lock() if not is_pyodide() else NopeLock()
         self.__evict_oauth_states_task = None
         self.__temp_dirs = {}
         self.__executor = ThreadPoolExecutor(thread_name_prefix="flet_fastapi")
-        self.__pubsubhubs_lock = threading.Lock() if not is_pyodide() else NopeLock()
         self.__pubsubhubs = {}
 
     @property
@@ -42,15 +38,14 @@ class FletAppManager:
     def get_pubsubhub(
         self, session_handler, loop: Optional[asyncio.AbstractEventLoop] = None
     ):
-        with self.__pubsubhubs_lock:
-            psh = self.__pubsubhubs.get(session_handler, None)
-            if psh is None:
-                psh = PubSubHub(
-                    loop=loop or asyncio.get_running_loop(),
-                    executor=self.__executor,
-                )
-                self.__pubsubhubs[session_handler] = psh
-            return psh
+        psh = self.__pubsubhubs.get(session_handler, None)
+        if psh is None:
+            psh = PubSubHub(
+                loop=loop or asyncio.get_running_loop(),
+                executor=self.__executor,
+            )
+            self.__pubsubhubs[session_handler] = psh
+        return psh
 
     async def start(self):
         """
@@ -76,44 +71,31 @@ class FletAppManager:
         if self.__evict_oauth_states_task:
             self.__evict_oauth_states_task.cancel()
 
-    async def get_session(self, session_id: str) -> Optional[Page]:
-        async with self.__sessions_lock:
-            return self.__sessions.get(session_id)
+    async def get_session(self, session_id: str) -> Optional[Session]:
+        return self.__sessions.get(session_id)
 
-    async def add_session(self, session_id: str, conn: Page):
-        async with self.__sessions_lock:
-            self.__sessions[session_id] = conn
-            logger.info(
-                f"New session created ({len(self.__sessions)} total): {session_id}"
-            )
+    async def add_session(self, session_id: str, session: Session):
+        self.__sessions[session_id] = session
+        logger.info(f"New session created ({len(self.__sessions)} total): {session_id}")
 
     async def reconnect_session(self, session_id: str, conn: Connection):
         logger.info(f"Session reconnected: {session_id}")
-        async with self.__sessions_lock:
-            if session_id in self.__sessions:
-                page = self.__sessions[session_id]
-                old_conn = page.connection
-                await page._connect(conn)
-                if old_conn:
-                    old_conn.dispose()
+        if session_id in self.__sessions:
+            session = self.__sessions[session_id]
+            await session.connect(conn)
 
     async def disconnect_session(self, session_id: str, session_timeout_seconds: int):
         logger.info(f"Session disconnected: {session_id}")
-        async with self.__sessions_lock:
-            if session_id in self.__sessions:
-                await self.__sessions[session_id]._disconnect(session_timeout_seconds)
+        if session_id in self.__sessions:
+            await self.__sessions[session_id].disconnect(session_timeout_seconds)
 
     async def delete_session(self, session_id: str):
-        async with self.__sessions_lock:
-            page = self.__sessions.pop(session_id, None)
-            total = len(self.__sessions)
-        if page is not None:
+        session = self.__sessions.pop(session_id, None)
+        total = len(self.__sessions)
+        if session is not None:
             logger.info(f"Delete session ({total} left): {session_id}")
             try:
-                old_conn = page.connection
-                page._close()
-                if old_conn:
-                    old_conn.dispose()
+                session.close()
             except Exception as e:
                 logger.error(
                     f"Error deleting expired session: {e} {traceback.format_exc()}"
@@ -121,12 +103,10 @@ class FletAppManager:
 
     def store_state(self, state_id: str, state: OAuthState):
         logger.info(f"Store oauth state: {state_id}")
-        with self.__states_lock:
-            self.__states[state_id] = state
+        self.__states[state_id] = state
 
     def retrieve_state(self, state_id: str) -> Optional[OAuthState]:
-        with self.__states_lock:
-            return self.__states.pop(state_id, None)
+        return self.__states.pop(state_id, None)
 
     def add_temp_dir(self, temp_dir: str):
         self.__temp_dirs[temp_dir] = True
@@ -135,24 +115,22 @@ class FletAppManager:
         while True:
             await asyncio.sleep(10)
             session_ids = []
-            async with self.__sessions_lock:
-                for session_id, page in self.__sessions.items():
-                    if page.expires_at and datetime.now(timezone.utc) > page.expires_at:
-                        session_ids.append(session_id)
+            for session_id, session in self.__sessions.items():
+                if (
+                    session.expires_at
+                    and datetime.now(timezone.utc) > session.expires_at
+                ):
+                    session_ids.append(session_id)
             for session_id in session_ids:
                 await self.delete_session(session_id)
 
     async def __evict_expired_oauth_states(self):
         while True:
             await asyncio.sleep(10)
-            with self.__states_lock:
-                ids = []
-                for id, state in self.__states.items():
-                    if (
-                        state.expires_at
-                        and datetime.now(timezone.utc) > state.expires_at
-                    ):
-                        ids.append(id)
+            ids = []
+            for id, state in self.__states.items():
+                if state.expires_at and datetime.now(timezone.utc) > state.expires_at:
+                    ids.append(id)
             for id in ids:
                 logger.info(f"Delete expired oauth state: {id}")
                 self.retrieve_state(id)

@@ -2,10 +2,12 @@
 {{flutter_build_config}}
 
 var loading = document.querySelector('#loading');
+var config = {};
+if (webRenderer != "auto") {
+    config.renderer = webRenderer;
+}
 _flutter.loader.load({
-    config: {
-        renderer: webRenderer
-    },
+    config: config,
     serviceWorkerSettings: {
         serviceWorkerVersion: {{flutter_service_worker_version}},
     },

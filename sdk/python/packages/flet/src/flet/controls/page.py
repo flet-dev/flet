@@ -282,19 +282,6 @@ class Page(AdaptiveControl):
         #         c.will_unmount()
         pass
 
-    def _close(self) -> None:
-        # self.__pubsub.unsubscribe_all()
-        # removed_controls = self._remove_control_recursively(self.index, self)
-        # for c in removed_controls:
-        #     c.will_unmount()
-        #     c._dispose()
-        # self._controls.clear()
-        # self.__on_view_pop = None
-        # self.__client_storage = None
-        # self.__session_storage = None
-        # self.__conn = None
-        pass
-
     def get_session(self):
         if sess := self.__session():
             return sess

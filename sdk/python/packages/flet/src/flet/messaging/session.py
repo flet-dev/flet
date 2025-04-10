@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import traceback
 import weakref
 from datetime import datetime, timedelta, timezone
@@ -21,10 +22,12 @@ from flet.utils.from_dict import from_dict
 from flet.utils.patch_dataclass import patch_dataclass
 from flet.utils.strings import random_string
 
+logger = logging.getLogger("flet")
+
 
 class Session:
     def __init__(self, conn: Connection):
-        self.__conn: weakref.ReferenceType = weakref.ref(conn)
+        self.__conn = conn
         self.__id = random_string(16)
         self.__expires_at = None
         self.__index: weakref.WeakValueDictionary[int, Control] = (
@@ -36,9 +39,7 @@ class Session:
 
     @property
     def connection(self) -> Connection:
-        if conn := self.__conn():
-            return conn
-        raise Exception("An attempt to use destroyed connection.")
+        return self.__conn
 
     @property
     def id(self):
@@ -61,16 +62,25 @@ class Session:
         return self.__pubsub_client
 
     async def connect(self, conn: Connection) -> None:
+        logger.debug(f"Connect session: {self.id}")
         _session_page.set(self.__page)
-        self.__conn = weakref.ref(conn)
+        self.__conn = conn
         self.__expires_at = None
-        # await self.on_event_async(Event("page", "connect", ""))
+        await self.dispatch_event(self.__page._i, "connect", None)
 
     async def disconnect(self, session_timeout_seconds: int) -> None:
+        logger.debug(f"Disconnect session: {self.id}")
         self.__expires_at = datetime.now(timezone.utc) + timedelta(
             seconds=session_timeout_seconds
         )
-        # await self.on_event_async(Event("page", "disconnect", ""))
+        if self.__conn:
+            self.__conn.dispose()
+            self.__conn = None
+        await self.dispatch_event(self.__page._i, "disconnect", None)
+
+    def close(self):
+        logger.debug(f"Closing expired session: {self.id}")
+        self.__pubsub_client.unsubscribe_all()
 
     def patch_control(self, control: BaseControl):
         patch = self.__get_update_control_patch(control=control, prev_control=control)
