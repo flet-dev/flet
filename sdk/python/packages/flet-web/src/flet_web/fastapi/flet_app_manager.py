@@ -7,11 +7,9 @@ from datetime import datetime, timezone
 from typing import Optional
 
 import flet_web.fastapi as flet_fastapi
-from flet.controls.page import Page
 from flet.messaging.connection import Connection
 from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
-from flet.utils import is_pyodide
 from flet_web.fastapi.oauth_state import OAuthState
 
 logger = logging.getLogger(flet_fastapi.__name__)

@@ -1,4 +1,5 @@
 import asyncio
+import gc
 import logging
 import traceback
 import weakref
@@ -36,6 +37,11 @@ class Session:
         self.__page = Page(self)
         self.__index[self.__page._i] = self.__page
         self.__pubsub_client = PubSubClient(conn.pubsubhub, self.__id)
+
+        session_id = self.__id
+        weakref.finalize(
+            self, lambda: logger.debug(f"Session was garbage collected: {session_id}")
+        )
 
     @property
     def connection(self) -> Connection:
