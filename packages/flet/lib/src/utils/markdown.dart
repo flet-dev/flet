@@ -57,27 +57,27 @@ MarkdownStyleSheet? parseMarkdownStyleSheet(dynamic value, BuildContext context,
     a: parseTextStyle(
         value["a_text_style"], theme, const TextStyle(color: Colors.blue))!,
     p: parseTextStyle(value["p_text_style"], theme, theme.textTheme.bodyMedium),
-    pPadding: parseEdgeInsets(value["p_padding"], EdgeInsets.zero)!,
+    pPadding: parsePadding(value["p_padding"], EdgeInsets.zero)!,
     code: parseTextStyle(value["code_text_style"], theme,
         theme.textTheme.bodyMedium!.copyWith(fontFamily: "monospace")),
     h1: parseTextStyle(value["h1_text_style"], theme) ??
         theme.textTheme.headlineSmall,
-    h1Padding: parseEdgeInsets(value["h1_padding"], EdgeInsets.zero)!,
+    h1Padding: parsePadding(value["h1_padding"], EdgeInsets.zero)!,
     h2: parseTextStyle(
         value["h2_text_style"], theme, theme.textTheme.titleLarge),
-    h2Padding: parseEdgeInsets(value["h2_padding"], EdgeInsets.zero)!,
+    h2Padding: parsePadding(value["h2_padding"], EdgeInsets.zero)!,
     h3: parseTextStyle(
         value["h3_text_style"], theme, theme.textTheme.titleMedium),
-    h3Padding: parseEdgeInsets(value["h3_padding"], EdgeInsets.zero)!,
+    h3Padding: parsePadding(value["h3_padding"], EdgeInsets.zero)!,
     h4: parseTextStyle(
         value["h4_text_style"], theme, theme.textTheme.bodyLarge),
-    h4Padding: parseEdgeInsets(value["h4_padding"], EdgeInsets.zero)!,
+    h4Padding: parsePadding(value["h4_padding"], EdgeInsets.zero)!,
     h5: parseTextStyle(
         value["h5_text_style"], theme, theme.textTheme.bodyLarge),
-    h5Padding: parseEdgeInsets(value["h5_padding"], EdgeInsets.zero)!,
+    h5Padding: parsePadding(value["h5_padding"], EdgeInsets.zero)!,
     h6: parseTextStyle(
         value["h6_text_style"], theme, theme.textTheme.bodyLarge),
-    h6Padding: parseEdgeInsets(value["h6_padding"], EdgeInsets.zero)!,
+    h6Padding: parsePadding(value["h6_padding"], EdgeInsets.zero)!,
     em: parseTextStyle(value["em_text_style"], theme,
         const TextStyle(fontStyle: FontStyle.italic))!,
     strong: parseTextStyle(value["strong_text_style"], theme,
@@ -88,17 +88,13 @@ MarkdownStyleSheet? parseMarkdownStyleSheet(dynamic value, BuildContext context,
         value["blockquote_text_style"], theme, theme.textTheme.bodyMedium),
     img: parseTextStyle(
         value["img_text_style"], theme, theme.textTheme.bodyMedium),
-    checkbox: parseTextStyle(
-        value["checkbox_text_style"],
-        theme,
-        theme.textTheme.bodyMedium!.copyWith(
-          color: theme.primaryColor,
-        )),
+    checkbox: parseTextStyle(value["checkbox_text_style"], theme,
+        theme.textTheme.bodyMedium!.copyWith(color: theme.primaryColor)),
     blockSpacing: parseDouble(value["block_spacing"], 8.0)!,
     listIndent: parseDouble(value["list_indent"], 24.0)!,
     listBullet: parseTextStyle(
         value["list_bullet_text_style"], theme, theme.textTheme.bodyMedium),
-    listBulletPadding: parseEdgeInsets(
+    listBulletPadding: parsePadding(
         value["list_bullet_padding"], const EdgeInsets.only(right: 4))!,
     tableHead: parseTextStyle(value["table_head_text_style"], theme,
         const TextStyle(fontWeight: FontWeight.w600))!,
@@ -106,45 +102,36 @@ MarkdownStyleSheet? parseMarkdownStyleSheet(dynamic value, BuildContext context,
         value["table_body_text_style"], theme, theme.textTheme.bodyMedium),
     tableHeadAlign:
         parseTextAlign(value["table_head_text_align"], TextAlign.center)!,
-    tablePadding: parseEdgeInsets(
+    tablePadding: parsePadding(
         value["table_padding"], const EdgeInsets.only(bottom: 4.0))!,
-    tableBorder: TableBorder.all(
-      color: theme.dividerColor,
-    ),
+    tableBorder: TableBorder.all(color: theme.dividerColor),
     tableColumnWidth: const FlexColumnWidth(),
-    tableCellsPadding: parseEdgeInsets(
+    tableCellsPadding: parsePadding(
         value["table_cells_padding"], const EdgeInsets.fromLTRB(16, 8, 16, 8))!,
     tableCellsDecoration: parseBoxDecoration(
         value["table_cells_decoration"], context, const BoxDecoration()),
-    blockquotePadding: parseEdgeInsets(
-        value["blockquote_padding"], const EdgeInsets.all(8.0))!,
+    blockquotePadding:
+        parsePadding(value["blockquote_padding"], const EdgeInsets.all(8.0))!,
     blockquoteDecoration: parseBoxDecoration(
         value["blockquote_decoration"],
         context,
         BoxDecoration(
-          color: Colors.blue.shade100,
-          borderRadius: BorderRadius.circular(2.0),
-        ))!,
+            color: Colors.blue.shade100,
+            borderRadius: BorderRadius.circular(2.0)))!,
     codeblockPadding:
-        parseEdgeInsets(value["codeblock_padding"], const EdgeInsets.all(8.0))!,
+        parsePadding(value["codeblock_padding"], const EdgeInsets.all(8.0))!,
     codeblockDecoration: parseBoxDecoration(
         value["codeblock_decoration"],
         context,
         BoxDecoration(
-          color: theme.cardTheme.color ?? theme.cardColor,
-          borderRadius: BorderRadius.circular(2.0),
-        ))!,
+            color: theme.cardTheme.color ?? theme.cardColor,
+            borderRadius: BorderRadius.circular(2.0)))!,
     horizontalRuleDecoration: parseBoxDecoration(
         value["horizontal_rule_decoration"],
         context,
         BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              width: 5.0,
-              color: theme.dividerColor,
-            ),
-          ),
-        ))!,
+            border: Border(
+                top: BorderSide(width: 5.0, color: theme.dividerColor))))!,
     blockquoteAlign:
         parseWrapAlignment(value["blockquote_alignment"], WrapAlignment.start)!,
     codeblockAlign:
@@ -163,22 +150,21 @@ MarkdownStyleSheet? parseMarkdownStyleSheet(dynamic value, BuildContext context,
         value["unordered_list_alignment"], WrapAlignment.start)!,
   );
 }
+
 extension MarkdownParsers on Control {
   Map<String, TextStyle> getMarkdownCodeTheme(
       String propertyName, ThemeData theme) {
     return parseMarkdownCodeTheme(get(propertyName), theme);
   }
-/*
+
   md.ExtensionSet? getMarkdownExtensionSet(String propertyName,
       [md.ExtensionSet? defaultValue]) {
     return parseMarkdownExtensionSet(get(propertyName), defaultValue);
   }
-
 
   MarkdownStyleSheet? getMarkdownStyleSheet(
       String propertyName, BuildContext context,
       [MarkdownStyleSheet? defaultValue]) {
     return parseMarkdownStyleSheet(get(propertyName), context, defaultValue);
   }
-  */
 }

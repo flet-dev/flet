@@ -1,63 +1,51 @@
-import 'dart:convert';
-
+import 'package:flet/src/extensions/control.dart';
+import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
-import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/box.dart';
 import '../utils/images.dart';
 import '../utils/launch_url.dart';
 import '../utils/markdown.dart';
 import '../utils/uri.dart';
-import 'create_control.dart';
-import 'error.dart';
-import 'flet_store_mixin.dart';
+import '../widgets/error.dart';
+import '../widgets/flet_store_mixin.dart';
+import 'base_controls.dart';
 import 'highlight_view.dart';
 
 class MarkdownControl extends StatelessWidget with FletStoreMixin {
-  final Control? parent;
-  final List<Control> children;
   final Control control;
-  final bool parentDisabled;
-  final FletControlBackend backend;
 
   static const String svgTag = " xmlns=\"http://www.w3.org/2000/svg\"";
 
-  const MarkdownControl(
-      {super.key,
-      required this.parent,
-      required this.children,
-      required this.control,
-      required this.parentDisabled,
-      required this.backend});
+  const MarkdownControl({super.key, required this.control});
 
   @override
   Widget build(BuildContext context) {
     debugPrint("Markdown build: ${control.id}");
-    bool disabled = control.disabled || parentDisabled;
 
     var value = control.getString("value", "")!;
-    md.ExtensionSet extensionSet = parseMarkdownExtensionSet(
-        control.getString("extensionSet"), md.ExtensionSet.none)!;
+    md.ExtensionSet extensionSet =
+        control.getMarkdownExtensionSet("extension_set", md.ExtensionSet.none)!;
 
-    var autoFollowLinks = control.getBool("autoFollowLinks", false)!;
-    var autoFollowLinksTarget = control.getString("autoFollowLinksTarget");
+    var autoFollowLinks = control.getBool("auto_follow_links", false)!;
+    var autoFollowLinksTarget = control.getString("auto_follow_links_target");
 
     return withPageArgs((context, pageArgs) {
       bool selectable = control.getBool("selectable", false)!;
-      var codeStyleSheet = parseMarkdownStyleSheet(
-              control, "codeStyleSheet", Theme.of(context), pageArgs) ??
-          MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-              code: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(fontFamily: "monospace"));
-      var mdStyleSheet = parseMarkdownStyleSheet(
-          control, "mdStyleSheet", Theme.of(context), pageArgs);
+      var codeStyleSheet =
+          control.getMarkdownStyleSheet("code_style_sheet", context) ??
+              MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+                  code: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(fontFamily: "monospace"));
+      var mdStyleSheet =
+          control.getMarkdownStyleSheet("md_style_sheet", context);
       var codeTheme =
-          parseMarkdownCodeTheme(control, "codeTheme", Theme.of(context));
+          control.getMarkdownCodeTheme("code_theme", Theme.of(context));
       Widget markdown = MarkdownBody(
           data: value,
           selectable: selectable,
@@ -76,61 +64,47 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
             if (src == null && srcBase64 == null) {
               return ErrorControl("Invalid image URI: $s");
             }
-            var errorContentCtrls =
-                children.where((c) => c.name == "error" && c.visible);
-
-            var errorContent = errorContentCtrls.isNotEmpty
-                ? createControl(control, errorContentCtrls.first.id, disabled)
-                : null;
 
             return buildImage(
-              context: context,
-              control: control,
-              src: src,
-              srcBase64: srcBase64,
-              semanticsLabel: alt,
-              disabled: disabled,
-              pageArgs: pageArgs,
-              errorCtrl: errorContent,
-            );
+                context: context,
+                control: control,
+                src: src,
+                srcBase64: srcBase64,
+                semanticsLabel: alt,
+                disabled: control.disabled,
+                errorCtrl: control.buildWidget("img_error_content"));
           },
-          shrinkWrap: control.getBool("shrinkWrap", true)!,
-          fitContent: control.getBool("fitContent", true)!,
-          softLineBreak: control.getBool("softLineBreak", false)!,
+          shrinkWrap: control.getBool("shrink_wrap", true)!,
+          fitContent: control.getBool("fit_content", true)!,
+          softLineBreak: control.getBool("soft_line_break", false)!,
           onSelectionChanged: (String? text, TextSelection selection,
               SelectionChangedCause? cause) {
-            debugPrint("Markdown ${control.id} selection changed");
-            backend.triggerControlEvent(
-                control.id,
-                "selection_change",
-                jsonEncode({
-                  "text": text ?? "",
-                  "start": selection.start,
-                  "end": selection.end,
-                  "base_offset": selection.baseOffset,
-                  "extent_offset": selection.extentOffset,
-                  "affinity": selection.affinity.name,
-                  "directional": selection.isDirectional,
-                  "collapsed": selection.isCollapsed,
-                  "valid": selection.isValid,
-                  "normalized": selection.isNormalized,
-                  "cause": cause?.name ?? "unknown",
-                }));
+            control.triggerEvent("selection_change", {
+              "text": text ?? "",
+              "cause": cause?.name ?? "unknown",
+              "selection": {
+                "start": selection.start,
+                "end": selection.end,
+                "selection": text ?? "",
+                "base_offset": selection.baseOffset,
+                "extent_offset": selection.extentOffset,
+                "affinity": selection.affinity.name,
+                "directional": selection.isDirectional,
+                "collapsed": selection.isCollapsed,
+                "valid": selection.isValid,
+                "normalized": selection.isNormalized,
+              },
+            });
           },
-          onTapText: () {
-            debugPrint("Markdown ${control.id} text tapped");
-            backend.triggerControlEvent(control.id, "tap_text");
-          },
+          onTapText: () => control.triggerEvent("tap_text"),
           onTapLink: (String text, String? href, String title) {
-            debugPrint("Markdown ${control.id} link tapped clicked");
             if (autoFollowLinks && href != null) {
               openWebBrowser(href, webWindowName: autoFollowLinksTarget);
             }
-            backend.triggerControlEvent(
-                control.id, "tap_link", href?.toString());
+            control.triggerEvent("tap_link", href?.toString());
           });
 
-      return constrainedControl(context, markdown, parent, control);
+      return ConstrainedControl(control: control, child: markdown);
     });
   }
 }

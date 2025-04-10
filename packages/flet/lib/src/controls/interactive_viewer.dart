@@ -119,10 +119,11 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
           ? (ScaleStartDetails details) {
               widget.control.triggerEvent("interaction_start", {
                 "pc": details.pointerCount,
-                "fp_x": details.focalPoint.dx,
-                "fp_y": details.focalPoint.dy,
-                "lfp_x": details.localFocalPoint.dx,
-                "lfp_y": details.localFocalPoint.dy
+                "gfp": {"x": details.focalPoint.dx, "y": details.focalPoint.dy},
+                "lfp": {
+                  "x": details.localFocalPoint.dx,
+                  "y": details.localFocalPoint.dy
+                },
               });
             }
           : null,
