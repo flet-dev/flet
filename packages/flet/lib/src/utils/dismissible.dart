@@ -6,9 +6,7 @@ import '../utils/numbers.dart';
 
 DismissDirection? parseDismissDirection(String? value,
     [DismissDirection? defaultValue]) {
-  if (value == null) {
-    return defaultValue;
-  }
+  if (value == null) return defaultValue;
   return DismissDirection.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
       defaultValue;
@@ -17,22 +15,19 @@ DismissDirection? parseDismissDirection(String? value,
 Map<DismissDirection, double>? parseDismissThresholds(dynamic value,
     [Map<DismissDirection, double>? defaultValue]) {
   if (value == null) return defaultValue;
-  if (value is! Map<String, dynamic>) {
-    value = {"": value};
-  }
 
-  Map<DismissDirection, double> dismissDirectionMap = {};
-  value.forEach((directionStr, jv) {
-    directionStr.split(",").map((s) => s.trim().toLowerCase()).forEach((state) {
-      DismissDirection d = parseDismissDirection(state, DismissDirection.none)!;
-      if (d != DismissDirection.none) {
-        dismissDirectionMap[d] = parseDouble(jv, 0)!;
-      }
-    });
+  Map<DismissDirection, double> result = {};
+  value.forEach((d, t) {
+    var direction = parseDismissDirection(d, DismissDirection.none)!;
+    if (direction != DismissDirection.none) {
+      var threshold = parseDouble(t, 0.0)!;
+      result[direction] = threshold;
+    }
   });
 
-  return dismissDirectionMap;
+  return result;
 }
+
 extension DismissibleParsers on Control {
   DismissDirection? getDismissDirection(String propertyName,
       [DismissDirection? defaultValue]) {

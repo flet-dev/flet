@@ -39,6 +39,7 @@ import 'controls/cupertino_textfield.dart';
 import 'controls/cupertino_timer_picker.dart';
 import 'controls/datatable.dart';
 import 'controls/date_picker.dart';
+import 'controls/dismissible.dart';
 import 'controls/divider.dart';
 import 'controls/drag_target.dart';
 import 'controls/draggable.dart';
@@ -153,6 +154,8 @@ class FletCoreExtension extends FletExtension {
         return MergeSemanticsControl(key: key, control: control);
       case "Column":
         return ColumnControl(key: key, control: control);
+      case "Dismissible":
+        return DismissibleControl(key: key, control: control);
       case "GestureDetector":
         return GestureDetectorControl(key: key, control: control);
       case "GridView":

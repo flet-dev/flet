@@ -1,13 +1,17 @@
+import asyncio
 from dataclasses import dataclass, field
-from typing import Dict, Optional
+from typing import Dict
 
 from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, control
 from flet.controls.control_event import ControlEvent
-from flet.controls.duration import OptionalDurationValue
+from flet.controls.duration import Duration, DurationValue
+from flet.controls.material.container import Container
 from flet.controls.material.snack_bar import DismissDirection
 from flet.controls.types import (
+    Number,
     OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,
@@ -32,13 +36,19 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
     """
 
     content: Control
-    background: Optional[Control] = None
-    secondary_background: Optional[Control] = None
-    dismiss_direction: Optional[DismissDirection] = None
-    dismiss_thresholds: Optional[Dict[DismissDirection, OptionalNumber]] = None
-    movement_duration: OptionalDurationValue = None
-    resize_duration: OptionalDurationValue = None
-    cross_axis_end_offset: OptionalNumber = None
+    background: Control = Container(bgcolor=Colors.TRANSPARENT)
+    secondary_background: Control = Container(bgcolor=Colors.TRANSPARENT)
+    dismiss_direction: DismissDirection = DismissDirection.HORIZONTAL
+    dismiss_thresholds: Dict[DismissDirection, OptionalNumber] = field(
+        default_factory=dict
+    )
+    movement_duration: DurationValue = field(
+        default_factory=lambda: Duration(milliseconds=200)
+    )
+    resize_duration: DurationValue = field(
+        default_factory=lambda: Duration(milliseconds=300)
+    )
+    cross_axis_end_offset: Number = 0.0
     on_update: OptionalEventCallable["DismissibleUpdateEvent"] = None
     on_dismiss: OptionalEventCallable["DismissibleDismissEvent"] = None
     on_confirm_dismiss: OptionalEventCallable["DismissibleDismissEvent"] = None
@@ -46,19 +56,23 @@ class Dismissible(ConstrainedControl, AdaptiveControl):
 
     def before_update(self):
         super().before_update()
+        assert self.content.visible, "content must be visible"
+
+    async def confirm_dismiss_async(self, dismiss: bool):
+        await self._invoke_method_async("confirm_dismiss", {"dismiss": dismiss})
 
     def confirm_dismiss(self, dismiss: bool):
-        self.invoke_method("confirm_dismiss", {"dismiss": str(dismiss).lower()})
+        asyncio.create_task(self.confirm_dismiss_async(dismiss))
 
 
 @dataclass
 class DismissibleDismissEvent(ControlEvent):
-    direction: Optional[DismissDirection] = None
+    direction: DismissDirection
 
 
 @dataclass
 class DismissibleUpdateEvent(ControlEvent):
-    direction: DismissDirection = field(metadata={"data_field": "direction"})
-    progress: float = field(metadata={"data_field": "progress"})
-    reached: bool = field(metadata={"data_field": "reached"})
-    previous_reached: bool = field(metadata={"data_field": "previous_reached"})
+    direction: DismissDirection
+    progress: float
+    reached: bool
+    previous_reached: bool
