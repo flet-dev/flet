@@ -1,19 +1,8 @@
-import 'package:flet/src/extensions/control.dart';
-import 'package:flet/src/utils/colors.dart';
-import 'package:flet/src/utils/numbers.dart';
+import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-//import '../flet_control_backend.dart';
-import '../models/control.dart';
-import '../utils/autofill.dart';
-import '../utils/borders.dart';
-import '../utils/edge_insets.dart';
-import '../utils/form_field.dart';
-import '../utils/mouse.dart';
-import '../utils/platform.dart';
-import '../utils/text.dart';
-import '../utils/textfield.dart';
+import 'base_controls.dart';
 //import 'create_control.dart';
 //import 'cupertino_textfield.dart';
 //import 'flet_store_mixin.dart';
@@ -195,11 +184,11 @@ class _TextFieldControlState extends State<TextFieldControl>
           fontSize: textSize, color: _focused ? focusedColor ?? color : color);
     }
 
-    TextCapitalization textCapitalization = parseTextCapitalization(
-        widget.control.getString("capitalization"), TextCapitalization.none)!;
+    TextCapitalization textCapitalization = widget.control
+        .getTextCapitalization("capitalization", TextCapitalization.none)!;
 
     FilteringTextInputFormatter? inputFilter =
-        parseInputFilter(widget.control, "inputFilter");
+        parseInputFilter(widget.control.get("input_filter"));
 
     List<TextInputFormatter>? inputFormatters = [];
     // add non-null input formatters
@@ -223,12 +212,12 @@ class _TextFieldControlState extends State<TextFieldControl>
           });
     }
 
-    double? textVerticalAlign = widget.control.attrDouble("textVerticalAlign");
+    double? textVerticalAlign = widget.control.getDouble("text_vertical_align");
 
     FocusNode focusNode = shiftEnter ? _shiftEnterfocusNode : _focusNode;
 
-    var focusValue = widget.control.attrString("focus");
-    var blurValue = widget.control.attrString("blur");
+    var focusValue = widget.control.getString("focus");
+    var blurValue = widget.control.getString("blur");
     if (focusValue != null && focusValue != _lastFocusValue) {
       _lastFocusValue = focusValue;
       focusNode.requestFocus();
@@ -248,8 +237,7 @@ class _TextFieldControlState extends State<TextFieldControl>
         enabled: !widget.control.disabled,
         onFieldSubmitted: !multiline
             ? (value) {
-                widget.control.backend
-                    .triggerControlEvent(widget.control, "submit", value);
+                widget.control.triggerEvent("submit", value);
               }
             : null,
         decoration: buildInputDecoration(context, widget.control,
@@ -266,85 +254,84 @@ class _TextFieldControlState extends State<TextFieldControl>
             icon: iconWidget,
             //counter: counterControls.isNotEmpty ? counterControls.first : null,
             counter: counterWidget,
-            error: errorCtrl.isNotEmpty ? errorCtrl.first : null,
-            helper: helperCtrl.isNotEmpty ? helperCtrl.first : null,
-            label: labelCtrl.isNotEmpty ? labelCtrl.first : null,
+            //error: errorCtrl.isNotEmpty ? errorCtrl.first : null,
+            error: errorWidget,
+            //helper: helperCtrl.isNotEmpty ? helperCtrl.first : null,
+            helper: helperWidget,
+            //label: labelCtrl.isNotEmpty ? labelCtrl.first : null,
+            label: labelWidget,
             customSuffix: revealPasswordIcon,
             valueLength: _value.length,
             maxLength: maxLength,
             focused: _focused,
             disabled: widget.control.disabled,
             adaptive: widget.control.adaptive),
-        showCursor: widget.control.attrBool("showCursor"),
+        showCursor: widget.control.getBool("show_cursor"),
         textAlignVertical: textVerticalAlign != null
             ? TextAlignVertical(y: textVerticalAlign)
             : null,
-        cursorHeight: widget.control.attrDouble("cursorHeight"),
-        cursorWidth: widget.control.attrDouble("cursorWidth", 2.0)!,
-        cursorRadius: parseRadius(widget.control, "cursorRadius"),
+        cursorHeight: widget.control.getDouble("cursor_height"),
+        cursorWidth: widget.control.getDouble("cursor_width", 2.0)!,
+        cursorRadius: widget.control.getRadius("cursor_radius"),
         keyboardType: multiline
             ? TextInputType.multiline
-            : parseTextInputType(
-                widget.control.attrString("keyboardType"), TextInputType.text)!,
-        autocorrect: widget.control.attrBool("autocorrect", true)!,
-        enableSuggestions: widget.control.attrBool("enableSuggestions", true)!,
-        smartDashesType: widget.control.attrBool("smartDashesType", true)!
+            : widget.control
+                .getTextInputType("keyboardType", TextInputType.text)!,
+        autocorrect: widget.control.getBool("autocorrect", true)!,
+        enableSuggestions: widget.control.getBool("enable_suggestions", true)!,
+        smartDashesType: widget.control.getBool("smart_dashes_type", true)!
             ? SmartDashesType.enabled
             : SmartDashesType.disabled,
-        smartQuotesType: widget.control.attrBool("smartQuotesType", true)!
+        smartQuotesType: widget.control.getBool("smart_quotes_type", true)!
             ? SmartQuotesType.enabled
             : SmartQuotesType.disabled,
-        textAlign: parseTextAlign(
-            widget.control.attrString("textAlign"), TextAlign.start)!,
+        textAlign: widget.control.getTextAlign("text_align", TextAlign.start)!,
         minLines: fitParentSize ? null : minLines,
         maxLines: fitParentSize ? null : maxLines,
         maxLength: maxLength,
-        readOnly: widget.control.attrBool("readOnly", false)!,
+        readOnly: widget.control.getBool("read_only", false)!,
         inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
         obscureText: password && !_revealPassword,
         controller: _controller,
         focusNode: focusNode,
-        autofillHints: parseAutofillHints(widget.control, "autofillHints"),
+        autofillHints: widget.control.getAutofillHints("autofill_hints"),
         expands: fitParentSize,
         enableInteractiveSelection:
-            widget.control.attrBool("enableInteractiveSelection"),
-        canRequestFocus: widget.control.attrBool("canRequestFocus", true)!,
-        clipBehavior: parseClip(
-            widget.control.attrString("clipBehavior"), Clip.hardEdge)!,
+            widget.control.getBool("enable_interactive_selection"),
+        canRequestFocus: widget.control.getBool("can_request_focus", true)!,
+        clipBehavior:
+            widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
         cursorColor: cursorColor,
-        ignorePointers: widget.control.attrBool("ignorePointers"),
-        cursorErrorColor: widget.control.attrColor("cursorErrorColor", context),
-        scribbleEnabled: widget.control.attrBool("enableScribble", true)!,
-        scrollPadding: parseEdgeInsets(
-            widget.control, "scrollPadding", const EdgeInsets.all(20.0))!,
-        keyboardAppearance:
-            parseBrightness(widget.control.attrString("keyboardBrightness")),
+        ignorePointers: widget.control.getBool("ignore_pointers"),
+        cursorErrorColor:
+            widget.control.getColor("cursor_error_color", context),
+        scribbleEnabled: widget.control.getBool("enable_scribble", true)!,
+        scrollPadding: widget.control
+            .getEdgeInsets("scroll_padding", const EdgeInsets.all(20.0))!,
+        keyboardAppearance: widget.control.getBrightness("keyboard_brightness"),
         enableIMEPersonalizedLearning:
-            widget.control.attrBool("enableIMEPersonalizedLearning", true)!,
+            widget.control.getBool("enable_ime_personalized_learning", true)!,
         obscuringCharacter:
-            widget.control.attrString("obscuringCharacter", '•')!,
-        mouseCursor: parseMouseCursor(widget.control.attrString("mouseCursor")),
-        cursorOpacityAnimates: widget.control.attrBool("animateCursorOpacity",
+            widget.control.getString("obscuring_character", '•')!,
+        mouseCursor: widget.control.getMouseCursor("mouseCursor"),
+        cursorOpacityAnimates: widget.control.getBool("animate_cursor_opacity",
             Theme.of(context).platform == TargetPlatform.iOS)!,
-        onTapAlwaysCalled:
-            widget.control.attrBool("animateCursorOpacity", false)!,
-        strutStyle: parseStrutStyle(widget.control, "strutStyle"),
+        onTapAlwaysCalled: widget.control.getBool("always_call_on_tap", false)!,
+        strutStyle: widget.control.getStrutStyle("strut_style"),
         onTap: () {
-          widget.backend.triggerControlEvent(widget.control.id, "click");
+          widget.control.triggerEvent("click");
         },
-        onTapOutside: widget.control.attrBool("onTapOutside", false)!
+        //onTapOutside: widget.control.getBool("on_tap_outside", false)! ?
+        onTapOutside: widget.control.getBool("on_tap_outside", false)!
             ? (PointerDownEvent? event) {
-                widget.backend
-                    .triggerControlEvent(widget.control.id, "tapOutside");
+                widget.control.triggerEvent("tap_outside");
               }
             : null,
         onChanged: (String value) {
           _value = value;
-          widget.backend
-              .updateControlState(widget.control.id, {"value": value});
-          if (widget.control.attrBool("onChange", false)!) {
-            widget.backend
-                .triggerControlEvent(widget.control.id, "change", value);
+          widget.control.updateProperties({"value": value});
+          if (widget.control.getBool("on_change", false)!) {
+            widget.control.triggerEvent("change", value);
           }
         });
 
@@ -359,22 +346,23 @@ class _TextFieldControlState extends State<TextFieldControl>
     textField =
         isLinuxDesktop() ? ExcludeSemantics(child: textField) : textField;
 
-    if (widget.control.attrInt("expand", 0)! > 0) {
-      return constrainedControl(
-          context, textField, widget.parent, widget.control);
+    if (widget.control.getInt("expand", 0)! > 0) {
+      return ConstrainedControl(
+        control: widget.control,
+        child: textField,
+      );
     } else {
       return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           if (constraints.maxWidth == double.infinity &&
-              widget.control.attrDouble("width") == null) {
+              widget.control.getDouble("width") == null) {
             textField = ConstrainedBox(
               constraints: const BoxConstraints.tightFor(width: 300),
               child: textField,
             );
           }
 
-          return constrainedControl(
-              context, textField, widget.parent, widget.control);
+          return ConstrainedControl(control: widget.control, child: textField);
         },
       );
     }

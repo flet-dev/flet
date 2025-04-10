@@ -83,6 +83,7 @@ import 'controls/stack.dart';
 import 'controls/submenu_button.dart';
 import 'controls/tabs.dart';
 import 'controls/text.dart';
+import 'controls/textfield.dart';
 import 'controls/time_picker.dart';
 import 'controls/transparent_pointer.dart';
 import 'controls/vertical_divider.dart';
@@ -267,6 +268,8 @@ class FletCoreExtension extends FletExtension {
         return TabsControl(key: key, control: control);
       case "Text":
         return TextControl(key: key, control: control);
+      case "TextField":
+        return TextFieldControl(key: key, control: control);
       case "Placeholder":
         return PlaceholderControl(key: key, control: control);
       case "MenuBar":
