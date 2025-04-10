@@ -1,4 +1,4 @@
-import time
+import asyncio
 from dataclasses import dataclass
 from enum import Enum
 from typing import List, Optional, Union
@@ -173,6 +173,8 @@ class TextField(FormFieldControl, AdaptiveControl):
         ) and self.filled is None:
             self.filled = True  # required to display any of the above colors
 
+    async def focus_async(self):
+        await self._invoke_method_async("focus")
+
     def focus(self):
-        self._set_attr_json("focus", str(time.time()))
-        self.update()
+        asyncio.create_task(self.focus_async())
