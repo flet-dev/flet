@@ -24,6 +24,7 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
   double _value = 0;
   final _debouncer = Debouncer(milliseconds: isDesktopPlatform() ? 10 : 100);
   late FletBackend backend;
+
   @override
   void dispose() {
     _debouncer.dispose();

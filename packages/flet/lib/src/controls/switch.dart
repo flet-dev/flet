@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
@@ -46,11 +45,11 @@ class _SwitchControlState extends State<SwitchControl> {
     _value = value;
     var props = {"value": value};
     widget.control.updateProperties(props, notify: true);
-    widget.control.triggerEvent( "change");
+    widget.control.triggerEvent("change");
   }
 
   void _onFocusChange() {
-    widget.control.triggerEvent( _focusNode.hasFocus ? "focus" : "blur");
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override

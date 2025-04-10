@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'base_controls.dart';
+
 //import 'create_control.dart';
 //import 'cupertino_textfield.dart';
 //import 'flet_store_mixin.dart';
@@ -10,6 +11,7 @@ import 'base_controls.dart';
 class TextFieldControl extends StatefulWidget {
   //final Control? parent;
   final Control control;
+
   //final List<Control> children;
   //final bool parentDisabled;
   //final bool? parentAdaptive;
@@ -29,8 +31,8 @@ class TextFieldControl extends StatefulWidget {
   State<TextFieldControl> createState() => _TextFieldControlState();
 }
 
-class _TextFieldControlState extends State<TextFieldControl>
-//with FletStoreMixin
+class _TextFieldControlState
+    extends State<TextFieldControl> //with FletStoreMixin
 {
   String _value = "";
   bool _revealPassword = false;
@@ -94,7 +96,6 @@ class _TextFieldControlState extends State<TextFieldControl>
 
   void _onFocusChange() {
     _focused = _focusNode.hasFocus;
-
     widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 

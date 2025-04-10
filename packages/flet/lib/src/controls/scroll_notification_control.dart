@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/numbers.dart';
 
@@ -63,7 +62,7 @@ class _ScrollNotificationControlState extends State<ScrollNotificationControl> {
 
         if (data["t"] != null) {
           debugPrint("ScrollNotification ${widget.control.id} event");
-           widget.control.triggerEvent("scroll", data);
+          widget.control.triggerEvent("scroll", data);
         }
       }
     }

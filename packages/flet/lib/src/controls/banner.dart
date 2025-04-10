@@ -61,10 +61,8 @@ class _BannerControlState extends State<BannerControl> {
       actions: actions,
       forceActionsBelow: widget.control.getBool("force_actions_below", false)!,
       backgroundColor: widget.control.getColor("bgcolor", context),
-      contentTextStyle: widget.control.getTextStyle(
-        "content_text_style",
-        Theme.of(context),
-      ),
+      contentTextStyle:
+          widget.control.getTextStyle("content_text_style", Theme.of(context)),
       surfaceTintColor: widget.control.getColor("surface_tint_color", context),
       shadowColor: widget.control.getColor("shadow_color", context),
       dividerColor: widget.control.getColor("divider_color", context),

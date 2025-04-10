@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
 import '../utils/misc.dart';
@@ -36,7 +35,7 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
   }
 
   void _onFocusChange() {
-     widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override

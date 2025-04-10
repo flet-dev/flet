@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/box.dart';
 import '../utils/colors.dart';
@@ -49,7 +48,7 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
   }
 
   void _onFocusChange() {
-    widget.control.triggerEvent( _focusNode.hasFocus ? "focus" : "blur");
+    widget.control.triggerEvent(_focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -97,12 +96,14 @@ class _CupertinoSwitchControlState extends State<CupertinoSwitchControl> {
         onActiveThumbImageError: activeThumbImage == null
             ? null
             : (Object exception, StackTrace? stackTrace) {
-               widget.control.triggerEvent("image_error", exception.toString());
+                widget.control
+                    .triggerEvent("image_error", exception.toString());
               },
         onInactiveThumbImageError: inactiveThumbImage == null
             ? null
             : (Object exception, StackTrace? stackTrace) {
-               widget.control.triggerEvent( "image_error", exception.toString());
+                widget.control
+                    .triggerEvent("image_error", exception.toString());
               },
         value: _value,
         offLabelColor: widget.control.getColor("off_label_color", context),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
@@ -71,7 +70,7 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
 
       Function()? onLongPress = onLongPressDefined && !control.disabled
           ? () {
-             control.triggerEvent("long_press");
+              control.triggerEvent("long_press");
             }
           : null;
 
@@ -109,7 +108,7 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
         titleAlignment: control.getListTileTitleAlignment("title_alignment"),
         style: control.getListTileStyle("style"),
         onFocusChange: (bool hasFocus) {
-         control.triggerEvent( hasFocus ? "focus" : "blur");
+          control.triggerEvent(hasFocus ? "focus" : "blur");
         },
         leading: leading,
         title: title,

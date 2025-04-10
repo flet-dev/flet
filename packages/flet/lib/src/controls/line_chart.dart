@@ -6,6 +6,7 @@ import '../widgets/skip_inherited_notifier.dart';
 
 class LineChartControl extends StatefulWidget implements SkipInheritedNotifier {
   final Control control;
+
   const LineChartControl({super.key, required this.control});
 
   @override

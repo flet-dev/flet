@@ -28,6 +28,7 @@ import 'scrollable_control.dart';
 
 class ViewControl extends StatefulWidget {
   final Control control;
+
   const ViewControl({super.key, required this.control});
 
   @override

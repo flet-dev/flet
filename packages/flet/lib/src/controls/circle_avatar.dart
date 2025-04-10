@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/images.dart';
@@ -66,7 +65,7 @@ class CircleAvatarControl extends StatelessWidget with FletStoreMixin {
           maxRadius: control.getDouble("max_radius"),
           onBackgroundImageError: backgroundImage != null
               ? (object, trace) {
-                 control.triggerEvent( "image_error", "background");
+                  control.triggerEvent("image_error", "background");
                 }
               : null,
           onForegroundImageError: foregroundImage != null

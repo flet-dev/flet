@@ -10,6 +10,7 @@ import '../widgets/error.dart';
 
 class ControlWidget extends StatelessWidget {
   final Control control;
+
   const ControlWidget({super.key, required this.control});
 
   @override

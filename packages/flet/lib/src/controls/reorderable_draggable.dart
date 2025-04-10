@@ -7,6 +7,7 @@ import '../widgets/error.dart';
 
 class ReorderableDraggableControl extends StatelessWidget {
   final Control control;
+
   const ReorderableDraggableControl({super.key, required this.control});
 
   @override

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/debouncer.dart';
@@ -116,7 +115,7 @@ class _SliderControlState extends State<SliderControl> {
         secondaryTrackValue: widget.control.getDouble("secondary_track_value"),
         onChangeStart: !widget.control.disabled
             ? (double value) {
-                 widget.control.triggerEvent("change_start", value);
+                widget.control.triggerEvent("change_start", value);
               }
             : null,
         onChangeEnd: !widget.control.disabled

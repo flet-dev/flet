@@ -12,6 +12,7 @@ import 'base_controls.dart';
 
 class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
   final Control control;
+
   const AppBarControl({super.key, required this.control});
 
   @override

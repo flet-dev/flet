@@ -5,6 +5,7 @@ import 'control_widget.dart';
 
 class CenterControl extends StatelessWidget {
   final Control control;
+
   const CenterControl({super.key, required this.control});
 
   @override

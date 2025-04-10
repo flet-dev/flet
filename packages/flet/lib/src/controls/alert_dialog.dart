@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
@@ -59,9 +58,9 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
     }
 
     final actionsAlignment =
-        widget.control.getMainAxisAlignment("actionsAlignment");
+        widget.control.getMainAxisAlignment("actions_alignment");
     var clipBehavior =
-        parseClip(widget.control.getString("clipBehavior"), Clip.none)!;
+        parseClip(widget.control.getString("clip_behavior"), Clip.none)!;
 
     return AlertDialog(
       title: title is Control

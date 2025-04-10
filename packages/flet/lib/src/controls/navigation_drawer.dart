@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
@@ -27,9 +26,9 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
   void _destinationChanged(int index) {
     _selectedIndex = index;
     debugPrint("Selected index: $_selectedIndex");
-    widget.control.updateProperties({"selected_index": _selectedIndex},
-        notify: true);
-   widget.control.triggerEvent("change", _selectedIndex);
+    widget.control
+        .updateProperties({"selected_index": _selectedIndex}, notify: true);
+    widget.control.triggerEvent("change", _selectedIndex);
   }
 
   @override

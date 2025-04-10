@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/numbers.dart';
@@ -107,9 +106,7 @@ class TextControl extends StatelessWidget {
     }
 
     onTap() {
-      control.triggerEvent(
-        "tap"
-      );
+      control.triggerEvent("tap");
     }
 
     var textWidget = control.getBool("selectable", false)!

@@ -6,6 +6,7 @@ import 'control_widget.dart';
 
 class TabsControl extends StatefulWidget {
   final Control control;
+
   const TabsControl({super.key, required this.control});
 
   @override

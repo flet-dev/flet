@@ -10,6 +10,7 @@ import 'scrollable_control.dart';
 
 class RowControl extends StatelessWidget {
   final Control control;
+
   const RowControl({super.key, required this.control});
 
   @override

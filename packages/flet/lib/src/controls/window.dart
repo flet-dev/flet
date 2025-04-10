@@ -13,6 +13,7 @@ import '../utils/numbers.dart';
 
 class WindowControl extends StatefulWidget {
   final Control control;
+
   const WindowControl({super.key, required this.control});
 
   @override

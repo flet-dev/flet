@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
-import '../flet_backend.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/borders.dart';
@@ -68,7 +67,7 @@ class ExpansionTileControl extends StatelessWidget {
 
     Function(bool)? onChange = !control.disabled
         ? (expanded) {
-           control.triggerEvent("change", "$expanded");
+            control.triggerEvent("change", "$expanded");
           }
         : null;
 
