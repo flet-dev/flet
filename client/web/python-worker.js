@@ -1,11 +1,11 @@
-importScripts("https://cdn.jsdelivr.net/pyodide/v0.27.2/full/pyodide.js");
-
+self.pyodideUrl = null;
 self.micropipIncludePre = false;
 self.pythonModuleName = null;
 self.initialized = false;
 self.flet_js = {}; // namespace for Python global functions
 
 self.initPyodide = async function () {
+    importScripts(self.pyodideUrl);
     self.pyodide = await loadPyodide();
     self.pyodide.registerJsModule("flet_js", flet_js);
     flet_js.documentUrl = documentUrl;
@@ -48,6 +48,7 @@ self.onmessage = async (event) => {
     // run only once
     if (!self.initialized) {
         self.initialized = true;
+        self.pyodideUrl = event.data.pyodideUrl;
         self.documentUrl = event.data.documentUrl;
         self.micropipIncludePre = event.data.micropipIncludePre;
         self.pythonModuleName = event.data.pythonModuleName;
