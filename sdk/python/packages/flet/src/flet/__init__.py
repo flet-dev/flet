@@ -29,6 +29,7 @@ from flet.controls.box import (
     ColorFilter,
     DecorationImage,
     FilterQuality,
+    OptionalShadowValue,
     ShadowBlurStyle,
     ShadowValue,
 )

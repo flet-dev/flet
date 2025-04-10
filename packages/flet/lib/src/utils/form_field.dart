@@ -185,7 +185,7 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       //         : null,
       icon: icon,
       filled: control.getBool("filled", false)!,
-      fillColor: fillColor ?? (focused ? focusedBgcolor ?? bgcolor : bgcolor),
+      fillColor: fillColor ?? (focused ? (focusedBgcolor ?? bgcolor) : bgcolor),
       hintText: control.getString("hint_text"),
       hintStyle: control.getTextStyle("hint_style", Theme.of(context)),
       helperText: control.getString("helper_text"),
@@ -225,7 +225,7 @@ InputDecoration buildInputDecoration(BuildContext context, Control control,
       suffixStyle: control.getTextStyle("suffix_style", Theme.of(context)));
 }
 
-OverlayVisibilityMode? parseVisibilityMode(String? value,
+OverlayVisibilityMode? parseOverlayVisibilityMode(String? value,
     [OverlayVisibilityMode? defaultValue]) {
   switch (value?.toLowerCase()) {
     case "never":
@@ -267,7 +267,7 @@ extension FormFieldParsers on Control {
 
   OverlayVisibilityMode? getOverlayVisibilityMode(String propertyName,
       [OverlayVisibilityMode? defaultValue]) {
-    return parseVisibilityMode(get(propertyName), defaultValue);
+    return parseOverlayVisibilityMode(get(propertyName), defaultValue);
   }
 
   StrutStyle? getStrutStyle(String propertyName, [StrutStyle? defaultValue]) {

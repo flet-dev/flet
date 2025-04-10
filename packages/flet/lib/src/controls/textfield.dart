@@ -120,9 +120,6 @@ class _TextFieldControlState extends State<TextFieldControl>
     //       backend: widget.backend);
     // }
 
-    debugPrint("TextField build: ${widget.control.id}");
-
-    //String value = widget.control.attrs["value"] ?? "";
     String value = widget.control.getString("value", "")!;
     if (_value != value) {
       _value = value;
@@ -135,52 +132,49 @@ class _TextFieldControlState extends State<TextFieldControl>
 
     // var prefixControls =
     //     widget.children.where((c) => c.name == "prefix" && c.isVisible);
-    Widget? prefixWidget = widget.control.buildWidget("prefix");
+    var prefixWidget = widget.control.buildWidget("prefix");
     // var prefixIconControls =
     //     widget.children.where((c) => c.name == "prefix_icon" && c.isVisible);
-    Widget? prefixIconWidget = widget.control.buildIconOrWidget("prefix_icon");
+    var prefixIconWidget = widget.control.buildIconOrWidget("prefix_icon");
     // var suffixControls =
     //     widget.children.where((c) => c.name == "suffix" && c.isVisible);
-    Widget? suffixWidget = widget.control.buildWidget("suffix");
+    var suffixWidget = widget.control.buildWidget("suffix");
     // var suffixIconControls =
     //     widget.children.where((c) => c.name == "suffix_icon" && c.isVisible);
-    Widget? suffixIconWidget = widget.control.buildIconOrWidget("suffix_icon");
+    var suffixIconWidget = widget.control.buildIconOrWidget("suffix_icon");
     // var iconControls =
     //     widget.children.where((c) => c.name == "icon" && c.isVisible);
-    Widget? iconWidget = widget.control.buildIconOrWidget("icon");
+    var iconWidget = widget.control.buildIconOrWidget("icon");
     // var counterControls =
     //     widget.children.where((c) => c.name == "counter" && c.isVisible);
-    Widget? counterWidget = widget.control.buildWidget("counter");
+    var counterWidget = widget.control.buildWidget("counter");
     // var errorCtrl =
     //     widget.children.where((c) => c.name == "error" && c.isVisible);
-    Widget? errorWidget = widget.control.buildWidget("error");
+    var errorWidget = widget.control.buildWidget("error");
     // var helperCtrl =
     //     widget.children.where((c) => c.name == "helper" && c.isVisible);
-    Widget? helperWidget = widget.control.buildWidget("helper");
+    var helperWidget = widget.control.buildWidget("helper");
     // var labelCtrl =
     //     widget.children.where((c) => c.name == "label" && c.isVisible);
-    Widget? labelWidget = widget.control.buildTextOrWidget("label");
+    var labelWidget = widget.control.buildTextOrWidget("label");
 
-    bool shiftEnter = widget.control.getBool("shift_enter", false)!;
-    bool multiline = widget.control.getBool("multiline", false)! || shiftEnter;
-    int minLines = widget.control.getInt("min_lines", 1)!;
-    int? maxLines = widget.control.getInt("max_lines", multiline ? null : 1);
+    var shiftEnter = widget.control.getBool("shift_enter", false)!;
+    var multiline = widget.control.getBool("multiline", false)! || shiftEnter;
+    var minLines = widget.control.getInt("min_lines", 1)!;
+    var maxLines = widget.control.getInt("max_lines", multiline ? null : 1);
 
-    bool password = widget.control.getBool("password", false)!;
-    bool canRevealPassword =
+    var password = widget.control.getBool("password", false)!;
+    var canRevealPassword =
         widget.control.getBool("can_reveal_password", false)!;
     var cursorColor = widget.control.getColor("cursor_color", context);
     var selectionColor = widget.control.getColor("selection_color", context);
     var textSize = widget.control.getDouble("text_size");
     var color = widget.control.getColor("color", context);
     var focusedColor = widget.control.getColor("focused_color", context);
-
-    // TextStyle? textStyle =
-    //     getTextStyle(Theme.of(context), widget.control, "textStyle");
-    TextStyle? textStyle =
-        widget.control.getTextStyle("text_style", Theme.of(context));
+    var textStyle = widget.control
+        .getTextStyle("text_style", Theme.of(context), const TextStyle())!;
     if (textSize != null || color != null || focusedColor != null) {
-      textStyle = (textStyle ?? const TextStyle()).copyWith(
+      textStyle = textStyle.copyWith(
           fontSize: textSize, color: _focused ? focusedColor ?? color : color);
     }
 
@@ -212,7 +206,7 @@ class _TextFieldControlState extends State<TextFieldControl>
           });
     }
 
-    double? textVerticalAlign = widget.control.getDouble("text_vertical_align");
+    var textVerticalAlign = widget.control.getDouble("text_vertical_align");
 
     FocusNode focusNode = shiftEnter ? _shiftEnterfocusNode : _focusNode;
 
@@ -276,7 +270,7 @@ class _TextFieldControlState extends State<TextFieldControl>
         keyboardType: multiline
             ? TextInputType.multiline
             : widget.control
-                .getTextInputType("keyboardType", TextInputType.text)!,
+                .getTextInputType("keyboard_type", TextInputType.text)!,
         autocorrect: widget.control.getBool("autocorrect", true)!,
         enableSuggestions: widget.control.getBool("enable_suggestions", true)!,
         smartDashesType: widget.control.getBool("smart_dashes_type", true)!
@@ -305,9 +299,13 @@ class _TextFieldControlState extends State<TextFieldControl>
         ignorePointers: widget.control.getBool("ignore_pointers"),
         cursorErrorColor:
             widget.control.getColor("cursor_error_color", context),
-        scribbleEnabled: widget.control.getBool("enable_scribble", true)!,
+        stylusHandwritingEnabled: widget.control
+                .getBool("enable_stylus_handwriting") ??
+            widget.control.getBool(
+                "enable_scribble") ?? // todo(0.73.0): remove enable_scribble
+            true,
         scrollPadding: widget.control
-            .getEdgeInsets("scroll_padding", const EdgeInsets.all(20.0))!,
+            .getPadding("scroll_padding", const EdgeInsets.all(20.0))!,
         keyboardAppearance: widget.control.getBrightness("keyboard_brightness"),
         enableIMEPersonalizedLearning:
             widget.control.getBool("enable_ime_personalized_learning", true)!,
@@ -367,85 +365,5 @@ class _TextFieldControlState extends State<TextFieldControl>
       );
     }
     //});
-  }
-}
-
-class TextCapitalizationFormatter extends TextInputFormatter {
-  final TextCapitalization capitalization;
-
-  TextCapitalizationFormatter(this.capitalization);
-
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    String text = '';
-
-    switch (capitalization) {
-      case TextCapitalization.words:
-        text = capitalizeFirstofEach(newValue.text);
-        break;
-      case TextCapitalization.sentences:
-        List<String> sentences = newValue.text.split('.');
-        for (int i = 0; i < sentences.length; i++) {
-          sentences[i] = inCaps(sentences[i]);
-        }
-        text = sentences.join('.');
-        break;
-      case TextCapitalization.characters:
-        text = allInCaps(newValue.text);
-        break;
-      case TextCapitalization.none:
-        text = newValue.text;
-        break;
-    }
-
-    return TextEditingValue(
-      text: text,
-      selection: newValue.selection,
-    );
-  }
-
-  /// 'Hello world'
-  static String inCaps(String text) {
-    if (text.isEmpty) {
-      return text;
-    }
-    String result = '';
-    for (int i = 0; i < text.length; i++) {
-      if (text[i] != ' ') {
-        result += '${text[i].toUpperCase()}${text.substring(i + 1)}';
-        break;
-      } else {
-        result += text[i];
-      }
-    }
-    return result;
-  }
-
-  /// 'HELLO WORLD'
-  static String allInCaps(String text) => text.toUpperCase();
-
-  /// 'Hello World'
-  static String capitalizeFirstofEach(String text) => text
-      .replaceAll(RegExp(' +'), ' ')
-      .split(" ")
-      .map((str) => inCaps(str))
-      .join(" ");
-}
-
-class CustomNumberFormatter extends TextInputFormatter {
-  final String pattern;
-
-  CustomNumberFormatter(this.pattern);
-
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    final regExp = RegExp(pattern);
-    if (regExp.hasMatch(newValue.text)) {
-      return newValue;
-    }
-    // If newValue is invalid, keep the old value
-    return oldValue;
   }
 }

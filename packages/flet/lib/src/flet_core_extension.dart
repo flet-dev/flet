@@ -35,6 +35,7 @@ import 'controls/cupertino_segmented_button.dart';
 import 'controls/cupertino_slider.dart';
 import 'controls/cupertino_sliding_segmented_button.dart';
 import 'controls/cupertino_switch.dart';
+import 'controls/cupertino_textfield.dart';
 import 'controls/cupertino_timer_picker.dart';
 import 'controls/datatable.dart';
 import 'controls/date_picker.dart';
@@ -54,6 +55,7 @@ import 'controls/interactive_viewer.dart';
 import 'controls/line_chart.dart';
 import 'controls/list_tile.dart';
 import 'controls/list_view.dart';
+import 'controls/markdown.dart';
 import 'controls/menu_bar.dart';
 import 'controls/menu_item_button.dart';
 import 'controls/merge_semantics.dart';
@@ -129,6 +131,8 @@ class FletCoreExtension extends FletExtension {
         return CardControl(key: key, control: control);
       case "CupertinoSegmentedButton":
         return CupertinoSegmentedButtonControl(key: key, control: control);
+      case "Markdown":
+        return MarkdownControl(key: key, control: control);
       case "CupertinoBottomSheet":
         return CupertinoBottomSheetControl(key: key, control: control);
       case "PopupMenuButton":
@@ -140,6 +144,8 @@ class FletCoreExtension extends FletExtension {
             key: key, control: control);
       case "SegmentedButton":
         return SegmentedButtonControl(key: key, control: control);
+      case "CupertinoTextField":
+        return CupertinoTextFieldControl(key: key, control: control);
       case "Semantics":
         return SemanticsControl(key: key, control: control);
       case "MergeSemantics":

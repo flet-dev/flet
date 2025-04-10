@@ -7,12 +7,13 @@ from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.control import control
 from flet.controls.core.autofill_group import AutofillHint
 from flet.controls.material.form_field_control import FormFieldControl
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.padding import PaddingValue
 from flet.controls.text_style import StrutStyle
 from flet.controls.types import (
     Brightness,
     ClipBehavior,
     MouseCursor,
+    Number,
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
@@ -121,7 +122,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     show_cursor: bool = True
     cursor_color: OptionalColorValue = None
     cursor_error_color: OptionalColorValue = None
-    cursor_width: OptionalNumber = None
+    cursor_width: Number = 2.0
     cursor_height: OptionalNumber = None
     cursor_radius: OptionalNumber = None
     selection_color: OptionalColorValue = None
@@ -131,11 +132,14 @@ class TextField(FormFieldControl, AdaptiveControl):
     enable_ime_personalized_learning: bool = True
     can_request_focus: bool = True
     ignore_pointers: bool = False
-    enable_scribble: bool = True
+    enable_scribble: bool = (
+        True  # todo(0.70.3): remove in favor of enable_stylus_handwriting
+    )
+    enable_stylus_handwriting: bool = True
     animate_cursor_opacity: Optional[bool] = None
     always_call_on_tap: bool = False
-    scroll_padding: OptionalPaddingValue = None
-    clip_behavior: Optional[ClipBehavior] = None
+    scroll_padding: PaddingValue = 20
+    clip_behavior: ClipBehavior = ClipBehavior.HARD_EDGE
     keyboard_brightness: Optional[Brightness] = None
     mouse_cursor: Optional[MouseCursor] = None
     strut_style: Optional[StrutStyle] = None
