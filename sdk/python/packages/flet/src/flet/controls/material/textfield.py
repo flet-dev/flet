@@ -19,6 +19,7 @@ from flet.controls.types import (
     OptionalNumber,
     TextAlign,
 )
+from flet.utils import deprecated_warning
 
 __all__ = [
     "TextField",
@@ -150,6 +151,16 @@ class TextField(FormFieldControl, AdaptiveControl):
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
     on_tap_outside: OptionalControlEventCallable = None
+
+    def __setattr__(self, name, value):
+        if name == "enable_scribble" and value is not None:
+            deprecated_warning(
+                name="enable_scribble",
+                reason="Use enable_stylus_handwriting instead.",
+                version="0.70.0",
+                delete_version="0.70.3",
+            )
+        super().__setattr__(name, value)
 
     def before_update(self):
         super().before_update()
