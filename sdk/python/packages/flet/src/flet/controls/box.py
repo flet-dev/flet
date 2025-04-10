@@ -26,6 +26,7 @@ __all__ = [
     "BoxShape",
     "BoxConstraints",
     "ShadowValue",
+    "OptionalShadowValue",
 ]
 
 
@@ -59,6 +60,7 @@ class BoxShadow:
 
 
 ShadowValue = Union[BoxShadow, List[BoxShadow]]
+OptionalShadowValue = Union[BoxShadow, List[BoxShadow]]
 
 
 class BoxShape(Enum):
