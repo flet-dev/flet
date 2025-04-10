@@ -1,3 +1,4 @@
+const defaultPyodideUrl = "https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js";
 const pythonWorker = new Worker("python-worker.js");
 
 let _onPythonInitialized = null;
@@ -15,7 +16,12 @@ pythonWorker.onmessage = (event) => {
 documentUrl = document.URL;
 
 // initialize worker
-pythonWorker.postMessage({ documentUrl, micropipIncludePre, pythonModuleName });
+pythonWorker.postMessage({
+    pyodideUrl: globalThis.pyodideUrl ?? defaultPyodideUrl,
+    documentUrl,
+    micropipIncludePre,
+    pythonModuleName
+});
 
 globalThis.jsConnect = async function(receiveCallback) {
     _onReceivedCallback = receiveCallback;
