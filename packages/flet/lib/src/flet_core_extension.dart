@@ -33,6 +33,7 @@ import 'controls/cupertino_picker.dart';
 import 'controls/cupertino_radio.dart';
 import 'controls/cupertino_segmented_button.dart';
 import 'controls/cupertino_slider.dart';
+import 'controls/cupertino_sliding_segmented_button.dart';
 import 'controls/cupertino_switch.dart';
 import 'controls/cupertino_timer_picker.dart';
 import 'controls/datatable.dart';
@@ -133,6 +134,9 @@ class FletCoreExtension extends FletExtension {
         return PopupMenuButtonControl(key: key, control: control);
       case "Center":
         return CenterControl(key: key, control: control);
+      case "CupertinoSlidingSegmentedButton":
+        return CupertinoSlidingSegmentedButtonControl(
+            key: key, control: control);
       case "SegmentedButton":
         return SegmentedButtonControl(key: key, control: control);
       case "Semantics":
