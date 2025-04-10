@@ -27,10 +27,11 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-
   flutter:
     sdk: flutter
-
+  flutter_web_plugins:
+    sdk: flutter
+    
 # # --FAT_CLIENT_START--
 #   flet_audio:
 #     git:
@@ -94,7 +95,6 @@ dependencies:
 #       ref: 0.1.0
 #       path: src/flutter/flet_flashlight
 
-  url_strategy: ^0.2.0
   cupertino_icons: ^1.0.6
   
   integration_test:

@@ -213,7 +213,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_web_plugins:
-    dependency: transitive
+    dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -696,14 +696,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.4"
-  url_strategy:
-    dependency: "direct main"
-    description:
-      name: url_strategy
-      sha256: "42b68b42a9864c4d710401add17ad06e28f1c1d5500c93b98c431f6b0ea4ab87"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.0"
   vector_graphics:
     dependency: transitive
     description:

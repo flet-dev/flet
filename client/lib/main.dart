@@ -20,7 +20,7 @@ import 'package:flet/flet.dart';
 // import 'package:flet_webview/flet_webview.dart' as flet_webview;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:url_strategy/url_strategy.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
@@ -61,7 +61,7 @@ void main([List<String>? args]) async {
     var routeUrlStrategy = getFletRouteUrlStrategy();
     debugPrint("URL Strategy: $routeUrlStrategy");
     if (routeUrlStrategy == "path") {
-      setPathUrlStrategy();
+      usePathUrlStrategy();
     }
   } else if ((Platform.isWindows || Platform.isMacOS || Platform.isLinux) &&
       !kDebugMode) {

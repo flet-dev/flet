@@ -171,10 +171,21 @@ class FletBackend extends ChangeNotifier {
     _send(Message(
         action: MessageAction.registerClient,
         payload: RegisterClientRequestBody(
-                sessionId: SessionStore.sessionId,
-                pageName: getWebPageName(pageUri),
-                page: page)
-            .toJson()));
+            sessionId: SessionStore.sessionId,
+            pageName: getWebPageName(pageUri),
+            page: {
+              'route': page.get("route"),
+              'pwa': page.get("pwa"),
+              'web': page.get("web"),
+              'debug': page.get("debug"),
+              'wasm': page.get("wasm"),
+              'platform_brightness': page.get("platform_brightness"),
+              'width': page.get("width"),
+              'height': page.get("height"),
+              'platform': page.get("platform"),
+              'window': page.child("window")!.toJson(),
+              'media': page.get("media"),
+            }).toJson()));
   }
 
   _onClientRegistered(RegisterClientResponseBody resp) {
