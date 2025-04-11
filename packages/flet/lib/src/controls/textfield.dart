@@ -4,36 +4,19 @@ import 'package:flutter/services.dart';
 
 import 'base_controls.dart';
 
-//import 'create_control.dart';
-//import 'cupertino_textfield.dart';
-//import 'flet_store_mixin.dart';
-
 class TextFieldControl extends StatefulWidget {
-  //final Control? parent;
   final Control control;
-
-  //final List<Control> children;
-  //final bool parentDisabled;
-  //final bool? parentAdaptive;
-  //final FletControlBackend backend;
 
   const TextFieldControl({
     super.key,
-    //this.parent,
     required this.control,
-    //required this.children,
-    //required this.parentDisabled,
-    //required this.parentAdaptive,
-    //required this.backend,
   });
 
   @override
   State<TextFieldControl> createState() => _TextFieldControlState();
 }
 
-class _TextFieldControlState
-    extends State<TextFieldControl> //with FletStoreMixin
-{
+class _TextFieldControlState extends State<TextFieldControl> {
   String _value = "";
   bool _revealPassword = false;
   bool _focused = false;
@@ -52,7 +35,6 @@ class _TextFieldControlState
         if (!HardwareKeyboard.instance.isShiftPressed &&
             evt.logicalKey.keyLabel == 'Enter') {
           if (evt is KeyDownEvent) {
-            //widget.backend.triggerControlEvent(widget.control.id, "submit");
             widget.control.triggerEvent("submit");
           }
           return KeyEventResult.handled;
@@ -84,7 +66,7 @@ class _TextFieldControlState
       case "focus":
         _focusNode.requestFocus();
       default:
-        throw Exception("Unknown CupertinoButton method: $name");
+        throw Exception("Unknown TextField method: $name");
     }
   }
 
@@ -103,23 +85,7 @@ class _TextFieldControlState
   Widget build(BuildContext context) {
     debugPrint("TextField build: ${widget.control.id}");
 
-    //return withPagePlatform((context, platform) {
     bool autofocus = widget.control.getBool("autofocus", false)!;
-    // bool disabled = widget.control.isDisabled || widget.parentDisabled;
-
-    // bool? adaptive =
-    //     widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
-    // if (adaptive == true &&
-    //     (platform == TargetPlatform.iOS ||
-    //         platform == TargetPlatform.macOS)) {
-    //   return CupertinoTextFieldControl(
-    //       control: widget.control,
-    //       children: widget.children,
-    //       parent: widget.parent,
-    //       parentDisabled: widget.parentDisabled,
-    //       parentAdaptive: adaptive,
-    //       backend: widget.backend);
-    // }
 
     String value = widget.control.getString("value", "")!;
     if (_value != value) {
@@ -131,33 +97,19 @@ class _TextFieldControlState
       );
     }
 
-    // var prefixControls =
-    //     widget.children.where((c) => c.name == "prefix" && c.isVisible);
-    var prefixWidget = widget.control.buildWidget("prefix");
-    // var prefixIconControls =
-    //     widget.children.where((c) => c.name == "prefix_icon" && c.isVisible);
-    var prefixIconWidget = widget.control.buildIconOrWidget("prefix_icon");
-    // var suffixControls =
-    //     widget.children.where((c) => c.name == "suffix" && c.isVisible);
-    var suffixWidget = widget.control.buildWidget("suffix");
-    // var suffixIconControls =
-    //     widget.children.where((c) => c.name == "suffix_icon" && c.isVisible);
-    var suffixIconWidget = widget.control.buildIconOrWidget("suffix_icon");
-    // var iconControls =
-    //     widget.children.where((c) => c.name == "icon" && c.isVisible);
-    var iconWidget = widget.control.buildIconOrWidget("icon");
-    // var counterControls =
-    //     widget.children.where((c) => c.name == "counter" && c.isVisible);
-    var counterWidget = widget.control.buildWidget("counter");
-    // var errorCtrl =
-    //     widget.children.where((c) => c.name == "error" && c.isVisible);
-    var errorWidget = widget.control.buildWidget("error");
-    // var helperCtrl =
-    //     widget.children.where((c) => c.name == "helper" && c.isVisible);
-    var helperWidget = widget.control.buildWidget("helper");
-    // var labelCtrl =
-    //     widget.children.where((c) => c.name == "label" && c.isVisible);
-    var labelWidget = widget.control.buildTextOrWidget("label");
+    // var prefixWidget = widget.control.buildWidget("prefix");
+    // var prefixIconWidget = widget.control.buildIconOrWidget("prefix_icon");
+    // var suffixWidget = widget.control.buildWidget("suffix");
+    // var suffixIconWidget = widget.control.buildIconOrWidget("suffix_icon");
+    // var iconWidget = widget.control.buildIconOrWidget("icon");
+    // var counterWidget = widget.control.buildWidget("counter");
+    // var errorWidget = widget.control.buildWidget("error");
+
+    // var helperWidget = widget.control.buildTextOrWidget("helper");
+    // String? helperText = widget.control.get("helper") is String
+    //     ? widget.control.getString("helper")
+    //     : null;
+    //var labelWidget = widget.control.buildTextOrWidget("label");
 
     var shiftEnter = widget.control.getBool("shift_enter", false)!;
     var multiline = widget.control.getBool("multiline", false)! || shiftEnter;
@@ -235,32 +187,24 @@ class _TextFieldControlState
                 widget.control.triggerEvent("submit", value);
               }
             : null,
-        decoration: buildInputDecoration(context, widget.control,
-            //prefix: prefixControls.isNotEmpty ? prefixControls.first : null,
-            prefix: prefixWidget,
-            prefixIcon: prefixIconWidget,
-            //suffix: suffixControls.isNotEmpty ? suffixControls.first : null,
-            suffix: suffixWidget,
-            // suffixIcon:
-            //     suffixIconControls.isNotEmpty ? suffixIconControls.first : null,
-            suffixIcon: suffixIconWidget,
-            //icon: iconControls.isNotEmpty ? iconControls.first : null,
-
-            icon: iconWidget,
-            //counter: counterControls.isNotEmpty ? counterControls.first : null,
-            counter: counterWidget,
-            //error: errorCtrl.isNotEmpty ? errorCtrl.first : null,
-            error: errorWidget,
-            //helper: helperCtrl.isNotEmpty ? helperCtrl.first : null,
-            helper: helperWidget,
-            //label: labelCtrl.isNotEmpty ? labelCtrl.first : null,
-            label: labelWidget,
-            customSuffix: revealPasswordIcon,
-            valueLength: _value.length,
-            maxLength: maxLength,
-            focused: _focused,
-            disabled: widget.control.disabled,
-            adaptive: widget.control.adaptive),
+        decoration: buildInputDecoration(
+          context,
+          widget.control,
+          //prefix: prefixWidget,
+          //prefixIcon: prefixIconWidget,
+          //suffix: suffixWidget,
+          //suffixIcon: suffixIconWidget,
+          //icon: iconWidget,
+          //counter: counterWidget,
+          //error: errorWidget,
+          //helper: helperWidget,
+          //label: labelWidget,
+          customSuffix: revealPasswordIcon,
+          valueLength: _value.length,
+          maxLength: maxLength,
+          focused: _focused,
+          //disabled: widget.control.disabled,
+        ),
         showCursor: widget.control.getBool("show_cursor"),
         textAlignVertical: textVerticalAlign != null
             ? TextAlignVertical(y: textVerticalAlign)
@@ -312,7 +256,7 @@ class _TextFieldControlState
             widget.control.getBool("enable_ime_personalized_learning", true)!,
         obscuringCharacter:
             widget.control.getString("obscuring_character", '•')!,
-        mouseCursor: widget.control.getMouseCursor("mouseCursor"),
+        mouseCursor: widget.control.getMouseCursor("mouse_cursor"),
         cursorOpacityAnimates: widget.control.getBool("animate_cursor_opacity",
             Theme.of(context).platform == TargetPlatform.iOS)!,
         onTapAlwaysCalled: widget.control.getBool("always_call_on_tap", false)!,
@@ -320,7 +264,6 @@ class _TextFieldControlState
         onTap: () {
           widget.control.triggerEvent("click");
         },
-        //onTapOutside: widget.control.getBool("on_tap_outside", false)! ?
         onTapOutside: widget.control.getBool("on_tap_outside", false)!
             ? (PointerDownEvent? event) {
                 widget.control.triggerEvent("tap_outside");

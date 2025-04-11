@@ -12,6 +12,7 @@ from flet.controls.types import (
     IconValueOrControl,
     OptionalColorValue,
     OptionalNumber,
+    OptionalString,
     StrOrControl,
     VerticalAlignment,
 )
@@ -48,25 +49,25 @@ class FormFieldControl(ConstrainedControl):
     focus_color: OptionalColorValue = None
     align_label_with_hint: Optional[bool] = None
     hover_color: OptionalColorValue = None
-    hint_text: Optional[str] = None
+    hint_text: OptionalString = None
     hint_style: Optional[TextStyle] = None
     hint_fade_duration: OptionalDurationValue = None
     hint_max_lines: Optional[int] = None
-    helper: Optional[Control] = None
-    helper_text: Optional[str] = None
+    helper: Optional[StrOrControl] = None
+    helper_text: OptionalString = None  # todo(0.73.0): remove in favor of helper
     helper_style: Optional[TextStyle] = None
     helper_max_lines: Optional[int] = None
     counter: Optional[Control] = None
-    counter_text: Optional[str] = None
+    counter_text: OptionalString = None
     counter_style: Optional[TextStyle] = None
     error: Optional[Control] = None
-    error_text: Optional[str] = None
+    error_text: OptionalString = None
     error_style: Optional[TextStyle] = None
     error_max_lines: Optional[int] = None
     prefix: Optional[Control] = None
     prefix_icon: Optional[IconValueOrControl] = None
     prefix_icon_size_constraints: Optional[BoxConstraints] = None
-    prefix_text: Optional[str] = None
+    prefix_text: OptionalString = None
     prefix_style: Optional[TextStyle] = None
     suffix: Optional[Control] = None
     suffix_icon: Optional[IconValueOrControl] = None
@@ -74,5 +75,5 @@ class FormFieldControl(ConstrainedControl):
     size_constraints: Optional[BoxConstraints] = None
     collapsed: Optional[bool] = None
     fit_parent_size: Optional[bool] = None
-    suffix_text: Optional[str] = None
+    suffix_text: OptionalString = None
     suffix_style: Optional[TextStyle] = None

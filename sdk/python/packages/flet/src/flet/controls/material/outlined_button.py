@@ -49,7 +49,7 @@ class OutlinedButton(ConstrainedControl, AdaptiveControl):
     clip_behavior: ClipBehavior = ClipBehavior.NONE
     url: Optional[str] = None
     url_target: Optional[UrlTarget] = None
-    text: Optional[str] = None  # todo(0.70.3): remove in favor of content
+    text: Optional[str] = None  # todo(0.73.0): remove in favor of content
     on_click: OptionalControlEventCallable = None
     on_long_press: OptionalControlEventCallable = None
     on_hover: OptionalControlEventCallable = None
