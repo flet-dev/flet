@@ -7,7 +7,6 @@ from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import control
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
-    IconValue,
     IconValueOrControl,
     Number,
     OptionalColorValue,
