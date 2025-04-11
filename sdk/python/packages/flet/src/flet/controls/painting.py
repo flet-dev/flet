@@ -30,9 +30,9 @@ class PaintingStyle(Enum):
     STROKE = "stroke"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PaintGradient:
-    pass
+    type: str = ""
 
 
 @dataclass

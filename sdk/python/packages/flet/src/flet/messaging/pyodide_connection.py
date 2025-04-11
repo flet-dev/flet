@@ -4,6 +4,7 @@ from typing import Any
 
 import flet_js
 import msgpack
+from flet.controls.control import Control
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,
@@ -13,8 +14,8 @@ from flet.messaging.protocol import (
     RegisterClientRequestBody,
     RegisterClientResponseBody,
     UpdateControlPropsBody,
+    configure_encode_object_for_msgpack,
     decode_ext_from_msgpack,
-    encode_object_for_msgpack,
 )
 from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
@@ -110,6 +111,7 @@ class PyodideConnection(Connection):
     def send_message(self, message: ClientMessage):
         # print(f"Sending: {message}")
         m = msgpack.packb(
-            [message.action, message.body], default=encode_object_for_msgpack
+            [message.action, message.body],
+            default=configure_encode_object_for_msgpack(Control),
         )
         self.send_callback(m)

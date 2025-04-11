@@ -48,13 +48,13 @@ List<double>? parsePaintStrokeDashPattern(dynamic value,
       : null;
 }
 
-ui.Gradient? parsePaintGradient(Map<String, dynamic>? value, ThemeData? theme,
+ui.Gradient? parsePaintGradient(Map<dynamic, dynamic>? value, ThemeData? theme,
     [ui.Gradient? defaultValue]) {
   if (value == null) return defaultValue;
 
   String type = value["type"];
   var colorStops = parseGradientStops(value["color_stops"]);
-  var colors = parseColors(theme, value["colors"]);
+  var colors = parseColors(value["colors"], theme);
   var tileMode = parseTileMode(value["tile_mode"], TileMode.clamp)!;
   if (type == "linear") {
     return ui.Gradient.linear(parseOffset(value["begin"])!,

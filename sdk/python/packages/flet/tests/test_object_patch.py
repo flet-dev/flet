@@ -12,7 +12,7 @@ from flet.controls.object_patch import ObjectPatch
 from flet.controls.page import Page
 from flet.controls.ref import Ref
 from flet.messaging.connection import Connection
-from flet.messaging.protocol import encode_object_for_msgpack
+from flet.messaging.protocol import configure_encode_object_for_msgpack
 from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
 
@@ -20,7 +20,7 @@ controls_index = weakref.WeakValueDictionary()
 
 
 def b_pack(data):
-    return msgpack.packb(data, default=encode_object_for_msgpack)
+    return msgpack.packb(data, default=configure_encode_object_for_msgpack(Control))
 
 
 def b_unpack(packed_data):
@@ -42,7 +42,9 @@ def update_page(new: Any, old: Any = None, show_details=True):
     # print(graph_patch)
 
     # 3 - build msgpack message
-    msg = msgpack.packb(graph_patch, default=encode_object_for_msgpack)
+    msg = msgpack.packb(
+        graph_patch, default=configure_encode_object_for_msgpack(Control)
+    )
 
     end = datetime.datetime.now()
 

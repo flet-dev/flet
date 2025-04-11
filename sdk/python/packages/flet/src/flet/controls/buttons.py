@@ -29,7 +29,7 @@ __all__ = [
 
 @dataclass
 class OutlinedBorder:
-    type: str = None
+    type: str = ""
 
 
 @dataclass

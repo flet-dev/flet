@@ -6,9 +6,9 @@ import traceback
 import weakref
 from typing import Any, Optional
 
-import flet_web.fastapi as flet_fastapi
 import msgpack
 from fastapi import WebSocket, WebSocketDisconnect
+from flet.controls.control import Control
 from flet.controls.page import PageDisconnectedException
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
@@ -19,11 +19,13 @@ from flet.messaging.protocol import (
     RegisterClientRequestBody,
     RegisterClientResponseBody,
     UpdateControlPropsBody,
+    configure_encode_object_for_msgpack,
     decode_ext_from_msgpack,
-    encode_object_for_msgpack,
 )
 from flet.messaging.session import Session
 from flet.utils import random_string, sha1
+
+import flet_web.fastapi as flet_fastapi
 from flet_web.fastapi.flet_app_manager import app_manager
 from flet_web.fastapi.oauth_state import OAuthState
 from flet_web.uploads import build_upload_url
@@ -269,7 +271,8 @@ class FletApp(Connection):
     def send_message(self, message: ClientMessage):
         # print(f"Sending: {message}")
         m = msgpack.packb(
-            [message.action, message.body], default=encode_object_for_msgpack
+            [message.action, message.body],
+            default=configure_encode_object_for_msgpack(Control),
         )
         self.__send_queue.put_nowait(m)
 

@@ -5,7 +5,7 @@ from flet.controls.types import OptionalColorValue, OptionalNumber
 
 @dataclass
 class ChartPointShape:
-    pass
+    type: str = ""
 
 
 @dataclass

@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 
 import msgpack
-from flet.controls.control import BaseControl
+from flet.controls.control import BaseControl, Control
 from flet.controls.object_patch import ObjectPatch
 from flet.controls.padding import Padding
 from flet.controls.page import Page, PageMediaData
 from flet.controls.types import Brightness, PagePlatform
 from flet.messaging.connection import Connection
-from flet.messaging.protocol import encode_object_for_msgpack
+from flet.messaging.protocol import configure_encode_object_for_msgpack
 from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
 from flet.utils import patch_dataclass
@@ -85,7 +85,9 @@ def test_page_patch_dataclass():
     graph_patch = patch.to_graph()
     print("Patch 1:", graph_patch)
 
-    msg = msgpack.packb(graph_patch, default=encode_object_for_msgpack)
+    msg = msgpack.packb(
+        graph_patch, default=configure_encode_object_for_msgpack(Control)
+    )
 
     print("Message 1:", msg)
 
@@ -133,6 +135,8 @@ def test_page_patch_dataclass():
     assert graph_patch["platform_brightness"] == Brightness.DARK
     assert graph_patch["media"]["padding"]["left"] == 1
 
-    msg = msgpack.packb(graph_patch, default=encode_object_for_msgpack)
+    msg = msgpack.packb(
+        graph_patch, default=configure_encode_object_for_msgpack(Control)
+    )
 
     print("Message 2:", msg)

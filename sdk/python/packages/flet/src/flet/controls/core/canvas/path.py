@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, List, Optional
 
 from flet.controls.border_radius import OptionalBorderRadiusValue
@@ -9,21 +9,25 @@ from flet.controls.painting import Paint
 
 @control("Path")
 class Path(Shape):
-    @dataclass
+    @dataclass(kw_only=True)
     class PathElement:
-        pass
+        type: str = ""
 
     @dataclass
     class MoveTo(PathElement):
         x: float
         y: float
-        type: str = "moveto"
+
+        def __post_init__(self):
+            self.type = "moveto"
 
     @dataclass
     class LineTo(PathElement):
         x: float
         y: float
-        type: str = "lineto"
+
+        def __post_init__(self):
+            self.type = "lineto"
 
     @dataclass
     class QuadraticTo(PathElement):
@@ -32,7 +36,9 @@ class Path(Shape):
         x: float
         y: float
         w: float = 1
-        type: str = "conicto"
+
+        def __post_init__(self):
+            self.type = "conicto"
 
     @dataclass
     class CubicTo(PathElement):
@@ -42,14 +48,18 @@ class Path(Shape):
         cp2y: float
         x: float
         y: float
-        type: str = "cubicto"
+
+        def __post_init__(self):
+            self.type = "cubicto"
 
     @dataclass
     class SubPath(PathElement):
         elements: List["Path.PathElement"]
         x: float
         y: float
-        type: str = "subpath"
+
+        def __post_init__(self):
+            self.type = "subpath"
 
     @dataclass
     class Arc(PathElement):
@@ -59,7 +69,9 @@ class Path(Shape):
         height: float
         start_angle: float
         sweep_angle: float
-        type: str = "arc"
+
+        def __post_init__(self):
+            self.type = "arc"
 
     @dataclass
     class ArcTo(PathElement):
@@ -69,7 +81,9 @@ class Path(Shape):
         rotation: float = 0
         large_arc: bool = False
         clockwise: bool = True
-        type: str = "arcto"
+
+        def __post_init__(self):
+            self.type = "arcto"
 
     @dataclass
     class Oval(PathElement):
@@ -77,7 +91,9 @@ class Path(Shape):
         y: float
         width: float
         height: float
-        type: str = "oval"
+
+        def __post_init__(self):
+            self.type = "oval"
 
     @dataclass
     class Rect(PathElement):
@@ -86,11 +102,14 @@ class Path(Shape):
         width: float
         height: float
         border_radius: OptionalBorderRadiusValue = None
-        type: str = "rect"
+
+        def __post_init__(self):
+            self.type = "rect"
 
     @dataclass
     class Close(PathElement):
-        type: str = "close"
+        def __post_init__(self):
+            self.type = "close"
 
-    elements: Optional[List[PathElement]] = None
+    elements: List[PathElement] = field(default_factory=list)
     paint: Optional[Paint] = None

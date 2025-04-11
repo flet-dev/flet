@@ -10,6 +10,7 @@ import 'controls/app_bar.dart';
 import 'controls/banner.dart';
 import 'controls/bottom_app_bar.dart';
 import 'controls/bottom_sheet.dart';
+import 'controls/canvas.dart';
 import 'controls/card.dart';
 import 'controls/center.dart';
 import 'controls/chip.dart';
@@ -146,6 +147,8 @@ class FletCoreExtension extends FletExtension {
             key: key, control: control);
       case "SegmentedButton":
         return SegmentedButtonControl(key: key, control: control);
+      case "Canvas":
+        return CanvasControl(key: key, control: control);
       case "CupertinoTextField":
         return CupertinoTextFieldControl(key: key, control: control);
       case "Semantics":

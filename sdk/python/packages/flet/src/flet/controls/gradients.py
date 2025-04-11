@@ -30,6 +30,7 @@ class Gradient:
     tile_mode: GradientTileMode = GradientTileMode.CLAMP
     rotation: OptionalNumber = None
     stops: Optional[List[Number]] = None
+    type: str = ""
 
 
 @dataclass
