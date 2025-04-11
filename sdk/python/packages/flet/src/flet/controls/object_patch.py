@@ -232,7 +232,7 @@ class ObjectPatch(object):
             controls_index=controls_index,
             control_cls=control_cls,
         )
-        builder._compare_values([], None, src, dst)
+        builder._compare_values(None, [], None, src, dst)
         ops = list(builder.execute())
         return cls(ops)
 
@@ -290,7 +290,6 @@ class DiffBuilder(object):
         self.src_doc = src_doc
         self.dst_doc = dst_doc
         root[:] = [root, root, None]
-        self.parent_control = None
 
     def store_index(self, value, index, st):
         typed_key = (value, type(value))
@@ -368,8 +367,8 @@ class DiffBuilder(object):
             yield curr[2].operation
             curr = curr[1]
 
-    def _item_added(self, path, key, item):
-        self._configure_control(item, self.parent_control)
+    def _item_added(self, parent, path, key, item):
+        self._configure_control(item, parent)
         index = self.take_index(item, _ST_REMOVE)
         if index is not None:
             op = index[2]
@@ -435,8 +434,8 @@ class DiffBuilder(object):
         else:
             self.store_index(item, new_index, _ST_REMOVE)
 
-    def _item_replaced(self, path, key, item):
-        self._configure_control(item, self.parent_control)
+    def _item_replaced(self, parent, path, key, item):
+        self._configure_control(item, parent)
         self.insert(
             ReplaceOperation(
                 {
@@ -447,7 +446,7 @@ class DiffBuilder(object):
             )
         )
 
-    def _compare_dicts(self, path, src, dst):
+    def _compare_dicts(self, parent, path, src, dst):
         # print("\n_compare_dicts:", path, src, dst)
 
         src_keys = set(src.keys())
@@ -459,12 +458,12 @@ class DiffBuilder(object):
             self._item_removed(path, str(key), src[key])
 
         for key in added_keys:
-            self._item_added(path, str(key), dst[key])
+            self._item_added(parent, path, str(key), dst[key])
 
         for key in src_keys & dst_keys:
-            self._compare_values(path, key, src[key], dst[key])
+            self._compare_values(parent, path, key, src[key], dst[key])
 
-    def _compare_lists(self, path, src, dst):
+    def _compare_lists(self, parent, path, src, dst):
         # print("\n_compare_lists:", path, src, dst)
 
         len_src, len_dst = len(src), len(dst)
@@ -475,10 +474,10 @@ class DiffBuilder(object):
                 old, new = src[key], dst[key]
 
                 if isinstance(old, dict) and isinstance(new, dict):
-                    self._compare_dicts(_path_join(path, key), old, new)
+                    self._compare_dicts(parent, _path_join(path, key), old, new)
 
                 elif isinstance(old, list) and isinstance(new, list):
-                    self._compare_lists(_path_join(path, key), old, new)
+                    self._compare_lists(parent, _path_join(path, key), old, new)
 
                 elif (
                     dataclasses.is_dataclass(old)
@@ -488,31 +487,31 @@ class DiffBuilder(object):
                         or (not self.in_place and type(old) == type(new))
                     )
                 ):
-                    self._compare_dataclasses(_path_join(path, key), old, new)
+                    self._compare_dataclasses(parent, _path_join(path, key), old, new)
 
                 elif type(old) != type(new) or old != new:
                     self._item_removed(path, key, old)
-                    self._item_added(path, key, new)
+                    self._item_added(parent, path, key, new)
 
             elif len_src > len_dst:
                 self._item_removed(path, len_dst, src[key])
 
             else:
-                self._item_added(path, key, dst[key])
+                self._item_added(parent, path, key, dst[key])
 
-    def _compare_dataclasses(self, path, src, dst):
+    def _compare_dataclasses(self, parent, path, src, dst):
         # print("\n_compare_dataclasses:", path, src, dst)
 
         if (
             self.control_cls
-            and isinstance(self.parent_control, self.control_cls)
-            and self.parent_control.is_isolated()
-            and self.parent_control != self.dst_doc
+            and isinstance(parent, self.control_cls)
+            and parent.is_isolated()
+            and parent != self.dst_doc
         ):
             return  # do not update isolated control's children
 
         if self.control_cls and isinstance(dst, self.control_cls):
-            self.parent_control = dst
+            parent = dst
             dst.before_update()
 
         for field in dataclasses.fields(dst):
@@ -528,7 +527,7 @@ class DiffBuilder(object):
             if field.name.startswith("on_"):
                 new = new is not None
 
-            self._compare_values(path, field.name, old, new)
+            self._compare_values(parent, path, field.name, old, new)
 
             # update prev value
             if isinstance(new, list):
@@ -537,17 +536,17 @@ class DiffBuilder(object):
                 new = new.copy()
             setattr(dst, f"_prev_{field.name}", new)
 
-    def _compare_values(self, path, key, src, dst):
+    def _compare_values(self, parent, path, key, src, dst):
         # print("\n_compare_values:", path, key, src, dst)
 
         if isinstance(src, dict) and isinstance(dst, dict):
-            self._compare_dicts(_path_join(path, key), src, dst)
+            self._compare_dicts(parent, _path_join(path, key), src, dst)
 
         elif isinstance(src, list) and isinstance(dst, list):
             if (len(src) == 0 and len(dst) > 0) or (len(src) > 0 and len(dst) == 0):
-                self._item_replaced(path, key, dst)
+                self._item_replaced(parent, path, key, dst)
             else:
-                self._compare_lists(_path_join(path, key), src, dst)
+                self._compare_lists(parent, _path_join(path, key), src, dst)
 
         elif (
             dataclasses.is_dataclass(src)
@@ -557,10 +556,10 @@ class DiffBuilder(object):
                 or (not self.in_place and type(src) == type(dst))
             )
         ):
-            self._compare_dataclasses(_path_join(path, key), src, dst)
+            self._compare_dataclasses(parent, _path_join(path, key), src, dst)
 
         elif type(src) != type(dst) or src != dst:
-            self._item_replaced(path, key, dst)
+            self._item_replaced(parent, path, key, dst)
 
     def _configure_control(self, item, parent):
         if self.control_cls and isinstance(item, self.control_cls):
