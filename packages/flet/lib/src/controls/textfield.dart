@@ -97,20 +97,6 @@ class _TextFieldControlState extends State<TextFieldControl> {
       );
     }
 
-    // var prefixWidget = widget.control.buildWidget("prefix");
-    // var prefixIconWidget = widget.control.buildIconOrWidget("prefix_icon");
-    // var suffixWidget = widget.control.buildWidget("suffix");
-    // var suffixIconWidget = widget.control.buildIconOrWidget("suffix_icon");
-    // var iconWidget = widget.control.buildIconOrWidget("icon");
-    // var counterWidget = widget.control.buildWidget("counter");
-    // var errorWidget = widget.control.buildWidget("error");
-
-    // var helperWidget = widget.control.buildTextOrWidget("helper");
-    // String? helperText = widget.control.get("helper") is String
-    //     ? widget.control.getString("helper")
-    //     : null;
-    //var labelWidget = widget.control.buildTextOrWidget("label");
-
     var shiftEnter = widget.control.getBool("shift_enter", false)!;
     var multiline = widget.control.getBool("multiline", false)! || shiftEnter;
     var minLines = widget.control.getInt("min_lines", 1)!;
@@ -190,20 +176,10 @@ class _TextFieldControlState extends State<TextFieldControl> {
         decoration: buildInputDecoration(
           context,
           widget.control,
-          //prefix: prefixWidget,
-          //prefixIcon: prefixIconWidget,
-          //suffix: suffixWidget,
-          //suffixIcon: suffixIconWidget,
-          //icon: iconWidget,
-          //counter: counterWidget,
-          //error: errorWidget,
-          //helper: helperWidget,
-          //label: labelWidget,
           customSuffix: revealPasswordIcon,
           valueLength: _value.length,
           maxLength: maxLength,
           focused: _focused,
-          //disabled: widget.control.disabled,
         ),
         showCursor: widget.control.getBool("show_cursor"),
         textAlignVertical: textVerticalAlign != null

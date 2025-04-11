@@ -3,13 +3,11 @@ import 'package:flet/src/extensions/control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-//import '../controls/control_widget.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
 import 'borders.dart';
 import 'box.dart';
 import 'edge_insets.dart';
-//import 'icons.dart';
 import 'numbers.dart';
 import 'text.dart';
 import 'time.dart';
@@ -57,27 +55,15 @@ TextInputType? parseTextInputType(String? value,
 InputDecoration buildInputDecoration(
   BuildContext context,
   Control control, {
-  //Widget? prefix,
-  //Widget? prefixIcon,
-  //Widget? suffix,
-  //Widget? suffixIcon,
-  //Widget? icon,
-  //Widget? counter,
-  //Widget? error,
-  //Widget? helper,
-  //Widget? label,
   Widget? customSuffix,
   int? valueLength,
   int? maxLength,
   bool focused = false,
-  //bool disabled = false,
 }) {
   FormFieldInputBorder inputBorder = parseFormFieldInputBorder(
     control.getString("border"),
     FormFieldInputBorder.outline,
   )!;
-  //var prefixText = control.getString("prefix_text");
-  //var suffixText = control.getString("suffix_text");
   var bgcolor = control.getColor("bgcolor", context);
   var focusedBgcolor = control.getColor("focused_bgcolor", context);
   var fillColor = control.getColor("fill_color", context);
@@ -88,10 +74,7 @@ InputDecoration buildInputDecoration(
   var borderWidth = control.getDouble("border_width");
   var focusedBorderWidth = control.getDouble("focused_border_width");
 
-  //var helperTest = control.buildTextOrWidget("helper");
-
   //counter
-
   String? counterText;
   Widget? counterWidget;
   var counter = control.get("counter");
@@ -118,6 +101,53 @@ InputDecoration buildInputDecoration(
   String? errorText;
   Widget? errorWidget;
   var error = control.get("error");
+  if (error is Control) {
+    errorWidget = control.buildWidget("error");
+  } else if (error is String) {
+    errorText = control.getString("error");
+  } else {
+    // # todo(0.73.0): remove in favor of error
+    errorText = control.getString("error_text");
+  }
+
+  // helper
+  String? helperText;
+  Widget? helperWidget;
+  var helper = control.get("helper");
+  if (helper is Control) {
+    helperWidget = control.buildWidget("helper");
+  } else if (helper is String) {
+    helperText = control.getString("helper");
+  } else {
+    // # todo(0.73.0): remove in favor of helper
+    helperText = control.getString("helper_text");
+  }
+
+  // prefix
+  String? prefixText;
+  Widget? prefixWidget;
+  var prefix = control.get("prefix");
+  if (prefix is Control) {
+    prefixWidget = control.buildWidget("prefix");
+  } else if (prefix is String) {
+    prefixText = control.getString("prefix");
+  } else {
+    // # todo(0.73.0): remove in favor of prefix
+    prefixText = control.getString("prefix_text");
+  }
+
+  // suffix
+  String? suffixText;
+  Widget? suffixWidget;
+  var suffix = control.get("suffix");
+  if (suffix is Control) {
+    suffixWidget = control.buildWidget("suffix");
+  } else if (suffix is String) {
+    suffixText = control.getString("suffix");
+  } else {
+    // # todo(0.73.0): remove in favor of suffix
+    suffixText = control.getString("suffix_text");
+  }
 
   InputBorder? border;
   if (inputBorder == FormFieldInputBorder.underline) {
@@ -169,36 +199,37 @@ InputDecoration buildInputDecoration(
   }
 
   return InputDecoration(
-      //enabled: !disabled,
       enabled: !control.disabled,
       contentPadding: control.getEdgeInsets("content_padding"),
       isDense: control.getBool("dense"),
-      //label: label,
       label: control.buildTextOrWidget("label"),
       labelStyle: control.getTextStyle("label_style", Theme.of(context)),
       border: border,
       enabledBorder: border,
       focusedBorder: focusedBorder,
       hoverColor: hoverColor,
-      //icon: icon,
       icon: control.buildIconOrWidget("icon"),
       filled: control.getBool("filled", false)!,
       fillColor: fillColor ?? (focused ? (focusedBgcolor ?? bgcolor) : bgcolor),
+      //hint
       hintText: control.getString("hint_text"),
       hintStyle: control.getTextStyle("hint_style", Theme.of(context)),
-      //helper: helper,
-      helper: control.buildTextOrWidget("helper",
-          style: control.getTextStyle("helper_style", Theme.of(context))),
-      helperText: control.getString("helper_text"),
+      hintFadeDuration: control.getDuration("hint_fade_duration"),
+      hintMaxLines: control.getInt("hint_max_lines"),
+      //helper
+      helper: helperWidget,
+      helperText: helperText,
       helperStyle: control.getTextStyle("helper_style", Theme.of(context)),
+      helperMaxLines: control.getInt("helper_max_lines"),
+      //counter
       counter: counterWidget,
       counterText: counterText,
       counterStyle: control.getTextStyle("counter_style", Theme.of(context)),
-
-      //error: error,
-      error: control.buildTextOrWidget("error"),
-      errorText: control.getString("error_text"),
+      //error
+      error: errorWidget,
+      errorText: errorText,
       errorStyle: control.getTextStyle("error_style", Theme.of(context)),
+      errorMaxLines: control.getInt("error_max_lines"),
       constraints: control.getBoxConstraints("size_constraints"),
       isCollapsed: control.getBool("collapsed"),
       prefixIconConstraints:
@@ -206,25 +237,16 @@ InputDecoration buildInputDecoration(
       suffixIconConstraints:
           control.getBoxConstraints("suffix_icon_constraints"),
       focusColor: control.getColor("focus_color", context),
-      errorMaxLines: control.getInt("error_max_lines"),
       alignLabelWithHint: control.getBool("align_label_with_hint"),
-      //errorText: control.getString("error_text"),
-
-      //prefixIcon: prefixIcon,
       prefixIcon: control.buildIconOrWidget("prefix_icon"),
-      //prefixText: prefixText,
-      hintFadeDuration: control.getDuration("hint_fade_duration"),
-      hintMaxLines: control.getInt("hint_max_lines"),
-      helperMaxLines: control.getInt("helper_max_lines"),
-
-      //prefix: prefix,
-      prefix: control.buildTextOrWidget("prefix"),
+      //prefix
+      prefix: prefixWidget,
+      prefixText: prefixText,
       prefixStyle: control.getTextStyle("prefix_style", Theme.of(context)),
-      //suffix: suffix,
-      suffix: control.buildTextOrWidget("suffix"),
-      //suffixIcon: suffixIcon ?? customSuffix,
       suffixIcon: control.buildIconOrWidget("suffix_icon") ?? customSuffix,
-      //suffixText: suffix == null ? suffixText : null,
+      //suffix
+      suffix: suffixWidget,
+      suffixText: suffixText,
       suffixStyle: control.getTextStyle("suffix_style", Theme.of(context)));
 }
 
