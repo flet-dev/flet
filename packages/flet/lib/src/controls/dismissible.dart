@@ -13,7 +13,8 @@ import 'base_controls.dart';
 class DismissibleControl extends StatefulWidget {
   final Control control;
 
-  const DismissibleControl({super.key, required this.control});
+  DismissibleControl({Key? key, required this.control})
+      : super(key: ValueKey("dismissible_${control.id}"));
 
   @override
   State<DismissibleControl> createState() => _DismissibleControlState();
@@ -36,11 +37,12 @@ class _DismissibleControlState extends State<DismissibleControl> {
     debugPrint("Dismissible.$name($args)");
     switch (name) {
       case "confirm_dismiss":
-        widget.control.get("confirm_dismiss")?.complete(args["dismiss"]);
+        widget.control.properties
+            .remove("_completer")
+            ?.complete(args["dismiss"]);
       default:
         throw Exception("Unknown Dismissible method: $name");
     }
-    widget.control.removeInvokeMethodListener(_invokeMethod);
   }
 
   @override
@@ -83,11 +85,10 @@ class _DismissibleControlState extends State<DismissibleControl> {
         confirmDismiss: widget.control.getBool("on_confirm_dismiss", false)!
             ? (DismissDirection direction) {
                 var completer = Completer<bool?>();
-                widget.control.updateProperties({"confirm_dismiss": completer},
-                    python: false, notify: true);
+                widget.control
+                    .updateProperties({"_completer": completer}, python: false);
                 widget.control.triggerEvent(
                     "confirm_dismiss", {"direction": direction.name});
-                widget.control.addInvokeMethodListener(_invokeMethod);
                 return completer.future;
               }
             : null,
