@@ -5,6 +5,7 @@ import 'controls/adaptive_button.dart';
 import 'controls/adaptive_radio.dart';
 import 'controls/adaptive_slider.dart';
 import 'controls/adaptive_switch.dart';
+import 'controls/adaptive_texfield.dart';
 import 'controls/animated_switcher.dart';
 import 'controls/app_bar.dart';
 import 'controls/banner.dart';
@@ -87,7 +88,6 @@ import 'controls/stack.dart';
 import 'controls/submenu_button.dart';
 import 'controls/tabs.dart';
 import 'controls/text.dart';
-import 'controls/textfield.dart';
 import 'controls/time_picker.dart';
 import 'controls/transparent_pointer.dart';
 import 'controls/vertical_divider.dart';
@@ -281,7 +281,7 @@ class FletCoreExtension extends FletExtension {
       case "Text":
         return TextControl(key: key, control: control);
       case "TextField":
-        return TextFieldControl(key: key, control: control);
+        return AdaptiveTextFieldControl(key: key, control: control);
       case "Placeholder":
         return PlaceholderControl(key: key, control: control);
       case "MenuBar":
