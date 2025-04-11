@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 import '../flet_backend.dart';
@@ -15,6 +16,7 @@ typedef InvokeControlMethodCallback = Future<dynamic> Function(
 /// properties map that is a `Map` containing a "_c" key is automatically
 /// transformed into a `Control`.
 class Control extends ChangeNotifier {
+  static const DeepCollectionEquality _equality = DeepCollectionEquality();
   final int id;
   final String type;
   final Map<String, dynamic> properties;
@@ -373,4 +375,20 @@ class Control extends ChangeNotifier {
   String toString() {
     return toJson().toString();
   }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Control &&
+            other.id == id &&
+            other.type == type &&
+            _equality.equals(other.properties, properties);
+  }
+
+  @override
+  int get hashCode => Object.hash(
+        id,
+        type,
+        _equality.hash(properties),
+      );
 }
