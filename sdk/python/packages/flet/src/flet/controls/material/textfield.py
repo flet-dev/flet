@@ -153,7 +153,7 @@ class TextField(FormFieldControl, AdaptiveControl):
     on_tap_outside: OptionalControlEventCallable = None
 
     def __setattr__(self, name, value):
-        if name == "enable_scribble" and value is not None:
+        if name == "enable_scribble" and value is not True:
             deprecated_warning(
                 name="enable_scribble",
                 reason="Use enable_stylus_handwriting instead.",

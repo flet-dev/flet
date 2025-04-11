@@ -23,7 +23,7 @@ BorderRadius? parseBorderRadius(dynamic value, [BorderRadius? defaultValue]) {
 
 Radius? parseRadius(dynamic value, [Radius? defaultValue]) {
   var radius = parseDouble(value);
-  if (radius == null) return null;
+  if (radius == null) return defaultValue;
 
   return Radius.circular(radius);
 }

@@ -110,7 +110,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
     }
 
     List<TextInputFormatter> inputFormatters = [];
-    var inputFilter = widget.control.getTextInputFormatter("inputFilter");
+    var inputFilter = widget.control.getTextInputFormatter("input_filter");
     if (inputFilter != null) {
       inputFormatters.add(inputFilter);
     }
@@ -184,14 +184,18 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
     var gradient = widget.control.getGradient("gradient", Theme.of(context));
     var blendMode = widget.control.getBlendMode("blend_mode");
     var bgcolor = widget.control.getColor("bgcolor", context);
+    var label = widget.control.get("label");
+    String? labelStr;
+    if (label is String) {
+      labelStr = widget.control.getString("label");
+    }
 
     Widget textField = CupertinoTextField(
         style: textStyle,
         textAlignVertical: textVerticalAlign != null
             ? TextAlignVertical(y: textVerticalAlign)
             : null,
-        placeholder: widget.control.getString("placeholder_text") ??
-            widget.control.getString("label"),
+        placeholder: widget.control.getString("placeholder_text") ?? labelStr,
         placeholderStyle:
             widget.control.getTextStyle("placeholder_style", Theme.of(context)) ??
                 widget.control.getTextStyle("label_style", Theme.of(context)),
@@ -240,8 +244,9 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         minLines: fitParentSize ? null : minLines,
         maxLines: fitParentSize ? null : maxLines,
         maxLength: maxLength,
-        prefix: widget.control.buildWidget("prefix"),
-        suffix: revealPasswordIcon ?? widget.control.buildWidget("suffix"),
+        prefix: widget.control.buildTextOrWidget("prefix"),
+        suffix:
+            revealPasswordIcon ?? widget.control.buildTextOrWidget("suffix"),
         readOnly: readOnly,
         textDirection: rtl ? TextDirection.rtl : null,
         inputFormatters: inputFormatters.isNotEmpty ? inputFormatters : null,
@@ -261,7 +266,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
             .getBool("animate_cursor_opacity", Theme.of(context).platform == TargetPlatform.iOS)!,
         expands: fitParentSize,
         enableIMEPersonalizedLearning: widget.control.getBool("enable_ime_personalizedLearning", true)!,
-        clipBehavior: parseClip(widget.control.getString("clip_behavior"), Clip.hardEdge)!,
+        clipBehavior: widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
         cursorColor: cursorColor,
         autofillHints: parseAutofillHints(widget.control.get("autofill_hints")),
         keyboardAppearance: widget.control.getBrightness("keyboard_brightness"),
