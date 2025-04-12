@@ -80,21 +80,15 @@ InputDecoration buildInputDecoration(
   var counter = control.get("counter");
   if (counter is Control) {
     counterWidget = control.buildWidget("counter");
-  } else if (counter is String) {
-    counterText = control
-        .getString("counter", "")
-        ?.replaceAll("{value_length}", valueLength.toString())
-        .replaceAll("{max_length}", maxLength?.toString() ?? "None")
-        .replaceAll("{symbols_left}",
-            "${maxLength == null ? 'None' : (maxLength - (valueLength ?? 0))}");
   } else {
-    // # todo(0.73.0): remove in favor of counter
-    counterText = control
-        .getString("counter_text", "")
-        ?.replaceAll("{value_length}", valueLength.toString())
-        .replaceAll("{max_length}", maxLength?.toString() ?? "None")
-        .replaceAll("{symbols_left}",
-            "${maxLength == null ? 'None' : (maxLength - (valueLength ?? 0))}");
+    counterText = control.getString("counter") ??
+        control
+            .getString("counter_text",
+                "") // todo(0.73.0): remove "counter_text" in favor of "counter"
+            ?.replaceAll("{value_length}", valueLength.toString())
+            .replaceAll("{max_length}", maxLength?.toString() ?? "None")
+            .replaceAll("{symbols_left}",
+                "${maxLength == null ? 'None' : (maxLength - (valueLength ?? 0))}");
   }
 
   // error
@@ -103,24 +97,21 @@ InputDecoration buildInputDecoration(
   var error = control.get("error");
   if (error is Control) {
     errorWidget = control.buildWidget("error");
-  } else if (error is String) {
-    errorText = control.getString("error");
   } else {
-    // # todo(0.73.0): remove in favor of error
-    errorText = control.getString("error_text");
+    errorText = control.getString("error") ??
+        control.getString(
+            "error_text"); // todo(0.73.0): remove "error_text" in favor of "error"
   }
-
   // helper
   String? helperText;
   Widget? helperWidget;
   var helper = control.get("helper");
   if (helper is Control) {
     helperWidget = control.buildWidget("helper");
-  } else if (helper is String) {
-    helperText = control.getString("helper");
   } else {
-    // # todo(0.73.0): remove in favor of helper
-    helperText = control.getString("helper_text");
+    helperText = control.getString("helper") ??
+        control.getString(
+            "helper_text"); // todo(0.73.0): remove "helper_text" in favor of "helper"
   }
 
   // prefix
@@ -129,11 +120,10 @@ InputDecoration buildInputDecoration(
   var prefix = control.get("prefix");
   if (prefix is Control) {
     prefixWidget = control.buildWidget("prefix");
-  } else if (prefix is String) {
-    prefixText = control.getString("prefix");
   } else {
-    // # todo(0.73.0): remove in favor of prefix
-    prefixText = control.getString("prefix_text");
+    prefixText = control.getString("prefix") ??
+        control.getString(
+            "prefix_text"); // todo(0.73.0): remove "prefix_text" in favor of "prefix"
   }
 
   // suffix
@@ -142,11 +132,10 @@ InputDecoration buildInputDecoration(
   var suffix = control.get("suffix");
   if (suffix is Control) {
     suffixWidget = control.buildWidget("suffix");
-  } else if (suffix is String) {
-    suffixText = control.getString("suffix");
   } else {
-    // # todo(0.73.0): remove in favor of suffix
-    suffixText = control.getString("suffix_text");
+    suffixText = control.getString("suffix") ??
+        control.getString(
+            "suffix_text"); // todo(0.73.0): remove "suffix_text" in favor of "suffix"
   }
 
   InputBorder? border;

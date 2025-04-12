@@ -30,7 +30,6 @@ class CupertinoTextField(TextField):
     """
 
     placeholder_text: Optional[str] = None
-    value: str = ""
     placeholder_style: Optional[TextStyle] = None
     gradient: Optional[Gradient] = None
     blend_mode: Optional[BlendMode] = None

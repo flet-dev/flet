@@ -1,10 +1,12 @@
+import asyncio
+from dataclasses import field
 from enum import Enum
 from typing import Optional, Union
 
 from flet.controls.border_radius import OptionalBorderRadiusValue
 from flet.controls.box import BoxConstraints
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, control
+from flet.controls.control import control
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.text_style import TextStyle
@@ -28,7 +30,7 @@ class InputBorder(Enum):
 @control(kw_only=True)
 class FormFieldControl(ConstrainedControl):
     text_size: OptionalNumber = None
-    text_style: Optional[TextStyle] = None
+    text_style: TextStyle = field(default_factory=lambda: TextStyle())
     text_vertical_align: Union[VerticalAlignment, OptionalNumber] = None
     label: Optional[StrOrControl] = None
     label_style: Optional[TextStyle] = None
@@ -80,39 +82,26 @@ class FormFieldControl(ConstrainedControl):
     suffix_style: Optional[TextStyle] = None
 
     def __setattr__(self, name, value):
-        if name == "suffix_text" and value is not None:
+        deprecated_map = {
+            "suffix_text": "suffix",
+            "prefix_text": "prefix",
+            "error_text": "error",
+            "counter_text": "counter",
+            "helper_text": "helper",
+        }
+
+        if name in deprecated_map and value is not None:
             deprecated_warning(
                 name=name,
-                reason="Use suffix instead.",
+                reason=f"Use {deprecated_map[name]} instead.",
                 version="0.70.0",
                 delete_version="0.73.0",
             )
-        if name == "prefix_text" and value is not None:
-            deprecated_warning(
-                name=name,
-                reason="Use prefix instead.",
-                version="0.70.0",
-                delete_version="0.73.0",
-            )
-        if name == "error_text" and value is not None:
-            deprecated_warning(
-                name=name,
-                reason="Use error instead.",
-                version="0.70.0",
-                delete_version="0.73.0",
-            )
-        if name == "counter_text" and value is not None:
-            deprecated_warning(
-                name=name,
-                reason="Use counter instead.",
-                version="0.70.0",
-                delete_version="0.73.0",
-            )
-        if name == "helper_text" and value is not None:
-            deprecated_warning(
-                name=name,
-                reason="Use helper instead.",
-                version="0.70.0",
-                delete_version="0.73.0",
-            )
+
         super().__setattr__(name, value)
+
+    async def focus_async(self):
+        await self._invoke_method_async("focus")
+
+    def focus(self):
+        asyncio.create_task(self.focus_async())

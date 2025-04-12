@@ -1,4 +1,3 @@
-import asyncio
 from dataclasses import dataclass
 from enum import Enum
 from typing import List, Optional, Union
@@ -133,9 +132,9 @@ class TextField(FormFieldControl, AdaptiveControl):
     enable_ime_personalized_learning: bool = True
     can_request_focus: bool = True
     ignore_pointers: bool = False
-    enable_scribble: bool = True
-    # todo(0.73.0): remove in favor of enable_stylus_handwriting
-
+    enable_scribble: bool = (
+        True  # todo(0.73.0): remove in favor of enable_stylus_handwriting
+    )
     enable_stylus_handwriting: bool = True
     animate_cursor_opacity: Optional[bool] = None
     always_call_on_tap: bool = False
@@ -187,9 +186,3 @@ class TextField(FormFieldControl, AdaptiveControl):
             )
         ) and self.filled is None:
             self.filled = True  # required to display any of the above colors
-
-    async def focus_async(self):
-        await self._invoke_method_async("focus")
-
-    def focus(self):
-        asyncio.create_task(self.focus_async())

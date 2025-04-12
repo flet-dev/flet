@@ -7,6 +7,7 @@ from flet.controls.padding import OptionalPaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     IconValueOrControl,
+    Number,
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
@@ -68,18 +69,18 @@ class DropdownM2(FormFieldControl):
     value: Optional[str] = None
     options: Optional[List[Option]] = None
     alignment: Optional[Alignment] = None
-    autofocus: Optional[bool] = None
+    autofocus: bool = False
     hint_content: Optional[Control] = None
     select_icon: Optional[IconValueOrControl] = None
-    elevation: OptionalNumber = None
+    elevation: Number = 8
     item_height: OptionalNumber = None
     max_menu_height: OptionalNumber = None
-    select_icon_size: OptionalNumber = None
+    select_icon_size: Number = 24.0
     enable_feedback: Optional[bool] = None
     padding: OptionalPaddingValue = None
     select_icon_enabled_color: OptionalColorValue = None
     select_icon_disabled_color: OptionalColorValue = None
-    options_fill_horizontally: Optional[bool] = None
+    options_fill_horizontally: bool = True
     disabled_hint_content: Optional[Control] = None
     on_change: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None
@@ -96,3 +97,6 @@ class DropdownM2(FormFieldControl):
             )
         ) and self.filled is None:
             self.filled = True  # required to display any of the above colors
+
+    def __contains__(self, item):
+        return item in self.options
