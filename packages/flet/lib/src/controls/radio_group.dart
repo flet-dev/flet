@@ -1,9 +1,9 @@
-import 'package:flet/src/widgets/radio_group_provider.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../widgets/error.dart';
+import '../widgets/radio_group_provider.dart';
 
 class RadioGroupControl extends StatelessWidget {
   final Control control;

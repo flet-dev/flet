@@ -1,10 +1,10 @@
-import 'package:flet/src/utils/colors.dart';
-import 'package:flet/src/utils/misc.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../models/control.dart';
 import '../utils/alignment.dart';
+import '../utils/colors.dart';
+import '../utils/misc.dart';
+import '../utils/numbers.dart';
 import 'base_controls.dart';
 
 class CupertinoTimerPickerControl extends StatefulWidget {

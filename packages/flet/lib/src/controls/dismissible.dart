@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:flet/src/extensions/control.dart';
-import 'package:flet/src/utils/numbers.dart';
-import 'package:flet/src/utils/time.dart';
 import 'package:flutter/material.dart';
 
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/dismissible.dart';
+import '../utils/numbers.dart';
+import '../utils/time.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
 

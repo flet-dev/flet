@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/control.dart';
 import '../widgets/flet_store_mixin.dart';
 import 'cupertino_textfield.dart';
-import 'textField.dart';
+import 'textfield.dart';
 
 class AdaptiveTextFieldControl extends StatelessWidget with FletStoreMixin {
   final Control control;

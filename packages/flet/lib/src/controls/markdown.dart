@@ -1,14 +1,14 @@
-import 'package:flet/src/extensions/control.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/box.dart';
 import '../utils/images.dart';
 import '../utils/launch_url.dart';
 import '../utils/markdown.dart';
+import '../utils/numbers.dart';
 import '../utils/uri.dart';
 import '../widgets/error.dart';
 import '../widgets/flet_store_mixin.dart';

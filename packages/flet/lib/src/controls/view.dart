@@ -1,11 +1,11 @@
 import 'package:collection/collection.dart';
-import 'package:flet/src/extensions/control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../controls/control_widget.dart';
+import '../extensions/control.dart';
 import '../flet_backend.dart';
 import '../models/control.dart';
 import '../models/page_design.dart';

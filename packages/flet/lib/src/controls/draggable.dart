@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:flet/src/extensions/control.dart';
-import 'package:flet/src/utils/misc.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
+import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/misc.dart';
+import '../utils/numbers.dart';
 import '../widgets/error.dart';
 
 class DraggableControl extends StatelessWidget {

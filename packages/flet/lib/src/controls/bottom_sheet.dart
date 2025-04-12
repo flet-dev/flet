@@ -1,13 +1,13 @@
-import 'package:flet/src/extensions/control.dart';
-import 'package:flet/src/utils/colors.dart';
-import 'package:flet/src/utils/misc.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
 import '../utils/borders.dart';
 import '../utils/box.dart';
+import '../utils/colors.dart';
+import '../utils/misc.dart';
+import '../utils/numbers.dart';
 import '../widgets/error.dart';
 
 class BottomSheetControl extends StatefulWidget {

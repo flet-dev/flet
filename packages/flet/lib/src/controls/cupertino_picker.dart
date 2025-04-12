@@ -1,9 +1,9 @@
-import 'package:flet/src/extensions/control.dart';
-import 'package:flet/src/utils/colors.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/colors.dart';
+import '../utils/numbers.dart';
 import 'base_controls.dart';
 import 'control_widget.dart';
 

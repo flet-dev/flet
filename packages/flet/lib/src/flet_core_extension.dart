@@ -37,7 +37,6 @@ import 'controls/cupertino_segmented_button.dart';
 import 'controls/cupertino_slider.dart';
 import 'controls/cupertino_sliding_segmented_button.dart';
 import 'controls/cupertino_switch.dart';
-import 'controls/cupertino_textfield.dart';
 import 'controls/cupertino_timer_picker.dart';
 import 'controls/datatable.dart';
 import 'controls/date_picker.dart';
@@ -149,8 +148,6 @@ class FletCoreExtension extends FletExtension {
         return SegmentedButtonControl(key: key, control: control);
       case "Canvas":
         return CanvasControl(key: key, control: control);
-      case "CupertinoTextField":
-        return CupertinoTextFieldControl(key: key, control: control);
       case "Semantics":
         return SemanticsControl(key: key, control: control);
       case "MergeSemantics":
@@ -284,6 +281,7 @@ class FletCoreExtension extends FletExtension {
       case "Text":
         return TextControl(key: key, control: control);
       case "TextField":
+      case "CupertinoTextField":
         return AdaptiveTextFieldControl(key: key, control: control);
       case "Placeholder":
         return PlaceholderControl(key: key, control: control);

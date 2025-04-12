@@ -1,12 +1,12 @@
-import 'package:flet/src/controls/control_widget.dart';
-import 'package:flet/src/utils/colors.dart';
-import 'package:flet/src/utils/numbers.dart';
-import 'package:flet/src/widgets/error.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../controls/control_widget.dart';
 import '../models/control.dart';
+import '../utils/colors.dart';
 import '../utils/edge_insets.dart';
+import '../utils/numbers.dart';
+import '../widgets/error.dart';
 
 class CupertinoBottomSheetControl extends StatelessWidget {
   final Control control;

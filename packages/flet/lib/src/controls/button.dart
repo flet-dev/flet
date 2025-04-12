@@ -1,7 +1,7 @@
 import 'package:flet/flet.dart';
-import 'package:flet/src/widgets/error.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/error.dart';
 import 'base_controls.dart';
 
 class ButtonControl extends StatefulWidget {

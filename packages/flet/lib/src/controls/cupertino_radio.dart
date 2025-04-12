@@ -1,4 +1,3 @@
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -6,6 +5,7 @@ import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/misc.dart';
 import '../utils/mouse.dart';
+import '../utils/numbers.dart';
 import '../widgets/error.dart';
 import '../widgets/flet_store_mixin.dart';
 import '../widgets/radio_group_provider.dart';

@@ -1,6 +1,6 @@
-import 'package:flet/src/controls/control_widget.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../controls/control_widget.dart';
 import '../models/control.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
