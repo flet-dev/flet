@@ -45,7 +45,7 @@ class Window(BaseControl):
     progress_bar: OptionalNumber = None
     focused: bool = True
     visible: bool = True
-    shadow: bool = False
+    shadow: bool = True
     alignment: Optional[Alignment] = None
     badge_label: Optional[str] = None
     icon: Optional[str] = None

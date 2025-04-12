@@ -48,6 +48,7 @@ import 'controls/dropdown.dart';
 import 'controls/dropdownm2.dart';
 import 'controls/expansion_panel.dart';
 import 'controls/expansion_tile.dart';
+import 'controls/file_picker.dart';
 import 'controls/flet_app_control.dart';
 import 'controls/floating_action_button.dart';
 import 'controls/gesture_detector.dart';
@@ -310,6 +311,8 @@ class FletCoreExtension extends FletExtension {
         return CupertinoCheckboxControl(key: key, control: control);
       case "Window":
         return WindowControl(key: key, control: control);
+      case "FilePicker":
+        return FilePickerControl(key: key, control: control);
       default:
         return null;
     }
