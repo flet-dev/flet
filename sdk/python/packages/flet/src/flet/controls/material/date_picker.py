@@ -88,8 +88,12 @@ class DatePicker(DialogControl):
 
     value: Optional[DateTimeValue] = None
     modal: bool = False
-    first_date: DateTimeValue = datetime(year=1900, month=1, day=1)
-    last_date: DateTimeValue = datetime(year=2050, month=1, day=1)
+    first_date: DateTimeValue = field(
+        default_factory=lambda: datetime(year=1900, month=1, day=1)
+    )
+    last_date: DateTimeValue = field(
+        default_factory=lambda: datetime(year=2050, month=1, day=1)
+    )
     current_date: DateTimeValue = field(default_factory=lambda: datetime.now())
     keyboard_type: KeyboardType = KeyboardType.DATETIME
     date_picker_mode: DatePickerMode = DatePickerMode.DAY

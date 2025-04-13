@@ -4,6 +4,7 @@ import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/misc.dart';
 import '../utils/numbers.dart';
+import '../utils/time.dart';
 
 class TimePickerControl extends StatefulWidget {
   final Control control;
@@ -22,7 +23,7 @@ class _TimePickerControlState extends State<TimePickerControl> {
     bool lastOpen = widget.control.getBool("_open", false)!;
 
     var open = widget.control.getBool("open", false)!;
-    TimeOfDay value = widget.control.getTime("value", TimeOfDay.now())!;
+    var value = widget.control.getTimeOfDay("value", TimeOfDay.now())!;
 
     void onClosed(TimeOfDay? timeValue) {
       widget.control.updateProperties({"_open": false}, python: false);
@@ -63,7 +64,6 @@ class _TimePickerControlState extends State<TimePickerControl> {
             useRootNavigator: false,
             context: context,
             builder: (context) => createSelectTimeDialog()).then((result) {
-          debugPrint("pickTime() completed");
           onClosed(result);
         });
       });

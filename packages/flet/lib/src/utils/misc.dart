@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -89,22 +88,6 @@ StackFit? parseStackFit(String? value, [StackFit? defaultValue]) {
       defaultValue;
 }
 
-DatePickerMode? parseDatePickerMode(String? value,
-    [DatePickerMode? defaultValue]) {
-  if (value == null) return defaultValue;
-  return DatePickerMode.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
-}
-
-DatePickerEntryMode? parseDatePickerEntryMode(String? value,
-    [DatePickerEntryMode? defaultValue]) {
-  if (value == null) return defaultValue;
-  return DatePickerEntryMode.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
-}
-
 enum CardVariant { elevated, filled, outlined }
 
 CardVariant? parseCardVariant(String? value, [CardVariant? defaultValue]) {
@@ -130,14 +113,6 @@ LabelPosition? parseLabelPosition(String? value,
     [LabelPosition? defaultValue]) {
   if (value == null) return defaultValue;
   return LabelPosition.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
-}
-
-CupertinoTimerPickerMode? parseCupertinoTimerPickerMode(String? value,
-    [CupertinoTimerPickerMode? defaultValue]) {
-  if (value == null) return defaultValue;
-  return CupertinoTimerPickerMode.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
       defaultValue;
 }
@@ -183,34 +158,10 @@ Assertiveness? parseAssertiveness(String? value,
       defaultValue;
 }
 
-DatePickerDateOrder? parseDatePickerDateOrder(String? value,
-    [DatePickerDateOrder? defaultValue]) {
-  if (value == null) return defaultValue;
-  return DatePickerDateOrder.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
-}
-
-CupertinoDatePickerMode? parseCupertinoDatePickerMode(String? value,
-    [CupertinoDatePickerMode? defaultValue]) {
-  if (value == null) return defaultValue;
-  return CupertinoDatePickerMode.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
-}
-
 ListTileTitleAlignment? parseListTileTitleAlignment(String? value,
     [ListTileTitleAlignment? defaultValue]) {
   if (value == null) return defaultValue;
   return ListTileTitleAlignment.values.firstWhereOrNull(
-          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
-      defaultValue;
-}
-
-TimePickerEntryMode? parseTimePickerEntryMode(String? value,
-    [TimePickerEntryMode? defaultValue]) {
-  if (value == null) return defaultValue;
-  return TimePickerEntryMode.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
       defaultValue;
 }
@@ -283,16 +234,6 @@ extension MiscParsers on Control {
     return parseStackFit(get(propertyName), defaultValue);
   }
 
-  DatePickerMode? getDatePickerMode(String propertyName,
-      [DatePickerMode? defaultValue]) {
-    return parseDatePickerMode(get(propertyName), defaultValue);
-  }
-
-  DatePickerEntryMode? getDatePickerEntryMode(String propertyName,
-      [DatePickerEntryMode? defaultValue]) {
-    return parseDatePickerEntryMode(get(propertyName), defaultValue);
-  }
-
   CardVariant? getCardVariant(String propertyName,
       [CardVariant? defaultValue]) {
     return parseCardVariant(get(propertyName), defaultValue);
@@ -306,11 +247,6 @@ extension MiscParsers on Control {
   LabelPosition? getLabelPosition(String propertyName,
       [LabelPosition? defaultValue]) {
     return parseLabelPosition(get(propertyName), defaultValue);
-  }
-
-  CupertinoTimerPickerMode? getCupertinoTimerPickerMode(String propertyName,
-      [CupertinoTimerPickerMode? defaultValue]) {
-    return parseCupertinoTimerPickerMode(get(propertyName), defaultValue);
   }
 
   ListTileControlAffinity? getListTileControlAffinity(String propertyName,
@@ -340,24 +276,9 @@ extension MiscParsers on Control {
     return parseAssertiveness(get(propertyName), defaultValue);
   }
 
-  DatePickerDateOrder? getDatePickerDateOrder(String propertyName,
-      [DatePickerDateOrder? defaultValue]) {
-    return parseDatePickerDateOrder(get(propertyName), defaultValue);
-  }
-
-  CupertinoDatePickerMode? getCupertinoDatePickerMode(String propertyName,
-      [CupertinoDatePickerMode? defaultValue]) {
-    return parseCupertinoDatePickerMode(get(propertyName), defaultValue);
-  }
-
   ListTileTitleAlignment? getListTileTitleAlignment(String propertyName,
       [ListTileTitleAlignment? defaultValue]) {
     return parseListTileTitleAlignment(get(propertyName), defaultValue);
-  }
-
-  TimePickerEntryMode? getTimePickerEntryMode(String propertyName,
-      [TimePickerEntryMode? defaultValue]) {
-    return parseTimePickerEntryMode(get(propertyName), defaultValue);
   }
 
   Axis? getAxis(String propertyName, [Axis? defaultValue]) {

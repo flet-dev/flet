@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import '../models/control.dart';
 import '../utils/alignment.dart';
 import '../utils/colors.dart';
-import '../utils/misc.dart';
 import '../utils/numbers.dart';
+import '../utils/time.dart';
 import 'base_controls.dart';
 
 class CupertinoTimerPickerControl extends StatefulWidget {
@@ -22,21 +22,20 @@ class _CupertinoTimerPickerControlState
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoTimerPicker build: ${widget.control.id}");
-
-    int value = widget.control.getInt("value", 0)!;
-
+    var d = widget.control.getDuration("value", Duration.zero)!;
+    debugPrint("XXXX: ${d.inSeconds} ${d.inSeconds % 10 == 0}");
     Widget picker = CupertinoTimerPicker(
       mode: widget.control
           .getCupertinoTimerPickerMode("mode", CupertinoTimerPickerMode.hms)!,
-      initialTimerDuration: Duration(seconds: value),
+      initialTimerDuration: widget.control.getDuration("value", Duration.zero)!,
       minuteInterval: widget.control.getInt("minute_interval", 1)!,
       secondInterval: widget.control.getInt("second_interval", 1)!,
       itemExtent: widget.control.getDouble("item_extent", 32.0)!,
       alignment: widget.control.getAlignment("alignment", Alignment.center)!,
       backgroundColor: widget.control.getColor("bgcolor", context),
-      onTimerDurationChanged: (Duration d) {
-        widget.control.updateProperties({"value": d.inSeconds});
-        widget.control.triggerEvent("change", d.inSeconds);
+      onTimerDurationChanged: (duration) {
+        widget.control.updateProperties({"value": duration});
+        widget.control.triggerEvent("change", duration);
       },
     );
 

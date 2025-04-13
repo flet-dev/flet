@@ -33,13 +33,10 @@ def configure_encode_object_for_msgpack(control_cls):
             return r
         elif isinstance(obj, Enum):
             return obj.value
-        elif isinstance(obj, datetime.datetime):
-            return msgpack.ExtType(
-                1,
-                (obj.astimezone() if obj.tzinfo is None else obj)
-                .isoformat()
-                .encode("utf-8"),
-            )
+        elif isinstance(obj, (datetime.datetime, datetime.date)):
+            if isinstance(obj, datetime.datetime) and obj.tzinfo is None:
+                obj = obj.astimezone()
+            return msgpack.ExtType(1, obj.isoformat().encode("utf-8"))
         elif isinstance(obj, datetime.time):
             return msgpack.ExtType(2, obj.strftime("%H:%M").encode("utf-8"))
         return obj

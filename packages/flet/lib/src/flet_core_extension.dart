@@ -28,6 +28,7 @@ import 'controls/cupertino_button.dart';
 import 'controls/cupertino_checkbox.dart';
 import 'controls/cupertino_context_menu.dart';
 import 'controls/cupertino_context_menu_action.dart';
+import 'controls/cupertino_date_picker.dart';
 import 'controls/cupertino_dialog_action.dart';
 import 'controls/cupertino_list_tile.dart';
 import 'controls/cupertino_navigation_bar.dart';
@@ -137,6 +138,8 @@ class FletCoreExtension extends FletExtension {
         return CupertinoSegmentedButtonControl(key: key, control: control);
       case "Markdown":
         return MarkdownControl(key: key, control: control);
+      case "CupertinoDatePicker":
+        return CupertinoDatePickerControl(key: key, control: control);
       case "CupertinoBottomSheet":
         return CupertinoBottomSheetControl(key: key, control: control);
       case "PopupMenuButton":

@@ -4,8 +4,8 @@ import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/form_field.dart';
 import '../utils/icons.dart';
-import '../utils/misc.dart';
 import '../utils/numbers.dart';
+import '../utils/time.dart';
 
 class DatePickerControl extends StatefulWidget {
   final Control control;
@@ -27,11 +27,11 @@ class _DatePickerControlState extends State<DatePickerControl> {
     bool lastOpen = widget.control.getBool("_open", false)!;
 
     var open = widget.control.getBool("open", false)!;
-    DateTime? value = widget.control.getDateTime("value");
-    DateTime? currentDate = widget.control.getDateTime("current_date");
-    IconData? switchToCalendarEntryModeIcon =
+    var value = widget.control.getDateTime("value");
+    var currentDate = widget.control.getDateTime("current_date");
+    var switchToCalendarEntryModeIcon =
         parseIcon(widget.control.getString("switch_to_calendar_icon", "")!);
-    IconData? switchToInputEntryModeIcon =
+    var switchToInputEntryModeIcon =
         parseIcon(widget.control.getString("switch_to_input_icon"));
 
     void onClosed(DateTime? dateValue) {

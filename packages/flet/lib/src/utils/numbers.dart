@@ -76,7 +76,7 @@ extension LiteralParsers on Control {
     return get<DateTime>(propertyName, defaultValue);
   }
 
-  TimeOfDay? getTime(String propertyName, [TimeOfDay? defaultValue]) {
+  TimeOfDay? getTimeOfDay(String propertyName, [TimeOfDay? defaultValue]) {
     return get<TimeOfDay>(propertyName, defaultValue);
   }
 
