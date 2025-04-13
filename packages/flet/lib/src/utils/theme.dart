@@ -17,9 +17,9 @@ import 'icons.dart';
 import 'locale.dart';
 import 'material_state.dart';
 import 'menu.dart';
+import 'misc.dart';
 import 'mouse.dart';
 import 'numbers.dart';
-import 'misc.dart';
 import 'overlay_style.dart';
 import 'text.dart';
 import 'time.dart';
@@ -75,15 +75,13 @@ CupertinoThemeData fixCupertinoTheme(
 
 Brightness? parseBrightness(String? value, [Brightness? defaultValue]) {
   if (value == null) return defaultValue;
-  return Brightness.values
-          .firstWhereOrNull((e) => e.toString() == value.toLowerCase()) ??
+  return Brightness.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
       defaultValue;
 }
 
 ThemeMode? parseThemeMode(String? value, [ThemeMode? defaultValue]) {
-  if (value == null) {
-    return defaultValue;
-  }
+  if (value == null) return defaultValue;
   return ThemeMode.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
       defaultValue;
@@ -97,9 +95,7 @@ ThemeData parseTheme(
   var primarySwatch = parseColor(value?["primary_swatch"], theme);
   var colorSchemeSeed = parseColor(value?["color_scheme_seed"], theme);
 
-  if (colorSchemeSeed != null) {
-    primarySwatch = null;
-  }
+  if (colorSchemeSeed != null) primarySwatch = null;
 
   if (colorSchemeSeed == null && primarySwatch == null) {
     colorSchemeSeed = Colors.blue;

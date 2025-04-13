@@ -35,7 +35,7 @@ class WindowState {
     required this.opacity,
   });
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
+  Map<String, dynamic> toMap() => <String, dynamic>{
         'maximized': maximized,
         'minimized': minimized,
         'full_screen': fullScreen,
@@ -56,6 +56,6 @@ class WindowState {
 
   @override
   String toString() {
-    return toJson().toString();
+    return toMap().toString();
   }
 }

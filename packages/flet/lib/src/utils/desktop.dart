@@ -105,7 +105,7 @@ Future setWindowAlwaysOnTop(bool alwaysOnTop) async {
 }
 
 Future setWindowAlwaysOnBottom(bool alwaysOnBottom) async {
-  if (isDesktopPlatform()) {
+  if (isLinuxDesktop() || isWindowsDesktop()) {
     debugPrint("setWindowAlwaysOnBottom($alwaysOnBottom)");
     await windowManager.setAlwaysOnBottom(alwaysOnBottom);
   }
@@ -178,6 +178,18 @@ Future setWindowAlignment(Alignment alignment, [bool animate = true]) async {
   }
 }
 
+Future setWindowAspectRatio(double value) async {
+  if (isDesktopPlatform()) {
+    await windowManager.setAspectRatio(value);
+  }
+}
+
+Future setWindowBrightness(Brightness value) async {
+  if (isDesktopPlatform()) {
+    await windowManager.setBrightness(value);
+  }
+}
+
 Future minimizeWindow() async {
   if (isDesktopPlatform() && !await windowManager.isMinimized()) {
     debugPrint("minimizeWindow()");
@@ -235,9 +247,15 @@ Future windowToFront() async {
   }
 }
 
-Future windowStartDragging() async {
+Future startDraggingWindow() async {
   if (isDesktopPlatform()) {
     await windowManager.startDragging();
+  }
+}
+
+Future startResizingWindow(ResizeEdge edge) async {
+  if (isWindowsDesktop() || isLinuxDesktop()) {
+    await windowManager.startResizing(edge);
   }
 }
 

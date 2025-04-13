@@ -10,6 +10,8 @@ import '../utils/alignment.dart';
 import '../utils/colors.dart';
 import '../utils/desktop.dart';
 import '../utils/numbers.dart';
+import '../utils/theme.dart';
+import '../utils/window.dart';
 
 class WindowControl extends StatefulWidget {
   final Control control;
@@ -32,6 +34,8 @@ class _WindowControlState extends State<WindowControl> with WindowListener {
   double? _top;
   double? _left;
   double? _opacity;
+  double? _aspectRatio;
+  Brightness? _brightness;
   bool? _minimizable;
   bool? _maximizable;
   bool? _fullScreen;
@@ -144,6 +148,8 @@ class _WindowControlState extends State<WindowControl> with WindowListener {
       var icon = widget.control.getString("icon");
       var hasShadow = widget.control.getBool("shadow");
       var opacity = widget.control.getDouble("opacity");
+      var aspectRatio = widget.control.getDouble("aspect_ratio");
+      var brightness = widget.control.getBrightness("brightness");
       var minimizable = widget.control.getBool("minimizable");
       var maximizable = widget.control.getBool("maximizable");
       var alwaysOnTop = widget.control.getBool("always_on_top");
@@ -220,6 +226,18 @@ class _WindowControlState extends State<WindowControl> with WindowListener {
       if (opacity != null && opacity != _opacity) {
         await setWindowOpacity(opacity);
         _opacity = opacity;
+      }
+
+      // aspectRatio
+      if (aspectRatio != null && aspectRatio != _aspectRatio) {
+        await setWindowAspectRatio(aspectRatio);
+        _aspectRatio = aspectRatio;
+      }
+
+      // brightness
+      if (brightness != null && brightness != _brightness) {
+        await setWindowBrightness(brightness);
+        _brightness = brightness;
       }
 
       // minimizable
@@ -388,6 +406,15 @@ class _WindowControlState extends State<WindowControl> with WindowListener {
       case "destroy":
         await destroyWindow();
         break;
+      case "start_dragging":
+        await startDraggingWindow();
+        break;
+      case "start_resizing":
+        var edge = parseWindowResizeEdge(args["edge"]);
+        if (edge != null) {
+          await startResizingWindow(edge);
+        }
+        break;
       default:
         throw Exception("Unknown method ${widget.control.type}.$name");
     }
@@ -401,10 +428,8 @@ class _WindowControlState extends State<WindowControl> with WindowListener {
   @override
   void onWindowEvent(String eventName) {
     if (["resize", "resized", "move"].contains(eventName)) return;
-
-    var backend = FletBackend.of(context);
     getWindowState().then((wmd) {
-      backend.onWindowEvent(eventName, wmd);
+      widget.control.backend.onWindowEvent(eventName, wmd);
     });
   }
 }

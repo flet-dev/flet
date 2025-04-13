@@ -290,7 +290,7 @@ class FletBackend extends ChangeNotifier {
     debugPrint("Window event - $eventName: $windowState");
     var window = page.get("window");
     if (window != null && window is Control) {
-      updateControl(window.id, windowState.toJson());
+      updateControl(window.id, windowState.toMap());
       triggerControlEvent(window, "event", {"type": eventName});
       notifyListeners();
     }
@@ -307,7 +307,7 @@ class FletBackend extends ChangeNotifier {
       var windowState = await getWindowState();
       debugPrint("Window state updated: $windowState");
       var window = page.child("window")!;
-      updateControl(window.id, windowState.toJson());
+      updateControl(window.id, windowState.toMap());
       triggerControlEvent(window, "event", {"type": "resized"});
     }
 

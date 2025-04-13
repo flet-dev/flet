@@ -185,4 +185,3 @@ class Duration:
 
 DurationValue = Union[int, Duration]
 OptionalDurationValue = Optional[DurationValue]
-print(Duration(seconds=3600).in_milliseconds)

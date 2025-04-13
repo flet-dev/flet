@@ -148,7 +148,12 @@ from flet.controls.core.text import Text, TextAffinity, TextSelection
 from flet.controls.core.text_span import TextSpan
 from flet.controls.core.transparent_pointer import TransparentPointer
 from flet.controls.core.view import View
-from flet.controls.core.window import Window, WindowEvent
+from flet.controls.core.window import (
+    Window,
+    WindowEvent,
+    WindowEventType,
+    WindowResizeEdge,
+)
 from flet.controls.core.window_drag_area import WindowDragArea
 from flet.controls.cupertino import cupertino_colors, cupertino_icons
 from flet.controls.cupertino.cupertino_action_sheet import CupertinoActionSheet
@@ -462,7 +467,6 @@ from flet.controls.types import (
     VerticalAlignment,
     VisualDensity,
     WebRenderer,
-    WindowEventType,
 )
 from flet.pubsub.pubsub_client import PubSubClient
 from flet.pubsub.pubsub_hub import PubSubHub

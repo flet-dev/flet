@@ -1,19 +1,52 @@
 import asyncio
 from dataclasses import dataclass
+from enum import Enum
 from typing import Optional
 
 from flet.controls.alignment import Alignment
 from flet.controls.control import BaseControl, control
 from flet.controls.control_event import ControlEvent
 from flet.controls.types import (
+    Brightness,
     Number,
     OptionalColorValue,
     OptionalEventCallable,
     OptionalNumber,
-    WindowEventType,
 )
 
-__all__ = ["Window", "WindowEvent"]
+__all__ = ["Window", "WindowEvent", "WindowEventType", "WindowResizeEdge"]
+
+
+class WindowEventType(Enum):
+    CLOSE = "close"
+    FOCUS = "focus"
+    BLUR = "blur"
+    HIDE = "hide"
+    SHOW = "show"
+    MAXIMIZE = "maximize"
+    UNMAXIMIZE = "unmaximize"
+    MINIMIZE = "minimize"
+    RESTORE = "restore"
+    RESIZE = "resize"
+    RESIZED = "resized"
+    MOVE = "move"
+    MOVED = "moved"
+    LEAVE_FULL_SCREEN = "leave-full-screen"
+    ENTER_FULL_SCREEN = "enter-full-screen"
+
+
+class WindowResizeEdge(Enum):
+    TOP = "top"
+    LEFT = "left"
+    RIGHT = "right"
+    BOTTOM = "bottom"
+    TOP_LEFT = "topLeft"
+    BOTTOM_LEFT = "bottomLeft"
+    TOP_RIGHT = "topRight"
+    BOTTOM_RIGHT = "bottomRight"
+
+
+# todo: raise FletExceptions when a method cant be called on the running platform
 
 
 @control("Window")
@@ -28,6 +61,8 @@ class Window(BaseControl):
     min_width: OptionalNumber = None
     min_height: OptionalNumber = None
     opacity: Number = 1.0
+    aspect_ratio: OptionalNumber = None
+    brightness: Optional[Brightness] = None
     maximized: bool = False
     minimized: bool = False
     minimizable: bool = True
@@ -85,6 +120,18 @@ class Window(BaseControl):
 
     def to_front(self):
         asyncio.create_task(self.to_front_async())
+
+    async def start_dragging_async(self):
+        await self._invoke_method_async("start_dragging")
+
+    def start_dragging(self):
+        asyncio.create_task(self.start_dragging_async())
+
+    async def start_resizing_async(self, edge: WindowResizeEdge):
+        await self._invoke_method_async("start_resizing", {"edge": edge})
+
+    def start_resizing(self, edge: WindowResizeEdge):
+        asyncio.create_task(self.start_resizing_async(edge))
 
 
 @dataclass
