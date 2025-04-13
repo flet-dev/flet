@@ -58,10 +58,10 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     label: Optional[StrOrControl] = None
     value: Optional[bool] = None
-    label_position: Optional[LabelPosition] = None
+    label_position: LabelPosition = LabelPosition.RIGHT
     label_style: Optional[TextStyle] = None
-    tristate: Optional[bool] = None
-    autofocus: Optional[bool] = None
+    tristate: bool = False
+    autofocus: bool = False
     fill_color: ControlStateValue[ColorValue] = None
     overlay_color: ControlStateValue[ColorValue] = None
     check_color: OptionalColorValue = None
@@ -72,7 +72,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     shape: Optional[OutlinedBorder] = None
     splash_radius: OptionalNumber = None
     border_side: ControlStateValue[BorderSide] = None
-    is_error: Optional[bool] = None
+    is_error: bool = False
     visual_density: Optional[VisualDensity] = None
     mouse_cursor: Optional[MouseCursor] = None
     on_change: OptionalControlEventCallable = None

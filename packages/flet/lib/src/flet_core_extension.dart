@@ -1,3 +1,4 @@
+import 'package:flet/src/controls/adaptive_checkbox.dart';
 import 'package:flutter/widgets.dart';
 
 import 'controls/adaptive_alert_dialog.dart';
@@ -25,7 +26,6 @@ import 'controls/cupertino_alert_dialog.dart';
 import 'controls/cupertino_app_bar.dart';
 import 'controls/cupertino_bottom_sheet.dart';
 import 'controls/cupertino_button.dart';
-import 'controls/cupertino_checkbox.dart';
 import 'controls/cupertino_context_menu.dart';
 import 'controls/cupertino_context_menu_action.dart';
 import 'controls/cupertino_date_picker.dart';
@@ -118,6 +118,9 @@ class FletCoreExtension extends FletExtension {
         return AnimatedSwitcherControl(key: key, control: control);
       case "AppBar":
         return AppBarControl(key: key, control: control);
+      case "Checkbox":
+      case "CupertinoCheckbox":
+        return AdaptiveCheckboxControl(key: key, control: control);
       case "Banner":
         return BannerControl(key: key, control: control);
       case "Draggable":
@@ -310,8 +313,6 @@ class FletCoreExtension extends FletExtension {
         return AdaptiveRadioControl(key: key, control: control);
       case "CupertinoRadio":
         return CupertinoRadioControl(key: key, control: control);
-      case "CupertinoCheckbox":
-        return CupertinoCheckboxControl(key: key, control: control);
       case "Window":
         return WindowControl(key: key, control: control);
       case "FilePicker":

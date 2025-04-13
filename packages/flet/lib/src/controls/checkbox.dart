@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
@@ -9,19 +8,20 @@ import '../utils/misc.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
 import '../utils/text.dart';
+import '../utils/theme.dart';
 import 'base_controls.dart';
 import 'list_tile.dart';
 
-class CupertinoCheckboxControl extends StatefulWidget {
+class CheckboxControl extends StatefulWidget {
   final Control control;
 
-  const CupertinoCheckboxControl({super.key, required this.control});
+  const CheckboxControl({super.key, required this.control});
 
   @override
-  State<CupertinoCheckboxControl> createState() => _CheckboxControlState();
+  State<CheckboxControl> createState() => _CheckboxControlState();
 }
 
-class _CheckboxControlState extends State<CupertinoCheckboxControl> {
+class _CheckboxControlState extends State<CheckboxControl> {
   bool? _value;
   bool _tristate = false;
   late final FocusNode _focusNode;
@@ -64,7 +64,7 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("CupertinoCheckBox build: ${widget.control.id}");
+    debugPrint("Checkbox build: ${widget.control.id}");
 
     _tristate = widget.control.getBool("tristate", false)!;
     var value = widget.control.getBool("value", _tristate ? null : false);
@@ -72,22 +72,27 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
       _value = value;
     }
 
-    var cupertinoCheckbox = CupertinoCheckbox(
+    var checkbox = Checkbox(
         autofocus: widget.control.getBool("autofocus", false)!,
         focusNode: _focusNode,
         value: _value,
-        activeColor: widget.control.getColor(
-            "active_color", context, Theme.of(context).colorScheme.primary)!,
-        checkColor: widget.control.getColor("check_color", context),
-        focusColor: widget.control.getColor("focus_color", context),
-        shape: widget.control.getShape("shape"),
-        mouseCursor: widget.control.getMouseCursor("mouse_cursor"),
+        isError: widget.control.getBool("is_error", false)!,
         semanticLabel: widget.control.getString("semantics_label"),
+        shape: widget.control.getShape("shape"),
         side: widget.control
             .getWidgetStateBorderSide("border_side", Theme.of(context)),
+        splashRadius: widget.control.getDouble("splash_radius"),
+        activeColor: widget.control.getColor("active_color", context),
+        focusColor: widget.control.getColor("focus_color", context),
+        hoverColor: widget.control.getColor("hover_color", context),
+        overlayColor: widget.control
+            .getWidgetStateColor("overlay_color", Theme.of(context)),
+        checkColor: widget.control.getColor("check_color", context),
         fillColor:
             widget.control.getWidgetStateColor("fill_color", Theme.of(context)),
         tristate: _tristate,
+        visualDensity: widget.control.getVisualDensity("visual_density"),
+        mouseCursor: widget.control.getMouseCursor("mouse_cursor"),
         onChanged: !widget.control.disabled
             ? (bool? value) => _onChange(value)
             : null);
@@ -97,7 +102,7 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
       _toggleValue();
     });
 
-    Widget result = cupertinoCheckbox;
+    Widget result = checkbox;
 
     var labelStyle =
         widget.control.getTextStyle("label_style", Theme.of(context));
@@ -115,8 +120,8 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
           child: GestureDetector(
               onTap: !widget.control.disabled ? _toggleValue : null,
               child: labelPosition == LabelPosition.right
-                  ? Row(children: [cupertinoCheckbox, label])
-                  : Row(children: [label, cupertinoCheckbox])));
+                  ? Row(children: [checkbox, label])
+                  : Row(children: [label, checkbox])));
     }
 
     // Apply width and height if provided

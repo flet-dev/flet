@@ -22,8 +22,7 @@ class _CupertinoTimerPickerControlState
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoTimerPicker build: ${widget.control.id}");
-    var d = widget.control.getDuration("value", Duration.zero)!;
-    debugPrint("XXXX: ${d.inSeconds} ${d.inSeconds % 10 == 0}");
+
     Widget picker = CupertinoTimerPicker(
       mode: widget.control
           .getCupertinoTimerPickerMode("mode", CupertinoTimerPickerMode.hms)!,
@@ -34,8 +33,17 @@ class _CupertinoTimerPickerControlState
       alignment: widget.control.getAlignment("alignment", Alignment.center)!,
       backgroundColor: widget.control.getColor("bgcolor", context),
       onTimerDurationChanged: (duration) {
-        widget.control.updateProperties({"value": duration});
-        widget.control.triggerEvent("change", duration);
+        widget.control.updateProperties({
+          "value": {
+            "days": duration.inDays,
+            "hours": duration.inHours % 24,
+            "minutes": duration.inMinutes % 60,
+            "seconds": duration.inSeconds % 60,
+            "milliseconds": duration.inMilliseconds % 1000,
+            "microseconds": duration.inMicroseconds % 1000,
+          }
+        });
+        widget.control.triggerEvent("change", duration.inSeconds);
       },
     );
 

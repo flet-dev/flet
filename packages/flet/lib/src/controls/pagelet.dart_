@@ -33,12 +33,12 @@ class _PageletControlState extends State<PageletControl> with FletStoreMixin {
 
     var appBar = widget.control.buildWidget("appbar");
     var content = widget.control.buildWidget("content");
-    var navigationBar = widget.control.buildWidget("navigationbar");
-    var bottomAppBar = widget.control.buildWidget("bottomappbar");
-    var bottomSheet = widget.control.buildWidget("bottomsheet");
+    var navigationBar = widget.control.buildWidget("navigation_bar");
+    var bottomAppBar = widget.control.buildWidget("bottom_appbar");
+    var bottomSheet = widget.control.buildWidget("bottom_sheet");
     var drawer = widget.control.buildWidget("drawer");
-    var endDrawer = widget.control.buildWidget("enddrawer");
-    var fab = widget.control.buildWidget("floatingactionbutton");
+    var endDrawer = widget.control.buildWidget("end_drawer");
+    var fab = widget.control.buildWidget("floating_action_button");
 
     if (content == null) {
       return const ErrorControl("Pagelet.content must be provided and visible");

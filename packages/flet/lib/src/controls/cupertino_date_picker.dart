@@ -1,8 +1,8 @@
-import 'package:flet/src/utils/colors.dart';
-import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../models/control.dart';
+import '../utils/colors.dart';
+import '../utils/numbers.dart';
 import '../utils/time.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';

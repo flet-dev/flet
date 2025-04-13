@@ -57,8 +57,3 @@ class CupertinoCheckbox(ConstrainedControl):
     on_change: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
-
-    # def before_update(self):
-    #     super().before_update()
-    #     self._set_attr_json("borderSide", self.__border_side, wrap_attr_dict=True)
-    #     self._set_attr_json("fillColor", self.__fill_color, wrap_attr_dict=True)

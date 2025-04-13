@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flet/src/utils/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/control.dart';
+import '../utils/file_picker.dart';
 import '../utils/numbers.dart';
 import '../widgets/flet_store_mixin.dart';
 
