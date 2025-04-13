@@ -5,9 +5,10 @@ from typing import Any, Dict
 
 import msgpack
 
+from flet.controls.duration import Duration
+
 
 def configure_encode_object_for_msgpack(control_cls):
-
     def encode_object_for_msgpack(obj):
         if is_dataclass(obj):
             r = {}
@@ -39,6 +40,8 @@ def configure_encode_object_for_msgpack(control_cls):
             return msgpack.ExtType(1, obj.isoformat().encode("utf-8"))
         elif isinstance(obj, datetime.time):
             return msgpack.ExtType(2, obj.strftime("%H:%M").encode("utf-8"))
+        elif isinstance(obj, Duration):
+            return msgpack.ExtType(3, obj.in_microseconds)
         return obj
 
     return encode_object_for_msgpack
@@ -49,6 +52,8 @@ def decode_ext_from_msgpack(code, data):
         return datetime.datetime.fromisoformat(data.decode("utf-8"))
     elif code == 2:
         return datetime.time(*map(int, data.decode("utf-8").split(":")))
+    elif code == 3:
+        return Duration.from_unit(microseconds=int(data))
     return msgpack.ExtType(code, data)
 
 

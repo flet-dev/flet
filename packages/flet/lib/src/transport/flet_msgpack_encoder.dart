@@ -13,6 +13,8 @@ class FletMsgpackEncoder extends ExtEncoder {
       return 1;
     } else if (object is TimeOfDay) {
       return 2;
+    } else if (object is Duration) {
+      return 3;
     }
     return 0;
   }
@@ -23,6 +25,8 @@ class FletMsgpackEncoder extends ExtEncoder {
       return codec.encode(object.toIso8601String());
     } else if (object is TimeOfDay) {
       return codec.encode("${object.hour}:${object.minute}");
+    } else if (object is Duration) {
+      return codec.encode(object.inMicroseconds.toString());
     }
     return Uint8List(0);
   }

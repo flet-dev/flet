@@ -16,6 +16,9 @@ class FletMsgpackDecoder extends ExtDecoder {
       var parts =
           codec.decode(data).split(":").map((s) => int.parse(s)).toList();
       return TimeOfDay(hour: parts[0], minute: parts[1]);
+    } else if (extType == 3) {
+      var microseconds = int.parse(codec.decode(data));
+      return Duration(microseconds: microseconds);
     }
     return null;
   }
