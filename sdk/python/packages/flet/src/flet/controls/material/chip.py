@@ -6,12 +6,12 @@ from flet.controls.box import BoxConstraints
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, control
+from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ClipBehavior,
     ColorValue,
-    ControlStateValue,
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
@@ -88,7 +88,7 @@ class Chip(ConstrainedControl):
     selected_shadow_color: OptionalColorValue = None
     autofocus: bool = False
     surface_tint_color: OptionalColorValue = None
-    color: ControlStateValue[ColorValue] = None
+    color: OptionalControlStateValue[ColorValue] = None
     click_elevation: OptionalNumber = None
     clip_behavior: Optional[ClipBehavior] = None
     visual_density: Optional[VisualDensity] = None

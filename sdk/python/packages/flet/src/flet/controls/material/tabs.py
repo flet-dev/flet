@@ -6,6 +6,7 @@ from flet.controls.border import BorderSide
 from flet.controls.border_radius import OptionalBorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, control
+from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.material.form_field_control import IconValueOrControl
@@ -14,7 +15,6 @@ from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ClipBehavior,
     ColorValue,
-    ControlStateValue,
     MouseCursor,
     Number,
     OptionalColorValue,
@@ -123,7 +123,7 @@ class Tabs(ConstrainedControl, AdaptiveControl):
     label_text_style: Optional[TextStyle] = None
     unselected_label_color: OptionalColorValue = None
     unselected_label_text_style: Optional[TextStyle] = None
-    overlay_color: ControlStateValue[ColorValue] = None
+    overlay_color: OptionalControlStateValue[ColorValue] = None
     divider_height: OptionalNumber = None
     indicator_thickness: Number = 2.0
     enable_feedback: Optional[str] = None

@@ -5,10 +5,10 @@ from flet.controls.border import BorderSide
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import control
+from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
-    ControlStateValue,
     LabelPosition,
     MouseCursor,
     OptionalColorValue,
@@ -62,8 +62,8 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     label_style: Optional[TextStyle] = None
     tristate: bool = False
     autofocus: bool = False
-    fill_color: ControlStateValue[ColorValue] = None
-    overlay_color: ControlStateValue[ColorValue] = None
+    fill_color: OptionalControlStateValue[ColorValue] = None
+    overlay_color: OptionalControlStateValue[ColorValue] = None
     check_color: OptionalColorValue = None
     active_color: OptionalColorValue = None
     hover_color: OptionalColorValue = None
@@ -71,7 +71,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     semantics_label: Optional[str] = None
     shape: Optional[OutlinedBorder] = None
     splash_radius: OptionalNumber = None
-    border_side: ControlStateValue[BorderSide] = None
+    border_side: OptionalControlStateValue[BorderSide] = None
     is_error: bool = False
     visual_density: Optional[VisualDensity] = None
     mouse_cursor: Optional[MouseCursor] = None

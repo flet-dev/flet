@@ -7,10 +7,10 @@ from flet.controls.border import Border
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import control
+from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.types import (
     ColorValue,
-    ControlStateValue,
     IconValueOrControl,
     OptionalColorValue,
     OptionalControlEventCallable,
@@ -86,7 +86,7 @@ class NavigationBar(ConstrainedControl, AdaptiveControl):
     surface_tint_color: OptionalColorValue = None
     border: Optional[Border] = None
     animation_duration: OptionalDurationValue = None
-    overlay_color: ControlStateValue[ColorValue] = None
+    overlay_color: OptionalControlStateValue[ColorValue] = None
     on_change: OptionalControlEventCallable = None
 
     def before_update(self):

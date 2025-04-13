@@ -6,13 +6,13 @@ from flet.controls.border_radius import OptionalBorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, control
 from flet.controls.control_event import ControlEvent
+from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.core.gesture_detector import TapEvent
 from flet.controls.gradients import Gradient
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ClipBehavior,
     ColorValue,
-    ControlStateValue,
     MainAxisAlignment,
     Number,
     OptionalColorValue,
@@ -60,7 +60,7 @@ class DataCell(Control):
 @control("row")
 class DataRow(Control):
     cells: List[DataCell] = field(default_factory=list)
-    color: ControlStateValue[ColorValue] = None
+    color: OptionalControlStateValue[ColorValue] = None
     selected: Optional[bool] = field(default=False)
     on_long_press: OptionalControlEventCallable = None
     on_select_changed: OptionalControlEventCallable = None
@@ -92,14 +92,14 @@ class DataTable(ConstrainedControl):
     vertical_lines: Optional[BorderSide] = None
     checkbox_horizontal_margin: OptionalNumber = None
     column_spacing: OptionalNumber = None
-    data_row_color: ControlStateValue[ColorValue] = None
+    data_row_color: OptionalControlStateValue[ColorValue] = None
     data_row_min_height: OptionalNumber = None
     data_row_max_height: OptionalNumber = None
     data_text_style: Optional[TextStyle] = None
     bgcolor: OptionalColorValue = None
     gradient: Optional[Gradient] = None
     divider_thickness: Number = 1.0
-    heading_row_color: ControlStateValue[ColorValue] = None
+    heading_row_color: OptionalControlStateValue[ColorValue] = None
     heading_row_height: OptionalNumber = None
     heading_text_style: Optional[TextStyle] = None
     horizontal_margin: OptionalNumber = None

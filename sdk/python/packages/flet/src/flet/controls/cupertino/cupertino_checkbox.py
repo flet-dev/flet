@@ -4,9 +4,9 @@ from flet.controls.border import BorderSide
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import control
+from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.types import (
     ColorValue,
-    ControlStateValue,
     LabelPosition,
     MouseCursor,
     OptionalColorValue,
@@ -49,11 +49,11 @@ class CupertinoCheckbox(ConstrainedControl):
     check_color: OptionalColorValue = None
     active_color: OptionalColorValue = None
     focus_color: OptionalColorValue = None
-    fill_color: ControlStateValue[ColorValue] = None
+    fill_color: OptionalControlStateValue[ColorValue] = None
     shape: Optional[OutlinedBorder] = None
     mouse_cursor: Optional[MouseCursor] = None
     semantics_label: Optional[str] = None
-    border_side: ControlStateValue[BorderSide] = None
+    border_side: OptionalControlStateValue[BorderSide] = None
     on_change: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None

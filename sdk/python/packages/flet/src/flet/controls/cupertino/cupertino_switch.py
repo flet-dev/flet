@@ -2,9 +2,9 @@ from typing import Optional
 
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import control
+from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.types import (
     ColorValue,
-    ControlStateValue,
     IconValue,
     LabelPosition,
     OptionalColorValue,
@@ -55,9 +55,9 @@ class CupertinoSwitch(ConstrainedControl):
     active_track_color: OptionalColorValue = None
     inactive_thumb_color: OptionalColorValue = None
     inactive_track_color: OptionalColorValue = None
-    track_outline_color: ControlStateValue[ColorValue] = None
-    track_outline_width: ControlStateValue[OptionalNumber] = None
-    thumb_icon: ControlStateValue[IconValue] = None
+    track_outline_color: OptionalControlStateValue[ColorValue] = None
+    track_outline_width: OptionalControlStateValue[OptionalNumber] = None
+    thumb_icon: OptionalControlStateValue[IconValue] = None
     on_change: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None

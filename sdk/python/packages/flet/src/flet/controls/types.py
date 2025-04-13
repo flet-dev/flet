@@ -80,18 +80,6 @@ OptionalNumber = Optional[Number]
 OptionalString = Optional[str]
 
 
-class ControlState(Enum):
-    HOVERED = "hovered"
-    FOCUSED = "focused"
-    PRESSED = "pressed"
-    DRAGGED = "dragged"
-    SELECTED = "selected"
-    SCROLLED_UNDER = "scrolledUnder"
-    DISABLED = "disabled"
-    ERROR = "error"
-    DEFAULT = "default"
-
-
 class MainAxisAlignment(Enum):
     START = "start"
     END = "end"
@@ -363,12 +351,9 @@ IconValueOrControl = Union[IconValue, "Control"]
 # Content
 StrOrControl = Union[str, "Control"]
 
-# ControlState
-T = TypeVar("T")
-ControlStateValue = Union[None, T, Dict[ControlState, T]]
-
 # DateTime
 DateTimeValue = Union[datetime, date]
+OptionalDateTimeValue = Optional[DateTimeValue]
 
 # Wrapper
 Wrapper = Callable[..., Any]
@@ -376,4 +361,5 @@ Wrapper = Callable[..., Any]
 
 # Protocols
 class SupportsStr(Protocol):
-    def __str__(self) -> str: ...
+    def __str__(self) -> str:
+        ...

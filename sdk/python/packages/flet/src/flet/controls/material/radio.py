@@ -3,10 +3,10 @@ from typing import Optional
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import control
+from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
-    ControlStateValue,
     LabelPosition,
     MouseCursor,
     OptionalColorValue,
@@ -54,9 +54,9 @@ class Radio(ConstrainedControl, AdaptiveControl):
     label_style: Optional[TextStyle] = None
     value: Optional[str] = None
     autofocus: bool = False
-    fill_color: ControlStateValue[ColorValue] = None
+    fill_color: OptionalControlStateValue[ColorValue] = None
     active_color: OptionalColorValue = None
-    overlay_color: ControlStateValue[ColorValue] = None
+    overlay_color: OptionalControlStateValue[ColorValue] = None
     hover_color: OptionalColorValue = None
     focus_color: OptionalColorValue = None
     splash_radius: OptionalNumber = None

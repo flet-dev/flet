@@ -3,10 +3,10 @@ from typing import Optional
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import control
+from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
-    ControlStateValue,
     IconValue,
     LabelPosition,
     MouseCursor,
@@ -66,15 +66,15 @@ class Switch(ConstrainedControl, AdaptiveControl):
     focus_color: OptionalColorValue = None
     inactive_thumb_color: OptionalColorValue = None
     inactive_track_color: OptionalColorValue = None
-    thumb_color: ControlStateValue[ColorValue] = None
-    thumb_icon: ControlStateValue[IconValue] = None
-    track_color: ControlStateValue[ColorValue] = None
+    thumb_color: OptionalControlStateValue[ColorValue] = None
+    thumb_icon: OptionalControlStateValue[IconValue] = None
+    track_color: OptionalControlStateValue[ColorValue] = None
     adaptive: Optional[bool] = None
     hover_color: OptionalColorValue = None
     splash_radius: OptionalNumber = None
-    overlay_color: ControlStateValue[ColorValue] = None
-    track_outline_color: ControlStateValue[ColorValue] = None
-    track_outline_width: ControlStateValue[OptionalNumber] = None
+    overlay_color: OptionalControlStateValue[ColorValue] = None
+    track_outline_color: OptionalControlStateValue[ColorValue] = None
+    track_outline_width: OptionalControlStateValue[OptionalNumber] = None
     mouse_cursor: Optional[MouseCursor] = None
     on_change: OptionalControlEventCallable = None
     on_focus: OptionalEventCallable[OnFocusEvent] = None

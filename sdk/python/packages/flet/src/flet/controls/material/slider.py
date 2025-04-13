@@ -4,10 +4,10 @@ from typing import Optional
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import control
+from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     ColorValue,
-    ControlStateValue,
     MouseCursor,
     Number,
     OptionalColorValue,
@@ -63,7 +63,7 @@ class Slider(ConstrainedControl, AdaptiveControl):
     thumb_color: OptionalColorValue = None
     interaction: Optional[SliderInteraction] = None
     secondary_active_color: OptionalColorValue = None
-    overlay_color: ControlStateValue[ColorValue] = None
+    overlay_color: OptionalControlStateValue[ColorValue] = None
     secondary_track_value: OptionalNumber = None
     mouse_cursor: Optional[MouseCursor] = None
     padding: Optional[PaddingValue] = None

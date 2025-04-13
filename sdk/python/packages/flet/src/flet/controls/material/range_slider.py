@@ -2,9 +2,9 @@ from typing import Optional
 
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import control
+from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.types import (
     ColorValue,
-    ControlStateValue,
     MouseCursor,
     Number,
     OptionalColorValue,
@@ -85,8 +85,8 @@ class RangeSlider(ConstrainedControl):
     round: Optional[int] = None
     active_color: OptionalColorValue = None
     inactive_color: OptionalColorValue = None
-    overlay_color: ControlStateValue[ColorValue] = None
-    mouse_cursor: ControlStateValue[MouseCursor] = None
+    overlay_color: OptionalControlStateValue[ColorValue] = None
+    mouse_cursor: OptionalControlStateValue[MouseCursor] = None
     on_change: OptionalControlEventCallable = None
     on_change_start: OptionalControlEventCallable = None
     on_change_end: OptionalControlEventCallable = None

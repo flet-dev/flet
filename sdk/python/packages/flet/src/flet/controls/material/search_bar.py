@@ -7,12 +7,12 @@ from flet.controls.box import BoxConstraints
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control, control
+from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.material.textfield import KeyboardType, TextCapitalization
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ColorValue,
-    ControlStateValue,
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
@@ -36,16 +36,16 @@ class SearchBar(ConstrainedControl):
     bar_leading: Optional[Control] = None
     bar_trailing: Optional[List[Control]] = None
     bar_hint_text: Optional[str] = None
-    bar_bgcolor: ControlStateValue[ColorValue] = None
-    bar_overlay_color: ControlStateValue[ColorValue] = None
-    bar_shadow_color: ControlStateValue[ColorValue] = None
-    bar_surface_tint_color: ControlStateValue[ColorValue] = None
-    bar_elevation: ControlStateValue[OptionalNumber] = None
-    bar_border_side: ControlStateValue[BorderSide] = None
-    bar_shape: ControlStateValue[OutlinedBorder] = None
-    bar_text_style: ControlStateValue[TextStyle] = None
-    bar_hint_text_style: ControlStateValue[TextStyle] = None
-    bar_padding: ControlStateValue[PaddingValue] = None
+    bar_bgcolor: OptionalControlStateValue[ColorValue] = None
+    bar_overlay_color: OptionalControlStateValue[ColorValue] = None
+    bar_shadow_color: OptionalControlStateValue[ColorValue] = None
+    bar_surface_tint_color: OptionalControlStateValue[ColorValue] = None
+    bar_elevation: OptionalControlStateValue[OptionalNumber] = None
+    bar_border_side: OptionalControlStateValue[BorderSide] = None
+    bar_shape: OptionalControlStateValue[OutlinedBorder] = None
+    bar_text_style: OptionalControlStateValue[TextStyle] = None
+    bar_hint_text_style: OptionalControlStateValue[TextStyle] = None
+    bar_padding: OptionalControlStateValue[PaddingValue] = None
     bar_scroll_padding: PaddingValue = 20
     view_leading: Optional[Control] = None
     view_trailing: Optional[List[Control]] = None
