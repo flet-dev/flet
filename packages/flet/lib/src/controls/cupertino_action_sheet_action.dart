@@ -17,7 +17,7 @@ class CupertinoActionSheetActionControl extends StatelessWidget {
     debugPrint("CupertinoActionSheetActionControl build: ${control.id}");
 
     var content = control.get("content");
-    var text = control.getString("text"); // todo(0.70.3): remove "text"
+    var text = control.getString("text"); // todo(0.73.0): remove "text"
     if (content == null && text == null) {
       return const ErrorControl(
           "CupertinoActionSheetAction.content must be set and visible");

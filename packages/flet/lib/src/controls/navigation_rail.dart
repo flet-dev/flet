@@ -102,8 +102,8 @@ class _NavigationRailControlState extends State<NavigationRailControl>
               icon: icon,
               selectedIcon: selectedIcon,
               label: destinationControl.buildWidget("label") ??
-                  destinationControl
-                      .buildWidget("label_content") ?? // todo(0.70.3): remove
+                  destinationControl.buildWidget(
+                      "label_content") ?? // todo(0.73.0): remove label_content
                   Text(label),
             );
           }).toList(),

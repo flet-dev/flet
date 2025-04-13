@@ -50,7 +50,7 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
                 name="text",
                 reason="Use content instead.",
                 version="0.70.0",
-                delete_version="0.70.3",
+                delete_version="0.73.0",
             )
         super().__setattr__(name, value)
 

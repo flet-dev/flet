@@ -24,7 +24,7 @@ class FloatingActionButtonControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("FloatingActionButtonControl build: ${control.id}");
 
-    String? text = control.getString("text"); //to be removed in 0.70.3
+    String? text = control.getString("text"); //to be removed in 0.73.0
     var content = control.get("content");
 
     Widget? contentWidget = content is Control
@@ -74,7 +74,7 @@ class FloatingActionButtonControl extends StatelessWidget {
 
     if (iconWidget == null && contentWidget == null) {
       return const ErrorControl(
-          "FloatingActionButton has nothing to display. Provide at minimum one of these: text, icon, content"); //text to be removed in 0.70.3
+          "FloatingActionButton has nothing to display. Provide at minimum one of these: text, icon, content"); // todo(0.73.0): remove text
     }
     var child = iconWidget != null
         ? contentWidget == null
