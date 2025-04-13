@@ -11,13 +11,6 @@ bool isDesktopPlatform() {
           defaultTargetPlatform == TargetPlatform.linux);
 }
 
-/// Checks if the current platform is a mobile (iOS or Android) platform.
-bool isMobilePlatform() {
-  return !kIsWeb &&
-      (defaultTargetPlatform == TargetPlatform.iOS ||
-          defaultTargetPlatform == TargetPlatform.android);
-}
-
 /// Checks if the current platform is Windows desktop.
 bool isWindowsDesktop() {
   return !kIsWeb && (defaultTargetPlatform == TargetPlatform.windows);
@@ -31,6 +24,30 @@ bool isMacOSDesktop() {
 /// Checks if the current platform is Linux desktop.
 bool isLinuxDesktop() {
   return !kIsWeb && (defaultTargetPlatform == TargetPlatform.linux);
+}
+
+/// Checks if the current platform is a mobile (iOS or Android) platform.
+bool isMobilePlatform() {
+  return !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android);
+}
+
+/// Checks if the current platform is iOS mobile.
+bool isIOSMobile() {
+  return !kIsWeb && (defaultTargetPlatform == TargetPlatform.iOS);
+}
+
+/// Checks if the current platform is Android mobile.
+bool isAndroidMobile() {
+  return !kIsWeb && (defaultTargetPlatform == TargetPlatform.android);
+}
+
+/// Checks if the current platform is an Apple platform (iOS or macOS).
+bool isApplePlatform() {
+  return !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.macOS);
 }
 
 /// Checks if the current platform is a web platform.

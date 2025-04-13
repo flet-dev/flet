@@ -134,6 +134,7 @@ from flet.controls.core.markdown import (
     MarkdownStyleSheet,
 )
 from flet.controls.core.pagelet import Pagelet
+from flet.controls.core.path_provider import PathProvider
 from flet.controls.core.placeholder import Placeholder
 from flet.controls.core.reorderable_draggable import ReorderableDraggable
 from flet.controls.core.responsive_row import ResponsiveRow

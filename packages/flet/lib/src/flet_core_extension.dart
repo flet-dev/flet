@@ -1,4 +1,5 @@
 import 'package:flet/src/controls/adaptive_checkbox.dart';
+import 'package:flet/src/services/storage.dart';
 import 'package:flutter/widgets.dart';
 
 import 'controls/adaptive_alert_dialog.dart';
@@ -339,6 +340,8 @@ class FletCoreExtension extends FletExtension {
         return UrlLauncherService(control: control, backend: backend);
       case "SemanticsService":
         return SemanticsServiceControl(control: control, backend: backend);
+      case "PathProvider":
+        return PathProviderService(control: control, backend: backend);
       default:
         return null;
     }

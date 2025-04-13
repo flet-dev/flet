@@ -1,7 +1,6 @@
 import asyncio
 import json
 import logging
-import warnings
 import weakref
 from concurrent.futures import CancelledError, Future, ThreadPoolExecutor
 from contextvars import ContextVar
@@ -30,6 +29,7 @@ from flet.controls.control import BaseControl, Control, Service, control
 from flet.controls.control_event import ControlEvent
 from flet.controls.core.browser_context_menu import BrowserContextMenu
 from flet.controls.core.clipboard import Clipboard
+from flet.controls.core.path_provider import PathProvider
 from flet.controls.core.shared_preferences import SharedPreferences
 from flet.controls.core.url_launcher import UrlLauncher
 from flet.controls.core.view import View
@@ -65,7 +65,7 @@ from flet.controls.types import (
     ThemeMode,
     Wrapper,
 )
-from flet.utils import classproperty, deprecated, is_pyodide
+from flet.utils import classproperty, deprecated, deprecated_warning, is_pyodide
 
 if TYPE_CHECKING:
     from flet.messaging.session import Session
@@ -97,7 +97,8 @@ try:
     from flet.auth.oauth_provider import OAuthProvider
 except ImportError as e:
 
-    class OAuthProvider: ...
+    class OAuthProvider:
+        ...
 
     class Authorization:
         def __init__(
@@ -106,7 +107,8 @@ except ImportError as e:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ): ...
+        ):
+            ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -157,6 +159,7 @@ class Page(AdaptiveControl):
         default_factory=lambda: SharedPreferences()
     )
     clipboard: Clipboard = field(default_factory=lambda: Clipboard())
+    storage: PathProvider = field(default_factory=lambda: PathProvider())
     url_launcher: UrlLauncher = field(default_factory=lambda: UrlLauncher())
     _user_services: "ServiceRegistry" = field(default_factory=lambda: ServiceRegistry())
     _page_services: "ServiceRegistry" = field(default_factory=lambda: ServiceRegistry())
@@ -231,6 +234,7 @@ class Page(AdaptiveControl):
             self.shared_preferences,
             self.clipboard,
             self.url_launcher,
+            self.storage,
         ]
 
     def update(self, *controls) -> None:
@@ -540,34 +544,31 @@ class Page(AdaptiveControl):
             ),
         )
 
+    @deprecated(
+        reason="Use page.clipboard.set() instead.",
+        version="0.70.0",
+        delete_version="0.73.0",
+        show_parentheses=True,
+    )
     def set_clipboard(self, value: str, timeout: Optional[float] = 10) -> None:
-        warnings.warn(
-            "page.set_clipboard() is deprecated since version 1.0.0 "
-            "and will be removed in version 1.1.0. "
-            "Use page.clipboard.set() instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
         self.clipboard.set(value, timeout=timeout)
 
-    def get_clipboard(self, timeout: Optional[float] = 10) -> Optional[str]:
-        warnings.warn(
-            "page.get_clipboard() is deprecated since version 1.0.0 "
-            "and will be removed in version 1.1.0. "
-            "Use page.clipboard.get() instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.clipboard.get(timeout=timeout)
+    @deprecated(
+        reason="Use page.clipboard.get() instead.",
+        version="0.70.0",
+        delete_version="0.73.0",
+        show_parentheses=True,
+    )
+    async def get_clipboard(self, timeout: Optional[float] = 10) -> Optional[str]:
+        return await self.clipboard.get_async(timeout=timeout)
 
+    @deprecated(
+        reason="Use page.clipboard.get() instead.",
+        version="0.70.0",
+        delete_version="0.73.0",
+        show_parentheses=True,
+    )
     async def get_clipboard_async(self, timeout: Optional[float] = 10) -> Optional[str]:
-        warnings.warn(
-            "page.get_clipboard_async() is deprecated since version 1.0.0 "
-            "and will be removed in version 1.1.0. "
-            "Use page.clipboard.get() instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
         return await self.clipboard.get_async(timeout=timeout)
 
     def launch_url(
@@ -727,12 +728,11 @@ class Page(AdaptiveControl):
     # client_storage
     @property
     def client_storage(self) -> SharedPreferences:
-        warnings.warn(
-            "page.client_storage is deprecated since version 1.0.0 "
-            "and will be removed in version 1.1.0. "
-            "Use page.shared_preferences instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
+        deprecated_warning(
+            name="page.client_storage",
+            reason="Use page.shared_preferences instead.",
+            version="0.70.0",
+            delete_version="0.73.0",
         )
         return self.shared_preferences
 
