@@ -27,6 +27,7 @@ import 'controls/cupertino_alert_dialog.dart';
 import 'controls/cupertino_app_bar.dart';
 import 'controls/cupertino_bottom_sheet.dart';
 import 'controls/cupertino_button.dart';
+import 'controls/cupertino_checkbox.dart';
 import 'controls/cupertino_context_menu.dart';
 import 'controls/cupertino_context_menu_action.dart';
 import 'controls/cupertino_date_picker.dart';
@@ -39,6 +40,7 @@ import 'controls/cupertino_segmented_button.dart';
 import 'controls/cupertino_slider.dart';
 import 'controls/cupertino_sliding_segmented_button.dart';
 import 'controls/cupertino_switch.dart';
+import 'controls/cupertino_textfield.dart';
 import 'controls/cupertino_timer_picker.dart';
 import 'controls/datatable.dart';
 import 'controls/date_picker.dart';
@@ -120,8 +122,9 @@ class FletCoreExtension extends FletExtension {
       case "AppBar":
         return AppBarControl(key: key, control: control);
       case "Checkbox":
-      case "CupertinoCheckbox":
         return AdaptiveCheckboxControl(key: key, control: control);
+      case "CupertinoCheckbox":
+        return CupertinoCheckboxControl(key: key, control: control);
       case "Banner":
         return BannerControl(key: key, control: control);
       case "Draggable":
@@ -132,8 +135,6 @@ class FletCoreExtension extends FletExtension {
         return BottomAppBarControl(key: key, control: control);
       case "BottomSheet":
         return BottomSheetControl(key: key, control: control);
-      // case "OutlinedButton":
-      //   return OutlinedButtonControl(key: key, control: control);
       case "SearchBar":
         return SearchBarControl(key: key, control: control);
       case "Card":
@@ -292,8 +293,9 @@ class FletCoreExtension extends FletExtension {
       case "Text":
         return TextControl(key: key, control: control);
       case "TextField":
-      case "CupertinoTextField":
         return AdaptiveTextFieldControl(key: key, control: control);
+      case "CupertinoTextField":
+        return CupertinoTextFieldControl(key: key, control: control);
       case "Placeholder":
         return PlaceholderControl(key: key, control: control);
       case "MenuBar":
