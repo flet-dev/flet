@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/control.dart';
@@ -121,6 +123,14 @@ class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
   String toString() => 'CustomFloatingActionButtonLocation(dx: $dx, dy: $dy)';
 }
 
+CupertinoButtonSize? parseSizeStyle(String? value,
+    [CupertinoButtonSize? defaultValue]) {
+  if (value == null) return defaultValue;
+  return CupertinoButtonSize.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defaultValue;
+}
+
 extension ButtonParsers on Control {
   ButtonStyle? getButtonStyle(String propertyName, ThemeData theme,
       {Color? defaultForegroundColor,
@@ -150,5 +160,10 @@ extension ButtonParsers on Control {
       String propertyName,
       [FloatingActionButtonLocation? defaultValue]) {
     return parseFloatingActionButtonLocation(get(propertyName), defaultValue);
+  }
+
+  CupertinoButtonSize? getSizeStyle(String propertyName,
+      [CupertinoButtonSize? defaultValue]) {
+    return parseSizeStyle(get(propertyName), defaultValue);
   }
 }

@@ -180,8 +180,6 @@ class FletCoreExtension extends FletExtension {
         return CupertinoActionSheetControl(key: key, control: control);
       case "CupertinoActionSheetAction":
         return CupertinoActionSheetActionControl(key: key, control: control);
-      // case "TextButton":
-      //   return TextButtonControl(key: key, control: control);
       case "Container":
         return ContainerControl(key: key, control: control);
       case "Chip":

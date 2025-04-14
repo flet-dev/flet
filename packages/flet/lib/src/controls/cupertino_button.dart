@@ -78,6 +78,9 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     Color? bgColor = widget.control.getColor("bgcolor", context);
     Color? focusColor = widget.control.getColor("focus_color", context);
 
+    CupertinoButtonSize sizeStyle =
+        widget.control.getSizeStyle("size_style", CupertinoButtonSize.large)!;
+
     var alignment = widget.control.getAlignment("alignment", Alignment.center)!;
     var borderRadius = widget.control.getBorderRadius(
         "border_radius", const BorderRadius.all(Radius.circular(8.0)))!;
@@ -158,6 +161,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
         pressedOpacity: pressedOpacity,
         alignment: alignment,
         minSize: minSize,
+        sizeStyle: sizeStyle,
         autofocus: autofocus,
         focusColor: focusColor,
         onLongPress: onLongPressed,
@@ -175,6 +179,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
         pressedOpacity: pressedOpacity,
         alignment: alignment,
         minSize: minSize,
+        sizeStyle: sizeStyle,
         autofocus: autofocus,
         focusColor: focusColor,
         onLongPress: onLongPressed,
@@ -192,6 +197,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
         pressedOpacity: pressedOpacity,
         alignment: alignment,
         minSize: minSize,
+        sizeStyle: sizeStyle,
         autofocus: autofocus,
         focusColor: focusColor,
         onLongPress: onLongPressed,

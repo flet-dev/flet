@@ -1,4 +1,5 @@
 import asyncio
+from enum import Enum
 from typing import Optional
 
 from flet.controls.alignment import Alignment
@@ -16,7 +17,13 @@ from flet.controls.types import (
 )
 from flet.utils.deprecated import deprecated_warning
 
-__all__ = ["CupertinoButton"]
+__all__ = ["CupertinoButton", "CupertinoButtonSize"]
+
+
+class CupertinoButtonSize(Enum):
+    SMALL = "small"
+    MEDIUM = "medium"
+    LARGE = "large"
 
 
 @control("CupertinoButton")
@@ -47,6 +54,7 @@ class CupertinoButton(ConstrainedControl):
     disabled_bgcolor: OptionalColorValue = None
     opacity_on_click: Number = 0.4
     min_size: Number = None
+    size_style: Optional[CupertinoButtonSize] = CupertinoButtonSize.LARGE
     padding: OptionalPaddingValue = None
     alignment: Optional[Alignment] = None
     border_radius: OptionalBorderRadiusValue = 8.0

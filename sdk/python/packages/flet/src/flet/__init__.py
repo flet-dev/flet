@@ -167,7 +167,10 @@ from flet.controls.cupertino.cupertino_activity_indicator import (
 from flet.controls.cupertino.cupertino_alert_dialog import CupertinoAlertDialog
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
 from flet.controls.cupertino.cupertino_bottom_sheet import CupertinoBottomSheet
-from flet.controls.cupertino.cupertino_button import CupertinoButton
+from flet.controls.cupertino.cupertino_button import (
+    CupertinoButton,
+    CupertinoButtonSize,
+)
 from flet.controls.cupertino.cupertino_checkbox import CupertinoCheckbox
 from flet.controls.cupertino.cupertino_colors import CupertinoColors
 from flet.controls.cupertino.cupertino_context_menu import CupertinoContextMenu

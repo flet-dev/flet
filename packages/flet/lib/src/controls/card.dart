@@ -41,7 +41,7 @@ class CardControl extends StatelessWidget {
     Widget? card;
 
     CardVariant variant =
-        parseCardVariant(control.getString("variant"), CardVariant.elevated)!;
+        control.getCardVariant("variant", CardVariant.elevated)!;
 
     if (variant == CardVariant.outlined) {
       card = Card.outlined(
