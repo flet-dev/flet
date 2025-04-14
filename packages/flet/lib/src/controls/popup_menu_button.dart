@@ -57,7 +57,7 @@ class PopupMenuButtonControl extends StatelessWidget {
                 .children("items")
                 .where((i) => i.type == "PopupMenuItem")
                 .map((item) {
-              var itemIcon = parseIcon(item.getString("icon"));
+              var itemIcon = item.getIcon("icon");
               var text = item.getString("text", "")!;
               var checked = item.getBool("checked");
               var height = item.getDouble("height", 48.0)!;
