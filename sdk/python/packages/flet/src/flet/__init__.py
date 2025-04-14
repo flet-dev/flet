@@ -212,6 +212,7 @@ from flet.controls.exceptions import (
     FletUnsupportedPlatformException,
 )
 from flet.controls.gradients import (
+    Gradient,
     GradientTileMode,
     LinearGradient,
     RadialGradient,
