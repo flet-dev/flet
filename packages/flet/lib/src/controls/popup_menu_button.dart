@@ -23,13 +23,12 @@ class PopupMenuButtonControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("PopupMenuButton build: ${control.id}");
 
-    var icon = parseIcon(control.getString("icon"));
     var content = control.buildWidget("content");
 
     var popupMenuButton = PopupMenuButton<String>(
         enabled: !control.disabled,
         tooltip: null,
-        icon: icon != null ? Icon(icon) : null,
+        icon: control.buildIconOrWidget("icon"),
         iconSize: control.getDouble("icon_size"),
         splashRadius: control.getDouble("splash_radius"),
         shadowColor: control.getColor("shadow_color", context),

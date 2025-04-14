@@ -11,6 +11,7 @@ from flet.controls.padding import OptionalPaddingValue, PaddingValue
 from flet.controls.types import (
     ClipBehavior,
     IconValue,
+    IconValueOrControl,
     MouseCursor,
     Number,
     OptionalColorValue,
@@ -81,7 +82,7 @@ class PopupMenuButton(ConstrainedControl):
 
     content: Optional[Control] = None
     items: List[PopupMenuItem] = field(default_factory=list)
-    icon: Optional[IconValue] = None
+    icon: Optional[IconValueOrControl] = None
     bgcolor: OptionalColorValue = None
     icon_color: OptionalColorValue = None
     shadow_color: OptionalColorValue = None
