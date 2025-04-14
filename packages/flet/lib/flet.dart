@@ -1,5 +1,6 @@
 library flet;
 
+export 'src/controls/base_controls.dart';
 export 'src/extensions/control.dart';
 export 'src/flet_app.dart';
 export 'src/flet_app_errors_handler.dart';
@@ -55,4 +56,5 @@ export 'src/utils/time.dart';
 export 'src/utils/tooltip.dart';
 export 'src/utils/transforms.dart';
 export 'src/utils/uri.dart';
+export 'src/widgets/error.dart';
 export 'src/widgets/flet_store_mixin.dart';
