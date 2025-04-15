@@ -35,7 +35,9 @@ def configure_encode_object_for_msgpack(control_cls):
                 elif is_dataclass(v):
                     r[field.name] = v
                     prev_classes[field.name] = v
-                elif v != field.default or not isinstance(obj, control_cls):
+                elif v is not None and (
+                    v != field.default or not isinstance(obj, control_cls)
+                ):
                     r[field.name] = v
 
             setattr(obj, "__prev_lists", prev_lists)

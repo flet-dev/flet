@@ -34,13 +34,16 @@ List<BoxShadow>? parseBoxShadows(dynamic value, ThemeData theme,
     [List<BoxShadow>? defaultValue]) {
   if (value == null) return defaultValue;
   if (value is List) {
-    return value.map((e) => parseBoxShadow(e, theme)).toList();
+    return value.map((e) => parseBoxShadow(e, theme)!).toList();
   } else {
-    return [parseBoxShadow(json, theme)];
+    return [parseBoxShadow(json, theme)!];
   }
 }
 
-BoxShadow parseBoxShadow(dynamic value, ThemeData theme) {
+BoxShadow? parseBoxShadow(dynamic value, ThemeData theme) {
+  if (value == null) {
+    return null;
+  }
   var offset = parseOffset(value["offset"]);
   return BoxShadow(
       color: parseColor(value["color"], theme, const Color(0xFF000000))!,

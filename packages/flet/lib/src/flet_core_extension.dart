@@ -62,7 +62,7 @@ import 'controls/icon.dart';
 import 'controls/icon_button.dart';
 import 'controls/image.dart';
 import 'controls/interactive_viewer.dart';
-import 'controls/line_chart.dart';
+import 'controls/linechart.dart';
 import 'controls/list_tile.dart';
 import 'controls/list_view.dart';
 import 'controls/markdown.dart';
@@ -339,12 +339,12 @@ class FletCoreExtension extends FletExtension {
         return ShakeDetectorService(control: control, backend: backend);
       case "SharedPreferences":
         return SharedPreferencesService(control: control, backend: backend);
-      case "UrlLauncher":
-        return UrlLauncherService(control: control, backend: backend);
       case "SemanticsService":
         return SemanticsServiceControl(control: control, backend: backend);
       case "StoragePaths":
         return StoragePaths(control: control, backend: backend);
+      case "UrlLauncher":
+        return UrlLauncherService(control: control, backend: backend);
       default:
         return null;
     }

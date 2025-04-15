@@ -35,14 +35,17 @@ Border? parseBorder(dynamic value, ThemeData? theme,
   if (value == null) return defaultValue;
   return Border(
       top: parseBorderSide(value['top'], theme,
-          defaultSideColor: defaultSideColor, defaultValue: defaultBorderSide)!,
+          defaultSideColor: defaultSideColor,
+          defaultValue: defaultBorderSide ?? BorderSide.none)!,
       right: parseBorderSide(value['right'], theme,
-          defaultSideColor: defaultSideColor, defaultValue: defaultBorderSide)!,
+          defaultSideColor: defaultSideColor,
+          defaultValue: defaultBorderSide ?? BorderSide.none)!,
       bottom: parseBorderSide(value['bottom'], theme,
-          defaultSideColor: defaultSideColor, defaultValue: defaultBorderSide)!,
+          defaultSideColor: defaultSideColor,
+          defaultValue: defaultBorderSide ?? BorderSide.none)!,
       left: parseBorderSide(value['left'], theme,
           defaultSideColor: defaultSideColor,
-          defaultValue: defaultBorderSide)!);
+          defaultValue: defaultBorderSide ?? BorderSide.none)!);
 }
 
 BorderSide? parseBorderSide(dynamic value, ThemeData? theme,

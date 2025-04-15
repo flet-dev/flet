@@ -27,10 +27,10 @@ class ControlWidget extends StatelessWidget {
     }
 
     Widget? widget;
-    if (control.type == "LineChart") {
+    if (control.get("_skip_inherited_notifier") == true) {
       for (var extension in FletBackend.of(context).extensions) {
         widget = extension.createWidget(controlKey, control);
-        if (widget != null) break;
+        if (widget != null) return widget;
       }
       widget = ErrorControl("Unknown control: ${control.type}");
     } else {
