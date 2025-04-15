@@ -23,3 +23,9 @@ Badge? parseBadge(dynamic value, Widget widget, ThemeData theme) {
     child: widget,
   );
 }
+
+extension BadgeParsers on Control {
+  Badge? getBadge(String propertyName, Widget child, ThemeData theme) {
+    return parseBadge(get(propertyName), child, theme);
+  }
+}

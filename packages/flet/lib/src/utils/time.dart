@@ -101,4 +101,12 @@ extension TimeParsers on Control {
       [DatePickerEntryMode? defaultValue]) {
     return parseDatePickerEntryMode(get(propertyName), defaultValue);
   }
+
+  DateTime? getDateTime(String propertyName, [DateTime? defaultValue]) {
+    return get<DateTime>(propertyName, defaultValue);
+  }
+
+  TimeOfDay? getTimeOfDay(String propertyName, [TimeOfDay? defaultValue]) {
+    return get<TimeOfDay>(propertyName, defaultValue);
+  }
 }

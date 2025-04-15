@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/animations.dart';
+import '../utils/badge.dart';
 import '../utils/numbers.dart';
 import '../utils/tooltip.dart';
 import '../utils/transforms.dart';
