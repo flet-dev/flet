@@ -368,7 +368,7 @@ class DiffBuilder(object):
             curr = curr[1]
 
     def _item_added(self, parent, path, key, item):
-        self._configure_control(item, parent)
+        self._configure_dataclass(item, parent)
         index = self.take_index(item, _ST_REMOVE)
         if index is not None:
             op = index[2]
@@ -435,7 +435,7 @@ class DiffBuilder(object):
             self.store_index(item, new_index, _ST_REMOVE)
 
     def _item_replaced(self, parent, path, key, item):
-        self._configure_control(item, parent)
+        self._configure_dataclass(item, parent)
         self.insert(
             ReplaceOperation(
                 {
@@ -514,27 +514,52 @@ class DiffBuilder(object):
             parent = dst
             dst.before_update()
 
-        for field in dataclasses.fields(dst):
-            if "skip" in field.metadata:
-                continue
-            old = (
-                getattr(src, field.name)
-                if not self.in_place
-                else getattr(src, f"_prev_{field.name}")
-            )
-            new = getattr(dst, field.name)
+        changes = getattr(dst, "__changes", {})
+        prev_lists = getattr(dst, "__prev_lists", {})
+        prev_dicts = getattr(dst, "__prev_dicts", {})
+        prev_classes = getattr(dst, "__prev_classes", {})
 
-            if field.name.startswith("on_"):
-                new = new is not None
+        for field_name, change in changes.items():
+            old = change[0]
+            new = change[1]
 
-            self._compare_values(parent, path, field.name, old, new)
+            self._compare_values(parent, path, field_name, old, new)
 
             # update prev value
             if isinstance(new, list):
                 new = new[:]
+                prev_lists[field_name] = new
             elif isinstance(new, dict):
                 new = new.copy()
-            setattr(dst, f"_prev_{field.name}", new)
+                prev_dicts[field_name] = new
+            elif dataclasses.is_dataclass(new):
+                prev_classes[field_name] = new
+
+        # compare lists
+        for field_name, old in prev_lists.items():
+            if field_name in changes:
+                continue
+            new = getattr(dst, field_name)
+            self._compare_values(parent, path, field_name, old, new)
+            prev_lists[field_name] = new[:]
+
+        # compare dicts
+        for field_name, old in prev_dicts.items():
+            if field_name in changes:
+                continue
+            new = getattr(dst, field_name)
+            self._compare_values(parent, path, field_name, old, new)
+            prev_dicts[field_name] = new.copy()
+
+        # compare dataclasses
+        for field_name, old in prev_classes.items():
+            if field_name in changes:
+                continue
+            new = getattr(dst, field_name)
+            self._compare_values(parent, path, field_name, old, new)
+            prev_classes[field_name] = new
+
+        changes.clear()
 
     def _compare_values(self, parent, path, key, src, dst):
         # print("\n_compare_values:", path, key, src, dst)
@@ -561,8 +586,9 @@ class DiffBuilder(object):
         elif type(src) != type(dst) or src != dst:
             self._item_replaced(parent, path, key, dst)
 
-    def _configure_control(self, item, parent):
-        if self.control_cls and isinstance(item, self.control_cls):
+    def _configure_dataclass(self, item, parent):
+        if dataclasses.is_dataclass(item):
+
             # set parent
             if parent:
                 # print(
@@ -574,35 +600,57 @@ class DiffBuilder(object):
                 #     )
                 setattr(item, "_parent", weakref.ref(parent))
 
-            # call Control.build()
-            if hasattr(item, "build") and "build" in item.__class__.__dict__:
-                warnings.warn(
-                    "'Control.build()' is deprecated. Use 'Control.init()' instead.",
-                    DeprecationWarning,
-                )
-                item.build()
-            else:
-                item.init()
+            def control_setattr(obj, name, value):
+                if not name.startswith("_") and hasattr(obj, "__changes"):
+                    old_value = getattr(obj, name, None)
+                    if name.startswith("on_"):
+                        old_value = old_value is not None
+                    new_value = (
+                        value if not name.startswith("on_") else value is not None
+                    )
+                    if old_value != new_value:
+                        # print(
+                        #     f"set_attr: {obj.__class__.__name__}.{name} = {new_value}"
+                        # )
+                        changes = getattr(obj, "__changes")
+                        changes[name] = (old_value, new_value)
+                super(obj.__class__, obj).__setattr__(name, value)
 
-            # add control to the index
-            if self.controls_index is not None:
-                self.controls_index[item._i] = item
+            item.__class__.__setattr__ = control_setattr  # type: ignore
+
+            if self.control_cls and isinstance(item, self.control_cls):
+                # call Control.build()
+                if hasattr(item, "build") and "build" in item.__class__.__dict__:
+                    warnings.warn(
+                        "'Control.build()' is deprecated. Use 'Control.init()' instead.",
+                        DeprecationWarning,
+                    )
+                    item.build()
+                else:
+                    item.init()
+
+                # add control to the index
+                if self.controls_index is not None:
+                    self.controls_index[item._i] = item
 
             # recurse through fields
             for field in dataclasses.fields(item):
                 if not "skip" in field.metadata:
-                    self._configure_control(getattr(item, field.name), item)
+                    self._configure_dataclass(getattr(item, field.name), item)
 
-            # call Control.before_update()
-            item.before_update()
+            if self.control_cls and isinstance(item, self.control_cls):
+                # call Control.before_update()
+                item.before_update()
+
+            setattr(item, "__changes", {})
 
         elif isinstance(item, dict):
             for v in item.values():
-                self._configure_control(v, parent)
+                self._configure_dataclass(v, parent)
 
         elif isinstance(item, list):
             for v in item:
-                self._configure_control(v, parent)
+                self._configure_dataclass(v, parent)
 
 
 def _path_join(path, key):

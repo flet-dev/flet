@@ -7,9 +7,17 @@ import msgpack
 from flet.controls.buttons import ButtonStyle
 from flet.controls.colors import Colors
 from flet.controls.control import BaseControl, Control, Service, control
+
+# import flet as ft
+# import flet.canvas as cv
+from flet.controls.core.container import Container
+from flet.controls.core.gesture_detector import DragUpdateEvent, GestureDetector
+from flet.controls.core.text import Text
+from flet.controls.material.button import Button
 from flet.controls.material.elevated_button import ElevatedButton
 from flet.controls.object_patch import ObjectPatch
 from flet.controls.page import Page
+from flet.controls.painting import Paint, PaintLinearGradient
 from flet.controls.ref import Ref
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import configure_encode_object_for_msgpack
@@ -20,7 +28,7 @@ controls_index = weakref.WeakValueDictionary()
 
 
 def b_pack(data):
-    return msgpack.packb(data, default=configure_encode_object_for_msgpack(Control))
+    return msgpack.packb(data, default=configure_encode_object_for_msgpack(BaseControl))
 
 
 def b_unpack(packed_data):
@@ -43,7 +51,7 @@ def update_page(new: Any, old: Any = None, show_details=True):
 
     # 3 - build msgpack message
     msg = msgpack.packb(
-        graph_patch, default=configure_encode_object_for_msgpack(Control)
+        graph_patch, default=configure_encode_object_for_msgpack(BaseControl)
     )
 
     end = datetime.datetime.now()
@@ -176,8 +184,86 @@ def test_simple_page():
     page.services[0].prop_2 = [2, 6]
 
     update_page(page, show_details=True)
+    assert hasattr(page.views[0], "__changes")
 
-    assert page.views[0]._prev_bgcolor == "green"
+
+def test_changes_tracking():
+    conn = Connection()
+    conn.pubsubhub = PubSubHub()
+    page = Page(sess=Session(conn))
+    page.controls.append(
+        btn := Button(Text("Click me!"), on_click=lambda e: print("clicked!"))
+    )
+
+    # initial update
+    msg = update_page(page, {}, show_details=True)
+
+    # second update
+    btn.content = Text("A new button content")
+    btn.width = 300
+    btn.height = 100
+
+    # t1 = Text("AAA")
+    # t2 = Text("BBB")
+    page.controls.append(Text("Line 2"))
+
+    msg = update_page(page, show_details=True)
+
+
+def test_large_updates():
+    import flet.canvas as cv
+
+    conn = Connection()
+    conn.pubsubhub = PubSubHub()
+    page = Page(sess=Session(conn))
+
+    def pan_update(e: DragUpdateEvent):
+        pass
+
+    page.controls.append(
+        Container(
+            cp := cv.Canvas(
+                [
+                    cv.Fill(
+                        Paint(
+                            gradient=PaintLinearGradient(
+                                (0, 0), (600, 600), colors=[Colors.CYAN_50, Colors.GREY]
+                            )
+                        )
+                    ),
+                ],
+                content=GestureDetector(
+                    on_pan_update=pan_update,
+                    drag_interval=30,
+                ),
+                expand=False,
+            ),
+            border_radius=5,
+            width=float("inf"),
+            expand=True,
+        )
+    )
+
+    # initial update
+    msg = update_page(page, {}, show_details=True)
+
+    # second update
+    for i in range(1, 1000):
+        cp.shapes.append(
+            cv.Line(i + 1, i + 100, i + 10, i + 20, paint=Paint(stroke_width=3))
+        )
+
+    msg = update_page(cp, show_details=False)
+
+    cp.shapes[100].x1 = 12
+
+    # third update
+    for i in range(1, 20):
+        cp.shapes.append(
+            cv.Line(i + 1, i + 100, i + 10, i + 20, paint=Paint(stroke_width=3))
+        )
+
+    msg = update_page(cp, show_details=True)
 
 
 # exit()

@@ -4,7 +4,6 @@ from enum import Enum
 from typing import Any, Dict
 
 import msgpack
-
 from flet.controls.duration import Duration
 
 
@@ -12,6 +11,9 @@ def configure_encode_object_for_msgpack(control_cls):
     def encode_object_for_msgpack(obj):
         if is_dataclass(obj):
             r = {}
+            prev_lists = {}
+            prev_dicts = {}
+            prev_classes = {}
             for field in fields(obj):
                 if "skip" in field.metadata:  # or hasattr(obj, f"_prev_{field.name}"):
                     continue
@@ -20,17 +22,27 @@ def configure_encode_object_for_msgpack(control_cls):
                     v = v[:]
                     if len(v) > 0:
                         r[field.name] = v
+                    prev_lists[field.name] = v
                 elif isinstance(v, dict):
                     v = v.copy()
                     if len(v) > 0:
                         r[field.name] = v
+                    prev_dicts[field.name] = v
                 elif field.name.startswith("on_"):
                     v = v is not None
                     if v:
                         r[field.name] = v
+                elif is_dataclass(v):
+                    r[field.name] = v
+                    prev_classes[field.name] = v
                 elif v != field.default or not isinstance(obj, control_cls):
                     r[field.name] = v
-                setattr(obj, f"_prev_{field.name}", v)
+
+            setattr(obj, "__prev_lists", prev_lists)
+            setattr(obj, "__prev_dicts", prev_dicts)
+            setattr(obj, "__prev_classes", prev_classes)
+            # print("__prev_cols", obj.__class__.__name__, prev_cols.keys())
+
             return r
         elif isinstance(obj, Enum):
             return obj.value
