@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from flet.controls.animation import AnimationValue
 from flet.controls.border import Border, BorderSide
@@ -10,6 +10,7 @@ from flet.controls.core.charts.chart_axis import ChartAxis
 from flet.controls.core.charts.chart_grid_lines import ChartGridLines
 from flet.controls.core.charts.line_chart_data import LineChartData
 from flet.controls.padding import OptionalPaddingValue
+from flet.controls.ref import Ref
 from flet.controls.types import (
     OptionalColorValue,
     OptionalEventCallable,
@@ -61,4 +62,9 @@ class LineChart(ConstrainedControl):
     tooltip_fit_inside_horizontally: Optional[bool] = None
     tooltip_fit_inside_vertically: Optional[bool] = None
     tooltip_show_on_top_of_chart_box_area: Optional[bool] = None
+    _skip_inherited_notifier: Optional[bool] = None
     on_chart_event: OptionalEventCallable[LineChartEvent] = None
+
+    def init(self):
+        super().init()
+        self._skip_inherited_notifier = True

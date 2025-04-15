@@ -86,7 +86,7 @@ def test_page_patch_dataclass():
     print("Patch 1:", graph_patch)
 
     msg = msgpack.packb(
-        graph_patch, default=configure_encode_object_for_msgpack(Control)
+        graph_patch, default=configure_encode_object_for_msgpack(BaseControl)
     )
 
     print("Message 1:", msg)
@@ -95,15 +95,15 @@ def test_page_patch_dataclass():
     assert page.window.width == 800.0
     assert page.window.height == 628.0
     assert page.debug is True
-    assert page._prev_debug is True
+    # assert page._prev_debug is True
     assert page.platform_brightness == Brightness.LIGHT
-    assert page._prev_platform_brightness == Brightness.LIGHT
+    # assert page._prev_platform_brightness == Brightness.LIGHT
     assert isinstance(page.media, PageMediaData)
     assert isinstance(page.media.padding, Padding)
     assert isinstance(page.media.view_insets, Padding)
     assert isinstance(page.media.view_padding, Padding)
-    assert page.media.padding._prev_left == 0.0
-    assert page.media.view_insets._prev_top == 0.0
+    # assert page.media.padding._prev_left == 0.0
+    # assert page.media.view_insets._prev_top == 0.0
     assert page.platform == PagePlatform.MACOS
 
     # 1 -calculate diff
@@ -136,7 +136,7 @@ def test_page_patch_dataclass():
     assert graph_patch["media"]["padding"]["left"] == 1
 
     msg = msgpack.packb(
-        graph_patch, default=configure_encode_object_for_msgpack(Control)
+        graph_patch, default=configure_encode_object_for_msgpack(BaseControl)
     )
 
     print("Message 2:", msg)

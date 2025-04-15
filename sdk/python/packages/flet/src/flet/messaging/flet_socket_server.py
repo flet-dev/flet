@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 import msgpack
-from flet.controls.control import Control
+from flet.controls.control import BaseControl
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,
@@ -174,7 +174,7 @@ class FletSocketServer(Connection):
         # print(f"Sending: {message}")
         m = msgpack.packb(
             [message.action, message.body],
-            default=configure_encode_object_for_msgpack(Control),
+            default=configure_encode_object_for_msgpack(BaseControl),
         )
         self.__send_queue.put_nowait(m)
 

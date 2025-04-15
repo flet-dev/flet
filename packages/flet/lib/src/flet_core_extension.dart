@@ -10,6 +10,7 @@ import 'controls/adaptive_switch.dart';
 import 'controls/adaptive_texfield.dart';
 import 'controls/animated_switcher.dart';
 import 'controls/app_bar.dart';
+import 'controls/autofill_group.dart';
 import 'controls/banner.dart';
 import 'controls/bottom_app_bar.dart';
 import 'controls/bottom_sheet.dart';
@@ -61,7 +62,7 @@ import 'controls/icon.dart';
 import 'controls/icon_button.dart';
 import 'controls/image.dart';
 import 'controls/interactive_viewer.dart';
-import 'controls/line_chart.dart';
+import 'controls/linechart.dart';
 import 'controls/list_tile.dart';
 import 'controls/list_view.dart';
 import 'controls/markdown.dart';
@@ -121,6 +122,8 @@ class FletCoreExtension extends FletExtension {
         return AnimatedSwitcherControl(key: key, control: control);
       case "AppBar":
         return AppBarControl(key: key, control: control);
+      case "AutofillGroup":
+        return AutofillGroupControl(key: key, control: control);
       case "Checkbox":
         return AdaptiveCheckboxControl(key: key, control: control);
       case "CupertinoCheckbox":
@@ -336,12 +339,12 @@ class FletCoreExtension extends FletExtension {
         return ShakeDetectorService(control: control, backend: backend);
       case "SharedPreferences":
         return SharedPreferencesService(control: control, backend: backend);
-      case "UrlLauncher":
-        return UrlLauncherService(control: control, backend: backend);
       case "SemanticsService":
         return SemanticsServiceControl(control: control, backend: backend);
       case "StoragePaths":
         return StoragePaths(control: control, backend: backend);
+      case "UrlLauncher":
+        return UrlLauncherService(control: control, backend: backend);
       default:
         return null;
     }

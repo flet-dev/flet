@@ -8,7 +8,7 @@ from typing import Any, Optional
 
 import msgpack
 from fastapi import WebSocket, WebSocketDisconnect
-from flet.controls.control import Control
+from flet.controls.control import BaseControl
 from flet.controls.page import PageDisconnectedException
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
@@ -246,9 +246,7 @@ class FletApp(Connection):
 
         elif action == ClientAction.CONTROL_EVENT:
             req = ControlEventBody(**body)
-            task = asyncio.create_task(
-                self.__session.dispatch_event(req.target, req.name, req.data)
-            )
+            await self.__session.dispatch_event(req.target, req.name, req.data)
 
         elif action == ClientAction.UPDATE_CONTROL_PROPS:
             req = UpdateControlPropsBody(**body)
@@ -272,7 +270,7 @@ class FletApp(Connection):
         # print(f"Sending: {message}")
         m = msgpack.packb(
             [message.action, message.body],
-            default=configure_encode_object_for_msgpack(Control),
+            default=configure_encode_object_for_msgpack(BaseControl),
         )
         self.__send_queue.put_nowait(m)
 
