@@ -340,7 +340,7 @@ class FletCoreExtension extends FletExtension {
         return UrlLauncherService(control: control, backend: backend);
       case "SemanticsService":
         return SemanticsServiceControl(control: control, backend: backend);
-      case "PathProvider":
+      case "StoragePaths":
         return StoragePaths(control: control, backend: backend);
       default:
         return null;

@@ -12,8 +12,17 @@ from flet.controls import (
     transform,
 )
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.alignment import Alignment, Axis
-from flet.controls.animation import Animation, AnimationCurve
+from flet.controls.alignment import Alignment, Axis, OptionalAlignment, OptionalAxis
+from flet.controls.animation import (
+    Animation,
+    AnimationCurve,
+    AnimationStyle,
+    AnimationValue,
+    OptionalAnimation,
+    OptionalAnimationCurve,
+    OptionalAnimationStyle,
+    OptionalAnimationValue,
+)
 from flet.controls.blur import Blur, BlurTileMode, BlurValue, OptionalBlurValue
 from flet.controls.border import Border, BorderSide, BorderSideStrokeAlign
 from flet.controls.border_radius import (
@@ -44,7 +53,7 @@ from flet.controls.buttons import (
 )
 from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, Service, control
+from flet.controls.control import Control, OptionalControl, Service, control
 from flet.controls.control_event import ControlEvent
 from flet.controls.control_state import (
     ControlState,
@@ -358,6 +367,13 @@ from flet.controls.scrollable_control import (
 from flet.controls.size import Size
 from flet.controls.template_route import TemplateRoute
 from flet.controls.text_style import (
+    OptionalStrutStyle,
+    OptionalTextBaseline,
+    OptionalTextDecoration,
+    OptionalTextDecorationStyle,
+    OptionalTextOverflow,
+    OptionalTextStyle,
+    OptionalTextThemeStyle,
     TextBaseline,
     TextDecoration,
     TextDecorationStyle,

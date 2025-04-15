@@ -23,7 +23,14 @@ else:
 if TYPE_CHECKING:
     from .page import Page
 
-__all__ = ["BaseControl", "Control", "Service", "control", "skip_field"]
+__all__ = [
+    "BaseControl",
+    "Control",
+    "Service",
+    "OptionalControl",
+    "control",
+    "skip_field",
+]
 
 
 def skip_field():
@@ -235,3 +242,7 @@ class Control(BaseControl):
 @dataclass(kw_only=True)
 class Service(BaseControl):
     pass
+
+
+# Typing
+OptionalControl = Optional[Control]

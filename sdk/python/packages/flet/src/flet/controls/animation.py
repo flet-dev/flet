@@ -4,7 +4,16 @@ from typing import Optional, Union
 
 from flet.controls.duration import OptionalDurationValue
 
-__all__ = ["Animation", "AnimationCurve", "AnimationStyle", "AnimationValue"]
+__all__ = [
+    "Animation",
+    "AnimationCurve",
+    "AnimationStyle",
+    "AnimationValue",
+    "OptionalAnimation",
+    "OptionalAnimationCurve",
+    "OptionalAnimationStyle",
+    "OptionalAnimationValue",
+]
 
 
 class AnimationCurve(Enum):
@@ -55,15 +64,19 @@ class AnimationCurve(Enum):
 @dataclass
 class Animation:
     duration: OptionalDurationValue = None
-    curve: Optional[AnimationCurve] = None
+    curve: "OptionalAnimationCurve" = None
 
 
 @dataclass
 class AnimationStyle:
     duration: OptionalDurationValue = None
     reverse_duration: OptionalDurationValue = None
-    curve: Optional[AnimationCurve] = None
-    reverse_curve: Optional[AnimationCurve] = None
+    curve: "OptionalAnimationCurve" = None
+    reverse_curve: "OptionalAnimationCurve" = None
 
 
 AnimationValue = Union[bool, int, Animation]
+OptionalAnimationValue = Optional[AnimationValue]
+OptionalAnimationStyle = Optional[AnimationStyle]
+OptionalAnimation = Optional[Animation]
+OptionalAnimationCurve = Optional[AnimationCurve]
