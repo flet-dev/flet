@@ -97,8 +97,7 @@ try:
     from flet.auth.oauth_provider import OAuthProvider
 except ImportError as e:
 
-    class OAuthProvider:
-        ...
+    class OAuthProvider: ...
 
     class Authorization:
         def __init__(
@@ -107,8 +106,7 @@ except ImportError as e:
             fetch_user: bool,
             fetch_groups: bool,
             scope: Optional[List[str]] = None,
-        ):
-            ...
+        ): ...
 
 
 AT = TypeVar("AT", bound=Authorization)
@@ -214,6 +212,13 @@ class Page(AdaptiveControl):
         self.__session = weakref.ref(sess)
 
         # page services
+        self._page_services.services = [
+            self.browser_context_menu,
+            self.shared_preferences,
+            self.clipboard,
+            self.url_launcher,
+            self.storage_paths,
+        ]
         self.__query: QueryString = QueryString(self)
         self.__session_storage: SessionStorage = SessionStorage()
         self.__authorization: Optional[Authorization] = None
@@ -226,16 +231,6 @@ class Page(AdaptiveControl):
     def __default_view(self) -> View:
         assert len(self.views) > 0, "views list is empty."
         return self.views[0]
-
-    def before_update(self):
-        super().before_update()
-        self._page_services.services = [
-            self.browser_context_menu,
-            self.shared_preferences,
-            self.clipboard,
-            self.url_launcher,
-            self.storage_paths,
-        ]
 
     def update(self, *controls) -> None:
         if len(controls) == 0:
