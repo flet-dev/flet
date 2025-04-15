@@ -10,6 +10,7 @@ import 'controls/adaptive_switch.dart';
 import 'controls/adaptive_texfield.dart';
 import 'controls/animated_switcher.dart';
 import 'controls/app_bar.dart';
+import 'controls/autofill_group.dart';
 import 'controls/banner.dart';
 import 'controls/bottom_app_bar.dart';
 import 'controls/bottom_sheet.dart';
@@ -121,6 +122,8 @@ class FletCoreExtension extends FletExtension {
         return AnimatedSwitcherControl(key: key, control: control);
       case "AppBar":
         return AppBarControl(key: key, control: control);
+      case "AutofillGroup":
+        return AutofillGroupControl(key: key, control: control);
       case "Checkbox":
         return AdaptiveCheckboxControl(key: key, control: control);
       case "CupertinoCheckbox":
