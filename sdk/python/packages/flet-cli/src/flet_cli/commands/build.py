@@ -9,19 +9,10 @@ from pathlib import Path
 from typing import Optional, cast
 
 import flet.version
-import flet_cli.utils.processes as processes
 import yaml
 from flet.utils import cleanup_path, copy_tree, is_windows, slugify
 from flet.utils.platform_utils import get_bool_env_var
 from flet.version import update_version
-from flet_cli.commands.base import BaseCommand
-from flet_cli.utils.hash_stamp import HashStamp
-from flet_cli.utils.merge import merge_dict
-from flet_cli.utils.project_dependencies import (
-    get_poetry_dependencies,
-    get_project_dependencies,
-)
-from flet_cli.utils.pyproject_toml import load_pyproject_toml
 from packaging import version
 from packaging.requirements import Requirement
 from rich.console import Console, Group
@@ -31,6 +22,16 @@ from rich.progress import Progress
 from rich.style import Style
 from rich.table import Column, Table
 from rich.theme import Theme
+
+import flet_cli.utils.processes as processes
+from flet_cli.commands.base import BaseCommand
+from flet_cli.utils.hash_stamp import HashStamp
+from flet_cli.utils.merge import merge_dict
+from flet_cli.utils.project_dependencies import (
+    get_poetry_dependencies,
+    get_project_dependencies,
+)
+from flet_cli.utils.pyproject_toml import load_pyproject_toml
 
 PYODIDE_ROOT_URL = "https://cdn.jsdelivr.net/pyodide/v0.27.2/full"
 DEFAULT_TEMPLATE_URL = "gh:flet-dev/flet-build-template"
@@ -1763,10 +1764,16 @@ class Command(BaseCommand):
                 for i in range(0, len(toml_dependencies)):
                     package_name = Requirement(toml_dependencies[i]).name
                     if package_name in dev_packages:
-                        dev_path = Path(dev_packages[package_name])
+                        package_location = dev_packages[package_name]
+                        dev_path = Path(package_location)
                         if not dev_path.is_absolute():
                             dev_path = (self.python_app_path / dev_path).resolve()
-                        toml_dependencies[i] = f"{package_name} @ file://{dev_path}"
+                        if dev_path.exists():
+                            toml_dependencies[i] = f"{package_name} @ file://{dev_path}"
+                        else:
+                            toml_dependencies[i] = (
+                                f"{package_name} @ {package_location}"
+                            )
                         dev_packages_configured = True
                 if dev_packages_configured:
                     toml_dependencies.append("--no-cache-dir")
