@@ -29,8 +29,8 @@ from flet.controls.control import BaseControl, Control, Service, control
 from flet.controls.control_event import ControlEvent
 from flet.controls.core.browser_context_menu import BrowserContextMenu
 from flet.controls.core.clipboard import Clipboard
-from flet.controls.core.path_provider import PathProvider
 from flet.controls.core.shared_preferences import SharedPreferences
+from flet.controls.core.storage_paths import StoragePaths
 from flet.controls.core.url_launcher import UrlLauncher
 from flet.controls.core.view import View
 from flet.controls.core.window import Window
@@ -159,7 +159,7 @@ class Page(AdaptiveControl):
         default_factory=lambda: SharedPreferences()
     )
     clipboard: Clipboard = field(default_factory=lambda: Clipboard())
-    storage: PathProvider = field(default_factory=lambda: PathProvider())
+    storage_paths: StoragePaths = field(default_factory=lambda: StoragePaths())
     url_launcher: UrlLauncher = field(default_factory=lambda: UrlLauncher())
     _user_services: "ServiceRegistry" = field(default_factory=lambda: ServiceRegistry())
     _page_services: "ServiceRegistry" = field(default_factory=lambda: ServiceRegistry())
@@ -234,7 +234,7 @@ class Page(AdaptiveControl):
             self.shared_preferences,
             self.clipboard,
             self.url_launcher,
-            self.storage,
+            self.storage_paths,
         ]
 
     def update(self, *controls) -> None:

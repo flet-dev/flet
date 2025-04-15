@@ -4,22 +4,19 @@ import 'package:path_provider/path_provider.dart';
 import '../flet_service.dart';
 import '../utils/platform.dart';
 
-class PathProviderService extends FletService {
-  PathProviderService({required super.control, required super.backend});
+class StoragePaths extends FletService {
+  StoragePaths({required super.control, required super.backend});
 
   @override
   void init() {
     super.init();
-    debugPrint(
-        "PathProviderService(${control.id}).init: ${control.properties}");
-    control.addInvokeMethodListener(_invokeMethod);
+    debugPrint("StoragePaths(${control.id}).init: ${control.properties}");
     updateValues();
   }
 
   @override
   void update() {
-    debugPrint(
-        "PathProviderService(${control.id}).update: ${control.properties}");
+    debugPrint("StoragePaths(${control.id}).update: ${control.properties}");
     updateValues();
   }
 
@@ -53,20 +50,5 @@ class PathProviderService extends FletService {
       "external_cache_directory": externalCacheDirectory,
       "temporary_directory": temporaryDirectory,
     });
-  }
-
-  Future<dynamic> _invokeMethod(String name, dynamic args) async {
-    debugPrint("PathProviderService.$name($args)");
-    switch (name) {
-      default:
-        throw Exception("Unknown PathProviderService method: $name");
-    }
-  }
-
-  @override
-  void dispose() {
-    debugPrint("PathProviderService(${control.id}).dispose()");
-    control.removeInvokeMethodListener(_invokeMethod);
-    super.dispose();
   }
 }

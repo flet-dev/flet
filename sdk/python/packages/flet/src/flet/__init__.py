@@ -134,7 +134,6 @@ from flet.controls.core.markdown import (
     MarkdownStyleSheet,
 )
 from flet.controls.core.pagelet import Pagelet
-from flet.controls.core.path_provider import PathProvider
 from flet.controls.core.placeholder import Placeholder
 from flet.controls.core.reorderable_draggable import ReorderableDraggable
 from flet.controls.core.responsive_row import ResponsiveRow
@@ -145,6 +144,7 @@ from flet.controls.core.semantics_service import Assertiveness, SemanticsService
 from flet.controls.core.shader_mask import ShaderMask
 from flet.controls.core.shake_detector import ShakeDetector
 from flet.controls.core.stack import Stack, StackFit
+from flet.controls.core.storage_paths import StoragePaths
 from flet.controls.core.text import Text, TextAffinity, TextSelection
 from flet.controls.core.text_span import TextSpan
 from flet.controls.core.transparent_pointer import TransparentPointer
