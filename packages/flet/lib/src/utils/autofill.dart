@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../models/control.dart';
+
 List<String>? parseAutofillHints(dynamic value, [List<String>? defaultValue]) {
   if (value == null) return defaultValue;
   List<String> hints = [];
@@ -163,5 +165,21 @@ AutofillContextAction? parseAutofillContextAction(String? value,
       return AutofillContextAction.cancel;
     default:
       return defaultValue;
+  }
+}
+
+extension AutofillParsers on Control {
+  List<String>? getAutofillHints(String propertyName,
+      [List<String>? defaultValue]) {
+    return parseAutofillHints(get(propertyName), defaultValue);
+  }
+
+  String? getAutofillHint(String propertyName, [String? defaultValue]) {
+    return parseAutofillHint(get(propertyName), defaultValue);
+  }
+
+  AutofillContextAction? getAutofillContextAction(String propertyName,
+      [AutofillContextAction? defaultValue]) {
+    return parseAutofillContextAction(get(propertyName), defaultValue);
   }
 }

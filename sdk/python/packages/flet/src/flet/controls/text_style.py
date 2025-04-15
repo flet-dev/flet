@@ -14,6 +14,13 @@ __all__ = [
     "TextDecorationStyle",
     "TextStyle",
     "StrutStyle",
+    "OptionalTextStyle",
+    "OptionalStrutStyle",
+    "OptionalTextOverflow",
+    "OptionalTextBaseline",
+    "OptionalTextThemeStyle",
+    "OptionalTextDecoration",
+    "OptionalTextDecorationStyle",
 ]
 
 
@@ -71,7 +78,7 @@ class TextStyle:
     decoration: Optional[TextDecoration] = None
     decoration_color: OptionalColorValue = None
     decoration_thickness: OptionalNumber = None
-    decoration_style: Optional[TextDecorationStyle] = None
+    decoration_style: "OptionalTextDecorationStyle" = None
     font_family: Optional[str] = None
     color: OptionalColorValue = None
     bgcolor: OptionalColorValue = None
@@ -92,3 +99,13 @@ class StrutStyle:
     font_family: Optional[str] = None
     leading: OptionalNumber = None
     force_strut_height: Optional[bool] = None
+
+
+# Typing
+OptionalTextStyle = Optional[TextStyle]
+OptionalStrutStyle = Optional[StrutStyle]
+OptionalTextOverflow = Optional[TextOverflow]
+OptionalTextBaseline = Optional[TextBaseline]
+OptionalTextThemeStyle = Optional[TextThemeStyle]
+OptionalTextDecoration = Optional[TextDecoration]
+OptionalTextDecorationStyle = Optional[TextDecorationStyle]

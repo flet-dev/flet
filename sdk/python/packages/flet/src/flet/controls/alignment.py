@@ -1,10 +1,14 @@
 import dataclasses
 from enum import Enum
-from typing import Union
+from typing import Optional, Union
+
+from flet.controls.types import Number
 
 __all__ = [
     "Alignment",
     "Axis",
+    "OptionalAlignment",
+    "OptionalAxis",
     "bottom_center",
     "bottom_left",
     "bottom_right",
@@ -24,9 +28,11 @@ class Axis(Enum):
 
 @dataclasses.dataclass
 class Alignment:
-    x: Union[float, int]
-    y: Union[float, int]
+    x: Number
+    y: Number
 
+
+# Constants
 
 bottom_center = Alignment(0, 1)
 bottom_left = Alignment(-1, 1)
@@ -37,3 +43,7 @@ center_right = Alignment(1, 0)
 top_center = Alignment(0, -1)
 top_left = Alignment(-1, -1)
 top_right = Alignment(1, -1)
+
+# Typing
+OptionalAlignment = Optional[Alignment]
+OptionalAxis = Optional[Axis]

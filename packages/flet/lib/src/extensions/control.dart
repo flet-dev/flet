@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 
 import '../controls/control_widget.dart';
 import '../models/control.dart';
-import '../utils/autofill.dart';
-import '../utils/badge.dart';
 
 /// Extension on [Control] to easily convert child or children controls
 /// into corresponding [Widget]s using [ControlWidget].
@@ -98,27 +96,5 @@ extension WidgetFromControl on Control {
     }
 
     return null;
-  }
-}
-
-extension AutofillParsers on Control {
-  List<String>? getAutofillHints(String propertyName,
-      [List<String>? defaultValue]) {
-    return parseAutofillHints(get(propertyName), defaultValue);
-  }
-
-  String? getAutofillHint(String propertyName, [String? defaultValue]) {
-    return parseAutofillHint(get(propertyName), defaultValue);
-  }
-
-  AutofillContextAction? getAutofillContextAction(String propertyName,
-      [AutofillContextAction? defaultValue]) {
-    return parseAutofillContextAction(get(propertyName), defaultValue);
-  }
-}
-
-extension BadgeParsers on Control {
-  Badge? getBadge(String propertyName, Widget child, ThemeData theme) {
-    return parseBadge(get(propertyName), child, theme);
   }
 }
