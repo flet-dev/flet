@@ -61,6 +61,53 @@ class LineChartControl extends StatefulWidget {
 class _LineChartControlState extends State<LineChartControl> {
   LineChartEventData? _eventData;
 
+  final Map<int, List<FlSpot>> _barSpots = {};
+
+  @override
+  void initState() {
+    debugPrint("LineChart.initState: ${widget.control.id}");
+    super.initState();
+    widget.control.addListener(_chartUpdated);
+    _chartUpdated();
+  }
+
+  @override
+  void dispose() {
+    debugPrint("LineChart.dispose: ${widget.control.id}");
+    widget.control.removeListener(_chartUpdated);
+    super.dispose();
+  }
+
+  _chartUpdated() {
+    debugPrint("LineChart._chartUpdated: ${widget.control.id}");
+    setState(() {
+      for (var lineBar in widget.control.children("data_series")) {
+        lineBar.notifyParent = true;
+        List<FlSpot> spots = [];
+        if (_barSpots.containsKey(lineBar.id)) {
+          spots = _barSpots[lineBar.id]!;
+        } else {
+          _barSpots[lineBar.id] = spots;
+        }
+
+        spots.clear();
+        for (var spot in lineBar.children("data_points")) {
+          spot.notifyParent = true;
+          spots.add(FlSpot(spot.getDouble("x")!, spot.getDouble("y")!));
+        }
+      }
+
+      // removed data series
+      for (var lineBarId in _barSpots.keys.toList()) {
+        if (!widget.control
+            .children("data_series")
+            .any((bar) => bar.id == lineBarId)) {
+          _barSpots.remove(lineBarId);
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     debugPrint("LineChart build: ${widget.control.id}");
@@ -86,15 +133,13 @@ class _LineChartControlState extends State<LineChartControl> {
           getBarData(Theme.of(context), widget.control, interactive, ds);
       barsData.add(barData);
 
-      if (!interactive) {
-        var spotIndex = 0;
-        for (var p in ds.children("data_points")) {
-          if (p.getBool("selected", false)!) {
-            selectedPoints
-                .add(LineBarSpot(barData, barIndex, barData.spots[spotIndex]));
-          }
-          spotIndex++;
+      var spotIndex = 0;
+      for (var p in ds.children("data_points")) {
+        if (!interactive && p.getBool("selected", false)!) {
+          selectedPoints
+              .add(LineBarSpot(barData, barIndex, barData.spots[spotIndex]));
         }
+        spotIndex++;
       }
 
       barIndex++;
@@ -103,12 +148,12 @@ class _LineChartControlState extends State<LineChartControl> {
     var chart = LineChart(
       LineChartData(
           backgroundColor: widget.control.getColor("bgcolor", context),
-          minX: widget.control.getDouble("minx"),
-          maxX: widget.control.getDouble("maxx"),
-          minY: widget.control.getDouble("miny"),
-          maxY: widget.control.getDouble("maxy"),
-          baselineX: widget.control.getDouble("baselinex"),
-          baselineY: widget.control.getDouble("baseliney"),
+          minX: widget.control.getDouble("min_x"),
+          maxX: widget.control.getDouble("max_x"),
+          minY: widget.control.getDouble("min_y"),
+          maxY: widget.control.getDouble("max_y"),
+          baselineX: widget.control.getDouble("baseline_x"),
+          baselineY: widget.control.getDouble("baseline_y"),
           showingTooltipIndicators: groupBy(selectedPoints, (p) => p.x)
               .values
               .map((e) => ShowingTooltipIndicators(e))
@@ -129,7 +174,7 @@ class _LineChartControlState extends State<LineChartControl> {
               ? FlBorderData(show: true, border: border)
               : FlBorderData(show: false),
           gridData: parseChartGridData(Theme.of(context), widget.control,
-              "horizontalGridLines", "verticalGridLines"),
+              "horizontal_grid_lines", "vertical_grid_lines"),
           lineBarsData: barsData,
           lineTouchData: LineTouchData(
             enabled: interactive,
@@ -254,7 +299,7 @@ class _LineChartControlState extends State<LineChartControl> {
                 }).toList();
               },
             ),
-            touchCallback: widget.control.getBool("onChartEvent", false)!
+            touchCallback: widget.control.getBool("on_chart_event", false)!
                 ? (evt, resp) {
                     var eventData = LineChartEventData(
                         eventType: evt.runtimeType
@@ -324,10 +369,7 @@ class _LineChartControlState extends State<LineChartControl> {
             chartData.getBool("prevent_curve_over_shooting", false)!,
         preventCurveOvershootingThreshold:
             chartData.getDouble("prevent_curve_over_shooting_threshold", 10.0)!,
-        spots: chartData
-            .children("data_points")
-            .map((p) => FlSpot(p.getDouble("x")!, p.getDouble("y")!))
-            .toList(),
+        spots: _barSpots[chartData.id]!,
         showingIndicators: chartData
             .children("data_points")
             .asMap()
