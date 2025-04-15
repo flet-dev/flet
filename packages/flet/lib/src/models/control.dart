@@ -57,7 +57,9 @@ class Control extends ChangeNotifier {
             properties[propertyName] != null
         ? T == double && properties[propertyName] is int
             ? properties[propertyName].toDouble()
-            : properties[propertyName]
+            : T == String
+                ? properties[propertyName].toString()
+                : properties[propertyName]
         : defaultValue;
   }
 
