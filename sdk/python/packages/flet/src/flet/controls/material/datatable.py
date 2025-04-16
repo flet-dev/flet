@@ -80,31 +80,176 @@ class DataRow(Control):
 
 @control("DataTable")
 class DataTable(ConstrainedControl):
+    """
+    A Material Design data table.
+    """
+
     columns: List[DataColumn] = field(default_factory=list)
+    """
+    A list of [DataColumn](https://flet.dev/docs/controls/datatable#datacolumn) controls describing table columns.
+    """
+
     rows: List[DataRow] = field(default_factory=list)
+    """
+    A list of [DataRow](https://flet.dev/docs/controls/datatable#datarow) controls defining table rows.
+    """
+
     sort_ascending: bool = False
+    """
+    Whether the column mentioned in `sort_column_index`, if any, is sorted in ascending order.
+
+    If `True`, the order is ascending (meaning the rows with the smallest values for the current sort column are first in the table).
+
+    If `False`, the order is descending (meaning the rows with the smallest values for the current sort column are last in the table).
+    """
+
     show_checkbox_column: bool = False
+    """
+    Whether the control should display checkboxes for selectable rows.
+
+    If `True`, a `Checkbox` will be placed at the beginning of each row that is selectable. However, if `DataRow.on_select_changed` is not set for any row, checkboxes will not be placed, even if this value is `True`.
+
+    If `False`, all rows will not display a `Checkbox`.
+    """
+
     sort_column_index: Optional[int] = None
+    """
+    The current primary sort key's column.
+
+    If specified, indicates that the indicated column is the column by which the data is sorted. The number must correspond to the index of the relevant column in `columns`.
+
+    Setting this will cause the relevant column to have a sort indicator displayed.
+
+    When this is `None`, it implies that the table's sort order does not correspond to any of the columns.
+    """
+
     show_bottom_border: bool = False
+    """
+    Whether a border at the bottom of the table is displayed.
+
+    By default, a border is not shown at the bottom to allow for a border around the table defined by decoration.
+    """
+
     border: Optional[Border] = None
+    """
+    The border around the table. 
+
+    The value is an instance of [Border](https://flet.dev/docs/reference/types/border) class.
+    """
+
     border_radius: OptionalBorderRadiusValue = None
+    """
+    Border corners.
+
+    Border radius is an instance of [BorderRadius](https://flet.dev/docs/reference/types/borderradius) class.
+    """
+
     horizontal_lines: Optional[BorderSide] = None
+    """
+    Set the [color](https://flet.dev/docs/reference/colors) and width of horizontal lines between rows. An instance of [BorderSide](https://flet.dev/docs/reference/types/borderside) class.
+    """
+
     vertical_lines: Optional[BorderSide] = None
+    """
+    Set the [color](https://flet.dev/docs/reference/colors) and width of vertical lines between columns.
+
+    Value is of type [BorderSide](https://flet.dev/docs/reference/types/borderside).
+    """
+
     checkbox_horizontal_margin: OptionalNumber = None
+    """
+    Horizontal margin around the checkbox, if it is displayed.
+    """
+
     column_spacing: OptionalNumber = None
+    """
+    The horizontal margin between the contents of each data column.
+    """
+
     data_row_color: OptionalControlStateValue[ColorValue] = None
+    """
+    The background [color](https://flet.dev/docs/reference/colors) for the data rows.
+
+    The effective background color can be made to depend on the [ControlState](https://flet.dev/docs/reference/types/controlstate) state, i.e. if the row is selected, pressed, hovered, focused, disabled or enabled. The color is painted as an overlay to the row. To make sure that the row's InkWell is visible (when pressed, hovered and focused), it is recommended to use a translucent background color.
+    """
+
     data_row_min_height: OptionalNumber = None
+    """
+    The minimum height of each row (excluding the row that contains column headings).
+
+    Defaults to `48.0` and must be less than or equal to `data_row_max_height`.
+    """
+
     data_row_max_height: OptionalNumber = None
+    """
+    The maximum height of each row (excluding the row that contains column headings). Set to `float("inf")` for the height of each row to adjust automatically with its content.
+
+    Defaults to `48.0` and must be greater than or equal to `data_row_min_height`.
+    """
+
     data_text_style: Optional[TextStyle] = None
+    """
+    The text style for data rows. An instance of [TextStyle](https://flet.dev/docs/reference/types/textstyle) class.
+    """
+
     bgcolor: OptionalColorValue = None
+    """
+    The background [color](https://flet.dev/docs/reference/colors) for the table.
+    """
+
     gradient: Optional[Gradient] = None
+    """
+    The background gradient for the table.
+
+    Value is of type [Gradient](https://flet.dev/docs/reference/types/gradient).
+    """
+
     divider_thickness: Number = 1.0
+    """
+    The width of the divider that appears between `TableRow`s. Must be greater than or equal to zero.
+
+    Defaults to 1.0.
+    """
+
     heading_row_color: OptionalControlStateValue[ColorValue] = None
+    """
+    The background [color](https://flet.dev/docs/reference/colors) for the heading row.
+
+    The effective background color can be made to depend on the [ControlState](https://flet.dev/docs/reference/types/controlstate) state, i.e. if the row is pressed, hovered, focused when sorted. The color is painted as an overlay to the row. To make sure that the row's InkWell is visible (when pressed, hovered and focused), it is recommended to use a translucent color.
+    """
+
     heading_row_height: OptionalNumber = None
+    """
+    The height of the heading row.
+    """
+
     heading_text_style: Optional[TextStyle] = None
+    """
+    The text style for the heading row. An instance of [TextStyle](https://flet.dev/docs/reference/types/textstyle) class.
+    """
+
     horizontal_margin: OptionalNumber = None
+    """
+    The horizontal margin between the edges of the table and the content in the first and last cells of each row.
+
+    When a checkbox is displayed, it is also the margin between the checkbox the content in the first data column.
+    """
+
     clip_behavior: Optional[ClipBehavior] = None
+    """
+    The content will be clipped (or not) according to this option. 
+
+    Value is of type [ClipBehavior](https://flet.dev/docs/reference/types/clipbehavior) and defaults to `ClipBehavior.ANTI_ALIAS` if `border_radius!=None`; otherwise `ClipBehavior.HARD_EDGE`.
+    """
+
     on_select_all: OptionalControlEventCallable = None
+    """
+    Invoked when the user selects or unselects every row, using the checkbox in the heading row.
+
+    If this is `None`, then the `DataRow.on_select_changed` callback of every row in the table is invoked appropriately instead.
+
+    To control whether a particular row is selectable or not, see `DataRow.on_select_changed`. This callback is only relevant if any row is selectable.
+    """
 
     def __contains__(self, item):
         return item in self.columns or item in self.rows
