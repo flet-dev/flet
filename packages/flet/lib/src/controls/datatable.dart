@@ -77,7 +77,7 @@ class DataTableControl extends StatelessWidget {
         column.notifyParent = true;
         return DataColumn(
           numeric: column.getBool("numeric", false)!,
-          tooltip: column.getString("tooltip"),
+          tooltip: column.getString("tooltip_text"),
           headingRowAlignment:
               parseMainAxisAlignment(column.getString("heading_row_alignment")),
           mouseCursor: WidgetStateMouseCursor.clickable,
@@ -87,7 +87,7 @@ class DataTableControl extends StatelessWidget {
                       .triggerEvent("sort", {"i": columnIndex, "a": ascending});
                 }
               : null,
-          label: column.buildWidget("label")!,
+          label: column.buildTextOrWidget("label")!,
         );
       }).toList(),
       rows: control.children("rows").map((row) {
@@ -109,7 +109,7 @@ class DataTableControl extends StatelessWidget {
           cells: row.children("cells").map((cell) {
             cell.notifyParent = true;
             return DataCell(
-              cell.buildWidget("content")!,
+              cell.buildTextOrWidget("content")!,
               placeholder: cell.getBool("placeholder", false)!,
               showEditIcon: cell.getBool("show_edit_icon", false)!,
               onDoubleTap: cell.getBool("on_double_tap", false)!
