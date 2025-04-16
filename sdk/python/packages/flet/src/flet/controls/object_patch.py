@@ -536,24 +536,30 @@ class DiffBuilder(object):
                 prev_classes[field_name] = new
 
         # compare lists
-        for field_name, old in prev_lists.items():
+        for field_name, old in list(prev_lists.items()):
             if field_name in changes:
+                if new is None:
+                    del prev_lists[field_name]
                 continue
             new = getattr(dst, field_name)
             self._compare_values(parent, path, field_name, old, new)
             prev_lists[field_name] = new[:]
 
         # compare dicts
-        for field_name, old in prev_dicts.items():
+        for field_name, old in list(prev_dicts.items()):
             if field_name in changes:
+                if new is None:
+                    del prev_dicts[field_name]
                 continue
             new = getattr(dst, field_name)
             self._compare_values(parent, path, field_name, old, new)
             prev_dicts[field_name] = new.copy()
 
         # compare dataclasses
-        for field_name, old in prev_classes.items():
+        for field_name, old in list(prev_classes.items()):
             if field_name in changes:
+                if new is None:
+                    del prev_classes[field_name]
                 continue
             new = getattr(dst, field_name)
             self._compare_values(parent, path, field_name, old, new)
