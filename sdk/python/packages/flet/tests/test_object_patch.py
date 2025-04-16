@@ -41,7 +41,7 @@ def update_page(new: Any, old: Any = None, show_details=True):
     start = datetime.datetime.now()
 
     # 1 -calculate diff
-    patch = ObjectPatch.from_diff(
+    patch, added_controls, removed_controls = ObjectPatch.from_diff(
         old, new, in_place=True, controls_index=controls_index, control_cls=BaseControl
     )
 
