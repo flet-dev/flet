@@ -54,7 +54,7 @@ Widget _tooltip(BuildContext context, Widget widget, Control control) {
 }
 
 Widget _badge(Widget widget, ThemeData theme, Control control) {
-  var badge = control.getBadge("badge", widget, theme);
+  var badge = control.wrapWithBadge("badge", widget, theme);
   return badge ?? widget;
 }
 
