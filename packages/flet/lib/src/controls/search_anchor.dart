@@ -37,8 +37,10 @@ class SearchAnchorControl extends StatefulWidget {
 class _SearchAnchorControlState extends State<SearchAnchorControl> {
   late final SearchController _controller;
   bool _focused = false;
+  TextCapitalization _textCapitalization = TextCapitalization.none;
   late final FocusNode _focusNode;
   String? _lastFocusValue;
+  String? _lastBlurValue;
 
   @override
   void initState() {
@@ -67,21 +69,58 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
   }
 
   void _searchTextChanged() {
-    debugPrint("_searchTextChanged: ${_controller.text}");
+    _textCapitalization = parseTextCapitalization(
+        widget.control.attrString("capitalization"), TextCapitalization.none)!;
     _updateValue(_controller.text);
   }
 
   void _updateValue(String value) {
-    debugPrint("SearchBar.changeValue: $value");
+    value = applyCapitalization(value);
+    if (_controller.value.text != value) {
+      _controller.value = TextEditingValue(
+        text: value,
+        selection: TextSelection.collapsed(offset: value.length),
+      );
+    }
+
     widget.backend.updateControlState(widget.control.id, {"value": value});
+  }
+
+  String applyCapitalization(String text) {
+    switch (_textCapitalization) {
+      /// Capitalizes the first character of each word.
+      case TextCapitalization.words:
+        return text
+            .split(RegExp(r'\s+'))
+            .map((word) => word.isNotEmpty
+                ? word[0].toUpperCase() + word.substring(1).toLowerCase()
+                : word)
+            .join(' ');
+
+      /// Capitalizes the first character of each sentence.
+      case TextCapitalization.sentences:
+        return text
+            .split('. ')
+            .map((sentence) => sentence.isNotEmpty
+                ? sentence.trimLeft()[0].toUpperCase() +
+                    sentence.substring(1).toLowerCase()
+                : sentence)
+            .join('. ');
+
+      /// Capitalizes all characters.
+      case TextCapitalization.characters:
+        return text.toUpperCase();
+
+      /// No change.
+      case TextCapitalization.none:
+        return text;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("SearchAnchor build: ${widget.control.id}");
     bool disabled = widget.control.isDisabled || widget.parentDisabled;
-
-    debugPrint(widget.control.attrs.toString());
 
     var value = widget.control.attrString("value", "");
     if (value != null && value != _controller.text) {
@@ -104,16 +143,18 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
         widget.children.where((c) => c.name == "viewLeading" && c.isVisible);
     var viewTrailingCtrls =
         widget.children.where((c) => c.name == "viewTrailing" && c.isVisible);
-
-    var textCapitalization = parseTextCapitalization(
-        widget.control.attrString("textCapitalization"));
     TextInputType keyboardType = parseTextInputType(
         widget.control.attrString("keyboardType"), TextInputType.text)!;
 
     var focusValue = widget.control.attrString("focus");
+    var blurValue = widget.control.attrString("blur");
     if (focusValue != null && focusValue != _lastFocusValue) {
       _lastFocusValue = focusValue;
       _focusNode.requestFocus();
+    }
+    if (blurValue != null && blurValue != _lastBlurValue) {
+      _lastBlurValue = blurValue;
+      _focusNode.unfocus();
     }
 
     var method = widget.control.attrString("method");
@@ -193,13 +234,13 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
             : null,
         viewSurfaceTintColor:
             widget.control.attrColor("viewSurfaceTintColor", context),
-        textCapitalization: textCapitalization,
+        textCapitalization: _textCapitalization,
         keyboardType: keyboardType,
         builder: (BuildContext context, SearchController controller) {
           return SearchBar(
             controller: controller,
             keyboardType: keyboardType,
-            textCapitalization: textCapitalization,
+            textCapitalization: _textCapitalization,
             autoFocus: widget.control.attrBool("autoFocus", false)!,
             focusNode: _focusNode,
             hintText: widget.control.attrString("barHintText"),
@@ -220,6 +261,8 @@ class _SearchAnchorControlState extends State<SearchAnchorControl> {
                 Theme.of(context), widget.control, "barBgcolor"),
             overlayColor: parseWidgetStateColor(
                 Theme.of(context), widget.control, "barOverlayColor"),
+            scrollPadding: parseEdgeInsets(widget.control, "barScrollPadding",
+                const EdgeInsets.all(20.0))!,
             leading: barLeadingCtrls.isNotEmpty
                 ? createControl(
                     widget.parent, barLeadingCtrls.first.id, disabled,

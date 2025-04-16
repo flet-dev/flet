@@ -73,9 +73,10 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         spacing: OptionalNumber = None,
         run_spacing: OptionalNumber = None,
         child_aspect_ratio: OptionalNumber = None,
-        padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         semantic_child_count: Optional[int] = None,
+        build_controls_on_demand: Optional[bool] = None,
         cache_extent: OptionalNumber = None,
         #
         # ConstrainedControl
@@ -92,9 +93,9 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -170,6 +171,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
         self.clip_behavior = clip_behavior
         self.semantic_child_count = semantic_child_count
         self.cache_extent = cache_extent
+        self.build_controls_on_demand = build_controls_on_demand
 
     def _get_control_name(self):
         return "gridview"
@@ -187,6 +189,15 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     def clean(self):
         super().clean()
         self.__controls.clear()
+
+    # build_controls_on_demand
+    @property
+    def build_controls_on_demand(self) -> Optional[bool]:
+        return self._get_attr("buildControlsOnDemand", data_type="bool", def_value=True)
+
+    @build_controls_on_demand.setter
+    def build_controls_on_demand(self, value: Optional[bool]):
+        self._set_attr("buildControlsOnDemand", value)
 
     # horizontal
     @property
@@ -253,11 +264,11 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # controls

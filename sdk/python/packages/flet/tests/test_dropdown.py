@@ -1,6 +1,5 @@
-from flet.core.protocol import Command
-
 import flet as ft
+from flet.core.protocol import Command
 
 
 def test_instance_no_attrs_set():

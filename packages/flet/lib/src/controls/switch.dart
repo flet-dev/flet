@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
@@ -5,6 +6,7 @@ import '../models/control.dart';
 import '../utils/colors.dart';
 import '../utils/icons.dart';
 import '../utils/mouse.dart';
+import '../utils/numbers.dart';
 import '../utils/others.dart';
 import '../utils/text.dart';
 import 'create_control.dart';
@@ -17,6 +19,7 @@ class SwitchControl extends StatefulWidget {
   final Control control;
   final bool parentDisabled;
   final bool? parentAdaptive;
+  final List<Control> children;
   final FletControlBackend backend;
 
   const SwitchControl(
@@ -25,6 +28,7 @@ class SwitchControl extends StatefulWidget {
       required this.control,
       required this.parentDisabled,
       required this.parentAdaptive,
+      required this.children,
       required this.backend});
 
   @override
@@ -59,7 +63,9 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
 
   void _onFocusChange() {
     widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
+        widget.control.id,
+        _focusNode.hasFocus ? "focus" : "blur",
+        _focusNode.hasPrimaryFocus.toString());
   }
 
   @override
@@ -78,7 +84,8 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
             backend: widget.backend);
       }
 
-      String label = widget.control.attrString("label", "")!;
+      var label = widget.children.firstWhereOrNull((c) => c.isVisible);
+      String labelStr = widget.control.attrString("label", "")!;
       LabelPosition labelPosition = parseLabelPosition(
           widget.control.attrString("labelPosition"), LabelPosition.right)!;
       double? width = widget.control.attrDouble("width");
@@ -91,8 +98,6 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
       if (disabled && labelStyle != null) {
         labelStyle = labelStyle.apply(color: Theme.of(context).disabledColor);
       }
-
-      debugPrint("Switch build: ${widget.control.id}");
 
       bool value = widget.control.attrBool("value", false)!;
       if (_value != value) {
@@ -125,6 +130,8 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
               Theme.of(context), widget.control, "overlayColor"),
           trackOutlineColor: parseWidgetStateColor(
               Theme.of(context), widget.control, "trackOutlineColor"),
+          trackOutlineWidth:
+              parseWidgetStateDouble(widget.control, "trackOutlineWidth"),
           onChanged: !disabled
               ? (bool value) {
                   _onChange(value);
@@ -136,22 +143,17 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
       });
 
       Widget result = s;
-      if (width != null || height != null) {
-        result = SizedBox(
-          width: width,
-          height: height,
-          child: FittedBox(
-            fit: BoxFit.fill,
-            child: result,
-          ),
-        );
-      }
-      if (label != "") {
-        var labelWidget = disabled
-            ? Text(label, style: labelStyle)
-            : MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: Text(label, style: labelStyle));
+      if (label != null || (labelStr != "")) {
+        Widget? labelWidget;
+        if (label != null) {
+          labelWidget = createControl(widget.control, label.id, disabled);
+        } else {
+          labelWidget = disabled
+              ? Text(labelStr, style: labelStyle)
+              : MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: Text(labelStr, style: labelStyle));
+        }
 
         result = MergeSemantics(
           child: GestureDetector(
@@ -162,13 +164,23 @@ class _SwitchControlState extends State<SwitchControl> with FletStoreMixin {
                 : null,
             child: labelPosition == LabelPosition.right
                 ? Row(
-                    mainAxisSize: MainAxisSize.min,
+                    // mainAxisSize: MainAxisSize.min,
                     children: [result, labelWidget],
                   )
                 : Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [labelWidget, result],
                   ),
+          ),
+        );
+      }
+      if (width != null || height != null) {
+        result = SizedBox(
+          width: width,
+          height: height,
+          child: FittedBox(
+            fit: BoxFit.fill,
+            child: result,
           ),
         );
       }

@@ -2,6 +2,7 @@ from flet.utils.browser import open_in_browser
 from flet.utils.classproperty import classproperty
 from flet.utils.deprecated import deprecated
 from flet.utils.files import (
+    cleanup_path,
     copy_tree,
     get_current_script_dir,
     is_within_directory,

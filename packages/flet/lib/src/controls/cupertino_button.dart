@@ -99,7 +99,6 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     String url = widget.control.attrString("url", "")!;
     Color disabledColor =
         widget.control.attrColor("disabledBgcolor", context) ??
-            widget.control.attrColor("disabledColor", context) ?? // deprecated
             CupertinoColors.quaternarySystemFill;
     Color? bgColor = widget.control.attrColor("bgColor", context);
     Color? color = widget.control.attrColor("color", context);
@@ -169,6 +168,18 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
       pressedOpacity: pressedOpacity,
       alignment: alignment,
       minSize: minSize,
+      autofocus: widget.control.attrBool("autofocus", false)!,
+      focusColor: widget.control.attrColor("focusColor", context),
+      onLongPress: !disabled
+          ? () {
+              widget.backend
+                  .triggerControlEvent(widget.control.id, "longPress");
+            }
+          : null,
+      onFocusChange: (focused) {
+        widget.backend
+            .triggerControlEvent(widget.control.id, focused ? "focus" : "blur");
+      },
       child: content,
     );
 

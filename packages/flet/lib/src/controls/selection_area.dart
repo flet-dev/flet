@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
@@ -33,18 +34,14 @@ class SelectionAreaControl extends StatelessWidget {
           "SelectionArea.content must be provided and visible");
     }
     bool disabled = control.isDisabled || parentDisabled;
+    var selectionArea = SelectionArea(
+      child: createControl(control, contentCtrls.first.id, disabled,
+          parentAdaptive: parentAdaptive),
+      onSelectionChanged: (SelectedContent? selection) {
+        backend.triggerControlEvent(control.id, "change", selection?.plainText);
+      },
+    );
 
-    return baseControl(
-        context,
-        SelectionArea(
-          child: createControl(control, contentCtrls.first.id, disabled,
-              parentAdaptive: parentAdaptive),
-          onSelectionChanged: (selection) {
-            backend.triggerControlEvent(
-                control.id, "change", selection?.plainText ?? "");
-          },
-        ),
-        parent,
-        control);
+    return baseControl(context, selectionArea, parent, control);
   }
 }

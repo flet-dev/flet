@@ -8,7 +8,8 @@ import 'flet_app_services.dart';
 class FletApp extends StatefulWidget {
   final String pageUrl;
   final String assetsDir;
-  final bool? hideLoadingPage;
+  final bool? showAppStartupScreen;
+  final String? appStartupScreenMessage;
   final String? controlId;
   final String? title;
   final FletAppErrorsHandler? errorsHandler;
@@ -20,7 +21,8 @@ class FletApp extends StatefulWidget {
       {super.key,
       required this.pageUrl,
       required this.assetsDir,
-      this.hideLoadingPage,
+      this.showAppStartupScreen,
+      this.appStartupScreenMessage,
       this.controlId,
       this.title,
       this.errorsHandler,
@@ -48,7 +50,8 @@ class _FletAppState extends State<FletApp> {
       _pageUrl = widget.pageUrl;
       _appServices = FletAppServices(
           parentAppServices: FletAppServices.maybeOf(context),
-          hideLoadingPage: widget.hideLoadingPage,
+          showAppStartupScreen: widget.showAppStartupScreen,
+          appStartupScreenMessage: widget.appStartupScreenMessage,
           controlId: widget.controlId,
           reconnectIntervalMs: widget.reconnectIntervalMs,
           reconnectTimeoutMs: widget.reconnectTimeoutMs,

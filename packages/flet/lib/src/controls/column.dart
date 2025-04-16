@@ -27,53 +27,38 @@ class ColumnControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("Column build: ${control.id}");
-
-    final spacing = control.attrDouble("spacing", 10)!;
-    final mainAlignment = parseMainAxisAlignment(
-        control.attrString("alignment"), MainAxisAlignment.start)!;
-    bool tight = control.attrBool("tight", false)!;
-    bool wrap = control.attrBool("wrap", false)!;
     bool disabled = control.isDisabled || parentDisabled;
     bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
 
-    List<Widget> controls = [];
+    var spacing = control.attrDouble("spacing", 10)!;
+    var alignment = control.attrString("alignment");
+    var tight = control.attrBool("tight", false)!;
+    var wrap = control.attrBool("wrap", false)!;
+    var horizontalAlignment = control.attrString("horizontalAlignment");
 
-    bool firstControl = true;
-    for (var ctrl in children.where((c) => c.isVisible)) {
-      // spacer between displayed controls
-      if (!wrap &&
-          spacing > 0 &&
-          !firstControl &&
-          mainAlignment != MainAxisAlignment.spaceAround &&
-          mainAlignment != MainAxisAlignment.spaceBetween &&
-          mainAlignment != MainAxisAlignment.spaceEvenly) {
-        controls.add(SizedBox(height: spacing));
-      }
-      firstControl = false;
-
-      // displayed control
-      controls.add(
-          createControl(control, ctrl.id, disabled, parentAdaptive: adaptive));
-    }
+    List<Widget> controls = children.where((c) => c.isVisible).map((c) {
+      return createControl(control, c.id, disabled, parentAdaptive: adaptive);
+    }).toList();
 
     Widget child = wrap
         ? Wrap(
             direction: Axis.vertical,
             spacing: spacing,
             runSpacing: control.attrDouble("runSpacing", 10)!,
-            alignment: parseWrapAlignment(
-                control.attrString("alignment"), WrapAlignment.start)!,
+            alignment: parseWrapAlignment(alignment, WrapAlignment.start)!,
+            runAlignment: parseWrapAlignment(
+                control.attrString("runAlignment"), WrapAlignment.start)!,
             crossAxisAlignment: parseWrapCrossAlignment(
-                control.attrString("horizontalAlignment"),
-                WrapCrossAlignment.start)!,
+                horizontalAlignment, WrapCrossAlignment.start)!,
             children: controls,
           )
         : Column(
-            mainAxisAlignment: mainAlignment,
+            mainAxisAlignment:
+                parseMainAxisAlignment(alignment, MainAxisAlignment.start)!,
+            spacing: spacing,
             mainAxisSize: tight ? MainAxisSize.min : MainAxisSize.max,
             crossAxisAlignment: parseCrossAxisAlignment(
-                control.attrString("horizontalAlignment"),
-                CrossAxisAlignment.start)!,
+                horizontalAlignment, CrossAxisAlignment.start)!,
             children: controls,
           );
 

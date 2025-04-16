@@ -73,14 +73,6 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
 
         var wrap = (totalCols > bpColumns);
 
-        if (!wrap && bpSpacing > 0) {
-          var i = 1;
-          while (i < controls.length) {
-            controls.insert(i, SizedBox(width: bpSpacing));
-            i += 2;
-          }
-        }
-
         try {
           return wrap
               ? Wrap(
@@ -96,6 +88,7 @@ class ResponsiveRowControl extends StatelessWidget with FletStoreMixin {
                   children: controls,
                 )
               : Row(
+                  spacing: bpSpacing - 0.1,
                   mainAxisAlignment: parseMainAxisAlignment(
                       control.attrString("alignment"),
                       MainAxisAlignment.start)!,

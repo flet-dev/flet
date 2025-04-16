@@ -42,6 +42,21 @@ def which(program, exclude_exe=None):
 
     return None
 
+
+def cleanup_path(path: str, executable: str):
+    cleaned_dirs = []
+    for path_dir in path.split(os.pathsep):
+        found = False
+        for file_name in [executable, f"{executable}.bat", f"{executable}.cmd"]:
+            if os.path.isfile(os.path.join(path_dir, file_name)):
+                found = True
+                break
+        if not found:
+            cleaned_dirs.append(path_dir)
+
+    return os.pathsep.join(cleaned_dirs)
+
+
 def get_current_script_dir():
     pathname = os.path.dirname(sys.argv[0])
     return os.path.abspath(pathname)

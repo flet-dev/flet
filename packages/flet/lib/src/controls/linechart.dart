@@ -60,7 +60,7 @@ class LineChartDataViewModel extends Equatable {
         control: control,
         dataPoints: store.state.controls[control.id]!.childIds
             .map((childId) => store.state.controls[childId])
-            .whereNotNull()
+            .nonNulls
             .where((c) => c.isVisible)
             .map((c) => LineChartDataPointViewModel.fromStore(store, c))
             .toList());
@@ -356,9 +356,7 @@ class _LineChartControlState extends State<LineChartControl> {
                       return touchedSpots.map((spot) {
                         var dp = viewModel.dataSeries[spot.barIndex]
                             .dataPoints[spot.spotIndex];
-                        var tooltip = dp.tooltip != null
-                            ? jsonDecode(dp.tooltip!)
-                            : dp.y.toString();
+                        var tooltip = dp.tooltip ?? dp.y.toString();
                         var tooltipStyle = parseTextStyle(
                             Theme.of(context), dp.control, "tooltipStyle");
                         tooltipStyle ??= const TextStyle();
@@ -474,7 +472,7 @@ class _LineChartControlState extends State<LineChartControl> {
         dashArray: dashPattern != null
             ? (json.decode(dashPattern) as List)
                 .map((e) => parseInt(e))
-                .whereNotNull()
+                .nonNulls
                 .toList()
             : null,
         shadow: shadow.isNotEmpty

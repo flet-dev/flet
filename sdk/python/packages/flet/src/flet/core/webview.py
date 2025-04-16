@@ -1,5 +1,4 @@
 import json
-import warnings
 from enum import Enum
 from typing import Any, Optional, Union
 
@@ -23,6 +22,7 @@ from flet.core.types import (
     RotateValue,
     ScaleValue,
 )
+from flet.utils import deprecated
 
 
 class WebviewRequestMethod(Enum):
@@ -64,6 +64,12 @@ class WebviewJavaScriptEvent(ControlEvent):
         self.url: str = d.get("url")
 
 
+@deprecated(
+    reason="WebView control has been moved to a separate Python package: https://pypi.org/project/flet-webview. "
+    + "Read more about this change in Flet blog: https://flet.dev/blog/flet-v-0-26-release-announcement",
+    version="0.26.0",
+    delete_version="0.29.0",
+)
 class WebView(ConstrainedControl):
     """
     Easily load webpages while allowing user interaction.
@@ -127,7 +133,6 @@ class WebView(ConstrainedControl):
     def __init__(
         self,
         url: str,
-        javascript_enabled: Optional[bool] = None,
         enable_javascript: Optional[bool] = None,
         prevent_link: Optional[str] = None,
         bgcolor: Optional[ColorValue] = None,
@@ -156,9 +161,9 @@ class WebView(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -167,7 +172,7 @@ class WebView(ConstrainedControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -220,7 +225,6 @@ class WebView(ConstrainedControl):
         )
 
         self.url = url
-        self.javascript_enabled = javascript_enabled
         self.enable_javascript = enable_javascript
         self.prevent_link = prevent_link
         self.bgcolor = bgcolor
@@ -366,33 +370,6 @@ class WebView(ConstrainedControl):
         self._set_attr("url", value)
         if self.page:
             self.load_request(value, WebviewRequestMethod.GET)
-
-    # javascript_enabled
-    @property
-    def javascript_enabled(self) -> bool:
-        warnings.warn(
-            f"javascript_enabled is deprecated since version 0.25.0 "
-            f"and will be removed in version 0.28.0. Use enable_javascript instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self._get_attr("javascriptEnabled", data_type="bool", def_value=False)
-
-    @javascript_enabled.setter
-    def javascript_enabled(self, value: Optional[bool]):
-        self._set_attr("javascriptEnabled", value)
-        if value is not None:
-            warnings.warn(
-                f"javascript_enabled is deprecated since version 0.25.0 "
-                f"and will be removed in version 0.28.0. Use enable_javascript instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-            if self.page:
-                self.invoke_method(
-                    "set_javascript_mode",
-                    arguments={"value": str(value)},
-                )
 
     # enable_javascript
     @property

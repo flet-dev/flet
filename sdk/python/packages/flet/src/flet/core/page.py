@@ -512,6 +512,9 @@ class Window:
     def to_front(self) -> None:
         self.page._invoke_method("windowToFront")
 
+    def start_dragging(self) -> None:
+        self.page._invoke_method("windowStartDragging")
+
     # Events
     # on_event
     @property
@@ -1080,7 +1083,7 @@ class Page(AdaptiveControl):
                 self.close_in_app_web_view()
             else:
                 # activate desktop window
-                self.window_to_front()
+                self.window.to_front()
         login_evt = LoginEvent(
             error=d.get("error"),
             error_description=d.get("error_description"),
@@ -1599,11 +1602,11 @@ class Page(AdaptiveControl):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__default_view.padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__default_view.padding = value
 
     # bgcolor

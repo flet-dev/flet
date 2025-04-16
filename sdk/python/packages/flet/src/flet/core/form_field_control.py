@@ -49,14 +49,14 @@ class FormFieldControl(ConstrainedControl):
         border: Optional[InputBorder] = None,
         color: Optional[ColorValue] = None,
         bgcolor: Optional[ColorValue] = None,
-        border_radius: BorderRadiusValue = None,
+        border_radius: Optional[BorderRadiusValue] = None,
         border_width: OptionalNumber = None,
         border_color: Optional[ColorValue] = None,
         focused_color: Optional[ColorValue] = None,
         focused_bgcolor: Optional[ColorValue] = None,
         focused_border_width: OptionalNumber = None,
         focused_border_color: Optional[ColorValue] = None,
-        content_padding: PaddingValue = None,
+        content_padding: Optional[PaddingValue] = None,
         dense: Optional[bool] = None,
         filled: Optional[bool] = None,
         fill_color: Optional[ColorValue] = None,
@@ -65,7 +65,7 @@ class FormFieldControl(ConstrainedControl):
         hover_color: Optional[ColorValue] = None,
         hint_text: Optional[str] = None,
         hint_style: Optional[TextStyle] = None,
-        hint_fade_duration: DurationValue = None,
+        hint_fade_duration: Optional[DurationValue] = None,
         hint_max_lines: Optional[int] = None,
         helper: Optional[Control] = None,
         helper_text: Optional[str] = None,
@@ -106,9 +106,9 @@ class FormFieldControl(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -117,7 +117,7 @@ class FormFieldControl(ConstrainedControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -300,7 +300,8 @@ class FormFieldControl(ConstrainedControl):
     @icon.setter
     def icon(self, value: Optional[IconValueOrControl]):
         self.__icon = value
-        self._set_enum_attr("icon", value, IconEnums)
+        if not isinstance(value, Control):
+            self._set_enum_attr("icon", value, IconEnums)
 
     # border
     @property
@@ -351,11 +352,11 @@ class FormFieldControl(ConstrainedControl):
 
     # hint_fade_duration
     @property
-    def hint_fade_duration(self) -> DurationValue:
+    def hint_fade_duration(self) -> Optional[DurationValue]:
         return self.__hint_fade_duration
 
     @hint_fade_duration.setter
-    def hint_fade_duration(self, value: DurationValue):
+    def hint_fade_duration(self, value: Optional[DurationValue]):
         self.__hint_fade_duration = value
 
     # hint_max_lines
@@ -433,11 +434,11 @@ class FormFieldControl(ConstrainedControl):
 
     # border_radius
     @property
-    def border_radius(self) -> BorderRadiusValue:
+    def border_radius(self) -> Optional[BorderRadiusValue]:
         return self.__border_radius
 
     @border_radius.setter
-    def border_radius(self, value: BorderRadiusValue):
+    def border_radius(self, value: Optional[BorderRadiusValue]):
         self.__border_radius = value
 
     # border_width
@@ -512,11 +513,11 @@ class FormFieldControl(ConstrainedControl):
 
     # content_padding
     @property
-    def content_padding(self) -> PaddingValue:
+    def content_padding(self) -> Optional[PaddingValue]:
         return self.__content_padding
 
     @content_padding.setter
-    def content_padding(self, value: PaddingValue):
+    def content_padding(self, value: Optional[PaddingValue]):
         self.__content_padding = value
 
     # dense
@@ -653,7 +654,8 @@ class FormFieldControl(ConstrainedControl):
     @prefix_icon.setter
     def prefix_icon(self, value: Optional[IconValueOrControl]):
         self.__prefix_icon = value
-        self._set_enum_attr("prefixIcon", value, IconEnums)
+        if not isinstance(value, Control):
+            self._set_enum_attr("prefixIcon", value, IconEnums)
 
     # prefix_text
     @property
@@ -690,7 +692,8 @@ class FormFieldControl(ConstrainedControl):
     @suffix_icon.setter
     def suffix_icon(self, value: Optional[IconValueOrControl]):
         self.__suffix_icon = value
-        self._set_enum_attr("suffixIcon", value, IconEnums)
+        if not isinstance(value, Control):
+            self._set_enum_attr("suffixIcon", value, IconEnums)
 
     # suffix_text
     @property

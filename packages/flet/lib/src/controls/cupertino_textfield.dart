@@ -50,6 +50,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
   late final FocusNode _focusNode;
   late final FocusNode _shiftEnterfocusNode;
   String? _lastFocusValue;
+  String? _lastBlurValue;
 
   @override
   void initState() {
@@ -87,8 +88,8 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
     setState(() {
       _focused = _shiftEnterfocusNode.hasFocus;
     });
-    widget.backend.triggerControlEvent(widget.control.id,
-        _shiftEnterfocusNode.hasFocus ? "focus" : "blur", "");
+    widget.backend.triggerControlEvent(
+        widget.control.id, _shiftEnterfocusNode.hasFocus ? "focus" : "blur");
   }
 
   void _onFocusChange() {
@@ -96,7 +97,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
       _focused = _focusNode.hasFocus;
     });
     widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -173,9 +174,14 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
     FocusNode focusNode = shiftEnter ? _shiftEnterfocusNode : _focusNode;
 
     var focusValue = widget.control.attrString("focus");
+    var blurValue = widget.control.attrString("blur");
     if (focusValue != null && focusValue != _lastFocusValue) {
       _lastFocusValue = focusValue;
       focusNode.requestFocus();
+    }
+    if (blurValue != null && blurValue != _lastBlurValue) {
+      _lastBlurValue = blurValue;
+      _focusNode.unfocus();
     }
 
     BorderRadius? borderRadius =
@@ -318,6 +324,12 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl>
           },
           controller: _controller,
           focusNode: focusNode,
+          onTapOutside: widget.control.attrBool("onTapOutside", false)!
+              ? (PointerDownEvent? event) {
+                  widget.backend
+                      .triggerControlEvent(widget.control.id, "tapOutside");
+                }
+              : null,
           onChanged: (String value) {
             //debugPrint(value);
             _value = value;

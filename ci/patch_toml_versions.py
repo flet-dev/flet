@@ -18,7 +18,7 @@ with open(toml_path, "r") as f:
     t = tomlkit.parse(f.read())
 
 # patch version
-t["tool"]["poetry"]["version"] = ver
+t["project"]["version"] = ver
 
 # patch dependencies
 deps = t["tool"]["poetry"]["dependencies"]

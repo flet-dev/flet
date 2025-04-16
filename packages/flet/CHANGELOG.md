@@ -1,3 +1,89 @@
+# 0.27.6
+
+* Fix `flet build`: allow dependencies with commas ([#5033](https://github.com/flet-dev/flet/issues/5033))
+* Show app startup screen by default ([#5036](https://github.com/flet-dev/flet/issues/5036))
+* fix: `Textfield` cursor position changes when modifying field content in `on_change` ([#5019](https://github.com/flet-dev/flet/issues/5019))
+* Remove deperecated `Control.update_async()` method ([#5005](https://github.com/flet-dev/flet/issues/5005))
+* fix: incorrect positioning of non-FAB controls assigned to page.floating_action_button ([#5049](https://github.com/flet-dev/flet/issues/5049))
+
+# 0.27.5
+
+* Added `FletApp.showAppStartupScreen` and `FletApp.appStartupScreenMessage` properties.
+* Added `tool.flet.splash.icon_bgcolor` and `tool.flet.splash.icon_dark_bgcolor` settings for Android splash screen icon image.
+* Added `tool.flet.app.boot_screen` and `tool.flet.app.startup_screen` settings for customizing Flet app "loading" screens.
+* feat: `Dropdown.menu_width` property ([#5007](https://github.com/flet-dev/flet/issues/5007))
+* PBKDF2 iteration count increased to 600,000 ([#5023](https://github.com/flet-dev/flet/issues/5023))
+
+# 0.27.4
+
+* Fix: do not remove `flutter-packages` on re-build if `dev_packages` configured.
+
+# 0.27.3
+
+* Fixes to make `flet build` work in CI environment ([#4993](https://github.com/flet-dev/flet/issues/4993))
+
+# 0.27.2
+
+* Error on second flet build run "Because {app} depends on flet_{package} from path which doesn't exist" ([#4955](https://github.com/flet-dev/flet/issues/4955))
+* Editable packages in pyproject.toml to install from a path by flet build command ([#4963](https://github.com/flet-dev/flet/issues/4963))
+* Setting Android manifest `<application>` element properties in `pyproject.toml` ([#4977](https://github.com/flet-dev/flet/issues/4977))
+* Fixed regression: Added back `Control.build()` method.
+
+# 0.27.1
+
+* Fixed: binary file operations should not specify encoding.
+
+# 0.27.0
+
+* `DropdownMenu` control ([#1088](https://github.com/flet-dev/flet/issues/1088))
+* feat: `ReorderableListView` Control ([#4865](https://github.com/flet-dev/flet/pull/4865))
+* Remove v0.24.0 deprecations [#4932](https://github.com/flet-dev/flet/pull/4932))
+* Implement `Container.dark_theme` property ([#4857](https://github.com/flet-dev/flet/issues/4857))
+* Upgrade to Pyodide 0.27 for `httpx` Support ([#4840](https://github.com/flet-dev/flet/issues/4840))
+* Remove `CupertinoCheckbox.inactive_color` in favor of `fill_color` ([#4837](https://github.com/flet-dev/flet/issues/4837))
+* `flet build`: use Provisioning Profile to sign iOS app archive (`.ipa`), deprecate `--team` option ([#4869](https://github.com/flet-dev/flet/issues/4869))
+* feat: `flet doctor` CLI command ([#4803](https://github.com/flet-dev/flet/pull/4803))
+* feat: implement button themes (for `ElevatedButton`, `OutlinedButton`, `TextButton`, `FilledButton`, `IconButton `) ([#4872](https://github.com/flet-dev/flet/pull/4872))
+* `ControlEvent.data` should be of type `Optional[str]` and default to `None` ([#4786](https://github.com/flet-dev/flet/issues/4786))
+* `flet build`: add `--source-packages` to allow installing certain Python packages from source distros ([#4762](https://github.com/flet-dev/flet/issues/4762))
+* disable markup for flet-cli stdout logs ([#4796](https://github.com/flet-dev/flet/pull/4796))
+* Fixed: Disable rich's Markup for stdout logs ([#4795](https://github.com/flet-dev/flet/issues/4795))
+* Fixed: Setting `SearchBar.bar_border_side` isn't visually honoured ([#4767](https://github.com/flet-dev/flet/issues/4767))
+* Fixed: Dropdown: Long options cause the down-arrow to oveflow ([#4838](https://github.com/flet-dev/flet/issues/4838))
+* Fixed: CupertinoSlider initialisation does not allow values less then zero/greater then 1 ([#4853](https://github.com/flet-dev/flet/issues/4853))
+* Fixed: Same code shows different appearance in Flet APP/Web/PC local. ([#4855](https://github.com/flet-dev/flet/issues/4855))
+* Fixed: Transforming scale renders a grey screen ([#4759](https://github.com/flet-dev/flet/issues/4759))
+* Fixed: UnicodeDecodeError when using accented characters in manifest.json ([#4713](https://github.com/flet-dev/flet/issues/4713))
+* Fixed: Implement `SearchBar.blur()` to programmatically unfocus the bar ([#4827](https://github.com/flet-dev/flet/issues/4827))
+
+# 0.26.0
+
+* Flutter extensions: `flet_*` packages moved to separate repositories ([#4721](https://github.com/flet-dev/flet/pull/4721))
+* Automatic installation of Flutter, JDK and Android SDK ([#4721](https://github.com/flet-dev/flet/pull/4721))
+* Migrated to Flutter 3.27.0 ([#4593](https://github.com/flet-dev/flet/pull/4593))
+* New control properties, Flutter 3.27 fixes ([#4703](https://github.com/flet-dev/flet/pull/4703))
+* Optional on-demand creation of `ListView.controls` ([#3931](https://github.com/flet-dev/flet/issues/3931))
+* Reset `InteractiveViewer` tranformations ([#4391](https://github.com/flet-dev/flet/issues/4391))
+* Passthrough of mouse events from main window to other applications ([#1438](https://github.com/flet-dev/flet/issues/1438))
+* Remove v0.26.0-related deprecations ([#4456](https://github.com/flet-dev/flet/issues/4456))
+* Implemented `Window.ignore_mouse_events` ([#4465](https://github.com/flet-dev/flet/pull/4465))
+* Adding Google/Android TV platform support ([#4581](https://github.com/flet-dev/flet/pull/4581))
+* Remove `Optional[]` from predefined typing `*Value`s ([#4702](https://github.com/flet-dev/flet/pull/4702))
+* Throttle `InteractiveViewer` update events ([#4704](https://github.com/flet-dev/flet/pull/4704))
+* Fixed: Update project_dependencies.py ([#4459](https://github.com/flet-dev/flet/pull/4459))
+* Fixed: `SafeArea` object has no attribute `_SafeArea__minimum` ([#4500](https://github.com/flet-dev/flet/pull/4500))
+* Fixed: Tooltip corruption in `Segment` and `BarChartRod` on `update()` ([#4525](https://github.com/flet-dev/flet/pull/4525))
+* Fixed: Setting `CheckBox.border_side.stroke_align` to an Enum fails ([#4526](https://github.com/flet-dev/flet/pull/4526))
+* Fixed: `ControlState` should be resolved based on user-defined order ([#4556](https://github.com/flet-dev/flet/pull/4556))
+* Fixed: broken `Dismissible.dismiss_direction` ([#4557](https://github.com/flet-dev/flet/pull/4557))
+* Fixed: Fix Rive not updating ([#4582](https://github.com/flet-dev/flet/pull/4582))
+* Fixed: `DatePicker` regression with first and last dates ([#4661](https://github.com/flet-dev/flet/pull/4661))
+* `flet build` command: Copy `flutter-packages`, support for platform-specific dependencies ([#4667](https://github.com/flet-dev/flet/pull/4667))
+* Fixed: `CupertinoBottomSheet` applies a red color and yellow underline to `Text`  content ([#4673](https://github.com/flet-dev/flet/pull/4673))
+* Fixed: setting `ButtonTheme` displays a grey screen ([#4731](https://github.com/flet-dev/flet/pull/4731))
+* Fixed: `Textfield` input border color considers user-specified `border_color` property ([#4735](https://github.com/flet-dev/flet/pull/4735))
+* Fixed: make `Tooltip.message` a required parameter ([#4736](https://github.com/flet-dev/flet/pull/4736))
+
 # 0.25.2
 
 ## Bug fixes

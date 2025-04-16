@@ -21,7 +21,6 @@ from flet.core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ThemeVisualDensity,
     VisualDensity,
 )
 
@@ -48,8 +47,8 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         subtitle: Optional[Control] = None,
         leading: Optional[Control] = None,
         trailing: Optional[Control] = None,
-        controls_padding: PaddingValue = None,
-        tile_padding: PaddingValue = None,
+        controls_padding: Optional[PaddingValue] = None,
+        tile_padding: Optional[PaddingValue] = None,
         affinity: Optional[TileAffinity] = None,
         expanded_alignment: Optional[Alignment] = None,
         expanded_cross_axis_alignment: CrossAxisAlignment = CrossAxisAlignment.CENTER,
@@ -68,7 +67,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         enable_feedback: Optional[bool] = None,
         show_trailing_icon: Optional[bool] = None,
         min_tile_height: OptionalNumber = None,
-        visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
+        visual_density: Optional[VisualDensity] = None,
         on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
@@ -85,9 +84,9 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -96,7 +95,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -208,20 +207,20 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # controls_padding
     @property
-    def controls_padding(self) -> PaddingValue:
+    def controls_padding(self) -> Optional[PaddingValue]:
         return self.__controls_padding
 
     @controls_padding.setter
-    def controls_padding(self, value: PaddingValue):
+    def controls_padding(self, value: Optional[PaddingValue]):
         self.__controls_padding = value
 
     # tile_padding
     @property
-    def tile_padding(self) -> PaddingValue:
+    def tile_padding(self) -> Optional[PaddingValue]:
         return self.__tile_padding
 
     @tile_padding.setter
-    def tile_padding(self, value: PaddingValue):
+    def tile_padding(self, value: Optional[PaddingValue]):
         self.__tile_padding = value
 
     # expanded_alignment
@@ -319,13 +318,13 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
 
     # visual_density
     @property
-    def visual_density(self) -> Union[None, ThemeVisualDensity, VisualDensity]:
+    def visual_density(self) -> Optional[VisualDensity]:
         return self.__visual_density
 
     @visual_density.setter
-    def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
+    def visual_density(self, value: Optional[VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, (ThemeVisualDensity, VisualDensity))
+        self._set_enum_attr("visualDensity", value, VisualDensity)
 
     # maintain_state
     @property

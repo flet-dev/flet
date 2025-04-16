@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:collection/collection.dart';
 import 'package:flet/src/utils/badge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -59,6 +58,7 @@ import 'divider.dart';
 import 'drag_target.dart';
 import 'draggable.dart';
 import 'dropdown.dart';
+import 'dropdownm2.dart';
 import 'elevated_button.dart';
 import 'error.dart';
 import 'expansion_panel.dart';
@@ -93,6 +93,8 @@ import 'progress_ring.dart';
 import 'radio.dart';
 import 'radio_group.dart';
 import 'range_slider.dart';
+import 'reorderable_draggable.dart';
+import 'reorderable_list_view.dart';
 import 'responsive_row.dart';
 import 'row.dart';
 import 'safe_area.dart';
@@ -173,22 +175,24 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
       widget ??= createWidget(controlKey, controlView, parent, parentDisabled,
           parentAdaptive, nextChild, FletAppServices.of(context).server);
 
-      // no theme defined? return widget!
-      var themeMode = ThemeMode.values.firstWhereOrNull((t) =>
-          t.name.toLowerCase() ==
-          controlView.control.attrString("themeMode", "")!.toLowerCase());
+      // no theme defined? return widget
+      var themeMode =
+          parseThemeMode(controlView.control.attrString("themeMode"));
       if (id == "page" ||
           (controlView.control.attrString("theme") == null &&
+              controlView.control.attrString("darkTheme") == null &&
               themeMode == null)) {
         return widget;
       }
 
       // wrap into theme widget
       ThemeData? parentTheme = (themeMode == null) ? Theme.of(context) : null;
-
       buildTheme(Brightness? brightness) {
         return Theme(
-            data: parseTheme(controlView.control, "theme", brightness,
+            data: parseTheme(
+                controlView.control,
+                brightness == Brightness.dark ? "darkTheme" : "theme",
+                brightness,
                 parentTheme: parentTheme),
             child: widget!);
       }
@@ -201,9 +205,11 @@ Widget createControl(Control? parent, String id, bool parentDisabled,
               return buildTheme(media.displayBrightness);
             });
       } else {
-        return buildTheme((themeMode == ThemeMode.light)
+        return buildTheme(themeMode == ThemeMode.light
             ? Brightness.light
-            : ((themeMode == ThemeMode.dark) ? Brightness.dark : null));
+            : themeMode == ThemeMode.dark
+                ? Brightness.dark
+                : parentTheme?.brightness);
       }
     },
   );
@@ -704,6 +710,24 @@ Widget createWidget(
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
           backend: backend);
+    case "reorderablelistview":
+      return ReorderableListViewControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
+    case "reorderabledraggable":
+      return ReorderableDraggableControl(
+        key: key,
+        parent: parent,
+        control: controlView.control,
+        children: controlView.children,
+        parentDisabled: parentDisabled,
+        parentAdaptive: parentAdaptive,
+      );
     case "gridview":
       return GridViewControl(
           key: key,
@@ -753,6 +777,7 @@ Widget createWidget(
           control: controlView.control,
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
+          children: controlView.children,
           backend: backend);
     case "cupertinocheckbox":
       return CupertinoCheckboxControl(
@@ -768,6 +793,7 @@ Widget createWidget(
           control: controlView.control,
           parentDisabled: parentDisabled,
           parentAdaptive: parentAdaptive,
+          children: controlView.children,
           backend: backend);
     case "cupertinoswitch":
       return CupertinoSwitchControl(
@@ -831,6 +857,15 @@ Widget createWidget(
           backend: backend);
     case "dropdown":
       return DropdownControl(
+          key: key,
+          parent: parent,
+          control: controlView.control,
+          children: controlView.children,
+          parentDisabled: parentDisabled,
+          parentAdaptive: parentAdaptive,
+          backend: backend);
+    case "dropdownm2":
+      return DropdownM2Control(
           key: key,
           parent: parent,
           control: controlView.control,
@@ -956,13 +991,6 @@ Widget createWidget(
         parentAdaptive: parentAdaptive,
         children: controlView.children,
       );
-    case "windowdragarea":
-      return WindowDragAreaControl(
-          parent: parent,
-          control: controlView.control,
-          children: controlView.children,
-          parentDisabled: parentDisabled,
-          parentAdaptive: parentAdaptive);
     case "linechart":
       return LineChartControl(
           key: key,
@@ -1149,7 +1177,7 @@ Widget _scaledControl(
   var animation = parseAnimation(control, "animateScale");
   if (animation != null) {
     return AnimatedScale(
-        scale: scaleDetails?.scale! ?? 1.0,
+        scale: scaleDetails?.scale ?? 1.0,
         alignment: scaleDetails?.alignment ?? Alignment.center,
         duration: animation.duration,
         curve: animation.curve,

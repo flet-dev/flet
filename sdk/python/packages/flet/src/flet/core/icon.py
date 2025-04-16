@@ -8,6 +8,7 @@ from flet.core.control import OptionalNumber
 from flet.core.ref import Ref
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
+    BlendMode,
     ColorEnums,
     ColorValue,
     IconEnums,
@@ -63,6 +64,7 @@ class Icon(ConstrainedControl):
         grade: OptionalNumber = None,
         weight: OptionalNumber = None,
         optical_size: OptionalNumber = None,
+        blend_mode: Optional[BlendMode] = None,
         #
         # ConstrainedControl
         #
@@ -72,9 +74,9 @@ class Icon(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -83,7 +85,7 @@ class Icon(ConstrainedControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -125,6 +127,7 @@ class Icon(ConstrainedControl):
         self.grade = grade
         self.weight = weight
         self.optical_size = optical_size
+        self.blend_mode = blend_mode
 
     def _get_control_name(self):
         return "icon"
@@ -142,6 +145,16 @@ class Icon(ConstrainedControl):
     def name(self, value: Optional[IconValue]):
         self.__name = value
         self._set_enum_attr("name", value, IconEnums)
+
+    # blend_mode
+    @property
+    def blend_mode(self) -> Optional[BlendMode]:
+        return self.__blend_mode
+
+    @blend_mode.setter
+    def blend_mode(self, value: Optional[BlendMode]):
+        self.__blend_mode = value
+        self._set_enum_attr("blendMode", value, BlendMode)
 
     # color
     @property

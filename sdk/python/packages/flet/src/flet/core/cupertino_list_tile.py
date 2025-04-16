@@ -63,7 +63,7 @@ class CupertinoListTile(ConstrainedControl):
         trailing: Optional[Control] = None,
         bgcolor: Optional[ColorValue] = None,
         bgcolor_activated: Optional[str] = None,
-        padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
         toggle_inputs: Optional[bool] = None,
@@ -87,9 +87,9 @@ class CupertinoListTile(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -98,7 +98,7 @@ class CupertinoListTile(ConstrainedControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -243,11 +243,11 @@ class CupertinoListTile(ConstrainedControl):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # notched

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flet/flet.dart';
+import 'package:flet_ads/flet_ads.dart' as flet_ads;
 // --FAT_CLIENT_START--
 import 'package:flet_audio/flet_audio.dart' as flet_audio;
 // --FAT_CLIENT_END--
@@ -13,7 +14,6 @@ import 'package:flet_map/flet_map.dart' as flet_map;
 import 'package:flet_permission_handler/flet_permission_handler.dart'
     as flet_permission_handler;
 import 'package:flet_rive/flet_rive.dart' as flet_rive;
-import 'package:flet_ads/flet_ads.dart' as flet_ads;
 import 'package:flet_dropzone/flet_dropzone.dart' as flet_dropzone;
 // --FAT_CLIENT_START--
 import 'package:flet_video/flet_video.dart' as flet_video;
@@ -70,7 +70,7 @@ void main([List<String>? args]) async {
   } else if ((Platform.isWindows || Platform.isMacOS || Platform.isLinux) &&
       !kDebugMode) {
     debugPrint("Flet View is running in Desktop mode");
-    // first argument must be
+    // first argument must exist
     if (args!.isEmpty) {
       throw Exception('Page URL must be provided as a first argument.');
     }
@@ -107,6 +107,7 @@ void main([List<String>? args]) async {
     pageUrl: pageUrl,
     assetsDir: assetsDir,
     errorsHandler: errorsHandler,
+    showAppStartupScreen: true,
     createControlFactories: [
 // --FAT_CLIENT_START--
       flet_audio.createControl,

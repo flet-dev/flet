@@ -103,11 +103,9 @@ class _DataTableControlState extends State<DataTableControl>
           sortAscending: widget.control.attrBool("sortAscending", false)!,
           sortColumnIndex: widget.control.attrInt("sortColumnIndex"),
           onSelectAll: widget.control.attrBool("onSelectAll", false)!
-              ? (selected) {
+              ? (bool? selected) {
                   widget.backend.triggerControlEvent(
-                      widget.control.id,
-                      "select_all",
-                      selected != null ? selected.toString() : "");
+                      widget.control.id, "select_all", selected?.toString());
                 }
               : null,
           columns: viewModel.controlViews
@@ -143,10 +141,8 @@ class _DataTableControlState extends State<DataTableControl>
                     Theme.of(context), row.control, "color"),
                 onSelectChanged: row.control.attrBool("onSelectChanged", false)!
                     ? (selected) {
-                        widget.backend.triggerControlEvent(
-                            row.control.id,
-                            "select_changed",
-                            selected != null ? selected.toString() : "");
+                        widget.backend.triggerControlEvent(row.control.id,
+                            "select_changed", selected?.toString());
                       }
                     : null,
                 onLongPress: row.control.attrBool("onLongPress", false)!

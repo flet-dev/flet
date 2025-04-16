@@ -33,7 +33,7 @@ class BottomAppBar(ConstrainedControl):
         surface_tint_color: Optional[ColorValue] = None,
         bgcolor: Optional[ColorValue] = None,
         shadow_color: Optional[ColorValue] = None,
-        padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         shape: Optional[NotchShape] = None,
         notch_margin: OptionalNumber = None,
@@ -52,9 +52,9 @@ class BottomAppBar(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -160,11 +160,11 @@ class BottomAppBar(ConstrainedControl):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # shape

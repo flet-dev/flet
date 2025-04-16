@@ -48,7 +48,7 @@ class Control:
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -90,11 +90,14 @@ class Control:
         pass
 
     def _before_build_command(self) -> None:
-        if self._get_control_name() not in ["segment", "bar_chart_rod"]:
-            # see https://github.com/flet-dev/flet/pull/4525
+        # checking if tooltip has getter/setter in inherited class
+        if "tooltip" not in vars(self.__class__):
             self._set_attr_json("tooltip", self.tooltip)
         if isinstance(self.badge, (Badge, str)):
             self._set_attr_json("badge", self.badge)
+        else:
+            self._set_attr("badge", None)
+
         self._set_attr_json("col", self.__col)
 
     def did_mount(self):
@@ -324,12 +327,6 @@ class Control:
         ), f"{self.__class__.__qualname__} Control must be added to the page first"
         self.__page.update(self)
 
-    async def update_async(self) -> None:
-        assert (
-            self.__page
-        ), f"{self.__class__.__qualname__} Control must be added to the page"
-        await self.__page.update_async(self)
-
     def clean(self) -> None:
         assert (
             self.__page
@@ -526,18 +523,8 @@ class Control:
     ) -> List[Command]:
         if index:
             self.page = index["page"]
-        content = self.build()
+        self.build()
 
-        # fix for UserControl
-        if content is not None:
-            if isinstance(content, Control) and hasattr(self, "controls"):
-                self.controls = [content]
-            elif (
-                isinstance(content, List)
-                and hasattr(self, "controls")
-                and all(isinstance(control, Control) for control in content)
-            ):
-                self.controls = content
         # remove control from index
         if self.__uid and index is not None and self.__uid in index:
             del index[self.__uid]

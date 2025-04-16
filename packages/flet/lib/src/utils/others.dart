@@ -1,9 +1,13 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+
+import '../models/control.dart';
+import 'numbers.dart';
 
 Clip? parseClip(String? value, [Clip? defaultValue]) {
   if (value == null) {
@@ -71,6 +75,27 @@ SliderInteraction? parseSliderInteraction(String? value,
   return SliderInteraction.values.firstWhereOrNull(
           (e) => e.name.toLowerCase() == value.toLowerCase()) ??
       defValue;
+}
+
+Size? parseSize(Control control, String propName, [Size? defValue]) {
+  var v = control.attrString(propName, null);
+  if (v == null) {
+    return defValue;
+  }
+
+  final j1 = json.decode(v);
+  return sizeFromJson(j1, defValue);
+}
+
+Size? sizeFromJson(Map<String, dynamic>? json, [Size? defValue]) {
+  if (json == null) return defValue;
+
+  final width = parseDouble(json['width']);
+  final height = parseDouble(json['height']);
+
+  if (width == null || height == null) return defValue;
+
+  return Size(width, height);
 }
 
 SnackBarBehavior? parseSnackBarBehavior(String? value,

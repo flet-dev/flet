@@ -1,8 +1,7 @@
 import json
 from dataclasses import dataclass
-from enum import Enum, EnumMeta, IntFlag
+from enum import Enum, IntFlag
 from typing import Any, List, Optional, Tuple, Union
-from warnings import warn
 
 from flet.core.animation import AnimationCurve, AnimationValue
 from flet.core.badge import BadgeValue
@@ -22,10 +21,12 @@ from flet.core.types import (
     OffsetValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
+    PointerDeviceType,
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
 )
+from flet.utils import deprecated
 
 
 @dataclass
@@ -70,34 +71,6 @@ class MapMultiFingerGesture(IntFlag):
     ALL = (1 << 0) | (1 << 1) | (1 << 2)
 
 
-class MapPointerDeviceTypeDeprecated(EnumMeta):
-    def __getattribute__(self, item):
-        if item in [
-            "TOUCH",
-            "MOUSE",
-            "STYLUS",
-            "INVERTED_STYLUS",
-            "TRACKPAD",
-            "UNKNOWN",
-        ]:
-            warn(
-                "MapPointerDeviceType enum is deprecated since version 0.25.0 "
-                "and will be removed in version 0.28.0. Use PointerDeviceType enum instead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-        return EnumMeta.__getattribute__(self, item)
-
-
-class MapPointerDeviceType(Enum, metaclass=MapPointerDeviceTypeDeprecated):
-    TOUCH = "touch"
-    MOUSE = "mouse"
-    STYLUS = "stylus"
-    INVERTED_STYLUS = "invertedStylus"
-    TRACKPAD = "trackpad"
-    UNKNOWN = "unknown"
-
-
 @dataclass
 class MapInteractionConfiguration:
     enable_multi_finger_gesture_race: Optional[bool] = None
@@ -111,6 +84,12 @@ class MapInteractionConfiguration:
     pinch_zoom_win_gestures: Optional[MapMultiFingerGesture] = None
 
 
+@deprecated(
+    reason="Map control has been moved to a separate Python package: https://pypi.org/project/flet-map. "
+    + "Read more about this change in Flet blog: https://flet.dev/blog/flet-v-0-26-release-announcement",
+    version="0.26.0",
+    delete_version="0.29.0",
+)
 class Map(ConstrainedControl):
     """
     Map Control.
@@ -132,7 +111,7 @@ class Map(ConstrainedControl):
         max_zoom: OptionalNumber = None,
         min_zoom: OptionalNumber = None,
         animation_curve: Optional[AnimationCurve] = None,
-        animation_duration: DurationValue = None,
+        animation_duration: Optional[DurationValue] = None,
         on_init: OptionalControlEventCallable = None,
         on_tap: OptionalEventCallable["MapTapEvent"] = None,
         on_hover: OptionalEventCallable["MapHoverEvent"] = None,
@@ -158,9 +137,9 @@ class Map(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -169,7 +148,7 @@ class Map(ConstrainedControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -282,7 +261,7 @@ class Map(ConstrainedControl):
     def reset_rotation(
         self,
         animation_curve: Optional[AnimationCurve] = None,
-        animation_duration: DurationValue = None,
+        animation_duration: Optional[DurationValue] = None,
     ):
         self.invoke_method(
             "reset_rotation",
@@ -295,7 +274,7 @@ class Map(ConstrainedControl):
     def zoom_in(
         self,
         animation_curve: Optional[AnimationCurve] = None,
-        animation_duration: DurationValue = None,
+        animation_duration: Optional[DurationValue] = None,
     ):
         self.invoke_method(
             "zoom_in",
@@ -308,7 +287,7 @@ class Map(ConstrainedControl):
     def zoom_out(
         self,
         animation_curve: Optional[AnimationCurve] = None,
-        animation_duration: DurationValue = None,
+        animation_duration: Optional[DurationValue] = None,
     ):
         self.invoke_method(
             "zoom_out",
@@ -322,7 +301,7 @@ class Map(ConstrainedControl):
         self,
         zoom: Number,
         animation_curve: Optional[AnimationCurve] = None,
-        animation_duration: DurationValue = None,
+        animation_duration: Optional[DurationValue] = None,
     ):
         self.invoke_method(
             "zoom_to",
@@ -339,7 +318,7 @@ class Map(ConstrainedControl):
         zoom: OptionalNumber = None,
         rotation: OptionalNumber = None,
         animation_curve: Optional[AnimationCurve] = None,
-        animation_duration: DurationValue = None,
+        animation_duration: Optional[DurationValue] = None,
         offset: Optional[Union[Offset, Tuple[Union[Number], Union[Number]]]] = None,
     ):
         if isinstance(offset, tuple):
@@ -363,7 +342,7 @@ class Map(ConstrainedControl):
         point: Optional[MapLatitudeLongitude],
         zoom: OptionalNumber,
         animation_curve: Optional[AnimationCurve] = None,
-        animation_duration: DurationValue = None,
+        animation_duration: Optional[DurationValue] = None,
     ):
         self.invoke_method(
             "center_on",
@@ -630,7 +609,7 @@ class MapHoverEvent(ControlEvent):
         self.local_y: Optional[float] = d.get("ly")
         self.global_x: float = d.get("gx")
         self.global_y: float = d.get("gy")
-        self.device_type: MapPointerDeviceType = MapPointerDeviceType(d.get("kind"))
+        self.device_type: PointerDeviceType = PointerDeviceType(d.get("kind"))
         self.coordinates: MapLatitudeLongitude = MapLatitudeLongitude(
             d.get("lat"), d.get("long")
         )
@@ -652,7 +631,7 @@ class MapPointerEvent(ControlEvent):
     def __init__(self, e: ControlEvent) -> None:
         super().__init__(e.target, e.name, e.data, e.control, e.page)
         d = json.loads(e.data)
-        self.device_type: MapPointerDeviceType = MapPointerDeviceType(d.get("kind"))
+        self.device_type: PointerDeviceType = PointerDeviceType(d.get("kind"))
         self.global_y: float = d.get("gy")
         self.global_x: float = d.get("gx")
         self.coordinates: MapLatitudeLongitude = MapLatitudeLongitude(

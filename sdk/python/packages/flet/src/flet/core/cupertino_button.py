@@ -41,16 +41,20 @@ class CupertinoButton(ConstrainedControl):
         content: Optional[Control] = None,
         bgcolor: Optional[ColorValue] = None,
         color: Optional[ColorValue] = None,
-        disabled_color: Optional[ColorValue] = None,
         disabled_bgcolor: Optional[ColorValue] = None,
         opacity_on_click: OptionalNumber = None,
         min_size: OptionalNumber = None,
-        padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
         alignment: Optional[Alignment] = None,
-        border_radius: BorderRadiusValue = None,
+        border_radius: Optional[BorderRadiusValue] = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
+        autofocus: Optional[bool] = None,
+        focus_color: Optional[bool] = None,
         on_click: OptionalControlEventCallable = None,
+        on_long_press: OptionalControlEventCallable = None,
+        on_focus: OptionalControlEventCallable = None,
+        on_blur: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
         #
@@ -66,9 +70,9 @@ class CupertinoButton(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -77,7 +81,7 @@ class CupertinoButton(ConstrainedControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -115,7 +119,6 @@ class CupertinoButton(ConstrainedControl):
             data=data,
         )
 
-        self.disabled_color = disabled_color
         self.disabled_bgcolor = disabled_bgcolor
         self.text = text
         self.icon = icon
@@ -131,6 +134,11 @@ class CupertinoButton(ConstrainedControl):
         self.url = url
         self.url_target = url_target
         self.on_click = on_click
+        self.on_long_press = on_long_press
+        self.on_focus = on_focus
+        self.on_blur = on_blur
+        self.autofocus = autofocus
+        self.focus_color = focus_color
 
     def _get_control_name(self):
         return "cupertinobutton"
@@ -158,6 +166,25 @@ class CupertinoButton(ConstrainedControl):
     @text.setter
     def text(self, value):
         self._set_attr("text", value)
+
+    # focus_color
+    @property
+    def focus_color(self):
+        return self.__focus_color
+
+    @focus_color.setter
+    def focus_color(self, value):
+        self.__focus_color = value
+        self._set_enum_attr("focusColor", value, ColorEnums)
+
+    # autofocus
+    @property
+    def autofocus(self):
+        return self._get_attr("autofocus", data_type="bool", def_value=False)
+
+    @autofocus.setter
+    def autofocus(self, value):
+        self._set_attr("autofocus", value)
 
     # icon
     @property
@@ -188,29 +215,6 @@ class CupertinoButton(ConstrainedControl):
     def alignment(self, value: Optional[Alignment]):
         self.__alignment = value
 
-    # disabled_color
-    @property
-    def disabled_color(self) -> Optional[ColorValue]:
-        warnings.warn(
-            f"disabled_color is deprecated since version 0.24.0 "
-            f"and will be removed in version 0.27.0. Use disabled_bgcolor instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.__disabled_color
-
-    @disabled_color.setter
-    def disabled_color(self, value: Optional[ColorValue]):
-        self.__disabled_color = value
-        self._set_enum_attr("disabledColor", value, ColorEnums)
-        if value is not None:
-            warnings.warn(
-                f"disabled_color is deprecated since version 0.24.0 "
-                f"and will be removed in version 0.27.0. Use disabled_bgcolor instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-
     # disabled_bgcolor
     @property
     def disabled_bgcolor(self) -> Optional[str]:
@@ -234,11 +238,11 @@ class CupertinoButton(ConstrainedControl):
 
     # border_radius
     @property
-    def border_radius(self) -> BorderRadiusValue:
+    def border_radius(self) -> Optional[BorderRadiusValue]:
         return self.__border_radius
 
     @border_radius.setter
-    def border_radius(self, value: BorderRadiusValue):
+    def border_radius(self, value: Optional[BorderRadiusValue]):
         self.__border_radius = value
 
     # min_size
@@ -252,11 +256,11 @@ class CupertinoButton(ConstrainedControl):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # bgcolor
@@ -315,3 +319,30 @@ class CupertinoButton(ConstrainedControl):
     @content.setter
     def content(self, value: Optional[Control]):
         self.__content = value
+
+    # on_long_press
+    @property
+    def on_long_press(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("longPress")
+
+    @on_long_press.setter
+    def on_long_press(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("longPress", handler)
+
+    # on_focus
+    @property
+    def on_focus(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("focus")
+
+    @on_focus.setter
+    def on_focus(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("focus", handler)
+
+    # on_blur
+    @property
+    def on_blur(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("blur")
+
+    @on_blur.setter
+    def on_blur(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("blur", handler)

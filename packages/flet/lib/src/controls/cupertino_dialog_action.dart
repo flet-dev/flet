@@ -26,32 +26,25 @@ class CupertinoDialogActionControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint("CupertinoDialogAction build: ${control.id}");
-
-    String text = control.attrString("text", "")!;
-    var contentCtrls =
-        children.where((c) => c.name == "content" && c.isVisible);
-    bool isDefaultAction = control.attrBool("isDefaultAction", false)!;
-    bool isDestructiveAction = control.attrBool("isDestructiveAction", false)!;
     bool disabled = control.isDisabled || parentDisabled;
 
-    Function()? onPressed = !disabled
-        ? () {
-            debugPrint("CupertinoDialogAction ${control.id} clicked!");
-            backend.triggerControlEvent(control.id, "click");
-          }
-        : null;
+    var contentCtrls =
+        children.where((c) => c.name == "content" && c.isVisible);
 
-    CupertinoDialogAction? cupertinoDialogAction;
-
-    cupertinoDialogAction = CupertinoDialogAction(
-        onPressed: onPressed,
-        isDefaultAction: isDefaultAction,
-        isDestructiveAction: isDestructiveAction,
+    var cupertinoDialogAction = CupertinoDialogAction(
+        isDefaultAction: control.attrBool("isDefaultAction", false)!,
+        isDestructiveAction: control.attrBool("isDestructiveAction", false)!,
         textStyle: parseTextStyle(Theme.of(context), control, "textStyle"),
+        onPressed: !disabled
+            ? () {
+                debugPrint("CupertinoDialogAction ${control.id} clicked!");
+                backend.triggerControlEvent(control.id, "click");
+              }
+            : null,
         child: contentCtrls.isNotEmpty
             ? createControl(control, contentCtrls.first.id, disabled,
                 parentAdaptive: parentAdaptive)
-            : Text(text));
+            : Text(control.attrString("text", "")!));
 
     return baseControl(context, cupertinoDialogAction, parent, control);
   }

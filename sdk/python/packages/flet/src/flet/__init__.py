@@ -1,28 +1,13 @@
 from flet.app import app, app_async
-from flet.core import (
-    ads,
-    alignment,
-    animation,
-    audio,
-    border,
-    border_radius,
-    colors,
-    cupertino_colors,
-    cupertino_icons,
-    dropdown,
-    icons,
-    margin,
-    padding,
-    painting,
-    transform,
-    bgblur,
-)
+
 from flet.core.adaptive_control import AdaptiveControl
+from flet.core import bgblur
 from flet.core.alert_dialog import AlertDialog
 from flet.core.alignment import Alignment, Axis
 from flet.core.animated_switcher import AnimatedSwitcher, AnimatedSwitcherTransition
 from flet.core.animation import Animation, AnimationCurve
 from flet.core.app_bar import AppBar
+from flet.core.reorderable_draggable import ReorderableDraggable
 from flet.core.audio import (
     Audio,
     AudioDurationChangeEvent,
@@ -96,7 +81,7 @@ from flet.core.charts.pie_chart_section import PieChartSection
 from flet.core.checkbox import Checkbox
 from flet.core.chip import Chip
 from flet.core.circle_avatar import CircleAvatar
-from flet.core.colors import Colors, colors
+from flet.core.colors import Colors
 from flet.core.column import Column
 from flet.core.container import Container, ContainerTapEvent
 from flet.core.control import Control
@@ -109,7 +94,7 @@ from flet.core.cupertino_app_bar import CupertinoAppBar
 from flet.core.cupertino_bottom_sheet import CupertinoBottomSheet
 from flet.core.cupertino_button import CupertinoButton
 from flet.core.cupertino_checkbox import CupertinoCheckbox
-from flet.core.cupertino_colors import CupertinoColors, cupertino_colors
+from flet.core.cupertino_colors import CupertinoColors
 from flet.core.cupertino_context_menu import CupertinoContextMenu
 from flet.core.cupertino_context_menu_action import CupertinoContextMenuAction
 from flet.core.cupertino_date_picker import (
@@ -119,7 +104,7 @@ from flet.core.cupertino_date_picker import (
 )
 from flet.core.cupertino_dialog_action import CupertinoDialogAction
 from flet.core.cupertino_filled_button import CupertinoFilledButton
-from flet.core.cupertino_icons import CupertinoIcons, cupertino_icons
+from flet.core.cupertino_icons import CupertinoIcons
 from flet.core.cupertino_list_tile import CupertinoListTile
 from flet.core.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.core.cupertino_picker import CupertinoPicker
@@ -154,7 +139,8 @@ from flet.core.dismissible import (
 from flet.core.divider import Divider
 from flet.core.drag_target import DragTarget, DragTargetEvent
 from flet.core.draggable import Draggable
-from flet.core.dropdown import Dropdown
+from flet.core.dropdown import Dropdown, DropdownOption
+from flet.core.dropdownm2 import DropdownM2
 from flet.core.elevated_button import ElevatedButton
 from flet.core.exceptions import (
     FletException,
@@ -213,7 +199,7 @@ from flet.core.grid_view import GridView
 from flet.core.haptic_feedback import HapticFeedback
 from flet.core.icon import Icon
 from flet.core.icon_button import IconButton
-from flet.core.icons import Icons, icons
+from flet.core.icons import Icons
 from flet.core.image import Image
 from flet.core.interactive_viewer import (
     InteractiveViewer,
@@ -230,8 +216,6 @@ from flet.core.markdown import (
     MarkdownCodeTheme,
     MarkdownCustomCodeTheme,
     MarkdownExtensionSet,
-    MarkdownSelectionChangeCause,
-    MarkdownSelectionChangeEvent,
     MarkdownStyleSheet,
 )
 from flet.core.menu_bar import MenuBar, MenuStyle
@@ -265,7 +249,6 @@ from flet.core.page import (
     ViewPopEvent,
     Window,
     WindowEvent,
-    WindowEventType,
     WindowResizeEvent,
     context,
 )
@@ -297,6 +280,7 @@ from flet.core.radio import Radio
 from flet.core.radio_group import RadioGroup
 from flet.core.range_slider import RangeSlider
 from flet.core.ref import Ref
+from flet.core.reorderable_list_view import OnReorderEvent, ReorderableListView
 from flet.core.responsive_row import ResponsiveRow
 from flet.core.rive import Rive
 from flet.core.row import Row
@@ -309,6 +293,7 @@ from flet.core.semantics import Semantics
 from flet.core.semantics_service import Assertiveness, SemanticsService
 from flet.core.shader_mask import ShaderMask
 from flet.core.shake_detector import ShakeDetector
+from flet.core.size import Size
 from flet.core.slider import Slider, SliderInteraction
 from flet.core.snack_bar import DismissDirection, SnackBar, SnackBarBehavior
 from flet.core.stack import Stack, StackFit
@@ -352,13 +337,17 @@ from flet.core.theme import (
     DatePickerTheme,
     DialogTheme,
     DividerTheme,
+    ElevatedButtonTheme,
     ExpansionTileTheme,
+    FilledButtonTheme,
     FloatingActionButtonTheme,
+    IconButtonTheme,
     IconTheme,
     ListTileTheme,
     NavigationBarTheme,
     NavigationDrawerTheme,
     NavigationRailTheme,
+    OutlinedButtonTheme,
     PageTransitionsTheme,
     PageTransitionTheme,
     PopupMenuTheme,
@@ -373,6 +362,7 @@ from flet.core.theme import (
     SwitchTheme,
     SystemOverlayStyle,
     TabsTheme,
+    TextButtonTheme,
     TextTheme,
     Theme,
     TimePickerTheme,
@@ -394,27 +384,47 @@ from flet.core.types import (
     AppLifecycleState,
     AppView,
     BlendMode,
+    BorderRadiusValue,
     Brightness,
     ClipBehavior,
+    ColorEnums,
+    ColorValue,
+    ControlEventType,
     ControlState,
+    ControlStateValue,
     CrossAxisAlignment,
+    DateTimeValue,
     Duration,
+    DurationValue,
+    EventType,
     FloatingActionButtonLocation,
     FontWeight,
+    IconEnums,
+    IconValue,
+    IconValueOrControl,
     ImageFit,
     ImageRepeat,
     LabelPosition,
     Locale,
     LocaleConfiguration,
     MainAxisAlignment,
+    MarginValue,
     MouseCursor,
     NotchShape,
     Number,
+    OffsetValue,
+    OnFocusEvent,
+    OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,
+    OptionalString,
     Orientation,
     PaddingValue,
     PagePlatform,
+    PointerDeviceType,
+    ResponsiveNumber,
+    RotateValue,
+    ScaleValue,
     ScrollMode,
     StrokeCap,
     StrokeJoin,
@@ -422,11 +432,11 @@ from flet.core.types import (
     TabAlignment,
     TextAlign,
     ThemeMode,
-    ThemeVisualDensity,
     UrlTarget,
     VerticalAlignment,
     VisualDensity,
     WebRenderer,
+    WindowEventType,
 )
 from flet.core.vertical_divider import VerticalDivider
 from flet.core.video import (

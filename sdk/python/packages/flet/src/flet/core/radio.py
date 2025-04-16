@@ -19,7 +19,6 @@ from flet.core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ThemeVisualDensity,
     VisualDensity,
 )
 
@@ -73,7 +72,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         focus_color: Optional[ColorValue] = None,
         splash_radius: OptionalNumber = None,
         toggleable: Optional[bool] = None,
-        visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
+        visual_density: Optional[VisualDensity] = None,
         mouse_cursor: Optional[MouseCursor] = None,
         on_focus: OptionalControlEventCallable = None,
         on_blur: OptionalControlEventCallable = None,
@@ -92,9 +91,9 @@ class Radio(ConstrainedControl, AdaptiveControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -103,7 +102,7 @@ class Radio(ConstrainedControl, AdaptiveControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -219,13 +218,13 @@ class Radio(ConstrainedControl, AdaptiveControl):
 
     # visual_density
     @property
-    def visual_density(self) -> Union[None, ThemeVisualDensity, VisualDensity]:
+    def visual_density(self) -> Optional[VisualDensity]:
         return self.__visual_density
 
     @visual_density.setter
-    def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
+    def visual_density(self, value: Optional[VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, (ThemeVisualDensity, VisualDensity))
+        self._set_enum_attr("visualDensity", value, VisualDensity)
 
     # label
     @property

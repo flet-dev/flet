@@ -26,8 +26,8 @@ class PaintGradient:
 
 @dataclass
 class PaintLinearGradient(PaintGradient):
-    begin: OffsetValue
-    end: OffsetValue
+    begin: Optional[OffsetValue]
+    end: Optional[OffsetValue]
     colors: List[str]
     color_stops: Optional[List[float]] = None
     tile_mode: GradientTileMode = field(default=GradientTileMode.CLAMP)
@@ -36,7 +36,7 @@ class PaintLinearGradient(PaintGradient):
 
 @dataclass
 class PaintRadialGradient(PaintGradient):
-    center: OffsetValue
+    center: Optional[OffsetValue]
     radius: Union[float, int]
     colors: List[str]
     color_stops: Optional[List[float]] = None
@@ -48,7 +48,7 @@ class PaintRadialGradient(PaintGradient):
 
 @dataclass
 class PaintSweepGradient(PaintGradient):
-    center: OffsetValue
+    center: Optional[OffsetValue]
     colors: List[str]
     color_stops: Optional[List[float]] = None
     tile_mode: GradientTileMode = field(default=GradientTileMode.CLAMP)

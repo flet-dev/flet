@@ -78,7 +78,8 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
         scale_factor: OptionalNumber = None,
         clip_behavior: Optional[ClipBehavior] = None,
         alignment: Optional[Alignment] = None,
-        boundary_margin: MarginValue = None,
+        boundary_margin: Optional[MarginValue] = None,
+        interaction_update_interval: Optional[int] = None,
         on_interaction_start: Optional[
             Callable[[InteractiveViewerInteractionStartEvent], None]
         ] = None,
@@ -103,9 +104,9 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -114,7 +115,7 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -189,6 +190,7 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
         self.on_interaction_start = on_interaction_start
         self.on_interaction_end = on_interaction_end
         self.on_interaction_update = on_interaction_update
+        self.interaction_update_interval = interaction_update_interval
 
     def _get_control_name(self):
         return "interactiveviewer"
@@ -196,6 +198,9 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     def before_update(self):
         super().before_update()
         assert self.__content.visible, "content must be visible"
+        assert (
+            self.max_scale >= self.min_scale
+        ), "max_scale must be greather than or equal to min_scale"
         self._set_attr_json("alignment", self.__alignment)
         self._set_attr_json("boundaryMargin", self.__boundary_margin)
 
@@ -226,7 +231,19 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
 
     @min_scale.setter
     def min_scale(self, value: OptionalNumber):
+        assert value is None or value > 0, "min_scale must be greater than 0"
         self._set_attr("minScale", value)
+
+    # interaction_update_interval
+    @property
+    def interaction_update_interval(self) -> int:
+        return self._get_attr(
+            "interactionUpdateInterval", data_type="int", def_value=200
+        )
+
+    @interaction_update_interval.setter
+    def interaction_update_interval(self, value: Optional[int]):
+        self._set_attr("interactionUpdateInterval", value)
 
     # max_scale
     @property
@@ -235,6 +252,7 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
 
     @max_scale.setter
     def max_scale(self, value: OptionalNumber):
+        assert value is None or value > 0, "max_scale must be greater than 0"
         self._set_attr("maxScale", value)
 
     # interaction_end_friction_coefficient
@@ -246,6 +264,9 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
 
     @interaction_end_friction_coefficient.setter
     def interaction_end_friction_coefficient(self, value: OptionalNumber):
+        assert (
+            value is None or value > 0
+        ), "interaction_end_friction_coefficient must be greater than 0"
         self._set_attr("interactionEndFrictionCoefficient", value)
 
     # content
@@ -325,11 +346,11 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
 
     # boundary_margin
     @property
-    def boundary_margin(self) -> MarginValue:
+    def boundary_margin(self) -> Optional[MarginValue]:
         return self.__boundary_margin
 
     @boundary_margin.setter
-    def boundary_margin(self, value: MarginValue):
+    def boundary_margin(self, value: Optional[MarginValue]):
         self.__boundary_margin = value
 
     # on_interaction_start

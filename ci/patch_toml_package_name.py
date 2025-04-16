@@ -18,7 +18,7 @@ with open(toml_path, "r") as f:
     t = tomlkit.parse(f.read())
 
 # patch name
-t["tool"]["poetry"]["name"] = package_name
+t["project"]["name"] = package_name
 
 # save
 with open(toml_path, "w") as f:

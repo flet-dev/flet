@@ -7,11 +7,11 @@ from flet.core.border import BorderSide
 from flet.core.border_radius import BorderRadius
 from flet.core.box import BoxConstraints, BoxDecoration, BoxShadow
 from flet.core.buttons import ButtonStyle, OutlinedBorder
-from flet.core.control import OptionalNumber
 from flet.core.menu_bar import MenuStyle
 from flet.core.navigation_bar import NavigationBarLabelBehavior
 from flet.core.navigation_rail import NavigationRailLabelType
 from flet.core.popup_menu_button import PopupMenuPosition
+from flet.core.size import Size
 from flet.core.slider import SliderInteraction
 from flet.core.snack_bar import DismissDirection, SnackBarBehavior
 from flet.core.text_style import TextStyle
@@ -31,10 +31,13 @@ from flet.core.types import (
     MouseCursor,
     NotchShape,
     OffsetValue,
+    OptionalNumber,
     PaddingValue,
-    ThemeVisualDensity,
+    StrokeCap,
+    TextAlign,
     VisualDensity,
 )
+from flet.utils.deprecated import deprecated_class, deprecated_property
 
 try:
     from typing import Literal
@@ -49,6 +52,7 @@ class PageTransitionTheme(Enum):
     ZOOM = "zoom"
     CUPERTINO = "cupertino"
     PREDICTIVE = "predictive"
+    FADE_FORWARDS = "fadeForwards"
 
 
 @dataclass
@@ -165,14 +169,14 @@ class TabsTheme:
     divider_color: Optional[ColorValue] = None
     indicator_border_radius: Optional[BorderRadius] = None
     indicator_border_side: Optional[BorderSide] = None
-    indicator_padding: PaddingValue = None
+    indicator_padding: Optional[PaddingValue] = None
     indicator_color: Optional[ColorValue] = None
     indicator_tab_size: Optional[bool] = None
     label_color: Optional[ColorValue] = None
     unselected_label_color: Optional[ColorValue] = None
     overlay_color: ControlStateValue[ColorValue] = None
     mouse_cursor: ControlStateValue[MouseCursor] = None
-    label_padding: PaddingValue = None
+    label_padding: Optional[PaddingValue] = None
     label_text_style: Optional[TextStyle] = None
     unselected_label_text_style: Optional[TextStyle] = None
 
@@ -209,7 +213,80 @@ class DialogTheme:
     actions_padding: Optional[PaddingValue] = None
     clip_behavior: Optional[ClipBehavior] = None
     barrier_color: Optional[ColorValue] = None
-    inset_padding: PaddingValue = None
+    inset_padding: Optional[PaddingValue] = None
+
+
+@dataclass
+class ElevatedButtonTheme:
+    bgcolor: Optional[ColorValue] = None
+    foreground_color: Optional[ColorValue] = None
+    icon_color: Optional[ColorValue] = None
+    shadow_color: Optional[ColorValue] = None
+    disabled_bgcolor: Optional[ColorValue] = None
+    disabled_foreground_color: Optional[ColorValue] = None
+    disabled_icon_color: Optional[ColorValue] = None
+    overlay_color: Optional[ColorValue] = None
+    surface_tint_color: Optional[ColorValue] = None
+    elevation: OptionalNumber = None
+    padding: Optional[PaddingValue] = None
+    enable_feedback: Optional[bool] = None
+    disabled_mouse_cursor: Optional[MouseCursor] = None
+    enabled_mouse_cursor: Optional[MouseCursor] = None
+    shape: Optional[OutlinedBorder] = None
+    text_style: Optional[TextStyle] = None
+    visual_density: Optional[VisualDensity] = None
+    border_side: Optional[BorderSide] = None
+    animation_duration: Optional[DurationValue] = None
+    alignment: Optional[Alignment] = None
+    icon_size: OptionalNumber = None
+    fixed_size: Optional[Size] = None
+    maximum_size: Optional[Size] = None
+    minimum_size: Optional[Size] = None
+
+
+@dataclass
+class OutlinedButtonTheme(ElevatedButtonTheme):
+    pass
+
+
+@dataclass
+class TextButtonTheme(ElevatedButtonTheme):
+    pass
+
+
+@dataclass
+class FilledButtonTheme(ElevatedButtonTheme):
+    pass
+
+
+@dataclass
+class IconButtonTheme:
+    # from ElevatedButtonTheme (excluding icon_color, disabled_icon_color, text_style)
+    bgcolor: Optional[ColorValue] = None
+    foreground_color: Optional[ColorValue] = None
+    shadow_color: Optional[ColorValue] = None
+    disabled_bgcolor: Optional[ColorValue] = None
+    disabled_foreground_color: Optional[ColorValue] = None
+    overlay_color: Optional[ColorValue] = None
+    surface_tint_color: Optional[ColorValue] = None
+    elevation: OptionalNumber = None
+    padding: Optional[PaddingValue] = None
+    enable_feedback: Optional[bool] = None
+    disabled_mouse_cursor: Optional[MouseCursor] = None
+    enabled_mouse_cursor: Optional[MouseCursor] = None
+    shape: Optional[OutlinedBorder] = None
+    visual_density: Optional[VisualDensity] = None
+    border_side: Optional[BorderSide] = None
+    animation_duration: Optional[DurationValue] = None
+    alignment: Optional[Alignment] = None
+    icon_size: OptionalNumber = None
+    fixed_size: Optional[Size] = None
+    maximum_size: Optional[Size] = None
+    minimum_size: Optional[Size] = None
+    # Icon Button Theme
+    focus_color: Optional[ColorValue] = None
+    highlight_color: Optional[ColorValue] = None
+    hover_color: Optional[ColorValue] = None
 
 
 @dataclass
@@ -236,7 +313,7 @@ class CardTheme:
     elevation: OptionalNumber = None
     shape: Optional[OutlinedBorder] = None
     clip_behavior: Optional[ClipBehavior] = None
-    margin: MarginValue = None
+    margin: Optional[MarginValue] = None
 
 
 @dataclass
@@ -254,8 +331,8 @@ class ChipTheme:
     elevation: OptionalNumber = None
     click_elevation: OptionalNumber = None
     shape: Optional[OutlinedBorder] = None
-    padding: PaddingValue = None
-    label_padding: PaddingValue = None
+    padding: Optional[PaddingValue] = None
+    label_padding: Optional[PaddingValue] = None
     label_text_style: Optional[TextStyle] = None
     secondary_label_text_style: Optional[TextStyle] = None
     border_side: Optional[BorderSide] = None
@@ -283,11 +360,13 @@ class FloatingActionButtonTheme:
     disabled_elevation: OptionalNumber = None
     shape: Optional[OutlinedBorder] = None
     enable_feedback: Optional[bool] = None
-    extended_padding: PaddingValue = None
+    extended_padding: Optional[PaddingValue] = None
     extended_text_style: Optional[TextStyle] = None
     extended_icon_label_spacing: OptionalNumber = None
     extended_size_constraints: Optional[BoxConstraints] = None
     size_constraints: Optional[BoxConstraints] = None
+    large_size_constraints: Optional[BoxConstraints] = None
+    small_size_constraints: Optional[BoxConstraints] = None
 
 
 @dataclass
@@ -320,6 +399,7 @@ class AppBarTheme:
     title_spacing: OptionalNumber = None
     scroll_elevation: OptionalNumber = None
     toolbar_height: OptionalNumber = None
+    actions_padding: Optional[PaddingValue] = None
 
 
 @dataclass
@@ -329,7 +409,7 @@ class BottomAppBarTheme:
     surface_tint_color: Optional[ColorValue] = None
     elevation: OptionalNumber = None
     height: OptionalNumber = None
-    padding: PaddingValue = None
+    padding: Optional[PaddingValue] = None
     shape: Optional[NotchShape] = None
 
 
@@ -339,7 +419,7 @@ class RadioTheme:
     overlay_color: ControlStateValue[ColorValue] = None
     splash_radius: OptionalNumber = None
     height: OptionalNumber = None
-    visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None
+    visual_density: Optional[VisualDensity] = None
     mouse_cursor: ControlStateValue[MouseCursor] = None
 
     def __post_init__(self):
@@ -358,7 +438,7 @@ class CheckboxTheme:
     fill_color: ControlStateValue[ColorValue] = None
     splash_radius: OptionalNumber = None
     border_side: Optional[BorderSide] = None
-    visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None
+    visual_density: Optional[VisualDensity] = None
     shape: Optional[OutlinedBorder] = None
     mouse_cursor: ControlStateValue[MouseCursor] = None
 
@@ -380,8 +460,8 @@ class BadgeTheme:
     small_size: OptionalNumber = None
     large_size: OptionalNumber = None
     alignment: Optional[Alignment] = None
-    padding: PaddingValue = None
-    offset: OffsetValue = None
+    padding: Optional[PaddingValue] = None
+    offset: Optional[OffsetValue] = None
     text_style: Optional[TextStyle] = None
 
 
@@ -395,6 +475,7 @@ class SwitchTheme:
     track_outline_width: ControlStateValue[OptionalNumber] = None
     splash_radius: OptionalNumber = None
     mouse_cursor: ControlStateValue[MouseCursor] = None
+    padding: Optional[PaddingValue] = None
 
     def __post_init__(self):
         if not isinstance(self.thumb_color, dict):
@@ -438,7 +519,7 @@ class SnackBarTheme:
     dismiss_direction: Optional[DismissDirection] = None
     behavior: Optional[SnackBarBehavior] = None
     shape: Optional[OutlinedBorder] = None
-    inset_padding: PaddingValue = None
+    inset_padding: Optional[PaddingValue] = None
     action_overflow_threshold: OptionalNumber = None
 
 
@@ -448,8 +529,8 @@ class BannerTheme:
     surface_tint_color: Optional[ColorValue] = None
     shadow_color: Optional[ColorValue] = None
     divider_color: Optional[ColorValue] = None
-    padding: PaddingValue = None
-    leading_padding: PaddingValue = None
+    padding: Optional[PaddingValue] = None
+    leading_padding: Optional[PaddingValue] = None
     elevation: OptionalNumber = None
     content_text_style: Optional[TextStyle] = None
 
@@ -547,7 +628,7 @@ class TimePickerTheme:
     day_period_shape: Optional[OutlinedBorder] = None
     hour_minute_shape: Optional[OutlinedBorder] = None
     day_period_border_side: Optional[BorderSide] = None
-    padding: PaddingValue = None
+    padding: Optional[PaddingValue] = None
     time_selector_separator_color: ControlStateValue[ColorValue] = None
     time_selector_separator_text_style: ControlStateValue[TextStyle] = None
 
@@ -579,9 +660,9 @@ class ListTileTheme:
     enable_feedback: Optional[bool] = None
     dense: Optional[bool] = None
     shape: Optional[OutlinedBorder] = None
-    visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None
-    content_padding: PaddingValue = None
-    min_vertical_padding: PaddingValue = None
+    visual_density: Optional[VisualDensity] = None
+    content_padding: Optional[PaddingValue] = None
+    min_vertical_padding: Optional[PaddingValue] = None
     horizontal_spacing: OptionalNumber = None
     min_leading_width: OptionalNumber = None
     title_text_style: Optional[TextStyle] = None
@@ -603,13 +684,14 @@ class TooltipTheme:
     exclude_from_semantics: Optional[bool] = None
     prefer_below: Optional[bool] = None
     vertical_offset: OptionalNumber = None
-    padding: PaddingValue = None
-    wait_duration: DurationValue = None
-    exit_duration: DurationValue = None
-    show_duration: DurationValue = None
-    margin: MarginValue = None
+    padding: Optional[PaddingValue] = None
+    wait_duration: Optional[DurationValue] = None
+    exit_duration: Optional[DurationValue] = None
+    show_duration: Optional[DurationValue] = None
+    margin: Optional[MarginValue] = None
     trigger_mode: Optional[TooltipTriggerMode] = None
     decoration: Optional[BoxDecoration] = None
+    text_align: Optional[TextAlign] = None
 
 
 @dataclass
@@ -621,9 +703,9 @@ class ExpansionTileTheme:
     collapsed_icon_color: Optional[ColorValue] = None
     clip_behavior: Optional[ClipBehavior] = None
     collapsed_text_color: Optional[ColorValue] = None
-    tile_padding: PaddingValue = None
+    tile_padding: Optional[PaddingValue] = None
     expanded_alignment: Optional[Alignment] = None
-    controls_padding: PaddingValue = None
+    controls_padding: Optional[PaddingValue] = None
 
 
 @dataclass
@@ -649,10 +731,23 @@ class SliderTheme:
     track_height: OptionalNumber = None
     value_indicator_stroke_color: Optional[ColorValue] = None
     interaction: Optional[SliderInteraction] = None
+    padding: Optional[PaddingValue] = None
+    track_gap: OptionalNumber = None
+    thumb_size: ControlStateValue[Size] = None
+    year_2023: Optional[bool] = None
 
     def __post_init__(self):
         if not isinstance(self.mouse_cursor, dict):
             self.mouse_cursor = {ControlState.DEFAULT: self.mouse_cursor}
+        if not isinstance(self.thumb_size, dict):
+            self.thumb_size = {ControlState.DEFAULT: self.thumb_size}
+        if self.year_2023 is not None:
+            deprecated_property(
+                name="year_2023",
+                version="0.27.0",
+                delete_version=None,  # not known for now
+                reason="Set this flag to False to opt into the 2024 Slider appearance. In the future, this flag will default to False.",
+            )
 
 
 @dataclass
@@ -662,6 +757,25 @@ class ProgressIndicatorTheme:
     linear_track_color: Optional[ColorValue] = None
     refresh_bgcolor: Optional[ColorValue] = None
     linear_min_height: OptionalNumber = None
+    border_radius: Optional[BorderRadius] = None
+    track_gap: OptionalNumber = None
+    circular_track_padding: Optional[PaddingValue] = None
+    size_constraints: Optional[BoxConstraints] = None
+    stop_indicator_color: Optional[ColorValue] = None
+    stop_indicator_radius: OptionalNumber = None
+    stroke_align: OptionalNumber = None
+    stroke_cap: Optional[StrokeCap] = None
+    stroke_width: OptionalNumber = None
+    year_2023: Optional[bool] = None
+
+    def __post_init__(self):
+        if self.year_2023 is not None:
+            deprecated_property(
+                name="year_2023",
+                version="0.27.0",
+                delete_version=None,  # not known for now
+                reason="Set this flag to False to opt into the 2024 ProgressIndicator appearance. In the future, this flag will default to False.",
+            )
 
 
 @dataclass
@@ -678,11 +792,20 @@ class PopupMenuTheme:
     shape: Optional[OutlinedBorder] = None
     menu_position: Optional[PopupMenuPosition] = None
     mouse_cursor: ControlStateValue[MouseCursor] = None
-    menu_padding: PaddingValue = None
+    menu_padding: Optional[PaddingValue] = None
 
     def __post_init__(self):
         if not isinstance(self.mouse_cursor, dict):
             self.mouse_cursor = {ControlState.DEFAULT: self.mouse_cursor}
+        if not isinstance(self.thumb_size, dict):
+            self.thumb_size = {ControlState.DEFAULT: self.thumb_size}
+        if self.year_2023 is not None:
+            deprecated_property(
+                name="year_2023",
+                version="0.27.0",
+                delete_version=None,  # not known for now
+                reason="Set this flag to False to opt into the 2024 Slider appearance. In the future, this flag will default to False.",
+            )
 
 
 @dataclass
@@ -733,6 +856,9 @@ class SearchViewTheme:
     border_side: Optional[BorderSide] = None
     size_constraints: Optional[BoxConstraints] = None
     header_height: OptionalNumber = None
+    padding: Optional[PaddingValue] = None
+    bar_padding: Optional[PaddingValue] = None
+    shrink_wrap: Optional[bool] = None
 
 
 @dataclass
@@ -745,6 +871,7 @@ class NavigationDrawerTheme:
     tile_height: OptionalNumber = None
     label_text_style: ControlStateValue[TextStyle] = None
     indicator_shape: Optional[OutlinedBorder] = None
+    indicator_size: Optional[Size] = None
 
     def __post_init__(self):
         if not isinstance(self.label_text_style, dict):
@@ -763,6 +890,7 @@ class NavigationBarTheme:
     label_text_style: ControlStateValue[TextStyle] = None
     indicator_shape: Optional[OutlinedBorder] = None
     label_behavior: Optional[NavigationBarLabelBehavior] = None
+    label_padding: Optional[PaddingValue] = None
 
     def __post_init__(self):
         if not isinstance(self.label_text_style, dict):
@@ -809,6 +937,11 @@ class DataTableTheme:
     heading_cell_cursor: ControlStateValue[MouseCursor] = None
 
 
+@deprecated_class(
+    "Use ElevatedButtonTheme, OutlinedButtonTheme, TextButtonTheme, FilledButtonTheme or IconButtonTheme instead.",
+    version="0.27.0",
+    delete_version="0.30.0",
+)
 @dataclass
 class ButtonTheme:
     button_color: Optional[ColorValue] = None
@@ -822,7 +955,7 @@ class ButtonTheme:
     height: OptionalNumber = None
     min_width: OptionalNumber = None
     shape: Optional[OutlinedBorder] = None
-    padding: PaddingValue = None
+    padding: Optional[PaddingValue] = None
 
 
 @dataclass
@@ -846,6 +979,11 @@ class Theme:
     dialog_theme: Optional[DialogTheme] = None
     divider_theme: Optional[DividerTheme] = None
     # dropdown_menu_theme: Optional[DropdownMenuTheme] = None
+    elevated_button_theme: Optional[ElevatedButtonTheme] = None
+    outlined_button_theme: Optional[OutlinedButtonTheme] = None
+    text_button_theme: Optional[TextButtonTheme] = None
+    filled_button_theme: Optional[FilledButtonTheme] = None
+    icon_button_theme: Optional[IconButtonTheme] = None
     expansion_tile_theme: Optional[ExpansionTileTheme] = None
     floating_action_button_theme: Optional[FloatingActionButtonTheme] = None
     icon_theme: Optional[IconTheme] = None
@@ -888,4 +1026,20 @@ class Theme:
     text_theme: Optional[TextTheme] = None
     time_picker_theme: Optional[TimePickerTheme] = None
     tooltip_theme: Optional[TooltipTheme] = None
-    visual_density: Union[VisualDensity, ThemeVisualDensity] = None
+    visual_density: Optional[VisualDensity] = None
+
+    def __post_init__(self):
+        if self.button_theme:
+            deprecated_property(
+                "button_theme",
+                "Use elevated_button_theme, outlined_button_theme, text_button_theme, filled_button_theme or icon_button_theme instead.",
+                version="0.27.0",
+                delete_version="0.30.0",
+            )
+        if self.dialog_bgcolor:
+            deprecated_property(
+                "dialog_bgcolor",
+                "Use dialog_theme.bgcolor instead.",
+                version="0.27.0",
+                delete_version="0.30.0",
+            )

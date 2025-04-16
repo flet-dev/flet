@@ -51,7 +51,7 @@ class View(ScrollableControl, AdaptiveControl):
         vertical_alignment: Optional[MainAxisAlignment] = None,
         horizontal_alignment: Optional[CrossAxisAlignment] = None,
         spacing: OptionalNumber = None,
-        padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
         bgcolor: Optional[ColorValue] = None,
         decoration: Optional[BoxDecoration] = None,
         foreground_decoration: Optional[BoxDecoration] = None,
@@ -122,14 +122,15 @@ class View(ScrollableControl, AdaptiveControl):
         if self.__bottom_appbar:
             children.append(self.__bottom_appbar)
         if self.__fab:
+            self.__fab._set_attr_internal("n", "fab")
             children.append(self.__fab)
         if self.__navigation_bar:
             children.append(self.__navigation_bar)
         if self.__drawer:
-            self.__drawer._set_attr_internal("n", "start")
+            self.__drawer._set_attr_internal("n", "drawer_start")
             children.append(self.__drawer)
         if self.__end_drawer:
-            self.__end_drawer._set_attr_internal("n", "end")
+            self.__end_drawer._set_attr_internal("n", "drawer_end")
             children.append(self.__end_drawer)
         return children + self.__controls
 
@@ -258,11 +259,11 @@ class View(ScrollableControl, AdaptiveControl):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # bgcolor

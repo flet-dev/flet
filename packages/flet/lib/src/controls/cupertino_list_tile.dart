@@ -74,6 +74,8 @@ class CupertinoListTileControl extends StatelessWidget {
     Color? bgcolorActivated = control.attrColor("bgcolorActivated", context);
 
     var padding = parseEdgeInsets(control, "contentPadding");
+    var leadingSize = control.attrDouble("leadingSize");
+    var leadingToTitle = control.attrDouble("leadingToTitle");
 
     Function()? onPressed = (onclick || toggleInputs || url != "") && !disabled
         ? () {
@@ -98,8 +100,8 @@ class CupertinoListTileControl extends StatelessWidget {
             backgroundColor: backgroundColor,
             backgroundColorActivated: bgcolorActivated,
             leading: leading,
-            leadingSize: control.attrDouble("leadingSize", 28.0)!,
-            leadingToTitle: control.attrDouble("leadingToTitle", 16.0)!,
+            leadingSize: leadingSize ?? 28.0,
+            leadingToTitle: leadingToTitle ?? 16.0,
             padding: padding,
             title: title,
             subtitle: subtitle,
@@ -111,8 +113,8 @@ class CupertinoListTileControl extends StatelessWidget {
             backgroundColor: backgroundColor,
             backgroundColorActivated: bgcolorActivated,
             leading: leading,
-            leadingSize: control.attrDouble("leadingSize", 30.0)!,
-            leadingToTitle: control.attrDouble("leadingToTitle", 12.0)!,
+            leadingSize: leadingSize ?? 30.0,
+            leadingToTitle: leadingToTitle ?? 12.0,
             padding: padding,
             title: title,
             subtitle: subtitle,

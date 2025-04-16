@@ -1,4 +1,4 @@
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 from flet.core.adaptive_control import AdaptiveControl
 from flet.core.alignment import Alignment
@@ -68,21 +68,21 @@ class AlertDialog(AdaptiveControl):
     def __init__(
         self,
         modal: bool = False,
-        title: Optional[Control] = None,
+        title: Optional[Union[Control, str]] = None,
         content: Optional[Control] = None,
         actions: Optional[List[Control]] = None,
         bgcolor: Optional[ColorValue] = None,
         elevation: OptionalNumber = None,
         icon: Optional[Control] = None,
         open: bool = False,
-        title_padding: PaddingValue = None,
-        content_padding: PaddingValue = None,
-        actions_padding: PaddingValue = None,
+        title_padding: Optional[PaddingValue] = None,
+        content_padding: Optional[PaddingValue] = None,
+        actions_padding: Optional[PaddingValue] = None,
         actions_alignment: Optional[MainAxisAlignment] = None,
         shape: Optional[OutlinedBorder] = None,
-        inset_padding: PaddingValue = None,
-        icon_padding: PaddingValue = None,
-        action_button_padding: PaddingValue = None,
+        inset_padding: Optional[PaddingValue] = None,
+        icon_padding: Optional[PaddingValue] = None,
+        action_button_padding: Optional[PaddingValue] = None,
         surface_tint_color: Optional[ColorValue] = None,
         shadow_color: Optional[ColorValue] = None,
         icon_color: Optional[ColorValue] = None,
@@ -166,7 +166,7 @@ class AlertDialog(AdaptiveControl):
 
     def _get_children(self):
         children = []
-        if self.__title:
+        if isinstance(self.__title, Control):
             self.__title._set_attr_internal("n", "title")
             children.append(self.__title)
         if self.__icon:
@@ -304,12 +304,14 @@ class AlertDialog(AdaptiveControl):
 
     # title
     @property
-    def title(self) -> Optional[Control]:
+    def title(self) -> Optional[Union[Control, str]]:
         return self.__title
 
     @title.setter
-    def title(self, value: Optional[Control]):
+    def title(self, value: Optional[Union[Control, str]]):
         self.__title = value
+        if not isinstance(value, Control):
+            self._set_attr("title", value)
 
     # icon
     @property
@@ -322,11 +324,11 @@ class AlertDialog(AdaptiveControl):
 
     # title_padding
     @property
-    def title_padding(self) -> PaddingValue:
+    def title_padding(self) -> Optional[PaddingValue]:
         return self.__title_padding
 
     @title_padding.setter
-    def title_padding(self, value: PaddingValue):
+    def title_padding(self, value: Optional[PaddingValue]):
         self.__title_padding = value
 
     # content
@@ -340,11 +342,11 @@ class AlertDialog(AdaptiveControl):
 
     # content_padding
     @property
-    def content_padding(self) -> PaddingValue:
+    def content_padding(self) -> Optional[PaddingValue]:
         return self.__content_padding
 
     @content_padding.setter
-    def content_padding(self, value: PaddingValue):
+    def content_padding(self, value: Optional[PaddingValue]):
         self.__content_padding = value
 
     # actions
@@ -358,11 +360,11 @@ class AlertDialog(AdaptiveControl):
 
     # actions_padding
     @property
-    def actions_padding(self) -> PaddingValue:
+    def actions_padding(self) -> Optional[PaddingValue]:
         return self.__actions_padding
 
     @actions_padding.setter
-    def actions_padding(self, value: PaddingValue):
+    def actions_padding(self, value: Optional[PaddingValue]):
         self.__actions_padding = value
 
     # actions_alignment
@@ -389,29 +391,29 @@ class AlertDialog(AdaptiveControl):
 
     # inset_padding
     @property
-    def inset_padding(self) -> PaddingValue:
+    def inset_padding(self) -> Optional[PaddingValue]:
         return self.__inset_padding
 
     @inset_padding.setter
-    def inset_padding(self, value: PaddingValue):
+    def inset_padding(self, value: Optional[PaddingValue]):
         self.__inset_padding = value
 
     # icon_padding
     @property
-    def icon_padding(self) -> PaddingValue:
+    def icon_padding(self) -> Optional[PaddingValue]:
         return self.__icon_padding
 
     @icon_padding.setter
-    def icon_padding(self, value: PaddingValue):
+    def icon_padding(self, value: Optional[PaddingValue]):
         self.__icon_padding = value
 
     # action_button_padding
     @property
-    def action_button_padding(self) -> PaddingValue:
+    def action_button_padding(self) -> Optional[PaddingValue]:
         return self.__action_button_padding
 
     @action_button_padding.setter
-    def action_button_padding(self, value: PaddingValue):
+    def action_button_padding(self, value: Optional[PaddingValue]):
         self.__action_button_padding = value
 
     # semantics_label

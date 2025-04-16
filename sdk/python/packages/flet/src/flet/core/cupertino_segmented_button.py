@@ -34,8 +34,10 @@ class CupertinoSegmentedButton(ConstrainedControl):
         selected_color: Optional[ColorValue] = None,
         unselected_color: Optional[ColorValue] = None,
         border_color: Optional[ColorValue] = None,
-        padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
         click_color: Optional[ColorValue] = None,
+        disabled_color: Optional[ColorValue] = None,
+        disabled_text_color: Optional[ColorValue] = None,
         on_change: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
@@ -52,9 +54,9 @@ class CupertinoSegmentedButton(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -63,7 +65,7 @@ class CupertinoSegmentedButton(ConstrainedControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -108,6 +110,8 @@ class CupertinoSegmentedButton(ConstrainedControl):
         self.unselected_color = unselected_color
         self.on_change = on_change
         self.click_color = click_color
+        self.disabled_color = disabled_color
+        self.disabled_text_color = disabled_text_color
 
     def _get_control_name(self):
         return "cupertinosegmentedbutton"
@@ -143,6 +147,26 @@ class CupertinoSegmentedButton(ConstrainedControl):
     def border_color(self, value: Optional[ColorValue]):
         self.__border_color = value
         self._set_enum_attr("borderColor", value, ColorEnums)
+
+    # disabled_color
+    @property
+    def disabled_color(self) -> Optional[ColorValue]:
+        return self.__disabled_color
+
+    @disabled_color.setter
+    def disabled_color(self, value: Optional[ColorValue]):
+        self.__disabled_color = value
+        self._set_enum_attr("disabledColor", value, ColorEnums)
+
+    # disabled_text_color
+    @property
+    def disabled_text_color(self) -> Optional[ColorValue]:
+        return self.__disabled_text_color
+
+    @disabled_text_color.setter
+    def disabled_text_color(self, value: Optional[ColorValue]):
+        self.__disabled_text_color = value
+        self._set_enum_attr("disabledTextColor", value, ColorEnums)
 
     # selected_index
     @property
@@ -187,11 +211,11 @@ class CupertinoSegmentedButton(ConstrainedControl):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # on_change

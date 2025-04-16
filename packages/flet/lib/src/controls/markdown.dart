@@ -10,7 +10,6 @@ import '../utils/box.dart';
 import '../utils/images.dart';
 import '../utils/launch_url.dart';
 import '../utils/markdown.dart';
-import '../utils/text.dart';
 import '../utils/uri.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -40,12 +39,8 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
     bool disabled = control.isDisabled || parentDisabled;
 
     var value = control.attrString("value", "")!;
-    var codeTheme = control.attrString("codeTheme", "")!;
     md.ExtensionSet extensionSet = parseMarkdownExtensionSet(
         control.attrString("extensionSet"), md.ExtensionSet.none)!;
-
-    TextStyle? codeStyle =
-        parseTextStyle(Theme.of(context), control, "codeStyle"); // DEPRECATED
 
     var autoFollowLinks = control.attrBool("autoFollowLinks", false)!;
     var autoFollowLinksTarget = control.attrString("autoFollowLinksTarget");
@@ -55,11 +50,10 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
       var codeStyleSheet = parseMarkdownStyleSheet(
               control, "codeStyleSheet", Theme.of(context), pageArgs) ??
           MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-              code: codeStyle ??
-                  Theme.of(context)
-                      .textTheme
-                      .bodyMedium!
-                      .copyWith(fontFamily: "monospace"));
+              code: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(fontFamily: "monospace"));
       var mdStyleSheet = parseMarkdownStyleSheet(
           control, "mdStyleSheet", Theme.of(context), pageArgs);
       var codeTheme =
@@ -133,7 +127,7 @@ class MarkdownControl extends StatelessWidget with FletStoreMixin {
               openWebBrowser(href, webWindowName: autoFollowLinksTarget);
             }
             backend.triggerControlEvent(
-                control.id, "tap_link", href?.toString() ?? "");
+                control.id, "tap_link", href?.toString());
           });
 
       return constrainedControl(context, markdown, parent, control);
@@ -176,13 +170,8 @@ class CodeElementBuilder extends MarkdownElementBuilder {
           // Specify highlight theme
           // All available themes are listed in `themes` folder
           theme: codeTheme,
-
-          // Specify padding
           padding: mdStyleSheet.codeblockPadding,
-
           decoration: mdStyleSheet.codeblockDecoration,
-
-          // Specify text style
           textStyle: mdStyleSheet.code,
 
           selectable: selectable,

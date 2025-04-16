@@ -19,7 +19,7 @@ class BarChartRod(Control):
         width: OptionalNumber = None,
         color: Optional[ColorValue] = None,
         gradient: Optional[Gradient] = None,
-        border_radius: BorderRadiusValue = None,
+        border_radius: Optional[BorderRadiusValue] = None,
         border_side: Optional[BorderSide] = None,
         bg_from_y: OptionalNumber = None,
         bg_to_y: OptionalNumber = None,

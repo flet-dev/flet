@@ -6,6 +6,7 @@ import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
 import '../utils/icons.dart';
 import '../utils/others.dart';
 import '../utils/time.dart';
@@ -81,6 +82,7 @@ class _NavigationBarControlState extends State<NavigationBarControl>
             animationDuration:
                 parseDuration(widget.control, "animationDuration"),
             elevation: widget.control.attrDouble("elevation"),
+            labelPadding: parseEdgeInsets(widget.control, "labelPadding"),
             shadowColor: widget.control.attrColor("shadowColor", context),
             surfaceTintColor:
                 widget.control.attrColor("surfaceTintColor", context),
@@ -97,22 +99,10 @@ class _NavigationBarControlState extends State<NavigationBarControl>
               var iconStr = parseIcon(destView.control.attrString("icon"));
               var iconCtrls = destView.children
                   .where((c) => c.name == "icon" && c.isVisible);
-              // if no control provided in "icon" property, replace iconCtrls with control provided in icon_content, if any
-              // the line below needs to be deleted after icon_content is deprecated
-              iconCtrls = iconCtrls.isEmpty
-                  ? destView.children
-                      .where((c) => c.name == "icon_content" && c.isVisible)
-                  : iconCtrls;
               var selectedIconStr =
                   parseIcon(destView.control.attrString("selectedIcon"));
               var selectedIconCtrls = destView.children
                   .where((c) => c.name == "selected_icon" && c.isVisible);
-              // if no control provided in "selected_icon" property, replace selectedIconCtrls with control provided in selected_icon_content, if any
-              // the line below needs to be deleted after selected_icon_content is deprecated
-              selectedIconCtrls = selectedIconCtrls.isEmpty
-                  ? destView.children.where(
-                      (c) => c.name == "selected_icon_content" && c.isVisible)
-                  : selectedIconCtrls;
               var destinationDisabled = disabled || destView.control.isDisabled;
               var destinationAdaptive = destView.control.isAdaptive ?? adaptive;
               var destinationTooltip = destView.control.attrString("tooltip");

@@ -47,6 +47,7 @@ class _TextFieldControlState extends State<TextFieldControl>
   late final FocusNode _focusNode;
   late final FocusNode _shiftEnterfocusNode;
   String? _lastFocusValue;
+  String? _lastBlurValue;
 
   @override
   void initState() {
@@ -84,8 +85,8 @@ class _TextFieldControlState extends State<TextFieldControl>
     setState(() {
       _focused = _shiftEnterfocusNode.hasFocus;
     });
-    widget.backend.triggerControlEvent(widget.control.id,
-        _shiftEnterfocusNode.hasFocus ? "focus" : "blur", "");
+    widget.backend.triggerControlEvent(
+        widget.control.id, _shiftEnterfocusNode.hasFocus ? "focus" : "blur");
   }
 
   void _onFocusChange() {
@@ -93,7 +94,7 @@ class _TextFieldControlState extends State<TextFieldControl>
       _focused = _focusNode.hasFocus;
     });
     widget.backend.triggerControlEvent(
-        widget.control.id, _focusNode.hasFocus ? "focus" : "blur", "");
+        widget.control.id, _focusNode.hasFocus ? "focus" : "blur");
   }
 
   @override
@@ -123,7 +124,11 @@ class _TextFieldControlState extends State<TextFieldControl>
       String value = widget.control.attrs["value"] ?? "";
       if (_value != value) {
         _value = value;
-        _controller.text = value;
+        _controller.value = TextEditingValue(
+          text: value,
+          selection: TextSelection.collapsed(
+              offset: value.length), // preserve cursor position at the end
+        );
       }
 
       var prefixControls =
@@ -203,10 +208,16 @@ class _TextFieldControlState extends State<TextFieldControl>
       FocusNode focusNode = shiftEnter ? _shiftEnterfocusNode : _focusNode;
 
       var focusValue = widget.control.attrString("focus");
+      var blurValue = widget.control.attrString("blur");
       if (focusValue != null && focusValue != _lastFocusValue) {
         _lastFocusValue = focusValue;
         focusNode.requestFocus();
       }
+      if (blurValue != null && blurValue != _lastBlurValue) {
+        _lastBlurValue = blurValue;
+        _focusNode.unfocus();
+      }
+
       var fitParentSize = widget.control.attrBool("fitParentSize", false)!;
 
       var maxLength = widget.control.attrInt("maxLength");
@@ -302,6 +313,12 @@ class _TextFieldControlState extends State<TextFieldControl>
           onTap: () {
             widget.backend.triggerControlEvent(widget.control.id, "click");
           },
+          onTapOutside: widget.control.attrBool("onTapOutside", false)!
+              ? (PointerDownEvent? event) {
+                  widget.backend
+                      .triggerControlEvent(widget.control.id, "tapOutside");
+                }
+              : null,
           onChanged: (String value) {
             _value = value;
             widget.backend

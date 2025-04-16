@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../flet_control_backend.dart';
 import '../models/control.dart';
+import '../utils/animations.dart';
+import '../utils/borders.dart';
+import '../utils/box.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'error.dart';
 
@@ -92,7 +96,15 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
                 elevation: widget.control.attrDouble("elevation"),
                 isScrollControlled: isScrollControlled,
                 enableDrag: enableDrag,
+                barrierColor: widget.control.attrColor("barrierColor", context),
+                sheetAnimationStyle:
+                    parseAnimationStyle(widget.control, "animationStyle"),
+                constraints:
+                    parseBoxConstraints(widget.control, "sizeConstraints"),
                 showDragHandle: showDragHandle,
+                clipBehavior:
+                    parseClip(widget.control.attrString("clipBehavior")),
+                shape: parseOutlinedBorder(widget.control, "shape"),
                 useSafeArea: useSafeArea)
             .then((value) {
           lastOpen = widget.control.state["open"] ?? false;

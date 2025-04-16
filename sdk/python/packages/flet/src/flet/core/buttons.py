@@ -29,7 +29,7 @@ class StadiumBorder(OutlinedBorder):
 
 @dataclass
 class RoundedRectangleBorder(OutlinedBorder):
-    radius: BorderRadiusValue = None
+    radius: Optional[BorderRadiusValue] = None
 
     def __post_init__(self):
         self.type = "roundedRectangle"
@@ -43,7 +43,7 @@ class CircleBorder(OutlinedBorder):
 
 @dataclass
 class BeveledRectangleBorder(OutlinedBorder):
-    radius: BorderRadiusValue = None
+    radius: Optional[BorderRadiusValue] = None
 
     def __post_init__(self):
         self.type = "beveledRectangle"
@@ -51,7 +51,7 @@ class BeveledRectangleBorder(OutlinedBorder):
 
 @dataclass
 class ContinuousRectangleBorder(OutlinedBorder):
-    radius: BorderRadiusValue = None
+    radius: Optional[BorderRadiusValue] = None
 
     def __post_init__(self):
         self.type = "continuousRectangle"

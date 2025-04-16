@@ -23,7 +23,6 @@ from flet.core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ThemeVisualDensity,
     UrlTarget,
     VisualDensity,
 )
@@ -87,16 +86,18 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         splash_color: Optional[ColorValue] = None,
         splash_radius: OptionalNumber = None,
         alignment: Optional[Alignment] = None,
-        padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
         enable_feedback: Optional[bool] = None,
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
         mouse_cursor: Optional[MouseCursor] = None,
-        visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
+        visual_density: Optional[VisualDensity] = None,
         size_constraints: Optional[BoxConstraints] = None,
         on_click: OptionalControlEventCallable = None,
         on_focus: OptionalControlEventCallable = None,
         on_blur: OptionalControlEventCallable = None,
+        on_long_press: OptionalControlEventCallable = None,
+        on_hover: OptionalControlEventCallable = None,
         #
         # ConstrainedControl and AdaptiveControl
         #
@@ -112,9 +113,9 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -123,7 +124,7 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -190,6 +191,8 @@ class IconButton(ConstrainedControl, AdaptiveControl):
         self.mouse_cursor = mouse_cursor
         self.visual_density = visual_density
         self.size_constraints = size_constraints
+        self.on_long_press = on_long_press
+        self.on_hover = on_hover
 
     def _get_control_name(self):
         return "iconbutton"
@@ -335,11 +338,11 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # size_constraints
@@ -409,13 +412,13 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     # visual_density
     @property
-    def visual_density(self) -> Union[None, ThemeVisualDensity, VisualDensity]:
+    def visual_density(self) -> Optional[VisualDensity]:
         return self.__visual_density
 
     @visual_density.setter
-    def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
+    def visual_density(self, value: Optional[VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, (ThemeVisualDensity, VisualDensity))
+        self._set_enum_attr("visualDensity", value, VisualDensity)
 
     # on_click
     @property
@@ -461,6 +464,15 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     @on_blur.setter
     def on_blur(self, handler: OptionalControlEventCallable):
         self._add_event_handler("blur", handler)
+
+    # on_hover
+    @property
+    def on_hover(self) -> OptionalControlEventCallable:
+        return self._get_event_handler("hover")
+
+    @on_hover.setter
+    def on_hover(self, handler: OptionalControlEventCallable):
+        self._add_event_handler("hover", handler)
 
     # alignment
     @property

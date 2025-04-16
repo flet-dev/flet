@@ -120,6 +120,16 @@ class _IconButtonControlState extends State<IconButtonControl>
               widget.backend.triggerControlEvent(widget.control.id, "click");
             };
 
+      Function()? onLongPressHandler = !disabled
+          ? () =>
+              widget.backend.triggerControlEvent(widget.control.id, "longPress")
+          : null;
+
+      Function(bool)? onHoverHandler = !disabled
+          ? (bool hovered) => widget.backend.triggerControlEvent(
+              widget.control.id, "hover", hovered.toString())
+          : null;
+
       Widget? button;
 
       var theme = Theme.of(context);
@@ -160,6 +170,8 @@ class _IconButtonControlState extends State<IconButtonControl>
             style: style,
             isSelected: selected,
             constraints: sizeConstraints,
+            onLongPress: onLongPressHandler,
+            onHover: onHoverHandler,
             selectedIcon: selectedIcon != null
                 ? Icon(selectedIcon, color: selectedIconColor)
                 : null,
@@ -184,6 +196,8 @@ class _IconButtonControlState extends State<IconButtonControl>
             style: style,
             isSelected: selected,
             constraints: sizeConstraints,
+            onLongPress: onLongPressHandler,
+            onHover: onHoverHandler,
             selectedIcon: selectedIcon != null
                 ? Icon(selectedIcon, color: selectedIconColor)
                 : null,

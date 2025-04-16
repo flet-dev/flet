@@ -709,25 +709,29 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
         builder: (context, routesView) {
           debugPrint("_buildNavigator build");
 
-          var hideLoadingPage =
-              FletAppServices.of(context).hideLoadingPage ?? false;
+          var showAppStartupScreen =
+              FletAppServices.of(context).showAppStartupScreen ?? false;
+          var appStartupScreenMessage =
+              FletAppServices.of(context).appStartupScreenMessage ?? "";
 
           List<Page<dynamic>> pages = [];
           if (routesView.views.isEmpty) {
             pages.add(AnimatedTransitionPage(
                 fadeTransition: true,
                 duration: Duration.zero,
-                child: hideLoadingPage
-                    ? const Scaffold(
-                        body: PageMedia(),
-                      )
-                    : Stack(children: [
+                child: showAppStartupScreen
+                    ? Stack(children: [
                         const PageMedia(),
                         LoadingPage(
                           isLoading: routesView.isLoading,
-                          message: routesView.error,
+                          message: routesView.isLoading
+                              ? appStartupScreenMessage
+                              : routesView.error,
                         )
-                      ])));
+                      ])
+                    : const Scaffold(
+                        body: PageMedia(),
+                      )));
           } else {
             Widget? loadingPage;
             // offstage
@@ -751,10 +755,12 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
             }
 
             if ((routesView.isLoading || routesView.error != "") &&
-                !hideLoadingPage) {
+                showAppStartupScreen) {
               loadingPage = LoadingPage(
                 isLoading: routesView.isLoading,
-                message: routesView.error,
+                message: routesView.isLoading
+                    ? appStartupScreenMessage
+                    : routesView.error,
               );
             }
 
@@ -880,9 +886,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
               control.attrString("horizontalAlignment"),
               CrossAxisAlignment.start)!;
           final fabLocation = parseFloatingActionButtonLocation(
-              control,
-              "floatingActionButtonLocation",
-              FloatingActionButtonLocation.endFloat);
+              control, "floatingActionButtonLocation");
 
           Control? appBar;
           Control? cupertinoAppBar;
@@ -904,7 +908,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
             } else if (ctrl.type == "bottomappbar") {
               bottomAppBar = ctrl;
               continue;
-            } else if (ctrl.type == "floatingactionbutton") {
+            } else if (ctrl.name == "fab") {
               fab = ctrl;
               continue;
             } else if (ctrl.type == "navigationbar" ||
@@ -912,10 +916,10 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
               navBar = ctrl;
               continue;
             } else if (ctrl.type == "navigationdrawer" &&
-                ctrl.name == "start") {
+                ctrl.name == "drawer_start") {
               drawer = ctrl;
               continue;
-            } else if (ctrl.type == "navigationdrawer" && ctrl.name == "end") {
+            } else if (ctrl.type == "navigationdrawer" && ctrl.name == "drawer_end") {
               endDrawer = ctrl;
               continue;
             }
@@ -939,7 +943,7 @@ class _ViewControlState extends State<ViewControl> with FletStoreMixin {
             cupertinoAppBar?.id,
             drawer?.id,
             endDrawer?.id
-          ].whereNotNull().toList();
+          ].nonNulls.toList();
 
           final textDirection = widget.parent.attrBool("rtl", false)!
               ? TextDirection.rtl

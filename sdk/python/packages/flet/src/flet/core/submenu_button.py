@@ -37,7 +37,7 @@ class SubmenuButton(ConstrainedControl):
         clip_behavior: Optional[ClipBehavior] = None,
         menu_style: Optional[MenuStyle] = None,
         style: Optional[ButtonStyle] = None,
-        alignment_offset: OffsetValue = None,
+        alignment_offset: Optional[OffsetValue] = None,
         on_open: OptionalControlEventCallable = None,
         on_close: OptionalControlEventCallable = None,
         on_hover: OptionalControlEventCallable = None,
@@ -58,9 +58,9 @@ class SubmenuButton(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -69,7 +69,7 @@ class SubmenuButton(ConstrainedControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -225,11 +225,11 @@ class SubmenuButton(ConstrainedControl):
 
     # alignment_offset
     @property
-    def alignment_offset(self) -> OffsetValue:
+    def alignment_offset(self) -> Optional[OffsetValue]:
         return self.__alignment_offset
 
     @alignment_offset.setter
-    def alignment_offset(self, value: OffsetValue):
+    def alignment_offset(self, value: Optional[OffsetValue]):
         self.__alignment_offset = value
 
     # on_open

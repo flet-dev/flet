@@ -1,16 +1,15 @@
 from dataclasses import dataclass
 from datetime import date, datetime
-from enum import Enum, EnumMeta
+from enum import Enum
 from typing import Any, Callable, Dict, List, Optional, Protocol, Tuple, TypeVar, Union
-from warnings import warn
 
 from flet.core.border_radius import BorderRadius
-from flet.core.colors import Colors, colors
+from flet.core.colors import Colors
 from flet.core.control_event import ControlEvent
-from flet.core.cupertino_colors import CupertinoColors, cupertino_colors
-from flet.core.cupertino_icons import CupertinoIcons, cupertino_icons
+from flet.core.cupertino_colors import CupertinoColors
+from flet.core.cupertino_icons import CupertinoIcons
 from flet.core.event import Event
-from flet.core.icons import Icons, icons
+from flet.core.icons import Icons
 from flet.core.margin import Margin
 from flet.core.padding import Padding
 from flet.core.transform import Offset, Rotate, Scale
@@ -59,17 +58,17 @@ class UrlTarget(Enum):
     TOP = "_top"
 
 
-PaddingValue = Optional[Union[int, float, Padding]]
+PaddingValue = Union[int, float, Padding]
 
-MarginValue = Optional[Union[int, float, Margin]]
+MarginValue = Union[int, float, Margin]
 
-BorderRadiusValue = Optional[Union[int, float, BorderRadius]]
+BorderRadiusValue = Union[int, float, BorderRadius]
 
-RotateValue = Optional[Union[int, float, Rotate]]
+RotateValue = Union[int, float, Rotate]
 
-ScaleValue = Optional[Union[int, float, Scale]]
+ScaleValue = Union[int, float, Scale]
 
-OffsetValue = Optional[Union[Offset, Tuple[Union[float, int], Union[float, int]]]]
+OffsetValue = Union[Offset, Tuple[Union[float, int], Union[float, int]]]
 
 
 @dataclass
@@ -82,7 +81,7 @@ class Duration:
     days: int = 0
 
 
-DurationValue = Union[int, Duration, None]
+DurationValue = Union[int, Duration]
 
 
 class FontWeight(Enum):
@@ -236,6 +235,7 @@ class ImageRepeat(Enum):
 class PagePlatform(Enum):
     IOS = "ios"
     ANDROID = "android"
+    ANDROID_TV = "android_tv"
     MACOS = "macos"
     WINDOWS = "windows"
     LINUX = "linux"
@@ -349,31 +349,6 @@ class StrokeJoin(Enum):
     BEVEL = "bevel"
 
 
-class ThemeVisualDensityDeprecated(EnumMeta):
-    def __getattribute__(self, item):
-        if item in [
-            "STANDARD",
-            "COMPACT",
-            "COMFORTABLE",
-            "ADAPTIVE_PLATFORM_DENSITY",
-        ]:
-            warn(
-                "ThemeVisualDensity enum is deprecated and will be removed in version 0.27.0. "
-                "Use VisualDensity enum instead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-        return EnumMeta.__getattribute__(self, item)
-
-
-class ThemeVisualDensity(Enum, metaclass=ThemeVisualDensityDeprecated):
-    STANDARD = "standard"
-    COMPACT = "compact"
-    COMFORTABLE = "comfortable"
-    ADAPTIVEPLATFORMDENSITY = "adaptivePlatformDensity"
-    ADAPTIVE_PLATFORM_DENSITY = "adaptivePlatformDensity"
-
-
 class VisualDensity(Enum):
     STANDARD = "standard"
     COMPACT = "compact"
@@ -400,13 +375,20 @@ EventType = TypeVar("EventType", bound=Event)
 OptionalEventCallable = Optional[Callable[[EventType], Any]]
 OptionalControlEventCallable = Optional[Callable[[ControlEvent], Any]]
 
+
+class OnFocusEvent(ControlEvent):
+    def __init__(self, e: ControlEvent):
+        super().__init__(e.target, e.name, e.data, e.control, e.page)
+        self.primary: bool = bool(e.data)
+
+
 # Colors
-ColorEnums = (colors, Colors, cupertino_colors, CupertinoColors)
-ColorValue = Union[str, colors, Colors, cupertino_colors, CupertinoColors]
+ColorEnums = (Colors, CupertinoColors)
+ColorValue = Union[str, Colors, CupertinoColors]
 
 # Icons
-IconEnums = (icons, Icons, cupertino_icons, CupertinoIcons)
-IconValue = Union[str, icons, Icons, cupertino_icons, CupertinoIcons]
+IconEnums = (Icons, CupertinoIcons)
+IconValue = Union[str, Icons, CupertinoIcons]
 IconValueOrControl = Union[IconValue, "Control"]
 
 # ControlState

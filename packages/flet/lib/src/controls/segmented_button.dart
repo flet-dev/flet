@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/buttons.dart';
+import '../utils/edge_insets.dart';
+import '../utils/others.dart';
 import 'create_control.dart';
 import 'error.dart';
 import 'flet_store_mixin.dart';
@@ -113,6 +115,9 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
                   onChange(newSelection.toSet());
                 }
               : null,
+          direction: parseAxis(
+              widget.control.attrString("direction"), Axis.horizontal)!,
+          expandedInsets: parseEdgeInsets(widget.control, "padding"),
           segments: segmentViews.controlViews.map((segmentView) {
             var iconCtrls = segmentView.children
                 .where((c) => c.name == "icon" && c.isVisible);

@@ -70,8 +70,9 @@ class Banner(Control):
         shadow_color: Optional[ColorValue] = None,
         divider_color: Optional[ColorValue] = None,
         elevation: OptionalNumber = None,
-        margin: MarginValue = None,
+        margin: Optional[MarginValue] = None,
         content_text_style: Optional[TextStyle] = None,
+        min_action_bar_height: OptionalNumber = None,
         on_visible: OptionalControlEventCallable = None,
         #
         # Control
@@ -104,6 +105,7 @@ class Banner(Control):
         self.elevation = elevation
         self.margin = margin
         self.content_text_style = content_text_style
+        self.min_action_bar_height = min_action_bar_height
         self.on_visible = on_visible
 
     def _get_control_name(self):
@@ -161,11 +163,11 @@ class Banner(Control):
 
     # leading_padding
     @property
-    def leading_padding(self) -> PaddingValue:
+    def leading_padding(self) -> Optional[PaddingValue]:
         return self.__leading_padding
 
     @leading_padding.setter
-    def leading_padding(self, value: PaddingValue):
+    def leading_padding(self, value: Optional[PaddingValue]):
         self.__leading_padding = value
 
     # content
@@ -179,20 +181,20 @@ class Banner(Control):
 
     # content_padding
     @property
-    def content_padding(self) -> PaddingValue:
+    def content_padding(self) -> Optional[PaddingValue]:
         return self.__content_padding
 
     @content_padding.setter
-    def content_padding(self, value: PaddingValue):
+    def content_padding(self, value: Optional[PaddingValue]):
         self.__content_padding = value
 
     # margin
     @property
-    def margin(self) -> MarginValue:
+    def margin(self) -> Optional[MarginValue]:
         return self.__margin
 
     @margin.setter
-    def margin(self, value: MarginValue):
+    def margin(self, value: Optional[MarginValue]):
         self.__margin = value
 
     # actions
@@ -271,6 +273,15 @@ class Banner(Control):
     def elevation(self, value: OptionalNumber):
         assert value is None or value >= 0, "elevation_on_scroll cannot be negative"
         self._set_attr("elevation", value)
+
+    # min_action_bar_height
+    @property
+    def min_action_bar_height(self) -> OptionalNumber:
+        return self._get_attr("minActionBarHeight", data_type="float", def_value=52.0)
+
+    @min_action_bar_height.setter
+    def min_action_bar_height(self, value: OptionalNumber):
+        self._set_attr("minActionBarHeight", value)
 
     # on_visible
     @property

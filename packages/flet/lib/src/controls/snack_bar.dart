@@ -59,8 +59,6 @@ class _SnackBarControlState extends State<SnackBarControl> {
     SnackBarBehavior? behavior =
         parseSnackBarBehavior(widget.control.attrString("behavior"));
 
-    DismissDirection? dismissDirection =
-        parseDismissDirection(widget.control.attrString("dismissDirection"));
     var width = widget.control.attrDouble("width");
     var margin = parseEdgeInsets(widget.control, "margin");
 
@@ -84,7 +82,8 @@ class _SnackBarControlState extends State<SnackBarControl> {
           debugPrint("SnackBar.onVisible(${widget.control.id})");
           widget.backend.triggerControlEvent(widget.control.id, "visible");
         },
-        dismissDirection: dismissDirection,
+        dismissDirection: parseDismissDirection(
+            widget.control.attrString("dismissDirection")),
         showCloseIcon: widget.control.attrBool("showCloseIcon"),
         closeIconColor: widget.control.attrColor("closeIconColor", context),
         content: createControl(widget.control, contentCtrls.first.id, disabled,

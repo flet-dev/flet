@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -317,7 +316,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                       supportedDevicesJson is! Map)) {
                 return supportedDevicesJson
                     .map((d) => parsePointerDeviceKind(d))
-                    .whereNotNull()
+                    .nonNulls
                     .toSet();
               }
               return null;

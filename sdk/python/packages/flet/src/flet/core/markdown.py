@@ -1,8 +1,6 @@
-import warnings
 from dataclasses import dataclass
-from enum import Enum, EnumMeta
+from enum import Enum
 from typing import Any, Optional, Union, cast
-from warnings import warn
 
 from flet.core.animation import AnimationValue
 from flet.core.badge import BadgeValue
@@ -39,65 +37,24 @@ class MarkdownExtensionSet(Enum):
     GITHUB_FLAVORED = "gitHubFlavored"
 
 
-class MarkdownSelectionChangeCauseDeprecated(EnumMeta):
-    def __getattribute__(self, item):
-        if item in [
-            "UNKNOWN",
-            "TAP",
-            "DOUBLE_TAP",
-            "LONG_PRESS",
-            "FORCE_PRESS",
-            "KEYBOARD",
-            "TOOLBAR",
-            "DRAG",
-            "SCRIBBLE",
-        ]:
-            warn(
-                "MarkdownSelectionChangeCause enum is deprecated since version 0.25.0 "
-                "and will be removed in version 0.28.0. Use TextSelectionChangeCause enum instead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-        return EnumMeta.__getattribute__(self, item)
-
-
-class MarkdownSelectionChangeCause(
-    Enum, metaclass=MarkdownSelectionChangeCauseDeprecated
-):
-    UNKNOWN = "unknown"
-    TAP = "tap"
-    DOUBLE_TAP = "doubleTap"
-    LONG_PRESS = "longPress"
-    FORCE_PRESS = "forcePress"
-    KEYBOARD = "keyboard"
-    TOOLBAR = "toolbar"
-    DRAG = "drag"
-    SCRIBBLE = "scribble"
-
-
-# deprecated in v0.25.0 and will be removed in v0.28.0
-class MarkdownSelectionChangeEvent(TextSelectionChangeEvent):
-    pass
-
-
 @dataclass
 class MarkdownStyleSheet:
     a_text_style: Optional[TextStyle] = None
     p_text_style: Optional[TextStyle] = None
-    p_padding: PaddingValue = None
+    p_padding: Optional[PaddingValue] = None
     code_text_style: Optional[TextStyle] = None
     h1_text_style: Optional[TextStyle] = None
-    h1_padding: PaddingValue = None
+    h1_padding: Optional[PaddingValue] = None
     h2_text_style: Optional[TextStyle] = None
-    h2_padding: PaddingValue = None
+    h2_padding: Optional[PaddingValue] = None
     h3_text_style: Optional[TextStyle] = None
-    h3_padding: PaddingValue = None
+    h3_padding: Optional[PaddingValue] = None
     h4_text_style: Optional[TextStyle] = None
-    h4_padding: PaddingValue = None
+    h4_padding: Optional[PaddingValue] = None
     h5_text_style: Optional[TextStyle] = None
-    h5_padding: PaddingValue = None
+    h5_padding: Optional[PaddingValue] = None
     h6_text_style: Optional[TextStyle] = None
-    h6_padding: PaddingValue = None
+    h6_padding: Optional[PaddingValue] = None
     em_text_style: Optional[TextStyle] = None
     strong_text_style: Optional[TextStyle] = None
     del_text_style: Optional[TextStyle] = None
@@ -107,16 +64,16 @@ class MarkdownStyleSheet:
     block_spacing: OptionalNumber = None
     list_indent: OptionalNumber = None
     list_bullet_text_style: Optional[TextStyle] = None
-    list_bullet_padding: PaddingValue = None
+    list_bullet_padding: Optional[PaddingValue] = None
     table_head_text_style: Optional[TextStyle] = None
     table_body_text_style: Optional[TextStyle] = None
     table_head_text_align: Optional[TextAlign] = None
-    table_padding: PaddingValue = None
-    table_cells_padding: PaddingValue = None
-    blockquote_padding: PaddingValue = None
+    table_padding: Optional[PaddingValue] = None
+    table_cells_padding: Optional[PaddingValue] = None
+    blockquote_padding: Optional[PaddingValue] = None
     table_cells_decoration: Optional[BoxDecoration] = None
     blockquote_decoration: Optional[BoxDecoration] = None
-    codeblock_padding: PaddingValue = None
+    codeblock_padding: Optional[PaddingValue] = None
     codeblock_decoration: Optional[BoxDecoration] = None
     horizontal_rule_decoration: Optional[BoxDecoration] = None
     blockquote_alignment: Optional[MainAxisAlignment] = None
@@ -291,7 +248,6 @@ class Markdown(ConstrainedControl):
         selectable: Optional[bool] = None,
         extension_set: Optional[MarkdownExtensionSet] = None,
         code_theme: Optional[Union[MarkdownCodeTheme, MarkdownCustomCodeTheme]] = None,
-        code_style: Optional[TextStyle] = None,
         auto_follow_links: Optional[bool] = None,
         shrink_wrap: Optional[bool] = None,
         fit_content: Optional[bool] = None,
@@ -301,9 +257,7 @@ class Markdown(ConstrainedControl):
         code_style_sheet: Optional[MarkdownStyleSheet] = None,
         md_style_sheet: Optional[MarkdownStyleSheet] = None,
         on_tap_text: OptionalControlEventCallable = None,
-        on_selection_change: OptionalEventCallable[
-            Union[TextSelectionChangeEvent, MarkdownSelectionChangeEvent]
-        ] = None,
+        on_selection_change: OptionalEventCallable[TextSelectionChangeEvent] = None,
         on_tap_link: OptionalControlEventCallable = None,
         #
         # ConstrainedControl
@@ -320,9 +274,9 @@ class Markdown(ConstrainedControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -331,7 +285,7 @@ class Markdown(ConstrainedControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -379,7 +333,6 @@ class Markdown(ConstrainedControl):
         self.selectable = selectable
         self.extension_set = extension_set
         self.code_theme = code_theme
-        self.code_style = code_style
         self.auto_follow_links = auto_follow_links
         self.auto_follow_links_target = auto_follow_links_target
         self.on_tap_link = on_tap_link
@@ -397,7 +350,6 @@ class Markdown(ConstrainedControl):
 
     def before_update(self):
         super().before_update()
-        self._set_attr_json("codeStyle", self.__code_style)
         self._set_attr_json("codeStyleSheet", self.__code_style_sheet)
         self._set_attr_json("mdStyleSheet", self.__md_style_sheet)
         self._set_attr_json(
@@ -497,28 +449,6 @@ class Markdown(ConstrainedControl):
     ):
         self.__code_theme = value
 
-    # code_style
-    @property
-    def code_style(self) -> Optional[TextStyle]:
-        warnings.warn(
-            f"code_style is deprecated since version 0.24.0 "
-            f"and will be removed in version 0.27.0. Use code_style_sheet.code_text_style instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.__code_style
-
-    @code_style.setter
-    def code_style(self, value: Optional[TextStyle]):
-        self.__code_style = value
-        if value is not None:
-            warnings.warn(
-                f"code_style is deprecated since version 0.24.0 "
-                f"and will be removed in version 0.27.0. Use code_style_sheet.code_text_style instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-
     # auto_follow_links
     @property
     def auto_follow_links(self) -> bool:
@@ -571,16 +501,12 @@ class Markdown(ConstrainedControl):
     @property
     def on_selection_change(
         self,
-    ) -> OptionalEventCallable[
-        Union[TextSelectionChangeEvent, MarkdownSelectionChangeEvent]
-    ]:
+    ) -> OptionalEventCallable[TextSelectionChangeEvent]:
         return self.__on_selection_change.handler
 
     @on_selection_change.setter
     def on_selection_change(
         self,
-        handler: OptionalEventCallable[
-            Union[TextSelectionChangeEvent, MarkdownSelectionChangeEvent]
-        ],
+        handler: OptionalEventCallable[TextSelectionChangeEvent],
     ):
         self.__on_selection_change.handler = handler

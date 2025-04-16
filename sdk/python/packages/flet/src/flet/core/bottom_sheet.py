@@ -1,8 +1,16 @@
 from typing import Any, Optional
 
+from flet.core.animation import AnimationStyle
+from flet.core.box import BoxConstraints
+from flet.core.buttons import OutlinedBorder
 from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
-from flet.core.types import ColorEnums, ColorValue, OptionalControlEventCallable
+from flet.core.types import (
+    ClipBehavior,
+    ColorEnums,
+    ColorValue,
+    OptionalControlEventCallable,
+)
 
 
 class BottomSheet(Control):
@@ -55,6 +63,10 @@ class BottomSheet(Control):
         use_safe_area: Optional[bool] = None,
         is_scroll_controlled: Optional[bool] = None,
         maintain_bottom_view_insets_padding: Optional[bool] = None,
+        animation_style: Optional[AnimationStyle] = None,
+        size_constraints: Optional[BoxConstraints] = None,
+        clip_behavior: Optional[ClipBehavior] = None,
+        shape: Optional[OutlinedBorder] = None,
         on_dismiss: OptionalControlEventCallable = None,
         #
         # Control
@@ -82,6 +94,10 @@ class BottomSheet(Control):
         self.is_scroll_controlled = is_scroll_controlled
         self.content = content
         self.maintain_bottom_view_insets_padding = maintain_bottom_view_insets_padding
+        self.animation_style = animation_style
+        self.size_constraints = size_constraints
+        self.clip_behavior = clip_behavior
+        self.shape = shape
         self.on_dismiss = on_dismiss
 
     def _get_control_name(self):
@@ -94,6 +110,9 @@ class BottomSheet(Control):
     def before_update(self):
         super().before_update()
         assert self.__content.visible, "content must be visible"
+        self._set_attr_json("animationStyle", self.__animation_style)
+        self._set_attr_json("sizeConstraints", self.__size_constraints)
+        self._set_attr_json("shape", self.__shape)
 
     # open
     @property
@@ -188,6 +207,43 @@ class BottomSheet(Control):
     @content.setter
     def content(self, value: Control):
         self.__content = value
+
+    # animation_style
+    @property
+    def animation_style(self) -> Optional[AnimationStyle]:
+        return self.__animation_style
+
+    @animation_style.setter
+    def animation_style(self, value: Optional[AnimationStyle]):
+        self.__animation_style = value
+
+    # size_constraints
+    @property
+    def size_constraints(self) -> Optional[BoxConstraints]:
+        return self.__size_constraints
+
+    @size_constraints.setter
+    def size_constraints(self, value: Optional[BoxConstraints]):
+        self.__size_constraints = value
+
+    # clip_behavior
+    @property
+    def clip_behavior(self) -> Optional[ClipBehavior]:
+        return self.__clip_behavior
+
+    @clip_behavior.setter
+    def clip_behavior(self, value: Optional[ClipBehavior]):
+        self.__clip_behavior = value
+        self._set_enum_attr("clipBehavior", value, ClipBehavior)
+
+    # shape
+    @property
+    def shape(self) -> Optional[OutlinedBorder]:
+        return self.__shape
+
+    @shape.setter
+    def shape(self, value: Optional[OutlinedBorder]):
+        self.__shape = value
 
     # on_dismiss
     @property

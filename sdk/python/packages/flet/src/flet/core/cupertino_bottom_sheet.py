@@ -26,7 +26,7 @@ class CupertinoBottomSheet(Control):
         modal: bool = False,
         bgcolor: Optional[ColorValue] = None,
         height: OptionalNumber = None,
-        padding: PaddingValue = None,
+        padding: Optional[PaddingValue] = None,
         on_dismiss: OptionalControlEventCallable = None,
         #
         # Control
@@ -107,11 +107,11 @@ class CupertinoBottomSheet(Control):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # content

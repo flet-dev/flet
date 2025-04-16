@@ -1,5 +1,4 @@
 import json
-import warnings
 from typing import Any, List, Optional, Tuple, Union
 
 from flet.core.adaptive_control import AdaptiveControl
@@ -42,6 +41,7 @@ from flet.core.types import (
     ThemeMode,
     UrlTarget,
 )
+from flet.utils.deprecated import deprecated_property
 
 
 class Container(ConstrainedControl, AdaptiveControl):
@@ -74,19 +74,14 @@ class Container(ConstrainedControl, AdaptiveControl):
     def __init__(
         self,
         content: Optional[Control] = None,
-        padding: PaddingValue = None,
-        margin: MarginValue = None,
+        padding: Optional[PaddingValue] = None,
+        margin: Optional[MarginValue] = None,
         alignment: Optional[Alignment] = None,
         bgcolor: Optional[ColorValue] = None,
         gradient: Optional[Gradient] = None,
         blend_mode: Optional[BlendMode] = None,
         border: Optional[Border] = None,
-        border_radius: BorderRadiusValue = None,
-        image_src: Optional[str] = None,
-        image_src_base64: Optional[str] = None,
-        image_repeat: Optional[ImageRepeat] = None,
-        image_fit: Optional[ImageFit] = None,
-        image_opacity: OptionalNumber = None,
+        border_radius: Optional[BorderRadiusValue] = None,
         shape: Optional[BoxShape] = None,
         clip_behavior: Optional[ClipBehavior] = None,
         ink: Optional[bool] = None,
@@ -100,6 +95,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         url: Optional[str] = None,
         url_target: Optional[UrlTarget] = None,
         theme: Optional[Theme] = None,
+        dark_theme: Optional[Theme] = None,
         theme_mode: Optional[ThemeMode] = None,
         color_filter: Optional[ColorFilter] = None,
         ignore_interactions: Optional[bool] = None,
@@ -123,9 +119,9 @@ class Container(ConstrainedControl, AdaptiveControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -134,7 +130,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -189,11 +185,6 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.blend_mode = blend_mode
         self.border = border
         self.border_radius = border_radius
-        self.image_src = image_src
-        self.image_src_base64 = image_src_base64
-        self.image_repeat = image_repeat
-        self.image_fit = image_fit
-        self.image_opacity = image_opacity
         self.shape = shape
         self.clip_behavior = clip_behavior
         self.ink = ink
@@ -204,6 +195,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self.url = url
         self.url_target = url_target
         self.theme = theme
+        self.dark_theme = dark_theme
         self.theme_mode = theme_mode
         self.color_filter = color_filter
         self.ignore_interactions = ignore_interactions
@@ -237,6 +229,7 @@ class Container(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("blur", self.__blur)
         self._set_attr_json("shadow", self.__shadow if self.__shadow else None)
         self._set_attr_json("theme", self.__theme)
+        self._set_attr_json("darkTheme", self.__dark_theme)
         self._set_attr_json("colorFilter", self.__color_filter)
         self._set_attr_json("image", self.__image)
         self._set_attr_json("foregroundDecoration", self.__foreground_decoration)
@@ -264,11 +257,11 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # padding
     @property
-    def padding(self) -> PaddingValue:
+    def padding(self) -> Optional[PaddingValue]:
         return self.__padding
 
     @padding.setter
-    def padding(self, value: PaddingValue):
+    def padding(self, value: Optional[PaddingValue]):
         self.__padding = value
 
     # image
@@ -291,11 +284,11 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # margin
     @property
-    def margin(self) -> MarginValue:
+    def margin(self) -> Optional[MarginValue]:
         return self.__margin
 
     @margin.setter
-    def margin(self, value: MarginValue):
+    def margin(self, value: Optional[MarginValue]):
         self.__margin = value
 
     # bgcolor
@@ -372,56 +365,12 @@ class Container(ConstrainedControl, AdaptiveControl):
 
     # border_radius
     @property
-    def border_radius(self) -> BorderRadiusValue:
+    def border_radius(self) -> Optional[BorderRadiusValue]:
         return self.__border_radius
 
     @border_radius.setter
-    def border_radius(self, value: BorderRadiusValue):
+    def border_radius(self, value: Optional[BorderRadiusValue]):
         self.__border_radius = value
-
-    # image_src
-    @property
-    def image_src(self) -> Optional[str]:
-        warnings.warn(
-            f"image_src is deprecated since version 0.24.0 "
-            f"and will be removed in version 0.27.0. Use Container.image.src instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self._get_attr("imageSrc")
-
-    @image_src.setter
-    def image_src(self, value: Optional[str]):
-        self._set_attr("imageSrc", value)
-        if value is not None:
-            warnings.warn(
-                f"image_src is deprecated since version 0.24.0 "
-                f"and will be removed in version 0.27.0. Use Container.image.src instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-
-    # image_src_base64
-    @property
-    def image_src_base64(self) -> Optional[str]:
-        warnings.warn(
-            f"image_src_base64 is deprecated since version 0.24.0 "
-            f"and will be removed in version 0.27.0. Use Container.image.src_base64 instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self._get_attr("imageSrcBase64")
-
-    @image_src_base64.setter
-    def image_src_base64(self, value: Optional[str]):
-        self._set_attr("imageSrcBase64", value)
-        if value is not None:
-            warnings.warn(
-                f"image_src_base64 is deprecated since version 0.24.0 "
-                f"and will be removed in version 0.27.0. Use Container.image.src_base64 instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
 
     # ignore_interactions
     @property
@@ -431,74 +380,6 @@ class Container(ConstrainedControl, AdaptiveControl):
     @ignore_interactions.setter
     def ignore_interactions(self, value: Optional[str]):
         self._set_attr("ignoreInteractions", value)
-
-    # image_fit
-    @property
-    def image_fit(self) -> Optional[ImageFit]:
-        warnings.warn(
-            f"image_fit is deprecated since version 0.24.0 "
-            f"and will be removed in version 0.27.0. Use Container.image.fit instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.__image_fit
-
-    @image_fit.setter
-    def image_fit(self, value: Optional[ImageFit]):
-        self.__image_fit = value
-        self._set_enum_attr("imageFit", value, ImageFit)
-        if value is not None:
-            warnings.warn(
-                f"image_fit is deprecated since version 0.24.0 "
-                f"and will be removed in version 0.27.0. Use Container.image.fit instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-
-    # image_repeat
-    @property
-    def image_repeat(self) -> Optional[ImageRepeat]:
-        warnings.warn(
-            f"image_repeat is deprecated since version 0.24.0 "
-            f"and will be removed in version 0.27.0. Use Container.image.repeat instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.__image_repeat
-
-    @image_repeat.setter
-    def image_repeat(self, value: Optional[ImageRepeat]):
-        self.__image_repeat = value
-        self._set_enum_attr("imageRepeat", value, ImageRepeat)
-        if value is not None:
-            warnings.warn(
-                f"image_repeat is deprecated since version 0.24.0 "
-                f"and will be removed in version 0.27.0. Use Container.image.repeat instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
-
-    # image_opacity
-    @property
-    def image_opacity(self) -> float:
-        warnings.warn(
-            f"image_opacity is deprecated since version 0.24.0 "
-            f"and will be removed in version 0.27.0. Use Container.image.opacity instead.",
-            category=DeprecationWarning,
-            stacklevel=2,
-        )
-        return self._get_attr("imageOpacity", data_type="float", def_value=1.0)
-
-    @image_opacity.setter
-    def image_opacity(self, value: OptionalNumber):
-        self._set_attr("imageOpacity", value)
-        if value is not None:
-            warnings.warn(
-                f"image_opacity is deprecated since version 0.24.0 "
-                f"and will be removed in version 0.27.0. Use Container.image.opacity instead.",
-                category=DeprecationWarning,
-                stacklevel=2,
-            )
 
     # content
     @property
@@ -584,6 +465,15 @@ class Container(ConstrainedControl, AdaptiveControl):
     @theme.setter
     def theme(self, value: Optional[Theme]):
         self.__theme = value
+
+    # dark_theme
+    @property
+    def dark_theme(self) -> Optional[Theme]:
+        return self.__dark_theme
+
+    @dark_theme.setter
+    def dark_theme(self, value: Optional[Theme]):
+        self.__dark_theme = value
 
     # theme_mode
     @property

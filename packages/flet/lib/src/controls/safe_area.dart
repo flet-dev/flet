@@ -28,25 +28,22 @@ class SafeAreaControl extends StatelessWidget {
         children.where((c) => c.name == "content" && c.isVisible);
     bool disabled = control.isDisabled || parentDisabled;
     bool? adaptive = control.attrBool("adaptive") ?? parentAdaptive;
+    var safeArea = SafeArea(
+        left: control.attrBool("left", true)!,
+        top: control.attrBool("top", true)!,
+        right: control.attrBool("right", true)!,
+        bottom: control.attrBool("bottom", true)!,
+        maintainBottomViewPadding:
+            control.attrBool("maintainBottomViewPadding", false)!,
+        minimum: parseEdgeInsets(control, "minimumPadding") ??
+            parseEdgeInsets(control, "minimum") ??
+            EdgeInsets.zero,
+        child: contentCtrls.isNotEmpty
+            ? createControl(control, contentCtrls.first.id, disabled,
+                parentAdaptive: adaptive)
+            : const ErrorControl(
+                "SafeArea.content must be provided and visible"));
 
-    return constrainedControl(
-        context,
-        SafeArea(
-            left: control.attrBool("left", true)!,
-            top: control.attrBool("top", true)!,
-            right: control.attrBool("right", true)!,
-            bottom: control.attrBool("bottom", true)!,
-            maintainBottomViewPadding:
-                control.attrBool("maintainBottomViewPadding", false)!,
-            minimum: parseEdgeInsets(control, "minimumPadding") ??
-                parseEdgeInsets(control, "minimum") ??
-                EdgeInsets.zero,
-            child: contentCtrls.isNotEmpty
-                ? createControl(control, contentCtrls.first.id, disabled,
-                    parentAdaptive: adaptive)
-                : const ErrorControl(
-                    "SafeArea.content must be provided and visible")),
-        parent,
-        control);
+    return constrainedControl(context, safeArea, parent, control);
   }
 }

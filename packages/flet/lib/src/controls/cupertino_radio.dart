@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../flet_control_backend.dart';
 import '../models/control.dart';
 import '../utils/colors.dart';
+import '../utils/mouse.dart';
 import '../utils/others.dart';
 import 'create_control.dart';
 import 'error.dart';
@@ -90,6 +91,8 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
           fillColor: widget.control.attrColor("fillColor", context),
           focusColor: widget.control.attrColor("focusColor", context),
           toggleable: widget.control.attrBool("toggleable", false)!,
+          mouseCursor:
+              parseMouseCursor(widget.control.attrString("mouseCursor")),
           activeColor: parseColor(Theme.of(context),
               widget.control.attrString("activeColor", "primary")!),
           inactiveColor: widget.control.attrColor("inactiveColor", context),

@@ -6,7 +6,7 @@ from flet.core.badge import BadgeValue
 from flet.core.border import BorderSide
 from flet.core.buttons import OutlinedBorder
 from flet.core.constrained_control import ConstrainedControl
-from flet.core.control import OptionalNumber
+from flet.core.control import Control, OptionalNumber
 from flet.core.ref import Ref
 from flet.core.text_style import TextStyle
 from flet.core.tooltip import TooltipValue
@@ -21,7 +21,6 @@ from flet.core.types import (
     ResponsiveNumber,
     RotateValue,
     ScaleValue,
-    ThemeVisualDensity,
     VisualDensity,
 )
 
@@ -62,7 +61,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     def __init__(
         self,
-        label: Optional[str] = None,
+        label: Optional[Union[str, Control]] = None,
         value: Optional[bool] = None,
         label_position: Optional[LabelPosition] = None,
         label_style: Optional[TextStyle] = None,
@@ -79,7 +78,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         splash_radius: OptionalNumber = None,
         border_side: ControlStateValue[BorderSide] = None,
         is_error: Optional[bool] = None,
-        visual_density: Union[None, ThemeVisualDensity, VisualDensity] = None,
+        visual_density: Optional[VisualDensity] = None,
         mouse_cursor: Optional[MouseCursor] = None,
         on_change: OptionalControlEventCallable = None,
         on_focus: OptionalControlEventCallable = None,
@@ -99,9 +98,9 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         expand_loose: Optional[bool] = None,
         col: Optional[ResponsiveNumber] = None,
         opacity: OptionalNumber = None,
-        rotate: RotateValue = None,
-        scale: ScaleValue = None,
-        offset: OffsetValue = None,
+        rotate: Optional[RotateValue] = None,
+        scale: Optional[ScaleValue] = None,
+        offset: Optional[OffsetValue] = None,
         aspect_ratio: OptionalNumber = None,
         animate_opacity: Optional[AnimationValue] = None,
         animate_size: Optional[AnimationValue] = None,
@@ -110,7 +109,7 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         animate_scale: Optional[AnimationValue] = None,
         animate_offset: Optional[AnimationValue] = None,
         on_animation_end: OptionalControlEventCallable = None,
-        tooltip: TooltipValue = None,
+        tooltip: Optional[TooltipValue] = None,
         badge: Optional[BadgeValue] = None,
         visible: Optional[bool] = None,
         disabled: Optional[bool] = None,
@@ -185,6 +184,9 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
         self._set_attr_json("shape", self.__shape)
         self._set_attr_json("labelStyle", self.__label_style)
 
+    def _get_children(self):
+        return [self.__label] if isinstance(self.__label, Control) else []
+
     # value
     @property
     def value(self) -> Optional[bool]:
@@ -207,12 +209,14 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     # label
     @property
-    def label(self) -> Optional[str]:
-        return self._get_attr("label")
+    def label(self) -> Optional[Union[str, Control]]:
+        return self.__label
 
     @label.setter
-    def label(self, value: Optional[str]):
-        self._set_attr("label", value)
+    def label(self, value: Optional[Union[str, Control]]):
+        self.__label = value
+        if not isinstance(value, Control):
+            self._set_attr("label", value)
 
     # label_position
     @property
@@ -236,13 +240,13 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
 
     # visual_density
     @property
-    def visual_density(self) -> Union[None, ThemeVisualDensity, VisualDensity]:
+    def visual_density(self) -> Optional[VisualDensity]:
         return self.__visual_density
 
     @visual_density.setter
-    def visual_density(self, value: Union[None, ThemeVisualDensity, VisualDensity]):
+    def visual_density(self, value: Optional[VisualDensity]):
         self.__visual_density = value
-        self._set_enum_attr("visualDensity", value, (ThemeVisualDensity, VisualDensity))
+        self._set_enum_attr("visualDensity", value, VisualDensity)
 
     # autofocus
     @property
