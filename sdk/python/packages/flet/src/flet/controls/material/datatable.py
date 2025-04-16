@@ -44,7 +44,7 @@ class DataColumn(Control):
     Typically, this will be a `Text` control. It could also be an `Icon` (typically using size 18), or a `Row` with an icon and some text.
     """
 
-    tooltip_text: Optional[str]
+    tooltip_text: Optional[str] = None
     """
     The column heading's tooltip.
 
