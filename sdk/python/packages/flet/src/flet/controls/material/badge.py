@@ -12,14 +12,18 @@ __all__ = ["Badge", "BadgeValue"]
 
 @dataclass
 class Badge:
-    """Badges are used to show notifications, counts, or status information on navigation items such as NavigationBar or NavigationRail destinations
-    or a button's icon."""
+    """
+    Badges are used to show notifications, counts, or status information on navigation items such as NavigationBar or NavigationRail destinations
+    or a button's icon.
+
+    Online docs: https://flet.dev/docs/reference/types/badge
+    """
 
     text: Optional[str] = None
     offset: Optional[OffsetValue] = None
     alignment: Optional[Alignment] = None
     bgcolor: OptionalColorValue = None
-    label_visible: Optional[bool] = None
+    label_visible: bool = True
     large_size: OptionalNumber = None
     padding: OptionalPaddingValue = None
     small_size: OptionalNumber = None
