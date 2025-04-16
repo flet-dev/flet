@@ -1,4 +1,4 @@
-from dataclasses import field
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import List, Optional
 
@@ -32,6 +32,7 @@ class PieChartEventType(Enum):
     UNDEFINED = "undefined"
 
 
+@dataclass
 class PieChartEvent(ControlEvent):
     type: PieChartEventType
     section_index: int

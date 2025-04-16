@@ -10,7 +10,7 @@ from flet.controls.text_style import TextStyle
 from flet.controls.types import OptionalColorValue, OptionalNumber, TextAlign
 
 
-@control("r")
+@control("r", kw_only=True)
 class BarChartRod(Control):
     rod_stack_items: List[BarChartRodStackItem] = field(default_factory=list)
     from_y: OptionalNumber = None

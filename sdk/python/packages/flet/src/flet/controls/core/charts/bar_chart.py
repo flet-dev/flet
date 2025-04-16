@@ -1,7 +1,6 @@
-import json
-from dataclasses import field
+from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, List, Optional, Union
+from typing import List, Optional
 
 from flet.controls.animation import AnimationValue
 from flet.controls.border import Border, BorderSide
@@ -11,18 +10,11 @@ from flet.controls.control_event import ControlEvent
 from flet.controls.core.charts.bar_chart_group import BarChartGroup
 from flet.controls.core.charts.chart_axis import ChartAxis
 from flet.controls.core.charts.chart_grid_lines import ChartGridLines
-from flet.controls.material.badge import BadgeValue
-from flet.controls.material.tooltip import TooltipValue
 from flet.controls.padding import OptionalPaddingValue
-from flet.controls.ref import Ref
-from flet.controls.transform import OffsetValue, RotateValue, ScaleValue
 from flet.controls.types import (
-    ColorEnums,
     OptionalColorValue,
-    OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,
-    ResponsiveNumber,
 )
 
 
@@ -32,11 +24,12 @@ class TooltipDirection(Enum):
     BOTTOM = "bottom"
 
 
+@dataclass
 class BarChartEvent(ControlEvent):
     type: str
-    group_index: int
-    rod_index: int
-    stack_item_index: int
+    group_index: Optional[int] = None
+    rod_index: Optional[int] = None
+    stack_item_index: Optional[int] = None
 
 
 @control("BarChart")

@@ -12,6 +12,7 @@ import 'controls/animated_switcher.dart';
 import 'controls/app_bar.dart';
 import 'controls/autofill_group.dart';
 import 'controls/banner.dart';
+import 'controls/bar_chart.dart';
 import 'controls/bottom_app_bar.dart';
 import 'controls/bottom_sheet.dart';
 import 'controls/canvas.dart';
@@ -130,6 +131,8 @@ class FletCoreExtension extends FletExtension {
         return CupertinoCheckboxControl(key: key, control: control);
       case "Banner":
         return BannerControl(key: key, control: control);
+      case "BarChart":
+        return BarChartControl(key: key, control: control);
       case "Draggable":
         return DraggableControl(key: key, control: control);
       case "DragTarget":
