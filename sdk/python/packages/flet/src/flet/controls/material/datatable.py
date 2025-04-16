@@ -162,11 +162,60 @@ class DataCell(Control):
 
 @control("row")
 class DataRow(Control):
+    """
+    Row configuration and cell data for a DataTable.
+
+    One row configuration must be provided for each row to display in the table.
+
+    The data for this row of the table is provided in the `cells` property of the `DataRow` object.
+    """
+
     cells: List[DataCell] = field(default_factory=list)
+    """
+    The data for this row - a list of [`DataCell`](https://flet.dev/docs/reference/datacell) controls.
+
+    There must be exactly as many cells as there are columns in the table.
+    """
+
     color: OptionalControlStateValue[ColorValue] = None
-    selected: Optional[bool] = field(default=False)
+    """
+    The [color](https://flet.dev/docs/reference/colors) for the row.
+
+    By default, the color is transparent unless selected. Selected rows has a grey translucent color.
+
+    The effective color can depend on the [`ControlState`](https://flet.dev/docs/reference/types/controlstate) state, if the row is
+    selected, pressed, hovered, focused, disabled or enabled. The color is painted as an overlay to the row. To make sure
+    that the row's InkWell is visible (when pressed, hovered and focused), it is recommended to use a translucent color.
+    """
+
+    selected: bool = False
+    """
+    Whether the row is selected.
+
+    If `on_select_changed` is non-null for any row in the table, then a checkbox is shown at the start of each row. If the row is selected (`True`), the checkbox will be checked and the row will be highlighted.
+
+    Otherwise, the checkbox, if present, will not be checked.
+    """
+
     on_long_press: OptionalControlEventCallable = None
+    """
+    Called if the row is long-pressed.
+
+    If a `DataCell` in the row has its `DataCell.on_tap`, `DataCell.on_double_tap`, `DataCell.on_long_press`, `DataCell.on_tap_cancel` or `DataCell.on_tap_down` callback defined, that callback behavior overrides the gesture behavior of the row for that particular cell.
+    """
+
     on_select_changed: OptionalControlEventCallable = None
+    """
+    Called when the user selects or unselects a selectable row.
+
+    If this is not null, then the row is selectable. The current selection state of the row is given by selected.
+
+    If any row is selectable, then the table's heading row will have a checkbox that can be checked to select all selectable rows (and which is checked if all the rows are selected), and each subsequent row will have a checkbox to toggle just that row.
+
+    A row whose `on_select_changed` callback is null is ignored for the purposes of determining the state of the "all" checkbox, and its checkbox is disabled.
+
+    If a `DataCell` in the row has its `DataCell.on_tap` callback defined, that callback behavior overrides the gesture behavior of the row for that particular cell.
+    """
 
     def __contains__(self, item):
         return item in self.cells
