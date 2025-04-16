@@ -6,7 +6,8 @@ import weakref
 from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
-from flet.controls.control import BaseControl, Control
+from flet.controls.base_control import BaseControl
+from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
 from flet.controls.object_patch import ObjectPatch
 from flet.controls.page import Page, _session_page
