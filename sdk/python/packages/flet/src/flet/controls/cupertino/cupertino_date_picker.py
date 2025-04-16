@@ -1,10 +1,10 @@
 from dataclasses import field
-from datetime import datetime, date
+from datetime import date, datetime
 from enum import Enum
 from typing import Optional
 
+from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import control
 from flet.controls.types import (
     DateTimeValue,
     Number,

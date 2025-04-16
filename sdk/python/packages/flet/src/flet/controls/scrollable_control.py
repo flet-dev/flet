@@ -4,7 +4,8 @@ from enum import Enum
 from typing import Optional
 
 from flet.controls.animation import AnimationCurve
-from flet.controls.control import Control, control
+from flet.controls.base_control import control
+from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.types import Number, OptionalEventCallable, ScrollMode

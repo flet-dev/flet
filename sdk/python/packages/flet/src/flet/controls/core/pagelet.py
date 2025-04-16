@@ -1,8 +1,9 @@
 from typing import Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, control
+from flet.controls.control import Control
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
 from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.controls.material.app_bar import AppBar

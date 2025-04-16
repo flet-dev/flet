@@ -3,8 +3,9 @@ from typing import List, Optional
 
 from flet.controls import padding
 from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, control
+from flet.controls.control import Control
 from flet.controls.padding import PaddingValue
 from flet.controls.types import (
     Number,

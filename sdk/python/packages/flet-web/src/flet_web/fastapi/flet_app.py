@@ -8,7 +8,7 @@ from typing import Any, Optional
 
 import msgpack
 from fastapi import WebSocket, WebSocketDisconnect
-from flet.controls.control import BaseControl
+from flet.controls.base_control import BaseControl
 from flet.controls.page import PageDisconnectedException
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (

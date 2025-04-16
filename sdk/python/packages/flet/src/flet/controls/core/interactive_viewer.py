@@ -3,8 +3,9 @@ from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
+from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, control
+from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.margin import MarginValue
@@ -72,9 +73,9 @@ class InteractiveViewer(ConstrainedControl, AdaptiveControl):
     on_interaction_update: OptionalEventCallable[
         InteractiveViewerInteractionUpdateEvent
     ] = None
-    on_interaction_end: OptionalEventCallable[
-        InteractiveViewerInteractionEndEvent
-    ] = None
+    on_interaction_end: OptionalEventCallable[InteractiveViewerInteractionEndEvent] = (
+        None
+    )
 
     def before_update(self):
         super().before_update()

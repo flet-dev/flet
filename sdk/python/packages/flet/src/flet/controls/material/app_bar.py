@@ -1,8 +1,9 @@
 from typing import List, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
-from flet.controls.control import Control, control
+from flet.controls.control import Control
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
     ClipBehavior,

@@ -2,9 +2,10 @@ from dataclasses import dataclass, field
 from typing import List, Optional
 
 from flet.controls.alignment import Alignment
+from flet.controls.base_control import control
 from flet.controls.border import BorderSide
 from flet.controls.buttons import OutlinedBorder
-from flet.controls.control import Control, control
+from flet.controls.control import Control
 from flet.controls.control_state import ControlState, OptionalControlStateValue
 from flet.controls.padding import PaddingValue
 from flet.controls.types import ClipBehavior, ColorValue, MouseCursor, OptionalNumber

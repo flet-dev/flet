@@ -1,11 +1,12 @@
 from typing import Optional
 
 from flet.controls.animation import AnimationStyle
+from flet.controls.base_control import control
 from flet.controls.border import BorderSide
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, control
+from flet.controls.control import Control
 from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.text_style import TextStyle

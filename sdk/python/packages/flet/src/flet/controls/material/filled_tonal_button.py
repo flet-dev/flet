@@ -1,4 +1,4 @@
-from flet.controls.control import control
+from flet.controls.base_control import control
 from flet.controls.material.elevated_button import ElevatedButton
 
 

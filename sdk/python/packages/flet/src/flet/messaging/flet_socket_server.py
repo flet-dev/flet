@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 import msgpack
-from flet.controls.control import BaseControl
+from flet.controls.base_control import BaseControl
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,

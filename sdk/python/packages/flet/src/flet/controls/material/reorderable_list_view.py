@@ -1,7 +1,8 @@
 from dataclasses import field
 from typing import List, Optional
 
-from flet.controls.control import Control, control
+from flet.controls.base_control import control
+from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
 from flet.controls.core.list_view import ListView
 from flet.controls.padding import OptionalPaddingValue

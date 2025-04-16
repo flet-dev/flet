@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 from typing import Any, List, Optional
 
+from flet.controls.base_control import control
 from flet.controls.border_radius import OptionalBorderRadiusValue
-from flet.controls.control import control
 from flet.controls.core.canvas.shape import Shape
 from flet.controls.painting import Paint
 

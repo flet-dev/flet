@@ -24,8 +24,9 @@ from urllib.parse import urlparse
 
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.animation import AnimationCurve
+from flet.controls.base_control import BaseControl, control
 from flet.controls.box import BoxDecoration
-from flet.controls.control import BaseControl, Control, Service, control
+from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
 from flet.controls.core.browser_context_menu import BrowserContextMenu
 from flet.controls.core.clipboard import Clipboard
@@ -46,6 +47,7 @@ from flet.controls.material.navigation_drawer import NavigationDrawer
 from flet.controls.padding import OptionalPaddingValue, Padding
 from flet.controls.query_string import QueryString
 from flet.controls.scrollable_control import OnScrollEvent
+from flet.controls.service import Service
 from flet.controls.session_storage import SessionStorage
 from flet.controls.theme import Theme
 from flet.controls.transform import OffsetValue

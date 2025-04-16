@@ -1,6 +1,7 @@
 from typing import Optional, Union
 
-from flet.controls.control import Control, control
+from flet.controls.base_control import control
+from flet.controls.control import Control
 from flet.controls.core.charts.chart_point_line import ChartPointLine
 from flet.controls.core.charts.chart_point_shape import ChartPointShape
 from flet.controls.text_style import TextStyle

@@ -2,9 +2,10 @@ from enum import Enum
 from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, control
+from flet.controls.control import Control
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.types import ClipBehavior, OptionalColorValue, OptionalNumber
 

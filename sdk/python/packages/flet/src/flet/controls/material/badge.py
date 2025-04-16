@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Optional, Union
 
 from flet.controls.alignment import Alignment
-from flet.controls.control import BaseControl, control
+from flet.controls.base_control import BaseControl, control
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.transform import OffsetValue

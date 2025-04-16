@@ -2,9 +2,9 @@ from dataclasses import dataclass, field
 from typing import Any, List, Optional
 
 from flet.controls.animation import AnimationValue
+from flet.controls.base_control import control
 from flet.controls.border import Border, BorderSide
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import control
 from flet.controls.control_event import ControlEvent
 from flet.controls.core.charts.chart_axis import ChartAxis
 from flet.controls.core.charts.chart_grid_lines import ChartGridLines

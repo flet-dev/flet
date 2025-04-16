@@ -4,7 +4,7 @@ from enum import Enum
 from typing import Optional
 
 from flet.controls.alignment import Alignment
-from flet.controls.control import BaseControl, control
+from flet.controls.base_control import BaseControl, control
 from flet.controls.control_event import ControlEvent
 from flet.controls.types import (
     Brightness,

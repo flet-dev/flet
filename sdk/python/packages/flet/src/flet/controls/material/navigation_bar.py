@@ -3,10 +3,10 @@ from enum import Enum
 from typing import List, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.base_control import control
 from flet.controls.border import Border
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import control
 from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.types import (

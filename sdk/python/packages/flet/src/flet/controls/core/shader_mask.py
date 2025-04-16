@@ -1,8 +1,9 @@
 from typing import Optional
 
+from flet.controls.base_control import control
 from flet.controls.border_radius import OptionalBorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, control
+from flet.controls.control import Control
 from flet.controls.gradients import Gradient
 from flet.controls.types import BlendMode
 

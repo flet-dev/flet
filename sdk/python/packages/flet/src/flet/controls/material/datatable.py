@@ -1,10 +1,11 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
+from flet.controls.base_control import control
 from flet.controls.border import Border, BorderSide
 from flet.controls.border_radius import OptionalBorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, control
+from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
 from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.core.gesture_detector import TapEvent

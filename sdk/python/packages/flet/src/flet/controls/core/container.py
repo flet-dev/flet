@@ -4,6 +4,7 @@ from typing import Optional
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment
 from flet.controls.animation import AnimationValue
+from flet.controls.base_control import control
 from flet.controls.blur import BlurValue
 from flet.controls.border import Border
 from flet.controls.border_radius import OptionalBorderRadiusValue
@@ -15,7 +16,7 @@ from flet.controls.box import (
     ShadowValue,
 )
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, control
+from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
 from flet.controls.gradients import Gradient
 from flet.controls.margin import OptionalMarginValue

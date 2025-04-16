@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 import msgpack
-from flet.controls.control import BaseControl, Control
+from flet.controls.base_control import BaseControl
 from flet.controls.object_patch import ObjectPatch
 from flet.controls.padding import Padding
 from flet.controls.page import Page, PageMediaData
