@@ -108,6 +108,12 @@ class Session:
     def get_page_patch(self):
         return self.__get_update_control_patch(self.__page, prev_control=None)[""]
 
+    # optimizations:
+    # - disable auto-update
+    # - auto-update to skip already updated items
+    # - add-only list
+    # - disable mount/unmount
+
     async def dispatch_event(self, control_id: int, event_name: str, event_data: Any):
         if control := self.__index.get(control_id):
             field_name = f"on_{event_name}"
@@ -171,12 +177,15 @@ class Session:
         self, control: BaseControl, prev_control: Optional[BaseControl]
     ):
         # calculate patch
-        patch = ObjectPatch.from_diff(
+        patch, added_controls, removed_controls = ObjectPatch.from_diff(
             prev_control,
             control,
             in_place=True,
             controls_index=self.__index,
             control_cls=BaseControl,
         )
+
+        # print(f"\n\nadded_controls ({len(added_controls)}):", added_controls)
+        # print(f"\n\nremoved_controls ({len(removed_controls)}):", removed_controls)
 
         return patch.to_graph()

@@ -234,7 +234,7 @@ class ObjectPatch(object):
         )
         builder._compare_values(None, [], None, src, dst)
         ops = list(builder.execute())
-        return cls(ops)
+        return cls(ops), builder.added_controls, builder.removed_controls
 
     def to_graph(self) -> Any:
         root = {}
@@ -283,6 +283,8 @@ class DiffBuilder(object):
     ):
         self.in_place = in_place
         self.controls_index = controls_index
+        self.added_controls = []
+        self.removed_controls = []
         self.control_cls = control_cls
         self.index_storage = [{}, {}]
         self.index_storage2 = [[], []]
@@ -398,6 +400,7 @@ class DiffBuilder(object):
             self.store_index(item, new_index, _ST_ADD)
 
     def _item_removed(self, path, key, item):
+        # print("_item_removed:", path, key, item)
         new_op = RemoveOperation(
             {
                 "op": "remove",
@@ -433,6 +436,7 @@ class DiffBuilder(object):
 
         else:
             self.store_index(item, new_index, _ST_REMOVE)
+            self._remove_control(item)
 
     def _item_replaced(self, parent, path, key, item):
         self._configure_dataclass(item, parent)
@@ -644,6 +648,8 @@ class DiffBuilder(object):
                 if not "skip" in field.metadata:
                     self._configure_dataclass(getattr(item, field.name), item)
 
+            self.added_controls.append(item)
+
             if self.control_cls and isinstance(item, self.control_cls):
                 # call Control.before_update()
                 item.before_update()
@@ -657,6 +663,31 @@ class DiffBuilder(object):
         elif isinstance(item, list):
             for v in item:
                 self._configure_dataclass(v, parent)
+
+    def _remove_control(self, item):
+        if self.control_cls and isinstance(item, self.control_cls):
+
+            # recurse through list props
+            for item_list in getattr(item, "__prev_lists", {}).values():
+                self._remove_control(item_list)
+
+            # recurse through dict props
+            for item_dict in getattr(item, "__prev_dicts", {}).values():
+                self._remove_control(item_dict)
+
+            # recurse through dataclass props
+            for item_class in getattr(item, "__prev_classes", {}).values():
+                self._remove_control(item_class)
+
+            self.removed_controls.append(item)
+
+        elif isinstance(item, dict):
+            for v in item.values():
+                self._remove_control(v)
+
+        elif isinstance(item, list):
+            for v in item:
+                self._remove_control(v)
 
 
 def _path_join(path, key):
