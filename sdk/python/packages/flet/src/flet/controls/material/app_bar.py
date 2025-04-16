@@ -66,7 +66,7 @@ class AppBar(AdaptiveControl):
     """
     Defines the height of the toolbar component of an AppBar.
 
-    Value is of tye [`OptionalNumber`](https://flet.dev/docs/reference/types/aliases#optionalnumber) and defaults to `56.0`.
+    Value is of type [`OptionalNumber`](https://flet.dev/docs/reference/types/aliases#optionalnumber) and defaults to `56.0`.
     """
 
     color: OptionalColorValue = None
