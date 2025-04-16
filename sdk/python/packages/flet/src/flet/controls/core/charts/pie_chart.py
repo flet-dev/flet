@@ -35,14 +35,14 @@ class PieChartEventType(Enum):
 @dataclass
 class PieChartEvent(ControlEvent):
     type: PieChartEventType
-    section_index: int
+    section_index: Optional[int]
     local_x: Optional[float] = field(metadata={"data_field": "lx"})
     local_y: Optional[float] = field(metadata={"data_field": "ly"})
 
 
 @control("PieChart")
 class PieChart(ConstrainedControl):
-    sections: Optional[List[PieChartSection]] = None
+    sections: List[PieChartSection] = field(default_factory=list)
     center_space_color: OptionalColorValue = None
     center_space_radius: OptionalNumber = None
     sections_space: OptionalNumber = None

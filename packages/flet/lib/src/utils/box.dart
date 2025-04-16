@@ -36,7 +36,7 @@ List<BoxShadow>? parseBoxShadows(dynamic value, ThemeData theme,
   if (value is List) {
     return value.map((e) => parseBoxShadow(e, theme)!).toList();
   } else {
-    return [parseBoxShadow(json, theme)!];
+    return [parseBoxShadow(value, theme)!];
   }
 }
 

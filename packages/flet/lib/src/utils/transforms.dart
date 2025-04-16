@@ -30,7 +30,7 @@ ScaleDetails? parseScale(dynamic value, [ScaleDetails? defaultValue]) {
 
 Offset? parseOffset(dynamic value, [Offset? defaultValue]) {
   if (value == null) return defaultValue;
-  var details = OffsetDetails.fromJson(value);
+  var details = OffsetDetails.fromValue(value);
   return Offset(details.x, details.y);
 }
 
@@ -79,7 +79,7 @@ class OffsetDetails {
 
   OffsetDetails({required this.x, required this.y});
 
-  factory OffsetDetails.fromJson(dynamic value) {
+  factory OffsetDetails.fromValue(dynamic value) {
     if (value is List && value.length > 1) {
       return OffsetDetails(
           x: parseDouble(value[0], 0)!, y: parseDouble(value[1], 0)!);
@@ -89,6 +89,7 @@ class OffsetDetails {
     }
   }
 }
+
 extension TransformParsers on Control {
   RotationDetails? getRotationDetails(String propertyName,
       [RotationDetails? defaultValue]) {

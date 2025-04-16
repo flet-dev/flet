@@ -75,6 +75,7 @@ import 'controls/navigation_bar_destination.dart';
 import 'controls/navigation_drawer.dart';
 import 'controls/navigation_rail.dart';
 import 'controls/page.dart';
+import 'controls/pie_chart.dart';
 import 'controls/placeholder.dart';
 import 'controls/popup_menu_button.dart';
 import 'controls/progress_bar.dart';
@@ -272,6 +273,8 @@ class FletCoreExtension extends FletExtension {
         return ReorderableListViewControl(key: key, control: control);
       case "Page":
         return PageControl(key: key, control: control);
+      case "PieChart":
+        return PieChartControl(key: key, control: control);
       case "ProgressBar":
         return ProgressBarControl(key: key, control: control);
       case "ProgressRing":
