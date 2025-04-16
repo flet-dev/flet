@@ -109,7 +109,7 @@ class DataTableControl extends StatelessWidget {
           cells: row.children("cells").map((cell) {
             cell.notifyParent = true;
             return DataCell(
-              cell.buildWidget("content")!,
+              cell.buildTextOrWidget("content")!,
               placeholder: cell.getBool("placeholder", false)!,
               showEditIcon: cell.getBool("show_edit_icon", false)!,
               onDoubleTap: cell.getBool("on_double_tap", false)!

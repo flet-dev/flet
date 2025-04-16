@@ -82,14 +82,78 @@ class DataColumn(Control):
 
 @control("cell")
 class DataCell(Control):
-    content: Control
-    placeholder: Optional[bool] = field(default=False)
-    show_edit_icon: Optional[bool] = field(default=False)
+    """
+    The data for a cell of a `DataTable`.
+
+    One list of DataCell objects must be provided for each `DataRow` in the `DataTable`.
+    """
+
+    content: StrOrControl
+    """
+    The data for the row.
+
+    Typically a `Text` control or a `Dropdown` control.
+
+    If the cell has no data, then a `Text` widget with placeholder text should be provided instead, and `placeholder` should be set to `True`.
+
+    This control can only have one child. To lay out multiple children, let this control's child be a widget such as `Row`, `Column`, or `Stack`, which have `controls` property, and then provide the children to that widget.
+    """
+
+    placeholder: bool = False
+    """
+    Whether the child is actually a placeholder.
+
+    If this is `True`, the default text style for the cell is changed to be appropriate for placeholder text.
+    """
+
+    show_edit_icon: bool = False
+    """
+    Whether to show an edit icon at the end of the cell.
+
+    This does not make the cell actually editable; the caller must implement editing behavior if desired (initiated from the `on_tap` callback).
+
+    If this is set, `on_tap` should also be set, otherwise tapping the icon will have no effect.
+    """
+
     on_tap: OptionalControlEventCallable = None
+    """
+    Called if the cell is tapped.
+
+    If specified, tapping the cell will call this callback, else tapping the cell will attempt to select the row (
+    if `DataRow.on_select_changed` is provided).
+    """
+
     on_double_tap: OptionalControlEventCallable = None
+    """
+    Called when the cell is double tapped.
+
+    If specified, tapping the cell will call this callback, else (tapping the cell will attempt to select the row (
+    if `DataRow.on_select_changed` is provided).
+    """
+
     on_long_press: OptionalControlEventCallable = None
+    """
+    Called if the cell is long-pressed.
+
+    If specified, tapping the cell will invoke this callback, else tapping the cell will attempt to select the row (
+    if `DataRow.on_select_changed` is provided).
+    """
+
     on_tap_cancel: OptionalControlEventCallable = None
+    """
+    Called if the user cancels a tap was started on cell.
+
+    If specified, cancelling the tap gesture will invoke this callback, else tapping the cell will attempt to select the
+    row (if `DataRow.on_select_changed` is provided).
+    """
+
     on_tap_down: OptionalEventCallable[TapEvent] = None
+    """
+    Called if the cell is tapped down.
+
+    If specified, tapping the cell will call this callback, else tapping the cell will attempt to select the row (
+    if `DataRow.on_select_changed` is provided).
+    """
 
     def before_update(self):
         super().before_update()
