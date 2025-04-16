@@ -3,8 +3,6 @@ import sys
 from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING, Any, Callable, Dict, Optional, Type, TypeVar, Union
 
-from flet.controls.material.badge import BadgeValue
-from flet.controls.material.tooltip import TooltipValue
 from flet.controls.ref import Ref
 from flet.controls.types import Number, ResponsiveNumber
 from flet.utils.strings import random_string
@@ -21,6 +19,9 @@ else:
 
 
 if TYPE_CHECKING:
+    from flet.controls.material.badge import BadgeValue
+    from flet.controls.material.tooltip import TooltipValue
+
     from .page import Page
 
 __all__ = [
@@ -220,8 +221,8 @@ class Control(BaseControl):
     expand_loose: Optional[bool] = None
     col: ResponsiveNumber = 12
     opacity: Number = 1.0
-    tooltip: Optional[TooltipValue] = None
-    badge: Optional[BadgeValue] = None
+    tooltip: Optional["TooltipValue"] = None
+    badge: Optional["BadgeValue"] = None
     visible: bool = True
     disabled: bool = False
     rtl: bool = False

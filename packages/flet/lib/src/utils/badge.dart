@@ -2,25 +2,28 @@ import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
 extension BadgeParsers on Control {
-  Badge? wrapWithBadge(String propertyName, Widget child, ThemeData theme) {
-    var value = get(propertyName);
-    if (value == null) return null;
-    if (value is String) {
-      return Badge(label: Text(value), child: child);
+  Widget wrapWithBadge(String propertyName, Widget child, ThemeData theme) {
+    var badge = get(propertyName);
+    if (badge == null) {
+      return child;
+    } else if (badge is Control) {
+      badge.notifyParent = true;
+      return Badge(
+        label:
+            badge.buildTextOrWidget("label") ?? badge.buildTextOrWidget("text"),
+        isLabelVisible: badge.getBool("label_visible", true)!,
+        offset: badge.getOffset("offset"),
+        alignment: badge.getAlignment("alignment"),
+        backgroundColor: parseColor(badge.get("bgcolor"), theme),
+        largeSize: badge.getDouble("large_size"),
+        padding: badge.getPadding("padding"),
+        smallSize: badge.getDouble("small_size"),
+        textColor: parseColor(badge.get("text_color"), theme),
+        textStyle: badge.getTextStyle("text_style", theme),
+        child: child,
+      );
+    } else {
+      return Badge(label: Text(badge.toString()), child: child);
     }
-
-    return Badge(
-      label: buildTextOrWidget("label") ?? buildTextOrWidget("text"),
-      isLabelVisible: parseBool(value["label_visible"], true)!,
-      offset: parseOffset(value["offset"]),
-      alignment: parseAlignment(value["alignment"]),
-      backgroundColor: parseColor(value["bgcolor"], theme),
-      largeSize: parseDouble(value["large_size"]),
-      padding: parseEdgeInsets(value["padding"]),
-      smallSize: parseDouble(value["small_size"]),
-      textColor: parseColor(value["text_color"], theme),
-      textStyle: parseTextStyle(value["text_style"], theme),
-      child: child,
-    );
   }
 }

@@ -2,16 +2,17 @@ from dataclasses import dataclass
 from typing import Optional, Union
 
 from flet.controls.alignment import Alignment
+from flet.controls.control import BaseControl, control
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.transform import OffsetValue
-from flet.controls.types import OptionalColorValue, OptionalNumber
+from flet.controls.types import OptionalColorValue, OptionalNumber, StrOrControl
 
 __all__ = ["Badge", "BadgeValue"]
 
 
-@dataclass
-class Badge:
+@control("badge")
+class Badge(BaseControl):
     """
     Badges are used to show notifications, counts, or status information on navigation items such as NavigationBar or NavigationRail destinations
     or a button's icon.
@@ -19,7 +20,7 @@ class Badge:
     Online docs: https://flet.dev/docs/reference/types/badge
     """
 
-    text: Optional[str] = None
+    label: Optional[StrOrControl] = None
     offset: Optional[OffsetValue] = None
     alignment: Optional[Alignment] = None
     bgcolor: OptionalColorValue = None
