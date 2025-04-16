@@ -156,32 +156,32 @@ class AlertDialog(DialogControl):
 
     icon_color: OptionalColorValue = None
     """
-    (No description provided in Reference.)
+    TBD
     """
 
     scrollable: bool = False
     """
-    (No description provided in Reference.)
+    TBD
     """
 
     actions_overflow_button_spacing: OptionalNumber = None
     """
-    (No description provided in Reference.)
+    TBD
     """
 
     alignment: Optional[Alignment] = None
     """
-    (No description provided in Reference.)
+    TBD
     """
 
     content_text_style: Optional[TextStyle] = None
     """
-    (No description provided in Reference.)
+    TBD
     """
 
     title_text_style: Optional[TextStyle] = None
     """
-    (No description provided in Reference.)
+    TBD
     """
 
     clip_behavior: Optional[ClipBehavior] = None
