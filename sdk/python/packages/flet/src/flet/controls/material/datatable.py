@@ -19,6 +19,7 @@ from flet.controls.types import (
     OptionalControlEventCallable,
     OptionalEventCallable,
     OptionalNumber,
+    StrOrControl,
 )
 
 
@@ -30,11 +31,49 @@ class DataColumnSortEvent(ControlEvent):
 
 @control("column")
 class DataColumn(Control):
-    label: Control
-    numeric: Optional[bool] = field(default=False)
+    """
+    Column configuration for a `DataTable`.
+
+    One column configuration must be provided for each column to display in the table.
+    """
+
+    label: StrOrControl
+    """
+    The column heading.
+
+    Typically, this will be a `Text` control. It could also be an `Icon` (typically using size 18), or a `Row` with an icon and some text.
+    """
+
+    tooltip_text: Optional[str]
+    """
+    The column heading's tooltip.
+
+    This is a longer description of the column heading, for cases where the heading might have been abbreviated to keep the column width to a reasonable size.
+    """
+
+    numeric: bool = False
+    """
+    Whether this column represents numeric data or not.
+
+    The contents of cells of columns containing numeric data are right-aligned.
+    """
+
     column_tooltip: Optional[str] = None
+    # No reference documentation provided for `column_tooltip`.
+
     heading_row_alignment: Optional[MainAxisAlignment] = None
+    """
+    Defines the horizontal layout of the label and sort indicator in the heading row.
+
+    Value is of type [MainAxisAlignment](https://flet.dev/docs/reference/types/mainaxisalignment).
+    """
+
     on_sort: OptionalEventCallable[DataColumnSortEvent] = None
+    """
+    Called when the user asks to sort the table using this column.
+
+    If not set, the column will not be considered sortable.
+    """
 
     # def before_update(self):
     #     super().before_update()
