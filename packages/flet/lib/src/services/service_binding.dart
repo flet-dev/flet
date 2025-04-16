@@ -9,7 +9,7 @@ class ServiceBinding {
 
   ServiceBinding({required this.control, required this.backend}) {
     for (var extension in backend.extensions) {
-      _service = extension.createService(control, backend);
+      _service = extension.createService(control);
       if (_service != null) {
         break;
       }

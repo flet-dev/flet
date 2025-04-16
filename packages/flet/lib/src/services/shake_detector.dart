@@ -8,7 +8,7 @@ import '../flet_service.dart';
 import '../utils/numbers.dart';
 
 class ShakeDetectorService extends FletService {
-  ShakeDetectorService({required super.control, required super.backend});
+  ShakeDetectorService({required super.control});
 
   StreamSubscription<AccelerometerEvent>? _subscription;
 
@@ -77,7 +77,7 @@ class ShakeDetectorService extends FletService {
         _mShakeCount++;
 
         if (_mShakeCount >= _minimumShakeCount) {
-          backend.triggerControlEvent(control, "shake");
+          control.triggerEvent("shake");
         }
       }
     });

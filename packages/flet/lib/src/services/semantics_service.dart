@@ -5,7 +5,7 @@ import '../flet_service.dart';
 import '../utils/misc.dart';
 
 class SemanticsServiceControl extends FletService {
-  SemanticsServiceControl({required super.control, required super.backend});
+  SemanticsServiceControl({required super.control});
 
   @override
   void init() {

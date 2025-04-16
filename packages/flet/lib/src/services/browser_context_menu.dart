@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import '../flet_service.dart';
 
 class BrowserContextMenuService extends FletService {
-  BrowserContextMenuService({required super.control, required super.backend});
+  BrowserContextMenuService({required super.control});
 
   @override
   void init() {

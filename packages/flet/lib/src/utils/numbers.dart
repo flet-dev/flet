@@ -10,6 +10,8 @@ double? parseDouble(dynamic value, [double? defaultValue]) {
     return double.infinity;
   } else if (value == null) {
     return defaultValue;
+  } else if (value is int) {
+    return value.toDouble();
   } else {
     return double.tryParse(value.toString()) ?? defaultValue;
   }

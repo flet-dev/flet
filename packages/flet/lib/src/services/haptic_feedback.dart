@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import '../flet_service.dart';
 
 class HapticFeedbackService extends FletService {
-  HapticFeedbackService({required super.control, required super.backend});
+  HapticFeedbackService({required super.control});
 
   @override
   void init() {

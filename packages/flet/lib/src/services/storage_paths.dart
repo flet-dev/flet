@@ -5,7 +5,7 @@ import '../flet_service.dart';
 import '../utils/platform.dart';
 
 class StoragePaths extends FletService {
-  StoragePaths({required super.control, required super.backend});
+  StoragePaths({required super.control});
 
   @override
   void init() {

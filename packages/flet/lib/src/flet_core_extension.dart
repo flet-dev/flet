@@ -102,7 +102,6 @@ import 'controls/transparent_pointer.dart';
 import 'controls/vertical_divider.dart';
 import 'controls/view.dart';
 import 'controls/window.dart';
-import 'flet_backend.dart';
 import 'flet_extension.dart';
 import 'flet_service.dart';
 import 'models/control.dart';
@@ -333,24 +332,24 @@ class FletCoreExtension extends FletExtension {
   }
 
   @override
-  FletService? createService(Control control, FletBackend backend) {
+  FletService? createService(Control control) {
     switch (control.type) {
       case "BrowserContextMenu":
-        return BrowserContextMenuService(control: control, backend: backend);
+        return BrowserContextMenuService(control: control);
       case "Clipboard":
-        return ClipboardService(control: control, backend: backend);
+        return ClipboardService(control: control);
       case "HapticFeedback":
-        return HapticFeedbackService(control: control, backend: backend);
+        return HapticFeedbackService(control: control);
       case "ShakeDetector":
-        return ShakeDetectorService(control: control, backend: backend);
+        return ShakeDetectorService(control: control);
       case "SharedPreferences":
-        return SharedPreferencesService(control: control, backend: backend);
+        return SharedPreferencesService(control: control);
       case "SemanticsService":
-        return SemanticsServiceControl(control: control, backend: backend);
+        return SemanticsServiceControl(control: control);
       case "StoragePaths":
-        return StoragePaths(control: control, backend: backend);
+        return StoragePaths(control: control);
       case "UrlLauncher":
-        return UrlLauncherService(control: control, backend: backend);
+        return UrlLauncherService(control: control);
       default:
         return null;
     }

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import '../flet_service.dart';
 
 class ClipboardService extends FletService {
-  ClipboardService({required super.control, required super.backend});
+  ClipboardService({required super.control});
 
   @override
   void init() {
