@@ -53,13 +53,22 @@ class _ScatterChartControlState extends State<ScatterChartControl> {
 
     // Build list of ScatterSpotData
     final spots = widget.control.children('scatter_spots').map((spot) {
-      return ScatterSpot(spot.getDouble('x')!, spot.getDouble('y')!,
+      var x = spot.getDouble('x', 0)!;
+      var y = spot.getDouble('y', 0)!;
+      return ScatterSpot(x, y,
           show: spot.getBool('show', true)!,
           renderPriority: spot.getInt('render_priority', 0)!,
           xError: spot.get('x_error'),
           yError: spot.get('y_error'),
-          dotPainter: parseChartDotPainter(
-              spot.get("point"), Theme.of(context), null, null, 0));
+          dotPainter: spot.get("point") != null
+              ? parseChartDotPainter(
+                  spot.get("point"), Theme.of(context), null, null, 0)
+              : FlDotCirclePainter(
+                  radius: spot.getDouble("radius"),
+                  color: spot.getColor("color", context) ??
+                      Colors.primaries[
+                          ((x * y) % Colors.primaries.length).toInt()],
+                ));
     }).toList();
 
     final chart = ScatterChart(
@@ -173,8 +182,20 @@ class _ScatterChartControlState extends State<ScatterChartControl> {
             )),
         scatterLabelSettings: ScatterLabelSettings(
           showLabel: true,
-          getLabelFunction: (spotIndex, spot) => "aaa",
-          getLabelTextStyleFunction: (spotIndex, spot) => const TextStyle(),
+          getLabelFunction: (spotIndex, spot) {
+            var dp = widget.control.children("scatter_spots")[spotIndex];
+            return dp.getString("label_text", "")!;
+          },
+          getLabelTextStyleFunction: (spotIndex, spot) {
+            var dp = widget.control.children("scatter_spots")[spotIndex];
+            var labelStyle = dp.getTextStyle("label_style", Theme.of(context));
+            labelStyle ??= const TextStyle();
+            if (labelStyle.color == null) {
+              labelStyle =
+                  labelStyle.copyWith(color: spot.dotPainter.mainColor);
+            }
+            return labelStyle;
+          },
         ),
         showingTooltipIndicators: widget.control
             .children('scatter_spots')
@@ -193,7 +214,17 @@ class _ScatterChartControlState extends State<ScatterChartControl> {
       curve: animate != null ? animate.curve : Curves.linear,
     );
 
-    return ConstrainedControl(control: widget.control, child: chart);
+    var lb = LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      return (constraints.maxHeight == double.infinity)
+          ? ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 300),
+              child: chart,
+            )
+          : chart;
+    });
+
+    return ConstrainedControl(control: widget.control, child: lb);
   }
 
   AxisTitles getAxisTitles(Control? axis) {

@@ -25,4 +25,6 @@ class ScatterChartSpot(Control):
     tooltip_align: Optional[TextAlign] = None
     tooltip_spans: Optional[List[TextSpan]] = None
     tooltip_bgcolor: OptionalColorValue = None
+    label_text: Optional[str] = None
+    label_style: Optional[TextStyle] = None
     point: Union[None, bool, ChartPointShape] = None
