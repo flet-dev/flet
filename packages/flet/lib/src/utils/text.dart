@@ -76,7 +76,7 @@ FontWeight? getFontWeight(String? weightName, [FontWeight? defaultWeight]) {
   }
 }
 
-List<InlineSpan> parseTextSpans(
+List<TextSpan> parseTextSpans(
     ThemeData theme,
     List<Control> spans,
     bool parentDisabled,
@@ -88,7 +88,7 @@ List<InlineSpan> parseTextSpans(
       .toList();
 }
 
-InlineSpan? parseInlineSpan(ThemeData theme, Control span, bool parentDisabled,
+TextSpan? parseInlineSpan(ThemeData theme, Control span, bool parentDisabled,
     void Function(Control, String, String)? sendControlEvent) {
   span.notifyParent = true;
   bool disabled = span.disabled || parentDisabled;
@@ -216,10 +216,10 @@ TextStyle? parseTextStyle(dynamic value, ThemeData theme,
   );
 }
 
-WidgetStateProperty<TextStyle?>? parseWidgetStateTextStyle(dynamic value,
-    ThemeData theme,
+WidgetStateProperty<TextStyle?>? parseWidgetStateTextStyle(
+    dynamic value, ThemeData theme,
     {TextStyle? defaultTextStyle,
-      WidgetStateProperty<TextStyle?>? defaultValue}) {
+    WidgetStateProperty<TextStyle?>? defaultValue}) {
   if (value == null) return defaultValue;
   return getWidgetStateProperty<TextStyle?>(
       value, (jv) => parseTextStyle(theme, jv), defaultTextStyle);

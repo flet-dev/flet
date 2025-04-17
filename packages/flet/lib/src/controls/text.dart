@@ -25,7 +25,7 @@ class TextControl extends StatelessWidget {
     var enableInteractiveSelection =
         control.getBool("enable_interactive_selection", true)!;
 
-    List<InlineSpan>? spans = parseTextSpans(
+    List<TextSpan>? spans = parseTextSpans(
       Theme.of(context),
       control.children("spans"),
       control.disabled,

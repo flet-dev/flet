@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
-from typing import Any, List, Optional
+from enum import Enum
+from typing import List, Optional
 
 from flet.controls.animation import AnimationValue
 from flet.controls.base_control import control
@@ -8,37 +9,43 @@ from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEvent
 from flet.controls.core.charts.chart_axis import ChartAxis
 from flet.controls.core.charts.chart_grid_lines import ChartGridLines
-from flet.controls.core.charts.line_chart_data import LineChartData
+from flet.controls.core.charts.scatter_chart_spot import ScatterChartSpot
 from flet.controls.padding import OptionalPaddingValue
-from flet.controls.ref import Ref
 from flet.controls.types import (
     OptionalColorValue,
     OptionalEventCallable,
     OptionalNumber,
+    TextAlign,
 )
 
 
-@dataclass
-class LineChartEventSpot:
-    bar_index: int
-    spot_index: int
+class ScatterShartTooltipAlignment(Enum):
+    START = "start"
+    CENTER = "center"
+    END = "end"
 
 
 @dataclass
-class LineChartEvent(ControlEvent):
+class ScatterChartEvent(ControlEvent):
     type: str
-    spots: List[LineChartEventSpot]
+    """
+    Type of the event (e.g. tapDown, panUpdate)
+    """
+
+    spot_index: Optional[int] = None
+    """
+    Index of the touched spot, if any
+    """
 
 
-@control("LineChart")
-class LineChart(ConstrainedControl):
-    data_series: List[LineChartData] = field(default_factory=list)
+@control("ScatterChart")
+class ScatterChart(ConstrainedControl):
+    scatter_spots: List[ScatterChartSpot] = field(default_factory=list)
     animate: Optional[AnimationValue] = None
-    interactive: Optional[bool] = None
-    point_line_start: OptionalNumber = None
-    point_line_end: OptionalNumber = None
+    interactive: bool = True
+    handle_built_in_touches: bool = True
+    long_press_duration: Optional[int] = None
     bgcolor: OptionalColorValue = None
-    tooltip_bgcolor: OptionalColorValue = None
     border: Optional[Border] = None
     horizontal_grid_lines: Optional[ChartGridLines] = None
     vertical_grid_lines: Optional[ChartGridLines] = None
@@ -52,19 +59,12 @@ class LineChart(ConstrainedControl):
     baseline_y: OptionalNumber = None
     min_y: OptionalNumber = None
     max_y: OptionalNumber = None
+    tooltip_bgcolor: OptionalColorValue = None
     tooltip_rounded_radius: OptionalNumber = None
-    tooltip_margin: OptionalNumber = None
     tooltip_padding: OptionalPaddingValue = None
-    tooltip_max_content_width: OptionalNumber = None
-    tooltip_rotate_angle: OptionalNumber = None
     tooltip_horizontal_offset: OptionalNumber = None
+    tooltip_horizontal_alignment: Optional[ScatterShartTooltipAlignment] = None
     tooltip_border_side: Optional[BorderSide] = None
     tooltip_fit_inside_horizontally: Optional[bool] = None
     tooltip_fit_inside_vertically: Optional[bool] = None
-    tooltip_show_on_top_of_chart_box_area: Optional[bool] = None
-    _skip_inherited_notifier: Optional[bool] = None
-    on_chart_event: OptionalEventCallable[LineChartEvent] = None
-
-    def init(self):
-        super().init()
-        self._skip_inherited_notifier = True
+    on_chart_event: OptionalEventCallable[ScatterChartEvent] = None

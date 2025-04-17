@@ -279,8 +279,8 @@ class _LineChartControlState extends State<LineChartControl> {
                   var dp = widget.control
                       .children("data_series")[spot.barIndex]
                       .children("data_points")[spot.spotIndex];
-                  var tooltip =
-                      dp.getString("tooltip") ?? dp.getDouble("y").toString();
+                  var tooltip = dp.getString("tooltip_text") ??
+                      dp.getDouble("y").toString();
                   var tooltipStyle =
                       dp.getTextStyle("tooltip_style", Theme.of(context));
                   tooltipStyle ??= const TextStyle();
@@ -292,9 +292,20 @@ class _LineChartControlState extends State<LineChartControl> {
                   }
                   TextAlign? tooltipAlign =
                       dp.getTextAlign("tooltip_align", TextAlign.center)!;
+                  List<TextSpan>? spans = dp.get("tooltip_spans") != null
+                      ? parseTextSpans(
+                          Theme.of(context),
+                          dp.children("tooltip_spans"),
+                          dp.disabled,
+                          (Control control, String eventName,
+                              String eventData) {
+                            control.triggerEvent(eventName, eventData);
+                          },
+                        )
+                      : null;
                   return dp.getBool("show_tooltip", true)!
                       ? LineTooltipItem(tooltip, tooltipStyle,
-                          textAlign: tooltipAlign)
+                          textAlign: tooltipAlign, children: spans)
                       : null;
                 }).toList();
               },

@@ -93,6 +93,12 @@ from flet.controls.core.charts.line_chart_data import LineChartData
 from flet.controls.core.charts.line_chart_data_point import LineChartDataPoint
 from flet.controls.core.charts.pie_chart import PieChart, PieChartEvent
 from flet.controls.core.charts.pie_chart_section import PieChartSection
+from flet.controls.core.charts.scatter_chart import (
+    ScatterChart,
+    ScatterChartEvent,
+    ScatterChartSpot,
+    ScatterShartTooltipAlignment,
+)
 from flet.controls.core.column import Column
 from flet.controls.core.container import Container, ContainerTapEvent
 from flet.controls.core.dismissible import (

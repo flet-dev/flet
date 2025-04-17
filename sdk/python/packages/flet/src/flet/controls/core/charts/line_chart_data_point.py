@@ -14,6 +14,7 @@ class LineChartDataPoint(Control):
     y: OptionalNumber = None
     selected: Optional[bool] = None
     show_tooltip: Optional[bool] = None
+    tooltip_text: Optional[str] = None
     tooltip_style: Optional[TextStyle] = None
     tooltip_align: Optional[TextAlign] = None
     point: Union[None, bool, ChartPointShape] = None
