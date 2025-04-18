@@ -78,7 +78,7 @@ def test_page_patch_dataclass():
 
     # 1 -calculate diff
     patch, added_controls, removed_controls = ObjectPatch.from_diff(
-        None, page, in_place=True, controls_index=None, control_cls=BaseControl
+        None, page, in_place=True, control_cls=BaseControl
     )
 
     # 2 - convert patch to hierarchy
@@ -108,7 +108,7 @@ def test_page_patch_dataclass():
 
     # 1 -calculate diff
     patch, _, _ = ObjectPatch.from_diff(
-        page, page, in_place=True, controls_index=None, control_cls=BaseControl
+        page, page, in_place=True, control_cls=BaseControl
     )
 
     # 2 - convert patch to hierarchy
@@ -124,7 +124,7 @@ def test_page_patch_dataclass():
 
     # 1 -calculate diff
     patch, _, _ = ObjectPatch.from_diff(
-        page, page, in_place=True, controls_index=None, control_cls=BaseControl
+        page, page, in_place=True, control_cls=BaseControl
     )
 
     # 2 - convert patch to hierarchy

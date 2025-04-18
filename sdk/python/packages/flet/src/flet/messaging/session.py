@@ -90,13 +90,24 @@ class Session:
         self.__pubsub_client.unsubscribe_all()
 
     def patch_control(self, control: BaseControl):
-        patch = self.__get_update_control_patch(control=control, prev_control=control)
+        patch, added_controls, removed_controls = self.__get_update_control_patch(
+            control=control, prev_control=control
+        )
         if patch:
+
+            for removed_control in removed_controls:
+                removed_control.will_unmount()
+                self.__index.pop(removed_control._i, None)
+
             self.connection.send_message(
                 ClientMessage(
                     ClientAction.PATCH_CONTROL, PatchControlBody(control._i, patch)
                 )
             )
+
+            for added_control in added_controls:
+                self.__index[added_control._i] = added_control
+                added_control.did_mount()
 
     def apply_patch(self, control_id: int, patch: dict[str, Any]):
         if control := self.__index.get(control_id):
@@ -107,7 +118,7 @@ class Session:
         self.apply_patch(self.__page._i, patch)
 
     def get_page_patch(self):
-        return self.__get_update_control_patch(self.__page, prev_control=None)[""]
+        return self.__get_update_control_patch(self.__page, prev_control=None)[0][""]
 
     # optimizations:
     # - disable auto-update
@@ -182,11 +193,10 @@ class Session:
             prev_control,
             control,
             in_place=True,
-            controls_index=self.__index,
             control_cls=BaseControl,
         )
 
         # print(f"\n\nadded_controls ({len(added_controls)}):", added_controls)
         # print(f"\n\nremoved_controls ({len(removed_controls)}):", removed_controls)
 
-        return patch.to_graph()
+        return patch.to_graph(), added_controls, removed_controls

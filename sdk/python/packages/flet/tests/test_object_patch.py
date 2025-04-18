@@ -26,8 +26,6 @@ from flet.messaging.protocol import configure_encode_object_for_msgpack
 from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
 
-controls_index = weakref.WeakValueDictionary()
-
 
 def b_pack(data):
     return msgpack.packb(data, default=configure_encode_object_for_msgpack(BaseControl))
@@ -44,7 +42,7 @@ def update_page(new: Any, old: Any = None, show_details=True):
 
     # 1 -calculate diff
     patch, added_controls, removed_controls = ObjectPatch.from_diff(
-        old, new, in_place=True, controls_index=controls_index, control_cls=BaseControl
+        old, new, in_place=True, control_cls=BaseControl
     )
 
     # 2 - convert patch to hierarchy
@@ -65,7 +63,6 @@ def update_page(new: Any, old: Any = None, show_details=True):
     else:
         print("\nMessage length:", len(msg))
 
-    print("\ncontrols_index:", len(controls_index))
     print("\nTotal:", (end - start).total_seconds() * 1000)
 
     return msg

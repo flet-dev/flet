@@ -222,14 +222,12 @@ class ObjectPatch(object):
         src,
         dst,
         in_place=False,
-        controls_index: Optional[MutableMapping] = None,
         control_cls=None,
     ):
         builder = DiffBuilder(
             src,
             dst,
             in_place=in_place,
-            controls_index=controls_index,
             control_cls=control_cls,
         )
         builder._compare_values(None, [], None, src, dst)
@@ -278,11 +276,9 @@ class DiffBuilder(object):
         src_doc,
         dst_doc,
         in_place=False,
-        controls_index: Optional[MutableMapping] = None,
         control_cls=None,
     ):
         self.in_place = in_place
-        self.controls_index = controls_index
         self.added_controls = []
         self.removed_controls = []
         self.control_cls = control_cls
@@ -639,18 +635,15 @@ class DiffBuilder(object):
                 else:
                     item.init()
 
-                # add control to the index
-                if self.controls_index is not None:
-                    self.controls_index[item._i] = item
-
             # recurse through fields
             for field in dataclasses.fields(item):
                 if not "skip" in field.metadata:
                     self._configure_dataclass(getattr(item, field.name), item)
 
-            self.added_controls.append(item)
-
             if self.control_cls and isinstance(item, self.control_cls):
+                # register new control
+                self.added_controls.append(item)
+
                 # call Control.before_update()
                 item.before_update()
 
