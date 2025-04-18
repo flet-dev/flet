@@ -10,6 +10,7 @@ globalThis.jsConnect = async function(appId, dartOnMessage) {
     let app = {
         "dartOnMessage": dartOnMessage
     };
+    console.log(`Starting up Python worker: ${appId}`);
     _apps[appId] = app;
     app.worker = new Worker("python-worker.js");
 
@@ -32,14 +33,26 @@ globalThis.jsConnect = async function(appId, dartOnMessage) {
     });
 
     await pythonInitialized;
-    console.log(`Pyodide engine initialized for app: ${appId}`);
+    console.log(`Python worker initialized: ${appId}`);
 }
 
 // Called from Dart on backend.send
 // data is a message serialized to JSUint8Array
 globalThis.jsSend = async function(appId, data) {
-    var app = _apps[appId];
-    if (app) {
+    if (appId in _apps) {
+        const app = _apps[appId];
         app.worker.postMessage(data);
+    }
+}
+
+// Called from Dart on channel.disconnect
+globalThis.jsDisconnect = async function(appId) {
+    if (appId in _apps) {
+        console.log(`Terminating Python worker: ${appId}`);
+        const app = _apps[appId];
+        delete _apps[appId];
+        app.worker.terminate();
+        app.worker.onmessage = null;
+        app.worker.onerror = null;
     }
 }

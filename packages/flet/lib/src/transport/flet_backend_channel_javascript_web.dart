@@ -12,6 +12,9 @@ external JSPromise jsConnect(String appId, JSExportedDartFunction onMessage);
 @JS()
 external void jsSend(String appId, JSUint8Array data);
 
+@JS()
+external void jsDisconnect(String appId);
+
 typedef FletBackendJavascriptChannelOnMessageCallback = void Function(
     List<int> message);
 
@@ -47,5 +50,7 @@ class FletJavaScriptBackendChannel implements FletBackendChannel {
   }
 
   @override
-  void disconnect() {}
+  void disconnect() {
+    jsDisconnect(address);
+  }
 }
