@@ -18,8 +18,8 @@
   <link rel="icon" type="image/png" href="favicon.png" />
 
   <!-- Flet specific -->
-  <meta name="flet-route-url-strategy" content="%FLET_ROUTE_URL_STRATEGY%">
-  <meta name="flet-web-pyodide" content="%FLET_WEB_PYODIDE%">
+  <meta name="flet-route-url-strategy" content="path">
+  <meta name="flet-web-pyodide" content="true">
   <meta name="flet-websocket-endpoint-path" content="/ws">
 
   <title>Flet</title>
@@ -34,6 +34,11 @@
   <!-- useColorEmoji -->
 
   <!-- pyodideCode -->
+  <script>
+    var micropipIncludePre = false;
+    var pythonModuleName = "main";
+  </script>
+  <script src="python.js"></script>
 </head>
 
 <body>

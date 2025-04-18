@@ -1,34 +1,45 @@
 const defaultPyodideUrl = "https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js";
-const pythonWorker = new Worker("python-worker.js");
 
-let _onPythonInitialized = null;
-let pythonInitialized = new Promise((onSuccess) => _onPythonInitialized = onSuccess);
-let _onReceivedCallback = null;
+let _apps = {};
+let _documentUrl = document.URL;
 
-pythonWorker.onmessage = (event) => {
-    if (event.data == "initialized") {
-        _onPythonInitialized();
-    } else {
-        _onReceivedCallback(event.data);
-    }
-};
+// This method is called from Dart on backend.connect()
+// dartOnMessage is called on backend.onMessage
+// it accepts "data" of type JSUint8Array
+globalThis.jsConnect = async function(appId, dartOnMessage) {
+    let app = {
+        "dartOnMessage": dartOnMessage
+    };
+    _apps[appId] = app;
+    app.worker = new Worker("python-worker.js");
 
-documentUrl = document.URL;
+    app.worker.onmessage = (event) => {
+        if (event.data == "initialized") {
+            app.onPythonInitialized();
+        } else {
+            app.dartOnMessage(event.data);
+        }
+    };
 
-// initialize worker
-pythonWorker.postMessage({
-    pyodideUrl: globalThis.pyodideUrl ?? defaultPyodideUrl,
-    documentUrl,
-    micropipIncludePre,
-    pythonModuleName
-});
+    let pythonInitialized = new Promise((resolveCallback) => app.onPythonInitialized = resolveCallback);
 
-globalThis.jsConnect = async function(receiveCallback) {
-    _onReceivedCallback = receiveCallback;
+    // initialize worker
+    app.worker.postMessage({
+        pyodideUrl: globalThis.pyodideUrl ?? defaultPyodideUrl,
+        _documentUrl,
+        micropipIncludePre,
+        pythonModuleName
+    });
+
     await pythonInitialized;
-    console.log("Pyodide engine initialized!");
+    console.log(`Pyodide engine initialized for app: ${appId}`);
 }
 
-globalThis.jsSend = async function(data) {
-    pythonWorker.postMessage(data);
+// Called from Dart on backend.send
+// data is a message serialized to JSUint8Array
+globalThis.jsSend = async function(appId, data) {
+    var app = _apps[appId];
+    if (app) {
+        app.worker.postMessage(data);
+    }
 }
