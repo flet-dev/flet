@@ -53,7 +53,13 @@ from flet.controls.buttons import (
 )
 from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, OptionalControl, Service, control
+from flet.controls.control import (
+    BaseControl,
+    Control,
+    OptionalControl,
+    Service,
+    control,
+)
 from flet.controls.control_event import ControlEvent
 from flet.controls.control_state import (
     ControlState,
