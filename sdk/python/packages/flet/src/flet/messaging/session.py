@@ -148,10 +148,12 @@ class Session:
                     if hasattr(control, field_name):
                         event_handler = getattr(control, field_name)
                         UpdateBehavior.reset()
+
                         if asyncio.iscoroutinefunction(event_handler):
                             await event_handler(e)
                         elif callable(event_handler):
                             event_handler(e)
+
                         if UpdateBehavior.auto_update_enabled():
                             self.auto_update(control)
             except Exception as ex:
