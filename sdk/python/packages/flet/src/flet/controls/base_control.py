@@ -3,6 +3,7 @@ import sys
 from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING, Any, Callable, Dict, Optional, Type, TypeVar, Union
 
+from flet.controls.control_id import ControlId
 from flet.controls.ref import Ref
 from flet.utils.strings import random_string
 
@@ -100,7 +101,7 @@ class BaseControl:
 
     def __post_init__(self, ref: Optional[Ref[Any]]):
         self.__class__.__hash__ = BaseControl.__hash__
-        self._i = self.__hash__()
+        self._i = ControlId.next()
         if not hasattr(self, "_c") or self._c is None:
             cls_name = f"{self.__class__.__module__}.{self.__class__.__qualname__}"
             raise Exception(
