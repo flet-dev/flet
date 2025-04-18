@@ -11,6 +11,7 @@ from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
 from flet.controls.object_patch import ObjectPatch
 from flet.controls.page import Page, _session_page
+from flet.controls.update_behavior import UpdateBehavior
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,
@@ -146,11 +147,13 @@ class Session:
                         e = from_dict(event_type, args)
                     if hasattr(control, field_name):
                         event_handler = getattr(control, field_name)
+                        UpdateBehavior.reset()
                         if asyncio.iscoroutinefunction(event_handler):
                             await event_handler(e)
                         elif callable(event_handler):
                             event_handler(e)
-                        self.auto_update(control)
+                        if UpdateBehavior.auto_update_enabled():
+                            self.auto_update(control)
             except Exception as ex:
                 tb = traceback.format_exc()
                 self.error(f"Exception in '{field_name}': {ex}\n{tb}")
