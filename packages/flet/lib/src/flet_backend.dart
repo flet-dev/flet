@@ -45,6 +45,7 @@ class FletBackend extends ChangeNotifier {
   final FletAppErrorsHandler? errorsHandler;
   late final List<FletExtension> extensions;
   final List<String>? args;
+  final bool? forcePyodide;
   final Map<String, GlobalKey> globalKeys = {};
 
   final WeakValueMap<int, Control> controlsIndex = WeakValueMap<int, Control>();
@@ -86,6 +87,7 @@ class FletBackend extends ChangeNotifier {
       this.appStartupScreenMessage,
       this.controlId,
       this.args,
+      this.forcePyodide,
       required extensions,
       FletBackend? parentFletBackend})
       : _parentFletBackend =
@@ -160,6 +162,7 @@ class FletBackend extends ChangeNotifier {
       _backendChannel = FletBackendChannel(
           address: pageUri.toString(),
           args: args ?? [],
+          forcePyodide: forcePyodide == true,
           onDisconnect: _onDisconnect,
           onMessage: _onMessage);
       await _backendChannel!.connect();

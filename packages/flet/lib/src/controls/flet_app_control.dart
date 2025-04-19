@@ -46,6 +46,7 @@ class _FletAppControlState extends State<FletAppControl> {
         args: widget.control.get("args") != null
             ? List.from(widget.control.get("args"))
             : null,
+        forcePyodide: widget.control.getBool("force_pyodide"),
       ),
     );
   }

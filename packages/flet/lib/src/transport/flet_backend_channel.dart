@@ -14,10 +14,11 @@ abstract class FletBackendChannel {
   factory FletBackendChannel(
       {required String address,
       required List<String> args,
+      required bool forcePyodide,
       required FletBackendChannelOnDisconnectCallback onDisconnect,
       required FletBackendChannelOnMessageCallback onMessage}) {
-    if (isFletWebPyodideMode()) {
-      // JavaScript
+    if (isFletWebPyodideMode() || forcePyodide) {
+      // Pyodide/JavaScript
       return FletJavaScriptBackendChannel(
           address: address,
           args: args,

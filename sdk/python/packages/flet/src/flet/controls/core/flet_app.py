@@ -12,6 +12,7 @@ __all__ = ["FletApp"]
 class FletApp(ConstrainedControl):
     url: Optional[str] = None
     args: Optional[List[str]] = None
+    force_pyodide: bool = False
     reconnect_interval_ms: Optional[int] = None
     reconnect_timeout_ms: Optional[int] = None
     show_app_startup_screen: bool = False
