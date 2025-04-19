@@ -6,11 +6,11 @@ let _documentUrl = document.URL;
 // This method is called from Dart on backend.connect()
 // dartOnMessage is called on backend.onMessage
 // it accepts "data" of type JSUint8Array
-globalThis.jsConnect = async function(appId, dartOnMessage) {
+globalThis.jsConnect = async function(appId, args, dartOnMessage) {
     let app = {
         "dartOnMessage": dartOnMessage
     };
-    console.log(`Starting up Python worker: ${appId}`);
+    console.log(`Starting up Python worker: ${appId}, args: ${args}`);
     _apps[appId] = app;
     app.worker = new Worker("python-worker.js");
 

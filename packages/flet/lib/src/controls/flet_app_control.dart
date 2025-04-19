@@ -43,6 +43,9 @@ class _FletAppControlState extends State<FletAppControl> {
         assetsDir: "",
         errorsHandler: _errorsHandler,
         extensions: FletBackend.of(context).extensions,
+        args: widget.control.get("args") != null
+            ? List.from(widget.control.get("args"))
+            : null,
       ),
     );
   }

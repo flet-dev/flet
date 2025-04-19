@@ -44,6 +44,7 @@ class FletBackend extends ChangeNotifier {
   final int? controlId;
   final FletAppErrorsHandler? errorsHandler;
   late final List<FletExtension> extensions;
+  final List<String>? args;
   final Map<String, GlobalKey> globalKeys = {};
 
   final WeakValueMap<int, Control> controlsIndex = WeakValueMap<int, Control>();
@@ -84,6 +85,7 @@ class FletBackend extends ChangeNotifier {
       this.showAppStartupScreen,
       this.appStartupScreenMessage,
       this.controlId,
+      this.args,
       required extensions,
       FletBackend? parentFletBackend})
       : _parentFletBackend =
@@ -157,6 +159,7 @@ class FletBackend extends ChangeNotifier {
     try {
       _backendChannel = FletBackendChannel(
           address: pageUri.toString(),
+          args: args ?? [],
           onDisconnect: _onDisconnect,
           onMessage: _onMessage);
       await _backendChannel!.connect();

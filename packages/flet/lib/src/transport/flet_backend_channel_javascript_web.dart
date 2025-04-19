@@ -7,7 +7,8 @@ import '../protocol/message.dart';
 import 'flet_backend_channel.dart';
 
 @JS()
-external JSPromise jsConnect(String appId, JSExportedDartFunction onMessage);
+external JSPromise jsConnect(
+    String appId, JSArray<JSString> args, JSExportedDartFunction onMessage);
 
 @JS()
 external void jsSend(String appId, JSUint8Array data);
@@ -20,18 +21,22 @@ typedef FletBackendJavascriptChannelOnMessageCallback = void Function(
 
 class FletJavaScriptBackendChannel implements FletBackendChannel {
   final String address;
+  final List<String> args;
   final FletBackendChannelOnMessageCallback onMessage;
   final FletBackendChannelOnDisconnectCallback onDisconnect;
 
   FletJavaScriptBackendChannel(
       {required this.address,
+      required this.args,
       required this.onDisconnect,
       required this.onMessage});
 
   @override
   connect() async {
     debugPrint("Connecting to Flet JavaScript channel $address...");
-    await jsConnect(address, _onMessage.toJS).toDart;
+    await jsConnect(
+            address, args.map((arg) => arg.toJS).toList().toJS, _onMessage.toJS)
+        .toDart;
   }
 
   void _onMessage(JSUint8Array data) {
