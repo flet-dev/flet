@@ -44,7 +44,7 @@ class FletBackend extends ChangeNotifier {
   final int? controlId;
   final FletAppErrorsHandler? errorsHandler;
   late final List<FletExtension> extensions;
-  final List<String>? args;
+  final Map<String, dynamic>? args;
   final bool? forcePyodide;
   final Map<String, GlobalKey> globalKeys = {};
 
@@ -161,7 +161,7 @@ class FletBackend extends ChangeNotifier {
     try {
       _backendChannel = FletBackendChannel(
           address: pageUri.toString(),
-          args: args ?? [],
+          args: args ?? {},
           forcePyodide: forcePyodide == true,
           onDisconnect: _onDisconnect,
           onMessage: _onMessage);

@@ -19,7 +19,7 @@ class FletApp extends StatefulWidget {
   final int? reconnectIntervalMs;
   final int? reconnectTimeoutMs;
   final List<FletExtension>? extensions;
-  final List<String>? args;
+  final Map<String, dynamic>? args;
   final bool? forcePyodide;
 
   const FletApp(

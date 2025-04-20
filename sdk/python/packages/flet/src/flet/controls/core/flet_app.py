@@ -1,5 +1,4 @@
-from dataclasses import field
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
@@ -11,7 +10,7 @@ __all__ = ["FletApp"]
 @control("FletApp")
 class FletApp(ConstrainedControl):
     url: Optional[str] = None
-    args: Optional[List[str]] = None
+    args: Optional[dict[str, Any]] = None
     force_pyodide: bool = False
     reconnect_interval_ms: Optional[int] = None
     reconnect_timeout_ms: Optional[int] = None

@@ -13,7 +13,7 @@ typedef FletBackendChannelOnMessageCallback = void Function(Message message);
 abstract class FletBackendChannel {
   factory FletBackendChannel(
       {required String address,
-      required List<String> args,
+      required Map<String, dynamic> args,
       required bool forcePyodide,
       required FletBackendChannelOnDisconnectCallback onDisconnect,
       required FletBackendChannelOnMessageCallback onMessage}) {

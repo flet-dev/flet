@@ -44,7 +44,7 @@ class _FletAppControlState extends State<FletAppControl> {
         errorsHandler: _errorsHandler,
         extensions: FletBackend.of(context).extensions,
         args: widget.control.get("args") != null
-            ? List.from(widget.control.get("args"))
+            ? Map<String, dynamic>.from(widget.control.get("args"))
             : null,
         forcePyodide: widget.control.getBool("force_pyodide"),
       ),
