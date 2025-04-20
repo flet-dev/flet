@@ -17,6 +17,7 @@ else:
     def dataclass_transform():  # No-op decorator for older Python versions
         return lambda x: x
 
+
 if TYPE_CHECKING:
     from .page import Page
 
@@ -36,11 +37,11 @@ T = TypeVar("T", bound="BaseControl")
 
 @dataclass_transform()
 def control(
-        cls_or_type_name: Optional[Union[Type[T], str]] = None,
-        *,
-        isolated: Optional[bool] = None,
-        post_init_args: int = 1,
-        **dataclass_kwargs,
+    cls_or_type_name: Optional[Union[Type[T], str]] = None,
+    *,
+    isolated: Optional[bool] = None,
+    post_init_args: int = 1,
+    **dataclass_kwargs,
 ) -> Union[Type[T], Callable[[Type[T]], Type[T]]]:
     """Decorator to optionally set 'type' and 'isolated' while behaving like @dataclass.
 
@@ -65,11 +66,11 @@ def control(
 
 
 def _apply_control(
-        cls: Type[T],
-        type_name: Optional[str],
-        isolated: Optional[bool],
-        post_init_args: int,
-        **dataclass_kwargs,
+    cls: Type[T],
+    type_name: Optional[str],
+    isolated: Optional[bool],
+    post_init_args: int,
+    **dataclass_kwargs,
 ) -> Type[T]:
     """Applies @control logic, ensuring compatibility with @dataclass."""
     cls = dataclass(**dataclass_kwargs)(cls)  # Apply @dataclass first
@@ -164,10 +165,10 @@ class BaseControl:
         self.page.update(self)
 
     async def _invoke_method_async(
-            self,
-            method_name: str,
-            arguments: Optional[Dict[str, Any]] = None,
-            timeout: Optional[float] = 10,
+        self,
+        method_name: str,
+        arguments: Optional[Dict[str, Any]] = None,
+        timeout: Optional[float] = 10,
     ) -> Any:
         assert (
             self.page
@@ -199,7 +200,7 @@ class BaseControl:
         return result
 
     def _handle_invoke_method_results(
-            self, call_id: str, result: Any, error: Optional[str]
+        self, call_id: str, result: Any, error: Optional[str]
     ) -> None:
         evt = self.__method_calls.pop(call_id, None)
         if evt is None:
