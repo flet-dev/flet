@@ -14,13 +14,13 @@ globalThis.jsConnect = async function(appId, args, dartOnMessage) {
     _apps[appId] = app;
     app.worker = new Worker("python-worker.js");
 
+    var error;
     app.worker.onmessage = (event) => {
         if (typeof event.data === "string") {
-            if (event.data == "initialized") {
-                app.onPythonInitialized();
-            } else {
-                console.log("Python worker init error:", event.data);
+            if (event.data != "initialized") {
+                error = event.data;
             }
+            app.onPythonInitialized();
         } else {
             app.dartOnMessage(event.data);
         }
@@ -31,13 +31,20 @@ globalThis.jsConnect = async function(appId, args, dartOnMessage) {
     // initialize worker
     app.worker.postMessage({
         pyodideUrl: globalThis.pyodideUrl ?? defaultPyodideUrl,
+        args: args,
         _documentUrl,
         micropipIncludePre,
         pythonModuleName
     });
 
     await pythonInitialized;
-    console.log(`Python worker initialized: ${appId}`);
+
+    if (error) {
+        console.log("Python worker init error:", error);
+        throw error;
+    } else {
+        console.log(`Python worker initialized: ${appId}`);
+    }
 }
 
 // Called from Dart on backend.send

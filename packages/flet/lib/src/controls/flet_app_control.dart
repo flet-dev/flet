@@ -10,7 +10,8 @@ import 'base_controls.dart';
 class FletAppControl extends StatefulWidget {
   final Control control;
 
-  const FletAppControl({super.key, required this.control});
+  FletAppControl({Key? key, required this.control})
+      : super(key: ValueKey(control.id));
 
   @override
   State<FletAppControl> createState() => _FletAppControlState();

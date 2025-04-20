@@ -3,7 +3,7 @@ import 'flet_backend_channel.dart';
 
 class FletJavaScriptBackendChannel implements FletBackendChannel {
   final String address;
-  final List<String> args;
+  final Map<String, dynamic> args;
   final FletBackendChannelOnMessageCallback onMessage;
   final FletBackendChannelOnDisconnectCallback onDisconnect;
 

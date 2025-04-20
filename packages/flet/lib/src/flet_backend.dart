@@ -169,6 +169,7 @@ class FletBackend extends ChangeNotifier {
       _registerClient();
     } catch (e) {
       debugPrint("Error connecting to Flet backend: $e");
+      error = e.toString();
       _onDisconnect();
     }
   }
@@ -177,7 +178,7 @@ class FletBackend extends ChangeNotifier {
     _send(Message(
         action: MessageAction.registerClient,
         payload: RegisterClientRequestBody(
-            sessionId: SessionStore.sessionId,
+            sessionId: SessionStore.getSessionId(pageUri.toString()),
             pageName: getWebPageName(pageUri),
             page: {
               'route': page.get("route"),
@@ -198,7 +199,7 @@ class FletBackend extends ChangeNotifier {
     if (resp.error?.isEmpty ?? true) {
       // all good!
       // store session ID in a cookie
-      SessionStore.sessionId = resp.sessionId;
+      SessionStore.setSessionId(pageUri.toString(), resp.sessionId);
       isLoading = false;
       _reconnectDelayMs = 0;
       error = "";
@@ -475,8 +476,9 @@ class FletBackend extends ChangeNotifier {
         await connect();
       });
     } else {
-      errorsHandler
-          ?.onError("Error connecting to a Flet service in a timely manner.");
+      errorsHandler?.onError(error != ""
+          ? error
+          : "Error connecting to a Flet service in a timely manner.");
     }
   }
 

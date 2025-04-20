@@ -14,12 +14,20 @@ self.initPyodide = async function () {
         await self.pyodide.loadPackage("micropip");
         let pre = self.micropipIncludePre ? "True" : "False";
         await self.pyodide.runPythonAsync(`
-        import micropip, os, runpy, sys, traceback
+        import flet_js, micropip, os, runpy, sys, traceback
         from pyodide.http import pyfetch
+
+        py_args = flet_js.args.to_py() if flet_js.args else None
+        print("Args:", py_args)
         
-        print("Downloading app archive")
-        response = await pyfetch("assets/app/app.zip")
-        await response.unpack_archive()
+        if "script" not in py_args:
+            print("Downloading app archive")
+            response = await pyfetch("assets/app/app.zip")
+            await response.unpack_archive()
+        else:
+            print("Saving script to a file")
+            with open("${self.pythonModuleName}.py", "w") as f:
+                f.write(py_args["script"]);
     
         pkgs_path = "__pypackages__"
         if os.path.exists(pkgs_path):
@@ -31,17 +39,17 @@ self.initPyodide = async function () {
                 deps = [line.rstrip() for line in f]
                 print("Loading requirements.txt:", deps)
                 await micropip.install(deps, pre=${pre})
+
+        if "dependencies" in py_args:
+            await micropip.install(py_args["dependencies"], pre=${pre})
     
         # Execute app
-        try:
-            runpy.run_module("${self.pythonModuleName}", run_name="__main__")
-        except Exception as e:
-            traceback.print_exception(e)
+        runpy.run_module("${self.pythonModuleName}", run_name="__main__")
       `);
         await self.flet_js.start_connection(self.receiveCallback);
         self.postMessage("initialized");
     } catch (error) {
-        self.postMessage(`Python worker error: ${error}`);
+        self.postMessage(error.toString());
     }
 };
 
@@ -54,6 +62,7 @@ self.onmessage = async (event) => {
     if (!self.initialized) {
         self.initialized = true;
         self.pyodideUrl = event.data.pyodideUrl;
+        self.flet_js.args = event.data.args;
         self.documentUrl = event.data.documentUrl;
         self.micropipIncludePre = event.data.micropipIncludePre;
         self.pythonModuleName = event.data.pythonModuleName;

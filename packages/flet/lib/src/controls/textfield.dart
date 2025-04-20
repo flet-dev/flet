@@ -2,8 +2,6 @@ import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'base_controls.dart';
-
 class TextFieldControl extends StatefulWidget {
   final Control control;
 
@@ -264,7 +262,9 @@ class _TextFieldControlState extends State<TextFieldControl> {
     textField =
         isLinuxDesktop() ? ExcludeSemantics(child: textField) : textField;
 
-    if (widget.control.getInt("expand", 0)! > 0) {
+    if (widget.control.get("expand") == true ||
+        (widget.control.get("expand") is int &&
+            widget.control.getInt("expand", 0)! > 0)) {
       return ConstrainedControl(
         control: widget.control,
         child: textField,
