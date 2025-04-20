@@ -15,8 +15,12 @@ globalThis.jsConnect = async function(appId, args, dartOnMessage) {
     app.worker = new Worker("python-worker.js");
 
     app.worker.onmessage = (event) => {
-        if (event.data == "initialized") {
-            app.onPythonInitialized();
+        if (typeof event.data === "string") {
+            if (event.data == "initialized") {
+                app.onPythonInitialized();
+            } else {
+                console.log("Python worker init error:", event.data);
+            }
         } else {
             app.dartOnMessage(event.data);
         }
