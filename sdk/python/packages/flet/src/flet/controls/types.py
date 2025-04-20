@@ -58,8 +58,10 @@ Number = Union[int, float]
 ResponsiveNumber = Union[Dict[str, Number], Number]
 OptionalNumber = Optional[Number]
 
-# str type alias
+# literal type alias
 OptionalString = Optional[str]
+OptionalBool = Optional[bool]
+OptionalInt = Optional[int]
 
 
 class MainAxisAlignment(Enum):
@@ -332,10 +334,6 @@ IconValueOrControl = Union[IconValue, "Control"]
 
 # Content
 StrOrControl = Union[str, "Control"]
-
-# DateTime
-DateTimeValue = Union[datetime, date]
-OptionalDateTimeValue = Optional[DateTimeValue]
 
 # Wrapper
 Wrapper = Callable[..., Any]

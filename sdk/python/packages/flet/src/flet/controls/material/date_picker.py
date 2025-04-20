@@ -6,9 +6,9 @@ from typing import Optional
 from flet.controls.base_control import control
 from flet.controls.control_event import ControlEvent
 from flet.controls.dialog_control import DialogControl
+from flet.controls.duration import DateTimeValue
 from flet.controls.material.textfield import KeyboardType
 from flet.controls.types import (
-    DateTimeValue,
     IconValue,
     OptionalColorValue,
     OptionalControlEventCallable,

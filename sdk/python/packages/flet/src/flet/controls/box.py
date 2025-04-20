@@ -27,6 +27,14 @@ __all__ = [
     "BoxConstraints",
     "ShadowValue",
     "OptionalShadowValue",
+    "OptionalBoxDecoration",
+    "OptionalBoxShadow",
+    "OptionalDecorationImage",
+    "OptionalColorFilter",
+    "OptionalFilterQuality",
+    "OptionalShadowBlurStyle",
+    "OptionalBoxShape",
+    "OptionalBoxConstraints",
 ]
 
 
@@ -110,3 +118,14 @@ class BoxConstraints:
         assert (
             0 <= self.min_height <= self.max_height <= float("inf")
         ), "min_height and max_height must be between 0 and infinity and min_height must be less than or equal to max_height"
+
+
+# typing
+OptionalBoxDecoration = Optional[BoxDecoration]
+OptionalBoxShadow = Optional[BoxShadow]
+OptionalDecorationImage = Optional[DecorationImage]
+OptionalColorFilter = Optional[ColorFilter]
+OptionalFilterQuality = Optional[FilterQuality]
+OptionalShadowBlurStyle = Optional[ShadowBlurStyle]
+OptionalBoxShape = Optional[BoxShape]
+OptionalBoxConstraints = Optional[BoxConstraints]

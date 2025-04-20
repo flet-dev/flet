@@ -39,6 +39,14 @@ from flet.controls.box import (
     ColorFilter,
     DecorationImage,
     FilterQuality,
+    OptionalBoxConstraints,
+    OptionalBoxDecoration,
+    OptionalBoxShadow,
+    OptionalBoxShape,
+    OptionalColorFilter,
+    OptionalDecorationImage,
+    OptionalFilterQuality,
+    OptionalShadowBlurStyle,
     OptionalShadowValue,
     ShadowBlurStyle,
     ShadowValue,
@@ -221,7 +229,13 @@ from flet.controls.cupertino.cupertino_timer_picker import (
 )
 from flet.controls.cupertino.cupertino_tinted_button import CupertinoTintedButton
 from flet.controls.dialog_control import DialogControl
-from flet.controls.duration import Duration, DurationValue, OptionalDurationValue
+from flet.controls.duration import (
+    DateTimeValue,
+    Duration,
+    DurationValue,
+    OptionalDateTimeValue,
+    OptionalDurationValue,
+)
 from flet.controls.exceptions import (
     FletException,
     FletUnimplementedPlatformEception,
@@ -458,7 +472,6 @@ from flet.controls.types import (
     ColorEnums,
     ColorValue,
     CrossAxisAlignment,
-    DateTimeValue,
     EventType,
     FloatingActionButtonLocation,
     FontWeight,
@@ -475,9 +488,11 @@ from flet.controls.types import (
     NotchShape,
     Number,
     OnFocusEvent,
+    OptionalBool,
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
+    OptionalInt,
     OptionalNumber,
     OptionalString,
     Orientation,
