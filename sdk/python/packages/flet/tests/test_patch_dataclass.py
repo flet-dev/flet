@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 import msgpack
-from flet.controls.control import BaseControl, Control
+from flet.controls.base_control import BaseControl
 from flet.controls.object_patch import ObjectPatch
 from flet.controls.padding import Padding
 from flet.controls.page import Page, PageMediaData
@@ -77,8 +77,8 @@ def test_page_patch_dataclass():
     )
 
     # 1 -calculate diff
-    patch = ObjectPatch.from_diff(
-        None, page, in_place=True, controls_index=None, control_cls=BaseControl
+    patch, added_controls, removed_controls = ObjectPatch.from_diff(
+        None, page, in_place=True, control_cls=BaseControl
     )
 
     # 2 - convert patch to hierarchy
@@ -107,8 +107,8 @@ def test_page_patch_dataclass():
     assert page.platform == PagePlatform.MACOS
 
     # 1 -calculate diff
-    patch = ObjectPatch.from_diff(
-        page, page, in_place=True, controls_index=None, control_cls=BaseControl
+    patch, _, _ = ObjectPatch.from_diff(
+        page, page, in_place=True, control_cls=BaseControl
     )
 
     # 2 - convert patch to hierarchy
@@ -123,8 +123,8 @@ def test_page_patch_dataclass():
     page.window.height = 768
 
     # 1 -calculate diff
-    patch = ObjectPatch.from_diff(
-        page, page, in_place=True, controls_index=None, control_cls=BaseControl
+    patch, _, _ = ObjectPatch.from_diff(
+        page, page, in_place=True, control_cls=BaseControl
     )
 
     # 2 - convert patch to hierarchy

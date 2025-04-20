@@ -222,19 +222,17 @@ class ObjectPatch(object):
         src,
         dst,
         in_place=False,
-        controls_index: Optional[MutableMapping] = None,
         control_cls=None,
     ):
         builder = DiffBuilder(
             src,
             dst,
             in_place=in_place,
-            controls_index=controls_index,
             control_cls=control_cls,
         )
         builder._compare_values(None, [], None, src, dst)
         ops = list(builder.execute())
-        return cls(ops)
+        return cls(ops), builder.added_controls, builder.removed_controls
 
     def to_graph(self) -> Any:
         root = {}
@@ -278,11 +276,11 @@ class DiffBuilder(object):
         src_doc,
         dst_doc,
         in_place=False,
-        controls_index: Optional[MutableMapping] = None,
         control_cls=None,
     ):
         self.in_place = in_place
-        self.controls_index = controls_index
+        self.added_controls = []
+        self.removed_controls = []
         self.control_cls = control_cls
         self.index_storage = [{}, {}]
         self.index_storage2 = [[], []]
@@ -398,6 +396,7 @@ class DiffBuilder(object):
             self.store_index(item, new_index, _ST_ADD)
 
     def _item_removed(self, path, key, item):
+        # print("_item_removed:", path, key, item)
         new_op = RemoveOperation(
             {
                 "op": "remove",
@@ -433,6 +432,7 @@ class DiffBuilder(object):
 
         else:
             self.store_index(item, new_index, _ST_REMOVE)
+            self._remove_control(item)
 
     def _item_replaced(self, parent, path, key, item):
         self._configure_dataclass(item, parent)
@@ -536,24 +536,30 @@ class DiffBuilder(object):
                 prev_classes[field_name] = new
 
         # compare lists
-        for field_name, old in prev_lists.items():
+        for field_name, old in list(prev_lists.items()):
             if field_name in changes:
+                if new is None:
+                    del prev_lists[field_name]
                 continue
             new = getattr(dst, field_name)
             self._compare_values(parent, path, field_name, old, new)
             prev_lists[field_name] = new[:]
 
         # compare dicts
-        for field_name, old in prev_dicts.items():
+        for field_name, old in list(prev_dicts.items()):
             if field_name in changes:
+                if new is None:
+                    del prev_dicts[field_name]
                 continue
             new = getattr(dst, field_name)
             self._compare_values(parent, path, field_name, old, new)
             prev_dicts[field_name] = new.copy()
 
         # compare dataclasses
-        for field_name, old in prev_classes.items():
+        for field_name, old in list(prev_classes.items()):
             if field_name in changes:
+                if new is None:
+                    del prev_classes[field_name]
                 continue
             new = getattr(dst, field_name)
             self._compare_values(parent, path, field_name, old, new)
@@ -629,16 +635,15 @@ class DiffBuilder(object):
                 else:
                     item.init()
 
-                # add control to the index
-                if self.controls_index is not None:
-                    self.controls_index[item._i] = item
-
             # recurse through fields
             for field in dataclasses.fields(item):
                 if not "skip" in field.metadata:
                     self._configure_dataclass(getattr(item, field.name), item)
 
             if self.control_cls and isinstance(item, self.control_cls):
+                # register new control
+                self.added_controls.append(item)
+
                 # call Control.before_update()
                 item.before_update()
 
@@ -651,6 +656,31 @@ class DiffBuilder(object):
         elif isinstance(item, list):
             for v in item:
                 self._configure_dataclass(v, parent)
+
+    def _remove_control(self, item):
+        if self.control_cls and isinstance(item, self.control_cls):
+
+            # recurse through list props
+            for item_list in getattr(item, "__prev_lists", {}).values():
+                self._remove_control(item_list)
+
+            # recurse through dict props
+            for item_dict in getattr(item, "__prev_dicts", {}).values():
+                self._remove_control(item_dict)
+
+            # recurse through dataclass props
+            for item_class in getattr(item, "__prev_classes", {}).values():
+                self._remove_control(item_class)
+
+            self.removed_controls.append(item)
+
+        elif isinstance(item, dict):
+            for v in item.values():
+                self._remove_control(v)
+
+        elif isinstance(item, list):
+            for v in item:
+                self._remove_control(v)
 
 
 def _path_join(path, key):

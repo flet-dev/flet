@@ -23,6 +23,7 @@ from flet.controls.animation import (
     OptionalAnimationStyle,
     OptionalAnimationValue,
 )
+from flet.controls.base_control import BaseControl, control
 from flet.controls.blur import Blur, BlurTileMode, BlurValue, OptionalBlurValue
 from flet.controls.border import Border, BorderSide, BorderSideStrokeAlign
 from flet.controls.border_radius import (
@@ -53,13 +54,7 @@ from flet.controls.buttons import (
 )
 from flet.controls.colors import Colors
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import (
-    BaseControl,
-    Control,
-    OptionalControl,
-    Service,
-    control,
-)
+from flet.controls.control import Control, OptionalControl
 from flet.controls.control_event import ControlEvent
 from flet.controls.control_state import (
     ControlState,
@@ -98,6 +93,12 @@ from flet.controls.core.charts.line_chart_data import LineChartData
 from flet.controls.core.charts.line_chart_data_point import LineChartDataPoint
 from flet.controls.core.charts.pie_chart import PieChart, PieChartEvent
 from flet.controls.core.charts.pie_chart_section import PieChartSection
+from flet.controls.core.charts.scatter_chart import (
+    ScatterChart,
+    ScatterChartEvent,
+    ScatterChartSpot,
+    ScatterShartTooltipAlignment,
+)
 from flet.controls.core.column import Column
 from flet.controls.core.container import Container, ContainerTapEvent
 from flet.controls.core.dismissible import (
@@ -370,6 +371,7 @@ from flet.controls.scrollable_control import (
     ScrollDirection,
     ScrollType,
 )
+from flet.controls.service import Service
 from flet.controls.size import Size
 from flet.controls.template_route import TemplateRoute
 from flet.controls.text_style import (
@@ -495,5 +497,6 @@ from flet.controls.types import (
     VisualDensity,
     WebRenderer,
 )
+from flet.controls.update_behavior import UpdateBehavior
 from flet.pubsub.pubsub_client import PubSubClient
 from flet.pubsub.pubsub_hub import PubSubHub

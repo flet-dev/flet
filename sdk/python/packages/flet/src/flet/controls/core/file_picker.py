@@ -3,7 +3,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import List, Optional
 
-from flet.controls.control import Control, control
+from flet.controls.base_control import control
+from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
 from flet.controls.types import OptionalEventCallable
 

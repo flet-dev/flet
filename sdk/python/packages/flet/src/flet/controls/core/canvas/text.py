@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from flet.controls.alignment import Alignment
-from flet.controls.control import control
+from flet.controls.base_control import control
 from flet.controls.core.canvas.shape import Shape
 from flet.controls.core.text_span import TextSpan
 from flet.controls.text_style import TextStyle

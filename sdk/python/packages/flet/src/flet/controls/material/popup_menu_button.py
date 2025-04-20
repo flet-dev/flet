@@ -3,10 +3,11 @@ from enum import Enum
 from typing import List, Optional
 
 from flet.controls.animation import AnimationStyle
+from flet.controls.base_control import control
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import ButtonStyle, OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, control
+from flet.controls.control import Control
 from flet.controls.padding import OptionalPaddingValue, PaddingValue
 from flet.controls.types import (
     ClipBehavior,

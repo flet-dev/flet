@@ -2,10 +2,11 @@ import asyncio
 from dataclasses import dataclass, field
 from typing import List, Optional
 
+from flet.controls.base_control import control
 from flet.controls.border_radius import OptionalBorderRadiusValue
 from flet.controls.buttons import ButtonStyle
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, control
+from flet.controls.control import Control
 from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.material.form_field_control import InputBorder
 from flet.controls.material.icons import Icons

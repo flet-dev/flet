@@ -1,6 +1,7 @@
 from typing import Optional, Union
 
-from flet.controls.control import Control, control
+from flet.controls.base_control import control
+from flet.controls.control import Control
 from flet.controls.core.charts.chart_point_line import ChartPointLine
 from flet.controls.core.charts.chart_point_shape import ChartPointShape
 from flet.controls.text_style import TextStyle
@@ -13,6 +14,7 @@ class LineChartDataPoint(Control):
     y: OptionalNumber = None
     selected: Optional[bool] = None
     show_tooltip: Optional[bool] = None
+    tooltip_text: Optional[str] = None
     tooltip_style: Optional[TextStyle] = None
     tooltip_align: Optional[TextAlign] = None
     point: Union[None, bool, ChartPointShape] = None

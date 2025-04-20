@@ -4,7 +4,7 @@ from typing import Any
 
 import flet_js
 import msgpack
-from flet.controls.control import BaseControl
+from flet.controls.base_control import BaseControl
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,
@@ -86,9 +86,7 @@ class PyodideConnection(Connection):
 
         elif action == ClientAction.CONTROL_EVENT:
             req = ControlEventBody(**body)
-            task = asyncio.create_task(
-                self.session.dispatch_event(req.target, req.name, req.data)
-            )
+            await self.session.dispatch_event(req.target, req.name, req.data)
 
         elif action == ClientAction.UPDATE_CONTROL_PROPS:
             req = UpdateControlPropsBody(**body)

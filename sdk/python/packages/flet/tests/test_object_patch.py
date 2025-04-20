@@ -4,9 +4,10 @@ from dataclasses import field
 from typing import Any, List, Optional
 
 import msgpack
+from flet.controls.base_control import BaseControl, control
 from flet.controls.buttons import ButtonStyle
 from flet.controls.colors import Colors
-from flet.controls.control import BaseControl, Control, Service, control
+from flet.controls.control import Control
 
 # import flet as ft
 # import flet.canvas as cv
@@ -19,12 +20,11 @@ from flet.controls.object_patch import ObjectPatch
 from flet.controls.page import Page
 from flet.controls.painting import Paint, PaintLinearGradient
 from flet.controls.ref import Ref
+from flet.controls.service import Service
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import configure_encode_object_for_msgpack
 from flet.messaging.session import Session
 from flet.pubsub.pubsub_hub import PubSubHub
-
-controls_index = weakref.WeakValueDictionary()
 
 
 def b_pack(data):
@@ -41,8 +41,8 @@ def update_page(new: Any, old: Any = None, show_details=True):
     start = datetime.datetime.now()
 
     # 1 -calculate diff
-    patch = ObjectPatch.from_diff(
-        old, new, in_place=True, controls_index=controls_index, control_cls=BaseControl
+    patch, added_controls, removed_controls = ObjectPatch.from_diff(
+        old, new, in_place=True, control_cls=BaseControl
     )
 
     # 2 - convert patch to hierarchy
@@ -63,7 +63,6 @@ def update_page(new: Any, old: Any = None, show_details=True):
     else:
         print("\nMessage length:", len(msg))
 
-    print("\ncontrols_index:", len(controls_index))
     print("\nTotal:", (end - start).total_seconds() * 1000)
 
     return msg

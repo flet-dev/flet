@@ -108,7 +108,7 @@ FlDotPainter? parseChartSelectedDotPainter(dynamic value, ThemeData theme,
 
 FlDotPainter? chartDotPainterFromJSON(
     ThemeData theme,
-    Map<String, dynamic> json,
+    Map<dynamic, dynamic> json,
     Color? barColor,
     Gradient? barGradient,
     double percentage,
@@ -124,7 +124,7 @@ FlDotPainter? chartDotPainterFromJSON(
             ? parseColor(json['color'] as String, theme) ??
                 const Color.fromRGBO(76, 175, 80, 1)
             : defaultGetDotStrokeColor(barColor, barGradient, percentage),
-        strokeWidth: parseDouble(json["stroke_width"], 1.0)!);
+        strokeWidth: parseDouble(json["stroke_width"], 0.0)!);
   } else if (type == "square") {
     return FlDotSquarePainter(
         color: json['color'] != null

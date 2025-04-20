@@ -3,7 +3,7 @@ from datetime import datetime, time
 from enum import Enum
 from typing import Optional
 
-from flet.controls.control import control
+from flet.controls.base_control import control
 from flet.controls.control_event import ControlEvent
 from flet.controls.dialog_control import DialogControl
 from flet.controls.types import (

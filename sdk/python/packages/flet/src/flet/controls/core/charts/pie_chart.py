@@ -3,8 +3,8 @@ from enum import Enum
 from typing import List, Optional
 
 from flet.controls.animation import AnimationValue
+from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import control
 from flet.controls.control_event import ControlEvent
 from flet.controls.core.charts.pie_chart_section import PieChartSection
 from flet.controls.types import (

@@ -6,10 +6,12 @@ import weakref
 from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
-from flet.controls.control import BaseControl, Control
+from flet.controls.base_control import BaseControl
+from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
 from flet.controls.object_patch import ObjectPatch
 from flet.controls.page import Page, _session_page
+from flet.controls.update_behavior import UpdateBehavior
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
     ClientAction,
@@ -89,13 +91,24 @@ class Session:
         self.__pubsub_client.unsubscribe_all()
 
     def patch_control(self, control: BaseControl):
-        patch = self.__get_update_control_patch(control=control, prev_control=control)
+        patch, added_controls, removed_controls = self.__get_update_control_patch(
+            control=control, prev_control=control
+        )
         if patch:
+
+            for removed_control in removed_controls:
+                removed_control.will_unmount()
+                self.__index.pop(removed_control._i, None)
+
             self.connection.send_message(
                 ClientMessage(
                     ClientAction.PATCH_CONTROL, PatchControlBody(control._i, patch)
                 )
             )
+
+            for added_control in added_controls:
+                self.__index[added_control._i] = added_control
+                added_control.did_mount()
 
     def apply_patch(self, control_id: int, patch: dict[str, Any]):
         if control := self.__index.get(control_id):
@@ -106,7 +119,13 @@ class Session:
         self.apply_patch(self.__page._i, patch)
 
     def get_page_patch(self):
-        return self.__get_update_control_patch(self.__page, prev_control=None)[""]
+        return self.__get_update_control_patch(self.__page, prev_control=None)[0][""]
+
+    # optimizations:
+    # - disable auto-update
+    # - auto-update to skip already updated items
+    # - add-only list
+    # - disable mount/unmount
 
     async def dispatch_event(self, control_id: int, event_name: str, event_data: Any):
         if control := self.__index.get(control_id):
@@ -128,11 +147,15 @@ class Session:
                         e = from_dict(event_type, args)
                     if hasattr(control, field_name):
                         event_handler = getattr(control, field_name)
+                        UpdateBehavior.reset()
+
                         if asyncio.iscoroutinefunction(event_handler):
                             await event_handler(e)
                         elif callable(event_handler):
                             event_handler(e)
-                        self.auto_update(control)
+
+                        if UpdateBehavior.auto_update_enabled():
+                            self.auto_update(control)
             except Exception as ex:
                 tb = traceback.format_exc()
                 self.error(f"Exception in '{field_name}': {ex}\n{tb}")
@@ -171,12 +194,14 @@ class Session:
         self, control: BaseControl, prev_control: Optional[BaseControl]
     ):
         # calculate patch
-        patch = ObjectPatch.from_diff(
+        patch, added_controls, removed_controls = ObjectPatch.from_diff(
             prev_control,
             control,
             in_place=True,
-            controls_index=self.__index,
             control_cls=BaseControl,
         )
 
-        return patch.to_graph()
+        # print(f"\n\nadded_controls ({len(added_controls)}):", added_controls)
+        # print(f"\n\nremoved_controls ({len(removed_controls)}):", removed_controls)
+
+        return patch.to_graph(), added_controls, removed_controls

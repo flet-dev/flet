@@ -3,8 +3,8 @@ from enum import Enum
 
 from flet.controls import alignment
 from flet.controls.alignment import Alignment
+from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import control
 from flet.controls.duration import Duration, DurationValue
 from flet.controls.types import Number, OptionalColorValue, OptionalControlEventCallable
 

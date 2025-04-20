@@ -2,9 +2,9 @@ from dataclasses import dataclass, field
 from typing import Any, List, Optional
 
 from flet.controls.animation import AnimationValue
+from flet.controls.base_control import control
 from flet.controls.border import Border, BorderSide
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import control
 from flet.controls.control_event import ControlEvent
 from flet.controls.core.charts.chart_axis import ChartAxis
 from flet.controls.core.charts.chart_grid_lines import ChartGridLines
@@ -57,8 +57,8 @@ class LineChart(ConstrainedControl):
     tooltip_padding: OptionalPaddingValue = None
     tooltip_max_content_width: OptionalNumber = None
     tooltip_rotate_angle: OptionalNumber = None
-    tooltip_tooltip_horizontal_offset: OptionalNumber = None
-    tooltip_tooltip_border_side: Optional[BorderSide] = None
+    tooltip_horizontal_offset: OptionalNumber = None
+    tooltip_border_side: Optional[BorderSide] = None
     tooltip_fit_inside_horizontally: Optional[bool] = None
     tooltip_fit_inside_vertically: Optional[bool] = None
     tooltip_show_on_top_of_chart_box_area: Optional[bool] = None

@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
-from flet.controls.types import OptionalColorValue, OptionalNumber
+from flet.controls.types import Number, OptionalColorValue, OptionalNumber
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ChartPointShape:
     type: str = ""
 
@@ -13,7 +13,7 @@ class ChartCirclePoint(ChartPointShape):
     color: OptionalColorValue = None
     radius: OptionalNumber = None
     stroke_color: OptionalColorValue = None
-    stroke_width: OptionalNumber = None
+    stroke_width: Number = 0
 
     def __post_init__(self):
         self.type = "circle"
@@ -22,9 +22,9 @@ class ChartCirclePoint(ChartPointShape):
 @dataclass
 class ChartSquarePoint(ChartPointShape):
     color: OptionalColorValue = None
-    size: OptionalNumber = None
+    size: Number = 4.0
     stroke_color: OptionalColorValue = None
-    stroke_width: OptionalNumber = None
+    stroke_width: Number = 1.0
 
     def __post_init__(self):
         self.type = "square"
@@ -33,8 +33,8 @@ class ChartSquarePoint(ChartPointShape):
 @dataclass
 class ChartCrossPoint(ChartPointShape):
     color: OptionalColorValue = None
-    size: OptionalNumber = None
-    width: OptionalNumber = None
+    size: Number = 8.0
+    width: Number = 2.0
 
     def __post_init__(self):
         self.type = "cross"

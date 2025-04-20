@@ -1,8 +1,8 @@
 from enum import Enum
 from typing import Optional
 
+from flet.controls.base_control import control
 from flet.controls.box import DecorationImage, OptionalShadowValue
-from flet.controls.control import control
 from flet.controls.gradients import Gradient
 from flet.controls.material.textfield import TextField
 from flet.controls.padding import OptionalPaddingValue

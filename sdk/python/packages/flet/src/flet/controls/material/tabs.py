@@ -2,10 +2,11 @@ from dataclasses import field
 from typing import List, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.base_control import control
 from flet.controls.border import BorderSide
 from flet.controls.border_radius import OptionalBorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control, control
+from flet.controls.control import Control
 from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.margin import OptionalMarginValue

@@ -1,8 +1,9 @@
 from dataclasses import field
 from typing import List, Optional, Union
 
+from flet.controls.base_control import control
 from flet.controls.box import BoxShadow
-from flet.controls.control import Control, control
+from flet.controls.control import Control
 from flet.controls.core.charts.chart_point_line import ChartPointLine
 from flet.controls.core.charts.chart_point_shape import ChartPointShape
 from flet.controls.core.charts.line_chart_data_point import LineChartDataPoint

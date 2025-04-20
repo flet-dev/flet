@@ -24,7 +24,7 @@ class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
       leadingWidth: control.getDouble("leading_width"),
       automaticallyImplyLeading:
           control.getBool("automatically_imply_leading", true)!,
-      title: control.buildWidget("title"),
+      title: control.buildTextOrWidget("title"),
       centerTitle: control.getBool("center_title", false)!,
       toolbarHeight: preferredSize.height,
       foregroundColor: control.getColor("color", context),

@@ -1,9 +1,10 @@
 from typing import Optional
 
 from flet.controls.animation import AnimationStyle
+from flet.controls.base_control import control
 from flet.controls.box import BoxConstraints
 from flet.controls.buttons import OutlinedBorder
-from flet.controls.control import Control, control
+from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
 from flet.controls.types import (
     ClipBehavior,

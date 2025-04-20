@@ -21,8 +21,9 @@ def patch_dataclass(obj: Any, patch: dict):
         localns = frame.f_globals.copy()
         localns.update(frame.f_locals)
         hints = get_type_hints(cls, globalns=globalns, localns=localns)
-    except Exception:
+    except Exception as e:
         hints = {f.name: f.type for f in dataclasses.fields(cls)}  # fallback
+        # print("ERROR: ", cls.__name__, e)
 
     for field_name, field_type in hints.items():
         if field_name not in patch:

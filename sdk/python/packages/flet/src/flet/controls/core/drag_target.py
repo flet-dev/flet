@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
-from flet.controls.control import Control, control
+from flet.controls.base_control import control
+from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
 from flet.controls.transform import Offset
 from flet.controls.types import OptionalControlEventCallable, OptionalEventCallable

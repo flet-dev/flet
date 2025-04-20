@@ -1,9 +1,10 @@
 from dataclasses import field
 from typing import List, Optional
 
+from flet.controls.base_control import control
 from flet.controls.border import BorderSide
 from flet.controls.border_radius import OptionalBorderRadiusValue
-from flet.controls.control import Control, control
+from flet.controls.control import Control
 from flet.controls.core.charts.bar_chart_rod_stack_item import BarChartRodStackItem
 from flet.controls.gradients import Gradient
 from flet.controls.text_style import TextStyle

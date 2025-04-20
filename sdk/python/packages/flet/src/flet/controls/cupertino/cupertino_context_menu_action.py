@@ -1,7 +1,7 @@
 from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.control import control
+from flet.controls.base_control import control
 from flet.controls.types import IconValue, OptionalControlEventCallable, StrOrControl
 
 __all__ = ["CupertinoContextMenuAction"]

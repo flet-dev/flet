@@ -1,8 +1,9 @@
 from enum import Enum
 from typing import Optional
 
+from flet.controls.base_control import control
 from flet.controls.buttons import OutlinedBorder
-from flet.controls.control import Control, control
+from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.margin import OptionalMarginValue

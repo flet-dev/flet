@@ -1,7 +1,8 @@
 from enum import Enum
 from typing import Optional
 
-from flet.controls.control import Control, control
+from flet.controls.base_control import control
+from flet.controls.control import Control
 
 __all__ = ["AutofillGroup", "AutofillHint", "AutofillGroupDisposeAction"]
 

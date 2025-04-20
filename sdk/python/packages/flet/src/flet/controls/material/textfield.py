@@ -3,7 +3,7 @@ from enum import Enum
 from typing import List, Optional, Union
 
 from flet.controls.adaptive_control import AdaptiveControl
-from flet.controls.control import control
+from flet.controls.base_control import control
 from flet.controls.core.autofill_group import AutofillHint
 from flet.controls.material.form_field_control import FormFieldControl
 from flet.controls.padding import PaddingValue

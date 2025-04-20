@@ -1,10 +1,10 @@
 from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
+from flet.controls.base_control import control
 from flet.controls.border import BorderSide
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import control
 from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
