@@ -11,7 +11,7 @@ __all__ = ["ConstrainedControl"]
 
 @control(kw_only=True)
 class ConstrainedControl(Control):
-    key: Optional[str] = None
+    scroll_key: Optional[str] = None
     width: OptionalNumber = None
     height: OptionalNumber = None
     left: OptionalNumber = None
