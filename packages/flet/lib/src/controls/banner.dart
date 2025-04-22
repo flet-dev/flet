@@ -42,8 +42,8 @@ class _BannerControlState extends State<BannerControl> {
   }
 
   Widget _createBanner() {
-    var leading = widget.control.buildWidget("leading");
-    var content = widget.control.buildWidget("content");
+    var leading = widget.control.buildIconOrWidget("leading");
+    var content = widget.control.buildTextOrWidget("content");
     var actions = widget.control.buildWidgets("actions");
 
     if (content == null) {

@@ -8,10 +8,12 @@ from flet.controls.margin import OptionalMarginValue
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.text_style import TextStyle
 from flet.controls.types import (
+    IconValueOrControl,
     Number,
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
+    StrOrControl,
 )
 
 __all__ = ["Banner"]
@@ -27,7 +29,7 @@ class Banner(DialogControl):
     Online docs: https://flet.dev/docs/controls/banner
     """
 
-    content: Control
+    content: StrOrControl
     """
     The content of the Banner.
 
@@ -41,7 +43,7 @@ class Banner(DialogControl):
     Typically this is a list of [`TextButton`](https://flet.dev/docs/controls/textbutton) controls.
     """
 
-    leading: Optional[Control] = None
+    leading: Optional[IconValueOrControl] = None
     """
     The (optional) leading `Control` of the Banner.
 
