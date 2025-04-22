@@ -34,6 +34,6 @@ class Card(ConstrainedControl, AdaptiveControl):
     surface_tint_color: OptionalColorValue = None
     shape: Optional[OutlinedBorder] = None
     clip_behavior: Optional[ClipBehavior] = None
-    is_semantic_container: Optional[bool] = None
-    show_border_on_foreground: Optional[bool] = None
+    is_semantic_container: bool = True
+    show_border_on_foreground: bool = True
     variant: Optional[CardVariant] = None
