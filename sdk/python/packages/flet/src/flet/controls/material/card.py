@@ -66,14 +66,13 @@ class Card(ConstrainedControl, AdaptiveControl):
     """
     The shape of the card.
 
-    Value is of type [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder) and defaults to `RoundedRectangleBorder(radius=4.0)`.
+    Value is of type [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder)`.
     """
 
     clip_behavior: Optional[ClipBehavior] = None
     """
     The `content` will be clipped (or not) according to this option.
 
-    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) and defaults to `ClipBehavior.NONE`.
     """
 
     is_semantic_container: bool = True
@@ -88,7 +87,7 @@ class Card(ConstrainedControl, AdaptiveControl):
     Defaults to `True`.
     """
 
-    variant: Optional[CardVariant] = None
+    variant: CardVariant = CardVariant.ELEVATED
     """
     Defines the card variant to be used.
 
