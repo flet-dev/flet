@@ -1,9 +1,6 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
-import 'base_controls.dart';
-import 'control_widget.dart';
-
 class TabsControl extends StatefulWidget {
   final Control control;
 
@@ -47,7 +44,6 @@ class _TabsControlState extends State<TabsControl>
     }
     var index = _tabController!.index;
     if (_selectedIndex != index) {
-      debugPrint("Selected index: $index");
       widget.control.updateProperties({"selected_index": index});
       widget.control.triggerEvent("change", index);
       _selectedIndex = index;
@@ -102,7 +98,8 @@ class _TabsControlState extends State<TabsControl>
         widget.control.getBorderRadius("indicator_border_radius");
     var indicatorBorderSide = widget.control
         .getBorderSide("indicator_border_side", Theme.of(context));
-    var indicatorPadding = widget.control.getPadding("indicator_padding");
+    var indicatorPadding =
+        widget.control.getPadding("indicator_padding", EdgeInsets.zero)!;
     var indicatorColor = widget.control.getColor(
         "indicator_color",
         context,
@@ -172,24 +169,14 @@ class _TabsControlState extends State<TabsControl>
 
     var tabs = widget.control.children("tabs").map((tab) {
       tab.notifyParent = true;
-      var icon = tab.get("icon");
-      var label = tab.get("label") ?? tab.get("tab_content");
-      var text = tab.getString("text");
+      var icon = tab.buildIconOrWidget("icon");
+      var label = tab.buildTextOrWidget("label");
 
       return Tab(
-        icon: icon is Control
-            ? ControlWidget(control: icon)
-            : icon is String
-                ? Icon(parseIcon(icon))
-                : null,
+        icon: icon,
         height: tab.getDouble("height"),
         iconMargin: tab.getMargin("icon_margin"),
-        text: text,
-        child: label is Control
-            ? ControlWidget(control: label)
-            : label is String
-                ? Text(label)
-                : null,
+        child: label,
       );
     }).toList();
 
@@ -217,7 +204,7 @@ class _TabsControlState extends State<TabsControl>
           labelStyle: labelStyle,
           unselectedLabelStyle: unselectedLabelStyle,
           splashBorderRadius: splashBorderRadius,
-          indicatorPadding: indicatorPadding ?? EdgeInsets.zero,
+          indicatorPadding: indicatorPadding,
           onTap: onTap);
     } else {
       tabBar = TabBar(
@@ -241,7 +228,7 @@ class _TabsControlState extends State<TabsControl>
           labelStyle: labelStyle,
           unselectedLabelStyle: unselectedLabelStyle,
           splashBorderRadius: splashBorderRadius,
-          indicatorPadding: indicatorPadding ?? EdgeInsets.zero,
+          indicatorPadding: indicatorPadding,
           onTap: onTap);
     }
 

@@ -16,8 +16,6 @@ from flet.controls.types import (
 
 __all__ = ["FloatingActionButton"]
 
-from flet.utils import deprecated_warning
-
 
 @control("FloatingActionButton")
 class FloatingActionButton(ConstrainedControl):
@@ -69,16 +67,6 @@ class FloatingActionButton(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/floatingactionbutton
     """
 
-    def __setattr__(self, name, value):
-        if name == "text" and value is not None:
-            deprecated_warning(
-                name="text",
-                reason="Use 'content' instead.",
-                version="0.70.0",
-                delete_version="0.73.0",
-            )
-        super().__setattr__(name, value)
-
     content: Optional[StrOrControl] = None
     icon: Optional[IconValueOrControl] = None
     bgcolor: OptionalColorValue = None
@@ -98,14 +86,11 @@ class FloatingActionButton(ConstrainedControl):
     url_target: Optional[UrlTarget] = None
     mouse_cursor: Optional[MouseCursor] = None
     on_click: OptionalControlEventCallable = None
-    text: Optional[str] = None  # todo(0.70.3): remove in favor of content
 
     def before_update(self):
         super().before_update()
-        assert (
-            self.text
-            or self.icon
-            or (self.content and self.content.visible)  # text to be removed in 0.70.3
+        assert self.icon or (
+            self.content and self.content.visible
         ), "at minimum, text, icon or a visible content must be provided"
         assert (
             self.elevation is None or self.elevation >= 0

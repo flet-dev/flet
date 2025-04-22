@@ -254,10 +254,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         padding:
             widget.control.getPadding("padding", const EdgeInsets.all(7.0))!,
         stylusHandwritingEnabled:
-            widget.control.getBool("enable_stylus_handwriting") ??
-                widget.control.getBool(
-                    "enable_scribble") ?? // todo(0.73.0): remove enable_scribble
-                true,
+            widget.control.getBool("enable_stylus_handwriting", true)!,
         scrollPadding: widget.control
             .getPadding("scroll_padding", const EdgeInsets.all(20.0))!,
         obscuringCharacter:

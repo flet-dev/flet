@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/borders.dart';
 import '../utils/colors.dart';
-import '../utils/icons.dart';
 import '../utils/launch_url.dart';
 import '../utils/misc.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
 import '../widgets/error.dart';
 import 'base_controls.dart';
-import 'control_widget.dart';
 
 class FloatingActionButtonControl extends StatelessWidget {
   final Control control;
@@ -24,24 +23,8 @@ class FloatingActionButtonControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("FloatingActionButtonControl build: ${control.id}");
 
-    String? text = control.getString("text"); //to be removed in 0.73.0
-    var content = control.get("content");
-
-    Widget? contentWidget = content is Control
-        ? ControlWidget(control: content)
-        : content is String
-            ? Text(content)
-            : text != null
-                ? Text(text)
-                : null;
-
-    var icon = control.get("icon");
-    var iconWidget = icon is Control
-        ? ControlWidget(control: icon)
-        : icon is String
-            ? Icon(parseIcon(icon))
-            : null;
-
+    var content = control.buildTextOrWidget("content");
+    var icon = control.buildIconOrWidget("icon");
     var url = control.getString("url", "")!;
     var urlTarget = control.getString("url_target");
     var disabledElevation = control.getDouble("disabled_elevation");
@@ -49,7 +32,7 @@ class FloatingActionButtonControl extends StatelessWidget {
     var hoverElevation = control.getDouble("hover_elevation");
     var highlightElevation = control.getDouble("highlight_elevation");
     var focusElevation = control.getDouble("focus_elevation");
-    var bgColor = control.getColor("bgcolor", context);
+    var bgcolor = control.getColor("bgcolor", context);
     var foregroundColor = control.getColor("foreground_color", context);
     var splashColor = control.getColor("splash_color", context);
     var hoverColor = control.getColor("hover_color", context);
@@ -57,10 +40,9 @@ class FloatingActionButtonControl extends StatelessWidget {
     var shape = control.getShape("shape");
     var clipBehavior =
         parseClip(control.getString("clip_behavior"), Clip.none)!;
-
-    bool autofocus = control.getBool("autofocus", false)!;
-    bool mini = control.getBool("mini", false)!;
-    bool? enableFeedback = control.getBool("enable_feedback");
+    var autofocus = control.getBool("autofocus", false)!;
+    var mini = control.getBool("mini", false)!;
+    var enableFeedback = control.getBool("enable_feedback");
     var mouseCursor = control.getMouseCursor("mouse_cursor");
 
     Function()? onPressed = control.disabled
@@ -72,15 +54,15 @@ class FloatingActionButtonControl extends StatelessWidget {
             control.triggerEvent("click");
           };
 
-    if (iconWidget == null && contentWidget == null) {
+    if (icon == null && content == null) {
       return const ErrorControl(
-          "FloatingActionButton has nothing to display. Provide at minimum one of these: text, icon, content"); // todo(0.73.0): remove text
+          "FloatingActionButton has nothing to display. Provide at minimum one of these: icon, content");
     }
-    var child = iconWidget != null
-        ? contentWidget == null
-            ? iconWidget
+    var child = icon != null
+        ? content == null
+            ? icon
             : null
-        : contentWidget;
+        : content;
 
     Widget button;
     if (child != null) {
@@ -89,7 +71,7 @@ class FloatingActionButtonControl extends StatelessWidget {
           autofocus: autofocus,
           onPressed: onPressed,
           mouseCursor: mouseCursor,
-          backgroundColor: bgColor,
+          backgroundColor: bgcolor,
           foregroundColor: foregroundColor,
           hoverColor: hoverColor,
           splashColor: splashColor,
@@ -104,15 +86,15 @@ class FloatingActionButtonControl extends StatelessWidget {
           shape: shape,
           mini: mini,
           child: child);
-    } else if (contentWidget != null) {
+    } else if (content != null) {
       button = FloatingActionButton.extended(
         heroTag: control.id,
         autofocus: autofocus,
         onPressed: onPressed,
         mouseCursor: mouseCursor,
-        label: contentWidget,
-        icon: iconWidget,
-        backgroundColor: bgColor,
+        label: content,
+        icon: icon,
+        backgroundColor: bgcolor,
         foregroundColor: foregroundColor,
         hoverColor: hoverColor,
         splashColor: splashColor,
@@ -128,7 +110,7 @@ class FloatingActionButtonControl extends StatelessWidget {
       );
     } else {
       return const ErrorControl(
-          "FloatingActionButton has nothing to display. Provide at minimum one of these: text, icon, content");
+          "FloatingActionButton has nothing to display. Provide at minimum icon or content.");
     }
 
     return ConstrainedControl(control: control, child: button);

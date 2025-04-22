@@ -18,7 +18,6 @@ from flet.controls.types import (
     OptionalNumber,
     TextAlign,
 )
-from flet.utils import deprecated_warning
 
 __all__ = [
     "TextField",
@@ -132,9 +131,6 @@ class TextField(FormFieldControl, AdaptiveControl):
     enable_ime_personalized_learning: bool = True
     can_request_focus: bool = True
     ignore_pointers: bool = False
-    enable_scribble: bool = (
-        True  # todo(0.73.0): remove in favor of enable_stylus_handwriting
-    )
     enable_stylus_handwriting: bool = True
     animate_cursor_opacity: Optional[bool] = None
     always_call_on_tap: bool = False
@@ -150,16 +146,6 @@ class TextField(FormFieldControl, AdaptiveControl):
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
     on_tap_outside: OptionalControlEventCallable = None
-
-    def __setattr__(self, name, value):
-        if name == "enable_scribble" and value is not True:
-            deprecated_warning(
-                name="enable_scribble",
-                reason="Use enable_stylus_handwriting instead.",
-                version="0.70.0",
-                delete_version="0.73.0",
-            )
-        super().__setattr__(name, value)
 
     def before_update(self):
         super().before_update()

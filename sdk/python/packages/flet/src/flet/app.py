@@ -7,9 +7,6 @@ import traceback
 from pathlib import Path
 from typing import Optional
 
-import flet.version
-from flet.controls.control_event import ControlEvent
-from flet.controls.page import Page
 from flet.controls.types import AppView, WebRenderer
 from flet.controls.update_behavior import UpdateBehavior
 from flet.messaging.session import Session
@@ -22,23 +19,12 @@ from flet.utils import (
     is_pyodide,
     open_in_browser,
 )
-from flet.utils.deprecated import deprecated
 from flet.utils.pip import (
     ensure_flet_desktop_package_installed,
     ensure_flet_web_package_installed,
 )
 
 logger = logging.getLogger("flet")
-
-
-@deprecated("Use run() instead.", version="0.70.0", show_parentheses=True)
-def app(*args, **kwargs):
-    return run(*args, **kwargs)
-
-
-@deprecated("Use run() instead.", version="0.70.0", show_parentheses=True)
-async def app_async(*args, **kwargs):
-    return await run_async(*args, **kwargs)
 
 
 def run(

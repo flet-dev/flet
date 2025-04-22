@@ -93,19 +93,17 @@ class _NavigationRailControlState extends State<NavigationRailControl>
                     .buildWidget("selected_icon") ??
                 Icon(parseIcon(destinationControl.getString("selected_icon")));
             return NavigationRailDestination(
-              disabled: disabled || destinationControl.disabled,
-              padding: parseEdgeInsets(destinationControl.get("padding")),
-              indicatorColor:
-                  destinationControl.getColor("indicator_color", context),
-              indicatorShape: parseOutlinedBorder(
-                  destinationControl.get("indicator_shape")),
-              icon: icon,
-              selectedIcon: selectedIcon,
-              label: destinationControl.buildWidget("label") ??
-                  destinationControl.buildWidget(
-                      "label_content") ?? // todo(0.73.0): remove label_content
-                  Text(label),
-            );
+                disabled: disabled || destinationControl.disabled,
+                padding: parseEdgeInsets(destinationControl.get("padding")),
+                indicatorColor:
+                    destinationControl.getColor("indicator_color", context),
+                indicatorShape: parseOutlinedBorder(
+                    destinationControl.get("indicator_shape")),
+                icon: icon,
+                selectedIcon: selectedIcon,
+                label: destinationControl.buildTextOrWidget("label") ??
+                    ErrorWidget(
+                        "label (string or visible Control) must be provided"));
           }).toList(),
         );
       },

@@ -81,13 +81,11 @@ InputDecoration buildInputDecoration(
   if (counter is Control) {
     counterWidget = control.buildWidget("counter");
   } else {
-    counterText = control.getString("counter") ??
-        control
-            .getString("counter_text",
-                "") // todo(0.73.0): remove "counter_text" in favor of "counter"
-            ?.replaceAll("{value_length}", valueLength.toString())
-            .replaceAll("{max_length}", maxLength?.toString() ?? "None")
-            .replaceAll("{symbols_left}",
+    counterText = control
+        .getString("counter")
+        ?.replaceAll("{value_length}", valueLength.toString())
+        .replaceAll("{max_length}", maxLength?.toString() ?? "None")
+        .replaceAll("{symbols_left}",
                 "${maxLength == null ? 'None' : (maxLength - (valueLength ?? 0))}");
   }
 
@@ -98,9 +96,7 @@ InputDecoration buildInputDecoration(
   if (error is Control) {
     errorWidget = control.buildWidget("error");
   } else {
-    errorText = control.getString("error") ??
-        control.getString(
-            "error_text"); // todo(0.73.0): remove "error_text" in favor of "error"
+    errorText = control.getString("error");
   }
   // helper
   String? helperText;
@@ -109,9 +105,7 @@ InputDecoration buildInputDecoration(
   if (helper is Control) {
     helperWidget = control.buildWidget("helper");
   } else {
-    helperText = control.getString("helper") ??
-        control.getString(
-            "helper_text"); // todo(0.73.0): remove "helper_text" in favor of "helper"
+    helperText = control.getString("helper");
   }
 
   // prefix
@@ -121,9 +115,7 @@ InputDecoration buildInputDecoration(
   if (prefix is Control) {
     prefixWidget = control.buildWidget("prefix");
   } else {
-    prefixText = control.getString("prefix") ??
-        control.getString(
-            "prefix_text"); // todo(0.73.0): remove "prefix_text" in favor of "prefix"
+    prefixText = control.getString("prefix");
   }
 
   // suffix
@@ -133,9 +125,7 @@ InputDecoration buildInputDecoration(
   if (suffix is Control) {
     suffixWidget = control.buildWidget("suffix");
   } else {
-    suffixText = control.getString("suffix") ??
-        control.getString(
-            "suffix_text"); // todo(0.73.0): remove "suffix_text" in favor of "suffix"
+    suffixText = control.getString("suffix");
   }
 
   InputBorder? border;
@@ -241,17 +231,10 @@ InputDecoration buildInputDecoration(
 
 OverlayVisibilityMode? parseOverlayVisibilityMode(String? value,
     [OverlayVisibilityMode? defaultValue]) {
-  switch (value?.toLowerCase()) {
-    case "never":
-      return OverlayVisibilityMode.never;
-    case "notediting":
-      return OverlayVisibilityMode.notEditing;
-    case "editing":
-      return OverlayVisibilityMode.editing;
-    case "always":
-      return OverlayVisibilityMode.always;
-  }
-  return defaultValue;
+  if (value == null) return defaultValue;
+  return OverlayVisibilityMode.values.firstWhereOrNull(
+          (e) => e.name.toLowerCase() == value.toLowerCase()) ??
+      defaultValue;
 }
 
 StrutStyle? parseStrutStyle(dynamic value, [StrutStyle? defaultValue]) {

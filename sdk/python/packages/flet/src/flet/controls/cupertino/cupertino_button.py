@@ -2,9 +2,9 @@ import asyncio
 from enum import Enum
 from typing import Optional
 
-from flet.controls.alignment import Alignment
+from flet.controls.alignment import OptionalAlignment
 from flet.controls.base_control import control
-from flet.controls.border_radius import OptionalBorderRadiusValue
+from flet.controls.border_radius import BorderRadiusValue
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
@@ -15,7 +15,6 @@ from flet.controls.types import (
     StrOrControl,
     UrlTarget,
 )
-from flet.utils.deprecated import deprecated_warning
 
 __all__ = ["CupertinoButton", "CupertinoButtonSize"]
 
@@ -36,16 +35,6 @@ class CupertinoButton(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/cupertinobutton
     """
 
-    def __setattr__(self, name, value):
-        if name == "text" and value is not None:
-            deprecated_warning(
-                name="text",
-                reason="Use content instead.",
-                version="0.70.0",
-                delete_version="0.73.0",
-            )
-        super().__setattr__(name, value)
-
     content: Optional[StrOrControl] = None
     icon: Optional[IconValueOrControl] = None
     icon_color: OptionalColorValue = None
@@ -54,10 +43,10 @@ class CupertinoButton(ConstrainedControl):
     disabled_bgcolor: OptionalColorValue = None
     opacity_on_click: Number = 0.4
     min_size: Number = None
-    size_style: Optional[CupertinoButtonSize] = CupertinoButtonSize.LARGE
+    size: CupertinoButtonSize = CupertinoButtonSize.LARGE
     padding: OptionalPaddingValue = None
-    alignment: Optional[Alignment] = None
-    border_radius: OptionalBorderRadiusValue = 8.0
+    alignment: OptionalAlignment = None
+    border_radius: BorderRadiusValue = 8.0
     url: Optional[str] = None
     url_target: Optional[UrlTarget] = None
     autofocus: bool = False
@@ -66,7 +55,6 @@ class CupertinoButton(ConstrainedControl):
     on_long_press: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
-    text: Optional[str] = None  # deprecated
 
     def before_update(self):
         super().before_update()

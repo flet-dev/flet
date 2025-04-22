@@ -123,7 +123,7 @@ class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
   String toString() => 'CustomFloatingActionButtonLocation(dx: $dx, dy: $dy)';
 }
 
-CupertinoButtonSize? parseSizeStyle(String? value,
+CupertinoButtonSize? parseCupertinoButtonSize(String? value,
     [CupertinoButtonSize? defaultValue]) {
   if (value == null) return defaultValue;
   return CupertinoButtonSize.values.firstWhereOrNull(
@@ -162,8 +162,8 @@ extension ButtonParsers on Control {
     return parseFloatingActionButtonLocation(get(propertyName), defaultValue);
   }
 
-  CupertinoButtonSize? getSizeStyle(String propertyName,
+  CupertinoButtonSize? getCupertinoButtonSize(String propertyName,
       [CupertinoButtonSize? defaultValue]) {
-    return parseSizeStyle(get(propertyName), defaultValue);
+    return parseCupertinoButtonSize(get(propertyName), defaultValue);
   }
 }

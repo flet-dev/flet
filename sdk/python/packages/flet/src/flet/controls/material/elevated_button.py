@@ -15,7 +15,6 @@ from flet.controls.types import (
     StrOrControl,
     UrlTarget,
 )
-from flet.utils.deprecated import deprecated_warning
 
 __all__ = ["ElevatedButton"]
 
@@ -45,16 +44,6 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
         Online docs: https://flet.dev/docs/controls/elevatedbutton
     """
 
-    def __setattr__(self, name, value):
-        if name == "text" and value is not None:
-            deprecated_warning(
-                name="text",
-                reason="Use content instead.",
-                version="0.70.0",
-                delete_version="0.73.0",
-            )
-        super().__setattr__(name, value)
-
     content: Optional[StrOrControl] = None
     icon: Optional[IconValueOrControl] = None
     icon_color: OptionalColorValue = None
@@ -71,16 +60,14 @@ class ElevatedButton(ConstrainedControl, AdaptiveControl):
     on_hover: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
-    text: Optional[str] = None  # todo(0.70.3): remove in favor of content
 
     def before_update(self):
         super().before_update()
         assert (
             self.icon
-            or self.text  # todo(0.70.3): remove line
             or isinstance(self.content, str)
             or (isinstance(self.content, Control) and self.content.visible)
-        ), "at least text, icon, or content (string or visible Control) must be provided"
+        ), "at least icon, or content (string or visible Control) must be provided"
 
     async def focus_async(self):
         await self._invoke_method_async("focus")

@@ -7,8 +7,6 @@ from flet.controls.control_id import ControlId
 from flet.controls.ref import Ref
 from flet.utils.strings import random_string
 
-from ..utils import deprecated
-
 # Try importing `dataclass_transform()` for Python 3.11+, else use a no-op function
 if sys.version_info >= (3, 11):  # Only use it for Python 3.11+
     from typing import dataclass_transform
@@ -135,15 +133,6 @@ class BaseControl:
 
     def is_isolated(self):
         return hasattr(self, "_isolated") and self._isolated
-
-    @deprecated(
-        reason="Use init() instead.",
-        version="0.70.0",
-        delete_version="0.73.0",
-        show_parentheses=True,
-    )
-    def build(self):
-        pass
 
     def init(self):
         pass

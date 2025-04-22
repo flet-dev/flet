@@ -1,4 +1,4 @@
-from flet.app import app, app_async, run, run_async
+from flet.app import run, run_async
 from flet.controls import (
     alignment,
     animation,

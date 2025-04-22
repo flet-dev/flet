@@ -18,7 +18,6 @@ from flet.controls.types import (
     StrOrControl,
     VerticalAlignment,
 )
-from flet.utils.deprecated import deprecated_warning
 
 
 class InputBorder(Enum):
@@ -57,20 +56,16 @@ class FormFieldControl(ConstrainedControl):
     hint_fade_duration: OptionalDurationValue = None
     hint_max_lines: Optional[int] = None
     helper: Optional[StrOrControl] = None
-    helper_text: OptionalString = None  # todo(0.73.0): remove in favor of helper
     helper_style: Optional[TextStyle] = None
     helper_max_lines: Optional[int] = None
     counter: Optional[StrOrControl] = None
-    counter_text: OptionalString = None  # todo(0.73.0): remove in favor of counter
     counter_style: Optional[TextStyle] = None
     error: Optional[StrOrControl] = None
-    error_text: OptionalString = None  # todo(0.73.0): remove in favor of error
     error_style: Optional[TextStyle] = None
     error_max_lines: Optional[int] = None
     prefix: Optional[StrOrControl] = None
     prefix_icon: Optional[IconValueOrControl] = None
     prefix_icon_size_constraints: Optional[BoxConstraints] = None
-    prefix_text: OptionalString = None  # todo(0.73.0): remove in favor of prefix
     prefix_style: Optional[TextStyle] = None
     suffix: Optional[StrOrControl] = None
     suffix_icon: Optional[IconValueOrControl] = None
@@ -78,27 +73,7 @@ class FormFieldControl(ConstrainedControl):
     size_constraints: Optional[BoxConstraints] = None
     collapsed: Optional[bool] = None
     fit_parent_size: Optional[bool] = None
-    suffix_text: OptionalString = None  # todo(0.73.0): remove in favor of suffix
     suffix_style: Optional[TextStyle] = None
-
-    def __setattr__(self, name, value):
-        deprecated_map = {
-            "suffix_text": "suffix",
-            "prefix_text": "prefix",
-            "error_text": "error",
-            "counter_text": "counter",
-            "helper_text": "helper",
-        }
-
-        if name in deprecated_map and value is not None:
-            deprecated_warning(
-                name=name,
-                reason=f"Use {deprecated_map[name]} instead.",
-                version="0.70.0",
-                delete_version="0.73.0",
-            )
-
-        super().__setattr__(name, value)
 
     async def focus_async(self):
         await self._invoke_method_async("focus")

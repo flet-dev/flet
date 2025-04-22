@@ -2,8 +2,6 @@ import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'base_controls.dart';
-
 class TextFieldControl extends StatefulWidget {
   final Control control;
 
@@ -220,11 +218,8 @@ class _TextFieldControlState extends State<TextFieldControl> {
         ignorePointers: widget.control.getBool("ignore_pointers"),
         cursorErrorColor:
             widget.control.getColor("cursor_error_color", context),
-        stylusHandwritingEnabled: widget.control
-                .getBool("enable_stylus_handwriting") ??
-            widget.control.getBool(
-                "enable_scribble") ?? // todo(0.73.0): remove enable_scribble
-            true,
+        stylusHandwritingEnabled:
+            widget.control.getBool("enable_stylus_handwriting", true)!,
         scrollPadding: widget.control
             .getPadding("scroll_padding", const EdgeInsets.all(20.0))!,
         keyboardAppearance: widget.control.getBrightness("keyboard_brightness"),
