@@ -17,6 +17,8 @@ class Badge(BaseControl):
     Badges are used to show notifications, counts, or status information on navigation items such as NavigationBar or NavigationRail destinations
     or a button's icon.
 
+    -----
+
     Online docs: https://flet.dev/docs/reference/types/badge
     """
 
@@ -36,7 +38,7 @@ class Badge(BaseControl):
     """
     Combined with `alignment` to determine the location of the label relative to the content.
 
-    Has effect only used if `text` is also provided.
+    Has effect only used if `label` is also provided.
 
     Value is of type [`OffsetValue`](https://flet.dev/docs/reference/types/aliases#offsetvalue).
     """
@@ -47,7 +49,7 @@ class Badge(BaseControl):
 
     The alignment positions the label in similar way content of a container is positioned using its [`alignment`](https://flet.dev/docs/controls/container#alignment), except that the badge alignment is resolved as if the label was a [`large_size`](https://flet.dev/docs/reference/types/badge#large_size) square and `offset` is added to the result.
 
-    This value is only used if `text` property is provided.
+    This value is only used if `label` property is provided.
 
     For example:
 
@@ -72,7 +74,7 @@ class Badge(BaseControl):
 
     large_size: OptionalNumber = None
     """
-    The badge's label height if `text` is provided.
+    The badge's label height if `label` is provided.
 
     If the default value is overridden then it may be useful to also override `padding` and `alignment`.
 
@@ -90,7 +92,7 @@ class Badge(BaseControl):
 
     small_size: OptionalNumber = None
     """
-    The badge's label diameter if `text` is not provided.
+    The badge's label diameter if `label` is not provided.
 
     Value is of type [`OptionalNumber`](https://flet.dev/docs/reference/types/aliases#optionalnumber) and defaults to `6`.
     """

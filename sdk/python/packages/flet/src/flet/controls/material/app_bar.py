@@ -19,6 +19,8 @@ class AppBar(AdaptiveControl):
     """
     A material design app bar.
 
+    -----
+
     Online docs: https://flet.dev/docs/controls/appbar
     """
 

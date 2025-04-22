@@ -26,6 +26,8 @@ class AutoComplete(Control):
     """
     Helps the user make a selection by entering some text and choosing from among a list of displayed options.
 
+    -----
+
     Online docs: https://flet.dev/docs/controls/autocomplete
     """
 
