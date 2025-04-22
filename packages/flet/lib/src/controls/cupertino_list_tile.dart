@@ -32,12 +32,13 @@ class CupertinoListTileControl extends StatelessWidget {
     var backgroundColor = control.getColor("bgcolor", context);
     var bgcolorActivated = control.getColor("bgcolor_activated", context);
     var padding = control.getPadding("content_padding");
-    var leadingSize = control.getDouble("leading_size");
-    var leadingToTitle = control.getDouble("leading_to_title");
     var notched = control.getBool("notched", false)!;
+    var leadingSize = control.getDouble("leading_size", notched ? 30.0 : 28.0)!;
+    var leadingToTitle =
+        control.getDouble("leading_to_title", notched ? 12.0 : 16.0)!;
     var onclick = control.getBool("on_click", false)!;
     var toggleInputs = control.getBool("toggle_inputs", false)!;
-    var url = control.getString("url", "")!;
+    var url = control.getString("url");
     var urlTarget = control.getString("url_target");
 
     Function()? onPressed =
@@ -46,7 +47,7 @@ class CupertinoListTileControl extends StatelessWidget {
                 if (toggleInputs) {
                   _clickNotifier.onClick();
                 }
-                if (url != "") {
+                if (url != null) {
                   openWebBrowser(url, webWindowName: urlTarget);
                 }
                 if (onclick) {
@@ -56,28 +57,28 @@ class CupertinoListTileControl extends StatelessWidget {
             : null;
 
     Widget tile;
-    !notched
-        ? tile = CupertinoListTile(
+    notched
+        ? tile = CupertinoListTile.notched(
             onTap: onPressed,
             additionalInfo: additionalInfo,
             backgroundColor: backgroundColor,
             backgroundColorActivated: bgcolorActivated,
             leading: leading,
-            leadingSize: leadingSize ?? 28.0,
-            leadingToTitle: leadingToTitle ?? 16.0,
+            leadingSize: leadingSize,
+            leadingToTitle: leadingToTitle,
             padding: padding,
             title: title,
             subtitle: subtitle,
             trailing: trailing,
           )
-        : tile = CupertinoListTile.notched(
+        : tile = CupertinoListTile(
             onTap: onPressed,
             additionalInfo: additionalInfo,
             backgroundColor: backgroundColor,
             backgroundColorActivated: bgcolorActivated,
             leading: leading,
-            leadingSize: leadingSize ?? 30.0,
-            leadingToTitle: leadingToTitle ?? 12.0,
+            leadingSize: leadingSize,
+            leadingToTitle: leadingToTitle,
             padding: padding,
             title: title,
             subtitle: subtitle,
