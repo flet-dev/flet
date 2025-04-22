@@ -125,7 +125,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) and defaults to `ClipBehavior.ANTI_ALIAS` if `border_radius` is not `None`; otherwise `ClipBehavior.NONE`.
     """
 
-    ink: Optional[bool] = None
+    ink: bool = False
     """
     `True` to produce ink ripples effect when user clicks the container.
 
@@ -289,7 +289,7 @@ class Container(ConstrainedControl, AdaptiveControl):
     Value is of type [`ColorFilter`](https://flet.dev/docs/reference/types/colorfilter).
     """
 
-    ignore_interactions: Optional[bool] = None
+    ignore_interactions: bool = False
     """
     Whether to ignore all interactions with this container and its descendants.
 
