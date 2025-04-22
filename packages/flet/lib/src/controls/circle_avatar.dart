@@ -23,7 +23,7 @@ class CircleAvatarControl extends StatelessWidget with FletStoreMixin {
     return withPageArgs((context, pageArgs) {
       var foregroundImageSrc = control.getString("foreground_image_src");
       var backgroundImageSrc = control.getString("background_image_src");
-      var content = control.buildWidget("content");
+      var content = control.buildTextOrWidget("content");
 
       ImageProvider<Object>? backgroundImage;
       ImageProvider<Object>? foregroundImage;

@@ -26,55 +26,129 @@ class Checkbox(ConstrainedControl, AdaptiveControl):
     """
     Checkbox allows to select one or more items from a group, or switch between two mutually exclusive options (checked or unchecked, on or off).
 
-    Example:
-    ```
-    import flet as ft
-
-    def main(page):
-        def button_clicked(e):
-            t.value = (
-                f"Checkboxes values are:  {c1.value}, {c2.value}, {c3.value}, {c4.value}, {c5.value}."
-            )
-            page.update()
-
-        t = ft.Text()
-        c1 = ft.Checkbox(label="Unchecked by default checkbox", value=False)
-        c2 = ft.Checkbox(label="Undefined by default tristate checkbox", tristate=True)
-        c3 = ft.Checkbox(label="Checked by default checkbox", value=True)
-        c4 = ft.Checkbox(label="Disabled checkbox", disabled=True)
-        c5 = ft.Checkbox(
-            label="Checkbox with rendered label_position='left'", label_position=ft.LabelPosition.LEFT
-        )
-        b = ft.ElevatedButton(text="Submit", on_click=button_clicked)
-        page.add(c1, c2, c3, c4, c5, b, t)
-
-    ft.app(target=main)
-    ```
-
-    -----
-
     Online docs: https://flet.dev/docs/controls/checkbox
     """
 
     label: Optional[StrOrControl] = None
+    """
+    The clickable label to display on the right of a checkbox.
+    """
+
     value: Optional[bool] = None
+    """
+    Current value of the checkbox.
+    """
+
     label_position: LabelPosition = LabelPosition.RIGHT
+    """
+    Defines on which side of the checkbox the `label` should be shown.
+
+    Value is of type [`LabelPosition`](https://flet.dev/docs/reference/types/labelposition) and defaults to `LabelPosition.RIGHT`.
+    """
+
     label_style: Optional[TextStyle] = None
+    """
+    The label's style. An instance of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
+    """
+
     tristate: bool = False
+    """
+    If `True` the checkboxes value can be `True`, `False`, or `None`.
+
+    Checkbox displays a dash when its value is `None`.
+    """
+
     autofocus: bool = False
+    """
+    True if the control will be selected as the initial focus. If there is more than one control on a page with autofocus set, then the first one added to the page will get focus.
+    """
+
     fill_color: OptionalControlStateValue[ColorValue] = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) that fills the checkbox in various [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
+    """
+
     overlay_color: OptionalControlStateValue[ColorValue] = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) of the checkbox's overlay in various [`ControlState`](https://flet.dev/docs/reference/types/controlstate) states.
+
+    This property supports the following `ControlState` values: `PRESSED`, `SELECTED`, `HOVERED` and `FOCUSED`.
+    """
+
     check_color: OptionalColorValue = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) to use for the check icon when this checkbox is checked.
+    """
+
     active_color: OptionalColorValue = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) to use when this checkbox is checked.
+    """
+
     hover_color: OptionalColorValue = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) to use when this checkbox is hovered.
+    """
+
     focus_color: OptionalColorValue = None
+    """
+    TBD
+    """
+
     semantics_label: Optional[str] = None
+    """
+    The semantic label for the checkbox that is not shown in the UI, but will be announced by screen readers in accessibility modes (e.g TalkBack/VoiceOver).
+    """
+
     shape: Optional[OutlinedBorder] = None
+    """
+    The shape of the checkbox. The value is an instance of [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder) class.
+
+    Defaults to `RoundedRectangleBorder(radius=2)`.
+    """
+
     splash_radius: OptionalNumber = None
+    """
+    The radius of the circular Material ink response (ripple) in logical pixels.
+
+    Defaults to `20.0`.
+    """
+
     border_side: OptionalControlStateValue[BorderSide] = None
+    """
+    TBD
+    """
+
     is_error: bool = False
+    """
+    Whether this checkbox wants to show an error state. When `True` this checkbox will have a different default container color and check color.
+
+    Defaults to `False`.
+    """
+
     visual_density: Optional[VisualDensity] = None
+    """
+    TBD
+    """
+
     mouse_cursor: Optional[MouseCursor] = None
+    """
+    The cursor to be displayed when a mouse pointer enters or is hovering over this control.
+
+    Value is of type [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
+    """
+
     on_change: OptionalControlEventCallable = None
+    """
+    Fires when the state of the Checkbox is changed.
+    """
+
     on_focus: OptionalControlEventCallable = None
+    """
+    Fires when the control has received focus.
+    """
+
     on_blur: OptionalControlEventCallable = None
+    """
+    Fires when the control has lost focus.
+    """
