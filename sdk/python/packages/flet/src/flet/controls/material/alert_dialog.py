@@ -24,8 +24,6 @@ class AlertDialog(DialogControl):
     """
     An alert dialog informs the user about situations that require acknowledgement. An alert dialog has an optional title and an optional list of actions. The title is displayed above the content and the actions are displayed below the content.
 
-    -----
-
     Online docs: https://flet.dev/docs/controls/alertdialog
     """
 

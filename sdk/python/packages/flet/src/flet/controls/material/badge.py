@@ -17,8 +17,6 @@ class Badge(BaseControl):
     Badges are used to show notifications, counts, or status information on navigation items such as NavigationBar or NavigationRail destinations
     or a button's icon.
 
-    -----
-
     Online docs: https://flet.dev/docs/reference/types/badge
     """
 
