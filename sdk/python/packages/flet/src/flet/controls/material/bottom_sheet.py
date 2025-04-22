@@ -19,53 +19,85 @@ class BottomSheet(DialogControl):
     """
     A modal bottom sheet is an alternative to a menu or a dialog and prevents the user from interacting with the rest of the app.
 
-    Example:
-    ```
-    import flet as ft
-
-
-    def main(page: ft.Page):
-        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-
-        def handle_dismissal(e):
-            page.add(ft.Text("Bottom sheet dismissed"))
-        bs = ft.BottomSheet(
-            on_dismiss=handle_dismissal,
-            content=ft.Container(
-                padding=50,
-                content=ft.Column(
-                    tight=True,
-                    controls=[
-                        ft.Text("This is bottom sheet's content!"),
-                        ft.ElevatedButton("Close bottom sheet", on_click=lambda _: page.close(bs)),
-                    ],
-                ),
-            ),
-        )
-        page.add(ft.ElevatedButton("Display bottom sheet", on_click=lambda _: page.open(bs)))
-
-
-    ft.app(target=main)
-    ```
-
-    -----
-
     Online docs: https://flet.dev/docs/controls/bottomsheet
     """
 
     content: Control
+    """
+    The content `Control` of the bottom sheet.
+    """
+
     elevation: OptionalNumber = None
+    """
+    Controls the size of the shadow below the BottomSheet.
+    """
+
     bgcolor: OptionalColorValue = None
-    dismissible: Optional[bool] = None
-    enable_drag: Optional[bool] = None
-    show_drag_handle: Optional[bool] = None
-    use_safe_area: Optional[bool] = None
-    is_scroll_controlled: Optional[bool] = None
-    maintain_bottom_view_insets_padding: Optional[bool] = None
+    """
+    The sheet's background [color](https://flet.dev/docs/reference/colors).
+    """
+
+    dismissible: bool = True
+    """
+    Specifies whether the bottom sheet will be dismissed when user taps on the scrim.
+    """
+
+    enable_drag: bool = False
+    """
+    Specifies whether the bottom sheet can be dragged up and down and dismissed by swiping downwards.
+    """
+
+    show_drag_handle: bool = False
+    """
+    Whether to display drag handle at the top of sheet or not.
+    """
+
+    use_safe_area: bool = True
+    """
+    Specifies whether the sheet will avoid system intrusions on the top, left, and right.
+
+    Defaults to `False`.
+    """
+
+    is_scroll_controlled: bool = False
+    """
+    Specifies if the bottom sheet contains scrollable content, such as ListView or GridView.
+
+    Defaults to `False`.
+    """
+
+    maintain_bottom_view_insets_padding: bool = True
+    """
+    Adds a padding at the bottom to avoid obstructing bottom sheet content with on-screen keyboard or other system elements.
+    """
+
     animation_style: Optional[AnimationStyle] = None
+    """
+    The sheet's animation style.
+
+    Value is of type [`AnimationStyle`](https://flet.dev/docs/reference/types/animationstyle).
+    """
+
     size_constraints: Optional[BoxConstraints] = None
+    """
+    The size constraints to apply to the bottom sheet.
+
+    Value is of type [`BoxConstraints`](https://flet.dev/docs/reference/types/boxconstraints).
+    """
+
     clip_behavior: Optional[ClipBehavior] = None
+    """
+    The sheet's clip behavior.
+
+    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior).
+    """
+
     shape: Optional[OutlinedBorder] = None
+    """
+    Defines the shape of the bottom sheet.
+
+    Value is of type [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder).
+    """
 
     def before_update(
         self,
