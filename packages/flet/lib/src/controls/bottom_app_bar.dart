@@ -1,8 +1,6 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
-import 'base_controls.dart';
-
 class BottomAppBarControl extends StatelessWidget {
   final Control control;
 
@@ -16,7 +14,7 @@ class BottomAppBarControl extends StatelessWidget {
       clipBehavior: control.getClipBehavior("clip_behavior", Clip.none)!,
       padding: control.getPadding("padding"),
       height: control.getDouble("height"),
-      elevation: control.getDouble("elevation", 0),
+      elevation: control.getDouble("elevation"),
       shape: control.getNotchedShape("shape"),
       shadowColor: control.getColor("shadow_color", context),
       surfaceTintColor: control.getColor("surface_tint_color", context),
