@@ -16,6 +16,7 @@ from flet.controls.types import (
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
+    StrOrControl,
     VisualDensity,
 )
 
@@ -30,7 +31,7 @@ class Chip(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/chip
     """
 
-    label: Control
+    label: StrOrControl
     """
     A `Control` that represents primary content of the chip, typically a [`Text`](https://flet.dev/docs/controls/text). Label is a required property.
     """
@@ -104,8 +105,6 @@ class Chip(ConstrainedControl):
     delete_icon: Optional[Control] = None
     """
     A `Control` to display to the right of the chip's `label` in case `on_delete` event is specified.
-
-    Defaults to an [`Icon(icons.CANCEL)`](https://flet.dev/docs/controls/icon).
     """
 
     delete_icon_tooltip: Optional[str] = None
@@ -166,7 +165,7 @@ class Chip(ConstrainedControl):
     Defaults to `8.0`.
     """
 
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
     The content will be clipped (or not) according to this option.
 

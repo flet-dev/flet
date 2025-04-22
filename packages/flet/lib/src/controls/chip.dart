@@ -50,7 +50,7 @@ class _ChipControlState extends State<ChipControl> {
     debugPrint("Chip build: ${widget.control.id}");
     bool disabled = widget.control.disabled;
 
-    var label = widget.control.buildWidget("label");
+    var label = widget.control.buildTextOrWidget("label");
     if (label == null) {
       return const ErrorControl("Chip.label must be provided and visible");
     }
