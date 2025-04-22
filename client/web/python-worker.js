@@ -18,7 +18,6 @@ self.initPyodide = async function () {
         from pyodide.http import pyfetch
 
         py_args = flet_js.args.to_py() if flet_js.args else None
-        print("Args:", py_args)
         
         if "script" not in py_args:
             print("Downloading app archive")
