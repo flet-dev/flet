@@ -32,9 +32,9 @@ globalThis.jsConnect = async function(appId, args, dartOnMessage) {
     app.worker.postMessage({
         pyodideUrl: globalThis.pyodideUrl ?? defaultPyodideUrl,
         args: args,
-        _documentUrl,
-        micropipIncludePre,
-        pythonModuleName
+        documentUrl: _documentUrl,
+        micropipIncludePre: globalThis.micropipIncludePre,
+        pythonModuleName: globalThis.pythonModuleName
     });
 
     await pythonInitialized;

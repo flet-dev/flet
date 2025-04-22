@@ -29,7 +29,6 @@ def patch_index_html(
             var micropipIncludePre = {str(pyodide_pre).lower()};
             var pythonModuleName = "{module_name}";
         </script>
-        <script src="python.js"></script>
         """
         index = index.replace("<!-- pyodideCode -->", pyodideCode)
     index = index.replace("%FLET_WEB_PYODIDE%", str(pyodide).lower())
