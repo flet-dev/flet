@@ -8,6 +8,7 @@ from flet.controls.types import (
     OptionalControlEventCallable,
     OptionalNumber,
     OptionalString,
+    StrOrControl,
 )
 
 __all__ = ["CircleAvatar"]
@@ -24,7 +25,7 @@ class CircleAvatar(ConstrainedControl):
     Online docs: https://flet.dev/docs/controls/circleavatar
     """
 
-    content: Optional[Control] = None
+    content: Optional[StrOrControl] = None
     """
     Typically a `Text` control. If the CircleAvatar is to have an image, use `background_image_src` instead.
     """
