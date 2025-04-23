@@ -3,9 +3,6 @@ from typing import Optional, Union
 
 __all__ = [
     "Padding",
-    "all",
-    "symmetric",
-    "only",
     "PaddingValue",
     "OptionalPaddingValue",
 ]
@@ -20,19 +17,19 @@ class Padding:
     right: Number
     bottom: Number
 
+    @classmethod
+    def all(cls, value: Number) -> "Padding":
+        return Padding(left=value, top=value, right=value, bottom=value)
 
-def all(value: Number) -> Padding:
-    return Padding(left=value, top=value, right=value, bottom=value)
+    @classmethod
+    def symmetric(cls, *, vertical: Number = 0, horizontal: Number = 0) -> "Padding":
+        return Padding(left=horizontal, top=vertical, right=horizontal, bottom=vertical)
 
-
-def symmetric(vertical: Number = 0, horizontal: Number = 0) -> Padding:
-    return Padding(left=horizontal, top=vertical, right=horizontal, bottom=vertical)
-
-
-def only(
-    left: Number = 0, top: Number = 0, right: Number = 0, bottom: Number = 0
-) -> Padding:
-    return Padding(left=left, top=top, right=right, bottom=bottom)
+    @classmethod
+    def only(
+        cls, *, left: Number = 0, top: Number = 0, right: Number = 0, bottom: Number = 0
+    ) -> "Padding":
+        return Padding(left=left, top=top, right=right, bottom=bottom)
 
 
 PaddingValue = Union[Number, Padding]

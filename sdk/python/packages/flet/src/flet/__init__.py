@@ -1,16 +1,4 @@
 from flet.app import run, run_async
-from flet.controls import (
-    alignment,
-    animation,
-    border,
-    border_radius,
-    colors,
-    margin,
-    padding,
-    painting,
-    size,
-    transform,
-)
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment, Axis, OptionalAlignment, OptionalAxis
 from flet.controls.animation import (
@@ -24,7 +12,13 @@ from flet.controls.animation import (
     OptionalAnimationValue,
 )
 from flet.controls.base_control import BaseControl, control
-from flet.controls.blur import Blur, BlurTileMode, BlurValue, OptionalBlurValue
+from flet.controls.blur import (
+    Blur,
+    BlurTileMode,
+    BlurValue,
+    OptionalBlurTileMode,
+    OptionalBlurValue,
+)
 from flet.controls.border import (
     Border,
     BorderSide,
@@ -43,6 +37,7 @@ from flet.controls.border_radius import (
 from flet.controls.box import (
     BoxConstraints,
     BoxDecoration,
+    BoxFit,
     BoxShadow,
     BoxShape,
     ColorFilter,
@@ -50,6 +45,7 @@ from flet.controls.box import (
     FilterQuality,
     OptionalBoxConstraints,
     OptionalBoxDecoration,
+    OptionalBoxFit,
     OptionalBoxShadow,
     OptionalBoxShape,
     OptionalColorFilter,
@@ -65,6 +61,8 @@ from flet.controls.buttons import (
     ButtonStyle,
     CircleBorder,
     ContinuousRectangleBorder,
+    OptionalButtonStyle,
+    OptionalOutlinedBorder,
     OutlinedBorder,
     RoundedRectangleBorder,
     StadiumBorder,

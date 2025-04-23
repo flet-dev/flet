@@ -100,10 +100,7 @@ class Colors(str, Enum):
     ON_ERROR_CONTAINER = "onerrorcontainer"
     OUTLINE = "outline"
     OUTLINE_VARIANT = "outlinevariant"
-    SURFACE = "surface"  # previously BACKGROUND
-    ON_SURFACE = "onsurface"  # previously ON_BACKGROUND
     SURFACE_TINT = "surfacetint"
-    SURFACE_CONTAINER_HIGHEST = "surfaceContainerHighest"  # previously SURFACE_VARIANT
     ON_SURFACE_VARIANT = "onsurfacevariant"
     INVERSE_SURFACE = "inversesurface"
     ON_INVERSE_SURFACE = "oninversesurface"
