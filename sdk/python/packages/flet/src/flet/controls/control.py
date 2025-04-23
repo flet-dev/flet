@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import Optional, Union
 
 from flet.controls.base_control import BaseControl
 from flet.controls.material.badge import BadgeValue

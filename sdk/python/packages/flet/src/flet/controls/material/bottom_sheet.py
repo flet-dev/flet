@@ -6,12 +6,7 @@ from flet.controls.box import BoxConstraints
 from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
-from flet.controls.types import (
-    ClipBehavior,
-    OptionalColorValue,
-    OptionalControlEventCallable,
-    OptionalNumber,
-)
+from flet.controls.types import ClipBehavior, OptionalColorValue, OptionalNumber
 
 
 @control("BottomSheet")

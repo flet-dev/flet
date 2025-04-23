@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import Optional, Union
 
 from flet.controls.alignment import Alignment
@@ -11,7 +10,7 @@ from flet.controls.types import OptionalColorValue, OptionalNumber, StrOrControl
 __all__ = ["Badge", "BadgeValue"]
 
 
-@control("badge")
+@control("Badge")
 class Badge(BaseControl):
     """
     Badges are used to show notifications, counts, or status information on navigation items such as NavigationBar or NavigationRail destinations

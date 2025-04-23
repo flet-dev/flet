@@ -1,5 +1,3 @@
-from typing import Any, Optional
-
 from flet.controls.base_control import control
 from flet.controls.cupertino.cupertino_button import CupertinoButton
 
