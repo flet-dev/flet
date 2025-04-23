@@ -14,15 +14,17 @@ version = ""
 def update_version():
     """Return the current version or default."""
     working = Path().absolute()
-    os.chdir(Path(flet.__file__).absolute().parent)
+    version_file_path = Path(flet.__file__).absolute().parent / "version.py"
+    os.chdir(version_file_path.parent)  # Change to the directory containing version.py
+
     in_repo = (
         which("git.exe" if is_windows() else "git")
         and sp.run(
-            ["git", "status"],
+            ["git", "rev-parse", "--is-inside-work-tree"],
             capture_output=True,
             text=True,
-        ).returncode
-        == 0
+        ).stdout.strip()
+        == "true"
     )
 
     if in_repo:
@@ -53,8 +55,7 @@ def update_version():
         )
 
     else:
-        version = "0.2.0"
-    os.chdir(working)
+        version = "0.1.0"
     return version
 
 
