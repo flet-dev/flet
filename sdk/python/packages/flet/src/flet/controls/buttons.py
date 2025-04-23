@@ -25,6 +25,8 @@ __all__ = [
     "OutlinedBorder",
     "RoundedRectangleBorder",
     "StadiumBorder",
+    "OptionalButtonStyle",
+    "OptionalOutlinedBorder",
 ]
 
 
@@ -91,3 +93,8 @@ class ButtonStyle:
     icon_color: OptionalControlStateValue[ColorValue] = None
     visual_density: Optional[VisualDensity] = None
     mouse_cursor: OptionalControlStateValue[MouseCursor] = None
+
+
+# Typing
+OptionalButtonStyle = Optional[ButtonStyle]
+OptionalOutlinedBorder = Optional[OutlinedBorder]

@@ -1,22 +1,23 @@
-import time
+import asyncio
 from dataclasses import field
 from typing import List, Optional
 
 from flet.controls.base_control import control
-from flet.controls.border import BorderSide
-from flet.controls.box import BoxConstraints
-from flet.controls.buttons import OutlinedBorder
+from flet.controls.border import BorderSide, OptionalBorderSide
+from flet.controls.box import OptionalBoxConstraints
+from flet.controls.buttons import OptionalOutlinedBorder, OutlinedBorder
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control
+from flet.controls.control import Control, OptionalControl
 from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.material.textfield import KeyboardType, TextCapitalization
 from flet.controls.padding import PaddingValue
-from flet.controls.text_style import TextStyle
+from flet.controls.text_style import OptionalTextStyle, TextStyle
 from flet.controls.types import (
     ColorValue,
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
+    OptionalString,
 )
 
 __all__ = ["SearchBar"]
@@ -33,10 +34,10 @@ class SearchBar(ConstrainedControl):
     """
 
     controls: List[Control] = field(default_factory=list)
-    value: Optional[str] = None
-    bar_leading: Optional[Control] = None
+    value: str = ""
+    bar_leading: OptionalControl = None
     bar_trailing: Optional[List[Control]] = None
-    bar_hint_text: Optional[str] = None
+    bar_hint_text: OptionalString = None
     bar_bgcolor: OptionalControlStateValue[ColorValue] = None
     bar_overlay_color: OptionalControlStateValue[ColorValue] = None
     bar_shadow_color: OptionalControlStateValue[ColorValue] = None
@@ -48,16 +49,16 @@ class SearchBar(ConstrainedControl):
     bar_hint_text_style: OptionalControlStateValue[TextStyle] = None
     bar_padding: OptionalControlStateValue[PaddingValue] = None
     bar_scroll_padding: PaddingValue = 20
-    view_leading: Optional[Control] = None
+    view_leading: OptionalControl = None
     view_trailing: Optional[List[Control]] = None
     view_elevation: OptionalNumber = None
     view_bgcolor: OptionalColorValue = None
-    view_hint_text: Optional[str] = None
-    view_side: Optional[BorderSide] = None
-    view_shape: Optional[OutlinedBorder] = None
-    view_header_text_style: Optional[TextStyle] = None
-    view_hint_text_style: Optional[TextStyle] = None
-    view_size_constraints: Optional[BoxConstraints] = None
+    view_hint_text: OptionalString = None
+    view_side: OptionalBorderSide = None
+    view_shape: OptionalOutlinedBorder = None
+    view_header_text_style: OptionalTextStyle = None
+    view_hint_text_style: OptionalTextStyle = None
+    view_size_constraints: OptionalBoxConstraints = None
     view_header_height: OptionalNumber = None
     divider_color: OptionalColorValue = None
     capitalization: Optional[TextCapitalization] = None
@@ -79,29 +80,28 @@ class SearchBar(ConstrainedControl):
         super().before_update()
 
     # Public methods
+    async def focus_async(self):
+        await self._invoke_method_async("focus")
+
     def focus(self):
-        self._set_attr_json("focus", str(time.time()))
-        self.update()
+        asyncio.create_task(self.focus_async())
+
+    async def blur_async(self):
+        await self._invoke_method_async("blur")
 
     def blur(self):
-        self._set_attr_json("blur", str(time.time()))
-        self.update()
+        asyncio.create_task(self.blur_async())
 
     def open_view(self):
-        m = {
-            "n": "openView",
-            "i": str(time.time()),
-            "p": {},
-        }
-        self._set_attr_json("method", m)
-        self.update()
+        asyncio.create_task(self.open_view_async())
 
-    def close_view(self, text: str = ""):
-        m = {
-            "n": "closeView",
-            "i": str(time.time()),
-            "p": {"text": text},
-        }
-        self.value = text
-        self._set_attr_json("method", m)
-        self.update()
+    async def open_view_async(self):
+        await self._invoke_method_async("open_view")
+
+    def close_view(self, text: Optional[str] = None):
+        asyncio.create_task(self.close_view_async(text))
+
+    def close_view_async(self, text: Optional[str] = None):
+        self._invoke_method_async(
+            "close_view", {"text": text if text is not None else self.value}
+        )

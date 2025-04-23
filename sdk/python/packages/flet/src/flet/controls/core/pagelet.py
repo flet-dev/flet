@@ -3,18 +3,16 @@ from typing import Optional, Union
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
-from flet.controls.control import Control
+from flet.controls.control import Control, OptionalControl
 from flet.controls.cupertino.cupertino_app_bar import CupertinoAppBar
 from flet.controls.cupertino.cupertino_navigation_bar import CupertinoNavigationBar
 from flet.controls.material.app_bar import AppBar
 from flet.controls.material.bottom_app_bar import BottomAppBar
-from flet.controls.material.floating_action_button import FloatingActionButton
 from flet.controls.material.navigation_bar import NavigationBar
 from flet.controls.material.navigation_drawer import NavigationDrawer
 from flet.controls.transform import OffsetValue
 from flet.controls.types import FloatingActionButtonLocation, OptionalColorValue
 
-# todo: deprecate show_* in favor of a open/close methods, or page.open/close
 __all__ = ["Pagelet"]
 
 
@@ -51,10 +49,10 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
     appbar: Optional[Union[AppBar, CupertinoAppBar]] = None
     navigation_bar: Optional[Union[NavigationBar, CupertinoNavigationBar]] = None
     bottom_app_bar: Optional[BottomAppBar] = None
-    bottom_sheet: Optional[Control] = None
+    bottom_sheet: OptionalControl = None
     drawer: Optional[NavigationDrawer] = None
     end_drawer: Optional[NavigationDrawer] = None
-    floating_action_button: Optional[FloatingActionButton] = None
+    floating_action_button: Optional[Control] = None
     floating_action_button_location: Optional[
         Union[FloatingActionButtonLocation, OffsetValue]
     ] = None
@@ -64,6 +62,7 @@ class Pagelet(ConstrainedControl, AdaptiveControl):
         super().before_update()
         assert self.content.visible, "content must be visible"
 
+    # todo: deprecate show_* in favor of a open/close methods, or page.open/close
     # Drawer
     #
     def show_drawer(self, drawer: NavigationDrawer):

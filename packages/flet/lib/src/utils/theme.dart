@@ -527,7 +527,8 @@ TabBarThemeData? parseTabBarTheme(Map<String, dynamic>? value, ThemeData theme,
     [TabBarThemeData? defaultValue]) {
   if (value == null) return defaultValue;
 
-  var indicatorColor = parseColor(value["indicator_color"], theme);
+  var indicatorColor =
+      parseColor(value["indicator_color"], theme, theme.colorScheme.primary)!;
 
   return theme.tabBarTheme.copyWith(
       overlayColor: parseWidgetStateColor(value["overlay_color"], theme),
@@ -549,9 +550,7 @@ TabBarThemeData? parseTabBarTheme(Map<String, dynamic>? value, ThemeData theme,
                       topRight: Radius.circular(2)))!,
               borderSide: parseBorderSide(value["indicator_border_side"], theme,
                   defaultSideColor: indicatorColor,
-                  defaultValue: BorderSide(
-                      width: 2.0,
-                      color: indicatorColor ?? theme.colorScheme.primary))!,
+                  defaultValue: BorderSide(width: 2.0, color: indicatorColor))!,
               insets:
                   parsePadding(value["indicator_padding"], EdgeInsets.zero)!)
           : null,
@@ -1298,7 +1297,8 @@ class NoPageTransitionsBuilder extends PageTransitionsBuilder {
   const NoPageTransitionsBuilder();
 
   @override
-  Widget buildTransitions<T>(PageRoute<T>? route,
+  Widget buildTransitions<T>(
+      PageRoute<T>? route,
       BuildContext? context,
       Animation<double> animation,
       Animation<double> secondaryAnimation,

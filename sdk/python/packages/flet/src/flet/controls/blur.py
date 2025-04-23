@@ -4,7 +4,13 @@ from typing import Optional, Tuple, Union
 
 from flet.controls.types import Number
 
-__all__ = ["Blur", "BlurTileMode", "BlurValue", "OptionalBlurValue"]
+__all__ = [
+    "Blur",
+    "BlurTileMode",
+    "BlurValue",
+    "OptionalBlurValue",
+    "OptionalBlurTileMode",
+]
 
 
 class BlurTileMode(Enum):
@@ -22,4 +28,5 @@ class Blur:
 
 
 BlurValue = Union[Number, Tuple[Number, Number], Blur]
-OptionalBlurValue = Union[Number, Tuple[Number, Number], Blur]
+OptionalBlurValue = Optional[BlurValue]
+OptionalBlurTileMode = Optional[BlurTileMode]

@@ -12,6 +12,7 @@ from flet.controls.types import (
     ImageFit,
     ImageRepeat,
     Number,
+    OptionalBool,
     OptionalColorValue,
     OptionalNumber,
 )
@@ -25,6 +26,7 @@ __all__ = [
     "ShadowBlurStyle",
     "BoxShape",
     "BoxConstraints",
+    "BoxFit",
     "ShadowValue",
     "OptionalShadowValue",
     "OptionalBoxDecoration",
@@ -35,6 +37,7 @@ __all__ = [
     "OptionalShadowBlurStyle",
     "OptionalBoxShape",
     "OptionalBoxConstraints",
+    "OptionalBoxFit",
 ]
 
 
@@ -76,6 +79,16 @@ class BoxShape(Enum):
     CIRCLE = "circle"
 
 
+class BoxFit(Enum):
+    NONE = "none"
+    CONTAIN = "contain"
+    COVER = "cover"
+    FILL = "fill"
+    FIT_HEIGHT = "fitHeight"
+    FIT_WIDTH = "fitWidth"
+    SCALE_DOWN = "scaleDown"
+
+
 @dataclass
 class DecorationImage:
     src: Optional[str] = None
@@ -84,12 +97,12 @@ class DecorationImage:
     fit: Optional[ImageFit] = None
     alignment: Optional[Alignment] = None
     repeat: Optional[ImageRepeat] = None
-    match_text_direction: Optional[bool] = None
+    match_text_direction: OptionalBool = None
     scale: OptionalNumber = None
     opacity: OptionalNumber = None
     filter_quality: Optional[FilterQuality] = None
-    invert_colors: Optional[bool] = None
-    anti_alias: Optional[bool] = None
+    invert_colors: OptionalBool = None
+    anti_alias: OptionalBool = None
 
 
 @dataclass
@@ -129,3 +142,4 @@ OptionalFilterQuality = Optional[FilterQuality]
 OptionalShadowBlurStyle = Optional[ShadowBlurStyle]
 OptionalBoxShape = Optional[BoxShape]
 OptionalBoxConstraints = Optional[BoxConstraints]
+OptionalBoxFit = Optional[BoxFit]

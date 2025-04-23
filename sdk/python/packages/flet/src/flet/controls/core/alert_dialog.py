@@ -7,12 +7,13 @@ from flet.controls.buttons import OutlinedBorder
 from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
 from flet.controls.padding import OptionalPaddingValue
-from flet.controls.text_style import TextStyle
+from flet.controls.text_style import OptionalTextStyle
 from flet.controls.types import (
     ClipBehavior,
     MainAxisAlignment,
     OptionalColorValue,
     OptionalNumber,
+    OptionalString,
     StrOrControl,
 )
 
@@ -90,10 +91,10 @@ class AlertDialog(DialogControl):
     scrollable: bool = False
     actions_overflow_button_spacing: OptionalNumber = None
     alignment: Optional[Alignment] = None
-    content_text_style: Optional[TextStyle] = None
-    title_text_style: Optional[TextStyle] = None
+    content_text_style: OptionalTextStyle = None
+    title_text_style: OptionalTextStyle = None
     clip_behavior: Optional[ClipBehavior] = None
-    semantics_label: Optional[str] = None
+    semantics_label: OptionalString = None
     barrier_color: OptionalColorValue = None
 
     def before_update(self):

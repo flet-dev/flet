@@ -29,7 +29,7 @@ Radius? parseRadius(dynamic value, [Radius? defaultValue]) {
 }
 
 Border? parseBorder(dynamic value, ThemeData? theme,
-    {Color? defaultSideColor,
+    {Color defaultSideColor = Colors.black,
     BorderSide? defaultBorderSide,
     Border? defaultValue}) {
   if (value == null) return defaultValue;
@@ -49,7 +49,7 @@ Border? parseBorder(dynamic value, ThemeData? theme,
 }
 
 BorderSide? parseBorderSide(dynamic value, ThemeData? theme,
-    {Color? defaultSideColor = Colors.black, BorderSide? defaultValue}) {
+    {Color defaultSideColor = Colors.black, BorderSide? defaultValue}) {
   if (value == null) return defaultValue;
   return BorderSide(
       color: parseColor(value['color'], theme, defaultSideColor)!,
@@ -170,7 +170,7 @@ extension BorderParsers on Control {
   }
 
   Border? getBorder(String propertyName, ThemeData theme,
-      {Color? defaultSideColor,
+      {Color defaultSideColor = Colors.black,
       BorderSide? defaultBorderSide,
       Border? defaultValue}) {
     return parseBorder(get(propertyName), theme,
@@ -180,7 +180,7 @@ extension BorderParsers on Control {
   }
 
   BorderSide? getBorderSide(String propertyName, ThemeData theme,
-      {Color? defaultSideColor = Colors.black, BorderSide? defaultValue}) {
+      {Color defaultSideColor = Colors.black, BorderSide? defaultValue}) {
     return parseBorderSide(get(propertyName), theme,
         defaultSideColor: defaultSideColor, defaultValue: defaultValue);
   }

@@ -101,13 +101,6 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     on_blur: OptionalControlEventCallable = None
     content: Optional[Control] = None  # todo(0.70.3): remove in favor of icon
 
-    # def before_update(self):
-    #     super().before_update()
-    #     if self.__style is not None:
-    #         self.__style.side = self._wrap_attr_dict(self.__style.side)
-    #         self.__style.shape = self._wrap_attr_dict(self.__style.shape)
-    #         self.__style.padding = self._wrap_attr_dict(self.__style.padding)
-
     async def focus_async(self):
         await self._invoke_method_async("focus")
 
