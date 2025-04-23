@@ -53,7 +53,7 @@ class DropdownOption(Option):
 class Dropdown(ConstrainedControl):
     """
     A dropdown control that allows users to select a single option from a list of options.
-    -----
+
     Online docs: https://flet.dev/docs/controls/dropdown
     """
 
