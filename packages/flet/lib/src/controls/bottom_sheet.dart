@@ -33,7 +33,7 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
     var showDragHandle = widget.control.getBool("show_drag_handle", false)!;
     var useSafeArea = widget.control.getBool("use_safe_area", true)!;
     var isScrollControlled =
-        widget.control.getBool("isScrollControlled", false)!;
+        widget.control.getBool("is_scroll_controlled", false)!;
     var maintainBottomViewInsetsPadding =
         widget.control.getBool("maintain_bottom_view_insets_padding", true)!;
 
@@ -48,7 +48,7 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
 
                   if (content == null) {
                     return const ErrorControl(
-                        "BottomSheet.content must be provided and visible");
+                        "BottomSheet.content must be visible");
                   }
 
                   if (maintainBottomViewInsetsPadding) {
@@ -73,10 +73,10 @@ class _BottomSheetControlState extends State<BottomSheetControl> {
                     widget.control.getBoxConstraints("size_constraints"),
                 showDragHandle: showDragHandle,
                 clipBehavior: widget.control.getClipBehavior("clip_behavior"),
-                shape: widget.control.getOutlinedBorder("shape"),
+                shape: widget.control
+                    .getOutlinedBorder("shape", Theme.of(context)),
                 useSafeArea: useSafeArea)
             .then((value) {
-          debugPrint("BottomSheet dismissed: $lastOpen");
           widget.control.updateProperties({"_open": false}, python: false);
           widget.control.updateProperties({"open": false});
           widget.control.triggerEvent("dismiss");

@@ -78,7 +78,7 @@ class _CheckboxControlState extends State<CheckboxControl> {
         value: _value,
         isError: widget.control.getBool("is_error", false)!,
         semanticLabel: widget.control.getString("semantics_label"),
-        shape: widget.control.getShape("shape"),
+        shape: widget.control.getShape("shape", Theme.of(context)),
         side: widget.control
             .getWidgetStateBorderSide("border_side", Theme.of(context)),
         splashRadius: widget.control.getDouble("splash_radius"),

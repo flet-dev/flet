@@ -161,13 +161,15 @@ class _SearchBarControlState extends State<SearchBarControl> {
     //   }
     // }
 
+    var theme = Theme.of(context);
+
     Widget anchor = SearchAnchor(
         searchController: _controller,
-        headerHintStyle: widget.control
-            .getTextStyle("view_hint_text_style", Theme.of(context)),
-        headerTextStyle: widget.control
-            .getTextStyle("view_header_text_style", Theme.of(context)),
-        viewSide: widget.control.getBorderSide("view_side", Theme.of(context)),
+        headerHintStyle:
+            widget.control.getTextStyle("view_hint_text_style", theme),
+        headerTextStyle:
+            widget.control.getTextStyle("view_header_text_style", theme),
+        viewSide: widget.control.getBorderSide("view_side", theme),
         isFullScreen: widget.control.getBool("full_screen", false),
         viewBackgroundColor: widget.control.getColor("view_bgcolor", context),
         dividerColor: widget.control.getColor("divider_color", context),
@@ -176,7 +178,7 @@ class _SearchBarControlState extends State<SearchBarControl> {
         headerHeight: widget.control.getDouble("view_header_height"),
         viewConstraints:
             widget.control.getBoxConstraints("view_size_constraints"),
-        viewShape: widget.control.getShape("view_shape"),
+        viewShape: widget.control.getShape("view_shape", theme),
         viewTrailing: widget.control.buildWidgets("view_trailing"),
         viewLeading: widget.control.buildWidget("view_leading"),
         viewOnSubmitted: onSubmit
@@ -204,22 +206,23 @@ class _SearchBarControlState extends State<SearchBarControl> {
             focusNode: _focusNode,
             hintText: widget.control.getString("bar_hint_text"),
             elevation: widget.control.getWidgetStateDouble("bar_elevation"),
-            shape: widget.control.getWidgetStateOutlinedBorder("bar_shape"),
+            shape:
+                widget.control.getWidgetStateOutlinedBorder("bar_shape", theme),
             padding: widget.control.getWidgetStatePadding("bar_padding"),
-            textStyle: widget.control
-                .getWidgetStateTextStyle("bar_text_style", Theme.of(context)),
-            hintStyle: widget.control.getWidgetStateTextStyle(
-                "bar_hint_text_style", Theme.of(context)),
-            shadowColor: widget.control
-                .getWidgetStateColor("bar_shadow_color", Theme.of(context)),
-            surfaceTintColor: widget.control.getWidgetStateColor(
-                "bar_surface_tint_color", Theme.of(context)),
+            textStyle:
+                widget.control.getWidgetStateTextStyle("bar_text_style", theme),
+            hintStyle: widget.control
+                .getWidgetStateTextStyle("bar_hint_text_style", theme),
+            shadowColor:
+                widget.control.getWidgetStateColor("bar_shadow_color", theme),
+            surfaceTintColor: widget.control
+                .getWidgetStateColor("bar_surface_tint_color", theme),
             side: widget.control
-                .getWidgetStateBorderSide("bar_border_side", Theme.of(context)),
-            backgroundColor: widget.control
-                .getWidgetStateColor("bar_bgcolor", Theme.of(context)),
-            overlayColor: widget.control
-                .getWidgetStateColor("bar_overlay_color", Theme.of(context)),
+                .getWidgetStateBorderSide("bar_border_side", theme),
+            backgroundColor:
+                widget.control.getWidgetStateColor("bar_bgcolor", theme),
+            overlayColor:
+                widget.control.getWidgetStateColor("bar_overlay_color", theme),
             scrollPadding: widget.control
                 .getPadding("bar_scroll_padding", const EdgeInsets.all(20.0))!,
             leading: widget.control.buildWidget("bar_leading"),

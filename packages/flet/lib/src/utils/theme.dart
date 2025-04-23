@@ -298,8 +298,8 @@ ButtonThemeData? parseButtonTheme(Map<String, dynamic>? value, ThemeData theme,
     alignedDropdown: parseBool(value["aligned_dropdown"]),
     height: parseDouble(value["height"]),
     minWidth: parseDouble(value["min_width"]),
-    shape: parseOutlinedBorder(value["shape"]),
-    padding: parseEdgeInsets(value["padding"]),
+    shape: parseShape(value["shape"], theme),
+    padding: parsePadding(value["padding"]),
   );
 }
 
@@ -321,11 +321,11 @@ ElevatedButtonThemeData? parseElevatedButtonTheme(
     overlayColor: parseColor(value["overlay_color"], theme),
     surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     elevation: parseDouble(value["elevation"]),
-    padding: parseEdgeInsets(value["padding"]),
+    padding: parsePadding(value["padding"]),
     enableFeedback: parseBool(value["enable_feedback"]),
     disabledMouseCursor: parseMouseCursor(value["disabled_mouse_cursor"]),
     enabledMouseCursor: parseMouseCursor(value["enabled_mouse_cursor"]),
-    shape: parseOutlinedBorder(value["shape"]),
+    shape: parseShape(value["shape"], theme),
     textStyle: parseTextStyle(value["text_style"], theme),
     visualDensity: parseVisualDensity(value["visual_density"]),
     side: parseBorderSide(value["border_side"], theme),
@@ -356,11 +356,11 @@ OutlinedButtonThemeData? parseOutlinedButtonTheme(
     overlayColor: parseColor(value["overlay_color"], theme),
     surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     elevation: parseDouble(value["elevation"]),
-    padding: parseEdgeInsets(value["padding"]),
+    padding: parsePadding(value["padding"]),
     enableFeedback: parseBool(value["enable_feedback"]),
     disabledMouseCursor: parseMouseCursor(value["disabled_mouse_cursor"]),
     enabledMouseCursor: parseMouseCursor(value["enabled_mouse_cursor"]),
-    shape: parseOutlinedBorder(value["shape"]),
+    shape: parseShape(value["shape"], theme),
     textStyle: parseTextStyle(value["text_style"], theme),
     visualDensity: parseVisualDensity(value["visual_density"]),
     side: parseBorderSide(value["border_side"], theme),
@@ -391,11 +391,11 @@ TextButtonThemeData? parseTextButtonTheme(
     overlayColor: parseColor(value["overlay_color"], theme),
     surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     elevation: parseDouble(value["elevation"]),
-    padding: parseEdgeInsets(value["padding"]),
+    padding: parsePadding(value["padding"]),
     enableFeedback: parseBool(value["enable_feedback"]),
     disabledMouseCursor: parseMouseCursor(value["disabled_mouse_cursor"]),
     enabledMouseCursor: parseMouseCursor(value["enabled_mouse_cursor"]),
-    shape: parseOutlinedBorder(value["shape"]),
+    shape: parseShape(value["shape"], theme),
     textStyle: parseTextStyle(value["text_style"], theme),
     visualDensity: parseVisualDensity(value["visual_density"]),
     side: parseBorderSide(value["border_side"], theme),
@@ -426,11 +426,11 @@ FilledButtonThemeData? parseFilledButtonTheme(
     overlayColor: parseColor(value["overlay_color"], theme),
     surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     elevation: parseDouble(value["elevation"]),
-    padding: parseEdgeInsets(value["padding"]),
+    padding: parsePadding(value["padding"]),
     enableFeedback: parseBool(value["enable_feedback"]),
     disabledMouseCursor: parseMouseCursor(value["disabled_mouse_cursor"]),
     enabledMouseCursor: parseMouseCursor(value["enabled_mouse_cursor"]),
-    shape: parseOutlinedBorder(value["shape"]),
+    shape: parseShape(value["shape"], theme),
     textStyle: parseTextStyle(value["text_style"], theme),
     visualDensity: parseVisualDensity(value["visual_density"]),
     side: parseBorderSide(value["border_side"], theme),
@@ -462,11 +462,11 @@ IconButtonThemeData? parseIconButtonTheme(
     highlightColor: parseColor(value["highlight_color"], theme),
     hoverColor: parseColor(value["hover_color"], theme),
     elevation: parseDouble(value["elevation"]),
-    padding: parseEdgeInsets(value["padding"]),
+    padding: parsePadding(value["padding"]),
     enableFeedback: parseBool(value["enable_feedback"]),
     disabledMouseCursor: parseMouseCursor(value["disabled_mouse_cursor"]),
     enabledMouseCursor: parseMouseCursor(value["enabled_mouse_cursor"]),
-    shape: parseOutlinedBorder(value["shape"]),
+    shape: parseShape(value["shape"], theme),
     visualDensity: parseVisualDensity(value["visual_density"]),
     side: parseBorderSide(value["border_side"], theme),
     animationDuration: parseDuration(value["animation_duration"]),
@@ -489,21 +489,18 @@ DataTableThemeData? parseDataTableTheme(
     columnSpacing: parseDouble(value["column_spacing"]),
     dataRowMaxHeight: parseDouble(value["data_row_max_height"]),
     dataRowMinHeight: parseDouble(value["data_row_min_height"]),
-    dataRowColor: getWidgetStateProperty<Color?>(
-        value["data_row_color"], (jv) => parseColor(jv as String, theme)),
+    dataRowColor: parseWidgetStateColor(value["data_row_color"], theme),
     dataTextStyle: parseTextStyle(value["data_text_style"], theme),
     dividerThickness: parseDouble(value["divider_thickness"]),
     horizontalMargin: parseDouble(value["horizontal_margin"]),
     headingTextStyle: parseTextStyle(value["heading_text_style"], theme),
-    headingRowColor: getWidgetStateProperty<Color?>(
-        value["heading_row_color"], (jv) => parseColor(jv as String, theme)),
+    headingRowColor: parseWidgetStateColor(value["heading_row_color"], theme),
     headingRowHeight: parseDouble(value["heading_row_height"]),
-    dataRowCursor: getWidgetStateProperty<MouseCursor?>(
-        value["data_row_cursor"], (jv) => parseMouseCursor(jv)),
+    dataRowCursor: parseWidgetStateMouseCursor(value["data_row_cursor"]),
     decoration: parseBoxDecoration(value["decoration"], context),
     headingRowAlignment: parseMainAxisAlignment(value["heading_row_alignment"]),
-    headingCellCursor: getWidgetStateProperty<MouseCursor?>(
-        value["heading_cell_cursor"], (jv) => parseMouseCursor(jv)),
+    headingCellCursor:
+        parseWidgetStateMouseCursor(value["heading_cell_cursor"]),
   );
 }
 
@@ -512,21 +509,13 @@ ScrollbarThemeData? parseScrollBarTheme(
     [ScrollbarThemeData? defaultValue]) {
   if (value == null) return defaultValue;
   return theme.scrollbarTheme.copyWith(
-    trackVisibility: getWidgetStateProperty<bool?>(
-        value["track_visibility"], (jv) => parseBool(jv)),
-    trackColor: getWidgetStateProperty<Color?>(
-        value["track_color"], (jv) => parseColor(jv as String, theme)),
-    trackBorderColor: getWidgetStateProperty<Color?>(
-        value["track_border_color"], (jv) => parseColor(jv as String, theme)),
-    thumbVisibility: getWidgetStateProperty<bool?>(
-        value["thumb_visibility"], (jv) => parseBool(jv)),
-    thumbColor: getWidgetStateProperty<Color?>(
-        value["thumb_color"], (jv) => parseColor(jv as String, theme)),
-    thickness: getWidgetStateProperty<double?>(
-        value["thickness"], (jv) => parseDouble(jv, 0)!),
-    radius: value["radius"] != null
-        ? Radius.circular(parseDouble(value["radius"], 0)!)
-        : null,
+    trackVisibility: parseWidgetStateBool(value["track_visibility"]),
+    trackColor: parseWidgetStateColor(value["track_color"], theme),
+    trackBorderColor: parseWidgetStateColor(value["track_border_color"], theme),
+    thumbVisibility: parseWidgetStateBool(value["thumb_visibility"]),
+    thumbColor: parseWidgetStateColor(value["thumb_color"], theme),
+    thickness: parseWidgetStateDouble(value["thickness"]),
+    radius: parseRadius(value["radius"]),
     crossAxisMargin: parseDouble(value["cross_axis_margin"]),
     mainAxisMargin: parseDouble(value["main_axis_margin"]),
     minThumbLength: parseDouble(value["min_thumb_length"]),
@@ -541,8 +530,7 @@ TabBarThemeData? parseTabBarTheme(Map<String, dynamic>? value, ThemeData theme,
   var indicatorColor = parseColor(value["indicator_color"], theme);
 
   return theme.tabBarTheme.copyWith(
-      overlayColor: getWidgetStateProperty<Color?>(
-          value["overlay_color"], (jv) => parseColor(jv as String, theme)),
+      overlayColor: parseWidgetStateColor(value["overlay_color"], theme),
       dividerColor: parseColor(value["divider_color"], theme),
       indicatorColor: indicatorColor,
       labelColor: parseColor(value["label_color"], theme),
@@ -564,12 +552,11 @@ TabBarThemeData? parseTabBarTheme(Map<String, dynamic>? value, ThemeData theme,
                   defaultValue: BorderSide(
                       width: 2.0,
                       color: indicatorColor ?? theme.colorScheme.primary))!,
-              insets: parseEdgeInsets(value["indicator_padding"]) ??
-                  EdgeInsets.zero)
+              insets:
+                  parsePadding(value["indicator_padding"], EdgeInsets.zero)!)
           : null,
-      mouseCursor: getWidgetStateProperty<MouseCursor?>(
-          value["mouse_cursor"], (jv) => parseMouseCursor(jv)),
-      labelPadding: parseEdgeInsets(value["label_padding"]),
+      mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
+      labelPadding: parsePadding(value["label_padding"]),
       dividerHeight: parseDouble(value["divider_height"]),
       labelStyle: parseTextStyle(value["label_text_style"], theme),
       unselectedLabelStyle:
@@ -592,22 +579,22 @@ VisualDensity? parseVisualDensity(String? density,
   }
 }
 
-PageTransitionsTheme? parsePageTransitions(Map<String, dynamic>? json,
+PageTransitionsTheme? parsePageTransitions(Map<String, dynamic>? value,
     [PageTransitionsTheme? defaultValue]) {
-  if (json == null) {
+  if (value == null) {
     return defaultValue;
   }
   return PageTransitionsTheme(builders: {
     TargetPlatform.android: parseTransitionsBuilder(
-        json["android"], const FadeUpwardsPageTransitionsBuilder()),
+        value["android"], const FadeUpwardsPageTransitionsBuilder())!,
     TargetPlatform.iOS: parseTransitionsBuilder(
-        json["ios"], const CupertinoPageTransitionsBuilder()),
+        value["ios"], const CupertinoPageTransitionsBuilder())!,
     TargetPlatform.linux: parseTransitionsBuilder(
-        json["linux"], const ZoomPageTransitionsBuilder()),
+        value["linux"], const ZoomPageTransitionsBuilder())!,
     TargetPlatform.macOS: parseTransitionsBuilder(
-        json["macos"], const ZoomPageTransitionsBuilder()),
+        value["macos"], const ZoomPageTransitionsBuilder())!,
     TargetPlatform.windows: parseTransitionsBuilder(
-        json["windows"], const ZoomPageTransitionsBuilder()),
+        value["windows"], const ZoomPageTransitionsBuilder())!,
   });
 }
 
@@ -621,14 +608,14 @@ DialogThemeData? parseDialogTheme(Map<String, dynamic>? value, ThemeData theme,
     surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     iconColor: parseColor(value["icon_color"], theme),
     elevation: parseDouble(value["elevation"]),
-    shape: value["shape"] != null ? parseOutlinedBorder(value["shape"]) : null,
+    shape: parseShape(value["shape"], theme),
     titleTextStyle: parseTextStyle(value["title_text_style"], theme),
     contentTextStyle: parseTextStyle(value["content_text_style"], theme),
     alignment: parseAlignment(value["alignment"]),
-    actionsPadding: parseEdgeInsets(value["actions_padding"]),
+    actionsPadding: parsePadding(value["actions_padding"]),
     clipBehavior: parseClip(value["clip_behavior"]),
     barrierColor: parseColor(value["barrier_color"], theme),
-    insetPadding: parseEdgeInsets(value["inset_padding"]),
+    insetPadding: parsePadding(value["inset_padding"]),
   );
 }
 
@@ -643,7 +630,7 @@ BottomSheetThemeData? parseBottomSheetTheme(
     surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     dragHandleColor: parseColor(value["drag_handle_color"], theme),
     elevation: parseDouble(value["elevation"]),
-    shape: value["shape"] != null ? parseOutlinedBorder(value["shape"]) : null,
+    shape: parseShape(value["shape"], theme),
     showDragHandle: parseBool(value["show_drag_handle"]),
     modalBackgroundColor: parseColor(value["modal_bgcolor"], theme),
     modalElevation: parseDouble(value["modal_elevation"]),
@@ -662,10 +649,9 @@ CardThemeData? parseCardTheme(Map<String, dynamic>? value, ThemeData theme,
       shadowColor: parseColor(value["shadow_color"], theme),
       surfaceTintColor: parseColor(value["surface_tint_color"], theme),
       elevation: parseDouble(value["elevation"]),
-      shape:
-          value["shape"] != null ? parseOutlinedBorder(value["shape"]) : null,
+      shape: parseShape(value["shape"], theme),
       clipBehavior: parseClip(value["clip_behavior"]),
-      margin: parseEdgeInsets(value["margin"]));
+      margin: parseMargin(value["margin"]));
 }
 
 ChipThemeData? parseChipTheme(Map<String, dynamic>? value, ThemeData theme,
@@ -673,15 +659,14 @@ ChipThemeData? parseChipTheme(Map<String, dynamic>? value, ThemeData theme,
   if (value == null) return defaultValue;
 
   return theme.chipTheme.copyWith(
-    color: getWidgetStateProperty<Color?>(
-        value["color"], (jv) => parseColor(jv as String, theme)),
+    color: parseWidgetStateColor(value["color"], theme),
     backgroundColor: parseColor(value["bgcolor"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
     surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     elevation: parseDouble(value["elevation"]),
-    shape: value["shape"] != null ? parseOutlinedBorder(value["shape"]) : null,
-    padding: parseEdgeInsets(value["padding"]),
-    labelPadding: parseEdgeInsets(value["label_padding"]),
+    shape: parseShape(value["shape"], theme),
+    padding: parsePadding(value["padding"]),
+    labelPadding: parsePadding(value["label_padding"]),
     labelStyle: parseTextStyle(value["label_text_style"], theme),
     secondaryLabelStyle:
         parseTextStyle(value["secondary_label_text_style"], theme),
@@ -692,10 +677,7 @@ ChipThemeData? parseChipTheme(Map<String, dynamic>? value, ThemeData theme,
     side: parseBorderSide(value["border_side"], theme),
     secondarySelectedColor:
         parseColor(value["secondary_selected_color"], theme),
-    brightness: value["brightness"] != null
-        ? Brightness.values.firstWhereOrNull(
-            (b) => b.name.toLowerCase() == value["brightness"].toLowerCase())
-        : null,
+    brightness: parseBrightness(value["brightness"]),
     selectedShadowColor: parseColor(value["selected_shadow_color"], theme),
     showCheckmark: parseBool(value["show_checkmark"]),
     pressElevation: parseDouble(value["click_elevation"]),
@@ -721,13 +703,12 @@ FloatingActionButtonThemeData? parseFloatingActionButtonTheme(
     hoverElevation: parseDouble(value["hover_elevation"]),
     highlightElevation: parseDouble(value["highlight_elevation"]),
     disabledElevation: parseDouble(value["disabled_elevation"]),
-    shape: value["shape"] != null ? parseOutlinedBorder(value["shape"]) : null,
+    shape: parseShape(value["shape"], theme),
     enableFeedback: parseBool(value["enable_feedback"]),
-    extendedPadding: parseEdgeInsets(value["extended_padding"]),
+    extendedPadding: parsePadding(value["extended_padding"]),
     extendedTextStyle: parseTextStyle(value["extended_text_style"], theme),
     extendedIconLabelSpacing: parseDouble(value["extended_icon_label_spacing"]),
-    mouseCursor: getWidgetStateProperty<MouseCursor?>(
-        value["mouse_cursor"], (jv) => parseMouseCursor(jv)),
+    mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
     iconSize: parseDouble(value["icon_size"]),
     extendedSizeConstraints:
         parseBoxConstraints(value["extended_size_constraints"]),
@@ -753,9 +734,7 @@ NavigationRailThemeData? parseNavigationRailTheme(
     minWidth: parseDouble(value["min_width"]),
     labelType: parseNavigationRailLabelType(value["label_type"]),
     groupAlignment: parseDouble(value["group_alignment"]),
-    indicatorShape: value["indicator_shape"] != null
-        ? parseOutlinedBorder(value["indicator_shape"])
-        : null,
+    indicatorShape: parseShape(value["indicator_shape"], theme),
     minExtendedWidth: parseDouble(value["min_extended_width"]),
     useIndicator: parseBool(value["use_indicator"]),
   );
@@ -773,13 +752,13 @@ AppBarTheme? parseAppBarTheme(Map<String, dynamic>? value, ThemeData theme,
     surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     titleTextStyle: parseTextStyle(value["title_text_style"], theme),
     toolbarTextStyle: parseTextStyle(value["toolbar_text_style"], theme),
-    shape: value["shape"] != null ? parseOutlinedBorder(value["shape"]) : null,
+    shape: parseShape(value["shape"], theme),
     elevation: parseDouble(value["elevation"]),
     centerTitle: parseBool(value["center_title"]),
     titleSpacing: parseDouble(value["title_spacing"]),
     scrolledUnderElevation: parseDouble(value["scroll_elevation"]),
     toolbarHeight: parseDouble(value["toolbar_height"]),
-    actionsPadding: parseEdgeInsets(value["actions_padding"]),
+    actionsPadding: parsePadding(value["actions_padding"]),
   );
 }
 
@@ -794,7 +773,7 @@ BottomAppBarTheme? parseBottomAppBarTheme(
     surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     elevation: parseDouble(value["elevation"]),
     height: parseDouble(value["height"]),
-    padding: parseEdgeInsets(value["padding"]),
+    padding: parsePadding(value["padding"]),
     shape: parseNotchedShape(value["shape"]),
   );
 }
@@ -804,14 +783,11 @@ RadioThemeData? parseRadioTheme(Map<String, dynamic>? value, ThemeData theme,
   if (value == null) return defaultValue;
 
   return theme.radioTheme.copyWith(
-    fillColor: getWidgetStateProperty<Color?>(
-        value["fill_color"], (jv) => parseColor(jv as String, theme)),
+    fillColor: parseWidgetStateColor(value["fill_color"], theme),
     splashRadius: parseDouble(value["splash_radius"]),
-    overlayColor: getWidgetStateProperty<Color?>(
-        value["overlay_color"], (jv) => parseColor(jv as String, theme)),
+    overlayColor: parseWidgetStateColor(value["overlay_color"], theme),
     visualDensity: parseVisualDensity(value["visual_density"]),
-    mouseCursor: getWidgetStateProperty<MouseCursor?>(
-        value["mouse_cursor"], (jv) => parseMouseCursor(jv)),
+    mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
   );
 }
 
@@ -821,18 +797,14 @@ CheckboxThemeData? parseCheckboxTheme(
   if (value == null) return defaultValue;
 
   return theme.checkboxTheme.copyWith(
-    fillColor: getWidgetStateProperty<Color?>(
-        value["fill_color"], (jv) => parseColor(jv as String, theme)),
+    fillColor: parseWidgetStateColor(value["fill_color"], theme),
     splashRadius: parseDouble(value["splash_radius"]),
-    overlayColor: getWidgetStateProperty<Color?>(
-        value["overlay_color"], (jv) => parseColor(jv as String, theme)),
+    overlayColor: parseWidgetStateColor(value["overlay_color"], theme),
     visualDensity: parseVisualDensity(value["visual_density"]),
-    checkColor: getWidgetStateProperty<Color?>(
-        value["check_color"], (jv) => parseColor(jv as String, theme)),
+    checkColor: parseWidgetStateColor(value["check_color"], theme),
     side: parseBorderSide(value["border_side"], theme),
-    shape: value["shape"] != null ? parseOutlinedBorder(value["shape"]) : null,
-    mouseCursor: getWidgetStateProperty<MouseCursor?>(
-        value["mouse_cursor"], (jv) => parseMouseCursor(jv)),
+    shape: parseShape(value["shape"], theme),
+    mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
   );
 }
 
@@ -843,7 +815,7 @@ BadgeThemeData? parseBadgeTheme(Map<String, dynamic>? value, ThemeData theme,
   return theme.badgeTheme.copyWith(
     backgroundColor: parseColor(value["bgcolor"], theme),
     textStyle: parseTextStyle(value["text_style"], theme),
-    padding: parseEdgeInsets(value["padding"]),
+    padding: parsePadding(value["padding"]),
     alignment: parseAlignment(value["alignment"]),
     textColor: parseColor(value["text_color"], theme),
     offset: parseOffset(value["offset"]),
@@ -860,18 +832,13 @@ SwitchThemeData? parseSwitchTheme(Map<String, dynamic>? value, ThemeData theme,
     thumbColor: parseWidgetStateColor(value["thumb_color"], theme),
     trackColor: parseWidgetStateColor(value["track_color"], theme),
     overlayColor: parseWidgetStateColor(value["overlay_color"], theme),
-    splashRadius: value["splash_radius"] != null
-        ? parseDouble(value["splash_radius"])
-        : null,
-    thumbIcon: getWidgetStateProperty<Icon?>(
-        value["thumb_icon"], (jv) => Icon(parseIcon(jv as String))),
+    splashRadius: parseDouble(value["splash_radius"]),
+    thumbIcon: parseWidgetStateIcon(value["thumb_icon"], theme),
     trackOutlineColor:
         parseWidgetStateColor(value["track_outline_color"], theme),
-    trackOutlineWidth: getWidgetStateProperty<double?>(
-        value["track_outline_width"], (jv) => parseDouble(jv)),
-    mouseCursor: getWidgetStateProperty<MouseCursor?>(
-        value["mouse_cursor"], (jv) => parseMouseCursor(jv)),
-    padding: parseEdgeInsets(value["padding"]),
+    trackOutlineWidth: parseWidgetStateDouble(value["track_outline_width"]),
+    mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
+    padding: parsePadding(value["padding"]),
   );
 }
 
@@ -904,11 +871,11 @@ SnackBarThemeData? parseSnackBarTheme(
     disabledActionBackgroundColor:
         parseColor(value["disabled_action_bgcolor"], theme),
     elevation: parseDouble(value["elevation"]),
-    shape: value["shape"] != null ? parseOutlinedBorder(value["shape"]) : null,
+    shape: parseShape(value["shape"], theme),
     behavior: parseSnackBarBehavior(value["behavior"]),
     contentTextStyle: parseTextStyle(value["content_text_style"], theme),
     width: parseDouble(value["width"]),
-    insetPadding: parseEdgeInsets(value["inset_padding"]),
+    insetPadding: parsePadding(value["inset_padding"]),
     dismissDirection: parseDismissDirection(value["dismiss_direction"]),
     showCloseIcon: parseBool(value["show_close_icon"]),
     actionOverflowThreshold: parseDouble(value["action_overflow_threshold"]),
@@ -924,8 +891,8 @@ MaterialBannerThemeData? parseBannerTheme(
     backgroundColor: parseColor(value["bgcolor"], theme),
     elevation: parseDouble(value["elevation"]),
     dividerColor: parseColor(value["divider_color"], theme),
-    padding: parseEdgeInsets(value["padding"]),
-    leadingPadding: parseEdgeInsets(value["leading_padding"]),
+    padding: parsePadding(value["padding"]),
+    leadingPadding: parsePadding(value["leading_padding"]),
     surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     shadowColor: parseColor(value["shadow_color"], theme),
     contentTextStyle: parseTextStyle(value["content_text_style"], theme),
@@ -945,19 +912,16 @@ DatePickerThemeData? parseDatePickerTheme(
     shadowColor: parseColor(value["shadow_color"], theme),
     cancelButtonStyle: parseButtonStyle(value["cancel_button_style"], theme),
     confirmButtonStyle: parseButtonStyle(value["confirm_button_style"], theme),
-    dayBackgroundColor: getWidgetStateProperty<Color?>(
-        value["day_bgcolor"], (jv) => parseColor(jv as String, theme)),
+    dayBackgroundColor: parseWidgetStateColor(value["day_bgcolor"], theme),
     yearStyle: parseTextStyle(value["year_text_style"], theme),
     dayStyle: parseTextStyle(value["day_text_style"], theme),
-    shape: value["shape"] != null ? parseOutlinedBorder(value["shape"]) : null,
-    dayOverlayColor: getWidgetStateProperty<Color?>(
-        value["day_overlay_color"], (jv) => parseColor(jv as String, theme)),
+    shape: parseShape(value["shape"], theme),
+    dayOverlayColor: parseWidgetStateColor(value["day_overlay_color"], theme),
     headerBackgroundColor: parseColor(value["header_bgcolor"], theme),
-    dayForegroundColor: getWidgetStateProperty<Color?>(
-        value["day_foreground_color"], (jv) => parseColor(jv as String, theme)),
+    dayForegroundColor:
+        parseWidgetStateColor(value["day_foreground_color"], theme),
     rangePickerElevation: parseDouble(value["range_picker_elevation"]),
-    todayBackgroundColor: getWidgetStateProperty<Color?>(
-        value["today_bgcolor"], (jv) => parseColor(jv as String, theme)),
+    todayBackgroundColor: parseWidgetStateColor(value["today_bgcolor"], theme),
     headerForegroundColor: parseColor(value["header_foreground_color"], theme),
     headerHeadlineStyle:
         parseTextStyle(value["header_headline_text_style"], theme),
@@ -970,12 +934,9 @@ DatePickerThemeData? parseDatePickerTheme(
         parseColor(value["range_picker_header_foreground_color"], theme),
     rangePickerShadowColor:
         parseColor(value["range_picker_shadow_color"], theme),
-    todayForegroundColor: getWidgetStateProperty<Color?>(
-        value["today_foreground_color"],
-        (jv) => parseColor(jv as String, theme)),
-    rangePickerShape: value["range_picker_shape"] != null
-        ? parseOutlinedBorder(value["range_picker_shape"])
-        : null,
+    todayForegroundColor:
+        parseWidgetStateColor(value["today_foreground_color"], theme),
+    rangePickerShape: parseShape(value["range_picker_shape"], theme),
     rangePickerHeaderHelpStyle:
         parseTextStyle(value["range_picker_header_help_text_style"], theme),
     rangePickerHeaderHeadlineStyle:
@@ -984,22 +945,15 @@ DatePickerThemeData? parseDatePickerTheme(
         parseColor(value["range_picker_surface_tint_color"], theme),
     rangeSelectionBackgroundColor:
         parseColor(value["range_selection_bgcolor"], theme),
-    rangeSelectionOverlayColor: getWidgetStateProperty<Color?>(
-        value["range_selection_overlay_color"],
-        (jv) => parseColor(jv as String, theme)),
-    todayBorder: value["today_border_side"] != null
-        ? parseBorderSide(value["today_border_side"], theme)
-        : null,
-    yearBackgroundColor: getWidgetStateProperty<Color?>(
-        value["year_bgcolor"], (jv) => parseColor(jv as String, theme)),
-    yearForegroundColor: getWidgetStateProperty<Color?>(
-        value["year_foreground_color"],
-        (jv) => parseColor(jv as String, theme)),
-    yearOverlayColor: getWidgetStateProperty<Color?>(
-        value["year_overlay_color"], (jv) => parseColor(jv as String, theme)),
+    rangeSelectionOverlayColor:
+        parseWidgetStateColor(value["range_selection_overlay_color"], theme),
+    todayBorder: parseBorderSide(value["today_border_side"], theme),
+    yearBackgroundColor: parseWidgetStateColor(value["year_bgcolor"], theme),
+    yearForegroundColor:
+        parseWidgetStateColor(value["year_foreground_color"], theme),
+    yearOverlayColor: parseWidgetStateColor(value["year_overlay_color"], theme),
     weekdayStyle: parseTextStyle(value["weekday_text_style"], theme),
-    dayShape: getWidgetStateProperty<OutlinedBorder?>(
-        value["day_shape"], (jv) => parseOutlinedBorder(jv)),
+    dayShape: parseWidgetStateOutlinedBorder(value["day_shape"], theme),
     locale: parseLocale(value["locale"]),
   );
 }
@@ -1012,17 +966,14 @@ TimePickerThemeData? parseTimePickerTheme(
   return theme.timePickerTheme.copyWith(
     backgroundColor: parseColor(value["bgcolor"], theme),
     elevation: parseDouble(value["elevation"]),
-    padding: parseEdgeInsets(value["padding"]),
-    shape: value["shape"] != null ? parseOutlinedBorder(value["shape"]) : null,
-    dayPeriodBorderSide: value["day_period_border_side"] != null
-        ? parseBorderSide(value["day_period_border_side"], theme)
-        : null,
+    padding: parsePadding(value["padding"]),
+    shape: parseShape(value["shape"], theme),
+    dayPeriodBorderSide:
+        parseBorderSide(value["day_period_border_side"], theme),
     dayPeriodButtonStyle:
         parseButtonStyle(value["day_period_button_style"], theme),
     dayPeriodColor: parseColor(value["day_period_color"], theme),
-    dayPeriodShape: value["day_period_shape"] != null
-        ? parseOutlinedBorder(value["day_period_shape"])
-        : null,
+    dayPeriodShape: parseShape(value["day_period_shape"], theme),
     dayPeriodTextColor: parseColor(value["day_period_text_color"], theme),
     dayPeriodTextStyle: parseTextStyle(value["day_period_text_style"], theme),
     dialBackgroundColor: parseColor(value["dial_bgcolor"], theme),
@@ -1034,17 +985,13 @@ TimePickerThemeData? parseTimePickerTheme(
     hourMinuteColor: parseColor(value["hour_minute_color"], theme),
     hourMinuteTextColor: parseColor(value["hour_minute_text_color"], theme),
     hourMinuteTextStyle: parseTextStyle(value["hour_minute_text_style"], theme),
-    hourMinuteShape: value["hour_minute_shape"] != null
-        ? parseOutlinedBorder(value["hour_minute_shape"])
-        : null,
+    hourMinuteShape: parseShape(value["hour_minute_shape"], theme),
     cancelButtonStyle: parseButtonStyle(value["cancel_button_style"], theme),
     confirmButtonStyle: parseButtonStyle(value["confirm_button_style"], theme),
-    timeSelectorSeparatorColor: getWidgetStateProperty<Color?>(
-        value["time_selector_separator_color"],
-        (jv) => parseColor(jv as String, theme)),
-    timeSelectorSeparatorTextStyle: getWidgetStateProperty<TextStyle?>(
-        value["time_selector_separator_text_style"],
-        (jv) => parseTextStyle(value[jv], theme)),
+    timeSelectorSeparatorColor:
+        parseWidgetStateColor(value["time_selector_separator_color"], theme),
+    timeSelectorSeparatorTextStyle: parseWidgetStateTextStyle(
+        value["time_selector_separator_text_style"], theme),
   );
 }
 
@@ -1068,8 +1015,8 @@ ListTileThemeData? parseListTileTheme(
     iconColor: parseColor(value["icon_color"], theme),
     textColor: parseColor(value["text_color"], theme),
     tileColor: parseColor(value["bgcolor"], theme),
-    shape: value["shape"] != null ? parseOutlinedBorder(value["shape"]) : null,
-    contentPadding: parseEdgeInsets(value["content_padding"]),
+    shape: parseShape(value["shape"], theme),
+    contentPadding: parsePadding(value["content_padding"]),
     selectedColor: parseColor(value["selected_color"], theme),
     selectedTileColor: parseColor(value["selected_tile_color"], theme),
     isThreeLine: parseBool(value["is_three_line"]),
@@ -1083,8 +1030,7 @@ ListTileThemeData? parseListTileTheme(
     minLeadingWidth: parseDouble(value["min_leading_width"]),
     leadingAndTrailingTextStyle:
         parseTextStyle(value["leading_and_trailing_text_style"], theme),
-    mouseCursor: getWidgetStateProperty<MouseCursor?>(
-        value["mouse_cursor"], (jv) => parseMouseCursor(jv)),
+    mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
     minTileHeight: parseDouble(value["min_tile_height"]),
   );
 }
@@ -1103,11 +1049,11 @@ TooltipThemeData? parseTooltipTheme(
     textStyle: parseTextStyle(value["text_style"], theme),
     preferBelow: parseBool(value["prefer_below"]),
     verticalOffset: parseDouble(value["vertical_offset"]),
-    padding: parseEdgeInsets(value["padding"]),
+    padding: parsePadding(value["padding"]),
     waitDuration: parseDuration(value["wait_duration"]),
     exitDuration: parseDuration(value["exit_duration"]),
     showDuration: parseDuration(value["show_duration"]),
-    margin: parseEdgeInsets(value["margin"]),
+    margin: parseMargin(value["margin"]),
     textAlign: parseTextAlign(value["text_align"]),
     triggerMode: parseTooltipTriggerMode(value["trigger_mode"]),
     decoration: parseBoxDecoration(value["decoration"], context),
@@ -1127,9 +1073,9 @@ ExpansionTileThemeData? parseExpansionTileTheme(
     collapsedIconColor: parseColor(value["collapsed_icon_color"], theme),
     clipBehavior: parseClip(value["clip_behavior"]),
     collapsedTextColor: parseColor(value["collapsed_text_color"], theme),
-    tilePadding: parseEdgeInsets(value["tile_padding"]),
+    tilePadding: parsePadding(value["tile_padding"]),
     expandedAlignment: parseAlignment(value["expanded_alignment"]),
-    childrenPadding: parseEdgeInsets(value["controls_padding"]),
+    childrenPadding: parsePadding(value["controls_padding"]),
   );
 }
 
@@ -1146,8 +1092,7 @@ SliderThemeData? parseSliderTheme(Map<String, dynamic>? value, ThemeData theme,
     disabledThumbColor: parseColor(value["disabled_thumb_color"], theme),
     valueIndicatorTextStyle:
         parseTextStyle(value["value_indicator_text_style"], theme),
-    mouseCursor: getWidgetStateProperty<MouseCursor?>(
-        value["mouse_cursor"], (jv) => parseMouseCursor(jv)),
+    mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
     activeTickMarkColor: parseColor(value["active_tick_mark_color"], theme),
     disabledActiveTickMarkColor:
         parseColor(value["disabled_active_tick_mark_color"], theme),
@@ -1169,7 +1114,7 @@ SliderThemeData? parseSliderTheme(Map<String, dynamic>? value, ThemeData theme,
     valueIndicatorStrokeColor:
         parseColor(value["value_indicator_stroke_color"], theme),
     allowedInteraction: parseSliderInteraction(value["interaction"]),
-    padding: parseEdgeInsets(value["padding"]),
+    padding: parsePadding(value["padding"]),
     trackGap: parseDouble(value["track_gap"]),
     thumbSize: getWidgetStateProperty<Size?>(
         value["thumb_size"], (jv) => parseSize(jv)),
@@ -1191,7 +1136,7 @@ ProgressIndicatorThemeData? parseProgressIndicatorTheme(
     linearMinHeight: parseDouble(value["linear_min_height"]),
     borderRadius: parseBorderRadius(value["border_radius"]),
     trackGap: parseDouble(value["track_gap"]),
-    circularTrackPadding: parseEdgeInsets(value["circular_track_padding"]),
+    circularTrackPadding: parsePadding(value["circular_track_padding"]),
     constraints: parseBoxConstraints(value["size_constraints"]),
     stopIndicatorColor: parseColor(value["stop_indicator_color"], theme),
     stopIndicatorRadius: parseDouble(value["stop_indicator_radius"]),
@@ -1213,19 +1158,14 @@ PopupMenuThemeData? parsePopupMenuTheme(
     shadowColor: parseColor(value["shadow_color"], theme),
     iconColor: parseColor(value["icon_color"], theme),
     textStyle: parseTextStyle(value["text_style"], theme),
-    labelTextStyle: getWidgetStateProperty<TextStyle?>(
-        value["label_text_style"], (jv) => parseTextStyle(value[jv], theme)),
+    labelTextStyle: parseWidgetStateTextStyle(value["label_text_style"], theme),
     enableFeedback: parseBool(value["enable_feedback"]),
     elevation: parseDouble(value["elevation"]),
     iconSize: parseDouble(value["icon_size"]),
-    position: value["menu_position"] != null
-        ? PopupMenuPosition.values.firstWhereOrNull(
-            (c) => c.name.toLowerCase() == value["menu_position"].toLowerCase())
-        : null,
-    mouseCursor: getWidgetStateProperty<MouseCursor?>(
-        value["mouse_cursor"], (jv) => parseMouseCursor(jv)),
-    shape: value["shape"] != null ? parseOutlinedBorder(value["shape"]) : null,
-    menuPadding: parseEdgeInsets(value["menu_padding"]),
+    position: parsePopupMenuPosition(value["menu_position"]),
+    mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
+    shape: parseShape(value["shape"], theme),
+    menuPadding: parsePadding(value["menu_padding"]),
   );
 }
 
@@ -1235,31 +1175,18 @@ SearchBarThemeData? parseSearchBarTheme(
   if (value == null) return defaultValue;
 
   return theme.searchBarTheme.copyWith(
-    surfaceTintColor: getWidgetStateProperty<Color?>(
-        value["surface_tint_color"], (jv) => parseColor(jv as String, theme)),
-    shadowColor: getWidgetStateProperty<Color?>(
-        value["shadow_color"], (jv) => parseColor(jv as String, theme)),
-    elevation: getWidgetStateProperty<double?>(
-        value["elevation"], (jv) => parseDouble(jv)),
-    backgroundColor: getWidgetStateProperty<Color?>(
-        value["bgcolor"], (jv) => parseColor(jv as String, theme)),
-    overlayColor: getWidgetStateProperty<Color?>(
-        value["overlay_color"], (jv) => parseColor(jv as String, theme)),
-    textStyle: getWidgetStateProperty<TextStyle?>(
-        value["text_style"], (jv) => parseTextStyle(value[jv], theme)),
-    hintStyle: getWidgetStateProperty<TextStyle?>(
-        value["hint_style"], (jv) => parseTextStyle(value[jv], theme)),
-    shape: getWidgetStateProperty<OutlinedBorder?>(
-        value["shape"], (jv) => parseOutlinedBorder(jv)),
-    textCapitalization: value["text_capitalization"] != null
-        ? TextCapitalization.values.firstWhereOrNull((c) =>
-            c.name.toLowerCase() == value["text_capitalization"].toLowerCase())
-        : null,
-    padding: getWidgetStateProperty<EdgeInsetsGeometry?>(
-        value["padding"], (jv) => parseEdgeInsets(jv)),
+    surfaceTintColor: parseWidgetStateColor(value["surface_tint_color"], theme),
+    shadowColor: parseWidgetStateColor(value["shadow_color"], theme),
+    elevation: parseWidgetStateDouble(value["elevation"]),
+    backgroundColor: parseWidgetStateColor(value["bgcolor"], theme),
+    overlayColor: parseWidgetStateColor(value["overlay_color"], theme),
+    textStyle: parseWidgetStateTextStyle(value["text_style"], theme),
+    hintStyle: parseWidgetStateTextStyle(value["hint_style"], theme),
+    shape: parseWidgetStateOutlinedBorder(value["shape"], theme),
+    textCapitalization: parseTextCapitalization(value["text_capitalization"]),
+    padding: parseWidgetStatePadding(value["padding"]),
     constraints: parseBoxConstraints(value["size_constraints"]),
-    side: getWidgetStateProperty<BorderSide?>(
-        value["border_side"], (jv) => parseBorderSide(theme, jv)),
+    side: parseWidgetStateBorderSide(value["border_side"], theme),
   );
 }
 
@@ -1275,12 +1202,12 @@ SearchViewThemeData? parseSearchViewTheme(
     elevation: parseDouble(value["elevation"]),
     headerHintStyle: parseTextStyle(value["header_hint_text_style"], theme),
     headerTextStyle: parseTextStyle(value["header_text_style"], theme),
-    shape: value["shape"] != null ? parseOutlinedBorder(value["shape"]) : null,
+    shape: parseShape(value["shape"], theme),
     side: parseBorderSide(value["border_side"], theme),
     constraints: parseBoxConstraints(value["size_constraints"]),
     headerHeight: parseDouble(value["header_height"]),
-    padding: parseEdgeInsets(value["padding"]),
-    barPadding: parseEdgeInsets(value["bar_padding"]),
+    padding: parsePadding(value["padding"]),
+    barPadding: parsePadding(value["bar_padding"]),
     shrinkWrap: parseBool(value["shrink_wrap"]),
   );
 }
@@ -1298,11 +1225,8 @@ NavigationDrawerThemeData? parseNavigationDrawerTheme(
     elevation: parseDouble(value["elevation"]),
     indicatorSize: parseSize(value["indicator_size"]),
     tileHeight: parseDouble(value["tile_height"]),
-    labelTextStyle: getWidgetStateProperty<TextStyle?>(
-        value["label_text_style"], (jv) => parseTextStyle(value[jv], theme)),
-    indicatorShape: value["indicator_shape"] != null
-        ? parseOutlinedBorder(value["indicator_shape"])
-        : null,
+    labelTextStyle: parseWidgetStateTextStyle(value["label_text_style"], theme),
+    indicatorShape: parseShape(value["indicator_shape"], theme),
   );
 }
 
@@ -1316,20 +1240,14 @@ NavigationBarThemeData? parseNavigationBarTheme(
     shadowColor: parseColor(value["shadow_color"], theme),
     surfaceTintColor: parseColor(value["surface_tint_color"], theme),
     indicatorColor: parseColor(value["indicator_color"], theme),
-    overlayColor: getWidgetStateProperty<Color?>(
-        value["overlay_color"], (jv) => parseColor(jv as String, theme)),
+    overlayColor: parseWidgetStateColor(value["overlay_color"], theme),
     elevation: parseDouble(value["elevation"]),
     height: parseDouble(value["height"]),
-    labelTextStyle: getWidgetStateProperty<TextStyle?>(
-        value["label_text_style"], (jv) => parseTextStyle(value[jv], theme)),
-    indicatorShape: value["indicator_shape"] != null
-        ? parseOutlinedBorder(value["indicator_shape"])
-        : null,
-    labelBehavior: value["label_behavior"] != null
-        ? NavigationDestinationLabelBehavior.values.firstWhereOrNull((c) =>
-            c.name.toLowerCase() == value["label_behavior"].toLowerCase())
-        : null,
-    labelPadding: parseEdgeInsets(value["label_padding"]),
+    labelTextStyle: parseWidgetStateTextStyle(value["label_text_style"], theme),
+    indicatorShape: parseShape(value["indicator_shape"], theme),
+    labelBehavior:
+        parseNavigationDestinationLabelBehavior(value["label_behavior"]),
+    labelPadding: parsePadding(value["label_padding"]),
   );
 }
 
@@ -1358,45 +1276,33 @@ IconThemeData? parseIconTheme(Map<String, dynamic>? value, ThemeData theme,
     opticalSize: parseDouble(value["optical_size"]),
     grade: parseDouble(value["grade"]),
     weight: parseDouble(value["weight"]),
-    shadows: value["shadows"] != null
-        ? parseBoxShadows(value["shadows"], theme)
-        : null,
+    shadows: parseBoxShadows(value["shadows"], theme),
   );
 }
 
-PageTransitionsBuilder parseTransitionsBuilder(
-    String? tb, PageTransitionsBuilder defaultBuilder) {
-  switch (tb?.toLowerCase()) {
-    case "fadeupwards":
-      return const FadeUpwardsPageTransitionsBuilder();
-    case "openupwards":
-      return const OpenUpwardsPageTransitionsBuilder();
-    case "cupertino":
-      return const CupertinoPageTransitionsBuilder();
-    case "zoom":
-      return const ZoomPageTransitionsBuilder();
-    case "none":
-      return const NoPageTransitionsBuilder();
-    case "predictive":
-      return const PredictiveBackPageTransitionsBuilder();
-    case "fadeforwards":
-      return const FadeForwardsPageTransitionsBuilder();
-    default:
-      return defaultBuilder;
-  }
+PageTransitionsBuilder? parseTransitionsBuilder(String? value,
+    [PageTransitionsBuilder? defaultValue]) {
+  var buildersMap = {
+    "fadeupwards": const FadeUpwardsPageTransitionsBuilder(),
+    "openupwards": const OpenUpwardsPageTransitionsBuilder(),
+    "cupertino": const CupertinoPageTransitionsBuilder(),
+    "zoom": const ZoomPageTransitionsBuilder(),
+    "none": const NoPageTransitionsBuilder(),
+    "predictive": const PredictiveBackPageTransitionsBuilder(),
+    "fadeforwards": const FadeForwardsPageTransitionsBuilder(),
+  };
+  return buildersMap[value?.toLowerCase()] ?? defaultValue;
 }
 
 class NoPageTransitionsBuilder extends PageTransitionsBuilder {
   const NoPageTransitionsBuilder();
 
   @override
-  Widget buildTransitions<T>(
-    PageRoute<T>? route,
-    BuildContext? context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-    Widget? child,
-  ) {
+  Widget buildTransitions<T>(PageRoute<T>? route,
+      BuildContext? context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget? child) {
     // only return the child without warping it with animations
     return child!;
   }

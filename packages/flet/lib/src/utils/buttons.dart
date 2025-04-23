@@ -25,6 +25,7 @@ ButtonStyle? parseButtonStyle(dynamic value, ThemeData theme,
     EdgeInsets? defaultPadding,
     BorderSide? defaultBorderSide,
     OutlinedBorder? defaultShape,
+    TextStyle? defaultTextStyle,
     ButtonStyle? defaultValue}) {
   if (value == null) return defaultValue;
   return ButtonStyle(
@@ -41,21 +42,21 @@ ButtonStyle? parseButtonStyle(dynamic value, ThemeData theme,
     elevation: parseWidgetStateDouble(value["elevation"],
         defaultDouble: defaultElevation),
     animationDuration: parseDuration(value["animation_duration"]),
-    padding: getWidgetStateProperty<EdgeInsetsGeometry?>(
-        value["padding"], (jv) => parseEdgeInsets(jv), defaultPadding),
+    padding: parseWidgetStatePadding(value["padding"],
+        defaultPadding: defaultPadding),
     side: getWidgetStateProperty<BorderSide?>(
         value["side"],
         (jv) => parseBorderSide(jv, theme,
             defaultSideColor: theme.colorScheme.outline),
         defaultBorderSide),
-    shape: getWidgetStateProperty<OutlinedBorder?>(
-        value["shape"], (jv) => parseOutlinedBorder(jv), defaultShape),
+    shape: parseWidgetStateOutlinedBorder(value["shape"], theme,
+        defaultOutlinedBorder: defaultShape),
     iconColor: parseWidgetStateColor(value["icon_color"], theme,
         defaultColor: defaultForegroundColor),
     alignment: parseAlignment(value["alignment"]),
     enableFeedback: parseBool(value["enable_feedback"]),
-    textStyle: getWidgetStateProperty<TextStyle?>(
-        value["text_style"], (jv) => parseTextStyle(jv, theme)),
+    textStyle: parseWidgetStateTextStyle(value["text_style"], theme,
+        defaultTextStyle: defaultTextStyle),
     iconSize: parseWidgetStateDouble(value["icon_size"]),
     visualDensity: parseVisualDensity(value["visual_density"]),
     mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),

@@ -25,7 +25,16 @@ from flet.controls.animation import (
 )
 from flet.controls.base_control import BaseControl, control
 from flet.controls.blur import Blur, BlurTileMode, BlurValue, OptionalBlurValue
-from flet.controls.border import Border, BorderSide, BorderSideStrokeAlign
+from flet.controls.border import (
+    Border,
+    BorderSide,
+    BorderSideStrokeAlign,
+    BorderSideStrokeAlignValue,
+    OptionalBorder,
+    OptionalBorderSide,
+    OptionalBorderSideStrokeAlign,
+    OptionalBorderSideStrokeAlignValue,
+)
 from flet.controls.border_radius import (
     BorderRadius,
     BorderRadiusValue,

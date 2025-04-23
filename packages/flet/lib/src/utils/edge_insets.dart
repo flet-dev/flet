@@ -47,10 +47,10 @@ WidgetStateProperty<EdgeInsets?>? parseWidgetStateEdgeInsets(dynamic value,
 }
 
 WidgetStateProperty<EdgeInsets?>? parseWidgetStatePadding(dynamic value,
-    {EdgeInsets? defaultEdgeInsets,
+    {EdgeInsets? defaultPadding,
     WidgetStateProperty<EdgeInsets?>? defaultValue}) {
   return parseWidgetStateEdgeInsets(value,
-      defaultEdgeInsets: defaultEdgeInsets, defaultValue: defaultValue);
+      defaultEdgeInsets: defaultPadding, defaultValue: defaultValue);
 }
 
 WidgetStateProperty<EdgeInsets?>? parseWidgetStateMargin(dynamic value,
@@ -87,10 +87,10 @@ extension EdgeInsetsParsers on Control {
   }
 
   WidgetStateProperty<EdgeInsets?>? getWidgetStatePadding(String propertyName,
-      {EdgeInsets? defaultEdgeInsets,
+      {EdgeInsets? defaultPadding,
       WidgetStateProperty<EdgeInsets?>? defaultValue}) {
     return parseWidgetStatePadding(get(propertyName),
-        defaultEdgeInsets: defaultEdgeInsets, defaultValue: defaultValue);
+        defaultPadding: defaultPadding, defaultValue: defaultValue);
   }
 
   WidgetStateProperty<EdgeInsets?>? getWidgetStateMargin(String propertyName,

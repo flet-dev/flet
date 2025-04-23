@@ -61,7 +61,8 @@ class _NavigationBarControlState extends State<NavigationBarControl>
           overlayColor: widget.control
               .getWidgetStateColor("overlay_color", Theme.of(context)),
           indicatorColor: widget.control.getColor("indicator_color", context),
-          indicatorShape: widget.control.getShape("indicator_shape"),
+          indicatorShape:
+              widget.control.getShape("indicator_shape", Theme.of(context)),
           backgroundColor: widget.control.getColor("bgcolor", context),
           selectedIndex: _selectedIndex,
           onDestinationSelected:

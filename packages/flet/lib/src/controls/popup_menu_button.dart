@@ -39,7 +39,7 @@ class PopupMenuButtonControl extends StatelessWidget {
         padding: control.getPadding("padding", const EdgeInsets.all(8))!,
         color: control.getColor("bgcolor", context),
         clipBehavior: control.getClipBehavior("clip_behavior", Clip.none)!,
-        shape: control.getShape("shape",
+        shape: control.getShape("shape", Theme.of(context),
             defaultValue: (Theme.of(context).useMaterial3
                 ? RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10))

@@ -1,14 +1,21 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from flet.controls.alignment import Alignment
-from flet.controls.border import BorderSide
+from flet.controls.alignment import OptionalAlignment
+from flet.controls.border import BorderSide, OptionalBorderSide
 from flet.controls.border_radius import OptionalBorderRadiusValue
-from flet.controls.control_state import ControlState, OptionalControlStateValue
+from flet.controls.control_state import OptionalControlStateValue
 from flet.controls.duration import OptionalDurationValue
 from flet.controls.padding import PaddingValue
 from flet.controls.text_style import TextStyle
-from flet.controls.types import ColorValue, MouseCursor, OptionalNumber, VisualDensity
+from flet.controls.types import (
+    ColorValue,
+    MouseCursor,
+    Number,
+    OptionalBool,
+    OptionalNumber,
+    VisualDensity,
+)
 
 __all__ = [
     "BeveledRectangleBorder",
@@ -23,6 +30,7 @@ __all__ = [
 
 @dataclass
 class OutlinedBorder:
+    side: OptionalBorderSide = None
     type: str = ""
 
 
@@ -42,6 +50,8 @@ class RoundedRectangleBorder(OutlinedBorder):
 
 @dataclass
 class CircleBorder(OutlinedBorder):
+    eccentricity: Number = 0.0
+
     def __post_init__(self):
         self.type = "circle"
 
@@ -74,23 +84,10 @@ class ButtonStyle:
     padding: OptionalControlStateValue[PaddingValue] = None
     side: OptionalControlStateValue[BorderSide] = None
     shape: OptionalControlStateValue[OutlinedBorder] = None
-    alignment: Optional[Alignment] = None
-    enable_feedback: Optional[bool] = None
+    alignment: OptionalAlignment = None
+    enable_feedback: OptionalBool = None
     text_style: OptionalControlStateValue[TextStyle] = None
     icon_size: OptionalControlStateValue[OptionalNumber] = None
     icon_color: OptionalControlStateValue[ColorValue] = None
     visual_density: Optional[VisualDensity] = None
     mouse_cursor: OptionalControlStateValue[MouseCursor] = None
-
-    def __post_init__(self):
-        if not isinstance(self.text_style, dict):
-            self.text_style = {ControlState.DEFAULT: self.text_style}
-
-        if not isinstance(self.padding, dict):
-            self.padding = {ControlState.DEFAULT: self.padding}
-
-        if not isinstance(self.side, dict):
-            self.side = {ControlState.DEFAULT: self.side}
-
-        if not isinstance(self.shape, dict):
-            self.shape = {ControlState.DEFAULT: self.shape}

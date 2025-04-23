@@ -37,7 +37,7 @@ class FloatingActionButtonControl extends StatelessWidget {
     var splashColor = control.getColor("splash_color", context);
     var hoverColor = control.getColor("hover_color", context);
     var focusColor = control.getColor("focus_color", context);
-    var shape = control.getShape("shape");
+    var shape = control.getShape("shape", Theme.of(context));
     var clipBehavior =
         parseClip(control.getString("clip_behavior"), Clip.none)!;
     var autofocus = control.getBool("autofocus", false)!;

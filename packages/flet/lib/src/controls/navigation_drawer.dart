@@ -45,7 +45,8 @@ class _NavigationDrawerControlState extends State<NavigationDrawerControl> {
     var drawer = NavigationDrawer(
       elevation: widget.control.getDouble("elevation"),
       indicatorColor: widget.control.getColor("indicator_color", context),
-      indicatorShape: widget.control.getOutlinedBorder("indicator_shape"),
+      indicatorShape: widget.control
+          .getOutlinedBorder("indicator_shape", Theme.of(context)),
       backgroundColor: widget.control.getColor("bgcolor", context),
       selectedIndex: _selectedIndex,
       shadowColor: widget.control.getColor("shadow_color", context),

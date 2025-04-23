@@ -29,7 +29,7 @@ class CardControl extends StatelessWidget {
         : null;
     var clipBehavior = control.getClipBehavior("clip_behavior");
     var elevation = control.getDouble("elevation");
-    var shape = control.getShape("shape");
+    var shape = control.getShape("shape", Theme.of(context));
     var margin = control.getMargin("margin");
     var isSemanticContainer = control.getBool("is_semantic_container", true)!;
     var showBorderOnForeground =
@@ -81,9 +81,6 @@ class CardControl extends StatelessWidget {
           child: contentWidget);
     }
 
-    return ConstrainedControl(
-      control: control,
-      child: card,
-    );
+    return ConstrainedControl(control: control, child: card);
   }
 }

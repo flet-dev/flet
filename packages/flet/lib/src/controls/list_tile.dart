@@ -96,7 +96,7 @@ class ListTileControl extends StatelessWidget with FletStoreMixin {
       textColor: control.getColor("text_color", context),
       mouseCursor: control.getMouseCursor("mouse_cursor"),
       visualDensity: control.getVisualDensity("visual_density"),
-      shape: control.getShape("shape"),
+      shape: control.getShape("shape", Theme.of(context)),
       titleTextStyle:
           control.getTextStyle("title_text_style", Theme.of(context)),
       leadingAndTrailingTextStyle: control.getTextStyle(
