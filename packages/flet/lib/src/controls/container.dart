@@ -1,20 +1,5 @@
+import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
-
-import '../models/control.dart';
-import '../utils/alignment.dart';
-import '../utils/animations.dart';
-import '../utils/borders.dart';
-import '../utils/box.dart';
-import '../utils/colors.dart';
-import '../utils/edge_insets.dart';
-import '../utils/gradient.dart';
-import '../utils/images.dart';
-import '../utils/launch_url.dart';
-import '../utils/misc.dart';
-import '../utils/numbers.dart';
-import '../widgets/flet_store_mixin.dart';
-import 'base_controls.dart';
-import 'control_widget.dart';
 
 class ContainerTapEvent {
   final double localX;
@@ -49,18 +34,15 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     debugPrint("Container build: ${control.id}");
 
     var bgColor = control.getColor("bgcolor", context);
-    var contentCtrl = control.child("content");
-    bool ink = control.getBool("ink", false)!;
-    bool onClick = control.getBool("on_click", false)!;
-    bool onTapDown = control.getBool("on_tap_down", false)!;
-    String url = control.getString("url", "")!;
-    String? urlTarget = control.getString("url_target");
-    bool onLongPress = control.getBool("on_long_press", false)!;
-    bool onHover = control.getBool("on_hover", false)!;
-    bool ignoreInteractions = control.getBool("ignore_interactions", false)!;
-    Widget? child =
-        contentCtrl != null ? ControlWidget(control: contentCtrl) : null;
-
+    var content = control.buildWidget("content");
+    var ink = control.getBool("ink", false)!;
+    var onClick = control.getBool("on_click", false)!;
+    var onTapDown = control.getBool("on_tap_down", false)!;
+    var url = control.getString("url");
+    var urlTarget = control.getString("url_target");
+    var onLongPress = control.getBool("on_long_press", false)!;
+    var onHover = control.getBool("on_hover", false)!;
+    var ignoreInteractions = control.getBool("ignore_interactions", false)!;
     var animation = control.getAnimation("animate");
     var blur = control.getBlur("blur");
     var colorFilter = control.getColorFilter("color_filter", Theme.of(context));
@@ -92,7 +74,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     var onAnimationEnd = control.getBool("on_animation_end", false)!
         ? () => control.triggerEvent("animation_end", "container")
         : null;
-    if ((onClick || url != "" || onLongPress || onHover || onTapDown) &&
+    if ((onClick || url != null || onLongPress || onHover || onTapDown) &&
         ink &&
         !control.disabled) {
       var ink = Material(
@@ -102,9 +84,9 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
             // Dummy callback to enable widget
             // see https://github.com/flutter/flutter/issues/50116#issuecomment-582047374
             // and https://github.com/flutter/flutter/blob/eed80afe2c641fb14b82a22279d2d78c19661787/packages/flutter/lib/src/material/ink_well.dart#L1125-L1129
-            onTap: onClick || url != "" || onTapDown
+            onTap: onClick || url != null || onTapDown
                 ? () {
-                    if (url != "") {
+                    if (url != null) {
                       openWebBrowser(url, webWindowName: urlTarget);
                     }
                     if (onClick) {
@@ -130,12 +112,12 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 ? (value) => control.triggerEvent("hover", value)
                 : null,
             borderRadius: borderRadius,
-            splashColor: control.getColor("inkColor", context),
+            splashColor: control.getColor("ink_color", context),
             child: Container(
               padding: padding,
               alignment: alignment,
               clipBehavior: Clip.none,
-              child: child,
+              child: content,
             ),
           ));
 
@@ -171,7 +153,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
               decoration: boxDecoration,
               foregroundDecoration: boxForegroundDecoration,
               clipBehavior: clipBehavior,
-              child: child)
+              child: content)
           : AnimatedContainer(
               duration: animation.duration,
               curve: animation.curve,
@@ -184,12 +166,12 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
               foregroundDecoration: boxForegroundDecoration,
               clipBehavior: clipBehavior,
               onEnd: onAnimationEnd,
-              child: child);
+              child: content);
 
-      if ((onClick || onLongPress || onHover || onTapDown || url != "") &&
+      if ((onClick || onLongPress || onHover || onTapDown || url != null) &&
           !control.disabled) {
         container = MouseRegion(
-          cursor: onClick || onTapDown || url != ""
+          cursor: onClick || onTapDown || url != null
               ? SystemMouseCursors.click
               : MouseCursor.defer,
           onEnter: onHover
@@ -203,9 +185,9 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 }
               : null,
           child: GestureDetector(
-            onTap: onClick || url != ""
+            onTap: onClick || url != null
                 ? () {
-                    if (url != "") {
+                    if (url != null) {
                       openWebBrowser(url, webWindowName: urlTarget);
                     }
                     if (onClick) {

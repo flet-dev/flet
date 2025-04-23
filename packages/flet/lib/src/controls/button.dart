@@ -54,19 +54,20 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
     bool isFilledTonalButton = widget.control.type == "FilledTonalButton";
     bool isTextButton = widget.control.type == "TextButton";
     bool isOutlinedButton = widget.control.type == "OutlinedButton";
-    String url = widget.control.getString("url", "")!;
-    Color? iconColor = widget.control.getColor("icon_color", context);
+
+    var url = widget.control.getString("url");
+    var iconColor = widget.control.getColor("icon_color", context);
+    var clipBehavior =
+        widget.control.getClipBehavior("clip_behavior", Clip.none)!;
+    var autofocus = widget.control.getBool("autofocus", false)!;
 
     Widget? iconWidget =
         widget.control.buildIconOrWidget("icon", color: iconColor);
 
-    var clipBehavior =
-        widget.control.getClipBehavior("clip_behavior", Clip.none)!;
-    bool autofocus = widget.control.getBool("autofocus", false)!;
 
     Function()? onPressed = !widget.control.disabled
         ? () {
-            if (url != "") {
+            if (url != null) {
               openWebBrowser(url,
                   webWindowName: widget.control.getString("url_target"));
             }

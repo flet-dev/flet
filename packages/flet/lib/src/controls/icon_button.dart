@@ -1,8 +1,6 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/error.dart';
-import 'base_controls.dart';
 import 'control_widget.dart';
 import 'cupertino_button.dart';
 
@@ -86,14 +84,14 @@ class _IconButtonControlState extends State<IconButtonControl>
       var autofocus = widget.control.getBool("autofocus", false)!;
       var enableFeedback = widget.control.getBool("enable_feedback", true)!;
       var selected = widget.control.getBool("selected", false)!;
-      var url = widget.control.getString("url", "")!;
+      var url = widget.control.getString("url");
       var urlTarget = widget.control.getString("url_target");
       var mouseCursor = widget.control.getMouseCursor("mouse_cursor");
       var visualDensity = widget.control.getVisualDensity("visual_density");
 
       Function()? onPressed = !widget.control.disabled
           ? () {
-              if (url != "") {
+              if (url != null) {
                 openWebBrowser(url, webWindowName: urlTarget);
               }
               widget.control.triggerEvent("click");
