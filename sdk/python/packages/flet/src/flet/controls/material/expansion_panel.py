@@ -25,12 +25,43 @@ class ExpansionPanel(ConstrainedControl, AdaptiveControl):
     """
 
     header: Optional[Control] = None
+    """
+    The control to be found in the header of the `ExpansionPanel`. If `can_tap_header` is `True`, tapping on the header will expand or collapse the panel.
+
+    If this property is `None`, the `ExpansionPanel` will have a placeholder `Text` as header.
+    """
+
     content: Optional[Control] = None
+    """
+    The control to be found in the body of the `ExpansionPanel`. It is displayed below the `header` when the panel is expanded.
+
+    If this property is `None`, the `ExpansionPanel` will have a placeholder `Text` as content.
+    """
+
     bgcolor: OptionalColorValue = None
+    """
+    The background [color](https://flet.dev/docs/reference/colors) of the panel.
+    """
+
     expanded: bool = False
+    """
+    Whether expanded(`True`) or collapsed(`False`). Defaults to `False`.
+    """
+
     can_tap_header: bool = False
+    """
+    If `True`, tapping on the panel's `header` will expand or collapse it. Defaults to `False`.
+    """
+
     splash_color: OptionalColorValue = None
+    """
+    TBD
+    """
+
     highlight_color: OptionalColorValue = None
+    """
+    TBD
+    """
 
 
 @control("ExpansionPanelList")
