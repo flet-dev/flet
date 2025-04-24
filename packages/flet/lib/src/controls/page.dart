@@ -134,7 +134,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
   }
 
   void _handleAppLifecycleTransition(String state) {
-    widget.control.triggerEvent("app_lifecycle_state_change", data: state);
+    widget.control.triggerEvent("app_lifecycle_state_change", state);
   }
 
   bool _handleKeyDown(KeyEvent e) {
@@ -156,7 +156,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
       ].contains(k)) {
         widget.control.triggerEvent(
             "keyboard_event",
-            fields: KeyboardEvent(
+            KeyboardEvent(
                     key: k.keyLabel,
                     isAltPressed: HardwareKeyboard.instance.isAltPressed,
                     isControlPressed:
@@ -382,7 +382,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
             pages: pages,
             onDidRemovePage: (page) {
               widget.control
-                  .triggerEvent("view_pop", data: (page.key as ValueKey).value);
+                  .triggerEvent("view_pop", (page.key as ValueKey).value);
             }));
   }
 }

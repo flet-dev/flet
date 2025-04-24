@@ -42,7 +42,7 @@ class _CupertinoDatePickerControlState
             "date_picker_mode", CupertinoDatePickerMode.dateAndTime)!,
         onDateTimeChanged: (DateTime value) {
           widget.control.updateProperties({"value": value});
-          widget.control.triggerEvent("change", data: value);
+          widget.control.triggerEvent("change", value);
         },
       );
     } catch (e) {

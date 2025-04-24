@@ -105,12 +105,12 @@ class _SliderControlState extends State<SliderControl> {
         secondaryTrackValue: widget.control.getDouble("secondary_track_value"),
         onChangeStart: !widget.control.disabled
             ? (double value) {
-                widget.control.triggerEvent("change_start", data: value);
+                widget.control.triggerEvent("change_start", value);
               }
             : null,
         onChangeEnd: !widget.control.disabled
             ? (double value) {
-                widget.control.triggerEvent("change_end", data: value);
+                widget.control.triggerEvent("change_end", value);
               }
             : null);
 

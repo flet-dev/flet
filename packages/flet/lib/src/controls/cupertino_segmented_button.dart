@@ -46,7 +46,7 @@ class _CupertinoSegmentedButtonControlState
       onValueChanged: (int index) {
         if (!widget.control.disabled) {
           widget.control.updateProperties({"selected_index": index});
-          widget.control.triggerEvent("change", data: index);
+          widget.control.triggerEvent("change", index);
           setState(() {
             selectedIndex = index;
           });

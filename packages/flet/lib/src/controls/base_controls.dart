@@ -101,7 +101,7 @@ Widget _opacity(BuildContext context, Widget widget, Control control) {
       opacity: opacity ?? 1.0,
       onEnd: control.getBool("on_animation_end", false)!
           ? () {
-              control.triggerEvent("animation_end", data: "opacity");
+              control.triggerEvent("animation_end", "opacity");
             }
           : null,
       child: widget,
@@ -126,7 +126,7 @@ Widget _rotatedControl(BuildContext context, Widget widget, Control control) {
       curve: animation.curve,
       onEnd: control.getBool("on_animation_end", false)!
           ? () {
-              control.triggerEvent("animation_end", data: "rotation");
+              control.triggerEvent("animation_end", "rotation");
             }
           : null,
       child: widget,
@@ -152,7 +152,7 @@ Widget _scaledControl(BuildContext context, Widget widget, Control control) {
       curve: animation.curve,
       onEnd: control.getBool("on_animation_end", false)!
           ? () {
-              control.triggerEvent("animation_end", data: "scale");
+              control.triggerEvent("animation_end", "scale");
             }
           : null,
       child: widget,
@@ -179,7 +179,7 @@ Widget _offsetControl(BuildContext context, Widget widget, Control control) {
       curve: animation.curve,
       onEnd: control.getBool("on_animation_end", false)!
           ? () {
-              control.triggerEvent("animation_end", data: "offset");
+              control.triggerEvent("animation_end", "offset");
             }
           : null,
       child: widget,
@@ -213,7 +213,7 @@ Widget _positionedControl(
       bottom: bottom,
       onEnd: control.getBool("on_animation_end", false)!
           ? () {
-              control.triggerEvent("animation_end", data: "position");
+              control.triggerEvent("animation_end", "position");
             }
           : null,
       child: widget,

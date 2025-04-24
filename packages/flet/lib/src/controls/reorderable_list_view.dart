@@ -70,18 +70,16 @@ class _ListViewControlState extends State<ReorderableListViewControl> {
         final movedControl = controls.removeAt(oldIndex);
         controls.insert(newIndex, movedControl);
       });
-      widget.control.triggerEvent("reorder",
-          fields: {"old_index": oldIndex, "new_index": newIndex});
+      widget.control.triggerEvent(
+          "reorder", {"old_index": oldIndex, "new_index": newIndex});
     }
 
     void onReorderEnd(int newIndex) {
-      widget.control
-          .triggerEvent("reorder_end", fields: {"new_index": newIndex});
+      widget.control.triggerEvent("reorder_end", {"new_index": newIndex});
     }
 
     void onReorderStart(int oldIndex) {
-      widget.control
-          .triggerEvent("reorder_start", fields: {"old_index": oldIndex});
+      widget.control.triggerEvent("reorder_start", {"old_index": oldIndex});
     }
 
     Widget result = LayoutBuilder(

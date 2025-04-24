@@ -67,7 +67,7 @@ class DataTableControl extends StatelessWidget {
       sortColumnIndex: control.getInt("sort_column_index"),
       onSelectAll: control.getBool("on_select_all", false)!
           ? (bool? selected) {
-              control.triggerEvent("select_all", data: selected);
+              control.triggerEvent("select_all", selected);
             }
           : null,
       columns: control.children("columns").map((column) {
@@ -80,10 +80,8 @@ class DataTableControl extends StatelessWidget {
           mouseCursor: WidgetStateMouseCursor.clickable,
           onSort: column.getBool("on_sort", false)!
               ? (columnIndex, ascending) {
-                  column.triggerEvent("sort", fields: {
-                    "column_index": columnIndex,
-                    "ascending": ascending
-                  });
+                  column.triggerEvent("sort",
+                      {"column_index": columnIndex, "ascending": ascending});
                 }
               : null,
           label: column.buildTextOrWidget("label")!,
@@ -96,7 +94,7 @@ class DataTableControl extends StatelessWidget {
           selected: row.getBool("selected", false)!,
           color: parseWidgetStateColor(row.get("color"), theme),
           onSelectChanged: row.getBool("on_select_changed", false)!
-              ? (selected) => row.triggerEvent("select_changed", data: selected)
+              ? (selected) => row.triggerEvent("select_changed", selected)
               : null,
           onLongPress: row.getBool("on_long_press", false)!
               ? () => row.triggerEvent("long_press")
@@ -121,7 +119,7 @@ class DataTableControl extends StatelessWidget {
                   : null,
               onTapDown: cell.getBool("on_tap_down", false)!
                   ? (details) {
-                      cell.triggerEvent("tap_down", fields: {
+                      cell.triggerEvent("tap_down", {
                         "kind": details.kind?.name,
                         "local_x": details.localPosition.dx,
                         "local_y": details.localPosition.dy,

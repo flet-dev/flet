@@ -168,7 +168,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
         enabled: !widget.control.disabled,
         onFieldSubmitted: !multiline
             ? (value) {
-                widget.control.triggerEvent("submit", data: value);
+                widget.control.triggerEvent("submit", value);
               }
             : null,
         decoration: buildInputDecoration(
@@ -244,7 +244,7 @@ class _TextFieldControlState extends State<TextFieldControl> {
           _value = value;
           widget.control.updateProperties({"value": value});
           if (widget.control.getBool("on_change", false)!) {
-            widget.control.triggerEvent("change", data: value);
+            widget.control.triggerEvent("change", value);
           }
         });
 

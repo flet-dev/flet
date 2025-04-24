@@ -30,7 +30,7 @@ class _NavigationRailControlState extends State<NavigationRailControl>
     _selectedIndex = index;
     debugPrint("NavigationRail selected_index: $_selectedIndex");
     widget.control.updateProperties({"selected_index": _selectedIndex});
-    widget.control.triggerEvent("change", data: _selectedIndex);
+    widget.control.triggerEvent("change", _selectedIndex);
   }
 
   @override

@@ -31,7 +31,7 @@ class DraggableControl extends StatelessWidget {
       affinity: control.getAxis("affinity"),
       maxSimultaneousDrags: control.getInt("max_simultaneous_drags"),
       onDragStarted: () => control.triggerEvent("drag_start"),
-      onDragCompleted: () => control.triggerEvent("drag_complete", data: group),
+      onDragCompleted: () => control.triggerEvent("drag_complete", group),
       childWhenDragging: control.buildWidget("content_when_dragging"),
       feedback: MouseRegion(
         cursor: SystemMouseCursors.grabbing,

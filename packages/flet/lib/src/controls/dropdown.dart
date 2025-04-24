@@ -210,7 +210,7 @@ class _DropdownControlState extends State<DropdownControl> {
           ? null
           : (String? value) {
               widget.control.updateProperties({"value": value});
-              widget.control.triggerEvent("change", data: value);
+              widget.control.triggerEvent("change", value);
             },
       dropdownMenuEntries: items,
     );

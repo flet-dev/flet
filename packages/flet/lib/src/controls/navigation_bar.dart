@@ -29,7 +29,7 @@ class _NavigationBarControlState extends State<NavigationBarControl>
     _selectedIndex = index;
     widget.control
         .updateProperties({"selected_index": _selectedIndex}, notify: true);
-    widget.control.triggerEvent("change", data: _selectedIndex);
+    widget.control.triggerEvent("change", _selectedIndex);
   }
 
   @override

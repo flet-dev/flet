@@ -104,7 +104,7 @@ class _IconButtonControlState extends State<IconButtonControl>
 
       Function(bool)? onHoverHandler = !widget.control.disabled
           ? (bool hovered) => FletBackend.of(context)
-              .triggerControlEvent(widget.control, "hover", data: hovered)
+              .triggerControlEvent(widget.control, "hover", hovered)
           : null;
 
       Widget? button;

@@ -87,11 +87,10 @@ class Control extends ChangeNotifier {
   /// This method checks if the control has an event handler for the given
   /// [eventName] and triggers the event if the application is not in a loading state.
   ///
-  /// - [name]: The name of the event to trigger.
-  /// - [data]: Optional data to pass along with the event. Will be accessible as `e.data` in the Python event handler.
-  /// - [fields]: Optional fields to pass along with the event.
-  void triggerEvent(String name, {dynamic data, Map<String, dynamic>? fields}) {
-    return backend.triggerControlEvent(this, name, data: data, fields: fields);
+  /// - [eventName]: The name of the event to trigger.
+  /// - [eventData]: Optional data to pass along with the event.
+  void triggerEvent(String eventName, [dynamic data]) {
+    return backend.triggerControlEvent(this, eventName, data);
   }
 
   /// Updates the properties of this control.

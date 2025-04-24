@@ -44,7 +44,7 @@ class CupertinoSlidingSegmentedButtonControl extends StatelessWidget {
         if (!control.disabled) {
           control
               .updateProperties({"selected_index": index ?? 0}, notify: true);
-          control.triggerEvent("change", data: index);
+          control.triggerEvent("change", index);
         }
       },
     );

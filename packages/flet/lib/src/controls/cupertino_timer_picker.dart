@@ -34,7 +34,7 @@ class _CupertinoTimerPickerControlState
       backgroundColor: widget.control.getColor("bgcolor", context),
       onTimerDurationChanged: (duration) {
         widget.control.updateProperties({"value": duration});
-        widget.control.triggerEvent("change", data: duration);
+        widget.control.triggerEvent("change", duration);
       },
     );
 

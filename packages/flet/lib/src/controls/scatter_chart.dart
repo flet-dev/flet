@@ -111,7 +111,7 @@ class _ScatterChartControlState extends State<ScatterChartControl> {
                     debugPrint(
                         "ScatterChart ${widget.control.id} ${eventData.eventType}");
                     widget.control
-                        .triggerEvent("chart_event", fields: eventData.toMap());
+                        .triggerEvent("chart_event", eventData.toMap());
                   }
                 : null,
             // mouseCursorResolver: (evt, resp) {
@@ -168,7 +168,7 @@ class _ScatterChartControlState extends State<ScatterChartControl> {
                         dp.children("tooltip_spans"),
                         dp.disabled,
                         (Control control, String eventName, String eventData) {
-                          control.triggerEvent(eventName, data: eventData);
+                          control.triggerEvent(eventName, eventData);
                         },
                       )
                     : null;

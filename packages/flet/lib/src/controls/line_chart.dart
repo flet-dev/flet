@@ -299,7 +299,7 @@ class _LineChartControlState extends State<LineChartControl> {
                           dp.disabled,
                           (Control control, String eventName,
                               String eventData) {
-                            control.triggerEvent(eventName, data: eventData);
+                            control.triggerEvent(eventName, eventData);
                           },
                         )
                       : null;
@@ -325,8 +325,8 @@ class _LineChartControlState extends State<LineChartControl> {
                             : []);
                     if (eventData != _eventData) {
                       _eventData = eventData;
-                      widget.control.triggerEvent("chart_event",
-                          fields: eventData.toMap());
+                      widget.control
+                          .triggerEvent("chart_event", eventData.toMap());
                     }
                   }
                 : null,

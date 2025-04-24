@@ -90,7 +90,7 @@ class _PieChartControlState extends State<PieChartControl> {
                   if (eventData != _eventData) {
                     _eventData = eventData;
                     widget.control
-                        .triggerEvent("chart_event", fields: eventData.toMap());
+                        .triggerEvent("chart_event", eventData.toMap());
                   }
                 }
               : null,

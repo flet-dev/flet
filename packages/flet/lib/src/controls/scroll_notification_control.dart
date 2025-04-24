@@ -70,7 +70,7 @@ class _ScrollNotificationControlState extends State<ScrollNotificationControl> {
     // Check that event_type was set before triggering the event
     if (fields["event_type"] != null) {
       debugPrint("ScrollNotification ${widget.control.id} event");
-      widget.control.triggerEvent("scroll", fields: fields);
+      widget.control.triggerEvent("scroll", fields);
     }
 
     return false;

@@ -23,7 +23,7 @@ class ExpansionPanelListControl extends StatelessWidget {
       control
           .children("controls")[index]
           .updateProperties({"expanded": isExpanded}, notify: true);
-      control.triggerEvent("change", data: index);
+      control.triggerEvent("change", index);
     }
 
     var panelList = ExpansionPanelList(
