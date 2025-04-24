@@ -19,6 +19,8 @@ class FletApp extends StatefulWidget {
   final int? reconnectIntervalMs;
   final int? reconnectTimeoutMs;
   final List<FletExtension>? extensions;
+  final Map<String, dynamic>? args;
+  final bool? forcePyodide;
 
   const FletApp(
       {super.key,
@@ -31,7 +33,9 @@ class FletApp extends StatefulWidget {
       this.errorsHandler,
       this.reconnectIntervalMs,
       this.reconnectTimeoutMs,
-      this.extensions});
+      this.extensions,
+      this.args,
+      this.forcePyodide});
 
   @override
   State<FletApp> createState() => _FletAppState();
@@ -60,6 +64,8 @@ class _FletAppState extends State<FletApp> {
             assetsDir: widget.assetsDir,
             errorsHandler: widget.errorsHandler,
             extensions: widget.extensions ?? [],
+            args: widget.args,
+            forcePyodide: widget.forcePyodide,
             parentFletBackend:
                 Provider.of<FletBackend?>(context, listen: false));
       },

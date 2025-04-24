@@ -259,7 +259,9 @@ class _TextFieldControlState extends State<TextFieldControl> {
     textField =
         isLinuxDesktop() ? ExcludeSemantics(child: textField) : textField;
 
-    if (widget.control.getInt("expand", 0)! > 0) {
+    if (widget.control.get("expand") == true ||
+        (widget.control.get("expand") is int &&
+            widget.control.getInt("expand", 0)! > 0)) {
       return ConstrainedControl(
         control: widget.control,
         child: textField,

@@ -10,7 +10,8 @@ import 'base_controls.dart';
 class FletAppControl extends StatefulWidget {
   final Control control;
 
-  const FletAppControl({super.key, required this.control});
+  FletAppControl({Key? key, required this.control})
+      : super(key: ValueKey(control.id));
 
   @override
   State<FletAppControl> createState() => _FletAppControlState();
@@ -43,6 +44,10 @@ class _FletAppControlState extends State<FletAppControl> {
         assetsDir: "",
         errorsHandler: _errorsHandler,
         extensions: FletBackend.of(context).extensions,
+        args: widget.control.get("args") != null
+            ? Map<String, dynamic>.from(widget.control.get("args"))
+            : null,
+        forcePyodide: widget.control.getBool("force_pyodide"),
       ),
     );
   }

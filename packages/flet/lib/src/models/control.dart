@@ -146,7 +146,9 @@ class Control extends ChangeNotifier {
       if (patchValue is Map) {
         if (properties.containsKey(key)) {
           var current = properties[key];
-          if (current is Control) {
+          if (current is Control &&
+              (!patchValue.containsKey("_i") ||
+                  patchValue["_i"] == current.id)) {
             current.applyPatch(patchValue, backend, shouldNotify: shouldNotify);
           } else if (current is List) {
             var merged = mergeList(current, patchValue, backend, shouldNotify);

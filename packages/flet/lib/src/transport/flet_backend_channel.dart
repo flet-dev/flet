@@ -13,12 +13,17 @@ typedef FletBackendChannelOnMessageCallback = void Function(Message message);
 abstract class FletBackendChannel {
   factory FletBackendChannel(
       {required String address,
+      required Map<String, dynamic> args,
+      required bool forcePyodide,
       required FletBackendChannelOnDisconnectCallback onDisconnect,
       required FletBackendChannelOnMessageCallback onMessage}) {
-    if (isFletWebPyodideMode()) {
-      // JavaScript
+    if (isFletWebPyodideMode() || forcePyodide) {
+      // Pyodide/JavaScript
       return FletJavaScriptBackendChannel(
-          address: address, onDisconnect: onDisconnect, onMessage: onMessage);
+          address: address,
+          args: args,
+          onDisconnect: onDisconnect,
+          onMessage: onMessage);
     } else if (address.startsWith("http://") ||
         address.startsWith("https://")) {
       // WebSocket

@@ -7,28 +7,34 @@ import '../protocol/message.dart';
 import 'flet_backend_channel.dart';
 
 @JS()
-external JSPromise jsConnect(JSExportedDartFunction onMessage);
+external JSPromise jsConnect(
+    String appId, JSAny args, JSExportedDartFunction onMessage);
 
 @JS()
-external void jsSend(JSUint8Array data);
+external void jsSend(String appId, JSUint8Array data);
+
+@JS()
+external void jsDisconnect(String appId);
 
 typedef FletBackendJavascriptChannelOnMessageCallback = void Function(
     List<int> message);
 
 class FletJavaScriptBackendChannel implements FletBackendChannel {
   final String address;
+  final Map<String, dynamic> args;
   final FletBackendChannelOnMessageCallback onMessage;
   final FletBackendChannelOnDisconnectCallback onDisconnect;
 
   FletJavaScriptBackendChannel(
       {required this.address,
+      required this.args,
       required this.onDisconnect,
       required this.onMessage});
 
   @override
   connect() async {
     debugPrint("Connecting to Flet JavaScript channel $address...");
-    await jsConnect(_onMessage.toJS).toDart;
+    await jsConnect(address, args.jsify()!, _onMessage.toJS).toDart;
   }
 
   void _onMessage(JSUint8Array data) {
@@ -43,9 +49,11 @@ class FletJavaScriptBackendChannel implements FletBackendChannel {
 
   @override
   void send(Message message) {
-    jsSend(msgpack.serialize(message.toList()).toJS);
+    jsSend(address, msgpack.serialize(message.toList()).toJS);
   }
 
   @override
-  void disconnect() {}
+  void disconnect() {
+    jsDisconnect(address);
+  }
 }
