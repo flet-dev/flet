@@ -26,24 +26,122 @@ class FloatingActionButton(ConstrainedControl):
     """
 
     content: Optional[StrOrControl] = None
+    """
+    A Control representing custom button content.
+    """
+
     icon: Optional[IconValueOrControl] = None
+    """
+    Icon shown in the button.
+    """
+
     bgcolor: OptionalColorValue = None
+    """
+    Button background [color](https://flet.dev/docs/reference/colors).
+    """
+
     shape: Optional[OutlinedBorder] = None
+    """
+    The shape of the FAB's border.
+
+    The value is an instance of [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder) class.
+    """
+
     autofocus: bool = False
+    """
+    True if the control will be selected as the initial focus. If there is more than one control on a page with autofocus set, then the first one added to the page will get focus.
+    """
+
     mini: bool = False
+    """
+    Controls the size of this button.
+
+    By default, floating action buttons are non-mini and have a height and width of `56.0` logical pixels. Mini floating
+    action buttons have a height and width of `40.0` logical pixels with a layout width and height of `48.0` logical pixels.
+    """
+
     foreground_color: OptionalColorValue = None
+    """
+    The default foreground [color](https://flet.dev/docs/reference/colors) for icons and text within the button.
+    """
+
     focus_color: OptionalColorValue = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) to use for filling the button when the button has input focus.
+    """
+
     clip_behavior: Optional[ClipBehavior] = None
+    """
+    The content will be clipped (or not) according to this option.
+
+    Value is of type [`ClipBehavior`](https://flet.dev/docs/reference/types/clipbehavior) and defaults to `ClipBehavior.NONE`.
+    """
+
     elevation: OptionalNumber = None
+    """
+    The button's elevation.
+
+    Defaults to `6`.
+    """
+
     disabled_elevation: OptionalNumber = None
+    """
+    The button's elevation when disabled.
+
+    Defaults to the same value as `elevation`.
+    """
+
     focus_elevation: OptionalNumber = None
+    """
+    The button's elevation when it has input focus.
+
+    Defaults to `8`.
+    """
+
     highlight_elevation: OptionalNumber = None
+    """
+    The button's elevation when being touched.
+
+    Defaults to `12`.
+    """
+
     hover_elevation: OptionalNumber = None
+    """
+    The button's elevation when it is enabled and being hovered.
+
+    Defaults to `8`.
+    """
+
     enable_feedback: bool = True
+    """
+    Whether detected gestures should provide acoustic and/or haptic feedback. On Android, for example, setting this to `True` will produce a click sound and a long-press will produce a short vibration.
+
+    Defaults to `True`.
+    """
+
     url: Optional[str] = None
+    """
+    The URL to open when the button is clicked. If registered, `on_click` event is fired after that.
+    """
+
     url_target: Optional[UrlTarget] = None
+    """
+    Where to open URL in the web mode.
+
+    Value is of type [`UrlTarget`](https://flet.dev/docs/reference/types/urltarget) and defaults to `UrlTarget.BLANK`.
+    """
+
     mouse_cursor: Optional[MouseCursor] = None
+    """
+    The cursor to be displayed when a mouse pointer enters or is hovering over this control.
+
+    Value is of type [`MouseCursor`](https://flet.dev/docs/reference/types/mousecursor).
+    """
+
     on_click: OptionalControlEventCallable = None
+    """
+    Fires when a user clicks the button.
+    """
 
     def before_update(self):
         super().before_update()
