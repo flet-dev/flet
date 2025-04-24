@@ -43,7 +43,7 @@ class CupertinoButton(ConstrainedControl):
     disabled_bgcolor: OptionalColorValue = None
     opacity_on_click: Number = 0.4
     min_size: Number = None
-    size: CupertinoButtonSize = CupertinoButtonSize.LARGE
+    size_style: CupertinoButtonSize = CupertinoButtonSize.LARGE
     padding: OptionalPaddingValue = None
     alignment: OptionalAlignment = None
     border_radius: BorderRadiusValue = 8.0
