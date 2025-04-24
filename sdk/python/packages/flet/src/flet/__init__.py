@@ -1,5 +1,5 @@
 from flet.app import app, app_async, run, run_async
-from flet.controls import alignment, border, border_radius, padding
+from flet.controls import alignment, border, border_radius, margin, padding
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment, Axis, OptionalAlignment, OptionalAxis
 from flet.controls.animation import (
