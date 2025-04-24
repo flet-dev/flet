@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Optional
 
 from flet.controls.base_control import control
 from flet.controls.core.canvas.shape import Shape

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Any, List, Optional
+from typing import List, Optional
 
 from flet.controls.animation import AnimationValue
 from flet.controls.base_control import control
@@ -10,7 +10,6 @@ from flet.controls.core.charts.chart_axis import ChartAxis
 from flet.controls.core.charts.chart_grid_lines import ChartGridLines
 from flet.controls.core.charts.line_chart_data import LineChartData
 from flet.controls.padding import OptionalPaddingValue
-from flet.controls.ref import Ref
 from flet.controls.types import (
     OptionalColorValue,
     OptionalEventCallable,

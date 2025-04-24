@@ -12,7 +12,7 @@ class KeyboardEvent {
       required this.isAltPressed,
       required this.isMetaPressed});
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
+  Map<String, dynamic> toMap() => <String, dynamic>{
         'key': key,
         'shift': isShiftPressed,
         'ctrl': isControlPressed,

@@ -7,10 +7,8 @@ import traceback
 from pathlib import Path
 from typing import Optional
 
-import flet.version
-from flet.controls.control_event import ControlEvent
-from flet.controls.page import Page
 from flet.controls.types import AppView, WebRenderer
+from flet.controls.update_behavior import UpdateBehavior
 from flet.messaging.session import Session
 from flet.utils import (
     get_bool_env_var,
@@ -231,12 +229,15 @@ async def __run_socket_server(port=0, session_handler=None, blocking=False):
         logger.info("App session started")
         try:
             assert session_handler is not None
+            UpdateBehavior.reset()
             if asyncio.iscoroutinefunction(session_handler):
                 await session_handler(session.page)
             else:
                 # run synchronously
                 session_handler(session.page)
-            session.auto_update(session.page)
+
+            if UpdateBehavior.auto_update_enabled():
+                session.auto_update(session.page)
 
         except Exception as e:
             print(
@@ -308,10 +309,14 @@ def __run_pyodide(target):
         logger.info("App session started")
         try:
             assert target is not None
+            UpdateBehavior.reset()
             if asyncio.iscoroutinefunction(target):
                 await target(session.page)
             else:
                 target(session.page)
+
+            if UpdateBehavior.auto_update_enabled():
+                session.auto_update(session.page)
         except Exception as e:
             print(
                 f"Unhandled error processing page session {session.id}:",

@@ -73,7 +73,8 @@ class _NavigationRailControlState extends State<NavigationRailControl>
           unselectedLabelTextStyle: parseTextStyle(
               widget.control.get("unselected_label_text_style"),
               Theme.of(context)),
-          indicatorShape: widget.control.getOutlinedBorder("indicator_shape"),
+          indicatorShape: widget.control
+              .getOutlinedBorder("indicator_shape", Theme.of(context)),
           minWidth: widget.control.getDouble("min_width"),
           minExtendedWidth: widget.control.getDouble("min_extended_width"),
           groupAlignment: widget.control.getDouble("group_alignment"),
@@ -93,19 +94,18 @@ class _NavigationRailControlState extends State<NavigationRailControl>
                     .buildWidget("selected_icon") ??
                 Icon(parseIcon(destinationControl.getString("selected_icon")));
             return NavigationRailDestination(
-              disabled: disabled || destinationControl.disabled,
-              padding: parseEdgeInsets(destinationControl.get("padding")),
-              indicatorColor:
-                  destinationControl.getColor("indicator_color", context),
-              indicatorShape: parseOutlinedBorder(
-                  destinationControl.get("indicator_shape")),
-              icon: icon,
-              selectedIcon: selectedIcon,
-              label: destinationControl.buildWidget("label") ??
-                  destinationControl.buildWidget(
-                      "label_content") ?? // todo(0.73.0): remove label_content
-                  Text(label),
-            );
+                disabled: disabled || destinationControl.disabled,
+                padding: destinationControl.getPadding("padding"),
+                indicatorColor:
+                    destinationControl.getColor("indicator_color", context),
+                indicatorShape: destinationControl.getOutlinedBorder(
+                    "indicator_shape", Theme.of(context)),
+                icon: icon,
+                selectedIcon: selectedIcon,
+                label: destinationControl.buildTextOrWidget("label",
+                    required: true,
+                    errorWidget: ErrorWidget(
+                        "label (string or visible Control) must be provided"))!);
           }).toList(),
         );
       },

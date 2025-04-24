@@ -1,11 +1,8 @@
-from dataclasses import field
-
-from flet.controls import padding
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.padding import OptionalPaddingValue
+from flet.controls.padding import PaddingValue
 
 __all__ = ["SafeArea"]
 
@@ -18,9 +15,7 @@ class SafeArea(ConstrainedControl, AdaptiveControl):
     right: bool = True
     bottom: bool = True
     maintain_bottom_view_padding: bool = False
-    minimum_padding: OptionalPaddingValue = field(
-        default_factory=lambda: padding.all(0)
-    )
+    minimum_padding: PaddingValue = 0
 
     def before_update(self):
         super().before_update()

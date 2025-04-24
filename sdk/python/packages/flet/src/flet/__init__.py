@@ -1,16 +1,5 @@
 from flet.app import app, app_async, run, run_async
-from flet.controls import (
-    alignment,
-    animation,
-    border,
-    border_radius,
-    colors,
-    margin,
-    padding,
-    painting,
-    size,
-    transform,
-)
+from flet.controls import alignment, border, border_radius, margin, padding
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment, Axis, OptionalAlignment, OptionalAxis
 from flet.controls.animation import (
@@ -24,8 +13,23 @@ from flet.controls.animation import (
     OptionalAnimationValue,
 )
 from flet.controls.base_control import BaseControl, control
-from flet.controls.blur import Blur, BlurTileMode, BlurValue, OptionalBlurValue
-from flet.controls.border import Border, BorderSide, BorderSideStrokeAlign
+from flet.controls.blur import (
+    Blur,
+    BlurTileMode,
+    BlurValue,
+    OptionalBlurTileMode,
+    OptionalBlurValue,
+)
+from flet.controls.border import (
+    Border,
+    BorderSide,
+    BorderSideStrokeAlign,
+    BorderSideStrokeAlignValue,
+    OptionalBorder,
+    OptionalBorderSide,
+    OptionalBorderSideStrokeAlign,
+    OptionalBorderSideStrokeAlignValue,
+)
 from flet.controls.border_radius import (
     BorderRadius,
     BorderRadiusValue,
@@ -34,11 +38,21 @@ from flet.controls.border_radius import (
 from flet.controls.box import (
     BoxConstraints,
     BoxDecoration,
+    BoxFit,
     BoxShadow,
     BoxShape,
     ColorFilter,
     DecorationImage,
     FilterQuality,
+    OptionalBoxConstraints,
+    OptionalBoxDecoration,
+    OptionalBoxFit,
+    OptionalBoxShadow,
+    OptionalBoxShape,
+    OptionalColorFilter,
+    OptionalDecorationImage,
+    OptionalFilterQuality,
+    OptionalShadowBlurStyle,
     OptionalShadowValue,
     ShadowBlurStyle,
     ShadowValue,
@@ -48,6 +62,8 @@ from flet.controls.buttons import (
     ButtonStyle,
     CircleBorder,
     ContinuousRectangleBorder,
+    OptionalButtonStyle,
+    OptionalOutlinedBorder,
     OutlinedBorder,
     RoundedRectangleBorder,
     StadiumBorder,
@@ -100,7 +116,6 @@ from flet.controls.core.charts.scatter_chart import (
     ScatterShartTooltipAlignment,
 )
 from flet.controls.core.column import Column
-from flet.controls.core.container import Container, ContainerTapEvent
 from flet.controls.core.dismissible import (
     Dismissible,
     DismissibleDismissEvent,
@@ -221,7 +236,13 @@ from flet.controls.cupertino.cupertino_timer_picker import (
 )
 from flet.controls.cupertino.cupertino_tinted_button import CupertinoTintedButton
 from flet.controls.dialog_control import DialogControl
-from flet.controls.duration import Duration, DurationValue, OptionalDurationValue
+from flet.controls.duration import (
+    DateTimeValue,
+    Duration,
+    DurationValue,
+    OptionalDateTimeValue,
+    OptionalDurationValue,
+)
 from flet.controls.exceptions import (
     FletException,
     FletUnimplementedPlatformEception,
@@ -252,6 +273,7 @@ from flet.controls.material.card import Card, CardVariant
 from flet.controls.material.checkbox import Checkbox
 from flet.controls.material.chip import Chip
 from flet.controls.material.circle_avatar import CircleAvatar
+from flet.controls.material.container import Container
 from flet.controls.material.datatable import (
     DataCell,
     DataColumn,
@@ -458,7 +480,6 @@ from flet.controls.types import (
     ColorEnums,
     ColorValue,
     CrossAxisAlignment,
-    DateTimeValue,
     EventType,
     FloatingActionButtonLocation,
     FontWeight,
@@ -475,9 +496,11 @@ from flet.controls.types import (
     NotchShape,
     Number,
     OnFocusEvent,
+    OptionalBool,
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
+    OptionalInt,
     OptionalNumber,
     OptionalString,
     Orientation,

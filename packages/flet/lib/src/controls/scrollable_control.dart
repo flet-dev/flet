@@ -1,15 +1,5 @@
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
+import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
-
-import '../flet_backend.dart';
-import '../models/control.dart';
-import '../utils/animations.dart';
-import '../utils/misc.dart';
-import '../utils/numbers.dart';
-import '../utils/time.dart';
-import '../widgets/flet_store_mixin.dart';
 
 class ScrollableControl extends StatefulWidget {
   final Control control;
@@ -32,11 +22,11 @@ class _ScrollableControlState extends State<ScrollableControl>
     with FletStoreMixin {
   late final ScrollController _controller;
   late bool _ownController = false;
-  String? _method;
 
   @override
   void initState() {
     super.initState();
+    widget.control.addInvokeMethodListener(_invokeMethod);
     if (widget.scrollController != null) {
       _controller = widget.scrollController!;
     } else {
@@ -45,104 +35,88 @@ class _ScrollableControlState extends State<ScrollableControl>
     }
   }
 
+  Future<dynamic> _invokeMethod(String name, dynamic args) async {
+    debugPrint("ScrollableControl.$name($args)");
+    var offset = parseDouble(args["offset"]);
+    var delta = parseDouble(args["delta"]);
+    var key = args["key"] != null
+        ? widget.control.backend.globalKeys[args["key"]]
+        : null;
+    switch (name) {
+      case "scroll_to":
+        var duration = parseDuration(args["duration"], Duration.zero)!;
+        var curve = parseCurve(args["curve"], Curves.ease)!;
+        if (key != null) {
+          var ctx = key.currentContext;
+          if (ctx != null) {
+            Scrollable.ensureVisible(ctx, duration: duration, curve: curve);
+          }
+        } else if (offset != null) {
+          if (offset < 0) {
+            offset = _controller.position.maxScrollExtent + offset + 1;
+          }
+          if (duration.inMilliseconds < 1) {
+            _controller.jumpTo(offset);
+          } else {
+            _controller.animateTo(offset, duration: duration, curve: curve);
+          }
+        } else if (delta != null) {
+          var offset = _controller.position.pixels + delta;
+          if (duration.inMilliseconds < 1) {
+            _controller.jumpTo(offset);
+          } else {
+            _controller.animateTo(offset, duration: duration, curve: curve);
+          }
+        }
+      default:
+        throw Exception("Unknown ScrollableControl method: $name");
+    }
+  }
+
   @override
   void dispose() {
     if (_ownController) {
       _controller.dispose();
     }
+    widget.control.removeInvokeMethodListener(_invokeMethod);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("ScrollableControl build: ${widget.control.id}");
-    return withPagePlatform((context, platform) {
-      ScrollMode scrollMode =
-          parseScrollMode(widget.control.getString("scroll"), ScrollMode.none)!;
+    ScrollMode scrollMode =
+        widget.control.getScrollMode("scroll", ScrollMode.none)!;
 
-      var method = widget.control.getString("method");
-
-      if (widget.control.getBool("auto_scroll", false)!) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _controller.animateTo(
-            _controller.position.maxScrollExtent,
-            duration: const Duration(seconds: 1),
-            curve: Curves.ease,
-          );
-        });
-      } else if (method != null && method != _method) {
-        _method = method;
-        debugPrint("ScrollableControl JSON method: $method");
-        widget.control.updateProperties({"method": ""});
-
-        var mj = json.decode(method);
-        var name = mj["n"] as String;
-        var params = Map<String, dynamic>.from(mj["p"] as Map);
-
-        if (name == "scroll_to") {
-          var duration = parseDuration(params["duration"], Duration.zero)!;
-          var curve = parseCurve(params["curve"], Curves.ease)!;
-          if (params["key"] != null) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              var key = FletBackend.of(context).globalKeys[params["key"]];
-              if (key != null) {
-                var ctx = key.currentContext;
-                if (ctx != null) {
-                  Scrollable.ensureVisible(ctx,
-                      duration: duration, curve: curve);
-                }
-              }
-            });
-          } else if (params["offset"] != null) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              var offset = parseDouble(params["offset"], 0)!;
-              if (offset < 0) {
-                offset = _controller.position.maxScrollExtent + offset + 1;
-              }
-              if (duration.inMilliseconds < 1) {
-                _controller.jumpTo(offset);
-              } else {
-                _controller.animateTo(offset, duration: duration, curve: curve);
-              }
-            });
-          } else if (params["delta"] != null) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              var delta = parseDouble(params["delta"], 0)!;
-              var offset = _controller.position.pixels + delta;
-              if (duration.inMilliseconds < 1) {
-                _controller.jumpTo(offset);
-              } else {
-                _controller.animateTo(offset, duration: duration, curve: curve);
-              }
-            });
-          }
-        }
-      }
-
-      return scrollMode != ScrollMode.none
-          ? Scrollbar(
-              thumbVisibility: scrollMode == ScrollMode.always ||
-                      (scrollMode == ScrollMode.adaptive &&
-                          !kIsWeb &&
-                          platform != TargetPlatform.iOS &&
-                          platform != TargetPlatform.android)
-                  ? true
-                  : false,
-              trackVisibility: scrollMode == ScrollMode.hidden ? false : null,
-              thickness: scrollMode == ScrollMode.hidden
-                  ? 0
-                  : platform == TargetPlatform.iOS ||
-                          platform == TargetPlatform.android
-                      ? 4.0
-                      : null,
-              //interactive: true,
+    if (widget.control.getBool("auto_scroll", false)!) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _controller.animateTo(
+          _controller.position.maxScrollExtent,
+          duration: const Duration(seconds: 1),
+          curve: Curves.ease,
+        );
+      });
+    }
+    return scrollMode != ScrollMode.none
+        ? Scrollbar(
+            // todo: create class ScrollBarConfiguration on Py end, for more customizability
+            thumbVisibility: scrollMode == ScrollMode.always ||
+                    (scrollMode == ScrollMode.adaptive && !isMobilePlatform())
+                ? true
+                : false,
+            trackVisibility: scrollMode == ScrollMode.hidden ? false : null,
+            thickness: scrollMode == ScrollMode.hidden
+                ? 0
+                : isMobilePlatform()
+                    ? 4.0
+                    : null,
+            //interactive: true,
+            controller: _controller,
+            child: SingleChildScrollView(
               controller: _controller,
-              child: SingleChildScrollView(
-                controller: _controller,
-                scrollDirection: widget.scrollDirection,
-                child: widget.child,
-              ))
-          : widget.child;
-    });
+              scrollDirection: widget.scrollDirection,
+              child: widget.child,
+            ))
+        : widget.child;
   }
 }

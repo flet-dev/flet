@@ -39,12 +39,13 @@ MenuStyle? parseMenuStyle(dynamic value, ThemeData theme,
         (jv) => parseBorderSide(jv, theme,
             defaultSideColor: theme.colorScheme.outline),
         defaultBorderSide),
-    shape: getWidgetStateProperty<OutlinedBorder?>(
-        value["shape"], (jv) => parseOutlinedBorder(jv), defaultShape),
+    shape: parseWidgetStateOutlinedBorder(value["shape"], theme,
+        defaultOutlinedBorder: defaultShape),
     mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"],
         defaultMouseCursor: defaultMouseCursor),
   );
 }
+
 extension MenuParsers on Control {
   MenuStyle? getMenuStyle(String propertyName, ThemeData theme,
       {Color? defaultBackgroundColor,

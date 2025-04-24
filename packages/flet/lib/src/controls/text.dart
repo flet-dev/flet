@@ -91,17 +91,7 @@ class TextControl extends StatelessWidget {
       control.triggerEvent("selection_change", {
         "text": text,
         "cause": cause?.name ?? "unknown",
-        "selection": {
-          "start": selection.start,
-          "end": selection.end,
-          "base_offset": selection.baseOffset,
-          "extent_offset": selection.extentOffset,
-          "affinity": selection.affinity.name,
-          "directional": selection.isDirectional,
-          "collapsed": selection.isCollapsed,
-          "valid": selection.isValid,
-          "normalized": selection.isNormalized,
-        }
+        "selection": selection.toMap(),
       });
     }
 

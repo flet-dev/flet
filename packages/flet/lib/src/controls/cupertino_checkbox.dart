@@ -80,7 +80,7 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
             "active_color", context, Theme.of(context).colorScheme.primary)!,
         checkColor: widget.control.getColor("check_color", context),
         focusColor: widget.control.getColor("focus_color", context),
-        shape: widget.control.getShape("shape"),
+        shape: widget.control.getShape("shape", Theme.of(context)),
         mouseCursor: widget.control.getMouseCursor("mouse_cursor"),
         semanticLabel: widget.control.getString("semantics_label"),
         side: widget.control
@@ -104,7 +104,8 @@ class _CheckboxControlState extends State<CupertinoCheckboxControl> {
     if (widget.control.disabled && labelStyle != null) {
       labelStyle = labelStyle.apply(color: Theme.of(context).disabledColor);
     }
-    var label = widget.control.buildTextOrWidget("label", style: labelStyle);
+    var label =
+        widget.control.buildTextOrWidget("label", textStyle: labelStyle);
     if (label != null) {
       label = widget.control.disabled
           ? label

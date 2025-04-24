@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional, Tuple, Union
 
-from flet.controls.alignment import Alignment
+from flet.controls.alignment import OptionalAlignment
 from flet.controls.types import Number, OptionalNumber
 
 __all__ = [
@@ -22,13 +22,13 @@ class Scale:
     scale: OptionalNumber = None
     scale_x: OptionalNumber = None
     scale_y: OptionalNumber = None
-    alignment: Optional[Alignment] = None
+    alignment: OptionalAlignment = None
 
 
 @dataclass
 class Rotate:
     angle: Number
-    alignment: Optional[Alignment] = None
+    alignment: OptionalAlignment = None
 
 
 @dataclass
@@ -37,6 +37,7 @@ class Offset:
     y: Number
 
 
+# typing
 RotateValue = Union[Number, Rotate]
 OptionalRotateValue = Optional[RotateValue]
 ScaleValue = Union[Number, Scale]

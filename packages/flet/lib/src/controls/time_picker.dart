@@ -45,7 +45,7 @@ class _TimePickerControlState extends State<TimePickerControl> {
         errorInvalidText: widget.control.getString("error_invalid_text"),
         initialEntryMode: widget.control.getTimePickerEntryMode(
             "time_picker_entry_mode", TimePickerEntryMode.dial)!,
-        orientation: parseOrientation(widget.control.getString("orientation")),
+        orientation: widget.control.getOrientation("orientation"),
         onEntryModeChanged: (TimePickerEntryMode mode) {
           widget.control.triggerEvent("entry_mode_change", mode.name);
         },

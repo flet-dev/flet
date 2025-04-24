@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
-import 'base_controls.dart';
-
 class DropdownControl extends StatefulWidget {
   final Control control;
 
@@ -191,7 +189,7 @@ class _DropdownControlState extends State<DropdownControl> {
       enableSearch: widget.control.getBool("enable_search", true)!,
       menuHeight: widget.control.getDouble("menu_height"),
       label: widget.control.buildTextOrWidget("label",
-          style: widget.control.getTextStyle("label_style", theme)),
+          textStyle: widget.control.getTextStyle("label_style", theme)),
       leadingIcon: widget.control.buildIconOrWidget("leading_icon"),
       trailingIcon: widget.control.buildIconOrWidget("trailing_icon"),
       selectedTrailingIcon:

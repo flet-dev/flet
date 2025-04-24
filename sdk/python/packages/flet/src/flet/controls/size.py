@@ -4,11 +4,6 @@ from flet.controls.types import Number
 
 __all__ = [
     "Size",
-    "copy",
-    "square",
-    "from_width",
-    "from_height",
-    "from_radius",
     "zero",
     "infinite",
 ]
@@ -42,30 +37,30 @@ class Size:
         """Checks if both dimensions are finite."""
         return self.width != float("inf") and self.height != float("inf")
 
+    @classmethod
+    def copy(cls, source: "Size") -> "Size":
+        """Creates a copy of the given Size object."""
+        return Size(source.width, source.height)
 
-def copy(source: "Size") -> Size:
-    """Creates a copy of the given Size object."""
-    return Size(source.width, source.height)
+    @classmethod
+    def square(cls, dimension: Number) -> "Size":
+        """Creates a square Size where width and height are the same."""
+        return Size(dimension, dimension)
 
+    @classmethod
+    def from_width(cls, width: Number) -> "Size":
+        """Creates a Size with the given width and an infinite height."""
+        return Size(width, float("inf"))
 
-def square(dimension: Number) -> Size:
-    """Creates a square Size where width and height are the same."""
-    return Size(dimension, dimension)
+    @classmethod
+    def from_height(cls, height: Number) -> "Size":
+        """Creates a Size with the given height and an infinite width."""
+        return Size(float("inf"), height)
 
-
-def from_width(width: Number) -> Size:
-    """Creates a Size with the given width and an infinite height."""
-    return Size(width, float("inf"))
-
-
-def from_height(height: Number) -> Size:
-    """Creates a Size with the given height and an infinite width."""
-    return Size(float("inf"), height)
-
-
-def from_radius(radius: Number) -> Size:
-    """Creates a square Size whose width and height are twice the given radius."""
-    return Size(radius * 2.0, radius * 2.0)
+    @classmethod
+    def from_radius(cls, radius: Number) -> "Size":
+        """Creates a square Size whose width and height are twice the given radius."""
+        return Size(radius * 2.0, radius * 2.0)
 
 
 # Constants

@@ -67,7 +67,7 @@ from flet.controls.types import (
     ThemeMode,
     Wrapper,
 )
-from flet.utils import classproperty, deprecated, deprecated_warning, is_pyodide
+from flet.utils import classproperty, is_pyodide
 
 if TYPE_CHECKING:
     from flet.messaging.session import Session
@@ -369,16 +369,15 @@ class Page(AdaptiveControl):
         self.route = route if not kwargs else route + self.query.post(kwargs)
 
         if not skip_route_change_event:
-            self.run_task(
-                self.__on_route_change.get_handler(),
-                ControlEvent(
-                    target="page",
-                    name="route_change",
-                    data=self.route,
-                    page=self,
-                    control=self,
-                ),
+            e = RouteChangeEvent(
+                name="route_change", control=self, data=self.route, route=self.route
             )
+            if self.on_route_change:
+                if asyncio.iscoroutinefunction(self.on_route_change):
+                    self.run_task(self.on_route_change, e)
+                elif callable(self.on_route_change):
+                    self.on_route_change(e)
+
         self.update()
         self.query()  # Update query url (required when using go)
 
@@ -541,33 +540,6 @@ class Page(AdaptiveControl):
             ),
         )
 
-    @deprecated(
-        reason="Use page.clipboard.set() instead.",
-        version="0.70.0",
-        delete_version="0.73.0",
-        show_parentheses=True,
-    )
-    def set_clipboard(self, value: str, timeout: Optional[float] = 10) -> None:
-        self.clipboard.set(value, timeout=timeout)
-
-    @deprecated(
-        reason="Use page.clipboard.get() instead.",
-        version="0.70.0",
-        delete_version="0.73.0",
-        show_parentheses=True,
-    )
-    async def get_clipboard(self, timeout: Optional[float] = 10) -> Optional[str]:
-        return await self.clipboard.get_async(timeout=timeout)
-
-    @deprecated(
-        reason="Use page.clipboard.get() instead.",
-        version="0.70.0",
-        delete_version="0.73.0",
-        show_parentheses=True,
-    )
-    async def get_clipboard_async(self, timeout: Optional[float] = 10) -> Optional[str]:
-        return await self.clipboard.get_async(timeout=timeout)
-
     def launch_url(
         self,
         url: str,
@@ -648,15 +620,6 @@ class Page(AdaptiveControl):
         self._dialogs.controls.append(dialog)
         self._dialogs.update()
 
-    @deprecated(
-        reason="Use page.show_dialog() instead.",
-        version="0.70.0",
-        delete_version="0.73.0",
-        show_parentheses=True,
-    )
-    def open(self, control: DialogControl) -> None:
-        self.show_dialog(control)
-
     def pop_dialog(self) -> Optional[DialogControl]:
         # get the top most opened dialog
         dialog = next(
@@ -668,19 +631,6 @@ class Page(AdaptiveControl):
         setattr(dialog, "_force_close", True)
         dialog.update()
         return dialog
-
-    @deprecated(
-        reason="Use page.pop_dialog() instead.",
-        version="0.70.0",
-        delete_version="0.73.0",
-        show_parentheses=True,
-    )
-    def close(self, control: Control) -> None:
-        if hasattr(control, "open"):
-            control.open = False
-            control.update()
-        else:
-            raise ValueError(f"{control.__class__.__qualname__} has no open attribute")
 
     # query
     @property
@@ -721,17 +671,6 @@ class Page(AdaptiveControl):
     @property
     def overlay(self) -> List[Control]:
         return self._overlay.controls
-
-    # client_storage
-    @property
-    def client_storage(self) -> SharedPreferences:
-        deprecated_warning(
-            name="page.client_storage",
-            reason="Use page.shared_preferences instead.",
-            version="0.70.0",
-            delete_version="0.73.0",
-        )
-        return self.shared_preferences
 
     # session_storage
     @property

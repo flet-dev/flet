@@ -15,7 +15,6 @@ from flet.controls.types import (
     OptionalNumber,
     StrOrControl,
 )
-from flet.utils import deprecated_warning
 
 __all__ = ["NavigationRail", "NavigationRailDestination", "NavigationRailLabelType"]
 
@@ -28,20 +27,10 @@ class NavigationRailLabelType(Enum):
 
 @control("NavigationRailDestination")
 class NavigationRailDestination(Control):
-    def __setattr__(self, name, value):
-        if name == "label_content" and value is not None:
-            deprecated_warning(
-                name="label_content",
-                reason="Use label instead.",
-                version="0.70.0",
-                delete_version="0.73.0",
-            )
-        super().__setattr__(name, value)
 
     icon: Optional[IconValueOrControl] = None
     selected_icon: Optional[IconValueOrControl] = None
     label: Optional[StrOrControl] = None
-    label_content: Optional[Control] = None  # todo(0.70.3): remove in favor of label
     padding: OptionalPaddingValue = None
     indicator_color: OptionalColorValue = None
     indicator_shape: Optional[OutlinedBorder] = None

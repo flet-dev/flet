@@ -1,15 +1,8 @@
-from dataclasses import field
-from typing import Optional
-
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.dialog_control import DialogControl
 from flet.controls.padding import OptionalPaddingValue
-from flet.controls.types import (
-    OptionalColorValue,
-    OptionalControlEventCallable,
-    OptionalNumber,
-)
+from flet.controls.types import OptionalColorValue, OptionalNumber
 
 __all__ = ["CupertinoBottomSheet"]
 

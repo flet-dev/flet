@@ -22,7 +22,7 @@ class ScatterChartEventData extends Equatable {
 
   const ScatterChartEventData({required this.eventType, this.spotIndex});
 
-  Map<String, dynamic> toJson() => {'type': eventType, 'spot_index': spotIndex};
+  Map<String, dynamic> toMap() => {'type': eventType, 'spot_index': spotIndex};
 
   @override
   List<Object?> get props => [eventType, spotIndex];
@@ -96,8 +96,8 @@ class _ScatterChartControlState extends State<ScatterChartControl> {
         borderData: border != null
             ? FlBorderData(show: true, border: border)
             : FlBorderData(show: false),
-        gridData: parseChartGridData(Theme.of(context), widget.control,
-            "horizontal_grid_lines", "vertical_grid_lines"),
+        gridData: parseChartGridData(widget.control, "horizontal_grid_lines",
+            "vertical_grid_lines", Theme.of(context)),
         scatterTouchData: ScatterTouchData(
             enabled: interactive,
             touchCallback: widget.control.getBool("on_chart_event", false)!
@@ -111,7 +111,7 @@ class _ScatterChartControlState extends State<ScatterChartControl> {
                     debugPrint(
                         "ScatterChart ${widget.control.id} ${eventData.eventType}");
                     widget.control
-                        .triggerEvent("chart_event", eventData.toJson());
+                        .triggerEvent("chart_event", eventData.toMap());
                   }
                 : null,
             // mouseCursorResolver: (evt, resp) {

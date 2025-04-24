@@ -25,6 +25,7 @@ ButtonStyle? parseButtonStyle(dynamic value, ThemeData theme,
     EdgeInsets? defaultPadding,
     BorderSide? defaultBorderSide,
     OutlinedBorder? defaultShape,
+    TextStyle? defaultTextStyle,
     ButtonStyle? defaultValue}) {
   if (value == null) return defaultValue;
   return ButtonStyle(
@@ -41,21 +42,21 @@ ButtonStyle? parseButtonStyle(dynamic value, ThemeData theme,
     elevation: parseWidgetStateDouble(value["elevation"],
         defaultDouble: defaultElevation),
     animationDuration: parseDuration(value["animation_duration"]),
-    padding: getWidgetStateProperty<EdgeInsetsGeometry?>(
-        value["padding"], (jv) => parseEdgeInsets(jv), defaultPadding),
+    padding: parseWidgetStatePadding(value["padding"],
+        defaultPadding: defaultPadding),
     side: getWidgetStateProperty<BorderSide?>(
         value["side"],
         (jv) => parseBorderSide(jv, theme,
             defaultSideColor: theme.colorScheme.outline),
         defaultBorderSide),
-    shape: getWidgetStateProperty<OutlinedBorder?>(
-        value["shape"], (jv) => parseOutlinedBorder(jv), defaultShape),
+    shape: parseWidgetStateOutlinedBorder(value["shape"], theme,
+        defaultOutlinedBorder: defaultShape),
     iconColor: parseWidgetStateColor(value["icon_color"], theme,
         defaultColor: defaultForegroundColor),
     alignment: parseAlignment(value["alignment"]),
     enableFeedback: parseBool(value["enable_feedback"]),
-    textStyle: getWidgetStateProperty<TextStyle?>(
-        value["text_style"], (jv) => parseTextStyle(jv, theme)),
+    textStyle: parseWidgetStateTextStyle(value["text_style"], theme,
+        defaultTextStyle: defaultTextStyle),
     iconSize: parseWidgetStateDouble(value["icon_size"]),
     visualDensity: parseVisualDensity(value["visual_density"]),
     mouseCursor: parseWidgetStateMouseCursor(value["mouse_cursor"]),
@@ -123,7 +124,7 @@ class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
   String toString() => 'CustomFloatingActionButtonLocation(dx: $dx, dy: $dy)';
 }
 
-CupertinoButtonSize? parseSizeStyle(String? value,
+CupertinoButtonSize? parseCupertinoButtonSize(String? value,
     [CupertinoButtonSize? defaultValue]) {
   if (value == null) return defaultValue;
   return CupertinoButtonSize.values.firstWhereOrNull(
@@ -162,8 +163,8 @@ extension ButtonParsers on Control {
     return parseFloatingActionButtonLocation(get(propertyName), defaultValue);
   }
 
-  CupertinoButtonSize? getSizeStyle(String propertyName,
+  CupertinoButtonSize? getCupertinoButtonSize(String propertyName,
       [CupertinoButtonSize? defaultValue]) {
-    return parseSizeStyle(get(propertyName), defaultValue);
+    return parseCupertinoButtonSize(get(propertyName), defaultValue);
   }
 }

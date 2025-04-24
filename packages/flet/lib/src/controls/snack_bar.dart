@@ -49,12 +49,12 @@ class _SnackBarControlState extends State<SnackBarControl> {
     }
 
     var actionName = widget.control.getString("action", "")!;
-    SnackBarAction? action = actionName != ""
+    SnackBarAction? action = actionName != "" // fixme
         ? SnackBarAction(
             label: actionName,
             textColor: widget.control.getColor("action_color", context),
             onPressed: () {
-              backend.triggerControlEvent(widget.control, "action");
+              widget.control.triggerEvent("action");
             })
         : null;
 
@@ -78,7 +78,7 @@ class _SnackBarControlState extends State<SnackBarControl> {
             widget.control.getString("clip_behavior"), Clip.hardEdge)!,
         actionOverflowThreshold:
             widget.control.getDouble("action_overflow_threshold"),
-        shape: widget.control.getOutlinedBorder("shape"),
+        shape: widget.control.getOutlinedBorder("shape", Theme.of(context)),
         onVisible: () {
           backend.triggerControlEvent(widget.control, "visible");
         },

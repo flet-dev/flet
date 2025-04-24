@@ -15,7 +15,6 @@ from flet.controls.types import (
     OptionalColorValue,
     OptionalEventCallable,
     OptionalNumber,
-    TextAlign,
 )
 
 

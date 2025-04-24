@@ -12,6 +12,7 @@ from flet.controls.types import (
     ImageFit,
     ImageRepeat,
     Number,
+    OptionalBool,
     OptionalColorValue,
     OptionalNumber,
 )
@@ -25,8 +26,18 @@ __all__ = [
     "ShadowBlurStyle",
     "BoxShape",
     "BoxConstraints",
+    "BoxFit",
     "ShadowValue",
     "OptionalShadowValue",
+    "OptionalBoxDecoration",
+    "OptionalBoxShadow",
+    "OptionalDecorationImage",
+    "OptionalColorFilter",
+    "OptionalFilterQuality",
+    "OptionalShadowBlurStyle",
+    "OptionalBoxShape",
+    "OptionalBoxConstraints",
+    "OptionalBoxFit",
 ]
 
 
@@ -68,6 +79,16 @@ class BoxShape(Enum):
     CIRCLE = "circle"
 
 
+class BoxFit(Enum):
+    NONE = "none"
+    CONTAIN = "contain"
+    COVER = "cover"
+    FILL = "fill"
+    FIT_HEIGHT = "fitHeight"
+    FIT_WIDTH = "fitWidth"
+    SCALE_DOWN = "scaleDown"
+
+
 @dataclass
 class DecorationImage:
     src: Optional[str] = None
@@ -76,12 +97,12 @@ class DecorationImage:
     fit: Optional[ImageFit] = None
     alignment: Optional[Alignment] = None
     repeat: Optional[ImageRepeat] = None
-    match_text_direction: Optional[bool] = None
+    match_text_direction: OptionalBool = None
     scale: OptionalNumber = None
     opacity: OptionalNumber = None
     filter_quality: Optional[FilterQuality] = None
-    invert_colors: Optional[bool] = None
-    anti_alias: Optional[bool] = None
+    invert_colors: OptionalBool = None
+    anti_alias: OptionalBool = None
 
 
 @dataclass
@@ -110,3 +131,15 @@ class BoxConstraints:
         assert (
             0 <= self.min_height <= self.max_height <= float("inf")
         ), "min_height and max_height must be between 0 and infinity and min_height must be less than or equal to max_height"
+
+
+# typing
+OptionalBoxDecoration = Optional[BoxDecoration]
+OptionalBoxShadow = Optional[BoxShadow]
+OptionalDecorationImage = Optional[DecorationImage]
+OptionalColorFilter = Optional[ColorFilter]
+OptionalFilterQuality = Optional[FilterQuality]
+OptionalShadowBlurStyle = Optional[ShadowBlurStyle]
+OptionalBoxShape = Optional[BoxShape]
+OptionalBoxConstraints = Optional[BoxConstraints]
+OptionalBoxFit = Optional[BoxFit]

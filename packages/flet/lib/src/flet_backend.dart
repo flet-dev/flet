@@ -190,9 +190,9 @@ class FletBackend extends ChangeNotifier {
               'width': page.get("width"),
               'height': page.get("height"),
               'platform': page.get("platform"),
-              'window': page.child("window")!.toJson(),
+              'window': page.child("window")!.toMap(),
               'media': page.get("media"),
-            }).toJson()));
+            }).toMap()));
   }
 
   _onClientRegistered(RegisterClientResponseBody resp) {
@@ -285,7 +285,7 @@ class FletBackend extends ChangeNotifier {
         action: MessageAction.controlEvent,
         payload: ControlEventBody(
                 target: controlId, name: eventName, data: eventData)
-            .toJson()));
+            .toMap()));
   }
 
   void _sendRouteChangeEvent(String route) {
@@ -306,9 +306,9 @@ class FletBackend extends ChangeNotifier {
   void updatePageSize(Size newSize) async {
     debugPrint("Page size updated: $newSize");
     pageSize = newSize;
-    var eventData = {"width": newSize.width, "height": newSize.height};
-    updateControl(page.id, eventData);
-    triggerControlEvent(page, "resized", eventData);
+    var newProps = {"width": newSize.width, "height": newSize.height};
+    updateControl(page.id, newProps);
+    triggerControlEvent(page, "resized", newProps);
 
     if (isDesktopPlatform()) {
       var windowState = await getWindowState();
@@ -335,7 +335,7 @@ class FletBackend extends ChangeNotifier {
   void updateMedia(PageMediaData newMedia) {
     debugPrint("Page media updated: $newMedia");
     media = newMedia;
-    updateControl(page.id, {"media": newMedia.toJson()});
+    updateControl(page.id, {"media": newMedia.toMap()});
     triggerControlEvent(page, "media_change");
     notifyListeners();
   }
@@ -364,7 +364,7 @@ class FletBackend extends ChangeNotifier {
       if (python && !isLoading) {
         _send(Message(
             action: MessageAction.updateControl,
-            payload: UpdateControlBody(id: id, props: props).toJson()));
+            payload: UpdateControlBody(id: id, props: props).toMap()));
       }
     }
   }
@@ -382,7 +382,7 @@ class FletBackend extends ChangeNotifier {
   }
 
   _onMessage(Message message) {
-    debugPrint("Received message: ${message.toJson()}");
+    debugPrint("Received message: ${message.toList()}");
     //debugPrint("message.payload: ${message.payload}");
     switch (message.action) {
       case MessageAction.registerClient:
@@ -433,7 +433,7 @@ class FletBackend extends ChangeNotifier {
                 callId: req.callId,
                 result: result,
                 error: error)
-            .toJson()));
+            .toMap()));
   }
 
   _onSessionCrashed(SessionCrashedBody body) {

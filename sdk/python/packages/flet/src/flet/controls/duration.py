@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import date, datetime
 from typing import Optional, Union
 
 __all__ = [
@@ -11,6 +11,8 @@ __all__ = [
     "MICROSECONDS_PER_MINUTE",
     "MICROSECONDS_PER_HOUR",
     "MICROSECONDS_PER_DAY",
+    "DateTimeValue",
+    "OptionalDateTimeValue",
 ]
 
 MICROSECONDS_PER_MILLISECOND = 1_000
@@ -183,5 +185,7 @@ class Duration:
         return self.in_microseconds >= other.in_microseconds
 
 
-DurationValue = Union[int, Duration]
+DurationValue = Union[Duration, int]
 OptionalDurationValue = Optional[DurationValue]
+DateTimeValue = Union[datetime, date]
+OptionalDateTimeValue = Optional[DateTimeValue]

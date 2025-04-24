@@ -78,7 +78,7 @@ class _CheckboxControlState extends State<CheckboxControl> {
         value: _value,
         isError: widget.control.getBool("is_error", false)!,
         semanticLabel: widget.control.getString("semantics_label"),
-        shape: widget.control.getShape("shape"),
+        shape: widget.control.getShape("shape", Theme.of(context)),
         side: widget.control
             .getWidgetStateBorderSide("border_side", Theme.of(context)),
         splashRadius: widget.control.getDouble("splash_radius"),
@@ -109,7 +109,8 @@ class _CheckboxControlState extends State<CheckboxControl> {
     if (widget.control.disabled && labelStyle != null) {
       labelStyle = labelStyle.apply(color: Theme.of(context).disabledColor);
     }
-    var label = widget.control.buildTextOrWidget("label", style: labelStyle);
+    var label =
+        widget.control.buildTextOrWidget("label", textStyle: labelStyle);
     if (label != null) {
       label = widget.control.disabled
           ? label

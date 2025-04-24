@@ -1,6 +1,6 @@
 from flet.controls.control_event import ControlEvent
 from flet.controls.core.column import Column
-from flet.controls.core.container import Container, ContainerTapEvent
+from flet.controls.material.container import Container, ContainerTapEvent
 from flet.controls.material.elevated_button import ElevatedButton
 from flet.controls.page import Page, PageResizeEvent
 from flet.controls.scrollable_control import OnScrollEvent
@@ -37,10 +37,10 @@ def test_create_event_typed_data():
             "control": c,
             "name": "some_event",
             "data": None,
-            "lx": 1,
-            "ly": 2,
-            "gx": 4,
-            "gy": 5,
+            "local_x": 1,
+            "local_y": 2,
+            "global_x": 4,
+            "global_y": 5,
         },
     )
 

@@ -1,5 +1,4 @@
 import asyncio
-import gc
 import logging
 import traceback
 import weakref
@@ -26,6 +25,8 @@ from flet.utils.patch_dataclass import patch_dataclass
 from flet.utils.strings import random_string
 
 logger = logging.getLogger("flet")
+
+__all__ = ["Session"]
 
 
 class Session:
@@ -127,36 +128,54 @@ class Session:
     # - add-only list
     # - disable mount/unmount
 
-    async def dispatch_event(self, control_id: int, event_name: str, event_data: Any):
-        if control := self.__index.get(control_id):
-            field_name = f"on_{event_name}"
-            try:
-                event_type = ControlEvent.get_event_field_type(control, field_name)
-                if event_type is not None:
-                    if event_type == ControlEvent or not isinstance(event_data, dict):
-                        # simple event
-                        e = ControlEvent(
-                            control=control, name=event_name, data=event_data
-                        )
-                    else:
-                        # custom event
-                        args = dict(event_data)
-                        args["control"] = control
-                        args["name"] = event_name
-                        args["data"] = event_data
-                        e = from_dict(event_type, args)
-                    if hasattr(control, field_name):
-                        event_handler = getattr(control, field_name)
-                        UpdateBehavior.reset()
-                        if asyncio.iscoroutinefunction(event_handler):
-                            await event_handler(e)
-                        elif callable(event_handler):
-                            event_handler(e)
-                        if UpdateBehavior.auto_update_enabled():
-                            self.auto_update(control)
-            except Exception as ex:
-                tb = traceback.format_exc()
-                self.error(f"Exception in '{field_name}': {ex}\n{tb}")
+    async def dispatch_event(
+        self,
+        control_id: int,
+        event_name: str,
+        event_data: Any,
+    ):
+        control = self.__index.get(control_id)
+        if not control:
+            # control not found
+            print("control not found:", control_id)
+            return
+
+        field_name = f"on_{event_name}"
+        if not hasattr(control, field_name):
+            # field_name not defined
+            return
+        try:
+            event_type = ControlEvent.get_event_field_type(control, field_name)
+            print("event_type:", event_type)
+            if event_type is None:
+                return
+
+            if event_type == ControlEvent or not isinstance(event_data, dict):
+                # simple ControlEvent
+                e = ControlEvent(control=control, name=event_name, data=event_data)
+            else:
+                # custom ControlEvent
+                args = {
+                    "control": control,
+                    "name": event_name,
+                    **(event_data or {}),
+                }
+                e = from_dict(event_type, args)
+
+            UpdateBehavior.reset()
+
+            # Handle async and sync event handlers accordingly
+            event_handler = getattr(control, field_name)
+            if asyncio.iscoroutinefunction(event_handler):
+                await event_handler(e)
+            elif callable(event_handler):
+                event_handler(e)
+
+            if UpdateBehavior.auto_update_enabled():
+                self.auto_update(control)
+        except Exception as ex:
+            tb = traceback.format_exc()
+            self.error(f"Exception in '{field_name}': {ex}\n{tb}")
 
     def invoke_method(self, control_id: int, call_id: str, method_name: str, args: Any):
         self.connection.send_message(
@@ -199,7 +218,9 @@ class Session:
             control_cls=BaseControl,
         )
 
-        # print(f"\n\nadded_controls ({len(added_controls)}):", added_controls)
+        # print(f"\n\nadded_controls: ({len(added_controls)})")
+        # for ac in added_controls:
+        #     print(f"added_control: {ac._c}({ac._i})")
         # print(f"\n\nremoved_controls ({len(removed_controls)}):", removed_controls)
 
         return patch.to_graph(), added_controls, removed_controls

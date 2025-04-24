@@ -1,8 +1,18 @@
 import 'dart:ui' as ui;
 
-import 'package:flet/flet.dart';
+import 'package:flet/src/extensions/control.dart';
+import 'package:flet/src/utils/alignment.dart';
+import 'package:flet/src/utils/borders.dart';
+import 'package:flet/src/utils/colors.dart';
+import 'package:flet/src/utils/drawing.dart';
+import 'package:flet/src/utils/numbers.dart';
 import 'package:flutter/material.dart';
 
+import '../models/control.dart';
+import '../utils/dash_path.dart';
+import '../utils/images.dart';
+import '../utils/text.dart';
+import '../utils/transforms.dart';
 import 'base_controls.dart';
 
 typedef CanvasControlOnPaintCallback = void Function(Size size);
@@ -39,8 +49,8 @@ class _CanvasControlState extends State<CanvasControl> {
                 _lastSize == null) {
               _lastResize = now;
               _lastSize = size;
-              widget.control
-                  .triggerEvent("resize", {"w": size.width, "h": size.height});
+              widget.control.triggerEvent(
+                  "resize", {"width": size.width, "height": size.height});
             }
           }
         },

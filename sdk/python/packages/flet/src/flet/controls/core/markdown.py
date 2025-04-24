@@ -8,7 +8,7 @@ from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.core.text import TextSelectionChangeEvent
 from flet.controls.padding import OptionalPaddingValue
-from flet.controls.text_style import TextStyle
+from flet.controls.text_style import OptionalTextStyle
 from flet.controls.types import (
     MainAxisAlignment,
     OptionalControlEventCallable,
@@ -36,34 +36,34 @@ class MarkdownExtensionSet(Enum):
 
 @dataclass
 class MarkdownStyleSheet:
-    a_text_style: Optional[TextStyle] = None
-    p_text_style: Optional[TextStyle] = None
+    a_text_style: OptionalTextStyle = None
+    p_text_style: OptionalTextStyle = None
     p_padding: OptionalPaddingValue = None
-    code_text_style: Optional[TextStyle] = None
-    h1_text_style: Optional[TextStyle] = None
+    code_text_style: OptionalTextStyle = None
+    h1_text_style: OptionalTextStyle = None
     h1_padding: OptionalPaddingValue = None
-    h2_text_style: Optional[TextStyle] = None
+    h2_text_style: OptionalTextStyle = None
     h2_padding: OptionalPaddingValue = None
-    h3_text_style: Optional[TextStyle] = None
+    h3_text_style: OptionalTextStyle = None
     h3_padding: OptionalPaddingValue = None
-    h4_text_style: Optional[TextStyle] = None
+    h4_text_style: OptionalTextStyle = None
     h4_padding: OptionalPaddingValue = None
-    h5_text_style: Optional[TextStyle] = None
+    h5_text_style: OptionalTextStyle = None
     h5_padding: OptionalPaddingValue = None
-    h6_text_style: Optional[TextStyle] = None
+    h6_text_style: OptionalTextStyle = None
     h6_padding: OptionalPaddingValue = None
-    em_text_style: Optional[TextStyle] = None
-    strong_text_style: Optional[TextStyle] = None
-    del_text_style: Optional[TextStyle] = None
-    blockquote_text_style: Optional[TextStyle] = None
-    img_text_style: Optional[TextStyle] = None
-    checkbox_text_style: Optional[TextStyle] = None
+    em_text_style: OptionalTextStyle = None
+    strong_text_style: OptionalTextStyle = None
+    del_text_style: OptionalTextStyle = None
+    blockquote_text_style: OptionalTextStyle = None
+    img_text_style: OptionalTextStyle = None
+    checkbox_text_style: OptionalTextStyle = None
     block_spacing: OptionalNumber = None
     list_indent: OptionalNumber = None
-    list_bullet_text_style: Optional[TextStyle] = None
+    list_bullet_text_style: OptionalTextStyle = None
     list_bullet_padding: OptionalPaddingValue = None
-    table_head_text_style: Optional[TextStyle] = None
-    table_body_text_style: Optional[TextStyle] = None
+    table_head_text_style: OptionalTextStyle = None
+    table_body_text_style: OptionalTextStyle = None
     table_head_text_align: Optional[TextAlign] = None
     table_padding: OptionalPaddingValue = None
     table_cells_padding: OptionalPaddingValue = None
@@ -181,53 +181,53 @@ class MarkdownCodeTheme(Enum):
 
 @dataclass
 class MarkdownCustomCodeTheme:
-    addition: Optional[TextStyle] = None
-    attr: Optional[TextStyle] = None
-    attribute: Optional[TextStyle] = None
-    built_in: Optional[TextStyle] = None
-    builtin_name: Optional[TextStyle] = None
-    bullet: Optional[TextStyle] = None
-    class_name: Optional[TextStyle] = None
-    code: Optional[TextStyle] = None
-    comment: Optional[TextStyle] = None
-    deletion: Optional[TextStyle] = None
-    doctag: Optional[TextStyle] = None
-    emphasis: Optional[TextStyle] = None
-    formula: Optional[TextStyle] = None
-    function: Optional[TextStyle] = None
-    keyword: Optional[TextStyle] = None
-    link: Optional[TextStyle] = None
-    link_label: Optional[TextStyle] = None
-    literal: Optional[TextStyle] = None
-    meta: Optional[TextStyle] = None
-    meta_keyword: Optional[TextStyle] = None
-    meta_string: Optional[TextStyle] = None
-    name: Optional[TextStyle] = None
-    number: Optional[TextStyle] = None
-    operator: Optional[TextStyle] = None
-    params: Optional[TextStyle] = None
-    pattern_match: Optional[TextStyle] = None
-    quote: Optional[TextStyle] = None
-    regexp: Optional[TextStyle] = None
-    root: Optional[TextStyle] = None
-    section: Optional[TextStyle] = None
-    selector_attr: Optional[TextStyle] = None
-    selector_class: Optional[TextStyle] = None
-    selector_id: Optional[TextStyle] = None
-    selector_pseudo: Optional[TextStyle] = None
-    selector_tag: Optional[TextStyle] = None
-    string: Optional[TextStyle] = None
-    strong: Optional[TextStyle] = None
-    stronge: Optional[TextStyle] = None
-    subst: Optional[TextStyle] = None
-    subtr: Optional[TextStyle] = None
-    symbol: Optional[TextStyle] = None
-    tag: Optional[TextStyle] = None
-    template_tag: Optional[TextStyle] = None
-    template_variable: Optional[TextStyle] = None
-    title: Optional[TextStyle] = None
-    type: Optional[TextStyle] = None
-    variable: Optional[TextStyle] = None
+    addition: OptionalTextStyle = None
+    attr: OptionalTextStyle = None
+    attribute: OptionalTextStyle = None
+    built_in: OptionalTextStyle = None
+    builtin_name: OptionalTextStyle = None
+    bullet: OptionalTextStyle = None
+    class_name: OptionalTextStyle = None
+    code: OptionalTextStyle = None
+    comment: OptionalTextStyle = None
+    deletion: OptionalTextStyle = None
+    doctag: OptionalTextStyle = None
+    emphasis: OptionalTextStyle = None
+    formula: OptionalTextStyle = None
+    function: OptionalTextStyle = None
+    keyword: OptionalTextStyle = None
+    link: OptionalTextStyle = None
+    link_label: OptionalTextStyle = None
+    literal: OptionalTextStyle = None
+    meta: OptionalTextStyle = None
+    meta_keyword: OptionalTextStyle = None
+    meta_string: OptionalTextStyle = None
+    name: OptionalTextStyle = None
+    number: OptionalTextStyle = None
+    operator: OptionalTextStyle = None
+    params: OptionalTextStyle = None
+    pattern_match: OptionalTextStyle = None
+    quote: OptionalTextStyle = None
+    regexp: OptionalTextStyle = None
+    root: OptionalTextStyle = None
+    section: OptionalTextStyle = None
+    selector_attr: OptionalTextStyle = None
+    selector_class: OptionalTextStyle = None
+    selector_id: OptionalTextStyle = None
+    selector_pseudo: OptionalTextStyle = None
+    selector_tag: OptionalTextStyle = None
+    string: OptionalTextStyle = None
+    strong: OptionalTextStyle = None
+    stronge: OptionalTextStyle = None
+    subst: OptionalTextStyle = None
+    subtr: OptionalTextStyle = None
+    symbol: OptionalTextStyle = None
+    tag: OptionalTextStyle = None
+    template_tag: OptionalTextStyle = None
+    template_variable: OptionalTextStyle = None
+    title: OptionalTextStyle = None
+    type: OptionalTextStyle = None
+    variable: OptionalTextStyle = None
 
 
 @control("Markdown")

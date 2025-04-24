@@ -1,5 +1,5 @@
-import time
-from dataclasses import dataclass, field
+import asyncio
+from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
@@ -7,8 +7,14 @@ from flet.controls.animation import AnimationCurve
 from flet.controls.base_control import control
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
-from flet.controls.duration import OptionalDurationValue
-from flet.controls.types import Number, OptionalEventCallable, ScrollMode
+from flet.controls.duration import Duration, DurationValue
+from flet.controls.types import (
+    Number,
+    OptionalEventCallable,
+    OptionalNumber,
+    OptionalString,
+    ScrollMode,
+)
 
 __all__ = ["ScrollableControl", "OnScrollEvent", "ScrollType", "ScrollDirection"]
 
@@ -29,17 +35,15 @@ class ScrollDirection(Enum):
 
 @dataclass
 class OnScrollEvent(ControlEvent):
-    event_type: ScrollType = field(metadata={"data_field": "t"})
-    pixels: float = field(metadata={"data_field": "p"})
-    min_scroll_extent: float = field(metadata={"data_field": "minse"})
-    max_scroll_extent: float = field(metadata={"data_field": "maxse"})
-    viewport_dimension: float = field(metadata={"data_field": "vd"})
-    scroll_delta: Optional[float] = field(metadata={"data_field": "sd"}, default=None)
-    direction: Optional[ScrollDirection] = field(
-        metadata={"data_field": "dir"}, default=None
-    )
-    overscroll: Optional[float] = field(metadata={"data_field": "os"}, default=None)
-    velocity: Optional[float] = field(metadata={"data_field": "v"}, default=None)
+    event_type: ScrollType
+    pixels: float
+    min_scroll_extent: float
+    max_scroll_extent: float
+    viewport_dimension: float
+    scroll_delta: Optional[float] = None
+    direction: Optional[ScrollDirection] = None
+    overscroll: Optional[float] = None
+    velocity: Optional[float] = None
 
 
 @control(kw_only=True)
@@ -47,27 +51,34 @@ class ScrollableControl(Control):
     scroll: Optional[ScrollMode] = None
     auto_scroll: bool = False
     reverse: bool = False
-    on_scroll_interval: Number = 10
+    on_scroll_interval: Number = 10  # todo: test that this value gets set
     on_scroll: OptionalEventCallable[OnScrollEvent] = None
 
     def scroll_to(
         self,
+        offset: OptionalNumber = None,
+        delta: OptionalNumber = None,
+        key: OptionalString = None,
+        duration: DurationValue = Duration(),
+        curve: AnimationCurve = AnimationCurve.EASE,
+    ):
+        asyncio.create_task(self.scroll_to_async(offset, delta, key, duration, curve))
+
+    async def scroll_to_async(
+        self,
         offset: Optional[float] = None,
         delta: Optional[float] = None,
         key: Optional[str] = None,
-        duration: OptionalDurationValue = None,
-        curve: Optional[AnimationCurve] = None,
+        duration: DurationValue = Duration(),
+        curve: AnimationCurve = AnimationCurve.EASE,
     ):
-        m = {
-            "n": "scroll_to",
-            "i": str(time.time()),
-            "p": {
+        await self._invoke_method_async(
+            "scroll_to",
+            {
                 "offset": offset,
                 "delta": delta,
                 "key": key,
                 "duration": duration,
-                "curve": curve.value if curve is not None else None,
+                "curve": curve,
             },
-        }
-        self._set_attr_json("method", m)
-        self.update()
+        )

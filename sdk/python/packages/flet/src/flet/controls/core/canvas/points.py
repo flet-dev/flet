@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, List, Optional
+from typing import List, Optional
 
 from flet.controls.base_control import control
 from flet.controls.core.canvas.shape import Shape

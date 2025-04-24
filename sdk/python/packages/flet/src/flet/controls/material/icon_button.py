@@ -30,36 +30,6 @@ class IconButton(ConstrainedControl, AdaptiveControl):
 
     Icon buttons are commonly used in the toolbars, but they can be used in many other places as well.
 
-    Example:
-    ```
-    import flet as ft
-
-    def main(page: ft.Page):
-        page.title = "Icon buttons"
-        page.add(
-            ft.Row(
-                [
-                    ft.IconButton(
-                        icon=ft.icons.PAUSE_CIRCLE_FILLED_ROUNDED,
-                        icon_color="blue400",
-                        icon_size=20,
-                        tooltip="Pause record",
-                    ),
-                    ft.IconButton(
-                        icon=ft.icons.DELETE_FOREVER_ROUNDED,
-                        icon_color="pink600",
-                        icon_size=40,
-                        tooltip="Delete record",
-                    ),
-                ]
-            ),
-        )
-
-    ft.app(target=main)
-    ```
-
-    -----
-
     Online docs: https://flet.dev/docs/controls/iconbutton
     """
 
@@ -100,13 +70,6 @@ class IconButton(ConstrainedControl, AdaptiveControl):
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
     content: Optional[Control] = None  # todo(0.70.3): remove in favor of icon
-
-    # def before_update(self):
-    #     super().before_update()
-    #     if self.__style is not None:
-    #         self.__style.side = self._wrap_attr_dict(self.__style.side)
-    #         self.__style.shape = self._wrap_attr_dict(self.__style.shape)
-    #         self.__style.padding = self._wrap_attr_dict(self.__style.padding)
 
     async def focus_async(self):
         await self._invoke_method_async("focus")

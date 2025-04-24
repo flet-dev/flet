@@ -30,10 +30,10 @@ class ExpansionTileControl extends StatelessWidget {
         .map((child) => ControlWidget(control: child, key: ValueKey(child.id)))
         .toList();
 
-    var leading = control.buildWidget("leading");
-    var title = control.buildWidget("title");
-    var subtitle = control.buildWidget("subtitle");
-    var trailing = control.buildWidget("trailing");
+    var leading = control.buildIconOrWidget("leading");
+    var title = control.buildTextOrWidget("title");
+    var subtitle = control.buildTextOrWidget("subtitle");
+    var trailing = control.buildIconOrWidget("trailing");
 
     if (title == null) {
       return const ErrorControl(
@@ -67,7 +67,7 @@ class ExpansionTileControl extends StatelessWidget {
 
     Function(bool)? onChange = !control.disabled
         ? (expanded) {
-            control.triggerEvent("change", "$expanded");
+            control.triggerEvent("change", expanded);
           }
         : null;
 
@@ -87,8 +87,8 @@ class ExpansionTileControl extends StatelessWidget {
       maintainState: maintainState,
       initiallyExpanded: initiallyExpanded,
       clipBehavior: clipBehavior,
-      shape: control.getShape("shape"),
-      collapsedShape: control.getShape("collapsed_shape"),
+      shape: control.getShape("shape", Theme.of(context)),
+      collapsedShape: control.getShape("collapsed_shape", Theme.of(context)),
       onExpansionChanged: onChange,
       visualDensity: control.getVisualDensity("visual_density"),
       enableFeedback: control.getBool("enable_feedback"),

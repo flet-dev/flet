@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from datetime import date, datetime
 from enum import Enum
 from typing import Any, Callable, Dict, List, Optional, Protocol, TypeVar, Union
 
@@ -58,8 +57,10 @@ Number = Union[int, float]
 ResponsiveNumber = Union[Dict[str, Number], Number]
 OptionalNumber = Optional[Number]
 
-# str type alias
+# literal type alias
 OptionalString = Optional[str]
+OptionalBool = Optional[bool]
+OptionalInt = Optional[int]
 
 
 class MainAxisAlignment(Enum):
@@ -154,6 +155,7 @@ class ClipBehavior(Enum):
     HARD_EDGE = "hardEdge"
 
 
+# todo: deprecate and remove in favor of BoxFit
 class ImageFit(Enum):
     NONE = "none"
     CONTAIN = "contain"
@@ -332,10 +334,6 @@ IconValueOrControl = Union[IconValue, "Control"]
 
 # Content
 StrOrControl = Union[str, "Control"]
-
-# DateTime
-DateTimeValue = Union[datetime, date]
-OptionalDateTimeValue = Optional[DateTimeValue]
 
 # Wrapper
 Wrapper = Callable[..., Any]

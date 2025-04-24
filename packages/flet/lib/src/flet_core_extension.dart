@@ -75,6 +75,7 @@ import 'controls/navigation_bar_destination.dart';
 import 'controls/navigation_drawer.dart';
 import 'controls/navigation_rail.dart';
 import 'controls/page.dart';
+import 'controls/pagelet.dart';
 import 'controls/pie_chart.dart';
 import 'controls/placeholder.dart';
 import 'controls/popup_menu_button.dart';
@@ -329,6 +330,8 @@ class FletCoreExtension extends FletExtension {
         return WindowControl(key: key, control: control);
       case "FilePicker":
         return FilePickerControl(key: key, control: control);
+      case "Pagelet":
+        return PageletControl(key: key, control: control);
       default:
         return null;
     }

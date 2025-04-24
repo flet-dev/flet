@@ -51,13 +51,11 @@ class _CupertinoNavigationBarControlState
         onTap: widget.control.disabled ? null : _onTap,
         items: widget.control.children("destinations").map((dest) {
           var icon = parseIcon(dest.getString("icon"));
-          var selectedIcon = parseIcon(dest.getString("selected_icon"));
           return BottomNavigationBarItem(
               tooltip: !dest.disabled ? dest.getString("tooltip") : null,
               backgroundColor: dest.getColor("bgcolor", context),
               icon: dest.buildWidget("icon") ?? Icon(icon),
-              activeIcon: dest.buildWidget("selected_icon") ??
-                  (selectedIcon != null ? Icon(selectedIcon) : null),
+              activeIcon: dest.buildIconOrWidget("selected_icon"),
               label: dest.getString("label", "")!);
         }).toList());
 

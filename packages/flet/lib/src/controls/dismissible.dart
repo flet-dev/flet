@@ -79,7 +79,7 @@ class _DismissibleControlState extends State<DismissibleControl> {
                             previousReached: details.previousReached,
                             progress: details.progress,
                             reached: details.reached)
-                        .toJson());
+                        .toMap());
               }
             : null,
         confirmDismiss: widget.control.getBool("on_confirm_dismiss", false)!
@@ -118,7 +118,7 @@ class DismissibleUpdateEvent {
       required this.previousReached,
       required this.reached});
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
+  Map<String, dynamic> toMap() => <String, dynamic>{
         'direction': direction,
         'progress': progress,
         'reached': reached,

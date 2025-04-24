@@ -31,10 +31,8 @@
 #
 
 import dataclasses
-import warnings
 import weakref
-from collections.abc import MutableMapping
-from typing import Any, Optional
+from typing import Any
 
 _ST_ADD = 0
 _ST_REMOVE = 1
@@ -270,7 +268,6 @@ class ObjectPatch(object):
 
 
 class DiffBuilder(object):
-
     def __init__(
         self,
         src_doc,
@@ -594,7 +591,6 @@ class DiffBuilder(object):
 
     def _configure_dataclass(self, item, parent):
         if dataclasses.is_dataclass(item):
-
             # set parent
             if parent:
                 # print(
@@ -620,20 +616,12 @@ class DiffBuilder(object):
                         # )
                         changes = getattr(obj, "__changes")
                         changes[name] = (old_value, new_value)
-                super(obj.__class__, obj).__setattr__(name, value)
+                object.__setattr__(obj, name, value)
 
             item.__class__.__setattr__ = control_setattr  # type: ignore
 
             if self.control_cls and isinstance(item, self.control_cls):
-                # call Control.build()
-                if hasattr(item, "build") and "build" in item.__class__.__dict__:
-                    warnings.warn(
-                        "'Control.build()' is deprecated. Use 'Control.init()' instead.",
-                        DeprecationWarning,
-                    )
-                    item.build()
-                else:
-                    item.init()
+                item.init()
 
             # recurse through fields
             for field in dataclasses.fields(item):

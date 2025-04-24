@@ -9,8 +9,7 @@ extension BadgeParsers on Control {
     } else if (badge is Control) {
       badge.notifyParent = true;
       return Badge(
-        label:
-            badge.buildTextOrWidget("label") ?? badge.buildTextOrWidget("text"),
+        label: badge.buildTextOrWidget("label"),
         isLabelVisible: badge.getBool("label_visible", true)!,
         offset: badge.getOffset("offset"),
         alignment: badge.getAlignment("alignment"),

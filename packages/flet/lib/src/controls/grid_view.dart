@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../controls/control_widget.dart';
 import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/edge_insets.dart';
@@ -12,7 +13,8 @@ import 'scrollable_control.dart';
 class GridViewControl extends StatefulWidget {
   final Control control;
 
-  const GridViewControl({super.key, required this.control});
+  GridViewControl({Key? key, required this.control})
+      : super(key: ValueKey(control.id));
 
   @override
   State<GridViewControl> createState() => _GridViewControlState();
@@ -51,8 +53,6 @@ class _GridViewControlState extends State<GridViewControl> {
     var clipBehavior =
         widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!;
 
-    var controls = widget.control.buildWidgets("controls");
-
     var gridView = LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         // debugPrint("GridView constraints.maxWidth: ${constraints.maxWidth}");
@@ -87,7 +87,7 @@ class _GridViewControlState extends State<GridViewControl> {
                 shrinkWrap: shrinkWrap,
                 padding: padding,
                 gridDelegate: gridDelegate,
-                children: controls,
+                children: widget.control.buildWidgets("controls"),
               )
             : GridView.builder(
                 scrollDirection: horizontal ? Axis.horizontal : Axis.vertical,
@@ -99,9 +99,10 @@ class _GridViewControlState extends State<GridViewControl> {
                 shrinkWrap: shrinkWrap,
                 padding: padding,
                 gridDelegate: gridDelegate,
-                itemCount: controls.length,
+                itemCount: widget.control.children("controls").length,
                 itemBuilder: (context, index) {
-                  return controls[index];
+                  return ControlWidget(
+                      control: widget.control.children("controls")[index]);
                 },
               );
 

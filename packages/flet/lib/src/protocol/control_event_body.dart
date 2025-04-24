@@ -6,6 +6,6 @@ class ControlEventBody {
   ControlEventBody(
       {required this.target, required this.name, required this.data});
 
-  Map<String, dynamic> toJson() =>
+  Map<String, dynamic> toMap() =>
       <String, dynamic>{'target': target, 'name': name, 'data': data};
 }

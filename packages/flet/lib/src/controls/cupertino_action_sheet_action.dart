@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../controls/control_widget.dart';
+import '../extensions/control.dart';
 import '../models/control.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
@@ -16,11 +16,10 @@ class CupertinoActionSheetActionControl extends StatelessWidget {
   Widget build(BuildContext context) {
     debugPrint("CupertinoActionSheetActionControl build: ${control.id}");
 
-    var content = control.get("content");
-    var text = control.getString("text"); // todo(0.73.0): remove "text"
-    if (content == null && text == null) {
+    var content = control.buildTextOrWidget("content");
+    if (content == null) {
       return const ErrorControl(
-          "CupertinoActionSheetAction.content must be set and visible");
+          "CupertinoActionSheetAction.content (string or visible Control) must be provided");
     }
 
     final actionSheet = CupertinoActionSheetAction(
@@ -32,13 +31,7 @@ class CupertinoActionSheetActionControl extends StatelessWidget {
         }
       },
       mouseCursor: control.getMouseCursor("mouse_cursor"),
-      child: content is Control
-          ? ControlWidget(control: content)
-          : content is String
-              ? Text(content)
-              : text is String
-                  ? Text(text)
-                  : const SizedBox.shrink(),
+      child: content,
     );
 
     return ConstrainedControl(control: control, child: actionSheet);

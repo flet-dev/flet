@@ -30,11 +30,11 @@ class PieChartEventData extends Equatable {
       required this.sectionIndex,
       this.localPosition});
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
+  Map<String, dynamic> toMap() => <String, dynamic>{
         'type': eventType,
         'section_index': sectionIndex,
-        "lx": localPosition?.dx,
-        "ly": localPosition?.dy
+        "local_x": localPosition?.dx,
+        "local_y": localPosition?.dy
       };
 
   @override
@@ -89,10 +89,8 @@ class _PieChartControlState extends State<PieChartControl> {
                   );
                   if (eventData != _eventData) {
                     _eventData = eventData;
-                    debugPrint(
-                        "PieChart ${widget.control.id} ${eventData.eventType}");
                     widget.control
-                        .triggerEvent("chart_event", eventData.toJson());
+                        .triggerEvent("chart_event", eventData.toMap());
                   }
                 }
               : null,

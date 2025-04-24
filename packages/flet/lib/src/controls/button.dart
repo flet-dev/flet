@@ -1,9 +1,6 @@
 import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/error.dart';
-import 'base_controls.dart';
-
 class ButtonControl extends StatefulWidget {
   final Control control;
 
@@ -57,19 +54,20 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
     bool isFilledTonalButton = widget.control.type == "FilledTonalButton";
     bool isTextButton = widget.control.type == "TextButton";
     bool isOutlinedButton = widget.control.type == "OutlinedButton";
-    String url = widget.control.getString("url", "")!;
-    Color? iconColor = widget.control.getColor("icon_color", context);
+
+    var url = widget.control.getString("url");
+    var iconColor = widget.control.getColor("icon_color", context);
+    var clipBehavior =
+        widget.control.getClipBehavior("clip_behavior", Clip.none)!;
+    var autofocus = widget.control.getBool("autofocus", false)!;
 
     Widget? iconWidget =
         widget.control.buildIconOrWidget("icon", color: iconColor);
 
-    var clipBehavior =
-        widget.control.getClipBehavior("clip_behavior", Clip.none)!;
-    bool autofocus = widget.control.getBool("autofocus", false)!;
 
     Function()? onPressed = !widget.control.disabled
         ? () {
-            if (url != "") {
+            if (url != null) {
               openWebBrowser(url,
                   webWindowName: widget.control.getString("url_target"));
             }
@@ -123,7 +121,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             clipBehavior: clipBehavior,
             icon: iconWidget,
             label: widget.control.buildTextOrWidget("content",
-                textPropertyName: "text", required: true, error: error)!);
+                required: true, errorWidget: error)!);
       } else if (isFilledTonalButton) {
         button = FilledButton.tonalIcon(
             style: style,
@@ -135,7 +133,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             clipBehavior: clipBehavior,
             icon: iconWidget,
             label: widget.control.buildTextOrWidget("content",
-                textPropertyName: "text", required: true, error: error)!);
+                required: true, errorWidget: error)!);
       } else if (isTextButton) {
         button = TextButton.icon(
           autofocus: autofocus,
@@ -147,7 +145,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
           clipBehavior: clipBehavior,
           icon: iconWidget,
           label: widget.control.buildTextOrWidget("content",
-              textPropertyName: "text", required: true, error: error)!,
+              required: true, errorWidget: error)!,
         );
       } else if (isOutlinedButton) {
         button = OutlinedButton.icon(
@@ -159,7 +157,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             style: style,
             icon: iconWidget,
             label: widget.control.buildTextOrWidget("content",
-                textPropertyName: "text", required: true, error: error)!);
+                required: true, errorWidget: error)!);
       } else {
         button = ElevatedButton.icon(
             style: style,
@@ -171,7 +169,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             clipBehavior: clipBehavior,
             icon: iconWidget,
             label: widget.control.buildTextOrWidget("content",
-                textPropertyName: "text", required: true, error: error)!);
+                required: true, errorWidget: error)!);
       }
     } else {
       if (isFilledButton) {
@@ -183,8 +181,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: widget.control
-                .buildTextOrWidget("content", textPropertyName: "text"));
+            child: widget.control.buildTextOrWidget("content"));
       } else if (isFilledTonalButton) {
         button = FilledButton.tonal(
             style: style,
@@ -194,8 +191,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: widget.control
-                .buildTextOrWidget("content", textPropertyName: "text"));
+            child: widget.control.buildTextOrWidget("content"));
       } else if (isTextButton) {
         button = TextButton(
             autofocus: autofocus,
@@ -205,9 +201,8 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: widget.control
-                    .buildTextOrWidget("content", textPropertyName: "text") ??
-                const Text(""));
+            child:
+                widget.control.buildTextOrWidget("content") ?? const Text(""));
       } else if (isOutlinedButton) {
         button = OutlinedButton(
             autofocus: autofocus,
@@ -217,8 +212,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             clipBehavior: clipBehavior,
             onHover: onHoverHandler,
             style: style,
-            child: widget.control
-                .buildTextOrWidget("content", textPropertyName: "text"));
+            child: widget.control.buildTextOrWidget("content"));
       } else {
         button = ElevatedButton(
             style: style,
@@ -228,8 +222,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
             onLongPress: onLongPressHandler,
             onHover: onHoverHandler,
             clipBehavior: clipBehavior,
-            child: widget.control
-                .buildTextOrWidget("content", textPropertyName: "text"));
+            child: widget.control.buildTextOrWidget("content"));
       }
     }
 

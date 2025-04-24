@@ -3,8 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'base_controls.dart';
-
 class CupertinoTextFieldControl extends StatefulWidget {
   final Control control;
 
@@ -254,23 +252,23 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         padding:
             widget.control.getPadding("padding", const EdgeInsets.all(7.0))!,
         stylusHandwritingEnabled:
-            widget.control.getBool("enable_stylus_handwriting") ??
-                widget.control.getBool(
-                    "enable_scribble") ?? // todo(0.73.0): remove enable_scribble
-                true,
+            widget.control.getBool("enable_stylus_handwriting", true)!,
         scrollPadding: widget.control
             .getPadding("scroll_padding", const EdgeInsets.all(20.0))!,
         obscuringCharacter:
             widget.control.getString("obscuring_character", '•')!,
-        cursorOpacityAnimates: widget.control
-            .getBool("animate_cursor_opacity", Theme.of(context).platform == TargetPlatform.iOS)!,
+        cursorOpacityAnimates:
+            widget.control.getBool("animate_cursor_opacity", isIOSMobile())!,
         expands: fitParentSize,
-        enableIMEPersonalizedLearning: widget.control.getBool("enable_ime_personalizedLearning", true)!,
-        clipBehavior: widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
+        enableIMEPersonalizedLearning:
+            widget.control.getBool("enable_ime_personalized_learning", true)!,
+        clipBehavior:
+            widget.control.getClipBehavior("clip_behavior", Clip.hardEdge)!,
         cursorColor: cursorColor,
         autofillHints: parseAutofillHints(widget.control.get("autofill_hints")),
         keyboardAppearance: widget.control.getBrightness("keyboard_brightness"),
-        enableInteractiveSelection: widget.control.getBool("enable_interactive_selection"),
+        enableInteractiveSelection:
+            widget.control.getBool("enable_interactive_selection"),
         clearButtonMode: widget.control.getOverlayVisibilityMode("clear_button_visibility_mode", OverlayVisibilityMode.never)!,
         strutStyle: widget.control.getStrutStyle("strut_style"),
         onTap: () => widget.control.triggerEvent("click"),

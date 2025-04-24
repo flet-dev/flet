@@ -1,6 +1,14 @@
-import 'package:flet/flet.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../extensions/control.dart';
+import '../models/control.dart';
+import '../utils/alignment.dart';
+import '../utils/borders.dart';
+import '../utils/buttons.dart';
+import '../utils/colors.dart';
+import '../utils/edge_insets.dart';
+import '../utils/launch_url.dart';
+import '../utils/numbers.dart';
 import 'base_controls.dart';
 
 class CupertinoButtonControl extends StatefulWidget {
@@ -53,23 +61,21 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     debugPrint("CupertinoButton build: ${widget.control.id}");
     Color? iconColor = widget.control.getColor("icon_color", context);
 
-    Widget? iconWidget =
-        widget.control.buildIconOrWidget("icon", color: iconColor);
-    Widget? contentWidget =
-        widget.control.buildTextOrWidget("content", textPropertyName: "text");
+    Widget? icon = widget.control.buildIconOrWidget("icon", color: iconColor);
+    Widget? content = widget.control.buildTextOrWidget("content");
 
     Widget child;
-    if (iconWidget != null) {
-      if (contentWidget != null) {
+    if (icon != null) {
+      if (content != null) {
         child = Row(
           mainAxisSize: MainAxisSize.min,
-          children: [iconWidget, const SizedBox(width: 8), contentWidget],
+          children: [icon, const SizedBox(width: 8), content],
         );
       } else {
-        child = iconWidget;
+        child = icon;
       }
     } else {
-      child = contentWidget ?? const Text("");
+      child = content ?? const Text("");
     }
 
     double pressedOpacity = widget.control.getDouble("opacity_on_click", 0.4)!;
@@ -78,22 +84,18 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     Color? bgColor = widget.control.getColor("bgcolor", context);
     Color? focusColor = widget.control.getColor("focus_color", context);
 
-    CupertinoButtonSize sizeStyle =
-        widget.control.getSizeStyle("size_style", CupertinoButtonSize.large)!;
+    CupertinoButtonSize sizeStyle = widget.control
+        .getCupertinoButtonSize("size_style", CupertinoButtonSize.large)!;
 
     var alignment = widget.control.getAlignment("alignment", Alignment.center)!;
     var borderRadius = widget.control.getBorderRadius(
         "border_radius", const BorderRadius.all(Radius.circular(8.0)))!;
 
     var padding = widget.control.getPadding("padding");
-    bool isFilledButton = {
-      "CupertinoFilledButton",
-      "FilledButton",
-    }.contains(widget.control.type);
-    bool isTintedButton = {
-      "CupertinoTintedButton",
-      "FilledTonalButton",
-    }.contains(widget.control.type);
+    bool isFilledButton =
+        {"CupertinoFilledButton", "FilledButton"}.contains(widget.control.type);
+    bool isTintedButton = {"CupertinoTintedButton", "FilledTonalButton"}
+        .contains(widget.control.type);
 
     // var style = widget.control.getButtonStyle("style", Theme.of(context),
     //     defaultForegroundColor: theme.colorScheme.primary,
@@ -125,6 +127,8 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     //   padding = style.padding?.resolve({}) as EdgeInsets?;
     // }
     var color = widget.control.getColor("color", context);
+    var disabledColor = widget.control.getColor(
+        "disabled_bgcolor", context, CupertinoColors.tertiarySystemFill)!;
     if (color != null) {
       child = DefaultTextStyle(
           style: CupertinoTheme.of(context)
@@ -133,10 +137,10 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
               .copyWith(color: color),
           child: child);
     }
-    var url = widget.control.getString("url", "")!;
+    var url = widget.control.getString("url");
     Function()? onPressed = !widget.control.disabled
         ? () {
-            if (url != "") {
+            if (url != null) {
               openWebBrowser(url,
                   webWindowName: widget.control.getString("url_target"));
             }
@@ -153,8 +157,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     if (isFilledButton) {
       button = CupertinoButton.filled(
         onPressed: onPressed,
-        disabledColor: widget.control.getColor(
-            "disabled_bgcolor", context, CupertinoColors.tertiarySystemFill)!,
+        disabledColor: disabledColor,
         //color: widget.control.getColor("bgcolor", context),
         padding: padding,
         borderRadius: borderRadius,
@@ -171,8 +174,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     } else if (isTintedButton) {
       button = CupertinoButton.tinted(
         onPressed: onPressed,
-        disabledColor: widget.control.getColor(
-            "disabled_bgcolor", context, CupertinoColors.tertiarySystemFill)!,
+        disabledColor: disabledColor,
         color: bgColor,
         padding: padding,
         borderRadius: borderRadius,
@@ -189,8 +191,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     } else {
       button = CupertinoButton(
         onPressed: onPressed,
-        disabledColor: widget.control.getColor(
-            "disabled_bgcolor", context, CupertinoColors.quaternarySystemFill)!,
+        disabledColor: disabledColor,
         color: bgColor,
         padding: padding,
         borderRadius: borderRadius,

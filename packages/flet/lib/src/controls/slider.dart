@@ -59,22 +59,11 @@ class _SliderControlState extends State<SliderControl> {
   @override
   Widget build(BuildContext context) {
     debugPrint("SliderControl build: ${widget.control.id}");
-    // bool? adaptive =
-    //     widget.control.attrBool("adaptive") ?? widget.parentAdaptive;
-    // if (adaptive == true &&
-    //     (platform == TargetPlatform.iOS ||
-    //         platform == TargetPlatform.macOS)) {
-    //   return CupertinoSliderControl(
-    //       control: widget.control,
-    //       parentDisabled: widget.parentDisabled,
-    //       backend: widget.backend);
-    // }
 
-    String? label = widget.control.getString("label");
-
-    double min = widget.control.getDouble("min", 0)!;
-    double max = widget.control.getDouble("max", 1)!;
-    int round = widget.control.getInt("round", 0)!;
+    var label = widget.control.getString("label");
+    var min = widget.control.getDouble("min", 0)!;
+    var max = widget.control.getDouble("max", 1)!;
+    var round = widget.control.getInt("round", 0)!;
 
     double value = widget.control.getDouble("value", min)!;
     if (_value != value) {
@@ -95,6 +84,7 @@ class _SliderControlState extends State<SliderControl> {
         min: min,
         max: max,
         year2023: widget.control.getBool("year_2023"),
+        // todo: remove
         divisions: widget.control.getInt("divisions"),
         label: label?.replaceAll("{value}", _value.toStringAsFixed(round)),
         activeColor: widget.control.getColor("active_color", context),

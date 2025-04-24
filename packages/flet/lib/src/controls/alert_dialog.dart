@@ -75,7 +75,7 @@ class _AlertDialogControlState extends State<AlertDialogControl> {
       actions: actions,
       actionsPadding: widget.control.getPadding("actions_padding"),
       actionsAlignment: actionsAlignment,
-      shape: widget.control.getShape("shape"),
+      shape: widget.control.getShape("shape", Theme.of(context)),
       semanticLabel: widget.control.getString("semantics_label"),
       insetPadding: widget.control.getPadding("inset_padding",
           const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0))!,

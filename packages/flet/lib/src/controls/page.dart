@@ -163,7 +163,7 @@ class _PageControlState extends State<PageControl> with FletStoreMixin {
                         HardwareKeyboard.instance.isControlPressed,
                     isShiftPressed: HardwareKeyboard.instance.isShiftPressed,
                     isMetaPressed: HardwareKeyboard.instance.isMetaPressed)
-                .toJson());
+                .toMap());
       }
     }
     return false;

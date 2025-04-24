@@ -46,7 +46,7 @@ class AppBarControl extends StatelessWidget implements PreferredSizeWidget {
       clipBehavior: control.getClipBehavior("clip_behavior"),
       titleTextStyle:
           control.getTextStyle("title_text_style", Theme.of(context)),
-      shape: control.getShape("shape"),
+      shape: control.getShape("shape", Theme.of(context)),
       toolbarOpacity: control.getDouble("toolbar_opacity", 1)!,
       toolbarTextStyle:
           parseTextStyle(control.get("toolbar_text_style"), Theme.of(context)),

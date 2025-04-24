@@ -13,7 +13,6 @@ from flet.controls.types import (
     StrOrControl,
     UrlTarget,
 )
-from flet.utils.deprecated import deprecated_warning
 
 __all__ = ["TextButton"]
 
@@ -42,16 +41,6 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/textbutton
     """
 
-    def __setattr__(self, name, value):
-        if name == "text" and value is not None:
-            deprecated_warning(
-                name="text",
-                reason="Use content instead.",
-                version="0.70.0",
-                delete_version="0.73.0",
-            )
-        super().__setattr__(name, value)
-
     content: Optional[StrOrControl] = None
     icon: Optional[IconValueOrControl] = None
     icon_color: OptionalColorValue = None
@@ -65,15 +54,6 @@ class TextButton(ConstrainedControl, AdaptiveControl):
     on_hover: OptionalControlEventCallable = None
     on_focus: OptionalControlEventCallable = None
     on_blur: OptionalControlEventCallable = None
-    text: Optional[str] = None  # todo(0.70.3): remove in favor of content
-
-    # def before_update(self):
-    #     super().before_update()
-    #     if self.__style is not None:
-    #         self.__style.side = self._wrap_attr_dict(self.__style.side)
-    #         self.__style.shape = self._wrap_attr_dict(self.__style.shape)
-    #         self.__style.padding = self._wrap_attr_dict(self.__style.padding)
-    #     self._set_attr_json("style", self.__style)
 
     async def focus_async(self):
         await self._invoke_method_async("focus")

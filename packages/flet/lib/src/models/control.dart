@@ -89,8 +89,8 @@ class Control extends ChangeNotifier {
   ///
   /// - [eventName]: The name of the event to trigger.
   /// - [eventData]: Optional data to pass along with the event.
-  void triggerEvent(String eventName, [dynamic eventData]) {
-    return backend.triggerControlEvent(this, eventName, eventData);
+  void triggerEvent(String eventName, [dynamic data]) {
+    return backend.triggerControlEvent(this, eventName, data);
   }
 
   /// Updates the properties of this control.
@@ -358,16 +358,16 @@ class Control extends ChangeNotifier {
     return results.length == 1 ? results[0] : results;
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return Map.fromEntries(
       properties.entries.where((e) => e.value != null).map((e) {
         if (e.value is Control) {
-          return MapEntry(e.key, (e.value as Control).toJson());
+          return MapEntry(e.key, (e.value as Control).toMap());
         } else if (e.value is List &&
             e.value.isNotEmpty &&
             e.value.first is Control) {
           return MapEntry(e.key,
-              (e.value as List).map((c) => (c as Control).toJson()).toList());
+              (e.value as List).map((c) => (c as Control).toMap()).toList());
         } else {
           return MapEntry(e.key, e.value);
         }
@@ -377,7 +377,7 @@ class Control extends ChangeNotifier {
 
   @override
   String toString() {
-    return "Control(${toJson()})";
+    return toMap().toString();
   }
 
   @override

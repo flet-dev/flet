@@ -1,5 +1,4 @@
 import contextvars
-from contextlib import contextmanager
 
 
 class UpdateBehavior:

@@ -50,7 +50,7 @@ class _ChipControlState extends State<ChipControl> {
     debugPrint("Chip build: ${widget.control.id}");
     bool disabled = widget.control.disabled;
 
-    var label = widget.control.buildWidget("label");
+    var label = widget.control.buildTextOrWidget("label");
     if (label == null) {
       return const ErrorControl("Chip.label must be provided and visible");
     }
@@ -91,7 +91,7 @@ class _ChipControlState extends State<ChipControl> {
       selectedShadowColor:
           widget.control.getColor("selected_shadow_color", context),
       shadowColor: widget.control.getColor("shadow_color", context),
-      shape: widget.control.getShape("shape"),
+      shape: widget.control.getShape("shape", Theme.of(context)),
       color: widget.control.getWidgetStateColor("color", Theme.of(context)),
       surfaceTintColor: widget.control.getColor("surface_tint_color", context),
       pressElevation: widget.control.getDouble("click_elevation"),
