@@ -179,13 +179,13 @@ class _SearchBarControlState extends State<SearchBarControl> {
         viewOnSubmitted: onSubmit
             ? (String value) {
                 _updateValue(value);
-                widget.control.triggerEvent("submit", value);
+                widget.control.triggerEvent("submit", data: value);
               }
             : null,
         viewOnChanged: onChange
             ? (String value) {
                 _updateValue(value);
-                widget.control.triggerEvent("change", value);
+                widget.control.triggerEvent("change", data: value);
               }
             : null,
         viewSurfaceTintColor:
@@ -230,13 +230,13 @@ class _SearchBarControlState extends State<SearchBarControl> {
             onSubmitted: onSubmit
                 ? (String value) {
                     _updateValue(value);
-                    widget.control.triggerEvent("submit", value);
+                    widget.control.triggerEvent("submit", data: value);
                   }
                 : null,
             onChanged: onChange
                 ? (String value) {
                     _updateValue(value);
-                    widget.control.triggerEvent("change", value);
+                    widget.control.triggerEvent("change", data: value);
                   }
                 : null,
           );

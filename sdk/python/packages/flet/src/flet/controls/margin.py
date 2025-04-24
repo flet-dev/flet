@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from typing import Optional, Union
 
-__all__ = ["Margin", "MarginValue", "OptionalMarginValue"]
-
 from flet.controls.types import Number
+
+__all__ = ["Margin", "MarginValue", "OptionalMarginValue"]
 
 
 @dataclass

@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
@@ -17,7 +17,7 @@ from flet.controls.box import (
 )
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
-from flet.controls.control_event import ControlEvent
+from flet.controls.core.gesture_detector import TapEvent
 from flet.controls.gradients import Gradient
 from flet.controls.margin import OptionalMarginValue
 from flet.controls.padding import OptionalPaddingValue
@@ -25,7 +25,6 @@ from flet.controls.theme import Theme
 from flet.controls.types import (
     BlendMode,
     ClipBehavior,
-    Number,
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalEventCallable,
@@ -37,11 +36,8 @@ __all__ = ["Container", "ContainerTapEvent"]
 
 
 @dataclass
-class ContainerTapEvent(ControlEvent):
-    local_x: Number = field(metadata={"data_field": "lx"})
-    local_y: Number = field(metadata={"data_field": "ly"})
-    global_x: Number = field(metadata={"data_field": "gx"})
-    global_y: Number = field(metadata={"data_field": "gy"})
+class ContainerTapEvent(TapEvent):
+    pass
 
 
 @control("Container")

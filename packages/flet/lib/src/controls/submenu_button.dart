@@ -73,7 +73,7 @@ class _SubmenuButtonControlState extends State<SubmenuButtonControl> {
           ? () => widget.control.triggerEvent("close")
           : null,
       onHover: onHover && !widget.control.disabled
-          ? (bool value) => widget.control.triggerEvent("hover", value)
+          ? (bool value) => widget.control.triggerEvent("hover", data: value)
           : null,
       onOpen: onOpen && !widget.control.disabled
           ? () => widget.control.triggerEvent("open")

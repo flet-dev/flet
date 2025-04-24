@@ -4,6 +4,7 @@ from typing import Any
 
 import flet_js
 import msgpack
+
 from flet.controls.base_control import BaseControl
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
@@ -24,10 +25,7 @@ logger = logging.getLogger("flet")
 
 
 class PyodideConnection(Connection):
-    def __init__(
-        self,
-        on_session_created,
-    ):
+    def __init__(self, on_session_created):
         super().__init__()
         self.__receive_queue = asyncio.Queue()
         self.__on_session_created = on_session_created
@@ -54,7 +52,7 @@ class PyodideConnection(Connection):
     async def __on_message(self, data: Any):
         action = ClientAction(data[0])
         body = data[1]
-        print(f"_on_message: {action} {body}")
+        # print(f"_on_message: {action} {body}")
         task = None
         if action == ClientAction.REGISTER_CLIENT:
             req = RegisterClientRequestBody(**body)
@@ -86,7 +84,9 @@ class PyodideConnection(Connection):
 
         elif action == ClientAction.CONTROL_EVENT:
             req = ControlEventBody(**body)
-            await self.session.dispatch_event(req.target, req.name, req.data)
+            await self.session.dispatch_event(
+                req.target, req.name, req.data, req.fields
+            )
 
         elif action == ClientAction.UPDATE_CONTROL_PROPS:
             req = UpdateControlPropsBody(**body)

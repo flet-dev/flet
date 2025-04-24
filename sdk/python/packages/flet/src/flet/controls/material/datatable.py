@@ -26,8 +26,8 @@ from flet.controls.types import (
 
 @dataclass
 class DataColumnSortEvent(ControlEvent):
-    column_index: int = field(metadata={"data_field": "i"})
-    ascending: bool = field(metadata={"data_field": "a"}, default=False)
+    column_index: int
+    ascending: bool = False
 
 
 @control("column")
@@ -76,9 +76,11 @@ class DataColumn(Control):
     If not set, the column will not be considered sortable.
     """
 
-    # def before_update(self):
-    #     super().before_update()
-    #     assert self.label.visible, "label must be visible"
+    def before_update(self):
+        super().before_update()
+        assert isinstance(self.label, str) or (
+            isinstance(self.label, Control) and self.label.visible
+        ), "label must be visible"
 
 
 @control("cell")

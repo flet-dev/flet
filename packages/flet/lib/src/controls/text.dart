@@ -30,7 +30,7 @@ class TextControl extends StatelessWidget {
       control.children("spans"),
       control.disabled,
       (Control control, String eventName, String eventData) {
-        control.triggerEvent(eventName, eventData);
+        control.triggerEvent(eventName, data: eventData);
       },
     );
     String? semanticsLabel = control.getString("semantics_label");
@@ -88,20 +88,10 @@ class TextControl extends StatelessWidget {
         parseTextOverflow(control.getString("overflow"), TextOverflow.clip)!;
 
     onSelectionChanged(TextSelection selection, SelectionChangedCause? cause) {
-      control.triggerEvent("selection_change", {
+      control.triggerEvent("selection_change", fields: {
         "text": text,
         "cause": cause?.name ?? "unknown",
-        "selection": {
-          "start": selection.start,
-          "end": selection.end,
-          "base_offset": selection.baseOffset,
-          "extent_offset": selection.extentOffset,
-          "affinity": selection.affinity.name,
-          "directional": selection.isDirectional,
-          "collapsed": selection.isCollapsed,
-          "valid": selection.isValid,
-          "normalized": selection.isNormalized,
-        }
+        "selection": selection.toMap(),
       });
     }
 

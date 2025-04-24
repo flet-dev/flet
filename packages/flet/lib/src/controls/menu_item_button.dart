@@ -69,7 +69,7 @@ class _MenuItemButtonControlState extends State<MenuItemButtonControl> {
       autofocus: widget.control.getBool("autofocus", false)!,
       overflowAxis: widget.control.getAxis("overflow_axis", Axis.horizontal)!,
       onHover: onHover && !widget.control.disabled
-          ? (bool value) => widget.control.triggerEvent("hover", value)
+          ? (bool value) => widget.control.triggerEvent("hover", data: value)
           : null,
       onPressed: onClick && !widget.control.disabled
           ? () => widget.control.triggerEvent("click")

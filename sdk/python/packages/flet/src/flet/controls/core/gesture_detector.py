@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import List, Optional
 
 from flet.controls.adaptive_control import AdaptiveControl
@@ -6,6 +6,7 @@ from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control import Control
 from flet.controls.control_event import ControlEvent
+from flet.controls.duration import Duration
 from flet.controls.types import MouseCursor, OptionalEventCallable, PointerDeviceType
 
 __all__ = [
@@ -118,113 +119,119 @@ class GestureDetector(ConstrainedControl, AdaptiveControl):
 
 @dataclass
 class TapEvent(ControlEvent):
-    local_x: Optional[float] = field(metadata={"data_field": "lx"})
-    local_y: Optional[float] = field(metadata={"data_field": "ly"})
-    global_x: Optional[float] = field(metadata={"data_field": "gx"})
-    global_y: Optional[float] = field(metadata={"data_field": "gy"})
-    kind: Optional[str] = field(metadata={"data_field": "kind"})
+    kind: Optional[str] = None
+    local_x: Optional[float] = None
+    local_y: Optional[float] = None
+    global_x: Optional[float] = None
+    global_y: Optional[float] = None
 
 
 @dataclass
 class MultiTapEvent(ControlEvent):
-    correct_touches: bool = field(metadata={"data_field": "correct"})
+    correct_touches: bool
 
 
 @dataclass
 class LongPressStartEvent(ControlEvent):
-    local_x: float = field(metadata={"data_field": "lx"})
-    local_y: float = field(metadata={"data_field": "ly"})
-    global_x: float = field(metadata={"data_field": "gx"})
-    global_y: float = field(metadata={"data_field": "gy"})
+    local_x: float
+    local_y: float
+    global_x: float
+    global_y: float
 
 
 @dataclass
 class LongPressEndEvent(ControlEvent):
-    local_x: float = field(metadata={"data_field": "lx"})
-    local_y: float = field(metadata={"data_field": "ly"})
-    global_x: float = field(metadata={"data_field": "gx"})
-    global_y: float = field(metadata={"data_field": "gy"})
-    velocity_x: float = field(metadata={"data_field": "vx"})
-    velocity_y: float = field(metadata={"data_field": "vy"})
+    local_x: float
+    local_y: float
+    global_x: float
+    global_y: float
+    velocity_x: float
+    velocity_y: float
 
 
 @dataclass
 class DragStartEvent(ControlEvent):
-    kind: str = field(metadata={"data_field": "kind"})
-    local_x: float = field(metadata={"data_field": "lx"})
-    local_y: float = field(metadata={"data_field": "ly"})
-    global_x: float = field(metadata={"data_field": "gx"})
-    global_y: float = field(metadata={"data_field": "gy"})
-    timestamp: Optional[int] = field(metadata={"data_field": "ts"})
+    kind: str
+    local_x: float
+    local_y: float
+    global_x: float
+    global_y: float
+    timestamp: Optional[Duration] = None
 
 
 @dataclass
 class DragUpdateEvent(ControlEvent):
-    delta_x: float = field(metadata={"data_field": "dx"})
-    delta_y: float = field(metadata={"data_field": "dy"})
-    primary_delta: Optional[float] = field(metadata={"data_field": "pd"})
-    local_x: float = field(metadata={"data_field": "lx"})
-    local_y: float = field(metadata={"data_field": "ly"})
-    global_x: float = field(metadata={"data_field": "gx"})
-    global_y: float = field(metadata={"data_field": "gy"})
-    timestamp: Optional[int] = field(metadata={"data_field": "ts"})
+    local_x: float
+    local_y: float
+    global_x: float
+    global_y: float
+    delta_x: float
+    delta_y: float
+    primary_delta: Optional[float] = None
+    timestamp: Optional[Duration] = None
 
 
 @dataclass
 class DragEndEvent(ControlEvent):
-    primary_velocity: Optional[float] = field(metadata={"data_field": "pv"})
-    velocity_x: float = field(metadata={"data_field": "vx"})
-    velocity_y: float = field(metadata={"data_field": "vy"})
+    local_x: float
+    local_y: float
+    global_x: float
+    global_y: float
+    velocity_x: float
+    velocity_y: float
+    primary_velocity: Optional[float] = None
 
 
 @dataclass
 class ScaleStartEvent(ControlEvent):
-    focal_point_x: float = field(metadata={"data_field": "fpx"})
-    focal_point_y: float = field(metadata={"data_field": "fpy"})
-    local_focal_point_x: float = field(metadata={"data_field": "lfpx"})
-    local_focal_point_y: float = field(metadata={"data_field": "lfpy"})
-    pointer_count: int = field(metadata={"data_field": "pc"})
+    focal_point_x: float
+    focal_point_y: float
+    local_focal_point_x: float
+    local_focal_point_y: float
+    pointer_count: int
+    timestamp: Optional[Duration] = None
 
 
 @dataclass
 class ScaleUpdateEvent(ControlEvent):
-    focal_point_x: float = field(metadata={"data_field": "fpx"})
-    focal_point_y: float = field(metadata={"data_field": "fpy"})
-    focal_point_delta_x: float = field(metadata={"data_field": "fpdx"})
-    focal_point_delta_y: float = field(metadata={"data_field": "fpdy"})
-    local_focal_point_x: float = field(metadata={"data_field": "lfpx"})
-    local_focal_point_y: float = field(metadata={"data_field": "lfpy"})
-    pointer_count: int = field(metadata={"data_field": "pc"})
-    horizontal_scale: float = field(metadata={"data_field": "hs"})
-    vertical_scale: float = field(metadata={"data_field": "vs"})
-    scale: float = field(metadata={"data_field": "s"})
-    rotation: float = field(metadata={"data_field": "r"})
+    focal_point_x: float
+    focal_point_y: float
+    focal_point_delta_x: float
+    focal_point_delta_y: float
+    local_focal_point_x: float
+    local_focal_point_y: float
+    pointer_count: int
+    horizontal_scale: float
+    vertical_scale: float
+    scale: float
+    rotation: float
+    timestamp: Optional[Duration] = None
 
 
 @dataclass
 class ScaleEndEvent(ControlEvent):
-    pointer_count: int = field(metadata={"data_field": "pc"})
-    velocity_x: float = field(metadata={"data_field": "vx"})
-    velocity_y: float = field(metadata={"data_field": "vy"})
+    pointer_count: int
+    velocity_x: float
+    velocity_y: float
 
 
 @dataclass
 class HoverEvent(ControlEvent):
-    timestamp: float = field(metadata={"data_field": "ts"})
-    kind: str = field(metadata={"data_field": "kind"})
-    global_x: float = field(metadata={"data_field": "lx"})
-    global_y: float = field(metadata={"data_field": "ly"})
-    local_x: float = field(metadata={"data_field": "gx"})
-    local_y: float = field(metadata={"data_field": "gy"})
-    delta_x: Optional[float] = field(metadata={"data_field": "dx"})
-    delta_y: Optional[float] = field(metadata={"data_field": "dy"})
+    kind: str
+    local_x: float
+    local_y: float
+    global_x: float
+    global_y: float
+    timestamp: Duration
+    delta_x: Optional[float] = None
+    delta_y: Optional[float] = None
 
 
 @dataclass
 class ScrollEvent(ControlEvent):
-    global_x: float = field(metadata={"data_field": "lx"})
-    global_y: float = field(metadata={"data_field": "ly"})
-    local_x: float = field(metadata={"data_field": "gx"})
-    local_y: float = field(metadata={"data_field": "gy"})
-    scroll_delta_x: Optional[float] = field(metadata={"data_field": "dx"})
-    scroll_delta_y: Optional[float] = field(metadata={"data_field": "dy"})
+    local_x: float
+    local_y: float
+    global_x: float
+    global_y: float
+    scroll_delta_x: float
+    scroll_delta_y: float

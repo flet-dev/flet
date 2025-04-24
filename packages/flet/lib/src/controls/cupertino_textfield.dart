@@ -202,7 +202,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
         enabled: !widget.control.disabled,
         onSubmitted: !multiline
             ? (String value) {
-                widget.control.triggerEvent("submit", value);
+                widget.control.triggerEvent("submit", data: value);
               }
             : null,
         decoration: defaultDecoration?.copyWith(
@@ -283,7 +283,7 @@ class _CupertinoTextFieldControlState extends State<CupertinoTextFieldControl> {
           _value = value;
           widget.control.updateProperties({"value": value});
           if (onChange) {
-            widget.control.triggerEvent("change", value);
+            widget.control.triggerEvent("change", data: value);
           }
         });
 

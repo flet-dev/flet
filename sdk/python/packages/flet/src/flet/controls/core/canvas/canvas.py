@@ -11,8 +11,8 @@ from flet.controls.types import OptionalEventCallable, OptionalNumber
 
 @dataclass
 class CanvasResizeEvent(ControlEvent):
-    width: float = field(metadata={"data_field": "w"})
-    height: float = field(metadata={"data_field": "h"})
+    width: float
+    height: float
 
 
 @control("Canvas")
@@ -20,4 +20,4 @@ class Canvas(ConstrainedControl):
     shapes: List[Shape] = field(default_factory=list)
     content: Optional[Control] = None
     resize_interval: OptionalNumber = None
-    on_resize = OptionalEventCallable[CanvasResizeEvent]
+    on_resize: OptionalEventCallable[CanvasResizeEvent] = None

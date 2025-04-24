@@ -24,7 +24,7 @@ class LineChartEventData extends Equatable {
 
   const LineChartEventData({required this.eventType, required this.barSpots});
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
+  Map<String, dynamic> toMap() => <String, dynamic>{
         'type': eventType,
         'spots': barSpots,
       };
@@ -40,7 +40,7 @@ class LineChartEventDataSpot extends Equatable {
   const LineChartEventDataSpot(
       {required this.barIndex, required this.spotIndex});
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
+  Map<String, dynamic> toMap() => <String, dynamic>{
         'bar_index': barIndex,
         'spot_index': spotIndex,
       };
@@ -173,8 +173,8 @@ class _LineChartControlState extends State<LineChartControl> {
           borderData: border != null
               ? FlBorderData(show: true, border: border)
               : FlBorderData(show: false),
-          gridData: parseChartGridData(Theme.of(context), widget.control,
-              "horizontal_grid_lines", "vertical_grid_lines"),
+          gridData: parseChartGridData(widget.control, "horizontal_grid_lines",
+              "vertical_grid_lines", Theme.of(context)),
           lineBarsData: barsData,
           lineTouchData: LineTouchData(
             enabled: interactive,
@@ -299,7 +299,7 @@ class _LineChartControlState extends State<LineChartControl> {
                           dp.disabled,
                           (Control control, String eventName,
                               String eventData) {
-                            control.triggerEvent(eventName, eventData);
+                            control.triggerEvent(eventName, data: eventData);
                           },
                         )
                       : null;
@@ -325,10 +325,8 @@ class _LineChartControlState extends State<LineChartControl> {
                             : []);
                     if (eventData != _eventData) {
                       _eventData = eventData;
-                      debugPrint(
-                          "LineChart ${widget.control.id} ${eventData.eventType}");
-                      widget.control
-                          .triggerEvent("chart_event", eventData.toJson());
+                      widget.control.triggerEvent("chart_event",
+                          fields: eventData.toMap());
                     }
                   }
                 : null,

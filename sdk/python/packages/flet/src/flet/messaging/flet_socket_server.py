@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 import msgpack
+
 from flet.controls.base_control import BaseControl
 from flet.messaging.connection import Connection
 from flet.messaging.protocol import (
@@ -150,7 +151,9 @@ class FletSocketServer(Connection):
 
         elif action == ClientAction.CONTROL_EVENT:
             req = ControlEventBody(**body)
-            await self.session.dispatch_event(req.target, req.name, req.data)
+            await self.session.dispatch_event(
+                req.target, req.name, req.data, req.fields
+            )
 
         elif action == ClientAction.UPDATE_CONTROL_PROPS:
             req = UpdateControlPropsBody(**body)

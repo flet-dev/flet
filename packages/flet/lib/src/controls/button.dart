@@ -83,7 +83,7 @@ class _ButtonControlState extends State<ButtonControl> with FletStoreMixin {
 
     Function(bool)? onHoverHandler = !widget.control.disabled
         ? (state) {
-            widget.control.triggerEvent("hover", state);
+            widget.control.triggerEvent("hover", data: state);
           }
         : null;
 

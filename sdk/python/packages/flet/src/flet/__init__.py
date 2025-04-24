@@ -1,4 +1,5 @@
-from flet.app import run, run_async
+from flet.app import app, app_async, run, run_async
+from flet.controls import alignment
 from flet.controls.adaptive_control import AdaptiveControl
 from flet.controls.alignment import Alignment, Axis, OptionalAlignment, OptionalAxis
 from flet.controls.animation import (
@@ -115,7 +116,6 @@ from flet.controls.core.charts.scatter_chart import (
     ScatterShartTooltipAlignment,
 )
 from flet.controls.core.column import Column
-from flet.controls.core.container import Container, ContainerTapEvent
 from flet.controls.core.dismissible import (
     Dismissible,
     DismissibleDismissEvent,
@@ -273,6 +273,7 @@ from flet.controls.material.card import Card, CardVariant
 from flet.controls.material.checkbox import Checkbox
 from flet.controls.material.chip import Chip
 from flet.controls.material.circle_avatar import CircleAvatar
+from flet.controls.material.container import Container
 from flet.controls.material.datatable import (
     DataCell,
     DataColumn,

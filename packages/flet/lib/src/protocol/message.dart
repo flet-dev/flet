@@ -16,11 +16,11 @@ class Message {
 
   Message({required this.action, required this.payload});
 
-  dynamic toJson() => [action.value, payload];
+  dynamic toList() => [action.value, payload];
 
-  factory Message.fromJson(List<dynamic> json) {
+  factory Message.fromList(List<dynamic> value) {
     return Message(
-        action: MessageAction.values.firstWhere((e) => e.value == json[0]),
-        payload: json[1]);
+        action: MessageAction.values.firstWhere((e) => e.value == value[0]),
+        payload: value[1]);
   }
 }

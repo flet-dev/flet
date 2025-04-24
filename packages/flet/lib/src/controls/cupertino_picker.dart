@@ -79,7 +79,7 @@ class _CupertinoPickerControlState extends State<CupertinoPickerControl> {
       onSelectedItemChanged: (int index) {
         _index = index;
         widget.control.updateProperties({"selected_index": index});
-        widget.control.triggerEvent("change", index);
+        widget.control.triggerEvent("change", data: index);
       },
       children: widget.control.children("controls").map((c) {
         return Center(child: ControlWidget(control: c));

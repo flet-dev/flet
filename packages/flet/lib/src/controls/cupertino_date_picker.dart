@@ -19,7 +19,6 @@ class CupertinoDatePickerControl extends StatefulWidget {
 
 class _CupertinoDatePickerControlState
     extends State<CupertinoDatePickerControl> {
-  static const double _kItemExtent = 32.0;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +34,7 @@ class _CupertinoDatePickerControlState
         backgroundColor: widget.control.getColor("bgcolor", context),
         minimumYear: widget.control.getInt("minimum_year", 1)!,
         maximumYear: widget.control.getInt("maximum_year"),
-        itemExtent: widget.control.getDouble("item_extent", _kItemExtent)!,
+        itemExtent: widget.control.getDouble("item_extent", 32.0)!,
         minuteInterval: widget.control.getInt("minute_interval", 1)!,
         use24hFormat: widget.control.getBool("use_24h_format", false)!,
         dateOrder: widget.control.getDatePickerDateOrder("date_order"),
@@ -43,7 +42,7 @@ class _CupertinoDatePickerControlState
             "date_picker_mode", CupertinoDatePickerMode.dateAndTime)!,
         onDateTimeChanged: (DateTime value) {
           widget.control.updateProperties({"value": value});
-          widget.control.triggerEvent("change", value);
+          widget.control.triggerEvent("change", data: value);
         },
       );
     } catch (e) {

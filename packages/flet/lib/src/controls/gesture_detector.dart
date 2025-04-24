@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:flet/src/utils/events.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
 import '../models/control.dart';
+import '../utils/gesture_detector.dart';
 import '../utils/misc.dart';
 import '../utils/mouse.dart';
 import '../utils/numbers.dart';
@@ -51,10 +53,6 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
     debugPrint("GestureDetector build: ${widget.control.id}");
 
     var content = widget.control.buildWidget("content");
-
-    void sendEvent(String name, [dynamic data]) {
-      widget.control.triggerEvent(name, data);
-    }
 
     var onHover = widget.control.getBool("on_hover", false)!;
     var onEnter = widget.control.getBool("on_enter", false)!;
@@ -108,14 +106,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
       _panX = details.localPosition.dx;
       _panY = details.localPosition.dy;
       if (onPanStart) {
-        sendEvent("pan_start", {
-          "kind": details.kind?.name,
-          "lx": details.localPosition.dx,
-          "ly": details.localPosition.dy,
-          "gx": details.globalPosition.dx,
-          "gy": details.globalPosition.dy,
-          "ts": details.sourceTimeStamp?.inMilliseconds
-        });
+        widget.control.triggerEvent("pan_start", fields: details.toMap());
       }
     }
 
@@ -123,20 +114,10 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
       var now = DateTime.now().millisecondsSinceEpoch;
       if (now - _panTimestamp > dragInterval) {
         _panTimestamp = now;
-        var dx = details.localPosition.dx - _panX;
-        var dy = details.localPosition.dy - _panY;
+        widget.control
+            .triggerEvent("pan_update", fields: details.toMap(_panX, _panY));
         _panX = details.localPosition.dx;
         _panY = details.localPosition.dy;
-        sendEvent("pan_update", {
-          "dx": dx,
-          "dy": dy,
-          "pd": details.primaryDelta,
-          "lx": details.localPosition.dx,
-          "ly": details.localPosition.dy,
-          "gx": details.globalPosition.dx,
-          "gy": details.globalPosition.dy,
-          "ts": details.sourceTimeStamp?.inMilliseconds
-        });
       }
     }
 
@@ -144,14 +125,8 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
       _hDragX = details.localPosition.dx;
       _hDragY = details.localPosition.dy;
       if (onHorizontalDragStart) {
-        sendEvent("horizontal_drag_start", {
-          "kind": details.kind?.name,
-          "lx": details.localPosition.dx,
-          "ly": details.localPosition.dy,
-          "gx": details.globalPosition.dx,
-          "gy": details.globalPosition.dy,
-          "ts": details.sourceTimeStamp?.inMilliseconds
-        });
+        widget.control
+            .triggerEvent("horizontal_drag_start", fields: details.toMap());
       }
     }
 
@@ -159,20 +134,10 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
       var now = DateTime.now().millisecondsSinceEpoch;
       if (now - _hDragTimestamp > dragInterval) {
         _hDragTimestamp = now;
-        var dx = details.localPosition.dx - _hDragX;
-        var dy = details.localPosition.dy - _hDragY;
+        widget.control.triggerEvent("horizontal_drag_update",
+            fields: details.toMap(_hDragX, _hDragY));
         _hDragX = details.localPosition.dx;
         _hDragY = details.localPosition.dy;
-        sendEvent("horizontal_drag_update", {
-          "dx": dx,
-          "dy": dy,
-          "pd": details.primaryDelta,
-          "lx": details.localPosition.dx,
-          "ly": details.localPosition.dy,
-          "gx": details.globalPosition.dx,
-          "gy": details.globalPosition.dy,
-          "ts": details.sourceTimeStamp?.inMilliseconds
-        });
       }
     }
 
@@ -180,14 +145,8 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
       _vDragX = details.localPosition.dx;
       _vDragY = details.localPosition.dy;
       if (onVerticalDragStart) {
-        sendEvent("vertical_drag_start", {
-          "kind": details.kind?.name,
-          "lx": details.localPosition.dx,
-          "ly": details.localPosition.dy,
-          "gx": details.globalPosition.dx,
-          "gy": details.globalPosition.dy,
-          "ts": details.sourceTimeStamp?.inMilliseconds
-        });
+        widget.control
+            .triggerEvent("vertical_drag_start", fields: details.toMap());
       }
     }
 
@@ -195,20 +154,10 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
       var now = DateTime.now().millisecondsSinceEpoch;
       if (now - _vDragTimestamp > dragInterval) {
         _vDragTimestamp = now;
-        var dx = details.localPosition.dx - _vDragX;
-        var dy = details.localPosition.dy - _vDragY;
+        widget.control.triggerEvent("vertical_drag_update",
+            fields: details.toMap(_vDragX, _vDragY));
         _vDragX = details.localPosition.dx;
         _vDragY = details.localPosition.dy;
-        sendEvent("vertical_drag_update", {
-          "dx": dx,
-          "dy": dy,
-          "pd": details.primaryDelta,
-          "lx": details.localPosition.dx,
-          "ly": details.localPosition.dy,
-          "gx": details.globalPosition.dx,
-          "gy": details.globalPosition.dy,
-          "ts": details.sourceTimeStamp?.inMilliseconds
-        });
       }
     }
 
@@ -218,14 +167,7 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
       _hoverX = details.localPosition.dx;
       _hoverY = details.localPosition.dy;
       if (onEnter) {
-        sendEvent("enter", {
-          "ts": details.timeStamp.inMilliseconds,
-          "kind": details.kind.name,
-          "gx": details.position.dx,
-          "gy": details.position.dy,
-          "lx": details.localPosition.dx,
-          "ly": details.localPosition.dy
-        });
+        widget.control.triggerEvent("enter", fields: details.toMap());
       }
     }
 
@@ -233,20 +175,10 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
       var now = DateTime.now().millisecondsSinceEpoch;
       if (now - _hoverTimestamp > hoverInterval) {
         _hoverTimestamp = now;
-        var dx = details.localPosition.dx - _hoverX;
-        var dy = details.localPosition.dy - _hoverY;
+        widget.control
+            .triggerEvent("hover", fields: details.toMap(_hoverX, _hoverY));
         _hoverX = details.localPosition.dx;
         _hoverY = details.localPosition.dy;
-        sendEvent("hover", {
-          "ts": details.timeStamp.inMilliseconds,
-          "kind": details.kind.name,
-          "gx": details.position.dx,
-          "gy": details.position.dy,
-          "lx": details.localPosition.dx,
-          "ly": details.localPosition.dy,
-          "dx": dx,
-          "dy": dy,
-        });
       }
     }
 
@@ -288,118 +220,65 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                   .nonNulls
                   .toSet();
             }(),
-            onTap: onTap
-                ? () {
-                    sendEvent("tap");
-                  }
-                : null,
+            onTap: onTap ? () => widget.control.triggerEvent("tap") : null,
             onTapDown: onTapDown
-                ? (details) {
-                    sendEvent("tap_down", {
-                      "kind": details.kind?.name,
-                      "lx": details.localPosition.dx,
-                      "ly": details.localPosition.dy,
-                      "gx": details.globalPosition.dx,
-                      "gy": details.globalPosition.dy,
-                    });
+                ? (TapDownDetails details) {
+                    widget.control
+                        .triggerEvent("tap_down", fields: details.toMap());
                   }
                 : null,
             onTapUp: onTapUp
-                ? (details) {
-                    sendEvent("tap_up", {
-                      "kind": details.kind.name,
-                      "lx": details.localPosition.dx,
-                      "ly": details.localPosition.dy,
-                      "gx": details.globalPosition.dx,
-                      "gy": details.globalPosition.dy,
-                    });
+                ? (TapUpDetails details) {
+                    widget.control
+                        .triggerEvent("tap_up", fields: details.toMap());
                   }
                 : null,
             onSecondaryTap: onSecondaryTap
-                ? () {
-                    sendEvent("secondary_tap");
-                  }
+                ? () => widget.control.triggerEvent("secondary_tap")
                 : null,
             onSecondaryTapDown: onSecondaryTapDown
-                ? (details) {
-                    sendEvent("secondary_tap_down", {
-                      "kind": details.kind?.name,
-                      "lx": details.localPosition.dx,
-                      "ly": details.localPosition.dy,
-                      "gx": details.globalPosition.dx,
-                      "gy": details.globalPosition.dy,
-                    });
+                ? (TapDownDetails details) {
+                    widget.control.triggerEvent("secondary_tap_down",
+                        fields: details.toMap());
                   }
                 : null,
             onSecondaryTapUp: onSecondaryTapUp
-                ? (details) {
-                    sendEvent("secondary_tap_up", {
-                      "kind": details.kind.name,
-                      "lx": details.localPosition.dx,
-                      "ly": details.localPosition.dy,
-                      "gx": details.globalPosition.dx,
-                      "gy": details.globalPosition.dy,
-                    });
+                ? (TapUpDetails details) {
+                    widget.control.triggerEvent("secondary_tap_up",
+                        fields: details.toMap());
                   }
                 : null,
             onLongPressStart: onLongPressStart
-                ? (details) {
-                    sendEvent("long_press_start", {
-                      "lx": details.localPosition.dx,
-                      "ly": details.localPosition.dy,
-                      "gx": details.globalPosition.dx,
-                      "gy": details.globalPosition.dy,
-                    });
+                ? (LongPressStartDetails details) {
+                    widget.control.triggerEvent("long_press_start",
+                        fields: details.toMap());
                   }
                 : null,
             onLongPressEnd: onLongPressEnd
-                ? (details) {
-                    sendEvent("long_press_end", {
-                      "lx": details.localPosition.dx,
-                      "ly": details.localPosition.dy,
-                      "gx": details.globalPosition.dx,
-                      "gy": details.globalPosition.dy,
-                      "vx": details.velocity.pixelsPerSecond.dx,
-                      "vy": details.velocity.pixelsPerSecond.dy
-                    });
+                ? (LongPressEndDetails details) {
+                    widget.control.triggerEvent("long_press_end",
+                        fields: details.toMap());
                   }
                 : null,
             onSecondaryLongPressStart: onSecondaryLongPressStart
-                ? (details) {
-                    sendEvent("secondary_long_press_start", {
-                      "lx": details.localPosition.dx,
-                      "ly": details.localPosition.dy,
-                      "gx": details.globalPosition.dx,
-                      "gy": details.globalPosition.dy,
-                    });
+                ? (LongPressStartDetails details) {
+                    widget.control.triggerEvent("secondary_long_press_start",
+                        fields: details.toMap());
                   }
                 : null,
             onSecondaryLongPressEnd: onSecondaryLongPressEnd
-                ? (details) {
-                    sendEvent("secondary_long_press_end", {
-                      "lx": details.localPosition.dx,
-                      "ly": details.localPosition.dy,
-                      "gx": details.globalPosition.dx,
-                      "gy": details.globalPosition.dy,
-                      "vx": details.velocity.pixelsPerSecond.dx,
-                      "vy": details.velocity.pixelsPerSecond.dy
-                    });
+                ? (LongPressEndDetails details) {
+                    widget.control.triggerEvent("secondary_long_press_end",
+                        fields: details.toMap());
                   }
                 : null,
             onDoubleTap: onDoubleTap
-                ? () {
-                    sendEvent("double_tap");
-                  }
+                ? () => widget.control.triggerEvent("double_tap")
                 : null,
             onDoubleTapDown: onDoubleTapDown
-                ? (details) {
-                    sendEvent("double_tap_down", {
-                      "kind": details.kind?.name,
-                      "lx": details.localPosition.dx,
-                      "ly": details.localPosition.dy,
-                      "gx": details.globalPosition.dx,
-                      "gy": details.globalPosition.dy,
-                    });
+                ? (TapDownDetails details) {
+                    widget.control.triggerEvent("double_tap_down",
+                        fields: details.toMap());
                   }
                 : null,
             onHorizontalDragStart:
@@ -412,29 +291,21 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                   }
                 : null,
             onHorizontalDragEnd: onHorizontalDragEnd
-                ? (details) {
-                    sendEvent("horizontal_drag_end", {
-                      "pv": details.primaryVelocity,
-                      "vx": details.velocity.pixelsPerSecond.dx,
-                      "vy": details.velocity.pixelsPerSecond.dy
-                    });
+                ? (DragEndDetails details) {
+                    widget.control.triggerEvent("horizontal_drag_end",
+                        fields: details.toMap());
                   }
                 : null,
             onVerticalDragStart: (onVerticalDragStart || onVerticalDragUpdate)
                 ? handleVerticalDragStart
                 : null,
             onVerticalDragUpdate: onVerticalDragUpdate
-                ? (details) {
-                    handleVerticalDragUpdate(details);
-                  }
+                ? (details) => handleVerticalDragUpdate(details)
                 : null,
             onVerticalDragEnd: onVerticalDragEnd
                 ? (details) {
-                    sendEvent("vertical_drag_end", {
-                      "pv": details.primaryVelocity,
-                      "vx": details.velocity.pixelsPerSecond.dx,
-                      "vy": details.velocity.pixelsPerSecond.dy
-                    });
+                    widget.control.triggerEvent("vertical_drag_end",
+                        fields: details.toMap());
                   }
                 : null,
             onPanStart: (onPanStart || onPanUpdate) ? handlePanStart : null,
@@ -444,49 +315,27 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                   }
                 : null,
             onPanEnd: onPanEnd
-                ? (details) {
-                    sendEvent("pan_end", {
-                      "pv": details.primaryVelocity,
-                      "vx": details.velocity.pixelsPerSecond.dx,
-                      "vy": details.velocity.pixelsPerSecond.dy
-                    });
+                ? (DragEndDetails details) {
+                    widget.control
+                        .triggerEvent("pan_end", fields: details.toMap());
                   }
                 : null,
             onScaleStart: onScaleStart
-                ? (details) {
-                    sendEvent("scale_start", {
-                      "fpx": details.focalPoint.dx,
-                      "fpy": details.focalPoint.dy,
-                      "lfpx": details.localFocalPoint.dx,
-                      "lfpy": details.localFocalPoint.dy,
-                      "pc": details.pointerCount
-                    });
+                ? (ScaleStartDetails details) {
+                    widget.control
+                        .triggerEvent("scale_start", fields: details.toMap());
                   }
                 : null,
             onScaleUpdate: onScaleUpdate
-                ? (details) {
-                    sendEvent("scale_update", {
-                      "fpx": details.focalPoint.dx,
-                      "fpy": details.focalPoint.dy,
-                      "fpdx": details.focalPointDelta.dx,
-                      "fpdy": details.focalPointDelta.dy,
-                      "lfpx": details.localFocalPoint.dx,
-                      "lfpy": details.localFocalPoint.dy,
-                      "pc": details.pointerCount,
-                      "hs": details.horizontalScale,
-                      "vs": details.verticalScale,
-                      "s": details.scale,
-                      "r": details.rotation,
-                    });
+                ? (ScaleUpdateDetails details) {
+                    widget.control
+                        .triggerEvent("scale_update", fields: details.toMap());
                   }
                 : null,
             onScaleEnd: onScaleEnd
-                ? (details) {
-                    sendEvent("scale_end", {
-                      "pc": details.pointerCount,
-                      "vx": details.velocity.pixelsPerSecond.dx,
-                      "vy": details.velocity.pixelsPerSecond.dy
-                    });
+                ? (ScaleEndDetails details) {
+                    widget.control
+                        .triggerEvent("scale_end", fields: details.toMap());
                   }
                 : null,
             child: result)
@@ -503,14 +352,14 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
                   instance.minNumberOfTouches = multiTapTouches;
                   instance.onMultiTap = (correctNumberOfTouches) {
                     if (onMultiTap) {
-                      sendEvent(
-                          "multi_tap", {"correct": correctNumberOfTouches});
+                      widget.control.triggerEvent("multi_tap",
+                          fields: {"correct_touches": correctNumberOfTouches});
                     }
                     if (onMultiLongPress) {
                       if (correctNumberOfTouches) {
                         _debounce =
                             Timer(const Duration(milliseconds: 1000), () {
-                          sendEvent("multi_long_press");
+                          widget.control.triggerEvent("multi_long_press");
                         });
                       } else if (_debounce?.isActive ?? false) {
                         _debounce!.cancel();
@@ -529,40 +378,23 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
             behavior: HitTestBehavior.translucent,
             onPointerSignal: (details) {
               if (details is PointerScrollEvent) {
-                sendEvent("scroll", {
-                  "gx": details.position.dx,
-                  "gy": details.position.dy,
-                  "lx": details.localPosition.dx,
-                  "ly": details.localPosition.dy,
-                  "dx": details.scrollDelta.dx,
-                  "dy": details.scrollDelta.dy,
-                });
+                widget.control.triggerEvent("scroll", fields: details.toMap());
               }
             },
-            child: result,
-          )
+            child: result)
         : result;
 
-    var mouseCursor = widget.control.getString("mouse_cursor");
+    var mouseCursor =
+        parseMouseCursor(widget.control.getString("mouse_cursor"));
     result = ((mouseCursor != null) || onHover || onEnter || onExit)
         ? MouseRegion(
-            cursor: parseMouseCursor(mouseCursor, MouseCursor.defer)!,
-            onHover: onHover
-                ? (details) {
-                    handleHover(details);
-                  }
-                : null,
+            cursor: mouseCursor ?? MouseCursor.defer,
+            onHover: onHover ? (details) => handleHover(details) : null,
             onEnter: (onEnter || onHover) ? handleEnter : null,
             onExit: onExit
-                ? (details) {
-                    sendEvent("exit", {
-                      "ts": details.timeStamp.inMilliseconds,
-                      "kind": details.kind.name,
-                      "gx": details.position.dx,
-                      "gy": details.position.dy,
-                      "lx": details.localPosition.dx,
-                      "ly": details.localPosition.dy
-                    });
+                ? (PointerExitEvent details) {
+                    widget.control
+                        .triggerEvent("exit", fields: details.toMap());
                   }
                 : null,
             child: result,
@@ -577,56 +409,3 @@ class _GestureDetectorControlState extends State<GestureDetectorControl> {
     return ConstrainedControl(control: widget.control, child: result);
   }
 }
-
-class MultiTouchGestureRecognizer extends MultiTapGestureRecognizer {
-  late MultiTouchGestureRecognizerCallback onMultiTap;
-  var numberOfTouches = 0;
-  int minNumberOfTouches = 0;
-
-  MultiTouchGestureRecognizer() {
-    super.onTapDown = (pointer, details) => addTouch(pointer, details);
-    super.onTapUp = (pointer, details) => removeTouch(pointer, details);
-    super.onTapCancel = (pointer) => cancelTouch(pointer);
-    super.onTap = (pointer) => captureDefaultTap(pointer);
-  }
-
-  void addTouch(int pointer, TapDownDetails details) {
-    //debugPrint("Add touch: $pointer");
-    numberOfTouches++;
-    if (numberOfTouches == minNumberOfTouches) {
-      onMultiTap(true);
-      numberOfTouches = 0;
-    }
-  }
-
-  void removeTouch(int pointer, TapUpDetails details) {
-    onRemoveTouch(pointer);
-  }
-
-  void cancelTouch(int pointer) {
-    onRemoveTouch(pointer);
-  }
-
-  void onRemoveTouch(int pointer) {
-    //debugPrint("Remove touch: $pointer");
-    onMultiTap(false);
-    numberOfTouches = 0;
-  }
-
-  void captureDefaultTap(int pointer) {}
-
-  @override
-  set onTapDown(onTapDown) {}
-
-  @override
-  set onTapUp(onTapUp) {}
-
-  @override
-  set onTapCancel(onTapCancel) {}
-
-  @override
-  set onTap(onTap) {}
-}
-
-typedef MultiTouchGestureRecognizerCallback = void Function(
-    bool correctNumberOfTouches);

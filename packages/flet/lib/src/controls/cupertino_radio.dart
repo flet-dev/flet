@@ -45,7 +45,7 @@ class _CupertinoRadioControlState extends State<CupertinoRadioControl>
 
   void _onChange(Control radioGroup, String? value) {
     radioGroup.updateProperties({"value": value}, notify: true);
-    radioGroup.triggerEvent("change", value);
+    radioGroup.triggerEvent("change", data: value);
   }
 
   @override

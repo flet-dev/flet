@@ -21,7 +21,8 @@ class FletMockBackendChannel implements FletBackendChannel {
 
   @override
   Future connect() async {
-    await Future.delayed(Duration(seconds: 1)); // Simulating async operation
+    await Future.delayed(
+        const Duration(seconds: 1)); // Simulating async operation
     debugPrint("Connected to the Mock Flet backend channel");
     //_scenario_line_chart_simple();
     _scenario_register();
@@ -73,7 +74,7 @@ class FletMockBackendChannel implements FletBackendChannel {
       }
     }));
 
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
 
     onMessage(Message(action: MessageAction.patchControl, payload: {
       "id": 2,
@@ -131,7 +132,7 @@ class FletMockBackendChannel implements FletBackendChannel {
 
     for (int i = 7; i < 100; i++) {
       var y = random.nextDouble();
-      await Future.delayed(Duration(milliseconds: 200));
+      await Future.delayed(const Duration(milliseconds: 200));
 
       onMessage(Message(action: MessageAction.patchControl, payload: {
         "id": 30,
@@ -161,7 +162,7 @@ class FletMockBackendChannel implements FletBackendChannel {
       }));
     }
 
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
 
     onMessage(Message(action: MessageAction.patchControl, payload: {
       "id": 30,
@@ -181,14 +182,14 @@ class FletMockBackendChannel implements FletBackendChannel {
       }
     }));
 
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
 
     onMessage(Message(action: MessageAction.patchControl, payload: {
       "id": 31,
       "patch": {"var1": "b", "var2": "c"}
     }));
 
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
 
     onMessage(Message(action: MessageAction.invokeControlMethod, payload: {
       "id": 31,
@@ -196,7 +197,7 @@ class FletMockBackendChannel implements FletBackendChannel {
       "args": {"a": 1, "b": false}
     }));
 
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
 
     onMessage(Message(action: MessageAction.patchControl, payload: {
       "id": 10,
@@ -217,7 +218,7 @@ class FletMockBackendChannel implements FletBackendChannel {
         action: MessageAction.invokeControlMethod,
         payload: {"id": 9, "name": "to_front", "args": {}}));
 
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
 
     onMessage(Message(
         action: MessageAction.invokeControlMethod,
@@ -241,7 +242,7 @@ class FletMockBackendChannel implements FletBackendChannel {
       }
     }));
 
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
 
     onMessage(Message(action: MessageAction.patchControl, payload: {
       "id": 1,
@@ -268,7 +269,7 @@ class FletMockBackendChannel implements FletBackendChannel {
       }
     }));
 
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
 
     onMessage(Message(action: MessageAction.patchControl, payload: {
       "id": 8,
@@ -281,7 +282,7 @@ class FletMockBackendChannel implements FletBackendChannel {
       }
     }));
 
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
 
     onMessage(Message(action: MessageAction.patchControl, payload: {
       "id": 5,
@@ -295,7 +296,7 @@ class FletMockBackendChannel implements FletBackendChannel {
 
   @override
   void send(Message message) {
-    debugPrint("Send message: ${message.toJson()}");
+    debugPrint("Send message: ${message.toList()}");
   }
 
   @override

@@ -4,5 +4,5 @@ class UpdateControlBody {
 
   UpdateControlBody({required this.id, required this.props});
 
-  Map<String, dynamic> toJson() => <String, dynamic>{'id': id, 'props': props};
+  Map<String, dynamic> toMap() => <String, dynamic>{'id': id, 'props': props};
 }

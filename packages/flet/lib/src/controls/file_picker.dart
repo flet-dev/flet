@@ -121,7 +121,7 @@ class _FilePickerControlState extends State<FilePickerControl>
             }).toList())
         .toMap();
 
-    widget.control.triggerEvent("result", result);
+    widget.control.triggerEvent("result", fields: result);
     // widget.control.updateProperties({"_result": result});
   }
 
@@ -200,9 +200,8 @@ class _FilePickerControlState extends State<FilePickerControl>
   }
 
   void sendProgress(String name, double? progress, String? error) {
-    widget.control.triggerEvent(
-        "upload",
-        FilePickerUploadProgressEvent(
+    widget.control.triggerEvent("upload",
+        fields: FilePickerUploadProgressEvent(
                 name: name, progress: progress, error: error)
             .toMap());
   }

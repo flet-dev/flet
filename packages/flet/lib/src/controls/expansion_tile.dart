@@ -67,7 +67,7 @@ class ExpansionTileControl extends StatelessWidget {
 
     Function(bool)? onChange = !control.disabled
         ? (expanded) {
-            control.triggerEvent("change", "$expanded");
+            control.triggerEvent("change", data: expanded);
           }
         : null;
 

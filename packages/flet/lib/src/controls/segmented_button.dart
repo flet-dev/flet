@@ -22,9 +22,9 @@ class SegmentedButtonControl extends StatefulWidget {
 class _SegmentedButtonControlState extends State<SegmentedButtonControl>
     with FletStoreMixin {
   void onChange(Set<String> selection) {
-    var s = selection.toList();
+    var s = selection.toList(); // todo: support Sets on both ends (msgpack)
     widget.control.updateProperties({"selected": s}, notify: true);
-    widget.control.triggerEvent("change", s);
+    widget.control.triggerEvent("change", data: s);
   }
 
   @override

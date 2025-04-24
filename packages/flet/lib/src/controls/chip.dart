@@ -127,7 +127,7 @@ class _ChipControlState extends State<ChipControl> {
           ? (bool selected) {
               _selected = selected;
               widget.control.updateProperties({"selected": selected});
-              widget.control.triggerEvent("select", selected);
+              widget.control.triggerEvent("select", data: selected);
             }
           : null,
     );

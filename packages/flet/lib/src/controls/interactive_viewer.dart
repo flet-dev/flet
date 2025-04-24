@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:flet/src/utils/events.dart';
 import 'package:flutter/material.dart';
 
 import '../extensions/control.dart';
@@ -50,18 +49,22 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
         break;
       case "pan":
         var dx = parseDouble(args["dx"]);
-        var dy = parseDouble(args["dy"]);
-        if (dx != null && dy != null) {
+        if (dx != null) {
           _transformationController.value =
-              _transformationController.value.clone()..translate(dx, dy);
+              _transformationController.value.clone()
+                ..translate(
+                  dx,
+                  parseDouble(args["dy"], 0)!,
+                  parseDouble(args["dz"], 0)!,
+                );
         }
         break;
       case "reset":
-        var duration = parseDuration(args["duration"]);
-        if (duration == null) {
+        var animationDuration = parseDuration(args["animation_duration"]);
+        if (animationDuration == null) {
           _transformationController.value = Matrix4.identity();
         } else {
-          _animationController.duration = duration;
+          _animationController.duration = animationDuration;
           _animation = Matrix4Tween(
             begin: _transformationController.value,
             end: Matrix4.identity(),
@@ -117,45 +120,24 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
           widget.control.getMargin("boundary_margin", EdgeInsets.zero)!,
       onInteractionStart: !widget.control.disabled
           ? (ScaleStartDetails details) {
-              widget.control.triggerEvent("interaction_start", {
-                "pc": details.pointerCount,
-                "gfp": {"x": details.focalPoint.dx, "y": details.focalPoint.dy},
-                "lfp": {
-                  "x": details.localFocalPoint.dx,
-                  "y": details.localFocalPoint.dy
-                },
-              });
+              widget.control.triggerEvent("interaction_start", fields: details.toMap());
             }
           : null,
       onInteractionEnd: !widget.control.disabled
           ? (ScaleEndDetails details) {
-              widget.control.triggerEvent(
-                  "interaction_end",
-                  jsonEncode({
-                    "pc": details.pointerCount,
-                    "sv": details.scaleVelocity,
-                  }));
+              widget.control.triggerEvent("interaction_end", fields: details.toMap());
             }
           : null,
       onInteractionUpdate: !widget.control.disabled
           ? (ScaleUpdateDetails details) {
               var interactionUpdateInterval =
-                  widget.control.getInt("interactionUpdateInterval", 200)!;
+                  widget.control.getInt("interaction_update_interval", 200)!;
               var now = DateTime.now().millisecondsSinceEpoch;
               if (now - _interactionUpdateTimestamp >
                   interactionUpdateInterval) {
                 _interactionUpdateTimestamp = now;
-                widget.control.triggerEvent("interaction_update", {
-                  "pc": details.pointerCount,
-                  "fp_x": details.focalPoint.dx,
-                  "fp_y": details.focalPoint.dy,
-                  "lfp_x": details.localFocalPoint.dx,
-                  "lfp_y": details.localFocalPoint.dy,
-                  "s": details.scale,
-                  "hs": details.horizontalScale,
-                  "vs": details.verticalScale,
-                  "rot": details.rotation,
-                });
+                widget.control.triggerEvent("interaction_update",
+                    fields: details.toMap());
               }
             }
           : null,

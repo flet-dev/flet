@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import List, Optional
 
-from flet.controls.animation import AnimationValue
+from flet.controls.animation import OptionalAnimationValue
 from flet.controls.base_control import control
 from flet.controls.constrained_control import ConstrainedControl
 from flet.controls.control_event import ControlEvent
@@ -35,9 +35,9 @@ class PieChartEventType(Enum):
 @dataclass
 class PieChartEvent(ControlEvent):
     type: PieChartEventType
-    section_index: Optional[int]
-    local_x: Optional[float] = field(metadata={"data_field": "lx"})
-    local_y: Optional[float] = field(metadata={"data_field": "ly"})
+    section_index: Optional[int] = None
+    local_x: Optional[float] = None
+    local_y: Optional[float] = None
 
 
 @control("PieChart")
@@ -47,5 +47,5 @@ class PieChart(ConstrainedControl):
     center_space_radius: OptionalNumber = None
     sections_space: OptionalNumber = None
     start_degree_offset: OptionalNumber = None
-    animate: Optional[AnimationValue] = None
+    animate: OptionalAnimationValue = None
     on_chart_event: OptionalEventCallable[PieChartEvent] = None

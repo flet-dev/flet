@@ -33,7 +33,6 @@ class Alignment:
 
 
 # Constants
-
 bottom_center = Alignment(0, 1)
 bottom_left = Alignment(-1, 1)
 bottom_right = Alignment(1, 1)
