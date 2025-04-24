@@ -29,13 +29,41 @@ __all__ = ["Dropdown", "DropdownOption"]
 
 @control("Option")
 class Option(Control):
+    """
+    Represents an item in a dropdown. Either `key` or `text` must be specified, else an `AssertionError` will be raised.
+    """
 
     key: Optional[str] = None
+    """
+    Option's key. If not specified `text` will be used as fallback.
+    """
+
     text: Optional[str] = None
+    """
+    Option's display text. If not specified `key` will be used as fallback.
+    """
+
     content: Optional[Control] = None
+    """
+    A `Control` to display in this option. If not specified, `text` will be used as fallback, else `text` will be ignored.
+    """
+
     leading_icon: Optional[IconValueOrControl] = None
+    """
+    An optional icon to display before the content or text.
+    """
+
     trailing_icon: Optional[IconValueOrControl] = None
+    """
+    An optional icon to display after the content or text.
+    """
+
     style: Optional[ButtonStyle] = None
+    """
+    Customizes this menu item's appearance. 
+
+    The value is an instance of [`ButtonStyle`](https://flet.dev/docs/reference/types/buttonstyle) class. 
+    """
 
     def before_update(self):
         super().before_update()
