@@ -11,9 +11,11 @@ from flet.controls.padding import OptionalPaddingValue
 from flet.controls.types import (
     ClipBehavior,
     CrossAxisAlignment,
+    IconValueOrControl,
     OptionalColorValue,
     OptionalControlEventCallable,
     OptionalNumber,
+    StrOrControl,
     VisualDensity,
 )
 
@@ -34,7 +36,7 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     Online docs: https://flet.dev/docs/controls/expansiontile
     """
 
-    title: Control
+    title: StrOrControl
     """
     A `Control` to display as primary content of the tile.
 
@@ -48,19 +50,19 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     Typically a list of [`ListTile`](https://flet.dev/docs/controls/listtile) controls.
     """
 
-    subtitle: Optional[Control] = None
+    subtitle: Optional[StrOrControl] = None
     """
     Additional content displayed below the title.
 
     Typically a [`Text`](https://flet.dev/docs/controls/text) control.
     """
 
-    leading: Optional[Control] = None
+    leading: Optional[IconValueOrControl] = None
     """
     A `Control` to display before the title.
     """
 
-    trailing: Optional[Control] = None
+    trailing: Optional[IconValueOrControl] = None
     """
     A `Control` to display after the title.
 
@@ -167,13 +169,11 @@ class ExpansionTile(ConstrainedControl, AdaptiveControl):
     of [`OutlinedBorder`](https://flet.dev/docs/reference/types/outlinedborder).
     """
 
-    dense: bool = None
+    dense: Optional[bool] = None
     """
     Whether this list tile is part of a vertically dense list. Dense list tiles default to a smaller height.
 
     It is not recommended to set this property to `True` when in Material3.
-
-    Defaults to `False`.
     """
 
     enable_feedback: bool = True
