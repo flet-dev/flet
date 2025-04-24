@@ -45,7 +45,7 @@ class RotationDetails {
 
   RotationDetails({required this.angle, required this.alignment});
 
-  factory RotationDetails.fromJson(Map<String, dynamic> value) {
+  factory RotationDetails.fromJson(Map<dynamic, dynamic> value) {
     return RotationDetails(
         angle: parseDouble(value["angle"], 0)!,
         alignment: parseAlignment(value["alignment"], Alignment.center)!);
