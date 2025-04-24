@@ -249,9 +249,7 @@ class FletApp(Connection):
 
         elif action == ClientAction.CONTROL_EVENT:
             req = ControlEventBody(**body)
-            await self.__session.dispatch_event(
-                req.target, req.name, req.data, req.fields
-            )
+            await self.__session.dispatch_event(req.target, req.name, req.data)
 
         elif action == ClientAction.UPDATE_CONTROL_PROPS:
             req = UpdateControlPropsBody(**body)

@@ -44,7 +44,7 @@ class _RadioControlState extends State<RadioControl> {
 
   void _onChange(Control radioGroup, String? value) {
     radioGroup.updateProperties({"value": value}, notify: true);
-    radioGroup.triggerEvent("change", data: value);
+    radioGroup.triggerEvent("change", value);
   }
 
   @override

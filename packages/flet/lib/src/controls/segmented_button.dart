@@ -24,7 +24,7 @@ class _SegmentedButtonControlState extends State<SegmentedButtonControl>
   void onChange(Set<String> selection) {
     var s = selection.toList(); // todo: support Sets on both ends (msgpack)
     widget.control.updateProperties({"selected": s}, notify: true);
-    widget.control.triggerEvent("change", data: s);
+    widget.control.triggerEvent("change", s);
   }
 
   @override

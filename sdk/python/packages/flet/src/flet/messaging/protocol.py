@@ -1,7 +1,7 @@
 import datetime
 from dataclasses import dataclass, fields, is_dataclass
 from enum import Enum
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 import msgpack
 
@@ -124,7 +124,6 @@ class ControlEventBody:
     target: int
     name: str
     data: Any
-    fields: Optional[Dict[str, Any]] = None
 
 
 @dataclass

@@ -20,7 +20,7 @@ __all__ = ["ControlEvent"]
 @dataclass
 class ControlEvent:
     name: str
-    data: Optional[Any]
+    data: Optional[Any] = field(default=None, kw_only=True)
     control: "Control" = field(repr=False)
 
     @property

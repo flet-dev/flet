@@ -35,7 +35,7 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
     _value = value;
     _debouncer.run(() {
       widget.control.updateProperties({"value": value}, notify: true);
-      widget.control.triggerEvent("change", data: value);
+      widget.control.triggerEvent("change", value);
     });
   }
 
@@ -70,14 +70,14 @@ class _CupertinoSliderControlState extends State<CupertinoSliderControl> {
             !widget.control.disabled ? (double value) => onChange(value) : null,
         onChangeStart: widget.control.disabled
             ? (double value) {
-                backend.triggerControlEvent(widget.control, "change_start",
-                    data: value);
+                backend.triggerControlEvent(
+                    widget.control, "change_start", value);
               }
             : null,
         onChangeEnd: !widget.control.disabled
             ? (double value) {
-                backend.triggerControlEvent(widget.control, "change_end",
-                    data: value);
+                backend.triggerControlEvent(
+                    widget.control, "change_end", value);
               }
             : null);
 

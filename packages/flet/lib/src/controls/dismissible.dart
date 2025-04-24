@@ -65,7 +65,7 @@ class _DismissibleControlState extends State<DismissibleControl> {
                 Container(color: Colors.transparent),
         onDismissed: widget.control.getBool("on_dismiss", false)!
             ? (DismissDirection direction) => widget.control
-                .triggerEvent("dismiss", fields: {"direction": direction.name})
+                .triggerEvent("dismiss", {"direction": direction.name})
             : null,
         onResize: widget.control.getBool("on_resize", false)!
             ? () => widget.control.triggerEvent("resize")
@@ -74,7 +74,7 @@ class _DismissibleControlState extends State<DismissibleControl> {
             ? (DismissUpdateDetails details) {
                 widget.control.triggerEvent(
                     "update",
-                    fields: DismissibleUpdateEvent(
+                    DismissibleUpdateEvent(
                             direction: details.direction.name,
                             previousReached: details.previousReached,
                             progress: details.progress,
@@ -87,8 +87,8 @@ class _DismissibleControlState extends State<DismissibleControl> {
                 var completer = Completer<bool?>();
                 widget.control
                     .updateProperties({"_completer": completer}, python: false);
-                widget.control.triggerEvent("confirm_dismiss",
-                    fields: {"direction": direction.name});
+                widget.control.triggerEvent(
+                    "confirm_dismiss", {"direction": direction.name});
                 return completer.future;
               }
             : null,

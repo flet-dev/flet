@@ -174,7 +174,7 @@ class _BarChartControlState extends State<BarChartControl> {
                     debugPrint(
                         "BarChart ${widget.control.id} ${eventData.eventType}");
                     widget.control
-                        .triggerEvent("chart_event", fields: eventData.toMap());
+                        .triggerEvent("chart_event", eventData.toMap());
                   }
                 }
               : null,

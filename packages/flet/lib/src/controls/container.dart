@@ -1,5 +1,4 @@
 import 'package:flet/flet.dart';
-import 'package:flet/src/utils/events.dart';
 import 'package:flutter/material.dart';
 
 class ContainerControl extends StatelessWidget with FletStoreMixin {
@@ -53,7 +52,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
     Widget? container;
 
     var onAnimationEnd = control.getBool("on_animation_end", false)!
-        ? () => control.triggerEvent("animation_end", data: "container")
+        ? () => control.triggerEvent("animation_end" "container")
         : null;
     if ((onClick || url != null || onLongPress || onHover || onTapDown) &&
         ink &&
@@ -77,13 +76,13 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 : null,
             onTapDown: onTapDown
                 ? (TapDownDetails details) {
-                    control.triggerEvent("tap_down", fields: details.toMap());
+                    control.triggerEvent("tap_down", details.toMap());
                   }
                 : null,
             onLongPress:
                 onLongPress ? () => control.triggerEvent("long_press") : null,
             onHover: onHover
-                ? (value) => control.triggerEvent("hover", data: value)
+                ? (value) => control.triggerEvent("hover", value)
                 : null,
             borderRadius: borderRadius,
             splashColor: control.getColor("ink_color", context),
@@ -150,12 +149,12 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
               : MouseCursor.defer,
           onEnter: onHover
               ? (value) {
-                  control.triggerEvent("hover", data: true);
+                  control.triggerEvent("hover", true);
                 }
               : null,
           onExit: onHover
               ? (value) {
-                  control.triggerEvent("hover", data: false);
+                  control.triggerEvent("hover", false);
                 }
               : null,
           child: GestureDetector(
@@ -171,7 +170,7 @@ class ContainerControl extends StatelessWidget with FletStoreMixin {
                 : null,
             onTapDown: onTapDown
                 ? (TapDownDetails details) {
-                    control.triggerEvent("tap_down", fields: details.toMap());
+                    control.triggerEvent("tap_down", details.toMap());
                   }
                 : null,
             onLongPress: onLongPress

@@ -120,12 +120,12 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
           widget.control.getMargin("boundary_margin", EdgeInsets.zero)!,
       onInteractionStart: !widget.control.disabled
           ? (ScaleStartDetails details) {
-              widget.control.triggerEvent("interaction_start", fields: details.toMap());
+              widget.control.triggerEvent("interaction_start", details.toMap());
             }
           : null,
       onInteractionEnd: !widget.control.disabled
           ? (ScaleEndDetails details) {
-              widget.control.triggerEvent("interaction_end", fields: details.toMap());
+              widget.control.triggerEvent("interaction_end", details.toMap());
             }
           : null,
       onInteractionUpdate: !widget.control.disabled
@@ -136,8 +136,8 @@ class _InteractiveViewerControlState extends State<InteractiveViewerControl>
               if (now - _interactionUpdateTimestamp >
                   interactionUpdateInterval) {
                 _interactionUpdateTimestamp = now;
-                widget.control.triggerEvent("interaction_update",
-                    fields: details.toMap());
+                widget.control
+                    .triggerEvent("interaction_update", details.toMap());
               }
             }
           : null,

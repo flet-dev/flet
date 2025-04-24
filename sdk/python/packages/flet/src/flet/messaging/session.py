@@ -3,7 +3,7 @@ import logging
 import traceback
 import weakref
 from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from flet.controls.base_control import BaseControl
 from flet.controls.control import Control
@@ -133,7 +133,6 @@ class Session:
         control_id: int,
         event_name: str,
         event_data: Any,
-        event_fields: Optional[Dict[str, Any]] = None,
     ):
         control = self.__index.get(control_id)
         if not control:
@@ -149,7 +148,7 @@ class Session:
             if event_type is None:
                 return
 
-            if event_type == ControlEvent or not isinstance(event_fields, dict):
+            if event_type == ControlEvent or not isinstance(event_data, dict):
                 # simple ControlEvent
                 e = ControlEvent(control=control, name=event_name, data=event_data)
             else:
@@ -157,8 +156,7 @@ class Session:
                 args = {
                     "control": control,
                     "name": event_name,
-                    "data": event_data,
-                    **(event_fields or {}),
+                    **(event_data or {}),
                 }
                 e = from_dict(event_type, args)
 
