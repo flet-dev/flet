@@ -19,12 +19,43 @@ __all__ = ["DropdownM2", "Option"]
 
 @control("Option")
 class Option(Control):
+    """
+    Represents an item in a dropdown. Either `key` or `text` must be specified, else an `AssertionError` will be raised.
+    """
+
     key: Optional[str] = None
+    """
+    Option's key. If not specified `text` will be used as fallback.
+    """
+
     text: Optional[str] = None
+    """
+    Option's display text. If not specified `key` will be used as fallback.
+    """
+
     content: Optional[Control] = None
+    """
+    A `Control` to display in this option. If not specified, `text` will be used as fallback, else `text` will be ignored.
+    """
+
     alignment: Optional[Alignment] = None
+    """
+    Defines the alignment of this option in it's container.
+
+    Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment) and defaults to `alignment.center_left`.
+    """
+
     text_style: Optional[TextStyle] = None
+    """
+    Defines the style of the `text`.
+
+    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
+    """
+
     on_click: OptionalControlEventCallable = None
+    """
+    Fires when this option is clicked.
+    """
 
     def before_update(self):
         super().before_update()
