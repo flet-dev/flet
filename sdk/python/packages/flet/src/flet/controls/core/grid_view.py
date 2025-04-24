@@ -71,6 +71,7 @@ class GridView(ConstrainedControl, ScrollableControl, AdaptiveControl):
     clip_behavior: Optional[ClipBehavior] = None
     semantic_child_count: Optional[int] = None
     cache_extent: OptionalNumber = None
+    build_controls_on_demand: bool = True
 
     def __contains__(self, item):
         return item in self.controls
