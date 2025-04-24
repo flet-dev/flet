@@ -141,8 +141,6 @@ class DropdownM2(FormFieldControl):
     """
     Whether detected gestures should provide acoustic and/or haptic feedback. On Android, for example, setting this
     to `True` produce a click sound and a long-press will produce a short vibration.
-
-    Defaults to `True`.
     """
 
     padding: OptionalPaddingValue = None
@@ -167,7 +165,7 @@ class DropdownM2(FormFieldControl):
 
     If `True`, the inner width is expanded to fill its surrounding container.
 
-    Value is of type `bool` and defaults to `False`.
+    Value is of type `bool` and defaults to `True`.
     """
 
     disabled_hint_content: Optional[Control] = None
