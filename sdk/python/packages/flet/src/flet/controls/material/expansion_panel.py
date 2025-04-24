@@ -73,14 +73,44 @@ class ExpansionPanelList(ConstrainedControl):
     """
 
     controls: List[ExpansionPanel] = field(default_factory=list)
+    """
+    A list of `ExpansionPanel`s to display inside `ExpansionPanelList`.
+    """
+
     divider_color: OptionalColorValue = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) of the divider when `ExpansionPanel.expanded` is `False`.
+    """
+
     elevation: Number = 2
+    """
+    Defines the elevation of the children controls (`ExpansionPanel`s), while it is expanded. Default value is `2`.
+    """
+
     expanded_header_padding: PaddingValue = field(
         default_factory=lambda: Padding.symmetric(vertical=16.0)
     )
+    """
+    Defines the padding around the header when expanded.
+
+    Padding value is an instance of [`Padding`](https://flet.dev/docs/reference/types/padding) class. Default value
+    is `padding.symmetric(vertical=16.0)`.
+    """
+
     expand_icon_color: OptionalColorValue = None
+    """
+    The [color](https://flet.dev/docs/reference/colors) of the icon. Defaults to `colors.BLACK_54` in light theme mode and `colors.WHITE_60` in dark theme mode.
+    """
+
     spacing: OptionalNumber = None
+    """
+    The size of the gap between the `ExpansionPanel`s when expanded.
+    """
+
     on_change: OptionalControlEventCallable = None
+    """
+    Fires when an `ExpansionPanel` is expanded or collapsed. The event's data (`e.data`), contains the index of the `ExpansionPanel` which triggered this event.
+    """
 
     def before_update(self):
         super().before_update()
