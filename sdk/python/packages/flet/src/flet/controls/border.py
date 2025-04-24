@@ -4,6 +4,7 @@ from typing import Optional, Union
 
 from flet.controls.colors import Colors
 from flet.controls.types import ColorValue, Number, OptionalColorValue, OptionalNumber
+from flet.utils import deprecated
 
 __all__ = [
     "Border",
@@ -14,6 +15,9 @@ __all__ = [
     "OptionalBorderSideStrokeAlign",
     "BorderSideStrokeAlignValue",
     "OptionalBorderSideStrokeAlignValue",
+    "all",
+    "symmetric",
+    "only",
 ]
 
 
@@ -47,6 +51,7 @@ class Border:
     @classmethod
     def symmetric(
         cls,
+        *,
         vertical: "OptionalBorderSide" = None,
         horizontal: "OptionalBorderSide" = None,
     ) -> "Border":
@@ -55,12 +60,51 @@ class Border:
     @classmethod
     def only(
         cls,
+        *,
         left: "OptionalBorderSide" = None,
         top: "OptionalBorderSide" = None,
         right: "OptionalBorderSide" = None,
         bottom: "OptionalBorderSide" = None,
     ) -> "Border":
         return Border(left=left, top=top, right=right, bottom=bottom)
+
+
+@deprecated(
+    reason="Use Border.all() instead",
+    version="0.70.0",
+    delete_version="0.73.0",
+    show_parentheses=True,
+)
+def all(width: Optional[float] = None, color: Optional[ColorValue] = None) -> Border:
+    bs = BorderSide(width, color)
+    return Border(left=bs, top=bs, right=bs, bottom=bs)
+
+
+@deprecated(
+    reason="Use Border.symmetric() instead",
+    version="0.70.0",
+    delete_version="0.73.0",
+    show_parentheses=True,
+)
+def symmetric(
+    vertical: Optional[BorderSide] = None, horizontal: Optional[BorderSide] = None
+) -> Border:
+    return Border(left=horizontal, top=vertical, right=horizontal, bottom=vertical)
+
+
+@deprecated(
+    reason="Use Border.only() instead",
+    version="0.70.0",
+    delete_version="0.73.0",
+    show_parentheses=True,
+)
+def only(
+    left: Optional[BorderSide] = None,
+    top: Optional[BorderSide] = None,
+    right: Optional[BorderSide] = None,
+    bottom: Optional[BorderSide] = None,
+) -> Border:
+    return Border(left=left, top=top, right=right, bottom=bottom)
 
 
 # Typings
