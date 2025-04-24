@@ -30,10 +30,10 @@ class ExpansionTileControl extends StatelessWidget {
         .map((child) => ControlWidget(control: child, key: ValueKey(child.id)))
         .toList();
 
-    var leading = control.buildWidget("leading");
-    var title = control.buildWidget("title");
-    var subtitle = control.buildWidget("subtitle");
-    var trailing = control.buildWidget("trailing");
+    var leading = control.buildIconOrWidget("leading");
+    var title = control.buildTextOrWidget("title");
+    var subtitle = control.buildTextOrWidget("subtitle");
+    var trailing = control.buildIconOrWidget("trailing");
 
     if (title == null) {
       return const ErrorControl(

@@ -19,12 +19,43 @@ __all__ = ["DropdownM2", "Option"]
 
 @control("Option")
 class Option(Control):
+    """
+    Represents an item in a dropdown. Either `key` or `text` must be specified, else an `AssertionError` will be raised.
+    """
+
     key: Optional[str] = None
+    """
+    Option's key. If not specified `text` will be used as fallback.
+    """
+
     text: Optional[str] = None
+    """
+    Option's display text. If not specified `key` will be used as fallback.
+    """
+
     content: Optional[Control] = None
+    """
+    A `Control` to display in this option. If not specified, `text` will be used as fallback, else `text` will be ignored.
+    """
+
     alignment: Optional[Alignment] = None
+    """
+    Defines the alignment of this option in it's container.
+
+    Value is of type [`Alignment`](https://flet.dev/docs/reference/types/alignment) and defaults to `alignment.center_left`.
+    """
+
     text_style: Optional[TextStyle] = None
+    """
+    Defines the style of the `text`.
+
+    Value is of type [`TextStyle`](https://flet.dev/docs/reference/types/textstyle).
+    """
+
     on_click: OptionalControlEventCallable = None
+    """
+    Fires when this option is clicked.
+    """
 
     def before_update(self):
         super().before_update()
@@ -38,55 +69,129 @@ class DropdownM2(FormFieldControl):
     """
     A dropdown lets the user select from a number of items. The dropdown shows the currently selected item as well as an arrow that opens a menu for selecting another item.
 
-    Example:
-    ```
-    import flet as ft
-
-    def main(page: ft.Page):
-        def button_clicked(e):
-            t.value = f"Dropdown value is:  {dd.value}"
-            page.update()
-
-        t = ft.Text()
-        b = ft.ElevatedButton(text="Submit", on_click=button_clicked)
-        dd = ft.DropdownM2(
-            width=200,
-            options=[
-                ft.dropdown.Option("Red"),
-                ft.dropdown.Option("Green"),
-                ft.dropdown.Option("Blue"),
-            ],
-        )
-        page.add(dd, b, t)
-
-    ft.app(target=main)
-    ```
-
-    -----
-
     Online docs: https://flet.dev/docs/controls/dropdown
     """
 
     value: Optional[str] = None
+    """
+    `key` value of the selected option.
+    """
+
     options: Optional[List[Option]] = None
+    """
+    A list of `Option` controls representing items in this dropdown.
+    """
+
     alignment: Optional[Alignment] = None
+    """
+    Defines how the `hint` or the selected item is positioned within this dropdown.
+
+    Alignment is an instance of [`Alignment`](https://flet.dev/docs/reference/types/alignment) class.
+    """
+
     autofocus: bool = False
+    """
+    True if the control will be selected as the initial focus. If there is more than one control on a page with autofocus set, then the first one added to the page will get focus.
+    """
+
     hint_content: Optional[Control] = None
+    """
+    A placeholder `Control` for the dropdown's value that is displayed when `value` is `None`.
+    """
+
     select_icon: Optional[IconValueOrControl] = None
+    """
+    The [name of the icon](https://flet.dev/docs/reference/icons) or `Control` to use for the drop-down select button's icon. Defaults to an `Icon(ft.Icons.ARROW_DROP_DOWN)`.
+
+    Example with icon name:
+    ```
+    icon=ft.Icons.BOOKMARK
+    ```
+    Example with Control:
+    ```
+    icon=ft.Icon(ft.Icons.BOOKMARK)
+    ```
+    """
+
     elevation: Number = 8
+    """
+    The dropdown's elevation.
+
+    Defaults to `8`.
+    """
+
     item_height: OptionalNumber = None
+    """
+    The height of the items/options in the dropdown menu.
+    """
+
     max_menu_height: OptionalNumber = None
+    """
+    The maximum height of the dropdown menu.
+    """
+
     select_icon_size: Number = 24.0
+    """
+    The size of the icon button which wraps `select_icon`.
+
+    Defaults to `24.0`.
+    """
+
     enable_feedback: Optional[bool] = None
+    """
+    Whether detected gestures should provide acoustic and/or haptic feedback. On Android, for example, setting this
+    to `True` produce a click sound and a long-press will produce a short vibration.
+    """
+
     padding: OptionalPaddingValue = None
+    """
+    The [padding](https://flet.dev/docs/reference/types/padding) around the visible portion of this dropdown.
+    """
+
     select_icon_enabled_color: OptionalColorValue = None
+    """
+    The color of any `Icon` descendant of `select_icon` if this button is enabled.
+    """
+
     select_icon_disabled_color: OptionalColorValue = None
+    """
+    The color of any `Icon` descendant of `select_icon` if this button is disabled.
+    """
+
     options_fill_horizontally: bool = True
+    """
+    Whether the dropdown's inner contents to horizontally fill its parent.
+    By default this button's inner width is the minimum size of its content. 
+
+    If `True`, the inner width is expanded to fill its surrounding container.
+
+    Value is of type `bool` and defaults to `True`.
+    """
+
     disabled_hint_content: Optional[Control] = None
+    """
+    A placeholder `Control` for the dropdown's value that is displayed when `value` is `None` and the dropdown is disabled.
+    """
+
     on_change: OptionalControlEventCallable = None
+    """
+    Fires when the selected item of this dropdown has changed.
+    """
+
     on_focus: OptionalControlEventCallable = None
+    """
+    Fires when the control has received focus.
+    """
+
     on_blur: OptionalControlEventCallable = None
+    """
+    Fires when the control has lost focus.
+    """
+
     on_click: OptionalControlEventCallable = None
+    """
+    Fires when this dropdown is clicked.
+    """
 
     def before_update(self):
         super().before_update()
