@@ -161,7 +161,6 @@ class Session:
                     **(event_fields or {}),
                 }
                 e = from_dict(event_type, args)
-                print(f"dispatch_event: {e}")
 
             UpdateBehavior.reset()
 

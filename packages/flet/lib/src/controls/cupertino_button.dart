@@ -85,7 +85,7 @@ class _CupertinoButtonControlState extends State<CupertinoButtonControl> {
     Color? focusColor = widget.control.getColor("focus_color", context);
 
     CupertinoButtonSize sizeStyle = widget.control
-        .getCupertinoButtonSize("size", CupertinoButtonSize.large)!;
+        .getCupertinoButtonSize("size_style", CupertinoButtonSize.large)!;
 
     var alignment = widget.control.getAlignment("alignment", Alignment.center)!;
     var borderRadius = widget.control.getBorderRadius(
