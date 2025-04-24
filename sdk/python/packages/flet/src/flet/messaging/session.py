@@ -34,9 +34,9 @@ class Session:
         self.__conn = conn
         self.__id = random_string(16)
         self.__expires_at = None
-        self.__index: weakref.WeakValueDictionary[
-            int, Control
-        ] = weakref.WeakValueDictionary()
+        self.__index: weakref.WeakValueDictionary[int, Control] = (
+            weakref.WeakValueDictionary()
+        )
         self.__page = Page(self)
         self.__index[self.__page._i] = self.__page
         self.__pubsub_client = PubSubClient(conn.pubsubhub, self.__id)
@@ -137,6 +137,7 @@ class Session:
         control = self.__index.get(control_id)
         if not control:
             # control not found
+            print("control not found:", control_id)
             return
 
         field_name = f"on_{event_name}"
@@ -145,6 +146,7 @@ class Session:
             return
         try:
             event_type = ControlEvent.get_event_field_type(control, field_name)
+            print("event_type:", event_type)
             if event_type is None:
                 return
 
@@ -216,7 +218,9 @@ class Session:
             control_cls=BaseControl,
         )
 
-        # print(f"\n\nadded_controls ({len(added_controls)}):", added_controls)
+        # print(f"\n\nadded_controls: ({len(added_controls)})")
+        # for ac in added_controls:
+        #     print(f"added_control: {ac._c}({ac._i})")
         # print(f"\n\nremoved_controls ({len(removed_controls)}):", removed_controls)
 
         return patch.to_graph(), added_controls, removed_controls
