@@ -16,35 +16,37 @@ version = ""
 def update_version():
     """Try to get the version from Git tags."""
     working = Path().absolute()
-    version_file_path = Path(flet.__file__).absolute().parent / "version.py"
-    repo_root = find_repo_root(version_file_path.parent)
+    try:
+        version_file_path = Path(flet.__file__).absolute().parent / "version.py"
+        repo_root = find_repo_root(version_file_path.parent)
 
-    if repo_root:
-        os.chdir(repo_root)
-        in_repo = (
-            which("git.exe" if is_windows() else "git")
-            and sp.run(
-                ["git", "status"],
-                capture_output=True,
-                text=True,
-            ).returncode
-            == 0
-        )
-
-        if in_repo:
-            try:
-                git_p = sp.run(
-                    ["git", "describe", "--abbrev=0"],
+        if repo_root:
+            os.chdir(repo_root)
+            in_repo = (
+                which("git.exe" if is_windows() else "git")
+                and sp.run(
+                    ["git", "status"],
                     capture_output=True,
                     text=True,
-                    check=True,  # Raise an exception for non-zero exit codes
-                )
-                tag = git_p.stdout.strip()
-                return tag[1:] if tag.startswith("v") else tag
-            except sp.CalledProcessError as e:
-                print(f"Error getting Git version: {e}")
-            except FileNotFoundError:
-                print("Git command not found.")
+                ).returncode
+                == 0
+            )
+
+            if in_repo:
+                try:
+                    git_p = sp.run(
+                        ["git", "describe", "--abbrev=0"],
+                        capture_output=True,
+                        text=True,
+                        check=True,  # Raise an exception for non-zero exit codes
+                    )
+                    tag = git_p.stdout.strip()
+                    return tag[1:] if tag.startswith("v") else tag
+                except sp.CalledProcessError as e:
+                    print(f"Error getting Git version: {e}")
+                except FileNotFoundError:
+                    print("Git command not found.")
+    finally:
         os.chdir(working)
     return None
 
