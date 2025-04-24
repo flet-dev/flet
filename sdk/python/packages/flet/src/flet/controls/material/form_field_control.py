@@ -63,7 +63,7 @@ class FormFieldControl(ConstrainedControl):
     The icon to show before the input field and outside of the decoration's container. Can be a `Control` or an icon name.
     """
 
-    border: Optional[InputBorder] = None
+    border: InputBorder = InputBorder.OUTLINE
     """
     Border around input.
 
