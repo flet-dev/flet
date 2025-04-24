@@ -70,7 +70,7 @@ class FloatingActionButton(ConstrainedControl):
     The [color](https://flet.dev/docs/reference/colors) to use for filling the button when the button has input focus.
     """
 
-    clip_behavior: Optional[ClipBehavior] = None
+    clip_behavior: ClipBehavior = ClipBehavior.NONE
     """
     The content will be clipped (or not) according to this option.
 
@@ -112,11 +112,9 @@ class FloatingActionButton(ConstrainedControl):
     Defaults to `8`.
     """
 
-    enable_feedback: bool = True
+    enable_feedback: Optional[bool] = None
     """
     Whether detected gestures should provide acoustic and/or haptic feedback. On Android, for example, setting this to `True` will produce a click sound and a long-press will produce a short vibration.
-
-    Defaults to `True`.
     """
 
     url: Optional[str] = None
